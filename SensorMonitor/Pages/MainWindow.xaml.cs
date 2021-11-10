@@ -35,9 +35,6 @@ namespace SensorMonitor
         // Database Maintenance Dispatcher
         private System.Timers.Timer maintenanceTimer;
 
-        // Application restart required
-        //private DispatcherTimer applicationRestartRequiredCheck;
-
         // Error Messages Window
         private ErrorMessagesWindow errorMessagesWindow;
 
@@ -164,15 +161,29 @@ namespace SensorMonitor
 
             void checkDatabaseStatus(object sender, EventArgs e)
             {
-                if (errorHandler.IsDatabaseError())
+                try
                 {
-                    tbDatabaseStatus.Visibility = Visibility.Visible;
+                    if (errorHandler.IsDatabaseError())
+                    {
+                        tbDatabaseStatus.Visibility = Visibility.Visible;
 
-                    tbDatabaseStatusText.Text = string.Format("Database Error: {0}", errorHandler.GetDatabaseErrorType().ToString());
+                        tbDatabaseStatusText.Text = string.Format("Database Error: {0}", errorHandler.GetDatabaseErrorType().ToString());
+                    }
+                    else
+                    {
+                        tbDatabaseStatus.Visibility = Visibility.Collapsed;
+                    }
                 }
-                else
+                catch (Exception ex)
                 {
-                    tbDatabaseStatus.Visibility = Visibility.Collapsed;
+                    errorHandler.Insert(
+                         new ErrorMessage(
+                             DateTime.UtcNow,
+                             ErrorMessageType.Database,
+                             ErrorMessageCategory.Admin,
+                             string.Format("Database Status Check Error (checkDatabaseStatus)\n\nSystem Message:\n{0}", ex.Message)));
+
+                    errorHandler.SetDatabaseError(ErrorHandler.DatabaseErrorType.CreateTables);
                 }
             }
 
@@ -317,45 +328,21 @@ namespace SensorMonitor
 
             void runUpdateUI(object sender, EventArgs e)
             {
-                Thread thread = new Thread(() => UpdateUI_Thread());
-                thread.Start();
-
-                void UpdateUI_Thread()
+                try
                 {
-                    // Input: Status
-                    /////////////////////////////////////////////////////////////////////////////////////////////////////
+                    Thread thread = new Thread(() => UpdateUI_Thread());
+                    thread.Start();
 
-                    // Hente listen med prosesserte sensor data
-                    foreach (var item in sensorDataRetrieval.GetSensorDataList())
+                    void UpdateUI_Thread()
                     {
-                        // Finne igjen sensor i display listen
-                        var sensorDataList = statusDisplayList.Where(x => x.id == item.id);
-
-                        // Dersom vi fant sensor
-                        if (sensorDataList.Count() > 0)
-                        {
-                            // Oppdater data
-                            sensorDataList.First().timestamp = item.timestamp;
-                            sensorDataList.First().data = item.data;
-                        }
-                        // ...fant ikke sensor
-                        else
-                        {
-                            // Legg den inn i listen
-                            statusDisplayList.Add(item);
-                        }
-                    }
-
-                    if (AdminMode.IsActive)
-                    {
-                        // Input: Sensor Data
+                        // Input: Status
                         /////////////////////////////////////////////////////////////////////////////////////////////////////
 
                         // Hente listen med prosesserte sensor data
-                        foreach (var item in sensorDataRetrieval.GetSensorDataList())
+                        foreach (var item in sensorDataRetrieval.GetSensorDataList().ToList())
                         {
                             // Finne igjen sensor i display listen
-                            var sensorDataList = sensorDataDisplayList.Where(x => x.id == item.id);
+                            var sensorDataList = statusDisplayList.Where(x => x.id == item.id);
 
                             // Dersom vi fant sensor
                             if (sensorDataList.Count() > 0)
@@ -368,37 +355,75 @@ namespace SensorMonitor
                             else
                             {
                                 // Legg den inn i listen
-                                sensorDataDisplayList.Add(item);
+                                statusDisplayList.Add(item);
                             }
                         }
 
-                        // TAB: Serial Ports
-                        /////////////////////////////////////////////////////////////////////////////////////////////////////
-
-                        // Gå gjennom listen med mottatte data fra serie port
-                        foreach (var item in sensorDataRetrieval.GetSerialPortDataReceivedList())
+                        if (AdminMode.IsActive)
                         {
-                            // Finne korrekt serie port
-                            var serialPortDataList = serialPortDataDisplayList.Where(x => x.portName == item.portName);
+                            // Input: Sensor Data
+                            /////////////////////////////////////////////////////////////////////////////////////////////////////
 
-                            // Port eksisterer -> Oppdater data
-                            if (serialPortDataList.Count() > 0)
+                            // Hente listen med prosesserte sensor data
+                            foreach (var item in sensorDataRetrieval.GetSensorDataList().ToList())
                             {
-                                // Oppdatere data hentet fra serie port
-                                serialPortDataList.First().data = item.data;
-                                serialPortDataList.First().timestamp = item.timestamp;
+                                // Finne igjen sensor i display listen
+                                var sensorDataList = sensorDataDisplayList.Where(x => x.id == item.id);
 
-                                // Oppdatere serie port status
-                                serialPortDataList.First().portStatus = item.portStatus;
+                                // Dersom vi fant sensor
+                                if (sensorDataList.Count() > 0)
+                                {
+                                    // Oppdater data
+                                    sensorDataList.First().timestamp = item.timestamp;
+                                    sensorDataList.First().data = item.data;
+                                }
+                                // ...fant ikke sensor
+                                else
+                                {
+                                    // Legg den inn i listen
+                                    sensorDataDisplayList.Add(item);
+                                }
                             }
-                            // Dersom den ikke eksisterer -> legge inn ny i listen for serie port data display
-                            else
+
+                            // TAB: Serial Ports
+                            /////////////////////////////////////////////////////////////////////////////////////////////////////
+
+                            // Gå gjennom listen med mottatte data fra serie port
+                            foreach (var item in sensorDataRetrieval.GetSerialPortDataReceivedList().ToList())
                             {
-                                // Lagre i listen
-                                serialPortDataDisplayList.Add(item);
+                                // Finne korrekt serie port
+                                var serialPortDataList = serialPortDataDisplayList.Where(x => x.portName == item.portName);
+
+                                // Port eksisterer -> Oppdater data
+                                if (serialPortDataList.Count() > 0)
+                                {
+                                    // Oppdatere data hentet fra serie port
+                                    serialPortDataList.First().data = item.data;
+                                    serialPortDataList.First().timestamp = item.timestamp;
+
+                                    // Oppdatere serie port status
+                                    serialPortDataList.First().portStatus = item.portStatus;
+                                }
+                                // Dersom den ikke eksisterer -> legge inn ny i listen for serie port data display
+                                else
+                                {
+                                    // Lagre i listen
+                                    serialPortDataDisplayList.Add(item);
+                                }
                             }
                         }
                     }
+                }
+                catch (Exception ex)
+                {
+                    errorHandler.Insert(
+                        new ErrorMessage(
+                            DateTime.UtcNow,
+                            ErrorMessageType.Database,
+                            ErrorMessageCategory.Admin,
+                            string.Format("UI Update Error (runUpdateUI)\n\nSystem Message:\n{0}", ex.Message)));
+
+                    errorHandler.SetDatabaseError(ErrorHandler.DatabaseErrorType.DatabaseMaintenance);
                 }
             }
         }
@@ -413,19 +438,33 @@ namespace SensorMonitor
 
             void runUpdateHMS(object sender, EventArgs e)
             {
-                Thread thread = new Thread(() => UpdateHMS_Thread());
-                thread.Start();
+                try
+                { 
+                    Thread thread = new Thread(() => UpdateHMS_Thread());
+                    thread.Start();
 
-                void UpdateHMS_Thread()
+                    void UpdateHMS_Thread()
+                    {
+                        // HMS: HMS Input Data
+                        /////////////////////////////////////////////////////////////////////////////////////////////////////
+                        hmsInputData.Transfer(sensorDataRetrieval.GetSensorDataList());
+
+                        // HMS: HMS Output Data
+                        /////////////////////////////////////////////////////////////////////////////////////////////////////
+                        // Prosesserer sensor data om til data som kan sendes til HMS klient
+                        hmsProcessing.Update(hmsInputData);
+                    }
+                }
+                catch (Exception ex)
                 {
-                    // HMS: HMS Input Data
-                    /////////////////////////////////////////////////////////////////////////////////////////////////////
-                    hmsInputData.Transfer(sensorDataRetrieval.GetSensorDataList());
+                    errorHandler.Insert(
+                        new ErrorMessage(
+                            DateTime.UtcNow,
+                            ErrorMessageType.Database,
+                            ErrorMessageCategory.Admin,
+                            string.Format("UI Update Error (runUpdateHMS)\n\nSystem Message:\n{0}", ex.Message)));
 
-                    // HMS: HMS Output Data
-                    /////////////////////////////////////////////////////////////////////////////////////////////////////
-                    // Prosesserer sensor data om til data som kan sendes til HMS klient
-                    hmsProcessing.Update(hmsInputData);
+                    errorHandler.SetDatabaseError(ErrorHandler.DatabaseErrorType.DatabaseMaintenance);
                 }
             }
         }
@@ -442,29 +481,43 @@ namespace SensorMonitor
 
             void runHMSDatabaseOps(object sender, EventArgs e)
             {
-                Thread thread = new Thread(() => UpdateHMS_Thread());
-                thread.Start();
+                try
+                { 
+                    Thread thread = new Thread(() => UpdateHMS_Thread());
+                    thread.Start();
 
-                void UpdateHMS_Thread()
-                {
-                    // HMS: Lagre data i databasen
-                    /////////////////////////////////////////////////////////////////////////////////////////////////////
-
-                    // Utfører første en sjekk på om database tabellene er opprettet.
-                    // Grunnen til at dette gjøres her, så sent etter init, er at output listen fylles av 
-                    // inidividuelle sub-rutiner rundt omkring.
-                    // Output listen er derfor ikke komplett før en update (hmsProcessing.Update ovenfor) er utført.
-                    if (!databaseTablesCreated)
+                    void UpdateHMS_Thread()
                     {
-                        hmsDatabase.CreateHMSDataTables(hmsOutputData);
-                        databaseTablesCreated = true;
+                        // HMS: Lagre data i databasen
+                        /////////////////////////////////////////////////////////////////////////////////////////////////////
 
-                        // Kjør vedlikehold en gang ved oppstart
-                        DoDatabaseMaintenance(DatabaseMaintenanceType.HMS);
+                        // Utfører første en sjekk på om database tabellene er opprettet.
+                        // Grunnen til at dette gjøres her, så sent etter init, er at output listen fylles av 
+                        // inidividuelle sub-rutiner rundt omkring.
+                        // Output listen er derfor ikke komplett før en update (hmsProcessing.Update ovenfor) er utført.
+                        if (!databaseTablesCreated)
+                        {
+                            hmsDatabase.CreateHMSDataTables(hmsOutputData);
+                            databaseTablesCreated = true;
+
+                            // Kjør vedlikehold en gang ved oppstart
+                            DoDatabaseMaintenance(DatabaseMaintenanceType.HMS);
+                        }
+
+                        // Lagre data i databasen
+                        hmsDatabase.InsertData(hmsOutputData);
                     }
+                }
+                catch (Exception ex)
+                {
+                    errorHandler.Insert(
+                        new ErrorMessage(
+                            DateTime.UtcNow,
+                            ErrorMessageType.Database,
+                            ErrorMessageCategory.Admin,
+                            string.Format("Database Ops Error (runHMSDatabaseOps)\n\nSystem Message:\n{0}", ex.Message)));
 
-                    // Lagre data i databasen
-                    hmsDatabase.InsertData(hmsOutputData);
+                    errorHandler.SetDatabaseError(ErrorHandler.DatabaseErrorType.DatabaseMaintenance);
                 }
             }
         }

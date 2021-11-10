@@ -56,6 +56,7 @@ namespace SensorMonitor
             // Socket Listener Worker
             socketWorker = new BackgroundWorker();
             socketWorker.DoWork += StartSocketListener;
+            socketWorker.WorkerSupportsCancellation = true;
 
             config = new Config();
 
@@ -82,6 +83,7 @@ namespace SensorMonitor
         public void Stop()
         {
             StopListening();
+            socketWorker.CancelAsync();
         }
 
         private void StartSocketListener(object sender, DoWorkEventArgs e)
@@ -107,7 +109,7 @@ namespace SensorMonitor
                 // Server running
                 serverIsRunning = true;
 
-                while (serverIsRunning)
+                while (true)
                 {
                     // Resette "ferdig" signalet
                     allDone.Reset();
@@ -120,6 +122,13 @@ namespace SensorMonitor
 
                     // Venter til kommunikasjonen er ferdig før vi går videre
                     allDone.WaitOne();
+
+                    // Stoppe socket listener
+                    if (socketWorker.CancellationPending)
+                    {
+                        e.Cancel = true;
+                        return;
+                    }
                 }
             }
             catch (ObjectDisposedException)
