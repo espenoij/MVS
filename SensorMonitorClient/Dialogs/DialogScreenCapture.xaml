@@ -1,0 +1,58 @@
+﻿<telerik:RadWindow
+    x:Class="SensorMonitorClient.DialogScreenCapture"
+    xmlns="http://schemas.microsoft.com/winfx/2006/xaml/presentation"
+    xmlns:x="http://schemas.microsoft.com/winfx/2006/xaml"
+    xmlns:d="http://schemas.microsoft.com/expression/blend/2008"
+    xmlns:telerik="http://schemas.telerik.com/2008/xaml/presentation"
+    xmlns:mc="http://schemas.openxmlformats.org/markup-compatibility/2006"
+    mc:Ignorable="d"
+    xmlns:local="clr-namespace:SensorMonitorClient"
+    telerik:Header="Screen Capture"
+    WindowStartupLocation="CenterScreen"
+    Height="250"
+    Width="400"
+    telerik:StyleManager.Theme="Material">
+
+    <telerik:RadWindow.Icon>
+        <Image
+            Source="../Icons/favicon.ico" />
+    </telerik:RadWindow.Icon>
+
+    <telerik:RadWindow.Resources>
+        <ResourceDictionary>
+            <Style
+                TargetType="local:DialogScreenCapture"
+                BasedOn="{StaticResource RadWindowStyle}" />
+        </ResourceDictionary>
+    </telerik:RadWindow.Resources>
+
+    <DockPanel>
+
+        <StackPanel
+            DockPanel.Dock="Bottom"
+            HorizontalAlignment="Center"
+            Orientation="Horizontal">
+
+            <Button
+                Margin="8"
+                Width="150"
+                Content="Open File Location"
+                Click="btnOpenFileLocation_Click" />
+
+            <Button
+                Margin="8"
+                Width="150"
+                Content="Close"
+                Click="btnClose_Click"/>
+
+        </StackPanel>
+
+        <Label
+            DockPanel.Dock="Top"
+            HorizontalAlignment="Center"
+            VerticalAlignment="Center"
+            Content="Screen captured successfully!" />
+
+    </DockPanel>
+
+</telerik:RadWindow>

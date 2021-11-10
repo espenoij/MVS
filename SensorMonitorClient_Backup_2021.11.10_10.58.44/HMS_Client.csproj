@@ -1,0 +1,638 @@
+﻿<?xml version="1.0" encoding="utf-8"?>
+<Project ToolsVersion="15.0" xmlns="http://schemas.microsoft.com/developer/msbuild/2003">
+  <Import Project="$(MSBuildExtensionsPath)\$(MSBuildToolsVersion)\Microsoft.Common.props" Condition="Exists('$(MSBuildExtensionsPath)\$(MSBuildToolsVersion)\Microsoft.Common.props')" />
+  <PropertyGroup>
+    <Configuration Condition=" '$(Configuration)' == '' ">Debug</Configuration>
+    <Platform Condition=" '$(Platform)' == '' ">AnyCPU</Platform>
+    <ProjectGuid>{5F604A51-A8DC-4B71-9EB0-988F5C686324}</ProjectGuid>
+    <OutputType>WinExe</OutputType>
+    <RootNamespace>SensorMonitorClient</RootNamespace>
+    <AssemblyName>SensorMonitorClient</AssemblyName>
+    <TargetFrameworkVersion>v4.7.2</TargetFrameworkVersion>
+    <FileAlignment>512</FileAlignment>
+    <ProjectTypeGuids>{60dc8134-eba5-43b8-bcc9-bb4bc16c2548};{FAE04EC0-301F-11D3-BF4B-00C04F79EFBC}</ProjectTypeGuids>
+    <WarningLevel>4</WarningLevel>
+    <AutoGenerateBindingRedirects>true</AutoGenerateBindingRedirects>
+    <Deterministic>true</Deterministic>
+    <TargetFrameworkProfile />
+  </PropertyGroup>
+  <PropertyGroup Condition=" '$(Configuration)|$(Platform)' == 'Debug|AnyCPU' ">
+    <PlatformTarget>x64</PlatformTarget>
+    <DebugSymbols>true</DebugSymbols>
+    <DebugType>full</DebugType>
+    <Optimize>true</Optimize>
+    <OutputPath>bin\Debug\</OutputPath>
+    <DefineConstants>DEBUG;TRACE</DefineConstants>
+    <ErrorReport>prompt</ErrorReport>
+    <WarningLevel>4</WarningLevel>
+    <Prefer32Bit>false</Prefer32Bit>
+  </PropertyGroup>
+  <PropertyGroup Condition=" '$(Configuration)|$(Platform)' == 'Release|AnyCPU' ">
+    <PlatformTarget>AnyCPU</PlatformTarget>
+    <DebugType>pdbonly</DebugType>
+    <Optimize>true</Optimize>
+    <OutputPath>bin\Release\</OutputPath>
+    <DefineConstants>TRACE</DefineConstants>
+    <ErrorReport>prompt</ErrorReport>
+    <WarningLevel>4</WarningLevel>
+    <Prefer32Bit>false</Prefer32Bit>
+  </PropertyGroup>
+  <PropertyGroup>
+    <ApplicationIcon>Icons\favicon.ico</ApplicationIcon>
+  </PropertyGroup>
+  <ItemGroup>
+    <Reference Include="BouncyCastle.Crypto, Version=1.8.9.0, Culture=neutral, PublicKeyToken=0e99375e54769942">
+      <HintPath>..\packages\BouncyCastle.1.8.9\lib\BouncyCastle.Crypto.dll</HintPath>
+    </Reference>
+    <Reference Include="DocumentFormat.OpenXml, Version=2.14.0.0, Culture=neutral, PublicKeyToken=8fb06cb64d019a17, processorArchitecture=MSIL">
+      <HintPath>..\packages\DocumentFormat.OpenXml.2.14.0\lib\net46\DocumentFormat.OpenXml.dll</HintPath>
+    </Reference>
+    <Reference Include="Google.Protobuf, Version=3.19.1.0, Culture=neutral, PublicKeyToken=a7d26565bac4d604, processorArchitecture=MSIL">
+      <HintPath>..\packages\Google.Protobuf.3.19.1\lib\net45\Google.Protobuf.dll</HintPath>
+    </Reference>
+    <Reference Include="K4os.Compression.LZ4, Version=1.2.15.0, Culture=neutral, PublicKeyToken=2186fa9121ef231d, processorArchitecture=MSIL">
+      <HintPath>..\packages\K4os.Compression.LZ4.1.2.15\lib\net46\K4os.Compression.LZ4.dll</HintPath>
+    </Reference>
+    <Reference Include="K4os.Compression.LZ4.Streams, Version=1.2.15.0, Culture=neutral, PublicKeyToken=2186fa9121ef231d, processorArchitecture=MSIL">
+      <HintPath>..\packages\K4os.Compression.LZ4.Streams.1.2.15\lib\net46\K4os.Compression.LZ4.Streams.dll</HintPath>
+    </Reference>
+    <Reference Include="K4os.Hash.xxHash, Version=1.0.6.0, Culture=neutral, PublicKeyToken=32cd54395057cec3, processorArchitecture=MSIL">
+      <HintPath>..\packages\K4os.Hash.xxHash.1.0.6\lib\net46\K4os.Hash.xxHash.dll</HintPath>
+    </Reference>
+    <Reference Include="Microsoft.Bcl.AsyncInterfaces, Version=5.0.0.0, Culture=neutral, PublicKeyToken=cc7b13ffcd2ddd51, processorArchitecture=MSIL">
+      <HintPath>..\packages\Microsoft.Bcl.AsyncInterfaces.5.0.0\lib\net461\Microsoft.Bcl.AsyncInterfaces.dll</HintPath>
+    </Reference>
+    <Reference Include="MySql.Data, Version=8.0.27.0, Culture=neutral, PublicKeyToken=c5687fc88969c44d, processorArchitecture=MSIL">
+      <HintPath>..\packages\MySql.Data.8.0.27\lib\net452\MySql.Data.dll</HintPath>
+    </Reference>
+    <Reference Include="System" />
+    <Reference Include="System.Buffers, Version=4.0.3.0, Culture=neutral, PublicKeyToken=cc7b13ffcd2ddd51, processorArchitecture=MSIL">
+      <HintPath>..\packages\System.Buffers.4.5.1\lib\net461\System.Buffers.dll</HintPath>
+    </Reference>
+    <Reference Include="System.ComponentModel" />
+    <Reference Include="System.ComponentModel.DataAnnotations" />
+    <Reference Include="System.Configuration" />
+    <Reference Include="System.Configuration.ConfigurationManager, Version=5.0.0.0, Culture=neutral, PublicKeyToken=cc7b13ffcd2ddd51, processorArchitecture=MSIL">
+      <HintPath>..\packages\System.Configuration.ConfigurationManager.5.0.0\lib\net461\System.Configuration.ConfigurationManager.dll</HintPath>
+    </Reference>
+    <Reference Include="System.Configuration.Install" />
+    <Reference Include="System.Data" />
+    <Reference Include="System.Data.OracleClient" />
+    <Reference Include="System.Design" />
+    <Reference Include="System.Drawing" />
+    <Reference Include="System.Management" />
+    <Reference Include="System.Memory, Version=4.0.1.1, Culture=neutral, PublicKeyToken=cc7b13ffcd2ddd51, processorArchitecture=MSIL">
+      <HintPath>..\packages\System.Memory.4.5.4\lib\net461\System.Memory.dll</HintPath>
+    </Reference>
+    <Reference Include="System.Net" />
+    <Reference Include="System.Numerics" />
+    <Reference Include="System.Numerics.Vectors, Version=4.1.4.0, Culture=neutral, PublicKeyToken=b03f5f7f11d50a3a, processorArchitecture=MSIL">
+      <HintPath>..\packages\System.Numerics.Vectors.4.5.0\lib\net46\System.Numerics.Vectors.dll</HintPath>
+    </Reference>
+    <Reference Include="System.Runtime.CompilerServices.Unsafe, Version=5.0.0.0, Culture=neutral, PublicKeyToken=b03f5f7f11d50a3a, processorArchitecture=MSIL">
+      <HintPath>..\packages\System.Runtime.CompilerServices.Unsafe.5.0.0\lib\net45\System.Runtime.CompilerServices.Unsafe.dll</HintPath>
+    </Reference>
+    <Reference Include="System.Runtime.Serialization" />
+    <Reference Include="System.Security" />
+    <Reference Include="System.Security.AccessControl, Version=5.0.0.0, Culture=neutral, PublicKeyToken=b03f5f7f11d50a3a, processorArchitecture=MSIL">
+      <HintPath>..\packages\System.Security.AccessControl.5.0.0\lib\net461\System.Security.AccessControl.dll</HintPath>
+    </Reference>
+    <Reference Include="System.Security.Permissions, Version=5.0.0.0, Culture=neutral, PublicKeyToken=cc7b13ffcd2ddd51, processorArchitecture=MSIL">
+      <HintPath>..\packages\System.Security.Permissions.5.0.0\lib\net461\System.Security.Permissions.dll</HintPath>
+    </Reference>
+    <Reference Include="System.Security.Principal.Windows, Version=5.0.0.0, Culture=neutral, PublicKeyToken=b03f5f7f11d50a3a, processorArchitecture=MSIL">
+      <HintPath>..\packages\System.Security.Principal.Windows.5.0.0\lib\net461\System.Security.Principal.Windows.dll</HintPath>
+    </Reference>
+    <Reference Include="System.ServiceProcess" />
+    <Reference Include="System.Text.Encodings.Web, Version=5.0.0.1, Culture=neutral, PublicKeyToken=cc7b13ffcd2ddd51, processorArchitecture=MSIL">
+      <HintPath>..\packages\System.Text.Encodings.Web.5.0.1\lib\net461\System.Text.Encodings.Web.dll</HintPath>
+    </Reference>
+    <Reference Include="System.Text.Json, Version=5.0.0.2, Culture=neutral, PublicKeyToken=cc7b13ffcd2ddd51, processorArchitecture=MSIL">
+      <HintPath>..\packages\System.Text.Json.5.0.2\lib\net461\System.Text.Json.dll</HintPath>
+    </Reference>
+    <Reference Include="System.Threading.Tasks.Extensions, Version=4.2.0.1, Culture=neutral, PublicKeyToken=cc7b13ffcd2ddd51, processorArchitecture=MSIL">
+      <HintPath>..\packages\System.Threading.Tasks.Extensions.4.5.4\lib\net461\System.Threading.Tasks.Extensions.dll</HintPath>
+    </Reference>
+    <Reference Include="System.Transactions" />
+    <Reference Include="System.ValueTuple, Version=4.0.3.0, Culture=neutral, PublicKeyToken=cc7b13ffcd2ddd51, processorArchitecture=MSIL">
+      <HintPath>..\packages\System.ValueTuple.4.5.0\lib\net47\System.ValueTuple.dll</HintPath>
+    </Reference>
+    <Reference Include="System.Web" />
+    <Reference Include="System.Windows.Forms" />
+    <Reference Include="System.Xml" />
+    <Reference Include="Microsoft.CSharp" />
+    <Reference Include="System.Core" />
+    <Reference Include="System.Xml.Linq" />
+    <Reference Include="System.Data.DataSetExtensions" />
+    <Reference Include="System.Net.Http" />
+    <Reference Include="System.Xaml">
+      <RequiredTargetFramework>4.0</RequiredTargetFramework>
+    </Reference>
+    <Reference Include="Telerik.Windows.Controls, Version=2021.3.914.45, Culture=neutral, PublicKeyToken=5803cfa389c90ce7, processorArchitecture=MSIL">
+      <SpecificVersion>False</SpecificVersion>
+      <HintPath>..\lib\RCWPF\2021.3.914.45.NoXaml\Telerik.Windows.Controls.dll</HintPath>
+      <Private>True</Private>
+    </Reference>
+    <Reference Include="Telerik.Windows.Controls.Chart, Version=2021.3.914.45, Culture=neutral, PublicKeyToken=5803cfa389c90ce7, processorArchitecture=MSIL">
+      <SpecificVersion>False</SpecificVersion>
+      <HintPath>..\lib\RCWPF\2021.3.914.45.NoXaml\Telerik.Windows.Controls.Chart.dll</HintPath>
+      <Private>True</Private>
+    </Reference>
+    <Reference Include="Telerik.Windows.Controls.Docking, Version=2021.3.914.45, Culture=neutral, PublicKeyToken=5803cfa389c90ce7, processorArchitecture=MSIL">
+      <SpecificVersion>False</SpecificVersion>
+      <HintPath>..\lib\RCWPF\2021.3.914.45.NoXaml\Telerik.Windows.Controls.Docking.dll</HintPath>
+      <Private>True</Private>
+    </Reference>
+    <Reference Include="Telerik.Windows.Controls.GridView, Version=2021.3.914.45, Culture=neutral, PublicKeyToken=5803cfa389c90ce7, processorArchitecture=MSIL">
+      <SpecificVersion>False</SpecificVersion>
+      <HintPath>..\lib\RCWPF\2021.3.914.45.NoXaml\Telerik.Windows.Controls.GridView.dll</HintPath>
+      <Private>True</Private>
+    </Reference>
+    <Reference Include="Telerik.Windows.Controls.Input, Version=2021.3.914.45, Culture=neutral, PublicKeyToken=5803cfa389c90ce7, processorArchitecture=MSIL">
+      <SpecificVersion>False</SpecificVersion>
+      <HintPath>..\lib\RCWPF\2021.3.914.45.NoXaml\Telerik.Windows.Controls.Input.dll</HintPath>
+      <Private>True</Private>
+    </Reference>
+    <Reference Include="Telerik.Windows.Controls.Navigation, Version=2021.3.914.45, Culture=neutral, PublicKeyToken=5803cfa389c90ce7, processorArchitecture=MSIL">
+      <SpecificVersion>False</SpecificVersion>
+      <HintPath>..\lib\RCWPF\2021.3.914.45.NoXaml\Telerik.Windows.Controls.Navigation.dll</HintPath>
+      <Private>True</Private>
+    </Reference>
+    <Reference Include="Telerik.Windows.Data, Version=2021.3.914.45, Culture=neutral, PublicKeyToken=5803cfa389c90ce7, processorArchitecture=MSIL">
+      <SpecificVersion>False</SpecificVersion>
+      <HintPath>..\lib\RCWPF\2021.3.914.45.NoXaml\Telerik.Windows.Data.dll</HintPath>
+      <Private>True</Private>
+    </Reference>
+    <Reference Include="Telerik.Windows.Documents.Core, Version=2021.3.909.40, Culture=neutral, PublicKeyToken=5803cfa389c90ce7, processorArchitecture=MSIL">
+      <HintPath>..\lib\RCWPF\2021.3.914.45.NoXaml\Telerik.Windows.Documents.Core.dll</HintPath>
+      <Private>True</Private>
+    </Reference>
+    <Reference Include="Telerik.Windows.Documents.Fixed, Version=2021.3.909.40, Culture=neutral, PublicKeyToken=5803cfa389c90ce7, processorArchitecture=MSIL">
+      <HintPath>..\lib\RCWPF\2021.3.914.45.NoXaml\Telerik.Windows.Documents.Fixed.dll</HintPath>
+      <Private>True</Private>
+    </Reference>
+    <Reference Include="Telerik.Windows.Themes.Material, Version=2021.3.914.45, Culture=neutral, PublicKeyToken=5803cfa389c90ce7, processorArchitecture=MSIL">
+      <SpecificVersion>False</SpecificVersion>
+      <HintPath>..\lib\RCWPF\2021.3.914.45.NoXaml\Telerik.Windows.Themes.Material.dll</HintPath>
+      <Private>True</Private>
+    </Reference>
+    <Reference Include="Telerik.Windows.Zip, Version=2021.3.909.40, Culture=neutral, PublicKeyToken=5803cfa389c90ce7, processorArchitecture=MSIL">
+      <HintPath>..\lib\RCWPF\2021.3.914.45.NoXaml\Telerik.Windows.Zip.dll</HintPath>
+      <Private>True</Private>
+    </Reference>
+    <Reference Include="Ubiety.Dns.Core, Version=2.2.1.0, Culture=neutral, PublicKeyToken=c5687fc88969c44d, processorArchitecture=MSIL">
+      <HintPath>..\packages\MySql.Data.8.0.27\lib\net452\Ubiety.Dns.Core.dll</HintPath>
+    </Reference>
+    <Reference Include="WindowsBase" />
+    <Reference Include="PresentationCore" />
+    <Reference Include="PresentationFramework" />
+    <Reference Include="ZstdNet, Version=1.4.5.0, Culture=neutral, PublicKeyToken=c5687fc88969c44d, processorArchitecture=MSIL">
+      <HintPath>..\packages\MySql.Data.8.0.27\lib\net452\ZstdNet.dll</HintPath>
+    </Reference>
+  </ItemGroup>
+  <ItemGroup>
+    <ApplicationDefinition Include="App.xaml">
+      <Generator>MSBuild:Compile</Generator>
+      <SubType>Designer</SubType>
+    </ApplicationDefinition>
+    <Compile Include="..\SensorMonitor\Helpers\RadObservableCollectionEx.cs">
+      <Link>Helpers\RadObservableCollectionEx.cs</Link>
+    </Compile>
+    <Compile Include="..\SensorMonitor\Helpers\TextHelper.cs">
+      <Link>Helpers\TextHelper.cs</Link>
+    </Compile>
+    <Compile Include="..\SensorMonitor\Services\Constants.cs">
+      <Link>Services\Constants.cs</Link>
+    </Compile>
+    <Compile Include="..\SensorMonitor\Services\DataValidation.cs">
+      <Link>Services\DataValidation.cs</Link>
+    </Compile>
+    <Compile Include="..\SensorMonitor\Services\Weather.cs">
+      <Link>Services\Weather.cs</Link>
+    </Compile>
+    <Compile Include="Services\AdminMode.cs" />
+    <Compile Include="Config\ConfigKey.cs" />
+    <Compile Include="Dialogs\DialogHandler.cs" />
+    <Compile Include="Dialogs\DialogHandlerWarning.xaml.cs">
+      <DependentUpon>DialogHandlerWarning.xaml</DependentUpon>
+    </Compile>
+    <Compile Include="Dialogs\DialogScreenCapture.xaml.cs">
+      <DependentUpon>DialogScreenCapture.xaml</DependentUpon>
+    </Compile>
+    <Compile Include="Dialogs\DialogEmail.xaml.cs">
+      <DependentUpon>DialogEmail.xaml</DependentUpon>
+    </Compile>
+    <Compile Include="Dialogs\DialogHelicopterDeparted.xaml.cs">
+      <DependentUpon>DialogHelicopterDeparted.xaml</DependentUpon>
+    </Compile>
+    <Compile Include="Dialogs\DialogHelicopterLanded.xaml.cs">
+      <DependentUpon>DialogHelicopterLanded.xaml</DependentUpon>
+    </Compile>
+    <Compile Include="Dialogs\DialogAdminMode.xaml.cs">
+      <DependentUpon>DialogAdminMode.xaml</DependentUpon>
+    </Compile>
+    <Compile Include="Pages\AdminInputData.xaml.cs">
+      <DependentUpon>AdminInputData.xaml</DependentUpon>
+    </Compile>
+    <Compile Include="Pages\AdminSettings.xaml.cs">
+      <DependentUpon>AdminSettings.xaml</DependentUpon>
+    </Compile>
+    <Compile Include="Services\HMSData.cs" />
+    <Compile Include="ViewModels\AdminSettingsVM.cs" />
+    <Compile Include="Helpers\Calculations.cs" />
+    <Compile Include="Services\CommonTypes.cs" />
+    <Compile Include="Pages\HelideckReport_CAP.xaml.cs">
+      <DependentUpon>HelideckReport_CAP.xaml</DependentUpon>
+    </Compile>
+    <Compile Include="Pages\HelideckReport_NOROG.xaml.cs">
+      <DependentUpon>HelideckReport_NOROG.xaml</DependentUpon>
+    </Compile>
+    <Compile Include="ViewModels\HelideckReportVM.cs" />
+    <Compile Include="Services\PdfExport\ConcreteRenderers\BorderRenderer.cs" />
+    <Compile Include="Services\PdfExport\ConcreteRenderers\EllipseRenderer.cs" />
+    <Compile Include="Services\PdfExport\ConcreteRenderers\FrameworkElementRenderer.cs" />
+    <Compile Include="Services\PdfExport\ConcreteRenderers\ImageRenderer.cs" />
+    <Compile Include="Services\PdfExport\ConcreteRenderers\LineRenderer.cs" />
+    <Compile Include="Services\PdfExport\ConcreteRenderers\PanelRenderer.cs" />
+    <Compile Include="Services\PdfExport\ConcreteRenderers\PathRenderer.cs" />
+    <Compile Include="Services\PdfExport\ConcreteRenderers\RectangleRenderer.cs" />
+    <Compile Include="Services\PdfExport\ConcreteRenderers\ShapeRenderer.cs" />
+    <Compile Include="Services\PdfExport\ConcreteRenderers\TextBlockRenderer.cs" />
+    <Compile Include="Services\PdfExport\ConcreteRenderers\TextBoxRenderer.cs" />
+    <Compile Include="Services\PdfExport\ConcreteRenderers\TextRenderer.cs" />
+    <Compile Include="Services\PdfExport\ConcreteRenderers\UIElementRendererBase.cs" />
+    <Compile Include="Services\PdfExport\ExportHelper.cs" />
+    <Compile Include="Services\PdfExport\Miscellaneous\CompositeDisposableObject.cs" />
+    <Compile Include="Services\PdfExport\Miscellaneous\DisposableOpacity.cs" />
+    <Compile Include="Services\PdfExport\Miscellaneous\MathHelper.cs" />
+    <Compile Include="Services\PdfExport\Miscellaneous\PdfColorHelper.cs" />
+    <Compile Include="Services\PdfExport\Miscellaneous\PdfGeometryHelper.cs" />
+    <Compile Include="Services\PdfExport\Miscellaneous\PdfRenderContext.cs" />
+    <Compile Include="Services\PdfExport\PdfRenderer.cs" />
+    <Compile Include="Services\PDFHandler.cs" />
+    <Compile Include="Config\HelicopterOperatorConfig.cs" />
+    <Compile Include="Config\HelicopterOperatorConfigCollection.cs" />
+    <Compile Include="Config\HelicopterOperatorConfigSection.cs" />
+    <Compile Include="Services\ScreenCapture.cs" />
+    <Compile Include="Pages\WindHeadingReadouts_NOROG.xaml.cs">
+      <DependentUpon>WindHeadingReadouts_NOROG.xaml</DependentUpon>
+    </Compile>
+    <Compile Include="Pages\WindHeadingReadouts_CAP.xaml.cs">
+      <DependentUpon>WindHeadingReadouts_CAP.xaml</DependentUpon>
+    </Compile>
+    <Compile Include="Pages\WindHeadingTrend_CAP.xaml.cs">
+      <DependentUpon>WindHeadingTrend_CAP.xaml</DependentUpon>
+    </Compile>
+    <Compile Include="ViewModels\WindHeadingTrendVM.cs" />
+    <Compile Include="Pages\HelideckRelativeWindLimits_CAP.xaml.cs">
+      <DependentUpon>HelideckRelativeWindLimits_CAP.xaml</DependentUpon>
+    </Compile>
+    <Compile Include="ViewModels\HelideckRelativeWindLimitsVM.cs" />
+    <Compile Include="ViewModels\HelideckStatusTrendVM.cs" />
+    <Compile Include="Pages\GeneralInformation_CAP.xaml.cs">
+      <DependentUpon>GeneralInformation_CAP.xaml</DependentUpon>
+    </Compile>
+    <Compile Include="ViewModels\HelideckStabilityLimitsVM.cs" />
+    <Compile Include="Pages\HelideckMotionLimits_Touchdown_CAP.xaml.cs">
+      <DependentUpon>HelideckMotionLimits_Touchdown_CAP.xaml</DependentUpon>
+    </Compile>
+    <Compile Include="Pages\HelideckStabilityLimits_CAP.xaml.cs">
+      <DependentUpon>HelideckStabilityLimits_CAP.xaml</DependentUpon>
+    </Compile>
+    <Compile Include="Pages\HelideckStatus_CAP.xaml.cs">
+      <DependentUpon>HelideckStatus_CAP.xaml</DependentUpon>
+    </Compile>
+    <Compile Include="Pages\HelideckStatusTrend_CAP.xaml.cs">
+      <DependentUpon>HelideckStatusTrend_CAP.xaml</DependentUpon>
+    </Compile>
+    <Compile Include="Config\HelicopterWSILimitConfig.cs" />
+    <Compile Include="Config\HelicopterWSILimitConfigCollection.cs" />
+    <Compile Include="Config\HelicopterWSILimitConfigSection.cs" />
+    <Compile Include="ViewModels\MainWindowVM.cs" />
+    <Compile Include="Services\Sensor.cs" />
+    <Compile Include="Services\UserInputs.cs" />
+    <Compile Include="Pages\UserInputs_CAP.xaml.cs">
+      <DependentUpon>UserInputs_CAP.xaml</DependentUpon>
+    </Compile>
+    <Compile Include="Services\HMSDataCollection.cs" />
+    <Compile Include="Services\ServerCom.cs" />
+    <Compile Include="Helpers\EnumExtension.cs" />
+    <Compile Include="ViewModels\GeneralInformationVM.cs" />
+    <Compile Include="Pages\HelideckMotionHistory.xaml.cs">
+      <DependentUpon>HelideckMotionHistory.xaml</DependentUpon>
+    </Compile>
+    <Compile Include="ViewModels\HelideckMotionTrendVM.cs" />
+    <Compile Include="ViewModels\HelideckMotionLimitsVM.cs" />
+    <Compile Include="Pages\HelideckStatusPrediction.xaml.cs">
+      <DependentUpon>HelideckStatusPrediction.xaml</DependentUpon>
+    </Compile>
+    <Compile Include="Config\HMSDataConfig.cs" />
+    <Compile Include="Config\HMSDataConfigCollection.cs" />
+    <Compile Include="Config\HMSDataConfigSection.cs" />
+    <Compile Include="ViewModels\HelideckStatusVM.cs" />
+    <Compile Include="Pages\MainWindow.xaml.cs">
+      <DependentUpon>MainWindow.xaml</DependentUpon>
+    </Compile>
+    <Compile Include="Config\Config.cs" />
+    <Compile Include="Pages\GeneralInformation_NOROG.xaml.cs">
+      <DependentUpon>GeneralInformation_NOROG.xaml</DependentUpon>
+    </Compile>
+    <Compile Include="Pages\HelideckMotionLimits_NOROG.xaml.cs">
+      <DependentUpon>HelideckMotionLimits_NOROG.xaml</DependentUpon>
+    </Compile>
+    <Compile Include="Pages\HelideckStatus_NOROG.xaml.cs">
+      <DependentUpon>HelideckStatus_NOROG.xaml</DependentUpon>
+    </Compile>
+    <Compile Include="Pages\Meteorological.xaml.cs">
+      <DependentUpon>Meteorological.xaml</DependentUpon>
+    </Compile>
+    <Compile Include="ViewModels\MeteorologicalVM.cs" />
+    <Compile Include="Pages\SensorStatusDisplay.xaml.cs">
+      <DependentUpon>SensorStatusDisplay.xaml</DependentUpon>
+    </Compile>
+    <Compile Include="ViewModels\SensorStatusVM.cs" />
+    <Compile Include="Pages\UserInputs_NOROG.xaml.cs">
+      <DependentUpon>UserInputs_NOROG.xaml</DependentUpon>
+    </Compile>
+    <Compile Include="Pages\HelideckMotionTrend_NOROG.xaml.cs">
+      <DependentUpon>HelideckMotionTrend_NOROG.xaml</DependentUpon>
+    </Compile>
+    <Compile Include="ViewModels\UserInputsVM.cs" />
+    <Compile Include="ViewModels\WindHeadingVM.cs" />
+    <Compile Include="Services\SensorStatus.cs" />
+    <Compile Include="Services\Socket\SocketClient.cs" />
+    <Compile Include="Pages\WindHeadingCompassRose.xaml.cs">
+      <DependentUpon>WindHeadingCompassRose.xaml</DependentUpon>
+    </Compile>
+    <Compile Include="Pages\WindHeading.xaml.cs">
+      <DependentUpon>WindHeading.xaml</DependentUpon>
+    </Compile>
+    <Compile Include="Services\Socket\SocketConsole.cs" />
+    <Compile Include="Services\Socket\SocketState.cs" />
+    <Page Include="Dialogs\DialogHandlerWarning.xaml">
+      <Generator>MSBuild:Compile</Generator>
+      <SubType>Designer</SubType>
+    </Page>
+    <Page Include="Dialogs\DialogScreenCapture.xaml">
+      <Generator>MSBuild:Compile</Generator>
+      <SubType>Designer</SubType>
+    </Page>
+    <Page Include="Dialogs\DialogEmail.xaml">
+      <Generator>MSBuild:Compile</Generator>
+      <SubType>Designer</SubType>
+    </Page>
+    <Page Include="Dialogs\DialogHelicopterDeparted.xaml">
+      <Generator>MSBuild:Compile</Generator>
+      <SubType>Designer</SubType>
+    </Page>
+    <Page Include="Dialogs\DialogHelicopterLanded.xaml">
+      <Generator>MSBuild:Compile</Generator>
+      <SubType>Designer</SubType>
+    </Page>
+    <Page Include="Dialogs\DialogAdminMode.xaml">
+      <SubType>Designer</SubType>
+      <Generator>MSBuild:Compile</Generator>
+    </Page>
+    <Page Include="Pages\AdminInputData.xaml">
+      <Generator>MSBuild:Compile</Generator>
+      <SubType>Designer</SubType>
+    </Page>
+    <Page Include="Pages\AdminSettings.xaml">
+      <SubType>Designer</SubType>
+      <Generator>MSBuild:Compile</Generator>
+    </Page>
+    <Page Include="Pages\GeneralInformation_CAP.xaml">
+      <SubType>Designer</SubType>
+      <Generator>MSBuild:Compile</Generator>
+    </Page>
+    <Page Include="Pages\HelideckMotionLimits_Touchdown_CAP.xaml">
+      <SubType>Designer</SubType>
+      <Generator>MSBuild:Compile</Generator>
+    </Page>
+    <Page Include="Pages\HelideckReport_CAP.xaml">
+      <Generator>MSBuild:Compile</Generator>
+      <SubType>Designer</SubType>
+    </Page>
+    <Page Include="Pages\HelideckReport_NOROG.xaml">
+      <SubType>Designer</SubType>
+      <Generator>MSBuild:Compile</Generator>
+    </Page>
+    <Page Include="Pages\WindHeadingReadouts_NOROG.xaml">
+      <Generator>MSBuild:Compile</Generator>
+      <SubType>Designer</SubType>
+    </Page>
+    <Page Include="Pages\WindHeadingReadouts_CAP.xaml">
+      <SubType>Designer</SubType>
+      <Generator>MSBuild:Compile</Generator>
+    </Page>
+    <Page Include="Pages\WindHeadingTrend_CAP.xaml">
+      <Generator>MSBuild:Compile</Generator>
+      <SubType>Designer</SubType>
+    </Page>
+    <Page Include="Pages\HelideckRelativeWindLimits_CAP.xaml">
+      <SubType>Designer</SubType>
+      <Generator>XamlIntelliSenseFileGenerator</Generator>
+    </Page>
+    <Page Include="Pages\HelideckStabilityLimits_CAP.xaml">
+      <Generator>MSBuild:Compile</Generator>
+      <SubType>Designer</SubType>
+    </Page>
+    <Page Include="Pages\HelideckStatus_CAP.xaml">
+      <Generator>MSBuild:Compile</Generator>
+      <SubType>Designer</SubType>
+    </Page>
+    <Page Include="Pages\HelideckStatusTrend_CAP.xaml">
+      <Generator>MSBuild:Compile</Generator>
+      <SubType>Designer</SubType>
+    </Page>
+    <Page Include="Pages\UserInputs_CAP.xaml">
+      <SubType>Designer</SubType>
+      <Generator>MSBuild:Compile</Generator>
+    </Page>
+    <Page Include="Pages\HelideckMotionHistory.xaml">
+      <Generator>MSBuild:Compile</Generator>
+      <SubType>Designer</SubType>
+    </Page>
+    <Page Include="Pages\HelideckStatusPrediction.xaml">
+      <SubType>Designer</SubType>
+      <Generator>MSBuild:Compile</Generator>
+    </Page>
+    <Page Include="Pages\SocketConsoleWindow.xaml">
+      <Generator>MSBuild:Compile</Generator>
+      <SubType>Designer</SubType>
+    </Page>
+    <Compile Include="App.xaml.cs">
+      <DependentUpon>App.xaml</DependentUpon>
+      <SubType>Code</SubType>
+    </Compile>
+    <Compile Include="Pages\SocketConsoleWindow.xaml.cs">
+      <DependentUpon>SocketConsoleWindow.xaml</DependentUpon>
+      <SubType>Code</SubType>
+    </Compile>
+    <Page Include="Pages\MainWindow.xaml">
+      <SubType>Designer</SubType>
+      <Generator>MSBuild:Compile</Generator>
+    </Page>
+    <Page Include="Pages\WindHeadingCompassRose.xaml">
+      <SubType>Designer</SubType>
+      <Generator>MSBuild:Compile</Generator>
+    </Page>
+    <Page Include="Pages\GeneralInformation_NOROG.xaml">
+      <SubType>Designer</SubType>
+      <Generator>MSBuild:Compile</Generator>
+    </Page>
+    <Page Include="Pages\HelideckMotionLimits_NOROG.xaml">
+      <SubType>Designer</SubType>
+      <Generator>MSBuild:Compile</Generator>
+    </Page>
+    <Page Include="Pages\HelideckStatus_NOROG.xaml">
+      <SubType>Designer</SubType>
+      <Generator>MSBuild:Compile</Generator>
+    </Page>
+    <Page Include="Pages\Meteorological.xaml">
+      <SubType>Designer</SubType>
+      <Generator>MSBuild:Compile</Generator>
+    </Page>
+    <Page Include="Pages\SensorStatusDisplay.xaml">
+      <SubType>Designer</SubType>
+      <Generator>MSBuild:Compile</Generator>
+    </Page>
+    <Page Include="Pages\UserInputs_NOROG.xaml">
+      <SubType>Designer</SubType>
+      <Generator>MSBuild:Compile</Generator>
+    </Page>
+    <Page Include="Pages\HelideckMotionTrend_NOROG.xaml">
+      <SubType>Designer</SubType>
+      <Generator>MSBuild:Compile</Generator>
+    </Page>
+    <Page Include="Pages\WindHeading.xaml">
+      <SubType>Designer</SubType>
+      <Generator>MSBuild:Compile</Generator>
+    </Page>
+  </ItemGroup>
+  <ItemGroup>
+    <Compile Include="Properties\AssemblyInfo.cs">
+      <SubType>Code</SubType>
+    </Compile>
+    <Compile Include="Properties\Resources.Designer.cs">
+      <AutoGen>True</AutoGen>
+      <DesignTime>True</DesignTime>
+      <DependentUpon>Resources.resx</DependentUpon>
+    </Compile>
+    <Compile Include="Properties\Settings.Designer.cs">
+      <AutoGen>True</AutoGen>
+      <DependentUpon>Settings.settings</DependentUpon>
+      <DesignTimeSharedInput>True</DesignTimeSharedInput>
+    </Compile>
+    <EmbeddedResource Include="Properties\Resources.resx">
+      <Generator>ResXFileCodeGenerator</Generator>
+      <LastGenOutput>Resources.Designer.cs</LastGenOutput>
+    </EmbeddedResource>
+    <None Include="packages.config" />
+    <None Include="Properties\Settings.settings">
+      <Generator>SettingsSingleFileGenerator</Generator>
+      <LastGenOutput>Settings.Designer.cs</LastGenOutput>
+    </None>
+  </ItemGroup>
+  <ItemGroup>
+    <None Include="App.config" />
+  </ItemGroup>
+  <ItemGroup>
+    <Resource Include="Icons\favicon.ico" />
+  </ItemGroup>
+  <ItemGroup>
+    <Resource Include="Icons\outline_admin_panel_settings_white_36dp.png" />
+  </ItemGroup>
+  <ItemGroup>
+    <Resource Include="Icons\helipad_black_36dp.png" />
+    <Resource Include="Icons\helipad_white_36dp.png" />
+  </ItemGroup>
+  <ItemGroup>
+    <Resource Include="Icons\outline_settings_white_36dp.png" />
+  </ItemGroup>
+  <ItemGroup>
+    <Resource Include="Icons\outline_opacity_white_36dp.png" />
+  </ItemGroup>
+  <ItemGroup>
+    <Resource Include="Icons\outline_analytics_white_36dp.png" />
+  </ItemGroup>
+  <ItemGroup>
+    <Resource Include="Icons\input_white_36dp.png" />
+  </ItemGroup>
+  <ItemGroup>
+    <Resource Include="Icons\outline_schedule_white_48dp.png" />
+  </ItemGroup>
+  <ItemGroup>
+    <Resource Include="Icons\outline_warning_amber_white_48dp.png" />
+  </ItemGroup>
+  <ItemGroup>
+    <Resource Include="Icons\outline_air_white_48dp.png" />
+  </ItemGroup>
+  <ItemGroup>
+    <Resource Include="Icons\outline_cloud_white_48dp.png" />
+  </ItemGroup>
+  <ItemGroup>
+    <Resource Include="Icons\outline_wb_sunny_white_48dp.png" />
+  </ItemGroup>
+  <ItemGroup>
+    <Resource Include="Icons\outline_visibility_white_48dp.png" />
+  </ItemGroup>
+  <ItemGroup>
+    <Resource Include="Icons\outline_directions_boat_black_48dp.png" />
+  </ItemGroup>
+  <ItemGroup>
+    <Resource Include="Icons\outline_location_on_black_48dp.png" />
+  </ItemGroup>
+  <ItemGroup>
+    <Resource Include="Icons\outline_today_black_48dp.png" />
+  </ItemGroup>
+  <ItemGroup>
+    <Resource Include="Icons\outline_schedule_black_48dp.png" />
+  </ItemGroup>
+  <ItemGroup>
+    <Resource Include="Icons\outline_verified_user_black_48dp.png" />
+  </ItemGroup>
+  <ItemGroup>
+    <Resource Include="Icons\outline_person_black_48dp.png" />
+  </ItemGroup>
+  <ItemGroup>
+    <Resource Include="Icons\outline_wysiwyg_black_48dp.png" />
+  </ItemGroup>
+  <ItemGroup>
+    <Resource Include="Icons\outline_wb_sunny_black_48dp.png" />
+  </ItemGroup>
+  <ItemGroup>
+    <Resource Include="Icons\outline_nightlight_black_48dp.png" />
+  </ItemGroup>
+  <ItemGroup>
+    <Resource Include="Icons\outline_explore_black_48dp.png" />
+  </ItemGroup>
+  <ItemGroup>
+    <Resource Include="Icons\outline_info_black_48dp.png" />
+  </ItemGroup>
+  <ItemGroup>
+    <Resource Include="Icons\outline_check_circle_black_48dp.png" />
+  </ItemGroup>
+  <ItemGroup>
+    <Resource Include="Icons\outline_east_black_48dp.png" />
+  </ItemGroup>
+  <ItemGroup>
+    <Resource Include="Icons\helicopter_64dp.png" />
+  </ItemGroup>
+  <ItemGroup>
+    <Resource Include="Icons\oil_rig_48dp.png" />
+  </ItemGroup>
+  <ItemGroup>
+    <Resource Include="Icons\outline_show_chart_white_36dp.png" />
+  </ItemGroup>
+  <ItemGroup>
+    <Resource Include="Icons\outline_article_white_48dp.png" />
+  </ItemGroup>
+  <ItemGroup>
+    <Resource Include="Icons\outline_camera_white_48dp.png" />
+  </ItemGroup>
+  <ItemGroup>
+    <Resource Include="Icons\outline_error_outline_black_48dp.png" />
+  </ItemGroup>
+  <Import Project="$(MSBuildToolsPath)\Microsoft.CSharp.targets" />
+</Project>
