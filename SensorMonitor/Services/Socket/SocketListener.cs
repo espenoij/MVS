@@ -37,8 +37,8 @@ namespace SensorMonitor
         // Server Port
         private int serverPort;
 
-        // Server is running
-        private bool serverIsRunning = false;
+        // Server started
+        private bool socketListenerStarted = false;
 
         // Configuration
         private Config config;
@@ -47,6 +47,9 @@ namespace SensorMonitor
 
         public SocketListener(HMSDataCollection hmsOutputData, HMSSensorStatus sensorStatusOutput, SocketConsole socketConsole, UserInputs userInputs, MainWindow.UserInputsCallback userInputCallback)
         {
+            config = new Config();
+            serverPort = config.Read(ConfigKey.ServerPort, Constants.ServerPortDefault);
+
             this.hmsOutputDataList = hmsOutputData.GetDataList();
             this.sensorStatusOutputList = sensorStatusOutput.GetSensorList();
             this.socketConsole = socketConsole;
@@ -56,19 +59,8 @@ namespace SensorMonitor
             // Socket Listener Worker
             socketWorker = new BackgroundWorker();
             socketWorker.DoWork += StartSocketListener;
-            socketWorker.WorkerSupportsCancellation = true;
+            socketWorker.RunWorkerCompleted += StopSocketListener;
 
-            config = new Config();
-
-            try
-            {
-                serverPort = config.Read(ConfigKey.ServerPort, Constants.ServerPortDefault);
-            }
-            catch (Exception) { } // Ingenting
-        }
-
-        public void Start()
-        {
             try
             {
                 socketWorker.RunWorkerAsync();
@@ -80,10 +72,14 @@ namespace SensorMonitor
             }
         }
 
+        public void Start()
+        {
+            socketListenerStarted = true;
+        }
+
         public void Stop()
         {
-            StopListening();
-            socketWorker.CancelAsync();
+            socketListenerStarted = false;
         }
 
         private void StartSocketListener(object sender, DoWorkEventArgs e)
@@ -91,7 +87,7 @@ namespace SensorMonitor
             // Starte opp socket og lytte etter innkommende kommunikasjon
             try
             {
-                // Sette maskinens DNS som endpoint
+                // Sette maskinens DNS som local endpoint
                 IPHostEntry ipHostInfo = Dns.GetHostEntry(Dns.GetHostName());
                 IPAddress ipAddress = ipHostInfo.AddressList[0];
                 IPEndPoint localEndPoint = new IPEndPoint(ipAddress, serverPort);
@@ -99,35 +95,29 @@ namespace SensorMonitor
                 // Opprette TCP/IP socket 
                 listener = new Socket(ipAddress.AddressFamily, SocketType.Stream, ProtocolType.Tcp);
 
+                // Socket Options
+                listener.SendTimeout = 1000;
+                listener.ReceiveTimeout = 1000;
+
                 // Binde socket til endpoint
                 listener.Bind(localEndPoint);
                 listener.Listen(10);
 
-                listener.SendTimeout = 1000;
-                listener.ReceiveTimeout = 1000;
-
-                // Server running
-                serverIsRunning = true;
-
                 while (true)
                 {
-                    // Resette "ferdig" signalet
-                    allDone.Reset();
-
-                    if (AdminMode.IsActive)
-                        socketConsole.Add("Waiting for a connection...");
-
-                    // Starter en asynkron socket for å lytte etter innkommende kommunikasjon
-                    listener.BeginAccept(new AsyncCallback(AcceptCallback), listener);
-
-                    // Venter til kommunikasjonen er ferdig før vi går videre
-                    allDone.WaitOne();
-
-                    // Stoppe socket listener
-                    if (socketWorker.CancellationPending)
+                    if (socketListenerStarted)
                     {
-                        e.Cancel = true;
-                        return;
+                        // Resette "ferdig" signalet
+                        allDone.Reset();
+
+                        if (AdminMode.IsActive)
+                            socketConsole.Add("Waiting for a connection...");
+
+                        // Starter en asynkron socket for å lytte etter innkommende kommunikasjon
+                        listener.BeginAccept(new AsyncCallback(AcceptCallback), listener);
+
+                        // Venter til kommunikasjonen er ferdig før vi går videre
+                        allDone.WaitOne();
                     }
                 }
             }
@@ -142,9 +132,10 @@ namespace SensorMonitor
             }
         }
 
-        public void StopListening()
+        private void StopSocketListener(object sender, RunWorkerCompletedEventArgs e)
         {
-            serverIsRunning = false;
+            listener.Shutdown(SocketShutdown.Both);
+            listener.Disconnect(true);
         }
 
         public void AcceptCallback(IAsyncResult ar)

@@ -44,7 +44,7 @@ namespace SensorMonitor
             window.ShowInTaskbar = true;
 
             // Tittel i taskbar
-            window.Title = "Helideck Monitoring System - Serverr"; // Må matche det som står i MainWindow.xaml
+            window.Title = "Helideck Monitoring System - Server"; // Må matche det som står i MainWindow.xaml
 
             // Theme Colors
             //////////////////////////////////////////////////////
