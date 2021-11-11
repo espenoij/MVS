@@ -15,7 +15,7 @@ namespace SensorMonitorClient
 
         private UserInputsVM userInputsVM;
 
-        public void Init(Config config, SensorStatus sensorStatus, UserInputsVM userInputsVM)
+        public void Init(Config config, SensorGroupStatus sensorStatus, UserInputsVM userInputsVM)
         {
             this.userInputsVM = userInputsVM;
 
@@ -70,7 +70,7 @@ namespace SensorMonitorClient
         {
             get
             {
-                if (_helideckStatusData.dataStatus == DataStatus.OK)
+                if (_helideckStatusData.status == DataStatus.OK)
                     return (HelideckStatusType)_helideckStatusData.data;
                 else
                     // Dersom vi har data timeout skal lyset slåes av

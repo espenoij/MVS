@@ -8,7 +8,7 @@ using System.Threading.Tasks;
 
 namespace SensorMonitorClient
 {
-    public class Sensor : INotifyPropertyChanged
+    public class SensorGroup : INotifyPropertyChanged
     {
         // Change notification
         public event PropertyChangedEventHandler PropertyChanged;
@@ -55,49 +55,34 @@ namespace SensorMonitorClient
             }
         }
 
-        private DataStatus _dataStatus { get; set; }
-        public DataStatus dataStatus
+        private DataStatus _status { get; set; }
+        public DataStatus status
         {
             get
             {
-                return _dataStatus;
+                return _status;
             }
             set
             {
-                _dataStatus = value;
+                _status = value;
                 OnPropertyChanged();
-                OnPropertyChanged(nameof(dataStatusString));
+                OnPropertyChanged(nameof(statusString));
             }
         }
-        public string dataStatusString
+        public string statusString
         {
             get
             {
-                return dataStatus.ToString();
+                return status.ToString();
             }
         }
 
-        private DataStatus _previousStatus { get; set; }
-        public DataStatus previousStatus
+        public void Set(SensorGroup sensorGroup)
         {
-            get
-            {
-                return _previousStatus;
-            }
-            set
-            {
-                _previousStatus = value;
-                OnPropertyChanged();
-            }
-        }
-
-        public void Set(Sensor sensor)
-        {
-            id = sensor.id;
-            name = sensor.name;
-            active = sensor.active;
-            dataStatus = sensor.dataStatus;
-            previousStatus = dataStatus;
+            id = sensorGroup.id;
+            name = sensorGroup.name;
+            active = sensorGroup.active;
+            //status = sensor.status;
         }
 
         // Variabel oppdatert

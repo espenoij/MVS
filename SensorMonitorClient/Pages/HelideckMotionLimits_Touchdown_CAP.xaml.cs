@@ -49,7 +49,7 @@ namespace SensorMonitorClient
                     ///////////////////////////////////////////////////////////////////////////////////////////
                     // Helideck Motion: Max Pitch
                     ///////////////////////////////////////////////////////////////////////////////////////////                  
-                    if (viewModel.pitchMax20mData?.dataStatus == DataStatus.OK)
+                    if (viewModel.pitchMax20mData?.status == DataStatus.OK)
                     {
                         if (viewModel.pitchMax20mData.limitStatus == LimitStatus.OK)
                             // Blank bakgrunn
@@ -67,7 +67,7 @@ namespace SensorMonitorClient
                     ///////////////////////////////////////////////////////////////////////////////////////////
                     // Helideck Motion: Roll Max
                     ///////////////////////////////////////////////////////////////////////////////////////////
-                    if (viewModel.rollMax20mData?.dataStatus == DataStatus.OK)
+                    if (viewModel.rollMax20mData?.status == DataStatus.OK)
                     {
                         if (viewModel.rollMax20mData.limitStatus == LimitStatus.OK)
                             // Blank bakgrunn
@@ -85,7 +85,7 @@ namespace SensorMonitorClient
                     ///////////////////////////////////////////////////////////////////////////////////////////
                     // Helideck Motion: Significant Heave Rate
                     ///////////////////////////////////////////////////////////////////////////////////////////
-                    if (viewModel.significantHeaveRateData?.dataStatus == DataStatus.OK)
+                    if (viewModel.significantHeaveRateData?.status == DataStatus.OK)
                     {
                         if (viewModel.significantHeaveRateData.limitStatus == LimitStatus.OK)
                             // Blank bakgrunn
@@ -103,7 +103,7 @@ namespace SensorMonitorClient
                     ///////////////////////////////////////////////////////////////////////////////////////////
                     // Helideck Motion: Max Inclination
                     ///////////////////////////////////////////////////////////////////////////////////////////
-                    if (viewModel.inclinationMax20mData?.dataStatus == DataStatus.OK)
+                    if (viewModel.inclinationMax20mData?.status == DataStatus.OK)
                     {
                         if (viewModel.inclinationMax20mData.limitStatus == LimitStatus.OK)
                             // Blank bakgrunn

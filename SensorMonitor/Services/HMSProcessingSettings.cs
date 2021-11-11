@@ -130,20 +130,20 @@ namespace SensorMonitor
             // Helideck vind
             helideckWindSensorHeight.data = (int)adminSettingsVM.helideckHeight;
             helideckWindSensorHeight.timestamp = DateTime.UtcNow;
-            helideckWindSensorHeight.dataStatus = DataStatus.OK;
+            helideckWindSensorHeight.status = DataStatus.OK;
 
             helideckWindSensorDistance.data = adminSettingsVM.windSensorDistance;
             helideckWindSensorDistance.timestamp = DateTime.UtcNow;
-            helideckWindSensorDistance.dataStatus = DataStatus.OK;
+            helideckWindSensorDistance.status = DataStatus.OK;
 
             // Area wind
             areaWindSensorHeight.data = adminSettingsVM.windSensorHeight;
             areaWindSensorHeight.timestamp = DateTime.UtcNow;
-            areaWindSensorHeight.dataStatus = DataStatus.OK;
+            areaWindSensorHeight.status = DataStatus.OK;
 
             areaWindSensorDistance.data = adminSettingsVM.windSensorDistance;
             areaWindSensorDistance.timestamp = DateTime.UtcNow;
-            areaWindSensorDistance.dataStatus = DataStatus.OK;
+            areaWindSensorDistance.status = DataStatus.OK;
 
             // NDB
             if (double.TryParse(adminSettingsVM.ndbFreq_NOROG, out double ndbFreqValue))
@@ -152,11 +152,11 @@ namespace SensorMonitor
                 ndbFrequency.data = Constants.NDBFrequencyDefault;
 
             ndbFrequency.timestamp = DateTime.UtcNow;
-            ndbFrequency.dataStatus = DataStatus.OK;
+            ndbFrequency.status = DataStatus.OK;
 
             ndbIdent.data3 = adminSettingsVM.ndbIdent;
             ndbIdent.timestamp = DateTime.UtcNow;
-            ndbIdent.dataStatus = DataStatus.OK;
+            ndbIdent.status = DataStatus.OK;
 
             // VHF
             if (double.TryParse(adminSettingsVM.vhfFreq, out double vhfFreqValue))
@@ -165,7 +165,7 @@ namespace SensorMonitor
                 vhfFrequency.data = Constants.VHFFrequencyDefault;
             
             vhfFrequency.timestamp = DateTime.UtcNow;
-            vhfFrequency.dataStatus = DataStatus.OK;
+            vhfFrequency.status = DataStatus.OK;
 
             // Log Frequency
             if (double.TryParse(adminSettingsVM.logFreq, out double logFreqValue))
@@ -174,41 +174,41 @@ namespace SensorMonitor
                 logFrequency.data = Constants.VHFFrequencyDefault;
 
             logFrequency.timestamp = DateTime.UtcNow;
-            logFrequency.dataStatus = DataStatus.OK;
+            logFrequency.status = DataStatus.OK;
 
             // Marine Channel
             marineChannel.data = adminSettingsVM.marineChannel;
             marineChannel.timestamp = DateTime.UtcNow;
-            marineChannel.dataStatus = DataStatus.OK;
+            marineChannel.status = DataStatus.OK;
 
             // Vessel Name
             vesselName.data3 = adminSettingsVM.vesselName;
             vesselName.timestamp = DateTime.UtcNow;
-            vesselName.dataStatus = DataStatus.OK;
+            vesselName.status = DataStatus.OK;
 
             // Email Server
             emailServer.data3 = adminSettingsVM.emailServer;
             emailServer.timestamp = DateTime.UtcNow;
-            emailServer.dataStatus = DataStatus.OK;
+            emailServer.status = DataStatus.OK;
 
             emailPort.data = adminSettingsVM.emailPort;
             emailPort.timestamp = DateTime.UtcNow;
-            emailPort.dataStatus = DataStatus.OK;
+            emailPort.status = DataStatus.OK;
 
             emailUsername.data3 = adminSettingsVM.emailUsername;
             emailUsername.timestamp = DateTime.UtcNow;
-            emailUsername.dataStatus = DataStatus.OK;
+            emailUsername.status = DataStatus.OK;
 
             emailPassword.data3 = adminSettingsVM.emailPassword;
             emailPassword.timestamp = DateTime.UtcNow;
-            emailPassword.dataStatus = DataStatus.OK;
+            emailPassword.status = DataStatus.OK;
 
             if (adminSettingsVM.emailSecureConnection)
                 emailSecureConnection.data = 1;
             else
                 emailSecureConnection.data = 0;
             emailSecureConnection.timestamp = DateTime.UtcNow;
-            emailSecureConnection.dataStatus = DataStatus.OK;
+            emailSecureConnection.status = DataStatus.OK;
 
             // Restricted Sector
             if (adminSettingsVM.regulationStandard == RegulationStandard.CAP)
@@ -218,18 +218,18 @@ namespace SensorMonitor
                 {
                     restrictedSector.data = valueFrom;
                     restrictedSector.data2 = valueTo;
-                    restrictedSector.dataStatus = DataStatus.OK;
+                    restrictedSector.status = DataStatus.OK;
                 }
                 else
                 {
                     restrictedSector.data = Constants.HeadingDefault;
                     restrictedSector.data2 = Constants.HeadingDefault;
-                    restrictedSector.dataStatus = DataStatus.TIMEOUT_ERROR;
+                    restrictedSector.status = DataStatus.TIMEOUT_ERROR;
                 }
             }
             else
             {
-                restrictedSector.dataStatus = DataStatus.OK;
+                restrictedSector.status = DataStatus.OK;
             }
             restrictedSector.timestamp = DateTime.UtcNow;
         }

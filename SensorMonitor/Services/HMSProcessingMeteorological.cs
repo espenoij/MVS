@@ -82,11 +82,11 @@ namespace SensorMonitor
             CalculateDewPoint();
 
             airPressureQFE.data = Math.Round(CalculateQFE(hmsInputDataList.GetData(ValueType.AirPressure).data, airTemperature.data, adminSettingsVM.airPressureSensorHeight - adminSettingsVM.helideckHeight), 1);
-            airPressureQFE.dataStatus = hmsInputDataList.GetData(ValueType.AirPressure).dataStatus;
+            airPressureQFE.status = hmsInputDataList.GetData(ValueType.AirPressure).status;
             airPressureQFE.timestamp = hmsInputDataList.GetData(ValueType.AirPressure).timestamp;
 
             airPressureQNH.data = Math.Round(CalculateQNH(airPressureQFE.data, adminSettingsVM.helideckHeight), 1);
-            airPressureQNH.dataStatus = hmsInputDataList.GetData(ValueType.AirPressure).dataStatus;
+            airPressureQNH.status = hmsInputDataList.GetData(ValueType.AirPressure).status;
             airPressureQNH.timestamp = hmsInputDataList.GetData(ValueType.AirPressure).timestamp;
 
             Visibility.Set(hmsInputDataList.GetData(ValueType.Visibility));
@@ -113,7 +113,7 @@ namespace SensorMonitor
 
             // Timestamp og status
             airDewPoint.timestamp = airTemperature.timestamp;
-            airDewPoint.dataStatus = airTemperature.dataStatus;
+            airDewPoint.status = airTemperature.status;
         }
 
         private double CalculateQFE(double measuredPressure, double measuredTemperature, double heightAboveStation)

@@ -52,7 +52,7 @@ namespace SensorMonitor
         private HMSDataCollection hmsInputData;
 
         // Sensor Status
-        private HMSSensorStatus sensorStatus;
+        private HMSSensorGroupStatus sensorStatus;
 
         // HMS
         private HMSProcessing hmsProcessing;
@@ -103,7 +103,7 @@ namespace SensorMonitor
                 hmsOutputData.GetDataList());
 
             // Sensor Status
-            sensorStatus = new HMSSensorStatus(config, hmsOutputData);
+            sensorStatus = new HMSSensorGroupStatus(config, hmsOutputData);
 
             // Laste sensor data setups fra fil
             sensorDataRetrieval.LoadSensors();

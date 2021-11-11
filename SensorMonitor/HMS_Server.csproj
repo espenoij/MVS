@@ -361,7 +361,7 @@
     <Compile Include="Config\SensorGroupIDConfig.cs" />
     <Compile Include="Config\SensorGroupIDConfigCollection.cs" />
     <Compile Include="Config\SensorGroupIDConfigSection.cs" />
-    <Compile Include="Services\HMSSensorStatus.cs" />
+    <Compile Include="Services\HMSSensorGroupStatus.cs" />
     <Compile Include="Config\Config.cs" />
     <Compile Include="Config\ConfigKey.cs" />
     <Compile Include="Services\Constants.cs" />

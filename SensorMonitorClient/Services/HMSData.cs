@@ -15,7 +15,8 @@ namespace SensorMonitorClient
         // Initialize
         public HMSData()
         {
-            dataStatus = DataStatus.TIMEOUT_ERROR;
+            status = DataStatus.TIMEOUT_ERROR;
+            sensorGroupId = Constants.SensorIDNotSet;
         }
 
         private int _id { get; set; }
@@ -103,6 +104,16 @@ namespace SensorMonitorClient
                 OnPropertyChanged(nameof(dataString));
             }
         }
+        public string dataString
+        {
+            get
+            {
+                if (!string.IsNullOrEmpty(data3))
+                    return data3;
+                else
+                    return data.ToString();
+            }
+        }
 
         private DateTime _timestamp { get; set; }
         public DateTime timestamp
@@ -118,19 +129,33 @@ namespace SensorMonitorClient
                 OnPropertyChanged(nameof(timestampString));
             }
         }
-
-        private DataStatus _dataStatus { get; set; }
-        public DataStatus dataStatus
+        public string timestampString
         {
             get
             {
-                return _dataStatus;
+                return timestamp.ToString();
+            }
+        }
+
+        private DataStatus _status { get; set; }
+        public DataStatus status
+        {
+            get
+            {
+                return _status;
             }
             set
             {
-                _dataStatus = value;
+                _status = value;
                 OnPropertyChanged();
-                OnPropertyChanged(nameof(dataStatusString));
+                OnPropertyChanged(nameof(statusString));
+            }
+        }
+        public string statusString
+        {
+            get
+            {
+                return status.ToString();
             }
         }
 
@@ -148,6 +173,13 @@ namespace SensorMonitorClient
                 OnPropertyChanged(nameof(limitStatusString));
             }
         }
+        public string limitStatusString
+        {
+            get
+            {
+                return limitStatus.ToString();
+            }
+        }
 
         private int _sensorGroupId { get; set; }
         public int sensorGroupId
@@ -160,6 +192,17 @@ namespace SensorMonitorClient
             {
                 _sensorGroupId = value;
                 OnPropertyChanged();
+                OnPropertyChanged(nameof(sensorGroupIdString));
+            }
+        }
+        public string sensorGroupIdString
+        {
+            get
+            {
+                if (sensorGroupId == Constants.SensorIDNotSet)
+                    return "None";
+                else
+                    return sensorGroupId.ToString();
             }
         }
 
@@ -177,40 +220,6 @@ namespace SensorMonitorClient
             }
         }
 
-        public string dataString
-        {
-            get
-            {
-                if (!string.IsNullOrEmpty(data3))
-                    return data3;
-                else
-                    return data.ToString();
-            }
-        }
-
-        public string timestampString
-        {
-            get
-            {
-                return timestamp.ToString();
-            }
-        }
-        public string dataStatusString
-        {
-            get
-            {
-                return dataStatus.ToString();
-            }
-        }
-
-        public string limitStatusString
-        {
-            get
-            {
-                return limitStatus.ToString();
-            }
-        }
-
         public HMSData(HMSData inputData)
         {
             if (inputData != null)
@@ -222,7 +231,7 @@ namespace SensorMonitorClient
                 data2 = inputData.data2;
                 data3 = inputData.data3;
                 timestamp = inputData.timestamp;
-                dataStatus = inputData.dataStatus;
+                status = inputData.status;
                 limitStatus = inputData.limitStatus;
                 sensorGroupId = inputData.sensorGroupId;
                 dbTableName = inputData.dbTableName;
@@ -240,7 +249,7 @@ namespace SensorMonitorClient
                 data2 = inputData.data2;
                 data3 = inputData.data3;
                 timestamp = inputData.timestamp;
-                dataStatus = inputData.dataStatus;
+                status = inputData.status;
                 limitStatus = inputData.limitStatus;
                 sensorGroupId = inputData.sensorGroupId;
                 dbTableName = inputData.dbTableName;

@@ -17,7 +17,7 @@
             <Style.Triggers>
 
                 <DataTrigger
-                    Binding="{Binding Path=dataStatusString}"
+                    Binding="{Binding Path=statusString}"
                     Value="TIMEOUT_ERROR">
                     <Setter
                         Property="Background"
@@ -25,7 +25,7 @@
                 </DataTrigger>
 
                 <DataTrigger
-                    Binding="{Binding Path=dataStatusString}"
+                    Binding="{Binding Path=statusString}"
                     Value="OK">
                     <Setter
                         Property="Background"
@@ -169,6 +169,11 @@
                         Header="ID"
                         IsReadOnly="True"
                         DataMemberBinding="{Binding id}" />
+                    <telerik:GridViewDataColumn
+                        Width="120"
+                        Header="Group ID"
+                        IsReadOnly="True"
+                        DataMemberBinding="{Binding sensorGroupIdString}" />
 
                 </telerik:RadGridView.Columns>
 

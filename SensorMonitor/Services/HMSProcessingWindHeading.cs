@@ -159,12 +159,12 @@ namespace SensorMonitor
             // Tar data fra input delen av server og overfører til HMS output delen
 
             helideckWindDirectionRT.data = hmsInputDataList.GetData(ValueType.AreaWindDirectionRT).data;
-            helideckWindDirectionRT.dataStatus = hmsInputDataList.GetData(ValueType.AreaWindDirectionRT).dataStatus;
+            helideckWindDirectionRT.status = hmsInputDataList.GetData(ValueType.AreaWindDirectionRT).status;
             helideckWindDirectionRT.timestamp = hmsInputDataList.GetData(ValueType.AreaWindDirectionRT).timestamp;
 
             // Korrigerer for høyde
             helideckWindSpeedRT.data = Math.Round(WindSpeedCorrection(hmsInputDataList.GetData(ValueType.AreaWindSpeedRT).data), 1);
-            helideckWindSpeedRT.dataStatus = hmsInputDataList.GetData(ValueType.AreaWindSpeedRT).dataStatus;
+            helideckWindSpeedRT.status = hmsInputDataList.GetData(ValueType.AreaWindSpeedRT).status;
             helideckWindSpeedRT.timestamp = hmsInputDataList.GetData(ValueType.AreaWindSpeedRT).timestamp;
 
             // 2-minute data
@@ -175,18 +175,18 @@ namespace SensorMonitor
                 areaWindAverageData2m);
 
             areaWindDirection2m.data = areaWindAverageData2m.windDir;
-            areaWindDirection2m.dataStatus = hmsInputDataList.GetData(ValueType.AreaWindDirectionRT).dataStatus;
+            areaWindDirection2m.status = hmsInputDataList.GetData(ValueType.AreaWindDirectionRT).status;
             areaWindDirection2m.timestamp = hmsInputDataList.GetData(ValueType.AreaWindDirectionRT).timestamp;
             areaWindDirection2m.sensorGroupId = hmsInputDataList.GetData(ValueType.AreaWindDirectionRT).sensorGroupId;
 
 
             areaWindSpeed2m.data = Math.Round(areaWindAverageData2m.windSpeed, 1);
-            areaWindSpeed2m.dataStatus = hmsInputDataList.GetData(ValueType.AreaWindSpeedRT).dataStatus;
+            areaWindSpeed2m.status = hmsInputDataList.GetData(ValueType.AreaWindSpeedRT).status;
             areaWindSpeed2m.timestamp = hmsInputDataList.GetData(ValueType.AreaWindSpeedRT).timestamp;
             areaWindSpeed2m.sensorGroupId = hmsInputDataList.GetData(ValueType.AreaWindDirectionRT).sensorGroupId;
 
             areaWindGust2m.data = areaWindAverageData2m.windGust;
-            areaWindGust2m.dataStatus = hmsInputDataList.GetData(ValueType.AreaWindSpeedRT).dataStatus;
+            areaWindGust2m.status = hmsInputDataList.GetData(ValueType.AreaWindSpeedRT).status;
             areaWindGust2m.timestamp = hmsInputDataList.GetData(ValueType.AreaWindSpeedRT).timestamp;
             areaWindGust2m.sensorGroupId = hmsInputDataList.GetData(ValueType.AreaWindDirectionRT).sensorGroupId;
 
@@ -196,15 +196,15 @@ namespace SensorMonitor
                 helideckWindAverageData2m);
 
             helideckWindDirection2m.data = helideckWindAverageData2m.windDir;
-            helideckWindDirection2m.dataStatus = helideckWindDirectionRT.dataStatus;
+            helideckWindDirection2m.status = helideckWindDirectionRT.status;
             helideckWindDirection2m.timestamp = helideckWindDirectionRT.timestamp;
 
             helideckWindSpeed2m.data = Math.Round(helideckWindAverageData2m.windSpeed, 1);
-            helideckWindSpeed2m.dataStatus = helideckWindSpeedRT.dataStatus;
+            helideckWindSpeed2m.status = helideckWindSpeedRT.status;
             helideckWindSpeed2m.timestamp = helideckWindSpeedRT.timestamp;
 
             helideckWindGust2m.data = Math.Round(helideckWindAverageData2m.windGust, 1);
-            helideckWindGust2m.dataStatus = helideckWindSpeedRT.dataStatus;
+            helideckWindGust2m.status = helideckWindSpeedRT.status;
             helideckWindGust2m.timestamp = helideckWindSpeedRT.timestamp;
 
             // 10-minute data
@@ -215,15 +215,15 @@ namespace SensorMonitor
                 helideckWindAverageData10m);
 
             helideckWindDirection10m.data = helideckWindAverageData10m.windDir;
-            helideckWindDirection10m.dataStatus = helideckWindDirectionRT.dataStatus;
+            helideckWindDirection10m.status = helideckWindDirectionRT.status;
             helideckWindDirection10m.timestamp = helideckWindDirectionRT.timestamp;
 
             helideckWindSpeed10m.data = Math.Round(helideckWindAverageData10m.windSpeed, 1);
-            helideckWindSpeed10m.dataStatus = helideckWindSpeedRT.dataStatus;
+            helideckWindSpeed10m.status = helideckWindSpeedRT.status;
             helideckWindSpeed10m.timestamp = helideckWindSpeedRT.timestamp;
 
             helideckWindGust10m.data = Math.Round(helideckWindAverageData10m.windGust, 1);
-            helideckWindGust10m.dataStatus = helideckWindSpeedRT.dataStatus;
+            helideckWindGust10m.status = helideckWindSpeedRT.status;
             helideckWindGust10m.timestamp = helideckWindSpeedRT.timestamp;
 
 
@@ -234,7 +234,7 @@ namespace SensorMonitor
             if (heading >= 360)
                 heading -= 360;
             helideckHeading.data = heading;
-            helideckHeading.dataStatus = vesselHeading.dataStatus;
+            helideckHeading.status = vesselHeading.status;
             helideckHeading.timestamp = vesselHeading.timestamp;
 
             if (adminSettingsVM.regulationStandard == RegulationStandard.CAP &&
@@ -242,8 +242,8 @@ namespace SensorMonitor
             {
                 // Relative Wind Direction
                 /////////////////////////////////////////////////////////////////////////////////////////
-                if (areaWindDirection2m.dataStatus == DataStatus.OK &&
-                    vesselHeading.dataStatus == DataStatus.OK)
+                if (areaWindDirection2m.status == DataStatus.OK &&
+                    vesselHeading.status == DataStatus.OK)
                 {
                     relativeWindDir.data = areaWindDirection2m.data - (vesselHeading.data + (userInputs.onDeckHelicopterHeading - userInputs.onDeckVesselHeading));
                 }
@@ -252,12 +252,12 @@ namespace SensorMonitor
                     relativeWindDir.data = 0;
                 }
 
-                relativeWindDir.dataStatus = areaWindDirection2m.dataStatus;
+                relativeWindDir.status = areaWindDirection2m.status;
                 relativeWindDir.timestamp = areaWindDirection2m.timestamp;
 
                 // Vessel Heading Delta
                 /////////////////////////////////////////////////////////////////////////////////////////
-                if (vesselHeading.dataStatus == DataStatus.OK &&
+                if (vesselHeading.status == DataStatus.OK &&
                     userInputs.onDeckTime != DateTime.MinValue &&
                     userInputs.onDeckVesselHeading != -1)
                 {
@@ -268,12 +268,12 @@ namespace SensorMonitor
                     vesselHeadingDelta.data = 0;
                 }
 
-                vesselHeadingDelta.dataStatus = vesselHeading.dataStatus;
+                vesselHeadingDelta.status = vesselHeading.status;
                 vesselHeadingDelta.timestamp = vesselHeading.timestamp;
 
                 // Wind Direction Delta
                 /////////////////////////////////////////////////////////////////////////////////////////
-                if (areaWindDirection2m.dataStatus == DataStatus.OK &&
+                if (areaWindDirection2m.status == DataStatus.OK &&
                     userInputs.onDeckTime != DateTime.MinValue &&
                     userInputs.onDeckWindDirection != -1)
                 {
@@ -284,22 +284,22 @@ namespace SensorMonitor
                     windDirectionDelta.data = 0;
                 }
 
-                windDirectionDelta.dataStatus = areaWindDirection2m.dataStatus;
+                windDirectionDelta.status = areaWindDirection2m.status;
                 windDirectionDelta.timestamp = areaWindDirection2m.timestamp;
             }
             else
             {
                 //  Dersom disse dataene ikke trenger å beregnes, men status og timestamp må likevel settes slik at det ikke ser ut som feil
                 relativeWindDir.data = 0;
-                relativeWindDir.dataStatus = areaWindDirection2m.dataStatus;
+                relativeWindDir.status = areaWindDirection2m.status;
                 relativeWindDir.timestamp = areaWindDirection2m.timestamp;
 
                 vesselHeadingDelta.data = 0;
-                vesselHeadingDelta.dataStatus = vesselHeading.dataStatus;
+                vesselHeadingDelta.status = vesselHeading.status;
                 vesselHeadingDelta.timestamp = vesselHeading.timestamp;
 
                 windDirectionDelta.data = 0;
-                windDirectionDelta.dataStatus = areaWindDirection2m.dataStatus;
+                windDirectionDelta.status = areaWindDirection2m.status;
                 windDirectionDelta.timestamp = areaWindDirection2m.timestamp;
             }
         }
@@ -307,8 +307,8 @@ namespace SensorMonitor
         private void UpdateWindAverages(HMSData windDir, HMSData windSpd, WindAverageData windAverageData)
         {
             // Sjekker status på data først
-            if (windDir?.dataStatus == DataStatus.OK &&
-                windSpd?.dataStatus == DataStatus.OK)
+            if (windDir?.status == DataStatus.OK &&
+                windSpd?.status == DataStatus.OK)
             {
                 // Lagre i datalisten
                 windAverageData.windDataList.Add(new Wind()

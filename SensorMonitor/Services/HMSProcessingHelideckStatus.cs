@@ -51,10 +51,10 @@ namespace SensorMonitor
             if (adminSettingsVM.regulationStandard == RegulationStandard.NOROG)
             {
                 // Slår av lysene når vi ikke har ordentlige data
-                if (hmsOutputData.GetData(ValueType.PitchMax20m).dataStatus == DataStatus.TIMEOUT_ERROR ||
-                    hmsOutputData.GetData(ValueType.RollMax20m).dataStatus == DataStatus.TIMEOUT_ERROR ||
-                    hmsOutputData.GetData(ValueType.HeaveAmplitudeMax20m).dataStatus == DataStatus.TIMEOUT_ERROR ||
-                    hmsOutputData.GetData(ValueType.SignificantHeaveRateMax20m).dataStatus == DataStatus.TIMEOUT_ERROR)
+                if (hmsOutputData.GetData(ValueType.PitchMax20m).status == DataStatus.TIMEOUT_ERROR ||
+                    hmsOutputData.GetData(ValueType.RollMax20m).status == DataStatus.TIMEOUT_ERROR ||
+                    hmsOutputData.GetData(ValueType.HeaveAmplitudeMax20m).status == DataStatus.TIMEOUT_ERROR ||
+                    hmsOutputData.GetData(ValueType.SignificantHeaveRateMax20m).status == DataStatus.TIMEOUT_ERROR)
                 {
                     helideckStatus = HelideckStatusType.OFF;
                 }
@@ -112,10 +112,10 @@ namespace SensorMonitor
                 if (userInputs.displayMode == DisplayMode.PreLanding)
                 {
                     // Slår av lysene når vi ikke har ordentlige data
-                    if (hmsOutputData.GetData(ValueType.PitchMax20m).dataStatus == DataStatus.TIMEOUT_ERROR ||
-                        hmsOutputData.GetData(ValueType.RollMax20m).dataStatus == DataStatus.TIMEOUT_ERROR ||
-                        hmsOutputData.GetData(ValueType.HeaveAmplitudeMax20m).dataStatus == DataStatus.TIMEOUT_ERROR ||
-                        hmsOutputData.GetData(ValueType.SignificantHeaveRate).dataStatus == DataStatus.TIMEOUT_ERROR)
+                    if (hmsOutputData.GetData(ValueType.PitchMax20m).status == DataStatus.TIMEOUT_ERROR ||
+                        hmsOutputData.GetData(ValueType.RollMax20m).status == DataStatus.TIMEOUT_ERROR ||
+                        hmsOutputData.GetData(ValueType.HeaveAmplitudeMax20m).status == DataStatus.TIMEOUT_ERROR ||
+                        hmsOutputData.GetData(ValueType.SignificantHeaveRate).status == DataStatus.TIMEOUT_ERROR)
                     {
                         // Status: OFF
                         helideckStatus = HelideckStatusType.OFF;
@@ -142,8 +142,8 @@ namespace SensorMonitor
                 // ON-DECK page
                 else
                 {
-                    if (hmsOutputData.GetData(ValueType.HelideckWindSpeed2m).dataStatus == DataStatus.TIMEOUT_ERROR ||
-                        hmsOutputData.GetData(ValueType.RelativeWindDir).dataStatus == DataStatus.TIMEOUT_ERROR)
+                    if (hmsOutputData.GetData(ValueType.HelideckWindSpeed2m).status == DataStatus.TIMEOUT_ERROR ||
+                        hmsOutputData.GetData(ValueType.RelativeWindDir).status == DataStatus.TIMEOUT_ERROR)
                     {
                         // Status: OFF
                         helideckStatus = HelideckStatusType.OFF;
@@ -161,9 +161,9 @@ namespace SensorMonitor
             helideckStatusData.timestamp = DateTime.UtcNow;
 
             if (helideckStatus != HelideckStatusType.OFF)
-                helideckStatusData.dataStatus = DataStatus.OK;
+                helideckStatusData.status = DataStatus.OK;
             else
-                helideckStatusData.dataStatus = DataStatus.TIMEOUT_ERROR;
+                helideckStatusData.status = DataStatus.TIMEOUT_ERROR;
         }
 
         private bool IsWithinLimits(ValueType value)

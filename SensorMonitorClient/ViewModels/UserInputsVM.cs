@@ -277,12 +277,12 @@ namespace SensorMonitorClient
                         // Sette on-deck variabler
                         onDeckTime = DateTime.UtcNow;
 
-                        if (windHeadingVM.vesselHeading.dataStatus == DataStatus.OK)
+                        if (windHeadingVM.vesselHeading.status == DataStatus.OK)
                             onDeckVesselHeading = windHeadingVM.vesselHeading.data;
                         else
                             onDeckVesselHeading = -1;
 
-                        if (windHeadingVM.windDirection2m.dataStatus == DataStatus.OK)
+                        if (windHeadingVM.windDirection2m.status == DataStatus.OK)
                             onDeckWindDirection = windHeadingVM.windDirection2m.data;
                         else
                             onDeckWindDirection = -1;

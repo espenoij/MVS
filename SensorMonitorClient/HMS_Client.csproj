@@ -312,7 +312,7 @@
     <Compile Include="Config\HelicopterWSILimitConfigCollection.cs" />
     <Compile Include="Config\HelicopterWSILimitConfigSection.cs" />
     <Compile Include="ViewModels\MainWindowVM.cs" />
-    <Compile Include="Services\Sensor.cs" />
+    <Compile Include="Services\SensorGroup.cs" />
     <Compile Include="Services\UserInputs.cs" />
     <Compile Include="Pages\UserInputs_CAP.xaml.cs">
       <DependentUpon>UserInputs_CAP.xaml</DependentUpon>
@@ -353,7 +353,7 @@
     <Compile Include="Pages\SensorStatusDisplay.xaml.cs">
       <DependentUpon>SensorStatusDisplay.xaml</DependentUpon>
     </Compile>
-    <Compile Include="ViewModels\SensorStatusVM.cs" />
+    <Compile Include="ViewModels\SensorStatusDisplayVM.cs" />
     <Compile Include="Pages\UserInputs_NOROG.xaml.cs">
       <DependentUpon>UserInputs_NOROG.xaml</DependentUpon>
     </Compile>
@@ -362,7 +362,7 @@
     </Compile>
     <Compile Include="ViewModels\UserInputsVM.cs" />
     <Compile Include="ViewModels\WindHeadingVM.cs" />
-    <Compile Include="Services\SensorStatus.cs" />
+    <Compile Include="Services\SensorGroupStatus.cs" />
     <Compile Include="Services\Socket\SocketClient.cs" />
     <Compile Include="Pages\WindHeadingCompassRose.xaml.cs">
       <DependentUpon>WindHeadingCompassRose.xaml</DependentUpon>

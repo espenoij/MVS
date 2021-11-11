@@ -58,7 +58,7 @@ namespace SensorMonitorClient
             InitSignificantHeaveData();
         }
 
-        public void Init(Config config, SensorStatus sensorStatus)
+        public void Init(Config config, SensorGroupStatus sensorStatus)
         {
             // Oppdatere UI
             UIUpdateTimer.Interval = TimeSpan.FromMilliseconds(config.Read(ConfigKey.ClientUpdateFrequencyUI, Constants.ClientUpdateFrequencyUIDefault));
@@ -322,7 +322,7 @@ namespace SensorMonitorClient
             // Grunnen til at vi buffrer data først er pga ytelsesproblemer dersom vi kjører data rett ut i grafene på skjerm.
             // Det takler ikke grafene fra Telerik. Buffrer data først og så oppdaterer vi grafene med jevne passende mellomrom.
 
-            if (data?.dataStatus == DataStatus.OK)
+            if (data?.status == DataStatus.OK)
             {
                 // Lagre data i buffer
                 buffer.Add(new HMSData(data));
@@ -427,7 +427,7 @@ namespace SensorMonitorClient
                 if (pitchMax20mData != null)
                 {
                     // Sjekke om data er gyldig
-                    if (pitchMax20mData.dataStatus == DataStatus.OK)
+                    if (pitchMax20mData.status == DataStatus.OK)
                     {
                         return string.Format("{0} °", pitchMax20mData.data.ToString("0.0"));
                     }
@@ -467,7 +467,7 @@ namespace SensorMonitorClient
                 if (pitchMaxUp20mData != null)
                 {
                     // Sjekke om data er gyldig
-                    if (pitchMaxUp20mData.dataStatus == DataStatus.OK)
+                    if (pitchMaxUp20mData.status == DataStatus.OK)
                     {
                         double pitch = Math.Abs(pitchMaxUp20mData.data);
                         return string.Format("{0} °", pitch.ToString("0.0"));
@@ -508,7 +508,7 @@ namespace SensorMonitorClient
                 if (pitchMaxDown20mData != null)
                 {
                     // Sjekke om data er gyldig
-                    if (pitchMaxDown20mData.dataStatus == DataStatus.OK)
+                    if (pitchMaxDown20mData.status == DataStatus.OK)
                     {
                         double pitch = Math.Abs(pitchMaxDown20mData.data);
                         return string.Format("{0} °", pitch.ToString("0.0"));
@@ -609,7 +609,7 @@ namespace SensorMonitorClient
                 if (rollMax20mData != null)
                 {
                     // Sjekke om data er gyldig
-                    if (rollMax20mData.dataStatus == DataStatus.OK)
+                    if (rollMax20mData.status == DataStatus.OK)
                     {
                         return string.Format("{0} °", rollMax20mData.data.ToString("0.0"));
                     }
@@ -649,7 +649,7 @@ namespace SensorMonitorClient
                 if (rollMaxLeft20mData != null)
                 {
                     // Sjekke om data er gyldig
-                    if (rollMaxLeft20mData.dataStatus == DataStatus.OK)
+                    if (rollMaxLeft20mData.status == DataStatus.OK)
                     {
                         double roll = Math.Abs(rollMaxLeft20mData.data);
                         return string.Format("{0} °", roll.ToString("0.0"));
@@ -690,7 +690,7 @@ namespace SensorMonitorClient
                 if (rollMaxRight20mData != null)
                 {
                     // Sjekke om data er gyldig
-                    if (rollMaxRight20mData.dataStatus == DataStatus.OK)
+                    if (rollMaxRight20mData.status == DataStatus.OK)
                     {
                         double roll = Math.Abs(rollMaxRight20mData.data);
                         return string.Format("{0} °", roll.ToString("0.0"));
@@ -790,7 +790,7 @@ namespace SensorMonitorClient
                 if (inclinationMax20mData != null)
                 {
                     // Sjekke om data er gyldig
-                    if (inclinationMax20mData.dataStatus == DataStatus.OK)
+                    if (inclinationMax20mData.status == DataStatus.OK)
                     {
                         return string.Format("{0} °", inclinationMax20mData.data.ToString("0.0"));
                     }
@@ -892,7 +892,7 @@ namespace SensorMonitorClient
                 if (heaveAmplitudeMax20mData != null)
                 {
                     // Sjekke om data er gyldig
-                    if (heaveAmplitudeMax20mData.dataStatus == DataStatus.OK)
+                    if (heaveAmplitudeMax20mData.status == DataStatus.OK)
                     {
                         return string.Format("{0} m", heaveAmplitudeMax20mData.data.ToString("0.0"));
                     }
@@ -977,7 +977,7 @@ namespace SensorMonitorClient
                 if (significantHeaveRateData != null)
                 {
                     // Sjekke om data er gyldig
-                    if (significantHeaveRateData.dataStatus == DataStatus.OK)
+                    if (significantHeaveRateData.status == DataStatus.OK)
                     {
                         return string.Format("{0} m/s", significantHeaveRateData.data.ToString("0.0"));
                     }
@@ -1553,7 +1553,7 @@ namespace SensorMonitorClient
             {
                 if (motionLimitPitchRoll != null)
                 {
-                    if (motionLimitPitchRoll.dataStatus == DataStatus.OK)
+                    if (motionLimitPitchRoll.status == DataStatus.OK)
                         return string.Format("{0} °", motionLimitPitchRoll.data.ToString("0.0"));
                     else
                         return Constants.NotAvailable;
@@ -1571,7 +1571,7 @@ namespace SensorMonitorClient
             {
                 if (motionLimitInclination != null)
                 {
-                    if (motionLimitInclination.dataStatus == DataStatus.OK)
+                    if (motionLimitInclination.status == DataStatus.OK)
                         return string.Format("{0} °", motionLimitInclination.data.ToString("0.0"));
                     else
                         return Constants.NotAvailable;
@@ -1589,7 +1589,7 @@ namespace SensorMonitorClient
             {
                 if (motionLimitSignificantHeaveRate != null)
                 {
-                    if (motionLimitSignificantHeaveRate.dataStatus == DataStatus.OK)
+                    if (motionLimitSignificantHeaveRate.status == DataStatus.OK)
                         return string.Format("{0} m/s", motionLimitSignificantHeaveRate.data.ToString("0.0"));
                     else
                         return Constants.NotAvailable;

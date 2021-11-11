@@ -24,7 +24,7 @@ namespace SensorMonitorClient
         // Admin settings
         private AdminSettingsVM adminSettingsVM;
 
-        public void Init(Config config, SensorStatus sensorStatus, UserInputsVM userInputsVM, AdminSettingsVM adminSettingsVM)
+        public void Init(Config config, SensorGroupStatus sensorStatus, UserInputsVM userInputsVM, AdminSettingsVM adminSettingsVM)
         {
             this.config = config;
             this.userInputsVM = userInputsVM;
@@ -224,7 +224,7 @@ namespace SensorMonitorClient
                     {
                         case WindMeasurement.RealTime:
                             // Sjekke om data er gyldig
-                            if (windDirectionRT.dataStatus == DataStatus.OK)
+                            if (windDirectionRT.status == DataStatus.OK)
                             {
                                 return string.Format("{0}°", windDirectionRT.data.ToString("000"));
                             }
@@ -235,7 +235,7 @@ namespace SensorMonitorClient
 
                         case WindMeasurement.TwoMinuteMean:
                             // Sjekke om data er gyldig
-                            if (windDirection2m.dataStatus == DataStatus.OK)
+                            if (windDirection2m.status == DataStatus.OK)
                             {
                                 return string.Format("{0}°", windDirection2m.data.ToString("000"));
                             }
@@ -246,7 +246,7 @@ namespace SensorMonitorClient
 
                         case WindMeasurement.TenMinuteMean:
                             // Sjekke om data er gyldig
-                            if (windDirection10m.dataStatus == DataStatus.OK)
+                            if (windDirection10m.status == DataStatus.OK)
                             {
                                 return string.Format("{0}°", windDirection10m.data.ToString("000"));
                             }
@@ -276,7 +276,7 @@ namespace SensorMonitorClient
                     {
                         case WindMeasurement.RealTime:
                             // Sjekke om data er gyldig
-                            if (windDirectionRT.dataStatus == DataStatus.OK)
+                            if (windDirectionRT.status == DataStatus.OK)
                             {
                                 return windDirectionRT.data;
                             }
@@ -287,7 +287,7 @@ namespace SensorMonitorClient
 
                         case WindMeasurement.TwoMinuteMean:
                             // Sjekke om data er gyldig
-                            if (windDirection2m.dataStatus == DataStatus.OK)
+                            if (windDirection2m.status == DataStatus.OK)
                             {
                                 return windDirection2m.data;
                             }
@@ -298,7 +298,7 @@ namespace SensorMonitorClient
 
                         case WindMeasurement.TenMinuteMean:
                             // Sjekke om data er gyldig
-                            if (windDirection10m.dataStatus == DataStatus.OK)
+                            if (windDirection10m.status == DataStatus.OK)
                             {
                                 return windDirection10m.data;
                             }
@@ -411,7 +411,7 @@ namespace SensorMonitorClient
                     {
                         case WindMeasurement.RealTime:
                             // Sjekke om data er gyldig
-                            if (windSpeedRT.dataStatus == DataStatus.OK)
+                            if (windSpeedRT.status == DataStatus.OK)
                             {
                                 return windSpeedRT.data.ToString("00");
                             }
@@ -422,7 +422,7 @@ namespace SensorMonitorClient
 
                         case WindMeasurement.TwoMinuteMean:
                             // Sjekke om data er gyldig
-                            if (windSpeed2m.dataStatus == DataStatus.OK)
+                            if (windSpeed2m.status == DataStatus.OK)
                             {
                                 return windSpeed2m.data.ToString("00");
                             }
@@ -433,7 +433,7 @@ namespace SensorMonitorClient
 
                         case WindMeasurement.TenMinuteMean:
                             // Sjekke om data er gyldig
-                            if (windSpeed10m.dataStatus == DataStatus.OK)
+                            if (windSpeed10m.status == DataStatus.OK)
                             {
                                 return windSpeed10m.data.ToString("00");
                             }
@@ -512,7 +512,7 @@ namespace SensorMonitorClient
                     {
                         case WindMeasurement.TwoMinuteMean:
                             // Sjekke om data er gyldig
-                            if (windGust2m.dataStatus == DataStatus.OK)
+                            if (windGust2m.status == DataStatus.OK)
                             {
                                 return windGust2m.data.ToString("00");
                             }
@@ -523,7 +523,7 @@ namespace SensorMonitorClient
 
                         case WindMeasurement.TenMinuteMean:
                             // Sjekke om data er gyldig
-                            if (windGust10m.dataStatus == DataStatus.OK)
+                            if (windGust10m.status == DataStatus.OK)
                             {
                                 return windGust10m.data.ToString("00");
                             }
@@ -579,7 +579,7 @@ namespace SensorMonitorClient
                 if (vesselHeading != null)
                 {
                     // Sjekke om data er gyldig
-                    if (vesselHeading.dataStatus == DataStatus.OK)
+                    if (vesselHeading.status == DataStatus.OK)
                     {
                         return string.Format("{0}°", vesselHeading.data.ToString("000"));
                     }
@@ -602,7 +602,7 @@ namespace SensorMonitorClient
                 if (vesselHeading != null)
                 {
                     // Sjekke om data er gyldig
-                    if (vesselHeading.dataStatus == DataStatus.OK)
+                    if (vesselHeading.status == DataStatus.OK)
                     {
                         return vesselHeading.data;
                     }
@@ -651,7 +651,7 @@ namespace SensorMonitorClient
                 if (vesselSpeed != null)
                 {
                     // Sjekke om data er gyldig
-                    if (vesselSpeed.dataStatus == DataStatus.OK)
+                    if (vesselSpeed.status == DataStatus.OK)
                     {
                         return vesselSpeed.data.ToString("0.0");
                     }
@@ -935,7 +935,7 @@ namespace SensorMonitorClient
             get
             {
                 if (userInputsVM.displayMode == DisplayMode.OnDeck &&
-                    vesselHeading?.dataStatus == DataStatus.OK)
+                    vesselHeading?.status == DataStatus.OK)
                 {
                     double heading = vesselHeading.data + userInputsVM.onDeckHelicopterRelativeHeading;
 
@@ -955,7 +955,7 @@ namespace SensorMonitorClient
         {
             get
             {
-                if (vesselHeading?.dataStatus == DataStatus.OK)
+                if (vesselHeading?.status == DataStatus.OK)
                 {
                     return vesselHeading.data + userInputsVM.onDeckHelicopterRelativeHeading;
                 }

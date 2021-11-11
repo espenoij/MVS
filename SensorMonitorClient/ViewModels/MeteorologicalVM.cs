@@ -25,7 +25,7 @@ namespace SensorMonitorClient
             }
         }
 
-        public void Init(Config config, SensorStatus sensorStatus)
+        public void Init(Config config, SensorGroupStatus sensorStatus)
         {
             // Oppdatere UI
             UIUpdateTimer.Interval = TimeSpan.FromMilliseconds(config.Read(ConfigKey.ClientUpdateFrequencyUI, Constants.ClientUpdateFrequencyUIDefault));
@@ -106,7 +106,7 @@ namespace SensorMonitorClient
                 if (airTemperature != null)
                 {
                     // Sjekke om data er gyldig
-                    if (airTemperature.dataStatus == DataStatus.OK)
+                    if (airTemperature.status == DataStatus.OK)
                     {
                         return string.Format("{0} °C", airTemperature.data.ToString("0.0"));
                     }
@@ -154,7 +154,7 @@ namespace SensorMonitorClient
                 if (airHumidity != null)
                 {
                     // Sjekke om data er gyldig
-                    if (airHumidity.dataStatus == DataStatus.OK)
+                    if (airHumidity.status == DataStatus.OK)
                     {
                         return string.Format("{0} %", airHumidity.data.ToString("0.0"));
                     }
@@ -202,7 +202,7 @@ namespace SensorMonitorClient
                 if (airDewPoint != null)
                 {
                     // Sjekke om data er gyldig
-                    if (airDewPoint.dataStatus == DataStatus.OK)
+                    if (airDewPoint.status == DataStatus.OK)
                     {
                         return string.Format("{0} °C", airDewPoint.data.ToString("0.0"));
                     }
@@ -250,7 +250,7 @@ namespace SensorMonitorClient
                 if (airPressureQNH != null)
                 {
                     // Sjekke om data er gyldig
-                    if (airPressureQNH.dataStatus == DataStatus.OK)
+                    if (airPressureQNH.status == DataStatus.OK)
                     {
                         return string.Format("{0} hPa", airPressureQNH.data.ToString("0.0"));
                     }
@@ -298,7 +298,7 @@ namespace SensorMonitorClient
                 if (airPressureQFE != null)
                 {
                     // Sjekke om data er gyldig
-                    if (airPressureQFE.dataStatus == DataStatus.OK)
+                    if (airPressureQFE.status == DataStatus.OK)
                     {
                         return string.Format("{0} hPa", airPressureQFE.data.ToString("0.0"));
                     }
@@ -346,7 +346,7 @@ namespace SensorMonitorClient
                 if (visibility != null)
                 {
                     // Sjekke om data er gyldig
-                    if (visibility.dataStatus == DataStatus.OK)
+                    if (visibility.status == DataStatus.OK)
                     {
                         return string.Format("{0} m", visibility.data.ToString());
                     }
@@ -394,7 +394,7 @@ namespace SensorMonitorClient
                 if (weather != null)
                 {
                     // Sjekke om data er gyldig
-                    if (weather.dataStatus == DataStatus.OK)
+                    if (weather.status == DataStatus.OK)
                     {
                         string weatherPhenomenaString = string.Empty;
 
@@ -477,7 +477,7 @@ namespace SensorMonitorClient
         {
             if (layer < Constants.TOTAL_CLOUD_LAYERS && layer >= 0)
             {
-                if (cloudBase[layer]?.dataStatus == DataStatus.OK &&
+                if (cloudBase[layer]?.status == DataStatus.OK &&
                     !double.IsNaN(cloudBase[layer].data))
                     return string.Format("{0} ft", cloudBase[layer]?.data.ToString("0"));
                 else
@@ -525,7 +525,7 @@ namespace SensorMonitorClient
         {
             if (layer < Constants.TOTAL_CLOUD_LAYERS && layer >= 0)
             {
-                if (cloudCoverage[layer]?.dataStatus == DataStatus.OK)
+                if (cloudCoverage[layer]?.status == DataStatus.OK)
                 {
                     switch (cloudCoverage[layer].data)
                     {

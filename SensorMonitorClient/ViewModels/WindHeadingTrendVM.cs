@@ -24,7 +24,7 @@ namespace SensorMonitorClient
 
         private UserInputsVM userInputsVM;
 
-        public void Init(Config config, SensorStatus sensorStatus, UserInputsVM userInputsVM)
+        public void Init(Config config, SensorGroupStatus sensorStatus, UserInputsVM userInputsVM)
         {
             this.userInputsVM = userInputsVM;
 
@@ -117,7 +117,7 @@ namespace SensorMonitorClient
             // Grunne til at vi buffrer data først er pga ytelsesproblemer dersom vi kjører data rett ut i grafene på skjerm.
             // Det takler ikke grafene fra Telerik. Buffrer data først og så oppdaterer vi grafene med jevne passende mellomrom.
 
-            if (data?.dataStatus == DataStatus.OK)
+            if (data?.status == DataStatus.OK)
             {
                 // Lagre data i buffer
                 buffer?.Add(new HMSData(data));
@@ -193,7 +193,7 @@ namespace SensorMonitorClient
                 if (_vesselHeadingDelta != null)
                 {
                     // Sjekke om data er gyldig
-                    if (_vesselHeadingDelta.dataStatus == DataStatus.OK)
+                    if (_vesselHeadingDelta.status == DataStatus.OK)
                     {
                         if (_vesselHeadingDelta.data >= 0)
                             return string.Format("{0}° R", _vesselHeadingDelta.data.ToString("0"));
@@ -242,7 +242,7 @@ namespace SensorMonitorClient
                 if (_windDirectionDelta != null)
                 {
                     // Sjekke om data er gyldig
-                    if (_windDirectionDelta.dataStatus == DataStatus.OK)
+                    if (_windDirectionDelta.status == DataStatus.OK)
                     {
                         if (windDirectionDelta.data >= 0)
                             return string.Format("{0}° R", windDirectionDelta.data.ToString("0"));

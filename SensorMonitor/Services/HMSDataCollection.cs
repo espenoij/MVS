@@ -76,14 +76,14 @@ namespace SensorMonitor
 
                         // Sjekke timestamp for data timeout
                         if (hmsData.timestamp.AddMilliseconds(dataTimeout) < DateTime.UtcNow)
-                            hmsData.dataStatus = DataStatus.TIMEOUT_ERROR;
+                            hmsData.status = DataStatus.TIMEOUT_ERROR;
                         else
-                            hmsData.dataStatus = DataStatus.OK;
+                            hmsData.status = DataStatus.OK;
                     }
                     // Ingen server verdi knyttet til klient verdi
                     else
                     {
-                        hmsData.dataStatus = DataStatus.TIMEOUT_ERROR;
+                        hmsData.status = DataStatus.TIMEOUT_ERROR;
                     }
                 }
             }

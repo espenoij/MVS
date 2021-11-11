@@ -16,7 +16,7 @@ namespace SensorMonitor
         private Config config;
 
         // Sensor Status
-        private HMSSensorStatus sensorStatus;
+        private HMSSensorGroupStatus sensorStatus;
 
         public HMSSensorGroupSetup()
         {
@@ -27,7 +27,7 @@ namespace SensorMonitor
             RadObservableCollectionEx<SensorData> serverSensorDataList, 
             HMSDataCollection clientSensorData, 
             Config config,
-            HMSSensorStatus sensorStatus)
+            HMSSensorGroupStatus sensorStatus)
         {
             this.config = config;
             this.sensorStatus = sensorStatus;

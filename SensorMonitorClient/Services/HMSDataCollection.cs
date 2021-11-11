@@ -29,7 +29,7 @@ namespace SensorMonitorClient
             if (sensorData.Count() > 0)
                 return sensorData.First();
             else
-                return new HMSData() { id = (int)id, dataStatus = DataStatus.TIMEOUT_ERROR };
+                return new HMSData() { id = (int)id, status = DataStatus.TIMEOUT_ERROR };
         }
     }
 }

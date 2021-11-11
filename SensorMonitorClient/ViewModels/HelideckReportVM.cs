@@ -24,7 +24,7 @@ namespace SensorMonitorClient
         private DispatcherTimer TimeTimer = new DispatcherTimer();
         private DispatcherTimer DataStatusTimer = new DispatcherTimer();
 
-        public void Init(Config config, SensorStatus sensorStatus)
+        public void Init(Config config, SensorGroupStatus sensorStatus)
         {
             this.config = config;
 
@@ -238,7 +238,7 @@ namespace SensorMonitorClient
             }
             else
             {
-                cloudLayer_NOROG.dataStatus = DataStatus.TIMEOUT_ERROR;
+                cloudLayer_NOROG.status = DataStatus.TIMEOUT_ERROR;
                 OnPropertyChanged(nameof(cloudLayerString_NOROG));
             }
 
@@ -493,8 +493,8 @@ namespace SensorMonitorClient
                     longitude != null)
                 {
                     // Sjekke om data er gyldig
-                    if (latitude.dataStatus == DataStatus.OK && 
-                        longitude.dataStatus == DataStatus.OK)
+                    if (latitude.status == DataStatus.OK && 
+                        longitude.status == DataStatus.OK)
                     {
                         string latString;
                         string lonString;
@@ -586,7 +586,7 @@ namespace SensorMonitorClient
             get
             {
                 // Sjekke om data er gyldig
-                if (latitude.dataStatus == DataStatus.OK)
+                if (latitude.status == DataStatus.OK)
                 {
                     if (latitude.data >= 0)
                         return "N";
@@ -605,7 +605,7 @@ namespace SensorMonitorClient
             get
             {
                 // Sjekke om data er gyldig
-                if (latitude.dataStatus == DataStatus.OK)
+                if (latitude.status == DataStatus.OK)
                 {
                     if (latitude.data >= 0)
                         return ((int)latitude.data).ToString("00");
@@ -624,7 +624,7 @@ namespace SensorMonitorClient
             get
             {
                 // Sjekke om data er gyldig
-                if (latitude.dataStatus == DataStatus.OK)
+                if (latitude.status == DataStatus.OK)
                 {
                     if (latitude.data >= 0)
                         return ((latitude.data - (double)((int)latitude.data)) * 60).ToString("00.000");
@@ -643,7 +643,7 @@ namespace SensorMonitorClient
             get
             {
                 // Sjekke om data er gyldig
-                if (longitude.dataStatus == DataStatus.OK)
+                if (longitude.status == DataStatus.OK)
                 {
                     if (longitude.data >= 0)
                         return "E";
@@ -662,7 +662,7 @@ namespace SensorMonitorClient
             get
             {
                 // Sjekke om data er gyldig
-                if (longitude.dataStatus == DataStatus.OK)
+                if (longitude.status == DataStatus.OK)
                 {
                     if (longitude.data >= 0)
                         return ((int)longitude.data).ToString("000");
@@ -681,7 +681,7 @@ namespace SensorMonitorClient
             get
             {
                 // Sjekke om data er gyldig
-                if (longitude.dataStatus == DataStatus.OK)
+                if (longitude.status == DataStatus.OK)
                 {
                     if (longitude.data >= 0)
                         return ((longitude.data - (double)((int)longitude.data)) * 60).ToString("00.000");
@@ -816,7 +816,7 @@ namespace SensorMonitorClient
         {
             get
             {
-                if (ndbFreq.dataStatus == DataStatus.OK)
+                if (ndbFreq.status == DataStatus.OK)
                     return ndbFreq.data.ToString("0.000", Constants.cultureInfo);
                 else
                     return Constants.HelideckReportNoData;
@@ -827,7 +827,7 @@ namespace SensorMonitorClient
         {
             get
             {
-                if (ndbFreq.dataStatus == DataStatus.OK && ndbServiceable)
+                if (ndbFreq.status == DataStatus.OK && ndbServiceable)
                     return ndbFreq.data.ToString("0.000", Constants.cultureInfo);
                 else
                     return Constants.HelideckReportNoData;
@@ -862,7 +862,7 @@ namespace SensorMonitorClient
         {
             get
             {
-                if (ndbIdent.dataStatus == DataStatus.OK && ndbServiceable)
+                if (ndbIdent.status == DataStatus.OK && ndbServiceable)
                     return ndbIdent.data3;
                 else
                     return Constants.HelideckReportNoData;
@@ -897,7 +897,7 @@ namespace SensorMonitorClient
         {
             get
             {
-                if (vhfFreq.dataStatus == DataStatus.OK)
+                if (vhfFreq.status == DataStatus.OK)
                     return vhfFreq.data.ToString("0.000", Constants.cultureInfo);
                 else
                     return Constants.HelideckReportNoData;
@@ -932,7 +932,7 @@ namespace SensorMonitorClient
         {
             get
             {
-                if (logFreq.dataStatus == DataStatus.OK)
+                if (logFreq.status == DataStatus.OK)
                     return logFreq.data.ToString("0.000", Constants.cultureInfo);
                 else
                     return Constants.HelideckReportNoData;
@@ -967,7 +967,7 @@ namespace SensorMonitorClient
         {
             get
             {
-                if (marineChannel.dataStatus == DataStatus.OK)
+                if (marineChannel.status == DataStatus.OK)
                     return marineChannel.data.ToString("0");
                 else
                     return Constants.HelideckReportNoData;
@@ -1480,7 +1480,7 @@ namespace SensorMonitorClient
             get
             {
                 // Sjekke om data er gyldig
-                if (helideckWindSensorHeight.dataStatus == DataStatus.OK)
+                if (helideckWindSensorHeight.status == DataStatus.OK)
                     return helideckWindSensorHeight.data.ToString("0");
                 else
                     return Constants.HelideckReportNoData;
@@ -1516,7 +1516,7 @@ namespace SensorMonitorClient
             get
             {
                 // Sjekke om data er gyldig
-                if (helideckWindSensorDistance.dataStatus == DataStatus.OK)
+                if (helideckWindSensorDistance.status == DataStatus.OK)
                     return helideckWindSensorDistance.data.ToString("0");
                 else
                     return Constants.HelideckReportNoData;
@@ -1554,7 +1554,7 @@ namespace SensorMonitorClient
             get
             {
                 // Sjekke om data er gyldig
-                if (helideckWindDirection.dataStatus == DataStatus.OK)
+                if (helideckWindDirection.status == DataStatus.OK)
                 {
                     return string.Format("{0}°", helideckWindDirection.data.ToString("000"));
                 }
@@ -1570,7 +1570,7 @@ namespace SensorMonitorClient
             get
             {
                 // Sjekke om data er gyldig
-                if (helideckWindDirection.dataStatus == DataStatus.OK)
+                if (helideckWindDirection.status == DataStatus.OK)
                 {
                     return helideckWindDirection.data.ToString("000");
                 }
@@ -1611,7 +1611,7 @@ namespace SensorMonitorClient
             get
             {
                 // Sjekke om data er gyldig
-                if (helideckWindVelocity.dataStatus == DataStatus.OK)
+                if (helideckWindVelocity.status == DataStatus.OK)
                 {
                     return helideckWindVelocity.data.ToString("00");
                 }
@@ -1652,7 +1652,7 @@ namespace SensorMonitorClient
             get
             {
                 // Sjekke om data er gyldig
-                if (helideckWindGust.dataStatus == DataStatus.OK)
+                if (helideckWindGust.status == DataStatus.OK)
                 {
                     return helideckWindGust.data.ToString("00");
                 }
@@ -1692,7 +1692,7 @@ namespace SensorMonitorClient
             get
             {
                 // Sjekke om data er gyldig
-                if (areaWindSensorHeight.dataStatus == DataStatus.OK)
+                if (areaWindSensorHeight.status == DataStatus.OK)
                     return areaWindSensorHeight.data.ToString("0");
                 else
                     return Constants.HelideckReportNoData;
@@ -1728,7 +1728,7 @@ namespace SensorMonitorClient
             get
             {
                 // Sjekke om data er gyldig
-                if (areaWindSensorDistance.dataStatus == DataStatus.OK)
+                if (areaWindSensorDistance.status == DataStatus.OK)
                     return areaWindSensorDistance.data.ToString("0");
                 else
                     return Constants.HelideckReportNoData;
@@ -1765,7 +1765,7 @@ namespace SensorMonitorClient
             get
             {
                 // Sjekke om data er gyldig
-                if (areaWindDirection.dataStatus == DataStatus.OK)
+                if (areaWindDirection.status == DataStatus.OK)
                 {
                     return string.Format("{0}°", areaWindDirection.data.ToString("000"));
                 }
@@ -1806,7 +1806,7 @@ namespace SensorMonitorClient
             get
             {
                 // Sjekke om data er gyldig
-                if (areaWindVelocity.dataStatus == DataStatus.OK)
+                if (areaWindVelocity.status == DataStatus.OK)
                 {
                     return areaWindVelocity.data.ToString("00");
                 }
@@ -1847,7 +1847,7 @@ namespace SensorMonitorClient
             get
             {
                 // Sjekke om data er gyldig
-                if (areaWindGust.dataStatus == DataStatus.OK)
+                if (areaWindGust.status == DataStatus.OK)
                 {
                     return areaWindGust.data.ToString("00");
                 }
@@ -1935,7 +1935,7 @@ namespace SensorMonitorClient
             get
             {
                 // Sjekke om data er gyldig
-                if (visibility.dataStatus == DataStatus.OK)
+                if (visibility.status == DataStatus.OK)
                     return visibility.data.ToString();
                 else
                     return Constants.HelideckReportNoData;
@@ -1971,7 +1971,7 @@ namespace SensorMonitorClient
             get
             {
                 // Sjekke om data er gyldig
-                if (airPressureQNH.dataStatus == DataStatus.OK)
+                if (airPressureQNH.status == DataStatus.OK)
                     return airPressureQNH.data.ToString("0.0");
                 else
                     return Constants.HelideckReportNoData;
@@ -2007,7 +2007,7 @@ namespace SensorMonitorClient
             get
             {
                 // Sjekke om data er gyldig
-                if (_airPressureQFE.dataStatus == DataStatus.OK)
+                if (_airPressureQFE.status == DataStatus.OK)
                     return _airPressureQFE.data.ToString("0.0");
                 else
                     return Constants.HelideckReportNoData;
@@ -2043,7 +2043,7 @@ namespace SensorMonitorClient
             get
             {
                 // Sjekke om data er gyldig
-                if (significantWaveHeight.dataStatus == DataStatus.OK)
+                if (significantWaveHeight.status == DataStatus.OK)
                     return significantWaveHeight.data.ToString("0.0");
                 else
                     return Constants.HelideckReportNoData;
@@ -2079,7 +2079,7 @@ namespace SensorMonitorClient
             get
             {
                 // Sjekke om data er gyldig
-                if (helideckHeading.dataStatus == DataStatus.OK)
+                if (helideckHeading.status == DataStatus.OK)
                     return string.Format("{0}°", helideckHeading.data.ToString("000"));
                 else
                     return Constants.HelideckReportNoData;
@@ -2116,7 +2116,7 @@ namespace SensorMonitorClient
             get
             {
                 // Sjekke om data er gyldig
-                if (vesselHeading.dataStatus == DataStatus.OK)
+                if (vesselHeading.status == DataStatus.OK)
                     return string.Format("{0}°", vesselHeading.data.ToString("000"));
                 else
                     return Constants.HelideckReportNoData;
@@ -2128,7 +2128,7 @@ namespace SensorMonitorClient
             get
             {
                 // Sjekke om data er gyldig
-                if (vesselHeading.dataStatus == DataStatus.OK)
+                if (vesselHeading.status == DataStatus.OK)
                     return vesselHeading.data.ToString("000");
                 else
                     return Constants.HelideckReportNoData;
@@ -2167,7 +2167,7 @@ namespace SensorMonitorClient
                 if (weather != null)
                 {
                     // Sjekke om data er gyldig
-                    if (weather.dataStatus == DataStatus.OK)
+                    if (weather.status == DataStatus.OK)
                     {
                         string weatherPhenomenaString = string.Empty;
 
@@ -2233,7 +2233,7 @@ namespace SensorMonitorClient
             get
             {
                 // Sjekke om data er gyldig
-                if (airTemperature.dataStatus == DataStatus.OK)
+                if (airTemperature.status == DataStatus.OK)
                     return airTemperature.data.ToString("0");
                 else
                     return Constants.HelideckReportNoData;
@@ -2269,7 +2269,7 @@ namespace SensorMonitorClient
             get
             {
                 // Sjekke om data er gyldig
-                if (airDewPoint.dataStatus == DataStatus.OK)
+                if (airDewPoint.status == DataStatus.OK)
                     return airDewPoint.data.ToString("0");
                 else
                     return Constants.HelideckReportNoData;
@@ -2305,7 +2305,7 @@ namespace SensorMonitorClient
             get
             {
                 // Sjekke om data er gyldig
-                if (cloudLayer_NOROG.dataStatus == DataStatus.OK)
+                if (cloudLayer_NOROG.status == DataStatus.OK)
                     return cloudLayer_NOROG.data.ToString("0");
                 else
                     return Constants.HelideckReportNoData;
@@ -2359,7 +2359,7 @@ namespace SensorMonitorClient
         {
             if (layer < Constants.TOTAL_CLOUD_LAYERS && layer >= 0)
             {
-                if (cloudBase[layer]?.dataStatus == DataStatus.OK &&
+                if (cloudBase[layer]?.status == DataStatus.OK &&
                     !double.IsNaN(cloudBase[layer].data))
                     return cloudBase[layer]?.data.ToString("0");
                 else
@@ -2407,7 +2407,7 @@ namespace SensorMonitorClient
         {
             if (layer < Constants.TOTAL_CLOUD_LAYERS && layer >= 0)
             {
-                if (cloudCoverage[layer]?.dataStatus == DataStatus.OK)
+                if (cloudCoverage[layer]?.status == DataStatus.OK)
                 {
                     switch (cloudCoverage[layer].data)
                     {
@@ -2497,7 +2497,7 @@ namespace SensorMonitorClient
             get
             {
                 // Sjekke om data er gyldig
-                if (installationCategory.dataStatus == DataStatus.OK)
+                if (installationCategory.status == DataStatus.OK)
                 {
                     switch (_installationCategory.data)
                     {
@@ -2547,7 +2547,7 @@ namespace SensorMonitorClient
             get
             {
                 // Sjekke om data er gyldig
-                if (pitchUp.dataStatus == DataStatus.OK)
+                if (pitchUp.status == DataStatus.OK)
                     return Math.Abs(pitchUp.data).ToString("0.0");
                 else
                     return Constants.HelideckReportNoData;
@@ -2583,7 +2583,7 @@ namespace SensorMonitorClient
             get
             {
                 // Sjekke om data er gyldig
-                if (pitchDown.dataStatus == DataStatus.OK)
+                if (pitchDown.status == DataStatus.OK)
                     return Math.Abs(pitchDown.data).ToString("0.0");
                 else
                     return Constants.HelideckReportNoData;
@@ -2619,7 +2619,7 @@ namespace SensorMonitorClient
             get
             {
                 // Sjekke om data er gyldig
-                if (rollLeft.dataStatus == DataStatus.OK)
+                if (rollLeft.status == DataStatus.OK)
                     return Math.Abs(rollLeft.data).ToString("0.0");
                 else
                     return Constants.HelideckReportNoData;
@@ -2655,7 +2655,7 @@ namespace SensorMonitorClient
             get
             {
                 // Sjekke om data er gyldig
-                if (rollRight.dataStatus == DataStatus.OK)
+                if (rollRight.status == DataStatus.OK)
                     return Math.Abs(rollRight.data).ToString("0.0");
                 else
                     return Constants.HelideckReportNoData;
@@ -2691,7 +2691,7 @@ namespace SensorMonitorClient
             get
             {
                 // Sjekke om data er gyldig
-                if (inclination.dataStatus == DataStatus.OK)
+                if (inclination.status == DataStatus.OK)
                     return inclination.data.ToString("0.0");
                 else
                     return Constants.HelideckReportNoData;
@@ -2727,7 +2727,7 @@ namespace SensorMonitorClient
             get
             {
                 // Sjekke om data er gyldig
-                if (maxHeave.dataStatus == DataStatus.OK)
+                if (maxHeave.status == DataStatus.OK)
                     return maxHeave.data.ToString("0.0");
                 else
                     return Constants.HelideckReportNoData;
@@ -2763,7 +2763,7 @@ namespace SensorMonitorClient
             get
             {
                 // Sjekke om data er gyldig
-                if (heavePeriod.dataStatus == DataStatus.OK)
+                if (heavePeriod.status == DataStatus.OK)
                     return heavePeriod.data.ToString("0.0");
                 else
                     return Constants.HelideckReportNoData;
@@ -2799,7 +2799,7 @@ namespace SensorMonitorClient
             get
             {
                 // Sjekke om data er gyldig
-                if (_significantHeaveRate.dataStatus == DataStatus.OK)
+                if (_significantHeaveRate.status == DataStatus.OK)
                     return _significantHeaveRate.data.ToString("0.0");
                 else
                     return Constants.HelideckReportNoData;
@@ -2836,7 +2836,7 @@ namespace SensorMonitorClient
             get
             {
                 // Sjekke om data er gyldig
-                if (_maximumHeaveRate.dataStatus == DataStatus.OK)
+                if (_maximumHeaveRate.status == DataStatus.OK)
                     return _maximumHeaveRate.data.ToString("0.0");
                 else
                     return Constants.HelideckReportNoData;
@@ -3061,7 +3061,7 @@ namespace SensorMonitorClient
         {
             get
             {
-                if (_vesselName.dataStatus == DataStatus.OK && !string.IsNullOrEmpty(_vesselName.data3))
+                if (_vesselName.status == DataStatus.OK && !string.IsNullOrEmpty(_vesselName.data3))
                     return _vesselName.data3.ToString();
                 else
                     return Constants.NotAvailable;
@@ -3259,7 +3259,7 @@ namespace SensorMonitorClient
         {
             get
             {
-                if (_restrictionSector.dataStatus == DataStatus.OK)
+                if (_restrictionSector.status == DataStatus.OK)
                     return _restrictionSector.data.ToString("000");
                 else
                     return Constants.HelideckReportNoData;
@@ -3270,7 +3270,7 @@ namespace SensorMonitorClient
         {
             get
             {
-                if (_restrictionSector.dataStatus == DataStatus.OK)
+                if (_restrictionSector.status == DataStatus.OK)
                     return _restrictionSector.data2.ToString("000");
                 else
                     return Constants.HelideckReportNoData;

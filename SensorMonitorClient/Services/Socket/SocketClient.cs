@@ -23,7 +23,7 @@ namespace SensorMonitorClient
         private static string response = string.Empty;
 
         private RadObservableCollectionEx<HMSData> hmsDataList;
-        private RadObservableCollectionEx<Sensor> sensorStatusList;
+        private RadObservableCollectionEx<SensorGroup> sensorStatusList;
         private UserInputs userInputs;
 
         // Socker Client worker
@@ -47,13 +47,13 @@ namespace SensorMonitorClient
 
         private ServerCom.SocketCallback socketCallback;
 
-        private SensorStatusVM sensorStatusVM;
+        private SensorStatusDisplayVM sensorStatusDisplayVM;
 
-        public SocketClient(SocketConsole socketConsole, ServerCom.SocketCallback socketCallback = null, SensorStatusVM sensorStatusVM = null)
+        public SocketClient(SocketConsole socketConsole, ServerCom.SocketCallback socketCallback = null, SensorStatusDisplayVM sensorStatusDisplayVM = null)
         {
             this.socketConsole = socketConsole;
             this.socketCallback = socketCallback;
-            this.sensorStatusVM = sensorStatusVM;
+            this.sensorStatusDisplayVM = sensorStatusDisplayVM;
 
             config = new Config();
 
@@ -69,7 +69,7 @@ namespace SensorMonitorClient
             socketWorker.DoWork += DoSocketWork;
         }
 
-        public void SetParams(string command, RadObservableCollectionEx<HMSData> hmsDataList = null, RadObservableCollectionEx<Sensor> sensorStatusList = null, UserInputs userInputs = null, string payload = "")
+        public void SetParams(string command, RadObservableCollectionEx<HMSData> hmsDataList = null, RadObservableCollectionEx<SensorGroup> sensorStatusList = null, UserInputs userInputs = null, string payload = "")
         {
             this.command = command;
             this.hmsDataList = hmsDataList;
@@ -433,10 +433,10 @@ namespace SensorMonitorClient
                         if (payload.CompareTo(string.Empty) != 0)
                         {
                             // De-serialisere fra JSON
-                            List<Sensor> sensorStatusList = JsonSerializer.Deserialize<List<Sensor>>(payload);
+                            List<SensorGroup> sensorStatusListReceived = JsonSerializer.Deserialize<List<SensorGroup>>(payload);
 
                             // Overføre mottatt data til lagringsplass
-                            TransferReceivedSensorStatus(sensorStatusList);
+                            TransferReceivedSensorStatus(sensorStatusListReceived);
 
                             // Ferdig med å hente data fra socket -> si i fra at vi er ferdig og prosessere data
                             if (socketCallback != null)
@@ -551,7 +551,7 @@ namespace SensorMonitorClient
             }
         }
 
-        private void TransferReceivedSensorStatus(List<Sensor> dataList)
+        private void TransferReceivedSensorStatus(List<SensorGroup> dataList)
         {
             // NB! Samme problem som over!
             // Gjør en del sjekker, søk og kopiering av data her. Hvorfor ikke bare slette alle data og så kopiere alt?
@@ -611,8 +611,8 @@ namespace SensorMonitorClient
                 }
             }
 
-            // Oppdatere navn i SensorStatusVM
-            sensorStatusVM?.Update();
+            // Oppdatere sensor status i display
+            sensorStatusDisplayVM?.Update();
         }
 
         private void TransferReceivedUserInputs(UserInputs userInputsReceived)

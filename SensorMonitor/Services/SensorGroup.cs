@@ -1,10 +1,5 @@
-﻿using System;
-using System.Collections.Generic;
-using System.ComponentModel;
-using System.Linq;
+﻿using System.ComponentModel;
 using System.Runtime.CompilerServices;
-using System.Text;
-using System.Threading.Tasks;
 
 namespace SensorMonitor
 {
@@ -19,7 +14,6 @@ namespace SensorMonitor
             name = sensor.name;
             active = sensor.active;
             status = sensor.status;
-            previousStatus = sensor.previousStatus;
         }
 
         public SensorGroup(SensorGroupIDConfig sensorIDConfig)
@@ -28,7 +22,6 @@ namespace SensorMonitor
             name = sensorIDConfig.name;
             active = bool.Parse(sensorIDConfig.active);
             status = DataStatus.OK;
-            previousStatus = DataStatus.OK;
         }
 
         private int _id { get; set; }
@@ -84,10 +77,10 @@ namespace SensorMonitor
             {
                 _status = value;
                 OnPropertyChanged();
-                OnPropertyChanged(nameof(dataStatusString));
+                OnPropertyChanged(nameof(statusString));
             }
         }
-        public string dataStatusString
+        public string statusString
         {
             get
             {
@@ -95,27 +88,12 @@ namespace SensorMonitor
             }
         }
 
-        private DataStatus _previousStatus { get; set; }
-        public DataStatus previousStatus
+        public void Set(SensorGroup sensorGroup)
         {
-            get
-            {
-                return _previousStatus;
-            }
-            set
-            {
-                _previousStatus = value;
-                OnPropertyChanged();
-            }
-        }
-
-        public void Set(SensorGroup sensor)
-        {
-            id = sensor.id;
-            name = sensor.name;
-            active = sensor.active;
-            status = sensor.status;
-            previousStatus = sensor.previousStatus;
+            id = sensorGroup.id;
+            name = sensorGroup.name;
+            active = sensorGroup.active;
+            status = sensorGroup.status;
         }
 
         // Variabel oppdatert

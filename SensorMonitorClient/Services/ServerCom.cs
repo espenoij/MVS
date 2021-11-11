@@ -30,8 +30,8 @@ namespace SensorMonitorClient
         private RadObservableCollectionEx<HMSData> socketHMSDataList = new RadObservableCollectionEx<HMSData>();
 
         // Liste med sensor status
-        private RadObservableCollectionEx<Sensor> sensorStatusList;
-        private RadObservableCollectionEx<Sensor> socketSensorStatusList = new RadObservableCollectionEx<Sensor>();
+        private RadObservableCollectionEx<SensorGroup> sensorStatusList;
+        private RadObservableCollectionEx<SensorGroup> socketSensorStatusList = new RadObservableCollectionEx<SensorGroup>();
 
         // User Inputs
         private UserInputs userInputsReceived = new UserInputs();
@@ -45,7 +45,7 @@ namespace SensorMonitorClient
         // User Inputs have been set callback
         //private MainWindow.UserInputsSetCallback userInputsSetCallback;
 
-        private SensorStatusVM sensorStatusVM;
+        private SensorStatusDisplayVM sensorStatusDisplayVM;
         private UserInputsVM userInputsVM;
 
         // Tidspunkt for sist mottatt HMS data
@@ -55,8 +55,8 @@ namespace SensorMonitorClient
             SocketConsole socketConsole,
             HMSDataCollection hmsDataCollection,
             AdminSettingsVM adminSettingsVM,
-            SensorStatus sensorStatus,
-            SensorStatusVM sensorStatusVM,
+            SensorGroupStatus sensorStatus,
+            SensorStatusDisplayVM sensorStatusVM,
             UserInputsVM userInputsVM,
             MainWindow.DataRequestCallback dataRequestCallback,
             Config config)
@@ -74,7 +74,7 @@ namespace SensorMonitorClient
             sensorStatusList = sensorStatus.GetSensorList();
 
             // Oppdatere sensor status på skjerm
-            this.sensorStatusVM = sensorStatusVM;
+            this.sensorStatusDisplayVM = sensorStatusVM;
 
             // User Inputs VM
             this.userInputsVM = userInputsVM;
@@ -126,7 +126,7 @@ namespace SensorMonitorClient
                 SocketCallback socketCallback = new SocketCallback(ProcessSocketSensorStatusList);
 
                 // Start en data fetch mot server
-                SocketClient socketClient = new SocketClient(socketConsole, socketCallback, sensorStatusVM);
+                SocketClient socketClient = new SocketClient(socketConsole, socketCallback, sensorStatusDisplayVM);
 
                 // Sette kommando og parametre
                 socketClient.SetParams(
@@ -148,7 +148,7 @@ namespace SensorMonitorClient
                 SocketCallback socketCallback = new SocketCallback(ProcessSocketUserInputs);
 
                 // Start en data fetch mot server
-                SocketClient socketClient = new SocketClient(socketConsole, socketCallback, sensorStatusVM);
+                SocketClient socketClient = new SocketClient(socketConsole, socketCallback, sensorStatusDisplayVM);
 
                 // Sette kommando og parametre
                 socketClient.SetParams(
@@ -235,9 +235,9 @@ namespace SensorMonitorClient
 
                         // Sjekke timestamp for data timeout
                         if (hmsData.First().timestamp.AddMilliseconds(dataTimeout) < DateTime.UtcNow)
-                            hmsData.First().dataStatus = DataStatus.TIMEOUT_ERROR;
+                            hmsData.First().status = DataStatus.TIMEOUT_ERROR;
                         else
-                            hmsData.First().dataStatus = DataStatus.OK;
+                            hmsData.First().status = DataStatus.OK;
                     }
                     // Ikke match?
                     else
@@ -262,7 +262,7 @@ namespace SensorMonitorClient
             }
         }
 
-        private void ProcessSocketSensorStatus(RadObservableCollectionEx<Sensor> socketSensorStatusList)
+        private void ProcessSocketSensorStatus(RadObservableCollectionEx<SensorGroup> socketSensorStatusList)
         {
             // Lese data timeout fra config
             double dataTimeout = config.Read(ConfigKey.DataTimeout, Constants.DataTimeoutDefault);

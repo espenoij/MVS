@@ -1,21 +1,18 @@
 ﻿using System;
-using System.Collections.Generic;
 using System.Linq;
-using System.Text;
-using System.Threading.Tasks;
 using System.Windows.Threading;
 
 namespace SensorMonitor
 {
-    public class HMSSensorStatus
+    public class HMSSensorGroupStatus
     {
-        private RadObservableCollectionEx<SensorGroup> hmsSensorList = new RadObservableCollectionEx<SensorGroup>();
+        private RadObservableCollectionEx<SensorGroup> hmsSensorGroupList = new RadObservableCollectionEx<SensorGroup>();
         private HMSDataCollection hmsOutputDataList;
 
         // Config
         private Config config;
 
-        public HMSSensorStatus(Config config, HMSDataCollection hmsOutputDataList)
+        public HMSSensorGroupStatus(Config config, HMSDataCollection hmsOutputDataList)
         {
             this.config = config;
             this.hmsOutputDataList = hmsOutputDataList;
@@ -29,7 +26,7 @@ namespace SensorMonitor
                 foreach (SensorGroupIDConfig item in sensorIDConfigCollection)
                 {
                     SensorGroup sensor = new SensorGroup(item);
-                    hmsSensorList.Add(sensor);
+                    hmsSensorGroupList.Add(sensor);
                 }
             }
 
@@ -51,14 +48,14 @@ namespace SensorMonitor
 
         public RadObservableCollectionEx<SensorGroup> GetSensorList()
         {
-            return hmsSensorList;
+            return hmsSensorGroupList;
         }
 
-        public void SetSensorName(SensorGroup sensor)
+        public void SetSensorGroupName(SensorGroup sensor)
         {
-            if (sensor.id < hmsSensorList.Count)
+            if (sensor.id < hmsSensorGroupList.Count)
             {
-                hmsSensorList[sensor.id].name = sensor.name;
+                hmsSensorGroupList[sensor.id].name = sensor.name;
 
                 // Lagre til fil
                 config.SetSensorGroupIDData(sensor);
@@ -68,83 +65,39 @@ namespace SensorMonitor
         private void UpdateStatus(int id)
         {
             // Finne frem sensoren vi skal oppdatere status for
-            var sensor = hmsSensorList.Where(x => x.id == id);
-            if (sensor.Count() == 1)
+            var sensorGroup = hmsSensorGroupList.Where(x => x.id == id);
+            if (sensorGroup.Count() == 1)
             {
-                // Finne sensor verdier knyttet til valgt sensor ID
+                // Finne sensor verdier knyttet til valgt sensor gruppe ID
                 var hmsDataList = hmsOutputDataList.GetDataList();
                 lock (hmsDataList)
                 {
                     var clientData = hmsDataList.Where(x => x.sensorGroupId == id);
 
-                    // Har funnet verdier knyttet til sensor
+                    // Har funnet sensor verdier knyttet til sensor gruppe
                     if (clientData.Count() > 0)
                     {
                         // Skjekke om noen av sensor verdiene har error status
-                        var errorList = clientData.Where(x => x.dataStatus == DataStatus.TIMEOUT_ERROR);
+                        var errorList = clientData.Where(x => x.status == DataStatus.TIMEOUT_ERROR);
 
                         // En eller flere error statuser funnet
                         if (errorList.Count() > 0)
-                            sensor.First().status = DataStatus.TIMEOUT_ERROR;
+                        {
+                            sensorGroup.First().status = DataStatus.TIMEOUT_ERROR;
+                        }
                         // Ingen error status funnet
                         else
-                            sensor.First().status = DataStatus.OK;
+                        {
+                            sensorGroup.First().status = DataStatus.OK;
+                        }
                     }
                     // Ingen verdier knyttet til denne sensoren -> ingen feilmelding
                     else
                     {
-                        sensor.First().status = DataStatus.OK;
+                        sensorGroup.First().status = DataStatus.OK;
                     }
                 }
             }
-        }
-
-        public DataStatus GetStatus(int id)
-        {
-            var sensor = hmsSensorList.Where(x => x.id == id);
-            if (sensor.Count() == 1)
-            {
-                return sensor.First().status;
-            }
-            else
-            {
-                return DataStatus.TIMEOUT_ERROR;
-            }
-        }
-
-        public bool StatusChanged(int id)
-        {
-            // Sjekk på om status er endret
-            var sensor = hmsSensorList.Where(x => x.id == id);
-            if (sensor.Count() == 1)
-            {
-                if (sensor.First().previousStatus != sensor.First().status)
-                    return true;
-                else
-                    return false;
-            }
-            else
-            {
-                return false;
-            }
-        }
-
-        public void StatusChangedReset(int id)
-        {
-            var sensor = hmsSensorList.Where(x => x.id == id);
-            if (sensor.Count() == 1)
-            {
-                sensor.First().previousStatus = sensor.First().status;
-            }
-        }
-
-        public bool IsActive(int id)
-        {
-            var sensor = hmsSensorList.Where(x => x.id == id);
-            if (sensor.Count() == 1)
-                return sensor.First().active;
-            else
-                return false;
         }
     }
 }

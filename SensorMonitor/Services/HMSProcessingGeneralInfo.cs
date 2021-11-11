@@ -43,7 +43,7 @@ namespace SensorMonitor
 
             helideckCategory.data = (int)adminSettingsVM.helideckCategory;
             helideckCategory.timestamp = DateTime.UtcNow;
-            helideckCategory.dataStatus = DataStatus.OK;
+            helideckCategory.status = DataStatus.OK;
         }
     }
 }

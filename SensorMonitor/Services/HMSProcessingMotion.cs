@@ -340,19 +340,19 @@ namespace SensorMonitor
             // Motion Limits
             motionLimitPitchRoll.data = motionLimits.GetLimit(LimitType.PitchRoll);
             motionLimitPitchRoll.timestamp = DateTime.UtcNow;
-            motionLimitPitchRoll.dataStatus = DataStatus.OK;
+            motionLimitPitchRoll.status = DataStatus.OK;
 
             motionLimitInclination.data = motionLimits.GetLimit(LimitType.Inclination);
             motionLimitInclination.timestamp = DateTime.UtcNow;
-            motionLimitInclination.dataStatus = DataStatus.OK;
+            motionLimitInclination.status = DataStatus.OK;
 
             motionLimitHeaveAmplitude.data = motionLimits.GetLimit(LimitType.HeaveAmplitude);
             motionLimitHeaveAmplitude.timestamp = DateTime.UtcNow;
-            motionLimitHeaveAmplitude.dataStatus = DataStatus.OK;
+            motionLimitHeaveAmplitude.status = DataStatus.OK;
 
             motionLimitSignificantHeaveRate.data = motionLimits.GetLimit(LimitType.SignificantHeaveRate);
             motionLimitSignificantHeaveRate.timestamp = DateTime.UtcNow;
-            motionLimitSignificantHeaveRate.dataStatus = DataStatus.OK;
+            motionLimitSignificantHeaveRate.status = DataStatus.OK;
 
             // SHR Limit
             UpdateSHRLimitConditions(significantHeaveRateData);
@@ -370,9 +370,9 @@ namespace SensorMonitor
                 HMSData accelerationY = new HMSData(hmsInputDataList.GetData(ValueType.AccelerationY));
                 HMSData accelerationZ = new HMSData(hmsInputDataList.GetData(ValueType.AccelerationZ));
 
-                if (accelerationX.dataStatus == DataStatus.OK &&
-                    accelerationY.dataStatus == DataStatus.OK &&
-                    accelerationZ.dataStatus == DataStatus.OK)
+                if (accelerationX.status == DataStatus.OK &&
+                    accelerationY.status == DataStatus.OK &&
+                    accelerationZ.status == DataStatus.OK)
                 {
                     double mms = 0;
 
@@ -384,7 +384,7 @@ namespace SensorMonitor
 
                     // Kalkulere MMS_MSI (CAP formel)
                     mms_msi.data = Math.Round(10 * (180 / Math.PI) * Math.Atan(mms * (Math.PI / 180)), 0, MidpointRounding.AwayFromZero);
-                    mms_msi.dataStatus = DataStatus.OK;
+                    mms_msi.status = DataStatus.OK;
                     mms_msi.timestamp = accelerationX.timestamp;
                 }
 
@@ -397,16 +397,16 @@ namespace SensorMonitor
                 HMSData vesselDir = hmsInputDataList.GetData(ValueType.VesselHeading);
                 HMSData vesselSpd = hmsInputDataList.GetData(ValueType.VesselSpeed);
 
-                if (windDir.dataStatus == DataStatus.OK &&
-                    windSpd.dataStatus == DataStatus.OK &&
-                    vesselDir.dataStatus == DataStatus.OK &&
-                    vesselSpd.dataStatus == DataStatus.OK)
+                if (windDir.status == DataStatus.OK &&
+                    windSpd.status == DataStatus.OK &&
+                    vesselDir.status == DataStatus.OK &&
+                    vesselSpd.status == DataStatus.OK)
                 {
                     double vesselComp = 0;
 
                     // Kalkulere vind-komponenten som følge av fartøyets hastighet
-                    if (vesselDir.dataStatus == DataStatus.OK &&
-                        vesselSpd.dataStatus == DataStatus.OK)
+                    if (vesselDir.status == DataStatus.OK &&
+                        vesselSpd.status == DataStatus.OK)
                     {
                         // Beregner først vinkel mellom fartøyets retning og vind-retning
                         double angle = windDir.data - vesselDir.data;
@@ -430,13 +430,13 @@ namespace SensorMonitor
                     windCorrected += vesselComp;
 
                     // Lagre data
-                    wsit.dataStatus = windDir.dataStatus;
+                    wsit.status = windDir.status;
                     wsit.timestamp = windDir.timestamp;
                     wsit.data = windCorrected;
                 }
                 else
                 {
-                    wsit.dataStatus = DataStatus.TIMEOUT_ERROR;
+                    wsit.status = DataStatus.TIMEOUT_ERROR;
                     wsit.timestamp = DateTime.UtcNow;
                     wsit.data = 0;
                 }
@@ -451,7 +451,7 @@ namespace SensorMonitor
 
         private void CalculateMSIMax(HMSData value, List<TimeData> dataList, HMSData maxValue, double time)
         {
-            if (value.dataStatus == DataStatus.OK)
+            if (value.status == DataStatus.OK)
             {
                 // Korreksjon R
                 double valueCorr = value.data * adminSettingsVM.msiCorrectionR;
@@ -467,11 +467,11 @@ namespace SensorMonitor
 
                 // Timestamp og status
                 maxValue.timestamp = value.timestamp;
-                maxValue.dataStatus = value.dataStatus;
+                maxValue.status = value.status;
             }
             else
             {
-                maxValue.dataStatus = value.dataStatus;
+                maxValue.status = value.status;
             }
 
             // Sjekke om vi skal ta ut gamle verdier
@@ -514,7 +514,7 @@ namespace SensorMonitor
                     {
                         maxValue.data = Math.Round(dataList[j].data * adminSettingsVM.msiCorrectionR, 1);
                         maxValue.timestamp = dataList[j].timestamp;
-                        maxValue.dataStatus = DataStatus.OK;
+                        maxValue.status = DataStatus.OK;
 
                         done = true;
                     }
@@ -524,7 +524,7 @@ namespace SensorMonitor
                         {
                             maxValue.data = Math.Round(dataList[j].data * adminSettingsVM.msiCorrectionR, 1);
                             maxValue.timestamp = dataList[j].timestamp;
-                            maxValue.dataStatus = DataStatus.OK;
+                            maxValue.status = DataStatus.OK;
                         }
                     }
                 }
@@ -533,7 +533,7 @@ namespace SensorMonitor
 
         private void CalculateWSIMean(HMSData value, List<TimeData> dataList, HMSData totalSum, HMSData meanValue, double time)
         {
-            if (value.dataStatus == DataStatus.OK &&
+            if (value.status == DataStatus.OK &&
                 !double.IsNaN(value.data))
             {
                 // Legge inn den nye verdien i data settet
@@ -583,7 +583,7 @@ namespace SensorMonitor
             // Lagre data
             meanValue.data = Math.Round(wsiDisp, 1);
             meanValue.timestamp = value.timestamp;
-            meanValue.dataStatus = value.dataStatus;
+            meanValue.status = value.status;
         }
 
         private void CheckLimits()
@@ -697,10 +697,10 @@ namespace SensorMonitor
                     outputData.timestamp = roll.timestamp;
 
                 // Status
-                if (pitch.dataStatus == DataStatus.OK && roll.dataStatus == DataStatus.OK)
-                    outputData.dataStatus = DataStatus.OK;
+                if (pitch.status == DataStatus.OK && roll.status == DataStatus.OK)
+                    outputData.status = DataStatus.OK;
                 else
-                    outputData.dataStatus = DataStatus.TIMEOUT_ERROR;
+                    outputData.status = DataStatus.TIMEOUT_ERROR;
             }
         }
 
@@ -710,7 +710,7 @@ namespace SensorMonitor
         private void UpdateSHRLimitConditions(HMSData sensorData)
         {
             // Sjekker status på data først
-            if (sensorData.dataStatus == DataStatus.OK)
+            if (sensorData.status == DataStatus.OK)
             {
                 // 2-minute minimum
                 ///////////////////////////////////////////////////////////

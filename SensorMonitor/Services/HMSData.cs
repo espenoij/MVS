@@ -15,7 +15,8 @@ namespace SensorMonitor
         // Initialize
         public HMSData()
         {
-            dataStatus = DataStatus.TIMEOUT_ERROR;
+            status = DataStatus.TIMEOUT_ERROR;
+            sensorGroupId = Constants.SensorIDNotSet;
         }
 
         private int _id { get; set; }
@@ -136,25 +137,25 @@ namespace SensorMonitor
             }
         }
 
-        private DataStatus _dataStatus { get; set; }
-        public DataStatus dataStatus
+        private DataStatus _status { get; set; }
+        public DataStatus status
         {
             get
             {
-                return _dataStatus;
+                return _status;
             }
             set
             {
-                _dataStatus = value;
+                _status = value;
                 OnPropertyChanged();
-                OnPropertyChanged(nameof(dataStatusString));
+                OnPropertyChanged(nameof(statusString));
             }
         }
-        public string dataStatusString
+        public string statusString
         {
             get
             {
-                return dataStatus.ToString();
+                return status.ToString();
             }
         }
 
@@ -198,7 +199,10 @@ namespace SensorMonitor
         {
             get
             {
-                return sensorGroupId.ToString();
+                if (sensorGroupId == Constants.SensorIDNotSet)
+                    return "None";
+                else
+                    return sensorGroupId.ToString();
             }
         }
 
@@ -227,7 +231,7 @@ namespace SensorMonitor
                 data2 = inputData.data2;
                 data3 = inputData.data3;
                 timestamp = inputData.timestamp;
-                dataStatus = inputData.dataStatus;
+                status = inputData.status;
                 limitStatus = inputData.limitStatus;
                 sensorGroupId = inputData.sensorGroupId;
                 dbTableName = inputData.dbTableName;
@@ -245,7 +249,7 @@ namespace SensorMonitor
                 data2 = inputData.data2;
                 data3 = inputData.data3;
                 timestamp = inputData.timestamp;
-                dataStatus = inputData.dataStatus;
+                status = inputData.status;
                 limitStatus = inputData.limitStatus;
                 sensorGroupId = inputData.sensorGroupId;
                 dbTableName = inputData.dbTableName;
@@ -286,7 +290,7 @@ namespace SensorMonitor
 
                 // Setter timestamp og status lik inndata
                 timestamp = newData.timestamp;
-                dataStatus = newData.dataStatus;
+                status = newData.status;
                 sensorGroupId = newData.sensorGroupId;
             }
         }

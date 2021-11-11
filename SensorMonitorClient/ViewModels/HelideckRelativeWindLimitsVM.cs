@@ -17,7 +17,7 @@ namespace SensorMonitorClient
         private RadObservableCollectionEx<HMSData> relativeWindDir20mBuffer = new RadObservableCollectionEx<HMSData>();
         public RadObservableCollectionEx<HMSData> relativeWindDir20mDataList = new RadObservableCollectionEx<HMSData>();
 
-        public void Init(Config config, SensorStatus sensorStatus)
+        public void Init(Config config, SensorGroupStatus sensorStatus)
         {
             InitUI();
 
@@ -33,7 +33,7 @@ namespace SensorMonitorClient
                 sensorStatus.TimeoutCheck(relativeWindDir);
 
                 // Oppdatere data som skal ut i grafer
-                if (rwdGraphData.dataStatus == DataStatus.OK)
+                if (rwdGraphData.status == DataStatus.OK)
                     UpdateChartBuffer(rwdGraphData, relativeWindDir20mBuffer);
             }
 
@@ -68,8 +68,8 @@ namespace SensorMonitorClient
             windSpd = clientSensorList.GetData(ValueType.HelideckWindSpeed2m);
             relativeWindDir = clientSensorList.GetData(ValueType.RelativeWindDir);
 
-            if (windSpd.dataStatus == DataStatus.OK &&
-                relativeWindDir.dataStatus == DataStatus.OK)
+            if (windSpd.status == DataStatus.OK &&
+                relativeWindDir.status == DataStatus.OK)
             {
                 // Begrenser RWD i grafen til 60 grader
                 double rwd = Math.Abs(relativeWindDir.data);
@@ -89,7 +89,7 @@ namespace SensorMonitorClient
 
                 rwdGraphData.data = rwd;
                 rwdGraphData.data2 = wind;
-                rwdGraphData.dataStatus = DataStatus.OK;
+                rwdGraphData.status = DataStatus.OK;
                 rwdGraphData.timestamp = windSpd.timestamp;
 
                 OnPropertyChanged(nameof(rwdGraphDataX));
@@ -99,7 +99,7 @@ namespace SensorMonitorClient
             {
                 rwdGraphData.data = 0;
                 rwdGraphData.data2 = 0;
-                rwdGraphData.dataStatus = DataStatus.TIMEOUT_ERROR;
+                rwdGraphData.status = DataStatus.TIMEOUT_ERROR;
                 rwdGraphData.timestamp = windSpd.timestamp;
 
                 OnPropertyChanged(nameof(rwdGraphDataX));
@@ -115,7 +115,7 @@ namespace SensorMonitorClient
             // Grunne til at vi buffrer data først er pga ytelsesproblemer dersom vi kjører data rett ut i grafene på skjerm.
             // Det takler ikke grafene fra Telerik. Buffrer data først og så oppdaterer vi grafene med jevne passende mellomrom.
 
-            if (data?.dataStatus == DataStatus.OK)
+            if (data?.status == DataStatus.OK)
             {
                 // Lagre data i buffer
                 buffer?.Add(new HMSData(data));
@@ -204,7 +204,7 @@ namespace SensorMonitorClient
                 if (_relativeWindDir != null)
                 {
                     // Sjekke om data er gyldig
-                    if (_relativeWindDir.dataStatus == DataStatus.OK)
+                    if (_relativeWindDir.status == DataStatus.OK)
                     {
                         if (relativeWindDir.data >= 0)
                             return string.Format("{0}° R", relativeWindDir.data.ToString("0"));
@@ -252,7 +252,7 @@ namespace SensorMonitorClient
         {
             get
             {
-                if (_rwdGraphData?.dataStatus == DataStatus.OK)
+                if (_rwdGraphData?.status == DataStatus.OK)
                     return _rwdGraphData.data2;
                 else
                     return 0;
@@ -263,7 +263,7 @@ namespace SensorMonitorClient
         {
             get
             {
-                if (_rwdGraphData?.dataStatus == DataStatus.OK)
+                if (_rwdGraphData?.status == DataStatus.OK)
                     return _rwdGraphData.data;
                 else
                     return 0;

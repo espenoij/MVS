@@ -16,7 +16,7 @@ namespace SensorMonitorClient
         private DispatcherTimer UIUpdateTimer = new DispatcherTimer();
         private DispatcherTimer TimeTimer = new DispatcherTimer();
 
-        public void Init(Config config, AdminSettingsVM adminSettingsVM, SensorStatus sensorStatus)
+        public void Init(Config config, AdminSettingsVM adminSettingsVM, SensorGroupStatus sensorStatus)
         {
             this.config = config;
             this.adminSettingsVM = adminSettingsVM;
@@ -126,7 +126,7 @@ namespace SensorMonitorClient
         {
             get
             {
-                if (vesselName.dataStatus == DataStatus.OK)
+                if (vesselName.status == DataStatus.OK)
                     return vesselName.data3.ToString();
                 else
                     return Constants.NotAvailable;
@@ -157,7 +157,7 @@ namespace SensorMonitorClient
         {
             get
             {
-                if (_helideckCategory.dataStatus == DataStatus.OK)
+                if (_helideckCategory.status == DataStatus.OK)
                 {
                     return ((HelideckCategory)Enum.Parse(typeof(HelideckCategory), _helideckCategory.data.ToString())).GetDescription();
                 }
@@ -198,7 +198,7 @@ namespace SensorMonitorClient
                 if (latitude != null)
                 {
                     // Sjekke om data er gyldig
-                    if (latitude.dataStatus == DataStatus.OK)
+                    if (latitude.status == DataStatus.OK)
                     {
                         // Hente data
                         double lat = latitude.data;
@@ -277,7 +277,7 @@ namespace SensorMonitorClient
                 if (longitude != null)
                 {
                     // Sjekke om data er gyldig
-                    if (longitude.dataStatus == DataStatus.OK)
+                    if (longitude.status == DataStatus.OK)
                     {
                         // Hente data
                         double lon = longitude.data;

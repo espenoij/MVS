@@ -17,7 +17,7 @@
             <Style.Triggers>
 
                 <DataTrigger
-                    Binding="{Binding dataStatusString}"
+                    Binding="{Binding statusString}"
                     Value="TIMEOUT_ERROR">
                     <Setter
                         Property="Background"
@@ -25,7 +25,7 @@
                 </DataTrigger>
 
                 <DataTrigger
-                    Binding="{Binding dataStatusString}"
+                    Binding="{Binding statusString}"
                     Value="OK">
                     <Setter
                         Property="Background"
@@ -130,7 +130,7 @@
                     <telerik:GridViewDataColumn
                         Width="200"
                         Header="Status"
-                        DataMemberBinding="{Binding dataStatusString}" />
+                        DataMemberBinding="{Binding statusString}" />
                     <telerik:GridViewCheckBoxColumn
                         Width="120"
                         Header="Active"

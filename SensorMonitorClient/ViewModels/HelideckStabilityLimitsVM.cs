@@ -25,7 +25,7 @@ namespace SensorMonitorClient
 
         private bool initDone = false;
 
-        public void Init(Config config, SensorStatus sensorStatus)
+        public void Init(Config config, SensorGroupStatus sensorStatus)
         {
             InitUI();
 
@@ -49,7 +49,7 @@ namespace SensorMonitorClient
                 }
 
                 // Oppdatere data som skal ut i grafer
-                if (msiwsi.dataStatus == DataStatus.OK)
+                if (msiwsi.status == DataStatus.OK)
                 {
                     UpdateChartBuffer(msiwsi, msiwsi20mBuffer);
                     UpdateChartBuffer(msiwsi, msiwsi3hBuffer);
@@ -120,8 +120,8 @@ namespace SensorMonitorClient
                 // MSI / WSI Graf
                 /////////////////////////////////////////////////
                 /// Kombinerer MSI og WSI data
-                if (msi20m.dataStatus == DataStatus.OK &&
-                    wsi20m.dataStatus == DataStatus.OK)
+                if (msi20m.status == DataStatus.OK &&
+                    wsi20m.status == DataStatus.OK)
                 {
                     HMSData tmp = new HMSData();
 
@@ -129,7 +129,7 @@ namespace SensorMonitorClient
                     tmp.data = msi20m.data;
                     tmp.data2 = wsi20m.data;
 
-                    tmp.dataStatus = DataStatus.OK;
+                    tmp.status = DataStatus.OK;
 
                     if (msi20m.timestamp < wsi20m.timestamp)
                         tmp.timestamp = msi20m.timestamp;
@@ -150,7 +150,7 @@ namespace SensorMonitorClient
             // Grunne til at vi buffrer data først er pga ytelsesproblemer dersom vi kjører data rett ut i grafene på skjerm.
             // Det takler ikke grafene fra Telerik. Buffrer data først og så oppdaterer vi grafene med jevne passende mellomrom.
 
-            if (data?.dataStatus == DataStatus.OK)
+            if (data?.status == DataStatus.OK)
             {
                 // Lagre data i buffer
                 buffer?.Add(new HMSData(data));
@@ -216,7 +216,7 @@ namespace SensorMonitorClient
                 if (mms_msi != null)
                 {
                     // Sjekke om data er gyldig
-                    if (mms_msi.dataStatus == DataStatus.OK)
+                    if (mms_msi.status == DataStatus.OK)
                     {
                         return mms_msi.data.ToString("0.0");
                     }
@@ -263,7 +263,7 @@ namespace SensorMonitorClient
                 if (msi20m != null)
                 {
                     // Sjekke om data er gyldig
-                    if (msi20m.dataStatus == DataStatus.OK)
+                    if (msi20m.status == DataStatus.OK)
                     {
                         return msi20m.data.ToString("0.0");
                     }
@@ -402,7 +402,7 @@ namespace SensorMonitorClient
                 if (wsit != null)
                 {
                     // Sjekke om data er gyldig
-                    if (wsit.dataStatus == DataStatus.OK)
+                    if (wsit.status == DataStatus.OK)
                     {
                         return wsit.data.ToString("0.0");
                     }
@@ -449,7 +449,7 @@ namespace SensorMonitorClient
                 if (wsi20m != null)
                 {
                     // Sjekke om data er gyldig
-                    if (wsi20m.dataStatus == DataStatus.OK)
+                    if (wsi20m.status == DataStatus.OK)
                     {
                         return wsi20m.data.ToString("0.0");
                     }
@@ -493,7 +493,7 @@ namespace SensorMonitorClient
         {
             get
             {
-                if (_msiwsi?.dataStatus == DataStatus.OK)
+                if (_msiwsi?.status == DataStatus.OK)
                     return Math.Round(_msiwsi.data2, 0, MidpointRounding.AwayFromZero);
                 else
                     return 0;
@@ -507,7 +507,7 @@ namespace SensorMonitorClient
                 if (msiwsi != null)
                 {
                     // Sjekke om data er gyldig
-                    if (msiwsi.dataStatus == DataStatus.OK)
+                    if (msiwsi.status == DataStatus.OK)
                     {
                         return msiwsiX.ToString("0");
                     }
@@ -527,7 +527,7 @@ namespace SensorMonitorClient
         {
             get
             {
-                if (msiwsi?.dataStatus == DataStatus.OK)
+                if (msiwsi?.status == DataStatus.OK)
                     return Math.Round(msiwsi.data, 0, MidpointRounding.AwayFromZero);
                 else
                     return 0;
@@ -541,7 +541,7 @@ namespace SensorMonitorClient
                 if (msiwsi != null)
                 {
                     // Sjekke om data er gyldig
-                    if (msiwsi.dataStatus == DataStatus.OK)
+                    if (msiwsi.status == DataStatus.OK)
                     {
                         return msiwsiY.ToString("0");
                     }

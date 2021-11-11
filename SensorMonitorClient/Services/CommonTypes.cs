@@ -67,6 +67,7 @@ public enum DataStatus
 {
     OK,
     TIMEOUT_ERROR, // Timeout / error
+    NONE
 }
 
 public enum LimitStatus

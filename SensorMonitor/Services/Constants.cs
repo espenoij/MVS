@@ -134,7 +134,7 @@ class Constants
     public const int GUIDataLinesMax = 100;
 
     // Max sensors
-    public const int MaxSensors = 10;
+    public const int MaxSensors = 12;
 
     // Sensor Gruppe
     public const int NO_SENSOR_GROUP_ID = -1;

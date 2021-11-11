@@ -33,7 +33,7 @@ namespace SensorMonitorClient
         private HMSDataCollection hmsDataCollection;
 
         // Sensor Status
-        private SensorStatus sensorStatus;
+        private SensorGroupStatus sensorStatus;
 
         // Application Restart Required callback
         public delegate void RestartRequiredCallback(bool showMessage);
@@ -53,7 +53,7 @@ namespace SensorMonitorClient
         private HelideckStatusVM helideckStatusVM = new HelideckStatusVM();
         private HelideckStatusTrendVM helideckStatusTrendVM = new HelideckStatusTrendVM();
         private MeteorologicalVM meteorologicalVM = new MeteorologicalVM();
-        private SensorStatusVM sensorStatusVM = new SensorStatusVM();
+        private SensorStatusDisplayVM sensorStatusVM = new SensorStatusDisplayVM();
         private WindHeadingVM windHeadingVM = new WindHeadingVM();
         private AdminSettingsVM adminSettingsVM = new AdminSettingsVM();
         private HelideckReportVM helideckReportVM = new HelideckReportVM();
@@ -74,7 +74,7 @@ namespace SensorMonitorClient
             hmsDataCollection = new HMSDataCollection();
 
             // Sensor Status
-            sensorStatus = new SensorStatus(config, hmsDataCollection);
+            sensorStatus = new SensorGroupStatus(config, hmsDataCollection);
 
             // Regulation Standard
             regulationStandard = (RegulationStandard)Enum.Parse(typeof(RegulationStandard), config.Read(ConfigKey.RegulationStandard));
@@ -261,8 +261,8 @@ namespace SensorMonitorClient
             // Helideck Motion Trend Zoom
             ucHelideckMotionHistory.Init(helideckMotionTrendVM);
 
-            // Sensor Status
-            ucSensorStatus.Init(sensorStatusVM, config, sensorStatus, tabHelicopterOps);
+            // Sensor Status Display
+            ucSensorStatus.Init(sensorStatusVM);
 
             // Wind & Heading
             ucWindHeading.Init(windHeadingVM, config);
@@ -282,11 +282,7 @@ namespace SensorMonitorClient
             // Admin Data Flow
             ucAdminDataFlow.Init(
                 hmsDataCollection,
-                config,
-                serverCom,
-                sensorStatus,
-                sensorStatusVM,
-                tabAdminDataFlow);
+                sensorStatus);
         }
 
         private void InitDataRequest()

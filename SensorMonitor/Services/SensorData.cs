@@ -306,7 +306,7 @@ namespace SensorMonitor
                 _portStatus = value;
                 OnPropertyChanged();
                 OnPropertyChanged(nameof(portStatusString));
-                OnPropertyChanged(nameof(dataStatusString));
+                OnPropertyChanged(nameof(statusString));
             }
         }
         public string portStatusString
@@ -317,7 +317,7 @@ namespace SensorMonitor
             }
         }
 
-        public string dataStatusString
+        public string statusString
         {
             get
             {
