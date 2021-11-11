@@ -8,6 +8,7 @@ using System.Net.Sockets;
 using System.Text;
 using System.Text.Json;
 using System.Threading;
+using System.Windows.Threading;
 
 namespace SensorMonitor
 {
@@ -37,8 +38,8 @@ namespace SensorMonitor
         // Server Port
         private int serverPort;
 
-        // Server started
-        private bool socketListenerStarted = false;
+        // Socket Listener satt på pause
+        private bool socketListenerPaused = false;
 
         // Configuration
         private Config config;
@@ -61,25 +62,53 @@ namespace SensorMonitor
             socketWorker.DoWork += StartSocketListener;
             socketWorker.RunWorkerCompleted += StopSocketListener;
 
-            try
+            // Starte socket
+            StartSocketWorker();
+
+            // Socket Listener Check
+            // Starter socket igjen dersom noe har skjedd slik at den har stoppet
+            // Socket skal alltid kjøre!
+            DispatcherTimer socketListenerCheck = new DispatcherTimer();
+            socketListenerCheck.Interval = TimeSpan.FromMilliseconds(2000);
+            socketListenerCheck.Tick += checkSocketListener;
+            socketListenerCheck.Start();
+
+            void checkSocketListener(object sender, EventArgs e)
             {
-                socketWorker.RunWorkerAsync();
+                if (listener != null)
+                {
+                    // Kjører socket?
+                    if (!listener.Connected)
+                    {
+                        // Starte socket
+                        StartSocketWorker();
+                    }
+                }
             }
-            catch (Exception ex)
+
+            // Starter socket worker
+            void StartSocketWorker()
             {
-                if (AdminMode.IsActive)
-                    socketConsole.Add(string.Format("RunWorkerAsync:\n\n{0}", ex.Message));
+                try
+                {
+                    socketWorker.RunWorkerAsync();
+                }
+                catch (Exception ex)
+                {
+                    if (AdminMode.IsActive)
+                        socketConsole.Add(string.Format("RunWorkerAsync (2):\n\n{0}", ex.Message));
+                }
             }
         }
 
         public void Start()
         {
-            socketListenerStarted = true;
+            socketListenerPaused = false;
         }
 
         public void Stop()
         {
-            socketListenerStarted = false;
+            socketListenerPaused = true;
         }
 
         private void StartSocketListener(object sender, DoWorkEventArgs e)
@@ -96,8 +125,8 @@ namespace SensorMonitor
                 listener = new Socket(ipAddress.AddressFamily, SocketType.Stream, ProtocolType.Tcp);
 
                 // Socket Options
-                listener.SendTimeout = 1000;
-                listener.ReceiveTimeout = 1000;
+                listener.SendTimeout = 500;
+                listener.ReceiveTimeout = 500;
 
                 // Binde socket til endpoint
                 listener.Bind(localEndPoint);
@@ -105,7 +134,7 @@ namespace SensorMonitor
 
                 while (true)
                 {
-                    if (socketListenerStarted)
+                    if (!socketListenerPaused)
                     {
                         // Resette "ferdig" signalet
                         allDone.Reset();
