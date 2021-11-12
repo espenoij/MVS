@@ -125,8 +125,8 @@ namespace SensorMonitor
                 listener = new Socket(ipAddress.AddressFamily, SocketType.Stream, ProtocolType.Tcp);
 
                 // Socket Options
-                listener.SendTimeout = 500;
-                listener.ReceiveTimeout = 500;
+                listener.SendTimeout = 2000;
+                listener.ReceiveTimeout = 2000;
 
                 // Binde socket til endpoint
                 listener.Bind(localEndPoint);
@@ -150,9 +150,11 @@ namespace SensorMonitor
                     }
                 }
             }
-            catch (ObjectDisposedException)
+            catch (ObjectDisposedException ex)
             {
                 // Ingen melding, socket lukket OK
+                if (AdminMode.IsActive)
+                    socketConsole.Add(string.Format("ObjectDisposedException:\n\n{0}", ex.Message));
             }
             catch (Exception ex)
             {

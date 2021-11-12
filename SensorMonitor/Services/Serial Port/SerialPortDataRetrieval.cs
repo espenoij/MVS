@@ -225,35 +225,38 @@ namespace SensorMonitor
                                     CalculatedData calculatedData = process.ApplyCalculationsToSelectedData(selectedData, sensorData.dataCalculations, serialPortData.timestamp, errorHandler, ErrorMessageCategory.None);
 
                                     // Lagre resultat
-                                    sensorData.timestamp = serialPortData.timestamp;
-                                    sensorData.data = calculatedData.data;
+                                    //if (!double.IsNaN(calculatedData.data))
+                                    //{
+                                        sensorData.timestamp = serialPortData.timestamp;
+                                        sensorData.data = calculatedData.data;
 
-                                    // Lagre til databasen
-                                    if (sensorData.saveFreq == DatabaseSaveFrequency.Sensor)
-                                    {
-                                        // Legger ikke inn data dersom data ikke er satt
-                                        if (!double.IsNaN(sensorData.data))
+                                        // Lagre til databasen
+                                        if (sensorData.saveFreq == DatabaseSaveFrequency.Sensor)
                                         {
-                                            try
+                                            // Legger ikke inn data dersom data ikke er satt
+                                            if (!double.IsNaN(sensorData.data))
                                             {
-                                                database.Insert(sensorData);
+                                                try
+                                                {
+                                                    database.Insert(sensorData);
 
-                                                errorHandler.ResetDatabaseError(ErrorHandler.DatabaseErrorType.Insert);
-                                            }
-                                            catch (Exception ex)
-                                            {
-                                                errorHandler.Insert(
-                                                    new ErrorMessage(
-                                                        DateTime.UtcNow,
-                                                        ErrorMessageType.Database,
-                                                        ErrorMessageCategory.None,
-                                                        string.Format("Database Error (Insert 3)\n\nSystem Message:\n{0}", ex.Message),
-                                                        sensorData.id));
+                                                    errorHandler.ResetDatabaseError(ErrorHandler.DatabaseErrorType.Insert);
+                                                }
+                                                catch (Exception ex)
+                                                {
+                                                    errorHandler.Insert(
+                                                        new ErrorMessage(
+                                                            DateTime.UtcNow,
+                                                            ErrorMessageType.Database,
+                                                            ErrorMessageCategory.None,
+                                                            string.Format("Database Error (Insert 3)\n\nSystem Message:\n{0}", ex.Message),
+                                                            sensorData.id));
 
-                                                errorHandler.SetDatabaseError(ErrorHandler.DatabaseErrorType.Insert);
+                                                    errorHandler.SetDatabaseError(ErrorHandler.DatabaseErrorType.Insert);
+                                                }
                                             }
                                         }
-                                    }
+                                    //}
                                 }
                             }
                             catch (Exception ex)

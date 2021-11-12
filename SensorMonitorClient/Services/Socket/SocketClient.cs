@@ -150,8 +150,8 @@ namespace SensorMonitorClient
                 // Opprette TCP/IP socket.  
                 Socket client = new Socket(ipAddress.AddressFamily, SocketType.Stream, ProtocolType.Tcp);
 
-                client.SendTimeout = 500;
-                client.ReceiveTimeout = 500;
+                client.SendTimeout = 2000;
+                client.ReceiveTimeout = 2000;
 
                 // Opprette forbindelse
                 IAsyncResult result = client.BeginConnect(remoteIP, new AsyncCallback(ConnectCallback), client);

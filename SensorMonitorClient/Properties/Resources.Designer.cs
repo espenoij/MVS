@@ -8,7 +8,7 @@
 // </auto-generated>
 //------------------------------------------------------------------------------
 
-namespace SensorMonitorClient.Properties {
+namespace HMS_Client.Properties {
     using System;
     
     
