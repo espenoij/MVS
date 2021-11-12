@@ -71,7 +71,7 @@ namespace SensorMonitorClient
             this.adminSettingsVM = adminSettingsVM;
 
             // Sensor Status fra server
-            sensorStatusList = sensorStatus.GetSensorList();
+            sensorStatusList = sensorStatus.GetSensorGroupList();
 
             // Oppdatere sensor status på skjerm
             this.sensorStatusDisplayVM = sensorStatusVM;

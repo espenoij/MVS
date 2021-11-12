@@ -1,7 +1,8 @@
 ﻿using System;
 using System.ComponentModel;
 using System.Runtime.CompilerServices;
-using System.Windows.Media.Imaging;
+using System.Windows;
+using System.Windows.Threading;
 
 namespace SensorMonitorClient
 {
@@ -12,35 +13,43 @@ namespace SensorMonitorClient
 
         public RadObservableCollectionEx<SensorStatusDisplay> sensorStatusDisplayList = new RadObservableCollectionEx<SensorStatusDisplay>();
 
-        public void Init(SensorGroupStatus sensorStatus)
+        public void Init(SensorGroupStatus sensorStatus, Config config)
         {
             this.sensorStatus = sensorStatus;
 
-            InitUI();
+            InitUI(config);
         }
 
-        private void InitUI()
+        private void InitUI(Config config)
         {
             for (int i = 0; i < Constants.MaxSensors; i++)
                 sensorStatusDisplayList.Add(new SensorStatusDisplay());
-        }
 
-        public void Update()
-        {
-            RadObservableCollectionEx<SensorGroup> sensorStatusList = sensorStatus.GetSensorList();
+            DispatcherTimer statusUpdate = new DispatcherTimer();
+            statusUpdate.Interval = TimeSpan.FromMilliseconds(config.Read(ConfigKey.ClientUpdateFrequencyUI, Constants.ClientUpdateFrequencyUIDefault));
+            statusUpdate.Tick += UpdateStatus;
+            statusUpdate.Start();
 
-            // Oppdatere liste med sensor navn/status
-            for (int i = 0; i < Constants.MaxSensors; i++)
+            // Oppdatere sensor group status
+            void UpdateStatus(object sender, EventArgs e)
             {
-                if (i < sensorStatusList?.Count)
+                RadObservableCollectionEx<SensorGroup> sensorStatusList = sensorStatus.GetSensorGroupList();
+
+                // Oppdatere liste med sensor navn/status
+                for (int i = 0; i < Constants.MaxSensors; i++)
                 {
-                    sensorStatusDisplayList[i].sensorName = sensorStatusList[i].name;
-                    sensorStatusDisplayList[i].sensorStatus = sensorStatusList[i].status;
-                }
-                else
-                {
-                    sensorStatusDisplayList[i].sensorName = string.Empty;
-                    sensorStatusDisplayList[i].sensorStatus = DataStatus.NONE;
+                    if (i < sensorStatusList?.Count)
+                    {
+                        sensorStatusDisplayList[i].name = sensorStatusList[i].name;
+                        sensorStatusDisplayList[i].status = sensorStatusList[i].status;
+                        sensorStatusDisplayList[i].active = sensorStatusList[i].active;
+                    }
+                    else
+                    {
+                        sensorStatusDisplayList[i].name = string.Empty;
+                        sensorStatusDisplayList[i].status = DataStatus.NONE;
+                        sensorStatusDisplayList[i].active = false;
+                    }
                 }
             }
         }
@@ -53,49 +62,64 @@ namespace SensorMonitorClient
             // Change notification
             public event PropertyChangedEventHandler PropertyChanged;
 
-            private string _sensorName { get; set; } = string.Empty;
-            public string sensorName
+            private string _name { get; set; } = string.Empty;
+            public string name
             {
                 get
                 {
-                    return _sensorName;
+                    return _name;
                 }
                 set
                 {
-                    _sensorName = value;
+                    _name = value;
                     OnPropertyChanged();
                 }
             }
 
-            private DataStatus _sensorStatus { get; set; } = DataStatus.NONE;
-            public DataStatus sensorStatus
+            private bool _active { get; set; }
+            public bool active
             {
                 get
                 {
-                    return _sensorStatus;
+                    return _active;
                 }
                 set
                 {
-                    _sensorStatus = value;
+                    _active = value;
                     OnPropertyChanged();
-                    OnPropertyChanged(nameof(sensorImage));
+                    OnPropertyChanged(nameof(sensorStatusVisibility));
                 }
             }
-            public BitmapImage sensorImage
+            public Visibility sensorStatusVisibility
+            { 
+                get
+                {
+                    if (active)
+                        return Visibility.Visible;
+                    else
+                        return Visibility.Hidden;
+                }
+            }
+
+            private DataStatus _status { get; set; } = DataStatus.NONE;
+            public DataStatus status
             {
                 get
                 {
-                    switch (sensorStatus)
-                    {
-                        case DataStatus.OK:
-                            return new BitmapImage(new Uri("../Icons/outline_check_circle_black_48dp.png", UriKind.Relative));
-
-                        case DataStatus.TIMEOUT_ERROR:
-                            return new BitmapImage(new Uri("../Icons/outline_info_black_48dp.png", UriKind.Relative));
-
-                        default:
-                            return new BitmapImage();
-                    }
+                    return _status;
+                }
+                set
+                {
+                    _status = value;
+                    OnPropertyChanged();
+                    OnPropertyChanged(nameof(statusString));
+                }
+            }
+            public string statusString
+            {
+                get
+                {
+                    return _status.ToString();
                 }
             }
 
@@ -106,7 +130,5 @@ namespace SensorMonitorClient
                 PropertyChanged?.Invoke(this, new PropertyChangedEventArgs(name));
             }
         }
-
-
     }
 }

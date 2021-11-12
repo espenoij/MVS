@@ -15,6 +15,56 @@
         <sys:Double
             x:Key="fontSize">12</sys:Double>
 
+        <Style
+            x:Key="SensorStatusIcon"
+            TargetType="Image">
+
+            <Style.Triggers>
+
+                <DataTrigger
+                    Binding="{Binding statusString}"
+                    Value="OK">
+                    <Setter
+                        Property="Source"
+                        Value="..\Icons\outline_check_circle_black_48dp.png" />
+                </DataTrigger>
+
+                <DataTrigger
+                    Binding="{Binding statusString}"
+                    Value="TIMEOUT_ERROR">
+                    <Setter
+                        Property="Source"
+                        Value="..\Icons\outline_info_black_48dp.png" />
+                </DataTrigger>
+
+            </Style.Triggers>
+        </Style>
+
+        <Style
+            x:Key="SensorStatusBackground"
+            TargetType="StackPanel">
+
+            <Style.Triggers>
+
+                <DataTrigger
+                    Binding="{Binding statusString}"
+                    Value="OK">
+                    <Setter
+                        Property="Background"
+                        Value="Transparent" />
+                </DataTrigger>
+
+                <DataTrigger
+                    Binding="{Binding statusString}"
+                    Value="TIMEOUT_ERROR">
+                    <Setter
+                        Property="Background"
+                        Value="{StaticResource ColorAmber}" />
+                </DataTrigger>
+
+            </Style.Triggers>
+        </Style>
+
     </UserControl.Resources>
 
     <Grid>
@@ -24,25 +74,41 @@
             Margin="8">
 
             <ItemsControl
-                x:Name="lbSensorStatus" >
+                x:Name="lbSensorStatus">
 
                 <ItemsControl.ItemTemplate>
                     <DataTemplate>
-                        
+
                         <StackPanel
-                            Margin="8"
                             Orientation="Horizontal"
-                            VerticalAlignment="Center">
+                            VerticalAlignment="Center"
+                            Visibility="{Binding Path=sensorStatusVisibility}"
+                            Style="{StaticResource SensorStatusBackground}">
 
-                            <Image
-                                Margin="4"
-                                Source="{Binding Path=sensorImage}" />
+                            <Viewbox
+                                StretchDirection="Both"
+                                Stretch="Uniform"
+                                HorizontalAlignment="Left">
 
-                            <telerik:Label
-                                Content="{Binding Path=sensorName}" />
+                                <Image
+                                    Margin="8"
+                                    Style="{StaticResource SensorStatusIcon}" />
+
+                            </Viewbox>
+
+
+                            <Viewbox
+                                StretchDirection="Both"
+                                Stretch="Uniform"
+                                HorizontalAlignment="Left">
+
+                                <telerik:Label
+                                    Content="{Binding Path=name}" />
+
+                            </Viewbox>
 
                         </StackPanel>
-                        
+
                     </DataTemplate>
                 </ItemsControl.ItemTemplate>
 
@@ -52,7 +118,7 @@
                             Columns="2" />
                     </ItemsPanelTemplate>
                 </ItemsControl.ItemsPanel>
-                
+
             </ItemsControl>
 
         </telerik:GroupBox>

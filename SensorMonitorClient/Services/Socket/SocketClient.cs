@@ -610,9 +610,6 @@ namespace SensorMonitorClient
                         socketConsole?.Add(string.Format("ProcessReceivedData: id:{0}, data:{1}, timestamp:{2}", item.id, item.name, item.active.ToString()));
                 }
             }
-
-            // Oppdatere sensor status i display
-            sensorStatusDisplayVM?.Update();
         }
 
         private void TransferReceivedUserInputs(UserInputs userInputsReceived)

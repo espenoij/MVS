@@ -111,7 +111,7 @@ namespace SensorMonitorClient
             helideckStatusVM.Init(config, sensorStatus, userInputsVM);
             helideckStatusTrendVM.Init(helideckStatusVM, helideckStabilityLimitsVM, config);
             meteorologicalVM.Init(config, sensorStatus);
-            sensorStatusVM.Init(sensorStatus);
+            sensorStatusVM.Init(sensorStatus, config);
             windHeadingVM.Init(config, sensorStatus, userInputsVM, adminSettingsVM);
 
             // XAML

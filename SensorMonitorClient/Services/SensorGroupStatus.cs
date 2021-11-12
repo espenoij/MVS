@@ -116,7 +116,7 @@ namespace SensorMonitorClient
             return ret;
         }
 
-        public RadObservableCollectionEx<SensorGroup> GetSensorList()
+        public RadObservableCollectionEx<SensorGroup> GetSensorGroupList()
         {
             return sensorGroupList;
         }

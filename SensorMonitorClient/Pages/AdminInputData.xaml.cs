@@ -1,9 +1,4 @@
-﻿using System;
-using System.Windows;
-using System.Windows.Controls;
-using System.Windows.Threading;
-using Telerik.Windows.Controls;
-using Telerik.Windows.Controls.GridView;
+﻿using System.Windows.Controls;
 
 namespace SensorMonitorClient
 {
@@ -25,7 +20,7 @@ namespace SensorMonitorClient
             gvServerData.ItemsSource = hmsDataCollection.GetDataList();
 
             // Liste med sensor ID verdier
-            gvSensorID.ItemsSource = sensorStatus.GetSensorList();
+            gvSensorID.ItemsSource = sensorStatus.GetSensorGroupList();
         }
     }
 }
