@@ -323,6 +323,7 @@
     <Compile Include="..\SensorMonitorClient\Services\UserInputs.cs">
       <Link>Services\UserInputs.cs</Link>
     </Compile>
+    <Compile Include="Helpers\GraphBuffer.cs" />
     <Compile Include="Services\HelideckMotionLimits.cs" />
     <Compile Include="Services\HMSData.cs" />
     <Compile Include="Services\HMSDatabase.cs" />

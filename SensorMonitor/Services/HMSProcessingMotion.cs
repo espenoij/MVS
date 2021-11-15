@@ -476,28 +476,28 @@ namespace HMS_Server
 
             // Sjekke om vi skal ta ut gamle verdier
             bool findNewMaxValue = false;
-            bool done = false;
+            bool doneRemovingOldValues = false;
 
-            for (int i = 0; i < dataList.Count && i >= 0 && !done; i++)
+            while (!doneRemovingOldValues && dataList.Count > 0)
             {
                 // Time stamp eldre enn satt grense?
-                if (dataList[i]?.timestamp.AddSeconds(time) < DateTime.UtcNow)
+                if (dataList[0]?.timestamp.AddSeconds(time) < DateTime.UtcNow)
                 {
                     // Sjekke om dette var høyeste verdi
-                    if (dataList[i].data == maxValue.data)
+                    if (dataList[0].data == maxValue.data)
                     {
                         // Finne ny høyeste verdi
                         findNewMaxValue = true;
                     }
 
                     // Fjerne gammel verdi fra verdiliste
-                    dataList.RemoveAt(i--);
+                    dataList.RemoveAt(0);
                 }
                 else
                 {
                     // Vi har kommet til nyere tidsverdier som ikke skal fjernes
                     // Kan da avslutte søk etter gamle verdier
-                    done = true;
+                    doneRemovingOldValues = true;
                 }
             }
 
@@ -506,8 +506,8 @@ namespace HMS_Server
             {
                 double oldMaxValue = maxValue.data;
                 maxValue.data = 0;
-                done = false;
-                for (int j = 0; j < dataList.Count && !done; j++)
+                doneRemovingOldValues = false;
+                for (int j = 0; j < dataList.Count && !doneRemovingOldValues; j++)
                 {
                     // Kan avslutte søket dersom vi finne en verdi like den gamle max verdien (ingen er høyere)
                     if (dataList[j]?.data == oldMaxValue)
@@ -516,7 +516,7 @@ namespace HMS_Server
                         maxValue.timestamp = dataList[j].timestamp;
                         maxValue.status = DataStatus.OK;
 
-                        done = true;
+                        doneRemovingOldValues = true;
                     }
                     else
                     {
@@ -544,33 +544,33 @@ namespace HMS_Server
             }
 
             // Sjekke om vi skal ta ut gamle verdier
-            bool done = false;
+            bool doneRemovingOldValues = false;
 
-            for (int i = 0; i < dataList.Count && i >= 0 && !done; i++)
+            while (!doneRemovingOldValues && dataList.Count > 0)
             {
-                if (dataList[i] != null)
+                if (dataList[0] != null)
                 {
                     // Time stamp eldre enn satt grense?
-                    if (dataList[i].timestamp.AddSeconds(time) < DateTime.UtcNow)
+                    if (dataList[0].timestamp.AddSeconds(time) < DateTime.UtcNow)
                     {
                         // Trekke fra i total summen
-                        totalSum.data -= dataList[i].data;
+                        totalSum.data -= dataList[0].data;
 
                         // Fjerne gammel verdi fra verdiliste
-                        dataList.RemoveAt(i--);
+                        dataList.RemoveAt(0);
                     }
                     else
                     {
                         // Vi har kommet til nyere tidsverdier som ikke skal fjernes
                         // Kan da avslutte søk etter gamle verdier
-                        done = true;
+                        doneRemovingOldValues = true;
                     }
                 }
                 else
                 {
                     // Fjerne null forekomst
                     // Denne er plassert her fordi jeg fikk et tilfelle der hele listen dataList[i] var lik null.
-                    dataList.RemoveAt(i--);
+                    dataList.RemoveAt(0);
                 }
             }
 
@@ -727,22 +727,22 @@ namespace HMS_Server
                     significantHeaveRate2mMin = sensorData.data;
 
                 // Sjekke om vi skal fjerne data fra 2 min listen
-                bool done = false;
+                bool doneRemovingOldValues = false;
                 bool findNewMinValue = false;
 
-                for (int i = 0; i < significantHeaveRate2mMinData.Count() && i >= 0 && !done; i++)
+                while (!doneRemovingOldValues && significantHeaveRate2mMinData.Count > 0)
                 {
-                    if (significantHeaveRate2mMinData[i]?.timestamp.AddMinutes(2) < DateTime.UtcNow)
+                    if (significantHeaveRate2mMinData[0]?.timestamp.AddMinutes(2) < DateTime.UtcNow)
                     {
                         // Er den verdien vi nå skal fjerne lik minimunsverdien?
-                        if (significantHeaveRate2mMinData[i].data == significantHeaveRate2mMin)
+                        if (significantHeaveRate2mMinData[0].data == significantHeaveRate2mMin)
                             findNewMinValue = true;
 
-                        significantHeaveRate2mMinData.RemoveAt(i--);
+                        significantHeaveRate2mMinData.RemoveAt(0);
                     }
                     else
                     {
-                        done = true;
+                        doneRemovingOldValues = true;
                     }
                 }
 
@@ -752,14 +752,14 @@ namespace HMS_Server
                     double oldMinValue = significantHeaveRate2mMin;
                     significantHeaveRate2mMin = double.MaxValue;
 
-                    done = false;
-                    for (int j = 0; j < significantHeaveRate2mMinData.Count && !done; j++)
+                    doneRemovingOldValues = false;
+                    for (int j = 0; j < significantHeaveRate2mMinData.Count && !doneRemovingOldValues; j++)
                     {
                         // Kan avslutte søket dersom vi finne en verdi like den gamle minimumsverdien (ingen er lavere)
                         if (significantHeaveRate2mMinData[j]?.data == oldMinValue)
                         {
                             significantHeaveRate2mMin = oldMinValue;
-                            done = true;
+                            doneRemovingOldValues = true;
                         }
                         else
                         {
@@ -784,22 +784,22 @@ namespace HMS_Server
                 significantHeaveRate10mSum += sensorData.data;
 
                 // Sjekke om vi skal ta ut gamle verdier
-                done = false;
-                for (int i = 0; i < significantHeaveRate10mMeanData.Count && i >= 0 && !done; i++)
+                doneRemovingOldValues = false;
+                while (!doneRemovingOldValues && significantHeaveRate10mMeanData.Count > 0)
                 {
-                    if (significantHeaveRate10mMeanData[i]?.timestamp.AddMinutes(10) < DateTime.UtcNow)
+                    if (significantHeaveRate10mMeanData[0]?.timestamp.AddMinutes(10) < DateTime.UtcNow)
                     {
                         // Trekke fra i total summen
-                        significantHeaveRate10mSum -= significantHeaveRate10mMeanData[i].data;
+                        significantHeaveRate10mSum -= significantHeaveRate10mMeanData[0].data;
 
                         // Fjerne fra verdi listne
-                        significantHeaveRate10mMeanData.RemoveAt(i--);
+                        significantHeaveRate10mMeanData.RemoveAt(0);
                     }
                     else
                     {
                         // Vi har kommet til nyere tidsverdier som ikke skal fjernes
                         // Kan da avslutte søk etter gamle verdier
-                        done = true;
+                        doneRemovingOldValues = true;
                     }
                 }
 
@@ -821,21 +821,21 @@ namespace HMS_Server
                     significantHeaveRate20mMax = sensorData.data;
 
                 // Sjekke om vi skal fjerne data fra 20 min listen
-                done = false;
+                doneRemovingOldValues = false;
                 bool findNewMaxValue = false;
-                for (int i = 0; i < significantHeaveRate20mMaxData.Count() && i >= 0 && !done; i++)
+                while (!doneRemovingOldValues && significantHeaveRate20mMaxData.Count > 0)
                 {
-                    if (significantHeaveRate20mMaxData[i]?.timestamp.AddMinutes(20) < DateTime.UtcNow)
+                    if (significantHeaveRate20mMaxData[0]?.timestamp.AddMinutes(20) < DateTime.UtcNow)
                     {
                         // Er den verdien vi nå skal fjerne lik maximunsverdien?
-                        if (significantHeaveRate20mMaxData[i].data == significantHeaveRate20mMax)
+                        if (significantHeaveRate20mMaxData[0].data == significantHeaveRate20mMax)
                             findNewMaxValue = true;
 
-                        significantHeaveRate20mMaxData.RemoveAt(i--);
+                        significantHeaveRate20mMaxData.RemoveAt(0);
                     }
                     else
                     {
-                        done = true;
+                        doneRemovingOldValues = true;
                     }
                 }
 
@@ -844,14 +844,14 @@ namespace HMS_Server
                 {
                     double oldMaxValue = significantHeaveRate20mMax;
                     significantHeaveRate20mMax = double.MaxValue;
-                    done = false;
-                    for (int j = 0; j < significantHeaveRate20mMaxData.Count && !done; j++)
+                    doneRemovingOldValues = false;
+                    for (int j = 0; j < significantHeaveRate20mMaxData.Count && !doneRemovingOldValues; j++)
                     {
                         // Kan avslutte søket dersom vi finne en verdi like den gamle minimumsverdien (ingen er lavere)
                         if (significantHeaveRate20mMaxData[j]?.data == oldMaxValue)
                         {
                             significantHeaveRate20mMax = oldMaxValue;
-                            done = true;
+                            doneRemovingOldValues = true;
                         }
                         else
                         {

@@ -138,12 +138,17 @@ namespace HMS_Client
 
         private void RemoveOldData(RadObservableCollectionEx<HelideckStatus> dataList, double timeInterval)
         {
-            for (int i = 0; i < dataList.Count && i >= 0; i++)
+            if (dataList != null)
             {
-                if (dataList[i]?.timestamp < DateTime.UtcNow.AddSeconds(-timeInterval))
-                    dataList.RemoveAt(i--);
-                else
-                    break;
+                bool doneRemovingOldData = false;
+
+                while (!doneRemovingOldData && dataList.Count > 0)
+                {
+                    if (dataList[0].timestamp < DateTime.UtcNow.AddSeconds(-timeInterval))
+                        dataList.RemoveAt(0);
+                    else
+                        doneRemovingOldData = true;
+                }
             }
         }
 

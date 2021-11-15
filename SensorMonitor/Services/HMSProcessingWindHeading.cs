@@ -329,26 +329,26 @@ namespace HMS_Server
                 }
 
                 // Sjekke om vi skal fjerne data fra data listen
-                bool done = false;
+                bool doneRemovingOldValues = false;
                 bool findNewMaxGust = false;
 
-                for (int i = 0; i < windAverageData.windDataList.Count && i >= 0 && !done; i++)
+                while (!doneRemovingOldValues && windAverageData.windDataList.Count > 0)
                 {
-                    if (windAverageData.windDataList[i]?.timestamp.AddMinutes(windAverageData.minutes) < DateTime.UtcNow)
+                    if (windAverageData.windDataList[0]?.timestamp.AddMinutes(windAverageData.minutes) < DateTime.UtcNow)
                     {
                         // Trekke fra i total summene
-                        windAverageData.windDataDirTotal -= windAverageData.windDataList[i].dir;
-                        windAverageData.windDataSpdTotal -= windAverageData.windDataList[i].spd;
+                        windAverageData.windDataDirTotal -= windAverageData.windDataList[0].dir;
+                        windAverageData.windDataSpdTotal -= windAverageData.windDataList[0].spd;
 
                         // Sjekke om dette var max gust
-                        if (windAverageData.windDataList[i].spd == windAverageData.windDataSpdMax)
+                        if (windAverageData.windDataList[0].spd == windAverageData.windDataSpdMax)
                             findNewMaxGust = true;
 
-                        windAverageData.windDataList.RemoveAt(i--);
+                        windAverageData.windDataList.RemoveAt(0);
                     }
                     else
                     {
-                        done = true;
+                        doneRemovingOldValues = true;
                     }
                 }
 
@@ -358,13 +358,13 @@ namespace HMS_Server
                     double oldMax = windAverageData.windDataSpdMax;
                     windAverageData.windDataSpdMax = 0;
 
-                    for (int j = 0; j < windAverageData.windDataList.Count && !done; j++)
+                    for (int j = 0; j < windAverageData.windDataList.Count && !doneRemovingOldValues; j++)
                     {
                         // Kan avslutte søket dersom vi finne en verdi like den gamle maximumsverdien (ingen er høyere)
                         if (windAverageData.windDataList[j]?.spd == oldMax)
                         {
                             windAverageData.windDataSpdMax = oldMax;
-                            done = true;
+                            doneRemovingOldValues = true;
                         }
                         else
                         {

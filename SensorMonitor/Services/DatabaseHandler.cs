@@ -104,11 +104,6 @@ namespace HMS_Server
 
         public void CreateTables(RadObservableCollectionEx<HMSData> hmsInputDataList)
         {
-            //// DEBUG
-            //string dbTableName;
-            //HMSData testdata = new HMSData();
-            //RadObservableCollectionEx<HMSData> testList = new RadObservableCollectionEx<HMSData>();
-
             try
             {
                 using (var connection = new MySqlConnection(connectionString))
@@ -122,17 +117,9 @@ namespace HMS_Server
                     //////////////////////////////////////////////////////////
                     lock (hmsInputDataList)
                     {
-                        //// DEBUG
-                        //foreach (var item in hmsInputDataList)
-                        //    testList.Add(item);
-
                         // For hver HMS data verdi som skal lagres oppretter vi en ny database tabell, dersom den ikke allerede eksisterer
                         foreach (var hmsData in hmsInputDataList)
                         {
-                            //// DEBUG
-                            //dbTableName = hmsData.dbTableName;
-                            //testdata.Set(hmsData);
-
                             if (!string.IsNullOrEmpty(hmsData.dbTableName))
                             {
                                 // Opprette nytt database table

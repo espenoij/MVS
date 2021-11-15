@@ -34,7 +34,7 @@ namespace HMS_Client
 
                 // Oppdatere data som skal ut i grafer
                 if (rwdGraphData.status == DataStatus.OK)
-                    UpdateChartBuffer(rwdGraphData, relativeWindDir20mBuffer);
+                    GraphBuffer.Update(rwdGraphData, relativeWindDir20mBuffer);
             }
 
             // Oppdatere trend data i UI: 20 minutter
@@ -45,13 +45,10 @@ namespace HMS_Client
             void ChartDataUpdate20m(object sender, EventArgs e)
             {
                 // Overføre data fra buffer til chart data: 20m
-                TransferBuffer(relativeWindDir20mBuffer, relativeWindDir20mDataList);
-
-                // Slette buffer
-                ClearBuffer(relativeWindDir20mBuffer);
+                GraphBuffer.Transfer(relativeWindDir20mBuffer, relativeWindDir20mDataList);
 
                 // Fjerne gamle data fra chart data
-                RemoveOldData(relativeWindDir20mDataList, Constants.Minutes20);
+                GraphBuffer.RemoveOldData(relativeWindDir20mDataList, Constants.Minutes20);
             }
         }
 
@@ -104,49 +101,6 @@ namespace HMS_Client
 
                 OnPropertyChanged(nameof(rwdGraphDataX));
                 OnPropertyChanged(nameof(rwdGraphDataY));
-            }
-        }
-
-        public void UpdateChartBuffer(HMSData data, RadObservableCollectionEx<HMSData> buffer)
-        {
-            // NB! Når vi har data tilgjengelig fores dette inn i grafene.
-            // Når vi ikke har data tilgjengelig legges 0 data inn i grafene for å holde de gående.
-
-            // Grunne til at vi buffrer data først er pga ytelsesproblemer dersom vi kjører data rett ut i grafene på skjerm.
-            // Det takler ikke grafene fra Telerik. Buffrer data først og så oppdaterer vi grafene med jevne passende mellomrom.
-
-            if (data?.status == DataStatus.OK)
-            {
-                // Lagre data i buffer
-                buffer?.Add(new HMSData(data));
-            }
-            else
-            {
-                // Lagre 0 data
-                buffer?.Add(new HMSData() { data = 0, timestamp = DateTime.UtcNow });
-            }
-        }
-
-        public void TransferBuffer(RadObservableCollectionEx<HMSData> buffer, RadObservableCollectionEx<HMSData> dataList)
-        {
-            // Overfører alle data fra buffer til dataList
-            dataList.AddRange(buffer);
-        }
-
-        public void ClearBuffer(RadObservableCollectionEx<HMSData> buffer)
-        {
-            // Sletter alle data fra buffer
-            buffer.Clear();
-        }
-
-        public void RemoveOldData(RadObservableCollectionEx<HMSData> dataList, double timeInterval)
-        {
-            for (int i = 0; i < dataList.Count && i >= 0; i++)
-            {
-                if (dataList[i]?.timestamp < DateTime.UtcNow.AddSeconds(-timeInterval))
-                    dataList.RemoveAt(i--);
-                else
-                    break;
             }
         }
 
