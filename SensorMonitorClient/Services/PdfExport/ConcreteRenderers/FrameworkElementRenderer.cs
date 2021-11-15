@@ -5,7 +5,7 @@ using System.Windows;
 using System.Windows.Controls;
 using System.Windows.Media;
 
-namespace SensorMonitorClient
+namespace HMS_Client
 {
     internal class FrameworkElementRenderer : UIElementRendererBase
     {

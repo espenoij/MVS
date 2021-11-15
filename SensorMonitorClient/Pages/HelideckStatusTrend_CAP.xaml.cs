@@ -6,7 +6,7 @@ using System.Windows.Media;
 using System.Windows.Shapes;
 using System.Windows.Threading;
 
-namespace SensorMonitorClient
+namespace HMS_Client
 {
     /// <summary>
     /// Interaction logic for HelideckStatusTrend_CAP.xaml

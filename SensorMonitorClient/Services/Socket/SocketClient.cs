@@ -10,7 +10,7 @@ using System.Threading;
 using System.Threading.Tasks;
 using Telerik.Windows.Data;
 
-namespace SensorMonitorClient
+namespace HMS_Client
 {
     class SocketClient
     {
@@ -148,28 +148,28 @@ namespace SensorMonitorClient
                 IPEndPoint remoteIP = new IPEndPoint(ipAddress, serverPort);
 
                 // Opprette TCP/IP socket.  
-                Socket client = new Socket(ipAddress.AddressFamily, SocketType.Stream, ProtocolType.Tcp);
+                Socket socket = new Socket(ipAddress.AddressFamily, SocketType.Stream, ProtocolType.Tcp);
 
-                client.SendTimeout = 2000;
-                client.ReceiveTimeout = 2000;
+                socket.SendTimeout = 2000;
+                socket.ReceiveTimeout = 2000;
 
                 // Opprette forbindelse
-                IAsyncResult result = client.BeginConnect(remoteIP, new AsyncCallback(ConnectCallback), client);
+                IAsyncResult result = socket.BeginConnect(remoteIP, new AsyncCallback(ConnectCallback), socket);
                 connectDone.WaitOne(Constants.SocketTimeout, true);
 
-                if (client.Connected && packet != string.Empty)
+                if (socket.Connected && packet != string.Empty)
                 {
                     // Sende data/forespørsel
-                    Send(client, packet);
+                    Send(socket, packet);
                     sendDone.WaitOne(Constants.SocketTimeout, true);
 
                     // Motta svar/data
-                    Receive(client);
+                    Receive(socket);
                     receiveDone.WaitOne(Constants.SocketTimeout, true);
 
                     // Avslutte/Release socket
-                    client.Shutdown(SocketShutdown.Both);
-                    client.Disconnect(true);
+                    socket.Shutdown(SocketShutdown.Both);
+                    socket.Disconnect(true);
 
                     if (AdminMode.IsActive)
                         socketConsole?.Add(string.Format("Response received : {0}", response));
@@ -181,8 +181,6 @@ namespace SensorMonitorClient
                 {
                     if (AdminMode.IsActive)
                         socketConsole?.Add("No responce from server");
-
-                    client.Disconnect(true);
                 }
             }
             catch (ObjectDisposedException odx)
@@ -400,23 +398,29 @@ namespace SensorMonitorClient
                     //////////////////////////
                     case Constants.CommandGetDataUpdate:
 
-                        // Fjerne command
-                        payload = receivedData.Substring(receivedData.IndexOf(command) + command.Length);
-
-                        // Fjerne end-of-file
-                        payload = payload.Substring(0, payload.LastIndexOf(Constants.EOF));
-
-                        if (payload.CompareTo(string.Empty) != 0)
+                        if (!string.IsNullOrEmpty(receivedData))
                         {
-                            // De-serialisere fra JSON
-                            List<HMSData> dataList = JsonSerializer.Deserialize<List<HMSData>>(payload);
+                            if (receivedData.IndexOf(command) < receivedData.Length)
+                            {
+                                // Fjerne command
+                                payload = receivedData.Substring(receivedData.IndexOf(command) + command.Length);
 
-                            // Overføre mottatt data til lagringsplass
-                            TransferReceivedData(dataList);
+                                // Fjerne end-of-file
+                                payload = payload.Substring(0, payload.LastIndexOf(Constants.EOF));
 
-                            // Ferdig med å hente data fra socket -> si i fra at vi er ferdig og prosessere data
-                            if (socketCallback != null)
-                                socketCallback();
+                                if (payload.CompareTo(string.Empty) != 0)
+                                {
+                                    // De-serialisere fra JSON
+                                    List<HMSData> dataList = JsonSerializer.Deserialize<List<HMSData>>(payload);
+
+                                    // Overføre mottatt data til lagringsplass
+                                    TransferReceivedData(dataList);
+
+                                    // Ferdig med å hente data fra socket -> si i fra at vi er ferdig og prosessere data
+                                    if (socketCallback != null)
+                                        socketCallback();
+                                }
+                            }
                         }
                         break;
 
@@ -424,23 +428,29 @@ namespace SensorMonitorClient
                     //////////////////////////
                     case Constants.CommandGetSensorStatus:
 
-                        // Fjerne command
-                        payload = receivedData.Substring(receivedData.IndexOf(command) + command.Length);
-
-                        // Fjerne end-of-file
-                        payload = payload.Substring(0, payload.LastIndexOf(Constants.EOF));
-
-                        if (payload.CompareTo(string.Empty) != 0)
+                        if (!string.IsNullOrEmpty(receivedData))
                         {
-                            // De-serialisere fra JSON
-                            List<SensorGroup> sensorStatusListReceived = JsonSerializer.Deserialize<List<SensorGroup>>(payload);
+                            if (receivedData.IndexOf(command) < receivedData.Length)
+                            {
+                                // Fjerne command
+                                payload = receivedData.Substring(receivedData.IndexOf(command) + command.Length);
 
-                            // Overføre mottatt data til lagringsplass
-                            TransferReceivedSensorStatus(sensorStatusListReceived);
+                                // Fjerne end-of-file
+                                payload = payload.Substring(0, payload.LastIndexOf(Constants.EOF));
 
-                            // Ferdig med å hente data fra socket -> si i fra at vi er ferdig og prosessere data
-                            if (socketCallback != null)
-                                socketCallback();
+                                if (payload.CompareTo(string.Empty) != 0)
+                                {
+                                    // De-serialisere fra JSON
+                                    List<SensorGroup> sensorStatusListReceived = JsonSerializer.Deserialize<List<SensorGroup>>(payload);
+
+                                    // Overføre mottatt data til lagringsplass
+                                    TransferReceivedSensorStatus(sensorStatusListReceived);
+
+                                    // Ferdig med å hente data fra socket -> si i fra at vi er ferdig og prosessere data
+                                    if (socketCallback != null)
+                                        socketCallback();
+                                }
+                            }
                         }
                         break;
 
@@ -461,23 +471,29 @@ namespace SensorMonitorClient
                     //////////////////////////
                     case Constants.CommandGetUserInputs:
 
-                        // Fjerne command
-                        payload = receivedData.Substring(receivedData.IndexOf(command) + command.Length);
-
-                        // Fjerne end-of-file
-                        payload = payload.Substring(0, payload.LastIndexOf(Constants.EOF));
-
-                        if (payload.CompareTo(string.Empty) != 0)
+                        if (!string.IsNullOrEmpty(receivedData))
                         {
-                            // De-serialisere fra JSON
-                            UserInputs userInputsReceived = JsonSerializer.Deserialize<UserInputs>(payload);
+                            if (receivedData.IndexOf(command) < receivedData.Length)
+                            {
+                                // Fjerne command
+                                payload = receivedData.Substring(receivedData.IndexOf(command) + command.Length);
 
-                            // Overføre mottatt data til lagringsplass
-                            TransferReceivedUserInputs(userInputsReceived);
+                                // Fjerne end-of-file
+                                payload = payload.Substring(0, payload.LastIndexOf(Constants.EOF));
 
-                            // Ferdig med å hente data fra socket -> si i fra at vi er ferdig og prosessere data
-                            if (socketCallback != null)
-                                socketCallback();
+                                if (payload.CompareTo(string.Empty) != 0)
+                                {
+                                    // De-serialisere fra JSON
+                                    UserInputs userInputsReceived = JsonSerializer.Deserialize<UserInputs>(payload);
+
+                                    // Overføre mottatt data til lagringsplass
+                                    TransferReceivedUserInputs(userInputsReceived);
+
+                                    // Ferdig med å hente data fra socket -> si i fra at vi er ferdig og prosessere data
+                                    if (socketCallback != null)
+                                        socketCallback();
+                                }
+                            }
                         }
                         break;
 

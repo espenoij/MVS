@@ -6,7 +6,7 @@ using System.Text;
 using System.Threading.Tasks;
 using Telerik.Windows.Data;
 
-namespace SensorMonitor
+namespace HMS_Server
 {
     public class HMSDataCollection
     {

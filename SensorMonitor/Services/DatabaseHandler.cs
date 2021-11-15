@@ -5,7 +5,7 @@ using System.Linq;
 using System.Security;
 using Telerik.Windows.Data;
 
-namespace SensorMonitor
+namespace HMS_Server
 {
     public class DatabaseHandler
     {

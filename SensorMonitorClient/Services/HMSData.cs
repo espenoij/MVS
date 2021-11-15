@@ -2,9 +2,9 @@
 using System.ComponentModel;
 using System.Runtime.CompilerServices;
 
-namespace SensorMonitorClient
+namespace HMS_Client
 {
-    // NB! Data definisjonene her er, og må være, lik de i server delen (SensorMonitorClient\HMSData.cs)
+    // NB! Data definisjonene her er, og må være, lik de i server delen (HMS_Client\HMSData.cs)
     // Forskjellen er at server klassen har prosessering i tillegg. Det trenger ikke klient siden.
 
     public class HMSData : INotifyPropertyChanged

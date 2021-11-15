@@ -1,7 +1,7 @@
 ﻿using System;
 using System.Collections.Generic;
 
-namespace SensorMonitor
+namespace HMS_Server
 {
     class HMSDataProcessing
     {

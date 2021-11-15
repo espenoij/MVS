@@ -13,7 +13,7 @@ using Telerik.Windows.Controls;
 using Telerik.Windows.Data;
 using System.Windows.Input;
 
-namespace SensorMonitor
+namespace HMS_Server
 {
     /// <summary>
     /// Interaction logic for SerialPortSetupWindow.xaml

@@ -10,7 +10,7 @@ using System.Windows.Threading;
 using Telerik.Windows.Controls;
 using Telerik.Windows.Data;
 
-namespace SensorMonitor
+namespace HMS_Server
 {
     /// <summary>
     /// Interaction logic for MainWindow.xaml

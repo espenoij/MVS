@@ -3,7 +3,7 @@ using System.ComponentModel;
 using System.Runtime.CompilerServices;
 using System.Windows.Threading;
 
-namespace SensorMonitorClient
+namespace HMS_Client
 {
     public class GeneralInformationVM : INotifyPropertyChanged
     {
@@ -126,7 +126,7 @@ namespace SensorMonitorClient
         {
             get
             {
-                if (vesselName.status == DataStatus.OK)
+                if (_vesselName.status == DataStatus.OK && !string.IsNullOrEmpty(_vesselName.data3))
                     return vesselName.data3.ToString();
                 else
                     return Constants.NotAvailable;

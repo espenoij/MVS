@@ -1,7 +1,7 @@
 ﻿using System.Windows;
 using System.Windows.Media;
 
-namespace SensorMonitorClient
+namespace HMS_Client
 {
     internal static class MathHelper
     {

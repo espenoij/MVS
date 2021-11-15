@@ -17,7 +17,7 @@ using System.Windows.Threading;
 using Telerik.Windows.Controls.ChartView;
 using Telerik.Windows.Data;
 
-namespace SensorMonitorClient
+namespace HMS_Client
 {
     /// <summary>
     /// Interaction logic for HelideckMotionTrend_NOROG.xaml

@@ -1,7 +1,7 @@
 ﻿using System.Windows;
 using System.Windows.Controls;
 
-namespace SensorMonitorClient
+namespace HMS_Client
 {
     internal class PanelRenderer : FrameworkElementRenderer
     {

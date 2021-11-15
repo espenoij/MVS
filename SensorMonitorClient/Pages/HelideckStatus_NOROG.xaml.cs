@@ -1,6 +1,6 @@
 ﻿using System.Windows.Controls;
 
-namespace SensorMonitorClient
+namespace HMS_Client
 {
     /// <summary>
     /// Interaction logic for HelideckStatus_NOROG.xaml

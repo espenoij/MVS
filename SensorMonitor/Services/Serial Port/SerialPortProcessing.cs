@@ -3,7 +3,7 @@ using System.Collections.Generic;
 using System.Globalization;
 using System.Text.RegularExpressions;
 
-namespace SensorMonitor
+namespace HMS_Server
 {
     class SerialPortProcessing
     {

@@ -14,7 +14,7 @@ using System.Windows.Navigation;
 using System.Windows.Shapes;
 using System.Windows.Threading;
 
-namespace SensorMonitorClient
+namespace HMS_Client
 {
     /// <summary>
     /// Interaction logic for WindHeadingCompassRose.xaml

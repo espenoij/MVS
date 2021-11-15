@@ -1,7 +1,7 @@
 ﻿using System.ComponentModel;
 using System.Runtime.CompilerServices;
 
-namespace SensorMonitor
+namespace HMS_Server
 {
     public class ModbusData : INotifyPropertyChanged
     {

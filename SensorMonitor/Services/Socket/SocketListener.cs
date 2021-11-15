@@ -10,7 +10,7 @@ using System.Text.Json;
 using System.Threading;
 using System.Windows.Threading;
 
-namespace SensorMonitor
+namespace HMS_Server
 {
     class SocketListener
     {
@@ -75,15 +75,31 @@ namespace SensorMonitor
 
             void checkSocketListener(object sender, EventArgs e)
             {
-                if (listener != null)
+                // Kjører socket worker thread
+                if (!socketWorker.IsBusy)
                 {
-                    // Kjører socket?
-                    if (!listener.Connected)
+                    // Socket opprettet?
+                    if (listener != null)
                     {
-                        // Starte socket
-                        StartSocketWorker();
+                        // Er socket tilkoblet?
+                        if (!SocketConnected(listener))
+                        {
+                            // Restarte socket
+                            StartSocketWorker();
+                        }
                     }
                 }
+            }
+
+            // Sjekk om socket er oppkoblet
+            bool SocketConnected(Socket s)
+            {
+                bool part1 = s.Poll(1000, SelectMode.SelectRead);
+                bool part2 = (s.Available == 0);
+                if (part1 && part2)
+                    return false;
+                else
+                    return true;
             }
 
             // Starter socket worker

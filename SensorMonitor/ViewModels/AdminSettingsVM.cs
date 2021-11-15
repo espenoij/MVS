@@ -1,9 +1,8 @@
 ﻿using System;
 using System.ComponentModel;
 using System.Runtime.CompilerServices;
-using System.Windows;
 
-namespace SensorMonitor
+namespace HMS_Server
 {
     public class AdminSettingsVM : INotifyPropertyChanged
     {

@@ -9,7 +9,7 @@ using System.Windows;
 using System.Windows.Threading;
 using Telerik.Windows.Data;
 
-namespace SensorMonitor
+namespace HMS_Server
 {
     class SerialPortDataRetrieval
     {
@@ -225,38 +225,35 @@ namespace SensorMonitor
                                     CalculatedData calculatedData = process.ApplyCalculationsToSelectedData(selectedData, sensorData.dataCalculations, serialPortData.timestamp, errorHandler, ErrorMessageCategory.None);
 
                                     // Lagre resultat
-                                    //if (!double.IsNaN(calculatedData.data))
-                                    //{
-                                        sensorData.timestamp = serialPortData.timestamp;
-                                        sensorData.data = calculatedData.data;
+                                    sensorData.timestamp = serialPortData.timestamp;
+                                    sensorData.data = calculatedData.data;
 
-                                        // Lagre til databasen
-                                        if (sensorData.saveFreq == DatabaseSaveFrequency.Sensor)
+                                    // Lagre til databasen
+                                    if (sensorData.saveFreq == DatabaseSaveFrequency.Sensor)
+                                    {
+                                        // Legger ikke inn data dersom data ikke er satt
+                                        if (!double.IsNaN(sensorData.data))
                                         {
-                                            // Legger ikke inn data dersom data ikke er satt
-                                            if (!double.IsNaN(sensorData.data))
+                                            try
                                             {
-                                                try
-                                                {
-                                                    database.Insert(sensorData);
+                                                database.Insert(sensorData);
 
-                                                    errorHandler.ResetDatabaseError(ErrorHandler.DatabaseErrorType.Insert);
-                                                }
-                                                catch (Exception ex)
-                                                {
-                                                    errorHandler.Insert(
-                                                        new ErrorMessage(
-                                                            DateTime.UtcNow,
-                                                            ErrorMessageType.Database,
-                                                            ErrorMessageCategory.None,
-                                                            string.Format("Database Error (Insert 3)\n\nSystem Message:\n{0}", ex.Message),
-                                                            sensorData.id));
+                                                errorHandler.ResetDatabaseError(ErrorHandler.DatabaseErrorType.Insert);
+                                            }
+                                            catch (Exception ex)
+                                            {
+                                                errorHandler.Insert(
+                                                    new ErrorMessage(
+                                                        DateTime.UtcNow,
+                                                        ErrorMessageType.Database,
+                                                        ErrorMessageCategory.None,
+                                                        string.Format("Database Error (Insert 3)\n\nSystem Message:\n{0}", ex.Message),
+                                                        sensorData.id));
 
-                                                    errorHandler.SetDatabaseError(ErrorHandler.DatabaseErrorType.Insert);
-                                                }
+                                                errorHandler.SetDatabaseError(ErrorHandler.DatabaseErrorType.Insert);
                                             }
                                         }
-                                    //}
+                                    }
                                 }
                             }
                             catch (Exception ex)

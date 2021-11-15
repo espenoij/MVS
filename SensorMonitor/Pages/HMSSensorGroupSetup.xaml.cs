@@ -5,7 +5,7 @@ using System.Windows.Threading;
 using Telerik.Windows.Controls;
 using Telerik.Windows.Controls.GridView;
 
-namespace SensorMonitor
+namespace HMS_Server
 {
     /// <summary>
     /// Interaction logic for HMSSensorGroupSetup.xaml

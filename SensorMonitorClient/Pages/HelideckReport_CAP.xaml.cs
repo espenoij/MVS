@@ -8,7 +8,7 @@ using System.Windows.Controls;
 using System.Windows.Input;
 using Telerik.Windows.Controls;
 
-namespace SensorMonitorClient
+namespace HMS_Client
 {
     /// <summary>
     /// Interaction logic for HelideckReport_CAP.xaml

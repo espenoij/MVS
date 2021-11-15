@@ -2,7 +2,7 @@
 using System.ComponentModel;
 using System.Runtime.CompilerServices;
 
-namespace SensorMonitorClient
+namespace HMS_Client
 {
     public class MainWindowVM : INotifyPropertyChanged
     {

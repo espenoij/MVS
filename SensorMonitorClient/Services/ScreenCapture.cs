@@ -10,7 +10,7 @@ using System.Windows.Interop;
 using System.Windows.Media.Imaging;
 using Telerik.Windows.Controls;
 
-namespace SensorMonitorClient
+namespace HMS_Client
 {
     class ScreenCapture
     {

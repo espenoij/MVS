@@ -1,6 +1,6 @@
 ﻿using System.Configuration;
 
-namespace SensorMonitorClient
+namespace HMS_Client
 {
     public class HelicopterOperatorConfigSection : ConfigurationSection
     {

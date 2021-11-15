@@ -1,7 +1,7 @@
 ﻿using System;
 using System.Security;
 
-namespace SensorMonitor
+namespace HMS_Server
 {
     class Encryption
     {

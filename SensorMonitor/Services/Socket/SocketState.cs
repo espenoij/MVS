@@ -1,7 +1,7 @@
 ﻿using System.Net.Sockets;
 using System.Text;
 
-namespace SensorMonitor
+namespace HMS_Server
 {
     public class SocketState
     {

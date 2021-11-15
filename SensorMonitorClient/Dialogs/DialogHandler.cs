@@ -1,4 +1,4 @@
-﻿namespace SensorMonitorClient
+﻿namespace HMS_Client
 {
     public static class DialogHandler
     {

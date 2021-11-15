@@ -1,7 +1,7 @@
 ﻿using System;
 using System.Collections.Generic;
 
-namespace SensorMonitorClient
+namespace HMS_Client
 {
     internal class CompositeDisposableObject : IDisposable
     {

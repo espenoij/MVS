@@ -1,6 +1,6 @@
 ﻿using System.Windows.Controls;
 
-namespace SensorMonitorClient
+namespace HMS_Client
 {
     /// <summary>
     /// Interaction logic for NOROG_GeneralInformation.xaml

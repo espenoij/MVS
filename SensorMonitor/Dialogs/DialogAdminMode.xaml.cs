@@ -13,7 +13,7 @@ using System.Windows.Media.Imaging;
 using System.Windows.Shapes;
 using Telerik.Windows.Controls;
 
-namespace SensorMonitor
+namespace HMS_Server
 {
     /// <summary>
     /// Interaction logic for DialogAdminMode.xaml

@@ -11,7 +11,7 @@ using System.Threading.Tasks;
 using System.Timers;
 using System.Windows;
 
-namespace SensorMonitor
+namespace HMS_Server
 {
     class ModbusDataRetrieval
     {

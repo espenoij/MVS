@@ -3,7 +3,7 @@ using System.Windows;
 using System.Windows.Media;
 using Telerik.Windows.Controls;
 
-namespace SensorMonitor
+namespace HMS_Server
 {
     /// <summary>
     /// Interaction logic for App.xaml

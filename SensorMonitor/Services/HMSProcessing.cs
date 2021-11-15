@@ -1,4 +1,4 @@
-﻿namespace SensorMonitor
+﻿namespace HMS_Server
 {
     public class HMSProcessing
     {

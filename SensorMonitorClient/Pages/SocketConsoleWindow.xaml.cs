@@ -7,7 +7,7 @@ using System.Windows.Threading;
 using Telerik.Windows.Controls;
 using Telerik.Windows.Data;
 
-namespace SensorMonitorClient
+namespace HMS_Client
 {
     /// <summary>
     /// Interaction logic for SocketConsoleWindow.xaml

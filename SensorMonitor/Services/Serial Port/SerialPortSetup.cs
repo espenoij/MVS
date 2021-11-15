@@ -2,7 +2,7 @@
 using System.Collections.Generic;
 using System.IO.Ports;
 
-namespace SensorMonitor
+namespace HMS_Server
 {
     public class SerialPortSetup
     {

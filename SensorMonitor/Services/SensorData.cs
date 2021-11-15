@@ -4,7 +4,7 @@ using System.ComponentModel;
 using System.IO.Ports;
 using System.Runtime.CompilerServices;
 
-namespace SensorMonitor
+namespace HMS_Server
 {
     public class SensorData : INotifyPropertyChanged
     {

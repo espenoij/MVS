@@ -7,7 +7,7 @@ using System.Threading.Tasks;
 using System.Windows.Threading;
 using Telerik.Windows.Data;
 
-namespace SensorMonitorClient
+namespace HMS_Client
 {
     public class ServerCom
     {

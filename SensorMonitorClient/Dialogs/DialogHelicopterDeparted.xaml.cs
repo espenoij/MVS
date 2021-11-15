@@ -2,7 +2,7 @@
 using System.Windows.Controls;
 using Telerik.Windows.Controls;
 
-namespace SensorMonitorClient
+namespace HMS_Client
 {
     /// <summary>
     /// Interaction logic for DialogHelicopterDeparted

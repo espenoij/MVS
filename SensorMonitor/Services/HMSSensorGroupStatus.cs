@@ -2,7 +2,7 @@
 using System.Linq;
 using System.Windows.Threading;
 
-namespace SensorMonitor
+namespace HMS_Server
 {
     public class HMSSensorGroupStatus
     {

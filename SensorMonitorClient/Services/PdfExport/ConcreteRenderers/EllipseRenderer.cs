@@ -1,7 +1,7 @@
 ﻿using System.Windows;
 using System.Windows.Shapes;
 
-namespace SensorMonitorClient
+namespace HMS_Client
 {
     internal class EllipseRenderer : UIElementRendererBase
     {

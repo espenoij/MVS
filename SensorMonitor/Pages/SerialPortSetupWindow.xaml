@@ -1,11 +1,11 @@
 ﻿<telerik:RadWindow
-    x:Class="SensorMonitor.SerialPortSetupWindow"
+    x:Class="HMS_Server.SerialPortSetupWindow"
     xmlns="http://schemas.microsoft.com/winfx/2006/xaml/presentation"
     xmlns:d="http://schemas.microsoft.com/expression/blend/2008"
     xmlns:x="http://schemas.microsoft.com/winfx/2006/xaml"
     xmlns:mc="http://schemas.openxmlformats.org/markup-compatibility/2006"
     xmlns:telerik="http://schemas.telerik.com/2008/xaml/presentation"
-    xmlns:local="clr-namespace:SensorMonitor"
+    xmlns:local="clr-namespace:HMS_Server"
     mc:Ignorable="d"
     telerik:Header="Serial Port Data Setup"
     WindowState="Maximized"

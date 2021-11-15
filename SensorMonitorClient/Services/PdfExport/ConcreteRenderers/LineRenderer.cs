@@ -3,7 +3,7 @@ using System.Windows;
 using System.Windows.Media;
 using System.Windows.Shapes;
 
-namespace SensorMonitorClient
+namespace HMS_Client
 {
     internal class LineRenderer : UIElementRendererBase
     {

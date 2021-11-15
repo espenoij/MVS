@@ -1,6 +1,6 @@
 ﻿using Telerik.Windows.Documents.Fixed.Model.Editing;
 
-namespace SensorMonitorClient
+namespace HMS_Client
 {
     internal class PdfRenderContext
     {

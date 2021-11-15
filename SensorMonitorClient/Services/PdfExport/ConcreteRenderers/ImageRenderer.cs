@@ -3,7 +3,7 @@ using System.Windows;
 using System.Windows.Media.Imaging;
 using Telerik.Windows.Media.Imaging;
 
-namespace SensorMonitorClient
+namespace HMS_Client
 {
     internal class ImageRenderer : UIElementRendererBase
     {

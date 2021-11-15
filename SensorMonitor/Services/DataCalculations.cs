@@ -4,7 +4,7 @@ using System.ComponentModel;
 using System.Globalization;
 using System.Linq;
 
-namespace SensorMonitor
+namespace HMS_Server
 {
     public class DataCalculations
     {

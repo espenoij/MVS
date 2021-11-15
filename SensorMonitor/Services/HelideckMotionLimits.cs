@@ -1,6 +1,6 @@
 ﻿using System;
 
-namespace SensorMonitor
+namespace HMS_Server
 {
     public class HelideckMotionLimits
     {

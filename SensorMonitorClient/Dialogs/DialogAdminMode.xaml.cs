@@ -1,7 +1,7 @@
 ﻿using System.Windows;
 using Telerik.Windows.Controls;
 
-namespace SensorMonitorClient
+namespace HMS_Client
 {
     /// <summary>
     /// Interaction logic for DialogAdminMode.xaml

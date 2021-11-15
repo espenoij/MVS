@@ -4,7 +4,7 @@ using System.Windows.Media;
 using Telerik.Windows.Documents.Fixed.Model.Data;
 using PdfColors = Telerik.Windows.Documents.Fixed.Model.ColorSpaces;
 
-namespace SensorMonitorClient
+namespace HMS_Client
 {
     internal static class PdfColorHelper
     {

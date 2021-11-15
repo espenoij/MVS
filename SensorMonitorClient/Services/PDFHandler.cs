@@ -7,7 +7,7 @@ using Telerik.Windows.Documents.Fixed.FormatProviders.Pdf.Export;
 using Telerik.Windows.Documents.Fixed.Model;
 using Telerik.Windows.Documents.Fixed.Model.Editing;
 
-namespace SensorMonitorClient
+namespace HMS_Client
 {
     class PDFHandler
     {

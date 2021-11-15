@@ -1,4 +1,4 @@
-﻿namespace SensorMonitor.Properties {
+﻿namespace HMS_Server.Properties {
     
     
     // This class allows you to handle specific events on the settings class:

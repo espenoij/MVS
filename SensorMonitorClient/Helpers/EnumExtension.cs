@@ -3,7 +3,7 @@ using System.ComponentModel;
 using System.Linq;
 using System.Reflection;
 
-namespace SensorMonitorClient
+namespace HMS_Client
 {
     public static class EnumExtension
     {

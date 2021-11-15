@@ -4,7 +4,7 @@ using System.IO;
 using System.Windows;
 using Telerik.Windows.Controls;
 
-namespace SensorMonitorClient
+namespace HMS_Client
 {
     /// <summary>
     /// Interaction logic for DialogScreenCapture.xaml

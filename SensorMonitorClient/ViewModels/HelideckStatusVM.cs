@@ -4,7 +4,7 @@ using System.Runtime.CompilerServices;
 using System.Windows.Threading;
 using Telerik.Windows.Data;
 
-namespace SensorMonitorClient
+namespace HMS_Client
 {
     public class HelideckStatusVM : INotifyPropertyChanged
     {

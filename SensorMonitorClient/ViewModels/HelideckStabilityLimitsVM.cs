@@ -6,7 +6,7 @@ using System.Windows;
 using System.Windows.Threading;
 using Telerik.Windows.Data;
 
-namespace SensorMonitorClient
+namespace HMS_Client
 {
     public class HelideckStabilityLimitsVM : INotifyPropertyChanged
     {

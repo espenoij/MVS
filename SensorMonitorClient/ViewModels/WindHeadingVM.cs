@@ -6,7 +6,7 @@ using System.Windows;
 using System.Windows.Media;
 using System.Windows.Threading;
 
-namespace SensorMonitorClient
+namespace HMS_Client
 {
     public class WindHeadingVM : INotifyPropertyChanged
     {

@@ -2,7 +2,7 @@
 using System.Windows.Controls;
 using System.Windows.Media;
 
-namespace SensorMonitorClient
+namespace HMS_Client
 {
     internal class TextBlockRenderer : UIElementRendererBase
     {

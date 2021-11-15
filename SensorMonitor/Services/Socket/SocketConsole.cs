@@ -1,6 +1,6 @@
 ﻿using System.ComponentModel;
 
-namespace SensorMonitor
+namespace HMS_Server
 {
     class SocketConsole
     {

@@ -1,6 +1,6 @@
 ﻿using Telerik.Windows.Controls;
 
-namespace SensorMonitorClient
+namespace HMS_Client
 {
     /// <summary>
     /// Interaction logic for DialogHandlerWarning.xaml

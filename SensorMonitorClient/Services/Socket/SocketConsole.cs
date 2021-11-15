@@ -3,7 +3,7 @@ using System.Windows;
 using System.Windows.Threading;
 using Telerik.Windows.Controls;
 
-namespace SensorMonitorClient
+namespace HMS_Client
 {
     public class SocketConsole
     {

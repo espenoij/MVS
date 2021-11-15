@@ -1,7 +1,7 @@
 ﻿using System.Linq;
 using Telerik.Windows.Data;
 
-namespace SensorMonitorClient
+namespace HMS_Client
 {
     public class HMSDataCollection
     {
@@ -25,11 +25,14 @@ namespace SensorMonitorClient
 
         public HMSData GetData(ValueType id)
         {
-            var sensorData = hmsDataList?.Where(x => x.id == (int)id);
-            if (sensorData.Count() > 0)
-                return sensorData.First();
-            else
-                return new HMSData() { id = (int)id, status = DataStatus.TIMEOUT_ERROR };
+            lock (hmsDataList)
+            {
+                var sensorData = hmsDataList?.Where(x => x.id == (int)id);
+                if (sensorData.Count() > 0)
+                    return sensorData.First();
+                else
+                    return new HMSData() { id = (int)id, status = DataStatus.TIMEOUT_ERROR };
+            }
         }
     }
 }

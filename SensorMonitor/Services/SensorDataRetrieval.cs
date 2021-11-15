@@ -8,7 +8,7 @@ using System.Threading.Tasks;
 using System.Windows.Threading;
 using Telerik.Windows.Data;
 
-namespace SensorMonitor
+namespace HMS_Server
 {
     class SensorDataRetrieval
     {

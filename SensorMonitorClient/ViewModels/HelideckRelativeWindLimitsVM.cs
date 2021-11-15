@@ -3,7 +3,7 @@ using System.ComponentModel;
 using System.Runtime.CompilerServices;
 using System.Windows.Threading;
 
-namespace SensorMonitorClient
+namespace HMS_Client
 {
     public class HelideckRelativeWindLimitsVM : INotifyPropertyChanged
     {

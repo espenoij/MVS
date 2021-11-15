@@ -1,6 +1,6 @@
 ﻿using System.Configuration;
 
-namespace SensorMonitor
+namespace HMS_Server
 {
     public class SensorGroupIDConfigSection : ConfigurationSection
     {

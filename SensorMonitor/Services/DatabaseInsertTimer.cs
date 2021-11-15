@@ -1,7 +1,7 @@
 ﻿using System;
 using System.Threading;
 
-namespace SensorMonitor
+namespace HMS_Server
 {
     class DatabaseInsertTimer
     {

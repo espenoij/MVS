@@ -2,7 +2,7 @@
 using System.Windows.Controls;
 using Telerik.Windows.Documents.Fixed.Model.Editing;
 
-namespace SensorMonitorClient
+namespace HMS_Client
 {
     public static class ExportHelper
     {

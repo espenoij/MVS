@@ -3,7 +3,7 @@ using System.Windows;
 using System.Windows.Media;
 using Telerik.Windows.Documents.Fixed.Model.Editing;
 
-namespace SensorMonitorClient
+namespace HMS_Client
 {
     internal abstract class UIElementRendererBase
     {

@@ -3,7 +3,7 @@ using System.Configuration;
 using System.Windows;
 using Telerik.Windows.Controls;
 
-namespace SensorMonitorClient
+namespace HMS_Client
 {
     // Kan ikke bruker ErrorHandler på meldingene herfra
     // Fordi ErrorHandler bruker DatabaseHandler, og DatabaseHandler bruker Config...
