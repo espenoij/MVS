@@ -70,32 +70,30 @@ namespace HMS_Server
             {
                 // Finne sensor verdier knyttet til valgt sensor gruppe ID
                 var hmsDataList = hmsOutputDataList.GetDataList();
-                lock (hmsDataList)
+
+                var clientData = hmsDataList.Where(x => x.sensorGroupId == id).ToList();
+
+                // Har funnet sensor verdier knyttet til sensor gruppe
+                if (clientData.Count() > 0)
                 {
-                    var clientData = hmsDataList.Where(x => x.sensorGroupId == id);
+                    // Skjekke om noen av sensor verdiene har error status
+                    var errorList = clientData.Where(x => x.status == DataStatus.TIMEOUT_ERROR);
 
-                    // Har funnet sensor verdier knyttet til sensor gruppe
-                    if (clientData.Count() > 0)
+                    // En eller flere error statuser funnet
+                    if (errorList.Count() > 0)
                     {
-                        // Skjekke om noen av sensor verdiene har error status
-                        var errorList = clientData.Where(x => x.status == DataStatus.TIMEOUT_ERROR);
-
-                        // En eller flere error statuser funnet
-                        if (errorList.Count() > 0)
-                        {
-                            sensorGroup.First().status = DataStatus.TIMEOUT_ERROR;
-                        }
-                        // Ingen error status funnet
-                        else
-                        {
-                            sensorGroup.First().status = DataStatus.OK;
-                        }
+                        sensorGroup.First().status = DataStatus.TIMEOUT_ERROR;
                     }
-                    // Ingen verdier knyttet til denne sensoren -> ingen feilmelding
+                    // Ingen error status funnet
                     else
                     {
                         sensorGroup.First().status = DataStatus.OK;
                     }
+                }
+                // Ingen verdier knyttet til denne sensoren -> ingen feilmelding
+                else
+                {
+                    sensorGroup.First().status = DataStatus.OK;
                 }
             }
         }

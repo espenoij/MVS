@@ -691,6 +691,41 @@
 
                 </telerik:GroupBox>
 
+                <telerik:GroupBox
+                    Name="gbSetupSummaryFileReader"
+                    Header="Setup Summery - File Reader"
+                    Visibility="Collapsed"
+                    Margin="8">
+
+                    <StackPanel
+                        Margin="8">
+
+                        <DockPanel
+                            Name="dbFileReaderFilePath">
+                            <Label
+                                Width="180"
+                                Content="Port Name" />
+                            <Label
+                                Name="lbFileReaderFilePath"
+                                Width="auto"
+                                Content="" />
+                        </DockPanel>
+
+                        <DockPanel
+                            Name="dbFileReaderFileName">
+                            <Label
+                                Width="180"
+                                Content="Port Name" />
+                            <Label
+                                Name="lbFileReaderFileName"
+                                Width="auto"
+                                Content="" />
+                        </DockPanel>
+
+                    </StackPanel>
+
+                </telerik:GroupBox>
+
             </StackPanel>
 
             <telerik:RadGridView

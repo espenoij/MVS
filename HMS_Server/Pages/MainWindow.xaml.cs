@@ -150,8 +150,8 @@ namespace HMS_Server
                 errorHandler.SetDatabaseError(ErrorHandler.DatabaseErrorType.CreateTables);
             }
 
-            // Database Maintenance
-            DatabaseMaintenance();
+            // Database Maintenance Init
+            DatabaseMaintenanceInit();
 
             // Database Status Check
             DispatcherTimer databaseStatusCheck = new DispatcherTimer();
@@ -666,7 +666,7 @@ namespace HMS_Server
             //sensorDataSelected = (sender as RadGridView).SelectedItem as SensorData;
         }
 
-        private void DatabaseMaintenance()
+        private void DatabaseMaintenanceInit()
         {
             // Timer som kjører vedlikehold på databasen
             // 1. Slette gamle data

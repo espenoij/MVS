@@ -19,6 +19,7 @@ namespace HMS_Server
 
             this.serialPort = null;
             this.modbus = null;
+            this.fileReader = null;
 
             switch (sensorData.type)
             {
@@ -30,6 +31,10 @@ namespace HMS_Server
                 case SensorType.ModbusASCII:
                 case SensorType.ModbusTCP:
                     this.modbus = new ModbusConfig(sensorData);
+                    break;
+
+                case SensorType.FileReader:
+                    this.fileReader = new FileReaderConfig(sensorData);
                     break;
             }
         }
@@ -89,6 +94,13 @@ namespace HMS_Server
         {
             get { return (ModbusConfig)this["modbus"]; }
             set { this["modbus"] = value; }
+        }
+
+        [ConfigurationProperty("fileReader", IsRequired = false)]
+        public FileReaderConfig fileReader
+        {
+            get { return (FileReaderConfig)this["fileReader"]; }
+            set { this["fileReader"] = value; }
         }
     }
 }

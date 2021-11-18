@@ -144,6 +144,10 @@ namespace HMS_Server
                 case SensorType.ModbusTCP:
                     newSensor.modbus = new ModbusSetup(sensorDataSelected.modbus);
                     break;
+
+                case SensorType.FileReader:
+                    newSensor.fileReader = new FileReaderSetup(sensorDataSelected.fileReader);
+                    break;
             }
 
             // Legge i listen
@@ -193,7 +197,7 @@ namespace HMS_Server
                 // Laste Sensor Setup UI for valgt sensor type
                 UISensorSetup_Load(sensorDataSelected.type);
             }
-            else 
+            else
             {
                 lbSensorID.Content = string.Empty;
                 tbSensorName.Text = string.Empty;
@@ -213,7 +217,7 @@ namespace HMS_Server
         private void tbSensorName_KeyDown(object sender, KeyEventArgs e)
         {
             if (e.Key == Key.Return)
-            { 
+            {
                 tbSensorName_Update(sender);
                 Keyboard.ClearFocus();
             }
@@ -244,6 +248,7 @@ namespace HMS_Server
                 {
                     case SensorType.None:
                     case SensorType.SerialPort:
+                    case SensorType.FileReader:
                         if (newSensorType != sensorDataSelected.type)
                         {
                             ChangeSensorTypeWithWarning(newSensorType);
@@ -259,7 +264,7 @@ namespace HMS_Server
                         {
                             ChangeSensorType(newSensorType);
                         }
-                        else 
+                        else
                         {
                             ChangeSensorTypeWithWarning(newSensorType);
                         }
@@ -310,6 +315,11 @@ namespace HMS_Server
                             //sensorDataSelected.modbus.startAddress = Constants.ModbusInputRegisterMin;
                             //sensorDataSelected.modbus.totalAddresses = 10;
                             //sensorDataSelected.modbus.dataAddress = Constants.ModbusInputRegisterMin;
+                            break;
+
+                        case SensorType.FileReader:
+                            // Sensor Data Options
+                            sensorDataSelected.saveFreq = DatabaseSaveFrequency.Program;
                             break;
                     }
 
@@ -495,6 +505,7 @@ namespace HMS_Server
                     gbSetupSummaryNone.Visibility = Visibility.Visible;
                     gbSetupSummarySerialPort.Visibility = Visibility.Collapsed;
                     gbSetupSummaryModbus.Visibility = Visibility.Collapsed;
+                    gbSetupSummaryFileReader.Visibility = Visibility.Collapsed;
 
                     btnSerialPortSetup.Visibility = Visibility.Collapsed;
                     btnModbusSetup.Visibility = Visibility.Collapsed;
@@ -505,6 +516,7 @@ namespace HMS_Server
                     gbSetupSummaryNone.Visibility = Visibility.Collapsed;
                     gbSetupSummarySerialPort.Visibility = Visibility.Visible;
                     gbSetupSummaryModbus.Visibility = Visibility.Collapsed;
+                    gbSetupSummaryFileReader.Visibility = Visibility.Collapsed;
 
                     btnSerialPortSetup.Visibility = Visibility.Visible;
                     btnModbusSetup.Visibility = Visibility.Collapsed;
@@ -520,6 +532,7 @@ namespace HMS_Server
                     gbSetupSummaryNone.Visibility = Visibility.Collapsed;
                     gbSetupSummarySerialPort.Visibility = Visibility.Collapsed;
                     gbSetupSummaryModbus.Visibility = Visibility.Visible;
+                    gbSetupSummaryFileReader.Visibility = Visibility.Collapsed;
 
                     btnSerialPortSetup.Visibility = Visibility.Collapsed;
                     btnModbusSetup.Visibility = Visibility.Visible;
@@ -547,7 +560,7 @@ namespace HMS_Server
 
                         dpModbusTCPAddress.IsEnabled = true;
                         lbModbusTCPAddress.Visibility = Visibility.Visible;
-                        
+
                         dpModbusTCPPort.IsEnabled = true;
                         lbModbusTCPPort.Visibility = Visibility.Visible;
                     }
@@ -574,13 +587,27 @@ namespace HMS_Server
 
                         dpModbusTCPAddress.IsEnabled = false;
                         lbModbusTCPAddress.Visibility = Visibility.Hidden;
-                        
+
                         dpModbusTCPPort.IsEnabled = false;
                         lbModbusTCPPort.Visibility = Visibility.Hidden;
                     }
 
                     // Laste data inn i UI
                     UILoadData_MODBUS();
+                    break;
+
+                case SensorType.FileReader:
+                    // Vise UI
+                    gbSetupSummaryNone.Visibility = Visibility.Collapsed;
+                    gbSetupSummarySerialPort.Visibility = Visibility.Collapsed;
+                    gbSetupSummaryModbus.Visibility = Visibility.Collapsed;
+                    gbSetupSummaryFileReader.Visibility = Visibility.Visible;
+
+                    btnSerialPortSetup.Visibility = Visibility.Collapsed;
+                    btnModbusSetup.Visibility = Visibility.Collapsed;
+
+                    // Laste data inn i UI
+                    UILoadData_FileReader();
                     break;
 
                 default:
@@ -614,7 +641,7 @@ namespace HMS_Server
             lbSerialPortDataField.Content = sensorDataSelected.serialPort.dataField;
             lbSerialPortDecimalSeparator.Content = sensorDataSelected.serialPort.decimalSeparator.ToString();
             lbSerialPortAutoExtractValue.Content = sensorDataSelected.serialPort.autoExtractValue.ToString();
-            
+
             lbSerialPortCalculationType1.Content = sensorDataSelected.serialPort.calculationSetup[0].type.GetDescription();
             lbSerialPortCalculationParameter1.Content = sensorDataSelected.serialPort.calculationSetup[0].parameter.ToString();
 
@@ -642,8 +669,8 @@ namespace HMS_Server
             cboDBStorageFrequencyType.Items.Clear();
             foreach (var value in Enum.GetValues(typeof(DatabaseSaveFrequency)))
             {
-                if (!((sensorDataSelected.type == SensorType.ModbusRTU || 
-                            sensorDataSelected.type == SensorType.ModbusASCII || 
+                if (!((sensorDataSelected.type == SensorType.ModbusRTU ||
+                            sensorDataSelected.type == SensorType.ModbusASCII ||
                             sensorDataSelected.type == SensorType.ModbusTCP) &&
                         value.ToString() == DatabaseSaveFrequency.Sensor.ToString()))
                 {
@@ -651,7 +678,7 @@ namespace HMS_Server
                 }
             }
 
-            if (sensorDataSelected.type == SensorType.ModbusRTU || 
+            if (sensorDataSelected.type == SensorType.ModbusRTU ||
                 sensorDataSelected.type == SensorType.ModbusASCII)
             {
                 lbModbusPortName.Content = sensorDataSelected.modbus.portName;
@@ -692,6 +719,12 @@ namespace HMS_Server
                 chkSaveToDatabase.IsChecked = false;
 
             cboDBStorageFrequencyType.Text = sensorDataSelected.saveFreq.ToString();
+        }
+
+        public void UILoadData_FileReader()
+        {
+            lbFileReaderFilePath.Content = sensorDataSelected.fileReader.filePath;
+            lbFileReaderFileName.Content = sensorDataSelected.fileReader.fileName;
         }
     }
 }

@@ -362,6 +362,7 @@ namespace HMS_Server
         // Sensor type-spesifikke data
         public SerialPortSetup serialPort { get; set; }
         public ModbusSetup modbus { get; set; }
+        public FileReaderSetup fileReader { get; set; }
 
 
         // Brukes i data bidning mot UI
@@ -433,7 +434,8 @@ namespace HMS_Server
         SerialPort,
         ModbusRTU,      // Remote Terminal Unit (serial port)
         ModbusASCII,
-        ModbusTCP
+        ModbusTCP,
+        FileReader
     }
 
     public enum DatabaseSaveFrequency
