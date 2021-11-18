@@ -214,19 +214,19 @@
       <Generator>MSBuild:Compile</Generator>
       <SubType>Designer</SubType>
     </ApplicationDefinition>
-    <Compile Include="..\SensorMonitor\Helpers\RadObservableCollectionEx.cs">
+    <Compile Include="..\HMS_Server\Helpers\RadObservableCollectionEx.cs">
       <Link>Helpers\RadObservableCollectionEx.cs</Link>
     </Compile>
-    <Compile Include="..\SensorMonitor\Helpers\TextHelper.cs">
+    <Compile Include="..\HMS_Server\Helpers\TextHelper.cs">
       <Link>Helpers\TextHelper.cs</Link>
     </Compile>
-    <Compile Include="..\SensorMonitor\Services\Constants.cs">
+    <Compile Include="..\HMS_Server\Services\Constants.cs">
       <Link>Services\Constants.cs</Link>
     </Compile>
-    <Compile Include="..\SensorMonitor\Services\DataValidation.cs">
+    <Compile Include="..\HMS_Server\Services\DataValidation.cs">
       <Link>Services\DataValidation.cs</Link>
     </Compile>
-    <Compile Include="..\SensorMonitor\Services\Weather.cs">
+    <Compile Include="..\HMS_Server\Services\Weather.cs">
       <Link>Services\Weather.cs</Link>
     </Compile>
     <Compile Include="Helpers\GraphBuffer.cs" />

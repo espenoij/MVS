@@ -79,22 +79,6 @@
 
                         </DockPanel>
 
-                        <!--Email-->
-                        <DockPanel>
-
-                            <telerik:Label
-                                Width="130"
-                                Content="Email: From"
-                                VerticalAlignment="Center" />
-
-                            <TextBox
-                                Name="tbEmail"
-                                Text="{Binding Path=emailFrom}"
-                                LostFocus="tbEmail_LostFocus"
-                                KeyDown="tbEmail_KeyDown" />
-
-                        </DockPanel>
-
                         <!--Telephone-->
                         <DockPanel>
 
@@ -352,7 +336,7 @@
                         <TextBlock
                             DockPanel.Dock="Top"
                             Margin="16,0,16,0"
-                            Text="E.g. ships within the 500m sone, non-conformities of helideck equipment, objects close the obstruction free zone, deviation from helideck procedures, flaring of gas, or other information the pilots may find useful."
+                            Text="E.g., ships within the 500m sone, non-conformities of helideck equipment, objects close the obstruction free zone, deviation from helideck procedures, flaring of gas, or other information the pilots may find useful."
                             FontSize="{StaticResource reportFontSizeComment}"
                             TextWrapping="Wrap"
                             VerticalAlignment="Center" />
@@ -529,6 +513,22 @@
                     <StackPanel
                         DockPanel.Dock="Top"
                         Margin="8">
+
+                        <!--Email: From-->
+                        <DockPanel>
+
+                            <telerik:Label
+                                Width="130"
+                                Content="Email: From"
+                                VerticalAlignment="Center" />
+
+                            <TextBox
+                                Name="tbEmail"
+                                Text="{Binding Path=emailFrom}"
+                                LostFocus="tbEmail_LostFocus"
+                                KeyDown="tbEmail_KeyDown" />
+
+                        </DockPanel>
 
                         <!--Helicopter Operator-->
                         <DockPanel>
@@ -2475,7 +2475,7 @@
                                         Orientation="Horizontal">
 
                                         <TextBlock
-                                            Text="Dewpoint:"
+                                            Text="Dew point:"
                                             VerticalAlignment="Bottom"
                                             HorizontalAlignment="Left"
                                             Margin="{StaticResource reportLabelMargin}"

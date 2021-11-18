@@ -317,10 +317,10 @@
       <Generator>MSBuild:Compile</Generator>
       <SubType>Designer</SubType>
     </ApplicationDefinition>
-    <Compile Include="..\SensorMonitorClient\Services\CommonTypes.cs">
+    <Compile Include="..\HMS_Client\Services\CommonTypes.cs">
       <Link>Services\CommonTypes.cs</Link>
     </Compile>
-    <Compile Include="..\SensorMonitorClient\Services\UserInputs.cs">
+    <Compile Include="..\HMS_Client\Services\UserInputs.cs">
       <Link>Services\UserInputs.cs</Link>
     </Compile>
     <Compile Include="Helpers\GraphBuffer.cs" />
