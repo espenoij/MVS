@@ -1,6 +1,5 @@
 ﻿using System;
 using System.Collections.Generic;
-using System.Linq;
 
 namespace HMS_Server
 {
@@ -600,9 +599,9 @@ namespace HMS_Server
             // Inclination
             CheckLimit(inclinationData, LimitType.Inclination);
             CheckLimit(inclinationMax20mData, LimitType.Inclination);
-            
+
             // Heave
-            CheckLimit(heaveAmplitudeMax20mData, LimitType.HeaveAmplitude); 
+            CheckLimit(heaveAmplitudeMax20mData, LimitType.HeaveAmplitude);
 
             // Significant Heave Rate
             if (SHRIsWithinLimits)

@@ -1,10 +1,6 @@
 ﻿using System;
-using System.Collections.Generic;
 using System.ComponentModel;
-using System.Linq;
 using System.Runtime.CompilerServices;
-using System.Text;
-using System.Threading.Tasks;
 
 namespace HMS_Server
 {
@@ -66,7 +62,7 @@ namespace HMS_Server
         }
         public string typeString
         {
-            get 
+            get
             {
                 return type.ToString();
             }
@@ -136,7 +132,7 @@ namespace HMS_Server
         private int _rowId { get; set; }
         public int rowId
         {
-            get 
+            get
             {
                 return _rowId;
             }

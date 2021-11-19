@@ -1,11 +1,8 @@
 ﻿using System;
-using System.Collections.ObjectModel;
-using System.Linq;
 using System.Windows;
 using System.Windows.Controls;
 using System.Windows.Input;
 using Telerik.Windows.Controls;
-using Telerik.Windows.Data;
 
 namespace HMS_Server
 {
@@ -146,7 +143,7 @@ namespace HMS_Server
                     break;
 
                 case SensorType.FileReader:
-                    newSensor.fileReader = new FileReaderSetup(sensorDataSelected.fileReader);
+                    newSensor.fileReader = new FileReaderData(sensorDataSelected.fileReader);
                     break;
             }
 
@@ -433,6 +430,18 @@ namespace HMS_Server
             SyncSerialPortSettings(sensorDataSelected);
         }
 
+        private void btnFileReaderSetup_Click(object sender, RoutedEventArgs e)
+        {
+            // Open new modal window 
+            FileReaderSetupWindow newWindow = new FileReaderSetupWindow(sensorDataSelected, sensorDataList, config, errorHandler);
+            newWindow.Owner = App.Current.MainWindow;
+            newWindow.Closed += FileReaderSetupWindow_Closed;
+            newWindow.ShowDialog();
+
+            // Lagre til disk når vi går ut av vinduet
+            config.SetData(sensorDataSelected);
+        }
+
         private void SyncSerialPortSettings(SensorData sensorData)
         {
             // Går igjennom alle sensor data og finne de som er satt på samme COM port -> oppdatere settings slik at alle er samkjørt
@@ -496,6 +505,12 @@ namespace HMS_Server
             UILoadData_MODBUS();
         }
 
+        void FileReaderSetupWindow_Closed(object sender, EventArgs e)
+        {
+            // Laste inn sensor setup data på nytt
+            UILoadData_FileReader();
+        }
+
         private void UISensorSetup_Load(SensorType type)
         {
             switch (type)
@@ -509,6 +524,7 @@ namespace HMS_Server
 
                     btnSerialPortSetup.Visibility = Visibility.Collapsed;
                     btnModbusSetup.Visibility = Visibility.Collapsed;
+                    btnFileReaderSetup.Visibility = Visibility.Collapsed;
                     break;
 
                 case SensorType.SerialPort:
@@ -520,6 +536,7 @@ namespace HMS_Server
 
                     btnSerialPortSetup.Visibility = Visibility.Visible;
                     btnModbusSetup.Visibility = Visibility.Collapsed;
+                    btnFileReaderSetup.Visibility = Visibility.Collapsed;
 
                     // Laste data inn i UI
                     UILoadData_SerialPort();
@@ -536,6 +553,7 @@ namespace HMS_Server
 
                     btnSerialPortSetup.Visibility = Visibility.Collapsed;
                     btnModbusSetup.Visibility = Visibility.Visible;
+                    btnFileReaderSetup.Visibility = Visibility.Collapsed;
 
                     if (type == SensorType.ModbusTCP)
                     {
@@ -605,6 +623,7 @@ namespace HMS_Server
 
                     btnSerialPortSetup.Visibility = Visibility.Collapsed;
                     btnModbusSetup.Visibility = Visibility.Collapsed;
+                    btnFileReaderSetup.Visibility = Visibility.Visible;
 
                     // Laste data inn i UI
                     UILoadData_FileReader();
@@ -723,7 +742,7 @@ namespace HMS_Server
 
         public void UILoadData_FileReader()
         {
-            lbFileReaderFilePath.Content = sensorDataSelected.fileReader.filePath;
+            lbFileReaderFileFolder.Content = sensorDataSelected.fileReader.fileFolder;
             lbFileReaderFileName.Content = sensorDataSelected.fileReader.fileName;
         }
     }

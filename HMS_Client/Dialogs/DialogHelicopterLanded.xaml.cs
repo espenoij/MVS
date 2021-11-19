@@ -1,5 +1,4 @@
 ﻿using System.Windows;
-using System.Windows.Controls;
 using Telerik.Windows.Controls;
 
 namespace HMS_Client

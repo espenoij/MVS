@@ -1,9 +1,6 @@
 ﻿using System;
-using System.Collections.Generic;
 using System.Linq;
-using System.Text;
 using System.Text.Json;
-using System.Threading.Tasks;
 using System.Windows.Threading;
 using Telerik.Windows.Data;
 
@@ -106,12 +103,12 @@ namespace HMS_Client
 
                 // Start en data fetch mot server
                 SocketClient socketClient = new SocketClient(socketConsole, socketCallback);
-                
+
                 // Sette kommando og parametre
                 socketClient.SetParams(
                     Constants.CommandGetDataUpdate,
                     socketHMSDataList);
-                
+
                 socketClient.Start();
             }
 

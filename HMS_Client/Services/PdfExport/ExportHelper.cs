@@ -1,5 +1,4 @@
 ﻿using System.Windows;
-using System.Windows.Controls;
 using Telerik.Windows.Documents.Fixed.Model.Editing;
 
 namespace HMS_Client

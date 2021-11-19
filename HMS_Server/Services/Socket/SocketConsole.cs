@@ -47,7 +47,7 @@ namespace HMS_Server
         private string _text { get; set; }
         public string text
         {
-            get 
+            get
             {
                 return _text;
             }

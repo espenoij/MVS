@@ -1,5 +1,4 @@
 ﻿using System.Configuration;
-using System.IO.Ports;
 
 namespace HMS_Server
 {
@@ -23,7 +22,7 @@ namespace HMS_Server
             this.startAddress = sensorData.modbus.startAddress.ToString();
             this.totalAddresses = sensorData.modbus.totalAddresses.ToString();
             this.dataAddress = sensorData.modbus.dataAddress.ToString();
-            
+
             this.calculationType1 = sensorData.modbus.calculationSetup[0].type.ToString();
             this.calculationParameter1 = sensorData.modbus.calculationSetup[0].parameter.ToString();
 

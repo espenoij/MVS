@@ -86,7 +86,8 @@ namespace HMS_Server
 
                     Application.Current.Dispatcher.BeginInvoke(
                     DispatcherPriority.Normal,
-                    new Action(() => {
+                    new Action(() =>
+                    {
                         {
                             RadWindow.Alert(TextHelper.Wrap(errorMessage.message));
                         }

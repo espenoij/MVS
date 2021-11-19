@@ -258,7 +258,7 @@ namespace HMS_Client
             rollData = hmsDataCollection.GetData(ValueType.Roll);
             rollMax20mData = hmsDataCollection.GetData(ValueType.RollMax20m);
             rollMaxLeft20mData = hmsDataCollection.GetData(ValueType.RollMaxLeft20m);
-            rollMaxRight20mData= hmsDataCollection.GetData(ValueType.RollMaxRight20m);
+            rollMaxRight20mData = hmsDataCollection.GetData(ValueType.RollMaxRight20m);
             rollMax3hData = hmsDataCollection.GetData(ValueType.RollMax3h);
 
             // Inclination

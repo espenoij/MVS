@@ -1,8 +1,4 @@
 ﻿using System;
-using System.Collections.Generic;
-using System.Linq;
-using System.Text;
-using System.Threading.Tasks;
 
 namespace HMS_Server
 {
@@ -163,7 +159,7 @@ namespace HMS_Server
                 vhfFrequency.data = vhfFreqValue;
             else
                 vhfFrequency.data = Constants.VHFFrequencyDefault;
-            
+
             vhfFrequency.timestamp = DateTime.UtcNow;
             vhfFrequency.status = DataStatus.OK;
 

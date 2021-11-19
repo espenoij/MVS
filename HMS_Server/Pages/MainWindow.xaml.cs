@@ -1,8 +1,5 @@
 ﻿using System;
-using System.Collections.ObjectModel;
-using System.ComponentModel;
 using System.Linq;
-using System.Reflection;
 using System.Threading;
 using System.Windows;
 using System.Windows.Input;
@@ -439,7 +436,7 @@ namespace HMS_Server
             void runUpdateHMS(object sender, EventArgs e)
             {
                 try
-                { 
+                {
                     Thread thread = new Thread(() => UpdateHMS_Thread());
                     thread.Start();
 
@@ -482,7 +479,7 @@ namespace HMS_Server
             void runHMSDatabaseOps(object sender, EventArgs e)
             {
                 try
-                { 
+                {
                     Thread thread = new Thread(() => UpdateHMS_Thread());
                     thread.Start();
 
@@ -594,7 +591,7 @@ namespace HMS_Server
         private void StopServer()
         {
             sensorDataRetrieval.SensorDataRetrieval_Stop();
-            
+
             btnStart1.IsEnabled = true;
             btnStart2.IsEnabled = true;
             btnStop1.IsEnabled = false;
@@ -641,7 +638,7 @@ namespace HMS_Server
             {
                 errorMessagesWindow = new ErrorMessagesWindow(config, errorHandler);
                 errorMessagesWindow.Closed += (a, b) => errorMessagesWindow = null;
-                
+
                 errorMessagesWindow.Show();
 
                 // Vise ikon på taskbar
@@ -784,7 +781,8 @@ namespace HMS_Server
         private void tcMainMenu_SelectionChanged(object sender, RadSelectionChangedEventArgs e)
         {
             // Fjerne fokus fra alle elementer slik at ikke knapper og felt lyser opp i rødt når vi bytter tab
-            Dispatcher.BeginInvoke((Action)(() => {
+            Dispatcher.BeginInvoke((Action)(() =>
+            {
                 (sender as RadTabControl).Focus();
             }), DispatcherPriority.ApplicationIdle);
         }

@@ -90,11 +90,18 @@
                     Click="btnSerialPortSetup_Click"
                     Width="180"
                     Visibility="Collapsed">Serial Port Data Setup</Button>
+                
                 <Button
                     Name="btnModbusSetup"
                     Click="btnModbusSetup_Click"
                     Width="180"
                     Visibility="Collapsed">MODBUS Data Setup</Button>
+
+                <Button
+                    Name="btnFileReaderSetup"
+                    Click="btnFileReaderSetup_Click"
+                    Width="180"
+                    Visibility="Collapsed">File Reader Data Setup</Button>
 
             </StackPanel>
 
@@ -701,12 +708,12 @@
                         Margin="8">
 
                         <DockPanel
-                            Name="dbFileReaderFilePath">
+                            Name="dbFileReaderFileFolder">
                             <Label
                                 Width="180"
-                                Content="Port Name" />
+                                Content="File Folder" />
                             <Label
-                                Name="lbFileReaderFilePath"
+                                Name="lbFileReaderFileFolder"
                                 Width="auto"
                                 Content="" />
                         </DockPanel>
@@ -715,7 +722,7 @@
                             Name="dbFileReaderFileName">
                             <Label
                                 Width="180"
-                                Content="Port Name" />
+                                Content="File Name" />
                             <Label
                                 Name="lbFileReaderFileName"
                                 Width="auto"

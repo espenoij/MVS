@@ -215,7 +215,7 @@ namespace HMS_Server
         public void ReadCallback(IAsyncResult ar)
         {
             try
-            { 
+            {
                 string packet = string.Empty;
 
                 // Hente socket og socket state objekt som skal håndtere lesing

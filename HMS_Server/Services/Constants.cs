@@ -19,11 +19,11 @@ class Constants
     // UI Update Frequency
     public const int ServerUpdateFrequencyUI = 2000;              // Millisekund, brukes til status og UI oppdatering
     public const int ServerUpdateFrequencyHMS = 500;              // Millisekund, brukes til prosessering av HMS data
-    
+
     public const int ClientUpdateFrequencyUIDefault = 500;
     public const int ClientUpdateFrequencyUIMin = 500;
     public const int ClientUpdateFrequencyUIMax = 5000;
-    
+
     public const int ChartUpdateFrequencyUI20mDefault = 5000;
     public const int ChartUpdateFrequencyUI3hDefault = 15000;
     public const int ChartUpdateFrequencyUIMin = 1000;

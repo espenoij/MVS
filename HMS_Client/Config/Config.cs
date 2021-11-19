@@ -1,6 +1,5 @@
 ﻿using System;
 using System.Configuration;
-using System.Windows;
 using Telerik.Windows.Controls;
 
 namespace HMS_Client
@@ -320,4 +319,4 @@ namespace HMS_Client
         App,
         Data
     }
-} 
+}

@@ -1,17 +1,17 @@
 ﻿using System;
 using System.Collections.Generic;
+using System.ComponentModel;
 using System.Diagnostics;
 using System.IO.Ports;
+using System.Linq;
 using System.Text.RegularExpressions;
 using System.Windows;
 using System.Windows.Controls;
+using System.Windows.Input;
 using System.Windows.Media;
 using System.Windows.Threading;
-using System.ComponentModel;
-using System.Linq;
 using Telerik.Windows.Controls;
 using Telerik.Windows.Data;
-using System.Windows.Input;
 
 namespace HMS_Server
 {
@@ -277,7 +277,7 @@ namespace HMS_Server
             {
                 process.packetHeader = string.Empty;
             }
-            
+
             // Packet End
             tbSelectedPacketEnd.Text = TextHelper.UnescapeSpace(sensorData.serialPort.packetEnd);
 
@@ -373,7 +373,7 @@ namespace HMS_Server
                 // Prosesseringstyper
                 foreach (CalculationType value in Enum.GetValues(typeof(CalculationType)))
                     cboCalculationType2.Items.Add(value.GetDescription());
-                
+
                 cboCalculationType2.Text = sensorData.serialPort.calculationSetup[1].type.GetDescription();
                 cboCalculationType2.SelectedIndex = (int)sensorData.serialPort.calculationSetup[1].type;
 

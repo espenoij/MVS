@@ -8,7 +8,7 @@ namespace HMS_Server
 
         public FileReaderConfig(SensorData sensorData)
         {
-            this.filePath = sensorData.fileReader.filePath;
+            this.filePath = sensorData.fileReader.fileFolder;
             this.fileName = sensorData.fileReader.fileName;
         }
 

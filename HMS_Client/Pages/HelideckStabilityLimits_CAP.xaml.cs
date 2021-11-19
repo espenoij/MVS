@@ -1,10 +1,6 @@
-﻿using System;
-using System.Windows;
+﻿using System.Windows;
 using System.Windows.Controls;
-using System.Windows.Data;
-using System.Windows.Threading;
 using Telerik.Windows.Controls;
-using Telerik.Windows.Controls.ChartView;
 
 namespace HMS_Client
 {

@@ -13,7 +13,7 @@ namespace HMS_Client
         }
 
         public void Init(
-            HMSDataCollection hmsDataCollection, 
+            HMSDataCollection hmsDataCollection,
             SensorGroupStatus sensorStatus)
         {
             // Liste med sensor verdier

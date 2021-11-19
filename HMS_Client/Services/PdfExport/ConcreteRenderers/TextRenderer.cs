@@ -43,7 +43,7 @@ namespace HMS_Client
 
 
         private static void SetFontFamily(
-            Telerik.Windows.Documents.Fixed.Model.Editing.FixedContentEditor drawingSurface, 
+            Telerik.Windows.Documents.Fixed.Model.Editing.FixedContentEditor drawingSurface,
             System.Windows.Media.FontFamily fontFamily,
             System.Windows.FontStyle fontStyle,
             System.Windows.FontWeight fontWeight)

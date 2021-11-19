@@ -32,8 +32,8 @@ namespace HMS_Client
 
         public void Init(
             AdminSettingsVM adminSettingsVM,
-            HelideckMotionLimitsVM helideckMotionLimitsVM, 
-            Config config, 
+            HelideckMotionLimitsVM helideckMotionLimitsVM,
+            Config config,
             MainWindowVM mainWindowVM,
             HelideckRelativeWindLimitsVM relativeWindDirectionLimitsVM,
             HelideckStabilityLimitsVM helideckStabilityLimitsVM,

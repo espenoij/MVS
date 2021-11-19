@@ -9,7 +9,7 @@ namespace HMS_Server
     {
         public string packetHeader { get; set; }
         public string packetEnd { get; set; }
-        
+
         public string packetDelimiter { get; set; }
         public SerialPortSetup.CombineFields packetCombineFields { get; set; }
         public bool fixedPosData { get; set; }
@@ -308,7 +308,7 @@ namespace HMS_Server
                 }
 
                 // Data Calculations
-                for ( int i = 0; i < Constants.DataCalculationSteps; i++)
+                for (int i = 0; i < Constants.DataCalculationSteps; i++)
                 {
                     // Skal vi utføre kalkulasjoner?
                     if (dataCalculations[i].type != CalculationType.None)
@@ -329,48 +329,48 @@ namespace HMS_Server
                     }
                 }
 
-/*                // Data Calculations 1
-                ////////////////////////////
-                // Skal vi utføre kalkulasjoner?
-                if (dataCalculations[0].type != CalculationType.None)
-                {
-                    // Utføre valgt prosessering
-                    if (dataCalculations[0].type == CalculationType.GPSPosition)
-                    {
-                        calculatedData.data = dataCalculations[0].DoCalculations(selectedData.selectedDataFieldString, timestamp, errorHandler, errorMessageCat);
-                    }
-                    else
-                    {
-                        calculatedData.data = dataCalculations[0].DoCalculations(calculatedData.data.ToString(Constants.cultureInfo), timestamp, errorHandler, errorMessageCat);
-                    }
-                }
+                /*                // Data Calculations 1
+                                ////////////////////////////
+                                // Skal vi utføre kalkulasjoner?
+                                if (dataCalculations[0].type != CalculationType.None)
+                                {
+                                    // Utføre valgt prosessering
+                                    if (dataCalculations[0].type == CalculationType.GPSPosition)
+                                    {
+                                        calculatedData.data = dataCalculations[0].DoCalculations(selectedData.selectedDataFieldString, timestamp, errorHandler, errorMessageCat);
+                                    }
+                                    else
+                                    {
+                                        calculatedData.data = dataCalculations[0].DoCalculations(calculatedData.data.ToString(Constants.cultureInfo), timestamp, errorHandler, errorMessageCat);
+                                    }
+                                }
 
-                // Data Calculations 2
-                ////////////////////////////
-                // Skal vi utføre kalkulasjoner?
-                if (dataCalculations[1].type != CalculationType.None)
-                {
-                    // Utføre valgt prosessering
-                    calculatedData.data = dataCalculations[1].DoCalculations(calculatedData.data.ToString(Constants.cultureInfo), timestamp, errorHandler, errorMessageCat);
-                }
+                                // Data Calculations 2
+                                ////////////////////////////
+                                // Skal vi utføre kalkulasjoner?
+                                if (dataCalculations[1].type != CalculationType.None)
+                                {
+                                    // Utføre valgt prosessering
+                                    calculatedData.data = dataCalculations[1].DoCalculations(calculatedData.data.ToString(Constants.cultureInfo), timestamp, errorHandler, errorMessageCat);
+                                }
 
-                // Data Calculations 3
-                ////////////////////////////
-                // Skal vi utføre kalkulasjoner?
-                if (dataCalculations[2].type != CalculationType.None)
-                {
-                    // Utføre valgt prosessering
-                    calculatedData.data = dataCalculations[2].DoCalculations(calculatedData.data.ToString(Constants.cultureInfo), timestamp, errorHandler, errorMessageCat);
-                }
+                                // Data Calculations 3
+                                ////////////////////////////
+                                // Skal vi utføre kalkulasjoner?
+                                if (dataCalculations[2].type != CalculationType.None)
+                                {
+                                    // Utføre valgt prosessering
+                                    calculatedData.data = dataCalculations[2].DoCalculations(calculatedData.data.ToString(Constants.cultureInfo), timestamp, errorHandler, errorMessageCat);
+                                }
 
-                // Data Calculations 4
-                ////////////////////////////
-                // Skal vi utføre kalkulasjoner?
-                if (dataCalculations[3].type != CalculationType.None)
-                {
-                    // Utføre valgt prosessering
-                    calculatedData.data = dataCalculations[3].DoCalculations(calculatedData.data.ToString(Constants.cultureInfo), timestamp, errorHandler, errorMessageCat);
-                }*/
+                                // Data Calculations 4
+                                ////////////////////////////
+                                // Skal vi utføre kalkulasjoner?
+                                if (dataCalculations[3].type != CalculationType.None)
+                                {
+                                    // Utføre valgt prosessering
+                                    calculatedData.data = dataCalculations[3].DoCalculations(calculatedData.data.ToString(Constants.cultureInfo), timestamp, errorHandler, errorMessageCat);
+                                }*/
             }
             catch (Exception ex)
             {

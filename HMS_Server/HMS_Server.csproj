@@ -324,8 +324,12 @@
       <Link>Services\UserInputs.cs</Link>
     </Compile>
     <Compile Include="Helpers\GraphBuffer.cs" />
-    <Compile Include="Services\FileReader\FileReaderSetup.cs" />
+    <Compile Include="Pages\FileReaderSetupWindow.xaml.cs">
+      <DependentUpon>FileReaderSetupWindow.xaml</DependentUpon>
+    </Compile>
+    <Compile Include="Services\FileReader\FileReaderData.cs" />
     <Compile Include="Services\FileReader\FileReaderConfig.cs" />
+    <Compile Include="Services\FileReader\FileReaderDataRetrieval.cs" />
     <Compile Include="Services\HelideckMotionLimits.cs" />
     <Compile Include="Services\HMSData.cs" />
     <Compile Include="Services\HMSDatabase.cs" />
@@ -406,6 +410,7 @@
     <Compile Include="Services\Serial Port\SerialPortConfig.cs" />
     <Compile Include="Services\Serial Port\SerialPortData.cs" />
     <Compile Include="Services\Serial Port\SerialPortSetup.cs" />
+    <Compile Include="ViewModels\FileReaderWindowVM.cs" />
     <Compile Include="ViewModels\ModbusSetupWindowVM.cs" />
     <Compile Include="ViewModels\SerialPortSetupWindowVM.cs" />
     <Compile Include="Helpers\Settings.cs" />
@@ -431,6 +436,10 @@
     <Page Include="Pages\ErrorMessagesWindow.xaml">
       <SubType>Designer</SubType>
       <Generator>MSBuild:Compile</Generator>
+    </Page>
+    <Page Include="Pages\FileReaderSetupWindow.xaml">
+      <Generator>MSBuild:Compile</Generator>
+      <SubType>Designer</SubType>
     </Page>
     <Page Include="Pages\ModbusSetupWindow.xaml">
       <SubType>Designer</SubType>

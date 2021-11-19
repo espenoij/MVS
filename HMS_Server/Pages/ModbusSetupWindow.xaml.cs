@@ -1,16 +1,16 @@
-﻿using System;
+﻿using NModbus;
+using NModbus.Serial;
+using System;
+using System.IO.Ports;
+using System.Linq;
+using System.Net.Sockets;
 using System.Windows;
 using System.Windows.Controls;
+using System.Windows.Input;
 using System.Windows.Media;
 using System.Windows.Threading;
-using System.IO.Ports;
-using NModbus;
-using NModbus.Serial;
-using System.Net.Sockets;
-using System.Linq;
 using Telerik.Windows.Controls;
 using Telerik.Windows.Data;
-using System.Windows.Input;
 
 namespace HMS_Server
 {
@@ -95,9 +95,6 @@ namespace HMS_Server
 
             // Initialisere Data Processing
             InitializeDataCalculations();
-
-            // Lagrer config i tilfelle dette er første kjøring og config fil ikke eksisterer
-            SaveAllWindowSettings();
         }
 
         private void InitializeModbusReader()
@@ -212,7 +209,7 @@ namespace HMS_Server
                 cboStopBits.IsEnabled = true;
                 cboParity.IsEnabled = true;
                 cboHandShake.IsEnabled = true;
-                
+
                 tbModbusTCPAddress.IsEnabled = false;
                 tbModbusTCPPort.IsEnabled = false;
             }
@@ -238,7 +235,7 @@ namespace HMS_Server
             timer.Start();
 
             void timer_Tick(object sender, EventArgs e)
-            {                
+            {
                 if (modbusReader.IsEnabled)
                 {
                     bModbusPortStatus.Background = (Brush)this.FindResource("ColorGreen");
@@ -330,10 +327,6 @@ namespace HMS_Server
             {
                 RadWindow.Alert(string.Format("InitializeDataProcessing\n\n{0}", TextHelper.Wrap(ex.Message)));
             }
-        }
-
-        private void SaveAllWindowSettings()
-        {
         }
 
         private void ReadAvailableCOMPorts()
@@ -611,7 +604,8 @@ namespace HMS_Server
         {
             Application.Current.Dispatcher.BeginInvoke(
             DispatcherPriority.Normal,
-            new Action(() => {
+            new Action(() =>
+            {
 
                 try
                 {
@@ -642,10 +636,11 @@ namespace HMS_Server
         {
             Application.Current.Dispatcher.BeginInvoke(
             DispatcherPriority.Normal,
-            new Action(() => {
+            new Action(() =>
+            {
 
                 try
-                { 
+                {
                     // Fjerne alle gamle data
                     rawDataItems.Clear();
 
@@ -673,7 +668,8 @@ namespace HMS_Server
         {
             Application.Current.Dispatcher.BeginInvoke(
             DispatcherPriority.Normal,
-            new Action(() => {
+            new Action(() =>
+            {
 
                 // Legg ut data i packet data listview
                 selectedDataItems.Add(modbusData);
@@ -688,7 +684,8 @@ namespace HMS_Server
         {
             Application.Current.Dispatcher.BeginInvoke(
             DispatcherPriority.Normal,
-            new Action(() => {
+            new Action(() =>
+            {
 
                 // Legg ut data i packet data listview
                 calculatedDataItems.Add(modbusData);

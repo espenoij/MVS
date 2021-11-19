@@ -1,8 +1,4 @@
 ﻿using System;
-using System.Collections.Generic;
-using System.Linq;
-using System.Text;
-using System.Threading.Tasks;
 
 namespace HMS_Server
 {
@@ -40,7 +36,7 @@ namespace HMS_Server
 
             hmsOutputDataList.Add(airTemperature);
             hmsOutputDataList.Add(airHumidity);
-            
+
             hmsOutputDataList.Add(airDewPoint);
             airDewPoint.id = (int)ValueType.AirDewPoint;
             airDewPoint.name = "Air Dew Point";

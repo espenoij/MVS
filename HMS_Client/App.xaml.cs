@@ -67,7 +67,7 @@ namespace HMS_Client
 
             // Window Bar
             MaterialPalette.Palette.PrimaryNormalColor = (Color)ColorConverter.ConvertFromString("#FF000000");
-            
+
             // Focus
             MaterialPalette.Palette.PrimaryFocusColor = (Color)ColorConverter.ConvertFromString("#ff999999");
 

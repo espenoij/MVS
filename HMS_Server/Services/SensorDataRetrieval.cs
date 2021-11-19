@@ -1,12 +1,7 @@
 ﻿using System;
 using System.Collections.Generic;
-using System.Collections.ObjectModel;
 using System.IO.Ports;
-using System.Linq;
-using System.Text;
-using System.Threading.Tasks;
 using System.Windows.Threading;
-using Telerik.Windows.Data;
 
 namespace HMS_Server
 {
@@ -52,7 +47,7 @@ namespace HMS_Server
         public void LoadSensors()
         {
             // Slette data listene
-            sensorDataList.Clear();          
+            sensorDataList.Clear();
             serialPortDataRetrieval.Clear();
             modbusDataRetrieval.Clear();
             databaseSaveTimer.Clear();

@@ -411,7 +411,7 @@ namespace HMS_Client
                         {
                             weatherPhenomenaString += " " + weather1.GetDescription();
                         }
-                        
+
                         if (weather2 != WeatherPhenomena.None)
                         {
                             weatherPhenomenaString += " " + weather2.GetDescription();
@@ -459,7 +459,7 @@ namespace HMS_Client
                 case 1:
                     OnPropertyChanged(nameof(cloudBaseString2));
                     OnPropertyChanged(nameof(cloudCoverageString2));
-                   break;
+                    break;
 
                 case 2:
                     OnPropertyChanged(nameof(cloudBaseString3));

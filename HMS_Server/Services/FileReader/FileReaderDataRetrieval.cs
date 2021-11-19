@@ -5,7 +5,7 @@ using System.Text.RegularExpressions;
 
 namespace HMS_Server
 {
-    class SerialPortDataRetrieval
+    class FileReaderDataRetrieval
     {
         // Configuration
         Config config;
@@ -15,16 +15,16 @@ namespace HMS_Server
 
         RadObservableCollectionEx<SensorData> sensorDataList;
 
-        // Serial Port: List
-        private List<SerialPort> serialPortList = new List<SerialPort>();
+        // File Reader: List
+        private List<FileReaderData> fileReaderList = new List<FileReaderData>();
 
         // Serial Port: Liste hvor data fra serie portene lagres
-        private List<SerialPortData> serialPortDataReceivedList = new List<SerialPortData>();
+        private List<FileReaderData> fileReaderDataReceivedList = new List<FileReaderData>();
 
         // Error Handler
         ErrorHandler errorHandler;
 
-        public SerialPortDataRetrieval(Config config, RadObservableCollectionEx<SensorData> sensorDataList, DatabaseHandler database, ErrorHandler errorHandler)
+        public FileReaderDataRetrieval(Config config, RadObservableCollectionEx<SensorData> sensorDataList, DatabaseHandler database, ErrorHandler errorHandler)
         {
             this.config = config;
             this.database = database;
@@ -35,143 +35,143 @@ namespace HMS_Server
 
         public void Load(SensorData sensorData)
         {
-            // Sjekke om serie port er lagt inn/åpnet fra før
-            SerialPort sp = serialPortList.Find(x => x.PortName == sensorData.serialPort.portName);
+            //// Sjekke om file er lagt inn/åpnet fra før
+            //SerialPort sp = fileReaderList.Find(x => x.PortName == sensorData.serialPort.portName);
 
-            // Dersom den ikke eksisterer -> så legger vi den inn i serie port listen...
-            if (sp == null)
-            {
-                // Sette serie port settings på SerialPort object
-                SerialPort serialPort = new SerialPort();
+            //// Dersom den ikke eksisterer -> så legger vi den inn i serie port listen...
+            //if (sp == null)
+            //{
+            //    // Sette serie port settings på SerialPort object
+            //    SerialPort serialPort = new SerialPort();
 
-                serialPort.PortName = sensorData.serialPort.portName;
-                serialPort.BaudRate = sensorData.serialPort.baudRate;
-                serialPort.DataBits = sensorData.serialPort.dataBits;
-                serialPort.StopBits = sensorData.serialPort.stopBits;
-                serialPort.Parity = sensorData.serialPort.parity;
-                serialPort.Handshake = sensorData.serialPort.handshake;
+            //    serialPort.PortName = sensorData.serialPort.portName;
+            //    serialPort.BaudRate = sensorData.serialPort.baudRate;
+            //    serialPort.DataBits = sensorData.serialPort.dataBits;
+            //    serialPort.StopBits = sensorData.serialPort.stopBits;
+            //    serialPort.Parity = sensorData.serialPort.parity;
+            //    serialPort.Handshake = sensorData.serialPort.handshake;
 
-                // Koble opp metode for å motta data
-                serialPort.DataReceived += new SerialDataReceivedEventHandler(DataReceived);
+            //    // Koble opp metode for å motta data
+            //    serialPort.DataReceived += new SerialDataReceivedEventHandler(DataReceived);
 
-                // Legge inn i serie port listen
-                serialPortList.Add(serialPort);
+            //    // Legge inn i serie port listen
+            //    fileReaderList.Add(serialPort);
 
-                // Opprette enhet i data mottaks listen også
-                SerialPortData dataReceived = new SerialPortData();
-                dataReceived.portName = serialPort.PortName;
-                dataReceived.firstRead = true;
-                serialPortDataReceivedList.Add(dataReceived);
-            }
+            //    // Opprette enhet i data mottaks listen også
+            //    SerialPortData dataReceived = new SerialPortData();
+            //    dataReceived.portName = serialPort.PortName;
+            //    dataReceived.firstRead = true;
+            //    fileReaderDataReceivedList.Add(dataReceived);
+            //}
         }
 
         private void DataReceived(object sender, SerialDataReceivedEventArgs e)
         {
-            SerialPort serialPort = sender as SerialPort;
+            //SerialPort serialPort = sender as SerialPort;
 
-            // Lese fra port
-            string inputData = serialPort?.ReadExisting();
+            //// Lese fra port
+            //string inputData = serialPort?.ReadExisting();
 
-            // Finne frem hvor vi skal lagre lest data fra serie port
-            SerialPortData serialPortData = serialPortDataReceivedList.Find(x => x.portName == serialPort.PortName);
-            if (serialPortData != null)
-            {
-                if (serialPortData.firstRead)
-                {
-                    // Dump inn buffer ved første lesing - gjør ingenting
-                    serialPortData.firstRead = false;
-                }
-                else
-                {
-                    // Lagre data
-                    serialPortData.data = TextHelper.EscapeControlChars(inputData);
-                    serialPortData.timestamp = DateTime.UtcNow;
+            //// Finne frem hvor vi skal lagre lest data fra serie port
+            //SerialPortData serialPortData = fileReaderDataReceivedList.Find(x => x.portName == serialPort.PortName);
+            //if (serialPortData != null)
+            //{
+            //    if (serialPortData.firstRead)
+            //    {
+            //        // Dump inn buffer ved første lesing - gjør ingenting
+            //        serialPortData.firstRead = false;
+            //    }
+            //    else
+            //    {
+            //        // Lagre data
+            //        serialPortData.data = TextHelper.EscapeControlChars(inputData);
+            //        serialPortData.timestamp = DateTime.UtcNow;
 
-                    // Oppdatere status
-                    if (!string.IsNullOrEmpty(inputData))
-                    {
-                        serialPortData.portStatus = PortStatus.Reading;
-                    }
+            //        // Oppdatere status
+            //        if (!string.IsNullOrEmpty(inputData))
+            //        {
+            //            serialPortData.portStatus = PortStatus.Reading;
+            //        }
 
-                    // Prosessere data
-                    DataProcessing(serialPortData);
-                }
-            }
+            //        // Prosessere data
+            //        DataProcessing(serialPortData);
+            //    }
+            //}
         }
 
         public void Start()
         {
-            foreach (var item in serialPortDataReceivedList)
-            {
-                // Resette firstRead variablene
-                item.firstRead = true;
+            //foreach (var item in fileReaderDataReceivedList)
+            //{
+            //    // Resette firstRead variablene
+            //    item.firstRead = true;
 
-                // Resette time stamp
-                item.timestamp = DateTime.UtcNow;
-            }
+            //    // Resette time stamp
+            //    item.timestamp = DateTime.UtcNow;
+            //}
 
-            // Starte serial ports
-            foreach (var item in serialPortList)
-            {
-                if (!item.IsOpen)
-                {
-                    try
-                    {
-                        item.Open();
-                    }
-                    catch (Exception ex)
-                    {
-                        // Sette feilmelding
-                        errorHandler.Insert(
-                            new ErrorMessage(
-                                DateTime.UtcNow,
-                                ErrorMessageType.SerialPort,
-                                ErrorMessageCategory.AdminUser,
-                                string.Format("Error opening serial port: {0} (Start), System Message: {1}", item.PortName, ex.Message)));
+            //// Starte serial ports
+            //foreach (var item in fileReaderList)
+            //{
+            //    if (!item.IsOpen)
+            //    {
+            //        try
+            //        {
+            //            item.Open();
+            //        }
+            //        catch (Exception ex)
+            //        {
+            //            // Sette feilmelding
+            //            errorHandler.Insert(
+            //                new ErrorMessage(
+            //                    DateTime.UtcNow,
+            //                    ErrorMessageType.SerialPort,
+            //                    ErrorMessageCategory.AdminUser,
+            //                    string.Format("Error opening serial port: {0} (Start), System Message: {1}", item.PortName, ex.Message)));
 
-                        // Endre status
-                        SerialPortData serialPortData = serialPortDataReceivedList.Find(x => x.portName == item.PortName);
-                        if (serialPortData != null)
-                            serialPortData.portStatus = PortStatus.OpenError;
-                    }
-                }
-            }
+            //            // Endre status
+            //            SerialPortData serialPortData = fileReaderDataReceivedList.Find(x => x.portName == item.PortName);
+            //            if (serialPortData != null)
+            //                serialPortData.portStatus = PortStatus.OpenError;
+            //        }
+            //    }
+            //}
         }
 
         public void Stop()
         {
-            // Stoppe serial ports
-            foreach (var serialPort in serialPortList)
-                if (serialPort.IsOpen)
-                    serialPort.Close();
+            //// Stoppe serial ports
+            //foreach (var serialPort in fileReaderList)
+            //    if (serialPort.IsOpen)
+            //        serialPort.Close();
         }
 
         public void Restart(string portName)
         {
-            // Restarter en port
-            SerialPort serialPort = serialPortList.Find(x => x.PortName == portName);
-            if (serialPort != null)
-            {
-                try
-                {
-                    // Lukke...
-                    serialPort.Close();
+            //// Restarter en port
+            //SerialPort serialPort = fileReaderList.Find(x => x.PortName == portName);
+            //if (serialPort != null)
+            //{
+            //    try
+            //    {
+            //        // Lukke...
+            //        serialPort.Close();
 
-                    // ...og åpne igjen
-                    serialPort.Open();
-                }
-                catch (Exception ex)
-                {
-                    // Sette feilmelding
-                    errorHandler.Insert(
-                        new ErrorMessage(
-                            DateTime.UtcNow,
-                            ErrorMessageType.SerialPort,
-                            ErrorMessageCategory.AdminUser,
-                            string.Format("Error restarting serial port: {0} (Restart), System Message: {1}", serialPort.PortName, ex.Message)));
+            //        // ...og åpne igjen
+            //        serialPort.Open();
+            //    }
+            //    catch (Exception ex)
+            //    {
+            //        // Sette feilmelding
+            //        errorHandler.Insert(
+            //            new ErrorMessage(
+            //                DateTime.UtcNow,
+            //                ErrorMessageType.SerialPort,
+            //                ErrorMessageCategory.AdminUser,
+            //                string.Format("Error restarting serial port: {0} (Restart), System Message: {1}", serialPort.PortName, ex.Message)));
 
-                }
-            }
+            //    }
+            //}
         }
 
         private void DataProcessing(SerialPortData serialPortData)
@@ -267,25 +267,25 @@ namespace HMS_Server
             }
         }
 
-        public List<SerialPortData> GetSerialPortDataReceivedList()
+        public List<FileReaderData> GetFileReaderDataReceivedList()
         {
-            return serialPortDataReceivedList;
+            return fileReaderDataReceivedList;
         }
 
-        public List<SerialPort> GetSerialPortList()
+        public List<FileReaderData> GetFileReaderList()
         {
-            return serialPortList;
+            return fileReaderList;
         }
 
-        public SerialPort GetSerialPort(string portName)
-        {
-            return serialPortList.Find(x => x.PortName == portName);
-        }
+        //public SerialPort GetSerialPort(string portName)
+        //{
+        //    return fileReaderList.Find(x => x.PortName == portName);
+        //}
 
         public void Clear()
         {
-            serialPortList.Clear();
-            serialPortDataReceivedList.Clear();
+            fileReaderList.Clear();
+            fileReaderDataReceivedList.Clear();
         }
     }
 }

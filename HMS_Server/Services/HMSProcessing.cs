@@ -10,7 +10,7 @@
         private HMSProcessingHelideckStatus hmsProcessingHelideckStatus;
 
         public HMSProcessing(
-            HelideckMotionLimits motionLimits, 
+            HelideckMotionLimits motionLimits,
             HMSDataCollection hmsOutputData,
             AdminSettingsVM adminSettingsVM,
             UserInputs userInputs,

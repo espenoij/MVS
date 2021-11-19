@@ -18,11 +18,11 @@ namespace HMS_Server
 
             void DatabaseSaveTimer_Run(object sender, EventArgs e)
             {
-                if (sensorData.saveToDatabase && 
+                if (sensorData.saveToDatabase &&
                     (sensorData.type == SensorType.SerialPort && sensorData.saveFreq != DatabaseSaveFrequency.Sensor) ||
-                    ((sensorData.type == SensorType.ModbusRTU || 
+                    ((sensorData.type == SensorType.ModbusRTU ||
                             sensorData.type == SensorType.ModbusASCII ||
-                            sensorData.type == SensorType.ModbusTCP) && 
+                            sensorData.type == SensorType.ModbusTCP) &&
                         sensorData.saveFreq != DatabaseSaveFrequency.Freq_2hz))
                 {
                     Thread thread = new Thread(() => DatabaseSaveTimer_Thread());

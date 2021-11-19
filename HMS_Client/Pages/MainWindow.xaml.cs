@@ -1,11 +1,9 @@
 ﻿using System;
 using System.IO;
 using System.Windows;
-using System.Windows.Controls;
 using System.Windows.Input;
 using System.Windows.Threading;
 using Telerik.Windows.Controls;
-using Telerik.Windows.Data;
 
 namespace HMS_Client
 {
@@ -93,11 +91,11 @@ namespace HMS_Client
 
             userInputsVM.Init(
                 adminSettingsVM,
-                helideckMotionLimitsVM, 
-                config, 
-                mainWindowVM, 
-                helideckRelativeWindLimitsVM, 
-                helideckStabilityLimitsVM, 
+                helideckMotionLimitsVM,
+                config,
+                mainWindowVM,
+                helideckRelativeWindLimitsVM,
+                helideckStabilityLimitsVM,
                 helideckWindHeadingTrendVM,
                 windHeadingVM,
                 resetWindDisplayCallback,
@@ -119,7 +117,7 @@ namespace HMS_Client
 
             // Init av UI
             InitUI();
-            
+
             // Admin Modus
             InitAdminMode();
 
@@ -272,11 +270,11 @@ namespace HMS_Client
 
             // Admin Settings
             ucAdminSettings.Init(
-                adminSettingsVM, 
+                adminSettingsVM,
                 generalInformationVM,
                 windHeadingVM,
-                config, 
-                socketConsole, 
+                config,
+                socketConsole,
                 serverCom);
 
             // Admin Data Flow
@@ -292,7 +290,7 @@ namespace HMS_Client
 
             serverCom.Init(
                 socketConsole,
-                hmsDataCollection, 
+                hmsDataCollection,
                 adminSettingsVM,
                 sensorStatus,
                 sensorStatusVM,
@@ -322,7 +320,7 @@ namespace HMS_Client
         private void InitAdminMode()
         {
             // Admin mode key event
-            this.KeyDown += new KeyEventHandler(OnAdminKeyCommand);          
+            this.KeyDown += new KeyEventHandler(OnAdminKeyCommand);
         }
 
         private void OnAdminKeyCommand(object sender, KeyEventArgs e)
@@ -420,7 +418,8 @@ namespace HMS_Client
                 btnScreenCapture.Visibility = Visibility.Collapsed;
 
             // Fjerne fokus fra alle elementer slik at ikke knapper og felt lyser opp i rødt når vi bytter tab
-            Dispatcher.BeginInvoke((Action)(() => {
+            Dispatcher.BeginInvoke((Action)(() =>
+            {
                 (sender as RadTabControl).Focus();
             }), DispatcherPriority.ApplicationIdle);
         }

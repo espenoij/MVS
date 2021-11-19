@@ -1,9 +1,4 @@
-﻿using System;
-using System.Windows;
-using System.Windows.Threading;
-using Telerik.Windows.Controls;
-
-namespace HMS_Client
+﻿namespace HMS_Client
 {
     public class SocketConsole
     {

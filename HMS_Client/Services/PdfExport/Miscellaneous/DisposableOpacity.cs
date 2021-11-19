@@ -1,6 +1,4 @@
-﻿using Telerik.Windows.Documents.Fixed.Model.Editing;
-
-namespace HMS_Client
+﻿namespace HMS_Client
 {
     internal class DisposableOpacity : System.IDisposable
     {

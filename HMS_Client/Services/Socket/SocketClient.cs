@@ -7,7 +7,6 @@ using System.Net.Sockets;
 using System.Text;
 using System.Text.Json;
 using System.Threading;
-using System.Threading.Tasks;
 using Telerik.Windows.Data;
 
 namespace HMS_Client
@@ -16,7 +15,7 @@ namespace HMS_Client
     {
         // ManualResetEvent instances signal completion.  
         private static ManualResetEvent connectDone = new ManualResetEvent(false);
-        private static ManualResetEvent sendDone    = new ManualResetEvent(false);
+        private static ManualResetEvent sendDone = new ManualResetEvent(false);
         private static ManualResetEvent receiveDone = new ManualResetEvent(false);
 
         // The response from the remote device.  

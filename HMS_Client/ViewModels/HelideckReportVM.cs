@@ -493,7 +493,7 @@ namespace HMS_Client
                     longitude != null)
                 {
                     // Sjekke om data er gyldig
-                    if (latitude.status == DataStatus.OK && 
+                    if (latitude.status == DataStatus.OK &&
                         longitude.status == DataStatus.OK)
                     {
                         string latString;
@@ -1113,7 +1113,7 @@ namespace HMS_Client
             }
         }
 
-        public string helifuelAvailableString_CAP 
+        public string helifuelAvailableString_CAP
         {
             get
             {

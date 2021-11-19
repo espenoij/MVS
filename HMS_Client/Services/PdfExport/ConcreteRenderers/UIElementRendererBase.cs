@@ -14,7 +14,7 @@ namespace HMS_Client
             if (frameworkElement != null)
             {
                 clip = System.Windows.Controls.Primitives.LayoutInformation.GetLayoutClip(frameworkElement);
-            }            
+            }
             if (clip == null)
             {
                 clip = element.Clip;

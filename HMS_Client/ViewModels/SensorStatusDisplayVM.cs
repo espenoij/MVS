@@ -91,7 +91,7 @@ namespace HMS_Client
                 }
             }
             public Visibility sensorStatusVisibility
-            { 
+            {
                 get
                 {
                     if (active)

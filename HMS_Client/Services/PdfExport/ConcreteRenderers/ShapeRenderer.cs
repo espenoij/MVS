@@ -34,7 +34,7 @@ namespace HMS_Client
                 {
                     context.drawingSurface.DrawPath(pdfGeometry);
                 }
-                
+
                 return true;
             }
         }

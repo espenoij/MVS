@@ -3,13 +3,9 @@ using NModbus.Serial;
 using System;
 using System.Collections.Generic;
 using System.IO.Ports;
-using System.Linq;
 using System.Net.Sockets;
-using System.Text;
 using System.Threading;
-using System.Threading.Tasks;
 using System.Timers;
-using System.Windows;
 
 namespace HMS_Server
 {
@@ -445,7 +441,7 @@ namespace HMS_Server
 
                                         // Hente data
                                         modbusData.data = Convert.ToInt32(modbusRegister.holding[modbusHelper.AddressToOffset(sensorData.modbus.dataAddress)]?.data);
-                                   
+
                                         break;
                                 }
 
@@ -543,9 +539,9 @@ namespace HMS_Server
                                                 DateTime.UtcNow,
                                                 ErrorMessageType.MODBUS,
                                                 ErrorMessageCategory.AdminUser,
-                                                string.Format("Failed to read MODBUS data from TCP connection {0}:{1}, System Message: {2}", 
-                                                    sensorData.modbus.tcpAddress, 
-                                                    sensorData.modbus.tcpPort, 
+                                                string.Format("Failed to read MODBUS data from TCP connection {0}:{1}, System Message: {2}",
+                                                    sensorData.modbus.tcpAddress,
+                                                    sensorData.modbus.tcpPort,
                                                     ex.Message),
                                                 sensorData.id));
                                         break;

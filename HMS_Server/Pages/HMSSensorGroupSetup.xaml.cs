@@ -1,7 +1,4 @@
-﻿using System;
-using System.Windows;
-using System.Windows.Controls;
-using System.Windows.Threading;
+﻿using System.Windows.Controls;
 using Telerik.Windows.Controls;
 using Telerik.Windows.Controls.GridView;
 
@@ -24,8 +21,8 @@ namespace HMS_Server
         }
 
         public void Init(
-            RadObservableCollectionEx<SensorData> serverSensorDataList, 
-            HMSDataCollection clientSensorData, 
+            RadObservableCollectionEx<SensorData> serverSensorDataList,
+            HMSDataCollection clientSensorData,
             Config config,
             HMSSensorGroupStatus sensorStatus)
         {

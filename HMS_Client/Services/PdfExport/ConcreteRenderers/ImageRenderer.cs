@@ -1,7 +1,6 @@
 ﻿using System.IO;
 using System.Windows;
 using System.Windows.Media.Imaging;
-using Telerik.Windows.Media.Imaging;
 
 namespace HMS_Client
 {

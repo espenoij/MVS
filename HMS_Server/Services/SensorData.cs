@@ -27,6 +27,10 @@ namespace HMS_Server
                 case SensorType.ModbusTCP:
                     modbus = new ModbusSetup();
                     break;
+
+                case SensorType.FileReader:
+                    fileReader = new FileReaderData();
+                    break;
             }
 
             for (int i = 0; i < Constants.DataCalculationSteps; i++)
@@ -71,7 +75,7 @@ namespace HMS_Server
                         serialPort.fixedPosTotal = Convert.ToInt32(sensorConfig.serialPort.fixedPosTotal);
 
                         serialPort.dataField = sensorConfig.serialPort.dataField;
-                        serialPort.decimalSeparator = (DecimalSeparator)Enum.Parse(typeof(DecimalSeparator), sensorConfig.serialPort.decimalSeparator);;
+                        serialPort.decimalSeparator = (DecimalSeparator)Enum.Parse(typeof(DecimalSeparator), sensorConfig.serialPort.decimalSeparator); ;
                         serialPort.autoExtractValue = bool.Parse(sensorConfig.serialPort.autoExtractValue);
 
                         // Data Calculations
@@ -159,6 +163,10 @@ namespace HMS_Server
                             dataCalculations.Add(new DataCalculations(modbus.calculationSetup[i].type, modbus.calculationSetup[i].parameter));
 
                         break;
+
+                    case SensorType.FileReader:
+                        fileReader = new FileReaderData();
+                        break;
                 }
             }
             catch (Exception ex)
@@ -210,11 +218,13 @@ namespace HMS_Server
                     case SensorType.None:
                         serialPort = null;
                         modbus = null;
+                        fileReader = null;
                         break;
 
                     case SensorType.SerialPort:
                         serialPort = new SerialPortSetup();
                         modbus = null;
+                        fileReader = null;
                         break;
 
                     case SensorType.ModbusRTU:
@@ -222,6 +232,13 @@ namespace HMS_Server
                     case SensorType.ModbusTCP:
                         serialPort = null;
                         modbus = new ModbusSetup();
+                        fileReader = null;
+                        break;
+
+                    case SensorType.FileReader:
+                        serialPort = null;
+                        modbus = null;
+                        fileReader = new FileReaderData();
                         break;
                 }
 
@@ -242,7 +259,7 @@ namespace HMS_Server
                 OnPropertyChanged();
             }
         }
-        
+
         private string _description { get; set; }
         public string description
         {
@@ -346,7 +363,7 @@ namespace HMS_Server
         }
         public bool HasMessage
         {
-            get 
+            get
             {
                 return !string.IsNullOrEmpty(message);
             }
@@ -362,14 +379,14 @@ namespace HMS_Server
         // Sensor type-spesifikke data
         public SerialPortSetup serialPort { get; set; }
         public ModbusSetup modbus { get; set; }
-        public FileReaderSetup fileReader { get; set; }
+        public FileReaderData fileReader { get; set; }
 
 
         // Brukes i data bidning mot UI
-        public string source 
-        { 
+        public string source
+        {
             get
-            { 
+            {
                 switch (type)
                 {
                     case SensorType.SerialPort:
@@ -385,7 +402,7 @@ namespace HMS_Server
                     default:
                         return "-";
                 }
-            } 
+            }
         }
 
         public double GetSaveFrequency(Config config)
