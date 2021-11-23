@@ -13,10 +13,19 @@ namespace HMS_Server
         // Change notification
         public event PropertyChangedEventHandler PropertyChanged;
 
-        public FileReaderWindowVM()
+        private Config config;
+
+        public FileReaderWindowVM(Config config)
         {
+            this.config = config;
+
             _fileFolder = string.Empty;
             _fileName = string.Empty;
+
+            totalDataLinesString = config.Read(ConfigKey.TotalDataLines, ConfigSection.FileReaderConfig, Constants.GUIDataLinesDefault).ToString();
+
+            // Timing: File Read Frequency
+            fileReadFrequency = config.Read(ConfigKey.FileReadFrequency, Constants.FileReadFreqDefault);
         }
 
         // Katalog lokasjon
@@ -60,6 +69,61 @@ namespace HMS_Server
             }
         }
 
+        // Antal linjer som skal vises på skjerm
+        private string _totalDataLinesString { get; set; }
+        public string totalDataLinesString
+        {
+            get
+            {
+                return _totalDataLinesString;
+            }
+            set
+            {
+                // Verifisere inndata
+                DataValidation.Double(
+                    value,
+                    Constants.GUIDataLinesMin,
+                    Constants.GUIDataLinesMax,
+                    Constants.GUIDataLinesDefault,
+                    out double validatedInput);
+
+                _totalDataLinesString = validatedInput.ToString();
+
+                // Lagre ny setting til config fil
+                config.Write(ConfigKey.TotalDataLines, totalDataLinesString, ConfigSection.FileReaderConfig);
+
+                OnPropertyChanged(nameof(totalDataLines));
+            }
+        }
+
+        public int totalDataLines
+        {
+            get
+            {
+                if (int.TryParse(_totalDataLinesString, out int result))
+                    return result;
+                else
+                    return Constants.GUIDataLinesDefault;
+            }
+        }
+
+        /////////////////////////////////////////////////////////////////////////////
+        // Timing: File Read Frequency
+        /////////////////////////////////////////////////////////////////////////////
+        private double _fileReadFrequency { get; set; }
+        public double fileReadFrequency
+        {
+            get
+            {
+                return _fileReadFrequency;
+            }
+            set
+            {
+                _fileReadFrequency = value;
+                config.Write(ConfigKey.FileReadFrequency, value.ToString());
+                OnPropertyChanged();
+            }
+        }
 
         // Variabel oppdatert
         // Dersom navn ikke er satt brukes kallende medlem sitt navn

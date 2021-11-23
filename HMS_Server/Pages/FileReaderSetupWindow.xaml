@@ -9,6 +9,7 @@
     mc:Ignorable="d"
     telerik:Header="File Reader Data Setup"
     WindowState="Maximized"
+    Closed="RadWindow_Closed"
     Height="1010"
     Width="1300">
 
@@ -33,7 +34,7 @@
             DockPanel.Dock="Bottom">
             <StatusBarItem>
                 <TextBlock
-                    Name="sensorMonitorStatus" />
+                    Name="fileReadingStatus" />
             </StatusBarItem>
         </StatusBar>
 
@@ -88,9 +89,9 @@
 
                 </telerik:GroupBox>
 
-                <!--File Path-->
+                <!--Settings-->
                 <telerik:GroupBox
-                    Header="File Path"
+                    Header="Settings"
                     Margin="8">
 
                     <StackPanel>
@@ -104,9 +105,7 @@
 
                             <TextBox
                                 Name="tbFileFolder"
-                                Text="{Binding fileFolder}"
-                                LostFocus="tbFileFolder_LostFocus"
-                                KeyDown="tbFileFolder_KeyDown" />
+                                Text="{Binding fileFolder}"/>
 
                         </DockPanel>
 
@@ -119,9 +118,7 @@
 
                             <TextBox
                                 Name="tbFileName"
-                                Text="{Binding fileName}"
-                                LostFocus="tbFileName_LostFocus"
-                                KeyDown="tbFileName_KeyDown" />
+                                Text="{Binding fileName}" />
 
                         </DockPanel>
 
@@ -132,13 +129,29 @@
                             Margin="8"
                             HorizontalAlignment="Right">Set File Path</Button>
 
+                        <DockPanel>
+                            
+                            <Label
+                                Content="Read Frequency"
+                                Width="200"
+                                VerticalAlignment="Center" />
+                            
+                            <TextBox
+                                Name="tbFileReadFrequency"
+                                HorizontalAlignment="Right"
+                                Text="{Binding Path=fileReadFrequency}"
+                                LostFocus="tbFileReadFrequency_LostFocus"
+                                KeyDown="tbFileReadFrequency_KeyDown" />
+                            
+                        </DockPanel>
+
                     </StackPanel>
 
                 </telerik:GroupBox>
-                
-                <!--File Read Controls-->
+
+                <!--Read Controls-->
                 <telerik:GroupBox
-                    Header="File Read Controls"
+                    Header="Read Controls"
                     Margin="8">
 
                     <StackPanel>
@@ -188,6 +201,38 @@
 
                 </telerik:GroupBox>
 
+                <!--Data Display-->
+                <telerik:GroupBox
+                    Header="Data Display"
+                    Margin="8">
+
+                    <StackPanel>
+
+                        <DockPanel>
+
+                            <Label
+                                Width="200"
+                                Content="Data Lines"
+                                VerticalAlignment="Center" />
+
+                            <TextBox
+                                Name="tbTotalDataLines"
+                                Text="{Binding totalDataLinesString}"
+                                LostFocus="tbTotalDataLines_LostFocus"
+                                KeyDown="tbTotalDataLines_KeyDown" />
+
+                        </DockPanel>
+
+                        <Button
+                            x:Name="chkClearAllData"
+                            Click="chkClearAllData_Click"
+                            HorizontalAlignment="Left"
+                            Content="Clear All" />
+
+                    </StackPanel>
+
+                </telerik:GroupBox>
+
             </StackPanel>
 
             <telerik:RadTabControl
@@ -196,10 +241,10 @@
                 Margin="8"
                 HeaderBackground="{StaticResource ColorHorizontalBarBackground}">
 
-                <!--2. Data Selection-->
+                <!--1. Data Selection-->
                 <telerik:RadTabItem
                     Name="tabDataSelection"
-                    Header="2: Data Selection">
+                    Header="1: Data Selection">
 
                     <Grid>
 
@@ -221,9 +266,9 @@
                                 Height="*" />
                         </Grid.RowDefinitions>
 
-                        <!--SelectedPacket-->
+                        <!--Data Line-->
                         <telerik:GroupBox
-                            Header="Selected Packets"
+                            Header="Data Line"
                             Grid.Column="0"
                             Grid.Row="0"
                             Margin="8"
@@ -232,7 +277,7 @@
                             <DockPanel>
 
                                 <telerik:RadGridView
-                                    Name="lvSelectedPackets2"
+                                    Name="lvDataLine"
                                     IsReadOnly="True"
                                     IsManipulationEnabled="False"
                                     CanUserSortColumns="False"
@@ -267,7 +312,7 @@
                             <DockPanel>
 
                                 <telerik:RadGridView
-                                    Name="lvPacketData"
+                                    Name="lvDataField"
                                     IsReadOnly="True"
                                     IsManipulationEnabled="False"
                                     CanUserSortColumns="False"
@@ -580,25 +625,19 @@
                                         Content="Delimiter"
                                         VerticalAlignment="Center" />
                                     <TextBox
-                                        Name="tbPacketDataDelimiter" />
-                                </DockPanel>
-
-                                <DockPanel>
-                                    <Label
-                                        Width="120"
-                                        Content="Combine Fields"
-                                        VerticalAlignment="Center" />
-                                    <telerik:RadComboBox
-                                        Width="auto"
-                                        Name="cboCombineFields" />
+                                        Name="tbFileReaderDelimiter"
+                                        LostFocus="tbFileReaderDelimiter_LostFocus"
+                                        KeyDown="tbFileReaderDelimiter_KeyDown" />
                                 </DockPanel>
 
                                 <Separator
                                     Margin="0,8" />
 
                                 <CheckBox
-                                    Name="cboFixedPositionData"
-                                    Content="Fixed Position Data" />
+                                    Name="cboFileReaderFixedPositionData"
+                                    Content="Fixed Position Data"
+                                    Checked="cboFixedPositionData_Checked"
+                                    Unchecked="cboFixedPositionData_Unchecked" />
 
                                 <DockPanel>
                                     <Label
@@ -606,7 +645,9 @@
                                         Content="Start"
                                         VerticalAlignment="Center" />
                                     <TextBox
-                                        Name="tbFixedPositionDataStart" />
+                                        Name="tbFileReaderFixedPositionDataStart"
+                                        LostFocus="tbFixedPositionDataStart_LostFocus"
+                                        KeyDown="tbFixedPositionDataStart_KeyDown"/>
                                 </DockPanel>
 
                                 <DockPanel>
@@ -615,7 +656,9 @@
                                         Content="Total"
                                         VerticalAlignment="Center" />
                                     <TextBox
-                                        Name="tbFixedPositionDataTotal" />
+                                        Name="tbFileReaderFixedPositionDataTotal"
+                                        LostFocus="tbFixedPositionDataTotal_LostFocus"
+                                        KeyDown="tbFixedPositionDataTotal_KeyDown"/>
                                 </DockPanel>
 
                             </StackPanel>

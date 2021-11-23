@@ -112,4 +112,23 @@ public static class DataValidation
         Regex regex = new Regex(@"^[\w-\.]+@([\w-]+\.)+[\w-]{2,4}$");
         return regex.IsMatch(input);
     }
+
+    // Validerer input etter lengde på string
+    // Sette default verdi dersom ugyldig
+    public static bool StringLength(string input, int length, string defaultValue, out string validatedInput)
+    {
+        bool valid;
+        if (input.Length == length)
+        {
+            validatedInput = input;
+            valid = true;
+        }
+        else
+        {
+            validatedInput = defaultValue;
+            valid = false;
+        }
+
+        return valid;
+    }
 }

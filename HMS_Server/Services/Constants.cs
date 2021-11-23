@@ -119,6 +119,14 @@ class Constants
     public const int ProgramSaveFreqMin = 500;
     public const int ProgramSaveFreqMax = 5000;
 
+    // File Read Frequency
+    public const int FileReadFreqDefault = 500;
+    public const int FileReadFreqMin = 500;
+    public const int FileReadFreqMax = 60000;
+
+    // File Reader
+    public const string FileReaderDelimiterDefault = ",";
+
     // Data Timeout
     public const double DataTimeoutDefault = 70000; // 70 sek
     public const double DataTimeoutMin = 500;

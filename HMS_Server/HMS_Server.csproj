@@ -327,9 +327,12 @@
     <Compile Include="Pages\FileReaderSetupWindow.xaml.cs">
       <DependentUpon>FileReaderSetupWindow.xaml</DependentUpon>
     </Compile>
+    <Compile Include="Services\FileReader\FileDataField.cs" />
+    <Compile Include="Services\FileReader\FileDataLine.cs" />
     <Compile Include="Services\FileReader\FileReaderData.cs" />
     <Compile Include="Services\FileReader\FileReaderConfig.cs" />
     <Compile Include="Services\FileReader\FileReaderDataRetrieval.cs" />
+    <Compile Include="Services\FileReader\FileReaderProcessing.cs" />
     <Compile Include="Services\HelideckMotionLimits.cs" />
     <Compile Include="Services\HMSData.cs" />
     <Compile Include="Services\HMSDatabase.cs" />

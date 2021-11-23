@@ -710,7 +710,7 @@
                         <DockPanel
                             Name="dbFileReaderFileFolder">
                             <Label
-                                Width="180"
+                                Width="100"
                                 Content="File Folder" />
                             <Label
                                 Name="lbFileReaderFileFolder"
@@ -721,10 +721,62 @@
                         <DockPanel
                             Name="dbFileReaderFileName">
                             <Label
-                                Width="180"
+                                Width="100"
                                 Content="File Name" />
                             <Label
                                 Name="lbFileReaderFileName"
+                                Width="auto"
+                                Content="" />
+                        </DockPanel>
+
+                        <DockPanel
+                            Name="dbFileReaderFrequency">
+                            <Label
+                                Content="Read Frequency" />
+                            <Label
+                                Width="100"
+                                Name="lbFileReaderFrequency"
+                                Content="" />
+                        </DockPanel>
+
+                        <Separator />
+
+                        <DockPanel
+                            Name="dbFileReaderDelimiter">
+                            <Label
+                                Width="180"
+                                Content="Delimiter" />
+                            <Label
+                                Name="lbFileReaderDelimiter"
+                                Content="" />
+                        </DockPanel>
+
+                        <DockPanel>
+                            <Label
+                                Width="180"
+                                Content="Fixed Pos Data" />
+                            <Label
+                                Name="lbFileReaderPosData"
+                                Width="auto"
+                                Content="" />
+                        </DockPanel>
+
+                        <DockPanel>
+                            <Label
+                                Width="180"
+                                Content="Fixed Pos Data Start" />
+                            <Label
+                                Name="lbFileReaderFixedPosStart"
+                                Width="auto"
+                                Content="" />
+                        </DockPanel>
+
+                        <DockPanel>
+                            <Label
+                                Width="180"
+                                Content="Fixed Pos Data Total" />
+                            <Label
+                                Name="lbFileReaderFixedPosTotal"
                                 Width="auto"
                                 Content="" />
                         </DockPanel>

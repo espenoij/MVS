@@ -7,6 +7,7 @@
     public const string ClientUpdateFrequencyUI = "ClientUpdateFrequencyUI";
     public const string ChartDataUpdateFrequency20m = "ChartDataUpdateFrequency20m";
     public const string ChartDataUpdateFrequency3h = "ChartDataUpdateFrequency3h";
+    public const string FileReadFrequency = "FileReadFrequency";
 
     // App: General Settings
     public const string RegulationStandard = "RegulationStandard";
@@ -108,7 +109,6 @@
 
     // Server App: Various
     public const string ProgramSaveFrequency = "ProgramSaveFrequency";
-    //public const string DataTimeout = "DataTimeout";
     public const string GUIDataLimit = "GUIDataLimit";
 
     // Server App: Serial Port Configuration

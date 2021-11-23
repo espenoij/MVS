@@ -744,6 +744,12 @@ namespace HMS_Server
         {
             lbFileReaderFileFolder.Content = sensorDataSelected.fileReader.fileFolder;
             lbFileReaderFileName.Content = sensorDataSelected.fileReader.fileName;
+            lbFileReaderFrequency.Content = sensorDataSelected.fileReader.readFrequency;
+
+            lbFileReaderDelimiter.Content = sensorDataSelected.fileReader.delimiter;
+            lbFileReaderPosData.Content = sensorDataSelected.fileReader.fixedPosData.ToString();
+            lbFileReaderFixedPosStart.Content = sensorDataSelected.fileReader.fixedPosStart.ToString();
+            lbFileReaderFixedPosTotal.Content = sensorDataSelected.fileReader.fixedPosTotal.ToString();
         }
     }
 }

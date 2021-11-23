@@ -535,7 +535,12 @@ namespace HMS_Server
     {
         // App: Serial Port Configuration
         public const string SerialPortConfig = "SerialPortConfig";
+
+        // App: MODBUS config
         public const string ModbusConfig = "ModbusConfig";
+
+        // App: File Reader
+        public const string FileReaderConfig = "FileReaderConfig";
 
         // Data: Sensor Data Setup
         public const string SensorData = "SensorData";

@@ -166,6 +166,15 @@ namespace HMS_Server
 
                     case SensorType.FileReader:
                         fileReader = new FileReaderData();
+
+                        fileReader.fileFolder = sensorConfig.fileReader.fileFolder;
+                        fileReader.fileName = sensorConfig.fileReader.fileName;
+                        fileReader.readFrequency = Convert.ToDouble(sensorConfig.fileReader.readFrequency);
+                        fileReader.delimiter = sensorConfig.fileReader.delimiter;
+                        fileReader.fixedPosData = bool.Parse(sensorConfig.fileReader.fixedPosData);
+                        fileReader.fixedPosStart = Convert.ToInt32(sensorConfig.fileReader.fixedPosStart);
+                        fileReader.fixedPosTotal = Convert.ToInt32(sensorConfig.fileReader.fixedPosTotal);
+
                         break;
                 }
             }

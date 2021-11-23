@@ -309,9 +309,15 @@ namespace HMS_Server
 
             // Fixed Position Data
             if (sensorData.serialPort.fixedPosData)
+            {
                 cboFixedPositionData.IsChecked = true;
+                process.fixedPosData = true;
+            }
             else
+            {
                 cboFixedPositionData.IsChecked = false;
+                process.fixedPosData = false;
+            }
 
             tbFixedPositionDataStart.Text = sensorData.serialPort.fixedPosStart.ToString();
             tbFixedPositionDataTotal.Text = sensorData.serialPort.fixedPosTotal.ToString();
@@ -1117,10 +1123,6 @@ namespace HMS_Server
 
             // Lagre ny setting
             sensorData.serialPort.fixedPosData = process.fixedPosData;
-        }
-
-        private void tbFixedPositionDataStart_TextChanged(object sender, TextChangedEventArgs e)
-        {
         }
 
         private void tbFixedPositionDataStart_LostFocus(object sender, RoutedEventArgs e)
