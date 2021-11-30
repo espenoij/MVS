@@ -53,6 +53,12 @@
     public const string HMSData = "HMSData";
     public const string HMSDataItems = "HMSDataItems";
 
+    // Test/Reference Data
+    public const string TestData = "TestData";
+    public const string TestDataItems = "TestDataItems";
+    public const string ReferenceData = "ReferenceData";
+    public const string ReferenceDataItems = "ReferenceDataItems";
+
     // Client: Report data
     public const string Report = "Report";
     public const string NameOfHLO = "NameOfHLO";

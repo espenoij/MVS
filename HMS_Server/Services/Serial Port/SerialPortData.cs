@@ -1,9 +1,14 @@
 ﻿using System;
+using System.ComponentModel;
+using System.Runtime.CompilerServices;
 
 namespace HMS_Server
 {
-    class SerialPortData
+    class SerialPortData : INotifyPropertyChanged
     {
+        // Change notification
+        public event PropertyChangedEventHandler PropertyChanged;
+
         public SerialPortData()
         {
             portName = string.Empty;
@@ -13,13 +18,50 @@ namespace HMS_Server
         }
 
         // Port Name
-        public string portName { get; set; }
+        private string _portName { get; set; }
+        public string portName
+        {
+            get
+            {
+                return _portName;
+            }
+            set
+            {
+                _portName = value;
+                OnPropertyChanged();
+            }
+        }
 
         // Data - raw data as read from the port
-        public string data { get; set; }
+        private string _data { get; set; }
+        public string data
+        {
+            get
+            {
+                return _data;
+            }
+            set
+            {
+                _data = value;
+                OnPropertyChanged();
+            }
+        }
 
         // Time Stamp
-        public DateTime timestamp { get; set; }
+        private DateTime _timestamp { get; set; }
+        public DateTime timestamp
+        {
+            get
+            {
+                return _timestamp;
+            }
+            set
+            {
+                _timestamp = value;
+                OnPropertyChanged();
+                OnPropertyChanged(nameof(timestampString));
+            }
+        }
         public string timestampString
         {
             get
@@ -36,13 +78,33 @@ namespace HMS_Server
         public bool firstRead { get; set; }
 
         // Port Status
-        public PortStatus portStatus { get; set; }
+        public PortStatus _portStatus { get; set; }
+        public PortStatus portStatus
+        {
+            get
+            {
+                return _portStatus;
+            }
+            set
+            {
+                _portStatus = value;
+                OnPropertyChanged();
+                OnPropertyChanged(nameof(portStatusString));
+            }
+        }
         public string portStatusString
         {
             get
             {
                 return portStatus.ToString();
             }
+        }
+
+        // Variabel oppdatert
+        // Dersom navn ikke settes brukes kallende medlem sitt navn
+        protected void OnPropertyChanged([CallerMemberName] string name = null)
+        {
+            PropertyChanged?.Invoke(this, new PropertyChangedEventArgs(name));
         }
     }
 
@@ -53,6 +115,7 @@ namespace HMS_Server
         Reading,
         NoData,
         Warning,
-        OpenError
+        OpenError,
+        EndOfFile
     }
 }

@@ -21,7 +21,7 @@ namespace HMS_Server
     public partial class SerialPortSetupWindow : RadWindow
     {
         // Configuration settings
-        Config config;
+        private Config config;
 
         // Error Handler
         private ErrorHandler errorHandler;
@@ -30,25 +30,25 @@ namespace HMS_Server
         private RadObservableCollectionEx<SensorData> sensorDataList = new RadObservableCollectionEx<SensorData>();
 
         // Valgt sensor data
-        SensorData sensorData;
+        private SensorData sensorData;
 
         // Serie port objekt
         private SerialPort serialPort = new SerialPort();
 
         // Første lesing dumpes - gjøres fordi den kan være mye buffrede data som venter, og disse kan overbelaste grensesnittet.
-        bool firstRead = true;
+        private bool firstRead = true;
 
         // Time stamp for sist leste data
-        DateTime dataTimeStamp;
+        private DateTime dataTimeStamp;
 
         // Data Processing
-        SerialPortProcessing process = new SerialPortProcessing();
+        private SerialPortProcessing process = new SerialPortProcessing();
         private List<DataCalculations> dataCalculations = new List<DataCalculations>();
 
         // Timer som begrenser hvor ofte vi viser data på skjerm.
         // NB! Begrenser ikke lesing fra selve porten, kun hvor ofte innkommende data blir prosessert og vist på skjerm.
         // Dette for at ikke UI skal bli overbelastet med for mye oppdatering dersom det kommer inn mye data med høy frekvens.
-        Stopwatch dataLimitTimer = new Stopwatch();
+        private Stopwatch dataLimitTimer = new Stopwatch();
 
         // Noen globale variabler som brukes i og oppdateres av forskjellige tråder
         private bool showControlChars;

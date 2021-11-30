@@ -1,5 +1,6 @@
 ﻿using Microsoft.Win32;
 using System;
+using System.Collections.Generic;
 using System.IO;
 using System.Text;
 using System.Windows;
@@ -20,10 +21,7 @@ namespace HMS_Server
         private Config config;
 
         // Error Handler
-        ErrorHandler errorHandler;
-
-        // Sensor Data List
-        private RadObservableCollectionEx<SensorData> sensorDataList = new RadObservableCollectionEx<SensorData>();
+        private ErrorHandler errorHandler;
 
         // Valgt sensor data
         private SensorData sensorData;
@@ -32,11 +30,13 @@ namespace HMS_Server
 
         // Data Processing
         private FileReaderProcessing process = new FileReaderProcessing();
+        private List<DataCalculations> dataCalculations = new List<DataCalculations>();
 
         // Lister for visning
         private RadObservableCollectionEx<FileDataLine> fileDataLines = new RadObservableCollectionEx<FileDataLine>();
         private RadObservableCollectionEx<FileDataFields> fileDataFields = new RadObservableCollectionEx<FileDataFields>();
-        private RadObservableCollectionEx<FileReaderData> calculatedDataItems = new RadObservableCollectionEx<FileReaderData>();
+        private RadObservableCollectionEx<SelectedDataField> selectedDataList = new RadObservableCollectionEx<SelectedDataField>();
+        private RadObservableCollectionEx<CalculatedData> calculatedDataList = new RadObservableCollectionEx<CalculatedData>();
 
         // File stream reader
         private StreamReader fsReader;
@@ -44,7 +44,7 @@ namespace HMS_Server
         // View Model
         private FileReaderWindowVM fileReaderWindowVM;
 
-        public FileReaderSetupWindow(SensorData sensorData, RadObservableCollectionEx<SensorData> sensorDataList, Config config, ErrorHandler errorHandler)
+        public FileReaderSetupWindow(SensorData sensorData, Config config, ErrorHandler errorHandler)
         {
             InitializeComponent();
 
@@ -53,9 +53,6 @@ namespace HMS_Server
 
             // Lagre valgt sensor data
             this.sensorData = sensorData;
-
-            // Sensor Data List
-            this.sensorDataList = sensorDataList;
 
             // Config
             this.config = config;
@@ -70,22 +67,19 @@ namespace HMS_Server
         // Initialiserer
         private void InitializeApplicationSettings()
         {
-            InitializeFileReader();
+            InitFileReader();
 
             InitBasicInformation();
             InitFilePath();
-            InitializeFileReaderControls();
+            InitFileReaderControls();
 
-            InitializeDataFieldSplit();
-            InitializeDataCalculations();
+            InitDataFieldSplit();
+            InitDataSelection();
+            InitDataCalculations();
         }
 
-        private void InitializeFileReader()
+        private void InitFileReader()
         {
-            // Binding for data listviews
-            lvDataLine.ItemsSource = fileDataLines;
-            lvDataField.ItemsSource = fileDataFields;
-
             fileReaderTimer.Tick += runFileReaderTimer;
 
             void runFileReaderTimer(object sender, EventArgs e)
@@ -93,7 +87,8 @@ namespace HMS_Server
                 // Sjekke at vi ikke er kommet til end of file
                 if (!fsReader.EndOfStream)
                 {
-                    // Lese en linje fra fil
+                    // Trinn 1: Lese en linje fra fil
+                    //////////////////////////////////////////////////////////////////////////////
                     string dataLine = fsReader.ReadLine();
 
                     // Sende leste data til skjermutskrift
@@ -102,11 +97,26 @@ namespace HMS_Server
                         // Vise data linje på skjerm
                         DisplayDataLines(dataLine);
 
-                        // Dele data linje opp i individuelle data felt
+                        // Trinn 2: Dele data linje opp i individuelle data felt
+                        //////////////////////////////////////////////////////////////////////////////
                         FileDataFields dataFields =  process.SplitDataLine(dataLine);
 
                         // Vise data felt på skjerm
                         DisplayDataFields(dataFields);
+
+                        // Trinn 3: Finne valgt datafelt
+                        //////////////////////////////////////////////////////////////////////////////
+                        SelectedDataField selectedData = process.FindSelectedData(dataFields);
+
+                        // Vise valgt data på skjerm
+                        DisplaySelectedDataField(selectedData);
+
+                        // Trinn 4: Utføre kalkulasjoner på utvalgt data
+                        //////////////////////////////////////////////////////////////////////////////
+                        CalculatedData calculatedData = process.ApplyCalculationsToSelectedData(selectedData, dataCalculations, DateTime.UtcNow, errorHandler, ErrorMessageCategory.Admin);
+
+                        // Vise de prosesserte dataene
+                        DisplayProcessedData(calculatedData);
                     }
                 }
             }
@@ -127,7 +137,7 @@ namespace HMS_Server
             fileReaderWindowVM.fileName = sensorData.fileReader.fileName;
         }
 
-        private void InitializeFileReaderControls()
+        private void InitFileReaderControls()
         {
             // Status Felt
             ///////////////////////////////////////////////////////////
@@ -149,7 +159,7 @@ namespace HMS_Server
             }
         }
 
-        private void InitializeDataFieldSplit()
+        private void InitDataFieldSplit()
         {
             // Delimiter
             tbFileReaderDelimiter.Text = sensorData.fileReader.delimiter;
@@ -174,12 +184,46 @@ namespace HMS_Server
             process.fixedPosTotal = sensorData.fileReader.fixedPosTotal;
         }
 
-        private void InitializeDataCalculations()
+        private void InitDataSelection()
+        {
+            // Binding for data listviews
+            lvDataLine.ItemsSource = fileDataLines;
+            lvDataField.ItemsSource = fileDataFields;
+            lvSelectedData.ItemsSource = selectedDataList;
+
+            // Data Field 
+            for (int i = 0; i < Constants.PacketDataFields; i++)
+                cboSelectedDataField.Items.Add(i.ToString());
+
+            cboSelectedDataField.Text = TextHelper.UnescapeSpace(sensorData.fileReader.dataField);
+
+            if (cboSelectedDataField.Text != string.Empty)
+                cboSelectedDataField.SelectedIndex = int.Parse(cboSelectedDataField.Text);
+            else
+                cboSelectedDataField.SelectedIndex = 0;
+
+            // Decimal Separator
+            foreach (var value in Enum.GetValues(typeof(DecimalSeparator)))
+                cboDecimalSeparator.Items.Add(value.ToString());
+
+            cboDecimalSeparator.Text = sensorData.fileReader.decimalSeparator.ToString();
+            process.decimalSeparator = sensorData.fileReader.decimalSeparator;
+
+            // Lese selected data auto extraction setting
+            cboSelectedDataAutoExtract.IsChecked = sensorData.fileReader.autoExtractValue;
+            process.autoExtractValue = sensorData.fileReader.autoExtractValue;
+        }
+
+        private void InitDataCalculations()
         {
             try
             {
                 // Binding for listviews
-                lvCalculatedData.ItemsSource = calculatedDataItems;
+                lvSelectedData2.ItemsSource = selectedDataList;
+                lvCalculatedData.ItemsSource = calculatedDataList;
+
+                for (int i = 0; i < Constants.DataCalculationSteps; i++)
+                    dataCalculations.Add(new DataCalculations());
 
                 // Data Calculations 1
                 // Prosesseringstyper
@@ -245,6 +289,7 @@ namespace HMS_Server
 
             // Stenge tilgang til settings
             tbFileFolder.IsEnabled = false;
+            tbFileName.IsEnabled = false;
             btnFilePath.IsEnabled = false;
             tbFileReadFrequency.IsEnabled = false;
 
@@ -265,6 +310,7 @@ namespace HMS_Server
 
             // Åpne tilgang til settings
             tbFileFolder.IsEnabled = true;
+            tbFileName.IsEnabled = true;
             btnFilePath.IsEnabled = true;
             tbFileReadFrequency.IsEnabled = true;
 
@@ -287,12 +333,32 @@ namespace HMS_Server
 
         private void DisplayDataFields(FileDataFields dataFields)
         {
-            // Legg ut data i raw data listview
+            // Legg ut data
             fileDataFields.Add(dataFields);
 
             // Begrense data på skjerm
             while (fileDataFields.Count > fileReaderWindowVM.totalDataLines)
                 fileDataFields.RemoveAt(0);
+        }
+
+        private void DisplaySelectedDataField(SelectedDataField selectedData)
+        {
+            // Legg ut data
+            selectedDataList.Add(selectedData);
+
+            // Begrense data på skjerm
+            while (selectedDataList.Count > fileReaderWindowVM.totalDataLines)
+                selectedDataList.RemoveAt(0);
+        }
+
+        private void DisplayProcessedData(CalculatedData calculatedData)
+        {
+            // Legg ut data
+            calculatedDataList.Add(calculatedData);
+
+            // Begrense data på skjerm
+            while (calculatedDataList.Count > fileReaderWindowVM.totalDataLines)
+                calculatedDataList.RemoveAt(0);
         }
 
         private void btnFileReaderStart_Click(object sender, RoutedEventArgs e)
@@ -488,6 +554,179 @@ namespace HMS_Server
         private void RadWindow_Closed(object sender, WindowClosedEventArgs e)
         {
             FileReader_Stop();
+        }
+
+        private void cboSelectedDataField_SelectionChanged(object sender, SelectionChangedEventArgs e)
+        {
+            process.dataField = cboSelectedDataField.SelectedIndex;
+
+            // Lagre ny setting
+            sensorData.fileReader.dataField = process.dataField.ToString();
+        }
+
+        private void cboDecimalSeparator_SelectionChanged(object sender, SelectionChangedEventArgs e)
+        {
+            process.decimalSeparator = (DecimalSeparator)Enum.Parse(typeof(DecimalSeparator), cboDecimalSeparator.SelectedItem.ToString());
+
+            // Lagre ny setting
+            sensorData.fileReader.decimalSeparator = process.decimalSeparator;
+        }
+
+        private void cboSelectedDataAutoExtract_Checked(object sender, RoutedEventArgs e)
+        {
+            process.autoExtractValue = true;
+
+            // Lagre ny setting
+            sensorData.fileReader.autoExtractValue = true;
+        }
+
+        private void cboSelectedDataAutoExtract_Unchecked(object sender, RoutedEventArgs e)
+        {
+            process.autoExtractValue = false;
+
+            // Lagre ny setting
+            sensorData.fileReader.autoExtractValue = false;
+        }
+
+        private void cboCalculationType1_SelectionChanged(object sender, SelectionChangedEventArgs e)
+        {
+            // Lagre ny setting
+            sensorData.fileReader.calculationSetup[0].type = EnumExtension.GetEnumValueFromDescription<CalculationType>(cboCalculationType1.Text);
+            dataCalculations[0].type = sensorData.fileReader.calculationSetup[0].type;
+        }
+
+        private void tbCalculationParameter1_LostFocus(object sender, RoutedEventArgs e)
+        {
+            tbCalculationParameter1_Update();
+        }
+
+        private void tbCalculationParameter1_KeyDown(object sender, KeyEventArgs e)
+        {
+            if (e.Key == Key.Return)
+            {
+                tbCalculationParameter1_Update();
+                Keyboard.ClearFocus();
+            }
+        }
+
+        private void tbCalculationParameter1_Update()
+        {
+            // Lagre ny setting
+            if (double.TryParse(tbCalculationParameter1.Text, Constants.numberStyle, Constants.cultureInfo, out double param))
+                sensorData.fileReader.calculationSetup[0].parameter = param;
+            else
+                sensorData.fileReader.calculationSetup[0].parameter = 0;
+
+            dataCalculations[0].parameter = sensorData.fileReader.calculationSetup[0].parameter;
+
+            // Skrive data (som kan være korrigert) tilbake til tekstfeltet
+            tbCalculationParameter1.Text = sensorData.fileReader.calculationSetup[0].parameter.ToString();
+        }
+
+        private void cboCalculationType2_SelectionChanged(object sender, SelectionChangedEventArgs e)
+        {
+            // Lagre ny setting
+            sensorData.fileReader.calculationSetup[1].type = EnumExtension.GetEnumValueFromDescription<CalculationType>(cboCalculationType2.Text);
+            dataCalculations[1].type = sensorData.fileReader.calculationSetup[1].type;
+        }
+
+        private void tbCalculationParameter2_LostFocus(object sender, RoutedEventArgs e)
+        {
+            tbCalculationParameter2_Update();
+        }
+
+        private void tbCalculationParameter2_KeyDown(object sender, KeyEventArgs e)
+        {
+            if (e.Key == Key.Return)
+            {
+                tbCalculationParameter2_Update();
+                Keyboard.ClearFocus();
+            }
+        }
+
+        private void tbCalculationParameter2_Update()
+        {
+            // Lagre ny setting
+            if (double.TryParse(tbCalculationParameter2.Text, Constants.numberStyle, Constants.cultureInfo, out double param))
+                sensorData.fileReader.calculationSetup[1].parameter = param;
+            else
+                sensorData.fileReader.calculationSetup[1].parameter = 0;
+
+            dataCalculations[1].parameter = sensorData.fileReader.calculationSetup[1].parameter;
+
+            // Skrive data (som kan være korrigert) tilbake til tekstfeltet
+            tbCalculationParameter2.Text = sensorData.fileReader.calculationSetup[1].parameter.ToString();
+
+        }
+
+        private void cboCalculationType3_SelectionChanged(object sender, SelectionChangedEventArgs e)
+        {
+            // Lagre ny setting
+            sensorData.fileReader.calculationSetup[2].type = EnumExtension.GetEnumValueFromDescription<CalculationType>(cboCalculationType3.Text);
+            dataCalculations[2].type = sensorData.fileReader.calculationSetup[2].type;
+        }
+
+        private void tbCalculationParameter3_LostFocus(object sender, RoutedEventArgs e)
+        {
+            tbCalculationParameter3_Update();
+        }
+
+        private void tbCalculationParameter3_KeyDown(object sender, KeyEventArgs e)
+        {
+            if (e.Key == Key.Return)
+            {
+                tbCalculationParameter3_Update();
+                Keyboard.ClearFocus();
+            }
+        }
+
+        private void tbCalculationParameter3_Update()
+        {
+            // Lagre ny setting
+            if (double.TryParse(tbCalculationParameter3.Text, Constants.numberStyle, Constants.cultureInfo, out double param))
+                sensorData.fileReader.calculationSetup[2].parameter = param;
+            else
+                sensorData.fileReader.calculationSetup[2].parameter = 0;
+
+            dataCalculations[2].parameter = sensorData.fileReader.calculationSetup[2].parameter;
+
+            // Skrive data (som kan være korrigert) tilbake til tekstfeltet
+            tbCalculationParameter3.Text = sensorData.fileReader.calculationSetup[2].parameter.ToString();
+        }
+
+        private void cboCalculationType4_SelectionChanged(object sender, SelectionChangedEventArgs e)
+        {
+            // Lagre ny setting
+            sensorData.fileReader.calculationSetup[3].type = EnumExtension.GetEnumValueFromDescription<CalculationType>(cboCalculationType4.Text);
+            dataCalculations[3].type = sensorData.fileReader.calculationSetup[3].type;
+        }
+
+        private void tbCalculationParameter4_LostFocus(object sender, RoutedEventArgs e)
+        {
+            tbCalculationParameter4_Update();
+        }
+
+        private void tbCalculationParameter4_KeyDown(object sender, KeyEventArgs e)
+        {
+            if (e.Key == Key.Return)
+            {
+                tbCalculationParameter4_Update();
+                Keyboard.ClearFocus();
+            }
+        }
+
+        private void tbCalculationParameter4_Update()
+        {
+            // Lagre ny setting
+            if (double.TryParse(tbCalculationParameter4.Text, Constants.numberStyle, Constants.cultureInfo, out double param))
+                sensorData.fileReader.calculationSetup[3].parameter = param;
+            else
+                sensorData.fileReader.calculationSetup[3].parameter = 0;
+
+            dataCalculations[3].parameter = sensorData.fileReader.calculationSetup[3].parameter;
+
+            // Skrive data (som kan være korrigert) tilbake til tekstfeltet
+            tbCalculationParameter4.Text = sensorData.fileReader.calculationSetup[3].parameter.ToString();
         }
     }
 }

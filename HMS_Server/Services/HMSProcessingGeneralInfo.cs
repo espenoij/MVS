@@ -11,7 +11,7 @@ namespace HMS_Server
 
         private AdminSettingsVM adminSettingsVM;
 
-        public HMSProcessingGeneralInfo(HMSDataCollection hmsOutputData, AdminSettingsVM adminSettingsVM)
+        public HMSProcessingGeneralInfo(DataCollection hmsOutputData, AdminSettingsVM adminSettingsVM)
         {
             this.adminSettingsVM = adminSettingsVM;
 
@@ -30,7 +30,7 @@ namespace HMS_Server
             helideckCategory.sensorGroupId = Constants.NO_SENSOR_GROUP_ID;
         }
 
-        public void Update(HMSDataCollection hmsInputDataList)
+        public void Update(DataCollection hmsInputDataList)
         {
             // Tar data fra input delen av server og overfører til HMS output delen
 

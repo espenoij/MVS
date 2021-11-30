@@ -12,19 +12,19 @@ namespace HMS_Server
     class ModbusDataRetrieval
     {
         // Configuration
-        Config config;
+        private Config config;
 
         // Database
-        DatabaseHandler database;
+        private DatabaseHandler database;
 
         // Error Handler
-        ErrorHandler errorHandler;
+        private ErrorHandler errorHandler;
 
         // Read timer
         private System.Timers.Timer modbusReader;
 
         // MODBUS Helper
-        ModbusHelper modbusHelper = new ModbusHelper();
+        private ModbusHelper modbusHelper = new ModbusHelper();
 
         // Serie port liste
         private List<SerialPort> modbusSerialPortList = new List<SerialPort>();
@@ -450,7 +450,7 @@ namespace HMS_Server
                                 DateTime dateTime = DateTime.UtcNow;
 
                                 // Utføre kalkulasjoner på data
-                                process.ApplyCalculationsToSelectedData(sensorData, DateTime.UtcNow, modbusData, errorHandler, ErrorMessageCategory.AdminUser);
+                                process.ApplyCalculationsToSelectedData(sensorData, dateTime, modbusData, errorHandler, ErrorMessageCategory.AdminUser);
 
                                 // Lagre resultat
                                 sensorData.timestamp = dateTime;

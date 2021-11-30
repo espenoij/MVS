@@ -29,7 +29,7 @@ namespace HMS_Server
                     break;
 
                 case SensorType.FileReader:
-                    fileReader = new FileReaderData();
+                    fileReader = new FileReaderSetup();
                     break;
             }
 
@@ -165,15 +165,49 @@ namespace HMS_Server
                         break;
 
                     case SensorType.FileReader:
-                        fileReader = new FileReaderData();
+                        fileReader = new FileReaderSetup();
 
                         fileReader.fileFolder = sensorConfig.fileReader.fileFolder;
                         fileReader.fileName = sensorConfig.fileReader.fileName;
                         fileReader.readFrequency = Convert.ToDouble(sensorConfig.fileReader.readFrequency);
+
                         fileReader.delimiter = sensorConfig.fileReader.delimiter;
                         fileReader.fixedPosData = bool.Parse(sensorConfig.fileReader.fixedPosData);
                         fileReader.fixedPosStart = Convert.ToInt32(sensorConfig.fileReader.fixedPosStart);
                         fileReader.fixedPosTotal = Convert.ToInt32(sensorConfig.fileReader.fixedPosTotal);
+
+                        fileReader.dataField = sensorConfig.fileReader.dataField;
+                        fileReader.decimalSeparator = (DecimalSeparator)Enum.Parse(typeof(DecimalSeparator), sensorConfig.fileReader.decimalSeparator); ;
+                        fileReader.autoExtractValue = bool.Parse(sensorConfig.fileReader.autoExtractValue);
+
+                        // Data Calculations
+                        fileReader.calculationSetup[0].type = (CalculationType)Enum.Parse(typeof(CalculationType), sensorConfig.fileReader.calculationType1);
+                        if (double.TryParse(sensorConfig.fileReader.calculationParameter1, Constants.numberStyle, Constants.cultureInfo, out param))
+                            fileReader.calculationSetup[0].parameter = param;
+                        else
+                            fileReader.calculationSetup[0].parameter = 0;
+
+                        fileReader.calculationSetup[1].type = (CalculationType)Enum.Parse(typeof(CalculationType), sensorConfig.fileReader.calculationType2);
+                        if (double.TryParse(sensorConfig.fileReader.calculationParameter2, Constants.numberStyle, Constants.cultureInfo, out param))
+                            fileReader.calculationSetup[1].parameter = param;
+                        else
+                            fileReader.calculationSetup[1].parameter = 0;
+
+                        fileReader.calculationSetup[2].type = (CalculationType)Enum.Parse(typeof(CalculationType), sensorConfig.fileReader.calculationType3);
+                        if (double.TryParse(sensorConfig.fileReader.calculationParameter3, Constants.numberStyle, Constants.cultureInfo, out param))
+                            fileReader.calculationSetup[2].parameter = param;
+                        else
+                            fileReader.calculationSetup[2].parameter = 0;
+
+                        fileReader.calculationSetup[3].type = (CalculationType)Enum.Parse(typeof(CalculationType), sensorConfig.fileReader.calculationType4);
+                        if (double.TryParse(sensorConfig.fileReader.calculationParameter4, Constants.numberStyle, Constants.cultureInfo, out param))
+                            fileReader.calculationSetup[3].parameter = param;
+                        else
+                            fileReader.calculationSetup[3].parameter = 0;
+
+                        dataCalculations.Clear();
+                        for (int i = 0; i < Constants.DataCalculationSteps; i++)
+                            dataCalculations.Add(new DataCalculations(fileReader.calculationSetup[i].type, fileReader.calculationSetup[i].parameter));
 
                         break;
                 }
@@ -247,7 +281,7 @@ namespace HMS_Server
                     case SensorType.FileReader:
                         serialPort = null;
                         modbus = null;
-                        fileReader = new FileReaderData();
+                        fileReader = new FileReaderSetup();
                         break;
                 }
 
@@ -388,7 +422,7 @@ namespace HMS_Server
         // Sensor type-spesifikke data
         public SerialPortSetup serialPort { get; set; }
         public ModbusSetup modbus { get; set; }
-        public FileReaderData fileReader { get; set; }
+        public FileReaderSetup fileReader { get; set; }
 
 
         // Brukes i data bidning mot UI
@@ -407,6 +441,9 @@ namespace HMS_Server
 
                     case SensorType.ModbusTCP:
                         return modbus.tcpAddress;
+
+                    case SensorType.FileReader:
+                        return fileReader.fileName;
 
                     default:
                         return "-";

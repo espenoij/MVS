@@ -17,6 +17,7 @@ namespace HMS_Server
         private RadObservableCollectionEx<SensorData> statusDisplayList = new RadObservableCollectionEx<SensorData>();
         private RadObservableCollectionEx<SensorData> sensorDataDisplayList = new RadObservableCollectionEx<SensorData>();
         private RadObservableCollectionEx<SerialPortData> serialPortDataDisplayList = new RadObservableCollectionEx<SerialPortData>();
+        private RadObservableCollectionEx<FileReaderSetup> fileReaderDataDisplayList = new RadObservableCollectionEx<FileReaderSetup>();
 
         //private SensorData sensorDataSelected = new SensorData();
 
@@ -40,20 +41,25 @@ namespace HMS_Server
 
         // Socket Listener
         private SocketListener socketListener;
+
         // Socket console hvor vi mottar meldinger fra socket listener
         private SocketConsole socketConsole = new SocketConsole();
 
         public delegate void UserInputsCallback(UserInputs userInputs);
 
         // Liste med HMS sensor data: Data som skal gjennom HMS prosessen og sendes til HMS klient
-        private HMSDataCollection hmsInputData;
+        private DataCollection hmsInputData;
+
+        // Liste med test data: Data som skal gjennom verifikasjonsprosessen
+        private DataCollection testData;
+        private DataCollection referenceData;
 
         // Sensor Status
         private HMSSensorGroupStatus sensorStatus;
 
         // HMS
         private HMSProcessing hmsProcessing;
-        private HMSDataCollection hmsOutputData;
+        private DataCollection hmsOutputData;
         private HMSDatabase hmsDatabase;
 
         // View Models
@@ -85,7 +91,7 @@ namespace HMS_Server
             sensorDataRetrieval = new SensorDataRetrieval(config, database, errorHandler);
 
             // HMS Output data
-            hmsOutputData = new HMSDataCollection();
+            hmsOutputData = new DataCollection();
 
             // HMS Database
             hmsDatabase = new HMSDatabase(database, errorHandler);
@@ -114,6 +120,7 @@ namespace HMS_Server
             // Init UI
             InitUI();
             InitUIHMS();
+            InitUIDataVerification();
 
             // Init User Inputs
             InitUserInput();
@@ -123,6 +130,9 @@ namespace HMS_Server
 
             // Init HMS Data Flow
             InitHMSUpdate();
+
+            // Init verification data prosessering
+            InitVerificationUpdate();
 
             // Init HMS Database operations
             InitHMSDatabaseOps();
@@ -191,6 +201,7 @@ namespace HMS_Server
             btnSetup.Visibility = Visibility.Visible;
             tabInput_SensorData.Visibility = Visibility.Visible;
             tabInput_SerialData.Visibility = Visibility.Visible;
+            tabInput_FileReader.Visibility = Visibility.Visible;
             tabInput_SocketConsole.Visibility = Visibility.Visible;
 
             // Starte server automatisk ved oppstart
@@ -219,6 +230,9 @@ namespace HMS_Server
             // Liste med serieport verdier
             gvSerialPortDataDisplay.ItemsSource = serialPortDataDisplayList;
 
+            // Liste med file reader verdier
+            gvFileReaderDataDisplay.ItemsSource = fileReaderDataDisplayList;
+
             // Div UI init
             btnStart1.IsEnabled = true;
             btnStart2.IsEnabled = true;
@@ -232,8 +246,8 @@ namespace HMS_Server
             motionLimits = new HelideckMotionLimits(userInputs, config, adminSettingsVM);
 
             // HMS data list
-            hmsInputData = new HMSDataCollection();
-            hmsInputData.LoadHMSInputDefinitions(config);
+            hmsInputData = new DataCollection();
+            hmsInputData.LoadHMSInput(config);
 
             // HMS data: Prosessering av input data til output data
             hmsProcessing = new HMSProcessing(motionLimits, hmsOutputData, adminSettingsVM, userInputs, errorHandler);
@@ -251,6 +265,25 @@ namespace HMS_Server
                 hmsInputData,
                 config,
                 sensorStatus);
+        }
+
+        private void InitUIDataVerification()
+        {
+            // Test data liste
+            testData = new DataCollection();
+            testData.LoadTestData(config);
+
+            // Referanse data liste
+            referenceData = new DataCollection();
+            referenceData.LoadReferenceData(config);
+
+            // Setup
+            ucDataVerificationSetup.Init(
+                hmsOutputData,
+                testData,
+                sensorDataDisplayList,
+                referenceData,
+                config);
         }
 
         private void InitUserInput()
@@ -311,6 +344,9 @@ namespace HMS_Server
 
         private void Window_Closing(object sender, Telerik.Windows.Controls.WindowClosedEventArgs e)
         {
+            // Socket Listener
+            socketListener.Stop();
+
             // Lukke alle serie porter
             sensorDataRetrieval.SensorDataRetrieval_Stop();
         }
@@ -320,10 +356,10 @@ namespace HMS_Server
             // Dispatcher som oppdatere UI
             DispatcherTimer uiTimer = new DispatcherTimer();
             uiTimer.Interval = TimeSpan.FromMilliseconds(Constants.ServerUpdateFrequencyUI);
-            uiTimer.Tick += runUpdateUI;
+            uiTimer.Tick += runUIInputUpdate;
             uiTimer.Start();
 
-            void runUpdateUI(object sender, EventArgs e)
+            void runUIInputUpdate(object sender, EventArgs e)
             {
                 try
                 {
@@ -358,7 +394,7 @@ namespace HMS_Server
 
                         if (AdminMode.IsActive)
                         {
-                            // Input: Sensor Data
+                            // TAB: Sensor Data
                             /////////////////////////////////////////////////////////////////////////////////////////////////////
 
                             // Hente listen med prosesserte sensor data
@@ -408,6 +444,33 @@ namespace HMS_Server
                                     serialPortDataDisplayList.Add(item);
                                 }
                             }
+
+                            // TAB: File Reader
+                            /////////////////////////////////////////////////////////////////////////////////////////////////////
+
+                            // Gå gjennom listen med mottatte data fra fil
+                            foreach (var item in sensorDataRetrieval.GetFileReaderList().ToList())
+                            {
+                                // Finne korrekt fil
+                                var fileReaderData = fileReaderDataDisplayList.Where(x => x.fileFolder == item.fileFolder && x.fileName == item.fileName);
+
+                                // Fil eksisterer -> Oppdater data
+                                if (fileReaderData.Count() > 0)
+                                {
+                                    // Oppdatere data hentet fra fil
+                                    fileReaderData.First().dataLine = item.dataLine;
+                                    fileReaderData.First().timestamp = item.timestamp;
+
+                                    // Oppdatere lese status
+                                    fileReaderData.First().portStatus = item.portStatus;
+                                }
+                                // Dersom den ikke eksisterer -> legge inn ny i listen for fil data display
+                                else
+                                {
+                                    // Lagre ny i listen
+                                    fileReaderDataDisplayList.Add(item);
+                                }
+                            }
                         }
                     }
                 }
@@ -418,7 +481,7 @@ namespace HMS_Server
                             DateTime.UtcNow,
                             ErrorMessageType.Database,
                             ErrorMessageCategory.Admin,
-                            string.Format("UI Update Error (runUpdateUI)\n\nSystem Message:\n{0}", ex.Message)));
+                            string.Format("UI Update Error (runUIInputUpdate)\n\nSystem Message:\n{0}", ex.Message)));
 
                     errorHandler.SetDatabaseError(ErrorHandler.DatabaseErrorType.DatabaseMaintenance);
                 }
@@ -430,10 +493,10 @@ namespace HMS_Server
             // Dispatcher som oppdatere HMS prosessering
             DispatcherTimer hmsTimer = new DispatcherTimer();
             hmsTimer.Interval = TimeSpan.FromMilliseconds(Constants.ServerUpdateFrequencyHMS);
-            hmsTimer.Tick += runUpdateHMS;
+            hmsTimer.Tick += runHMSUpdate;
             hmsTimer.Start();
 
-            void runUpdateHMS(object sender, EventArgs e)
+            void runHMSUpdate(object sender, EventArgs e)
             {
                 try
                 {
@@ -444,7 +507,7 @@ namespace HMS_Server
                     {
                         // HMS: HMS Input Data
                         /////////////////////////////////////////////////////////////////////////////////////////////////////
-                        hmsInputData.Transfer(sensorDataRetrieval.GetSensorDataList());
+                        hmsInputData.TransferSensorData(sensorDataRetrieval.GetSensorDataList());
 
                         // HMS: HMS Output Data
                         /////////////////////////////////////////////////////////////////////////////////////////////////////
@@ -459,7 +522,47 @@ namespace HMS_Server
                             DateTime.UtcNow,
                             ErrorMessageType.Database,
                             ErrorMessageCategory.Admin,
-                            string.Format("UI Update Error (runUpdateHMS)\n\nSystem Message:\n{0}", ex.Message)));
+                            string.Format("UI Update Error (runHMSUpdate)\n\nSystem Message:\n{0}", ex.Message)));
+
+                    errorHandler.SetDatabaseError(ErrorHandler.DatabaseErrorType.DatabaseMaintenance);
+                }
+            }
+        }
+
+        private void InitVerificationUpdate()
+        {
+            // Dispatcher som oppdatere verification data (test og referanse data)
+            DispatcherTimer verificationTimer = new DispatcherTimer();
+            verificationTimer.Interval = TimeSpan.FromMilliseconds(Constants.ServerUpdateFrequencyHMS);
+            verificationTimer.Tick += runVerificationUpdate;
+            verificationTimer.Start();
+
+            void runVerificationUpdate(object sender, EventArgs e)
+            {
+                try
+                {
+                    Thread thread = new Thread(() => UpdateHMS_Thread());
+                    thread.Start();
+
+                    void UpdateHMS_Thread()
+                    {
+                        // Test Data
+                        /////////////////////////////////////////////////////////////////////////////////////////////////////
+                        testData.TransferHMSData(hmsOutputData.GetDataList());
+
+                        // Referanse Data
+                        /////////////////////////////////////////////////////////////////////////////////////////////////////
+                        referenceData.TransferSensorData(sensorDataDisplayList);
+                    }
+                }
+                catch (Exception ex)
+                {
+                    errorHandler.Insert(
+                        new ErrorMessage(
+                            DateTime.UtcNow,
+                            ErrorMessageType.Database,
+                            ErrorMessageCategory.Admin,
+                            string.Format("UI Update Error (runVerificationUpdate)\n\nSystem Message:\n{0}", ex.Message)));
 
                     errorHandler.SetDatabaseError(ErrorHandler.DatabaseErrorType.DatabaseMaintenance);
                 }
@@ -583,9 +686,6 @@ namespace HMS_Server
 
             // Socket Listener
             socketListener.Start();
-
-            // Socket console updater
-            //socketConsoleUpdater.Start();
         }
 
         private void StopServer()
@@ -603,9 +703,6 @@ namespace HMS_Server
 
             // Socket Listener
             socketListener.Stop();
-
-            // Socket console updater
-            //socketConsoleUpdater.Stop();
         }
 
         private void btnSetup_Click(object sender, RoutedEventArgs e)
@@ -629,6 +726,7 @@ namespace HMS_Server
             statusDisplayList.Clear();
             sensorDataDisplayList.Clear();
             serialPortDataDisplayList.Clear();
+            fileReaderDataDisplayList.Clear();
         }
 
         private void btnErrorMessages_Click(object sender, RoutedEventArgs e)
@@ -744,6 +842,7 @@ namespace HMS_Server
 
                             tabInput_SensorData.Visibility = Visibility.Visible;
                             tabInput_SerialData.Visibility = Visibility.Visible;
+                            tabInput_FileReader.Visibility = Visibility.Visible;
                             tabInput_SocketConsole.Visibility = Visibility.Visible;
                         }
                     }
@@ -762,11 +861,13 @@ namespace HMS_Server
                         // Sette Status tab som valgt sub tab
                         tabInput_SensorData.Visibility = Visibility.Collapsed;
                         tabInput_SerialData.Visibility = Visibility.Collapsed;
+                        tabInput_FileReader.Visibility = Visibility.Collapsed;
                         tabInput_SocketConsole.Visibility = Visibility.Collapsed;
 
                         tabInput_Status.IsSelected = true;
                         tabInput_SensorData.IsSelected = false;
                         tabInput_SerialData.IsSelected = false;
+                        tabInput_FileReader.IsSelected = false;
                         tabInput_SocketConsole.IsSelected = false;
                     }
                 }

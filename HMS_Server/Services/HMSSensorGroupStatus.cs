@@ -7,12 +7,12 @@ namespace HMS_Server
     public class HMSSensorGroupStatus
     {
         private RadObservableCollectionEx<SensorGroup> hmsSensorGroupList = new RadObservableCollectionEx<SensorGroup>();
-        private HMSDataCollection hmsOutputDataList;
+        private DataCollection hmsOutputDataList;
 
         // Config
         private Config config;
 
-        public HMSSensorGroupStatus(Config config, HMSDataCollection hmsOutputDataList)
+        public HMSSensorGroupStatus(Config config, DataCollection hmsOutputDataList)
         {
             this.config = config;
             this.hmsOutputDataList = hmsOutputDataList;

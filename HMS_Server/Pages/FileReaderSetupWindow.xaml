@@ -133,7 +133,7 @@
                             
                             <Label
                                 Content="Read Frequency"
-                                Width="200"
+                                Width="200"                                
                                 VerticalAlignment="Center" />
                             
                             <TextBox
@@ -683,7 +683,8 @@
                                         VerticalAlignment="Center" />
                                     <telerik:RadComboBox
                                         Width="auto"
-                                        Name="cboSelectedDataField" />
+                                        Name="cboSelectedDataField"
+                                        SelectionChanged="cboSelectedDataField_SelectionChanged"/>
                                 </DockPanel>
 
                                 <!--Decimal Separator-->
@@ -694,12 +695,15 @@
                                         VerticalAlignment="Center" />
                                     <telerik:RadComboBox
                                         Width="auto"
-                                        Name="cboDecimalSeparator" />
+                                        Name="cboDecimalSeparator"
+                                        SelectionChanged="cboDecimalSeparator_SelectionChanged"/>
                                 </DockPanel>
 
                                 <!--Auto Extract Value-->
                                 <CheckBox
-                                    Name="cboSelectedDataAutoExtract">Auto Extract Value</CheckBox>
+                                    Name="cboSelectedDataAutoExtract"
+                                    Checked="cboSelectedDataAutoExtract_Checked"
+                                    Unchecked="cboSelectedDataAutoExtract_Unchecked">Auto Extract Value</CheckBox>
 
                             </StackPanel>
 
@@ -710,7 +714,7 @@
                 </telerik:RadTabItem>
 
 
-                <!--1. Packet Selection-->
+                <!--2. Data Calculations-->
                 <telerik:RadTabItem
                     Name="tabDataCalculations"
                     Header="2: Data Calculations">
@@ -733,36 +737,61 @@
 
                         <!--Selected Data-->
                         <telerik:GroupBox
-                            Grid.Row="0"
                             Grid.Column="0"
+                            Grid.Row="0"
                             Header="Selected Data"
                             Margin="8">
 
-                            <DockPanel>
+                            <telerik:RadGridView
+                                Name="lvSelectedData2"
+                                IsReadOnly="True"
+                                IsManipulationEnabled="False"
+                                CanUserSortColumns="False"
+                                ShowGroupPanel="False"
+                                ShowColumnHeaders="False"
+                                RowHeight="25"
+                                Margin="8"
+                                CanUserReorderColumns="False"
+                                CanUserDeleteRows="False"
+                                RowIndicatorVisibility="Collapsed"
+                                AutoGenerateColumns="False">
 
-                                <telerik:RadGridView
-                                    DockPanel.Dock="Left"
-                                    Name="lvSelectedData2"
-                                    IsReadOnly="True"
-                                    IsManipulationEnabled="False"
-                                    CanUserSortColumns="False"
-                                    ShowGroupPanel="False"
-                                    ShowColumnHeaders="False"
-                                    RowHeight="25"
-                                    Margin="8"
-                                    CanUserReorderColumns="False"
-                                    CanUserDeleteRows="False"
-                                    RowIndicatorVisibility="Collapsed"
-                                    AutoGenerateColumns="False">
+                                <telerik:RadGridView.Columns>
+                                    <telerik:GridViewDataColumn
+                                        DataMemberBinding="{Binding selectedDataFieldString}" />
+                                </telerik:RadGridView.Columns>
 
-                                    <telerik:RadGridView.Columns>
-                                        <telerik:GridViewDataColumn
-                                            DataMemberBinding="{Binding dataString}" />
-                                    </telerik:RadGridView.Columns>
+                            </telerik:RadGridView>
 
-                                </telerik:RadGridView>
+                        </telerik:GroupBox>
 
-                            </DockPanel>
+                        <!--Calculated Data-->
+                        <telerik:GroupBox
+                            Grid.Column="0"
+                            Grid.Row="1"
+                            Header="Calculated Data"
+                            Margin="8">
+
+                            <telerik:RadGridView
+                                Name="lvCalculatedData"
+                                IsReadOnly="True"
+                                IsManipulationEnabled="False"
+                                CanUserSortColumns="False"
+                                ShowGroupPanel="False"
+                                ShowColumnHeaders="False"
+                                RowHeight="25"
+                                Margin="8"
+                                CanUserReorderColumns="False"
+                                CanUserDeleteRows="False"
+                                RowIndicatorVisibility="Collapsed"
+                                AutoGenerateColumns="False">
+
+                                <telerik:RadGridView.Columns>
+                                    <telerik:GridViewDataColumn
+                                        DataMemberBinding="{Binding dataString}" />
+                                </telerik:RadGridView.Columns>
+
+                            </telerik:RadGridView>
 
                         </telerik:GroupBox>
 
@@ -771,9 +800,9 @@
                             Grid.Row="0"
                             Grid.RowSpan="2">
 
-                            <!--Data Calculation 1-->
+                            <!--Data Calculations 1-->
                             <telerik:GroupBox
-                                Header="Data Calculation 1"
+                                Header="Data Calculations 1"
                                 Margin="8">
 
                                 <StackPanel
@@ -787,8 +816,8 @@
                                         <telerik:RadComboBox
                                             Width="auto"
                                             Name="cboCalculationType1"
-                                            MaxDropDownHeight="400">
-                                        </telerik:RadComboBox>
+                                            MaxDropDownHeight="400"
+                                            SelectionChanged="cboCalculationType1_SelectionChanged" />
                                     </DockPanel>
 
                                     <DockPanel>
@@ -797,17 +826,18 @@
                                             Content="Parameter"
                                             VerticalAlignment="Center" />
                                         <TextBox
-                                            Name="tbCalculationParameter1"/>
+                                            Name="tbCalculationParameter1"
+                                            LostFocus="tbCalculationParameter1_LostFocus"
+                                            KeyDown="tbCalculationParameter1_KeyDown" />
                                     </DockPanel>
 
                                 </StackPanel>
 
                             </telerik:GroupBox>
 
-
-                            <!--Data Calculation 2-->
+                            <!--Data Calculations 2-->
                             <telerik:GroupBox
-                                Header="Data Calculation 2"
+                                Header="Data Calculations 2"
                                 Margin="8">
 
                                 <StackPanel
@@ -821,8 +851,8 @@
                                         <telerik:RadComboBox
                                             Width="auto"
                                             Name="cboCalculationType2"
-                                            MaxDropDownHeight="400">
-                                        </telerik:RadComboBox>
+                                            MaxDropDownHeight="400"
+                                            SelectionChanged="cboCalculationType2_SelectionChanged" />
                                     </DockPanel>
 
                                     <DockPanel>
@@ -831,17 +861,18 @@
                                             Content="Parameter"
                                             VerticalAlignment="Center" />
                                         <TextBox
-                                            Name="tbCalculationParameter2"/>
+                                            Name="tbCalculationParameter2"
+                                            LostFocus="tbCalculationParameter2_LostFocus"
+                                            KeyDown="tbCalculationParameter2_KeyDown" />
                                     </DockPanel>
 
                                 </StackPanel>
 
                             </telerik:GroupBox>
 
-
-                            <!--Data Calculation 3-->
+                            <!--Data Calculations 3-->
                             <telerik:GroupBox
-                                Header="Data Calculation 3"
+                                Header="Data Calculations 3"
                                 Margin="8">
 
                                 <StackPanel
@@ -855,8 +886,8 @@
                                         <telerik:RadComboBox
                                             Width="auto"
                                             Name="cboCalculationType3"
-                                            MaxDropDownHeight="400">
-                                        </telerik:RadComboBox>
+                                            MaxDropDownHeight="400"
+                                            SelectionChanged="cboCalculationType3_SelectionChanged" />
                                     </DockPanel>
 
                                     <DockPanel>
@@ -865,16 +896,18 @@
                                             Content="Parameter"
                                             VerticalAlignment="Center" />
                                         <TextBox
-                                            Name="tbCalculationParameter3"/>
+                                            Name="tbCalculationParameter3"
+                                            LostFocus="tbCalculationParameter3_LostFocus"
+                                            KeyDown="tbCalculationParameter3_KeyDown" />
                                     </DockPanel>
 
                                 </StackPanel>
 
                             </telerik:GroupBox>
 
-                            <!--Data Calculation 3-->
+                            <!--Data Calculations 4-->
                             <telerik:GroupBox
-                                Header="Data Calculation 4"
+                                Header="Data Calculations 4"
                                 Margin="8">
 
                                 <StackPanel
@@ -888,8 +921,8 @@
                                         <telerik:RadComboBox
                                             Width="auto"
                                             Name="cboCalculationType4"
-                                            MaxDropDownHeight="400">
-                                        </telerik:RadComboBox>
+                                            MaxDropDownHeight="400"
+                                            SelectionChanged="cboCalculationType4_SelectionChanged" />
                                     </DockPanel>
 
                                     <DockPanel>
@@ -898,7 +931,9 @@
                                             Content="Parameter"
                                             VerticalAlignment="Center" />
                                         <TextBox
-                                            Name="tbCalculationParameter4"/>
+                                            Name="tbCalculationParameter4"
+                                            LostFocus="tbCalculationParameter4_LostFocus"
+                                            KeyDown="tbCalculationParameter4_KeyDown" />
                                     </DockPanel>
 
                                 </StackPanel>
@@ -907,45 +942,10 @@
 
                         </StackPanel>
 
-                        <!--Processed Data-->
-                        <telerik:GroupBox
-                            Grid.Column="0"
-                            Grid.Row="1"
-                            Header="Calculated Data"
-                            Margin="8">
-
-                            <DockPanel>
-
-                                <telerik:RadGridView
-                                    DockPanel.Dock="Left"
-                                    Name="lvCalculatedData"
-                                    IsReadOnly="True"
-                                    IsManipulationEnabled="False"
-                                    CanUserSortColumns="False"
-                                    ShowGroupPanel="False"
-                                    ShowColumnHeaders="False"
-                                    RowHeight="25"
-                                    Margin="8"
-                                    CanUserReorderColumns="False"
-                                    CanUserDeleteRows="False"
-                                    RowIndicatorVisibility="Collapsed"
-                                    AutoGenerateColumns="False">
-
-                                    <telerik:RadGridView.Columns>
-                                        <telerik:GridViewDataColumn
-                                            DataMemberBinding="{Binding calculatedDataString}" />
-                                    </telerik:RadGridView.Columns>
-
-                                </telerik:RadGridView>
-
-                            </DockPanel>
-
-                        </telerik:GroupBox>
-
                     </Grid>
 
                 </telerik:RadTabItem>
-                
+
             </telerik:RadTabControl>
 
         </Grid>

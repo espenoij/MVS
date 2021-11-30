@@ -11,7 +11,7 @@
 
         public HMSProcessing(
             HelideckMotionLimits motionLimits,
-            HMSDataCollection hmsOutputData,
+            DataCollection hmsOutputData,
             AdminSettingsVM adminSettingsVM,
             UserInputs userInputs,
             ErrorHandler errorHandler)
@@ -24,7 +24,7 @@
             hmsProcessingHelideckStatus = new HMSProcessingHelideckStatus(hmsOutputData, motionLimits, adminSettingsVM, userInputs, hmsProcessingMotion, hmsProcessingWindHeading);
         }
 
-        public void Update(HMSDataCollection hmsInputDataList)
+        public void Update(DataCollection hmsInputDataList)
         {
             hmsProcessingSettings.Update();
             hmsProcessingGeneralInfo.Update(hmsInputDataList);

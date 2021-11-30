@@ -8,13 +8,13 @@ namespace HMS_Server
     class SensorDataRetrieval
     {
         // Configuration
-        Config config;
+        private Config config;
 
         // Database
-        DatabaseHandler database;
+        private DatabaseHandler database;
 
         // Error Handler
-        ErrorHandler errorHandler;
+        private ErrorHandler errorHandler;
 
         // Sensor Data List
         private RadObservableCollectionEx<SensorData> sensorDataList = new RadObservableCollectionEx<SensorData>();
@@ -23,13 +23,16 @@ namespace HMS_Server
         public List<DatabaseInsertTimer> databaseSaveTimer = new List<DatabaseInsertTimer>();
 
         // Serie port: Data innhenting
-        SerialPortDataRetrieval serialPortDataRetrieval;
+        private SerialPortDataRetrieval serialPortDataRetrieval;
 
         // MODBUS: Data innhenting
-        ModbusDataRetrieval modbusDataRetrieval;
+        private ModbusDataRetrieval modbusDataRetrieval;
+
+        // File Reader: Data innhenting
+        private FileReaderDataRetrieval fileReaderDataRetrieval;
 
         // Retrieval Status
-        bool dataRetrievalStarted = false;
+        private bool dataRetrievalStarted = false;
 
         public SensorDataRetrieval(Config config, DatabaseHandler database, ErrorHandler errorHandler)
         {
@@ -42,6 +45,9 @@ namespace HMS_Server
 
             // Modbus data innhenting
             modbusDataRetrieval = new ModbusDataRetrieval(config, database, errorHandler);
+
+            // File Reader data innhenting
+            fileReaderDataRetrieval = new FileReaderDataRetrieval(database, errorHandler);
         }
 
         public void LoadSensors()
@@ -50,6 +56,7 @@ namespace HMS_Server
             sensorDataList.Clear();
             serialPortDataRetrieval.Clear();
             modbusDataRetrieval.Clear();
+            fileReaderDataRetrieval.Clear();
             databaseSaveTimer.Clear();
 
             // Hente liste med data fra fil
@@ -86,6 +93,10 @@ namespace HMS_Server
                             if (sensorData.saveToDatabase && sensorData.saveFreq != DatabaseSaveFrequency.Freq_2hz)      // Lagring til DB utføres i runModbusReader_Thread for Freq_2hz
                                 databaseSaveTimer.Add(new DatabaseInsertTimer(sensorData, database, config, errorHandler));
                             break;
+
+                        case SensorType.FileReader:
+                            fileReaderDataRetrieval.Load(sensorData);
+                            break;
                     }
                 }
             }
@@ -109,6 +120,11 @@ namespace HMS_Server
             return serialPortDataRetrieval.GetSerialPort(portName);
         }
 
+        public List<FileReaderSetup> GetFileReaderList()
+        {
+            return fileReaderDataRetrieval.GetFileReaderList();
+        }
+
         public void SensorDataRetrieval_Start()
         {
             dataRetrievalStarted = true;
@@ -116,8 +132,11 @@ namespace HMS_Server
             // Start Serial Port
             serialPortDataRetrieval.Start();
 
-            // Start MODBS
+            // Start MODBUS
             modbusDataRetrieval.Start();
+
+            // Start MODBUS
+            fileReaderDataRetrieval.Start();
 
             // Starte database save timer
             foreach (var timer in databaseSaveTimer)
@@ -130,6 +149,7 @@ namespace HMS_Server
 
             serialPortDataRetrieval.Stop();
             modbusDataRetrieval.Stop();
+            fileReaderDataRetrieval.Stop();
 
             // Stoppe database save timer
             foreach (var timer in databaseSaveTimer)
@@ -174,8 +194,7 @@ namespace HMS_Server
                                         }
                                         else
                                         {
-                                            if (serialPortData.portStatus != PortStatus.OpenError)
-                                                serialPortData.portStatus = PortStatus.Closed;
+                                            serialPortData.portStatus = PortStatus.Closed;
                                         }
                                     }
                                     // Porten er åpen
@@ -239,6 +258,37 @@ namespace HMS_Server
                             {
                                 sensorData.portStatus = PortStatus.Closed;
                             }
+                            break;
+
+                        // File Reader
+                        //////////////////////////////////////////////////////////////////////////////////////
+                        case SensorType.FileReader:
+
+                            // Finne korrekt serie port data
+                            FileReaderSetup fileReaderData = fileReaderDataRetrieval.GetFileReaderList().Find(x =>
+                                x.fileFolder == sensorData.fileReader.fileFolder &&
+                                x.fileName == sensorData.fileReader.fileName);
+
+                            if (dataRetrievalStarted)
+                            {
+                                if (sensorData.portStatus == PortStatus.Closed)
+                                {
+                                    sensorData.portStatus = PortStatus.Open;
+
+                                    // Oppdatere status
+                                    if (fileReaderData != null)
+                                        fileReaderData.portStatus = sensorData.portStatus;
+                                }
+                            }
+                            else
+                            {
+                                sensorData.portStatus = PortStatus.Closed;
+
+                                // Oppdatere status
+                                if (fileReaderData != null)
+                                    fileReaderData.portStatus = sensorData.portStatus;
+                            }
+
                             break;
                     }
 

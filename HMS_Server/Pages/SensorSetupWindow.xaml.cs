@@ -143,7 +143,7 @@ namespace HMS_Server
                     break;
 
                 case SensorType.FileReader:
-                    newSensor.fileReader = new FileReaderData(sensorDataSelected.fileReader);
+                    newSensor.fileReader = new FileReaderSetup(sensorDataSelected.fileReader);
                     break;
             }
 
@@ -433,7 +433,7 @@ namespace HMS_Server
         private void btnFileReaderSetup_Click(object sender, RoutedEventArgs e)
         {
             // Open new modal window 
-            FileReaderSetupWindow newWindow = new FileReaderSetupWindow(sensorDataSelected, sensorDataList, config, errorHandler);
+            FileReaderSetupWindow newWindow = new FileReaderSetupWindow(sensorDataSelected, config, errorHandler);
             newWindow.Owner = App.Current.MainWindow;
             newWindow.Closed += FileReaderSetupWindow_Closed;
             newWindow.ShowDialog();
@@ -488,6 +488,33 @@ namespace HMS_Server
 
                         default:
                             break;
+                    }
+                }
+            }
+        }
+
+        private void SyncFileReaderSettings(SensorData sensorData)
+        {
+            // Går igjennom alle sensor data og finne de som er satt til å lese fra samme file
+            // -> oppdatere settings slik at alle er samkjørt
+            foreach (var item in sensorDataList)
+            {
+                // Same type?
+                if (item.type == sensorData.type)
+                {
+                    if (item.fileReader.fileFolder == sensorData.fileReader.fileFolder &&
+                        item.fileReader.fileName == sensorData.fileReader.fileName)
+                    {
+                        // Kopiere settings 
+                        item.serialPort.portName = sensorData.serialPort.portName;
+                        item.serialPort.baudRate = sensorData.serialPort.baudRate;
+                        item.serialPort.dataBits = sensorData.serialPort.dataBits;
+                        item.serialPort.stopBits = sensorData.serialPort.stopBits;
+                        item.serialPort.parity = sensorData.serialPort.parity;
+                        item.serialPort.handshake = sensorData.serialPort.handshake;
+
+                        // Lagre til fil
+                        config.SetData(item);
                     }
                 }
             }
@@ -750,6 +777,23 @@ namespace HMS_Server
             lbFileReaderPosData.Content = sensorDataSelected.fileReader.fixedPosData.ToString();
             lbFileReaderFixedPosStart.Content = sensorDataSelected.fileReader.fixedPosStart.ToString();
             lbFileReaderFixedPosTotal.Content = sensorDataSelected.fileReader.fixedPosTotal.ToString();
+
+            lbFileReaderDataField.Content = sensorDataSelected.fileReader.dataField;
+            lbFileReaderDecimalSeparator.Content = sensorDataSelected.fileReader.decimalSeparator.ToString();
+            lbFileReaderAutoExtractValue.Content = sensorDataSelected.fileReader.autoExtractValue.ToString();
+
+            lbFileReaderCalculationType1.Content = sensorDataSelected.fileReader.calculationSetup[0].type.GetDescription();
+            lbFileReaderCalculationParameter1.Content = sensorDataSelected.fileReader.calculationSetup[0].parameter.ToString();
+
+            lbFileReaderCalculationType2.Content = sensorDataSelected.fileReader.calculationSetup[1].type.GetDescription();
+            lbFileReaderCalculationParameter2.Content = sensorDataSelected.fileReader.calculationSetup[1].parameter.ToString();
+
+            lbFileReaderCalculationType3.Content = sensorDataSelected.fileReader.calculationSetup[2].type.GetDescription();
+            lbFileReaderCalculationParameter3.Content = sensorDataSelected.fileReader.calculationSetup[2].parameter.ToString();
+
+            lbFileReaderCalculationType4.Content = sensorDataSelected.fileReader.calculationSetup[3].type.GetDescription();
+            lbFileReaderCalculationParameter4.Content = sensorDataSelected.fileReader.calculationSetup[3].parameter.ToString();
+
         }
     }
 }

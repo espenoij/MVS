@@ -113,11 +113,11 @@
 
             <Grid.ColumnDefinitions>
                 <ColumnDefinition
-                    Width="*" />
+                    Width="5*" />
                 <ColumnDefinition
-                    Width="400" />
+                    Width="2*" />
                 <ColumnDefinition
-                    Width="400" />
+                    Width="3*" />
             </Grid.ColumnDefinitions>
 
             <StackPanel
@@ -781,6 +781,119 @@
                                 Content="" />
                         </DockPanel>
 
+                        <Separator />
+
+                        <DockPanel>
+                            <Label
+                                Width="180"
+                                Content="Data Field" />
+                            <Label
+                                Name="lbFileReaderDataField"
+                                Width="auto"
+                                Content="" />
+                        </DockPanel>
+
+                        <DockPanel>
+                            <Label
+                                Width="180"
+                                Content="Decimal Separator" />
+                            <Label
+                                Name="lbFileReaderDecimalSeparator"
+                                Width="auto"
+                                Content="" />
+                        </DockPanel>
+
+                        <DockPanel>
+                            <Label
+                                Width="180"
+                                Content="Auto Extract Value" />
+                            <Label
+                                Name="lbFileReaderAutoExtractValue"
+                                Width="auto"
+                                Content="" />
+                        </DockPanel>
+
+                        <Separator />
+
+                        <DockPanel>
+                            <Label
+                                Width="180"
+                                Content="Calculation 1: Type" />
+                            <Label
+                                Name="lbFileReaderCalculationType1"
+                                Width="auto"
+                                Content="" />
+                        </DockPanel>
+
+                        <DockPanel>
+                            <Label
+                                Width="180"
+                                Content="Calculation 1: Parameter" />
+                            <Label
+                                Name="lbFileReaderCalculationParameter1"
+                                Width="auto"
+                                Content="" />
+                        </DockPanel>
+
+                        <DockPanel>
+                            <Label
+                                Width="180"
+                                Content="Calculation 2: Type" />
+                            <Label
+                                Name="lbFileReaderCalculationType2"
+                                Width="auto"
+                                Content="" />
+                        </DockPanel>
+
+                        <DockPanel>
+                            <Label
+                                Width="180"
+                                Content="Calculation 2: Parameter" />
+                            <Label
+                                Name="lbFileReaderCalculationParameter2"
+                                Width="auto"
+                                Content="" />
+                        </DockPanel>
+
+                        <DockPanel>
+                            <Label
+                                Width="180"
+                                Content="Calculation 3: Type" />
+                            <Label
+                                Name="lbFileReaderCalculationType3"
+                                Width="auto"
+                                Content="" />
+                        </DockPanel>
+
+                        <DockPanel>
+                            <Label
+                                Width="180"
+                                Content="Calculation 3: Parameter" />
+                            <Label
+                                Name="lbFileReaderCalculationParameter3"
+                                Width="auto"
+                                Content="" />
+                        </DockPanel>
+
+                        <DockPanel>
+                            <Label
+                                Width="180"
+                                Content="Calculation 4: Type" />
+                            <Label
+                                Name="lbFileReaderCalculationType4"
+                                Width="auto"
+                                Content="" />
+                        </DockPanel>
+
+                        <DockPanel>
+                            <Label
+                                Width="180"
+                                Content="Calculation 4: Parameter" />
+                            <Label
+                                Name="lbFileReaderCalculationParameter4"
+                                Width="auto"
+                                Content="" />
+                        </DockPanel>
                     </StackPanel>
 
                 </telerik:GroupBox>

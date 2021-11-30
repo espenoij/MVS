@@ -24,16 +24,12 @@ namespace HMS_Server
             this.dataField = sensorData.serialPort.dataField;
             this.decimalSeparator = sensorData.serialPort.decimalSeparator.ToString();
             this.autoExtractValue = sensorData.serialPort.autoExtractValue.ToString();
-
             this.calculationType1 = sensorData.serialPort.calculationSetup[0].type.ToString();
             this.calculationParameter1 = sensorData.serialPort.calculationSetup[0].parameter.ToString();
-
             this.calculationType2 = sensorData.serialPort.calculationSetup[1].type.ToString();
             this.calculationParameter2 = sensorData.serialPort.calculationSetup[1].parameter.ToString();
-
             this.calculationType3 = sensorData.serialPort.calculationSetup[2].type.ToString();
             this.calculationParameter3 = sensorData.serialPort.calculationSetup[2].parameter.ToString();
-
             this.calculationType4 = sensorData.serialPort.calculationSetup[3].type.ToString();
             this.calculationParameter4 = sensorData.serialPort.calculationSetup[3].parameter.ToString();
         }

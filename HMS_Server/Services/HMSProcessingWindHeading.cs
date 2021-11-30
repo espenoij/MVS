@@ -36,7 +36,7 @@ namespace HMS_Server
         private AdminSettingsVM adminSettingsVM;
         private UserInputs userInputs;
 
-        public HMSProcessingWindHeading(HMSDataCollection hmsOutputData, AdminSettingsVM adminSettingsVM, UserInputs userInputs)
+        public HMSProcessingWindHeading(DataCollection hmsOutputData, AdminSettingsVM adminSettingsVM, UserInputs userInputs)
         {
             this.adminSettingsVM = adminSettingsVM;
             this.userInputs = userInputs;
@@ -150,7 +150,7 @@ namespace HMS_Server
             windDirectionDelta.dbTableName = "wind_direction_delta";
         }
 
-        public void Update(HMSDataCollection hmsInputDataList)
+        public void Update(DataCollection hmsInputDataList)
         {
             // Tar data fra input delen av server og overfører til HMS output delen
 

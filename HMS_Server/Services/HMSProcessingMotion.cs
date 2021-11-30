@@ -77,7 +77,7 @@ namespace HMS_Server
         private RadObservableCollectionEx<TimeData> significantHeaveRate10mMeanData = new RadObservableCollectionEx<TimeData>();
         private RadObservableCollectionEx<TimeData> significantHeaveRate20mMaxData = new RadObservableCollectionEx<TimeData>();
 
-        public HMSProcessingMotion(HMSDataCollection hmsOutputData, HelideckMotionLimits motionLimits, AdminSettingsVM adminSettingsVM, UserInputs userInputs, ErrorHandler errorHandler)
+        public HMSProcessingMotion(DataCollection hmsOutputData, HelideckMotionLimits motionLimits, AdminSettingsVM adminSettingsVM, UserInputs userInputs, ErrorHandler errorHandler)
         {
             this.motionLimits = motionLimits;
             this.adminSettingsVM = adminSettingsVM;
@@ -293,7 +293,7 @@ namespace HMS_Server
             }
         }
 
-        public void Update(HMSDataCollection hmsInputDataList)
+        public void Update(DataCollection hmsInputDataList)
         {
             // Tar data fra input delen av server og overfører til HMS output delen
             // og prosesserer input for overføring til HMS output også.

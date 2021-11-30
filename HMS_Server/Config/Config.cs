@@ -415,6 +415,121 @@ namespace HMS_Server
 
             return null;
         }
+        
+        // Oppdatere eksisterende test data i config fil
+        public void SetTestData(HMSData testData)
+        {
+            // NB! Dersom data med angitt ID allerede finnes vil dette gi feilmelding
+            TestDataConfig testDataConfig = new TestDataConfig(testData);
+
+            try
+            {
+                // Hente seksjon
+                var testDataConfigSection = dataConfig.GetSection(ConfigKey.TestData) as TestDataConfigSection;
+                if (testDataConfigSection != null)
+                {
+                    bool found = false;
+
+                    // Søke etter sensor verdi med angitt ID
+                    for (int i = 0; i < testDataConfigSection.ClientDataItems.Count && !found; i++)
+                    {
+                        // Sjekke ID
+                        if (testDataConfigSection.ClientDataItems[i]?.id == testDataConfig.id)
+                        {
+                            // Oppdatere data
+                            testDataConfigSection.ClientDataItems[i] = testDataConfig;
+                            found = true;
+                        }
+                    }
+
+                    // Oppdater XML fil
+                    dataConfig.Save(ConfigurationSaveMode.Modified);
+                    ConfigurationManager.RefreshSection(ConfigKey.TestData);
+                }
+            }
+            catch (Exception ex)
+            {
+                RadWindow.Alert(string.Format("Client Config (SetTestData)\n\nCould not update test data in config file\n\n{0}", TextHelper.Wrap(ex.Message)));
+            }
+        }
+
+        // Hente ut liste med alle test data
+        public TestDataConfigCollection GetTestDataList()
+        {
+            try
+            {
+                // Hente seksjon
+                var testDataConfigSection = dataConfig.GetSection(ConfigKey.TestData) as TestDataConfigSection;
+                if (testDataConfigSection != null)
+                {
+                    return testDataConfigSection.ClientDataItems;
+                }
+            }
+            catch (Exception ex)
+            {
+                RadWindow.Alert(string.Format("Client Config (GetTestDataList)\n\nCould not read all test data from config file\n\n{0}", TextHelper.Wrap(ex.Message)));
+            }
+
+            return null;
+        }
+
+        // Oppdatere eksisterende referanse data i config fil
+        public void SetReferenceData(HMSData testData)
+        {
+            // NB! Dersom data med angitt ID allerede finnes vil dette gi feilmelding
+            ReferenceDataConfig referenceDataConfig = new ReferenceDataConfig(testData);
+
+            try
+            {
+                // Hente seksjon
+                var referenceDataConfigSection = dataConfig.GetSection(ConfigKey.ReferenceData) as ReferenceDataConfigSection;
+                if (referenceDataConfigSection != null)
+                {
+                    bool found = false;
+
+                    // Søke etter sensor verdi med angitt ID
+                    for (int i = 0; i < referenceDataConfigSection.ClientDataItems.Count && !found; i++)
+                    {
+                        // Sjekke ID
+                        if (referenceDataConfigSection.ClientDataItems[i]?.id == referenceDataConfig.id)
+                        {
+                            // Oppdatere data
+                            referenceDataConfigSection.ClientDataItems[i] = referenceDataConfig;
+                            found = true;
+                        }
+                    }
+
+                    // Oppdater XML fil
+                    dataConfig.Save(ConfigurationSaveMode.Modified);
+                    ConfigurationManager.RefreshSection(ConfigKey.ReferenceData);
+                }
+            }
+            catch (Exception ex)
+            {
+                RadWindow.Alert(string.Format("Client Config (SetReferenceData)\n\nCould not update reference data in config file\n\n{0}", TextHelper.Wrap(ex.Message)));
+            }
+        }
+
+        // Hente ut liste med alle referanse data
+        public ReferenceDataConfigCollection GetReferenceDataList()
+        {
+            try
+            {
+                // Hente seksjon
+                var referenceDataConfigSection = dataConfig.GetSection(ConfigKey.ReferenceData) as ReferenceDataConfigSection;
+                if (referenceDataConfigSection != null)
+                {
+                    return referenceDataConfigSection.ClientDataItems;
+                }
+            }
+            catch (Exception ex)
+            {
+                RadWindow.Alert(string.Format("Client Config (GetReferenceDataList)\n\nCould not read all reference data from config file\n\n{0}", TextHelper.Wrap(ex.Message)));
+            }
+
+            return null;
+        }
+
 
         // Oppdatere eksisterende sensor group data i config fil
         public void SetSensorGroupIDData(SensorGroup sensor)
