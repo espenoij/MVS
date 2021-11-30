@@ -138,8 +138,7 @@
                             
                             <TextBox
                                 Name="tbFileReadFrequency"
-                                HorizontalAlignment="Right"
-                                Text="{Binding Path=fileReadFrequency}"
+                                Text="{Binding Path=readFrequency}"
                                 LostFocus="tbFileReadFrequency_LostFocus"
                                 KeyDown="tbFileReadFrequency_KeyDown" />
                             
@@ -320,6 +319,7 @@
                                     ShowColumnHeaders="True"
                                     IsFilteringAllowed="False"
                                     RowHeight="25"
+                                    Margin="8"
                                     CanUserReorderColumns="False"
                                     CanUserDeleteRows="False"
                                     RowIndicatorVisibility="Collapsed"

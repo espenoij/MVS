@@ -28,8 +28,6 @@ namespace HMS_Client
         // Server Communications modul
         private ServerCom serverCom;
 
-        private DispatcherTimer UIUpdateTimer = new DispatcherTimer();
-
         private bool clientIsMaster;
 
         public AdminSettings()
@@ -231,7 +229,6 @@ namespace HMS_Client
         private void btnDataRequestStart_Click(object sender, RoutedEventArgs e)
         {
             serverCom.Start();
-            UIUpdateTimer.Start();
 
             UIUpdateServerRunning(true);
         }
@@ -239,7 +236,6 @@ namespace HMS_Client
         private void btnDataRequestStop_Click(object sender, RoutedEventArgs e)
         {
             serverCom.Stop();
-            UIUpdateTimer.Stop();
 
             UIUpdateServerRunning(false);
         }

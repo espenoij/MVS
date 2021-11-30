@@ -102,9 +102,9 @@ namespace HMS_Client
     public enum HelideckStatusType
     {
         OFF,
-        RED,
-        GREEN,
         BLUE,
-        AMBER
+        AMBER,
+        RED,
+        GREEN
     }
 }

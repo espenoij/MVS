@@ -17,9 +17,6 @@ namespace HMS_Server
     /// </summary>
     public partial class FileReaderSetupWindow : RadWindow
     {
-        // Configuration settings
-        private Config config;
-
         // Error Handler
         private ErrorHandler errorHandler;
 
@@ -54,9 +51,6 @@ namespace HMS_Server
             // Lagre valgt sensor data
             this.sensorData = sensorData;
 
-            // Config
-            this.config = config;
-
             // Error Handler
             this.errorHandler = errorHandler;
 
@@ -70,7 +64,7 @@ namespace HMS_Server
             InitFileReader();
 
             InitBasicInformation();
-            InitFilePath();
+            InitSettings();
             InitFileReaderControls();
 
             InitDataFieldSplit();
@@ -130,11 +124,12 @@ namespace HMS_Server
             lbSensorType.Content = sensorData.type.ToString();
         }
 
-        private void InitFilePath()
+        private void InitSettings()
         {
             // File Folder
             fileReaderWindowVM.fileFolder = sensorData.fileReader.fileFolder;
             fileReaderWindowVM.fileName = sensorData.fileReader.fileName;
+            fileReaderWindowVM.readFrequency = sensorData.fileReader.readFrequency;
         }
 
         private void InitFileReaderControls()
@@ -280,9 +275,8 @@ namespace HMS_Server
             // Filen vi skal lese: Opprette streamreader objekt basert på file path
             fsReader = new StreamReader(sensorData.fileReader.filePath);
 
-            // Starter reader
-            fileReaderTimer.Interval = TimeSpan.FromMilliseconds(fileReaderWindowVM.fileReadFrequency);
-            fileReaderTimer.Start();
+            // Starter reader dispatcher
+            FileReaderDispatcher_Start();
 
             // Status
             fileReadingStatus.Text = "File open for reading...";
@@ -302,8 +296,8 @@ namespace HMS_Server
             // Lukke file stream
             fsReader?.Close();
 
-            // Stopper reader
-            fileReaderTimer.Stop();
+            // Stopper reader dispatcher
+            FileReaderDispatcher_Stop();
 
             // Status
             fileReadingStatus.Text = "File closed.";
@@ -316,6 +310,20 @@ namespace HMS_Server
 
             btnFileReaderStart.IsEnabled = true;
             btnFileReaderStop.IsEnabled = false;
+        }
+
+        private void FileReaderDispatcher_Start()
+        {
+            // Gjør dette trikset med Interval her for å få dispatchertimer til å kjøre med en gang.
+            // Ellers venter den til intervallet er gått før den kjører første gang.
+            fileReaderTimer.Interval = TimeSpan.FromMilliseconds(0);
+            fileReaderTimer.Start();
+            fileReaderTimer.Interval = TimeSpan.FromMilliseconds(fileReaderWindowVM.readFrequency);
+        }
+
+        private void FileReaderDispatcher_Stop()
+        {
+            fileReaderTimer.Stop();
         }
 
         private void DisplayDataLines(string dataString)
@@ -437,7 +445,8 @@ namespace HMS_Server
                     Constants.FileReadFreqDefault,
                     out double validatedInput);
 
-            fileReaderWindowVM.fileReadFrequency = validatedInput;
+            fileReaderWindowVM.readFrequency = validatedInput;
+            sensorData.fileReader.readFrequency = validatedInput;
         }
 
 

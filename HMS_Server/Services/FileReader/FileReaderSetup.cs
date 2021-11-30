@@ -181,23 +181,30 @@ namespace HMS_Server
 
         public void StartReader(ErrorHandler errorHandler, FileReaderDataRetrieval.FileReaderCallback fileReaderCallback)
         {
-            timer = new System.Timers.Timer(readFrequency);
-
             FileReaderSetup fileReaderData = new FileReaderSetup();
 
             // Overføre fil katalog og navn
             fileReaderData.fileFolder = fileFolder;
             fileReaderData.fileName = fileName;
 
+            // Timer
+            timer = new System.Timers.Timer(readFrequency);
+
             try
             {
                 StreamReader fsReader = new StreamReader(filePath);
 
+                // Timer parametre
                 timer.AutoReset = true;
                 timer.Elapsed += runReader;
+
+                // Kjøre leseren en gang manuellt, ellers må vi vente til elapsed time har gått
+                runReader(timer, new EventArgs());
+
+                // Starte timer
                 timer.Start();
 
-                void runReader(Object source, ElapsedEventArgs e)
+                void runReader(Object source, EventArgs e)
                 {
                     if (fsReader != null)
                     {
@@ -253,8 +260,8 @@ namespace HMS_Server
                 // Callback for å sende lest data linje tilbake for prosessering
                 if (fileReaderCallback != null)
                     fileReaderCallback(fileReaderData);
+            }
         }
-    }
 
         public void StopReader()
         {

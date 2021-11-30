@@ -440,6 +440,9 @@ namespace HMS_Server
 
             // Lagre til disk når vi går ut av vinduet
             config.SetData(sensorDataSelected);
+
+            // Sync settings
+            SyncFileReaderSettings(sensorDataSelected);
         }
 
         private void SyncSerialPortSettings(SensorData sensorData)
@@ -506,12 +509,7 @@ namespace HMS_Server
                         item.fileReader.fileName == sensorData.fileReader.fileName)
                     {
                         // Kopiere settings 
-                        item.serialPort.portName = sensorData.serialPort.portName;
-                        item.serialPort.baudRate = sensorData.serialPort.baudRate;
-                        item.serialPort.dataBits = sensorData.serialPort.dataBits;
-                        item.serialPort.stopBits = sensorData.serialPort.stopBits;
-                        item.serialPort.parity = sensorData.serialPort.parity;
-                        item.serialPort.handshake = sensorData.serialPort.handshake;
+                        item.fileReader.readFrequency = sensorData.fileReader.readFrequency;
 
                         // Lagre til fil
                         config.SetData(item);

@@ -19,13 +19,11 @@ namespace HMS_Server
         {
             this.config = config;
 
-            _fileFolder = string.Empty;
-            _fileName = string.Empty;
+            fileFolder = string.Empty;
+            fileName = string.Empty;
+            readFrequency = 0;
 
             totalDataLinesString = config.Read(ConfigKey.TotalDataLines, ConfigSection.FileReaderConfig, Constants.GUIDataLinesDefault).ToString();
-
-            // Timing: File Read Frequency
-            fileReadFrequency = config.Read(ConfigKey.FileReadFrequency, Constants.FileReadFreqDefault);
         }
 
         // Katalog lokasjon
@@ -110,17 +108,16 @@ namespace HMS_Server
         /////////////////////////////////////////////////////////////////////////////
         // Timing: File Read Frequency
         /////////////////////////////////////////////////////////////////////////////
-        private double _fileReadFrequency { get; set; }
-        public double fileReadFrequency
+        private double _readFrequency { get; set; }
+        public double readFrequency
         {
             get
             {
-                return _fileReadFrequency;
+                return _readFrequency;
             }
             set
             {
-                _fileReadFrequency = value;
-                config.Write(ConfigKey.FileReadFrequency, value.ToString());
+                _readFrequency = value;
                 OnPropertyChanged();
             }
         }

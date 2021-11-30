@@ -99,7 +99,6 @@ namespace HMS_Server
 
         private void InitializeModbusReader()
         {
-            modbusReader.Interval = TimeSpan.FromMilliseconds(sensorData.GetSaveFrequency(config));
             modbusReader.Tick += runModbusReader;
 
             void runModbusReader(object sender, EventArgs e)
@@ -531,7 +530,7 @@ namespace HMS_Server
 
         private void Modbus_Start()
         {
-            modbusReader.Start();
+            ModbusDispatcher_Start();
 
             // Status
             sensorMonitorStatus.Text = "MODBUS connection open for reading...";
@@ -561,7 +560,7 @@ namespace HMS_Server
             Modbus_Close();
 
             // Starter reader
-            modbusReader.Stop();
+            ModbusDispatcher_Stop();
 
             // Status
             sensorMonitorStatus.Text = "MODBUS connection closed.";
@@ -598,6 +597,20 @@ namespace HMS_Server
 
             btnModbusReaderStart.IsEnabled = true;
             btnModbusReaderStop.IsEnabled = false;
+        }
+
+        private void ModbusDispatcher_Start()
+        {
+            // Gjør dette trikset med Interval her for å få dispatchertimer til å kjøre med en gang.
+            // Ellers venter den til intervallet er gått før den kjører første gang.
+            modbusReader.Interval = TimeSpan.FromMilliseconds(0);
+            modbusReader.Start();
+            modbusReader.Interval = TimeSpan.FromMilliseconds(sensorData.GetSaveFrequency(config));
+        }
+
+        private void ModbusDispatcher_Stop()
+        {
+            modbusReader.Stop();
         }
 
         private void DisplayRegisters(bool[] registers, ModbusSetup modbusSetup)
