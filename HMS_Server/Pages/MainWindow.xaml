@@ -454,7 +454,8 @@
             <!--Side Menu: Output-->
             <!--==============================================================-->
             <telerik:RadTabItem
-                Name="tabOutput">
+                Name="tabOutput"
+                Visibility="Collapsed">
 
                 <telerik:RadTabItem.Header>
                     <Image
@@ -468,7 +469,8 @@
             <!--Side Menu: HMS-->
             <!--==============================================================-->
             <telerik:RadTabItem
-                Name="tabHMS">
+                Name="tabHMS"
+                Visibility="Collapsed">
 
                 <telerik:RadTabItem.Header>
                     <Image
@@ -557,7 +559,8 @@
             <!--Side Menu: Data Verification-->
             <!--==============================================================-->
             <telerik:RadTabItem
-                Name="tabDataVerification">
+                Name="tabDataVerification"
+                Visibility="Collapsed">
 
                 <telerik:RadTabItem.Header>
                     <Image
@@ -581,7 +584,6 @@
                             <RowDefinition
                                 Height="auto" />
                         </Grid.RowDefinitions>
-
 
                         <!--Start/Stop-->
                         <StackPanel
@@ -630,8 +632,8 @@
 
                             <DockPanel>
 
-                                <!--<uc:HMSDataSetup
-                                    x:Name="ucDataVerificationSetup" />-->
+                                <uc:DataVerificationResult
+                                    x:Name="ucDataVerificationResult" />
 
                             </DockPanel>
 
@@ -647,7 +649,8 @@
             <!--Side Menu: Settings-->
             <!--==============================================================-->
             <telerik:RadTabItem
-                Name="tabSettings">
+                Name="tabSettings"
+                Visibility="Collapsed">
 
                 <telerik:RadTabItem.Header>
                     <Image

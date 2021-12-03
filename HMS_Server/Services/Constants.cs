@@ -121,8 +121,8 @@ class Constants
 
     // File Read Frequency
     public const int FileReadFreqDefault = 500;
-    public const int FileReadFreqMin = 500;
-    public const int FileReadFreqMax = 60000;
+    public const int FileReadFreqMin = 100;
+    public const int FileReadFreqMax = 120000;
 
     // File Reader
     public const string FileReaderDelimiterDefault = ",";

@@ -108,6 +108,12 @@ public enum ValueType
     AccelerationY = 25,
     AccelerationZ = 26,
 
+    // Data Verification
+    TimeID = 27,
+    SensorMRU = 28,
+    SensorGyro = 29,
+    SensorWind = 30,
+
     // Ikke lagret i config fil
     // Dette er data som beregnes fra variablene over, dvs. fra sensor data
     PitchMax20m,

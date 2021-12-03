@@ -90,6 +90,7 @@
     public const string EmailUsername = "EmailUsername";
     public const string EmailPassword = "EmailPassword";
     public const string EmailSecureConnection = "EmailSecureConnection";
+    public const string DataVerificationEnabled = "DataVerificationEnabled";
 
     // Sensor Group ID Data
     public const string SensorGroupID = "SensorGroupID";

@@ -55,5 +55,13 @@ namespace HMS_Server
             else
                 return double.NaN;
         }
+
+        public void ResetDataCalculations()
+        {
+            // Resette dataCalculations
+            // Dvs data lister som brukes til snitt/max/etc målinger slettes
+            foreach (var item in dataCalculations)
+                item.Reset();
+        }
     }
 }

@@ -12,6 +12,9 @@ namespace HMS_Server
         // Liste med data
         private RadObservableCollectionEx<HMSData> dataList = new RadObservableCollectionEx<HMSData>();
 
+        // Er data i samlingen endret?
+        private bool collectionChanged = false;
+
         public void LoadHMSInput(Config config)
         {
             this.config = config;
@@ -108,7 +111,7 @@ namespace HMS_Server
         // Overføre data fra liste i input to denne data samlingen
         // HMS: Overføre fra sensor data liste til HMS data liste
         // Verification: Overføre fra sensor data liste til referanse data liste
-        public void TransferSensorData(RadObservableCollectionEx<SensorData> sensorDataList)
+        public void TransferData(RadObservableCollectionEx<SensorData> sensorDataList)
         {
             // Lese timeout fra config
             double dataTimeout = config.Read(ConfigKey.DataTimeout, Constants.DataTimeoutDefault);
@@ -122,6 +125,10 @@ namespace HMS_Server
                 // Fant match?
                 if (serverData.Count() > 0 && hmsData != null)
                 {
+                    // Er data som skal legges inn i samlingen oppdatert?
+                    if (hmsData.timestamp != serverData.First().timestamp)
+                        collectionChanged = true;
+
                     // Overføre data
                     hmsData.data = serverData.First().data;
 
@@ -144,7 +151,7 @@ namespace HMS_Server
 
         // Overføre data fra liste i input to denne data samlingen
         // Verification: Overføre fra HMS data liste til test data liste
-        public void TransferHMSData(RadObservableCollectionEx<HMSData> sensorDataList)
+        public void TransferData(RadObservableCollectionEx<HMSData> hmsDataList)
         {
             // Lese timeout fra config
             double dataTimeout = config.Read(ConfigKey.DataTimeout, Constants.DataTimeoutDefault);
@@ -153,11 +160,15 @@ namespace HMS_Server
             foreach (var hmsData in dataList.ToList())
             {
                 // Finne match i mottaker data listen
-                var serverData = sensorDataList.Where(x => x?.id == hmsData?.dataId);
+                var serverData = hmsDataList.Where(x => x?.id == hmsData?.dataId);
 
                 // Fant match?
                 if (serverData.Count() > 0 && hmsData != null)
                 {
+                    // Er data som skal legges inn i samlingen oppdatert?
+                    if (hmsData.timestamp != serverData.First().timestamp)
+                        collectionChanged = true;
+
                     // Overføre data
                     hmsData.data = serverData.First().data;
 
@@ -177,6 +188,7 @@ namespace HMS_Server
                 }
             }
         }
+
         // Hente datalisten
         public RadObservableCollectionEx<HMSData> GetDataList()
         {
@@ -191,6 +203,18 @@ namespace HMS_Server
                 return sensorData.First();
             else
                 return null;
+        }
+
+        // Data samlingen endret?
+        public bool CollectionChanged()
+        {
+            return collectionChanged;
+        }
+
+        // Resette samling endret variabelen
+        public void CollectionChangedReset()
+        {
+            collectionChanged = false;
         }
     }
 }

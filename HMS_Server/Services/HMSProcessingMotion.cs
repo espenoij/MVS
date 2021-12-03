@@ -143,15 +143,17 @@ namespace HMS_Server
             pitchMaxUp20mData.name = "Pitch Max Up (20m)";
             pitchMaxUp20mData.dbTableName = "pitch_max_up_20m";
             pitchMaxUp20mData.InitProcessing(errorHandler, ErrorMessageCategory.AdminUser);
-            pitchMaxUp20mData.AddProcessing(CalculationType.TimeMaxPositive, Constants.Minutes20);
+            pitchMaxUp20mData.AddProcessing(CalculationType.TimeMaxNegative, Constants.Minutes20);
             pitchMaxUp20mData.AddProcessing(CalculationType.RoundingDecimals, 1);
+            pitchMaxUp20mData.AddProcessing(CalculationType.Absolute, 0);
 
             pitchMaxDown20mData.id = (int)ValueType.PitchMaxDown20m;
             pitchMaxDown20mData.name = "Pitch Max Down (20m)";
             pitchMaxDown20mData.dbTableName = "pitch_max_down_20m";
             pitchMaxDown20mData.InitProcessing(errorHandler, ErrorMessageCategory.AdminUser);
-            pitchMaxDown20mData.AddProcessing(CalculationType.TimeMaxNegative, Constants.Minutes20);
+            pitchMaxDown20mData.AddProcessing(CalculationType.TimeMaxPositive, Constants.Minutes20);
             pitchMaxDown20mData.AddProcessing(CalculationType.RoundingDecimals, 1);
+            pitchMaxDown20mData.AddProcessing(CalculationType.Absolute, 0);
 
             rollMax20mData.id = (int)ValueType.RollMax20m;
             rollMax20mData.name = "Roll Max (20m)";
@@ -171,15 +173,17 @@ namespace HMS_Server
             rollMaxLeft20mData.name = "Roll Max Left (20m)";
             rollMaxLeft20mData.dbTableName = "roll_max_left_20m";
             rollMaxLeft20mData.InitProcessing(errorHandler, ErrorMessageCategory.AdminUser);
-            rollMaxLeft20mData.AddProcessing(CalculationType.TimeMaxPositive, Constants.Minutes20);
+            rollMaxLeft20mData.AddProcessing(CalculationType.TimeMaxNegative, Constants.Minutes20);
             rollMaxLeft20mData.AddProcessing(CalculationType.RoundingDecimals, 1);
+            rollMaxLeft20mData.AddProcessing(CalculationType.Absolute, 0);
 
             rollMaxRight20mData.id = (int)ValueType.RollMaxRight20m;
             rollMaxRight20mData.name = "Roll Max Right (20m)";
             rollMaxRight20mData.dbTableName = "roll_max_right_20m";
             rollMaxRight20mData.InitProcessing(errorHandler, ErrorMessageCategory.AdminUser);
-            rollMaxRight20mData.AddProcessing(CalculationType.TimeMaxNegative, Constants.Minutes20);
+            rollMaxRight20mData.AddProcessing(CalculationType.TimeMaxPositive, Constants.Minutes20);
             rollMaxRight20mData.AddProcessing(CalculationType.RoundingDecimals, 1);
+            rollMaxRight20mData.AddProcessing(CalculationType.Absolute, 0);
 
             inclinationData.id = (int)ValueType.Inclination;
             inclinationData.name = "Inclination";
@@ -298,6 +302,14 @@ namespace HMS_Server
             // Tar data fra input delen av server og overfører til HMS output delen
             // og prosesserer input for overføring til HMS output også.
 
+            // TEST TEST
+            if (hmsInputDataList.GetData(ValueType.Roll).data >= 0.85 ||
+                hmsInputDataList.GetData(ValueType.Roll).data <= -0.85)
+            {
+                HMSData test = new HMSData();
+                test.Set(hmsInputDataList.GetData(ValueType.Roll));
+            }
+
             // Pitch
             pitchData.Set(hmsInputDataList.GetData(ValueType.Pitch));
             pitchMax20mData.DoProcessing(pitchData);
@@ -369,23 +381,36 @@ namespace HMS_Server
                 HMSData accelerationY = new HMSData(hmsInputDataList.GetData(ValueType.AccelerationY));
                 HMSData accelerationZ = new HMSData(hmsInputDataList.GetData(ValueType.AccelerationZ));
 
+                //// TEST TEST TEST
+                //double testmms;
+
                 if (accelerationX.status == DataStatus.OK &&
                     accelerationY.status == DataStatus.OK &&
                     accelerationZ.status == DataStatus.OK)
                 {
-                    double mms = 0;
+                    double mms;
 
+                    // Kalkulere MMS (CAP formel)
                     if (accelerationZ.data != 0)
-                    {
-                        // Kalkulere MMS (CAP formel)
-                        mms = Math.Sqrt(Math.Pow(accelerationX.data, 2) + Math.Pow(accelerationY.data, 2)) / Math.Abs(accelerationZ.data);
-                    }
+                        mms = Math.Sqrt(Math.Pow(accelerationX.data, 2.0) + Math.Pow(accelerationY.data, 2.0)) / Math.Abs(accelerationZ.data);
+                    else
+                        mms = 0.0;
 
                     // Kalkulere MMS_MSI (CAP formel)
-                    mms_msi.data = Math.Round(10 * (180 / Math.PI) * Math.Atan(mms * (Math.PI / 180)), 0, MidpointRounding.AwayFromZero);
+                    mms_msi.data = Math.Round(10.0 * (180.0 / Math.PI) * Math.Atan(mms), 0, MidpointRounding.AwayFromZero);
                     mms_msi.status = DataStatus.OK;
                     mms_msi.timestamp = accelerationX.timestamp;
+
+                    //// TEST TEST TEST
+                    //testmms = mms;
                 }
+
+                //// TEST TEST TEST
+                //if (mms_msi.data >= 37)
+                //{
+                //    HMSData test = new HMSData();
+                //    test.Set(mms_msi);
+                //}
 
                 // Find max value
                 CalculateMSIMax(mms_msi, mms_msi_list, msiData, Constants.Minutes20);
@@ -431,7 +456,7 @@ namespace HMS_Server
                     // Lagre data
                     wsit.status = windDir.status;
                     wsit.timestamp = windDir.timestamp;
-                    wsit.data = windCorrected;
+                    wsit.data = Math.Round(windCorrected, 1);
                 }
                 else
                 {
@@ -446,6 +471,28 @@ namespace HMS_Server
 
             // Sjekker motion limits
             CheckLimits();
+        }
+
+        // Resette dataCalculations
+        public void ResetDataCalculations()
+        {
+            pitchMax20mData.ResetDataCalculations();
+            pitchMax3hData.ResetDataCalculations();
+            pitchMaxUp20mData.ResetDataCalculations();
+            pitchMaxDown20mData.ResetDataCalculations();
+            rollMax20mData.ResetDataCalculations();
+            rollMax3hData.ResetDataCalculations();
+            rollMaxLeft20mData.ResetDataCalculations();
+            rollMaxRight20mData.ResetDataCalculations();
+            heaveAmplitudeData.ResetDataCalculations();
+            heaveAmplitudeMax20mData.ResetDataCalculations();
+            heaveAmplitudeMax3hData.ResetDataCalculations();
+            heavePeriodMeanData.ResetDataCalculations();
+            significantHeaveRateData.ResetDataCalculations();
+            significantHeaveRateMax20mData.ResetDataCalculations();
+            significantHeaveRateMax3hData.ResetDataCalculations();
+            maxHeaveRateData.ResetDataCalculations();
+            significantWaveHeightData.ResetDataCalculations();
         }
 
         private void CalculateMSIMax(HMSData value, List<TimeData> dataList, HMSData maxValue, double time)
@@ -580,7 +627,7 @@ namespace HMS_Server
             double wsiDisp = (mean / adminSettingsVM.GetWSILimit(userInputs.helicopterType)) * 100;
 
             // Lagre data
-            meanValue.data = Math.Round(wsiDisp, 1);
+            meanValue.data = Math.Round(wsiDisp, 0);
             meanValue.timestamp = value.timestamp;
             meanValue.status = value.status;
         }

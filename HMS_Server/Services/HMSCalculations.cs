@@ -12,14 +12,14 @@ namespace HMS_Server
             // Til slutt arctan for å finne vinkelen til inclination.
 
             // Konvertere input til radianer
-            double rollRad = (Math.PI / 180) * roll;
-            double pitchRad = (Math.PI / 180) * pitch;
+            double rollRad = (Math.PI / 180.0) * roll;
+            double pitchRad = (Math.PI / 180.0) * pitch;
 
             // Beregne inclination
-            double inclinationRad = Math.Atan(Math.Sqrt(Math.Pow(Math.Tan(rollRad), 2) + Math.Pow(Math.Tan(pitchRad), 2)));
+            double inclinationRad = Math.Atan(Math.Sqrt(Math.Pow(Math.Tan(rollRad), 2.0) + Math.Pow(Math.Tan(pitchRad), 2.0)));
 
             // Konvertere tilbake til grader
-            return (180 / Math.PI) * inclinationRad;
+            return (180.0 / Math.PI) * inclinationRad;
         }
     }
 }

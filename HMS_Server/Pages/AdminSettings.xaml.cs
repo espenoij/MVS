@@ -1120,5 +1120,10 @@ namespace HMS_Server
                 lbNDBIdent_CAP.IsEnabled = false;
             }
         }
+
+        private void chkEnableDataVerification_Click(object sender, RoutedEventArgs e)
+        {
+            adminSettingsVM.ApplicationRestartRequired();
+        }
     }
 }

@@ -53,6 +53,7 @@ namespace HMS_Server
         // Liste med test data: Data som skal gjennom verifikasjonsprosessen
         private DataCollection testData;
         private DataCollection referenceData;
+        private RadObservableCollectionEx<VerificationData> verificationData;
 
         // Sensor Status
         private HMSSensorGroupStatus sensorStatus;
@@ -196,13 +197,13 @@ namespace HMS_Server
 
             // TODO: DEBUG DEBUG DEBUG !!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!! Fjerne det under før release
             // Vise admin grensesnittet
-            AdminMode.IsActive = true;
-            btnErrorMessages.Visibility = Visibility.Visible;
-            btnSetup.Visibility = Visibility.Visible;
-            tabInput_SensorData.Visibility = Visibility.Visible;
-            tabInput_SerialData.Visibility = Visibility.Visible;
-            tabInput_FileReader.Visibility = Visibility.Visible;
-            tabInput_SocketConsole.Visibility = Visibility.Visible;
+            //AdminMode.IsActive = true;
+            //btnErrorMessages.Visibility = Visibility.Visible;
+            //btnSetup.Visibility = Visibility.Visible;
+            //tabInput_SensorData.Visibility = Visibility.Visible;
+            //tabInput_SerialData.Visibility = Visibility.Visible;
+            //tabInput_FileReader.Visibility = Visibility.Visible;
+            //tabInput_SocketConsole.Visibility = Visibility.Visible;
 
             // Starte server automatisk ved oppstart
             //StartServer();
@@ -236,8 +237,10 @@ namespace HMS_Server
             // Div UI init
             btnStart1.IsEnabled = true;
             btnStart2.IsEnabled = true;
+            btnStart3.IsEnabled = true;
             btnStop1.IsEnabled = false;
             btnStop2.IsEnabled = false;
+            btnStop3.IsEnabled = false;
         }
 
         private void InitUIHMS()
@@ -277,12 +280,20 @@ namespace HMS_Server
             referenceData = new DataCollection();
             referenceData.LoadReferenceData(config);
 
+            // Verification data
+            verificationData = new RadObservableCollectionEx<VerificationData>();
+
             // Setup
             ucDataVerificationSetup.Init(
                 hmsOutputData,
                 testData,
                 sensorDataDisplayList,
                 referenceData,
+                config);
+
+            // Results
+            ucDataVerificationResult.Init(
+                verificationData,
                 config);
         }
 
@@ -344,11 +355,7 @@ namespace HMS_Server
 
         private void Window_Closing(object sender, Telerik.Windows.Controls.WindowClosedEventArgs e)
         {
-            // Socket Listener
-            socketListener.Stop();
-
-            // Lukke alle serie porter
-            sensorDataRetrieval.SensorDataRetrieval_Stop();
+            StopServer();
         }
 
         private void InitUIInputUpdate()
@@ -506,11 +513,9 @@ namespace HMS_Server
                     void UpdateHMS_Thread()
                     {
                         // HMS: HMS Input Data
-                        /////////////////////////////////////////////////////////////////////////////////////////////////////
-                        hmsInputData.TransferSensorData(sensorDataRetrieval.GetSensorDataList());
+                        hmsInputData.TransferData(sensorDataRetrieval.GetSensorDataList());
 
                         // HMS: HMS Output Data
-                        /////////////////////////////////////////////////////////////////////////////////////////////////////
                         // Prosesserer sensor data om til data som kan sendes til HMS klient
                         hmsProcessing.Update(hmsInputData);
                     }
@@ -531,7 +536,7 @@ namespace HMS_Server
 
         private void InitVerificationUpdate()
         {
-            // Dispatcher som oppdatere verification data (test og referanse data)
+            // Dispatcher som oppdaterer verification data (test og referanse data)
             DispatcherTimer verificationTimer = new DispatcherTimer();
             verificationTimer.Interval = TimeSpan.FromMilliseconds(Constants.ServerUpdateFrequencyHMS);
             verificationTimer.Tick += runVerificationUpdate;
@@ -547,12 +552,21 @@ namespace HMS_Server
                     void UpdateHMS_Thread()
                     {
                         // Test Data
-                        /////////////////////////////////////////////////////////////////////////////////////////////////////
-                        testData.TransferHMSData(hmsOutputData.GetDataList());
+                        testData.TransferData(hmsOutputData.GetDataList());
 
                         // Referanse Data
-                        /////////////////////////////////////////////////////////////////////////////////////////////////////
-                        referenceData.TransferSensorData(sensorDataDisplayList);
+                        referenceData.TransferData(sensorDataDisplayList);
+
+                        // Verification
+                        if (referenceData.CollectionChanged() && testData.CollectionChanged())
+                        {
+                            // Resette change variabelen
+                            testData.CollectionChangedReset();
+                            referenceData.CollectionChangedReset();
+
+                            // Overføre og regn ut forskjellene mellom test data og referanse data
+                            UpdateVerificationData();
+                        }
                     }
                 }
                 catch (Exception ex)
@@ -676,8 +690,10 @@ namespace HMS_Server
             // Sette knappe status
             btnStart1.IsEnabled = false;
             btnStart2.IsEnabled = false;
+            btnStart3.IsEnabled = false;
             btnStop1.IsEnabled = true;
             btnStop2.IsEnabled = true;
+            btnStop3.IsEnabled = true;
             btnSetup.IsEnabled = false;
 
             // Database Maintenance            
@@ -694,8 +710,10 @@ namespace HMS_Server
 
             btnStart1.IsEnabled = true;
             btnStart2.IsEnabled = true;
+            btnStart3.IsEnabled = true;
             btnStop1.IsEnabled = false;
             btnStop2.IsEnabled = false;
+            btnStop3.IsEnabled = false;
             btnSetup.IsEnabled = true;
 
             // Database Maintenance
@@ -703,6 +721,19 @@ namespace HMS_Server
 
             // Socket Listener
             socketListener.Stop();
+
+            // Resette dataCalculations
+            if (adminSettingsVM.dataVerificationEnabled)
+            {
+                // Resetter data listene i dataCalculations kun ved data verifikasjons-testing
+                // Under normal kjøring kan "gamle" data i listene være fullt brukelig ettersom
+                // de uansett blir slettet automatisk når de faktisk er for gamle.
+                hmsProcessing.ResetDataCalculations();
+
+                // Resette sammenligningsdata
+                foreach (var item in verificationData)
+                    item.Reset();
+            }
         }
 
         private void btnSetup_Click(object sender, RoutedEventArgs e)
@@ -823,7 +854,7 @@ namespace HMS_Server
             {
                 if (Keyboard.IsKeyDown(Key.H))
                 {
-                    if (!btnErrorMessages.IsVisible)
+                    if (!AdminMode.IsActive)
                     {
                         // Åpne admin passord vindu
                         DialogAdminMode adminMode = new DialogAdminMode();
@@ -836,9 +867,12 @@ namespace HMS_Server
                             btnErrorMessages.Visibility = Visibility.Visible;
                             btnSetup.Visibility = Visibility.Visible;
 
-                            tabHMS.Visibility = Visibility.Visible;
                             tabOutput.Visibility = Visibility.Visible;
+                            tabHMS.Visibility = Visibility.Visible;
                             tabSettings.Visibility = Visibility.Visible;
+
+                            if (adminSettingsVM.dataVerificationEnabled)
+                                tabDataVerification.Visibility = Visibility.Visible;
 
                             tabInput_SensorData.Visibility = Visibility.Visible;
                             tabInput_SerialData.Visibility = Visibility.Visible;
@@ -854,8 +888,10 @@ namespace HMS_Server
 
                         // Sette Input tab som valgt tab og skjule resten
                         tabInput.IsSelected = true;
-                        tabHMS.Visibility = Visibility.Collapsed;
+
                         tabOutput.Visibility = Visibility.Collapsed;
+                        tabHMS.Visibility = Visibility.Collapsed;
+                        tabDataVerification.Visibility = Visibility.Collapsed;
                         tabSettings.Visibility = Visibility.Collapsed;
 
                         // Sette Status tab som valgt sub tab
@@ -869,6 +905,8 @@ namespace HMS_Server
                         tabInput_SerialData.IsSelected = false;
                         tabInput_FileReader.IsSelected = false;
                         tabInput_SocketConsole.IsSelected = false;
+
+                        AdminMode.IsActive = false;
                     }
                 }
             }
@@ -886,6 +924,60 @@ namespace HMS_Server
             {
                 (sender as RadTabControl).Focus();
             }), DispatcherPriority.ApplicationIdle);
+        }
+
+        // Oppdaterer listen med data brukt til verifisering av HMS data
+        private void UpdateVerificationData()
+        {
+            // Input til listen er test data og referanse data.
+            RadObservableCollectionEx<HMSData> testDataList = testData.GetDataList();
+            RadObservableCollectionEx<HMSData> referenceDataList = referenceData.GetDataList();
+
+            // Løper gjennom listen med test data
+            foreach (var item in testDataList)
+            {
+                // Finner tilsvarende data i referanse data listen
+                var refData = referenceDataList.Where(x => x.id == item.id);
+                if (refData.Count() == 1)
+                {
+                    // Finne data i verification data listen
+                    var veriData = verificationData.Where(x => (int)x.id == item.id);
+
+                    // Dersom verifikasjons data allerede eksisterer -> oppdater
+                    if (veriData.Count() == 1)
+                    {
+                        veriData.First().id = (VerificationType)item.id;
+                        veriData.First().name = item.name;
+                        veriData.First().testData = item.data;
+                        veriData.First().refData = refData.First().data;
+                    }
+                    // Dersom de ikke eksisterer -> legg inn
+                    else
+                    {
+                        verificationData.Add(new VerificationData()
+                        {
+                            id = (VerificationType)item.id,
+                            name = item.name,
+                            testData = item.data,
+                            refData = refData.First().data
+                        });
+                    }
+                }
+            }
+
+            // Oppdatere/beregne forskjeller mellom test data og referanse data.
+            var sensorMRU = referenceDataList.Where(x => x.id == (int)VerificationType.SensorMRU);
+            var sensorGyro = referenceDataList.Where(x => x.id == (int)VerificationType.SensorGyro);
+            var sensorWind = referenceDataList.Where(x => x.id == (int)VerificationType.SensorWind);
+
+            foreach (var item in verificationData)
+            {
+                // Sammenligne test og referanse data
+                if (item.id != VerificationType.TimeID) // Men aldri for Time ID
+                    item.CompareData();
+                else
+                    item.differenceAbs = 0;
+            }
         }
     }
 }

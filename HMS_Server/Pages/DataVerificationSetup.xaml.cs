@@ -7,7 +7,7 @@ namespace HMS_Server
     /// <summary>
     /// Interaction logic for DataVerificationSetup.xaml
     /// </summary>
-    public partial class DataVerificationSetup : UserControl
+    partial class DataVerificationSetup : UserControl
     {
         // Configuration settings
         private Config config;

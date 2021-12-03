@@ -1245,6 +1245,21 @@ namespace HMS_Server
                             break;
 
                         ////////////////////////////////////////////////////////////////////////////////////////////////
+                        /// Rounding Decimals
+                        ////////////////////////////////////////////////////////////////////////////////////////////////
+                        /// Beskrivelse:
+                        /// Avrunder svaret med angitt antall desimaler.
+                        /// 
+                        case CalculationType.Absolute:
+
+                            // Sjekke om data string er numerisk
+                            if (double.TryParse(newData, Constants.numberStyle, Constants.cultureInfo, out value))
+                            {
+                                result = Math.Abs(value);
+                            }
+                            break;
+
+                        ////////////////////////////////////////////////////////////////////////////////////////////////
                         /// Ingen kalkulasjoner
                         ////////////////////////////////////////////////////////////////////////////////////////////////
                         default:
@@ -1272,12 +1287,65 @@ namespace HMS_Server
             return result;
         }
 
-        private enum WavePhase
+        public void Reset()
         {
-            Init,
-            Ascending,
-            Descending
+            // Time Average
+            timeAverageTotal = 0;
+            timeAverageDataList.Clear();
+
+            // Time Max Absolute
+            timeMaxAbsoluteMaxValue = 0;
+            timeMaxAbsoluteDataList.Clear();
+
+            // Time Max Positive
+            timeMaxPositiveMaxValue = 0;
+            timeMaxPositiveDataList.Clear();
+
+            // Time Max Positive
+            timeMaxNegativeMaxValue = 0;
+            timeMaxNegativeDataList.Clear();
+
+            // Significant Heave Rate
+            significantHeaveRateSquare = 0;
+            significantHeaveRateDataList.Clear();
+
+            // Significant Wave Height
+            swhValue = 0;
+            swhLast = double.NaN;
+            swhWavePhase = WavePhase.Init;
+            swhWaveTop = double.NaN;
+            swhWaveBottom = double.NaN;
+            swhDataList.Clear();
+
+            // Time Max Amplitude
+            timeMaxAmplitudeMaxValue = 0;
+            timeMaxAmplitudeLast = double.NaN;
+            timeMaxAmplitudeWavePhase = WavePhase.Init;
+            timeMaxAmplitudeWaveTop = double.NaN;
+            timeMaxAmplitudeWaveBottom = double.NaN;
+            timeMaxAmplitudeDataList.Clear();
+
+            // Amplitude
+            amplitudeLast = double.NaN;
+            amplitudeWavePhase = WavePhase.Init;
+            amplitudeWaveTop = double.NaN;
+            amplitudeWaveBottom = double.NaN;
+            amplitudeValue = 0;
+
+            // Time Mean Period
+            timeMeanPeriodTotal = 0;
+            timeMeanPeriodLast = double.NaN;
+            timeMeanPeriodWavePhase = WavePhase.Init;
+            timeMeanPeriodLastWaveTop = DateTime.MinValue;
+            timeMeanPeriodDataList.Clear();
         }
+    }
+
+    public enum WavePhase
+    {
+        Init,
+        Ascending,
+        Descending
     }
 
     class TimeData
@@ -1327,6 +1395,8 @@ namespace HMS_Server
         [Description("METAR Codes")]
         METARCodes,
         [Description("Significant Wave Height")]
-        SignificantWaveHeight
+        SignificantWaveHeight,
+         [Description("Absolute Value")]
+        Absolute
     }
 }

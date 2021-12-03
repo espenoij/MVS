@@ -2,7 +2,6 @@
 using System;
 using System.Collections.Generic;
 using System.IO;
-using System.Text;
 using System.Windows;
 using System.Windows.Controls;
 using System.Windows.Input;
@@ -302,6 +301,10 @@ namespace HMS_Server
             // Status
             fileReadingStatus.Text = "File closed.";
 
+            // Resette dataCalculations
+            foreach (var item in dataCalculations)
+                item.Reset();
+
             // Åpne tilgang til settings
             tbFileFolder.IsEnabled = true;
             tbFileName.IsEnabled = true;
@@ -400,6 +403,8 @@ namespace HMS_Server
         {
             // Sletter lister
             fileDataLines.Clear();
+            fileDataFields.Clear();
+            selectedDataList.Clear();
         }
 
         private void tbTotalDataLines_LostFocus(object sender, RoutedEventArgs e)

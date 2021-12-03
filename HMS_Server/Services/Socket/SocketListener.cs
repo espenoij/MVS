@@ -123,6 +123,7 @@ namespace HMS_Server
         public void Stop()
         {
             socketListenerPaused = true;
+            allDone.Reset();
         }
 
         private void StartSocketListener(object sender, DoWorkEventArgs e)
@@ -139,8 +140,8 @@ namespace HMS_Server
                 listener = new Socket(ipAddress.AddressFamily, SocketType.Stream, ProtocolType.Tcp);
 
                 // Socket Options
-                listener.SendTimeout = 2000;
-                listener.ReceiveTimeout = 2000;
+                listener.SendTimeout = 1000;
+                listener.ReceiveTimeout = 1000;
 
                 // Binde socket til endpoint
                 listener.Bind(localEndPoint);

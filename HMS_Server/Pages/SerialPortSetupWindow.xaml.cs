@@ -803,6 +803,10 @@ namespace HMS_Server
                     btnSerialPortReaderStop.IsEnabled = false;
                 }
             }
+
+            // Resette dataCalculations
+            foreach (var item in dataCalculations)
+                item.Reset();
         }
 
         private void chkShowControlChars_Checked(object sender, RoutedEventArgs e)

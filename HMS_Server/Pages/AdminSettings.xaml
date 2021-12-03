@@ -787,6 +787,34 @@
 
         </telerik:GroupBox>
 
+
+        <!--DATA VERIFICATION-->
+        <telerik:GroupBox
+            Grid.Row="2"
+            Grid.Column="3"
+            Margin="8"
+            Header="DATA VERIFICATION">
+
+            <StackPanel
+                Margin="8">
+
+                <!--Secure Connection-->
+                <DockPanel>
+                    <telerik:Label
+                        Content="Enable Data Verification Module"
+                        VerticalAlignment="Center" />
+                    <CheckBox
+                        Name="chkEnableDataVerification"
+                        IsChecked="{Binding Path=dataVerificationEnabled, Mode=TwoWay}"
+                        VerticalAlignment="Center"
+                        HorizontalAlignment="Right"
+                        Click="chkEnableDataVerification_Click"/>
+                </DockPanel>
+
+            </StackPanel>
+
+        </telerik:GroupBox>
+
     </Grid>
 
 </UserControl>

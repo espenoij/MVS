@@ -294,5 +294,11 @@ namespace HMS_Server
                 sensorGroupId = newData.sensorGroupId;
             }
         }
+
+        public void ResetDataCalculations()
+        {
+            // Resette dataCalculations
+            dataProcess.ResetDataCalculations();
+        }
     }
 }

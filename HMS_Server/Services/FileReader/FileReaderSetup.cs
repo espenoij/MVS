@@ -199,7 +199,7 @@ namespace HMS_Server
                 timer.Elapsed += runReader;
 
                 // Kjøre leseren en gang manuellt, ellers må vi vente til elapsed time har gått
-                runReader(timer, new EventArgs());
+                //runReader(timer, new EventArgs());
 
                 // Starte timer
                 timer.Start();
