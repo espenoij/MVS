@@ -319,11 +319,15 @@ namespace HMS_Client
             set
             {
                 if (_alignmentTime != value)
+                {
                     _alignmentTime = value;
+
+                    OnPropertyChanged(nameof(alignmentTimeMin));
+                    OnPropertyChanged(nameof(alignmentTimeMax));
+                }
             }
         }
 
-        private DateTime _alignmentTimeMin { get; set; }
         public DateTime alignmentTimeMin
         {
             get

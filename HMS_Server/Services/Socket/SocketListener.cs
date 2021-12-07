@@ -37,7 +37,9 @@ namespace HMS_Server
         private int serverPort;
 
         // Socket Listener satt på pause
-        private bool socketListenerPaused = false;
+        private bool socketListenerPaused = true;
+        // Socket Listener exit
+        private bool socketExit = false;
 
         // Configuration
         private Config config;
@@ -123,7 +125,12 @@ namespace HMS_Server
         public void Stop()
         {
             socketListenerPaused = true;
-            allDone.Reset();
+            //allDone.Reset();
+        }
+
+        public void Exit()
+        {
+            socketExit = true;
         }
 
         private void StartSocketListener(object sender, DoWorkEventArgs e)
@@ -147,7 +154,7 @@ namespace HMS_Server
                 listener.Bind(localEndPoint);
                 listener.Listen(10);
 
-                while (true)
+                while (!socketExit)
                 {
                     if (!socketListenerPaused)
                     {
@@ -330,7 +337,7 @@ namespace HMS_Server
                     string outPacket = Constants.CommandGetDataUpdate + SerializeHMSData() + Constants.EOF;
 
                     if (AdminMode.IsActive)
-                        socketConsole.Add(string.Format("jsonData: {0}", outPacket));
+                        socketConsole.Add(string.Format("Send: jsonData: {0}", outPacket));
 
                     // Sende HMS data til klient
                     Send(handler, outPacket);
@@ -344,7 +351,7 @@ namespace HMS_Server
                     string outPacket = Constants.CommandGetSensorStatus + SerializeSensorStatus() + Constants.EOF;
 
                     if (AdminMode.IsActive)
-                        socketConsole.Add(string.Format("jsonData: {0}", outPacket));
+                        socketConsole.Add(string.Format("Send: jsonData: {0}", outPacket));
 
                     // Sende sensor status til klient
                     Send(handler, outPacket);
@@ -370,7 +377,7 @@ namespace HMS_Server
                     string outPacket = Constants.CommandSetUserInputs + Constants.EOF; // Ingen payload data
 
                     if (AdminMode.IsActive)
-                        socketConsole.Add(string.Format("jsonData: {0}", outPacket));
+                        socketConsole.Add(string.Format("Send: jsonData: {0}", outPacket));
 
                     // Sende bekreftelse til klient
                     Send(handler, outPacket);
@@ -384,7 +391,7 @@ namespace HMS_Server
                     string outPacket = Constants.CommandGetUserInputs + SerializeUserInputs() + Constants.EOF;
 
                     if (AdminMode.IsActive)
-                        socketConsole.Add(string.Format("jsonData: {0}", outPacket));
+                        socketConsole.Add(string.Format("Send: jsonData: {0}", outPacket));
 
                     // Sende sensor status til klient
                     Send(handler, outPacket);
@@ -462,14 +469,8 @@ namespace HMS_Server
                     foreach (var sensorStatusOutputData in sensorStatusOutputList)
                     {
                         // Kopiere alle data
-                        SensorGroup sensor = new SensorGroup(sensorStatusOutputData);
-
-                        // Fjerner navnet på sensor data under vanlig kjøring for å redusere data mengden som sendes
-                        if (!AdminMode.IsActive)
-                            sensor.name = string.Empty;
-
                         // Legge til i listen som skal sendes
-                        sendData.Add(sensor);
+                        sendData.Add(new SensorGroup(sensorStatusOutputData));
                     }
                 }
 

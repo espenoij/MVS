@@ -45,7 +45,7 @@ namespace HMS_Client
                 lock (socketMessages)
                 {
                     // Gå gjennom meldingslisten
-                    foreach (var item in socketConsole.Messages().ToList())
+                    foreach (var item in socketMessages.ToList())
                     {
                         if (item != null)
                         {

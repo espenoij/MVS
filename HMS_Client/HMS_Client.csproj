@@ -232,6 +232,7 @@
       <Link>Services\Weather.cs</Link>
     </Compile>
     <Compile Include="Helpers\GraphBuffer.cs" />
+    <Compile Include="Helpers\HMSCalc.cs" />
     <Compile Include="Services\AdminMode.cs" />
     <Compile Include="Config\ConfigKey.cs" />
     <Compile Include="Dialogs\DialogHandler.cs" />
@@ -261,7 +262,6 @@
     </Compile>
     <Compile Include="Services\HMSData.cs" />
     <Compile Include="ViewModels\AdminSettingsVM.cs" />
-    <Compile Include="Helpers\Calculations.cs" />
     <Compile Include="Services\CommonTypes.cs" />
     <Compile Include="Pages\HelideckReport_CAP.xaml.cs">
       <DependentUpon>HelideckReport_CAP.xaml</DependentUpon>

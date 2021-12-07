@@ -262,5 +262,19 @@ namespace HMS_Client
         {
             PropertyChanged?.Invoke(this, new PropertyChangedEventArgs(name));
         }
+
+        // Server spesifikk:
+        ////////////////////////////////////////////////////////////////////
+        ///
+        public string nameString
+        {
+            get
+            {
+                if (!string.IsNullOrEmpty(name))
+                    return name;
+                else
+                    return Constants.NameNotSet;
+            }
+        }
     }
 }

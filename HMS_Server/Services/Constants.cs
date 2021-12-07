@@ -218,10 +218,6 @@ class Constants
     public const double MotionLimitDefaultHeaveAmplitude = 5;
     public const double MotionLimitDefaultSignificantHeaveRate = 1.3;
 
-    // Degrees / Radians
-    public const double DEG_to_RAD = Math.PI / 180.0;
-    public const double RAD_to_DEG = 180.0 / Math.PI;
-
     // PDF A4
     public const double A4Width = 3508;
     public const double A4Height = 2480;
@@ -255,4 +251,6 @@ class Constants
     // Cloud Layers
     public const int TOTAL_CLOUD_LAYERS = 4;
 
+    // Name not set (pga admin mode ikke på i server)
+    public const string NameNotSet = "No name (server admin mode is off)";
 }

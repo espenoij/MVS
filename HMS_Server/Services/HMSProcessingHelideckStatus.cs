@@ -118,20 +118,48 @@ namespace HMS_Server
                     }
                     else
                     {
-                        if (IsWithinLimits(ValueType.PitchMaxUp20m) &&
-                            IsWithinLimits(ValueType.PitchMaxDown20m) &&
-                            IsWithinLimits(ValueType.RollMaxLeft20m) &&
-                            IsWithinLimits(ValueType.RollMaxRight20m) &&
-                            IsWithinLimits(ValueType.InclinationMax20m) &&
-                            IsWithinLimits(ValueType.SignificantHeaveRate))
+                        switch (helideckStatus)
                         {
-                            // Status: BLUE / AMBER
-                            helideckStatus = hmsProcessingMotion.GetMSIWSIState;
-                        }
-                        else
-                        {
-                            // Status: RED
-                            helideckStatus = HelideckStatusType.RED;
+                            // Init
+                            case HelideckStatusType.OFF:
+                                if (IsWithinLimits(ValueType.PitchMax20m) &&
+                                    IsWithinLimits(ValueType.RollMax20m) &&
+                                    IsWithinLimits(ValueType.InclinationMax20m) &&
+                                    IsWithinLimits(ValueType.HeaveAmplitudeMax20m) &&
+                                    IsWithinLimits(ValueType.SignificantHeaveRate))
+                                {
+                                    helideckStatus = GetMSIWSIState();
+                                }
+                                else
+                                {
+                                    helideckStatus = HelideckStatusType.RED;
+                                }
+                                break;
+
+                            // Blue/amber -> Red
+                            case HelideckStatusType.BLUE:
+                            case HelideckStatusType.AMBER:
+                                if (!IsWithinLimits(ValueType.PitchMax20m) ||
+                                    !IsWithinLimits(ValueType.RollMax20m) ||
+                                    !IsWithinLimits(ValueType.InclinationMax20m) ||
+                                    !IsWithinLimits(ValueType.HeaveAmplitudeMax20m) ||
+                                    (!IsWithinLimits(ValueType.SignificantHeaveRate) && hmsProcessingMotion.IsSHR2mMinAboveLimit()))
+                                {
+                                    helideckStatus = HelideckStatusType.RED;
+                                }
+                                break;
+
+                            // Red -> Blue/amber
+                            case HelideckStatusType.RED:
+                                if (IsWithinLimits(ValueType.PitchMax20m) &&
+                                    IsWithinLimits(ValueType.RollMax20m) &&
+                                    IsWithinLimits(ValueType.InclinationMax20m) &&
+                                    IsWithinLimits(ValueType.HeaveAmplitudeMax20m) &&
+                                    IsWithinLimits(ValueType.SignificantHeaveRate95pct) && hmsProcessingMotion.IsSHR10mMeanBelowLimit())
+                                {
+                                    helideckStatus = GetMSIWSIState();
+                                }
+                                break;
                         }
                     }
                 }
@@ -162,6 +190,30 @@ namespace HMS_Server
                 helideckStatusData.status = DataStatus.TIMEOUT_ERROR;
         }
 
+        /////////////////////////////////////////////////////////////////////////////
+        // MSI / WSI State
+        /////////////////////////////////////////////////////////////////////////////
+        public HelideckStatusType GetMSIWSIState()
+        {
+            if (hmsOutputData.GetData(ValueType.MSI).data > 100)
+            {
+                return HelideckStatusType.AMBER;
+            }
+            else
+            {
+                double maxWSI = Constants.MSIMax - (Constants.MSIMax * (hmsOutputData.GetData(ValueType.MSI).data / Constants.WSIMax));
+
+                if (hmsOutputData.GetData(ValueType.WSI).data > maxWSI)
+                {
+                    return HelideckStatusType.AMBER;
+                }
+                else
+                {
+                    return HelideckStatusType.BLUE;
+                }
+            }
+        }
+
         private bool IsWithinLimits(ValueType value)
         {
             switch (value)
@@ -184,7 +236,7 @@ namespace HMS_Server
                     return hmsOutputData.GetData(value)?.data <= motionLimits.GetLimit(LimitType.SignificantHeaveRate);
 
                 case ValueType.SignificantHeaveRate95pct:
-                    return hmsOutputData.GetData(value)?.data <= motionLimits.GetLimit(LimitType.SignificantHeaveRate) * 0.95;
+                    return hmsProcessingMotion.GetSHR95Pct() <= motionLimits.GetLimit(LimitType.SignificantHeaveRate) * 0.95;
 
                 default:
                     return false;

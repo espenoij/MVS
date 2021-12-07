@@ -74,7 +74,7 @@
                                 LabelInterval="2"
                                 LabelFormat="HH:mm"
                                 PlotMode="OnTicks"
-                                TickOrigin="{Binding aligmentTime}"
+                                TickOrigin="{Binding alignmentTime}"
                                 Minimum="{Binding alignmentTimeMin}"
                                 Maximum="{Binding alignmentTimeMax}" />
                         </telerik:RadCartesianChart.HorizontalAxis>
@@ -195,7 +195,7 @@
                                 LabelInterval="2"
                                 LabelFormat="HH:mm"
                                 PlotMode="OnTicks"
-                                TickOrigin="{Binding aligmentTime}"
+                                TickOrigin="{Binding alignmentTime}"
                                 Minimum="{Binding alignmentTimeMin}"
                                 Maximum="{Binding alignmentTimeMax}" />
                         </telerik:RadCartesianChart.HorizontalAxis>

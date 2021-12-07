@@ -28,7 +28,7 @@ namespace HMS_Server
         private List<TimeData> timeMaxNegativeDataList = new List<TimeData>();
 
         // Significant Heave Rate
-        private double significantHeaveRateSquare = 0;
+        private double significantHeaveRateSquareSum = 0;
         private List<TimeData> significantHeaveRateDataList = new List<TimeData>();
 
         // Significant Wave Height
@@ -149,7 +149,7 @@ namespace HMS_Server
                             // Sjekke om string er numerisk
                             if (double.TryParse(newData, Constants.numberStyle, Constants.cultureInfo, out value))
                             {
-                                result = value * (Math.PI / 180);
+                                result = HMSCalc.ToRadians(value);
                             }
                             break;
 
@@ -161,7 +161,7 @@ namespace HMS_Server
                             // Sjekke om string er numerisk
                             if (double.TryParse(newData, Constants.numberStyle, Constants.cultureInfo, out value))
                             {
-                                result = value * (180 / Math.PI);
+                                result = HMSCalc.ToDegrees(value);
                             }
                             break;
 
@@ -525,7 +525,7 @@ namespace HMS_Server
                                     });
 
                                 // Legge til ny verdi i square total
-                                significantHeaveRateSquare += Math.Pow(value, 2);
+                                significantHeaveRateSquareSum += Math.Pow(value, 2);
 
                                 // Sjekke om vi skal ta ut gamle verdier
                                 doneRemovingOldValues = false;
@@ -534,7 +534,7 @@ namespace HMS_Server
                                     if (significantHeaveRateDataList[0]?.timestamp.AddSeconds(parameter) < DateTime.UtcNow)
                                     {
                                         // Trekke fra gammel verdi i square total
-                                        significantHeaveRateSquare -= Math.Pow(significantHeaveRateDataList[0].data, 2);
+                                        significantHeaveRateSquareSum -= Math.Pow(significantHeaveRateDataList[0].data, 2);
 
                                         // Fjerne fra verdiliste
                                         significantHeaveRateDataList.RemoveAt(0);
@@ -553,7 +553,7 @@ namespace HMS_Server
                                 // -> significantHeaveRateSquare
 
                                 // Mean
-                                double mean = significantHeaveRateSquare / (double)significantHeaveRateDataList.Count();
+                                double mean = significantHeaveRateSquareSum / (double)significantHeaveRateDataList.Count();
 
                                 // Root
                                 double root = Math.Sqrt(mean);
@@ -1306,7 +1306,7 @@ namespace HMS_Server
             timeMaxNegativeDataList.Clear();
 
             // Significant Heave Rate
-            significantHeaveRateSquare = 0;
+            significantHeaveRateSquareSum = 0;
             significantHeaveRateDataList.Clear();
 
             // Significant Wave Height

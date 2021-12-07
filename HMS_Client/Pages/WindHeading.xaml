@@ -38,81 +38,84 @@
                 </Grid.ColumnDefinitions>
 
                 <DockPanel
-                    Grid.Column="0"
-                    HorizontalAlignment="Center"
-                    VerticalAlignment="Top">
+                    Grid.Column="0">
 
-                    <Grid>
+                    <DockPanel
+                        DockPanel.Dock="Top"
+                        VerticalAlignment="Top">
 
-                        <Grid.ColumnDefinitions>
-                            <ColumnDefinition
-                                Width="2*" />
-                            <ColumnDefinition
-                                Width="1*" />
-                            <ColumnDefinition
-                                Width="2*" />
-                        </Grid.ColumnDefinitions>
+                        <Grid>
 
-                        <Viewbox
-                            Grid.Column="1"
-                            StretchDirection="Both"
-                            Stretch="Uniform"
-                            HorizontalAlignment="Center">
+                            <Grid.ColumnDefinitions>
+                                <ColumnDefinition
+                                    Width="2*" />
+                                <ColumnDefinition
+                                    Width="1*" />
+                                <ColumnDefinition
+                                    Width="2*" />
+                            </Grid.ColumnDefinitions>
 
-                            <telerik:Label
-                                Content="Magnetic North"
-                                FontSize="{StaticResource fontSizeLabelSmall}" />
-                            
-                        </Viewbox>
+                            <Viewbox
+                                Grid.Column="1"
+                                StretchDirection="Both"
+                                Stretch="Uniform"
+                                HorizontalAlignment="Center">
 
-                    </Grid>
-
-                </DockPanel>
-
-                <!--COMPASS ROSE-->
-                <uc:WindHeadingCompassRose
-                    Grid.Column="0"
-                    x:Name="ucCompass" />
-
-                <!--Wind Measurement-->
-                <DockPanel
-                    VerticalAlignment="Bottom"
-                    HorizontalAlignment="Center">
-
-                    <Grid>
-
-                        <Grid.ColumnDefinitions>
-                            <ColumnDefinition
-                                Width="2*" />
-                            <ColumnDefinition
-                                Width="3*" />
-                            <ColumnDefinition
-                                Width="2*" />
-                        </Grid.ColumnDefinitions>
-
-                        <Viewbox
-                            Grid.Column="1"
-                            StretchDirection="Both"
-                            Stretch="Uniform"
-                            HorizontalAlignment="Center">
-
-                            <StackPanel
-                                Orientation="Horizontal">
                                 <telerik:Label
-                                    Content="Wind"
-                                    VerticalAlignment="Center" />
+                                    Content="Magnetic North"
+                                    FontSize="{StaticResource fontSizeLabelSmall}" />
 
-                                <telerik:RadComboBox
-                                    Width="180"
-                                    Name="cboWindMeasurement"
-                                    Text="{Binding Path=windMeasurementString}"
-                                    SelectionChanged="cboWindMeasurement_SelectionChanged" />
+                            </Viewbox>
 
-                            </StackPanel>
+                        </Grid>
 
-                        </Viewbox>
+                    </DockPanel>
 
-                    </Grid>
+                    <!--Wind Measurement-->
+                    <DockPanel
+                        DockPanel.Dock="Bottom"
+                        HorizontalAlignment="Center">
+
+                        <Grid>
+
+                            <Grid.ColumnDefinitions>
+                                <ColumnDefinition
+                                    Width="2*" />
+                                <ColumnDefinition
+                                    Width="3*" />
+                                <ColumnDefinition
+                                    Width="2*" />
+                            </Grid.ColumnDefinitions>
+
+                            <Viewbox
+                                Grid.Column="1"
+                                StretchDirection="Both"
+                                Stretch="Uniform"
+                                HorizontalAlignment="Center">
+
+                                <StackPanel
+                                    Orientation="Horizontal">
+                                    <telerik:Label
+                                        Content="Wind"
+                                        VerticalAlignment="Center" />
+
+                                    <telerik:RadComboBox
+                                        Width="180"
+                                        Name="cboWindMeasurement"
+                                        Text="{Binding Path=windMeasurementString}"
+                                        SelectionChanged="cboWindMeasurement_SelectionChanged" />
+
+                                </StackPanel>
+
+                            </Viewbox>
+
+                        </Grid>
+
+                    </DockPanel>
+
+                    <!--COMPASS ROSE-->
+                    <uc:WindHeadingCompassRose
+                        x:Name="ucCompass" />
 
                 </DockPanel>
 

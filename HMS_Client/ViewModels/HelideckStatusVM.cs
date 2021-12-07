@@ -98,13 +98,4 @@ namespace HMS_Client
             PropertyChanged?.Invoke(this, new PropertyChangedEventArgs(name));
         }
     }
-
-    public enum HelideckStatusType
-    {
-        OFF,
-        BLUE,
-        AMBER,
-        RED,
-        GREEN
-    }
 }

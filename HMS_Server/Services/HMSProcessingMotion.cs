@@ -21,8 +21,11 @@ namespace HMS_Server
 
         // Inclination
         private HMSData inclinationData = new HMSData();
-        private HMSData inclinationMax20mData = new HMSData();
-        private HMSData inclinationMax3hData = new HMSData();
+        private HMSData inclination20mMaxData = new HMSData();
+        private HMSData inclination3hMaxData = new HMSData();
+
+        private RadObservableCollectionEx<TimeData> inclination20mMaxList = new RadObservableCollectionEx<TimeData>();
+        private RadObservableCollectionEx<TimeData> inclination3hMaxList = new RadObservableCollectionEx<TimeData>();
 
         // Heave Amplitude
         private HMSData heaveAmplitudeData = new HMSData();
@@ -47,17 +50,11 @@ namespace HMS_Server
         private HMSData motionLimitHeaveAmplitude = new HMSData();
         private HMSData motionLimitSignificantHeaveRate = new HMSData();
 
-        // MSI / WSI
+        // MSI
         private HMSData msiData = new HMSData();
-        private HMSData wsiData = new HMSData();
 
         // Liste for å finne max MSI
         private List<TimeData> mms_msi_list = new List<TimeData>();
-
-        // Liste for å finne gjennomsnitt WSI
-        private List<TimeData> wsi_list = new List<TimeData>();
-        // Total sum WSI
-        private HMSData wsiTotal20m = new HMSData();
 
         // Motion Limits
         private HelideckMotionLimits motionLimits;
@@ -101,8 +98,8 @@ namespace HMS_Server
             hmsOutputDataList.Add(rollMaxRight20mData);
 
             hmsOutputDataList.Add(inclinationData);
-            hmsOutputDataList.Add(inclinationMax20mData);
-            hmsOutputDataList.Add(inclinationMax3hData);
+            hmsOutputDataList.Add(inclination20mMaxData);
+            hmsOutputDataList.Add(inclination3hMaxData);
 
             hmsOutputDataList.Add(significantHeaveRateData);
             hmsOutputDataList.Add(significantHeaveRateMax20mData);
@@ -189,13 +186,13 @@ namespace HMS_Server
             inclinationData.name = "Inclination";
             inclinationData.dbTableName = "inclination";
 
-            inclinationMax20mData.id = (int)ValueType.InclinationMax20m;
-            inclinationMax20mData.name = "Inclination Max (20m)";
-            inclinationMax20mData.dbTableName = "inclination_max_20m";
+            inclination20mMaxData.id = (int)ValueType.InclinationMax20m;
+            inclination20mMaxData.name = "Inclination Max (20m)";
+            inclination20mMaxData.dbTableName = "inclination_max_20m";
 
-            inclinationMax3hData.id = (int)ValueType.InclinationMax3h;
-            inclinationMax3hData.name = "Inclination Max (3h)";
-            inclinationMax3hData.dbTableName = "inclination_max_3h";
+            inclination3hMaxData.id = (int)ValueType.InclinationMax3h;
+            inclination3hMaxData.name = "Inclination Max (3h)";
+            inclination3hMaxData.dbTableName = "inclination_max_3h";
 
             heaveAmplitudeData.id = (int)ValueType.HeaveAmplitude;
             heaveAmplitudeData.name = "Heave Amplitude";
@@ -283,17 +280,11 @@ namespace HMS_Server
             if (adminSettingsVM.regulationStandard == RegulationStandard.CAP)
             {
                 hmsOutputDataList.Add(msiData);
-                hmsOutputDataList.Add(wsiData);
 
                 msiData.id = (int)ValueType.MSI;
                 msiData.name = "MSI";
                 msiData.sensorGroupId = Constants.NO_SENSOR_GROUP_ID;
                 msiData.dbTableName = "msi";
-
-                wsiData.id = (int)ValueType.WSI;
-                wsiData.name = "WSI";
-                wsiData.sensorGroupId = Constants.NO_SENSOR_GROUP_ID;
-                wsiData.dbTableName = "wsi";
             }
         }
 
@@ -301,14 +292,6 @@ namespace HMS_Server
         {
             // Tar data fra input delen av server og overfører til HMS output delen
             // og prosesserer input for overføring til HMS output også.
-
-            // TEST TEST
-            if (hmsInputDataList.GetData(ValueType.Roll).data >= 0.85 ||
-                hmsInputDataList.GetData(ValueType.Roll).data <= -0.85)
-            {
-                HMSData test = new HMSData();
-                test.Set(hmsInputDataList.GetData(ValueType.Roll));
-            }
 
             // Pitch
             pitchData.Set(hmsInputDataList.GetData(ValueType.Pitch));
@@ -325,9 +308,8 @@ namespace HMS_Server
             rollMaxRight20mData.DoProcessing(rollData);
 
             // Inclination
-            CalcInclination(pitchData, rollData, inclinationData);
-            CalcInclination(pitchMax20mData, rollMax20mData, inclinationMax20mData);
-            CalcInclination(pitchMax3hData, rollMax3hData, inclinationMax3hData);
+            UpdateInclinationData(pitchData, rollData, inclination20mMaxData, Constants.Minutes20);
+            UpdateInclinationData(pitchData, rollData, inclination3hMaxData, Constants.Hours3);
 
             // Heave Amplitude
             heaveAmplitudeData.DoProcessing(hmsInputDataList.GetData(ValueType.Heave));
@@ -371,18 +353,14 @@ namespace HMS_Server
             // CAP spesifikke variabler / kalkulasjoner
             if (adminSettingsVM.regulationStandard == RegulationStandard.CAP)
             {
-                // MSI / WSI
+                // MSI
                 /////////////////////////////////////////////////////////////////////////////////////////
                 ///
                 HMSData mms_msi = new HMSData();
-                HMSData wsit = new HMSData();
 
                 HMSData accelerationX = new HMSData(hmsInputDataList.GetData(ValueType.AccelerationX));
                 HMSData accelerationY = new HMSData(hmsInputDataList.GetData(ValueType.AccelerationY));
                 HMSData accelerationZ = new HMSData(hmsInputDataList.GetData(ValueType.AccelerationZ));
-
-                //// TEST TEST TEST
-                //double testmms;
 
                 if (accelerationX.status == DataStatus.OK &&
                     accelerationY.status == DataStatus.OK &&
@@ -397,76 +375,13 @@ namespace HMS_Server
                         mms = 0.0;
 
                     // Kalkulere MMS_MSI (CAP formel)
-                    mms_msi.data = Math.Round(10.0 * (180.0 / Math.PI) * Math.Atan(mms), 0, MidpointRounding.AwayFromZero);
+                    mms_msi.data = Math.Round(10.0 * HMSCalc.ToDegrees(Math.Atan(mms)), 0);
                     mms_msi.status = DataStatus.OK;
                     mms_msi.timestamp = accelerationX.timestamp;
-
-                    //// TEST TEST TEST
-                    //testmms = mms;
                 }
-
-                //// TEST TEST TEST
-                //if (mms_msi.data >= 37)
-                //{
-                //    HMSData test = new HMSData();
-                //    test.Set(mms_msi);
-                //}
 
                 // Find max value
                 CalculateMSIMax(mms_msi, mms_msi_list, msiData, Constants.Minutes20);
-
-                // Wind Data
-                HMSData windDir = hmsInputDataList.GetData(ValueType.AreaWindDirectionRT); // NB! Bruker area wind her fordi vi korrigerer med egen CAP formel/fremgangsmåte
-                HMSData windSpd = hmsInputDataList.GetData(ValueType.AreaWindSpeedRT);
-                HMSData vesselDir = hmsInputDataList.GetData(ValueType.VesselHeading);
-                HMSData vesselSpd = hmsInputDataList.GetData(ValueType.VesselSpeed);
-
-                if (windDir.status == DataStatus.OK &&
-                    windSpd.status == DataStatus.OK &&
-                    vesselDir.status == DataStatus.OK &&
-                    vesselSpd.status == DataStatus.OK)
-                {
-                    double vesselComp = 0;
-
-                    // Kalkulere vind-komponenten som følge av fartøyets hastighet
-                    if (vesselDir.status == DataStatus.OK &&
-                        vesselSpd.status == DataStatus.OK)
-                    {
-                        // Beregner først vinkel mellom fartøyets retning og vind-retning
-                        double angle = windDir.data - vesselDir.data;
-
-                        // Beregne fartøys-komponenten
-                        vesselComp = vesselSpd.data * Math.Cos(Constants.DEG_to_RAD * angle);
-                    }
-
-                    // Beregne korrigert vind-hastighet
-                    double vesselCorrectedWind = windSpd.data - vesselComp;
-
-                    // Vind korreksjon for høyde over havet
-                    double windCorrected;
-                    if (adminSettingsVM.windSensorHeight != 0)
-                        // (CAP formel)
-                        windCorrected = vesselCorrectedWind * Math.Pow((adminSettingsVM.helideckHeight + 10) / adminSettingsVM.windSensorHeight, 0.13);
-                    else
-                        windCorrected = vesselCorrectedWind;
-
-                    // Legge til fartøys-komponenten igjen etter høyde-korreksjon
-                    windCorrected += vesselComp;
-
-                    // Lagre data
-                    wsit.status = windDir.status;
-                    wsit.timestamp = windDir.timestamp;
-                    wsit.data = Math.Round(windCorrected, 1);
-                }
-                else
-                {
-                    wsit.status = DataStatus.TIMEOUT_ERROR;
-                    wsit.timestamp = DateTime.UtcNow;
-                    wsit.data = 0;
-                }
-
-                // Finne gjennomsnittsverdier
-                CalculateWSIMean(wsit, wsi_list, wsiTotal20m, wsiData, Constants.Minutes20);
             }
 
             // Sjekker motion limits
@@ -476,6 +391,7 @@ namespace HMS_Server
         // Resette dataCalculations
         public void ResetDataCalculations()
         {
+            // Diverse
             pitchMax20mData.ResetDataCalculations();
             pitchMax3hData.ResetDataCalculations();
             pitchMaxUp20mData.ResetDataCalculations();
@@ -493,6 +409,24 @@ namespace HMS_Server
             significantHeaveRateMax3hData.ResetDataCalculations();
             maxHeaveRateData.ResetDataCalculations();
             significantWaveHeightData.ResetDataCalculations();
+
+            // Inclination
+            inclination20mMaxList.Clear();
+            inclination3hMaxList.Clear();
+
+            // MSI
+            msiData.data = 0;
+            mms_msi_list.Clear();
+
+            // SHR
+            significantHeaveRate2mMin = double.MaxValue;
+            significantHeaveRate10mSum = 0;
+            significantHeaveRate10mMean = 0;
+            significantHeaveRate20mMax = 0;
+
+            significantHeaveRate2mMinData.Clear();
+            significantHeaveRate10mMeanData.Clear();
+            significantHeaveRate20mMaxData.Clear();
         }
 
         private void CalculateMSIMax(HMSData value, List<TimeData> dataList, HMSData maxValue, double time)
@@ -577,61 +511,6 @@ namespace HMS_Server
             }
         }
 
-        private void CalculateWSIMean(HMSData value, List<TimeData> dataList, HMSData totalSum, HMSData meanValue, double time)
-        {
-            if (value.status == DataStatus.OK &&
-                !double.IsNaN(value.data))
-            {
-                // Legge inn den nye verdien i data settet
-                dataList.Add(new TimeData() { data = value.data, timestamp = value.timestamp });
-
-                // Legge til i total summen
-                totalSum.data += value.data;
-            }
-
-            // Sjekke om vi skal ta ut gamle verdier
-            bool doneRemovingOldValues = false;
-
-            while (!doneRemovingOldValues && dataList.Count > 0)
-            {
-                if (dataList[0] != null)
-                {
-                    // Time stamp eldre enn satt grense?
-                    if (dataList[0].timestamp.AddSeconds(time) < DateTime.UtcNow)
-                    {
-                        // Trekke fra i total summen
-                        totalSum.data -= dataList[0].data;
-
-                        // Fjerne gammel verdi fra verdiliste
-                        dataList.RemoveAt(0);
-                    }
-                    else
-                    {
-                        // Vi har kommet til nyere tidsverdier som ikke skal fjernes
-                        // Kan da avslutte søk etter gamle verdier
-                        doneRemovingOldValues = true;
-                    }
-                }
-                else
-                {
-                    // Fjerne null forekomst
-                    // Denne er plassert her fordi jeg fikk et tilfelle der hele listen dataList[i] var lik null.
-                    dataList.RemoveAt(0);
-                }
-            }
-
-            // Beregne gjennomsnitt av de verdiene som ligger i datasettet
-            double mean = totalSum.data / dataList.Count;
-
-            // Korrigere for WSI max basert på helikopter type
-            double wsiDisp = (mean / adminSettingsVM.GetWSILimit(userInputs.helicopterType)) * 100;
-
-            // Lagre data
-            meanValue.data = Math.Round(wsiDisp, 0);
-            meanValue.timestamp = value.timestamp;
-            meanValue.status = value.status;
-        }
-
         private void CheckLimits()
         {
             // Pitch & roll
@@ -645,7 +524,7 @@ namespace HMS_Server
 
             // Inclination
             CheckLimit(inclinationData, LimitType.Inclination);
-            CheckLimit(inclinationMax20mData, LimitType.Inclination);
+            CheckLimit(inclination20mMaxData, LimitType.Inclination);
 
             // Heave
             CheckLimit(heaveAmplitudeMax20mData, LimitType.HeaveAmplitude);
@@ -695,31 +574,9 @@ namespace HMS_Server
             return significantHeaveRate2mMin > motionLimits.GetLimit(LimitType.SignificantHeaveRate);
         }
 
-        /////////////////////////////////////////////////////////////////////////////
-        // MSI / WSI State
-        /////////////////////////////////////////////////////////////////////////////
-        public HelideckStatusType GetMSIWSIState
+        public double GetSHR95Pct()
         {
-            get
-            {
-                if (msiData.data > 100)
-                {
-                    return HelideckStatusType.AMBER;
-                }
-                else
-                {
-                    double maxWSI = Constants.MSIMax - (Constants.MSIMax * (msiData.data / Constants.WSIMax));
-
-                    if (wsiData.data > maxWSI)
-                    {
-                        return HelideckStatusType.AMBER;
-                    }
-                    else
-                    {
-                        return HelideckStatusType.BLUE;
-                    }
-                }
-            }
+            return significantHeaveRateData.data * 0.95;
         }
 
         /////////////////////////////////////////////////////////////////////////////
@@ -731,7 +588,7 @@ namespace HMS_Server
                 roll != null)
             {
                 // Beregne inclination
-                double inclination = HMSCalculations.Inclination(pitch.data, roll.data);
+                double inclination = HMSCalc.Inclination(pitch.data, roll.data);
 
                 // Data
                 outputData.data = Math.Round(inclination, 1);
@@ -889,7 +746,7 @@ namespace HMS_Server
                 if (findNewMaxValue)
                 {
                     double oldMaxValue = significantHeaveRate20mMax;
-                    significantHeaveRate20mMax = double.MaxValue;
+                    significantHeaveRate20mMax = double.MinValue;
                     doneRemovingOldValues = false;
                     for (int j = 0; j < significantHeaveRate20mMaxData.Count && !doneRemovingOldValues; j++)
                     {
@@ -902,12 +759,85 @@ namespace HMS_Server
                         else
                         {
                             // Sjekke om data er mindre enn minste lagret
-                            if (significantHeaveRate20mMaxData[j]?.data < significantHeaveRate20mMax)
+                            if (significantHeaveRate20mMaxData[j]?.data > significantHeaveRate20mMax)
                                 significantHeaveRate20mMax = significantHeaveRate20mMaxData[j].data;
                         }
                     }
                 }
             }
+        }
+
+        public void UpdateInclinationData(HMSData pitchData, HMSData rollData, HMSData inclinationMaxData, int time)
+        {
+            // Første regne nå-verdi for inclination
+            CalcInclination(pitchData, rollData, inclinationData);
+
+            // 20-minute max
+            ///////////////////////////////////////////////////////////
+            ///
+            // Legge inn den nye verdien i data settet
+            inclination20mMaxList.Add(new TimeData()
+            {
+                data = inclinationData.data,
+                timestamp = inclinationData.timestamp
+            });
+
+            // Sjekke om data er større enn største inclination lagret siste 20 minutter
+            if (inclinationData.data > inclinationMaxData.data)
+            {
+                inclinationMaxData.data = inclinationData.data;
+            }
+
+            // Sjekke om vi skal fjerne data fra 20 min listen
+            bool doneRemovingOldValues = false;
+            bool findNewMaxValue = false;
+
+            while (!doneRemovingOldValues && inclination20mMaxList.Count > 0)
+            {
+                if (inclination20mMaxList[0]?.timestamp.AddSeconds(time) < DateTime.UtcNow)
+                {
+                    // Er den verdien vi nå skal fjerne lik maximunsverdien?
+                    if (inclination20mMaxList[0].data == inclinationMaxData.data)
+                        findNewMaxValue = true;
+
+                    inclination20mMaxList.RemoveAt(0);
+                }
+                else
+                {
+                    doneRemovingOldValues = true;
+                }
+            }
+
+            // Gå gjennom hele listen og finne ny maximumsverdi
+            if (findNewMaxValue)
+            {
+                double oldMaxValue = inclinationMaxData.data;
+                inclinationMaxData.data = 0;
+
+                doneRemovingOldValues = false;
+                for (int j = 0; j < inclination20mMaxList.Count && !doneRemovingOldValues; j++)
+                {
+                    // Kan avslutte søket dersom vi finne en verdi like den gamle maximumsverdien (ingen er høyere)
+                    if (inclination20mMaxList[j]?.data == oldMaxValue)
+                    {
+                        inclinationMaxData.data = inclination20mMaxList[j].data;
+
+                        doneRemovingOldValues = true;
+                    }
+                    else
+                    {
+                        // Sjekke om data er mindre enn minste lagret
+                        if (inclination20mMaxList[j]?.data > inclinationMaxData.data)
+                        {
+                            inclinationMaxData.data = inclination20mMaxList[j].data;
+                        }
+                    }
+                }
+            }
+
+            // Oppdatere timestamp og status
+            inclinationMaxData.timestamp = inclinationData.timestamp;
+            inclinationMaxData.status = inclinationData.status;
         }
     }
 }

@@ -190,10 +190,10 @@ public enum ValueType
 public enum HelideckStatusType
 {
     OFF,
-    RED,
-    GREEN,
     BLUE,
-    AMBER
+    AMBER,
+    RED,
+    GREEN
 }
 
 public enum WindMeasurement

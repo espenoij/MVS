@@ -263,9 +263,10 @@ namespace HMS_Server
             PropertyChanged?.Invoke(this, new PropertyChangedEventArgs(name));
         }
 
-        // Data Prosessering
+        // Server spesifikk:
         ////////////////////////////////////////////////////////////////////
-        ///
+
+        // Data Prosessering
         private HMSDataProcessing dataProcess = new HMSDataProcessing();
 
         // Init av prosessering med error handler og error type

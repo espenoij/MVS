@@ -50,11 +50,6 @@
                         Header="Difference (Abs)"
                         DataMemberBinding="{Binding differenceAbsString}" />
 
-                    <telerik:GridViewDataColumn
-                        Width="200"
-                        Header="Max Diff (Abs)"
-                        DataMemberBinding="{Binding maxDifferenceAbsString}" />
-
                 </telerik:RadGridView.Columns>
 
             </telerik:RadGridView>

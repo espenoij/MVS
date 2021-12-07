@@ -92,40 +92,14 @@ namespace HMS_Server
             }
         }
 
-        private double _maxDifferenceAbs { get; set; }
-        public double maxDifferenceAbs
-        {
-            get
-            {
-                return _maxDifferenceAbs;
-            }
-            set
-            {
-                _maxDifferenceAbs = value;
-                OnPropertyChanged();
-                OnPropertyChanged(nameof(maxDifferenceAbsString));
-            }
-        }
-        public string maxDifferenceAbsString
-        {
-            get
-            {
-                return Math.Round(maxDifferenceAbs, 1).ToString();
-            }
-        }
-
-        public void CompareData()
+        public void Compare()
         {
             differenceAbs = Math.Abs(refData - testData);
-
-            if (differenceAbs > maxDifferenceAbs)
-                maxDifferenceAbs = differenceAbs;
         }
 
         public void Reset()
         {
             differenceAbs = 0;
-            maxDifferenceAbs = 0;
         }
 
         // Variabel oppdatert

@@ -356,6 +356,7 @@ namespace HMS_Server
         private void Window_Closing(object sender, Telerik.Windows.Controls.WindowClosedEventArgs e)
         {
             StopServer();
+            ExitServer();
         }
 
         private void InitUIInputUpdate()
@@ -736,6 +737,11 @@ namespace HMS_Server
             }
         }
 
+        private void ExitServer()
+        {
+            socketListener.Exit();
+        }
+
         private void btnSetup_Click(object sender, RoutedEventArgs e)
         {
             // Forhåndsvalgt sensor data
@@ -974,7 +980,7 @@ namespace HMS_Server
             {
                 // Sammenligne test og referanse data
                 if (item.id != VerificationType.TimeID) // Men aldri for Time ID
-                    item.CompareData();
+                    item.Compare();
                 else
                     item.differenceAbs = 0;
             }

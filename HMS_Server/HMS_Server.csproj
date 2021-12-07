@@ -361,7 +361,7 @@
     <Compile Include="Config\HMSDataConfig.cs" />
     <Compile Include="Config\HMSDataConfigCollection.cs" />
     <Compile Include="Config\HMSDataConfigSection.cs" />
-    <Compile Include="Services\HMSCalculations.cs" />
+    <Compile Include="Helpers\HMSCalc.cs" />
     <Compile Include="Services\HMSProcessing.cs" />
     <Compile Include="Services\DataCollection.cs" />
     <Compile Include="Config\HelicopterWSILimitConfig.cs" />

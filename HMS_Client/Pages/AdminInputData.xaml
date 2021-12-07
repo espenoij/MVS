@@ -81,7 +81,7 @@
                         Width="*"
                         Header="Name"
                         IsReadOnly="True"
-                        DataMemberBinding="{Binding name}" />
+                        DataMemberBinding="{Binding nameString}" />
                     <telerik:GridViewDataColumn
                         Width="200"
                         Header="Timestamp"

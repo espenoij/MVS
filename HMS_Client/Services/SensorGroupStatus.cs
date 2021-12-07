@@ -41,10 +41,10 @@ namespace HMS_Client
                 SensorGroup sensorGroup = sensorGroupList[i];
 
                 // Finne sensor verdier knyttet til valgt sensor gruppe
-                var clientDataList = clientSensorDataCollection.GetDataList();
+                var clientDataList = clientSensorDataCollection.GetDataList().ToList();
                 lock (clientDataList)
                 {
-                    var clientData = clientDataList.Where(x => x.sensorGroupId == i);
+                    var clientData = clientDataList?.Where(x => x.sensorGroupId == i);
 
                     // Har funnet sensor verdier knyttet til sensor gruppe
                     if (clientData.Count() > 0)
@@ -100,16 +100,13 @@ namespace HMS_Client
                 }
 
                 // Oppdatere data i klient sensor data listen også
-                var clientSensorDataList = clientSensorDataCollection.GetDataList();
-                lock (clientSensorDataList)
-                {
-                    var clientSensorData = clientSensorDataList?.Where(x => x?.id == sensorData.id);
+                var clientSensorDataList = clientSensorDataCollection.GetDataList().ToList();
+                var clientSensorData = clientSensorDataList?.Where(x => x?.id == sensorData.id);
 
-                    // Fant sensor
-                    if (clientSensorData.Count() == 1)
-                    {
-                        clientSensorData.First().status = sensorData.status;
-                    }
+                // Fant sensor
+                if (clientSensorData?.Count() == 1)
+                {
+                    clientSensorData.First().status = sensorData.status;
                 }
             }
 

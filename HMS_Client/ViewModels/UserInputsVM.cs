@@ -337,7 +337,18 @@ namespace HMS_Client
         /////////////////////////////////////////////////////////////////////////////
         // On-deck variabler
         /////////////////////////////////////////////////////////////////////////////
-        public DateTime onDeckTime { get; set; }
+        public DateTime _onDeckTime { get; set; }
+        public DateTime onDeckTime
+        {
+            get
+            {
+                return _onDeckTime;
+            }
+            set
+            {
+                _onDeckTime = value;
+            }
+        }
 
         private double _onDeckHelicopterHeading { get; set; }
         public double onDeckHelicopterHeading
