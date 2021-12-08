@@ -23,7 +23,7 @@ namespace HMS_Client
             OnPropertyChanged(nameof(helideckStatus));
 
             // Oppdatere UI
-            UIUpdateTimer.Interval = TimeSpan.FromMilliseconds(config.Read(ConfigKey.ClientUpdateFrequencyUI, Constants.ClientUpdateFrequencyUIDefault));
+            UIUpdateTimer.Interval = TimeSpan.FromMilliseconds(config.ReadWithDefault(ConfigKey.ClientUpdateFrequencyUI, Constants.ClientUpdateFrequencyUIDefault));
             UIUpdateTimer.Tick += UIUpdate;
             UIUpdateTimer.Start();
 

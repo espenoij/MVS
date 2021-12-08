@@ -40,7 +40,7 @@ namespace HMS_Client
             DispatcherTimer timerUI = new DispatcherTimer();
 
             // Oppdatere resten av UI
-            timerUI.Interval = TimeSpan.FromMilliseconds(config.Read(ConfigKey.ClientUpdateFrequencyUI, Constants.ClientUpdateFrequencyUIDefault));
+            timerUI.Interval = TimeSpan.FromMilliseconds(config.ReadWithDefault(ConfigKey.ClientUpdateFrequencyUI, Constants.ClientUpdateFrequencyUIDefault));
             timerUI.Tick += UpdateUI;
             timerUI.Start();
 
@@ -50,7 +50,7 @@ namespace HMS_Client
                     tabHelicopterOps.IsSelected)
                 {
                     // Lese data timeout fra config
-                    double dataTimeout = config.Read(ConfigKey.DataTimeout, Constants.DataTimeoutDefault);
+                    double dataTimeout = config.ReadWithDefault(ConfigKey.DataTimeout, Constants.DataTimeoutDefault);
 
                     ///////////////////////////////////////////////////////////////////////////////////////////
                     // Helideck Motion: Max Pitch

@@ -93,7 +93,7 @@ namespace HMS_Client
         {
             // Data Retrieval Timer
             /////////////////////////////////////////////////////////////
-            dataRequestTimer.Interval = TimeSpan.FromMilliseconds(config.Read(ConfigKey.DataRequestFrequency, Constants.DataRequestFrequencyDefault));
+            dataRequestTimer.Interval = TimeSpan.FromMilliseconds(config.ReadWithDefault(ConfigKey.DataRequestFrequency, Constants.DataRequestFrequencyDefault));
             dataRequestTimer.Tick += DataRequest;
 
             void DataRequest(object sender, EventArgs e)
@@ -114,7 +114,7 @@ namespace HMS_Client
 
             // Sensor Status Retrieval Timer
             /////////////////////////////////////////////////////////////
-            sensorStatusRequestTimer.Interval = TimeSpan.FromMilliseconds(config.Read(ConfigKey.SensorStatusRequestFrequency, Constants.SensorStatusRequestFrequencyDefault));
+            sensorStatusRequestTimer.Interval = TimeSpan.FromMilliseconds(config.ReadWithDefault(ConfigKey.SensorStatusRequestFrequency, Constants.SensorStatusRequestFrequencyDefault));
             sensorStatusRequestTimer.Tick += SensorStatusRequest;
 
             void SensorStatusRequest(object sender, EventArgs e)
@@ -203,7 +203,7 @@ namespace HMS_Client
         private void ProcessSocketHMSData(RadObservableCollectionEx<HMSData> socketHMSDataList)
         {
             // Lese data timeout fra config
-            double dataTimeout = config.Read(ConfigKey.DataTimeout, Constants.DataTimeoutDefault);
+            double dataTimeout = config.ReadWithDefault(ConfigKey.DataTimeout, Constants.DataTimeoutDefault);
 
             lock (hmsDataList)
             {
@@ -262,7 +262,7 @@ namespace HMS_Client
         private void ProcessSocketSensorStatus(RadObservableCollectionEx<SensorGroup> socketSensorStatusList)
         {
             // Lese data timeout fra config
-            double dataTimeout = config.Read(ConfigKey.DataTimeout, Constants.DataTimeoutDefault);
+            double dataTimeout = config.ReadWithDefault(ConfigKey.DataTimeout, Constants.DataTimeoutDefault);
 
             lock (sensorStatusList)
             {

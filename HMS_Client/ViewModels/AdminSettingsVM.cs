@@ -25,7 +25,7 @@ namespace HMS_Client
             this.restartRequired = restartRequired;
 
             // Regulation Standard
-            regulationStandard = (RegulationStandard)Enum.Parse(typeof(RegulationStandard), config.Read(ConfigKey.RegulationStandard));
+            regulationStandard = (RegulationStandard)Enum.Parse(typeof(RegulationStandard), config.ReadWithDefault(ConfigKey.RegulationStandard, RegulationStandard.NOROG.ToString()));
 
             // Client is Master
             if (config.Read(ConfigKey.ClientIsMaster) == "1")
@@ -34,22 +34,22 @@ namespace HMS_Client
                 clientIsMaster = false;
 
             // Update Frequencies
-            uiUpdateFrequency = config.Read(ConfigKey.ClientUpdateFrequencyUI, Constants.ClientUpdateFrequencyUIDefault);
-            dataTimeout = config.Read(ConfigKey.DataTimeout, Constants.DataTimeoutDefault);
-            chartDataUpdateFrequency20m = config.Read(ConfigKey.ChartDataUpdateFrequency20m, Constants.ChartUpdateFrequencyUI20mDefault);
-            chartDataUpdateFrequency3h = config.Read(ConfigKey.ChartDataUpdateFrequency3h, Constants.ChartUpdateFrequencyUI3hDefault);
+            uiUpdateFrequency = config.ReadWithDefault(ConfigKey.ClientUpdateFrequencyUI, Constants.ClientUpdateFrequencyUIDefault);
+            dataTimeout = config.ReadWithDefault(ConfigKey.DataTimeout, Constants.DataTimeoutDefault);
+            chartDataUpdateFrequency20m = config.ReadWithDefault(ConfigKey.ChartDataUpdateFrequency20m, Constants.ChartUpdateFrequencyUI20mDefault);
+            chartDataUpdateFrequency3h = config.ReadWithDefault(ConfigKey.ChartDataUpdateFrequency3h, Constants.ChartUpdateFrequencyUI3hDefault);
 
             // Server Address
             serverAddress = config.Read(ConfigKey.ServerAddress);
 
             // Server Port
-            serverPort = config.Read(ConfigKey.ServerPort, Constants.ServerPortDefault);
+            serverPort = config.ReadWithDefault(ConfigKey.ServerPort, Constants.ServerPortDefault);
 
             // Server: Data Request Frequency
-            dataRequestFrequency = config.Read(ConfigKey.DataRequestFrequency, Constants.DataRequestFrequencyDefault);
+            dataRequestFrequency = config.ReadWithDefault(ConfigKey.DataRequestFrequency, Constants.DataRequestFrequencyDefault);
 
             // Server: Sensor Status Request Frequency
-            sensorStatusRequestFrequency = config.Read(ConfigKey.SensorStatusRequestFrequency, Constants.SensorStatusRequestFrequencyDefault);
+            sensorStatusRequestFrequency = config.ReadWithDefault(ConfigKey.SensorStatusRequestFrequency, Constants.SensorStatusRequestFrequencyDefault);
         }
 
         public void ApplicationRestartRequired(bool showMessage = true)

@@ -218,6 +218,19 @@ public class WindAverageData
     public double windDir = 0;
     public double windSpeed = 0;
     public double windGust = 0;
+
+    public void Reset()
+    {
+        windDataList.Clear();
+
+        windDataDirTotal = 0;
+        windDataSpdTotal = 0;
+        windDataSpdMax = 0;
+
+        windDir = 0;
+        windSpeed = 0;
+        windGust = 0;
+    }
 }
 
 public class Wind

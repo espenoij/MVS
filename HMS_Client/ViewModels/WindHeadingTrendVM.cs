@@ -31,14 +31,25 @@ namespace HMS_Client
             InitUI();
 
             // Oppdatere UI
-            UIUpdateTimer.Interval = TimeSpan.FromMilliseconds(config.Read(ConfigKey.ClientUpdateFrequencyUI, Constants.ClientUpdateFrequencyUIDefault));
+            UIUpdateTimer.Interval = TimeSpan.FromMilliseconds(config.ReadWithDefault(ConfigKey.ClientUpdateFrequencyUI, Constants.ClientUpdateFrequencyUIDefault));
             UIUpdateTimer.Tick += UIUpdate;
 
             void UIUpdate(object sender, EventArgs e)
             {
                 // Sjekke om vi har data timeout
-                sensorStatus.TimeoutCheck(vesselHeadingDelta);
-                sensorStatus.TimeoutCheck(windDirectionDelta);
+                if (sensorStatus.TimeoutCheck(vesselHeadingDelta))
+                {
+                    OnPropertyChanged(nameof(vesselHeadingDeltaString));
+                    OnPropertyChanged(nameof(vesselHeadingAxisMax));
+                    OnPropertyChanged(nameof(vesselHeadingAxisMin));
+                }
+                
+                if (sensorStatus.TimeoutCheck(windDirectionDelta))
+                {
+                    OnPropertyChanged(nameof(deltaWindDirectionString));
+                    OnPropertyChanged(nameof(windDirectionAxisMax));
+                    OnPropertyChanged(nameof(windDirectionAxisMin));
+                }
 
                 // Oppdatere data som skal ut i grafer
                 GraphBuffer.Update(vesselHeadingDelta, vesselHdg20mBuffer);
@@ -46,7 +57,7 @@ namespace HMS_Client
             }
 
             // Oppdatere trend data i UI: 20 minutter
-            ChartDataUpdateTimer.Interval = TimeSpan.FromMilliseconds(config.Read(ConfigKey.ChartDataUpdateFrequency20m, Constants.ChartUpdateFrequencyUI20mDefault));
+            ChartDataUpdateTimer.Interval = TimeSpan.FromMilliseconds(config.ReadWithDefault(ConfigKey.ChartDataUpdateFrequency20m, Constants.ChartUpdateFrequencyUI20mDefault));
             ChartDataUpdateTimer.Tick += ChartDataUpdate;
 
             void ChartDataUpdate(object sender, EventArgs e)
@@ -143,15 +154,15 @@ namespace HMS_Client
         {
             get
             {
-                if (_vesselHeadingDelta != null)
+                if (vesselHeadingDelta != null)
                 {
                     // Sjekke om data er gyldig
-                    if (_vesselHeadingDelta.status == DataStatus.OK)
+                    if (vesselHeadingDelta.status == DataStatus.OK)
                     {
-                        if (_vesselHeadingDelta.data >= 0)
-                            return string.Format("{0}° R", _vesselHeadingDelta.data.ToString("0"));
+                        if (vesselHeadingDelta.data >= 0)
+                            return string.Format("{0}° R", vesselHeadingDelta.data.ToString("0"));
                         else
-                            return string.Format("{0}° L", Math.Abs(_vesselHeadingDelta.data).ToString("0"));
+                            return string.Format("{0}° L", Math.Abs(vesselHeadingDelta.data).ToString("0"));
                     }
                     else
                     {
@@ -332,7 +343,10 @@ namespace HMS_Client
         {
             get
             {
-                return userInputsVM.onDeckTime;
+                if (userInputsVM.onDeckTime.AddSeconds(Constants.Minutes30) > DateTime.UtcNow)
+                    return userInputsVM.onDeckTime;
+                else
+                    return DateTime.UtcNow.AddSeconds(-Constants.Minutes30);
             }
         }
 
@@ -340,29 +354,12 @@ namespace HMS_Client
         {
             get
             {
-                return userInputsVM.onDeckTime.AddSeconds(Constants.Minutes30);
+                if (userInputsVM.onDeckTime.AddSeconds(Constants.Minutes30) > DateTime.UtcNow)
+                    return userInputsVM.onDeckTime.AddSeconds(Constants.Minutes30);
+                else
+                    return DateTime.UtcNow;
             }
         }
-
-        /////////////////////////////////////////////////////////////////////////////
-        // Helideck Trend Time
-        /////////////////////////////////////////////////////////////////////////////
-        //public string helideckTrendTimeString
-        //{
-        //    get
-        //    {
-        //        if (vesselHdg20mDataList.Count > 0)
-        //        {
-        //            return string.Format("30-minute Trend ({0} - {1} UTC)",
-        //                vesselHdg20mDataList[0].timestamp.ToShortTimeString(),
-        //                vesselHdg20mDataList[0].timestamp.AddSeconds(Constants.Minutes30).ToShortTimeString());
-        //        }
-        //        else
-        //        {
-        //            return "30-minute Trend (--:-- - --:-- UTC)";
-        //        }
-        //    }
-        //}
 
         // Variabel oppdatert
         // Dersom navn ikke er satt brukes kallende medlem sitt navn

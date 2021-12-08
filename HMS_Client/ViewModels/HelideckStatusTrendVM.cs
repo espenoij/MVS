@@ -79,7 +79,7 @@ namespace HMS_Client
             }
 
             // Oppdatere trend data i UI: 20 minutter
-            ChartDataUpdateTimer20m.Interval = TimeSpan.FromMilliseconds(config.Read(ConfigKey.ChartDataUpdateFrequency20m, Constants.ChartUpdateFrequencyUI20mDefault));
+            ChartDataUpdateTimer20m.Interval = TimeSpan.FromMilliseconds(config.ReadWithDefault(ConfigKey.ChartDataUpdateFrequency20m, Constants.ChartUpdateFrequencyUI20mDefault));
             ChartDataUpdateTimer20m.Tick += ChartDataUpdate20m;
             ChartDataUpdateTimer20m.Start();
 
@@ -101,7 +101,7 @@ namespace HMS_Client
             }
 
             // Oppdatere trend data i UI: 3 hours
-            ChartDataUpdateTimer3h.Interval = TimeSpan.FromMilliseconds(config.Read(ConfigKey.ChartDataUpdateFrequency3h, Constants.ChartUpdateFrequencyUI3hDefault));
+            ChartDataUpdateTimer3h.Interval = TimeSpan.FromMilliseconds(config.ReadWithDefault(ConfigKey.ChartDataUpdateFrequency3h, Constants.ChartUpdateFrequencyUI3hDefault));
             ChartDataUpdateTimer3h.Tick += ChartDataUpdate3h;
             ChartDataUpdateTimer3h.Start();
 

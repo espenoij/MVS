@@ -48,7 +48,7 @@ namespace HMS_Client
         }
 
         // Lese double verdi fra appSettings med default verdi input
-        public double Read(string key, double defaultValue, ConfigType type = ConfigType.App)
+        public double ReadWithDefault(string key, double defaultValue, ConfigType type = ConfigType.App)
         {
             string readString = string.Empty;
 
@@ -76,7 +76,7 @@ namespace HMS_Client
         }
 
         // Lese int verdi fra appSettings med default verdi input
-        public int Read(string key, int defaultValue, ConfigType type = ConfigType.App)
+        public int ReadWithDefault(string key, int defaultValue, ConfigType type = ConfigType.App)
         {
             string readString = string.Empty;
 
@@ -103,6 +103,30 @@ namespace HMS_Client
                 return defaultValue;
         }
 
+        // Lese int verdi fra appSettings med default verdi input
+        public string ReadWithDefault(string key, string defaultValue, ConfigType type = ConfigType.App)
+        {
+            string readString = string.Empty;
+
+            Configuration config;
+            if (type == ConfigType.App)
+                config = appConfig;
+            else
+                config = dataConfig;
+
+            try
+            {
+                var settings = config.AppSettings.Settings;
+                readString = settings[key]?.Value;
+            }
+            catch (Exception ex)
+            {
+                DialogHandler.Warning("Config (Read 4): Error reading from config file", ex.Message);
+            }
+
+            return readString;
+        }
+
         // Lese fra en bestemt seksjon
         public string Read(string key, string section, ConfigType type = ConfigType.App)
         {
@@ -127,7 +151,7 @@ namespace HMS_Client
             }
             catch (Exception ex)
             {
-                RadWindow.Alert(string.Format("Config (Read 2)\n\nError reading from config file:\n\n{0}", TextHelper.Wrap(ex.Message)));
+                RadWindow.Alert(string.Format("Config (Read 5)\n\nError reading from config file:\n\n{0}", TextHelper.Wrap(ex.Message)));
             }
 
             return result;

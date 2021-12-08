@@ -147,6 +147,10 @@ namespace HMS_Server
                                 {
                                     helideckStatus = HelideckStatusType.RED;
                                 }
+                                else
+                                {
+                                    helideckStatus = GetMSIWSIState();
+                                }
                                 break;
 
                             // Red -> Blue/amber

@@ -47,17 +47,17 @@ namespace HMS_Client
 
             // Log Info
             flightNumber = config.Read(ConfigKey.FlightNumber, ConfigType.Data);
-            returnLoad = config.Read(ConfigKey.ReturnLoad, 0, ConfigType.Data);
-            totalLoad = config.Read(ConfigKey.TotalLoad, 0, ConfigType.Data);
-            luggage = config.Read(ConfigKey.Luggage, 0, ConfigType.Data);
-            cargo = config.Read(ConfigKey.Cargo, 0, ConfigType.Data);
+            returnLoad = config.ReadWithDefault(ConfigKey.ReturnLoad, 0, ConfigType.Data);
+            totalLoad = config.ReadWithDefault(ConfigKey.TotalLoad, 0, ConfigType.Data);
+            luggage = config.ReadWithDefault(ConfigKey.Luggage, 0, ConfigType.Data);
+            cargo = config.ReadWithDefault(ConfigKey.Cargo, 0, ConfigType.Data);
 
             if (config.Read(ConfigKey.HelifuelAvailable, ConfigType.Data) == "1")
                 helifuelAvailable = true;
             else
                 helifuelAvailable = false;
 
-            fuelQuantity = config.Read(ConfigKey.FuelQuantity, 0, ConfigType.Data);
+            fuelQuantity = config.ReadWithDefault(ConfigKey.FuelQuantity, 0, ConfigType.Data);
 
             // Resue and recovery available
             if (config.Read(ConfigKey.RescueRecoveryAvailable, ConfigType.Data) == "1")
@@ -136,7 +136,7 @@ namespace HMS_Client
             }
 
             // Sjekke sensor/data status
-            DataStatusTimer.Interval = TimeSpan.FromMilliseconds(config.Read(ConfigKey.ClientUpdateFrequencyUI, Constants.ClientUpdateFrequencyUIDefault));
+            DataStatusTimer.Interval = TimeSpan.FromMilliseconds(config.ReadWithDefault(ConfigKey.ClientUpdateFrequencyUI, Constants.ClientUpdateFrequencyUIDefault));
             DataStatusTimer.Tick += DataStatusCheck;
             DataStatusTimer.Start();
 

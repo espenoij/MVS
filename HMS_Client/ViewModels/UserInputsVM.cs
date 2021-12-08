@@ -22,6 +22,7 @@ namespace HMS_Client
         private HelideckRelativeWindLimitsVM relativeWindDirectionLimitsVM;
         private HelideckStabilityLimitsVM helideckStabilityLimitsVM;
         private WindHeadingTrendVM helideckWindHeadingTrendVM;
+        private HelideckRelativeWindLimitsVM helideckRelativeWindLimitsVM;
         private WindHeadingVM windHeadingVM;
 
         private MainWindow.ResetWindDisplayCallback resetWindDisplayCallback;
@@ -38,6 +39,7 @@ namespace HMS_Client
             HelideckRelativeWindLimitsVM relativeWindDirectionLimitsVM,
             HelideckStabilityLimitsVM helideckStabilityLimitsVM,
             WindHeadingTrendVM helideckWindHeadingTrendVM,
+            HelideckRelativeWindLimitsVM helideckRelativeWindLimitsVM,
             WindHeadingVM windHeadingVM,
             MainWindow.ResetWindDisplayCallback resetWindDisplayCallback,
             ServerCom serverCom)
@@ -49,6 +51,7 @@ namespace HMS_Client
             this.relativeWindDirectionLimitsVM = relativeWindDirectionLimitsVM;
             this.helideckStabilityLimitsVM = helideckStabilityLimitsVM;
             this.helideckWindHeadingTrendVM = helideckWindHeadingTrendVM;
+            this.helideckRelativeWindLimitsVM = helideckRelativeWindLimitsVM;
             this.windHeadingVM = windHeadingVM;
             this.resetWindDisplayCallback = resetWindDisplayCallback;
             this.serverCom = serverCom;
@@ -89,7 +92,7 @@ namespace HMS_Client
                     else
                     {
                         // Sjekke om vi har data timeout, dvs server utilgjengelig, kan være restartet, må sende user inputs på nytt
-                        if (serverCom.lastDataReceivedTime.AddMilliseconds(config.Read(ConfigKey.DataTimeout, Constants.DataTimeoutDefault)) < DateTime.UtcNow)
+                        if (serverCom.lastDataReceivedTime.AddMilliseconds(config.ReadWithDefault(ConfigKey.DataTimeout, Constants.DataTimeoutDefault)) < DateTime.UtcNow)
                             isUserInputsSet = false;
                     }
                 }
@@ -292,6 +295,7 @@ namespace HMS_Client
 
                         // Start oppdatering av grafer
                         helideckWindHeadingTrendVM.Start();
+                        helideckRelativeWindLimitsVM.Start();
 
                         // Sette Wind & Heading til å vise 2-min mean vind
                         resetWindDisplayCallback();
@@ -300,6 +304,7 @@ namespace HMS_Client
                     {
                         // Stopp oppdatering av grafer
                         helideckWindHeadingTrendVM.Stop();
+                        helideckRelativeWindLimitsVM.Stop();
                     }
 
                     OnPropertyChanged(nameof(displayModeVisibilityPreLanding));

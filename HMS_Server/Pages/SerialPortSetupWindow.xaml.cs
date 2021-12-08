@@ -319,6 +319,12 @@ namespace HMS_Server
                 process.fixedPosData = false;
             }
 
+            // Enable/Disable fixed position input
+            lblFixedPositionDataStart.IsEnabled = process.fixedPosData;
+            tbFixedPositionDataStart.IsEnabled = process.fixedPosData;
+            lblFixedPositionDataTotal.IsEnabled = process.fixedPosData;
+            tbFixedPositionDataTotal.IsEnabled = process.fixedPosData;
+
             tbFixedPositionDataStart.Text = sensorData.serialPort.fixedPosStart.ToString();
             tbFixedPositionDataTotal.Text = sensorData.serialPort.fixedPosTotal.ToString();
             process.fixedPosStart = sensorData.serialPort.fixedPosStart;
@@ -1119,6 +1125,12 @@ namespace HMS_Server
 
             // Lagre ny setting
             sensorData.serialPort.fixedPosData = process.fixedPosData;
+
+            // Enable position input
+            lblFixedPositionDataStart.IsEnabled = process.fixedPosData;
+            tbFixedPositionDataStart.IsEnabled = process.fixedPosData;
+            lblFixedPositionDataTotal.IsEnabled = process.fixedPosData;
+            tbFixedPositionDataTotal.IsEnabled = process.fixedPosData;
         }
 
         private void cboFixedPositionData_Unchecked(object sender, RoutedEventArgs e)
@@ -1127,6 +1139,12 @@ namespace HMS_Server
 
             // Lagre ny setting
             sensorData.serialPort.fixedPosData = process.fixedPosData;
+
+            // Disable position input
+            lblFixedPositionDataStart.IsEnabled = process.fixedPosData;
+            tbFixedPositionDataStart.IsEnabled = process.fixedPosData;
+            lblFixedPositionDataTotal.IsEnabled = process.fixedPosData;
+            tbFixedPositionDataTotal.IsEnabled = process.fixedPosData;
         }
 
         private void tbFixedPositionDataStart_LostFocus(object sender, RoutedEventArgs e)

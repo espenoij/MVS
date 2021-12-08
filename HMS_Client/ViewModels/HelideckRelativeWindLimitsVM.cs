@@ -22,15 +22,14 @@ namespace HMS_Client
             InitUI();
 
             // Oppdatere UI
-            UIUpdateTimer.Interval = TimeSpan.FromMilliseconds(config.Read(ConfigKey.ClientUpdateFrequencyUI, Constants.ClientUpdateFrequencyUIDefault));
+            UIUpdateTimer.Interval = TimeSpan.FromMilliseconds(config.ReadWithDefault(ConfigKey.ClientUpdateFrequencyUI, Constants.ClientUpdateFrequencyUIDefault));
             UIUpdateTimer.Tick += UIUpdate;
-            UIUpdateTimer.Start();
 
             void UIUpdate(object sender, EventArgs e)
             {
                 // Sjekke om vi har data timeout
                 sensorStatus.TimeoutCheck(windSpd);
-                sensorStatus.TimeoutCheck(relativeWindDir);
+                if (sensorStatus.TimeoutCheck(relativeWindDir)) OnPropertyChanged(nameof(relativeWindDirString));
 
                 // Oppdatere data som skal ut i grafer
                 if (rwdGraphData.status == DataStatus.OK)
@@ -38,7 +37,7 @@ namespace HMS_Client
             }
 
             // Oppdatere trend data i UI: 20 minutter
-            ChartDataUpdateTimer20m.Interval = TimeSpan.FromMilliseconds(config.Read(ConfigKey.ChartDataUpdateFrequency20m, Constants.ChartUpdateFrequencyUI20mDefault));
+            ChartDataUpdateTimer20m.Interval = TimeSpan.FromMilliseconds(config.ReadWithDefault(ConfigKey.ChartDataUpdateFrequency20m, Constants.ChartUpdateFrequencyUI20mDefault));
             ChartDataUpdateTimer20m.Tick += ChartDataUpdate20m;
             ChartDataUpdateTimer20m.Start();
 
@@ -57,6 +56,22 @@ namespace HMS_Client
             _windSpd = new HMSData();
             _relativeWindDir = new HMSData();
             _rwdGraphData = new HMSData();
+        }
+
+        public void Start()
+        {
+            UIUpdateTimer.Start();
+            ChartDataUpdateTimer20m.Start();
+        }
+
+        public void Stop()
+        {
+            UIUpdateTimer.Stop();
+            ChartDataUpdateTimer20m.Stop();
+
+            // Slette Graph buffer/data
+            GraphBuffer.Clear(relativeWindDir20mBuffer);
+            GraphBuffer.Clear(relativeWindDir20mDataList);
         }
 
         public void UpdateData(HMSDataCollection clientSensorList)
@@ -141,12 +156,9 @@ namespace HMS_Client
             {
                 if (value != null)
                 {
-                    if (_relativeWindDir.data != value.data)
-                    {
-                        OnPropertyChanged(nameof(relativeWindDirString));
-                    }
-
                     _relativeWindDir.Set(value);
+
+                    OnPropertyChanged(nameof(relativeWindDirString));
                 }
             }
         }
@@ -155,10 +167,10 @@ namespace HMS_Client
         {
             get
             {
-                if (_relativeWindDir != null)
+                if (relativeWindDir != null)
                 {
                     // Sjekke om data er gyldig
-                    if (_relativeWindDir.status == DataStatus.OK)
+                    if (relativeWindDir.status == DataStatus.OK)
                     {
                         if (relativeWindDir.data >= 0)
                             return string.Format("{0}° R", relativeWindDir.data.ToString("0"));

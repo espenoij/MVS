@@ -75,7 +75,7 @@ namespace HMS_Client
             sensorStatus = new SensorGroupStatus(config, hmsDataCollection);
 
             // Regulation Standard
-            regulationStandard = (RegulationStandard)Enum.Parse(typeof(RegulationStandard), config.Read(ConfigKey.RegulationStandard));
+            regulationStandard = (RegulationStandard)Enum.Parse(typeof(RegulationStandard), config.ReadWithDefault(ConfigKey.RegulationStandard, RegulationStandard.NOROG.ToString()));
 
             // Callback funksjon som kalles når application restart er påkrevd
             RestartRequiredCallback restartRequired = new RestartRequiredCallback(ShowRestartRequiredMessage);
@@ -97,6 +97,7 @@ namespace HMS_Client
                 helideckRelativeWindLimitsVM,
                 helideckStabilityLimitsVM,
                 helideckWindHeadingTrendVM,
+                helideckRelativeWindLimitsVM,
                 windHeadingVM,
                 resetWindDisplayCallback,
                 serverCom);

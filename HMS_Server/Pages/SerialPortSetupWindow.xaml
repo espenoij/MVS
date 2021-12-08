@@ -457,6 +457,7 @@
                                     ShowColumnHeaders="True"
                                     IsFilteringAllowed="False"
                                     RowHeight="25"
+                                    Margin="8"
                                     CanUserReorderColumns="False"
                                     CanUserDeleteRows="False"
                                     RowIndicatorVisibility="Collapsed"
@@ -789,6 +790,7 @@
 
                                 <DockPanel>
                                     <Label
+                                        Name="lblFixedPositionDataStart"
                                         Width="120"
                                         Content="Start"
                                         VerticalAlignment="Center" />
@@ -800,6 +802,7 @@
 
                                 <DockPanel>
                                     <Label
+                                        Name="lblFixedPositionDataTotal"
                                         Width="120"
                                         Content="Total"
                                         VerticalAlignment="Center" />

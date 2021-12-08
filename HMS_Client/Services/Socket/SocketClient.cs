@@ -59,7 +59,7 @@ namespace HMS_Client
             try
             {
                 serverAddress = config.Read(ConfigKey.ServerAddress);
-                serverPort = config.Read(ConfigKey.ServerPort, Constants.ServerPortDefault);
+                serverPort = config.ReadWithDefault(ConfigKey.ServerPort, Constants.ServerPortDefault);
             }
             catch (Exception) { } // Ingenting
 

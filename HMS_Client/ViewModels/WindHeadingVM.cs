@@ -39,7 +39,7 @@ namespace HMS_Client
             _vesselSpeed = new HMSData();
 
             // Oppdatere UI
-            UIUpdateTimer.Interval = TimeSpan.FromMilliseconds(config.Read(ConfigKey.ClientUpdateFrequencyUI, Constants.ClientUpdateFrequencyUIDefault));
+            UIUpdateTimer.Interval = TimeSpan.FromMilliseconds(config.ReadWithDefault(ConfigKey.ClientUpdateFrequencyUI, Constants.ClientUpdateFrequencyUIDefault));
             UIUpdateTimer.Tick += UIUpdate;
             UIUpdateTimer.Start();
 
@@ -827,7 +827,7 @@ namespace HMS_Client
         {
             get
             {
-                if (helideckHeading != null)
+                if (helideckHeading.status == DataStatus.OK)
                 {
                     return string.Format("{0}°", helideckHeading.data.ToString("000"));
                 }

@@ -30,7 +30,7 @@ namespace HMS_Client
             GenerateGridColumnDefinitions(statusTrendGrid3h);
 
             // Oppdatere UI
-            TrendUpdateTimer20m.Interval = TimeSpan.FromMilliseconds(config.Read(ConfigKey.ChartDataUpdateFrequency20m, Constants.ChartUpdateFrequencyUI20mDefault));
+            TrendUpdateTimer20m.Interval = TimeSpan.FromMilliseconds(config.ReadWithDefault(ConfigKey.ChartDataUpdateFrequency20m, Constants.ChartUpdateFrequencyUI20mDefault));
             TrendUpdateTimer20m.Tick += TrendUpdate20m;
             TrendUpdateTimer20m.Start();
 
@@ -40,7 +40,7 @@ namespace HMS_Client
             }
 
             // Oppdatere UI
-            TrendUpdateTimer3h.Interval = TimeSpan.FromMilliseconds(config.Read(ConfigKey.ChartDataUpdateFrequency3h, Constants.ChartUpdateFrequencyUI3hDefault));
+            TrendUpdateTimer3h.Interval = TimeSpan.FromMilliseconds(config.ReadWithDefault(ConfigKey.ChartDataUpdateFrequency3h, Constants.ChartUpdateFrequencyUI3hDefault));
             TrendUpdateTimer3h.Tick += TrendUpdate3h;
             TrendUpdateTimer3h.Start();
 

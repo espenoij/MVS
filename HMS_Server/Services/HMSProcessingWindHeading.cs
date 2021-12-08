@@ -1,4 +1,5 @@
 ﻿using System;
+using System.Linq;
 using System.Collections.Generic;
 
 namespace HMS_Server
@@ -36,11 +37,6 @@ namespace HMS_Server
 
         // WSI
         private HMSData wsiData = new HMSData();
-
-        // Liste for å finne gjennomsnitt WSI
-        private List<TimeData> wsi_list = new List<TimeData>();
-        // Total sum WSI
-        private HMSData wsiTotal20m = new HMSData();
 
         private AdminSettingsVM adminSettingsVM;
         private UserInputs userInputs;
@@ -328,92 +324,18 @@ namespace HMS_Server
             // WSI
             /////////////////////////////////////////////////////////////////////////////////////////
             ///
-            HMSData wsit = new HMSData();
-         
             if (helideckWindSpeed10m.status == DataStatus.OK)
             {
-                double vesselComp = 0;
-
-                // Vind korreksjon for høyde over havet
-                double windCorrected;
-                if (adminSettingsVM.windSensorHeight != 0)
-                    // (CAP formel)
-                    windCorrected = helideckWindSpeed10m.data * Math.Pow((adminSettingsVM.helideckHeight + 10) / adminSettingsVM.windSensorHeight, 0.13);
-                else
-                    windCorrected = helideckWindSpeed10m.data;
-
-                // Legge til fartøys-komponenten igjen etter høyde-korreksjon
-                windCorrected += vesselComp;
-
-                // Lagre data
-                wsit.status = helideckWindSpeed10m.status;
-                wsit.timestamp = helideckWindSpeed10m.timestamp;
-                wsit.data = Math.Round(windCorrected, 1);
+                wsiData.status = helideckWindSpeed10m.status;
+                wsiData.timestamp = helideckWindSpeed10m.timestamp;
+                wsiData.data = Math.Round(helideckWindSpeed10m.data / adminSettingsVM.GetWSILimit(userInputs.helicopterType) * 100);
             }
             else
             {
-                wsit.status = DataStatus.TIMEOUT_ERROR;
-                wsit.timestamp = DateTime.UtcNow;
-                wsit.data = 0;
+                wsiData.status = DataStatus.TIMEOUT_ERROR;
+                wsiData.timestamp = DateTime.UtcNow;
+                wsiData.data = 0;
             }
-
-            // Finne gjennomsnittsverdier
-            CalculateWSIMean(wsit, wsi_list, wsiTotal20m, wsiData, Constants.Minutes20);
-        }
-
-        private void CalculateWSIMean(HMSData value, List<TimeData> dataList, HMSData totalSum, HMSData meanValue, double time)
-        {
-            if (value.status == DataStatus.OK &&
-                !double.IsNaN(value.data))
-            {
-                // Legge inn den nye verdien i data settet
-                dataList.Add(new TimeData() { data = value.data, timestamp = value.timestamp });
-
-                // Legge til i total summen
-                totalSum.data += value.data;
-            }
-
-            // Sjekke om vi skal ta ut gamle verdier
-            bool doneRemovingOldValues = false;
-
-            while (!doneRemovingOldValues && dataList.Count > 0)
-            {
-                if (dataList[0] != null)
-                {
-                    // Time stamp eldre enn satt grense?
-                    if (dataList[0].timestamp.AddSeconds(time) < DateTime.UtcNow)
-                    {
-                        // Trekke fra i total summen
-                        totalSum.data -= dataList[0].data;
-
-                        // Fjerne gammel verdi fra verdiliste
-                        dataList.RemoveAt(0);
-                    }
-                    else
-                    {
-                        // Vi har kommet til nyere tidsverdier som ikke skal fjernes
-                        // Kan da avslutte søk etter gamle verdier
-                        doneRemovingOldValues = true;
-                    }
-                }
-                else
-                {
-                    // Fjerne null forekomst
-                    // Denne er plassert her fordi jeg fikk et tilfelle der hele listen dataList[i] var lik null.
-                    dataList.RemoveAt(0);
-                }
-            }
-
-            // Beregne gjennomsnitt av de verdiene som ligger i datasettet
-            double mean = totalSum.data / dataList.Count;
-
-            // Korrigere for WSI max basert på helikopter type
-            double wsiDisp = (mean / adminSettingsVM.GetWSILimit(userInputs.helicopterType)) * 100;
-
-            // Lagre data
-            meanValue.data = Math.Round(wsiDisp, 0);
-            meanValue.timestamp = value.timestamp;
-            meanValue.status = value.status;
         }
 
         // Resette dataCalculations
@@ -425,14 +347,13 @@ namespace HMS_Server
 
             if (adminSettingsVM.dataVerificationEnabled)
             {
-                areaWindAverageData2m.windDataList.Clear();
-                areaWindAverageData10m.windDataList.Clear();
-                helideckWindAverageData2m.windDataList.Clear();
-                helideckWindAverageData10m.windDataList.Clear();
+                areaWindAverageData2m.Reset();
+                areaWindAverageData10m.Reset();
+                helideckWindAverageData2m.Reset();
+                helideckWindAverageData10m.Reset();
 
                 // WSI
                 wsiData.data = 0;
-                wsi_list.Clear();
             }
         }
 

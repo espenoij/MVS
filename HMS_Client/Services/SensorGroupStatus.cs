@@ -16,12 +16,12 @@ namespace HMS_Client
             this.clientSensorDataCollection = clientSensorDataCollection;
 
             // Lese data timeout fra config
-            dataTimeout = config.Read(ConfigKey.DataTimeout, Constants.DataTimeoutDefault);
+            dataTimeout = config.ReadWithDefault(ConfigKey.DataTimeout, Constants.DataTimeoutDefault);
 
             // Update Sensor Status
             DispatcherTimer timer = new DispatcherTimer();
 
-            timer.Interval = TimeSpan.FromMilliseconds(config.Read(ConfigKey.ClientUpdateFrequencyUI, Constants.ClientUpdateFrequencyUIDefault));
+            timer.Interval = TimeSpan.FromMilliseconds(config.ReadWithDefault(ConfigKey.ClientUpdateFrequencyUI, Constants.ClientUpdateFrequencyUIDefault));
             timer.Tick += DoSensorStatusUpdate;
             timer.Start();
 
