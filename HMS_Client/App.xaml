@@ -51,7 +51,7 @@
             <SolidColorBrush
                 x:Key="ColorVerticalBarBackground">#ff000000</SolidColorBrush>
             <SolidColorBrush
-                x:Key="ColorBackgroundSeparator">#FFf6f6f6</SolidColorBrush>
+                x:Key="ColorBackgroundSeparator">#FFf0f0f0</SolidColorBrush>
             
             <!--Header høyde-->
             <sys:Double

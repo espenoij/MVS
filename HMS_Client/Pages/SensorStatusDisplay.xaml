@@ -47,16 +47,24 @@
             <Style.Triggers>
 
                 <DataTrigger
-                    Binding="{Binding statusString}"
-                    Value="OK">
+                    Binding="{Binding statusBackgroundColor}"
+                    Value="BACKGROUND_SEPARATOR">
+                    <Setter
+                        Property="Background"
+                        Value="{StaticResource ColorBackgroundSeparator}" />
+                </DataTrigger>
+
+                <DataTrigger
+                    Binding="{Binding statusBackgroundColor}"
+                    Value="BLANK">
                     <Setter
                         Property="Background"
                         Value="Transparent" />
                 </DataTrigger>
 
                 <DataTrigger
-                    Binding="{Binding statusString}"
-                    Value="TIMEOUT_ERROR">
+                    Binding="{Binding statusBackgroundColor}"
+                    Value="AMBER">
                     <Setter
                         Property="Background"
                         Value="{StaticResource ColorAmber}" />
@@ -74,12 +82,14 @@
             Margin="8">
 
             <ItemsControl
-                x:Name="lbSensorStatus">
+                x:Name="lbSensorStatus"
+                Margin="8">
 
                 <ItemsControl.ItemTemplate>
+                    
                     <DataTemplate>
 
-                        <StackPanel
+                        <StackPanel                            
                             Orientation="Horizontal"
                             VerticalAlignment="Center"
                             Visibility="{Binding Path=sensorStatusVisibility}"
@@ -96,7 +106,6 @@
 
                             </Viewbox>
 
-
                             <Viewbox
                                 StretchDirection="Both"
                                 Stretch="Uniform"
@@ -110,6 +119,7 @@
                         </StackPanel>
 
                     </DataTemplate>
+                    
                 </ItemsControl.ItemTemplate>
 
                 <ItemsControl.ItemsPanel>

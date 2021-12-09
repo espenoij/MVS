@@ -27,17 +27,6 @@ namespace HMS_Client
             this.userInputsVM = userInputsVM;
             this.adminSettingsVM = adminSettingsVM;
 
-            _windDirectionRT = new HMSData();
-            _windDirection2m = new HMSData();
-            _windDirection10m = new HMSData();
-            _windSpeedRT = new HMSData();
-            _windSpeed2m = new HMSData();
-            _windSpeed10m = new HMSData();
-            _windGust2m = new HMSData();
-            _windGust10m = new HMSData();
-            _vesselHeading = new HMSData();
-            _vesselSpeed = new HMSData();
-
             // Oppdatere UI
             UIUpdateTimer.Interval = TimeSpan.FromMilliseconds(config.ReadWithDefault(ConfigKey.ClientUpdateFrequencyUI, Constants.ClientUpdateFrequencyUIDefault));
             UIUpdateTimer.Tick += UIUpdate;
@@ -130,7 +119,7 @@ namespace HMS_Client
         /////////////////////////////////////////////////////////////////////////////
         // Wind Direction
         /////////////////////////////////////////////////////////////////////////////
-        private HMSData _windDirectionRT { get; set; }
+        private HMSData _windDirectionRT { get; set; } = new HMSData();
         public HMSData windDirectionRT
         {
             get
@@ -157,7 +146,7 @@ namespace HMS_Client
             }
         }
 
-        private HMSData _windDirection2m { get; set; }
+        private HMSData _windDirection2m { get; set; } = new HMSData();
         public HMSData windDirection2m
         {
             get
@@ -184,7 +173,7 @@ namespace HMS_Client
             }
         }
 
-        private HMSData _windDirection10m { get; set; }
+        private HMSData _windDirection10m { get; set; } = new HMSData();
         public HMSData windDirection10m
         {
             get
@@ -329,7 +318,7 @@ namespace HMS_Client
         /////////////////////////////////////////////////////////////////////////////
         // Wind Speed
         /////////////////////////////////////////////////////////////////////////////
-        private HMSData _windSpeedRT { get; set; }
+        private HMSData _windSpeedRT { get; set; } = new HMSData();
         public HMSData windSpeedRT
         {
             get
@@ -352,7 +341,7 @@ namespace HMS_Client
             }
         }
 
-        private HMSData _windSpeed2m { get; set; }
+        private HMSData _windSpeed2m { get; set; } = new HMSData();
         public HMSData windSpeed2m
         {
             get
@@ -375,7 +364,7 @@ namespace HMS_Client
             }
         }
 
-        private HMSData _windSpeed10m { get; set; }
+        private HMSData _windSpeed10m { get; set; } = new HMSData();
         public HMSData windSpeed10m
         {
             get
@@ -453,7 +442,7 @@ namespace HMS_Client
         /////////////////////////////////////////////////////////////////////////////
         // Wind Gust
         /////////////////////////////////////////////////////////////////////////////
-        private HMSData _windGust2m { get; set; }
+        private HMSData _windGust2m { get; set; } = new HMSData();
         public HMSData windGust2m
         {
             get
@@ -476,7 +465,7 @@ namespace HMS_Client
             }
         }
 
-        private HMSData _windGust10m { get; set; }
+        private HMSData _windGust10m { get; set; } = new HMSData();
         public HMSData windGust10m
         {
             get
@@ -543,7 +532,7 @@ namespace HMS_Client
         /////////////////////////////////////////////////////////////////////////////
         // Vessel Heading
         /////////////////////////////////////////////////////////////////////////////
-        private HMSData _vesselHeading { get; set; }
+        private HMSData _vesselHeading { get; set; } = new HMSData();
         public HMSData vesselHeading
         {
             get
@@ -552,8 +541,7 @@ namespace HMS_Client
             }
             set
             {
-                if (value != null &&
-                    _vesselHeading != null)
+                if (value != null)
                 {
                     if (value.data != _vesselHeading.data ||
                         value.timestamp != _vesselHeading.timestamp)
@@ -618,7 +606,7 @@ namespace HMS_Client
         /////////////////////////////////////////////////////////////////////////////
         // Vessel Speed
         /////////////////////////////////////////////////////////////////////////////
-        private HMSData _vesselSpeed { get; set; }
+        private HMSData _vesselSpeed { get; set; } = new HMSData();
         public HMSData vesselSpeed
         {
             get
@@ -811,8 +799,8 @@ namespace HMS_Client
             {
                 if (value != null)
                 {
-                    if (value.data != _windDirectionRT.data ||
-                        value.timestamp != _windDirectionRT.timestamp)
+                    if (value.data != _helideckHeading.data ||
+                        value.timestamp != _helideckHeading.timestamp)
                     {
                         _helideckHeading = value;
 

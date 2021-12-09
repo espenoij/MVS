@@ -242,11 +242,11 @@ namespace HMS_Server
             helideckWindGust10m.timestamp = helideckWindSpeedRT.timestamp;
 
             // Vessel Heading & Speed
-            vesselHeading.Set(hmsInputDataList.GetData(ValueType.VesselHeading));
-            vesselHeading.DoProcessing(hmsInputDataList.GetData(ValueType.VesselHeading));
+            vesselHeading.Set(hmsInputDataList.GetData(ValueType.VesselHeading)); // Set for å overføre grunnleggende data
+            vesselHeading.DoProcessing(hmsInputDataList.GetData(ValueType.VesselHeading)); // DoProcessing for å avrunde til heltall
 
-            vesselSpeed.Set(hmsInputDataList.GetData(ValueType.VesselSpeed));
-            vesselSpeed.DoProcessing(hmsInputDataList.GetData(ValueType.VesselSpeed));
+            vesselSpeed.Set(hmsInputDataList.GetData(ValueType.VesselSpeed)); // Set for å overføre grunnleggende data
+            vesselSpeed.DoProcessing(hmsInputDataList.GetData(ValueType.VesselSpeed)); // DoProcessing for å avrunde til en desimal
 
             double heading = hmsInputDataList.GetData(ValueType.VesselHeading).data + adminSettingsVM.helideckHeadingOffset;
             if (heading >= 360)

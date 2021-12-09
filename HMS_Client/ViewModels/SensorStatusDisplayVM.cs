@@ -23,7 +23,20 @@ namespace HMS_Client
         private void InitUI(Config config)
         {
             for (int i = 0; i < Constants.MaxSensors; i++)
+            {
                 sensorStatusDisplayList.Add(new SensorStatusDisplay());
+
+                int t = i % 10;
+                if (t == 0 ||
+                    t == 1 ||
+                    t == 4 ||
+                    t == 5 ||
+                    t == 8 ||
+                    t == 9)
+                    sensorStatusDisplayList[i].even = true;
+                else
+                    sensorStatusDisplayList[i].even = false;
+            }
 
             DispatcherTimer statusUpdate = new DispatcherTimer();
             statusUpdate.Interval = TimeSpan.FromMilliseconds(config.ReadWithDefault(ConfigKey.ClientUpdateFrequencyUI, Constants.ClientUpdateFrequencyUIDefault));
@@ -113,6 +126,7 @@ namespace HMS_Client
                     _status = value;
                     OnPropertyChanged();
                     OnPropertyChanged(nameof(statusString));
+                    OnPropertyChanged(nameof(statusBackgroundColor));
                 }
             }
             public string statusString
@@ -123,6 +137,42 @@ namespace HMS_Client
                 }
             }
 
+            private bool _even { get; set; }
+            public bool even
+            {
+                get
+                {
+                    return _even;
+                }
+                set
+                {
+                    _even = value;
+                    OnPropertyChanged();
+                    OnPropertyChanged(nameof(statusBackgroundColor));
+                }
+            }
+
+            public StatusBackground statusBackgroundColor
+            {
+                get
+                {
+                    switch (status)
+                    {
+                        case DataStatus.OK:
+                            if (even)
+                                return StatusBackground.BACKGROUND_SEPARATOR;
+                            else
+                                return StatusBackground.BLANK;
+
+                        case DataStatus.TIMEOUT_ERROR:
+                            return StatusBackground.AMBER;
+
+                        default:
+                            return StatusBackground.AMBER;
+                    }
+                }
+            }
+
             // Variabel oppdatert
             // Dersom navn ikke er satt brukes kallende medlem sitt navn
             protected void OnPropertyChanged([CallerMemberName] string name = null)
@@ -130,5 +180,12 @@ namespace HMS_Client
                 PropertyChanged?.Invoke(this, new PropertyChangedEventArgs(name));
             }
         }
+    }
+
+    public enum StatusBackground
+    {
+        BLANK,
+        BACKGROUND_SEPARATOR,
+        AMBER
     }
 }

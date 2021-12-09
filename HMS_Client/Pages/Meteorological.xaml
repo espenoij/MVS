@@ -16,7 +16,8 @@
             Header="METEOROLOGICAL"
             Margin="8">
 
-            <Grid>
+            <Grid
+                Margin="8">
 
                 <Grid.ColumnDefinitions>
                     <ColumnDefinition
