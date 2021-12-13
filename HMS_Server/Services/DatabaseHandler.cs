@@ -13,6 +13,11 @@ namespace HMS_Server
         private string connectionString;
 
         // Database tabeller/kolonner
+        // NB! Dersom HMS database tabellen endres er tanken at vi bare oppdaterer
+        // tabell navnet med nytt versjonsnummer slik at den gamle tabellen blir liggende
+        // selv om ny versjon av programmvaren med endre tabell installeres. Slik bevares
+        // lagrede data (myndighetskrav). Disse kan slettes manuellt når de er gått ut på data (6mnd).
+        private const string tableNamePrefixHMSData = "hms_data_v1";
         private const string tableNamePrefixSensorData = "sensor_data";
         private const string columnTimestamp = "timestamp";
         private const string columnData = "data";
@@ -22,6 +27,29 @@ namespace HMS_Server
         private const string columnId = "sensor_data_id";
         private const string columnType = "type";
         private const string columnMessage = "message";
+
+        // Verification Data
+        private const string veriDataTableName = "veri_data";
+        private const string veriDataColumnTimeID = "time_id";
+        private const string veriDataColumnRollR = "roll_r";
+        private const string veriDataColumnRollL = "roll_l";
+        private const string veriDataColumnPitchU = "pitch_u";
+        private const string veriDataColumnPitchD = "pitch_d";
+        private const string veriDataColumnInclinationMax = "incl_max";
+        private const string veriDataColumnSHR = "shr";
+        private const string veriDataColumnMSI = "msi";
+        private const string veriDataColumnWSI = "wsi";
+        private const string veriDataColumnHelideckStatus = "hll_status";
+        private const string veriDataColumnVesselDir = "vessel_dir";
+        private const string veriDataColumnWindSpd2m = "wind_spd_2m";
+        private const string veriDataColumnWindDir2m = "wind_dir_2m";
+        private const string veriDataColumnWindGust2m = "wind_gust_2m";
+        private const string veriDataColumnWindSpd10m = "wind_spd_10m";
+        private const string veriDataColumnWindDir10m = "wind_dir_10m";
+        private const string veriDataColumnWindGust10m = "wind_gust_10m";
+        private const string veriDataColumnSensorMRU = "sensor_mru";
+        private const string veriDataColumnSensorGyro = "sensor_gyro";
+        private const string veriDataColumnSensorWind = "sensor_wind";
 
         // Får vi opprettet OK forbindelse?
         private bool isDatabaseConnectionOK;
@@ -68,7 +96,7 @@ namespace HMS_Server
 
                     connection.Open();
 
-                    // Opprette tabeller for sensor dasta
+                    // Opprette tabeller for sensor data
                     //////////////////////////////////////////////////////////
                     lock (sensorDataList)
                     {
@@ -86,6 +114,32 @@ namespace HMS_Server
                     // Opprette error messages tabell
                     //////////////////////////////////////////////////////////
                     cmd.CommandText = string.Format(@"CREATE TABLE IF NOT EXISTS {0}(id INTEGER PRIMARY KEY AUTO_INCREMENT, {1} TIMESTAMP(3), {2} INTEGER, {3} TEXT, {4} TEXT)", tableNameErrorMessages, columnTimestamp, columnId, columnType, columnMessage);
+                    cmd.ExecuteNonQuery();
+
+                    // Opprette verificatio data tabell
+                    //////////////////////////////////////////////////////////
+                    cmd.CommandText = string.Format(@"CREATE TABLE IF NOT EXISTS {0}(id INTEGER PRIMARY KEY AUTO_INCREMENT, {1} TEXT, {2} TEXT, {3} TEXT, {4} TEXT, {5} TEXT, {6} TEXT, {7} TEXT, {8} TEXT, {9} TEXT, {10} TEXT, {11} TEXT, {12} TEXT, {13} TEXT, {14} TEXT, {15} TEXT, {16} TEXT, {17} TEXT, {18} TEXT, {19} TEXT, {20} TEXT)", 
+                        veriDataTableName,
+                        veriDataColumnTimeID,
+                        veriDataColumnRollR,
+                        veriDataColumnRollL,
+                        veriDataColumnPitchU,
+                        veriDataColumnPitchD,
+                        veriDataColumnInclinationMax,
+                        veriDataColumnSHR,
+                        veriDataColumnMSI,
+                        veriDataColumnWSI,
+                        veriDataColumnHelideckStatus,
+                        veriDataColumnVesselDir,
+                        veriDataColumnWindSpd2m,
+                        veriDataColumnWindDir2m,
+                        veriDataColumnWindGust2m,
+                        veriDataColumnWindSpd10m,
+                        veriDataColumnWindDir10m,
+                        veriDataColumnWindGust10m,
+                        veriDataColumnSensorMRU,
+                        veriDataColumnSensorGyro,
+                        veriDataColumnSensorWind);
                     cmd.ExecuteNonQuery();
 
                     connection.Close();
@@ -120,10 +174,10 @@ namespace HMS_Server
                         // For hver HMS data verdi som skal lagres oppretter vi en ny database tabell, dersom den ikke allerede eksisterer
                         foreach (var hmsData in hmsInputDataList)
                         {
-                            if (!string.IsNullOrEmpty(hmsData.dbTableName))
+                            if (!string.IsNullOrEmpty(hmsData.dbColumnName))
                             {
                                 // Opprette nytt database table
-                                cmd.CommandText = string.Format(@"CREATE TABLE IF NOT EXISTS {0}(id INTEGER PRIMARY KEY AUTO_INCREMENT, {1} TIMESTAMP(3), {2} DOUBLE)", hmsData.dbTableName, columnTimestamp, columnData);
+                                cmd.CommandText = string.Format(@"CREATE TABLE IF NOT EXISTS {0}(id INTEGER PRIMARY KEY AUTO_INCREMENT, {1} TIMESTAMP(3), {2} DOUBLE)", hmsData.dbColumnName, columnTimestamp, columnData);
                                 cmd.ExecuteNonQuery();
                             }
                             else
@@ -139,6 +193,47 @@ namespace HMS_Server
                 }
             }
             catch (Exception)
+            {
+                isDatabaseConnectionOK = false;
+
+                // Sendes videre oppover fordi vi ikke kan lagre feilmeldinger herfra
+                throw;
+            }
+        }
+
+        public void CreateTables(DataCollection hmsDataCollection)
+        {
+            try
+            {
+                using (var connection = new MySqlConnection(connectionString))
+                {
+                    var cmd = new MySqlCommand();
+                    cmd.Connection = connection;
+
+                    connection.Open();
+
+                    // Liste med database column navn
+                    string columnNames = "";
+                    foreach (var hmsData in hmsDataCollection.GetDataList())
+                    {
+                        // Kun variabler som har column navn satt skal legges inn
+                        if (!string.IsNullOrEmpty(hmsData.dbColumnName))
+                            columnNames += ", " + hmsData.dbColumnName + " TEXT";
+                    }
+
+                    // Opprette nytt database table
+                    cmd.CommandText = string.Format(@"CREATE TABLE IF NOT EXISTS {0}(id INTEGER PRIMARY KEY AUTO_INCREMENT, {1} TIMESTAMP(3){2})",
+                        tableNamePrefixHMSData, 
+                        columnTimestamp,
+                        columnNames);
+                    cmd.ExecuteNonQuery();
+
+                    connection.Close();
+
+                    isDatabaseConnectionOK = true;
+                }
+            }
+            catch (Exception ex)
             {
                 isDatabaseConnectionOK = false;
 
@@ -270,38 +365,183 @@ namespace HMS_Server
             }
         }
 
-        public void Insert(HMSData hmsData)
+        //public void Insert(HMSData hmsData)
+        //{
+        //    try
+        //    {
+        //        if (isDatabaseConnectionOK)
+        //        {
+        //            if (hmsData.timestamp != DateTime.MinValue &&
+        //                !double.IsNaN(hmsData.data) &&
+        //                !string.IsNullOrEmpty(hmsData.dbColumnName))
+        //            {
+        //                using (var connection = new MySqlConnection(connectionString))
+        //                {
+        //                    // SQL kommando
+        //                    var cmd = new MySqlCommand();
+        //                    cmd.Connection = connection;
+
+        //                    // Insert kommando
+        //                    cmd.CommandText = string.Format("INSERT INTO {0}({1}, {2}) VALUES(@1, @2)", hmsData.dbColumnName, columnTimestamp, columnData);
+
+        //                    // Insert parametre
+        //                    cmd.Parameters.AddWithValue("@1", hmsData.timestamp);
+        //                    cmd.Parameters.AddWithValue("@2", hmsData.data);
+
+        //                    // Åpne database connection
+        //                    connection.Open();
+
+        //                    // Insert execute
+        //                    cmd.ExecuteNonQuery();
+
+        //                    // Lukke database connection
+        //                    connection.Close();
+        //                }
+        //            }
+        //        }
+        //    }
+        //    catch (Exception)
+        //    {
+        //        throw;
+        //    }
+        //}
+
+        public void Insert(DataCollection hmsDataCollection)
         {
             try
             {
                 if (isDatabaseConnectionOK)
                 {
-                    if (hmsData.timestamp != DateTime.MinValue &&
-                        !double.IsNaN(hmsData.data) &&
-                        !string.IsNullOrEmpty(hmsData.dbTableName))
+                    using (var connection = new MySqlConnection(connectionString))
                     {
-                        using (var connection = new MySqlConnection(connectionString))
+                        // SQL kommando
+                        var cmd = new MySqlCommand();
+                        cmd.Connection = connection;
+
+                        // Liste med database column navn
+                        string columnNames = "";
+                        bool first = true;
+                        foreach (var hmsData in hmsDataCollection.GetDataList())
                         {
-                            // SQL kommando
-                            var cmd = new MySqlCommand();
-                            cmd.Connection = connection;
+                            // Kun variabler som har column navn satt skal legges inn
+                            if (!string.IsNullOrEmpty(hmsData.dbColumnName))
+                            {
+                                if (first)
+                                    columnNames += hmsData.dbColumnName;
+                                else
+                                    columnNames += ", " + hmsData.dbColumnName;
 
-                            // Insert kommando
-                            cmd.CommandText = string.Format("INSERT INTO {0}({1}, {2}) VALUES(@1, @2)", hmsData.dbTableName, columnTimestamp, columnData);
-
-                            // Insert parametre
-                            cmd.Parameters.AddWithValue("@1", hmsData.timestamp);
-                            cmd.Parameters.AddWithValue("@2", hmsData.data);
-
-                            // Åpne database connection
-                            connection.Open();
-
-                            // Insert execute
-                            cmd.ExecuteNonQuery();
-
-                            // Lukke database connection
-                            connection.Close();
+                                first = false;
+                            }
                         }
+
+                        // Value parametre
+                        string valueNumbers = "";
+                        first = true;
+                        int i = 1;
+                        foreach (var hmsData in hmsDataCollection.GetDataList())
+                        {
+                            // Kun variabler som har column navn satt skal legges inn
+                            if (!string.IsNullOrEmpty(hmsData.dbColumnName))
+                            {
+                                if (first)
+                                    valueNumbers += string.Format("@{0}", i++);
+                                else
+                                    valueNumbers += ", " + string.Format("@{0}", i++);
+
+                                first = false;
+                            }
+                        }
+
+                        // Insert kommando
+                        cmd.CommandText = string.Format("INSERT INTO {0}({1}) VALUES({2})",
+                            tableNamePrefixHMSData,
+                            columnNames,
+                            valueNumbers);
+
+                        // Insert value parametre
+                        i = 1;
+                        foreach (var hmsData in hmsDataCollection.GetDataList())
+                        {
+                            // Kun variabler som har column navn satt skal legges inn
+                            if (!string.IsNullOrEmpty(hmsData.dbColumnName))
+                            {
+                                string paramName = string.Format("@{0}", i++);
+
+                                cmd.Parameters.AddWithValue(paramName, hmsData.data.ToString());
+                            }
+                        }
+
+                        // Åpne database connection
+                        connection.Open();
+
+                        // Insert execute
+                        cmd.ExecuteNonQuery();
+
+                        // Lukke database connection
+                        connection.Close();
+                    }
+                }
+            }
+            catch (Exception ex)
+            {
+                throw;
+            }
+        }
+
+        public void Insert(RadObservableCollectionEx<VerificationData> verificationData)
+        {
+            try
+            {
+                if (isDatabaseConnectionOK)
+                {
+                    using (var connection = new MySqlConnection(connectionString))
+                    {
+                        // SQL kommando
+                        var cmd = new MySqlCommand();
+                        cmd.Connection = connection;
+
+                        // Insert kommando
+                        cmd.CommandText = string.Format("INSERT INTO {0}({1}, {2}, {3}, {4}, {5}, {6}, {7}, {8}, {9}, {10}, {11}, {12}, {13}, {14}, {15}, {16}, {17}, {18}, {19}, {20}) VALUES(@1, @2, @3, @4, @5, @6, @7, @8, @9, @10, @11, @12, @13, @14, @15, @16, @17, @18, @19, @20)",
+                            veriDataTableName, 
+                            veriDataColumnTimeID,
+                            veriDataColumnRollR,
+                            veriDataColumnRollL,
+                            veriDataColumnPitchU,
+                            veriDataColumnPitchD,
+                            veriDataColumnInclinationMax,
+                            veriDataColumnSHR,
+                            veriDataColumnMSI,
+                            veriDataColumnWSI,
+                            veriDataColumnHelideckStatus,
+                            veriDataColumnVesselDir,
+                            veriDataColumnWindSpd2m,
+                            veriDataColumnWindDir2m,
+                            veriDataColumnWindGust2m,
+                            veriDataColumnWindSpd10m,
+                            veriDataColumnWindDir10m,
+                            veriDataColumnWindGust10m,
+                            veriDataColumnSensorMRU,
+                            veriDataColumnSensorGyro,
+                            veriDataColumnSensorWind);
+
+                        // Insert parametre
+                        int i = 1;
+                        foreach (var item in verificationData)
+                        {
+                            string paramName = string.Format("@{0}", i++);
+
+                            cmd.Parameters.AddWithValue(paramName, item.testData);
+                        }
+
+                        // Åpne database connection
+                        connection.Open();
+
+                        // Insert execute
+                        cmd.ExecuteNonQuery();
+
+                        // Lukke database connection
+                        connection.Close();
                     }
                 }
             }
@@ -362,7 +602,7 @@ namespace HMS_Server
             }
         }
 
-        public void DatabaseMaintenance(RadObservableCollectionEx<HMSData> hmsDataList)
+        public void DatabaseMaintenance(DataCollection hmsDataCollection)
         {
             // Slette data eldre enn angitt antall dager
             try
@@ -378,22 +618,15 @@ namespace HMS_Server
 
                         // HMS Data
                         ////////////////////////////////
-                        lock (hmsDataList)
+                        lock (hmsDataCollection.GetDataList())
                         {
-                            // Slå opp tabellene for hver HMS verdi og slette data
-                            foreach (var hmsData in hmsDataList)
-                            {
-                                if (!string.IsNullOrEmpty(hmsData.dbTableName))
-                                {
-                                    // Slette alle data i database tabell
-                                    cmd.CommandText = string.Format(@"DELETE FROM {0} WHERE {1} < TIMESTAMP(UTC_TIMESTAMP() - INTERVAL {2} DAY)",
-                                        hmsData.dbTableName,
-                                        columnTimestamp,
-                                        config.Read(ConfigKey.DataStorageTime, Constants.DatabaseStorageTimeDefault));
+                            // Slette alle gamle data i database tabell
+                            cmd.CommandText = string.Format(@"DELETE FROM {0} WHERE {1} < TIMESTAMP(UTC_TIMESTAMP() - INTERVAL {2} DAY)",
+                                tableNamePrefixHMSData,
+                                columnTimestamp,
+                                config.Read(ConfigKey.DataStorageTime, Constants.DatabaseStorageTimeDefault));
 
-                                    cmd.ExecuteNonQuery();
-                                }
-                            }
+                            cmd.ExecuteNonQuery();
                         }
 
                         connection.Close();

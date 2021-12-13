@@ -42,7 +42,7 @@ namespace HMS_Server
                         item.sensorId = "0";
                     clientSensorData.sensorGroupId = int.Parse(item.sensorId, Constants.cultureInfo);
 
-                    clientSensorData.dbTableName = item.dbTableName;
+                    clientSensorData.dbColumnName = item.dbTableName;
 
                     // Legge inn i data listen
                     dataList.Add(clientSensorData);

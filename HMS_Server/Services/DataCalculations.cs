@@ -550,7 +550,7 @@ namespace HMS_Server
                                 // Regne 2 x RMS
 
                                 // Square
-                                // -> significantHeaveRateSquare
+                                // -> significantHeaveRateSquareSum
 
                                 // Mean
                                 double mean = significantHeaveRateSquareSum / (double)significantHeaveRateDataList.Count();

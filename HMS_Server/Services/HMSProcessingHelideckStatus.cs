@@ -38,7 +38,7 @@ namespace HMS_Server
             helideckStatusData.id = (int)ValueType.HelideckStatus;
             helideckStatusData.name = "Helideck Status";
             helideckStatusData.sensorGroupId = Constants.NO_SENSOR_GROUP_ID;
-            helideckStatusData.dbTableName = "helideck_status";
+            helideckStatusData.dbColumnName = "helideck_status";
         }
 
         public void Update()
@@ -245,6 +245,11 @@ namespace HMS_Server
                 default:
                     return false;
             }
+        }
+
+        public void ResetDataCalculations()
+        {
+
         }
     }
 }

@@ -17,10 +17,14 @@ namespace HMS_Server
         {
             try
             {
-                foreach (var hmsData in hmsDataCollection.GetDataList())
-                {
-                    database.Insert(hmsData);
-                }
+                //foreach (var hmsData in hmsDataCollection.GetDataList())
+                //{
+                //    database.Insert(hmsData);
+                //}
+
+                database.Insert(hmsDataCollection);
+
+                errorHandler.ResetDatabaseError(ErrorHandler.DatabaseErrorType.Insert3);
             }
             catch (Exception ex)
             {
@@ -31,7 +35,7 @@ namespace HMS_Server
                         ErrorMessageCategory.None,
                         string.Format("Database Error (InsertData HMS)\n\nSystem Message:\n{0}", ex.Message)));
 
-                errorHandler.SetDatabaseError(ErrorHandler.DatabaseErrorType.CreateTables);
+                errorHandler.SetDatabaseError(ErrorHandler.DatabaseErrorType.Insert3);
             }
         }
 
@@ -40,9 +44,10 @@ namespace HMS_Server
             try
             {
                 // Oppretter tabellene dersom de ikke eksisterer
-                database.CreateTables(hmsDataCollection.GetDataList());
+                //database.CreateTables(hmsDataCollection.GetDataList());
+                database.CreateTables(hmsDataCollection);
 
-                errorHandler.ResetDatabaseError(ErrorHandler.DatabaseErrorType.CreateTables);
+                errorHandler.ResetDatabaseError(ErrorHandler.DatabaseErrorType.CreateTablesHMSData);
             }
             catch (Exception ex)
             {
@@ -53,7 +58,7 @@ namespace HMS_Server
                         ErrorMessageCategory.None,
                         string.Format("Database Error (CreateTables HMS)\n\nSystem Message:\n{0}", ex.Message)));
 
-                errorHandler.SetDatabaseError(ErrorHandler.DatabaseErrorType.CreateTables);
+                errorHandler.SetDatabaseError(ErrorHandler.DatabaseErrorType.CreateTablesHMSData);
             }
         }
     }

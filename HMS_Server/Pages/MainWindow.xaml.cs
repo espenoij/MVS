@@ -1,4 +1,5 @@
 ﻿using System;
+using System.Collections.Generic;
 using System.Linq;
 using System.Threading;
 using System.Windows;
@@ -54,6 +55,7 @@ namespace HMS_Server
         private DataCollection testData;
         private DataCollection referenceData;
         private RadObservableCollectionEx<VerificationData> verificationData;
+        private List<double> refTimeIDList = new List<double>();
 
         // Sensor Status
         private HMSSensorGroupStatus sensorStatus;
@@ -62,6 +64,7 @@ namespace HMS_Server
         private HMSProcessing hmsProcessing;
         private DataCollection hmsOutputData;
         private HMSDatabase hmsDatabase;
+        private DispatcherTimer hmsTimer = new DispatcherTimer();
 
         // View Models
         private AdminSettingsVM adminSettingsVM = new AdminSettingsVM();
@@ -136,7 +139,7 @@ namespace HMS_Server
             InitVerificationUpdate();
 
             // Init HMS Database operations
-            InitHMSDatabaseOps();
+            //InitHMSDatabaseOps();
 
             // Opprette database tabeller
             // CreateTables gjør selv sjekk på om tabell finnes fra før eller må opprettes
@@ -144,7 +147,7 @@ namespace HMS_Server
             {
                 database.CreateTables(sensorDataRetrieval.GetSensorDataList());
 
-                errorHandler.ResetDatabaseError(ErrorHandler.DatabaseErrorType.CreateTables);
+                errorHandler.ResetDatabaseError(ErrorHandler.DatabaseErrorType.CreateTablesSensorData2);
             }
             catch (Exception ex)
             {
@@ -155,7 +158,7 @@ namespace HMS_Server
                          ErrorMessageCategory.None,
                          string.Format("Database Error (CreateTables 1)\n\nSystem Message:\n{0}", ex.Message)));
 
-                errorHandler.SetDatabaseError(ErrorHandler.DatabaseErrorType.CreateTables);
+                errorHandler.SetDatabaseError(ErrorHandler.DatabaseErrorType.CreateTablesSensorData2);
             }
 
             // Database Maintenance Init
@@ -181,6 +184,8 @@ namespace HMS_Server
                     {
                         tbDatabaseStatus.Visibility = Visibility.Collapsed;
                     }
+
+                    errorHandler.ResetDatabaseError(ErrorHandler.DatabaseErrorType.StatusCheck);
                 }
                 catch (Exception ex)
                 {
@@ -191,7 +196,7 @@ namespace HMS_Server
                              ErrorMessageCategory.Admin,
                              string.Format("Database Status Check Error (checkDatabaseStatus)\n\nSystem Message:\n{0}", ex.Message)));
 
-                    errorHandler.SetDatabaseError(ErrorHandler.DatabaseErrorType.CreateTables);
+                    errorHandler.SetDatabaseError(ErrorHandler.DatabaseErrorType.StatusCheck);
                 }
             }
 
@@ -282,6 +287,10 @@ namespace HMS_Server
 
             // Verification data
             verificationData = new RadObservableCollectionEx<VerificationData>();
+
+            // Referanse time ID list
+            for (int i = 52200; i <= 57600; i += 60)
+                refTimeIDList.Add(i);
 
             // Setup
             ucDataVerificationSetup.Init(
@@ -498,11 +507,11 @@ namespace HMS_Server
 
         private void InitHMSUpdate()
         {
+            bool databaseTablesCreated = false;
+
             // Dispatcher som oppdatere HMS prosessering
-            DispatcherTimer hmsTimer = new DispatcherTimer();
             hmsTimer.Interval = TimeSpan.FromMilliseconds(Constants.ServerUpdateFrequencyHMS);
             hmsTimer.Tick += runHMSUpdate;
-            hmsTimer.Start();
 
             void runHMSUpdate(object sender, EventArgs e)
             {
@@ -513,101 +522,22 @@ namespace HMS_Server
 
                     void UpdateHMS_Thread()
                     {
+                        // HMS Update
+                        /////////////////////////////////////////////////////////////////////////////////////////////////////
+
                         // HMS: HMS Input Data
                         hmsInputData.TransferData(sensorDataRetrieval.GetSensorDataList());
 
                         // HMS: HMS Output Data
                         // Prosesserer sensor data om til data som kan sendes til HMS klient
                         hmsProcessing.Update(hmsInputData);
-                    }
-                }
-                catch (Exception ex)
-                {
-                    errorHandler.Insert(
-                        new ErrorMessage(
-                            DateTime.UtcNow,
-                            ErrorMessageType.Database,
-                            ErrorMessageCategory.Admin,
-                            string.Format("UI Update Error (runHMSUpdate)\n\nSystem Message:\n{0}", ex.Message)));
 
-                    errorHandler.SetDatabaseError(ErrorHandler.DatabaseErrorType.DatabaseMaintenance);
-                }
-            }
-        }
 
-        private void InitVerificationUpdate()
-        {
-            // Dispatcher som oppdaterer verification data (test og referanse data)
-            DispatcherTimer verificationTimer = new DispatcherTimer();
-            verificationTimer.Interval = TimeSpan.FromMilliseconds(Constants.ServerUpdateFrequencyHMS);
-            verificationTimer.Tick += runVerificationUpdate;
-            verificationTimer.Start();
-
-            void runVerificationUpdate(object sender, EventArgs e)
-            {
-                try
-                {
-                    Thread thread = new Thread(() => UpdateHMS_Thread());
-                    thread.Start();
-
-                    void UpdateHMS_Thread()
-                    {
-                        // Test Data
-                        testData.TransferData(hmsOutputData.GetDataList());
-
-                        // Referanse Data
-                        referenceData.TransferData(sensorDataDisplayList);
-
-                        // Verification
-                        if (referenceData.CollectionChanged() && testData.CollectionChanged())
-                        {
-                            // Resette change variabelen
-                            testData.CollectionChangedReset();
-                            referenceData.CollectionChangedReset();
-
-                            // Overføre og regn ut forskjellene mellom test data og referanse data
-                            UpdateVerificationData();
-                        }
-                    }
-                }
-                catch (Exception ex)
-                {
-                    errorHandler.Insert(
-                        new ErrorMessage(
-                            DateTime.UtcNow,
-                            ErrorMessageType.Database,
-                            ErrorMessageCategory.Admin,
-                            string.Format("UI Update Error (runVerificationUpdate)\n\nSystem Message:\n{0}", ex.Message)));
-
-                    errorHandler.SetDatabaseError(ErrorHandler.DatabaseErrorType.DatabaseMaintenance);
-                }
-            }
-        }
-
-        private void InitHMSDatabaseOps()
-        {
-            bool databaseTablesCreated = false;
-
-            // Dispatcher som oppdatere HMS prosessering
-            DispatcherTimer hmsTimer = new DispatcherTimer();
-            hmsTimer.Interval = TimeSpan.FromMilliseconds(Constants.DBHMSSaveFrequency);
-            hmsTimer.Tick += runHMSDatabaseOps;
-            hmsTimer.Start();
-
-            void runHMSDatabaseOps(object sender, EventArgs e)
-            {
-                try
-                {
-                    Thread thread = new Thread(() => UpdateHMS_Thread());
-                    thread.Start();
-
-                    void UpdateHMS_Thread()
-                    {
                         // HMS: Lagre data i databasen
                         /////////////////////////////////////////////////////////////////////////////////////////////////////
 
                         // Utfører første en sjekk på om database tabellene er opprettet.
-                        // Grunnen til at dette gjøres her, så sent etter init, er at output listen fylles av 
+                        // Grunnen til at dette gjøres her, så sent etter init, er at output listen (med dbColumnNames) fylles av 
                         // inidividuelle sub-rutiner rundt omkring.
                         // Output listen er derfor ikke komplett før en update (hmsProcessing.Update ovenfor) er utført.
                         if (!databaseTablesCreated)
@@ -630,9 +560,41 @@ namespace HMS_Server
                             DateTime.UtcNow,
                             ErrorMessageType.Database,
                             ErrorMessageCategory.Admin,
-                            string.Format("Database Ops Error (runHMSDatabaseOps)\n\nSystem Message:\n{0}", ex.Message)));
+                            string.Format("UI Update Error (runHMSUpdate)\n\nSystem Message:\n{0}", ex.Message)));
 
                     errorHandler.SetDatabaseError(ErrorHandler.DatabaseErrorType.DatabaseMaintenance);
+                }
+            }
+        }
+
+        private void InitVerificationUpdate()
+        {
+            if (adminSettingsVM.dataVerificationEnabled)
+            {
+                // Dispatcher som oppdaterer verification data (test og referanse data)
+                DispatcherTimer verificationTimer = new DispatcherTimer();
+                verificationTimer.Interval = TimeSpan.FromMilliseconds(Constants.ServerUpdateFrequencyHMS);
+                verificationTimer.Tick += runVerificationUpdate;
+                verificationTimer.Start();
+
+                void runVerificationUpdate(object sender, EventArgs e)
+                {
+                    // Test Data
+                    testData.TransferData(hmsOutputData.GetDataList());
+
+                    // Referanse Data
+                    referenceData.TransferData(sensorDataDisplayList);
+
+                    // Verification
+                    if (referenceData.CollectionChanged() && testData.CollectionChanged())
+                    {
+                        // Overføre og regn ut forskjellene mellom test data og referanse data
+                        UpdateVerificationData();
+
+                        // Resette change variabelen
+                        testData.CollectionChangedReset();
+                        referenceData.CollectionChangedReset();
+                    }
                 }
             }
         }
@@ -671,7 +633,7 @@ namespace HMS_Server
                 // Oppretter tabellene dersom de ikke eksisterer
                 database.CreateTables(sensorDataRetrieval.GetSensorDataList());
 
-                errorHandler.ResetDatabaseError(ErrorHandler.DatabaseErrorType.CreateTables);
+                errorHandler.ResetDatabaseError(ErrorHandler.DatabaseErrorType.CreateTablesStartServer);
             }
             catch (Exception ex)
             {
@@ -682,7 +644,20 @@ namespace HMS_Server
                         ErrorMessageCategory.None,
                         string.Format("Database Error (CreateTables 2)\n\nSystem Message:\n{0}", ex.Message)));
 
-                errorHandler.SetDatabaseError(ErrorHandler.DatabaseErrorType.CreateTables);
+                errorHandler.SetDatabaseError(ErrorHandler.DatabaseErrorType.CreateTablesStartServer);
+            }
+
+            // Resette dataCalculations
+            if (adminSettingsVM.dataVerificationEnabled)
+            {
+                // Resetter data listene i dataCalculations kun ved data verifikasjons-testing
+                // Under normal kjøring kan "gamle" data i listene være fullt brukelig ettersom
+                // de uansett blir slettet automatisk når de faktisk er for gamle.
+                hmsProcessing.ResetDataCalculations();
+
+                // Resette sammenligningsdata
+                foreach (var item in verificationData)
+                    item.Reset();
             }
 
             // Starter data-innhenting 
@@ -697,7 +672,10 @@ namespace HMS_Server
             btnStop3.IsEnabled = true;
             btnSetup.IsEnabled = false;
 
-            // Database Maintenance            
+            // HMS prosessering updater
+            hmsTimer.Start();
+
+            // Database Maintenance
             DoDatabaseMaintenance(DatabaseMaintenanceType.SENSOR); // Kjør vedlikehold en gang ved oppstart
             maintenanceTimer.Start();   // Og så hver X timer
 
@@ -717,24 +695,14 @@ namespace HMS_Server
             btnStop3.IsEnabled = false;
             btnSetup.IsEnabled = true;
 
+            // HMS prosessering updater
+            hmsTimer.Stop();
+
             // Database Maintenance
             maintenanceTimer.Stop();
 
             // Socket Listener
             socketListener.Stop();
-
-            // Resette dataCalculations
-            if (adminSettingsVM.dataVerificationEnabled)
-            {
-                // Resetter data listene i dataCalculations kun ved data verifikasjons-testing
-                // Under normal kjøring kan "gamle" data i listene være fullt brukelig ettersom
-                // de uansett blir slettet automatisk når de faktisk er for gamle.
-                hmsProcessing.ResetDataCalculations();
-
-                // Resette sammenligningsdata
-                foreach (var item in verificationData)
-                    item.Reset();
-            }
         }
 
         private void ExitServer()
@@ -829,11 +797,11 @@ namespace HMS_Server
                             database.DatabaseMaintenance(statusDisplayList);
                             break;
                         case DatabaseMaintenanceType.HMS:
-                            database.DatabaseMaintenance(hmsOutputData.GetDataList());
+                            database.DatabaseMaintenance(hmsOutputData);
                             break;
                         case DatabaseMaintenanceType.ALL:
                             database.DatabaseMaintenance(statusDisplayList);
-                            database.DatabaseMaintenance(hmsOutputData.GetDataList());
+                            database.DatabaseMaintenance(hmsOutputData);
                             break;
                     }
 
@@ -984,6 +952,12 @@ namespace HMS_Server
                 else
                     item.differenceAbs = 0;
             }
+
+            // Legge test data inn i databasen
+            // Sjekke time ID mot listen med time ID'er vi er interessert i
+            // Matcher time ID settet i referanse data filen fra CAA (OUT_PRE tab i excel ark)
+            if (refTimeIDList.Exists(x => x == verificationData.First().testData)) 
+                database.Insert(verificationData);
         }
     }
 }

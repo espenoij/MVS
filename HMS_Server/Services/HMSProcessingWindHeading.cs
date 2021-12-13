@@ -81,57 +81,57 @@ namespace HMS_Server
 
             areaWindDirection2m.id = (int)ValueType.AreaWindDirection2m;
             areaWindDirection2m.name = "Area Wind Direction (2m)";
-            areaWindDirection2m.dbTableName = "area_wind_direction_2m";
+            areaWindDirection2m.dbColumnName = "area_wind_direction_2m";
 
             areaWindSpeed2m.id = (int)ValueType.AreaWindSpeed2m;
             areaWindSpeed2m.name = "Area Wind Speed (2m)";
             areaWindSpeed2m.sensorGroupId = Constants.NO_SENSOR_GROUP_ID;
-            areaWindSpeed2m.dbTableName = "area_wind_speed_2m";
+            areaWindSpeed2m.dbColumnName = "area_wind_speed_2m";
 
             areaWindGust2m.id = (int)ValueType.AreaWindGust2m;
             areaWindGust2m.name = "Area Wind Gust (2m)";
             areaWindGust2m.sensorGroupId = Constants.NO_SENSOR_GROUP_ID;
-            areaWindGust2m.dbTableName = "area_wind_gust_2m";
+            areaWindGust2m.dbColumnName = "area_wind_gust_2m";
 
             helideckWindDirectionRT.id = (int)ValueType.HelideckWindDirectionRT;
             helideckWindDirectionRT.name = "Helideck Wind Direction (RT)";
             helideckWindDirectionRT.sensorGroupId = Constants.NO_SENSOR_GROUP_ID;
-            helideckWindDirectionRT.dbTableName = "helideck_wind_direction_rt";
+            helideckWindDirectionRT.dbColumnName = "helideck_wind_direction_rt";
 
             helideckWindDirection2m.id = (int)ValueType.HelideckWindDirection2m;
             helideckWindDirection2m.name = "Helideck Wind Direction (2m)";
             helideckWindDirection2m.sensorGroupId = Constants.NO_SENSOR_GROUP_ID;
-            helideckWindDirection2m.dbTableName = "helideck_wind_direction_2m";
+            helideckWindDirection2m.dbColumnName = "helideck_wind_direction_2m";
 
             helideckWindDirection10m.id = (int)ValueType.HelideckWindDirection10m;
             helideckWindDirection10m.name = "Helideck Wind Direction (10m)";
             helideckWindDirection10m.sensorGroupId = Constants.NO_SENSOR_GROUP_ID;
-            helideckWindDirection10m.dbTableName = "helideck_wind_direction_10m";
+            helideckWindDirection10m.dbColumnName = "helideck_wind_direction_10m";
 
             helideckWindSpeedRT.id = (int)ValueType.HelideckWindSpeedRT;
             helideckWindSpeedRT.name = "Helideck Wind Speed (RT)";
             helideckWindSpeedRT.sensorGroupId = Constants.NO_SENSOR_GROUP_ID;
-            helideckWindSpeedRT.dbTableName = "helideck_wind_speed_rt";
+            helideckWindSpeedRT.dbColumnName = "helideck_wind_speed_rt";
 
             helideckWindSpeed2m.id = (int)ValueType.HelideckWindSpeed2m;
             helideckWindSpeed2m.name = "Helideck Wind Speed (2m)";
             helideckWindSpeed2m.sensorGroupId = Constants.NO_SENSOR_GROUP_ID;
-            helideckWindSpeed2m.dbTableName = "helideck_wind_speed_2m";
+            helideckWindSpeed2m.dbColumnName = "helideck_wind_speed_2m";
 
             helideckWindSpeed10m.id = (int)ValueType.HelideckWindSpeed10m;
             helideckWindSpeed10m.name = "Helideck Wind Speed (10m)";
             helideckWindSpeed10m.sensorGroupId = Constants.NO_SENSOR_GROUP_ID;
-            helideckWindSpeed10m.dbTableName = "helideck_wind_speed_10m";
+            helideckWindSpeed10m.dbColumnName = "helideck_wind_speed_10m";
 
             helideckWindGust2m.id = (int)ValueType.HelideckWindGust2m;
             helideckWindGust2m.name = "Helideck Wind Gust (2m)";
             helideckWindGust2m.sensorGroupId = Constants.NO_SENSOR_GROUP_ID;
-            helideckWindGust2m.dbTableName = "helideck_wind_gust_2m";
+            helideckWindGust2m.dbColumnName = "helideck_wind_gust_2m";
 
             helideckWindGust10m.id = (int)ValueType.HelideckWindGust10m;
             helideckWindGust10m.name = "Helideck Wind Gust (10m)";
             helideckWindGust10m.sensorGroupId = Constants.NO_SENSOR_GROUP_ID;
-            helideckWindGust10m.dbTableName = "helideck_wind_gust_10m";
+            helideckWindGust10m.dbColumnName = "helideck_wind_gust_10m";
 
             vesselHeading.InitProcessing(errorHandler, ErrorMessageCategory.AdminUser);
             vesselHeading.AddProcessing(CalculationType.RoundingDecimals, 0);
@@ -142,22 +142,22 @@ namespace HMS_Server
             relativeWindDir.id = (int)ValueType.RelativeWindDir;
             relativeWindDir.name = "Relative Wind Direction (CAP)";
             relativeWindDir.sensorGroupId = Constants.NO_SENSOR_GROUP_ID;
-            relativeWindDir.dbTableName = "relative_wind_direction";
+            relativeWindDir.dbColumnName = "relative_wind_direction";
 
             helideckHeading.id = (int)ValueType.HelideckHeading;
             helideckHeading.name = "Helideck Heading";
             helideckHeading.sensorGroupId = Constants.NO_SENSOR_GROUP_ID;
-            helideckHeading.dbTableName = "helideck_heading";
+            helideckHeading.dbColumnName = "helideck_heading";
 
             vesselHeadingDelta.id = (int)ValueType.VesselHeadingDelta;
             vesselHeadingDelta.name = "Vessel Heading (Delta) (CAP)";
             vesselHeadingDelta.sensorGroupId = Constants.NO_SENSOR_GROUP_ID;
-            vesselHeadingDelta.dbTableName = "vessel_heading_delta";
+            vesselHeadingDelta.dbColumnName = "vessel_heading_delta";
 
             windDirectionDelta.id = (int)ValueType.WindDirectionDelta;
             windDirectionDelta.name = "Wind Direction (Delta) (CAP)";
             windDirectionDelta.sensorGroupId = Constants.NO_SENSOR_GROUP_ID;
-            windDirectionDelta.dbTableName = "wind_direction_delta";
+            windDirectionDelta.dbColumnName = "wind_direction_delta";
 
             if (adminSettingsVM.regulationStandard == RegulationStandard.CAP)
             {
@@ -166,7 +166,7 @@ namespace HMS_Server
                 wsiData.id = (int)ValueType.WSI;
                 wsiData.name = "WSI";
                 wsiData.sensorGroupId = Constants.NO_SENSOR_GROUP_ID;
-                wsiData.dbTableName = "wsi";
+                wsiData.dbColumnName = "wsi";
             }
         }
 

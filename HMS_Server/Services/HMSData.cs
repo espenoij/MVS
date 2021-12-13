@@ -207,7 +207,7 @@ namespace HMS_Server
         }
 
         private string _dbTableName { get; set; }
-        public string dbTableName
+        public string dbColumnName
         {
             get
             {
@@ -234,7 +234,7 @@ namespace HMS_Server
                 status = inputData.status;
                 limitStatus = inputData.limitStatus;
                 sensorGroupId = inputData.sensorGroupId;
-                dbTableName = inputData.dbTableName;
+                dbColumnName = inputData.dbColumnName;
             }
         }
 
@@ -252,7 +252,7 @@ namespace HMS_Server
                 status = inputData.status;
                 limitStatus = inputData.limitStatus;
                 sensorGroupId = inputData.sensorGroupId;
-                dbTableName = inputData.dbTableName;
+                dbColumnName = inputData.dbColumnName;
             }
         }
 

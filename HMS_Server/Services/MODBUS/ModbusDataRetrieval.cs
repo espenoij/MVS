@@ -466,7 +466,7 @@ namespace HMS_Server
                                         {
                                             database.Insert(sensorData);
 
-                                            errorHandler.ResetDatabaseError(ErrorHandler.DatabaseErrorType.Insert);
+                                            errorHandler.ResetDatabaseError(ErrorHandler.DatabaseErrorType.Insert4);
                                         }
                                         catch (Exception ex)
                                         {
@@ -478,7 +478,7 @@ namespace HMS_Server
                                                     string.Format("Database Error (Insert 2)\n\nSystem Message:\n{0}", ex.Message),
                                                     sensorData.id));
 
-                                            errorHandler.SetDatabaseError(ErrorHandler.DatabaseErrorType.Insert);
+                                            errorHandler.SetDatabaseError(ErrorHandler.DatabaseErrorType.Insert4);
                                         }
                                     }
                                 }

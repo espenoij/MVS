@@ -532,7 +532,7 @@ namespace HMS_Server
                         // Oppretter tabellene dersom de ikke eksisterer
                         database.CreateTables(sensorDataList);
 
-                        errorHandler.ResetDatabaseError(ErrorHandler.DatabaseErrorType.CreateTables);
+                        errorHandler.ResetDatabaseError(ErrorHandler.DatabaseErrorType.CreateTablesSensorData1);
                     }
                     catch (Exception ex)
                     {
@@ -543,7 +543,7 @@ namespace HMS_Server
                                 ErrorMessageCategory.Admin,
                                 string.Format("Database Error (CreateTables 3)\n\nSystem Message:\n{0}", ex.Message)));
 
-                        errorHandler.SetDatabaseError(ErrorHandler.DatabaseErrorType.CreateTables);
+                        errorHandler.SetDatabaseError(ErrorHandler.DatabaseErrorType.CreateTablesSensorData1);
                     }
 
                     try
