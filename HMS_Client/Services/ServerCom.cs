@@ -20,7 +20,7 @@ namespace HMS_Client
         // TCP/IP Data Request Timer
         private DispatcherTimer dataRequestTimer = new DispatcherTimer();
         private DispatcherTimer sensorStatusRequestTimer = new DispatcherTimer();
-        private DispatcherTimer userInputsRequestTimer = new DispatcherTimer();
+        //private DispatcherTimer userInputsRequestTimer = new DispatcherTimer();
 
         // Liste med HMS data
         private RadObservableCollectionEx<HMSData> hmsDataList;
@@ -134,28 +134,28 @@ namespace HMS_Client
                 socketClient.Start();
             }
 
-            // User Inputs Retrieval Timer
-            /////////////////////////////////////////////////////////////
-            userInputsRequestTimer.Interval = TimeSpan.FromMilliseconds(Constants.UserInputsSetCheckFrequency);
-            userInputsRequestTimer.Tick += userInputsRequest;
+            //// User Inputs Retrieval Timer
+            ///////////////////////////////////////////////////////////////
+            //userInputsRequestTimer.Interval = TimeSpan.FromMilliseconds(Constants.UserInputsSetCheckFrequency);
+            //userInputsRequestTimer.Tick += userInputsRequest;
 
-            void userInputsRequest(object sender, EventArgs e)
-            {
-                // Callback funksjon som kalles når socketClient er ferdig med å hente data
-                SocketCallback socketCallback = new SocketCallback(ProcessSocketUserInputs);
+            //void userInputsRequest(object sender, EventArgs e)
+            //{
+            //    // Callback funksjon som kalles når socketClient er ferdig med å hente data
+            //    SocketCallback socketCallback = new SocketCallback(ProcessSocketUserInputs);
 
-                // Start en data fetch mot server
-                SocketClient socketClient = new SocketClient(socketConsole, socketCallback, sensorStatusDisplayVM);
+            //    // Start en data fetch mot server
+            //    SocketClient socketClient = new SocketClient(socketConsole, socketCallback, sensorStatusDisplayVM);
 
-                // Sette kommando og parametre
-                socketClient.SetParams(
-                    Constants.CommandGetUserInputs,
-                    null,
-                    null,
-                    userInputsReceived);
+            //    // Sette kommando og parametre
+            //    socketClient.SetParams(
+            //        Constants.CommandGetUserInputs,
+            //        null,
+            //        null,
+            //        userInputsReceived);
 
-                socketClient.Start();
-            }
+            //    socketClient.Start();
+            //}
         }
 
         public void SendUserInput(UserInputs userInputs, SocketCallback socketCallback)
@@ -296,44 +296,44 @@ namespace HMS_Client
             }
         }
 
-        public void ProcessSocketUserInputs()
-        {
-            // Prosessere data som kommer fra socketClient
-            if (socketSensorStatusList != null)
-            {
-                // Flytte data til UserInputsVM
-                userInputsVM.UserInputsReceived(userInputsReceived);
+        //public void ProcessSocketUserInputs()
+        //{
+        //    // Prosessere data som kommer fra socketClient
+        //    if (socketSensorStatusList != null)
+        //    {
+        //        // Flytte data til UserInputsVM
+        //        userInputsVM.UserInputsReceived(userInputsReceived);
 
-                // Ferdig med å hente data fra server
-                if (dataRequestCallback != null)
-                    dataRequestCallback();
-            }
-        }
+        //        // Ferdig med å hente data fra server
+        //        if (dataRequestCallback != null)
+        //            dataRequestCallback();
+        //    }
+        //}
 
         public void Start()
         {
             dataRequestTimer.Start();
             sensorStatusRequestTimer.Start();
 
-            if (!adminSettingsVM.clientIsMaster)
-                userInputsRequestTimer.Start();
+            //if (!adminSettingsVM.clientIsMaster)
+            //    userInputsRequestTimer.Start();
         }
 
         public void Stop()
         {
             dataRequestTimer.Stop();
             sensorStatusRequestTimer.Stop();
-            userInputsRequestTimer.Stop();
+            //userInputsRequestTimer.Stop();
         }
 
-        public void StartUserInputsRequest()
-        {
-            userInputsRequestTimer.Start();
-        }
+        //public void StartUserInputsRequest()
+        //{
+        //    userInputsRequestTimer.Start();
+        //}
 
-        public void StopUserInputsRequest()
-        {
-            userInputsRequestTimer.Stop();
-        }
+        //public void StopUserInputsRequest()
+        //{
+        //    userInputsRequestTimer.Stop();
+        //}
     }
 }

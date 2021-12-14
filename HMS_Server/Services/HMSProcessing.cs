@@ -6,6 +6,7 @@
         private AdminSettingsVM adminSettingsVM;
 
         private HMSProcessingSettings hmsProcessingSettings;
+        private HMSProcessingUserInputs hmsProcessingUserInputs;
         private HMSProcessingGeneralInfo hmsProcessingGeneralInfo;
         private HMSProcessingMotion hmsProcessingMotion;
         private HMSProcessingWindHeading hmsProcessingWindHeading;
@@ -24,7 +25,8 @@
             this.adminSettingsVM = adminSettingsVM;
 
             hmsProcessingSettings = new HMSProcessingSettings(hmsOutputData, adminSettingsVM);
-            hmsProcessingGeneralInfo = new HMSProcessingGeneralInfo(hmsOutputData, adminSettingsVM);
+            hmsProcessingUserInputs = new HMSProcessingUserInputs(hmsOutputData, userInputs, adminSettingsVM);
+            hmsProcessingGeneralInfo = new HMSProcessingGeneralInfo(hmsOutputData);
             hmsProcessingMotion = new HMSProcessingMotion(hmsOutputData, motionLimits, adminSettingsVM, userInputs, errorHandler);
             hmsProcessingWindHeading = new HMSProcessingWindHeading(hmsOutputData, adminSettingsVM, userInputs, errorHandler);
             hmsProcessingMeteorological = new HMSProcessingMeteorological(hmsOutputData, adminSettingsVM);
@@ -39,6 +41,7 @@
         public void Update(DataCollection hmsInputDataList)
         {
             hmsProcessingSettings.Update();
+            hmsProcessingUserInputs.Update();
             hmsProcessingGeneralInfo.Update(hmsInputDataList);
             hmsProcessingMotion.Update(hmsInputDataList);
             hmsProcessingWindHeading.Update(hmsInputDataList);

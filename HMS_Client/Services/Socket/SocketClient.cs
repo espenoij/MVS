@@ -119,16 +119,16 @@ namespace HMS_Client
 
                         break;
 
-                    // Get User Inputs
-                    case Constants.CommandGetUserInputs:
+                    //// Get User Inputs
+                    //case Constants.CommandGetUserInputs:
 
-                        // Bare kommando med eof
-                        packet = $"{command}{Constants.EOF}";
+                    //    // Bare kommando med eof
+                    //    packet = $"{command}{Constants.EOF}";
 
-                        if (AdminMode.IsActive)
-                            socketConsole?.Add("Requesting user inputs...");
+                    //    if (AdminMode.IsActive)
+                    //        socketConsole?.Add("Requesting user inputs...");
 
-                        break;
+                    //    break;
 
                     default:
                         packet = string.Empty;
@@ -466,35 +466,35 @@ namespace HMS_Client
 
                         break;
 
-                    // Get User Inputs
-                    //////////////////////////
-                    case Constants.CommandGetUserInputs:
+                    //// Get User Inputs
+                    ////////////////////////////
+                    //case Constants.CommandGetUserInputs:
 
-                        if (!string.IsNullOrEmpty(receivedData))
-                        {
-                            if (receivedData.IndexOf(command) < receivedData.Length)
-                            {
-                                // Fjerne command
-                                payload = receivedData.Substring(receivedData.IndexOf(command) + command.Length);
+                    //    if (!string.IsNullOrEmpty(receivedData))
+                    //    {
+                    //        if (receivedData.IndexOf(command) < receivedData.Length)
+                    //        {
+                    //            // Fjerne command
+                    //            payload = receivedData.Substring(receivedData.IndexOf(command) + command.Length);
 
-                                // Fjerne end-of-file
-                                payload = payload.Substring(0, payload.LastIndexOf(Constants.EOF));
+                    //            // Fjerne end-of-file
+                    //            payload = payload.Substring(0, payload.LastIndexOf(Constants.EOF));
 
-                                if (payload.CompareTo(string.Empty) != 0)
-                                {
-                                    // De-serialisere fra JSON
-                                    UserInputs userInputsReceived = JsonSerializer.Deserialize<UserInputs>(payload);
+                    //            if (payload.CompareTo(string.Empty) != 0)
+                    //            {
+                    //                // De-serialisere fra JSON
+                    //                UserInputs userInputsReceived = JsonSerializer.Deserialize<UserInputs>(payload);
 
-                                    // Overføre mottatt data til lagringsplass
-                                    TransferReceivedUserInputs(userInputsReceived);
+                    //                // Overføre mottatt data til lagringsplass
+                    //                TransferReceivedUserInputs(userInputsReceived);
 
-                                    // Ferdig med å hente data fra socket -> si i fra at vi er ferdig og prosessere data
-                                    if (socketCallback != null)
-                                        socketCallback();
-                                }
-                            }
-                        }
-                        break;
+                    //                // Ferdig med å hente data fra socket -> si i fra at vi er ferdig og prosessere data
+                    //                if (socketCallback != null)
+                    //                    socketCallback();
+                    //            }
+                    //        }
+                    //    }
+                    //    break;
 
                 }
             }

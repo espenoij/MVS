@@ -260,7 +260,7 @@
                                     HorizontalAlignment="Center">
 
                                     <telerik:Label
-                                        Content="{Binding Path=msiwsiY}"
+                                        Content="{Binding Path=msiString}"
                                         FontSize="{StaticResource fontSizeDataLarge}" />
 
                                 </Viewbox>
@@ -300,7 +300,7 @@
                                     HorizontalAlignment="Center">
 
                                     <telerik:Label
-                                        Content="{Binding Path=msiwsiX}"
+                                        Content="{Binding Path=wsiString}"
                                         FontSize="{StaticResource fontSizeDataLarge}" />
 
                                 </Viewbox>

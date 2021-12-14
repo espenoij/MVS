@@ -76,7 +76,7 @@ class Constants
     public const string CommandGetDataUpdate = "<get_data_update>";
     public const string CommandGetSensorStatus = "<get_sensor_status>";
     public const string CommandSetUserInputs = "<set_user_inputs>";
-    public const string CommandGetUserInputs = "<get_user_inputs>";
+    //public const string CommandGetUserInputs = "<get_user_inputs>";
 
     // Socket Timeout
     public const int SocketTimeout = 1000;
@@ -194,7 +194,7 @@ class Constants
     public const int Hours3 = 10800;
 
     // MSI / WSI Max
-    public const double MSIMax = 91; // CAP
+    public const double MSIMax = 91;  // CAP
     public const double WSIMax = 100; // CAP
 
     // Chart Axis Margins

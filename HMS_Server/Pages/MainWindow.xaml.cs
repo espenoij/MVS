@@ -66,6 +66,9 @@ namespace HMS_Server
         private HMSDatabase hmsDatabase;
         private DispatcherTimer hmsTimer = new DispatcherTimer();
 
+        // Data verification
+        DispatcherTimer verificationTimer = new DispatcherTimer();
+
         // View Models
         private AdminSettingsVM adminSettingsVM = new AdminSettingsVM();
 
@@ -572,10 +575,8 @@ namespace HMS_Server
             if (adminSettingsVM.dataVerificationEnabled)
             {
                 // Dispatcher som oppdaterer verification data (test og referanse data)
-                DispatcherTimer verificationTimer = new DispatcherTimer();
                 verificationTimer.Interval = TimeSpan.FromMilliseconds(Constants.ServerUpdateFrequencyHMS);
                 verificationTimer.Tick += runVerificationUpdate;
-                verificationTimer.Start();
 
                 void runVerificationUpdate(object sender, EventArgs e)
                 {
@@ -586,15 +587,8 @@ namespace HMS_Server
                     referenceData.TransferData(sensorDataDisplayList);
 
                     // Verification
-                    if (referenceData.CollectionChanged() && testData.CollectionChanged())
-                    {
-                        // Overføre og regn ut forskjellene mellom test data og referanse data
-                        UpdateVerificationData();
-
-                        // Resette change variabelen
-                        testData.CollectionChangedReset();
-                        referenceData.CollectionChangedReset();
-                    }
+                    // Overføre og regn ut forskjellene mellom test data og referanse data
+                    UpdateVerificationData();
                 }
             }
         }
@@ -681,6 +675,9 @@ namespace HMS_Server
 
             // Socket Listener
             socketListener.Start();
+
+            // Data verification
+            verificationTimer.Start();
         }
 
         private void StopServer()
@@ -703,6 +700,9 @@ namespace HMS_Server
 
             // Socket Listener
             socketListener.Stop();
+
+            // Data verification
+            verificationTimer.Stop();
         }
 
         private void ExitServer()

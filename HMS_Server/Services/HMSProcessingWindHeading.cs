@@ -174,12 +174,14 @@ namespace HMS_Server
         {
             // Tar data fra input delen av server og overfører til HMS output delen
 
+            // Vind retning
             helideckWindDirectionRT.data = Math.Round(hmsInputDataList.GetData(ValueType.AreaWindDirectionRT).data, 0);
             helideckWindDirectionRT.status = hmsInputDataList.GetData(ValueType.AreaWindDirectionRT).status;
             helideckWindDirectionRT.timestamp = hmsInputDataList.GetData(ValueType.AreaWindDirectionRT).timestamp;
 
+            // Vind hastighet
             // Korrigerer for høyde
-            helideckWindSpeedRT.data = Math.Round(WindSpeedCorrection(hmsInputDataList.GetData(ValueType.AreaWindSpeedRT).data), 1);
+            helideckWindSpeedRT.data = Math.Round(WindSpeedHeightCorrection(hmsInputDataList.GetData(ValueType.AreaWindSpeedRT).data), 1);
             helideckWindSpeedRT.status = hmsInputDataList.GetData(ValueType.AreaWindSpeedRT).status;
             helideckWindSpeedRT.timestamp = hmsInputDataList.GetData(ValueType.AreaWindSpeedRT).timestamp;
 
@@ -492,7 +494,7 @@ namespace HMS_Server
             }
         }
 
-        private double WindSpeedCorrection(double windSpeed)
+        private double WindSpeedHeightCorrection(double windSpeed)
         {
             // Power law approximation of a marine atmospheric boundary layer
             if (adminSettingsVM.windSensorHeight != 0)

@@ -7,14 +7,8 @@ namespace HMS_Server
         private HMSData gpsLatitude = new HMSData();
         private HMSData gpsLongitude = new HMSData();
 
-        private HMSData helideckCategory = new HMSData();
-
-        private AdminSettingsVM adminSettingsVM;
-
-        public HMSProcessingGeneralInfo(DataCollection hmsOutputData, AdminSettingsVM adminSettingsVM)
+        public HMSProcessingGeneralInfo(DataCollection hmsOutputData)
         {
-            this.adminSettingsVM = adminSettingsVM;
-
             // Fyller output listen med HMS Output data
             // NB! Variablene som legges inn i listen her fungerer som pekere: Oppdateres variabelen -> oppdateres listen
 
@@ -22,12 +16,6 @@ namespace HMS_Server
 
             hmsOutputDataList.Add(gpsLatitude);
             hmsOutputDataList.Add(gpsLongitude);
-
-            hmsOutputDataList.Add(helideckCategory);
-
-            helideckCategory.id = (int)ValueType.SettingsHelideckCategory;
-            helideckCategory.name = "Helideck Category";
-            helideckCategory.sensorGroupId = Constants.NO_SENSOR_GROUP_ID;
         }
 
         public void Update(DataCollection hmsInputDataList)
@@ -36,10 +24,6 @@ namespace HMS_Server
 
             gpsLatitude.Set(hmsInputDataList.GetData(ValueType.Latitude));
             gpsLongitude.Set(hmsInputDataList.GetData(ValueType.Longitude));
-
-            helideckCategory.data = (int)adminSettingsVM.helideckCategory;
-            helideckCategory.timestamp = DateTime.UtcNow;
-            helideckCategory.status = DataStatus.OK;
         }
     }
 }

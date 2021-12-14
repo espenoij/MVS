@@ -99,6 +99,32 @@ namespace HMS_Client
             }
         }
 
+        public void UpdateData(HMSDataCollection hmsDataList)
+        {
+            if (!adminSettingsVM.clientIsMaster)
+            {
+                helicopterType = (HelicopterType)hmsDataList.GetData(ValueType.SettingsHelicopterType).data;
+                helideckCategory = (HelideckCategory)hmsDataList.GetData(ValueType.SettingsHelideckCategory).data;
+                dayNight = (DayNight)hmsDataList.GetData(ValueType.SettingsDayNight).data;
+                displayMode = (DisplayMode)hmsDataList.GetData(ValueType.SettingsDisplayMode).data;
+
+                onDeckTime = DateTime.FromOADate(hmsDataList.GetData(ValueType.SettingsOnDeckTime).data);
+                onDeckHelicopterHeading = hmsDataList.GetData(ValueType.SettingsOnDeckHelicopterHeading).data;
+
+                if (hmsDataList.GetData(ValueType.SettingsOnDeckHelicopterHeadingCorrected).data == 1)
+                    onDeckHelicopterHeadingIsCorrected = true;
+                else
+                    onDeckHelicopterHeadingIsCorrected = false;
+                onDeckVesselHeading = hmsDataList.GetData(ValueType.SettingsOnDeckVesselHeading).data;
+                onDeckWindDirection = hmsDataList.GetData(ValueType.SettingsOnDeckWindDirection).data;
+
+                OnPropertyChanged(nameof(displayModeVisibilityPreLanding));
+                OnPropertyChanged(nameof(displayModeVisibilityOnDeck));
+                OnPropertyChanged(nameof(helicopterHeadingInfoString1));
+                OnPropertyChanged(nameof(helicopterHeadingInfoString2));
+            }
+        }
+
         private void SendUserInputsToServer()
         {
             if (adminSettingsVM.clientIsMaster)
@@ -449,24 +475,24 @@ namespace HMS_Client
         }
 
 
-        public void UserInputsReceived(UserInputs userInputs)
-        {
-            helicopterType = userInputs.helicopterType;
-            helideckCategory = userInputs.helideckCategory;
-            dayNight = userInputs.dayNight;
-            displayMode = userInputs.displayMode;
+        //public void UserInputsReceived(UserInputs userInputs)
+        //{
+        //    helicopterType = userInputs.helicopterType;
+        //    helideckCategory = userInputs.helideckCategory;
+        //    dayNight = userInputs.dayNight;
+        //    displayMode = userInputs.displayMode;
 
-            onDeckTime = userInputs.onDeckTime;
-            onDeckHelicopterHeading = userInputs.onDeckHelicopterHeading;
-            onDeckHelicopterHeadingIsCorrected = userInputs.onDeckHelicopterHeadingIsCorrected;
-            onDeckVesselHeading = userInputs.onDeckVesselHeading;
-            onDeckWindDirection = userInputs.onDeckWindDirection;
+        //    onDeckTime = userInputs.onDeckTime;
+        //    onDeckHelicopterHeading = userInputs.onDeckHelicopterHeading;
+        //    onDeckHelicopterHeadingIsCorrected = userInputs.onDeckHelicopterHeadingIsCorrected;
+        //    onDeckVesselHeading = userInputs.onDeckVesselHeading;
+        //    onDeckWindDirection = userInputs.onDeckWindDirection;
 
-            OnPropertyChanged(nameof(displayModeVisibilityPreLanding));
-            OnPropertyChanged(nameof(displayModeVisibilityOnDeck));
-            OnPropertyChanged(nameof(helicopterHeadingInfoString1));
-            OnPropertyChanged(nameof(helicopterHeadingInfoString2));
-        }
+        //    OnPropertyChanged(nameof(displayModeVisibilityPreLanding));
+        //    OnPropertyChanged(nameof(displayModeVisibilityOnDeck));
+        //    OnPropertyChanged(nameof(helicopterHeadingInfoString1));
+        //    OnPropertyChanged(nameof(helicopterHeadingInfoString2));
+        //}
 
         // Variabel oppdatert
         // Dersom navn ikke er satt brukes kallende medlem sitt navn

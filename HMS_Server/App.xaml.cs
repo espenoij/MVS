@@ -29,6 +29,8 @@ namespace HMS_Server
             Mutex mutex = new Mutex(true, Constants.appNameServer, out bool createdNew);
             if (!createdNew)
             {
+                DialogHandler.Warning("Program already running", "The program is already running.\nRunning two or more simultaneous sessions is not allowed.");
+
                 // Programmet kjører allerede -> avslutt
                 Application.Current.Shutdown();
             }

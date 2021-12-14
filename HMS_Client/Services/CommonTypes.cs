@@ -166,7 +166,15 @@ public enum ValueType
     MotionLimitSignificantHeaveRate,
 
     // Diverse andre data
+    SettingsHelicopterType,
     SettingsHelideckCategory,
+    SettingsDayNight,
+    SettingsDisplayMode,
+    SettingsOnDeckTime,
+    SettingsOnDeckHelicopterHeading,
+    SettingsOnDeckHelicopterHeadingCorrected,
+    SettingsOnDeckVesselHeading,
+    SettingsOnDeckWindDirection,
     SettingsHelideckWindSensorHeight,
     SettingsHelideckWindSensorDistance,
     SettingsAreaWindSensorHeight,

@@ -362,6 +362,9 @@ namespace HMS_Client
             // General Information
             generalInformationVM.UpdateData(hmsDataCollection);
 
+            // User Inputs
+            userInputsVM.UpdateData(hmsDataCollection);
+
             // Helideck Motion
             helideckMotionLimitsVM.UpdateData(hmsDataCollection);
 

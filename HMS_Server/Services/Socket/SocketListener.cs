@@ -382,20 +382,20 @@ namespace HMS_Server
                     // Sende bekreftelse til klient
                     Send(handler, outPacket);
                 }
-                else
-                // Command: Get User Inputs
-                ////////////////////////////////////////////////////////////////
-                if (inPacket.StartsWith(Constants.CommandGetUserInputs))
-                {
-                    // Serialisere user inputs og lage data pakke
-                    string outPacket = Constants.CommandGetUserInputs + SerializeUserInputs() + Constants.EOF;
+                //else
+                //// Command: Get User Inputs
+                //////////////////////////////////////////////////////////////////
+                //if (inPacket.StartsWith(Constants.CommandGetUserInputs))
+                //{
+                //    // Serialisere user inputs og lage data pakke
+                //    string outPacket = Constants.CommandGetUserInputs + SerializeUserInputs() + Constants.EOF;
 
-                    if (AdminMode.IsActive)
-                        socketConsole.Add(string.Format("Send: jsonData: {0}", outPacket));
+                //    if (AdminMode.IsActive)
+                //        socketConsole.Add(string.Format("Send: jsonData: {0}", outPacket));
 
-                    // Sende sensor status til klient
-                    Send(handler, outPacket);
-                }
+                //    // Sende sensor status til klient
+                //    Send(handler, outPacket);
+                //}
             }
             catch (Exception ex)
             {
@@ -486,20 +486,20 @@ namespace HMS_Server
             return string.Empty;
         }
 
-        private string SerializeUserInputs()
-        {
-            try
-            {
-                // Serialiserer data til JSON objekt
-                return JsonSerializer.Serialize(userInputs);
-            }
-            catch (Exception ex)
-            {
-                if (AdminMode.IsActive)
-                    socketConsole.Add(string.Format("SerializeUserInputs: {0}", ex.Message));
-            }
+        //private string SerializeUserInputs()
+        //{
+        //    try
+        //    {
+        //        // Serialiserer data til JSON objekt
+        //        return JsonSerializer.Serialize(userInputs);
+        //    }
+        //    catch (Exception ex)
+        //    {
+        //        if (AdminMode.IsActive)
+        //            socketConsole.Add(string.Format("SerializeUserInputs: {0}", ex.Message));
+        //    }
 
-            return string.Empty;
-        }
+        //    return string.Empty;
+        //}
     }
 }

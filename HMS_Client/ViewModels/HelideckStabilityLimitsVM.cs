@@ -34,15 +34,13 @@ namespace HMS_Client
             void UIUpdate(object sender, EventArgs e)
             {
                 // Sjekke om vi har data timeout
-                if (sensorStatus.TimeoutCheck(msi20m)) OnPropertyChanged(nameof(msi20mString));
-                if (sensorStatus.TimeoutCheck(wsi20m)) OnPropertyChanged(nameof(wsi20mString));
+                if (sensorStatus.TimeoutCheck(msi)) OnPropertyChanged(nameof(msiString));
+                if (sensorStatus.TimeoutCheck(wsi)) OnPropertyChanged(nameof(wsiString));
 
                 if (sensorStatus.TimeoutCheck(msiwsi))
                 {
                     OnPropertyChanged(nameof(msiwsiX));
                     OnPropertyChanged(nameof(msiwsiY));
-                    OnPropertyChanged(nameof(msiwsiXString));
-                    OnPropertyChanged(nameof(msiwsiYString));
                 }
 
                 // Oppdatere data som skal ut i grafer
@@ -86,16 +84,16 @@ namespace HMS_Client
         private void InitUI()
         {
             _mms_msi = new HMSData();
-            _msi20m = new HMSData();
+            _msi = new HMSData();
             _windDir = new HMSData();
             _windSpd = new HMSData();
             _vesselDir = new HMSData();
             _vesselSpd = new HMSData();
             _wsit = new HMSData();
-            _wsi20m = new HMSData();
+            _wsi = new HMSData();
             _msiwsi = new HMSData();
 
-            _msi20m.data = 0;
+            _msi.data = 0;
 
             selectedGraphTime = GraphTime.Minutes20;
 
@@ -106,27 +104,27 @@ namespace HMS_Client
         {
             if (initDone)
             {
-                msi20m = clientSensorList.GetData(ValueType.MSI);
-                wsi20m = clientSensorList.GetData(ValueType.WSI);
+                msi = clientSensorList.GetData(ValueType.MSI);
+                wsi = clientSensorList.GetData(ValueType.WSI);
 
                 // MSI / WSI Graf
                 /////////////////////////////////////////////////
                 /// Kombinerer MSI og WSI data
-                if (msi20m.status == DataStatus.OK &&
-                    wsi20m.status == DataStatus.OK)
+                if (msi.status == DataStatus.OK &&
+                    wsi.status == DataStatus.OK)
                 {
                     HMSData tmp = new HMSData();
 
                     // Sette data
-                    tmp.data = msi20m.data;
-                    tmp.data2 = wsi20m.data;
+                    tmp.data = msi.data;
+                    tmp.data2 = wsi.data;
 
                     tmp.status = DataStatus.OK;
 
-                    if (msi20m.timestamp < wsi20m.timestamp)
-                        tmp.timestamp = msi20m.timestamp;
+                    if (msi.timestamp < wsi.timestamp)
+                        tmp.timestamp = msi.timestamp;
                     else
-                        tmp.timestamp = wsi20m.timestamp;
+                        tmp.timestamp = wsi.timestamp;
 
                     // Lagre
                     msiwsi = tmp;
@@ -182,39 +180,39 @@ namespace HMS_Client
         }
 
         /////////////////////////////////////////////////////////////////////////////
-        // Motion Severity Index - MSI 20m
+        // Motion Severity Index - MSI
         /////////////////////////////////////////////////////////////////////////////
-        private HMSData _msi20m { get; set; }
-        public HMSData msi20m
+        private HMSData _msi { get; set; }
+        public HMSData msi
         {
             get
             {
-                return _msi20m;
+                return _msi;
             }
             set
             {
                 if (value != null)
                 {
-                    if (value.data != _msi20m.data ||
-                        value.timestamp != _msi20m.timestamp)
+                    if (value.data != _msi.data ||
+                        value.timestamp != _msi.timestamp)
                     {
-                        _msi20m.Set(value);
-                        OnPropertyChanged(nameof(msi20mString));
+                        _msi.Set(value);
+                        OnPropertyChanged(nameof(msiString));
                     }
                 }
             }
         }
 
-        public string msi20mString
+        public string msiString
         {
             get
             {
-                if (msi20m != null)
+                if (msi != null)
                 {
                     // Sjekke om data er gyldig
-                    if (msi20m.status == DataStatus.OK)
+                    if (msi.status == DataStatus.OK)
                     {
-                        return msi20m.data.ToString("0.0");
+                        return msi.data.ToString("0.0");
                     }
                     else
                     {
@@ -368,39 +366,39 @@ namespace HMS_Client
         }
 
         /////////////////////////////////////////////////////////////////////////////
-        // Wind Severity Index - WSI 20m
+        // Wind Severity Index - WSI
         /////////////////////////////////////////////////////////////////////////////
-        private HMSData _wsi20m { get; set; }
-        public HMSData wsi20m
+        private HMSData _wsi { get; set; }
+        public HMSData wsi
         {
             get
             {
-                return _wsi20m;
+                return _wsi;
             }
             set
             {
                 if (value != null)
                 {
-                    if (value.data != _wsi20m.data ||
-                        value.timestamp != _wsi20m.timestamp)
+                    if (value.data != _wsi.data ||
+                        value.timestamp != _wsi.timestamp)
                     {
-                        _wsi20m.Set(value);
-                        OnPropertyChanged(nameof(wsi20mString));
+                        _wsi.Set(value);
+                        OnPropertyChanged(nameof(wsiString));
                     }
                 }
             }
         }
 
-        public string wsi20mString
+        public string wsiString
         {
             get
             {
-                if (wsi20m != null)
+                if (wsi != null)
                 {
                     // Sjekke om data er gyldig
-                    if (wsi20m.status == DataStatus.OK)
+                    if (wsi.status == DataStatus.OK)
                     {
-                        return wsi20m.data.ToString("0.0");
+                        return wsi.data.ToString("0.0");
                     }
                     else
                     {
@@ -430,8 +428,6 @@ namespace HMS_Client
                 {
                     OnPropertyChanged(nameof(msiwsiX));
                     OnPropertyChanged(nameof(msiwsiY));
-                    OnPropertyChanged(nameof(msiwsiXString));
-                    OnPropertyChanged(nameof(msiwsiYString));
 
                     _msiwsi.Set(value);
                 }
@@ -449,29 +445,6 @@ namespace HMS_Client
             }
         }
 
-        public string msiwsiXString
-        {
-            get
-            {
-                if (msiwsi != null)
-                {
-                    // Sjekke om data er gyldig
-                    if (msiwsi.status == DataStatus.OK)
-                    {
-                        return msiwsiX.ToString("0");
-                    }
-                    else
-                    {
-                        return Constants.NotAvailable;
-                    }
-                }
-                else
-                {
-                    return Constants.NotAvailable;
-                }
-            }
-        }
-
         public double msiwsiY
         {
             get
@@ -480,29 +453,6 @@ namespace HMS_Client
                     return Math.Round(msiwsi.data, 0, MidpointRounding.AwayFromZero);
                 else
                     return 0;
-            }
-        }
-
-        public string msiwsiYString
-        {
-            get
-            {
-                if (msiwsi != null)
-                {
-                    // Sjekke om data er gyldig
-                    if (msiwsi.status == DataStatus.OK)
-                    {
-                        return msiwsiY.ToString("0");
-                    }
-                    else
-                    {
-                        return Constants.NotAvailable;
-                    }
-                }
-                else
-                {
-                    return Constants.NotAvailable;
-                }
             }
         }
 

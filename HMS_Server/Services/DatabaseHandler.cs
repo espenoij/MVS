@@ -233,7 +233,7 @@ namespace HMS_Server
                     isDatabaseConnectionOK = true;
                 }
             }
-            catch (Exception ex)
+            catch (Exception)
             {
                 isDatabaseConnectionOK = false;
 
@@ -483,7 +483,7 @@ namespace HMS_Server
                     }
                 }
             }
-            catch (Exception ex)
+            catch (Exception)
             {
                 throw;
             }
