@@ -158,6 +158,7 @@ public enum ValueType
     HelideckHeading,
     WindDirectionDelta,
     VesselHeadingDelta,
+    HelicopterHeading,
 
     // Motion Limits
     MotionLimitPitchRoll,

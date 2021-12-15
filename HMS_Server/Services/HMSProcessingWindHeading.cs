@@ -29,6 +29,8 @@ namespace HMS_Server
         private HMSData vesselHeadingDelta = new HMSData();
         private HMSData windDirectionDelta = new HMSData();
 
+        private HMSData helicopterHeading = new HMSData();
+
         // Data lister for vind-snittberegninger
         private WindAverageData areaWindAverageData2m = new WindAverageData();
         private WindAverageData areaWindAverageData10m = new WindAverageData();
@@ -48,6 +50,7 @@ namespace HMS_Server
 
             // Fyller output listen med HMS Output data
             // NB! Variablene som legges inn i listen her fungerer som pekere: Oppdateres variabelen -> oppdateres listen
+            // NB! Dersom nye variabler legges til i hmsOutputDataList må databasen opprettes på nytt
 
             RadObservableCollectionEx<HMSData> hmsOutputDataList = hmsOutputData.GetDataList();
 
@@ -73,6 +76,8 @@ namespace HMS_Server
 
             hmsOutputDataList.Add(vesselHeadingDelta);
             hmsOutputDataList.Add(windDirectionDelta);
+
+            hmsOutputDataList.Add(helicopterHeading);
 
             // NB! Selv om WSI ikke brukes i NOROG må vi legge den inn her
             // slik at database-tabell blir lik for CAP/NOROG.
@@ -163,6 +168,11 @@ namespace HMS_Server
             windDirectionDelta.name = "Wind Direction (Delta) (CAP)";
             windDirectionDelta.sensorGroupId = Constants.NO_SENSOR_GROUP_ID;
             windDirectionDelta.dbColumnName = "wind_direction_delta";
+
+            helicopterHeading.id = (int)ValueType.HelicopterHeading;
+            helicopterHeading.name = "Helicopter Heading (CAP)";
+            helicopterHeading.sensorGroupId = Constants.NO_SENSOR_GROUP_ID;
+            helicopterHeading.dbColumnName = "helicopter_heading";
 
             if (adminSettingsVM.regulationStandard == RegulationStandard.CAP)
             {
@@ -309,10 +319,22 @@ namespace HMS_Server
 
                 windDirectionDelta.status = areaWindDirection2m.status;
                 windDirectionDelta.timestamp = areaWindDirection2m.timestamp;
+
+                // Helicopter Heading
+                /////////////////////////////////////////////////////////////////////////////////////////
+                double heliHdg = userInputs.onDeckHelicopterHeading + (hmsInputDataList.GetData(ValueType.VesselHeading).data - userInputs.onDeckVesselHeading);
+                if (heliHdg > 360)
+                    heliHdg -= 360;
+                if (heliHdg < 0)
+                    heliHdg += 360;
+
+                helicopterHeading.data = heliHdg;
+                helicopterHeading.status = hmsInputDataList.GetData(ValueType.VesselHeading).status;
+                helicopterHeading.timestamp = hmsInputDataList.GetData(ValueType.VesselHeading).timestamp;
             }
             else
             {
-                //  Dersom disse dataene ikke trenger å beregnes, men status og timestamp må likevel settes slik at det ikke ser ut som feil
+                //  Disse dataene trenger vi ikke å beregne, men status og timestamp må likevel settes slik at det ikke ser ut som feil
                 relativeWindDir.data = 0;
                 relativeWindDir.status = areaWindDirection2m.status;
                 relativeWindDir.timestamp = areaWindDirection2m.timestamp;
@@ -324,6 +346,10 @@ namespace HMS_Server
                 windDirectionDelta.data = 0;
                 windDirectionDelta.status = areaWindDirection2m.status;
                 windDirectionDelta.timestamp = areaWindDirection2m.timestamp;
+
+                helicopterHeading.data = 0;
+                helicopterHeading.status = hmsInputDataList.GetData(ValueType.VesselHeading).status;
+                helicopterHeading.timestamp = hmsInputDataList.GetData(ValueType.VesselHeading).timestamp;
             }
 
             // WSI

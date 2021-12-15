@@ -31,6 +31,7 @@ namespace HMS_Server
 
             // Fyller output listen med HMS Output data
             // NB! Variablene som legges inn i listen her fungerer som pekere: Oppdateres variabelen (Update funksjonen under) -> oppdateres listen
+            // NB! Dersom nye variabler legges til i hmsOutputDataList må databasen opprettes på nytt
 
             RadObservableCollectionEx<HMSData> hmsOutputDataList = hmsOutputData.GetDataList();
 

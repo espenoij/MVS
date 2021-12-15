@@ -76,15 +76,18 @@ namespace HMS_Client
                     OnPropertyChanged(nameof(helideckHeadingRotation));
                 }
 
+                if (sensorStatus.TimeoutCheck(helicopterHeading))
+                {
+                    OnPropertyChanged(nameof(helicopterHeadingString));
+                    OnPropertyChanged(nameof(helicopterRotation));
+                }
+
                 OnPropertyChanged(nameof(displayModeVisibilityPreLanding));
                 OnPropertyChanged(nameof(displayModeVisibilityOnDeck));
                 OnPropertyChanged(nameof(displayOnDeckWindIndicator));
                 OnPropertyChanged(nameof(displayHelicopterOnDeck));
                 OnPropertyChanged(nameof(displayCAP));
                 OnPropertyChanged(nameof(displayNOROG));
-
-                OnPropertyChanged(nameof(helicopterHeadingString));
-                OnPropertyChanged(nameof(helicopterRotation));
 
                 OnPropertyChanged(nameof(displayVesselImageTriangle));
                 OnPropertyChanged(nameof(displayVesselImageShip));
@@ -112,6 +115,8 @@ namespace HMS_Client
             vesselSpeed = clientSensorList.GetData(ValueType.VesselSpeed);
 
             helideckHeading = clientSensorList.GetData(ValueType.HelideckHeading);
+
+            helicopterHeading = clientSensorList.GetData(ValueType.HelicopterHeading);
 
             UpdateRWDAngles();
         }
@@ -802,7 +807,7 @@ namespace HMS_Client
                     if (value.data != _helideckHeading.data ||
                         value.timestamp != _helideckHeading.timestamp)
                     {
-                        _helideckHeading = value;
+                        _helideckHeading.Set(value);
 
                         OnPropertyChanged(nameof(helideckHeadingString));
                         OnPropertyChanged(nameof(helideckHeadingRotation));
@@ -913,6 +918,32 @@ namespace HMS_Client
         }
 
         /////////////////////////////////////////////////////////////////////////////
+        // Helicopter Heading
+        /////////////////////////////////////////////////////////////////////////////
+        private HMSData _helicopterHeading { get; set; } = new HMSData();
+        public HMSData helicopterHeading
+        {
+            get
+            {
+                return _helicopterHeading;
+            }
+            set
+            {
+                if (value != null)
+                {
+                    if (value.data != _helicopterHeading.data ||
+                        value.timestamp != _helicopterHeading.timestamp)
+                    {
+                        _helicopterHeading.Set(value);
+
+                        OnPropertyChanged(nameof(helicopterHeadingString));
+                        OnPropertyChanged(nameof(helicopterRotation));
+                    }
+                }
+            }
+        }
+
+        /////////////////////////////////////////////////////////////////////////////
         // Helicopter Heading / Rotasjon
         /////////////////////////////////////////////////////////////////////////////
         public string helicopterHeadingString
@@ -920,14 +951,9 @@ namespace HMS_Client
             get
             {
                 if (userInputsVM.displayMode == DisplayMode.OnDeck &&
-                    vesselHeading?.status == DataStatus.OK)
+                    helicopterHeading.status == DataStatus.OK)
                 {
-                    double heading = vesselHeading.data + userInputsVM.onDeckHelicopterRelativeHeading;
-
-                    if (heading >= 360)
-                        heading -= 360;
-
-                    return string.Format("{0}°", heading.ToString("000"));
+                    return string.Format("{0}°", helicopterHeading.data.ToString("000"));
                 }
                 else
                 {
@@ -940,9 +966,9 @@ namespace HMS_Client
         {
             get
             {
-                if (vesselHeading?.status == DataStatus.OK)
+                if (helicopterHeading?.status == DataStatus.OK)
                 {
-                    return vesselHeading.data + userInputsVM.onDeckHelicopterRelativeHeading;
+                    return helicopterHeading.data;
                 }
                 else
                 {
