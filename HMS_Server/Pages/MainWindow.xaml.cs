@@ -52,6 +52,7 @@ namespace HMS_Server
         private DataCollection hmsInputData;
 
         // Liste med test data: Data som skal gjennom verifikasjonsprosessen
+        private bool dataVerificationIsActive = false;
         private DataCollection testData;
         private DataCollection referenceData;
         private RadObservableCollectionEx<VerificationData> verificationData;
@@ -230,6 +231,10 @@ namespace HMS_Server
             // Init Admin Mode
             InitAdminMode();
 
+            // Skal vi aktivere data verification?
+            if (adminSettingsVM.dataVerificationEnabled)
+                dataVerificationIsActive = true;
+
             // Liste med sensor status
             gvStatusDisplay.ItemsSource = statusDisplayList;
 
@@ -261,7 +266,7 @@ namespace HMS_Server
             hmsInputData.LoadHMSInput(config);
 
             // HMS data: Prosessering av input data til output data
-            hmsProcessing = new HMSProcessing(motionLimits, hmsOutputData, adminSettingsVM, userInputs, errorHandler);
+            hmsProcessing = new HMSProcessing(motionLimits, hmsOutputData, adminSettingsVM, userInputs, errorHandler, dataVerificationIsActive);
 
             // Data Flow
             ucHMSDataSetup.Init(
@@ -533,7 +538,7 @@ namespace HMS_Server
 
                         // HMS: HMS Output Data
                         // Prosesserer sensor data om til data som kan sendes til HMS klient
-                        hmsProcessing.Update(hmsInputData);
+                        hmsProcessing.Update(hmsInputData, dataVerificationIsActive);
 
 
                         // HMS: Lagre data i databasen
@@ -572,7 +577,7 @@ namespace HMS_Server
 
         private void InitVerificationUpdate()
         {
-            if (adminSettingsVM.dataVerificationEnabled)
+            if (dataVerificationIsActive)
             {
                 // Dispatcher som oppdaterer verification data (test og referanse data)
                 verificationTimer.Interval = TimeSpan.FromMilliseconds(Constants.ServerUpdateFrequencyHMS);
@@ -642,7 +647,7 @@ namespace HMS_Server
             }
 
             // Resette dataCalculations
-            if (adminSettingsVM.dataVerificationEnabled)
+            if (dataVerificationIsActive)
             {
                 // Resetter data listene i dataCalculations kun ved data verifikasjons-testing
                 // Under normal kjøring kan "gamle" data i listene være fullt brukelig ettersom

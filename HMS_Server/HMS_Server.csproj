@@ -329,6 +329,8 @@
     <Compile Include="Config\TestDataConfigCollection.cs" />
     <Compile Include="Config\ReferenceDataConfigSection.cs" />
     <Compile Include="Config\TestDataConfigSection.cs" />
+    <Compile Include="Dialogs\DialogHandler.cs" />
+    <Compile Include="Dialogs\DialogHandlerWarning.xaml.cs" />
     <Compile Include="Helpers\GraphBuffer.cs" />
     <Compile Include="Pages\DataVerificationResult.xaml.cs">
       <DependentUpon>DataVerificationResult.xaml</DependentUpon>
@@ -439,6 +441,10 @@
     <Compile Include="Helpers\Sorter.cs" />
     <Compile Include="Helpers\TextHelper.cs" />
     <Compile Include="Services\Weather.cs" />
+    <Page Include="Dialogs\DialogHandlerWarning.xaml">
+      <Generator>MSBuild:Compile</Generator>
+      <SubType>Designer</SubType>
+    </Page>
     <Page Include="Pages\DataVerificationResult.xaml">
       <Generator>MSBuild:Compile</Generator>
       <SubType>Designer</SubType>

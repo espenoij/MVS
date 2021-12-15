@@ -1,0 +1,67 @@
+﻿<telerik:RadWindow
+    x:Class="HMS_Server.DialogHandlerWarning"
+    xmlns="http://schemas.microsoft.com/winfx/2006/xaml/presentation"
+    xmlns:x="http://schemas.microsoft.com/winfx/2006/xaml"
+    xmlns:d="http://schemas.microsoft.com/expression/blend/2008"
+    xmlns:telerik="http://schemas.telerik.com/2008/xaml/presentation"
+    xmlns:mc="http://schemas.openxmlformats.org/markup-compatibility/2006"
+    mc:Ignorable="d"
+    xmlns:local="clr-namespace:HMS_Server"
+    telerik:Header="Warning"
+    WindowStartupLocation="CenterScreen"
+    Width="Auto"
+    Height="Auto"
+    MaxWidth="600"
+    MinWidth="400"
+    telerik:SizeToContent="True"
+    telerik:StyleManager.Theme="Material">
+
+    <telerik:RadWindow.Icon>
+        <Image
+            Source="../Icons/favicon.ico" />
+    </telerik:RadWindow.Icon>
+
+    <telerik:RadWindow.Resources>
+        <ResourceDictionary>
+            <Style
+                TargetType="local:DialogHandlerWarning"
+                BasedOn="{StaticResource RadWindowStyle}" />
+        </ResourceDictionary>
+    </telerik:RadWindow.Resources>
+
+    <DockPanel
+        Margin="8,8,8,0">
+
+        <Button
+            DockPanel.Dock="Bottom"
+            x:Name="btnClose"
+            Margin="8"
+            Width="110"
+            Content="Close"
+            Click="btnClose_Click"/>
+
+        <Image
+            Width="48"
+            Margin="16"
+            VerticalAlignment="Top"
+            Source="../Icons/outline_error_outline_black_48dp.png" />
+
+        <TextBlock
+            DockPanel.Dock="Top"
+            Name="tbHeader"
+            Margin="16"
+            HorizontalAlignment="Left"
+            VerticalAlignment="Top"
+            TextWrapping="Wrap" />
+
+        <TextBlock
+            DockPanel.Dock="Top"
+            Name="tbText"
+            Margin="16"
+            HorizontalAlignment="Left"
+            VerticalAlignment="Top"
+            TextWrapping="Wrap" />
+
+    </DockPanel>
+
+</telerik:RadWindow>

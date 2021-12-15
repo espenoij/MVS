@@ -12,7 +12,7 @@
         private HMSProcessingWindHeading hmsProcessingWindHeading;
         private HMSProcessingMeteorological hmsProcessingMeteorological;
         private HMSProcessingHelideckStatus hmsProcessingHelideckStatus;
-        private HMSProcessingVerificationData hMSProcessingVerificationData;
+        private HMSProcessingVerificationData hmsProcessingVerificationData;
 
         // Init data prosessering
         public HMSProcessing(
@@ -20,7 +20,8 @@
             DataCollection hmsOutputData,
             AdminSettingsVM adminSettingsVM,
             UserInputs userInputs,
-            ErrorHandler errorHandler)
+            ErrorHandler errorHandler,
+            bool dataVerificationIsActive)
         {
             this.adminSettingsVM = adminSettingsVM;
 
@@ -33,12 +34,12 @@
             hmsProcessingHelideckStatus = new HMSProcessingHelideckStatus(hmsOutputData, motionLimits, adminSettingsVM, userInputs, hmsProcessingMotion, hmsProcessingWindHeading);
 
             // Data Verification Module
-            if (adminSettingsVM.dataVerificationEnabled)
-                hMSProcessingVerificationData = new HMSProcessingVerificationData(hmsOutputData);
+            if (dataVerificationIsActive)
+                hmsProcessingVerificationData = new HMSProcessingVerificationData(hmsOutputData);
         }
 
         // Kjøre prosessering og oppdatere data
-        public void Update(DataCollection hmsInputDataList)
+        public void Update(DataCollection hmsInputDataList, bool dataVerificationIsActive)
         {
             hmsProcessingSettings.Update();
             hmsProcessingUserInputs.Update();
@@ -49,8 +50,8 @@
             hmsProcessingHelideckStatus.Update();
 
             // Data Verification Module
-            if (adminSettingsVM.dataVerificationEnabled)
-                hMSProcessingVerificationData.Update(hmsInputDataList);
+            if (dataVerificationIsActive)
+                hmsProcessingVerificationData.Update(hmsInputDataList);
         }
 
         public void ResetDataCalculations()
