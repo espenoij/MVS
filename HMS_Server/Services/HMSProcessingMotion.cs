@@ -119,6 +119,11 @@ namespace HMS_Server
             hmsOutputDataList.Add(motionLimitHeaveAmplitude);
             hmsOutputDataList.Add(motionLimitSignificantHeaveRate);
 
+            // NB! Selv om WSI ikke brukes i NOROG må vi legge den inn her
+            // slik at database-tabell blir lik for CAP/NOROG.
+            // Får database-feil ved bytte mellom CAP/NOROG når tabellene ikke er like.
+            hmsOutputDataList.Add(msiData);
+
             // Legge på litt informasjon på de variablene som ikke får dette automatisk fra sensor input data
             // (Disse verdiene blir kalkulert her, mens sensor input data bare kopieres videre med denne typen info allerede inkludert)
 
@@ -279,8 +284,6 @@ namespace HMS_Server
 
             if (adminSettingsVM.regulationStandard == RegulationStandard.CAP)
             {
-                hmsOutputDataList.Add(msiData);
-
                 msiData.id = (int)ValueType.MSI;
                 msiData.name = "MSI";
                 msiData.sensorGroupId = Constants.NO_SENSOR_GROUP_ID;

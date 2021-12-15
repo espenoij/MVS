@@ -74,6 +74,11 @@ namespace HMS_Server
             hmsOutputDataList.Add(vesselHeadingDelta);
             hmsOutputDataList.Add(windDirectionDelta);
 
+            // NB! Selv om WSI ikke brukes i NOROG må vi legge den inn her
+            // slik at database-tabell blir lik for CAP/NOROG.
+            // Får database-feil ved bytte mellom CAP/NOROG når tabellene ikke er like.
+            hmsOutputDataList.Add(wsiData); 
+
             areaWindAverageData2m.minutes = 2;
             areaWindAverageData10m.minutes = 10;
             helideckWindAverageData2m.minutes = 2;
@@ -161,8 +166,6 @@ namespace HMS_Server
 
             if (adminSettingsVM.regulationStandard == RegulationStandard.CAP)
             {
-                hmsOutputDataList.Add(wsiData);
-
                 wsiData.id = (int)ValueType.WSI;
                 wsiData.name = "WSI";
                 wsiData.sensorGroupId = Constants.NO_SENSOR_GROUP_ID;
