@@ -194,7 +194,14 @@ namespace HMS_Server
 
             // Vind hastighet
             // Korrigerer for høyde
-            helideckWindSpeedRT.data = Math.Round(WindSpeedHeightCorrection(hmsInputDataList.GetData(ValueType.AreaWindSpeedRT).data), 1);
+            // (Midlertidig variabel som brukes i beregninger -> ikke rund av!)
+            HMSData windSpeedCorrectedToHelideck = new HMSData();
+            windSpeedCorrectedToHelideck.data = WindSpeedHeightCorrection(hmsInputDataList.GetData(ValueType.AreaWindSpeedRT).data);
+            windSpeedCorrectedToHelideck.status = hmsInputDataList.GetData(ValueType.AreaWindSpeedRT).status;
+            windSpeedCorrectedToHelideck.timestamp = hmsInputDataList.GetData(ValueType.AreaWindSpeedRT).timestamp;
+
+            // Vind hastighet
+            helideckWindSpeedRT.data = Math.Round(windSpeedCorrectedToHelideck.data, 0);
             helideckWindSpeedRT.status = hmsInputDataList.GetData(ValueType.AreaWindSpeedRT).status;
             helideckWindSpeedRT.timestamp = hmsInputDataList.GetData(ValueType.AreaWindSpeedRT).timestamp;
 
@@ -202,7 +209,7 @@ namespace HMS_Server
             ///////////////////////////////////////////////////////////
             UpdateWindAverages(
                 helideckWindDirectionRT,
-                helideckWindSpeedRT,
+                windSpeedCorrectedToHelideck,
                 areaWindAverageData2m);
 
             areaWindDirection2m.data = Math.Round(areaWindAverageData2m.windDir, 0);
@@ -210,51 +217,51 @@ namespace HMS_Server
             areaWindDirection2m.timestamp = hmsInputDataList.GetData(ValueType.AreaWindDirectionRT).timestamp;
             areaWindDirection2m.sensorGroupId = hmsInputDataList.GetData(ValueType.AreaWindDirectionRT).sensorGroupId;
 
-            areaWindSpeed2m.data = Math.Round(areaWindAverageData2m.windSpeed, 1);
+            areaWindSpeed2m.data = Math.Round(areaWindAverageData2m.windSpeed, 0);
             areaWindSpeed2m.status = hmsInputDataList.GetData(ValueType.AreaWindSpeedRT).status;
             areaWindSpeed2m.timestamp = hmsInputDataList.GetData(ValueType.AreaWindSpeedRT).timestamp;
             areaWindSpeed2m.sensorGroupId = hmsInputDataList.GetData(ValueType.AreaWindDirectionRT).sensorGroupId;
 
-            areaWindGust2m.data = Math.Round(areaWindAverageData2m.windGust, 1);
+            areaWindGust2m.data = Math.Round(areaWindAverageData2m.windGust, 0);
             areaWindGust2m.status = hmsInputDataList.GetData(ValueType.AreaWindSpeedRT).status;
             areaWindGust2m.timestamp = hmsInputDataList.GetData(ValueType.AreaWindSpeedRT).timestamp;
             areaWindGust2m.sensorGroupId = hmsInputDataList.GetData(ValueType.AreaWindDirectionRT).sensorGroupId;
 
             UpdateWindAverages(
                 helideckWindDirectionRT,
-                helideckWindSpeedRT,
+                windSpeedCorrectedToHelideck,
                 helideckWindAverageData2m);
 
             helideckWindDirection2m.data = Math.Round(helideckWindAverageData2m.windDir, 0);
             helideckWindDirection2m.status = helideckWindDirectionRT.status;
             helideckWindDirection2m.timestamp = helideckWindDirectionRT.timestamp;
 
-            helideckWindSpeed2m.data = Math.Round(helideckWindAverageData2m.windSpeed, 1);
-            helideckWindSpeed2m.status = helideckWindSpeedRT.status;
-            helideckWindSpeed2m.timestamp = helideckWindSpeedRT.timestamp;
+            helideckWindSpeed2m.data = Math.Round(helideckWindAverageData2m.windSpeed, 0);
+            helideckWindSpeed2m.status = windSpeedCorrectedToHelideck.status;
+            helideckWindSpeed2m.timestamp = windSpeedCorrectedToHelideck.timestamp;
 
-            helideckWindGust2m.data = Math.Round(helideckWindAverageData2m.windGust, 1);
-            helideckWindGust2m.status = helideckWindSpeedRT.status;
-            helideckWindGust2m.timestamp = helideckWindSpeedRT.timestamp;
+            helideckWindGust2m.data = Math.Round(helideckWindAverageData2m.windGust, 0);
+            helideckWindGust2m.status = windSpeedCorrectedToHelideck.status;
+            helideckWindGust2m.timestamp = windSpeedCorrectedToHelideck.timestamp;
 
             // 10-minute data
             ///////////////////////////////////////////////////////////
             UpdateWindAverages(
                 helideckWindDirectionRT,
-                helideckWindSpeedRT,
+                windSpeedCorrectedToHelideck,
                 helideckWindAverageData10m);
 
             helideckWindDirection10m.data = Math.Round(helideckWindAverageData10m.windDir, 0);
             helideckWindDirection10m.status = helideckWindDirectionRT.status;
             helideckWindDirection10m.timestamp = helideckWindDirectionRT.timestamp;
 
-            helideckWindSpeed10m.data = Math.Round(helideckWindAverageData10m.windSpeed, 1);
-            helideckWindSpeed10m.status = helideckWindSpeedRT.status;
-            helideckWindSpeed10m.timestamp = helideckWindSpeedRT.timestamp;
+            helideckWindSpeed10m.data = Math.Round(helideckWindAverageData10m.windSpeed, 0);
+            helideckWindSpeed10m.status = windSpeedCorrectedToHelideck.status;
+            helideckWindSpeed10m.timestamp = windSpeedCorrectedToHelideck.timestamp;
 
-            helideckWindGust10m.data = Math.Round(helideckWindAverageData10m.windGust, 1);
-            helideckWindGust10m.status = helideckWindSpeedRT.status;
-            helideckWindGust10m.timestamp = helideckWindSpeedRT.timestamp;
+            helideckWindGust10m.data = Math.Round(helideckWindAverageData10m.windGust, 0);
+            helideckWindGust10m.status = windSpeedCorrectedToHelideck.status;
+            helideckWindGust10m.timestamp = windSpeedCorrectedToHelideck.timestamp;
 
             // Vessel Heading & Speed
             vesselHeading.Set(hmsInputDataList.GetData(ValueType.VesselHeading)); // Set for å overføre grunnleggende data
@@ -294,7 +301,7 @@ namespace HMS_Server
                     userInputs.onDeckTime != DateTime.MinValue &&
                     userInputs.onDeckVesselHeading != -1)
                 {
-                    vesselHeadingDelta.data = Math.Round(hmsInputDataList.GetData(ValueType.VesselHeading).data - userInputs.onDeckVesselHeading, 1);
+                    vesselHeadingDelta.data = Math.Round(hmsInputDataList.GetData(ValueType.VesselHeading).data - userInputs.onDeckVesselHeading, 0);
                 }
                 else
                 {
@@ -310,7 +317,7 @@ namespace HMS_Server
                     userInputs.onDeckTime != DateTime.MinValue &&
                     userInputs.onDeckWindDirection != -1)
                 {
-                    windDirectionDelta.data = Math.Round(areaWindDirection2m.data - userInputs.onDeckWindDirection, 1);
+                    windDirectionDelta.data = Math.Round(areaWindDirection2m.data - userInputs.onDeckWindDirection, 0);
                 }
                 else
                 {
@@ -359,7 +366,7 @@ namespace HMS_Server
             {
                 wsiData.status = helideckWindSpeed10m.status;
                 wsiData.timestamp = helideckWindSpeed10m.timestamp;
-                wsiData.data = Math.Round(helideckWindSpeed10m.data / adminSettingsVM.GetWSILimit(userInputs.helicopterType) * 100);
+                wsiData.data = Math.Round(helideckWindAverageData10m.windSpeed / adminSettingsVM.GetWSILimit(userInputs.helicopterType) * 100, 0);
             }
             else
             {
@@ -387,13 +394,15 @@ namespace HMS_Server
                 wsiData.data = 0;
             }
         }
-
+        
         private void UpdateWindAverages(HMSData windDir, HMSData windSpd, WindAverageData windAverageData)
         {
             // Sjekker status på data først
             if (windDir?.status == DataStatus.OK &&
                 windSpd?.status == DataStatus.OK)
             {
+                // WIND & HEADING
+                //////////////////////////////////////////////////////////////////////////////
                 // Lagre i datalisten
                 windAverageData.windDataList.Add(new Wind()
                 {
@@ -402,17 +411,11 @@ namespace HMS_Server
                     timestamp = windDir.timestamp
                 });
 
-                // Legg til i total summene for retning og hastighet
+                // Wind heading & speed: Legg til i total summene for retning og hastighet
                 windAverageData.windDataDirTotal += windDir.data;
                 windAverageData.windDataSpdTotal += windSpd.data;
 
-                // Gust
-                if (windSpd.data > windAverageData.windDataSpdMax)
-                {
-                    windAverageData.windDataSpdMax = windSpd.data;
-                }
-
-                // Sjekke om vi skal fjerne data fra data listen
+                // Sjekke om vi skal fjerne data fra vind data listen
                 bool doneRemovingOldValues = false;
                 bool findNewMaxGust = false;
 
@@ -424,10 +427,6 @@ namespace HMS_Server
                         windAverageData.windDataDirTotal -= windAverageData.windDataList[0].dir;
                         windAverageData.windDataSpdTotal -= windAverageData.windDataList[0].spd;
 
-                        // Sjekke om dette var max gust
-                        if (windAverageData.windDataList[0].spd == windAverageData.windDataSpdMax)
-                            findNewMaxGust = true;
-
                         windAverageData.windDataList.RemoveAt(0);
                     }
                     else
@@ -436,37 +435,251 @@ namespace HMS_Server
                     }
                 }
 
-                // Finne ny max gust
-                if (findNewMaxGust)
-                {
-                    double oldMax = windAverageData.windDataSpdMax;
-                    windAverageData.windDataSpdMax = 0;
-
-                    for (int j = 0; j < windAverageData.windDataList.Count && !doneRemovingOldValues; j++)
-                    {
-                        // Kan avslutte søket dersom vi finne en verdi like den gamle maximumsverdien (ingen er høyere)
-                        if (windAverageData.windDataList[j]?.spd == oldMax)
-                        {
-                            windAverageData.windDataSpdMax = oldMax;
-                            doneRemovingOldValues = true;
-                        }
-                        else
-                        {
-                            // Sjekke om data er større enn største lagret
-                            if (windAverageData.windDataList[j]?.spd > windAverageData.windDataSpdMax)
-                                windAverageData.windDataSpdMax = windAverageData.windDataList[j].spd;
-                        }
-                    }
-                }
-
                 // Lagre snittet vind retning, hastighet og gust data
                 windAverageData.windDir = windAverageData.windDataDirTotal / windAverageData.windDataList.Count;
                 windAverageData.windSpeed = windAverageData.windDataSpdTotal / windAverageData.windDataList.Count;
 
-                if (windAverageData.windDataSpdMax >= windAverageData.windSpeed + 10)
-                    windAverageData.windGust = windAverageData.windDataSpdMax;
+
+                // GUST
+                //////////////////////////////////////////////////////////////////////////////
+
+                // Gust: NOROG
+                //////////////////////////////////////////////
+                if (adminSettingsVM.regulationStandard == RegulationStandard.NOROG)
+                {
+                    // NOROG: 10 minuter gust
+                    if (windAverageData.minutes == 10)
+                    {
+                        // Lagre i 3 sekund-listen
+                        windAverageData.gust3SecDataList.Add(new Wind()
+                        {
+                            spd = windSpd.data,
+                            timestamp = windSpd.timestamp
+                        });
+
+                        // Sjekke om vi skal fjerne data fra 3-sek gust listen
+                        doneRemovingOldValues = false;
+                        while (!doneRemovingOldValues && windAverageData.gust3SecDataList.Count > 0)
+                        {
+                            if (windAverageData.gust3SecDataList[0]?.timestamp.AddSeconds(3) < DateTime.UtcNow)
+                                windAverageData.gust3SecDataList.RemoveAt(0);
+                            else
+                                doneRemovingOldValues = true;
+                        }
+
+                        // Høyeste av 3 sek gust verdiene
+                        double gust3SecHigh = double.MinValue;
+                        foreach (var item in windAverageData.gust3SecDataList)
+                            if (item.spd > gust3SecHigh)
+                                gust3SecHigh = item.spd;
+
+                        // Lagre i gust listen
+                        windAverageData.gustDataList.Add(new Wind()
+                        {
+                            spd = gust3SecHigh,
+                            timestamp = windSpd.timestamp
+                        });
+
+                        // Ny max verdi?
+                        if (gust3SecHigh > windAverageData.windDataGustMax)
+                        {
+                            windAverageData.windDataGustMax = gust3SecHigh;
+                        }
+
+                        // Sjekke om vi skal fjerne data fra gust listen
+                        while (!doneRemovingOldValues && windAverageData.gustDataList.Count > 0)
+                        {
+                            if (windAverageData.gustDataList[0]?.timestamp.AddMinutes(windAverageData.minutes) < DateTime.UtcNow)
+                            {
+                                // Sjekke om dette var max gust
+                                if (windAverageData.gustDataList[0].spd == windAverageData.windDataGustMax)
+                                    findNewMaxGust = true;
+
+                                windAverageData.gustDataList.RemoveAt(0);
+                            }
+                            else
+                            {
+                                doneRemovingOldValues = true;
+                            }
+                        }
+
+                        // Finne ny max gust
+                        if (findNewMaxGust)
+                        {
+                            double oldMax = windAverageData.windDataGustMax;
+                            windAverageData.windDataGustMax = 0;
+
+                            for (int j = 0; j < windAverageData.gustDataList.Count && !doneRemovingOldValues; j++)
+                            {
+                                // Kan avslutte søket dersom vi finne en verdi like den gamle maximumsverdien (ingen er høyere)
+                                if (windAverageData.gustDataList[j]?.spd == oldMax)
+                                {
+                                    windAverageData.windDataGustMax = oldMax;
+                                    doneRemovingOldValues = true;
+                                }
+                                else
+                                {
+                                    // Sjekke om data er større enn største lagret
+                                    if (windAverageData.gustDataList[j]?.spd > windAverageData.windDataGustMax)
+                                        windAverageData.windDataGustMax = windAverageData.gustDataList[j].spd;
+                                }
+                            }
+                        }
+
+                        // Er max gust 10 knop høyere enn snitt vind?
+                        if (windAverageData.windDataGustMax >= windAverageData.windSpeed + 10)
+                            windAverageData.windGust = windAverageData.windDataGustMax;
+                        else
+                            windAverageData.windGust = 0;
+                    }
+                    // NOROG: 2-minutter gust
+                    else
+                    {
+                        // Lagre i gust listen
+                        windAverageData.gustDataList.Add(new Wind()
+                        {
+                            spd = windSpd.data,
+                            timestamp = windSpd.timestamp
+                        });
+
+                        // Ny max verdi?
+                        if (windSpd.data > windAverageData.windDataGustMax)
+                        {
+                            windAverageData.windDataGustMax = windSpd.data;
+                        }
+
+                        // Sjekke om vi skal fjerne data fra gust listen
+                        while (!doneRemovingOldValues && windAverageData.gustDataList.Count > 0)
+                        {
+                            if (windAverageData.gustDataList[0]?.timestamp.AddMinutes(windAverageData.minutes) < DateTime.UtcNow)
+                            {
+                                // Sjekke om dette var max gust
+                                if (windAverageData.gustDataList[0].spd == windAverageData.windDataGustMax)
+                                    findNewMaxGust = true;
+
+                                windAverageData.gustDataList.RemoveAt(0);
+                            }
+                            else
+                            {
+                                doneRemovingOldValues = true;
+                            }
+                        }
+
+                        // Finne ny max gust
+                        if (findNewMaxGust)
+                        {
+                            double oldMax = windAverageData.windDataGustMax;
+                            windAverageData.windDataGustMax = 0;
+
+                            for (int j = 0; j < windAverageData.gustDataList.Count && !doneRemovingOldValues; j++)
+                            {
+                                // Kan avslutte søket dersom vi finne en verdi like den gamle maximumsverdien (ingen er høyere)
+                                if (windAverageData.gustDataList[j]?.spd == oldMax)
+                                {
+                                    windAverageData.windDataGustMax = oldMax;
+                                    doneRemovingOldValues = true;
+                                }
+                                else
+                                {
+                                    // Sjekke om data er større enn største lagret
+                                    if (windAverageData.gustDataList[j]?.spd > windAverageData.windDataGustMax)
+                                        windAverageData.windDataGustMax = windAverageData.gustDataList[j].spd;
+                                }
+                            }
+                        }
+
+                        // Er max gust 10 knop høyere enn snitt vind?
+                        if (windAverageData.windDataGustMax >= windAverageData.windSpeed + 10)
+                            windAverageData.windGust = windAverageData.windDataGustMax;
+                        else
+                            windAverageData.windGust = 0;
+                    }
+                }
+                // Gust: CAP
+                //////////////////////////////////////////////
                 else
-                    windAverageData.windGust = 0;
+                {
+                    // Lagre i 3 sekund-listen
+                    windAverageData.gust3SecDataList.Add(new Wind()
+                    {
+                        spd = windSpd.data,
+                        timestamp = windSpd.timestamp
+                    });
+
+                    // Sjekke om vi skal fjerne data fra 3-sek gust listen
+                    doneRemovingOldValues = false;
+                    while (!doneRemovingOldValues && windAverageData.gust3SecDataList.Count > 0)
+                    {
+                        if (windAverageData.gust3SecDataList[0]?.timestamp.AddSeconds(3) < DateTime.UtcNow)
+                            windAverageData.gust3SecDataList.RemoveAt(0);
+                        else
+                            doneRemovingOldValues = true;
+                    }
+
+                    // Sum av gust verdiene
+                    double gust3SecSum = 0;
+                    foreach (var item in windAverageData.gust3SecDataList)
+                        gust3SecSum += item.spd;
+
+                    // Snitt
+                    double gust3SecMean = gust3SecSum / windAverageData.gust3SecDataList.Count;
+
+                    // Lagre i gust listen
+                    windAverageData.gustDataList.Add(new Wind()
+                    {
+                        spd = gust3SecMean,
+                        timestamp = windSpd.timestamp
+                    });
+
+                    // Ny max gust verdi?
+                    if (gust3SecMean > windAverageData.windDataGustMax)
+                    {
+                        windAverageData.windDataGustMax = gust3SecMean;
+                    }
+
+                    // Sjekke om vi skal fjerne data fra gust listen
+                    while (!doneRemovingOldValues && windAverageData.gustDataList.Count > 0)
+                    {
+                        if (windAverageData.gustDataList[0]?.timestamp.AddMinutes(windAverageData.minutes) < DateTime.UtcNow)
+                        {
+                            // Sjekke om dette var max gust
+                            if (windAverageData.gustDataList[0].spd == windAverageData.windDataGustMax)
+                                findNewMaxGust = true;
+
+                            windAverageData.gustDataList.RemoveAt(0);
+                        }
+                        else
+                        {
+                            doneRemovingOldValues = true;
+                        }
+                    }
+
+                    // Finne ny max gust
+                    if (findNewMaxGust)
+                    {
+                        double oldMax = windAverageData.windDataGustMax;
+                        windAverageData.windDataGustMax = 0;
+
+                        for (int j = 0; j < windAverageData.gustDataList.Count && !doneRemovingOldValues; j++)
+                        {
+                            // Kan avslutte søket dersom vi finne en verdi like den gamle maximumsverdien (ingen er høyere)
+                            if (windAverageData.gustDataList[j]?.spd == oldMax)
+                            {
+                                windAverageData.windDataGustMax = oldMax;
+                                doneRemovingOldValues = true;
+                            }
+                            else
+                            {
+                                // Sjekke om data er større enn største lagret
+                                if (windAverageData.gustDataList[j]?.spd > windAverageData.windDataGustMax)
+                                    windAverageData.windDataGustMax = windAverageData.gustDataList[j].spd;
+                            }
+                        }
+                    }
+
+                    // Sette gust
+                    windAverageData.windGust = windAverageData.windDataGustMax;
+                }
             }
         }
 
@@ -525,9 +738,10 @@ namespace HMS_Server
 
         private double WindSpeedHeightCorrection(double windSpeed)
         {
-            // Power law approximation of a marine atmospheric boundary layer
+            // Power law approximation of a marine atmospheric boundary layer (0.13 er en konstant i denne formelen)
+            // Justert til X m over helideck
             if (adminSettingsVM.windSensorHeight != 0)
-                return windSpeed * Math.Pow((adminSettingsVM.helideckHeight + 10) / adminSettingsVM.windSensorHeight, 0.13);
+                return windSpeed * Math.Pow((adminSettingsVM.helideckHeight + Constants.WindAdjustmentAboveHelideck) / adminSettingsVM.windSensorHeight, 0.13);
             else
                 return windSpeed;
         }

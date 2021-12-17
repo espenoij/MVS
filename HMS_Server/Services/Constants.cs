@@ -142,12 +142,12 @@ class Constants
     public const int GUIDataLinesMax = 100;
 
     // Max sensors
-    public const int MaxSensors = 12;
+    public const int MaxSensors = 10;
 
     // Sensor Gruppe
     public const int NO_SENSOR_GROUP_ID = -1;
 
-    // Wind Sensor Height
+    // Helideck Height
     public const double HelideckHeightMin = 0;
     public const double HelideckHeightMax = 500;
     public const double HelideckHeightDefault = 10;
@@ -161,6 +161,9 @@ class Constants
     public const double WindSensorDistanceMin = 0;
     public const double WindSensorDistanceMax = 500;
     public const double WindSensorDistanceDefault = 10;
+
+    // Vind justert til X m over helideck
+    public const double WindAdjustmentAboveHelideck = 4;
 
     // NDB Frequency
     public const double NDBFrequencyMin = 190;

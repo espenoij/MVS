@@ -47,7 +47,7 @@
 
                     <telerik:GridViewDataColumn
                         Width="200"
-                        Header="Difference (Abs)"
+                        Header="Deviation"
                         DataMemberBinding="{Binding differenceAbsString}" />
 
                 </telerik:RadGridView.Columns>
