@@ -8,13 +8,19 @@ namespace HMS_Server
 {
     class Verfication
     {
+        private UserInputs userInputs;
+
         private DataCollection testData;
         private DataCollection referenceData;
         private RadObservableCollectionEx<VerificationData> verificationData;
         private List<double> refTimeIDList = new List<double>();
 
-        public Verfication(Config config)
+        private double prevID = 0;
+
+        public Verfication(Config config, UserInputs userInputs)
         {
+            this.userInputs = userInputs;
+
             // Test data liste
             testData = new DataCollection();
             testData.LoadTestData(config);
@@ -26,9 +32,14 @@ namespace HMS_Server
             // Verification data
             verificationData = new RadObservableCollectionEx<VerificationData>();
 
-            // Referanse time ID list
+            // Referanse time ID list (disse skal lagres til DB)
             for (int i = 52200; i <= 57600; i += 60)
                 refTimeIDList.Add(i);
+
+            // User input settings
+            userInputs.dayNight = DayNight.Day;
+            userInputs.helicopterType = HelicopterType.EC225;
+            userInputs.helideckCategory = HelideckCategory.Category1;
         }
 
         public DataCollection GetTestData()
@@ -99,11 +110,16 @@ namespace HMS_Server
                 }
             }
 
-            // Oppdatere/beregne forskjeller mellom test data og referanse data.
-            var sensorMRU = referenceDataList.Where(x => x.id == (int)VerificationType.SensorMRU);
-            var sensorGyro = referenceDataList.Where(x => x.id == (int)VerificationType.SensorGyro);
-            var sensorWind = referenceDataList.Where(x => x.id == (int)VerificationType.SensorWind);
+            // Sette on-deck i user inputs
+            if (verificationData.First().testData == 56100)
+            {
+                userInputs.onDeckHelicopterHeading = 388;
+                userInputs.onDeckTime = DateTime.UtcNow;
+                userInputs.onDeckVesselHeading = testData.GetData(ValueType.VesselHeading).data;
+                userInputs.onDeckWindDirection = testData.GetData(ValueType.HelideckWindDirection2m).data;
+            }
 
+            // Oppdatere/beregne forskjeller mellom test data og referanse data.
             foreach (var item in verificationData)
             {
                 // Sammenligne test og referanse data
@@ -116,9 +132,13 @@ namespace HMS_Server
             // Legge test data inn i databasen
             // Sjekke time ID mot listen med time ID'er vi er interessert i
             // Matcher time ID settet i referanse data filen fra CAA (OUT_PRE tab i excel ark)
-            if (refTimeIDList.Exists(x => x == verificationData.First().testData))
+            if (refTimeIDList.Exists(x => x == verificationData.First().testData) && prevID != verificationData.First().testData)
+            {
                 database.Insert(verificationData);
 
+                // Forhinderer duplikater
+                prevID = verificationData.First().testData;
+            }
         }
     }
 }

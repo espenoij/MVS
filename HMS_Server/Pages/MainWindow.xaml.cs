@@ -283,7 +283,7 @@ namespace HMS_Server
         private void InitUIDataVerification()
         {
             // Data verification
-            verfication = new Verfication(config);
+            verfication = new Verfication(config, userInputs);
 
             // Setup
             ucDataVerificationSetup.Init(
@@ -565,7 +565,7 @@ namespace HMS_Server
             if (dataVerificationIsActive)
             {
                 // Dispatcher som oppdaterer verification data (test og referanse data)
-                verificationTimer.Interval = TimeSpan.FromMilliseconds(Constants.ServerUpdateFrequencyHMS);
+                verificationTimer.Interval = TimeSpan.FromMilliseconds(Constants.ServerUpdateFrequencyVerification);
                 verificationTimer.Tick += runVerificationUpdate;
 
                 void runVerificationUpdate(object sender, EventArgs e)

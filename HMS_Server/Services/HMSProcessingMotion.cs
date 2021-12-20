@@ -146,7 +146,7 @@ namespace HMS_Server
             pitchMaxUp20mData.name = "Pitch Max Up (20m)";
             pitchMaxUp20mData.dbColumnName = "pitch_max_up_20m";
             pitchMaxUp20mData.InitProcessing(errorHandler, ErrorMessageCategory.AdminUser);
-            pitchMaxUp20mData.AddProcessing(CalculationType.TimeMaxNegative, Constants.Minutes20);
+            pitchMaxUp20mData.AddProcessing(CalculationType.TimeMaxPositive, Constants.Minutes20);
             pitchMaxUp20mData.AddProcessing(CalculationType.RoundingDecimals, 1);
             pitchMaxUp20mData.AddProcessing(CalculationType.Absolute, 0);
 
@@ -154,7 +154,7 @@ namespace HMS_Server
             pitchMaxDown20mData.name = "Pitch Max Down (20m)";
             pitchMaxDown20mData.dbColumnName = "pitch_max_down_20m";
             pitchMaxDown20mData.InitProcessing(errorHandler, ErrorMessageCategory.AdminUser);
-            pitchMaxDown20mData.AddProcessing(CalculationType.TimeMaxPositive, Constants.Minutes20);
+            pitchMaxDown20mData.AddProcessing(CalculationType.TimeMaxNegative, Constants.Minutes20);
             pitchMaxDown20mData.AddProcessing(CalculationType.RoundingDecimals, 1);
             pitchMaxDown20mData.AddProcessing(CalculationType.Absolute, 0);
 
@@ -379,7 +379,7 @@ namespace HMS_Server
                         mms = 0.0;
 
                     // Kalkulere MMS_MSI (CAP formel)
-                    mms_msi.data = Math.Round(10.0 * HMSCalc.ToDegrees(Math.Atan(mms)), 0);
+                    mms_msi.data = Math.Round(10.0 * HMSCalc.ToDegrees(Math.Atan(mms)), 0, MidpointRounding.AwayFromZero);
                     mms_msi.status = DataStatus.OK;
                     mms_msi.timestamp = accelerationX.timestamp;
                 }
@@ -446,7 +446,7 @@ namespace HMS_Server
                 // Større max verdi?
                 if (valueCorr > maxValue.data)
                 {
-                    maxValue.data = Math.Round(valueCorr, 1);
+                    maxValue.data = Math.Round(valueCorr, 1, MidpointRounding.AwayFromZero);
                 }
 
                 // Timestamp og status
@@ -496,7 +496,7 @@ namespace HMS_Server
                     // Kan avslutte søket dersom vi finne en verdi like den gamle max verdien (ingen er høyere)
                     if (dataList[j]?.data == oldMaxValue)
                     {
-                        maxValue.data = Math.Round(dataList[j].data * adminSettingsVM.msiCorrectionR, 1);
+                        maxValue.data = Math.Round(dataList[j].data * adminSettingsVM.msiCorrectionR, 1, MidpointRounding.AwayFromZero);
                         maxValue.timestamp = dataList[j].timestamp;
                         maxValue.status = DataStatus.OK;
 
@@ -506,7 +506,7 @@ namespace HMS_Server
                     {
                         if (dataList[j]?.data > maxValue.data)
                         {
-                            maxValue.data = Math.Round(dataList[j].data * adminSettingsVM.msiCorrectionR, 1);
+                            maxValue.data = Math.Round(dataList[j].data * adminSettingsVM.msiCorrectionR, 1, MidpointRounding.AwayFromZero);
                             maxValue.timestamp = dataList[j].timestamp;
                             maxValue.status = DataStatus.OK;
                         }
@@ -595,7 +595,7 @@ namespace HMS_Server
                 double inclination = HMSCalc.Inclination(pitch.data, roll.data);
 
                 // Data
-                outputData.data = Math.Round(inclination, 1);
+                outputData.data = Math.Round(inclination, 1, MidpointRounding.AwayFromZero);
 
                 // Timestamp
                 if (pitch.timestamp < roll.timestamp)

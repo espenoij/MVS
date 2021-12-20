@@ -78,11 +78,11 @@ namespace HMS_Server
             airHumidity.Set(hmsInputDataList.GetData(ValueType.AirHumidity));
             CalculateDewPoint();
 
-            airPressureQFE.data = Math.Round(CalculateQFE(hmsInputDataList.GetData(ValueType.AirPressure).data, airTemperature.data, adminSettingsVM.airPressureSensorHeight - adminSettingsVM.helideckHeight), 1);
+            airPressureQFE.data = Math.Round(CalculateQFE(hmsInputDataList.GetData(ValueType.AirPressure).data, airTemperature.data, adminSettingsVM.airPressureSensorHeight - adminSettingsVM.helideckHeight), 1, MidpointRounding.AwayFromZero);
             airPressureQFE.status = hmsInputDataList.GetData(ValueType.AirPressure).status;
             airPressureQFE.timestamp = hmsInputDataList.GetData(ValueType.AirPressure).timestamp;
 
-            airPressureQNH.data = Math.Round(CalculateQNH(airPressureQFE.data, adminSettingsVM.helideckHeight), 1);
+            airPressureQNH.data = Math.Round(CalculateQNH(airPressureQFE.data, adminSettingsVM.helideckHeight), 1, MidpointRounding.AwayFromZero);
             airPressureQNH.status = hmsInputDataList.GetData(ValueType.AirPressure).status;
             airPressureQNH.timestamp = hmsInputDataList.GetData(ValueType.AirPressure).timestamp;
 
@@ -106,7 +106,7 @@ namespace HMS_Server
             double humi = airHumidity.data;
 
             // Beregne dew point
-            airDewPoint.data = Math.Round(temp - (14.55 + 0.114 * temp) * (1 - (0.01 * humi)) - Math.Pow((2.5 + 0.007 * temp) * (1 - (0.01 * humi)), 3) - (15.9 + 0.117 * temp) * Math.Pow(1 - (0.01 * humi), 14), 1);
+            airDewPoint.data = Math.Round(temp - (14.55 + 0.114 * temp) * (1 - (0.01 * humi)) - Math.Pow((2.5 + 0.007 * temp) * (1 - (0.01 * humi)), 3) - (15.9 + 0.117 * temp) * Math.Pow(1 - (0.01 * humi), 14), 1, MidpointRounding.AwayFromZero);
 
             // Timestamp og status
             airDewPoint.timestamp = airTemperature.timestamp;

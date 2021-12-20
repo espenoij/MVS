@@ -1083,7 +1083,7 @@ namespace HMS_Server
                                 if (parameter > 10)
                                     parameter = 10;
 
-                                result = Math.Round(value, (int)parameter);
+                                result = Math.Round(value, (int)parameter, MidpointRounding.AwayFromZero);
                             }
                             break;
 

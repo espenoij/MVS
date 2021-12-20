@@ -88,7 +88,7 @@ namespace HMS_Server
         {
             get
             {
-                return Math.Round(differenceAbs, 1).ToString();
+                return Math.Round(differenceAbs, 1, MidpointRounding.AwayFromZero).ToString();
             }
         }
 

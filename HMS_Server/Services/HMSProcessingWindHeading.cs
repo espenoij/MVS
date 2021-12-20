@@ -33,7 +33,6 @@ namespace HMS_Server
 
         // Data lister for vind-snittberegninger
         private WindAverageData areaWindAverageData2m = new WindAverageData();
-        private WindAverageData areaWindAverageData10m = new WindAverageData();
         private WindAverageData helideckWindAverageData2m = new WindAverageData();
         private WindAverageData helideckWindAverageData10m = new WindAverageData();
 
@@ -85,7 +84,6 @@ namespace HMS_Server
             hmsOutputDataList.Add(wsiData); 
 
             areaWindAverageData2m.minutes = 2;
-            areaWindAverageData10m.minutes = 10;
             helideckWindAverageData2m.minutes = 2;
             helideckWindAverageData10m.minutes = 10;
 
@@ -188,82 +186,85 @@ namespace HMS_Server
             // Tar data fra input delen av server og overfører til HMS output delen
 
             // Vind retning
-            helideckWindDirectionRT.data = Math.Round(hmsInputDataList.GetData(ValueType.AreaWindDirectionRT).data, 0);
-            helideckWindDirectionRT.status = hmsInputDataList.GetData(ValueType.AreaWindDirectionRT).status;
-            helideckWindDirectionRT.timestamp = hmsInputDataList.GetData(ValueType.AreaWindDirectionRT).timestamp;
+            helideckWindDirectionRT.data = Math.Round(hmsInputDataList.GetData(ValueType.SensorWindDirection).data, 0, MidpointRounding.AwayFromZero);
+            helideckWindDirectionRT.status = hmsInputDataList.GetData(ValueType.SensorWindDirection).status;
+            helideckWindDirectionRT.timestamp = hmsInputDataList.GetData(ValueType.SensorWindDirection).timestamp;
 
             // Vind hastighet
             // Korrigerer for høyde
             // (Midlertidig variabel som brukes i beregninger -> ikke rund av!)
             HMSData windSpeedCorrectedToHelideck = new HMSData();
-            windSpeedCorrectedToHelideck.data = WindSpeedHeightCorrection(hmsInputDataList.GetData(ValueType.AreaWindSpeedRT).data);
-            windSpeedCorrectedToHelideck.status = hmsInputDataList.GetData(ValueType.AreaWindSpeedRT).status;
-            windSpeedCorrectedToHelideck.timestamp = hmsInputDataList.GetData(ValueType.AreaWindSpeedRT).timestamp;
+            windSpeedCorrectedToHelideck.data = WindSpeedHeightCorrection(hmsInputDataList.GetData(ValueType.SensorWindSpeed).data);
+            windSpeedCorrectedToHelideck.status = hmsInputDataList.GetData(ValueType.SensorWindSpeed).status;
+            windSpeedCorrectedToHelideck.timestamp = hmsInputDataList.GetData(ValueType.SensorWindSpeed).timestamp;
 
             // Vind hastighet
-            helideckWindSpeedRT.data = Math.Round(windSpeedCorrectedToHelideck.data, 0);
-            helideckWindSpeedRT.status = hmsInputDataList.GetData(ValueType.AreaWindSpeedRT).status;
-            helideckWindSpeedRT.timestamp = hmsInputDataList.GetData(ValueType.AreaWindSpeedRT).timestamp;
+            helideckWindSpeedRT.data = Math.Round(windSpeedCorrectedToHelideck.data, 0, MidpointRounding.AwayFromZero);
+            helideckWindSpeedRT.status = hmsInputDataList.GetData(ValueType.SensorWindSpeed).status;
+            helideckWindSpeedRT.timestamp = hmsInputDataList.GetData(ValueType.SensorWindSpeed).timestamp;
 
-            // 2-minute data
+            // Area Wind: 2-minute data
             ///////////////////////////////////////////////////////////
             UpdateWindAverages(
-                helideckWindDirectionRT,
-                windSpeedCorrectedToHelideck,
+                hmsInputDataList.GetData(ValueType.SensorWindDirection),
+                hmsInputDataList.GetData(ValueType.SensorWindSpeed),
                 areaWindAverageData2m);
 
-            areaWindDirection2m.data = Math.Round(areaWindAverageData2m.windDir, 0);
-            areaWindDirection2m.status = hmsInputDataList.GetData(ValueType.AreaWindDirectionRT).status;
-            areaWindDirection2m.timestamp = hmsInputDataList.GetData(ValueType.AreaWindDirectionRT).timestamp;
-            areaWindDirection2m.sensorGroupId = hmsInputDataList.GetData(ValueType.AreaWindDirectionRT).sensorGroupId;
+            areaWindDirection2m.data = Math.Round(areaWindAverageData2m.windDir, 0, MidpointRounding.AwayFromZero);
+            areaWindDirection2m.status = hmsInputDataList.GetData(ValueType.SensorWindDirection).status;
+            areaWindDirection2m.timestamp = hmsInputDataList.GetData(ValueType.SensorWindDirection).timestamp;
+            areaWindDirection2m.sensorGroupId = hmsInputDataList.GetData(ValueType.SensorWindDirection).sensorGroupId;
 
-            areaWindSpeed2m.data = Math.Round(areaWindAverageData2m.windSpeed, 0);
-            areaWindSpeed2m.status = hmsInputDataList.GetData(ValueType.AreaWindSpeedRT).status;
-            areaWindSpeed2m.timestamp = hmsInputDataList.GetData(ValueType.AreaWindSpeedRT).timestamp;
-            areaWindSpeed2m.sensorGroupId = hmsInputDataList.GetData(ValueType.AreaWindDirectionRT).sensorGroupId;
+            areaWindSpeed2m.data = Math.Round(areaWindAverageData2m.windSpeed, 0, MidpointRounding.AwayFromZero);
+            areaWindSpeed2m.status = hmsInputDataList.GetData(ValueType.SensorWindSpeed).status;
+            areaWindSpeed2m.timestamp = hmsInputDataList.GetData(ValueType.SensorWindSpeed).timestamp;
+            areaWindSpeed2m.sensorGroupId = hmsInputDataList.GetData(ValueType.SensorWindSpeed).sensorGroupId;
 
-            areaWindGust2m.data = Math.Round(areaWindAverageData2m.windGust, 0);
-            areaWindGust2m.status = hmsInputDataList.GetData(ValueType.AreaWindSpeedRT).status;
-            areaWindGust2m.timestamp = hmsInputDataList.GetData(ValueType.AreaWindSpeedRT).timestamp;
-            areaWindGust2m.sensorGroupId = hmsInputDataList.GetData(ValueType.AreaWindDirectionRT).sensorGroupId;
+            areaWindGust2m.data = Math.Round(areaWindAverageData2m.windGust, 0, MidpointRounding.AwayFromZero);
+            areaWindGust2m.status = hmsInputDataList.GetData(ValueType.SensorWindSpeed).status;
+            areaWindGust2m.timestamp = hmsInputDataList.GetData(ValueType.SensorWindSpeed).timestamp;
+            areaWindGust2m.sensorGroupId = hmsInputDataList.GetData(ValueType.SensorWindSpeed).sensorGroupId;
 
+            // Helideck Wind: 2-minute data
+            ///////////////////////////////////////////////////////////
             UpdateWindAverages(
-                helideckWindDirectionRT,
+                hmsInputDataList.GetData(ValueType.SensorWindDirection),
                 windSpeedCorrectedToHelideck,
                 helideckWindAverageData2m);
 
-            helideckWindDirection2m.data = Math.Round(helideckWindAverageData2m.windDir, 0);
+            helideckWindDirection2m.data = Math.Round(helideckWindAverageData2m.windDir, 0, MidpointRounding.AwayFromZero);
             helideckWindDirection2m.status = helideckWindDirectionRT.status;
             helideckWindDirection2m.timestamp = helideckWindDirectionRT.timestamp;
 
-            helideckWindSpeed2m.data = Math.Round(helideckWindAverageData2m.windSpeed, 0);
-            helideckWindSpeed2m.status = windSpeedCorrectedToHelideck.status;
-            helideckWindSpeed2m.timestamp = windSpeedCorrectedToHelideck.timestamp;
+            helideckWindSpeed2m.data = Math.Round(helideckWindAverageData2m.windSpeed, 0, MidpointRounding.AwayFromZero);
+            helideckWindSpeed2m.status = helideckWindSpeedRT.status;
+            helideckWindSpeed2m.timestamp = helideckWindSpeedRT.timestamp;
 
-            helideckWindGust2m.data = Math.Round(helideckWindAverageData2m.windGust, 0);
-            helideckWindGust2m.status = windSpeedCorrectedToHelideck.status;
-            helideckWindGust2m.timestamp = windSpeedCorrectedToHelideck.timestamp;
+            helideckWindGust2m.data = Math.Round(helideckWindAverageData2m.windGust, 0, MidpointRounding.AwayFromZero);
+            helideckWindGust2m.status = helideckWindSpeedRT.status;
+            helideckWindGust2m.timestamp = helideckWindSpeedRT.timestamp;
 
-            // 10-minute data
+            // Helideck Wind: 10-minute data
             ///////////////////////////////////////////////////////////
             UpdateWindAverages(
-                helideckWindDirectionRT,
+                hmsInputDataList.GetData(ValueType.SensorWindDirection),
                 windSpeedCorrectedToHelideck,
                 helideckWindAverageData10m);
 
-            helideckWindDirection10m.data = Math.Round(helideckWindAverageData10m.windDir, 0);
+            helideckWindDirection10m.data = Math.Round(helideckWindAverageData10m.windDir, 0, MidpointRounding.AwayFromZero);
             helideckWindDirection10m.status = helideckWindDirectionRT.status;
             helideckWindDirection10m.timestamp = helideckWindDirectionRT.timestamp;
 
-            helideckWindSpeed10m.data = Math.Round(helideckWindAverageData10m.windSpeed, 0);
-            helideckWindSpeed10m.status = windSpeedCorrectedToHelideck.status;
-            helideckWindSpeed10m.timestamp = windSpeedCorrectedToHelideck.timestamp;
+            helideckWindSpeed10m.data = Math.Round(helideckWindAverageData10m.windSpeed, 0, MidpointRounding.AwayFromZero);
+            helideckWindSpeed10m.status = helideckWindSpeedRT.status;
+            helideckWindSpeed10m.timestamp = helideckWindSpeedRT.timestamp;
 
-            helideckWindGust10m.data = Math.Round(helideckWindAverageData10m.windGust, 0);
-            helideckWindGust10m.status = windSpeedCorrectedToHelideck.status;
-            helideckWindGust10m.timestamp = windSpeedCorrectedToHelideck.timestamp;
+            helideckWindGust10m.data = Math.Round(helideckWindAverageData10m.windGust, 0, MidpointRounding.AwayFromZero);
+            helideckWindGust10m.status = helideckWindSpeedRT.status;
+            helideckWindGust10m.timestamp = helideckWindSpeedRT.timestamp;
 
             // Vessel Heading & Speed
+            ///////////////////////////////////////////////////////////
             vesselHeading.Set(hmsInputDataList.GetData(ValueType.VesselHeading)); // Set for å overføre grunnleggende data
             vesselHeading.DoProcessing(hmsInputDataList.GetData(ValueType.VesselHeading)); // DoProcessing for å avrunde til heltall
 
@@ -273,7 +274,7 @@ namespace HMS_Server
             double heading = hmsInputDataList.GetData(ValueType.VesselHeading).data + adminSettingsVM.helideckHeadingOffset;
             if (heading >= 360)
                 heading -= 360;
-            helideckHeading.data = Math.Round(heading, 0);
+            helideckHeading.data = Math.Round(heading, 0, MidpointRounding.AwayFromZero);
             helideckHeading.status = hmsInputDataList.GetData(ValueType.VesselHeading).status;
             helideckHeading.timestamp = hmsInputDataList.GetData(ValueType.VesselHeading).timestamp;
 
@@ -285,7 +286,7 @@ namespace HMS_Server
                 if (areaWindDirection2m.status == DataStatus.OK &&
                     hmsInputDataList.GetData(ValueType.VesselHeading).status == DataStatus.OK)
                 {
-                    relativeWindDir.data = Math.Round(areaWindDirection2m.data - (hmsInputDataList.GetData(ValueType.VesselHeading).data + (userInputs.onDeckHelicopterHeading - userInputs.onDeckVesselHeading)), 0);
+                    relativeWindDir.data = Math.Round(areaWindDirection2m.data - (hmsInputDataList.GetData(ValueType.VesselHeading).data + (userInputs.onDeckHelicopterHeading - userInputs.onDeckVesselHeading)), 0, MidpointRounding.AwayFromZero);
                 }
                 else
                 {
@@ -301,7 +302,7 @@ namespace HMS_Server
                     userInputs.onDeckTime != DateTime.MinValue &&
                     userInputs.onDeckVesselHeading != -1)
                 {
-                    vesselHeadingDelta.data = Math.Round(hmsInputDataList.GetData(ValueType.VesselHeading).data - userInputs.onDeckVesselHeading, 0);
+                    vesselHeadingDelta.data = Math.Round(hmsInputDataList.GetData(ValueType.VesselHeading).data - userInputs.onDeckVesselHeading, 0, MidpointRounding.AwayFromZero);
                 }
                 else
                 {
@@ -317,7 +318,7 @@ namespace HMS_Server
                     userInputs.onDeckTime != DateTime.MinValue &&
                     userInputs.onDeckWindDirection != -1)
                 {
-                    windDirectionDelta.data = Math.Round(areaWindDirection2m.data - userInputs.onDeckWindDirection, 0);
+                    windDirectionDelta.data = Math.Round(areaWindDirection2m.data - userInputs.onDeckWindDirection, 0, MidpointRounding.AwayFromZero);
                 }
                 else
                 {
@@ -366,7 +367,7 @@ namespace HMS_Server
             {
                 wsiData.status = helideckWindSpeed10m.status;
                 wsiData.timestamp = helideckWindSpeed10m.timestamp;
-                wsiData.data = Math.Round(helideckWindAverageData10m.windSpeed / adminSettingsVM.GetWSILimit(userInputs.helicopterType) * 100, 0);
+                wsiData.data = Math.Round(helideckWindAverageData10m.windSpeed / adminSettingsVM.GetWSILimit(userInputs.helicopterType) * 100, 0, MidpointRounding.AwayFromZero);
             }
             else
             {
@@ -386,7 +387,6 @@ namespace HMS_Server
             if (adminSettingsVM.dataVerificationEnabled)
             {
                 areaWindAverageData2m.Reset();
-                areaWindAverageData10m.Reset();
                 helideckWindAverageData2m.Reset();
                 helideckWindAverageData10m.Reset();
 
