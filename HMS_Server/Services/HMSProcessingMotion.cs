@@ -562,7 +562,7 @@ namespace HMS_Server
                 hmsData.limitStatus = LimitStatus.OVER;
         }
 
-        public bool IsSHR10mMeanBelowLimit()
+        public bool IsSHR10mMeanBelowLimit() // Below or on limit...
         {
             return significantHeaveRate10mMean <= motionLimits.GetLimit(LimitType.SignificantHeaveRate);
         }
@@ -572,10 +572,11 @@ namespace HMS_Server
             return significantHeaveRate2mMin > motionLimits.GetLimit(LimitType.SignificantHeaveRate);
         }
 
-        public double GetSHR95Pct()
-        {
-            return significantHeaveRateData.data * 0.95;
-        }
+        // Utgår i CAP 9b
+        //public double GetSHR95Pct()
+        //{
+        //    return significantHeaveRateData.data * 0.95;
+        //}
 
         /////////////////////////////////////////////////////////////////////////////
         // Inclination Kalkulasjon
