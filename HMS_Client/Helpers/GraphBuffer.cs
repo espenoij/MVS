@@ -41,14 +41,10 @@ namespace HMS_Client
         {
             if (dataList != null)
             {
-                bool doneRemovingOldData = false;
-
-                while (!doneRemovingOldData && dataList.Count > 0)
+                for (int i = 0; i < dataList.Count && dataList.Count > 0; i++)
                 {
-                    if (dataList[0].timestamp < DateTime.UtcNow.AddSeconds(-timeInterval))
-                        dataList.RemoveAt(0);
-                    else
-                        doneRemovingOldData = true;
+                    if (dataList[i]?.timestamp < DateTime.UtcNow.AddSeconds(-timeInterval))
+                        dataList.RemoveAt(i--);
                 }
             }
         }

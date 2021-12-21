@@ -116,7 +116,7 @@ namespace HMS_Server
                 userInputs.onDeckHelicopterHeading = 388;
                 userInputs.onDeckTime = DateTime.UtcNow;
                 userInputs.onDeckVesselHeading = testData.GetData(ValueType.VesselHeading).data;
-                userInputs.onDeckWindDirection = testData.GetData(ValueType.HelideckWindDirection2m).data;
+                //userInputs.onDeckWindDirection = testData.GetData(ValueType.HelideckWindDirection2m).data;
             }
 
             // Oppdatere/beregne forskjeller mellom test data og referanse data.

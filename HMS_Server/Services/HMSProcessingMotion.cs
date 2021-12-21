@@ -460,28 +460,21 @@ namespace HMS_Server
 
             // Sjekke om vi skal ta ut gamle verdier
             bool findNewMaxValue = false;
-            bool doneRemovingOldValues = false;
 
-            while (!doneRemovingOldValues && dataList.Count > 0)
+            for (int i = 0; i < dataList.Count && dataList.Count > 0; i++)
             {
                 // Time stamp eldre enn satt grense?
-                if (dataList[0]?.timestamp.AddSeconds(time) < DateTime.UtcNow)
+                if (dataList[i]?.timestamp.AddSeconds(time) < DateTime.UtcNow)
                 {
                     // Sjekke om dette var høyeste verdi
-                    if (dataList[0].data == maxValue.data)
+                    if (dataList[i].data == maxValue.data)
                     {
                         // Finne ny høyeste verdi
                         findNewMaxValue = true;
                     }
 
                     // Fjerne gammel verdi fra verdiliste
-                    dataList.RemoveAt(0);
-                }
-                else
-                {
-                    // Vi har kommet til nyere tidsverdier som ikke skal fjernes
-                    // Kan da avslutte søk etter gamle verdier
-                    doneRemovingOldValues = true;
+                    dataList.RemoveAt(i--);
                 }
             }
 
@@ -490,24 +483,25 @@ namespace HMS_Server
             {
                 double oldMaxValue = maxValue.data;
                 maxValue.data = 0;
-                doneRemovingOldValues = false;
-                for (int j = 0; j < dataList.Count && !doneRemovingOldValues; j++)
+                bool foundNewMax = false;
+
+                for (int i = 0; i < dataList.Count && !foundNewMax; i++)
                 {
                     // Kan avslutte søket dersom vi finne en verdi like den gamle max verdien (ingen er høyere)
-                    if (dataList[j]?.data == oldMaxValue)
+                    if (dataList[i]?.data == oldMaxValue)
                     {
-                        maxValue.data = Math.Round(dataList[j].data * adminSettingsVM.msiCorrectionR, 1, MidpointRounding.AwayFromZero);
-                        maxValue.timestamp = dataList[j].timestamp;
+                        maxValue.data = Math.Round(dataList[i].data * adminSettingsVM.msiCorrectionR, 1, MidpointRounding.AwayFromZero);
+                        maxValue.timestamp = dataList[i].timestamp;
                         maxValue.status = DataStatus.OK;
 
-                        doneRemovingOldValues = true;
+                        foundNewMax = true;
                     }
                     else
                     {
-                        if (dataList[j]?.data > maxValue.data)
+                        if (dataList[i]?.data > maxValue.data)
                         {
-                            maxValue.data = Math.Round(dataList[j].data * adminSettingsVM.msiCorrectionR, 1, MidpointRounding.AwayFromZero);
-                            maxValue.timestamp = dataList[j].timestamp;
+                            maxValue.data = Math.Round(dataList[i].data * adminSettingsVM.msiCorrectionR, 1, MidpointRounding.AwayFromZero);
+                            maxValue.timestamp = dataList[i].timestamp;
                             maxValue.status = DataStatus.OK;
                         }
                     }
@@ -616,6 +610,9 @@ namespace HMS_Server
         /////////////////////////////////////////////////////////////////////////////
         private void UpdateSHRLimitConditions(HMSData sensorData)
         {
+            // Bruker avrundet verdi i beregninger ifm helideck status
+            double shrDataRounded = Math.Round(sensorData.data, 1, MidpointRounding.AwayFromZero);
+
             // Sjekker status på data først
             if (sensorData.status == DataStatus.OK)
             {
@@ -625,31 +622,26 @@ namespace HMS_Server
                 // Lagre i 2-minutters listen
                 significantHeaveRate2mMinData.Add(new TimeData()
                 {
-                    data = sensorData.data,
+                    data = shrDataRounded,
                     timestamp = sensorData.timestamp
                 });
 
                 // Sjekke om data er mindre enn minste SHR lagret siste 2 minutter
-                if (sensorData.data < significantHeaveRate2mMin || significantHeaveRate2mMin == double.MaxValue)
-                    significantHeaveRate2mMin = sensorData.data;
+                if (shrDataRounded < significantHeaveRate2mMin || significantHeaveRate2mMin == double.MaxValue)
+                    significantHeaveRate2mMin = shrDataRounded;
 
                 // Sjekke om vi skal fjerne data fra 2 min listen
-                bool doneRemovingOldValues = false;
                 bool findNewMinValue = false;
 
-                while (!doneRemovingOldValues && significantHeaveRate2mMinData.Count > 0)
+                for (int i = 0; i < significantHeaveRate2mMinData.Count && significantHeaveRate2mMinData.Count > 0; i++)
                 {
-                    if (significantHeaveRate2mMinData[0]?.timestamp.AddMinutes(2) < DateTime.UtcNow)
+                    if (significantHeaveRate2mMinData[i]?.timestamp.AddMinutes(2) < DateTime.UtcNow)
                     {
                         // Er den verdien vi nå skal fjerne lik minimunsverdien?
-                        if (significantHeaveRate2mMinData[0].data == significantHeaveRate2mMin)
+                        if (significantHeaveRate2mMinData[i].data == significantHeaveRate2mMin)
                             findNewMinValue = true;
 
-                        significantHeaveRate2mMinData.RemoveAt(0);
-                    }
-                    else
-                    {
-                        doneRemovingOldValues = true;
+                        significantHeaveRate2mMinData.RemoveAt(i--);
                     }
                 }
 
@@ -658,21 +650,21 @@ namespace HMS_Server
                 {
                     double oldMinValue = significantHeaveRate2mMin;
                     significantHeaveRate2mMin = double.MaxValue;
+                    bool foundNewMax = false;
 
-                    doneRemovingOldValues = false;
-                    for (int j = 0; j < significantHeaveRate2mMinData.Count && !doneRemovingOldValues; j++)
+                    for (int i = 0; i < significantHeaveRate2mMinData.Count && !foundNewMax; i++)
                     {
                         // Kan avslutte søket dersom vi finne en verdi like den gamle minimumsverdien (ingen er lavere)
-                        if (significantHeaveRate2mMinData[j]?.data == oldMinValue)
+                        if (significantHeaveRate2mMinData[i]?.data == oldMinValue)
                         {
                             significantHeaveRate2mMin = oldMinValue;
-                            doneRemovingOldValues = true;
+                            foundNewMax = true;
                         }
                         else
                         {
                             // Sjekke om data er mindre enn minste lagret
-                            if (significantHeaveRate2mMinData[j]?.data < significantHeaveRate2mMin)
-                                significantHeaveRate2mMin = significantHeaveRate2mMinData[j].data;
+                            if (significantHeaveRate2mMinData[i]?.data < significantHeaveRate2mMin)
+                                significantHeaveRate2mMin = significantHeaveRate2mMinData[i].data;
                         }
                     }
                 }
@@ -683,30 +675,23 @@ namespace HMS_Server
                 // Legge inn den nye verdien i data settet
                 significantHeaveRate10mMeanData.Add(new TimeData()
                 {
-                    data = sensorData.data,
+                    data = shrDataRounded,
                     timestamp = sensorData.timestamp
                 });
 
                 // Legge til i total summen
-                significantHeaveRate10mSum += sensorData.data;
+                significantHeaveRate10mSum += shrDataRounded;
 
                 // Sjekke om vi skal ta ut gamle verdier
-                doneRemovingOldValues = false;
-                while (!doneRemovingOldValues && significantHeaveRate10mMeanData.Count > 0)
+                for (int i = 0; i < significantHeaveRate10mMeanData.Count && significantHeaveRate10mMeanData.Count > 0; i++)
                 {
-                    if (significantHeaveRate10mMeanData[0]?.timestamp.AddMinutes(10) < DateTime.UtcNow)
+                    if (significantHeaveRate10mMeanData[i]?.timestamp.AddMinutes(10) < DateTime.UtcNow)
                     {
                         // Trekke fra i total summen
-                        significantHeaveRate10mSum -= significantHeaveRate10mMeanData[0].data;
+                        significantHeaveRate10mSum -= significantHeaveRate10mMeanData[i].data;
 
                         // Fjerne fra verdi listne
-                        significantHeaveRate10mMeanData.RemoveAt(0);
-                    }
-                    else
-                    {
-                        // Vi har kommet til nyere tidsverdier som ikke skal fjernes
-                        // Kan da avslutte søk etter gamle verdier
-                        doneRemovingOldValues = true;
+                        significantHeaveRate10mMeanData.RemoveAt(i--);
                     }
                 }
 
@@ -719,30 +704,25 @@ namespace HMS_Server
                 // Legge inn den nye verdien i data settet
                 significantHeaveRate20mMaxData.Add(new TimeData()
                 {
-                    data = sensorData.data,
+                    data = shrDataRounded,
                     timestamp = sensorData.timestamp
                 });
 
                 // Sjekke om data er større enn største SHR lagret siste 20 minutter
-                if (sensorData.data > significantHeaveRate20mMax)
-                    significantHeaveRate20mMax = sensorData.data;
+                if (shrDataRounded > significantHeaveRate20mMax)
+                    significantHeaveRate20mMax = shrDataRounded;
 
                 // Sjekke om vi skal fjerne data fra 20 min listen
-                doneRemovingOldValues = false;
                 bool findNewMaxValue = false;
-                while (!doneRemovingOldValues && significantHeaveRate20mMaxData.Count > 0)
+                for (int i = 0; i < significantHeaveRate20mMaxData.Count && significantHeaveRate20mMaxData.Count > 0; i++)
                 {
-                    if (significantHeaveRate20mMaxData[0]?.timestamp.AddMinutes(20) < DateTime.UtcNow)
+                    if (significantHeaveRate20mMaxData[i]?.timestamp.AddMinutes(20) < DateTime.UtcNow)
                     {
                         // Er den verdien vi nå skal fjerne lik maximunsverdien?
-                        if (significantHeaveRate20mMaxData[0].data == significantHeaveRate20mMax)
+                        if (significantHeaveRate20mMaxData[i].data == significantHeaveRate20mMax)
                             findNewMaxValue = true;
 
-                        significantHeaveRate20mMaxData.RemoveAt(0);
-                    }
-                    else
-                    {
-                        doneRemovingOldValues = true;
+                        significantHeaveRate20mMaxData.RemoveAt(i--);
                     }
                 }
 
@@ -751,20 +731,21 @@ namespace HMS_Server
                 {
                     double oldMaxValue = significantHeaveRate20mMax;
                     significantHeaveRate20mMax = double.MinValue;
-                    doneRemovingOldValues = false;
-                    for (int j = 0; j < significantHeaveRate20mMaxData.Count && !doneRemovingOldValues; j++)
+                    bool foundNewMax = false;
+
+                    for (int i = 0; i < significantHeaveRate20mMaxData.Count && !foundNewMax; i++)
                     {
                         // Kan avslutte søket dersom vi finne en verdi like den gamle minimumsverdien (ingen er lavere)
-                        if (significantHeaveRate20mMaxData[j]?.data == oldMaxValue)
+                        if (significantHeaveRate20mMaxData[i]?.data == oldMaxValue)
                         {
                             significantHeaveRate20mMax = oldMaxValue;
-                            doneRemovingOldValues = true;
+                            foundNewMax = true;
                         }
                         else
                         {
                             // Sjekke om data er mindre enn minste lagret
-                            if (significantHeaveRate20mMaxData[j]?.data > significantHeaveRate20mMax)
-                                significantHeaveRate20mMax = significantHeaveRate20mMaxData[j].data;
+                            if (significantHeaveRate20mMaxData[i]?.data > significantHeaveRate20mMax)
+                                significantHeaveRate20mMax = significantHeaveRate20mMaxData[i].data;
                         }
                     }
                 }
@@ -793,22 +774,17 @@ namespace HMS_Server
             }
 
             // Sjekke om vi skal fjerne data fra 20 min listen
-            bool doneRemovingOldValues = false;
             bool findNewMaxValue = false;
 
-            while (!doneRemovingOldValues && inclination20mMaxList.Count > 0)
+            for (int i = 0; i < inclination20mMaxList.Count && inclination20mMaxList.Count > 0; i++)
             {
-                if (inclination20mMaxList[0]?.timestamp.AddSeconds(time) < DateTime.UtcNow)
+                if (inclination20mMaxList[i]?.timestamp.AddSeconds(time) < DateTime.UtcNow)
                 {
                     // Er den verdien vi nå skal fjerne lik maximunsverdien?
-                    if (inclination20mMaxList[0].data == inclinationMaxData.data)
+                    if (inclination20mMaxList[i].data == inclinationMaxData.data)
                         findNewMaxValue = true;
 
-                    inclination20mMaxList.RemoveAt(0);
-                }
-                else
-                {
-                    doneRemovingOldValues = true;
+                    inclination20mMaxList.RemoveAt(i--);
                 }
             }
 
@@ -817,24 +793,21 @@ namespace HMS_Server
             {
                 double oldMaxValue = inclinationMaxData.data;
                 inclinationMaxData.data = 0;
+                bool foundNewMax = false;
 
-                doneRemovingOldValues = false;
-                for (int j = 0; j < inclination20mMaxList.Count && !doneRemovingOldValues; j++)
+                for (int i = 0; i < inclination20mMaxList.Count && !foundNewMax; i++)
                 {
                     // Kan avslutte søket dersom vi finne en verdi like den gamle maximumsverdien (ingen er høyere)
-                    if (inclination20mMaxList[j]?.data == oldMaxValue)
+                    if (inclination20mMaxList[i]?.data == oldMaxValue)
                     {
-                        inclinationMaxData.data = inclination20mMaxList[j].data;
-
-                        doneRemovingOldValues = true;
+                        inclinationMaxData.data = inclination20mMaxList[i].data;
+                        foundNewMax = true;
                     }
                     else
                     {
                         // Sjekke om data er mindre enn minste lagret
-                        if (inclination20mMaxList[j]?.data > inclinationMaxData.data)
-                        {
-                            inclinationMaxData.data = inclination20mMaxList[j].data;
-                        }
+                        if (inclination20mMaxList[i]?.data > inclinationMaxData.data)
+                            inclinationMaxData.data = inclination20mMaxList[i].data;
                     }
                 }
             }

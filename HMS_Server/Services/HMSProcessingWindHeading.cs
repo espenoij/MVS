@@ -416,22 +416,15 @@ namespace HMS_Server
                 windAverageData.windDataSpdTotal += windSpd.data;
 
                 // Sjekke om vi skal fjerne data fra vind data listen
-                bool doneRemovingOldValues = false;
-                bool findNewMaxGust = false;
-
-                while (!doneRemovingOldValues && windAverageData.windDataList.Count > 0)
+                for (int i = 0; i < windAverageData.windDataList.Count && windAverageData.windDataList.Count > 0; i++)
                 {
-                    if (windAverageData.windDataList[0]?.timestamp.AddMinutes(windAverageData.minutes) < DateTime.UtcNow)
+                    if (windAverageData.windDataList[i]?.timestamp.AddMinutes(windAverageData.minutes) < DateTime.UtcNow)
                     {
                         // Trekke fra i total summene
-                        windAverageData.windDataDirTotal -= windAverageData.windDataList[0].dir;
-                        windAverageData.windDataSpdTotal -= windAverageData.windDataList[0].spd;
+                        windAverageData.windDataDirTotal -= windAverageData.windDataList[i].dir;
+                        windAverageData.windDataSpdTotal -= windAverageData.windDataList[i].spd;
 
-                        windAverageData.windDataList.RemoveAt(0);
-                    }
-                    else
-                    {
-                        doneRemovingOldValues = true;
+                        windAverageData.windDataList.RemoveAt(i--);
                     }
                 }
 
@@ -439,9 +432,9 @@ namespace HMS_Server
                 windAverageData.windDir = windAverageData.windDataDirTotal / windAverageData.windDataList.Count;
                 windAverageData.windSpeed = windAverageData.windDataSpdTotal / windAverageData.windDataList.Count;
 
-
                 // GUST
                 //////////////////////////////////////////////////////////////////////////////
+                bool findNewMaxGust = false;
 
                 // Gust: NOROG
                 //////////////////////////////////////////////
@@ -458,13 +451,10 @@ namespace HMS_Server
                         });
 
                         // Sjekke om vi skal fjerne data fra 3-sek gust listen
-                        doneRemovingOldValues = false;
-                        while (!doneRemovingOldValues && windAverageData.gust3SecDataList.Count > 0)
+                        for (int i = 0; i < windAverageData.gust3SecDataList.Count && windAverageData.gust3SecDataList.Count > 0; i++)
                         {
-                            if (windAverageData.gust3SecDataList[0]?.timestamp.AddSeconds(3) < DateTime.UtcNow)
-                                windAverageData.gust3SecDataList.RemoveAt(0);
-                            else
-                                doneRemovingOldValues = true;
+                            if (windAverageData.gust3SecDataList[i]?.timestamp.AddSeconds(3) < DateTime.UtcNow)
+                                windAverageData.gust3SecDataList.RemoveAt(i--);
                         }
 
                         // Høyeste av 3 sek gust verdiene
@@ -487,19 +477,15 @@ namespace HMS_Server
                         }
 
                         // Sjekke om vi skal fjerne data fra gust listen
-                        while (!doneRemovingOldValues && windAverageData.gustDataList.Count > 0)
+                        for (int i = 0; i < windAverageData.gustDataList.Count && windAverageData.gustDataList.Count > 0; i++)
                         {
-                            if (windAverageData.gustDataList[0]?.timestamp.AddMinutes(windAverageData.minutes) < DateTime.UtcNow)
+                            if (windAverageData.gustDataList[i]?.timestamp.AddMinutes(windAverageData.minutes) < DateTime.UtcNow)
                             {
                                 // Sjekke om dette var max gust
-                                if (windAverageData.gustDataList[0].spd == windAverageData.windDataGustMax)
+                                if (windAverageData.gustDataList[i].spd == windAverageData.windDataGustMax)
                                     findNewMaxGust = true;
 
-                                windAverageData.gustDataList.RemoveAt(0);
-                            }
-                            else
-                            {
-                                doneRemovingOldValues = true;
+                                windAverageData.gustDataList.RemoveAt(i--);
                             }
                         }
 
@@ -508,20 +494,21 @@ namespace HMS_Server
                         {
                             double oldMax = windAverageData.windDataGustMax;
                             windAverageData.windDataGustMax = 0;
+                            bool foundNewMax = false;
 
-                            for (int j = 0; j < windAverageData.gustDataList.Count && !doneRemovingOldValues; j++)
+                            for (int i = 0; i < windAverageData.gustDataList.Count && !foundNewMax; i++)
                             {
                                 // Kan avslutte søket dersom vi finne en verdi like den gamle maximumsverdien (ingen er høyere)
-                                if (windAverageData.gustDataList[j]?.spd == oldMax)
+                                if (windAverageData.gustDataList[i]?.spd == oldMax)
                                 {
                                     windAverageData.windDataGustMax = oldMax;
-                                    doneRemovingOldValues = true;
+                                    foundNewMax = true;
                                 }
                                 else
                                 {
                                     // Sjekke om data er større enn største lagret
-                                    if (windAverageData.gustDataList[j]?.spd > windAverageData.windDataGustMax)
-                                        windAverageData.windDataGustMax = windAverageData.gustDataList[j].spd;
+                                    if (windAverageData.gustDataList[i]?.spd > windAverageData.windDataGustMax)
+                                        windAverageData.windDataGustMax = windAverageData.gustDataList[i].spd;
                                 }
                             }
                         }
@@ -549,19 +536,15 @@ namespace HMS_Server
                         }
 
                         // Sjekke om vi skal fjerne data fra gust listen
-                        while (!doneRemovingOldValues && windAverageData.gustDataList.Count > 0)
+                        for (int i = 0; i < windAverageData.gustDataList.Count && windAverageData.gustDataList.Count > 0; i++)
                         {
-                            if (windAverageData.gustDataList[0]?.timestamp.AddMinutes(windAverageData.minutes) < DateTime.UtcNow)
+                            if (windAverageData.gustDataList[i]?.timestamp.AddMinutes(windAverageData.minutes) < DateTime.UtcNow)
                             {
                                 // Sjekke om dette var max gust
-                                if (windAverageData.gustDataList[0].spd == windAverageData.windDataGustMax)
+                                if (windAverageData.gustDataList[i].spd == windAverageData.windDataGustMax)
                                     findNewMaxGust = true;
 
-                                windAverageData.gustDataList.RemoveAt(0);
-                            }
-                            else
-                            {
-                                doneRemovingOldValues = true;
+                                windAverageData.gustDataList.RemoveAt(i--);
                             }
                         }
 
@@ -570,20 +553,21 @@ namespace HMS_Server
                         {
                             double oldMax = windAverageData.windDataGustMax;
                             windAverageData.windDataGustMax = 0;
+                            bool foundNewMax = false;
 
-                            for (int j = 0; j < windAverageData.gustDataList.Count && !doneRemovingOldValues; j++)
+                            for (int i = 0; i < windAverageData.gustDataList.Count && !foundNewMax; i++)
                             {
                                 // Kan avslutte søket dersom vi finne en verdi like den gamle maximumsverdien (ingen er høyere)
-                                if (windAverageData.gustDataList[j]?.spd == oldMax)
+                                if (windAverageData.gustDataList[i]?.spd == oldMax)
                                 {
                                     windAverageData.windDataGustMax = oldMax;
-                                    doneRemovingOldValues = true;
+                                    foundNewMax = true;
                                 }
                                 else
                                 {
                                     // Sjekke om data er større enn største lagret
-                                    if (windAverageData.gustDataList[j]?.spd > windAverageData.windDataGustMax)
-                                        windAverageData.windDataGustMax = windAverageData.gustDataList[j].spd;
+                                    if (windAverageData.gustDataList[i]?.spd > windAverageData.windDataGustMax)
+                                        windAverageData.windDataGustMax = windAverageData.gustDataList[i].spd;
                                 }
                             }
                         }
@@ -607,13 +591,10 @@ namespace HMS_Server
                     });
 
                     // Sjekke om vi skal fjerne data fra 3-sek gust listen
-                    doneRemovingOldValues = false;
-                    while (!doneRemovingOldValues && windAverageData.gust3SecDataList.Count > 0)
+                    for (int i = 0; i < windAverageData.gust3SecDataList.Count && windAverageData.gust3SecDataList.Count > 0; i++)
                     {
-                        if (windAverageData.gust3SecDataList[0]?.timestamp.AddSeconds(3) < DateTime.UtcNow)
-                            windAverageData.gust3SecDataList.RemoveAt(0);
-                        else
-                            doneRemovingOldValues = true;
+                        if (windAverageData.gust3SecDataList[i]?.timestamp.AddSeconds(3) < DateTime.UtcNow)
+                            windAverageData.gust3SecDataList.RemoveAt(i--);
                     }
 
                     // Sum av gust verdiene
@@ -638,19 +619,15 @@ namespace HMS_Server
                     }
 
                     // Sjekke om vi skal fjerne data fra gust listen
-                    while (!doneRemovingOldValues && windAverageData.gustDataList.Count > 0)
+                    for (int i = 0; i < windAverageData.gustDataList.Count && windAverageData.gustDataList.Count > 0; i++)
                     {
                         if (windAverageData.gustDataList[0]?.timestamp.AddMinutes(windAverageData.minutes) < DateTime.UtcNow)
                         {
                             // Sjekke om dette var max gust
-                            if (windAverageData.gustDataList[0].spd == windAverageData.windDataGustMax)
+                            if (windAverageData.gustDataList[i]?.spd == windAverageData.windDataGustMax)
                                 findNewMaxGust = true;
 
-                            windAverageData.gustDataList.RemoveAt(0);
-                        }
-                        else
-                        {
-                            doneRemovingOldValues = true;
+                            windAverageData.gustDataList.RemoveAt(i--);
                         }
                     }
 
@@ -659,20 +636,20 @@ namespace HMS_Server
                     {
                         double oldMax = windAverageData.windDataGustMax;
                         windAverageData.windDataGustMax = 0;
+                        bool foundNewMax = false;
 
-                        for (int j = 0; j < windAverageData.gustDataList.Count && !doneRemovingOldValues; j++)
+                        for (int i = 0; i < windAverageData.gustDataList.Count && !foundNewMax; i++)
                         {
                             // Kan avslutte søket dersom vi finne en verdi like den gamle maximumsverdien (ingen er høyere)
-                            if (windAverageData.gustDataList[j]?.spd == oldMax)
+                            if (windAverageData.gustDataList[i]?.spd == oldMax)
                             {
                                 windAverageData.windDataGustMax = oldMax;
-                                doneRemovingOldValues = true;
                             }
                             else
                             {
                                 // Sjekke om data er større enn største lagret
-                                if (windAverageData.gustDataList[j]?.spd > windAverageData.windDataGustMax)
-                                    windAverageData.windDataGustMax = windAverageData.gustDataList[j].spd;
+                                if (windAverageData.gustDataList[i]?.spd > windAverageData.windDataGustMax)
+                                    windAverageData.windDataGustMax = windAverageData.gustDataList[i].spd;
                             }
                         }
                     }
