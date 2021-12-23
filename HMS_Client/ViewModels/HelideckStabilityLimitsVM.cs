@@ -212,7 +212,7 @@ namespace HMS_Client
                     // Sjekke om data er gyldig
                     if (msi.status == DataStatus.OK)
                     {
-                        return msi.data.ToString("0.0");
+                        return msi.data.ToString("0");
                     }
                     else
                     {
@@ -398,7 +398,7 @@ namespace HMS_Client
                     // Sjekke om data er gyldig
                     if (wsi.status == DataStatus.OK)
                     {
-                        return wsi.data.ToString("0.0");
+                        return wsi.data.ToString("0");
                     }
                     else
                     {
@@ -439,7 +439,7 @@ namespace HMS_Client
             get
             {
                 if (_msiwsi?.status == DataStatus.OK)
-                    return Math.Round(_msiwsi.data2, 0, MidpointRounding.AwayFromZero);
+                    return _msiwsi.data2;
                 else
                     return 0;
             }
@@ -450,7 +450,7 @@ namespace HMS_Client
             get
             {
                 if (msiwsi?.status == DataStatus.OK)
-                    return Math.Round(msiwsi.data, 0, MidpointRounding.AwayFromZero);
+                    return msiwsi.data;
                 else
                     return 0;
             }

@@ -10,6 +10,8 @@ namespace HMS_Server
     /// </summary>
     public partial class App : Application
     {
+        private static Mutex mutex = null;
+
         public App()
         {
             // Generell exception handler
@@ -26,10 +28,11 @@ namespace HMS_Server
         protected override void OnStartup(StartupEventArgs e)
         {
             // Mutex for å hindre at flere instanser av server programmet kjører samtidig
-            Mutex mutex = new Mutex(true, Constants.appNameServer, out bool createdNew);
-            if (!createdNew)
+            bool mutexCreated;
+            mutex = new Mutex(true, Constants.appNameServer, out mutexCreated);
+            if (!mutexCreated)
             {
-                DialogHandler.Warning("Program already running", "The program is already running.\nRunning two or more simultaneous sessions is not allowed.");
+                DialogHandler.Warning("The application is already running.", "Running two or more simultaneous sessions is not allowed.");
 
                 // Programmet kjører allerede -> avslutt
                 Application.Current.Shutdown();

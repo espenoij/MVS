@@ -42,19 +42,19 @@ namespace HMS_Server
             airDewPoint.id = (int)ValueType.AirDewPoint;
             airDewPoint.name = "Air Dew Point";
             airDewPoint.sensorGroupId = Constants.NO_SENSOR_GROUP_ID;
-            airDewPoint.dbColumnName = "air_dew_point";
+            airDewPoint.dbColumn = "air_dew_point";
 
             hmsOutputDataList.Add(airPressureQFE);
             airPressureQFE.id = (int)ValueType.AirPressureQFE;
             airPressureQFE.name = "Air Pressure QFE";
             airPressureQFE.sensorGroupId = Constants.NO_SENSOR_GROUP_ID;
-            airPressureQFE.dbColumnName = "air_pressure_qfe";
+            airPressureQFE.dbColumn = "air_pressure_qfe";
 
             hmsOutputDataList.Add(airPressureQNH);
             airPressureQNH.id = (int)ValueType.AirPressureQNH;
             airPressureQNH.name = "Air Pressure QNH";
             airPressureQNH.sensorGroupId = Constants.NO_SENSOR_GROUP_ID;
-            airPressureQNH.dbColumnName = "air_pressure_qnh";
+            airPressureQNH.dbColumn = "air_pressure_qnh";
 
             hmsOutputDataList.Add(Visibility);
 

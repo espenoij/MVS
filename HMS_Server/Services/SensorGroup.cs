@@ -12,6 +12,7 @@ namespace HMS_Server
         {
             id = sensor.id;
             name = sensor.name;
+            dbColumn = sensor.dbColumn;
             active = sensor.active;
             status = sensor.status;
         }
@@ -20,6 +21,7 @@ namespace HMS_Server
         {
             id = sensorIDConfig.id;
             name = sensorIDConfig.name;
+            dbColumn = sensorIDConfig.dbColumn;
             active = bool.Parse(sensorIDConfig.active);
             status = DataStatus.OK;
         }
@@ -48,6 +50,20 @@ namespace HMS_Server
             set
             {
                 _name = value;
+                OnPropertyChanged();
+            }
+        }
+
+        private string _dbColumn { get; set; }
+        public string dbColumn
+        {
+            get
+            {
+                return _dbColumn;
+            }
+            set
+            {
+                _dbColumn = value;
                 OnPropertyChanged();
             }
         }

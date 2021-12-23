@@ -92,14 +92,36 @@ namespace HMS_Server
             }
         }
 
+        private double differenceTimePctCounterTotal = 0;
+        private double differenceTimePctCounterWrong = 0;
+        public string differenceTimePctString
+        {
+            get
+            {
+                if (differenceTimePctCounterTotal > 0)
+                    return Math.Round(((differenceTimePctCounterWrong / differenceTimePctCounterTotal) * 100.0), 2).ToString("0.00");
+                else
+                    return "0";
+            }
+        }
+
         public void Compare()
         {
-            differenceAbs = Math.Abs(refData - testData);
+            if (!double.IsNaN(refData) && !double.IsNaN(testData))
+            {
+                differenceAbs = Math.Abs(refData - testData);
+
+                differenceTimePctCounterTotal++;
+                if (differenceAbs != 0)
+                    differenceTimePctCounterWrong++;
+            }
         }
 
         public void Reset()
         {
             differenceAbs = 0;
+            differenceTimePctCounterTotal = 0;
+            differenceTimePctCounterWrong = 0;
         }
 
         // Variabel oppdatert

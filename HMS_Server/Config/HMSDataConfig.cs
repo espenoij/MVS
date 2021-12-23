@@ -12,7 +12,7 @@ namespace HMS_Server
             this.name = clientData.name;
             this.dataId = clientData.dataId.ToString();
             this.sensorId = clientData.sensorGroupId.ToString();
-            this.dbTableName = clientData.dbColumnName.ToString();
+            this.dbTableName = clientData.dbColumn.ToString();
         }
 
         [ConfigurationProperty("id", DefaultValue = 0, IsRequired = true, IsKey = true)]

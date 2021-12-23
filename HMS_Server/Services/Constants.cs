@@ -8,18 +8,19 @@ class Constants
     public const string appNameClient = "HMS_Client";
 
     // Sofware Version
-    public const string SoftwareVersion = "HMS version 0.1 (Dev)";
+    public const string SoftwareVersion = "HMS version 0.9 (Dev)";
 
     // Admin Mode Password
     public const string AdminModePassword = "a";
 
     // Max antall datafelt i en pakke
-    public const int PacketDataFields = 60;                // Korresponderer til felt i XAML fil (lvPacketData)
+    public const int PacketDataFields = 60;                     // Korresponderer til felt i XAML fil (lvPacketData)
 
     // UI Update Frequency
-    public const int ServerUpdateFrequencyUI = 2000;              // Millisekund, brukes til status og UI oppdatering
-    public const int ServerUpdateFrequencyHMS = 500;              // Millisekund, brukes til prosessering av HMS data
-    public const int ServerUpdateFrequencyVerification = 500;     // Millisekund, brukes til prosessering av verification data
+    public const int ServerUpdateFrequencyUI = 2000;            // Millisekund, brukes til status og UI oppdatering
+    public const int ServerUpdateFrequencyHMS = 250;            // Millisekund, brukes til prosessering av HMS data
+    public const int HMSSaveToDatabaseFrequency = 500;            // Millisekund, brukes til lagring  av HMS data
+    public const int ServerUpdateFrequencyVerification = 500;   // Millisekund, brukes til prosessering av verification data
 
     public const int ClientUpdateFrequencyUIDefault = 500;
     public const int ClientUpdateFrequencyUIMin = 500;
@@ -40,7 +41,7 @@ class Constants
 
     //  Maintenance Frequency
     public const int DBHMSSaveFrequency = 1000;
-    public const int DBMaintenanceFrequency = 43200000;     // Millisekund (12 timer)
+    public const int DBMaintenanceFrequency = 43200000;         // Millisekund (12 timer)
 
     // User Inputs Set Check frequency
     public const int UserInputsSetCheckFrequency = 3000;

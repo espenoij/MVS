@@ -63,6 +63,7 @@ namespace HMS_Server
         private DataCollection hmsOutputData;
         private HMSDatabase hmsDatabase;
         private DispatcherTimer hmsTimer = new DispatcherTimer();
+        private DispatcherTimer hmsDatabaseTimer = new DispatcherTimer();
 
         // Data verification
         DispatcherTimer verificationTimer = new DispatcherTimer();
@@ -111,7 +112,7 @@ namespace HMS_Server
                 hmsOutputData.GetDataList());
 
             // Sensor Status
-            sensorStatus = new HMSSensorGroupStatus(config, hmsOutputData);
+            sensorStatus = new HMSSensorGroupStatus(config, database, errorHandler, hmsOutputData);
 
             // Laste sensor data setups fra fil
             sensorDataRetrieval.LoadSensors();
@@ -138,9 +139,6 @@ namespace HMS_Server
 
             // Init verification data prosessering
             InitVerificationUpdate();
-
-            // Init HMS Database operations
-            //InitHMSDatabaseOps();
 
             // Opprette database tabeller
             // CreateTables gjør selv sjekk på om tabell finnes fra før eller må opprettes
@@ -535,13 +533,43 @@ namespace HMS_Server
                         // Output listen er derfor ikke komplett før en update (hmsProcessing.Update ovenfor) er utført.
                         if (!databaseTablesCreated)
                         {
-                            hmsDatabase.CreateHMSDataTables(hmsOutputData);
+                            hmsDatabase.CreateDataTables(hmsOutputData);
+                            sensorStatus.CreateDataTables();
+
                             databaseTablesCreated = true;
 
                             // Kjør vedlikehold en gang ved oppstart
                             DoDatabaseMaintenance(DatabaseMaintenanceType.HMS);
+                            DoDatabaseMaintenance(DatabaseMaintenanceType.STATUS);
                         }
+                    }
+                }
+                catch (Exception ex)
+                {
+                    errorHandler.Insert(
+                        new ErrorMessage(
+                            DateTime.UtcNow,
+                            ErrorMessageType.Database,
+                            ErrorMessageCategory.Admin,
+                            string.Format("Server Update Error (runHMSUpdate)\n\nSystem Message:\n{0}", ex.Message)));
 
+                    errorHandler.SetDatabaseError(ErrorHandler.DatabaseErrorType.DatabaseMaintenance);
+                }
+            }
+
+            // Dispatcher som lagrerer HMS data til databasen
+            hmsDatabaseTimer.Interval = TimeSpan.FromMilliseconds(Constants.HMSSaveToDatabaseFrequency);
+            hmsDatabaseTimer.Tick += runSaveHMSData;
+
+            void runSaveHMSData(object sender, EventArgs e)
+            {
+                try
+                {
+                    Thread thread = new Thread(() => SaveHMSData_Thread());
+                    thread.Start();
+
+                    void SaveHMSData_Thread()
+                    {
                         // Lagre data i databasen
                         hmsDatabase.InsertData(hmsOutputData);
                     }
@@ -553,7 +581,7 @@ namespace HMS_Server
                             DateTime.UtcNow,
                             ErrorMessageType.Database,
                             ErrorMessageCategory.Admin,
-                            string.Format("UI Update Error (runHMSUpdate)\n\nSystem Message:\n{0}", ex.Message)));
+                            string.Format("Database Insert Error (runSaveHMSData)\n\nSystem Message:\n{0}", ex.Message)));
 
                     errorHandler.SetDatabaseError(ErrorHandler.DatabaseErrorType.DatabaseMaintenance);
                 }
@@ -649,6 +677,7 @@ namespace HMS_Server
 
             // HMS prosessering updater
             hmsTimer.Start();
+            hmsDatabaseTimer.Start();
 
             // Database Maintenance
             DoDatabaseMaintenance(DatabaseMaintenanceType.SENSOR); // Kjør vedlikehold en gang ved oppstart
@@ -656,6 +685,9 @@ namespace HMS_Server
 
             // Socket Listener
             socketListener.Start();
+
+            // Sensor Status
+            sensorStatus.Start();
 
             // Data verification
             verificationTimer.Start();
@@ -675,12 +707,16 @@ namespace HMS_Server
 
             // HMS prosessering updater
             hmsTimer.Stop();
+            hmsDatabaseTimer.Stop();
 
             // Database Maintenance
             maintenanceTimer.Stop();
 
             // Socket Listener
             socketListener.Stop();
+
+            // Sensor Status
+            sensorStatus.Start();
 
             // Data verification
             verificationTimer.Stop();
@@ -778,11 +814,15 @@ namespace HMS_Server
                             database.DatabaseMaintenance(statusDisplayList);
                             break;
                         case DatabaseMaintenanceType.HMS:
-                            database.DatabaseMaintenance(hmsOutputData);
+                            database.DatabaseMaintenanceHMSData();
+                            break;
+                        case DatabaseMaintenanceType.STATUS:
+                            database.DatabaseMaintenanceSensorStatus();
                             break;
                         case DatabaseMaintenanceType.ALL:
                             database.DatabaseMaintenance(statusDisplayList);
-                            database.DatabaseMaintenance(hmsOutputData);
+                            database.DatabaseMaintenanceHMSData();
+                            database.DatabaseMaintenanceSensorStatus();
                             break;
                     }
 

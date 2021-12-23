@@ -550,6 +550,9 @@ namespace HMS_Server
                     {
                         // Slette data fra alle tabeller
                         database.DeleteAllData(sensorDataList);
+                        database.DeleteAllDataHMS();
+                        database.DeleteAllDataSensorStatus();
+                        database.DeleteAllDataVerification();
 
                         errorHandler.ResetDatabaseError(ErrorHandler.DatabaseErrorType.DeleteAllData);
                     }

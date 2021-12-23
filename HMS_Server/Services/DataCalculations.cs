@@ -234,7 +234,7 @@ namespace HMS_Server
                                 // Sjekke om vi skal ta ut gamle verdier
                                 for (int i = 0; i < timeAverageDataList.Count && timeAverageDataList.Count > 0; i++)
                                 {
-                                    if (timeAverageDataList[i]?.timestamp.AddSeconds(parameter) < DateTime.UtcNow)
+                                    if (timeAverageDataList[i]?.timestamp.AddSeconds(parameter) < newTimeStamp)
                                     {
                                         // Trekke fra i total summen
                                         timeAverageTotal -= timeAverageDataList[i].data;
@@ -284,7 +284,7 @@ namespace HMS_Server
                                 for (int i = 0; i < timeMaxAbsoluteDataList.Count && timeMaxAbsoluteDataList.Count > 0; i++)
                                 {
                                     // Time stamp eldre enn satt grense?
-                                    if (timeMaxAbsoluteDataList[i]?.timestamp.AddSeconds(parameter) < DateTime.UtcNow)
+                                    if (timeMaxAbsoluteDataList[i]?.timestamp.AddSeconds(parameter) < newTimeStamp)
                                     {
                                         // Sjekke om dette var høyeste verdi
                                         if (timeMaxAbsoluteDataList[i].data == timeMaxAbsoluteMaxValue)
@@ -360,7 +360,7 @@ namespace HMS_Server
                                 for (int i = 0; i < timeMaxPositiveDataList.Count && timeMaxPositiveDataList.Count > 0; i++)
                                 {
                                     // Time stamp eldre enn satt grense?
-                                    if (timeMaxPositiveDataList[i]?.timestamp.AddSeconds(parameter) < DateTime.UtcNow)
+                                    if (timeMaxPositiveDataList[i]?.timestamp.AddSeconds(parameter) < newTimeStamp)
                                     {
                                         // Sjekke om dette var høyeste verdi
                                         if (timeMaxPositiveDataList[i].data == timeMaxPositiveMaxValue)
@@ -435,7 +435,7 @@ namespace HMS_Server
                                 for (int i = 0; i < timeMaxNegativeDataList.Count && timeMaxNegativeDataList.Count > 0; i++)
                                 {
                                     // Time stamp eldre enn satt grense?
-                                    if (timeMaxNegativeDataList[i]?.timestamp.AddSeconds(parameter) < DateTime.UtcNow)
+                                    if (timeMaxNegativeDataList[i]?.timestamp.AddSeconds(parameter) < newTimeStamp)
                                     {
                                         // Sjekke om dette var laveste verdi
                                         if (timeMaxNegativeDataList[i].data == timeMaxNegativeMaxValue)
@@ -504,7 +504,7 @@ namespace HMS_Server
                                 // Sjekke om vi skal ta ut gamle verdier
                                 for (int i = 0; i < significantHeaveRateDataList.Count && significantHeaveRateDataList.Count > 0; i++)
                                 {
-                                    if (significantHeaveRateDataList[i]?.timestamp.AddSeconds(parameter) < DateTime.UtcNow)
+                                    if (significantHeaveRateDataList[i]?.timestamp.AddSeconds(parameter) < newTimeStamp)
                                     {
                                         // Trekke fra gammel verdi i square total
                                         significantHeaveRateSquareSum -= Math.Pow(significantHeaveRateDataList[i].data, 2);
@@ -682,7 +682,7 @@ namespace HMS_Server
                                 int deletedValues = 0;
                                 for (int i = 0; i < swhDataList.Count && i >= 0; i++)
                                 {
-                                    if (swhDataList[i]?.timestamp.AddSeconds(parameter) < DateTime.UtcNow)
+                                    if (swhDataList[i]?.timestamp.AddSeconds(parameter) < newTimeStamp)
                                     {
                                         // Dersom denne bølgehøyden ble tatt ut fra høyeste 1/3 av bølger så må vi kalkulere ny SWH
                                         if (!top13ops)
@@ -817,7 +817,7 @@ namespace HMS_Server
                                 bool findNewMaxValue = false;
                                 for (int i = 0; i < timeMaxAmplitudeDataList.Count && timeMaxAmplitudeDataList.Count > 0; i++)
                                 {
-                                    if (timeMaxAmplitudeDataList[i]?.timestamp.AddSeconds(parameter) < DateTime.UtcNow)
+                                    if (timeMaxAmplitudeDataList[i]?.timestamp.AddSeconds(parameter) < newTimeStamp)
                                     {
                                         // Var dette gammel max verdi?
                                         if (timeMaxAmplitudeDataList[i].data == timeMaxAmplitudeMaxValue)
@@ -963,7 +963,7 @@ namespace HMS_Server
                                         {
                                             if (timeMeanPeriodLastWaveTop != DateTime.MinValue)
                                             {
-                                                TimeSpan period = DateTime.UtcNow.Subtract(timeMeanPeriodLastWaveTop);
+                                                TimeSpan period = newTimeStamp.Subtract(timeMeanPeriodLastWaveTop);
 
                                                 // Legge inn periode i data listen
                                                 timeMeanPeriodDataList.Add(
@@ -975,11 +975,11 @@ namespace HMS_Server
 
                                                 timeMeanPeriodTotal += period.TotalSeconds;
 
-                                                timeMeanPeriodLastWaveTop = DateTime.UtcNow;
+                                                timeMeanPeriodLastWaveTop = newTimeStamp;
                                             }
                                             else
                                             {
-                                                timeMeanPeriodLastWaveTop = DateTime.UtcNow;
+                                                timeMeanPeriodLastWaveTop = newTimeStamp;
                                             }
 
                                             // På vei ned
@@ -1005,7 +1005,7 @@ namespace HMS_Server
                                 // Sjekke om vi skal ta ut gamle verdier
                                 for (int i = 0; i < timeMeanPeriodDataList.Count && timeMeanPeriodDataList.Count > 0; i++)
                                 {
-                                    if (timeMeanPeriodDataList[i]?.timestamp.AddSeconds(parameter) < DateTime.UtcNow)
+                                    if (timeMeanPeriodDataList[i]?.timestamp.AddSeconds(parameter) < newTimeStamp)
                                     {
                                         // Trekke fra data fra gammel periode
                                         timeMeanPeriodTotal -= timeMeanPeriodDataList[i].data;

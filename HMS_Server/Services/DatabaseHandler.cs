@@ -19,8 +19,13 @@ namespace HMS_Server
         // lagrede data (myndighetskrav). Disse kan slettes manuellt når de er gått ut på data (6mnd).
         private const string tableNamePrefixHMSData = "hms_data_v1";
         private const string tableNamePrefixSensorData = "sensor_data";
+        private const string tableNamePrefixSensorStatus = "sensor_status";
         private const string columnTimestamp = "timestamp";
         private const string columnData = "data";
+        private const string columnID = "id";
+        private const string columnName = "name";
+        private const string columnActive = "active";
+        private const string columnStatus = "status";
 
         // Error Messages
         private const string tableNameErrorMessages = "error_messages";
@@ -110,11 +115,14 @@ namespace HMS_Server
                         // For hver sensor verdi som skal lagres oppretter vi en ny database tabell, dersom den ikke allerede eksisterer
                         foreach (var sensorData in sensorDataList)
                         {
-                            string tableName = string.Format("{0}_{1}", tableNamePrefixSensorData, sensorData.id);
+                            if (sensorData.saveToDatabase)
+                            {
+                                string tableName = string.Format("{0}_{1}", tableNamePrefixSensorData, sensorData.id);
 
-                            // Opprette nytt database table
-                            cmd.CommandText = string.Format(@"CREATE TABLE IF NOT EXISTS {0}(id INTEGER PRIMARY KEY AUTO_INCREMENT, {1} TIMESTAMP(3), {2} DOUBLE)", tableName, columnTimestamp, columnData);
-                            cmd.ExecuteNonQuery();
+                                // Opprette nytt database table
+                                cmd.CommandText = string.Format(@"CREATE TABLE IF NOT EXISTS {0}(id INTEGER PRIMARY KEY AUTO_INCREMENT, {1} TIMESTAMP(3), {2} DOUBLE)", tableName, columnTimestamp, columnData);
+                                cmd.ExecuteNonQuery();
+                            }
                         }
                     }
 
@@ -189,10 +197,10 @@ namespace HMS_Server
                         // For hver HMS data verdi som skal lagres oppretter vi en ny database tabell, dersom den ikke allerede eksisterer
                         foreach (var hmsData in hmsInputDataList)
                         {
-                            if (!string.IsNullOrEmpty(hmsData.dbColumnName))
+                            if (!string.IsNullOrEmpty(hmsData.dbColumn))
                             {
                                 // Opprette nytt database table
-                                cmd.CommandText = string.Format(@"CREATE TABLE IF NOT EXISTS {0}(id INTEGER PRIMARY KEY AUTO_INCREMENT, {1} TIMESTAMP(3), {2} DOUBLE)", hmsData.dbColumnName, columnTimestamp, columnData);
+                                cmd.CommandText = string.Format(@"CREATE TABLE IF NOT EXISTS {0}(id INTEGER PRIMARY KEY AUTO_INCREMENT, {1} TIMESTAMP(3), {2} DOUBLE)", hmsData.dbColumn, columnTimestamp, columnData);
                                 cmd.ExecuteNonQuery();
                             }
                             else
@@ -232,8 +240,8 @@ namespace HMS_Server
                     foreach (var hmsData in hmsDataCollection.GetDataList())
                     {
                         // Kun variabler som har column navn satt skal legges inn
-                        if (!string.IsNullOrEmpty(hmsData.dbColumnName))
-                            columnNames += ", " + hmsData.dbColumnName + " TEXT";
+                        if (!string.IsNullOrEmpty(hmsData.dbColumn))
+                            columnNames += ", " + hmsData.dbColumn + " TEXT";
                     }
 
                     // Opprette nytt database table
@@ -257,6 +265,46 @@ namespace HMS_Server
             }
         }
 
+        public void CreateTables(RadObservableCollectionEx<SensorGroup> sensorGroupList)
+        {
+            try
+            {
+                using (var connection = new MySqlConnection(connectionString))
+                {
+                    var cmd = new MySqlCommand();
+                    cmd.Connection = connection;
+
+                    connection.Open();
+
+                    // Liste med database column navn
+                    string columnNames = "";
+                    foreach (var sensorGroup in sensorGroupList)
+                    {
+                        // Kun variabler som har column navn satt skal legges inn
+                        if (!string.IsNullOrEmpty(sensorGroup.dbColumn))
+                            columnNames += ", " + sensorGroup.dbColumn + " INT";
+                    }
+
+                    // Opprette ny database table
+                    cmd.CommandText = string.Format(@"CREATE TABLE IF NOT EXISTS {0}(id INTEGER PRIMARY KEY AUTO_INCREMENT, {1} TIMESTAMP(3){2})",
+                        tableNamePrefixSensorStatus,
+                        columnTimestamp,
+                        columnNames);
+                    cmd.ExecuteNonQuery();
+
+                    connection.Close();
+
+                    isDatabaseConnectionOK = true;
+                }
+            }
+            catch (Exception)
+            {
+                isDatabaseConnectionOK = false;
+
+                // Sendes videre oppover fordi vi ikke kan lagre feilmeldinger herfra
+                throw;
+            }
+        }
         public void RemoveUnusedTables(RadObservableCollectionEx<SensorData> sensorDataList)
         {
             try
@@ -320,13 +368,115 @@ namespace HMS_Server
                         // Slå opp tabellene for hver sensor verdi og slette data
                         foreach (var sensorData in sensorDataList)
                         {
-                            string tableName = string.Format("{0}_{1}", tableNamePrefixSensorData, sensorData.id);
+                            if (sensorData.saveToDatabase)
+                            {
+                                string tableName = string.Format("{0}_{1}", tableNamePrefixSensorData, sensorData.id);
 
-                            // Slette alle data i database table
-                            cmd.CommandText = string.Format(@"TRUNCATE {0}", tableName);
-                            cmd.ExecuteNonQuery();
+                                // Slette alle data i database table
+                                cmd.CommandText = string.Format(@"TRUNCATE {0}", tableName);
+                                cmd.ExecuteNonQuery();
+                            }
                         }
                     }
+
+                    // Slette også alle feilmeldinger fra databasen
+                    cmd.CommandText = string.Format(@"TRUNCATE {0}", tableNameErrorMessages);
+                    cmd.ExecuteNonQuery();
+
+                    connection.Close();
+                }
+            }
+            catch (Exception)
+            {
+                throw;
+            }
+        }
+
+        public void DeleteAllDataHMS()
+        {
+            // NB! Tabellen må eksistere ellers gies feilmelding
+
+            try
+            {
+                using (var connection = new MySqlConnection(connectionString))
+                {
+                    var cmd = new MySqlCommand();
+                    cmd.Connection = connection;
+
+                    connection.Open();
+
+                    // Slå opp tabellene for hver sensor verdi og slette data
+                    string tableName = string.Format("{0}", tableNamePrefixHMSData);
+
+                    // Slette alle data i database table
+                    cmd.CommandText = string.Format(@"TRUNCATE {0}", tableName);
+                    cmd.ExecuteNonQuery();
+
+                    // Slette også alle feilmeldinger fra databasen
+                    cmd.CommandText = string.Format(@"TRUNCATE {0}", tableNameErrorMessages);
+                    cmd.ExecuteNonQuery();
+
+                    connection.Close();
+                }
+            }
+            catch (Exception)
+            {
+                throw;
+            }
+        }
+
+        public void DeleteAllDataSensorStatus()
+        {
+            // NB! Tabellen må eksistere ellers gies feilmelding
+
+            try
+            {
+                using (var connection = new MySqlConnection(connectionString))
+                {
+                    var cmd = new MySqlCommand();
+                    cmd.Connection = connection;
+
+                    connection.Open();
+
+                    // Slå opp tabellene for hver sensor verdi og slette data
+                    string tableName = string.Format("{0}", tableNamePrefixSensorStatus);
+
+                    // Slette alle data i database table
+                    cmd.CommandText = string.Format(@"TRUNCATE {0}", tableName);
+                    cmd.ExecuteNonQuery();
+
+                    // Slette også alle feilmeldinger fra databasen
+                    cmd.CommandText = string.Format(@"TRUNCATE {0}", tableNameErrorMessages);
+                    cmd.ExecuteNonQuery();
+
+                    connection.Close();
+                }
+            }
+            catch (Exception)
+            {
+                throw;
+            }
+        }
+
+        public void DeleteAllDataVerification()
+        {
+            // NB! Tabellen må eksistere ellers gies feilmelding
+
+            try
+            {
+                using (var connection = new MySqlConnection(connectionString))
+                {
+                    var cmd = new MySqlCommand();
+                    cmd.Connection = connection;
+
+                    connection.Open();
+
+                    // Slå opp tabellene for hver sensor verdi og slette data
+                    string tableName = string.Format("{0}", veriDataTableName);
+
+                    // Slette alle data i database table
+                    cmd.CommandText = string.Format(@"TRUNCATE {0}", tableName);
+                    cmd.ExecuteNonQuery();
 
                     // Slette også alle feilmeldinger fra databasen
                     cmd.CommandText = string.Format(@"TRUNCATE {0}", tableNameErrorMessages);
@@ -421,6 +571,93 @@ namespace HMS_Server
         //    }
         //}
 
+        public void Insert(RadObservableCollectionEx<SensorGroup> sensorGroupList)
+        {
+            try
+            {
+                if (isDatabaseConnectionOK)
+                {
+                    using (var connection = new MySqlConnection(connectionString))
+                    {
+                        // SQL kommando
+                        var cmd = new MySqlCommand();
+                        cmd.Connection = connection;
+
+                        // Liste med database column navn
+                        string columnNames = "";
+                        bool first = true;
+                        foreach (var sensorGroup in sensorGroupList)
+                        {
+                            // Kun variabler som har column navn satt skal legges inn
+                            if (!string.IsNullOrEmpty(sensorGroup.dbColumn))
+                            {
+                                if (first)
+                                    columnNames += sensorGroup.dbColumn;
+                                else
+                                    columnNames += ", " + sensorGroup.dbColumn;
+
+                                first = false;
+                            }
+                        }
+
+                        // Value parametre
+                        string valueNumbers = "";
+                        first = true;
+                        int i = 1;
+                        foreach (var sensorGroup in sensorGroupList)
+                        {
+                            // Kun variabler som har column navn satt skal legges inn
+                            if (!string.IsNullOrEmpty(sensorGroup.dbColumn))
+                            {
+                                if (first)
+                                    valueNumbers += string.Format("@{0}", i++);
+                                else
+                                    valueNumbers += ", " + string.Format("@{0}", i++);
+
+                                first = false;
+                            }
+                        }
+
+                        // Insert kommando
+                        cmd.CommandText = string.Format("INSERT INTO {0}({1}) VALUES({2})",
+                            tableNamePrefixSensorStatus,
+                            columnNames,
+                            valueNumbers);
+
+                        // Insert value parametre
+                        i = 1;
+                        foreach (var sensorGroup in sensorGroupList)
+                        {
+                            // Kun variabler som har column navn satt skal legges inn
+                            if (!string.IsNullOrEmpty(sensorGroup.dbColumn))
+                            {
+                                string paramName = string.Format("@{0}", i++);
+
+                                if (sensorGroup.status == DataStatus.OK)
+                                    cmd.Parameters.AddWithValue(paramName, 1);
+                                else
+                                    cmd.Parameters.AddWithValue(paramName, 0);
+                            }
+                        }
+
+                        // Åpne database connection
+                        connection.Open();
+
+                        // Insert execute
+                        cmd.ExecuteNonQuery();
+
+                        // Lukke database connection
+                        connection.Close();
+                    }
+                }
+            }
+            catch (Exception)
+            {
+                throw;
+            }
+        }
+
+
         public void Insert(DataCollection hmsDataCollection)
         {
             try
@@ -439,12 +676,12 @@ namespace HMS_Server
                         foreach (var hmsData in hmsDataCollection.GetDataList())
                         {
                             // Kun variabler som har column navn satt skal legges inn
-                            if (!string.IsNullOrEmpty(hmsData.dbColumnName))
+                            if (!string.IsNullOrEmpty(hmsData.dbColumn))
                             {
                                 if (first)
-                                    columnNames += hmsData.dbColumnName;
+                                    columnNames += hmsData.dbColumn;
                                 else
-                                    columnNames += ", " + hmsData.dbColumnName;
+                                    columnNames += ", " + hmsData.dbColumn;
 
                                 first = false;
                             }
@@ -457,7 +694,7 @@ namespace HMS_Server
                         foreach (var hmsData in hmsDataCollection.GetDataList())
                         {
                             // Kun variabler som har column navn satt skal legges inn
-                            if (!string.IsNullOrEmpty(hmsData.dbColumnName))
+                            if (!string.IsNullOrEmpty(hmsData.dbColumn))
                             {
                                 if (first)
                                     valueNumbers += string.Format("@{0}", i++);
@@ -479,7 +716,7 @@ namespace HMS_Server
                         foreach (var hmsData in hmsDataCollection.GetDataList())
                         {
                             // Kun variabler som har column navn satt skal legges inn
-                            if (!string.IsNullOrEmpty(hmsData.dbColumnName))
+                            if (!string.IsNullOrEmpty(hmsData.dbColumn))
                             {
                                 string paramName = string.Format("@{0}", i++);
 
@@ -595,15 +832,18 @@ namespace HMS_Server
                             // Slå opp tabellene for hver sensor verdi og slette data
                             foreach (var sensorData in sensorDataList)
                             {
-                                string tableName = string.Format("{0}_{1}", tableNamePrefixSensorData, sensorData.id);
+                                if (sensorData.saveToDatabase)
+                                {
+                                    string tableName = string.Format("{0}_{1}", tableNamePrefixSensorData, sensorData.id);
 
-                                // Slette alle data i database tabell
-                                cmd.CommandText = string.Format(@"DELETE FROM {0} WHERE {1} < TIMESTAMP(UTC_TIMESTAMP() - INTERVAL {2} DAY)",
-                                    tableName,
-                                    columnTimestamp,
-                                    config.Read(ConfigKey.DataStorageTime, Constants.DatabaseStorageTimeDefault));
+                                    // Slette alle data i database tabell
+                                    cmd.CommandText = string.Format(@"DELETE FROM {0} WHERE {1} < TIMESTAMP(UTC_TIMESTAMP() - INTERVAL {2} DAY)",
+                                        tableName,
+                                        columnTimestamp,
+                                        config.Read(ConfigKey.DataStorageTime, Constants.DatabaseStorageTimeDefault));
 
-                                cmd.ExecuteNonQuery();
+                                    cmd.ExecuteNonQuery();
+                                }
                             }
                         }
 
@@ -625,7 +865,7 @@ namespace HMS_Server
             }
         }
 
-        public void DatabaseMaintenance(DataCollection hmsDataCollection)
+        public void DatabaseMaintenanceHMSData()
         {
             // Slette data eldre enn angitt antall dager
             try
@@ -641,16 +881,49 @@ namespace HMS_Server
 
                         // HMS Data
                         ////////////////////////////////
-                        lock (hmsDataCollection.GetDataList())
-                        {
-                            // Slette alle gamle data i database tabell
-                            cmd.CommandText = string.Format(@"DELETE FROM {0} WHERE {1} < TIMESTAMP(UTC_TIMESTAMP() - INTERVAL {2} DAY)",
-                                tableNamePrefixHMSData,
-                                columnTimestamp,
-                                config.Read(ConfigKey.DataStorageTime, Constants.DatabaseStorageTimeDefault));
 
-                            cmd.ExecuteNonQuery();
-                        }
+                        // Slette alle gamle data i database tabell
+                        cmd.CommandText = string.Format(@"DELETE FROM {0} WHERE {1} < TIMESTAMP(UTC_TIMESTAMP() - INTERVAL {2} DAY)",
+                            tableNamePrefixHMSData,
+                            columnTimestamp,
+                            config.Read(ConfigKey.DataStorageTime, Constants.DatabaseStorageTimeDefault));
+
+                        cmd.ExecuteNonQuery();
+
+                        connection.Close();
+                    }
+                }
+            }
+            catch (Exception)
+            {
+                throw;
+            }
+        }
+
+        public void DatabaseMaintenanceSensorStatus()
+        {
+            // Slette data eldre enn angitt antall dager
+            try
+            {
+                if (isDatabaseConnectionOK)
+                {
+                    using (var connection = new MySqlConnection(connectionString))
+                    {
+                        var cmd = new MySqlCommand();
+                        cmd.Connection = connection;
+
+                        connection.Open();
+
+                        // Sensor Status
+                        ////////////////////////////////
+                           
+                        // Slette alle gamle data i database tabell
+                        cmd.CommandText = string.Format(@"DELETE FROM {0} WHERE {1} < TIMESTAMP(UTC_TIMESTAMP() - INTERVAL {2} DAY)",
+                            tableNamePrefixSensorStatus,
+                            columnTimestamp,
+                            config.Read(ConfigKey.DataStorageTime, Constants.DatabaseStorageTimeDefault));
+
+                        cmd.ExecuteNonQuery();
 
                         connection.Close();
                     }

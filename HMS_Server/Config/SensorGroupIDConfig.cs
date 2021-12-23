@@ -12,6 +12,7 @@ namespace HMS_Server
             {
                 id = sensor.id;
                 name = sensor.name;
+                dbColumn = sensor.dbColumn;
                 active = sensor.active.ToString();
             }
         }
@@ -29,6 +30,13 @@ namespace HMS_Server
         {
             get { return (string)this["name"]; }
             set { this["name"] = value; }
+        }
+
+        [ConfigurationProperty("dbColumn", DefaultValue = "", IsRequired = true, IsKey = false)]
+        public string dbColumn
+        {
+            get { return (string)this["dbColumn"]; }
+            set { this["dbColumn"] = value; }
         }
 
         [ConfigurationProperty("active", DefaultValue = "", IsRequired = true, IsKey = false)]

@@ -223,7 +223,7 @@ namespace HMS_Server
                                     sensorData.data = calculatedData.data;
 
                                     // Lagre til databasen
-                                    if (sensorData.saveFreq == DatabaseSaveFrequency.Sensor)
+                                    if (sensorData.saveToDatabase && sensorData.saveFreq == DatabaseSaveFrequency.Sensor)
                                     {
                                         // Legger ikke inn data dersom data ikke er satt
                                         if (!double.IsNaN(sensorData.data))

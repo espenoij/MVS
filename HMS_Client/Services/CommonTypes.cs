@@ -65,15 +65,15 @@ public enum LimitType
 
 public enum DataStatus
 {
-    OK,
     TIMEOUT_ERROR, // Timeout / error
+    OK,
     NONE
 }
 
 public enum LimitStatus
 {
-    OK,
-    OVER
+    OVER_LIMIT,
+    OK
 }
 
 public enum ValueType
@@ -257,6 +257,7 @@ public enum DatabaseMaintenanceType
 {
     SENSOR,
     HMS,
+    STATUS,
     ALL
 }
 

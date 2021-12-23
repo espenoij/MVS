@@ -89,57 +89,57 @@ namespace HMS_Server
 
             areaWindDirection2m.id = (int)ValueType.AreaWindDirection2m;
             areaWindDirection2m.name = "Area Wind Direction (2m)";
-            areaWindDirection2m.dbColumnName = "area_wind_direction_2m";
+            areaWindDirection2m.dbColumn = "area_wind_direction_2m";
 
             areaWindSpeed2m.id = (int)ValueType.AreaWindSpeed2m;
             areaWindSpeed2m.name = "Area Wind Speed (2m)";
             areaWindSpeed2m.sensorGroupId = Constants.NO_SENSOR_GROUP_ID;
-            areaWindSpeed2m.dbColumnName = "area_wind_speed_2m";
+            areaWindSpeed2m.dbColumn = "area_wind_speed_2m";
 
             areaWindGust2m.id = (int)ValueType.AreaWindGust2m;
             areaWindGust2m.name = "Area Wind Gust (2m)";
             areaWindGust2m.sensorGroupId = Constants.NO_SENSOR_GROUP_ID;
-            areaWindGust2m.dbColumnName = "area_wind_gust_2m";
+            areaWindGust2m.dbColumn = "area_wind_gust_2m";
 
             helideckWindDirectionRT.id = (int)ValueType.HelideckWindDirectionRT;
             helideckWindDirectionRT.name = "Helideck Wind Direction (RT)";
             helideckWindDirectionRT.sensorGroupId = Constants.NO_SENSOR_GROUP_ID;
-            helideckWindDirectionRT.dbColumnName = "helideck_wind_direction_rt";
+            helideckWindDirectionRT.dbColumn = "helideck_wind_direction_rt";
 
             helideckWindDirection2m.id = (int)ValueType.HelideckWindDirection2m;
             helideckWindDirection2m.name = "Helideck Wind Direction (2m)";
             helideckWindDirection2m.sensorGroupId = Constants.NO_SENSOR_GROUP_ID;
-            helideckWindDirection2m.dbColumnName = "helideck_wind_direction_2m";
+            helideckWindDirection2m.dbColumn = "helideck_wind_direction_2m";
 
             helideckWindDirection10m.id = (int)ValueType.HelideckWindDirection10m;
             helideckWindDirection10m.name = "Helideck Wind Direction (10m)";
             helideckWindDirection10m.sensorGroupId = Constants.NO_SENSOR_GROUP_ID;
-            helideckWindDirection10m.dbColumnName = "helideck_wind_direction_10m";
+            helideckWindDirection10m.dbColumn = "helideck_wind_direction_10m";
 
             helideckWindSpeedRT.id = (int)ValueType.HelideckWindSpeedRT;
             helideckWindSpeedRT.name = "Helideck Wind Speed (RT)";
             helideckWindSpeedRT.sensorGroupId = Constants.NO_SENSOR_GROUP_ID;
-            helideckWindSpeedRT.dbColumnName = "helideck_wind_speed_rt";
+            helideckWindSpeedRT.dbColumn = "helideck_wind_speed_rt";
 
             helideckWindSpeed2m.id = (int)ValueType.HelideckWindSpeed2m;
             helideckWindSpeed2m.name = "Helideck Wind Speed (2m)";
             helideckWindSpeed2m.sensorGroupId = Constants.NO_SENSOR_GROUP_ID;
-            helideckWindSpeed2m.dbColumnName = "helideck_wind_speed_2m";
+            helideckWindSpeed2m.dbColumn = "helideck_wind_speed_2m";
 
             helideckWindSpeed10m.id = (int)ValueType.HelideckWindSpeed10m;
             helideckWindSpeed10m.name = "Helideck Wind Speed (10m)";
             helideckWindSpeed10m.sensorGroupId = Constants.NO_SENSOR_GROUP_ID;
-            helideckWindSpeed10m.dbColumnName = "helideck_wind_speed_10m";
+            helideckWindSpeed10m.dbColumn = "helideck_wind_speed_10m";
 
             helideckWindGust2m.id = (int)ValueType.HelideckWindGust2m;
             helideckWindGust2m.name = "Helideck Wind Gust (2m)";
             helideckWindGust2m.sensorGroupId = Constants.NO_SENSOR_GROUP_ID;
-            helideckWindGust2m.dbColumnName = "helideck_wind_gust_2m";
+            helideckWindGust2m.dbColumn = "helideck_wind_gust_2m";
 
             helideckWindGust10m.id = (int)ValueType.HelideckWindGust10m;
             helideckWindGust10m.name = "Helideck Wind Gust (10m)";
             helideckWindGust10m.sensorGroupId = Constants.NO_SENSOR_GROUP_ID;
-            helideckWindGust10m.dbColumnName = "helideck_wind_gust_10m";
+            helideckWindGust10m.dbColumn = "helideck_wind_gust_10m";
 
             vesselHeading.InitProcessing(errorHandler, ErrorMessageCategory.AdminUser);
             vesselHeading.AddProcessing(CalculationType.RoundingDecimals, 0);
@@ -150,34 +150,34 @@ namespace HMS_Server
             relativeWindDir.id = (int)ValueType.RelativeWindDir;
             relativeWindDir.name = "Relative Wind Direction (CAP)";
             relativeWindDir.sensorGroupId = Constants.NO_SENSOR_GROUP_ID;
-            relativeWindDir.dbColumnName = "relative_wind_direction";
+            relativeWindDir.dbColumn = "relative_wind_direction";
 
             helideckHeading.id = (int)ValueType.HelideckHeading;
             helideckHeading.name = "Helideck Heading";
             helideckHeading.sensorGroupId = Constants.NO_SENSOR_GROUP_ID;
-            helideckHeading.dbColumnName = "helideck_heading";
+            helideckHeading.dbColumn = "helideck_heading";
 
             vesselHeadingDelta.id = (int)ValueType.VesselHeadingDelta;
             vesselHeadingDelta.name = "Vessel Heading (Delta) (CAP)";
             vesselHeadingDelta.sensorGroupId = Constants.NO_SENSOR_GROUP_ID;
-            vesselHeadingDelta.dbColumnName = "vessel_heading_delta";
+            vesselHeadingDelta.dbColumn = "vessel_heading_delta";
 
             windDirectionDelta.id = (int)ValueType.WindDirectionDelta;
             windDirectionDelta.name = "Wind Direction (Delta) (CAP)";
             windDirectionDelta.sensorGroupId = Constants.NO_SENSOR_GROUP_ID;
-            windDirectionDelta.dbColumnName = "wind_direction_delta";
+            windDirectionDelta.dbColumn = "wind_direction_delta";
 
             helicopterHeading.id = (int)ValueType.HelicopterHeading;
             helicopterHeading.name = "Helicopter Heading (CAP)";
             helicopterHeading.sensorGroupId = Constants.NO_SENSOR_GROUP_ID;
-            helicopterHeading.dbColumnName = "helicopter_heading";
+            helicopterHeading.dbColumn = "helicopter_heading";
 
             if (adminSettingsVM.regulationStandard == RegulationStandard.CAP)
             {
                 wsiData.id = (int)ValueType.WSI;
                 wsiData.name = "WSI";
                 wsiData.sensorGroupId = Constants.NO_SENSOR_GROUP_ID;
-                wsiData.dbColumnName = "wsi";
+                wsiData.dbColumn = "wsi";
             }
         }
 
@@ -401,6 +401,8 @@ namespace HMS_Server
             if (windDir?.status == DataStatus.OK &&
                 windSpd?.status == DataStatus.OK)
             {
+                DateTime newTimestamp = windSpd.timestamp;
+
                 // WIND & HEADING
                 //////////////////////////////////////////////////////////////////////////////
                 // Lagre i datalisten
@@ -418,7 +420,7 @@ namespace HMS_Server
                 // Sjekke om vi skal fjerne data fra vind data listen
                 for (int i = 0; i < windAverageData.windDataList.Count && windAverageData.windDataList.Count > 0; i++)
                 {
-                    if (windAverageData.windDataList[i]?.timestamp.AddMinutes(windAverageData.minutes) < DateTime.UtcNow)
+                    if (windAverageData.windDataList[i]?.timestamp.AddMinutes(windAverageData.minutes) < newTimestamp)
                     {
                         // Trekke fra i total summene
                         windAverageData.windDataDirTotal -= windAverageData.windDataList[i].dir;
@@ -453,33 +455,34 @@ namespace HMS_Server
                         // Sjekke om vi skal fjerne data fra 3-sek gust listen
                         for (int i = 0; i < windAverageData.gust3SecDataList.Count && windAverageData.gust3SecDataList.Count > 0; i++)
                         {
-                            if (windAverageData.gust3SecDataList[i]?.timestamp.AddSeconds(3) < DateTime.UtcNow)
+                            if (windAverageData.gust3SecDataList[i]?.timestamp.AddSeconds(3) < newTimestamp)
                                 windAverageData.gust3SecDataList.RemoveAt(i--);
                         }
 
-                        // Høyeste av 3 sek gust verdiene
-                        double gust3SecHigh = double.MinValue;
+                        // Laveste av 3 sek gust verdiene
+                        // (Målet er å finne høyeste gust verdi som har vart i 3 sek eller mer)
+                        double gust3SecLow = double.MaxValue;
                         foreach (var item in windAverageData.gust3SecDataList)
-                            if (item.spd > gust3SecHigh)
-                                gust3SecHigh = item.spd;
+                            if (item.spd < gust3SecLow)
+                                gust3SecLow = item.spd;
 
                         // Lagre i gust listen
                         windAverageData.gustDataList.Add(new Wind()
                         {
-                            spd = gust3SecHigh,
+                            spd = gust3SecLow,
                             timestamp = windSpd.timestamp
                         });
 
                         // Ny max verdi?
-                        if (gust3SecHigh > windAverageData.windDataGustMax)
+                        if (gust3SecLow > windAverageData.windDataGustMax)
                         {
-                            windAverageData.windDataGustMax = gust3SecHigh;
+                            windAverageData.windDataGustMax = gust3SecLow;
                         }
 
                         // Sjekke om vi skal fjerne data fra gust listen
                         for (int i = 0; i < windAverageData.gustDataList.Count && windAverageData.gustDataList.Count > 0; i++)
                         {
-                            if (windAverageData.gustDataList[i]?.timestamp.AddMinutes(windAverageData.minutes) < DateTime.UtcNow)
+                            if (windAverageData.gustDataList[i]?.timestamp.AddMinutes(windAverageData.minutes) < newTimestamp)
                             {
                                 // Sjekke om dette var max gust
                                 if (windAverageData.gustDataList[i].spd == windAverageData.windDataGustMax)
@@ -538,7 +541,7 @@ namespace HMS_Server
                         // Sjekke om vi skal fjerne data fra gust listen
                         for (int i = 0; i < windAverageData.gustDataList.Count && windAverageData.gustDataList.Count > 0; i++)
                         {
-                            if (windAverageData.gustDataList[i]?.timestamp.AddMinutes(windAverageData.minutes) < DateTime.UtcNow)
+                            if (windAverageData.gustDataList[i]?.timestamp.AddMinutes(windAverageData.minutes) < newTimestamp)
                             {
                                 // Sjekke om dette var max gust
                                 if (windAverageData.gustDataList[i].spd == windAverageData.windDataGustMax)
@@ -593,7 +596,7 @@ namespace HMS_Server
                     // Sjekke om vi skal fjerne data fra 3-sek gust listen
                     for (int i = 0; i < windAverageData.gust3SecDataList.Count && windAverageData.gust3SecDataList.Count > 0; i++)
                     {
-                        if (windAverageData.gust3SecDataList[i]?.timestamp.AddSeconds(3) < DateTime.UtcNow)
+                        if (windAverageData.gust3SecDataList[i]?.timestamp.AddSeconds(3) < newTimestamp)
                             windAverageData.gust3SecDataList.RemoveAt(i--);
                     }
 
@@ -621,7 +624,7 @@ namespace HMS_Server
                     // Sjekke om vi skal fjerne data fra gust listen
                     for (int i = 0; i < windAverageData.gustDataList.Count && windAverageData.gustDataList.Count > 0; i++)
                     {
-                        if (windAverageData.gustDataList[0]?.timestamp.AddMinutes(windAverageData.minutes) < DateTime.UtcNow)
+                        if (windAverageData.gustDataList[0]?.timestamp.AddMinutes(windAverageData.minutes) < newTimestamp)
                         {
                             // Sjekke om dette var max gust
                             if (windAverageData.gustDataList[i]?.spd == windAverageData.windDataGustMax)

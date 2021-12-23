@@ -12,9 +12,20 @@ namespace HMS_Server
         // Config
         private Config config;
 
-        public HMSSensorGroupStatus(Config config, DataCollection hmsOutputDataList)
+        // Database
+        private DatabaseHandler database;
+
+        // Error handler
+        private ErrorHandler errorHandler;
+
+        // Update Sensor Status
+        DispatcherTimer timer = new DispatcherTimer();
+
+        public HMSSensorGroupStatus(Config config, DatabaseHandler database, ErrorHandler errorHandler, DataCollection hmsOutputDataList)
         {
             this.config = config;
+            this.database = database;
+            this.errorHandler = errorHandler;
             this.hmsOutputDataList = hmsOutputDataList;
 
             // Hente liste med data fra fil
@@ -31,19 +42,31 @@ namespace HMS_Server
             }
 
             // Update Sensor Status
-            DispatcherTimer timer = new DispatcherTimer();
-
             timer.Interval = TimeSpan.FromMilliseconds(Constants.ServerUpdateFrequencyUI);
             timer.Tick += UpdateSensorStatus;
-            timer.Start();
 
             void UpdateSensorStatus(object sender, EventArgs e)
             {
                 // Løper gjennom alle sensorene...
                 for (int i = 0; i < Constants.MaxSensors; i++)
+                {
                     //  ...og sjekker om de tilknyttede verdiene har error status
                     UpdateStatus(i);
+                }
+
+                // Lagre til databasen
+                SaveToDatabase();
             }
+        }
+
+        public void Start()
+        {
+            timer.Start();
+        }
+
+        public void Stop()
+        {
+            timer.Stop();
         }
 
         public RadObservableCollectionEx<SensorGroup> GetSensorList()
@@ -95,6 +118,51 @@ namespace HMS_Server
                 {
                     sensorGroup.First().status = DataStatus.OK;
                 }
+            }
+        }
+
+
+        private void SaveToDatabase()
+        {
+            try
+            {
+                // Lagre til databasen
+                database.Insert(hmsSensorGroupList);
+
+                errorHandler.ResetDatabaseError(ErrorHandler.DatabaseErrorType.Insert6);
+            }
+            catch (Exception ex)
+            {
+                errorHandler.Insert(
+                    new ErrorMessage(
+                        DateTime.UtcNow,
+                        ErrorMessageType.Database,
+                        ErrorMessageCategory.None,
+                        string.Format("Database Error (InsertData SensorStatus)\n\nSystem Message:\n{0}", ex.Message)));
+
+                errorHandler.SetDatabaseError(ErrorHandler.DatabaseErrorType.Insert6);
+            }
+        }
+
+        public void CreateDataTables()
+        {
+            try
+            {
+                // Oppretter tabellene dersom de ikke eksisterer
+                database.CreateTables(hmsSensorGroupList);
+
+                errorHandler.ResetDatabaseError(ErrorHandler.DatabaseErrorType.CreateTablesSensorStatus);
+            }
+            catch (Exception ex)
+            {
+                errorHandler.Insert(
+                    new ErrorMessage(
+                        DateTime.UtcNow,
+                        ErrorMessageType.Database,
+                        ErrorMessageCategory.None,
+                        string.Format("Database Error (CreateTables SensorStatus)\n\nSystem Message:\n{0}", ex.Message)));
+
+                errorHandler.SetDatabaseError(ErrorHandler.DatabaseErrorType.CreateTablesSensorStatus);
             }
         }
     }

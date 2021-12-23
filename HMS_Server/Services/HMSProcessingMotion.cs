@@ -130,21 +130,21 @@ namespace HMS_Server
 
             pitchMax20mData.id = (int)ValueType.PitchMax20m;
             pitchMax20mData.name = "Pitch Max (20m)";
-            pitchMax20mData.dbColumnName = "pitch_max_20m";
+            pitchMax20mData.dbColumn = "pitch_max_20m";
             pitchMax20mData.InitProcessing(errorHandler, ErrorMessageCategory.AdminUser);
             pitchMax20mData.AddProcessing(CalculationType.TimeMaxAbsolute, Constants.Minutes20);
             pitchMax20mData.AddProcessing(CalculationType.RoundingDecimals, 1);
 
             pitchMax3hData.id = (int)ValueType.PitchMax3h;
             pitchMax3hData.name = "Pitch Max (3h)";
-            pitchMax3hData.dbColumnName = "pitch_max_3h";
+            pitchMax3hData.dbColumn = "pitch_max_3h";
             pitchMax3hData.InitProcessing(errorHandler, ErrorMessageCategory.AdminUser);
             pitchMax3hData.AddProcessing(CalculationType.TimeMaxAbsolute, Constants.Hours3);
             pitchMax3hData.AddProcessing(CalculationType.RoundingDecimals, 1);
 
             pitchMaxUp20mData.id = (int)ValueType.PitchMaxUp20m;
             pitchMaxUp20mData.name = "Pitch Max Up (20m)";
-            pitchMaxUp20mData.dbColumnName = "pitch_max_up_20m";
+            pitchMaxUp20mData.dbColumn = "pitch_max_up_20m";
             pitchMaxUp20mData.InitProcessing(errorHandler, ErrorMessageCategory.AdminUser);
             pitchMaxUp20mData.AddProcessing(CalculationType.TimeMaxPositive, Constants.Minutes20);
             pitchMaxUp20mData.AddProcessing(CalculationType.RoundingDecimals, 1);
@@ -152,7 +152,7 @@ namespace HMS_Server
 
             pitchMaxDown20mData.id = (int)ValueType.PitchMaxDown20m;
             pitchMaxDown20mData.name = "Pitch Max Down (20m)";
-            pitchMaxDown20mData.dbColumnName = "pitch_max_down_20m";
+            pitchMaxDown20mData.dbColumn = "pitch_max_down_20m";
             pitchMaxDown20mData.InitProcessing(errorHandler, ErrorMessageCategory.AdminUser);
             pitchMaxDown20mData.AddProcessing(CalculationType.TimeMaxNegative, Constants.Minutes20);
             pitchMaxDown20mData.AddProcessing(CalculationType.RoundingDecimals, 1);
@@ -160,21 +160,21 @@ namespace HMS_Server
 
             rollMax20mData.id = (int)ValueType.RollMax20m;
             rollMax20mData.name = "Roll Max (20m)";
-            rollMax20mData.dbColumnName = "roll_max_20m";
+            rollMax20mData.dbColumn = "roll_max_20m";
             rollMax20mData.InitProcessing(errorHandler, ErrorMessageCategory.AdminUser);
             rollMax20mData.AddProcessing(CalculationType.TimeMaxAbsolute, Constants.Minutes20);
             rollMax20mData.AddProcessing(CalculationType.RoundingDecimals, 1);
 
             rollMax3hData.id = (int)ValueType.RollMax3h;
             rollMax3hData.name = "Roll Max (3h)";
-            rollMax3hData.dbColumnName = "roll_max_3h";
+            rollMax3hData.dbColumn = "roll_max_3h";
             rollMax3hData.InitProcessing(errorHandler, ErrorMessageCategory.AdminUser);
             rollMax3hData.AddProcessing(CalculationType.TimeMaxAbsolute, Constants.Hours3);
             rollMax3hData.AddProcessing(CalculationType.RoundingDecimals, 1);
 
             rollMaxLeft20mData.id = (int)ValueType.RollMaxLeft20m;
             rollMaxLeft20mData.name = "Roll Max Left (20m)";
-            rollMaxLeft20mData.dbColumnName = "roll_max_left_20m";
+            rollMaxLeft20mData.dbColumn = "roll_max_left_20m";
             rollMaxLeft20mData.InitProcessing(errorHandler, ErrorMessageCategory.AdminUser);
             rollMaxLeft20mData.AddProcessing(CalculationType.TimeMaxNegative, Constants.Minutes20);
             rollMaxLeft20mData.AddProcessing(CalculationType.RoundingDecimals, 1);
@@ -182,7 +182,7 @@ namespace HMS_Server
 
             rollMaxRight20mData.id = (int)ValueType.RollMaxRight20m;
             rollMaxRight20mData.name = "Roll Max Right (20m)";
-            rollMaxRight20mData.dbColumnName = "roll_max_right_20m";
+            rollMaxRight20mData.dbColumn = "roll_max_right_20m";
             rollMaxRight20mData.InitProcessing(errorHandler, ErrorMessageCategory.AdminUser);
             rollMaxRight20mData.AddProcessing(CalculationType.TimeMaxPositive, Constants.Minutes20);
             rollMaxRight20mData.AddProcessing(CalculationType.RoundingDecimals, 1);
@@ -190,75 +190,75 @@ namespace HMS_Server
 
             inclinationData.id = (int)ValueType.Inclination;
             inclinationData.name = "Inclination";
-            inclinationData.dbColumnName = "inclination";
+            inclinationData.dbColumn = "inclination";
 
             inclination20mMaxData.id = (int)ValueType.InclinationMax20m;
             inclination20mMaxData.name = "Inclination Max (20m)";
-            inclination20mMaxData.dbColumnName = "inclination_max_20m";
+            inclination20mMaxData.dbColumn = "inclination_max_20m";
 
             inclination3hMaxData.id = (int)ValueType.InclinationMax3h;
             inclination3hMaxData.name = "Inclination Max (3h)";
-            inclination3hMaxData.dbColumnName = "inclination_max_3h";
+            inclination3hMaxData.dbColumn = "inclination_max_3h";
 
             heaveAmplitudeData.id = (int)ValueType.HeaveAmplitude;
             heaveAmplitudeData.name = "Heave Amplitude";
-            heaveAmplitudeData.dbColumnName = "heave_amplitude";
+            heaveAmplitudeData.dbColumn = "heave_amplitude";
             heaveAmplitudeData.InitProcessing(errorHandler, ErrorMessageCategory.AdminUser);
             heaveAmplitudeData.AddProcessing(CalculationType.Amplitude, 0);
             heaveAmplitudeData.AddProcessing(CalculationType.RoundingDecimals, 1);
 
             heaveAmplitudeMax20mData.id = (int)ValueType.HeaveAmplitudeMax20m;
             heaveAmplitudeMax20mData.name = "Heave Amplitude Max (20m)";
-            heaveAmplitudeMax20mData.dbColumnName = "heave_amplitude_max_20m";
+            heaveAmplitudeMax20mData.dbColumn = "heave_amplitude_max_20m";
             heaveAmplitudeMax20mData.InitProcessing(errorHandler, ErrorMessageCategory.AdminUser);
             heaveAmplitudeMax20mData.AddProcessing(CalculationType.TimeMaxAmplitude, Constants.Minutes20);
             heaveAmplitudeMax20mData.AddProcessing(CalculationType.RoundingDecimals, 1);
 
             heaveAmplitudeMax3hData.id = (int)ValueType.HeaveAmplitudeMax3h;
             heaveAmplitudeMax3hData.name = "Heave Amplitude Max (3h)";
-            heaveAmplitudeMax3hData.dbColumnName = "heave_amplitude_max_3h";
+            heaveAmplitudeMax3hData.dbColumn = "heave_amplitude_max_3h";
             heaveAmplitudeMax3hData.InitProcessing(errorHandler, ErrorMessageCategory.AdminUser);
             heaveAmplitudeMax3hData.AddProcessing(CalculationType.TimeMaxAmplitude, Constants.Hours3);
             heaveAmplitudeMax3hData.AddProcessing(CalculationType.RoundingDecimals, 1);
 
             heavePeriodMeanData.id = (int)ValueType.HeavePeriodMean;
             heavePeriodMeanData.name = "Heave Period";
-            heavePeriodMeanData.dbColumnName = "heave_period";
+            heavePeriodMeanData.dbColumn = "heave_period";
             heavePeriodMeanData.InitProcessing(errorHandler, ErrorMessageCategory.AdminUser);
             heavePeriodMeanData.AddProcessing(CalculationType.TimeMeanPeriod, Constants.Minutes20);
             heavePeriodMeanData.AddProcessing(CalculationType.RoundingDecimals, 1);
 
             significantHeaveRateData.id = (int)ValueType.SignificantHeaveRate;
             significantHeaveRateData.name = "Significant Heave Rate";
-            significantHeaveRateData.dbColumnName = "significant_heave_rate";
+            significantHeaveRateData.dbColumn = "significant_heave_rate";
             significantHeaveRateData.InitProcessing(errorHandler, ErrorMessageCategory.AdminUser);
             significantHeaveRateData.AddProcessing(CalculationType.SignificantHeaveRate, Constants.Minutes20);
             significantHeaveRateData.AddProcessing(CalculationType.RoundingDecimals, 1);
 
             significantHeaveRateMax20mData.id = (int)ValueType.SignificantHeaveRateMax20m; // Brukes til å justere akse på graf
             significantHeaveRateMax20mData.name = "Significant Heave Rate Max (20m)";
-            significantHeaveRateMax20mData.dbColumnName = "shr_max_20m";
+            significantHeaveRateMax20mData.dbColumn = "shr_max_20m";
             significantHeaveRateMax20mData.InitProcessing(errorHandler, ErrorMessageCategory.AdminUser);
             significantHeaveRateMax20mData.AddProcessing(CalculationType.TimeMaxPositive, Constants.Minutes20);
             significantHeaveRateMax20mData.AddProcessing(CalculationType.RoundingDecimals, 1);
 
             significantHeaveRateMax3hData.id = (int)ValueType.SignificantHeaveRateMax3h; // Brukes til å justere akse på graf
             significantHeaveRateMax3hData.name = "Significant Heave Rate Max (3h)";
-            significantHeaveRateMax3hData.dbColumnName = "shr_max_3h";
+            significantHeaveRateMax3hData.dbColumn = "shr_max_3h";
             significantHeaveRateMax3hData.InitProcessing(errorHandler, ErrorMessageCategory.AdminUser);
             significantHeaveRateMax3hData.AddProcessing(CalculationType.TimeMaxPositive, Constants.Hours3);
             significantHeaveRateMax3hData.AddProcessing(CalculationType.RoundingDecimals, 1);
 
             maxHeaveRateData.id = (int)ValueType.MaxHeaveRate;
             maxHeaveRateData.name = "Max Heave Rate";
-            maxHeaveRateData.dbColumnName = "max_heave_rate";
+            maxHeaveRateData.dbColumn = "max_heave_rate";
             maxHeaveRateData.InitProcessing(errorHandler, ErrorMessageCategory.AdminUser);
             maxHeaveRateData.AddProcessing(CalculationType.TimeMaxAbsolute, Constants.Minutes20);
             maxHeaveRateData.AddProcessing(CalculationType.RoundingDecimals, 1);
 
             significantWaveHeightData.id = (int)ValueType.SignificantWaveHeight;
             significantWaveHeightData.name = "Significant Wave Height";
-            significantWaveHeightData.dbColumnName = "significant_wave_height";
+            significantWaveHeightData.dbColumn = "significant_wave_height";
             significantWaveHeightData.InitProcessing(errorHandler, ErrorMessageCategory.AdminUser);
             significantWaveHeightData.AddProcessing(CalculationType.SignificantWaveHeight, Constants.Minutes20);
             significantWaveHeightData.AddProcessing(CalculationType.RoundingDecimals, 1);
@@ -266,29 +266,29 @@ namespace HMS_Server
             motionLimitPitchRoll.id = (int)ValueType.MotionLimitPitchRoll;
             motionLimitPitchRoll.name = "Motion Limit Pitch and Roll";
             motionLimitPitchRoll.sensorGroupId = Constants.NO_SENSOR_GROUP_ID;
-            motionLimitPitchRoll.dbColumnName = "motion_limit_pitch_roll";
+            motionLimitPitchRoll.dbColumn = "motion_limit_pitch_roll";
 
             motionLimitInclination.id = (int)ValueType.MotionLimitInclination;
             motionLimitInclination.name = "Motion Limit Inclination";
             motionLimitInclination.sensorGroupId = Constants.NO_SENSOR_GROUP_ID;
-            motionLimitInclination.dbColumnName = "motion_limit_inclination";
+            motionLimitInclination.dbColumn = "motion_limit_inclination";
 
             motionLimitHeaveAmplitude.id = (int)ValueType.MotionLimitHeaveAmplitude;
             motionLimitHeaveAmplitude.name = "Motion Limit Heave Amplitude";
             motionLimitHeaveAmplitude.sensorGroupId = Constants.NO_SENSOR_GROUP_ID;
-            motionLimitHeaveAmplitude.dbColumnName = "motion_limit_heave_amplitude";
+            motionLimitHeaveAmplitude.dbColumn = "motion_limit_heave_amplitude";
 
             motionLimitSignificantHeaveRate.id = (int)ValueType.MotionLimitSignificantHeaveRate;
             motionLimitSignificantHeaveRate.name = "Motion Limit Significant Heave Rate";
             motionLimitSignificantHeaveRate.sensorGroupId = Constants.NO_SENSOR_GROUP_ID;
-            motionLimitSignificantHeaveRate.dbColumnName = "motion_limit_shr";
+            motionLimitSignificantHeaveRate.dbColumn = "motion_limit_shr";
 
             if (adminSettingsVM.regulationStandard == RegulationStandard.CAP)
             {
                 msiData.id = (int)ValueType.MSI;
                 msiData.name = "MSI";
                 msiData.sensorGroupId = Constants.NO_SENSOR_GROUP_ID;
-                msiData.dbColumnName = "msi";
+                msiData.dbColumn = "msi";
             }
         }
 
@@ -533,7 +533,7 @@ namespace HMS_Server
                 if (IsSHR2mMinAboveLimit())
                 {
                     SHRIsWithinLimits = false;
-                    significantHeaveRateData.limitStatus = LimitStatus.OVER;
+                    significantHeaveRateData.limitStatus = LimitStatus.OVER_LIMIT;
                 }
                 else
                 {
@@ -542,14 +542,14 @@ namespace HMS_Server
             }
             else
             {
-                if (IsSHR10mMeanBelowLimit() && significantHeaveRateData.data <= motionLimits.GetLimit(LimitType.SignificantHeaveRate) * 0.95)
+                if (IsSHR10mMeanBelowLimit()/* && significantHeaveRateData.data <= motionLimits.GetLimit(LimitType.SignificantHeaveRate) * 0.95*/)
                 {
                     SHRIsWithinLimits = true;
                     significantHeaveRateData.limitStatus = LimitStatus.OK;
                 }
                 else
                 {
-                    significantHeaveRateData.limitStatus = LimitStatus.OVER;
+                    significantHeaveRateData.limitStatus = LimitStatus.OVER_LIMIT;
                 }
             }
         }
@@ -559,17 +559,17 @@ namespace HMS_Server
             if (hmsData.data <= motionLimits.GetLimit(limitType))
                 hmsData.limitStatus = LimitStatus.OK;
             else
-                hmsData.limitStatus = LimitStatus.OVER;
+                hmsData.limitStatus = LimitStatus.OVER_LIMIT;
         }
 
-        public bool IsSHR10mMeanBelowLimit() // Below or on limit...
+        public bool IsSHR10mMeanBelowLimit()
         {
-            return significantHeaveRate10mMean <= motionLimits.GetLimit(LimitType.SignificantHeaveRate);
+            return significantHeaveRate10mMean < motionLimits.GetLimit(LimitType.SignificantHeaveRate);
         }
 
         public bool IsSHR2mMinAboveLimit()
         {
-            return significantHeaveRate2mMin > motionLimits.GetLimit(LimitType.SignificantHeaveRate);
+            return significantHeaveRate2mMin >= motionLimits.GetLimit(LimitType.SignificantHeaveRate);
         }
 
         // Utgår i CAP 9b

@@ -17,11 +17,6 @@ namespace HMS_Server
         {
             try
             {
-                //foreach (var hmsData in hmsDataCollection.GetDataList())
-                //{
-                //    database.Insert(hmsData);
-                //}
-
                 database.Insert(hmsDataCollection);
 
                 errorHandler.ResetDatabaseError(ErrorHandler.DatabaseErrorType.Insert3);
@@ -39,7 +34,7 @@ namespace HMS_Server
             }
         }
 
-        public void CreateHMSDataTables(DataCollection hmsDataCollection)
+        public void CreateDataTables(DataCollection hmsDataCollection)
         {
             try
             {

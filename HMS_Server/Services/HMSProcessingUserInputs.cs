@@ -41,47 +41,47 @@ namespace HMS_Server
 
             helicopterType.id = (int)ValueType.SettingsHelicopterType;
             helicopterType.name = "Helicopter Type";
-            helicopterType.dbColumnName = "helicopter_type";
+            helicopterType.dbColumn = "helicopter_type";
             helicopterType.sensorGroupId = Constants.NO_SENSOR_GROUP_ID;
 
             helideckCategory.id = (int)ValueType.SettingsHelideckCategory;
             helideckCategory.name = "Helideck Category";
-            helideckCategory.dbColumnName = "helideck_cat";
+            helideckCategory.dbColumn = "helideck_cat";
             helideckCategory.sensorGroupId = Constants.NO_SENSOR_GROUP_ID;
 
             dayNight.id = (int)ValueType.SettingsDayNight;
             dayNight.name = "Day - Night";
-            dayNight.dbColumnName = "day_night";
+            dayNight.dbColumn = "day_night";
             dayNight.sensorGroupId = Constants.NO_SENSOR_GROUP_ID;
 
             displayMode.id = (int)ValueType.SettingsDisplayMode;
             displayMode.name = "Display Mode";
-            displayMode.dbColumnName = "display_mode";
+            displayMode.dbColumn = "display_mode";
             displayMode.sensorGroupId = Constants.NO_SENSOR_GROUP_ID;
 
             onDeckTime.id = (int)ValueType.SettingsOnDeckTime;
             onDeckTime.name = "On Deck Time";
-            onDeckTime.dbColumnName = "on_deck_time";
+            onDeckTime.dbColumn = "on_deck_time";
             onDeckTime.sensorGroupId = Constants.NO_SENSOR_GROUP_ID;
 
             onDeckHelicopterHeading.id = (int)ValueType.SettingsOnDeckHelicopterHeading;
             onDeckHelicopterHeading.name = "On Deck Helicopter Heading";
-            onDeckHelicopterHeading.dbColumnName = "on_deck_helicopter_hdg";
+            onDeckHelicopterHeading.dbColumn = "on_deck_helicopter_hdg";
             onDeckHelicopterHeading.sensorGroupId = Constants.NO_SENSOR_GROUP_ID;
 
             onDeckHelicopterHeadingIsCorrected.id = (int)ValueType.SettingsOnDeckHelicopterHeadingCorrected;
             onDeckHelicopterHeadingIsCorrected.name = "On Deck Helicopter Heading Corrected";
-            onDeckHelicopterHeadingIsCorrected.dbColumnName = "on_deck_helicopter_hdg_corr";
+            onDeckHelicopterHeadingIsCorrected.dbColumn = "on_deck_helicopter_hdg_corr";
             onDeckHelicopterHeadingIsCorrected.sensorGroupId = Constants.NO_SENSOR_GROUP_ID;
 
             onDeckVesselHeading.id = (int)ValueType.SettingsOnDeckVesselHeading;
             onDeckVesselHeading.name = "On Deck Vessel Heading";
-            onDeckVesselHeading.dbColumnName = "on_deck_vessel_hdg";
+            onDeckVesselHeading.dbColumn = "on_deck_vessel_hdg";
             onDeckVesselHeading.sensorGroupId = Constants.NO_SENSOR_GROUP_ID;
 
             onDeckWindDirection.id = (int)ValueType.SettingsOnDeckWindDirection;
             onDeckWindDirection.name = "On Deck Wind Direction";
-            onDeckWindDirection.dbColumnName = "on_deck_wind_dir";
+            onDeckWindDirection.dbColumn = "on_deck_wind_dir";
             onDeckWindDirection.sensorGroupId = Constants.NO_SENSOR_GROUP_ID;
         }
 

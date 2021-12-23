@@ -17,6 +17,8 @@ namespace HMS_Server
 
         private double prevID = 0;
 
+        private bool deviationReset = false;
+
         public Verfication(Config config, UserInputs userInputs)
         {
             this.userInputs = userInputs;
@@ -110,34 +112,45 @@ namespace HMS_Server
                 }
             }
 
-            // Sette on-deck i user inputs
-            if (verificationData.First().testData == 56100)
+            // Stopper alle verification operasjoner når vi passerer siste time ID
+            if (verificationData.First().testData <= 57600)
             {
-                userInputs.onDeckHelicopterHeading = 388;
-                userInputs.onDeckTime = DateTime.UtcNow;
-                userInputs.onDeckVesselHeading = testData.GetData(ValueType.VesselHeading).data;
-                //userInputs.onDeckWindDirection = testData.GetData(ValueType.HelideckWindDirection2m).data;
-            }
+                // Resetter deviation variablene når vi starter med referanse data fra 54000
+                if (!deviationReset && verificationData.First().testData >= 54000)
+                {
+                    Reset();
+                    deviationReset = true;
+                }
 
-            // Oppdatere/beregne forskjeller mellom test data og referanse data.
-            foreach (var item in verificationData)
-            {
-                // Sammenligne test og referanse data
-                if (item.id != VerificationType.TimeID) // Men aldri for Time ID
-                    item.Compare();
-                else
-                    item.differenceAbs = 0;
-            }
+                // Sette on-deck i user inputs
+                if (verificationData.First().testData == 56100)
+                {
+                    userInputs.onDeckHelicopterHeading = 388;
+                    userInputs.onDeckTime = DateTime.UtcNow;
+                    userInputs.onDeckVesselHeading = 335;
+                    userInputs.onDeckWindDirection = 334;
+                }
 
-            // Legge test data inn i databasen
-            // Sjekke time ID mot listen med time ID'er vi er interessert i
-            // Matcher time ID settet i referanse data filen fra CAA (OUT_PRE tab i excel ark)
-            if (refTimeIDList.Exists(x => x == verificationData.First().testData) && prevID != verificationData.First().testData)
-            {
-                database.Insert(verificationData);
+                // Oppdatere/beregne forskjeller mellom test data og referanse data.
+                foreach (var item in verificationData)
+                {
+                    // Sammenligne test og referanse data
+                    if (item.id != VerificationType.TimeID) // Men aldri for Time ID
+                        item.Compare();
+                    else
+                        item.differenceAbs = 0;
+                }
 
-                // Forhinderer duplikater
-                prevID = verificationData.First().testData;
+                // Legge test data inn i databasen
+                // Sjekke time ID mot listen med time ID'er vi er interessert i
+                // Matcher time ID settet i referanse data filen fra CAA (OUT_PRE tab i excel ark)
+                if (refTimeIDList.Exists(x => x == verificationData.First().testData) && prevID != verificationData.First().testData)
+                {
+                    database.Insert(verificationData);
+
+                    // Forhinderer duplikater
+                    prevID = verificationData.First().testData;
+                }
             }
         }
     }

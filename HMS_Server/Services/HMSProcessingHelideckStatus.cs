@@ -39,7 +39,7 @@ namespace HMS_Server
             helideckStatusData.id = (int)ValueType.HelideckStatus;
             helideckStatusData.name = "Helideck Status";
             helideckStatusData.sensorGroupId = Constants.NO_SENSOR_GROUP_ID;
-            helideckStatusData.dbColumnName = "helideck_status";
+            helideckStatusData.dbColumn = "helideck_status";
         }
 
         public void Update()
@@ -111,7 +111,6 @@ namespace HMS_Server
                     // Slår av lysene når vi ikke har ordentlige data
                     if (hmsOutputData.GetData(ValueType.PitchMax20m).status == DataStatus.TIMEOUT_ERROR ||
                         hmsOutputData.GetData(ValueType.RollMax20m).status == DataStatus.TIMEOUT_ERROR ||
-                        hmsOutputData.GetData(ValueType.HeaveAmplitudeMax20m).status == DataStatus.TIMEOUT_ERROR ||
                         hmsOutputData.GetData(ValueType.SignificantHeaveRate).status == DataStatus.TIMEOUT_ERROR)
                     {
                         // Status: OFF
@@ -126,7 +125,6 @@ namespace HMS_Server
                                 if (IsWithinLimits(ValueType.PitchMax20m) &&
                                     IsWithinLimits(ValueType.RollMax20m) &&
                                     IsWithinLimits(ValueType.InclinationMax20m) &&
-                                    IsWithinLimits(ValueType.HeaveAmplitudeMax20m) &&
                                     IsWithinLimits(ValueType.SignificantHeaveRate))
                                 {
                                     helideckStatus = GetMSIWSIState();
@@ -143,7 +141,6 @@ namespace HMS_Server
                                 if (!IsWithinLimits(ValueType.PitchMax20m) ||
                                     !IsWithinLimits(ValueType.RollMax20m) ||
                                     !IsWithinLimits(ValueType.InclinationMax20m) ||
-                                    !IsWithinLimits(ValueType.HeaveAmplitudeMax20m) ||
                                     (!IsWithinLimits(ValueType.SignificantHeaveRate) && hmsProcessingMotion.IsSHR2mMinAboveLimit()))
                                 {
                                     helideckStatus = HelideckStatusType.RED;
@@ -159,7 +156,6 @@ namespace HMS_Server
                                 if (IsWithinLimits(ValueType.PitchMax20m) &&
                                     IsWithinLimits(ValueType.RollMax20m) &&
                                     IsWithinLimits(ValueType.InclinationMax20m) &&
-                                    IsWithinLimits(ValueType.HeaveAmplitudeMax20m) &&
                                     /*IsWithinLimits(ValueType.SignificantHeaveRate95pct) && */hmsProcessingMotion.IsSHR10mMeanBelowLimit()) // Utgår i CAP 9b
                                 {
                                     helideckStatus = GetMSIWSIState();
@@ -221,6 +217,8 @@ namespace HMS_Server
 
         private bool IsWithinLimits(ValueType value)
         {
+            // Pitch/roll/inclination verdier skal gå i rødt dersom de er OVER grensen
+            // SHR skal gå i rød dersom den er PÅ ELLER OVER grensen
             switch (value)
             {
                 case ValueType.PitchMax20m:
@@ -238,7 +236,8 @@ namespace HMS_Server
                     return hmsOutputData.GetData(value)?.data <= motionLimits.GetLimit(LimitType.HeaveAmplitude);
 
                 case ValueType.SignificantHeaveRate:
-                    return hmsOutputData.GetData(value)?.data <= motionLimits.GetLimit(LimitType.SignificantHeaveRate);
+                    // SHR skal gå i rød dersom den er PÅ ELLER OVER grensen
+                    return hmsOutputData.GetData(value)?.data < motionLimits.GetLimit(LimitType.SignificantHeaveRate);
 
                 // Utgår i CAP 9b
                 //case ValueType.SignificantHeaveRate95pct:
