@@ -11,7 +11,7 @@ namespace HMS_Server
     /// <summary>
     /// Interaction logic for ErrorMessagesWindow.xaml
     /// </summary>
-    public partial class ErrorMessagesWindow : RadWindow
+    public partial class ErrorMessagesPage : UserControl
     {
         // Configuration
         private Config config;
@@ -22,18 +22,16 @@ namespace HMS_Server
         // Error Message List
         private RadObservableCollectionEx<ErrorMessage> errorMessageList = new RadObservableCollectionEx<ErrorMessage>();
 
-        public ErrorMessagesWindow(Config config, ErrorHandler errorHandler)
+        public ErrorMessagesPage()
+        {
+            InitializeComponent();
+        }
+
+        public void Init(Config config, ErrorHandler errorHandler)
         {
             this.config = config;
             this.errorHandler = errorHandler;
 
-            InitializeComponent();
-
-            InitUI();
-        }
-
-        private void InitUI()
-        {
             // View
             cboErrorMessageView.Items.Add("Live View");
             cboErrorMessageView.Items.Add("From Database");

@@ -308,42 +308,6 @@
     <Reference Include="Ubiety.Dns.Core, Version=2.2.1.0, Culture=neutral, PublicKeyToken=c5687fc88969c44d, processorArchitecture=MSIL">
       <HintPath>..\packages\MySql.Data.8.0.27\lib\net452\Ubiety.Dns.Core.dll</HintPath>
     </Reference>
-    <Reference Include="Uno, Version=255.255.255.255, Culture=neutral, processorArchitecture=MSIL">
-      <HintPath>..\packages\Uno.UI.4.0.11\lib\netstandard2.0\Uno.dll</HintPath>
-    </Reference>
-    <Reference Include="Uno.Diagnostics.Eventing, Version=255.255.255.255, Culture=neutral, processorArchitecture=MSIL">
-      <HintPath>..\packages\Uno.Diagnostics.Eventing.2.0.1\lib\netstandard2.0\Uno.Diagnostics.Eventing.dll</HintPath>
-    </Reference>
-    <Reference Include="Uno.Foundation, Version=255.255.255.255, Culture=neutral, processorArchitecture=MSIL">
-      <HintPath>..\packages\Uno.UI.4.0.11\lib\netstandard2.0\Uno.Foundation.dll</HintPath>
-    </Reference>
-    <Reference Include="Uno.Foundation.Logging, Version=255.255.255.255, Culture=neutral, processorArchitecture=MSIL">
-      <HintPath>..\packages\Uno.UI.4.0.11\lib\netstandard2.0\Uno.Foundation.Logging.dll</HintPath>
-    </Reference>
-    <Reference Include="Uno.UI, Version=255.255.255.255, Culture=neutral, processorArchitecture=MSIL">
-      <HintPath>..\packages\Uno.UI.4.0.11\lib\netstandard2.0\Uno.UI.dll</HintPath>
-    </Reference>
-    <Reference Include="Uno.UI.Composition, Version=255.255.255.255, Culture=neutral, processorArchitecture=MSIL">
-      <HintPath>..\packages\Uno.UI.4.0.11\lib\netstandard2.0\Uno.UI.Composition.dll</HintPath>
-    </Reference>
-    <Reference Include="Uno.UI.Dispatching, Version=255.255.255.255, Culture=neutral, processorArchitecture=MSIL">
-      <HintPath>..\packages\Uno.UI.4.0.11\lib\netstandard2.0\Uno.UI.Dispatching.dll</HintPath>
-    </Reference>
-    <Reference Include="Uno.UI.FluentTheme, Version=255.255.255.255, Culture=neutral, processorArchitecture=MSIL">
-      <HintPath>..\packages\Uno.UI.4.0.11\lib\netstandard2.0\Uno.UI.FluentTheme.dll</HintPath>
-    </Reference>
-    <Reference Include="Uno.UI.FluentTheme.v1, Version=255.255.255.255, Culture=neutral, processorArchitecture=MSIL">
-      <HintPath>..\packages\Uno.UI.4.0.11\lib\netstandard2.0\Uno.UI.FluentTheme.v1.dll</HintPath>
-    </Reference>
-    <Reference Include="Uno.UI.FluentTheme.v2, Version=255.255.255.255, Culture=neutral, processorArchitecture=MSIL">
-      <HintPath>..\packages\Uno.UI.4.0.11\lib\netstandard2.0\Uno.UI.FluentTheme.v2.dll</HintPath>
-    </Reference>
-    <Reference Include="Uno.UI.Toolkit, Version=255.255.255.255, Culture=neutral, processorArchitecture=MSIL">
-      <HintPath>..\packages\Uno.UI.4.0.11\lib\netstandard2.0\Uno.UI.Toolkit.dll</HintPath>
-    </Reference>
-    <Reference Include="Uno.Xaml, Version=255.255.255.255, Culture=neutral, processorArchitecture=MSIL">
-      <HintPath>..\packages\Uno.UI.4.0.11\lib\netstandard2.0\Uno.Xaml.dll</HintPath>
-    </Reference>
     <Reference Include="WindowsBase" />
     <Reference Include="PresentationCore" />
     <Reference Include="PresentationFramework" />
@@ -439,8 +403,8 @@
     <Compile Include="Services\Encryption.cs" />
     <Compile Include="Services\ErrorMessage.cs" />
     <Compile Include="Services\ErrorHandler.cs" />
-    <Compile Include="Pages\ErrorMessagesWindow.xaml.cs">
-      <DependentUpon>ErrorMessagesWindow.xaml</DependentUpon>
+    <Compile Include="Pages\ErrorMessagesPage.xaml.cs">
+      <DependentUpon>ErrorMessagesPage.xaml</DependentUpon>
     </Compile>
     <Compile Include="Services\MODBUS\ModbusDataRetrieval.cs" />
     <Compile Include="Services\MODBUS\ModbusRegister.cs" />
@@ -513,7 +477,7 @@
       <SubType>Designer</SubType>
       <Generator>MSBuild:Compile</Generator>
     </Page>
-    <Page Include="Pages\ErrorMessagesWindow.xaml">
+    <Page Include="Pages\ErrorMessagesPage.xaml">
       <SubType>Designer</SubType>
       <Generator>MSBuild:Compile</Generator>
     </Page>
@@ -609,6 +573,9 @@
   <ItemGroup>
     <Resource Include="Icons\outline_verified_white_36dp.png" />
   </ItemGroup>
+  <ItemGroup>
+    <Resource Include="Icons\outline_announcement_white_36dp.png" />
+  </ItemGroup>
   <Import Project="$(MSBuildToolsPath)\Microsoft.CSharp.targets" />
   <Import Project="..\packages\NETStandard.Library.2.0.3\build\netstandard2.0\NETStandard.Library.targets" Condition="Exists('..\packages\NETStandard.Library.2.0.3\build\netstandard2.0\NETStandard.Library.targets')" />
   <Target Name="EnsureNuGetPackageBuildImports" BeforeTargets="PrepareForBuild">
@@ -617,8 +584,6 @@
     </PropertyGroup>
     <Error Condition="!Exists('..\packages\NETStandard.Library.2.0.3\build\netstandard2.0\NETStandard.Library.targets')" Text="$([System.String]::Format('$(ErrorText)', '..\packages\NETStandard.Library.2.0.3\build\netstandard2.0\NETStandard.Library.targets'))" />
     <Error Condition="!Exists('..\packages\System.Text.Json.6.0.0\build\System.Text.Json.targets')" Text="$([System.String]::Format('$(ErrorText)', '..\packages\System.Text.Json.6.0.0\build\System.Text.Json.targets'))" />
-    <Error Condition="!Exists('..\packages\Uno.SourceGenerationTasks.4.0.0\build\netstandard1.0\Uno.SourceGenerationTasks.targets')" Text="$([System.String]::Format('$(ErrorText)', '..\packages\Uno.SourceGenerationTasks.4.0.0\build\netstandard1.0\Uno.SourceGenerationTasks.targets'))" />
   </Target>
   <Import Project="..\packages\System.Text.Json.6.0.0\build\System.Text.Json.targets" Condition="Exists('..\packages\System.Text.Json.6.0.0\build\System.Text.Json.targets')" />
-  <Import Project="..\packages\Uno.SourceGenerationTasks.4.0.0\build\netstandard1.0\Uno.SourceGenerationTasks.targets" Condition="Exists('..\packages\Uno.SourceGenerationTasks.4.0.0\build\netstandard1.0\Uno.SourceGenerationTasks.targets')" />
 </Project>

@@ -8,9 +8,6 @@ using System.Windows.Input;
 using System.Windows.Threading;
 using Telerik.Windows.Controls;
 using Telerik.Windows.Data;
-using Windows.Devices.Enumeration;
-using Windows.Devices.SerialCommunication;
-using Windows.Storage.Streams;
 
 namespace HMS_Server
 {
@@ -37,9 +34,6 @@ namespace HMS_Server
 
         // Database Maintenance Dispatcher
         private System.Timers.Timer maintenanceTimer;
-
-        // Error Messages Window
-        private ErrorMessagesWindow errorMessagesWindow;
 
         // Error Handler
         private ErrorHandler errorHandler;
@@ -119,6 +113,9 @@ namespace HMS_Server
                 errorHandler,
                 sensorDataDisplayList,
                 hmsOutputData.GetDataList());
+
+            // Error Message
+            ucErrorMessagesPage.Init(config, errorHandler);
 
             // HMS Lights Output
             InitLightsOutputUpdate();
@@ -215,7 +212,6 @@ namespace HMS_Server
             // TODO: DEBUG DEBUG DEBUG !!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!! Fjerne det under før release
             // Vise admin grensesnittet
             //AdminMode.IsActive = true;
-            //btnErrorMessages.Visibility = Visibility.Visible;
             //btnSetup.Visibility = Visibility.Visible;
             //tabInput_SensorData.Visibility = Visibility.Visible;
             //tabInput_SerialData.Visibility = Visibility.Visible;
@@ -813,27 +809,6 @@ namespace HMS_Server
             fileReaderDataDisplayList.Clear();
         }
 
-        private void btnErrorMessages_Click(object sender, RoutedEventArgs e)
-        {
-            // Open window (men kun 1 instans av dette vinduet)
-            if (errorMessagesWindow == null)
-            {
-                errorMessagesWindow = new ErrorMessagesWindow(config, errorHandler);
-                errorMessagesWindow.Closed += (a, b) => errorMessagesWindow = null;
-
-                errorMessagesWindow.Show();
-
-                // Vise ikon på taskbar
-                var window = errorMessagesWindow.ParentOfType<Window>();
-                window.ShowInTaskbar = true;
-            }
-            else
-            {
-
-                errorMessagesWindow.Show();
-            }
-        }
-
         private void gvStatusDisplay_SelectionChanged(object sender, SelectionChangeEventArgs e)
         {
             // Tillater ikke valg av linjer på status tab (kundens område)
@@ -921,12 +896,12 @@ namespace HMS_Server
                         if (AdminMode.IsActive)
                         {
                             // Vise admin grensesnittet
-                            btnErrorMessages.Visibility = Visibility.Visible;
                             btnSetup.Visibility = Visibility.Visible;
 
                             tabOutput.Visibility = Visibility.Visible;
                             tabHMS.Visibility = Visibility.Visible;
                             tabSettings.Visibility = Visibility.Visible;
+                            tabErrorMessages.Visibility = Visibility.Visible;
 
                             if (adminSettingsVM.dataVerificationEnabled)
                                 tabDataVerification.Visibility = Visibility.Visible;
@@ -940,7 +915,6 @@ namespace HMS_Server
                     else
                     {
                         // Skjule admin grensesnittet
-                        btnErrorMessages.Visibility = Visibility.Collapsed;
                         btnSetup.Visibility = Visibility.Collapsed;
 
                         // Sette Input tab som valgt tab og skjule resten
@@ -950,6 +924,7 @@ namespace HMS_Server
                         tabHMS.Visibility = Visibility.Collapsed;
                         tabDataVerification.Visibility = Visibility.Collapsed;
                         tabSettings.Visibility = Visibility.Collapsed;
+                        tabErrorMessages.Visibility = Visibility.Collapsed;
 
                         // Sette Status tab som valgt sub tab
                         tabInput_SensorData.Visibility = Visibility.Collapsed;

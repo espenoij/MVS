@@ -154,13 +154,6 @@
                             Margin="10">
 
                             <Button
-                                Name="btnErrorMessages"
-                                Click="btnErrorMessages_Click"
-                                Width="110"
-                                Margin="0,0,10,0"
-                                Visibility="Collapsed">Messages</Button>
-
-                            <Button
                                 Name="btnSetup"
                                 Click="btnSetup_Click"
                                 Width="110"
@@ -675,6 +668,25 @@
                     x:Name="ucAdminSettings" />
 
             </telerik:RadTabItem>
+
+            <!--==============================================================-->
+            <!--Side Menu: Messages-->
+            <!--==============================================================-->
+            <telerik:RadTabItem
+                Name="tabErrorMessages"
+                Visibility="Collapsed">
+
+                <telerik:RadTabItem.Header>
+                    <Image
+                        Width="36"
+                        Source="../Icons/outline_announcement_white_36dp.png" />
+                </telerik:RadTabItem.Header>
+
+                <uc:ErrorMessagesPage
+                    x:Name="ucErrorMessagesPage" />
+
+            </telerik:RadTabItem>
+
 
         </telerik:RadTabControl>
 
