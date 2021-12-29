@@ -48,6 +48,86 @@ namespace HMS_Server
         }
 
         // Lese double verdi fra appSettings med default verdi input
+        public double ReadWithDefault(string key, double defaultValue, ConfigType type = ConfigType.App)
+        {
+            string readString = string.Empty;
+
+            Configuration config;
+            if (type == ConfigType.App)
+                config = appConfig;
+            else
+                config = dataConfig;
+
+            try
+            {
+                var settings = config.AppSettings.Settings;
+                readString = settings[key]?.Value;
+            }
+            catch (Exception ex)
+            {
+                DialogHandler.Warning("Config (Read 2): Error reading from config file", ex.Message);
+            }
+
+            // Konvertere fra string til double
+            if (double.TryParse(readString, Constants.numberStyle, Constants.cultureInfo, out double readValue))
+                return readValue;
+            else
+                return defaultValue;
+        }
+
+        // Lese int verdi fra appSettings med default verdi input
+        public int ReadWithDefault(string key, int defaultValue, ConfigType type = ConfigType.App)
+        {
+            string readString = string.Empty;
+
+            Configuration config;
+            if (type == ConfigType.App)
+                config = appConfig;
+            else
+                config = dataConfig;
+
+            try
+            {
+                var settings = config.AppSettings.Settings;
+                readString = settings[key]?.Value;
+            }
+            catch (Exception ex)
+            {
+                DialogHandler.Warning("Config (Read 3): Error reading from config file", ex.Message);
+            }
+
+            // Konvertere fra string til double
+            if (int.TryParse(readString, Constants.numberStyle, Constants.cultureInfo, out int readValue))
+                return readValue;
+            else
+                return defaultValue;
+        }
+
+        // Lese int verdi fra appSettings med default verdi input
+        public string ReadWithDefault(string key, string defaultValue, ConfigType type = ConfigType.App)
+        {
+            string readString = string.Empty;
+
+            Configuration config;
+            if (type == ConfigType.App)
+                config = appConfig;
+            else
+                config = dataConfig;
+
+            try
+            {
+                var settings = config.AppSettings.Settings;
+                readString = settings[key]?.Value;
+            }
+            catch (Exception ex)
+            {
+                DialogHandler.Warning("Config (Read 4): Error reading from config file", ex.Message);
+            }
+
+            return readString;
+        }
+
+        // Lese double verdi fra appSettings med default verdi input
         public double Read(string key, double defaultValue, ConfigType type = ConfigType.App)
         {
             string readString = string.Empty;
@@ -65,7 +145,7 @@ namespace HMS_Server
             }
             catch (Exception ex)
             {
-                RadWindow.Alert(string.Format("Config (Read 2)\n\nError reading from config file\n\n{0}", TextHelper.Wrap(ex.Message)));
+                RadWindow.Alert(string.Format("Config (Read 5)\n\nError reading from config file\n\n{0}", TextHelper.Wrap(ex.Message)));
             }
 
             // Konvertere fra string til double
@@ -93,7 +173,7 @@ namespace HMS_Server
             }
             catch (Exception ex)
             {
-                RadWindow.Alert(string.Format("Config (Read 3)\n\nError reading from config file\n\n{0}", TextHelper.Wrap(ex.Message)));
+                RadWindow.Alert(string.Format("Config (Read 6)\n\nError reading from config file\n\n{0}", TextHelper.Wrap(ex.Message)));
             }
 
             // Konvertere fra string til double
@@ -127,7 +207,7 @@ namespace HMS_Server
             }
             catch (Exception ex)
             {
-                RadWindow.Alert(string.Format("Config (Read 4)\n\nError reading from config file\n\n{0}", TextHelper.Wrap(ex.Message)));
+                RadWindow.Alert(string.Format("Config (Read 7)\n\nError reading from config file\n\n{0}", TextHelper.Wrap(ex.Message)));
             }
 
             return result;
@@ -157,7 +237,7 @@ namespace HMS_Server
             }
             catch (Exception ex)
             {
-                RadWindow.Alert(string.Format("Config (Read 5)\n\nError reading from config file\n\n{0}", TextHelper.Wrap(ex.Message)));
+                RadWindow.Alert(string.Format("Config (Read 8)\n\nError reading from config file\n\n{0}", TextHelper.Wrap(ex.Message)));
             }
 
             // Konvertere fra string til double
@@ -640,6 +720,63 @@ namespace HMS_Server
             catch (Exception ex)
             {
                 RadWindow.Alert(string.Format("Helicopter WSI Limit Config (GetHelicopterWSILimits)\n\nCould not read all helicopter WSI limit data from config file\n\n{0}", TextHelper.Wrap(ex.Message)));
+            }
+
+            return null;
+        }
+
+        // Oppdatere eksisterende lights output data i config fil
+        public void SetLightsOutputData(SensorData sensorData)
+        {
+            // NB! Dersom data med angitt ID allerede finnes vil dette gi feilmelding
+            SensorConfig sensorConfig = new SensorConfig(sensorData);
+
+            try
+            {
+                // Hente seksjon
+                var sensorConfigSection = dataConfig.GetSection(ConfigKey.LightsOutput) as SensorConfigSection;
+                if (sensorConfigSection != null)
+                {
+                    bool found = false;
+
+                    // Søke etter sensor verdi med angitt ID
+                    for (int i = 0; i < sensorConfigSection.SensorDataItems.Count && !found; i++)
+                    {
+                        // Sjekke ID
+                        if (sensorConfigSection.SensorDataItems[i]?.id == sensorConfig.id)
+                        {
+                            // Oppdatere data
+                            sensorConfigSection.SensorDataItems[i] = sensorConfig;
+                            found = true;
+                        }
+                    }
+
+                    // Oppdater XML fil
+                    dataConfig.Save(ConfigurationSaveMode.Modified);
+                    ConfigurationManager.RefreshSection(ConfigKey.SensorSectionData);
+                }
+            }
+            catch (Exception ex)
+            {
+                RadWindow.Alert(string.Format("Config (SetLightsOutputData)\n\nCould not update lights output data in config file\n\n{0}", TextHelper.Wrap(ex.Message)));
+            }
+        }
+
+        // Hente ut liste med alle test data
+        public SensorConfig GetLightsOutputData()
+        {
+            try
+            {
+                // Hente seksjon
+                var testDataConfigSection = dataConfig.GetSection(ConfigKey.LightsOutput) as SensorConfigSection;
+                if (testDataConfigSection != null)
+                {
+                    return testDataConfigSection.SensorDataItems[0];
+                }
+            }
+            catch (Exception ex)
+            {
+                RadWindow.Alert(string.Format("Config (GetLightsOutputData)\n\nCould not read lights output data from config file\n\n{0}", TextHelper.Wrap(ex.Message)));
             }
 
             return null;

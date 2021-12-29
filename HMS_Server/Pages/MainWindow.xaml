@@ -550,6 +550,19 @@
 
                         </telerik:RadTabItem>
 
+                        <telerik:RadTabItem
+                            Name="tabHMS_LightsOutput"
+                            Header="Lights Output">
+
+                            <DockPanel>
+
+                                <uc:HMSLightsOutput
+                                    x:Name="ucHMSLightsOutput" />
+
+                            </DockPanel>
+
+                        </telerik:RadTabItem>
+
                     </telerik:RadTabControl>
 
                 </DockPanel>

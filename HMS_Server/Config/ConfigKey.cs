@@ -58,6 +58,9 @@
     public const string ReferenceData = "ReferenceData";
     public const string ReferenceDataItems = "ReferenceDataItems";
 
+    // Lights Output Data
+    public const string LightsOutput = "LightsOutput";
+
     // Client: Report data
     public const string Report = "Report";
     public const string NameOfHLO = "NameOfHLO";

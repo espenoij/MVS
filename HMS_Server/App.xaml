@@ -38,6 +38,13 @@
                 x:Key="ColorAmber">#FFEBBA47</SolidColorBrush>
             <SolidColorBrush
                 x:Key="ColorRed">#FFE11444</SolidColorBrush>
+            <SolidColorBrush
+                x:Key="ColorBlue">#FF6495ED</SolidColorBrush>
+            <SolidColorBrush
+                x:Key="ColorYellow">#ffecf05c</SolidColorBrush>
+            <SolidColorBrush
+                x:Key="ColorWhite">White</SolidColorBrush>
+
 
             <SolidColorBrush
                 x:Key="ColorHorizontalBarBackground">#ff666666</SolidColorBrush>

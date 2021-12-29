@@ -1,5 +1,6 @@
 ﻿using System;
 using System.Collections.Generic;
+using System.IO.Ports;
 using System.Linq;
 using System.Threading;
 using System.Windows;
@@ -7,6 +8,9 @@ using System.Windows.Input;
 using System.Windows.Threading;
 using Telerik.Windows.Controls;
 using Telerik.Windows.Data;
+using Windows.Devices.Enumeration;
+using Windows.Devices.SerialCommunication;
+using Windows.Storage.Streams;
 
 namespace HMS_Server
 {
@@ -65,11 +69,16 @@ namespace HMS_Server
         private DispatcherTimer hmsTimer = new DispatcherTimer();
         private DispatcherTimer hmsDatabaseTimer = new DispatcherTimer();
 
+        // Lights Output
+        private DispatcherTimer lightsOutputTimer = new DispatcherTimer();
+        private SensorData lightsOutputData;
+
         // Data verification
         DispatcherTimer verificationTimer = new DispatcherTimer();
 
         // View Models
         private AdminSettingsVM adminSettingsVM = new AdminSettingsVM();
+        private HMSLightsOutputVM hmsLightsOutputVM = new HMSLightsOutputVM();
 
         // Motion Limits
         private HelideckMotionLimits motionLimits;
@@ -90,9 +99,6 @@ namespace HMS_Server
             // Error Handler
             errorHandler = new ErrorHandler(database);
 
-            // Init view model
-            InitViewModel();
-
             // Init
             sensorDataRetrieval = new SensorDataRetrieval(config, database, errorHandler);
 
@@ -102,6 +108,9 @@ namespace HMS_Server
             // HMS Database
             hmsDatabase = new HMSDatabase(database, errorHandler);
 
+            // Init view model
+            InitViewModel();
+
             // Admin Settings
             ucAdminSettings.Init(
                 adminSettingsVM,
@@ -110,6 +119,10 @@ namespace HMS_Server
                 errorHandler,
                 sensorDataDisplayList,
                 hmsOutputData.GetDataList());
+
+            // HMS Lights Output
+            InitLightsOutputUpdate();
+            ucHMSLightsOutput.Init(lightsOutputData, hmsLightsOutputVM, config, adminSettingsVM);
 
             // Sensor Status
             sensorStatus = new HMSSensorGroupStatus(config, database, errorHandler, hmsOutputData);
@@ -219,6 +232,7 @@ namespace HMS_Server
             RestartRequiredCallback restartRequired = new RestartRequiredCallback(ShowRestartRequiredMessage);
 
             adminSettingsVM.Init(config, restartRequired);
+            hmsLightsOutputVM.Init(hmsOutputData, config);
         }
 
         private void InitUI()
@@ -276,6 +290,9 @@ namespace HMS_Server
                 hmsInputData,
                 config,
                 sensorStatus);
+
+            // Lights Output
+            ucHMSLightsOutput.Init(lightsOutputData, hmsLightsOutputVM, config, adminSettingsVM);
         }
 
         private void InitUIDataVerification()
@@ -588,15 +605,54 @@ namespace HMS_Server
             }
         }
 
+        private void InitLightsOutputUpdate()
+        {
+            // Hente lights output data fra fil
+            lightsOutputData = new SensorData(config.GetLightsOutputData());
+
+            // Dispatcher som oppdaterer verification data (test og referanse data)
+            lightsOutputTimer.Interval = TimeSpan.FromMilliseconds(Constants.ServerUpdateFrequencyVerification);
+            lightsOutputTimer.Tick += runLightsOutputUpdate;
+
+            void runLightsOutputUpdate(object sender, EventArgs e)
+            {
+                // Sende lys signal
+                SerialPort serialPort = new SerialPort();
+
+                serialPort.PortName = lightsOutputData.serialPort.portName;
+                serialPort.BaudRate = lightsOutputData.serialPort.baudRate;
+                serialPort.DataBits = lightsOutputData.serialPort.dataBits;
+                serialPort.StopBits = lightsOutputData.serialPort.stopBits;
+                serialPort.Parity = lightsOutputData.serialPort.parity;
+                serialPort.Handshake = lightsOutputData.serialPort.handshake;
+
+                serialPort.Open();
+                if (serialPort.IsOpen)
+                {
+                    serialPort.Write("Yo!!!!");
+                }
+                else
+                {
+                    errorHandler.Insert(
+                        new ErrorMessage(
+                            DateTime.UtcNow,
+                            ErrorMessageType.SerialPort,
+                            ErrorMessageCategory.None,
+                            string.Format("Lights Output Error (runLightsOutputUpdate)\n\nUnable to open port.")));
+                }
+                serialPort.Close();
+            }
+        }
+
         private void InitVerificationUpdate()
         {
             if (dataVerificationIsActive)
             {
                 // Dispatcher som oppdaterer verification data (test og referanse data)
-                verificationTimer.Interval = TimeSpan.FromMilliseconds(Constants.ServerUpdateFrequencyVerification);
-                verificationTimer.Tick += runVerificationUpdate;
+                verificationTimer.Interval = TimeSpan.FromMilliseconds(Constants.ServerUpdateFrequencyLightsOutput);
+                verificationTimer.Tick += runLightsOutputUpdate;
 
-                void runVerificationUpdate(object sender, EventArgs e)
+                void runLightsOutputUpdate(object sender, EventArgs e)
                 {
                     verfication.Update(hmsOutputData.GetDataList(), sensorDataDisplayList, database);
                 }
@@ -689,6 +745,9 @@ namespace HMS_Server
             // Sensor Status
             sensorStatus.Start();
 
+            // Lights Output
+            lightsOutputTimer.Start();
+
             // Data verification
             verificationTimer.Start();
         }
@@ -717,6 +776,9 @@ namespace HMS_Server
 
             // Sensor Status
             sensorStatus.Start();
+
+            // Lights Output
+            lightsOutputTimer.Stop();
 
             // Data verification
             verificationTimer.Stop();

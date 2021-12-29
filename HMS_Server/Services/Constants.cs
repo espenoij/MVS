@@ -21,6 +21,7 @@ class Constants
     public const int ServerUpdateFrequencyHMS = 250;            // Millisekund, brukes til prosessering av HMS data
     public const int HMSSaveToDatabaseFrequency = 500;            // Millisekund, brukes til lagring  av HMS data
     public const int ServerUpdateFrequencyVerification = 500;   // Millisekund, brukes til prosessering av verification data
+    public const int ServerUpdateFrequencyLightsOutput = 1000;
 
     public const int ClientUpdateFrequencyUIDefault = 500;
     public const int ClientUpdateFrequencyUIMin = 500;
