@@ -228,7 +228,7 @@ namespace HMS_Server
             RestartRequiredCallback restartRequired = new RestartRequiredCallback(ShowRestartRequiredMessage);
 
             adminSettingsVM.Init(config, restartRequired);
-            hmsLightsOutputVM.Init(hmsOutputData, config);
+            hmsLightsOutputVM.Init(hmsOutputData, config, userInputs);
         }
 
         private void InitUI()
@@ -286,9 +286,6 @@ namespace HMS_Server
                 hmsInputData,
                 config,
                 sensorStatus);
-
-            // Lights Output
-            ucHMSLightsOutput.Init(lightsOutputData, hmsLightsOutputVM, config, adminSettingsVM);
         }
 
         private void InitUIDataVerification()
@@ -607,36 +604,60 @@ namespace HMS_Server
             lightsOutputData = new SensorData(config.GetLightsOutputData());
 
             // Dispatcher som oppdaterer verification data (test og referanse data)
-            lightsOutputTimer.Interval = TimeSpan.FromMilliseconds(Constants.ServerUpdateFrequencyVerification);
+            lightsOutputTimer.Interval = TimeSpan.FromMilliseconds(Constants.ServerUpdateFrequencyLightsOutput);
             lightsOutputTimer.Tick += runLightsOutputUpdate;
 
             void runLightsOutputUpdate(object sender, EventArgs e)
             {
-                // Sende lys signal
-                SerialPort serialPort = new SerialPort();
+                Thread thread = new Thread(() => SendLightsOutput_Thread());
+                thread.Start();
 
-                serialPort.PortName = lightsOutputData.serialPort.portName;
-                serialPort.BaudRate = lightsOutputData.serialPort.baudRate;
-                serialPort.DataBits = lightsOutputData.serialPort.dataBits;
-                serialPort.StopBits = lightsOutputData.serialPort.stopBits;
-                serialPort.Parity = lightsOutputData.serialPort.parity;
-                serialPort.Handshake = lightsOutputData.serialPort.handshake;
+                void SendLightsOutput_Thread()
+                {
+                    try
+                    {
+                        // Sende lys signal
+                        SerialPort serialPort = new SerialPort();
 
-                serialPort.Open();
-                if (serialPort.IsOpen)
-                {
-                    serialPort.Write("Yo!!!!");
+                        // Serie port parametre
+                        serialPort.PortName = lightsOutputData.serialPort.portName;
+                        serialPort.BaudRate = lightsOutputData.serialPort.baudRate;
+                        serialPort.DataBits = lightsOutputData.serialPort.dataBits;
+                        serialPort.StopBits = lightsOutputData.serialPort.stopBits;
+                        serialPort.Parity = lightsOutputData.serialPort.parity;
+                        serialPort.Handshake = lightsOutputData.serialPort.handshake;
+
+                        // Åpne serie port
+                        serialPort.Open();
+
+                        if (serialPort.IsOpen)
+                        {
+                            // Sende lys signal
+                            serialPort.Write(hmsLightsOutputVM.HMSLightsOutput.ToString());
+                        }
+                        else
+                        {
+                            errorHandler.Insert(
+                                new ErrorMessage(
+                                    DateTime.UtcNow,
+                                    ErrorMessageType.SerialPort,
+                                    ErrorMessageCategory.None,
+                                    string.Format("Lights Output Error\n\nUnable to open port.")));
+                        }
+
+                        // Lukke serie port
+                        serialPort.Close();
+                    }
+                    catch (Exception ex)
+                    {
+                        errorHandler.Insert(
+                            new ErrorMessage(
+                                DateTime.UtcNow,
+                                ErrorMessageType.SerialPort,
+                                ErrorMessageCategory.AdminUser,
+                                    string.Format("Lights Output Error\n\n{0}", ex.Message)));
+                    }
                 }
-                else
-                {
-                    errorHandler.Insert(
-                        new ErrorMessage(
-                            DateTime.UtcNow,
-                            ErrorMessageType.SerialPort,
-                            ErrorMessageCategory.None,
-                            string.Format("Lights Output Error (runLightsOutputUpdate)\n\nUnable to open port.")));
-                }
-                serialPort.Close();
             }
         }
 
@@ -743,6 +764,7 @@ namespace HMS_Server
 
             // Lights Output
             lightsOutputTimer.Start();
+            ucHMSLightsOutput.Start();
 
             // Data verification
             verificationTimer.Start();
@@ -775,6 +797,7 @@ namespace HMS_Server
 
             // Lights Output
             lightsOutputTimer.Stop();
+            ucHMSLightsOutput.Stop();
 
             // Data verification
             verificationTimer.Stop();

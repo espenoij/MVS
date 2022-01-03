@@ -577,6 +577,10 @@ namespace HMS_Server
             {
                 adminSettingsVM.regulationStandard = (RegulationStandard)cboRegulationStandard.SelectedIndex;
                 adminSettingsVM.ApplicationRestartRequired();
+
+                if (adminSettingsVM.regulationStandard == RegulationStandard.NOROG &&
+                    adminSettingsVM.dataVerificationEnabled)
+                    adminSettingsVM.dataVerificationEnabled = false;
             }
         }
 

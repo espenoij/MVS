@@ -97,16 +97,16 @@ namespace HMS_Client
             {
                 _clientIsMaster = value;
 
-                //if (_clientIsMaster)
-                //{
-                //    config.Write(ConfigKey.ClientIsMaster, "1");
-                //    serverCom.StopUserInputsRequest();
-                //}
-                //else
-                //{
-                //    config.Write(ConfigKey.ClientIsMaster, "0");
-                //    serverCom.StartUserInputsRequest();
-                //}
+                if (_clientIsMaster)
+                {
+                    config.Write(ConfigKey.ClientIsMaster, "1");
+                    //serverCom.StopUserInputsRequest();
+                }
+                else
+                {
+                    config.Write(ConfigKey.ClientIsMaster, "0");
+                    //serverCom.StartUserInputsRequest();
+                }
 
                 OnPropertyChanged();
             }

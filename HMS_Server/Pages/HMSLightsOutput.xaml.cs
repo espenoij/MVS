@@ -15,6 +15,8 @@ namespace HMS_Server
         private Config config;
 
         private SensorData lightsOutputData;
+        private HMSLightsOutputVM hmsLightsOutputVM;
+        private AdminSettingsVM adminSettingsVM;
 
         public HMSLightsOutput()
         {
@@ -26,18 +28,46 @@ namespace HMS_Server
             DataContext = hmsLightsOutputVM;
 
             this.lightsOutputData = lightsOutputData;
+            this.hmsLightsOutputVM = hmsLightsOutputVM;
             this.config = config;
+            this.adminSettingsVM = adminSettingsVM;
 
             // CAP eller NOROG
             if (adminSettingsVM.regulationStandard == RegulationStandard.CAP)
             {
                 gridLights_CAP.Visibility = Visibility.Visible;
                 gridLights_NOROG.Visibility = Visibility.Collapsed;
+
+                // Test Mode: Helideck Status
+                cboTestHelideckStatus.Items.Add(HelideckStatusType.OFF.ToString());
+                cboTestHelideckStatus.Items.Add(HelideckStatusType.BLUE.ToString());
+                cboTestHelideckStatus.Items.Add(HelideckStatusType.AMBER.ToString());
+                cboTestHelideckStatus.Items.Add(HelideckStatusType.RED.ToString());
+
+                cboTestHelideckStatus.SelectedIndex = (int)HelideckStatusType.OFF;
+                cboTestHelideckStatus.Text = HelideckStatusType.OFF.ToString();
+
+                // Test Mode: Helideck Display Mode
+                cboTestDisplayMode.Items.Add(DisplayMode.PreLanding.ToString());
+                cboTestDisplayMode.Items.Add(DisplayMode.OnDeck.ToString());
+
+                cboTestDisplayMode.SelectedIndex = (int)DisplayMode.PreLanding;
+                cboTestDisplayMode.Text = DisplayMode.PreLanding.ToString();
             }
             else
             {
                 gridLights_CAP.Visibility = Visibility.Collapsed;
                 gridLights_NOROG.Visibility = Visibility.Visible;
+
+                // Test Mode: Helideck Status
+                cboTestHelideckStatus.Items.Add(HelideckStatusType.OFF.ToString());
+                cboTestHelideckStatus.Items.Add(HelideckStatusType.GREEN.ToString());
+                cboTestHelideckStatus.Items.Add(HelideckStatusType.RED.ToString());
+
+                cboTestHelideckStatus.SelectedIndex = (int)HelideckStatusType.OFF;
+                cboTestHelideckStatus.Text = HelideckStatusType.OFF.ToString();
+
+                cboTestDisplayMode.IsEnabled = false;
             }
 
             // COM Port Names
@@ -101,6 +131,28 @@ namespace HMS_Server
 
             // Skrive satt hand shake type i combobox feltet
             cboHandShake.Text = lightsOutputData.serialPort.handshake.ToString();
+        }
+
+        public void Start()
+        {
+            // Stenge tilgang til å konfigurere porten
+            cboPortName.IsEnabled = false;
+            cboBaudRate.IsEnabled = false;
+            cboDataBits.IsEnabled = false;
+            cboStopBits.IsEnabled = false;
+            cboParity.IsEnabled = false;
+            cboHandShake.IsEnabled = false;
+        }
+
+        public void Stop()
+        {
+            // Åpne tilgang til å konfigurere porten
+            cboPortName.IsEnabled = true;
+            cboBaudRate.IsEnabled = true;
+            cboDataBits.IsEnabled = true;
+            cboStopBits.IsEnabled = true;
+            cboParity.IsEnabled = true;
+            cboHandShake.IsEnabled = true;
         }
 
         private void ReadAvailableCOMPorts()
@@ -203,6 +255,16 @@ namespace HMS_Server
             {
                 RadWindow.Alert(string.Format("cboHandShake_SelectionChanged\n\n{0}", TextHelper.Wrap(ex.Message)));
             }
+        }
+
+        private void cboTestHelideckStatus_SelectionChanged(object sender, SelectionChangedEventArgs e)
+        {
+            hmsLightsOutputVM.testModeStatus = (HelideckStatusType)Enum.Parse(typeof(HelideckStatusType), cboTestHelideckStatus.SelectedItem.ToString());
+        }
+
+        private void cboTestDisplayMode_SelectionChanged(object sender, SelectionChangedEventArgs e)
+        {
+            hmsLightsOutputVM.testModeDisplayMode = (DisplayMode)Enum.Parse(typeof(DisplayMode), cboTestDisplayMode.SelectedItem.ToString());
         }
     }
 }

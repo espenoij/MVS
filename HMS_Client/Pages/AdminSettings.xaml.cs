@@ -28,7 +28,7 @@ namespace HMS_Client
         // Server Communications modul
         private ServerCom serverCom;
 
-        private bool clientIsMaster;
+        private bool prevClientIsMaster;
 
         public AdminSettings()
         {
@@ -53,7 +53,7 @@ namespace HMS_Client
             this.socketConsole = socketConsole;
             this.serverCom = serverCom;
 
-            clientIsMaster = adminSettingsVM.clientIsMaster;
+            prevClientIsMaster = adminSettingsVM.clientIsMaster;
 
             // General Settings: Regulation Standard
             foreach (RegulationStandard value in Enum.GetValues(typeof(RegulationStandard)))
@@ -429,18 +429,18 @@ namespace HMS_Client
 
         private void chkClientIsMaster_Checked(object sender, RoutedEventArgs e)
         {
-            if (clientIsMaster != adminSettingsVM.clientIsMaster)
+            if (prevClientIsMaster != adminSettingsVM.clientIsMaster)
                 adminSettingsVM.ApplicationRestartRequired();
 
-            clientIsMaster = adminSettingsVM.clientIsMaster;
+            prevClientIsMaster = adminSettingsVM.clientIsMaster;
         }
 
         private void chkClientIsMaster_Unchecked(object sender, RoutedEventArgs e)
         {
-            if (clientIsMaster != adminSettingsVM.clientIsMaster)
+            if (prevClientIsMaster != adminSettingsVM.clientIsMaster)
                 adminSettingsVM.ApplicationRestartRequired();
 
-            clientIsMaster = adminSettingsVM.clientIsMaster;
+            prevClientIsMaster = adminSettingsVM.clientIsMaster;
         }
     }
 }

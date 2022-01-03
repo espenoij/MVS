@@ -131,7 +131,7 @@ public enum ValueType
     SignificantHeaveRate,
     SignificantHeaveRateMax20m,
     SignificantHeaveRateMax3h,
-    //SignificantHeaveRate95pct,
+    SignificantHeaveRate95pct,
     MaxHeaveRate,
     SignificantWaveHeight,
     Inclination,

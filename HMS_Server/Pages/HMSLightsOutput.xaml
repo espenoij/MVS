@@ -28,28 +28,28 @@
             TargetType="Ellipse">
             <Style.Triggers>
                 <DataTrigger
-                    Binding="{Binding Path=helideckStatus}"
+                    Binding="{Binding Path=HMSLightsOutputToDisplay}"
                     Value="RED">
                     <Setter
                         Property="Fill"
                         Value="{StaticResource ColorRed}" />
                 </DataTrigger>
                 <DataTrigger
-                    Binding="{Binding Path=helideckStatus}"
+                    Binding="{Binding Path=HMSLightsOutputToDisplay}"
                     Value="BLUE">
                     <Setter
                         Property="Fill"
                         Value="{StaticResource ColorBackgroundSeparator}" />
                 </DataTrigger>
                 <DataTrigger
-                    Binding="{Binding Path=helideckStatus}"
+                    Binding="{Binding Path=HMSLightsOutputToDisplay}"
                     Value="AMBER">
                     <Setter
                         Property="Fill"
                         Value="{StaticResource ColorBackgroundSeparator}" />
                 </DataTrigger>
                 <DataTrigger
-                    Binding="{Binding Path=helideckStatus}"
+                    Binding="{Binding Path=HMSLightsOutputToDisplay}"
                     Value="OFF">
                     <Setter
                         Property="Fill"
@@ -63,28 +63,28 @@
             TargetType="Ellipse">
             <Style.Triggers>
                 <DataTrigger
-                    Binding="{Binding Path=helideckStatus}"
+                    Binding="{Binding Path=HMSLightsOutputToDisplay}"
                     Value="AMBER">
                     <Setter
                         Property="Fill"
                         Value="{StaticResource ColorAmber}" />
                 </DataTrigger>
                 <DataTrigger
-                    Binding="{Binding Path=helideckStatus}"
+                    Binding="{Binding Path=HMSLightsOutputToDisplay}"
                     Value="BLUE">
                     <Setter
                         Property="Fill"
                         Value="{StaticResource ColorBackgroundSeparator}" />
                 </DataTrigger>
                 <DataTrigger
-                    Binding="{Binding Path=helideckStatus}"
+                    Binding="{Binding Path=HMSLightsOutputToDisplay}"
                     Value="RED">
                     <Setter
                         Property="Fill"
                         Value="{StaticResource ColorBackgroundSeparator}" />
                 </DataTrigger>
                 <DataTrigger
-                    Binding="{Binding Path=helideckStatus}"
+                    Binding="{Binding Path=HMSLightsOutputToDisplay}"
                     Value="OFF">
                     <Setter
                         Property="Fill"
@@ -98,28 +98,28 @@
             TargetType="Ellipse">
             <Style.Triggers>
                 <DataTrigger
-                    Binding="{Binding Path=helideckStatus}"
+                    Binding="{Binding Path=HMSLightsOutputToDisplay}"
                     Value="BLUE">
                     <Setter
                         Property="Fill"
                         Value="{StaticResource ColorBlue}" />
                 </DataTrigger>
                 <DataTrigger
-                    Binding="{Binding Path=helideckStatus}"
+                    Binding="{Binding Path=HMSLightsOutputToDisplay}"
                     Value="RED">
                     <Setter
                         Property="Fill"
                         Value="{StaticResource ColorBackgroundSeparator}" />
                 </DataTrigger>
                 <DataTrigger
-                    Binding="{Binding Path=helideckStatus}"
+                    Binding="{Binding Path=HMSLightsOutputToDisplay}"
                     Value="AMBER">
                     <Setter
                         Property="Fill"
                         Value="{StaticResource ColorBackgroundSeparator}" />
                 </DataTrigger>
                 <DataTrigger
-                    Binding="{Binding Path=helideckStatus}"
+                    Binding="{Binding Path=HMSLightsOutputToDisplay}"
                     Value="OFF">
                     <Setter
                         Property="Fill"
@@ -134,21 +134,21 @@
             TargetType="Ellipse">
             <Style.Triggers>
                 <DataTrigger
-                    Binding="{Binding Path=helideckStatus}"
+                    Binding="{Binding Path=HMSLightsOutputToDisplay}"
                     Value="GREEN">
                     <Setter
                         Property="Fill"
                         Value="{StaticResource ColorGreen}" />
                 </DataTrigger>
                 <DataTrigger
-                    Binding="{Binding Path=helideckStatus}"
+                    Binding="{Binding Path=HMSLightsOutputToDisplay}"
                     Value="RED">
                     <Setter
                         Property="Fill"
                         Value="{StaticResource ColorBackgroundSeparator}" />
                 </DataTrigger>
                 <DataTrigger
-                    Binding="{Binding Path=helideckStatus}"
+                    Binding="{Binding Path=HMSLightsOutputToDisplay}"
                     Value="OFF">
                     <Setter
                         Property="Fill"
@@ -162,21 +162,21 @@
             TargetType="Ellipse">
             <Style.Triggers>
                 <DataTrigger
-                    Binding="{Binding Path=helideckStatus}"
+                    Binding="{Binding Path=HMSLightsOutputToDisplay}"
                     Value="RED">
                     <Setter
                         Property="Fill"
                         Value="{StaticResource ColorRed}" />
                 </DataTrigger>
                 <DataTrigger
-                    Binding="{Binding Path=helideckStatus}"
+                    Binding="{Binding Path=HMSLightsOutputToDisplay}"
                     Value="GREEN">
                     <Setter
                         Property="Fill"
                         Value="{StaticResource ColorBackgroundSeparator}" />
                 </DataTrigger>
                 <DataTrigger
-                    Binding="{Binding Path=helideckStatus}"
+                    Binding="{Binding Path=HMSLightsOutputToDisplay}"
                     Value="OFF">
                     <Setter
                         Property="Fill"
@@ -300,7 +300,7 @@
                         Content="Enable Test Mode"
                         VerticalAlignment="Center" />
                     <CheckBox
-                        IsChecked="{Binding Path=vesselIsSemiSubmersible, Mode=TwoWay}"
+                        IsChecked="{Binding Path=testMode, Mode=TwoWay}"
                         VerticalAlignment="Center"
                         HorizontalAlignment="Right" />
                 </DockPanel>
@@ -313,7 +313,8 @@
                         VerticalAlignment="Center" />
                     <telerik:RadComboBox
                         Width="auto"
-                        Name="cboTestHelideckStatus" />
+                        Name="cboTestHelideckStatus"
+                        SelectionChanged="cboTestHelideckStatus_SelectionChanged"/>
                 </DockPanel>
 
                 <!--Test: Landing/Takeoff Mode-->
@@ -324,7 +325,8 @@
                         VerticalAlignment="Center" />
                     <telerik:RadComboBox
                         Width="auto"
-                        Name="cboTestMode" />
+                        Name="cboTestDisplayMode"
+                        SelectionChanged="cboTestDisplayMode_SelectionChanged"/>
                 </DockPanel>
 
             </StackPanel>

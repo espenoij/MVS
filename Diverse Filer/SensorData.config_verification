@@ -9,6 +9,7 @@
 		<section name="TestData" type="HMS_Server.TestDataConfigSection, HMS_Server" />
 		<section name="ReferenceData" type="HMS_Server.ReferenceDataConfigSection, HMS_Server" />
 		<section name="HelicopterWSILimit" type="HMS_Server.HelicopterWSILimitConfigSection, HMS_Server" />
+		<section name="LightsOutput" type="HMS_Server.SensorConfigSection, HMS_Server" />
 	</configSections>
 
 	<appSettings>
@@ -17,8 +18,8 @@
 		<add key="OutgoingEmailServer" value="smtp.helifuel.no" />
 	</appSettings>
 	<Header>
-  <add key="nextID" value="98" />
- </Header>
+		<add key="nextID" value="98" />
+	</Header>
 
 	<SensorData>
   <SensorHeaders>
@@ -31,16 +32,6 @@
      autoExtractValue="False" calculationType1="GPSPosition" calculationParameter1="0"
      calculationType2="None" calculationParameter2="0" calculationType3="None"
      calculationParameter3="0" calculationType4="None" calculationParameter4="0" />
-    <modbus portName="" baudRate="" dataBits="" stopBits="" parity=""
-     handshake="" tcpAddress="" tcpPort="" slaveID="" startAddress=""
-     totalAddresses="" dataAddress="" calculationType1="" calculationParameter1=""
-     calculationType2="" calculationParameter2="" calculationType3=""
-     calculationParameter3="" calculationType4="" calculationParameter4="" />
-    <fileReader fileFolder="" fileName="" readFrequency="" delimiter=""
-     fixedPosData="" fixedPosStart="" fixedPosTotal="" dataField=""
-     decimalSeparator="" autoExtractValue="" calculationType1="" calculationParameter1=""
-     calculationType2="" calculationParameter2="" calculationType3=""
-     calculationParameter3="" calculationType4="" calculationParameter4="" />
    </sensor>
    <sensor id="2" type="SerialPort" name="GPS Longitude" description="Test A&#xD;&#xA;"
     saveToDatabase="False" saveFreq="Sensor">
@@ -51,16 +42,6 @@
      autoExtractValue="False" calculationType1="GPSPosition" calculationParameter1="0"
      calculationType2="None" calculationParameter2="0" calculationType3="None"
      calculationParameter3="0" calculationType4="None" calculationParameter4="0" />
-    <modbus portName="" baudRate="" dataBits="" stopBits="" parity=""
-     handshake="" tcpAddress="" tcpPort="" slaveID="" startAddress=""
-     totalAddresses="" dataAddress="" calculationType1="" calculationParameter1=""
-     calculationType2="" calculationParameter2="" calculationType3=""
-     calculationParameter3="" calculationType4="" calculationParameter4="" />
-    <fileReader fileFolder="" fileName="" readFrequency="" delimiter=""
-     fixedPosData="" fixedPosStart="" fixedPosTotal="" dataField=""
-     decimalSeparator="" autoExtractValue="" calculationType1="" calculationParameter1=""
-     calculationType2="" calculationParameter2="" calculationType3=""
-     calculationParameter3="" calculationType4="" calculationParameter4="" />
    </sensor>
    <sensor id="7" type="ModbusTCP" name="MODBUS Test 12" description="MODBUS test sensor 1412"
     saveToDatabase="False" saveFreq="Program">
@@ -375,6 +356,18 @@
    </sensor>
    <sensor id="58" type="FileReader" name="CAP Test: Roll" description="Testing 1"
     saveToDatabase="False" saveFreq="Program">
+    <serialPort portName="" baudRate="" dataBits="" stopBits="" parity=""
+     handshake="" packetHeader="" packetEnd="" packetDelimiter=""
+     packetCombineFields="" fixedPosData="" fixedPosStart="" fixedPosTotal=""
+     dataField="" decimalSeparator="" autoExtractValue="" calculationType1=""
+     calculationParameter1="" calculationType2="" calculationParameter2=""
+     calculationType3="" calculationParameter3="" calculationType4=""
+     calculationParameter4="" />
+    <modbus portName="" baudRate="" dataBits="" stopBits="" parity=""
+     handshake="" tcpAddress="" tcpPort="" slaveID="" startAddress=""
+     totalAddresses="" dataAddress="" calculationType1="" calculationParameter1=""
+     calculationType2="" calculationParameter2="" calculationType3=""
+     calculationParameter3="" calculationType4="" calculationParameter4="" />
     <fileReader fileFolder="D:\HMS\Diverse Filer" fileName="CAP_Test_data.csv"
      readFrequency="500" delimiter="," fixedPosData="False" fixedPosStart="10"
      fixedPosTotal="6" dataField="1" decimalSeparator="Point" autoExtractValue="False"
@@ -384,6 +377,18 @@
    </sensor>
    <sensor id="59" type="FileReader" name="CAP Test: Pitch" description="Testing 1"
     saveToDatabase="False" saveFreq="Program">
+    <serialPort portName="" baudRate="" dataBits="" stopBits="" parity=""
+     handshake="" packetHeader="" packetEnd="" packetDelimiter=""
+     packetCombineFields="" fixedPosData="" fixedPosStart="" fixedPosTotal=""
+     dataField="" decimalSeparator="" autoExtractValue="" calculationType1=""
+     calculationParameter1="" calculationType2="" calculationParameter2=""
+     calculationType3="" calculationParameter3="" calculationType4=""
+     calculationParameter4="" />
+    <modbus portName="" baudRate="" dataBits="" stopBits="" parity=""
+     handshake="" tcpAddress="" tcpPort="" slaveID="" startAddress=""
+     totalAddresses="" dataAddress="" calculationType1="" calculationParameter1=""
+     calculationType2="" calculationParameter2="" calculationType3=""
+     calculationParameter3="" calculationType4="" calculationParameter4="" />
     <fileReader fileFolder="D:\HMS\Diverse Filer" fileName="CAP_Test_data.csv"
      readFrequency="500" delimiter="," fixedPosData="False" fixedPosStart="10"
      fixedPosTotal="6" dataField="7" decimalSeparator="Point" autoExtractValue="False"
@@ -393,6 +398,18 @@
    </sensor>
    <sensor id="60" type="FileReader" name="CAP Test: AX" description="Testing 1"
     saveToDatabase="False" saveFreq="Program">
+    <serialPort portName="" baudRate="" dataBits="" stopBits="" parity=""
+     handshake="" packetHeader="" packetEnd="" packetDelimiter=""
+     packetCombineFields="" fixedPosData="" fixedPosStart="" fixedPosTotal=""
+     dataField="" decimalSeparator="" autoExtractValue="" calculationType1=""
+     calculationParameter1="" calculationType2="" calculationParameter2=""
+     calculationType3="" calculationParameter3="" calculationType4=""
+     calculationParameter4="" />
+    <modbus portName="" baudRate="" dataBits="" stopBits="" parity=""
+     handshake="" tcpAddress="" tcpPort="" slaveID="" startAddress=""
+     totalAddresses="" dataAddress="" calculationType1="" calculationParameter1=""
+     calculationType2="" calculationParameter2="" calculationType3=""
+     calculationParameter3="" calculationType4="" calculationParameter4="" />
     <fileReader fileFolder="D:\HMS\Diverse Filer" fileName="CAP_Test_data.csv"
      readFrequency="500" delimiter="," fixedPosData="False" fixedPosStart="10"
      fixedPosTotal="6" dataField="18" decimalSeparator="Point" autoExtractValue="False"
@@ -402,6 +419,18 @@
    </sensor>
    <sensor id="61" type="FileReader" name="CAP Test: AY" description="Testing 1"
     saveToDatabase="False" saveFreq="Program">
+    <serialPort portName="" baudRate="" dataBits="" stopBits="" parity=""
+     handshake="" packetHeader="" packetEnd="" packetDelimiter=""
+     packetCombineFields="" fixedPosData="" fixedPosStart="" fixedPosTotal=""
+     dataField="" decimalSeparator="" autoExtractValue="" calculationType1=""
+     calculationParameter1="" calculationType2="" calculationParameter2=""
+     calculationType3="" calculationParameter3="" calculationType4=""
+     calculationParameter4="" />
+    <modbus portName="" baudRate="" dataBits="" stopBits="" parity=""
+     handshake="" tcpAddress="" tcpPort="" slaveID="" startAddress=""
+     totalAddresses="" dataAddress="" calculationType1="" calculationParameter1=""
+     calculationType2="" calculationParameter2="" calculationType3=""
+     calculationParameter3="" calculationType4="" calculationParameter4="" />
     <fileReader fileFolder="D:\HMS\Diverse Filer" fileName="CAP_Test_data.csv"
      readFrequency="500" delimiter="," fixedPosData="False" fixedPosStart="10"
      fixedPosTotal="6" dataField="19" decimalSeparator="Point" autoExtractValue="False"
@@ -411,6 +440,18 @@
    </sensor>
    <sensor id="62" type="FileReader" name="CAP Test: AZ" description="Testing 1"
     saveToDatabase="False" saveFreq="Program">
+    <serialPort portName="" baudRate="" dataBits="" stopBits="" parity=""
+     handshake="" packetHeader="" packetEnd="" packetDelimiter=""
+     packetCombineFields="" fixedPosData="" fixedPosStart="" fixedPosTotal=""
+     dataField="" decimalSeparator="" autoExtractValue="" calculationType1=""
+     calculationParameter1="" calculationType2="" calculationParameter2=""
+     calculationType3="" calculationParameter3="" calculationType4=""
+     calculationParameter4="" />
+    <modbus portName="" baudRate="" dataBits="" stopBits="" parity=""
+     handshake="" tcpAddress="" tcpPort="" slaveID="" startAddress=""
+     totalAddresses="" dataAddress="" calculationType1="" calculationParameter1=""
+     calculationType2="" calculationParameter2="" calculationType3=""
+     calculationParameter3="" calculationType4="" calculationParameter4="" />
     <fileReader fileFolder="D:\HMS\Diverse Filer" fileName="CAP_Test_data.csv"
      readFrequency="500" delimiter="," fixedPosData="False" fixedPosStart="10"
      fixedPosTotal="6" dataField="20" decimalSeparator="Point" autoExtractValue="False"
@@ -420,6 +461,18 @@
    </sensor>
    <sensor id="63" type="FileReader" name="CAP Test: Heave" description="Testing 1"
     saveToDatabase="False" saveFreq="Program">
+    <serialPort portName="" baudRate="" dataBits="" stopBits="" parity=""
+     handshake="" packetHeader="" packetEnd="" packetDelimiter=""
+     packetCombineFields="" fixedPosData="" fixedPosStart="" fixedPosTotal=""
+     dataField="" decimalSeparator="" autoExtractValue="" calculationType1=""
+     calculationParameter1="" calculationType2="" calculationParameter2=""
+     calculationType3="" calculationParameter3="" calculationType4=""
+     calculationParameter4="" />
+    <modbus portName="" baudRate="" dataBits="" stopBits="" parity=""
+     handshake="" tcpAddress="" tcpPort="" slaveID="" startAddress=""
+     totalAddresses="" dataAddress="" calculationType1="" calculationParameter1=""
+     calculationType2="" calculationParameter2="" calculationType3=""
+     calculationParameter3="" calculationType4="" calculationParameter4="" />
     <fileReader fileFolder="D:\HMS\Diverse Filer" fileName="CAP_Test_data.csv"
      readFrequency="500" delimiter="," fixedPosData="False" fixedPosStart="10"
      fixedPosTotal="6" dataField="17" decimalSeparator="Point" autoExtractValue="False"
@@ -429,6 +482,18 @@
    </sensor>
    <sensor id="64" type="FileReader" name="CAP Test: Heave Rate (Velocity)"
     description="Testing 1" saveToDatabase="False" saveFreq="Program">
+    <serialPort portName="" baudRate="" dataBits="" stopBits="" parity=""
+     handshake="" packetHeader="" packetEnd="" packetDelimiter=""
+     packetCombineFields="" fixedPosData="" fixedPosStart="" fixedPosTotal=""
+     dataField="" decimalSeparator="" autoExtractValue="" calculationType1=""
+     calculationParameter1="" calculationType2="" calculationParameter2=""
+     calculationType3="" calculationParameter3="" calculationType4=""
+     calculationParameter4="" />
+    <modbus portName="" baudRate="" dataBits="" stopBits="" parity=""
+     handshake="" tcpAddress="" tcpPort="" slaveID="" startAddress=""
+     totalAddresses="" dataAddress="" calculationType1="" calculationParameter1=""
+     calculationType2="" calculationParameter2="" calculationType3=""
+     calculationParameter3="" calculationType4="" calculationParameter4="" />
     <fileReader fileFolder="D:\HMS\Diverse Filer" fileName="CAP_Test_data.csv"
      readFrequency="500" delimiter="," fixedPosData="False" fixedPosStart="10"
      fixedPosTotal="6" dataField="16" decimalSeparator="Point" autoExtractValue="False"
@@ -438,6 +503,18 @@
    </sensor>
    <sensor id="65" type="FileReader" name="CAP Test: Vessel Heading"
     description="Testing 1" saveToDatabase="False" saveFreq="Program">
+    <serialPort portName="" baudRate="" dataBits="" stopBits="" parity=""
+     handshake="" packetHeader="" packetEnd="" packetDelimiter=""
+     packetCombineFields="" fixedPosData="" fixedPosStart="" fixedPosTotal=""
+     dataField="" decimalSeparator="" autoExtractValue="" calculationType1=""
+     calculationParameter1="" calculationType2="" calculationParameter2=""
+     calculationType3="" calculationParameter3="" calculationType4=""
+     calculationParameter4="" />
+    <modbus portName="" baudRate="" dataBits="" stopBits="" parity=""
+     handshake="" tcpAddress="" tcpPort="" slaveID="" startAddress=""
+     totalAddresses="" dataAddress="" calculationType1="" calculationParameter1=""
+     calculationType2="" calculationParameter2="" calculationType3=""
+     calculationParameter3="" calculationType4="" calculationParameter4="" />
     <fileReader fileFolder="D:\HMS\Diverse Filer" fileName="CAP_Test_data.csv"
      readFrequency="500" delimiter="," fixedPosData="False" fixedPosStart="10"
      fixedPosTotal="6" dataField="24" decimalSeparator="Point" autoExtractValue="False"
@@ -447,6 +524,18 @@
    </sensor>
    <sensor id="66" type="FileReader" name="CAP Test: Wind Speed"
     description="Testing 1" saveToDatabase="False" saveFreq="Program">
+    <serialPort portName="" baudRate="" dataBits="" stopBits="" parity=""
+     handshake="" packetHeader="" packetEnd="" packetDelimiter=""
+     packetCombineFields="" fixedPosData="" fixedPosStart="" fixedPosTotal=""
+     dataField="" decimalSeparator="" autoExtractValue="" calculationType1=""
+     calculationParameter1="" calculationType2="" calculationParameter2=""
+     calculationType3="" calculationParameter3="" calculationType4=""
+     calculationParameter4="" />
+    <modbus portName="" baudRate="" dataBits="" stopBits="" parity=""
+     handshake="" tcpAddress="" tcpPort="" slaveID="" startAddress=""
+     totalAddresses="" dataAddress="" calculationType1="" calculationParameter1=""
+     calculationType2="" calculationParameter2="" calculationType3=""
+     calculationParameter3="" calculationType4="" calculationParameter4="" />
     <fileReader fileFolder="D:\HMS\Diverse Filer" fileName="CAP_Test_data.csv"
      readFrequency="500" delimiter="," fixedPosData="False" fixedPosStart="10"
      fixedPosTotal="6" dataField="25" decimalSeparator="Point" autoExtractValue="False"
@@ -456,6 +545,18 @@
    </sensor>
    <sensor id="67" type="FileReader" name="CAP Test: Wind Direction"
     description="Testing 1" saveToDatabase="False" saveFreq="Program">
+    <serialPort portName="" baudRate="" dataBits="" stopBits="" parity=""
+     handshake="" packetHeader="" packetEnd="" packetDelimiter=""
+     packetCombineFields="" fixedPosData="" fixedPosStart="" fixedPosTotal=""
+     dataField="" decimalSeparator="" autoExtractValue="" calculationType1=""
+     calculationParameter1="" calculationType2="" calculationParameter2=""
+     calculationType3="" calculationParameter3="" calculationType4=""
+     calculationParameter4="" />
+    <modbus portName="" baudRate="" dataBits="" stopBits="" parity=""
+     handshake="" tcpAddress="" tcpPort="" slaveID="" startAddress=""
+     totalAddresses="" dataAddress="" calculationType1="" calculationParameter1=""
+     calculationType2="" calculationParameter2="" calculationType3=""
+     calculationParameter3="" calculationType4="" calculationParameter4="" />
     <fileReader fileFolder="D:\HMS\Diverse Filer" fileName="CAP_Test_data.csv"
      readFrequency="500" delimiter="," fixedPosData="False" fixedPosStart="10"
      fixedPosTotal="6" dataField="26" decimalSeparator="Point" autoExtractValue="False"
@@ -465,6 +566,18 @@
    </sensor>
    <sensor id="68" type="FileReader" name="CAP Ref: Roll R Max 20m"
     description="(description)" saveToDatabase="False" saveFreq="Program">
+    <serialPort portName="" baudRate="" dataBits="" stopBits="" parity=""
+     handshake="" packetHeader="" packetEnd="" packetDelimiter=""
+     packetCombineFields="" fixedPosData="" fixedPosStart="" fixedPosTotal=""
+     dataField="" decimalSeparator="" autoExtractValue="" calculationType1=""
+     calculationParameter1="" calculationType2="" calculationParameter2=""
+     calculationType3="" calculationParameter3="" calculationType4=""
+     calculationParameter4="" />
+    <modbus portName="" baudRate="" dataBits="" stopBits="" parity=""
+     handshake="" tcpAddress="" tcpPort="" slaveID="" startAddress=""
+     totalAddresses="" dataAddress="" calculationType1="" calculationParameter1=""
+     calculationType2="" calculationParameter2="" calculationType3=""
+     calculationParameter3="" calculationType4="" calculationParameter4="" />
     <fileReader fileFolder="D:\HMS\Diverse Filer" fileName="CAP_Test_data.csv"
      readFrequency="500" delimiter="," fixedPosData="False" fixedPosStart="0"
      fixedPosTotal="0" dataField="5" decimalSeparator="Point" autoExtractValue="False"
@@ -474,6 +587,18 @@
    </sensor>
    <sensor id="69" type="FileReader" name="CAP Ref: Roll L Max 20m"
     description="(description)" saveToDatabase="False" saveFreq="Program">
+    <serialPort portName="" baudRate="" dataBits="" stopBits="" parity=""
+     handshake="" packetHeader="" packetEnd="" packetDelimiter=""
+     packetCombineFields="" fixedPosData="" fixedPosStart="" fixedPosTotal=""
+     dataField="" decimalSeparator="" autoExtractValue="" calculationType1=""
+     calculationParameter1="" calculationType2="" calculationParameter2=""
+     calculationType3="" calculationParameter3="" calculationType4=""
+     calculationParameter4="" />
+    <modbus portName="" baudRate="" dataBits="" stopBits="" parity=""
+     handshake="" tcpAddress="" tcpPort="" slaveID="" startAddress=""
+     totalAddresses="" dataAddress="" calculationType1="" calculationParameter1=""
+     calculationType2="" calculationParameter2="" calculationType3=""
+     calculationParameter3="" calculationType4="" calculationParameter4="" />
     <fileReader fileFolder="D:\HMS\Diverse Filer" fileName="CAP_Test_data.csv"
      readFrequency="500" delimiter="," fixedPosData="False" fixedPosStart="0"
      fixedPosTotal="0" dataField="4" decimalSeparator="Point" autoExtractValue="False"
@@ -483,6 +608,18 @@
    </sensor>
    <sensor id="70" type="FileReader" name="CAP Ref: Pitch U Max 20m"
     description="(description)" saveToDatabase="False" saveFreq="Program">
+    <serialPort portName="" baudRate="" dataBits="" stopBits="" parity=""
+     handshake="" packetHeader="" packetEnd="" packetDelimiter=""
+     packetCombineFields="" fixedPosData="" fixedPosStart="" fixedPosTotal=""
+     dataField="" decimalSeparator="" autoExtractValue="" calculationType1=""
+     calculationParameter1="" calculationType2="" calculationParameter2=""
+     calculationType3="" calculationParameter3="" calculationType4=""
+     calculationParameter4="" />
+    <modbus portName="" baudRate="" dataBits="" stopBits="" parity=""
+     handshake="" tcpAddress="" tcpPort="" slaveID="" startAddress=""
+     totalAddresses="" dataAddress="" calculationType1="" calculationParameter1=""
+     calculationType2="" calculationParameter2="" calculationType3=""
+     calculationParameter3="" calculationType4="" calculationParameter4="" />
     <fileReader fileFolder="D:\HMS\Diverse Filer" fileName="CAP_Test_data.csv"
      readFrequency="500" delimiter="," fixedPosData="False" fixedPosStart="0"
      fixedPosTotal="0" dataField="10" decimalSeparator="Point" autoExtractValue="False"
@@ -492,6 +629,18 @@
    </sensor>
    <sensor id="71" type="FileReader" name="CAP Ref: Pitch D Max 20m"
     description="(description)" saveToDatabase="False" saveFreq="Program">
+    <serialPort portName="" baudRate="" dataBits="" stopBits="" parity=""
+     handshake="" packetHeader="" packetEnd="" packetDelimiter=""
+     packetCombineFields="" fixedPosData="" fixedPosStart="" fixedPosTotal=""
+     dataField="" decimalSeparator="" autoExtractValue="" calculationType1=""
+     calculationParameter1="" calculationType2="" calculationParameter2=""
+     calculationType3="" calculationParameter3="" calculationType4=""
+     calculationParameter4="" />
+    <modbus portName="" baudRate="" dataBits="" stopBits="" parity=""
+     handshake="" tcpAddress="" tcpPort="" slaveID="" startAddress=""
+     totalAddresses="" dataAddress="" calculationType1="" calculationParameter1=""
+     calculationType2="" calculationParameter2="" calculationType3=""
+     calculationParameter3="" calculationType4="" calculationParameter4="" />
     <fileReader fileFolder="D:\HMS\Diverse Filer" fileName="CAP_Test_data.csv"
      readFrequency="500" delimiter="," fixedPosData="False" fixedPosStart="0"
      fixedPosTotal="0" dataField="11" decimalSeparator="Point" autoExtractValue="False"
@@ -501,6 +650,18 @@
    </sensor>
    <sensor id="72" type="FileReader" name="CAP Ref: Inclination Max 20m"
     description="(description)" saveToDatabase="False" saveFreq="Program">
+    <serialPort portName="" baudRate="" dataBits="" stopBits="" parity=""
+     handshake="" packetHeader="" packetEnd="" packetDelimiter=""
+     packetCombineFields="" fixedPosData="" fixedPosStart="" fixedPosTotal=""
+     dataField="" decimalSeparator="" autoExtractValue="" calculationType1=""
+     calculationParameter1="" calculationType2="" calculationParameter2=""
+     calculationType3="" calculationParameter3="" calculationType4=""
+     calculationParameter4="" />
+    <modbus portName="" baudRate="" dataBits="" stopBits="" parity=""
+     handshake="" tcpAddress="" tcpPort="" slaveID="" startAddress=""
+     totalAddresses="" dataAddress="" calculationType1="" calculationParameter1=""
+     calculationType2="" calculationParameter2="" calculationType3=""
+     calculationParameter3="" calculationType4="" calculationParameter4="" />
     <fileReader fileFolder="D:\HMS\Diverse Filer" fileName="CAP_Test_data.csv"
      readFrequency="500" delimiter="," fixedPosData="False" fixedPosStart="0"
      fixedPosTotal="0" dataField="14" decimalSeparator="Point" autoExtractValue="False"
@@ -510,6 +671,18 @@
    </sensor>
    <sensor id="73" type="FileReader" name="CAP Ref: SHR" description="(description)"
     saveToDatabase="False" saveFreq="Program">
+    <serialPort portName="" baudRate="" dataBits="" stopBits="" parity=""
+     handshake="" packetHeader="" packetEnd="" packetDelimiter=""
+     packetCombineFields="" fixedPosData="" fixedPosStart="" fixedPosTotal=""
+     dataField="" decimalSeparator="" autoExtractValue="" calculationType1=""
+     calculationParameter1="" calculationType2="" calculationParameter2=""
+     calculationType3="" calculationParameter3="" calculationType4=""
+     calculationParameter4="" />
+    <modbus portName="" baudRate="" dataBits="" stopBits="" parity=""
+     handshake="" tcpAddress="" tcpPort="" slaveID="" startAddress=""
+     totalAddresses="" dataAddress="" calculationType1="" calculationParameter1=""
+     calculationType2="" calculationParameter2="" calculationType3=""
+     calculationParameter3="" calculationType4="" calculationParameter4="" />
     <fileReader fileFolder="D:\HMS\Diverse Filer" fileName="CAP_Test_data.csv"
      readFrequency="500" delimiter="," fixedPosData="False" fixedPosStart="0"
      fixedPosTotal="0" dataField="17" decimalSeparator="Point" autoExtractValue="False"
@@ -519,6 +692,18 @@
    </sensor>
    <sensor id="74" type="FileReader" name="CAP Ref: MSI" description="(description)"
     saveToDatabase="False" saveFreq="Program">
+    <serialPort portName="" baudRate="" dataBits="" stopBits="" parity=""
+     handshake="" packetHeader="" packetEnd="" packetDelimiter=""
+     packetCombineFields="" fixedPosData="" fixedPosStart="" fixedPosTotal=""
+     dataField="" decimalSeparator="" autoExtractValue="" calculationType1=""
+     calculationParameter1="" calculationType2="" calculationParameter2=""
+     calculationType3="" calculationParameter3="" calculationType4=""
+     calculationParameter4="" />
+    <modbus portName="" baudRate="" dataBits="" stopBits="" parity=""
+     handshake="" tcpAddress="" tcpPort="" slaveID="" startAddress=""
+     totalAddresses="" dataAddress="" calculationType1="" calculationParameter1=""
+     calculationType2="" calculationParameter2="" calculationType3=""
+     calculationParameter3="" calculationType4="" calculationParameter4="" />
     <fileReader fileFolder="D:\HMS\Diverse Filer" fileName="CAP_Test_data.csv"
      readFrequency="500" delimiter="," fixedPosData="False" fixedPosStart="0"
      fixedPosTotal="0" dataField="23" decimalSeparator="Point" autoExtractValue="False"
@@ -528,6 +713,18 @@
    </sensor>
    <sensor id="75" type="FileReader" name="CAP Ref: WSI %" description="(description)"
     saveToDatabase="False" saveFreq="Program">
+    <serialPort portName="" baudRate="" dataBits="" stopBits="" parity=""
+     handshake="" packetHeader="" packetEnd="" packetDelimiter=""
+     packetCombineFields="" fixedPosData="" fixedPosStart="" fixedPosTotal=""
+     dataField="" decimalSeparator="" autoExtractValue="" calculationType1=""
+     calculationParameter1="" calculationType2="" calculationParameter2=""
+     calculationType3="" calculationParameter3="" calculationType4=""
+     calculationParameter4="" />
+    <modbus portName="" baudRate="" dataBits="" stopBits="" parity=""
+     handshake="" tcpAddress="" tcpPort="" slaveID="" startAddress=""
+     totalAddresses="" dataAddress="" calculationType1="" calculationParameter1=""
+     calculationType2="" calculationParameter2="" calculationType3=""
+     calculationParameter3="" calculationType4="" calculationParameter4="" />
     <fileReader fileFolder="D:\HMS\Diverse Filer" fileName="CAP_Test_data.csv"
      readFrequency="500" delimiter="," fixedPosData="False" fixedPosStart="0"
      fixedPosTotal="0" dataField="34" decimalSeparator="Point" autoExtractValue="False"
@@ -537,6 +734,18 @@
    </sensor>
    <sensor id="76" type="FileReader" name="CAP Ref: Helideck Status"
     description="(description)" saveToDatabase="False" saveFreq="Program">
+    <serialPort portName="" baudRate="" dataBits="" stopBits="" parity=""
+     handshake="" packetHeader="" packetEnd="" packetDelimiter=""
+     packetCombineFields="" fixedPosData="" fixedPosStart="" fixedPosTotal=""
+     dataField="" decimalSeparator="" autoExtractValue="" calculationType1=""
+     calculationParameter1="" calculationType2="" calculationParameter2=""
+     calculationType3="" calculationParameter3="" calculationType4=""
+     calculationParameter4="" />
+    <modbus portName="" baudRate="" dataBits="" stopBits="" parity=""
+     handshake="" tcpAddress="" tcpPort="" slaveID="" startAddress=""
+     totalAddresses="" dataAddress="" calculationType1="" calculationParameter1=""
+     calculationType2="" calculationParameter2="" calculationType3=""
+     calculationParameter3="" calculationType4="" calculationParameter4="" />
     <fileReader fileFolder="D:\HMS\Diverse Filer" fileName="CAP_Test_data.csv"
      readFrequency="500" delimiter="," fixedPosData="False" fixedPosStart="0"
      fixedPosTotal="0" dataField="38" decimalSeparator="Point" autoExtractValue="False"
@@ -546,6 +755,18 @@
    </sensor>
    <sensor id="77" type="FileReader" name="CAP Ref: Vessel Dir"
     description="(description)" saveToDatabase="False" saveFreq="Program">
+    <serialPort portName="" baudRate="" dataBits="" stopBits="" parity=""
+     handshake="" packetHeader="" packetEnd="" packetDelimiter=""
+     packetCombineFields="" fixedPosData="" fixedPosStart="" fixedPosTotal=""
+     dataField="" decimalSeparator="" autoExtractValue="" calculationType1=""
+     calculationParameter1="" calculationType2="" calculationParameter2=""
+     calculationType3="" calculationParameter3="" calculationType4=""
+     calculationParameter4="" />
+    <modbus portName="" baudRate="" dataBits="" stopBits="" parity=""
+     handshake="" tcpAddress="" tcpPort="" slaveID="" startAddress=""
+     totalAddresses="" dataAddress="" calculationType1="" calculationParameter1=""
+     calculationType2="" calculationParameter2="" calculationType3=""
+     calculationParameter3="" calculationType4="" calculationParameter4="" />
     <fileReader fileFolder="D:\HMS\Diverse Filer" fileName="CAP_Test_data.csv"
      readFrequency="500" delimiter="," fixedPosData="False" fixedPosStart="0"
      fixedPosTotal="0" dataField="24" decimalSeparator="Point" autoExtractValue="False"
@@ -555,6 +776,18 @@
    </sensor>
    <sensor id="78" type="FileReader" name="CAP Ref: Wind Speed (2m)"
     description="(description)" saveToDatabase="False" saveFreq="Program">
+    <serialPort portName="" baudRate="" dataBits="" stopBits="" parity=""
+     handshake="" packetHeader="" packetEnd="" packetDelimiter=""
+     packetCombineFields="" fixedPosData="" fixedPosStart="" fixedPosTotal=""
+     dataField="" decimalSeparator="" autoExtractValue="" calculationType1=""
+     calculationParameter1="" calculationType2="" calculationParameter2=""
+     calculationType3="" calculationParameter3="" calculationType4=""
+     calculationParameter4="" />
+    <modbus portName="" baudRate="" dataBits="" stopBits="" parity=""
+     handshake="" tcpAddress="" tcpPort="" slaveID="" startAddress=""
+     totalAddresses="" dataAddress="" calculationType1="" calculationParameter1=""
+     calculationType2="" calculationParameter2="" calculationType3=""
+     calculationParameter3="" calculationType4="" calculationParameter4="" />
     <fileReader fileFolder="D:\HMS\Diverse Filer" fileName="CAP_Test_data.csv"
      readFrequency="500" delimiter="," fixedPosData="False" fixedPosStart="0"
      fixedPosTotal="0" dataField="29" decimalSeparator="Point" autoExtractValue="False"
@@ -564,6 +797,18 @@
    </sensor>
    <sensor id="79" type="FileReader" name="CAP Ref: Wind Dir (2m)"
     description="(description)" saveToDatabase="False" saveFreq="Program">
+    <serialPort portName="" baudRate="" dataBits="" stopBits="" parity=""
+     handshake="" packetHeader="" packetEnd="" packetDelimiter=""
+     packetCombineFields="" fixedPosData="" fixedPosStart="" fixedPosTotal=""
+     dataField="" decimalSeparator="" autoExtractValue="" calculationType1=""
+     calculationParameter1="" calculationType2="" calculationParameter2=""
+     calculationType3="" calculationParameter3="" calculationType4=""
+     calculationParameter4="" />
+    <modbus portName="" baudRate="" dataBits="" stopBits="" parity=""
+     handshake="" tcpAddress="" tcpPort="" slaveID="" startAddress=""
+     totalAddresses="" dataAddress="" calculationType1="" calculationParameter1=""
+     calculationType2="" calculationParameter2="" calculationType3=""
+     calculationParameter3="" calculationType4="" calculationParameter4="" />
     <fileReader fileFolder="D:\HMS\Diverse Filer" fileName="CAP_Test_data.csv"
      readFrequency="500" delimiter="," fixedPosData="False" fixedPosStart="0"
      fixedPosTotal="0" dataField="28" decimalSeparator="Point" autoExtractValue="False"
@@ -573,6 +818,18 @@
    </sensor>
    <sensor id="80" type="FileReader" name="CAP Ref: Wind Gust (2m)"
     description="(description)" saveToDatabase="False" saveFreq="Program">
+    <serialPort portName="" baudRate="" dataBits="" stopBits="" parity=""
+     handshake="" packetHeader="" packetEnd="" packetDelimiter=""
+     packetCombineFields="" fixedPosData="" fixedPosStart="" fixedPosTotal=""
+     dataField="" decimalSeparator="" autoExtractValue="" calculationType1=""
+     calculationParameter1="" calculationType2="" calculationParameter2=""
+     calculationType3="" calculationParameter3="" calculationType4=""
+     calculationParameter4="" />
+    <modbus portName="" baudRate="" dataBits="" stopBits="" parity=""
+     handshake="" tcpAddress="" tcpPort="" slaveID="" startAddress=""
+     totalAddresses="" dataAddress="" calculationType1="" calculationParameter1=""
+     calculationType2="" calculationParameter2="" calculationType3=""
+     calculationParameter3="" calculationType4="" calculationParameter4="" />
     <fileReader fileFolder="D:\HMS\Diverse Filer" fileName="CAP_Test_data.csv"
      readFrequency="500" delimiter="," fixedPosData="False" fixedPosStart="0"
      fixedPosTotal="0" dataField="30" decimalSeparator="Point" autoExtractValue="False"
@@ -582,6 +839,18 @@
    </sensor>
    <sensor id="81" type="FileReader" name="CAP Ref: Wind Speed (10m)"
     description="(description)" saveToDatabase="False" saveFreq="Program">
+    <serialPort portName="" baudRate="" dataBits="" stopBits="" parity=""
+     handshake="" packetHeader="" packetEnd="" packetDelimiter=""
+     packetCombineFields="" fixedPosData="" fixedPosStart="" fixedPosTotal=""
+     dataField="" decimalSeparator="" autoExtractValue="" calculationType1=""
+     calculationParameter1="" calculationType2="" calculationParameter2=""
+     calculationType3="" calculationParameter3="" calculationType4=""
+     calculationParameter4="" />
+    <modbus portName="" baudRate="" dataBits="" stopBits="" parity=""
+     handshake="" tcpAddress="" tcpPort="" slaveID="" startAddress=""
+     totalAddresses="" dataAddress="" calculationType1="" calculationParameter1=""
+     calculationType2="" calculationParameter2="" calculationType3=""
+     calculationParameter3="" calculationType4="" calculationParameter4="" />
     <fileReader fileFolder="D:\HMS\Diverse Filer" fileName="CAP_Test_data.csv"
      readFrequency="500" delimiter="," fixedPosData="False" fixedPosStart="0"
      fixedPosTotal="0" dataField="32" decimalSeparator="Point" autoExtractValue="False"
@@ -591,6 +860,18 @@
    </sensor>
    <sensor id="82" type="FileReader" name="CAP Ref: Wind Dir (10m)"
     description="(description)" saveToDatabase="False" saveFreq="Program">
+    <serialPort portName="" baudRate="" dataBits="" stopBits="" parity=""
+     handshake="" packetHeader="" packetEnd="" packetDelimiter=""
+     packetCombineFields="" fixedPosData="" fixedPosStart="" fixedPosTotal=""
+     dataField="" decimalSeparator="" autoExtractValue="" calculationType1=""
+     calculationParameter1="" calculationType2="" calculationParameter2=""
+     calculationType3="" calculationParameter3="" calculationType4=""
+     calculationParameter4="" />
+    <modbus portName="" baudRate="" dataBits="" stopBits="" parity=""
+     handshake="" tcpAddress="" tcpPort="" slaveID="" startAddress=""
+     totalAddresses="" dataAddress="" calculationType1="" calculationParameter1=""
+     calculationType2="" calculationParameter2="" calculationType3=""
+     calculationParameter3="" calculationType4="" calculationParameter4="" />
     <fileReader fileFolder="D:\HMS\Diverse Filer" fileName="CAP_Test_data.csv"
      readFrequency="500" delimiter="," fixedPosData="False" fixedPosStart="0"
      fixedPosTotal="0" dataField="31" decimalSeparator="Point" autoExtractValue="False"
@@ -600,6 +881,18 @@
    </sensor>
    <sensor id="83" type="FileReader" name="CAP Ref: Wind Gust (10m)"
     description="(description)" saveToDatabase="False" saveFreq="Program">
+    <serialPort portName="" baudRate="" dataBits="" stopBits="" parity=""
+     handshake="" packetHeader="" packetEnd="" packetDelimiter=""
+     packetCombineFields="" fixedPosData="" fixedPosStart="" fixedPosTotal=""
+     dataField="" decimalSeparator="" autoExtractValue="" calculationType1=""
+     calculationParameter1="" calculationType2="" calculationParameter2=""
+     calculationType3="" calculationParameter3="" calculationType4=""
+     calculationParameter4="" />
+    <modbus portName="" baudRate="" dataBits="" stopBits="" parity=""
+     handshake="" tcpAddress="" tcpPort="" slaveID="" startAddress=""
+     totalAddresses="" dataAddress="" calculationType1="" calculationParameter1=""
+     calculationType2="" calculationParameter2="" calculationType3=""
+     calculationParameter3="" calculationType4="" calculationParameter4="" />
     <fileReader fileFolder="D:\HMS\Diverse Filer" fileName="CAP_Test_data.csv"
      readFrequency="500" delimiter="," fixedPosData="False" fixedPosStart="0"
      fixedPosTotal="0" dataField="33" decimalSeparator="Point" autoExtractValue="False"
@@ -609,6 +902,18 @@
    </sensor>
    <sensor id="84" type="FileReader" name="CAP Ref: Time ID" description="Testing 1"
     saveToDatabase="False" saveFreq="Program">
+    <serialPort portName="" baudRate="" dataBits="" stopBits="" parity=""
+     handshake="" packetHeader="" packetEnd="" packetDelimiter=""
+     packetCombineFields="" fixedPosData="" fixedPosStart="" fixedPosTotal=""
+     dataField="" decimalSeparator="" autoExtractValue="" calculationType1=""
+     calculationParameter1="" calculationType2="" calculationParameter2=""
+     calculationType3="" calculationParameter3="" calculationType4=""
+     calculationParameter4="" />
+    <modbus portName="" baudRate="" dataBits="" stopBits="" parity=""
+     handshake="" tcpAddress="" tcpPort="" slaveID="" startAddress=""
+     totalAddresses="" dataAddress="" calculationType1="" calculationParameter1=""
+     calculationType2="" calculationParameter2="" calculationType3=""
+     calculationParameter3="" calculationType4="" calculationParameter4="" />
     <fileReader fileFolder="D:\HMS\Diverse Filer" fileName="CAP_Test_data.csv"
      readFrequency="500" delimiter="," fixedPosData="False" fixedPosStart="10"
      fixedPosTotal="6" dataField="0" decimalSeparator="Point" autoExtractValue="False"
@@ -618,6 +923,18 @@
    </sensor>
    <sensor id="86" type="FileReader" name="CAP Ref: Sensor MRU"
     description="(description)" saveToDatabase="False" saveFreq="Program">
+    <serialPort portName="" baudRate="" dataBits="" stopBits="" parity=""
+     handshake="" packetHeader="" packetEnd="" packetDelimiter=""
+     packetCombineFields="" fixedPosData="" fixedPosStart="" fixedPosTotal=""
+     dataField="" decimalSeparator="" autoExtractValue="" calculationType1=""
+     calculationParameter1="" calculationType2="" calculationParameter2=""
+     calculationType3="" calculationParameter3="" calculationType4=""
+     calculationParameter4="" />
+    <modbus portName="" baudRate="" dataBits="" stopBits="" parity=""
+     handshake="" tcpAddress="" tcpPort="" slaveID="" startAddress=""
+     totalAddresses="" dataAddress="" calculationType1="" calculationParameter1=""
+     calculationType2="" calculationParameter2="" calculationType3=""
+     calculationParameter3="" calculationType4="" calculationParameter4="" />
     <fileReader fileFolder="D:\HMS\Diverse Filer" fileName="CAP_Test_data.csv"
      readFrequency="500" delimiter="," fixedPosData="False" fixedPosStart="0"
      fixedPosTotal="0" dataField="35" decimalSeparator="Point" autoExtractValue="False"
@@ -627,6 +944,18 @@
    </sensor>
    <sensor id="91" type="FileReader" name="CAP Test: Sensor Gyro"
     description="Testing 1" saveToDatabase="False" saveFreq="Program">
+    <serialPort portName="" baudRate="" dataBits="" stopBits="" parity=""
+     handshake="" packetHeader="" packetEnd="" packetDelimiter=""
+     packetCombineFields="" fixedPosData="" fixedPosStart="" fixedPosTotal=""
+     dataField="" decimalSeparator="" autoExtractValue="" calculationType1=""
+     calculationParameter1="" calculationType2="" calculationParameter2=""
+     calculationType3="" calculationParameter3="" calculationType4=""
+     calculationParameter4="" />
+    <modbus portName="" baudRate="" dataBits="" stopBits="" parity=""
+     handshake="" tcpAddress="" tcpPort="" slaveID="" startAddress=""
+     totalAddresses="" dataAddress="" calculationType1="" calculationParameter1=""
+     calculationType2="" calculationParameter2="" calculationType3=""
+     calculationParameter3="" calculationType4="" calculationParameter4="" />
     <fileReader fileFolder="D:\HMS\Diverse Filer" fileName="CAP_Test_data.csv"
      readFrequency="500" delimiter="," fixedPosData="False" fixedPosStart="10"
      fixedPosTotal="6" dataField="36" decimalSeparator="Point" autoExtractValue="False"
@@ -636,6 +965,18 @@
    </sensor>
    <sensor id="92" type="FileReader" name="CAP Test: Sensor Wind"
     description="Testing 1" saveToDatabase="False" saveFreq="Program">
+    <serialPort portName="" baudRate="" dataBits="" stopBits="" parity=""
+     handshake="" packetHeader="" packetEnd="" packetDelimiter=""
+     packetCombineFields="" fixedPosData="" fixedPosStart="" fixedPosTotal=""
+     dataField="" decimalSeparator="" autoExtractValue="" calculationType1=""
+     calculationParameter1="" calculationType2="" calculationParameter2=""
+     calculationType3="" calculationParameter3="" calculationType4=""
+     calculationParameter4="" />
+    <modbus portName="" baudRate="" dataBits="" stopBits="" parity=""
+     handshake="" tcpAddress="" tcpPort="" slaveID="" startAddress=""
+     totalAddresses="" dataAddress="" calculationType1="" calculationParameter1=""
+     calculationType2="" calculationParameter2="" calculationType3=""
+     calculationParameter3="" calculationType4="" calculationParameter4="" />
     <fileReader fileFolder="D:\HMS\Diverse Filer" fileName="CAP_Test_data.csv"
      readFrequency="500" delimiter="," fixedPosData="False" fixedPosStart="10"
      fixedPosTotal="6" dataField="37" decimalSeparator="Point" autoExtractValue="False"
@@ -645,6 +986,18 @@
    </sensor>
    <sensor id="93" type="FileReader" name="CAP Ref: Helicopter Heading"
     description="Testing 1" saveToDatabase="False" saveFreq="Program">
+    <serialPort portName="" baudRate="" dataBits="" stopBits="" parity=""
+     handshake="" packetHeader="" packetEnd="" packetDelimiter=""
+     packetCombineFields="" fixedPosData="" fixedPosStart="" fixedPosTotal=""
+     dataField="" decimalSeparator="" autoExtractValue="" calculationType1=""
+     calculationParameter1="" calculationType2="" calculationParameter2=""
+     calculationType3="" calculationParameter3="" calculationType4=""
+     calculationParameter4="" />
+    <modbus portName="" baudRate="" dataBits="" stopBits="" parity=""
+     handshake="" tcpAddress="" tcpPort="" slaveID="" startAddress=""
+     totalAddresses="" dataAddress="" calculationType1="" calculationParameter1=""
+     calculationType2="" calculationParameter2="" calculationType3=""
+     calculationParameter3="" calculationType4="" calculationParameter4="" />
     <fileReader fileFolder="D:\HMS\Diverse Filer" fileName="CAP_Test_data.csv"
      readFrequency="500" delimiter="," fixedPosData="False" fixedPosStart="10"
      fixedPosTotal="6" dataField="43" decimalSeparator="Point" autoExtractValue="False"
@@ -654,6 +1007,18 @@
    </sensor>
    <sensor id="94" type="FileReader" name="CAP Ref: Helideck Heading"
     description="Testing 1" saveToDatabase="False" saveFreq="Program">
+    <serialPort portName="" baudRate="" dataBits="" stopBits="" parity=""
+     handshake="" packetHeader="" packetEnd="" packetDelimiter=""
+     packetCombineFields="" fixedPosData="" fixedPosStart="" fixedPosTotal=""
+     dataField="" decimalSeparator="" autoExtractValue="" calculationType1=""
+     calculationParameter1="" calculationType2="" calculationParameter2=""
+     calculationType3="" calculationParameter3="" calculationType4=""
+     calculationParameter4="" />
+    <modbus portName="" baudRate="" dataBits="" stopBits="" parity=""
+     handshake="" tcpAddress="" tcpPort="" slaveID="" startAddress=""
+     totalAddresses="" dataAddress="" calculationType1="" calculationParameter1=""
+     calculationType2="" calculationParameter2="" calculationType3=""
+     calculationParameter3="" calculationType4="" calculationParameter4="" />
     <fileReader fileFolder="D:\HMS\Diverse Filer" fileName="CAP_Test_data.csv"
      readFrequency="500" delimiter="," fixedPosData="False" fixedPosStart="10"
      fixedPosTotal="6" dataField="40" decimalSeparator="Point" autoExtractValue="False"
@@ -663,6 +1028,18 @@
    </sensor>
    <sensor id="95" type="FileReader" name="CAP Ref: Delta Vessel Heading"
     description="Testing 1" saveToDatabase="False" saveFreq="Program">
+    <serialPort portName="" baudRate="" dataBits="" stopBits="" parity=""
+     handshake="" packetHeader="" packetEnd="" packetDelimiter=""
+     packetCombineFields="" fixedPosData="" fixedPosStart="" fixedPosTotal=""
+     dataField="" decimalSeparator="" autoExtractValue="" calculationType1=""
+     calculationParameter1="" calculationType2="" calculationParameter2=""
+     calculationType3="" calculationParameter3="" calculationType4=""
+     calculationParameter4="" />
+    <modbus portName="" baudRate="" dataBits="" stopBits="" parity=""
+     handshake="" tcpAddress="" tcpPort="" slaveID="" startAddress=""
+     totalAddresses="" dataAddress="" calculationType1="" calculationParameter1=""
+     calculationType2="" calculationParameter2="" calculationType3=""
+     calculationParameter3="" calculationType4="" calculationParameter4="" />
     <fileReader fileFolder="D:\HMS\Diverse Filer" fileName="CAP_Test_data.csv"
      readFrequency="500" delimiter="," fixedPosData="False" fixedPosStart="10"
      fixedPosTotal="6" dataField="41" decimalSeparator="Point" autoExtractValue="False"
@@ -672,6 +1049,18 @@
    </sensor>
    <sensor id="96" type="FileReader" name="CAP Ref: Delta Wind Direction"
     description="Testing 1" saveToDatabase="False" saveFreq="Program">
+    <serialPort portName="" baudRate="" dataBits="" stopBits="" parity=""
+     handshake="" packetHeader="" packetEnd="" packetDelimiter=""
+     packetCombineFields="" fixedPosData="" fixedPosStart="" fixedPosTotal=""
+     dataField="" decimalSeparator="" autoExtractValue="" calculationType1=""
+     calculationParameter1="" calculationType2="" calculationParameter2=""
+     calculationType3="" calculationParameter3="" calculationType4=""
+     calculationParameter4="" />
+    <modbus portName="" baudRate="" dataBits="" stopBits="" parity=""
+     handshake="" tcpAddress="" tcpPort="" slaveID="" startAddress=""
+     totalAddresses="" dataAddress="" calculationType1="" calculationParameter1=""
+     calculationType2="" calculationParameter2="" calculationType3=""
+     calculationParameter3="" calculationType4="" calculationParameter4="" />
     <fileReader fileFolder="D:\HMS\Diverse Filer" fileName="CAP_Test_data.csv"
      readFrequency="500" delimiter="," fixedPosData="False" fixedPosStart="10"
      fixedPosTotal="6" dataField="42" decimalSeparator="Point" autoExtractValue="False"
@@ -681,6 +1070,18 @@
    </sensor>
    <sensor id="97" type="FileReader" name="CAP Ref: Relative Wind Direction"
     description="Testing 1" saveToDatabase="False" saveFreq="Program">
+    <serialPort portName="" baudRate="" dataBits="" stopBits="" parity=""
+     handshake="" packetHeader="" packetEnd="" packetDelimiter=""
+     packetCombineFields="" fixedPosData="" fixedPosStart="" fixedPosTotal=""
+     dataField="" decimalSeparator="" autoExtractValue="" calculationType1=""
+     calculationParameter1="" calculationType2="" calculationParameter2=""
+     calculationType3="" calculationParameter3="" calculationType4=""
+     calculationParameter4="" />
+    <modbus portName="" baudRate="" dataBits="" stopBits="" parity=""
+     handshake="" tcpAddress="" tcpPort="" slaveID="" startAddress=""
+     totalAddresses="" dataAddress="" calculationType1="" calculationParameter1=""
+     calculationType2="" calculationParameter2="" calculationType3=""
+     calculationParameter3="" calculationType4="" calculationParameter4="" />
     <fileReader fileFolder="D:\HMS\Diverse Filer" fileName="CAP_Test_data.csv"
      readFrequency="500" delimiter="," fixedPosData="False" fixedPosStart="10"
      fixedPosTotal="6" dataField="44" decimalSeparator="Point" autoExtractValue="False"
@@ -692,7 +1093,7 @@
  </SensorData>
 
 
-<SensorGroupID>
+	<SensorGroupID>
 		<SensorGroupIDHeaders>
 			<sensorGroup id="0" name="GPS" dbColumn="gps" active="True" />
 			<sensorGroup id="1" name="MOTION 1" dbColumn="motion_1" active="True" />
@@ -765,64 +1166,64 @@
 	</HMSData>
 
 	<TestData>
-  <TestDataItems>
-   <data id="1" name="Time ID" dataId="27" />
-   <data id="2" name="Roll Max R (20m)" dataId="38" />
-   <data id="3" name="Roll Max L (20m)" dataId="37" />
-   <data id="4" name="Pitch Max U (20m)" dataId="33" />
-   <data id="5" name="Pitch Max D (20m)" dataId="34" />
-   <data id="6" name="Inclination Max (20m)" dataId="50" />
-   <data id="7" name="SHR" dataId="43" />
-   <data id="8" name="MSI" dataId="55" />
-   <data id="9" name="WSI %" dataId="56" />
-   <data id="10" name="Vessel Heading" dataId="22" />
-   <data id="11" name="Helideck Heading" dataId="69" />
-   <data id="12" name="Helicopter Heading" dataId="72" />
-   <data id="13" name="Delta Vessel Heading" dataId="71" />
-   <data id="14" name="Delta Wind Direction" dataId="70" />
-   <data id="15" name="Relative Wind Direction" dataId="58" />
-   <data id="16" name="Helideck Status" dataId="55" />
-   <data id="17" name="Helideck Wind Speed (2m)" dataId="65" />
-   <data id="18" name="Helideck Wind Dir (2m)" dataId="63" />
-   <data id="19" name="Helideck Wind Gust (2m)" dataId="67" />
-   <data id="20" name="Helideck Wind Speed (10m)" dataId="66" />
-   <data id="21" name="Helideck Wind Dir (10m)" dataId="64" />
-   <data id="22" name="Helideck Wind Gust (10m)" dataId="68" />
-   <data id="23" name="Sensor MRU" dataId="28" />
-   <data id="24" name="Sensor Gyro" dataId="29" />
-   <data id="25" name="Sensor Wind" dataId="30" />
-  </TestDataItems>
- </TestData>
+		<TestDataItems>
+			<data id="1" name="Time ID" dataId="27" />
+			<data id="2" name="Roll Max R (20m)" dataId="38" />
+			<data id="3" name="Roll Max L (20m)" dataId="37" />
+			<data id="4" name="Pitch Max U (20m)" dataId="33" />
+			<data id="5" name="Pitch Max D (20m)" dataId="34" />
+			<data id="6" name="Inclination Max (20m)" dataId="50" />
+			<data id="7" name="SHR" dataId="43" />
+			<data id="8" name="MSI" dataId="55" />
+			<data id="9" name="WSI %" dataId="56" />
+			<data id="10" name="Vessel Heading" dataId="22" />
+			<data id="11" name="Helideck Heading" dataId="69" />
+			<data id="12" name="Helicopter Heading" dataId="72" />
+			<data id="13" name="Delta Vessel Heading" dataId="71" />
+			<data id="14" name="Delta Wind Direction" dataId="70" />
+			<data id="15" name="Relative Wind Direction" dataId="58" />
+			<data id="16" name="Helideck Status" dataId="54" />
+			<data id="17" name="Helideck Wind Speed (2m)" dataId="65" />
+			<data id="18" name="Helideck Wind Dir (2m)" dataId="63" />
+			<data id="19" name="Helideck Wind Gust (2m)" dataId="67" />
+			<data id="20" name="Helideck Wind Speed (10m)" dataId="66" />
+			<data id="21" name="Helideck Wind Dir (10m)" dataId="64" />
+			<data id="22" name="Helideck Wind Gust (10m)" dataId="68" />
+			<data id="23" name="Sensor MRU" dataId="28" />
+			<data id="24" name="Sensor Gyro" dataId="29" />
+			<data id="25" name="Sensor Wind" dataId="30" />
+		</TestDataItems>
+	</TestData>
 
 	<ReferenceData>
-  <ReferenceDataItems>
-   <data id="1" name="Time ID" dataId="84" />
-   <data id="2" name="Roll Max R (20m)" dataId="68" />
-   <data id="3" name="Roll Max L (20m)" dataId="69" />
-   <data id="4" name="Pitch Max U (20m)" dataId="71" />
-   <data id="5" name="Pitch Max D (20m)" dataId="70" />
-   <data id="6" name="Inclination Max (20m)" dataId="72" />
-   <data id="7" name="SHR" dataId="73" />
-   <data id="8" name="MSI" dataId="74" />
-   <data id="9" name="WSI %" dataId="75" />
-   <data id="10" name="Vessel Heading" dataId="77" />
-   <data id="11" name="Helideck Heading" dataId="94" />
-   <data id="12" name="Helicopter Heading" dataId="93" />
-   <data id="13" name="Delta Vessel Heading" dataId="95" />
-   <data id="14" name="Delta Wind Direction" dataId="96" />
-   <data id="15" name="Relative Wind Direction" dataId="97" />
-   <data id="16" name="Helideck Status" dataId="76" />
-   <data id="17" name="Helideck Wind Speed (2m)" dataId="78" />
-   <data id="18" name="Helideck Wind Dir (2m)" dataId="79" />
-   <data id="19" name="Helideck Wind Gust (2m)" dataId="80" />
-   <data id="20" name="Helideck Wind Speed (10m)" dataId="81" />
-   <data id="21" name="Helideck Wind Dir (10m)" dataId="82" />
-   <data id="22" name="Helideck Wind Gust (10m)" dataId="83" />
-   <data id="23" name="Sensor MRU" dataId="86" />
-   <data id="24" name="Sensor Gyro" dataId="91" />
-   <data id="25" name="Sensor Wind" dataId="92" />
-  </ReferenceDataItems>
- </ReferenceData>
+		<ReferenceDataItems>
+			<data id="1" name="Time ID" dataId="84" />
+			<data id="2" name="Roll Max R (20m)" dataId="68" />
+			<data id="3" name="Roll Max L (20m)" dataId="69" />
+			<data id="4" name="Pitch Max U (20m)" dataId="71" />
+			<data id="5" name="Pitch Max D (20m)" dataId="70" />
+			<data id="6" name="Inclination Max (20m)" dataId="72" />
+			<data id="7" name="SHR" dataId="73" />
+			<data id="8" name="MSI" dataId="74" />
+			<data id="9" name="WSI %" dataId="75" />
+			<data id="10" name="Vessel Heading" dataId="77" />
+			<data id="11" name="Helideck Heading" dataId="94" />
+			<data id="12" name="Helicopter Heading" dataId="93" />
+			<data id="13" name="Delta Vessel Heading" dataId="95" />
+			<data id="14" name="Delta Wind Direction" dataId="96" />
+			<data id="15" name="Relative Wind Direction" dataId="97" />
+			<data id="16" name="Helideck Status" dataId="76" />
+			<data id="17" name="Helideck Wind Speed (2m)" dataId="78" />
+			<data id="18" name="Helideck Wind Dir (2m)" dataId="79" />
+			<data id="19" name="Helideck Wind Gust (2m)" dataId="80" />
+			<data id="20" name="Helideck Wind Speed (10m)" dataId="81" />
+			<data id="21" name="Helideck Wind Dir (10m)" dataId="82" />
+			<data id="22" name="Helideck Wind Gust (10m)" dataId="83" />
+			<data id="23" name="Sensor MRU" dataId="86" />
+			<data id="24" name="Sensor Gyro" dataId="91" />
+			<data id="25" name="Sensor Wind" dataId="92" />
+		</ReferenceDataItems>
+	</ReferenceData>
 
 	<HelicopterWSILimit>
 		<HelicopterWSILimitHeaders>
@@ -845,5 +1246,20 @@
 			<helicopter id="16" limit="43" />
 		</HelicopterWSILimitHeaders>
 	</HelicopterWSILimit>
+
+	<LightsOutput>
+  <SensorHeaders>
+   <sensor id="1" type="SerialPort" name="Lights Output 1" description="Helideck Light System Output 1"
+    saveToDatabase="False" saveFreq="Sensor">
+    <serialPort portName="COM7" baudRate="9600" dataBits="8" stopBits="One"
+     parity="None" handshake="None" packetHeader="$GPGGA" packetEnd="\r\n"
+     packetDelimiter="," packetCombineFields="Odd" fixedPosData="False"
+     fixedPosStart="0" fixedPosTotal="0" dataField="1" decimalSeparator="Point"
+     autoExtractValue="False" calculationType1="GPSPosition" calculationParameter1="0"
+     calculationType2="None" calculationParameter2="0" calculationType3="None"
+     calculationParameter3="0" calculationType4="None" calculationParameter4="0" />
+   </sensor>
+  </SensorHeaders>
+ </LightsOutput>
 
 </configuration>

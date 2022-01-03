@@ -93,7 +93,7 @@ namespace HMS_Server
                                 IsWithinLimits(ValueType.RollMax20m) &&
                                 IsWithinLimits(ValueType.InclinationMax20m) &&
                                 IsWithinLimits(ValueType.HeaveAmplitudeMax20m) &&
-                                /*IsWithinLimits(ValueType.SignificantHeaveRate95pct) && */hmsProcessingMotion.IsSHR10mMeanBelowLimit()) // Utgår i CAP 9b
+                                IsWithinLimits(ValueType.SignificantHeaveRate95pct) && hmsProcessingMotion.IsSHR10mMeanBelowLimit()) // Utgår i CAP 9b
                             {
                                 helideckStatus = HelideckStatusType.GREEN;
                             }
@@ -239,9 +239,8 @@ namespace HMS_Server
                     // SHR skal gå i rød dersom den er PÅ ELLER OVER grensen
                     return hmsOutputData.GetData(value)?.data < motionLimits.GetLimit(LimitType.SignificantHeaveRate);
 
-                // Utgår i CAP 9b
-                //case ValueType.SignificantHeaveRate95pct:
-                //    return hmsProcessingMotion.GetSHR95Pct() <= motionLimits.GetLimit(LimitType.SignificantHeaveRate) * 0.95;
+                case ValueType.SignificantHeaveRate95pct:
+                    return hmsProcessingMotion.GetSHR95Pct() <= motionLimits.GetLimit(LimitType.SignificantHeaveRate) * 0.95;
 
                 default:
                     return false;

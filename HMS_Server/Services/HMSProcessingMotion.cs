@@ -572,11 +572,10 @@ namespace HMS_Server
             return significantHeaveRate2mMin >= motionLimits.GetLimit(LimitType.SignificantHeaveRate);
         }
 
-        // Utgår i CAP 9b
-        //public double GetSHR95Pct()
-        //{
-        //    return significantHeaveRateData.data * 0.95;
-        //}
+        public double GetSHR95Pct()
+        {
+            return significantHeaveRateData.data * 0.95;
+        }
 
         /////////////////////////////////////////////////////////////////////////////
         // Inclination Kalkulasjon
