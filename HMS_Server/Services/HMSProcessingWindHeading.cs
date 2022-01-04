@@ -32,9 +32,9 @@ namespace HMS_Server
         private HMSData helicopterHeading = new HMSData();
 
         // Data lister for vind-snittberegninger
-        private WindAverageData areaWindAverageData2m = new WindAverageData();
-        private WindAverageData helideckWindAverageData2m = new WindAverageData();
-        private WindAverageData helideckWindAverageData10m = new WindAverageData();
+        private GustData areaWindAverageData2m = new GustData();
+        private GustData helideckWindAverageData2m = new GustData();
+        private GustData helideckWindAverageData10m = new GustData();
 
         // WSI
         private HMSData wsiData = new HMSData();
@@ -395,7 +395,7 @@ namespace HMS_Server
             }
         }
         
-        private void UpdateWindAverages(HMSData windDir, HMSData windSpd, WindAverageData windAverageData)
+        private void UpdateWindAverages(HMSData windDir, HMSData windSpd, GustData windAverageData)
         {
             // Sjekker status på data først
             if (windDir?.status == DataStatus.OK &&

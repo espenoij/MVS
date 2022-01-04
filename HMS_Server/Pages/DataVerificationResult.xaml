@@ -50,10 +50,10 @@
                         Header="Deviation"
                         DataMemberBinding="{Binding differenceAbsString}" />
 
-                    <telerik:GridViewDataColumn
+                    <!--<telerik:GridViewDataColumn
                         Width="200"
                         Header="Deviation Time %"
-                        DataMemberBinding="{Binding differenceTimePctString}" />
+                        DataMemberBinding="{Binding differenceTimePctString}" />-->
 
                 </telerik:RadGridView.Columns>
 

@@ -666,7 +666,7 @@ namespace HMS_Server
             if (dataVerificationIsActive)
             {
                 // Dispatcher som oppdaterer verification data (test og referanse data)
-                verificationTimer.Interval = TimeSpan.FromMilliseconds(Constants.ServerUpdateFrequencyLightsOutput);
+                verificationTimer.Interval = TimeSpan.FromMilliseconds(Constants.ServerUpdateFrequencyHMS);
                 verificationTimer.Tick += runLightsOutputUpdate;
 
                 void runLightsOutputUpdate(object sender, EventArgs e)

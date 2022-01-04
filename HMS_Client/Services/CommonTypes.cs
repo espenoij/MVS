@@ -215,33 +215,33 @@ public enum WindMeasurement
     TenMinuteMean
 }
 
-public class WindAverageData
+public class GustData
 {
-    public List<Wind> windDataList = new List<Wind>();
+    //public List<Wind> windDataList = new List<Wind>();
     public List<Wind> gust3SecDataList = new List<Wind>();
     public List<Wind> gustDataList = new List<Wind>();
-    public double windDataDirTotal = 0;
-    public double windDataSpdTotal = 0;
+    //public double windDataDirTotal = 0;
+    //public double windDataSpdTotal = 0;
     public double windDataGustMax = 0;
     public double minutes;
 
     // Results
-    public double windDir = 0;
-    public double windSpeed = 0;
+    //public double windDir = 0;
+    //public double windSpeed = 0;
     public double windGust = 0;
 
     public void Reset()
     {
-        windDataList.Clear();
+        //windDataList.Clear();
         gust3SecDataList.Clear();
         gustDataList.Clear();
 
-        windDataDirTotal = 0;
-        windDataSpdTotal = 0;
+        //windDataDirTotal = 0;
+        //windDataSpdTotal = 0;
         windDataGustMax = 0;
 
-        windDir = 0;
-        windSpeed = 0;
+        //windDir = 0;
+        //windSpeed = 0;
         windGust = 0;
     }
 }

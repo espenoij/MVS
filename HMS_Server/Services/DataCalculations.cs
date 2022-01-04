@@ -225,22 +225,26 @@ namespace HMS_Server
                             // Sjekke om string er numerisk
                             if (double.TryParse(newData, Constants.numberStyle, Constants.cultureInfo, out value))
                             {
-                                // Legge inn den nye verdien i data settet
-                                timeAverageDataList.Add(new TimeData() { data = value, timestamp = newTimeStamp });
-
-                                // Legge til i total summen
-                                timeAverageTotal += value;
-
-                                // Sjekke om vi skal ta ut gamle verdier
-                                for (int i = 0; i < timeAverageDataList.Count && timeAverageDataList.Count > 0; i++)
+                                // Sjekke at ny verdi ikke er lik den forrige som ble lagt inn i datasettet -> unngå duplikater
+                                if (timeAverageDataList.LastOrDefault()?.timestamp != newTimeStamp)
                                 {
-                                    if (timeAverageDataList[i]?.timestamp.AddSeconds(parameter) < newTimeStamp)
-                                    {
-                                        // Trekke fra i total summen
-                                        timeAverageTotal -= timeAverageDataList[i].data;
+                                    // Legge inn den nye verdien i data settet
+                                    timeAverageDataList.Add(new TimeData() { data = value, timestamp = newTimeStamp });
 
-                                        // Fjerne fra verdi listne
-                                        timeAverageDataList.RemoveAt(i--);
+                                    // Legge til i total summen
+                                    timeAverageTotal += value;
+
+                                    // Sjekke om vi skal ta ut gamle verdier
+                                    for (int i = 0; i < timeAverageDataList.Count && timeAverageDataList.Count > 0; i++)
+                                    {
+                                        if (timeAverageDataList[i]?.timestamp.AddSeconds(parameter) < newTimeStamp)
+                                        {
+                                            // Trekke fra i total summen
+                                            timeAverageTotal -= timeAverageDataList[i].data;
+
+                                            // Fjerne fra verdi listne
+                                            timeAverageDataList.RemoveAt(i--);
+                                        }
                                     }
                                 }
 
@@ -265,58 +269,63 @@ namespace HMS_Server
                             // Sjekke om string er numerisk
                             if (double.TryParse(newData, Constants.numberStyle, Constants.cultureInfo, out value))
                             {
-                                // Legge inn den nye absolutte verdien i data settet
-                                timeMaxAbsoluteDataList.Add(
+                                // Sjekke at ny verdi ikke er lik den forrige som ble lagt inn i datasettet -> unngå duplikater
+                                if (timeMaxAbsoluteDataList.LastOrDefault()?.timestamp != newTimeStamp)
+                                {
+
+                                    // Legge inn den nye absolutte verdien i data settet
+                                    timeMaxAbsoluteDataList.Add(
                                     new TimeData()
                                     {
                                         data = Math.Abs(value),
                                         timestamp = newTimeStamp
                                     });
 
-                                // Større max verdi?
-                                if (Math.Abs(value) > timeMaxAbsoluteMaxValue)
-                                {
-                                    timeMaxAbsoluteMaxValue = Math.Abs(value);
-                                }
-
-                                // Sjekke om vi skal ta ut gamle verdier
-                                bool findNewMaxValue = false;
-                                for (int i = 0; i < timeMaxAbsoluteDataList.Count && timeMaxAbsoluteDataList.Count > 0; i++)
-                                {
-                                    // Time stamp eldre enn satt grense?
-                                    if (timeMaxAbsoluteDataList[i]?.timestamp.AddSeconds(parameter) < newTimeStamp)
+                                    // Større max verdi?
+                                    if (Math.Abs(value) > timeMaxAbsoluteMaxValue)
                                     {
-                                        // Sjekke om dette var høyeste verdi
-                                        if (timeMaxAbsoluteDataList[i].data == timeMaxAbsoluteMaxValue)
-                                        {
-                                            // Finne ny høyeste verdi
-                                            findNewMaxValue = true;
-                                        }
-
-                                        // Fjerne gammel verdi fra verdiliste
-                                        timeMaxAbsoluteDataList.RemoveAt(i--);
+                                        timeMaxAbsoluteMaxValue = Math.Abs(value);
                                     }
-                                }
 
-                                // Finne ny høyeste verdi
-                                if (findNewMaxValue)
-                                {
-                                    double oldMaxValue = timeMaxAbsoluteMaxValue;
-                                    bool foundNewMax = false;
-                                    timeMaxAbsoluteMaxValue = 0;
-
-                                    for (int i = 0; i < timeMaxAbsoluteDataList.Count && !foundNewMax; i++)
+                                    // Sjekke om vi skal ta ut gamle verdier
+                                    bool findNewMaxValue = false;
+                                    for (int i = 0; i < timeMaxAbsoluteDataList.Count && timeMaxAbsoluteDataList.Count > 0; i++)
                                     {
-                                        // Kan avslutte søket dersom vi finne en verdi like den gamle max verdien (ingen er høyere)
-                                        if (timeMaxAbsoluteDataList[i]?.data == oldMaxValue)
+                                        // Time stamp eldre enn satt grense?
+                                        if (timeMaxAbsoluteDataList[i]?.timestamp.AddSeconds(parameter) < newTimeStamp)
                                         {
-                                            timeMaxAbsoluteMaxValue = oldMaxValue;
-                                            foundNewMax = true;
+                                            // Sjekke om dette var høyeste verdi
+                                            if (timeMaxAbsoluteDataList[i].data == timeMaxAbsoluteMaxValue)
+                                            {
+                                                // Finne ny høyeste verdi
+                                                findNewMaxValue = true;
+                                            }
+
+                                            // Fjerne gammel verdi fra verdiliste
+                                            timeMaxAbsoluteDataList.RemoveAt(i--);
                                         }
-                                        else
+                                    }
+
+                                    // Finne ny høyeste verdi
+                                    if (findNewMaxValue)
+                                    {
+                                        double oldMaxValue = timeMaxAbsoluteMaxValue;
+                                        bool foundNewMax = false;
+                                        timeMaxAbsoluteMaxValue = 0;
+
+                                        for (int i = 0; i < timeMaxAbsoluteDataList.Count && !foundNewMax; i++)
                                         {
-                                            if (timeMaxAbsoluteDataList[i]?.data > timeMaxAbsoluteMaxValue)
-                                                timeMaxAbsoluteMaxValue = timeMaxAbsoluteDataList[i].data;
+                                            // Kan avslutte søket dersom vi finne en verdi like den gamle max verdien (ingen er høyere)
+                                            if (timeMaxAbsoluteDataList[i]?.data == oldMaxValue)
+                                            {
+                                                timeMaxAbsoluteMaxValue = oldMaxValue;
+                                                foundNewMax = true;
+                                            }
+                                            else
+                                            {
+                                                if (timeMaxAbsoluteDataList[i]?.data > timeMaxAbsoluteMaxValue)
+                                                    timeMaxAbsoluteMaxValue = timeMaxAbsoluteDataList[i].data;
+                                            }
                                         }
                                     }
                                 }
@@ -341,58 +350,62 @@ namespace HMS_Server
                             // Sjekke om string er numerisk
                             if (double.TryParse(newData, Constants.numberStyle, Constants.cultureInfo, out value))
                             {
-                                // Legge inn den nye verdien i data settet
-                                timeMaxPositiveDataList.Add(
+                                // Sjekke at ny verdi ikke er lik den forrige som ble lagt inn i datasettet -> unngå duplikater
+                                if (timeMaxPositiveDataList.LastOrDefault()?.timestamp != newTimeStamp)
+                                {
+                                    // Legge inn den nye verdien i data settet
+                                    timeMaxPositiveDataList.Add(
                                     new TimeData()
                                     {
                                         data = value,
                                         timestamp = newTimeStamp
                                     });
 
-                                // Større max verdi?
-                                if (value > timeMaxPositiveMaxValue)
-                                {
-                                    timeMaxPositiveMaxValue = value;
-                                }
-
-                                // Sjekke om vi skal ta ut gamle verdier
-                                bool findNewMaxValue = false;
-                                for (int i = 0; i < timeMaxPositiveDataList.Count && timeMaxPositiveDataList.Count > 0; i++)
-                                {
-                                    // Time stamp eldre enn satt grense?
-                                    if (timeMaxPositiveDataList[i]?.timestamp.AddSeconds(parameter) < newTimeStamp)
+                                    // Større max verdi?
+                                    if (value > timeMaxPositiveMaxValue)
                                     {
-                                        // Sjekke om dette var høyeste verdi
-                                        if (timeMaxPositiveDataList[i].data == timeMaxPositiveMaxValue)
-                                        {
-                                            // Finne ny høyeste verdi
-                                            findNewMaxValue = true;
-                                        }
-
-                                        // Fjerne gammel verdi fra verdiliste
-                                        timeMaxPositiveDataList.RemoveAt(i--);
+                                        timeMaxPositiveMaxValue = value;
                                     }
-                                }
 
-                                // Finne ny høyeste verdi
-                                if (findNewMaxValue)
-                                {
-                                    double oldMaxValue = timeMaxPositiveMaxValue;
-                                    timeMaxPositiveMaxValue = 0;
-                                    bool foundNewMax = false;
-
-                                    for (int i = 0; i < timeMaxPositiveDataList.Count && !foundNewMax; i++)
+                                    // Sjekke om vi skal ta ut gamle verdier
+                                    bool findNewMaxValue = false;
+                                    for (int i = 0; i < timeMaxPositiveDataList.Count && timeMaxPositiveDataList.Count > 0; i++)
                                     {
-                                        // Kan avslutte søket dersom vi finne en verdi like den gamle max verdien (ingen er høyere)
-                                        if (timeMaxPositiveDataList[i]?.data == oldMaxValue)
+                                        // Time stamp eldre enn satt grense?
+                                        if (timeMaxPositiveDataList[i]?.timestamp.AddSeconds(parameter) < newTimeStamp)
                                         {
-                                            timeMaxPositiveMaxValue = oldMaxValue;
-                                            foundNewMax = true; ;
+                                            // Sjekke om dette var høyeste verdi
+                                            if (timeMaxPositiveDataList[i].data == timeMaxPositiveMaxValue)
+                                            {
+                                                // Finne ny høyeste verdi
+                                                findNewMaxValue = true;
+                                            }
+
+                                            // Fjerne gammel verdi fra verdiliste
+                                            timeMaxPositiveDataList.RemoveAt(i--);
                                         }
-                                        else
+                                    }
+
+                                    // Finne ny høyeste verdi
+                                    if (findNewMaxValue)
+                                    {
+                                        double oldMaxValue = timeMaxPositiveMaxValue;
+                                        timeMaxPositiveMaxValue = 0;
+                                        bool foundNewMax = false;
+
+                                        for (int i = 0; i < timeMaxPositiveDataList.Count && !foundNewMax; i++)
                                         {
-                                            if (timeMaxPositiveDataList[i]?.data > timeMaxPositiveMaxValue)
-                                                timeMaxPositiveMaxValue = timeMaxPositiveDataList[i].data;
+                                            // Kan avslutte søket dersom vi finne en verdi like den gamle max verdien (ingen er høyere)
+                                            if (timeMaxPositiveDataList[i]?.data == oldMaxValue)
+                                            {
+                                                timeMaxPositiveMaxValue = oldMaxValue;
+                                                foundNewMax = true; ;
+                                            }
+                                            else
+                                            {
+                                                if (timeMaxPositiveDataList[i]?.data > timeMaxPositiveMaxValue)
+                                                    timeMaxPositiveMaxValue = timeMaxPositiveDataList[i].data;
+                                            }
                                         }
                                     }
                                 }
@@ -416,58 +429,62 @@ namespace HMS_Server
                             // Sjekke om string er numerisk
                             if (double.TryParse(newData, Constants.numberStyle, Constants.cultureInfo, out value))
                             {
-                                // Legge inn den nye verdien i data settet
-                                timeMaxNegativeDataList.Add(
+                                // Sjekke at ny verdi ikke er lik den forrige som ble lagt inn i datasettet -> unngå duplikater
+                                if (timeMaxNegativeDataList.LastOrDefault()?.timestamp != newTimeStamp)
+                                {
+                                    // Legge inn den nye verdien i data settet
+                                    timeMaxNegativeDataList.Add(
                                     new TimeData()
                                     {
                                         data = value,
                                         timestamp = newTimeStamp
                                     });
 
-                                // Større max verdi?
-                                if (value < timeMaxNegativeMaxValue)
-                                {
-                                    timeMaxNegativeMaxValue = value;
-                                }
-
-                                // Sjekke om vi skal ta ut gamle verdier
-                                bool findNewMaxValue = false;
-                                for (int i = 0; i < timeMaxNegativeDataList.Count && timeMaxNegativeDataList.Count > 0; i++)
-                                {
-                                    // Time stamp eldre enn satt grense?
-                                    if (timeMaxNegativeDataList[i]?.timestamp.AddSeconds(parameter) < newTimeStamp)
+                                    // Større max verdi?
+                                    if (value < timeMaxNegativeMaxValue)
                                     {
-                                        // Sjekke om dette var laveste verdi
-                                        if (timeMaxNegativeDataList[i].data == timeMaxNegativeMaxValue)
-                                        {
-                                            // Finne ny laveste verdi
-                                            findNewMaxValue = true;
-                                        }
-
-                                        // Fjerne gammel verdi fra verdiliste
-                                        timeMaxNegativeDataList.RemoveAt(i--);
+                                        timeMaxNegativeMaxValue = value;
                                     }
-                                }
 
-                                // Finne ny høyeste verdi
-                                if (findNewMaxValue)
-                                {
-                                    double oldMaxValue = timeMaxNegativeMaxValue;
-                                    timeMaxNegativeMaxValue = 0;
-                                    bool foundNewMax = false;
-
-                                    for (int i = 0; i < timeMaxNegativeDataList.Count && !foundNewMax; i++)
+                                    // Sjekke om vi skal ta ut gamle verdier
+                                    bool findNewMaxValue = false;
+                                    for (int i = 0; i < timeMaxNegativeDataList.Count && timeMaxNegativeDataList.Count > 0; i++)
                                     {
-                                        // Kan avslutte søket dersom vi finne en verdi like den gamle max verdien (ingen er høyere)
-                                        if (timeMaxNegativeDataList[i]?.data == oldMaxValue)
+                                        // Time stamp eldre enn satt grense?
+                                        if (timeMaxNegativeDataList[i]?.timestamp.AddSeconds(parameter) < newTimeStamp)
                                         {
-                                            timeMaxNegativeMaxValue = oldMaxValue;
-                                            foundNewMax = true;
+                                            // Sjekke om dette var laveste verdi
+                                            if (timeMaxNegativeDataList[i].data == timeMaxNegativeMaxValue)
+                                            {
+                                                // Finne ny laveste verdi
+                                                findNewMaxValue = true;
+                                            }
+
+                                            // Fjerne gammel verdi fra verdiliste
+                                            timeMaxNegativeDataList.RemoveAt(i--);
                                         }
-                                        else
+                                    }
+
+                                    // Finne ny høyeste verdi
+                                    if (findNewMaxValue)
+                                    {
+                                        double oldMaxValue = timeMaxNegativeMaxValue;
+                                        timeMaxNegativeMaxValue = 0;
+                                        bool foundNewMax = false;
+
+                                        for (int i = 0; i < timeMaxNegativeDataList.Count && !foundNewMax; i++)
                                         {
-                                            if (timeMaxNegativeDataList[i]?.data < timeMaxNegativeMaxValue)
-                                                timeMaxNegativeMaxValue = timeMaxNegativeDataList[i].data;
+                                            // Kan avslutte søket dersom vi finne en verdi like den gamle max verdien (ingen er høyere)
+                                            if (timeMaxNegativeDataList[i]?.data == oldMaxValue)
+                                            {
+                                                timeMaxNegativeMaxValue = oldMaxValue;
+                                                foundNewMax = true;
+                                            }
+                                            else
+                                            {
+                                                if (timeMaxNegativeDataList[i]?.data < timeMaxNegativeMaxValue)
+                                                    timeMaxNegativeMaxValue = timeMaxNegativeDataList[i].data;
+                                            }
                                         }
                                     }
                                 }
@@ -490,27 +507,31 @@ namespace HMS_Server
                             // Sjekke om string er numerisk
                             if (double.TryParse(newData, Constants.numberStyle, Constants.cultureInfo, out value))
                             {
-                                // Legge inn den nye absolutte verdien i data settet
-                                significantHeaveRateDataList.Add(
+                                // Sjekke at ny verdi ikke er lik den forrige som ble lagt inn i datasettet -> unngå duplikater
+                                if (significantHeaveRateDataList.LastOrDefault()?.timestamp != newTimeStamp)
+                                {
+                                    // Legge inn den nye absolutte verdien i data settet
+                                    significantHeaveRateDataList.Add(
                                     new TimeData()
                                     {
                                         data = Math.Abs(value),
                                         timestamp = newTimeStamp
                                     });
 
-                                // Legge til ny verdi i square total
-                                significantHeaveRateSquareSum += Math.Pow(value, 2);
+                                    // Legge til ny verdi i square total
+                                    significantHeaveRateSquareSum += Math.Pow(value, 2);
 
-                                // Sjekke om vi skal ta ut gamle verdier
-                                for (int i = 0; i < significantHeaveRateDataList.Count && significantHeaveRateDataList.Count > 0; i++)
-                                {
-                                    if (significantHeaveRateDataList[i]?.timestamp.AddSeconds(parameter) < newTimeStamp)
+                                    // Sjekke om vi skal ta ut gamle verdier
+                                    for (int i = 0; i < significantHeaveRateDataList.Count && significantHeaveRateDataList.Count > 0; i++)
                                     {
-                                        // Trekke fra gammel verdi i square total
-                                        significantHeaveRateSquareSum -= Math.Pow(significantHeaveRateDataList[i].data, 2);
+                                        if (significantHeaveRateDataList[i]?.timestamp.AddSeconds(parameter) < newTimeStamp)
+                                        {
+                                            // Trekke fra gammel verdi i square total
+                                            significantHeaveRateSquareSum -= Math.Pow(significantHeaveRateDataList[i].data, 2);
 
-                                        // Fjerne fra verdiliste
-                                        significantHeaveRateDataList.RemoveAt(i--);
+                                            // Fjerne fra verdiliste
+                                            significantHeaveRateDataList.RemoveAt(i--);
+                                        }
                                     }
                                 }
 
