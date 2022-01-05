@@ -366,6 +366,8 @@ namespace HMS_Server
         {
             StopServer();
             ExitServer();
+
+            Application.Current.Shutdown();
         }
 
         private void InitUIInputUpdate()
@@ -381,6 +383,7 @@ namespace HMS_Server
                 try
                 {
                     Thread thread = new Thread(() => UpdateUI_Thread());
+                    thread.IsBackground = true;
                     thread.Start();
 
                     void UpdateUI_Thread()
@@ -518,6 +521,7 @@ namespace HMS_Server
                 try
                 {
                     Thread thread = new Thread(() => UpdateHMS_Thread());
+                    thread.IsBackground = true;
                     thread.Start();
 
                     void UpdateHMS_Thread()
@@ -575,6 +579,7 @@ namespace HMS_Server
                 try
                 {
                     Thread thread = new Thread(() => SaveHMSData_Thread());
+                    thread.IsBackground = true;
                     thread.Start();
 
                     void SaveHMSData_Thread()
@@ -609,6 +614,7 @@ namespace HMS_Server
             void runLightsOutputUpdate(object sender, EventArgs e)
             {
                 Thread thread = new Thread(() => SendLightsOutput_Thread());
+                thread.IsBackground = true;
                 thread.Start();
 
                 void SendLightsOutput_Thread()
@@ -861,6 +867,7 @@ namespace HMS_Server
         private void DoDatabaseMaintenance(DatabaseMaintenanceType type)
         {
             Thread thread = new Thread(() => runDatabaseMaintenance_Thread());
+            thread.IsBackground = true;
             thread.Start();
 
             void runDatabaseMaintenance_Thread()

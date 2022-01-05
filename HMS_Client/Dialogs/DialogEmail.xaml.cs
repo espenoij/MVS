@@ -93,6 +93,7 @@ namespace HMS_Client
                 !(helideckReportVM.sendHMSScreenCapture && string.IsNullOrEmpty(helideckReportVM.screenCaptureFile)))
             {
                 Thread thread = new Thread(() => SendEmail_Thread());
+                thread.IsBackground = true;
                 thread.Start();
 
                 void SendEmail_Thread()

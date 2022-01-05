@@ -1,4 +1,5 @@
-﻿using System.Threading;
+﻿using System;
+using System.Threading;
 using System.Windows;
 using System.Windows.Media;
 using Telerik.Windows.Controls;
@@ -95,5 +96,12 @@ namespace HMS_Server
             MaterialPalette.Palette.DisabledOpacity = 0.26;
             MaterialPalette.Palette.DividerOpacity = 0.38;
         }
+
+        //protected override void OnClosed(EventArgs e)
+        //{
+        //    base.OnClosed(e);
+
+        //    Application.Current.Shutdown();
+        //}
     }
 }

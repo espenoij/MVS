@@ -92,6 +92,7 @@ namespace HMS_Server
                 foreach (var serialPort in modbusSerialPortList)
                 {
                     Thread thread = new Thread(() => runModbusReader_Thread(serialPort));
+                    thread.IsBackground = true;
                     thread.Start();
                 }
             }

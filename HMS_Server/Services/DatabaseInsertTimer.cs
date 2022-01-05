@@ -26,6 +26,7 @@ namespace HMS_Server
                         sensorData.saveFreq != DatabaseSaveFrequency.Freq_2hz))
                 {
                     Thread thread = new Thread(() => DatabaseSaveTimer_Thread());
+                    thread.IsBackground = true;
                     thread.Start();
                 }
             }
