@@ -242,7 +242,7 @@ namespace HMS_Server
                                             // Trekke fra i total summen
                                             timeAverageTotal -= timeAverageDataList[i].data;
 
-                                            // Fjerne fra verdi listne
+                                            // Fjerne fra verdi listen
                                             timeAverageDataList.RemoveAt(i--);
                                         }
                                     }

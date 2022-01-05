@@ -217,31 +217,23 @@ public enum WindMeasurement
 
 public class GustData
 {
-    //public List<Wind> windDataList = new List<Wind>();
+    // Variabler til bruk under kalkulasjoner
     public List<Wind> gust3SecDataList = new List<Wind>();
     public List<Wind> gustDataList = new List<Wind>();
-    //public double windDataDirTotal = 0;
-    //public double windDataSpdTotal = 0;
     public double windDataGustMax = 0;
     public double minutes;
+    public DateTime lastTimeStamp;
 
-    // Results
-    //public double windDir = 0;
-    //public double windSpeed = 0;
+    // Result
     public double windGust = 0;
 
     public void Reset()
     {
-        //windDataList.Clear();
         gust3SecDataList.Clear();
         gustDataList.Clear();
-
-        //windDataDirTotal = 0;
-        //windDataSpdTotal = 0;
         windDataGustMax = 0;
+        lastTimeStamp = DateTime.MinValue;
 
-        //windDir = 0;
-        //windSpeed = 0;
         windGust = 0;
     }
 }

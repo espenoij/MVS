@@ -203,7 +203,7 @@ namespace HMS_Server
                         DateTime.UtcNow,
                         ErrorMessageType.SerialPort,
                         errorMessageCat,
-                        string.Format("Serial Port Processing\n(ApplyCalculationsToSelectedData)\n\nSystem Message:\n{0}", ex.Message)));
+                        string.Format("File Reader Processing\n(ApplyCalculationsToSelectedData)\n\nSystem Message:\n{0}", ex.Message)));
             }
 
             return calculatedData;

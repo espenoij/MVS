@@ -164,8 +164,8 @@ class Constants
     public const double WindSensorDistanceMax = 500;
     public const double WindSensorDistanceDefault = 10;
 
-    // Vind justert til X m over helideck
-    public const double WindAdjustmentAboveHelideck = 4;
+    // Vind justert til X meter over helideck
+    public const double WindAdjustmentAboveHelideck = 10;
 
     // NDB Frequency
     public const double NDBFrequencyMin = 190;
@@ -187,7 +187,7 @@ class Constants
     public const double WindCorrectionRMax = 2;
 
     // Helicopter WSI Limits
-    public const double HelicopterWSIMin = 0;
+    public const double HelicopterWSIMin = 1;
     public const double HelicopterWSIMax = 100;
     public const double HelicopterWSIDefault = 43;
 
