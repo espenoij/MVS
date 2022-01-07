@@ -27,123 +27,406 @@
         <Grid
             Grid.Column="0">
 
-            <Grid.ColumnDefinitions>
-                <ColumnDefinition
-                    Width="*" />
-                <ColumnDefinition
-                    Width="*" />
-            </Grid.ColumnDefinitions>
-
             <Grid.RowDefinitions>
                 <RowDefinition
-                    Height="*" />
-                <RowDefinition
-                    Height="*" />
+                    Height="2*" />
                 <RowDefinition
                     Height="*" />
             </Grid.RowDefinitions>
 
-            <!--OFFSHORE WEATHER REPORT-->
-            <telerik:GroupBox
-                Header="OFFSHORE WEATHER REPORT"
-                Grid.Row="0"
-                Margin="8">
+            <Grid
+                Grid.Row="0">
 
-                <DockPanel>
+                <Grid.ColumnDefinitions>
+                    <ColumnDefinition
+                        Width="*" />
+                    <ColumnDefinition
+                        Width="*" />
+                </Grid.ColumnDefinitions>
 
-                    <telerik:RadButton
-                        DockPanel.Dock="Bottom"
-                        Name="btnClearHelideckReport"
-                        Content="Clear"
-                        HorizontalAlignment="Right"
-                        Width="110"
-                        Click="btnClearHelideckReport_Click" />
+                <Grid
+                    Grid.Column="0">
 
-                    <StackPanel
+                    <Grid.RowDefinitions>
+                        <RowDefinition
+                            Height="2*" />
+                        <RowDefinition
+                            Height="2*" />
+                        <RowDefinition
+                            Height="3*" />
+                    </Grid.RowDefinitions>
+
+                    <!--OFFSHORE WEATHER REPORT-->
+                    <telerik:GroupBox
+                        Header="OFFSHORE WEATHER REPORT"
+                        Grid.Column="0"
+                        Grid.Row="0"
                         Margin="8">
 
-                        <!--Report prepared by-->
                         <DockPanel>
 
-                            <telerik:Label
-                                Width="150"
-                                Content="Report prepared by"
-                                VerticalAlignment="Center" />
+                            <telerik:RadButton
+                                DockPanel.Dock="Bottom"
+                                Name="btnClearHelideckReport"
+                                Content="Clear"
+                                HorizontalAlignment="Right"
+                                Width="110"
+                                Click="btnClearHelideckReport_Click" />
 
-                            <TextBox
-                                Name="tbNameOfHLO"
-                                Text="{Binding Path=nameOfHLO}"
-                                LostFocus="tbNameOfHLO_LostFocus"
-                                KeyDown="tbNameOfHLO_KeyDown" />
+                            <StackPanel
+                                Margin="8">
+
+                                <!--Report prepared by-->
+                                <DockPanel>
+
+                                    <telerik:Label
+                                        Width="150"
+                                        Content="Report prepared by"
+                                        VerticalAlignment="Center" />
+
+                                    <TextBox
+                                        Name="tbNameOfHLO"
+                                        Text="{Binding Path=nameOfHLO}"
+                                        LostFocus="tbNameOfHLO_LostFocus"
+                                        KeyDown="tbNameOfHLO_KeyDown" />
+
+                                </DockPanel>
+
+                            </StackPanel>
 
                         </DockPanel>
 
-                    </StackPanel>
+                    </telerik:GroupBox>
 
-                </DockPanel>
-
-            </telerik:GroupBox>
-
-            <!--OBSERVATIONS-->
-            <telerik:GroupBox
-                Header="OBSERVATIONS"
-                Grid.Column="1"
-                Grid.Row="0"
-                Margin="8">
-
-                <DockPanel>
-
-                    <telerik:RadButton
-                        DockPanel.Dock="Bottom"
-                        Name="btnClearOtherWeatherInfo"
-                        Content="Clear"
-                        HorizontalAlignment="Right"
-                        Width="110"
-                        Click="btnClearObservations_Click" />
-
-                    <StackPanel
-                        DockPanel.Dock="Top"
+                    <!--OBSERVATIONS-->
+                    <telerik:GroupBox
+                        Header="OBSERVATIONS"
+                        Grid.Row="1"
                         Margin="8">
 
-                        <!--Lightning Present-->
                         <DockPanel>
 
-                            <telerik:Label
-                                Content="Lightning Present"
-                                VerticalAlignment="Center" />
+                            <telerik:RadButton
+                                DockPanel.Dock="Bottom"
+                                Name="btnClearOtherWeatherInfo"
+                                Content="Clear"
+                                HorizontalAlignment="Right"
+                                Width="110"
+                                Click="btnClearObservations_Click" />
 
-                            <CheckBox
-                                IsChecked="{Binding Path=lightningPresent, Mode=TwoWay}"
-                                VerticalAlignment="Center"
-                                HorizontalAlignment="Right" />
+                            <StackPanel
+                                DockPanel.Dock="Top"
+                                Margin="8">
+
+                                <!--Lightning Present-->
+                                <DockPanel>
+
+                                    <telerik:Label
+                                        Content="Lightning Present"
+                                        VerticalAlignment="Center" />
+
+                                    <CheckBox
+                                        IsChecked="{Binding Path=lightningPresent, Mode=TwoWay}"
+                                        VerticalAlignment="Center"
+                                        HorizontalAlignment="Right" />
+
+                                </DockPanel>
+
+                                <!--Cold Flaring-->
+                                <DockPanel>
+
+                                    <telerik:Label
+                                        Content="Cold Flaring"
+                                        VerticalAlignment="Center" />
+
+                                    <CheckBox
+                                        IsChecked="{Binding Path=coldFlaring, Mode=TwoWay}"
+                                        VerticalAlignment="Center"
+                                        HorizontalAlignment="Right" />
+
+                                </DockPanel>
+
+                            </StackPanel>
 
                         </DockPanel>
 
-                        <!--Cold Flaring-->
+                    </telerik:GroupBox>
+
+                    <!--SERVICES-->
+                    <telerik:GroupBox
+                        Header="SERVICES"
+                        Grid.Row="2"
+                        Grid.RowSpan="3"
+                        Margin="8">
+
                         <DockPanel>
 
-                            <telerik:Label
-                                Content="Cold Flaring"
-                                VerticalAlignment="Center" />
+                            <telerik:RadButton
+                                DockPanel.Dock="Bottom"
+                                Name="btnClearServices"
+                                Content="Clear"
+                                HorizontalAlignment="Right"
+                                Width="110"
+                                Click="btnClearServices_Click" />
 
-                            <CheckBox
-                                IsChecked="{Binding Path=coldFlaring, Mode=TwoWay}"
-                                VerticalAlignment="Center"
-                                HorizontalAlignment="Right" />
+                            <StackPanel
+                                DockPanel.Dock="Top"
+                                Margin="8">
+
+                                <!--Rescue & Recovery Available-->
+                                <DockPanel>
+
+                                    <telerik:Label
+                                        Content="Rescue &amp; Recovery Available"
+                                        VerticalAlignment="Center" />
+
+                                    <CheckBox
+                                        IsChecked="{Binding Path=rescueRecoveryAvailable, Mode=TwoWay}"
+                                        VerticalAlignment="Center"
+                                        HorizontalAlignment="Right" />
+
+                                </DockPanel>
+
+                                <!--Helifuel Serviceable-->
+                                <DockPanel>
+
+                                    <telerik:Label
+                                        Content="Fuel Serviceable"
+                                        VerticalAlignment="Center" />
+
+                                    <CheckBox
+                                        IsChecked="{Binding Path=helifuelAvailable, Mode=TwoWay}"
+                                        VerticalAlignment="Center"
+                                        HorizontalAlignment="Right" />
+
+                                </DockPanel>
+
+                                <!--Fuel Quantity-->
+                                <DockPanel>
+
+                                    <TextBox
+                                        DockPanel.Dock="Right"
+                                        Name="tbFuelQuantity"
+                                        Width="100"
+                                        Text="{Binding Path=fuelQuantity}"
+                                        LostFocus="tbFuelQuantity_LostFocus"
+                                        KeyDown="tbFuelQuantity_KeyDown" />
+
+                                    <telerik:Label
+                                        Content="Fuel Quantity"
+                                        VerticalAlignment="Center" />
+
+                                </DockPanel>
+
+                                <!--NDB Serviceable-->
+                                <DockPanel>
+
+                                    <telerik:Label
+                                        Content="NDB Serviceable"
+                                        VerticalAlignment="Center" />
+
+                                    <CheckBox
+                                        IsChecked="{Binding Path=ndbServiceable, Mode=TwoWay}"
+                                        VerticalAlignment="Center"
+                                        HorizontalAlignment="Right" />
+
+                                </DockPanel>
+
+                            </StackPanel>
 
                         </DockPanel>
 
-                    </StackPanel>
+                    </telerik:GroupBox>
 
-                </DockPanel>
+                </Grid>
 
-            </telerik:GroupBox>
+                <Grid
+                    Grid.Column="1">
+
+                    <Grid.RowDefinitions>
+                        <RowDefinition
+                            Height="*" />
+                        <RowDefinition
+                            Height="*" />
+                    </Grid.RowDefinitions>
+
+                    <!--SENSORS-->
+                    <telerik:GroupBox
+                        Header="SENSORS"
+                        Grid.Row="0"
+                        Margin="8">
+
+                        <DockPanel>
+
+                            <telerik:RadButton
+                                DockPanel.Dock="Bottom"
+                                Name="btnClearSensorRemarks"
+                                Content="Clear"
+                                HorizontalAlignment="Right"
+                                Width="110"
+                                Click="btnClearSensorRemarks_Click" />
+
+                            <StackPanel
+                                DockPanel.Dock="Top"
+                                Margin="8">
+
+                                <!--Any unserviceable sensors-->
+                                <DockPanel>
+
+                                    <telerik:Label
+                                        Content="Any unserviceable sensors"
+                                        VerticalAlignment="Center" />
+
+                                    <CheckBox
+                                        IsChecked="{Binding Path=anyUnserviceableSensors, Mode=TwoWay}"
+                                        VerticalAlignment="Center"
+                                        HorizontalAlignment="Right" />
+
+                                </DockPanel>
+
+                                <telerik:Label
+                                    Content="Details"
+                                    HorizontalAlignment="Left" />
+
+                                <TextBlock
+                                    Margin="16,0,16,0"
+                                    Text="E.g. type of sensor and the date it becaming unserviceable"
+                                    FontSize="{StaticResource reportFontSizeComment}"
+                                    TextWrapping="Wrap"
+                                    VerticalAlignment="Center" />
+
+                            </StackPanel>
+
+                            <Grid>
+
+                                <TextBox
+                                    Name="tbAnyUnserviceableSensorsComments"
+                                    Margin="8"
+                                    Text="{Binding Path=anyUnserviceableSensorsComments}"
+                                    TextWrapping="Wrap"
+                                    VerticalAlignment="Bottom"
+                                    LostFocus="tbAnyUnserviceableSensorsComments_LostFocus"
+                                    KeyDown="tbAnyUnserviceableSensorsComments_KeyDown" />
+
+                                <TextBlock
+                                    IsHitTestVisible="False"
+                                    Text="Enter sensor remarks here"
+                                    VerticalAlignment="Bottom"
+                                    HorizontalAlignment="Left"
+                                    Margin="18,0,0,18"
+                                    Foreground="DarkGray">
+
+                                    <TextBlock.Style>
+                                        <Style
+                                            TargetType="{x:Type TextBlock}">
+                                            <Setter
+                                                Property="Visibility"
+                                                Value="Collapsed" />
+                                            <Style.Triggers>
+                                                <DataTrigger
+                                                    Binding="{Binding Text, ElementName=tbAnyUnserviceableSensorsComments}"
+                                                    Value="">
+                                                    <Setter
+                                                        Property="Visibility"
+                                                        Value="Visible" />
+                                                </DataTrigger>
+                                            </Style.Triggers>
+                                        </Style>
+                                    </TextBlock.Style>
+                                </TextBlock>
+                            </Grid>
+
+                        </DockPanel>
+
+                    </telerik:GroupBox>
+
+                    <!--REMARKS-->
+                    <telerik:GroupBox
+                        Header="REMARKS"
+                        Grid.Row="1"
+                        Margin="8">
+
+                        <DockPanel>
+
+                            <telerik:RadButton
+                                DockPanel.Dock="Bottom"
+                                Name="btnClearRemarks"
+                                Content="Clear"
+                                HorizontalAlignment="Right"
+                                Width="110"
+                                Click="btnClearRemarks_Click" />
+
+                            <StackPanel
+                                DockPanel.Dock="Top"
+                                Margin="8">
+
+                                <telerik:Label
+                                    Content="Other relevant weather info"
+                                    HorizontalAlignment="Left" />
+
+                                <TextBlock
+                                    Margin="16,0,16,0"
+                                    Text="E.g. fog banks, rapid changes, etc."
+                                    FontSize="{StaticResource reportFontSizeComment}"
+                                    TextWrapping="Wrap"
+                                    VerticalAlignment="Center" />
+
+                            </StackPanel>
+
+                            <Grid>
+
+                                <TextBox
+                                    Name="tbRemarks"
+                                    Margin="8"
+                                    Text="{Binding Path=otherWeatherInfo}"
+                                    TextWrapping="Wrap"
+                                    VerticalAlignment="Bottom"
+                                    LostFocus="tbRemarks_LostFocus"
+                                    KeyDown="tbRemarks_KeyDown" />
+
+                                <TextBlock
+                                    IsHitTestVisible="False"
+                                    Text="Enter weather remarks here"
+                                    VerticalAlignment="Bottom"
+                                    HorizontalAlignment="Left"
+                                    Margin="18,0,0,18"
+                                    Foreground="DarkGray">
+
+                                    <TextBlock.Style>
+                                        <Style
+                                            TargetType="{x:Type TextBlock}">
+                                            <Setter
+                                                Property="Visibility"
+                                                Value="Collapsed" />
+                                            <Style.Triggers>
+                                                <DataTrigger
+                                                    Binding="{Binding Text, ElementName=tbOtherWeatherInfo}"
+                                                    Value="">
+                                                    <Setter
+                                                        Property="Visibility"
+                                                        Value="Visible" />
+                                                </DataTrigger>
+                                            </Style.Triggers>
+                                        </Style>
+                                    </TextBlock.Style>
+                                </TextBlock>
+                            </Grid>
+
+                        </DockPanel>
+
+                    </telerik:GroupBox>
+
+                </Grid>
+
+            </Grid>
 
             <!--EMAIL-->
             <telerik:GroupBox
+                Visibility="{Binding Path=reportEmailVisibility}"
                 Header="EMAIL"
-                Grid.Column="1"
-                Grid.Row="2"
+                Grid.Column="0"
+                Grid.Row="4"
+                Grid.ColumnSpan="2"
                 Margin="8">
 
                 <DockPanel>
@@ -165,7 +448,7 @@
 
                             <telerik:Label
                                 Width="150"
-                                Content="Email: From"
+                                Content="From"
                                 VerticalAlignment="Center" />
 
                             <TextBox
@@ -181,7 +464,7 @@
 
                             <telerik:Label
                                 Width="150"
-                                Content="Email: To"
+                                Content="To"
                                 VerticalAlignment="Center" />
 
                             <TextBox
@@ -197,7 +480,7 @@
 
                             <telerik:Label
                                 Width="150"
-                                Content="Email: CC"
+                                Content="CC"
                                 VerticalAlignment="Center" />
 
                             <TextBox
@@ -208,263 +491,41 @@
 
                         </DockPanel>
 
-                    </StackPanel>
-
-                </DockPanel>
-
-            </telerik:GroupBox>
-
-            <!--SERVICES-->
-            <telerik:GroupBox
-                Header="SERVICES"
-                Grid.Column="0"
-                Grid.Row="1"
-                Margin="8">
-
-                <DockPanel>
-
-                    <telerik:RadButton
-                        DockPanel.Dock="Bottom"
-                        Name="btnClearServices"
-                        Content="Clear"
-                        HorizontalAlignment="Right"
-                        Width="110"
-                        Click="btnClearServices_Click" />
-
-                    <StackPanel
-                        DockPanel.Dock="Top"
-                        Margin="8">
-
-                        <!--Rescue & Recovery Available-->
+                        <!--Subject-->
                         <DockPanel>
 
                             <telerik:Label
-                                Content="Rescue &amp; Recovery Available"
+                                Width="150"
+                                Content="Subject"
                                 VerticalAlignment="Center" />
-
-                            <CheckBox
-                                IsChecked="{Binding Path=rescueRecoveryAvailable, Mode=TwoWay}"
-                                VerticalAlignment="Center"
-                                HorizontalAlignment="Right" />
-
-                        </DockPanel>
-
-                        <!--Helifuel Serviceable-->
-                        <DockPanel>
-
-                            <telerik:Label
-                                Content="Fuel Serviceable"
-                                VerticalAlignment="Center" />
-
-                            <CheckBox
-                                IsChecked="{Binding Path=helifuelAvailable, Mode=TwoWay}"
-                                VerticalAlignment="Center"
-                                HorizontalAlignment="Right" />
-
-                        </DockPanel>
-
-                        <!--Fuel Quantity-->
-                        <DockPanel>
 
                             <TextBox
-                                DockPanel.Dock="Right"
-                                Name="tbFuelQuantity"
-                                Width="100"
-                                Text="{Binding Path=fuelQuantity}"
-                                LostFocus="tbFuelQuantity_LostFocus"
-                                KeyDown="tbFuelQuantity_KeyDown" />
-
-                            <telerik:Label
-                                Content="Fuel Quantity"
-                                VerticalAlignment="Center" />
-
-                        </DockPanel>
-
-                        <!--NDB Serviceable-->
-                        <DockPanel>
-
-                            <telerik:Label
-                                Content="NDB Serviceable"
-                                VerticalAlignment="Center" />
-
-                            <CheckBox
-                                IsChecked="{Binding Path=ndbServiceable, Mode=TwoWay}"
-                                VerticalAlignment="Center"
-                                HorizontalAlignment="Right" />
+                                Name="tbSubject"
+                                Text="{Binding Path=emailSubject}"
+                                LostFocus="tbSubject_LostFocus"
+                                KeyDown="tbSubject_KeyDown" />
 
                         </DockPanel>
 
                     </StackPanel>
 
-                </DockPanel>
-
-            </telerik:GroupBox>
-
-            <!--SENSORS-->
-            <telerik:GroupBox
-                Header="SENSORS"
-                Grid.Column="1"
-                Grid.Row="1"
-                Margin="8">
-
-                <DockPanel>
-
-                    <telerik:RadButton
-                        DockPanel.Dock="Bottom"
-                        Name="btnClearSensorRemarks"
-                        Content="Clear"
-                        HorizontalAlignment="Right"
-                        Width="110"
-                        Click="btnClearSensorRemarks_Click" />
-
-                    <StackPanel
-                        DockPanel.Dock="Top"
-                        Margin="8">
-
-                        <!--Any unserviceable sensors-->
-                        <DockPanel>
-
-                            <telerik:Label
-                                Content="Any unserviceable sensors"
-                                VerticalAlignment="Center" />
-
-                            <CheckBox
-                                IsChecked="{Binding Path=anyUnserviceableSensors, Mode=TwoWay}"
-                                VerticalAlignment="Center"
-                                HorizontalAlignment="Right" />
-
-                        </DockPanel>
+                    <!--Body-->
+                    <DockPanel
+                        Margin="8,0,8,8">
 
                         <telerik:Label
-                            Content="Details"
-                            HorizontalAlignment="Left" />
+                            Width="150"
+                            Content="Body"
+                            VerticalAlignment="Top" />
 
-                        <TextBlock
-                            Margin="16,0,16,0"
-                            Text="E.g. type of sensor and the date it becaming unserviceable"
-                            FontSize="{StaticResource reportFontSizeComment}"
-                            TextWrapping="Wrap"
-                            VerticalAlignment="Center" />
+                        <TextBox
+                            Name="tbBody"
+                            Text="{Binding Path=emailBody}"
+                            LostFocus="tbBody_LostFocus"
+                            KeyDown="tbBody_KeyDown"
+                            VerticalContentAlignment="Top" />
 
-                        <Grid
-                            Height="150">
-
-                            <TextBox
-                                Name="tbAnyUnserviceableSensorsComments"
-                                Margin="8"
-                                Text="{Binding Path=anyUnserviceableSensorsComments}"
-                                TextWrapping="Wrap"
-                                VerticalAlignment="Bottom"
-                                LostFocus="tbAnyUnserviceableSensorsComments_LostFocus"
-                                KeyDown="tbAnyUnserviceableSensorsComments_KeyDown" />
-
-                            <TextBlock
-                                IsHitTestVisible="False"
-                                Text="Enter sensor remarks here"
-                                VerticalAlignment="Bottom"
-                                HorizontalAlignment="Left"
-                                Margin="18,0,0,18"
-                                Foreground="DarkGray">
-
-                                <TextBlock.Style>
-                                    <Style
-                                        TargetType="{x:Type TextBlock}">
-                                        <Setter
-                                            Property="Visibility"
-                                            Value="Collapsed" />
-                                        <Style.Triggers>
-                                            <DataTrigger
-                                                Binding="{Binding Text, ElementName=tbAnyUnserviceableSensorsComments}"
-                                                Value="">
-                                                <Setter
-                                                    Property="Visibility"
-                                                    Value="Visible" />
-                                            </DataTrigger>
-                                        </Style.Triggers>
-                                    </Style>
-                                </TextBlock.Style>
-                            </TextBlock>
-                        </Grid>
-
-                    </StackPanel>
-
-                </DockPanel>
-
-            </telerik:GroupBox>
-
-            <!--REMARKS-->
-            <telerik:GroupBox
-                Header="REMARKS"
-                Grid.Column="0"
-                Grid.Row="2"
-                Margin="8">
-
-                <DockPanel>
-
-                    <telerik:RadButton
-                        DockPanel.Dock="Bottom"
-                        Name="btnClearRemarks"
-                        Content="Clear"
-                        HorizontalAlignment="Right"
-                        Width="110"
-                        Click="btnClearRemarks_Click" />
-
-                    <StackPanel
-                        DockPanel.Dock="Top"
-                        Margin="8">
-
-                        <telerik:Label
-                            Content="Other relevant weather info"
-                            HorizontalAlignment="Left" />
-
-                        <TextBlock
-                            Margin="16,0,16,0"
-                            Text="E.g. fog banks, rapid changes, etc."
-                            FontSize="{StaticResource reportFontSizeComment}"
-                            TextWrapping="Wrap"
-                            VerticalAlignment="Center" />
-
-                        <Grid
-                            Height="150">
-
-                            <TextBox
-                                Name="tbRemarks"
-                                Margin="8"
-                                Text="{Binding Path=otherWeatherInfo}"
-                                TextWrapping="Wrap"
-                                VerticalAlignment="Bottom"
-                                LostFocus="tbRemarks_LostFocus"
-                                KeyDown="tbRemarks_KeyDown" />
-
-                            <TextBlock
-                                IsHitTestVisible="False"
-                                Text="Enter weather remarks here"
-                                VerticalAlignment="Bottom"
-                                HorizontalAlignment="Left"
-                                Margin="18,0,0,18"
-                                Foreground="DarkGray">
-
-                                <TextBlock.Style>
-                                    <Style
-                                        TargetType="{x:Type TextBlock}">
-                                        <Setter
-                                            Property="Visibility"
-                                            Value="Collapsed" />
-                                        <Style.Triggers>
-                                            <DataTrigger
-                                                Binding="{Binding Text, ElementName=tbOtherWeatherInfo}"
-                                                Value="">
-                                                <Setter
-                                                    Property="Visibility"
-                                                    Value="Visible" />
-                                            </DataTrigger>
-                                        </Style.Triggers>
-                                    </Style>
-                                </TextBlock.Style>
-                            </TextBlock>
-                        </Grid>
-
-                    </StackPanel>
+                    </DockPanel>
 
                 </DockPanel>
 
@@ -3072,6 +3133,7 @@
                 <telerik:RadButton
                     Name="btnSendReport"
                     Content="Send Report"
+                    Visibility="{Binding Path=reportEmailVisibility}"
                     Margin="8"
                     HorizontalAlignment="Stretch"
                     Click="btnSendReport_Click" />

@@ -17,6 +17,7 @@ namespace HMS_Client
     {
         private HelideckReportVM helideckReportVM;
         private Config config;
+        private AdminSettingsVM adminSettingsVM;
 
         private List<HelicopterOperator> helicopterOperatorList = new List<HelicopterOperator>();
 
@@ -25,10 +26,11 @@ namespace HMS_Client
             InitializeComponent();
         }
 
-        public void Init(HelideckReportVM helideckReportVM, Config config)
+        public void Init(HelideckReportVM helideckReportVM, Config config, AdminSettingsVM adminSettingsVM)
         {
             this.helideckReportVM = helideckReportVM;
             this.config = config;
+            this.adminSettingsVM = adminSettingsVM;
 
             DataContext = helideckReportVM;
 
@@ -504,7 +506,7 @@ namespace HMS_Client
             pdf.SaveToFile(helideckReportPreviewContainer, reportFile);
 
             // Åpne email sending dialog
-            DialogEmail dialogEmail = new DialogEmail(helideckReportVM, reportFile);
+            DialogEmail dialogEmail = new DialogEmail(helideckReportVM, reportFile, adminSettingsVM);
             dialogEmail.Owner = App.Current.MainWindow;
             dialogEmail.ShowDialog();
         }
@@ -512,7 +514,7 @@ namespace HMS_Client
         private void btnSavePDF_Click(object sender, RoutedEventArgs e)
         {
             PDFHandler pdf = new PDFHandler();
-            pdf.SaveToFileWithDialog(helideckReportPreviewContainer);
+            pdf.SaveToFileWithDialog(helideckReportPreviewContainer, Constants.HelideckReportFilename);
         }
 
         private void btnOpenFileLocation_Click(object sender, RoutedEventArgs e)

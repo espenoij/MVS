@@ -356,7 +356,8 @@
 
 
                         <Grid
-                            Height="100">
+                            Margin="8"
+                            Height="150">
 
                             <TextBox
                                 x:Name="SpecialRemarksBox"
@@ -447,47 +448,47 @@
                             TextWrapping="Wrap"
                             VerticalAlignment="Center" />
 
-                        <Grid
-                            Height="100">
-                            
-                            <TextBox
-                                Name="tbOtherWeatherInfo"
-                                Margin="8"
-                                Text="{Binding Path=otherWeatherInfo}"
-                                TextWrapping="Wrap"
-                                VerticalAlignment="Bottom"
-                                LostFocus="tbOtherWeatherInfo_LostFocus"
-                                KeyDown="tbOtherWeatherInfo_KeyDown"/>
-
-                            <TextBlock
-                                IsHitTestVisible="False"
-                                Text="Enter weather info here"
-                                VerticalAlignment="Bottom"
-                                HorizontalAlignment="Left"
-                                Margin="18,0,0,18"
-                                Foreground="DarkGray">
-
-                                <TextBlock.Style>
-                                    <Style
-                                        TargetType="{x:Type TextBlock}">
-                                        <Setter
-                                            Property="Visibility"
-                                            Value="Collapsed" />
-                                        <Style.Triggers>
-                                            <DataTrigger
-                                                Binding="{Binding Text, ElementName=tbOtherWeatherInfo}"
-                                                Value="">
-                                                <Setter
-                                                    Property="Visibility"
-                                                    Value="Visible" />
-                                            </DataTrigger>
-                                        </Style.Triggers>
-                                    </Style>
-                                </TextBlock.Style>
-                            </TextBlock>
-                        </Grid>
-
                     </StackPanel>
+
+                    <Grid
+                        Margin="8">
+
+                        <TextBox
+                            Name="tbOtherWeatherInfo"
+                            Margin="8"
+                            Text="{Binding Path=otherWeatherInfo}"
+                            TextWrapping="Wrap"
+                            VerticalAlignment="Bottom"
+                            LostFocus="tbOtherWeatherInfo_LostFocus"
+                            KeyDown="tbOtherWeatherInfo_KeyDown" />
+
+                        <TextBlock
+                            IsHitTestVisible="False"
+                            Text="Enter weather info here"
+                            VerticalAlignment="Bottom"
+                            HorizontalAlignment="Left"
+                            Margin="18,0,0,18"
+                            Foreground="DarkGray">
+
+                            <TextBlock.Style>
+                                <Style
+                                    TargetType="{x:Type TextBlock}">
+                                    <Setter
+                                        Property="Visibility"
+                                        Value="Collapsed" />
+                                    <Style.Triggers>
+                                        <DataTrigger
+                                            Binding="{Binding Text, ElementName=tbOtherWeatherInfo}"
+                                            Value="">
+                                            <Setter
+                                                Property="Visibility"
+                                                Value="Visible" />
+                                        </DataTrigger>
+                                    </Style.Triggers>
+                                </Style>
+                            </TextBlock.Style>
+                        </TextBlock>
+                    </Grid>
 
                 </DockPanel>
 

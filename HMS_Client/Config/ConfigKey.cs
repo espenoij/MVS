@@ -29,6 +29,7 @@
     public const string AirPressureSensorHeight = "AirPressureSensorHeight";
     public const string NDBFrequency = "NDBFrequency";
     public const string VHFFrequency = "VHFFrequency";
+    public const string EnableReportEmail = "EnableReportEmail";
 
     // App: Wind/Heading
     public const string WindMeasurement = "WindMeasurement";
@@ -68,6 +69,8 @@
     public const string LogInfoRemarks = "LogInfoRemarks";
     public const string EmailTo = "EmailTo";
     public const string EmailCC = "EmailCC";
+    public const string EmailSubject = "EmailSubject";
+    public const string EmailBody = "EmailBody";
     public const string SendHMSScreenCapture = "SendHMSScreenCapture";
     public const string EmailServer = "EmailServer";
     public const string EmailPort = "EmailPort";

@@ -14,23 +14,22 @@ namespace HMS_Client
     {
         private HelideckReportVM helideckReportVM;
         private Config config;
+        private AdminSettingsVM adminSettingsVM;
 
         public HelideckReport_CAP()
         {
             InitializeComponent();
         }
 
-        public void Init(HelideckReportVM helideckReportVM, Config config)
+        public void Init(HelideckReportVM helideckReportVM, Config config, AdminSettingsVM adminSettingsVM)
         {
             this.helideckReportVM = helideckReportVM;
             this.config = config;
+            this.adminSettingsVM = adminSettingsVM;
 
             DataContext = helideckReportVM;
 
             helideckReportVM.EmailStatus = EmailStatus.PREVIEW;
-
-            // Helicopter Operator
-            HelicopterOperatorConfigCollection helicopterOperatorConfigCollection = config.GetHelicopterOperatorDataList();
         }
 
         private void tbNameOfHLO_LostFocus(object sender, RoutedEventArgs e)
@@ -316,6 +315,44 @@ namespace HMS_Client
             }
         }
 
+        private void tbSubject_LostFocus(object sender, RoutedEventArgs e)
+        {
+            tbSubject_Update(sender);
+        }
+
+        private void tbSubject_KeyDown(object sender, KeyEventArgs e)
+        {
+            if (e.Key == Key.Return)
+            {
+                tbSubject_Update(sender);
+                Keyboard.ClearFocus();
+            }
+        }
+
+        private void tbSubject_Update(object sender)
+        {
+            helideckReportVM.emailSubject = (sender as TextBox).Text;
+        }
+
+        private void tbBody_LostFocus(object sender, RoutedEventArgs e)
+        {
+            tbBody_Update(sender);
+        }
+
+        private void tbBody_KeyDown(object sender, KeyEventArgs e)
+        {
+            if (e.Key == Key.Return)
+            {
+                tbBody_Update(sender);
+                Keyboard.ClearFocus();
+            }
+        }
+
+        private void tbBody_Update(object sender)
+        {
+            helideckReportVM.emailBody = (sender as TextBox).Text;
+        }
+
         private void btnClearHelideckReport_Click(object sender, RoutedEventArgs e)
         {
             helideckReportVM.nameOfHLO = string.Empty;
@@ -355,14 +392,14 @@ namespace HMS_Client
 
         private void btnSendReport_Click(object sender, RoutedEventArgs e)
         {
-            string reportFile = string.Format("{0}_{1}.pdf", Constants.HelideckReportFilename, DateTime.UtcNow.ToString("yyyy-MM-dd_hh-mm-ss"));
+            string reportFile = string.Format("{0}_{1}.pdf", Constants.OffshoreWeatherReportFilename, DateTime.UtcNow.ToString("yyyy-MM-dd_hh-mm-ss"));
 
             // Opprette PDF dokument med Helideck Report
             PDFHandler pdf = new PDFHandler();
             pdf.SaveToFile(helideckReportPreviewContainer, reportFile);
 
             // Åpne email sending dialog
-            DialogEmail dialogEmail = new DialogEmail(helideckReportVM, reportFile);
+            DialogEmail dialogEmail = new DialogEmail(helideckReportVM, reportFile, adminSettingsVM);
             dialogEmail.Owner = App.Current.MainWindow;
             dialogEmail.ShowDialog();
         }
@@ -370,23 +407,13 @@ namespace HMS_Client
         private void btnSavePDF_Click(object sender, RoutedEventArgs e)
         {
             PDFHandler pdf = new PDFHandler();
-            pdf.SaveToFileWithDialog(helideckReportPreviewContainer);
+            pdf.SaveToFileWithDialog(helideckReportPreviewContainer, Constants.OffshoreWeatherReportFilename);
         }
 
         private void btnOpenFileLocation_Click(object sender, RoutedEventArgs e)
         {
             string reportFolder = Path.Combine(Environment.CurrentDirectory, Constants.HelideckReportFolder);
             Process.Start(reportFolder);
-        }
-
-        private void tbSignificantWaveHeight_LostFocus(object sender, RoutedEventArgs e)
-        {
-
-        }
-
-        private void tbSignificantWaveHeight_KeyDown(object sender, KeyEventArgs e)
-        {
-
         }
 
         private void tbRemarks_LostFocus(object sender, RoutedEventArgs e)

@@ -15,36 +15,42 @@ namespace HMS_Client
     public partial class DialogEmail : RadWindow
     {
         private HelideckReportVM helideckReportVM;
+        private AdminSettingsVM adminSettingsVM;
 
         private string reportFolder;
 
-        public DialogEmail(HelideckReportVM helideckReportVM, string reportFile)
+        public DialogEmail(HelideckReportVM helideckReportVM, string reportFile, AdminSettingsVM adminSettingsVM)
         {
             InitializeComponent();
 
             DataContext = helideckReportVM;
             this.helideckReportVM = helideckReportVM;
+            this.adminSettingsVM = adminSettingsVM;
 
             reportFolder = Path.Combine(Environment.CurrentDirectory, Constants.HelideckReportFolder);
 
             helideckReportVM.EmailStatus = EmailStatus.PREVIEW;
 
-            if (!string.IsNullOrEmpty(helideckReportVM.flightNumber))
+            // Email subject: NOROG
+            if (adminSettingsVM.regulationStandard == RegulationStandard.NOROG)
             {
-                // Med flight number
-                helideckReportVM.emailSubject = string.Format("{0}, {1}, {2}, {3}",
-                    helideckReportVM.vesselNameString,
-                    Constants.HelideckReportName,
-                    helideckReportVM.dateString_NOROG,
-                    helideckReportVM.flightNumber);
-            }
-            else
-            {
-                // Uten flight number
-                helideckReportVM.emailSubject = string.Format("{0}, {1}, {2}",
-                    helideckReportVM.vesselNameString,
-                    Constants.HelideckReportName,
-                    helideckReportVM.dateString_NOROG);
+                if (!string.IsNullOrEmpty(helideckReportVM.flightNumber))
+                {
+                    // Med flight number
+                    helideckReportVM.emailSubject = string.Format("{0}, {1}, {2}, {3}",
+                        helideckReportVM.vesselNameString,
+                        Constants.HelideckReportName,
+                        helideckReportVM.dateString_NOROG,
+                        helideckReportVM.flightNumber);
+                }
+                else
+                {
+                    // Uten flight number
+                    helideckReportVM.emailSubject = string.Format("{0}, {1}, {2}",
+                        helideckReportVM.vesselNameString,
+                        Constants.HelideckReportName,
+                        helideckReportVM.dateString_NOROG);
+                }
             }
 
             helideckReportVM.helideckReportFile = reportFile;
@@ -90,7 +96,8 @@ namespace HMS_Client
             if (!string.IsNullOrEmpty(helideckReportVM.emailServer.data3) &&
                 !string.IsNullOrEmpty(helideckReportVM.emailFrom) &&
                 !string.IsNullOrEmpty(helideckReportVM.emailTo) &&
-                !(helideckReportVM.sendHMSScreenCapture && string.IsNullOrEmpty(helideckReportVM.screenCaptureFile)))
+                (!(helideckReportVM.sendHMSScreenCapture && string.IsNullOrEmpty(helideckReportVM.screenCaptureFile)) || 
+                    adminSettingsVM.regulationStandard == RegulationStandard.CAP))
             {
                 Thread thread = new Thread(() => SendEmail_Thread());
                 thread.IsBackground = true;
@@ -113,7 +120,7 @@ namespace HMS_Client
                         email.Subject = helideckReportVM.emailSubject;
 
                         // Body
-                        email.Body = "";
+                        email.Body = helideckReportVM.emailBody;
 
                         // Legge til en CC mottaker
                         if (!string.IsNullOrEmpty(helideckReportVM.emailCC))
@@ -128,7 +135,8 @@ namespace HMS_Client
 
                         // Attachment: HMS Screen Capture
                         if (helideckReportVM.sendHMSScreenCapture &&
-                            !string.IsNullOrEmpty(helideckReportVM.screenCaptureFile))
+                            !string.IsNullOrEmpty(helideckReportVM.screenCaptureFile) &&
+                            adminSettingsVM.regulationStandard != RegulationStandard.CAP)
                         {
                             Attachment newAttachment = new Attachment(string.Format(@"{0}\{1}", reportFolder, helideckReportVM.screenCaptureFile));
                             email.Attachments.Add(newAttachment);

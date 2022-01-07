@@ -249,6 +249,7 @@ class Constants
     public const string HelideckReportFilename = "helideck_report";
     public const string HelideckReportName = "Helidekkrapport";
     public const string ScreenCaptureFilename = "hms_screencapture";
+    public const string OffshoreWeatherReportFilename = "offshore_weather_report";
 
     // Email
     public const int DefaultSMTPPort = 25;

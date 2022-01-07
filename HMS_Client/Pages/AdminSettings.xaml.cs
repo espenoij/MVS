@@ -29,6 +29,7 @@ namespace HMS_Client
         private ServerCom serverCom;
 
         private bool prevClientIsMaster;
+        private bool prevEnableReportEmail;
 
         public AdminSettings()
         {
@@ -54,6 +55,13 @@ namespace HMS_Client
             this.serverCom = serverCom;
 
             prevClientIsMaster = adminSettingsVM.clientIsMaster;
+            prevEnableReportEmail = adminSettingsVM.enableReportEmail;
+
+            if (adminSettingsVM.regulationStandard == RegulationStandard.NOROG)
+            {
+                lbEnableReportEmail.IsEnabled = false;
+                chkEnableReportEmail.IsEnabled = false;
+            }
 
             // General Settings: Regulation Standard
             foreach (RegulationStandard value in Enum.GetValues(typeof(RegulationStandard)))
@@ -441,6 +449,22 @@ namespace HMS_Client
                 adminSettingsVM.ApplicationRestartRequired();
 
             prevClientIsMaster = adminSettingsVM.clientIsMaster;
+        }
+
+        private void chkEnableReportEmail_Checked(object sender, RoutedEventArgs e)
+        {
+            if (prevEnableReportEmail != adminSettingsVM.enableReportEmail)
+                adminSettingsVM.ApplicationRestartRequired();
+
+            prevEnableReportEmail = adminSettingsVM.enableReportEmail;
+        }
+
+        private void chkEnableReportEmail_Unchecked(object sender, RoutedEventArgs e)
+        {
+            if (prevEnableReportEmail != adminSettingsVM.enableReportEmail)
+                adminSettingsVM.ApplicationRestartRequired();
+
+            prevEnableReportEmail = adminSettingsVM.enableReportEmail;
         }
     }
 }

@@ -11,7 +11,7 @@ namespace HMS_Client
 {
     class PDFHandler
     {
-        public void SaveToFileWithDialog(System.Windows.Controls.Border element)
+        public void SaveToFileWithDialog(System.Windows.Controls.Border element, string fileName)
         {
             PrepareForExport(element);
 
@@ -19,7 +19,7 @@ namespace HMS_Client
             {
                 DefaultExt = "pdf",
                 Filter = "PDF files|*.pdf|All Files (*.*)|*.*",
-                FileName = string.Format("{0}_{1}.pdf", Constants.HelideckReportFilename, DateTime.UtcNow.ToString("yyyy-MM-dd_hh-mm-ss")),
+                FileName = string.Format("{0}_{1}.pdf", fileName, DateTime.UtcNow.ToString("yyyy-MM-dd_hh-mm-ss")),
                 InitialDirectory = Path.Combine(Environment.CurrentDirectory, Constants.HelideckReportFolder)
             };
             if (dialog.ShowDialog() == true)

@@ -86,7 +86,7 @@ namespace HMS_Client
             // View Model Init
             mainWindowVM.Init();
             adminSettingsVM.Init(config, serverCom, restartRequired);
-            helideckReportVM.Init(config, sensorStatus);
+            helideckReportVM.Init(config, adminSettingsVM, sensorStatus);
             generalInformationVM.Init(config, adminSettingsVM, sensorStatus);
 
             userInputsVM.Init(
@@ -134,10 +134,10 @@ namespace HMS_Client
 
             ucAdminSettings.UIUpdateServerRunning(true);
 
-            // TODO: DEBUG DEBUG DEBUG !!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!! Fjerne det under før release
-            AdminMode.IsActive = true;
-            tabAdminSettings.Visibility = Visibility.Visible;
-            tabAdminDataFlow.Visibility = Visibility.Visible;
+            //// TODO: DEBUG DEBUG DEBUG !!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!! Fjerne det under før release
+            //AdminMode.IsActive = true;
+            //tabAdminSettings.Visibility = Visibility.Visible;
+            //tabAdminDataFlow.Visibility = Visibility.Visible;
         }
 
         private void InitUI()
@@ -198,7 +198,7 @@ namespace HMS_Client
                 // Helideck Report
                 tabHelideckReport_NOROG.Visibility = Visibility.Visible;
                 tabHelideckReport_CAP.Visibility = Visibility.Collapsed;
-                ucHelideckReport_NOROG.Init(helideckReportVM, config);
+                ucHelideckReport_NOROG.Init(helideckReportVM, config, adminSettingsVM);
             }
             else
             if (regulationStandard == RegulationStandard.CAP)
@@ -254,7 +254,7 @@ namespace HMS_Client
                 // Helideck Report
                 tabHelideckReport_CAP.Visibility = Visibility.Visible;
                 tabHelideckReport_NOROG.Visibility = Visibility.Collapsed;
-                ucHelideckReport_CAP.Init(helideckReportVM, config);
+                ucHelideckReport_CAP.Init(helideckReportVM, config, adminSettingsVM);
             }
 
             // Helideck Motion Trend Zoom

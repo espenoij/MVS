@@ -20,13 +20,15 @@ namespace HMS_Client
         }
 
         private Config config;
+        private AdminSettingsVM adminSettingsVM;
 
         private DispatcherTimer TimeTimer = new DispatcherTimer();
         private DispatcherTimer DataStatusTimer = new DispatcherTimer();
 
-        public void Init(Config config, SensorGroupStatus sensorStatus)
+        public void Init(Config config, AdminSettingsVM adminSettingsVM, SensorGroupStatus sensorStatus)
         {
             this.config = config;
+            this.adminSettingsVM = adminSettingsVM;
 
             // Lese settings fra config fil
 
@@ -108,13 +110,19 @@ namespace HMS_Client
 
             otherWeatherInfo = config.Read(ConfigKey.OtherWeatherInfo, ConfigType.Data);
 
-            // Helicopter Operator
+            // Email / Helicopter Operator
             emailTo = config.Read(ConfigKey.EmailTo, ConfigType.Data);
             emailCC = config.Read(ConfigKey.EmailCC, ConfigType.Data);
             if (config.Read(ConfigKey.SendHMSScreenCapture, ConfigType.Data) == "1")
                 sendHMSScreenCapture = true;
             else
                 sendHMSScreenCapture = false;
+
+            if (adminSettingsVM.regulationStandard == RegulationStandard.CAP)
+            {
+                emailSubject = config.Read(ConfigKey.EmailSubject, ConfigType.Data);
+                emailBody = config.Read(ConfigKey.EmailBody, ConfigType.Data);
+            }
 
             // Cloud Init
             cloudBase = new List<HMSData>();
@@ -2918,6 +2926,28 @@ namespace HMS_Client
                 if (value != null)
                 {
                     _emailSubject = value;
+                    config.Write(ConfigKey.EmailSubject, value, ConfigType.Data);
+                    OnPropertyChanged();
+                }
+            }
+        }
+
+        /////////////////////////////////////////////////////////////////////////////
+        // Email: Body
+        /////////////////////////////////////////////////////////////////////////////
+        private string _emailBody { get; set; }
+        public string emailBody
+        {
+            get
+            {
+                return _emailBody;
+            }
+            set
+            {
+                if (value != null)
+                {
+                    _emailBody = value;
+                    config.Write(ConfigKey.EmailBody, value, ConfigType.Data);
                     OnPropertyChanged();
                 }
             }
@@ -3274,6 +3304,20 @@ namespace HMS_Client
                     return _restrictionSector.data2.ToString("000");
                 else
                     return Constants.HelideckReportNoData;
+            }
+        }
+
+        /////////////////////////////////////////////////////////////////////////////
+        // CAP: Enable Report Email
+        /////////////////////////////////////////////////////////////////////////////
+        public Visibility reportEmailVisibility
+        {
+            get
+            {
+                if (adminSettingsVM.enableReportEmail)
+                    return Visibility.Visible;
+                else
+                    return Visibility.Collapsed;
             }
         }
 

@@ -255,6 +255,38 @@
 
         </telerik:GroupBox>
 
+        <telerik:GroupBox
+            Header="CAP"
+            Grid.Column="3"
+            Grid.Row="0"
+            Margin="8">
+
+            <StackPanel
+                Margin="8">
+
+                <DockPanel>
+
+                    <telerik:Label
+                        Name="lbEnableReportEmail"
+                        Width="200"
+                        Content="Enable report email"
+                        VerticalAlignment="Center" />
+
+                    <CheckBox
+                        Name="chkEnableReportEmail"
+                        IsChecked="{Binding Path=enableReportEmail, Mode=TwoWay}"
+                        Margin="5"
+                        VerticalAlignment="Center"
+                        HorizontalAlignment="Right"
+                        Checked="chkEnableReportEmail_Checked"
+                        Unchecked="chkEnableReportEmail_Unchecked" />
+
+                </DockPanel>
+
+            </StackPanel>
+
+        </telerik:GroupBox>
+
     </Grid>
 
 </UserControl>

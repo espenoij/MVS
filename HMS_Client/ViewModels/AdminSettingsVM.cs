@@ -1,6 +1,7 @@
 ﻿using System;
 using System.ComponentModel;
 using System.Runtime.CompilerServices;
+using System.Windows;
 
 namespace HMS_Client
 {
@@ -50,6 +51,12 @@ namespace HMS_Client
 
             // Server: Sensor Status Request Frequency
             sensorStatusRequestFrequency = config.ReadWithDefault(ConfigKey.SensorStatusRequestFrequency, Constants.SensorStatusRequestFrequencyDefault);
+
+            // CAP: Enable Report Email
+            if (config.Read(ConfigKey.EnableReportEmail) == "1")
+                enableReportEmail = true;
+            else
+                enableReportEmail = false;
         }
 
         public void ApplicationRestartRequired(bool showMessage = true)
@@ -278,6 +285,33 @@ namespace HMS_Client
             get
             {
                 return _vesselImage.ToString();
+            }
+        }
+
+        /////////////////////////////////////////////////////////////////////////////
+        // CAP: Enable report email
+        /////////////////////////////////////////////////////////////////////////////
+        private bool _enableReportEmail { get; set; }
+        public bool enableReportEmail
+        {
+            get
+            {
+                return _enableReportEmail;
+            }
+            set
+            {
+                _enableReportEmail = value;
+
+                if (_enableReportEmail)
+                {
+                    config.Write(ConfigKey.EnableReportEmail, "1");
+                }
+                else
+                {
+                    config.Write(ConfigKey.EnableReportEmail, "0");
+                }
+
+                OnPropertyChanged();
             }
         }
 
