@@ -15,11 +15,13 @@ namespace HMS_Server
 
         private UserInputs userInputs;
         private Config config;
+        private AdminSettingsVM adminSettingsVM;
 
-        public void Init(DataCollection hmsOutputDataList, Config config, UserInputs userInputs)
+        public void Init(DataCollection hmsOutputDataList, Config config, UserInputs userInputs, AdminSettingsVM adminSettingsVM)
         {
             this.userInputs = userInputs;
             this.config = config;
+            this.adminSettingsVM = adminSettingsVM;
 
             testMode = false;
             testModeStatus = HelideckStatusType.OFF;
@@ -205,57 +207,60 @@ namespace HMS_Server
 
             get
             {
-                HelideckStatusType status = HelideckStatusType.OFF; 
+                HelideckStatusType status = HelideckStatusType.OFF;
 
-                switch (HMSLightsOutput)
+                if (adminSettingsVM.regulationStandard == RegulationStandard.CAP)
                 {
-                    case LightsOutputType.Off:
-                        status = HelideckStatusType.OFF;
-                        break;
-
-                    case LightsOutputType.Blue:
-                        status = HelideckStatusType.BLUE;
-                        break;
-
-                    case LightsOutputType.BlueFlash:
-                        if ((int)DateTime.Now.Second % 2 == 0) // 30 fpm
+                    switch (HMSLightsOutput)
+                    {
+                        case LightsOutputType.Off:
                             status = HelideckStatusType.OFF;
-                        else
+                            break;
+
+                        case LightsOutputType.Blue:
                             status = HelideckStatusType.BLUE;
-                        break;
+                            break;
 
-                    case LightsOutputType.Amber:
-                        status = HelideckStatusType.AMBER;
-                        break;
+                        case LightsOutputType.BlueFlash:
+                            if ((int)DateTime.Now.Second % 2 == 0) // 30 fpm
+                                status = HelideckStatusType.OFF;
+                            else
+                                status = HelideckStatusType.BLUE;
+                            break;
 
-                    case LightsOutputType.AmberFlash:
-                        if (DateTime.Now.Millisecond < 500) // 60 fpm
-                            status = HelideckStatusType.OFF;
-                        else
+                        case LightsOutputType.Amber:
                             status = HelideckStatusType.AMBER;
-                        break;
+                            break;
 
-                    case LightsOutputType.Red:
-                        status = HelideckStatusType.RED;
-                        break;
+                        case LightsOutputType.AmberFlash:
+                            if (DateTime.Now.Millisecond < 500) // 60 fpm
+                                status = HelideckStatusType.OFF;
+                            else
+                                status = HelideckStatusType.AMBER;
+                            break;
 
-                    case LightsOutputType.RedFlash:
-                        if (DateTime.Now.Millisecond < 500) // 60 fpm
-                            status = HelideckStatusType.OFF;
-                        else
+                        case LightsOutputType.Red:
                             status = HelideckStatusType.RED;
-                        break;
+                            break;
 
-                    case LightsOutputType.Green:
-                        status = HelideckStatusType.GREEN;
-                        break;
+                        case LightsOutputType.RedFlash:
+                            if (DateTime.Now.Millisecond < 500) // 60 fpm
+                                status = HelideckStatusType.OFF;
+                            else
+                                status = HelideckStatusType.RED;
+                            break;
 
-                    case LightsOutputType.GreenFlash:
-                        if ((int)DateTime.Now.Second % 2 == 0) // 30 fpm
-                            status = HelideckStatusType.OFF;
-                        else
+                        case LightsOutputType.Green:
                             status = HelideckStatusType.GREEN;
-                        break;
+                            break;
+
+                        case LightsOutputType.GreenFlash:
+                            if ((int)DateTime.Now.Second % 2 == 0) // 30 fpm
+                                status = HelideckStatusType.OFF;
+                            else
+                                status = HelideckStatusType.GREEN;
+                            break;
+                    }
                 }
 
                 return status;

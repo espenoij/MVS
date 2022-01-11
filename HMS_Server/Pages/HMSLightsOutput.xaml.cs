@@ -50,42 +50,27 @@ namespace HMS_Server
             this.adminSettingsVM = adminSettingsVM;
             this.errorHandler = errorHandler;
 
+            // Test Mode: Helideck Status
+            cboTestHelideckStatus.Items.Add(HelideckStatusType.OFF.ToString());
+            cboTestHelideckStatus.Items.Add(HelideckStatusType.BLUE.ToString());
+            cboTestHelideckStatus.Items.Add(HelideckStatusType.AMBER.ToString());
+            cboTestHelideckStatus.Items.Add(HelideckStatusType.RED.ToString());
+
+            cboTestHelideckStatus.SelectedIndex = (int)HelideckStatusType.OFF;
+            cboTestHelideckStatus.Text = HelideckStatusType.OFF.ToString();
+
+            // Test Mode: Helideck Display Mode
+            cboTestDisplayMode.Items.Add(DisplayMode.PreLanding.ToString());
+            cboTestDisplayMode.Items.Add(DisplayMode.OnDeck.ToString());
+
+            cboTestDisplayMode.SelectedIndex = (int)DisplayMode.PreLanding;
+            cboTestDisplayMode.Text = DisplayMode.PreLanding.ToString();
+
             // CAP eller NOROG
-            if (adminSettingsVM.regulationStandard == RegulationStandard.CAP)
+            if (adminSettingsVM.regulationStandard != RegulationStandard.CAP)
             {
-                gridLights_CAP.Visibility = Visibility.Visible;
-                gridLights_NOROG.Visibility = Visibility.Collapsed;
-
-                // Test Mode: Helideck Status
-                cboTestHelideckStatus.Items.Add(HelideckStatusType.OFF.ToString());
-                cboTestHelideckStatus.Items.Add(HelideckStatusType.BLUE.ToString());
-                cboTestHelideckStatus.Items.Add(HelideckStatusType.AMBER.ToString());
-                cboTestHelideckStatus.Items.Add(HelideckStatusType.RED.ToString());
-
-                cboTestHelideckStatus.SelectedIndex = (int)HelideckStatusType.OFF;
-                cboTestHelideckStatus.Text = HelideckStatusType.OFF.ToString();
-
-                // Test Mode: Helideck Display Mode
-                cboTestDisplayMode.Items.Add(DisplayMode.PreLanding.ToString());
-                cboTestDisplayMode.Items.Add(DisplayMode.OnDeck.ToString());
-
-                cboTestDisplayMode.SelectedIndex = (int)DisplayMode.PreLanding;
-                cboTestDisplayMode.Text = DisplayMode.PreLanding.ToString();
-            }
-            else
-            {
-                gridLights_CAP.Visibility = Visibility.Collapsed;
-                gridLights_NOROG.Visibility = Visibility.Visible;
-
-                // Test Mode: Helideck Status
-                cboTestHelideckStatus.Items.Add(HelideckStatusType.OFF.ToString());
-                cboTestHelideckStatus.Items.Add(HelideckStatusType.GREEN.ToString());
-                cboTestHelideckStatus.Items.Add(HelideckStatusType.RED.ToString());
-
-                cboTestHelideckStatus.SelectedIndex = (int)HelideckStatusType.OFF;
-                cboTestHelideckStatus.Text = HelideckStatusType.OFF.ToString();
-
-                cboTestDisplayMode.IsEnabled = false;
+                EnableModbusUI(false);
+                EnableTestUI(false);
             }
 
             // COM Port Names
@@ -188,27 +173,57 @@ namespace HMS_Server
         public void Start()
         {
             // Stenge tilgang til å konfigurere porten
-            cboPortName.IsEnabled = false;
-            cboBaudRate.IsEnabled = false;
-            cboDataBits.IsEnabled = false;
-            cboStopBits.IsEnabled = false;
-            cboParity.IsEnabled = false;
-            cboHandShake.IsEnabled = false;
+            if (adminSettingsVM.regulationStandard == RegulationStandard.CAP)
+            {
+                EnableModbusUI(false);
 
-            Modbus_Start();
+                Modbus_Start();
+            }
         }
 
         public void Stop()
         {
             // Åpne tilgang til å konfigurere porten
-            cboPortName.IsEnabled = true;
-            cboBaudRate.IsEnabled = true;
-            cboDataBits.IsEnabled = true;
-            cboStopBits.IsEnabled = true;
-            cboParity.IsEnabled = true;
-            cboHandShake.IsEnabled = true;
+            if (adminSettingsVM.regulationStandard == RegulationStandard.CAP)
+            {
+                EnableModbusUI(true);
 
-            Modbus_Stop();
+                Modbus_Stop();
+            }
+        }
+
+        private void EnableModbusUI(bool state)
+        {
+            lbPortName.IsEnabled = state;
+            cboPortName.IsEnabled = state;
+            lbBaudRate.IsEnabled = state;
+            cboBaudRate.IsEnabled = state;
+            lbDataBits.IsEnabled = state;
+            cboDataBits.IsEnabled = state;
+            lbStopBits.IsEnabled = state;
+            cboStopBits.IsEnabled = state;
+            lbParity.IsEnabled = state;
+            cboParity.IsEnabled = state;
+            lbHandShake.IsEnabled = state;
+            cboHandShake.IsEnabled = state;
+            lbSlaveID.IsEnabled = state;
+            tbSlaveID.IsEnabled = state;
+            lbOutputAddress1.IsEnabled = state;
+            tbOutputAddress1.IsEnabled = state;
+            lbOutputAddress2.IsEnabled = state;
+            tbOutputAddress2.IsEnabled = state;
+            lbOutputAddress3.IsEnabled = state;
+            tbOutputAddress3.IsEnabled = state;
+        }
+
+        private void EnableTestUI(bool state)
+        {
+            lbTestMode.IsEnabled = state;
+            chkTestMode.IsEnabled = state;
+            lbTestHelideckStatus.IsEnabled = state;
+            cboTestHelideckStatus.IsEnabled = state;
+            lbTestDisplayMode.IsEnabled = state;
+            cboTestDisplayMode.IsEnabled = state;
         }
 
         private void ReadAvailableCOMPorts()

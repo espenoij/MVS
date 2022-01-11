@@ -17,11 +17,6 @@
         <sys:Double
             x:Key="circleSizeSmall_CAP">25</sys:Double>
 
-        <sys:Double
-            x:Key="circleSizeLarge_NOROG">30</sys:Double>
-        <sys:Double
-            x:Key="circleSizeSmall_NOROG">25</sys:Double>
-
         <!--CAP-->
         <Style
             x:Key="TrafficLightRed_CAP"
@@ -128,63 +123,6 @@
             </Style.Triggers>
         </Style>
 
-        <!--NOROG-->
-        <Style
-            x:Key="TrafficLightGreen_NOROG"
-            TargetType="Ellipse">
-            <Style.Triggers>
-                <DataTrigger
-                    Binding="{Binding Path=HMSLightsOutputToDisplay}"
-                    Value="GREEN">
-                    <Setter
-                        Property="Fill"
-                        Value="{StaticResource ColorGreen}" />
-                </DataTrigger>
-                <DataTrigger
-                    Binding="{Binding Path=HMSLightsOutputToDisplay}"
-                    Value="RED">
-                    <Setter
-                        Property="Fill"
-                        Value="{StaticResource ColorBackgroundSeparator}" />
-                </DataTrigger>
-                <DataTrigger
-                    Binding="{Binding Path=HMSLightsOutputToDisplay}"
-                    Value="OFF">
-                    <Setter
-                        Property="Fill"
-                        Value="{StaticResource ColorBackgroundSeparator}" />
-                </DataTrigger>
-            </Style.Triggers>
-        </Style>
-
-        <Style
-            x:Key="TrafficLightRed_NOROG"
-            TargetType="Ellipse">
-            <Style.Triggers>
-                <DataTrigger
-                    Binding="{Binding Path=HMSLightsOutputToDisplay}"
-                    Value="RED">
-                    <Setter
-                        Property="Fill"
-                        Value="{StaticResource ColorRed}" />
-                </DataTrigger>
-                <DataTrigger
-                    Binding="{Binding Path=HMSLightsOutputToDisplay}"
-                    Value="GREEN">
-                    <Setter
-                        Property="Fill"
-                        Value="{StaticResource ColorBackgroundSeparator}" />
-                </DataTrigger>
-                <DataTrigger
-                    Binding="{Binding Path=HMSLightsOutputToDisplay}"
-                    Value="OFF">
-                    <Setter
-                        Property="Fill"
-                        Value="{StaticResource ColorBackgroundSeparator}" />
-                </DataTrigger>
-            </Style.Triggers>
-        </Style>
-
     </UserControl.Resources>
     
     <Grid>
@@ -218,6 +156,7 @@
 
                 <DockPanel>
                     <Label
+                        Name="lbPortName"
                         Width="140"
                         Content="Port Name"
                         VerticalAlignment="Center" />
@@ -229,6 +168,7 @@
 
                 <DockPanel>
                     <Label
+                        Name="lbBaudRate"
                         Width="140"
                         Content="Baud Rate"
                         VerticalAlignment="Center" />
@@ -240,6 +180,7 @@
 
                 <DockPanel>
                     <Label
+                        Name="lbDataBits"
                         Width="140"
                         Content="Data Bits"
                         VerticalAlignment="Center" />
@@ -251,6 +192,7 @@
 
                 <DockPanel>
                     <Label
+                        Name="lbStopBits"
                         Width="140"
                         Content="Stop Bits"
                         VerticalAlignment="Center" />
@@ -262,6 +204,7 @@
 
                 <DockPanel>
                     <Label
+                        Name="lbParity"
                         Width="140"
                         Content="Data Parity"
                         VerticalAlignment="Center" />
@@ -273,6 +216,7 @@
 
                 <DockPanel>
                     <Label
+                        Name="lbHandShake"
                         Width="140"
                         Content="Hand Shake"
                         VerticalAlignment="Center" />
@@ -284,6 +228,7 @@
 
                 <DockPanel>
                     <Label
+                        Name="lbSlaveID"
                         Width="140"
                         Content="Slave ID"
                         VerticalAlignment="Center" />
@@ -293,20 +238,9 @@
                         KeyDown="tbSlaveID_KeyDown" />
                 </DockPanel>
 
-            </StackPanel>
-        </telerik:GroupBox>
-        
-        <!--MODBUS Addresses-->
-        <telerik:GroupBox
-            Grid.Column="1"
-            Grid.Row="0"
-            Header="MODBUS Addresses"
-            Margin="8">
-
-            <StackPanel>
-
                 <DockPanel>
                     <Label
+                        Name="lbOutputAddress1"
                         Width="140"
                         Content="Output Address 1"
                         VerticalAlignment="Center" />
@@ -319,6 +253,7 @@
 
                 <DockPanel>
                     <Label
+                        Name="lbOutputAddress2"
                         Width="140"
                         Content="Output Address 2"
                         VerticalAlignment="Center" />
@@ -331,24 +266,25 @@
 
                 <DockPanel>
                     <Label
+                        Name="lbOutputAddress3"
                         Width="140"
                         Content="Output Address 3"
                         VerticalAlignment="Center" />
                     <TextBox
                         Name="tbOutputAddress3"
                         Text="{Binding Path=outputAddress3}"
-                        LostFocus="tbOutputAddress3_LostFocus" 
+                        LostFocus="tbOutputAddress3_LostFocus"
                         KeyDown="tbOutputAddress3_KeyDown" />
                 </DockPanel>
 
             </StackPanel>
-
+            
         </telerik:GroupBox>
 
         <!--Test Mode-->
         <telerik:GroupBox
-            Grid.Column="0"
-            Grid.Row="1"
+            Grid.Column="1"
+            Grid.Row="0"
             Header="Test Mode"
             Margin="8">
 
@@ -357,9 +293,11 @@
                 <!--Test: Enable Test Mode-->
                 <DockPanel>
                     <telerik:Label
+                        Name="lbTestMode"
                         Content="Enable Test Mode"
                         VerticalAlignment="Center" />
                     <CheckBox
+                        Name="chkTestMode"
                         IsChecked="{Binding Path=testMode, Mode=TwoWay}"
                         VerticalAlignment="Center"
                         HorizontalAlignment="Right" />
@@ -368,10 +306,12 @@
                 <!--Test: Helideck Status-->
                 <DockPanel>
                     <telerik:Label
+                        Name="lbTestHelideckStatus"
                         Width="200"
                         Content="Helideck Status"
                         VerticalAlignment="Center" />
                     <telerik:RadComboBox
+                        
                         Width="auto"
                         Name="cboTestHelideckStatus"
                         SelectionChanged="cboTestHelideckStatus_SelectionChanged"/>
@@ -380,6 +320,7 @@
                 <!--Test: Landing/Takeoff Mode-->
                 <DockPanel>
                     <telerik:Label
+                        Name="lbTestDisplayMode"
                         Width="200"
                         Content="Landing/Takeoff Mode"
                         VerticalAlignment="Center" />
@@ -403,8 +344,7 @@
             <DockPanel
                 HorizontalAlignment="Center">
 
-                <Grid
-                    x:Name="gridLights_CAP">
+                <Grid>
 
                     <Grid.RowDefinitions>
                         <RowDefinition
@@ -451,45 +391,6 @@
                             Width="{StaticResource circleSizeLarge_CAP}"
                             Height="{StaticResource circleSizeLarge_CAP}"
                             Style="{StaticResource TrafficLightBlue}" />
-
-                    </Viewbox>
-
-                </Grid>
-
-
-                <Grid
-                    x:Name="gridLights_NOROG">
-
-                    <Grid.RowDefinitions>
-                        <RowDefinition
-                            Height="*" />
-                        <RowDefinition
-                            Height="*" />
-                    </Grid.RowDefinitions>
-
-                    <Viewbox
-                        Grid.Row="0"
-                        StretchDirection="Both"
-                        Stretch="Uniform">
-
-                        <Ellipse
-                            Margin="8"
-                            Width="{StaticResource circleSizeLarge_NOROG}"
-                            Height="{StaticResource circleSizeLarge_NOROG}"
-                            Style="{StaticResource TrafficLightRed_NOROG}" />
-
-                    </Viewbox>
-
-                    <Viewbox
-                        Grid.Row="1"
-                        StretchDirection="Both"
-                        Stretch="Uniform">
-
-                        <Ellipse
-                            Margin="8"
-                            Width="{StaticResource circleSizeLarge_NOROG}"
-                            Height="{StaticResource circleSizeLarge_NOROG}"
-                            Style="{StaticResource TrafficLightGreen_NOROG}" />
 
                     </Viewbox>
 

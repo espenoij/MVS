@@ -7,6 +7,7 @@ using System.Windows.Input;
 using System.Windows.Threading;
 using Telerik.Windows.Controls;
 using Telerik.Windows.Data;
+using LicenseSpring;
 
 namespace HMS_Server
 {
@@ -81,6 +82,13 @@ namespace HMS_Server
 
         // Application Restart Required callback
         public delegate void RestartRequiredCallback(bool showMessage);
+
+        // Kjører serveren?
+        private bool serverStarted = false;
+
+        // License
+        //private ILicenseManager licenseManager;
+        private bool licenseCheckOK = false;
 
         public MainWindow()
         {
@@ -208,6 +216,8 @@ namespace HMS_Server
                 }
             }
 
+            InitLicense();
+
             // TODO: DEBUG DEBUG DEBUG !!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!! Fjerne det under før release
             // Vise admin grensesnittet
             //AdminMode.IsActive = true;
@@ -227,7 +237,7 @@ namespace HMS_Server
             RestartRequiredCallback restartRequired = new RestartRequiredCallback(ShowRestartRequiredMessage);
 
             adminSettingsVM.Init(config, restartRequired);
-            hmsLightsOutputVM.Init(hmsOutputData, config, userInputs);
+            hmsLightsOutputVM.Init(hmsOutputData, config, userInputs, adminSettingsVM);
         }
 
         private void InitUI()
@@ -252,12 +262,29 @@ namespace HMS_Server
             gvFileReaderDataDisplay.ItemsSource = fileReaderDataDisplayList;
 
             // Div UI init
-            btnStart1.IsEnabled = true;
-            btnStart2.IsEnabled = true;
-            btnStart3.IsEnabled = true;
-            btnStop1.IsEnabled = false;
-            btnStop2.IsEnabled = false;
-            btnStop3.IsEnabled = false;
+            SetStartStopButtons(true);
+        }
+
+        private void SetStartStopButtons(bool state)
+        {
+            if (licenseCheckOK || AdminMode.IsActive)
+            {
+                btnStart1.IsEnabled = state;
+                btnStart2.IsEnabled = state;
+                btnStart3.IsEnabled = state;
+                btnStop1.IsEnabled = !state;
+                btnStop2.IsEnabled = !state;
+                btnStop3.IsEnabled = !state;
+            }
+            else
+            {
+                btnStart1.IsEnabled = false;
+                btnStart2.IsEnabled = false;
+                btnStart3.IsEnabled = false;
+                btnStop1.IsEnabled = false;
+                btnStop2.IsEnabled = false;
+                btnStop3.IsEnabled = false;
+            }
         }
 
         private void InitUIHMS()
@@ -681,6 +708,32 @@ namespace HMS_Server
             }
         }
 
+        private void InitLicense()
+        {
+            licenseCheckOK = true;
+
+            //var configuration = new LicenseSpring.Configuration(
+            //  apiKey: "89529663-adce-4360-bf70-f40a7c951a74",
+            //  sharedKey: "kzrxuF3Nk0paxEc9-XFjS9OKyuhzWH5XOgT86PVq21M",
+            //  productCode: "hmsserver",
+            //  appName: "HMS Server",
+            //  appVersion: "v1.0");
+
+            //licenseManager = LicenseManager.GetInstance();
+
+            //licenseManager.Initialize(configuration);
+
+            //var currentLicense = licenseManager.CurrentLicense();
+
+            //if (currentLicense != null)
+            //{
+            //    licenseCheckOK = true;
+            //}
+
+            // Sette start/stop knappene
+            SetStartStopButtons(true);
+        }
+
         public void UpdateUserInputs(UserInputs userInputs)
         {
             // Overføre data
@@ -745,12 +798,7 @@ namespace HMS_Server
             sensorDataRetrieval.SensorDataRetrieval_Start();
 
             // Sette knappe status
-            btnStart1.IsEnabled = false;
-            btnStart2.IsEnabled = false;
-            btnStart3.IsEnabled = false;
-            btnStop1.IsEnabled = true;
-            btnStop2.IsEnabled = true;
-            btnStop3.IsEnabled = true;
+            SetStartStopButtons(false);
             btnSetup.IsEnabled = false;
 
             // HMS prosessering updater
@@ -773,18 +821,16 @@ namespace HMS_Server
 
             // Data verification
             verificationTimer.Start();
+
+            // Server startet
+            serverStarted = true;
         }
 
         private void StopServer()
         {
             sensorDataRetrieval.SensorDataRetrieval_Stop();
 
-            btnStart1.IsEnabled = true;
-            btnStart2.IsEnabled = true;
-            btnStart3.IsEnabled = true;
-            btnStop1.IsEnabled = false;
-            btnStop2.IsEnabled = false;
-            btnStop3.IsEnabled = false;
+            SetStartStopButtons(true);
             btnSetup.IsEnabled = true;
 
             // HMS prosessering updater
@@ -806,6 +852,9 @@ namespace HMS_Server
 
             // Data verification
             verificationTimer.Stop();
+
+            // Server startet
+            serverStarted = false;
         }
 
         private void ExitServer()
@@ -969,6 +1018,9 @@ namespace HMS_Server
 
                         AdminMode.IsActive = false;
                     }
+
+                    // Setter start/stop status
+                    SetStartStopButtons(!serverStarted);
                 }
             }
         }

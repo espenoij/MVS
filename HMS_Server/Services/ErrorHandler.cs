@@ -61,15 +61,15 @@ namespace HMS_Server
             // Legge feilmelding inn i databasen
             database.InsertErrorMessage(errorMessage);
 
-            lock (errorMessageList)
-            {
+            //lock (errorMessageList)
+            //{
                 // Legge feilmelring inn i feilmeldinglisten
                 errorMessageList.Add(errorMessage);
 
                 // Begrenser antallet i feilmeldingslisten
                 if (errorMessageList.Count > Constants.MaxErrorMessages)
                     errorMessageList.RemoveAt(0);
-            }
+            //}
 
             // Vise melding på skjerm?
             switch (errorMessage.category)
