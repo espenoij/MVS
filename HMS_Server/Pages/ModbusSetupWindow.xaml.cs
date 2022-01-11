@@ -401,7 +401,7 @@ namespace HMS_Server
             }
             catch (Exception ex)
             {
-                RadWindow.Alert(string.Format("Error opening TCP/IP connection\n\n{0}", TextHelper.Wrap(ex.Message)));
+                RadWindow.Alert(string.Format("Error opening MODBUS connection\n\n{0}", TextHelper.Wrap(ex.Message)));
 
                 // Stoppe lesing av data dersom vi ikke får åpnet serie port
                 Modbus_Stop();
@@ -1060,7 +1060,7 @@ namespace HMS_Server
                             else
                             {
                                 RadWindow.Alert(
-                                    string.Format("Input Error\n\nValid address space (Start + Total):\n{0} - {1}\n{2} - {3}\n{4} - {5}\n{6} - {7} (a)",
+                                    string.Format("Input Error\n\nValid address space (Start + Total):\n{0} - {1}\n{2} - {3}\n{4} - {5}\n{6} - {7} (b)",
                                         Constants.ModbusCoilMin,
                                         Constants.ModbusCoilMax,
                                         Constants.ModbusDiscreteInputMin,
@@ -1075,7 +1075,7 @@ namespace HMS_Server
                         }
                         else
                         {
-                            RadWindow.Alert(string.Format("Valid address range: 0 - {0} (a)", Constants.ModbusRegistersMax));
+                            RadWindow.Alert(string.Format("Valid address range: 0 - {0} (b)", Constants.ModbusRegistersMax));
                             sensorData.modbus.totalAddresses = 0;
                         }
                     }

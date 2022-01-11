@@ -207,18 +207,18 @@
                 Height="*" />
         </Grid.RowDefinitions>
 
-        <!--Serial Port Configuration-->
+        <!--MODBUS Connection-->
         <telerik:GroupBox
             Grid.Column="0"
             Grid.Row="0"
-            Header="Connection"
+            Header="MODBUS Connection"
             Margin="8">
 
             <StackPanel>
 
                 <DockPanel>
                     <Label
-                        Width="100"
+                        Width="140"
                         Content="Port Name"
                         VerticalAlignment="Center" />
                     <telerik:RadComboBox
@@ -229,7 +229,7 @@
 
                 <DockPanel>
                     <Label
-                        Width="100"
+                        Width="140"
                         Content="Baud Rate"
                         VerticalAlignment="Center" />
                     <telerik:RadComboBox
@@ -240,7 +240,7 @@
 
                 <DockPanel>
                     <Label
-                        Width="100"
+                        Width="140"
                         Content="Data Bits"
                         VerticalAlignment="Center" />
                     <telerik:RadComboBox
@@ -251,7 +251,7 @@
 
                 <DockPanel>
                     <Label
-                        Width="100"
+                        Width="140"
                         Content="Stop Bits"
                         VerticalAlignment="Center" />
                     <telerik:RadComboBox
@@ -262,7 +262,7 @@
 
                 <DockPanel>
                     <Label
-                        Width="100"
+                        Width="140"
                         Content="Data Parity"
                         VerticalAlignment="Center" />
                     <telerik:RadComboBox
@@ -273,7 +273,7 @@
 
                 <DockPanel>
                     <Label
-                        Width="100"
+                        Width="140"
                         Content="Hand Shake"
                         VerticalAlignment="Center" />
                     <telerik:RadComboBox
@@ -282,13 +282,73 @@
                         SelectionChanged="cboHandShake_SelectionChanged" />
                 </DockPanel>
 
+                <DockPanel>
+                    <Label
+                        Width="140"
+                        Content="Slave ID"
+                        VerticalAlignment="Center" />
+                    <TextBox
+                        Name="tbSlaveID"
+                        LostFocus="tbSlaveID_LostFocus"
+                        KeyDown="tbSlaveID_KeyDown" />
+                </DockPanel>
+
             </StackPanel>
+        </telerik:GroupBox>
+        
+        <!--MODBUS Addresses-->
+        <telerik:GroupBox
+            Grid.Column="1"
+            Grid.Row="0"
+            Header="MODBUS Addresses"
+            Margin="8">
+
+            <StackPanel>
+
+                <DockPanel>
+                    <Label
+                        Width="140"
+                        Content="Output Address 1"
+                        VerticalAlignment="Center" />
+                    <TextBox
+                        Name="tbOutputAddress1"
+                        Text="{Binding Path=outputAddress1}"
+                        LostFocus="tbOutputAddress1_LostFocus"
+                        KeyDown="tbOutputAddress1_KeyDown" />
+                </DockPanel>
+
+                <DockPanel>
+                    <Label
+                        Width="140"
+                        Content="Output Address 2"
+                        VerticalAlignment="Center" />
+                    <TextBox
+                        Name="tbOutputAddress2"
+                        Text="{Binding Path=outputAddress2}"
+                        LostFocus="tbOutputAddress2_LostFocus"
+                        KeyDown="tbOutputAddress2_KeyDown" />
+                </DockPanel>
+
+                <DockPanel>
+                    <Label
+                        Width="140"
+                        Content="Output Address 3"
+                        VerticalAlignment="Center" />
+                    <TextBox
+                        Name="tbOutputAddress3"
+                        Text="{Binding Path=outputAddress3}"
+                        LostFocus="tbOutputAddress3_LostFocus" 
+                        KeyDown="tbOutputAddress3_KeyDown" />
+                </DockPanel>
+
+            </StackPanel>
+
         </telerik:GroupBox>
 
         <!--Test Mode-->
         <telerik:GroupBox
-            Grid.Column="1"
-            Grid.Row="0"
+            Grid.Column="0"
+            Grid.Row="1"
             Header="Test Mode"
             Margin="8">
 

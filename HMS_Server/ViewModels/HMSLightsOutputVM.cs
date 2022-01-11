@@ -1,4 +1,5 @@
 ﻿using System;
+using System.Collections.Generic;
 using System.ComponentModel;
 using System.Runtime.CompilerServices;
 using System.Windows.Threading;
@@ -13,14 +14,24 @@ namespace HMS_Server
         private DispatcherTimer statusUpdateTimer = new DispatcherTimer();
 
         private UserInputs userInputs;
+        private Config config;
 
         public void Init(DataCollection hmsOutputDataList, Config config, UserInputs userInputs)
         {
             this.userInputs = userInputs;
+            this.config = config;
 
             testMode = false;
             testModeStatus = HelideckStatusType.OFF;
             testModeDisplayMode = DisplayMode.PreLanding;
+
+            // Lese output adresser fra fil
+            for (int i = 0; i < 3; i++)
+                _outputAddressList.Add(new UInt16());
+
+            outputAddress1 = (UInt16)config.ReadWithDefault(ConfigKey.LightsOutputAddress1, Constants.ModbusCoilMin);
+            outputAddress2 = (UInt16)config.ReadWithDefault(ConfigKey.LightsOutputAddress2, Constants.ModbusCoilMin);
+            outputAddress3 = (UInt16)config.ReadWithDefault(ConfigKey.LightsOutputAddress3, Constants.ModbusCoilMin);
 
             // Oppdatere UI
             statusUpdateTimer.Interval = TimeSpan.FromMilliseconds(500);
@@ -298,6 +309,61 @@ namespace HMS_Server
                 OnPropertyChanged(nameof(HMSLightsOutputToDisplay));
             }
         }
+
+        /////////////////////////////////////////////////////////////////////////////
+        // MODBUS Addresses
+        /////////////////////////////////////////////////////////////////////////////
+        private List<UInt16> _outputAddressList { get; set; } = new List<ushort>();
+        public List<UInt16> outputAddressList
+        {
+            get
+            {
+                return _outputAddressList;
+            }
+        }
+
+        public UInt16 outputAddress1
+        {
+            get
+            {
+                return _outputAddressList[0];
+            }
+            set
+            {
+                _outputAddressList[0] = value;
+                config.Write(ConfigKey.LightsOutputAddress1, value.ToString());
+                OnPropertyChanged();
+            }
+        }
+
+        public UInt16 outputAddress2
+        {
+            get
+            {
+                return _outputAddressList[1];
+            }
+            set
+            {
+                _outputAddressList[1] = value;
+                config.Write(ConfigKey.LightsOutputAddress2, value.ToString());
+                OnPropertyChanged();
+            }
+        }
+
+        public UInt16 outputAddress3
+        {
+            get
+            {
+                return _outputAddressList[2];
+            }
+            set
+            {
+                _outputAddressList[2] = value;
+                config.Write(ConfigKey.LightsOutputAddress3, value.ToString());
+                OnPropertyChanged();
+            }
+        }
+
 
         // Variabel oppdatert
         // Dersom navn ikke er satt brukes kallende medlem sitt navn

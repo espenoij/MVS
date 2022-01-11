@@ -13,6 +13,14 @@
                 return false;
         }
 
+        public bool ValidAddressSpaceCoil(int address)
+        {
+            if (address >= Constants.ModbusCoilMin && address <= Constants.ModbusCoilMax)
+                return true;
+            else
+                return false;
+        }
+
         public ushort AddressToOffset(int address)
         {
             if (address >= Constants.ModbusCoilMin && address <= Constants.ModbusCoilMax)

@@ -40,6 +40,11 @@
     public const string LogFrequency = "LogFrequency";
     public const string MarineChannel = "MarineChannel";
 
+    // Lights output
+    public const string LightsOutputAddress1 = "LightsOutputAddress1";
+    public const string LightsOutputAddress2 = "LightsOutputAddress2";
+    public const string LightsOutputAddress3 = "LightsOutputAddress3";
+
     // App: Wind/Heading
     public const string WindMeasurement = "WindMeasurement";
     public const string HelideckHeadingOffset = "HelideckHeadingOffset";

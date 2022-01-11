@@ -118,7 +118,7 @@ namespace HMS_Server
 
             // HMS Lights Output
             InitLightsOutputUpdate();
-            ucHMSLightsOutput.Init(lightsOutputData, hmsLightsOutputVM, config, adminSettingsVM);
+            ucHMSLightsOutput.Init(lightsOutputData, hmsLightsOutputVM, config, adminSettingsVM, errorHandler);
 
             // Sensor Status
             sensorStatus = new HMSSensorGroupStatus(config, database, errorHandler, hmsOutputData);
@@ -625,12 +625,12 @@ namespace HMS_Server
                         SerialPort serialPort = new SerialPort();
 
                         // Serie port parametre
-                        serialPort.PortName = lightsOutputData.serialPort.portName;
-                        serialPort.BaudRate = lightsOutputData.serialPort.baudRate;
-                        serialPort.DataBits = lightsOutputData.serialPort.dataBits;
-                        serialPort.StopBits = lightsOutputData.serialPort.stopBits;
-                        serialPort.Parity = lightsOutputData.serialPort.parity;
-                        serialPort.Handshake = lightsOutputData.serialPort.handshake;
+                        serialPort.PortName = lightsOutputData.modbus.portName;
+                        serialPort.BaudRate = lightsOutputData.modbus.baudRate;
+                        serialPort.DataBits = lightsOutputData.modbus.dataBits;
+                        serialPort.StopBits = lightsOutputData.modbus.stopBits;
+                        serialPort.Parity = lightsOutputData.modbus.parity;
+                        serialPort.Handshake = lightsOutputData.modbus.handshake;
 
                         // Åpne serie port
                         serialPort.Open();
