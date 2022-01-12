@@ -125,8 +125,7 @@ namespace HMS_Server
             ucErrorMessagesPage.Init(config, errorHandler);
 
             // HMS Lights Output
-            InitLightsOutputUpdate();
-            ucHMSLightsOutput.Init(lightsOutputData, hmsLightsOutputVM, config, adminSettingsVM, errorHandler);
+            InitLightsOutput();
 
             // Sensor Status
             sensorStatus = new HMSSensorGroupStatus(config, database, errorHandler, hmsOutputData);
@@ -629,67 +628,79 @@ namespace HMS_Server
             }
         }
 
-        private void InitLightsOutputUpdate()
+        private void InitLightsOutput()
         {
-            // Hente lights output data fra fil
-            lightsOutputData = new SensorData(config.GetLightsOutputData());
-
-            // Dispatcher som oppdaterer verification data (test og referanse data)
-            lightsOutputTimer.Interval = TimeSpan.FromMilliseconds(Constants.ServerUpdateFrequencyLightsOutput);
-            lightsOutputTimer.Tick += runLightsOutputUpdate;
-
-            void runLightsOutputUpdate(object sender, EventArgs e)
+            // CAP
+            if (adminSettingsVM.regulationStandard == RegulationStandard.CAP)
             {
-                Thread thread = new Thread(() => SendLightsOutput_Thread());
-                thread.IsBackground = true;
-                thread.Start();
+                // Hente lights output data fra fil
+                lightsOutputData = new SensorData(config.GetLightsOutputData());
 
-                void SendLightsOutput_Thread()
+                ucHMSLightsOutput.Init(lightsOutputData, hmsLightsOutputVM, config, adminSettingsVM, errorHandler);
+
+                // Dispatcher som oppdaterer verification data (test og referanse data)
+                lightsOutputTimer.Interval = TimeSpan.FromMilliseconds(Constants.ServerUpdateFrequencyLightsOutput);
+                lightsOutputTimer.Tick += runLightsOutputUpdate;
+
+                void runLightsOutputUpdate(object sender, EventArgs e)
                 {
-                    try
+                    Thread thread = new Thread(() => SendLightsOutput_Thread());
+                    thread.IsBackground = true;
+                    thread.Start();
+
+                    void SendLightsOutput_Thread()
                     {
-                        // Sende lys signal
-                        SerialPort serialPort = new SerialPort();
-
-                        // Serie port parametre
-                        serialPort.PortName = lightsOutputData.modbus.portName;
-                        serialPort.BaudRate = lightsOutputData.modbus.baudRate;
-                        serialPort.DataBits = lightsOutputData.modbus.dataBits;
-                        serialPort.StopBits = lightsOutputData.modbus.stopBits;
-                        serialPort.Parity = lightsOutputData.modbus.parity;
-                        serialPort.Handshake = lightsOutputData.modbus.handshake;
-
-                        // Åpne serie port
-                        serialPort.Open();
-
-                        if (serialPort.IsOpen)
+                        try
                         {
                             // Sende lys signal
-                            serialPort.Write(hmsLightsOutputVM.HMSLightsOutput.ToString());
+                            SerialPort serialPort = new SerialPort();
+
+                            // Serie port parametre
+                            serialPort.PortName = lightsOutputData.modbus.portName;
+                            serialPort.BaudRate = lightsOutputData.modbus.baudRate;
+                            serialPort.DataBits = lightsOutputData.modbus.dataBits;
+                            serialPort.StopBits = lightsOutputData.modbus.stopBits;
+                            serialPort.Parity = lightsOutputData.modbus.parity;
+                            serialPort.Handshake = lightsOutputData.modbus.handshake;
+
+                            // Åpne serie port
+                            serialPort.Open();
+
+                            if (serialPort.IsOpen)
+                            {
+                                // Sende lys signal
+                                serialPort.Write(hmsLightsOutputVM.HMSLightsOutput.ToString());
+                            }
+                            else
+                            {
+                                errorHandler.Insert(
+                                    new ErrorMessage(
+                                        DateTime.UtcNow,
+                                        ErrorMessageType.SerialPort,
+                                        ErrorMessageCategory.None,
+                                        string.Format("Lights Output Error\n\nUnable to open port.")));
+                            }
+
+                            // Lukke serie port
+                            serialPort.Close();
                         }
-                        else
+                        catch (Exception ex)
                         {
                             errorHandler.Insert(
                                 new ErrorMessage(
                                     DateTime.UtcNow,
                                     ErrorMessageType.SerialPort,
-                                    ErrorMessageCategory.None,
-                                    string.Format("Lights Output Error\n\nUnable to open port.")));
+                                    ErrorMessageCategory.AdminUser,
+                                        string.Format("Lights Output Error\n\n{0}", ex.Message)));
                         }
-
-                        // Lukke serie port
-                        serialPort.Close();
-                    }
-                    catch (Exception ex)
-                    {
-                        errorHandler.Insert(
-                            new ErrorMessage(
-                                DateTime.UtcNow,
-                                ErrorMessageType.SerialPort,
-                                ErrorMessageCategory.AdminUser,
-                                    string.Format("Lights Output Error\n\n{0}", ex.Message)));
                     }
                 }
+            }
+            else
+            {
+                tabHMS_LightsOutput.Visibility = Visibility.Collapsed;
+
+                ucHMSLightsOutput.Init(new SensorData(), hmsLightsOutputVM, config, adminSettingsVM, errorHandler);
             }
         }
 
@@ -816,8 +827,11 @@ namespace HMS_Server
             sensorStatus.Start();
 
             // Lights Output
-            lightsOutputTimer.Start();
-            ucHMSLightsOutput.Start();
+            if (adminSettingsVM.regulationStandard == RegulationStandard.CAP)
+            {
+                lightsOutputTimer.Start();
+                ucHMSLightsOutput.Start();
+            }
 
             // Data verification
             verificationTimer.Start();
@@ -847,8 +861,11 @@ namespace HMS_Server
             sensorStatus.Start();
 
             // Lights Output
-            lightsOutputTimer.Stop();
-            ucHMSLightsOutput.Stop();
+            if (adminSettingsVM.regulationStandard == RegulationStandard.CAP)
+            {
+                lightsOutputTimer.Stop();
+                ucHMSLightsOutput.Stop();
+            }
 
             // Data verification
             verificationTimer.Stop();

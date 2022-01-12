@@ -284,8 +284,8 @@ namespace HMS_Server
             vesselSpeed.DoProcessing(hmsInputDataList.GetData(ValueType.VesselSpeed)); // DoProcessing for å avrunde til en desimal
 
             double heading = hmsInputDataList.GetData(ValueType.VesselHeading).data + adminSettingsVM.helideckHeadingOffset;
-            if (heading >= 360)
-                heading -= 360;
+            if (heading > Constants.HeadingMax)
+                heading -= Constants.HeadingMax;
             helideckHeading.data = Math.Round(heading, 0, MidpointRounding.AwayFromZero);
             helideckHeading.status = hmsInputDataList.GetData(ValueType.VesselHeading).status;
             helideckHeading.timestamp = hmsInputDataList.GetData(ValueType.VesselHeading).timestamp;
@@ -343,10 +343,10 @@ namespace HMS_Server
                 // Helicopter Heading
                 /////////////////////////////////////////////////////////////////////////////////////////
                 double heliHdg = userInputs.onDeckHelicopterHeading + (hmsInputDataList.GetData(ValueType.VesselHeading).data - userInputs.onDeckVesselHeading);
-                if (heliHdg > 360)
-                    heliHdg -= 360;
-                if (heliHdg < 0)
-                    heliHdg += 360;
+                if (heliHdg > Constants.HeadingMax)
+                    heliHdg -= Constants.HeadingMax;
+                if (heliHdg < Constants.HeadingMin)
+                    heliHdg += Constants.HeadingMax;
 
                 helicopterHeading.data = heliHdg;
                 helicopterHeading.status = hmsInputDataList.GetData(ValueType.VesselHeading).status;

@@ -210,9 +210,9 @@ class Constants
     public const double SignificantHeaveRateAxisMargin = 0.3;
 
     // Heading
-    public const int HeadingMin = 0;
+    public const int HeadingMin = 1;
     public const int HeadingMax = 360;
-    public const int HeadingDefault = 0;
+    public const int HeadingDefault = HeadingMax;
 
     // Helideck Status Trend
     public const int statusTrendDisplayListMax = 400; // Hvor mange segmenter trend linjen skal deles opp i / oppløsning på trend linjen

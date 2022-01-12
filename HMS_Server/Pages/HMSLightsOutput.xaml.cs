@@ -50,123 +50,119 @@ namespace HMS_Server
             this.adminSettingsVM = adminSettingsVM;
             this.errorHandler = errorHandler;
 
-            // Test Mode: Helideck Status
-            cboTestHelideckStatus.Items.Add(HelideckStatusType.OFF.ToString());
-            cboTestHelideckStatus.Items.Add(HelideckStatusType.BLUE.ToString());
-            cboTestHelideckStatus.Items.Add(HelideckStatusType.AMBER.ToString());
-            cboTestHelideckStatus.Items.Add(HelideckStatusType.RED.ToString());
-
-            cboTestHelideckStatus.SelectedIndex = (int)HelideckStatusType.OFF;
-            cboTestHelideckStatus.Text = HelideckStatusType.OFF.ToString();
-
-            // Test Mode: Helideck Display Mode
-            cboTestDisplayMode.Items.Add(DisplayMode.PreLanding.ToString());
-            cboTestDisplayMode.Items.Add(DisplayMode.OnDeck.ToString());
-
-            cboTestDisplayMode.SelectedIndex = (int)DisplayMode.PreLanding;
-            cboTestDisplayMode.Text = DisplayMode.PreLanding.ToString();
-
-            // CAP eller NOROG
-            if (adminSettingsVM.regulationStandard != RegulationStandard.CAP)
+            if (adminSettingsVM.regulationStandard == RegulationStandard.CAP)
             {
-                EnableModbusUI(false);
-                EnableTestUI(false);
-            }
+                // Test Mode: Helideck Status
+                cboTestHelideckStatus.Items.Add(HelideckStatusType.OFF.ToString());
+                cboTestHelideckStatus.Items.Add(HelideckStatusType.BLUE.ToString());
+                cboTestHelideckStatus.Items.Add(HelideckStatusType.AMBER.ToString());
+                cboTestHelideckStatus.Items.Add(HelideckStatusType.RED.ToString());
 
-            // COM Port Names
-            ///////////////////////////////////////////////////////////
-            // Lese tilgjengelig serie porter
-            ReadAvailableCOMPorts();
+                cboTestHelideckStatus.SelectedIndex = (int)HelideckStatusType.OFF;
+                cboTestHelideckStatus.Text = HelideckStatusType.OFF.ToString();
 
-            // Baud Rate
-            ///////////////////////////////////////////////////////////
-            cboBaudRate.Items.Add(110);
-            cboBaudRate.Items.Add(300);
-            cboBaudRate.Items.Add(600);
-            cboBaudRate.Items.Add(1200);
-            cboBaudRate.Items.Add(2400);
-            cboBaudRate.Items.Add(4800);
-            cboBaudRate.Items.Add(9600);
-            cboBaudRate.Items.Add(14400);
-            cboBaudRate.Items.Add(19200);
-            cboBaudRate.Items.Add(38400);
-            cboBaudRate.Items.Add(57600);
-            cboBaudRate.Items.Add(115200);
-            cboBaudRate.Items.Add(256000);
+                // Test Mode: Helideck Display Mode
+                cboTestDisplayMode.Items.Add(DisplayMode.PreLanding.ToString());
+                cboTestDisplayMode.Items.Add(DisplayMode.OnDeck.ToString());
 
-            // Skrive satt baud rate i combobox feltet
-            cboBaudRate.Text = lightsOutputData.modbus.baudRate.ToString();
+                cboTestDisplayMode.SelectedIndex = (int)DisplayMode.PreLanding;
+                cboTestDisplayMode.Text = DisplayMode.PreLanding.ToString();
 
-            // Data Bits
-            ///////////////////////////////////////////////////////////
-            cboDataBits.Items.Add(7);
-            cboDataBits.Items.Add(8);
+                // COM Port Names
+                ///////////////////////////////////////////////////////////
+                // Lese tilgjengelig serie porter
+                ReadAvailableCOMPorts();
 
-            // Skrive satt data bit type i combobox feltet
-            cboDataBits.Text = lightsOutputData.modbus.dataBits.ToString();
+                // Baud Rate
+                ///////////////////////////////////////////////////////////
+                cboBaudRate.Items.Add(110);
+                cboBaudRate.Items.Add(300);
+                cboBaudRate.Items.Add(600);
+                cboBaudRate.Items.Add(1200);
+                cboBaudRate.Items.Add(2400);
+                cboBaudRate.Items.Add(4800);
+                cboBaudRate.Items.Add(9600);
+                cboBaudRate.Items.Add(14400);
+                cboBaudRate.Items.Add(19200);
+                cboBaudRate.Items.Add(38400);
+                cboBaudRate.Items.Add(57600);
+                cboBaudRate.Items.Add(115200);
+                cboBaudRate.Items.Add(256000);
 
-            // Stop Bits
-            ///////////////////////////////////////////////////////////
-            cboStopBits.Items.Add("One");
-            cboStopBits.Items.Add("OnePointFive");
-            cboStopBits.Items.Add("Two");
+                // Skrive satt baud rate i combobox feltet
+                cboBaudRate.Text = lightsOutputData.modbus.baudRate.ToString();
 
-            // Skrive satt stop bit i combobox feltet
-            cboStopBits.Text = lightsOutputData.modbus.stopBits.ToString();
+                // Data Bits
+                ///////////////////////////////////////////////////////////
+                cboDataBits.Items.Add(7);
+                cboDataBits.Items.Add(8);
 
-            // Parity 
-            ///////////////////////////////////////////////////////////
-            cboParity.Items.Add("None");
-            cboParity.Items.Add("Even");
-            cboParity.Items.Add("Mark");
-            cboParity.Items.Add("Odd");
-            cboParity.Items.Add("Space");
+                // Skrive satt data bit type i combobox feltet
+                cboDataBits.Text = lightsOutputData.modbus.dataBits.ToString();
 
-            // Skrive satt parity i combobox feltet
-            cboParity.Text = lightsOutputData.modbus.parity.ToString();
+                // Stop Bits
+                ///////////////////////////////////////////////////////////
+                cboStopBits.Items.Add("One");
+                cboStopBits.Items.Add("OnePointFive");
+                cboStopBits.Items.Add("Two");
 
-            // Handshake
-            ///////////////////////////////////////////////////////////
-            cboHandShake.Items.Add("None");
-            cboHandShake.Items.Add("XOnXOff");
-            cboHandShake.Items.Add("RequestToSend");
-            cboHandShake.Items.Add("RequestToSendXOnXOff");
+                // Skrive satt stop bit i combobox feltet
+                cboStopBits.Text = lightsOutputData.modbus.stopBits.ToString();
 
-            // Slave ID
-            ///////////////////////////////////////////////////////////
-            tbSlaveID.Text = lightsOutputData.modbus.slaveID.ToString();
+                // Parity 
+                ///////////////////////////////////////////////////////////
+                cboParity.Items.Add("None");
+                cboParity.Items.Add("Even");
+                cboParity.Items.Add("Mark");
+                cboParity.Items.Add("Odd");
+                cboParity.Items.Add("Space");
 
-            // Sette serie port settings på SerialPort object 
-            ///////////////////////////////////////////////////////////
-            serialPort.PortName = lightsOutputData.modbus.portName;
-            serialPort.BaudRate = lightsOutputData.modbus.baudRate;
-            serialPort.DataBits = lightsOutputData.modbus.dataBits;
-            serialPort.StopBits = lightsOutputData.modbus.stopBits;
-            serialPort.Parity = lightsOutputData.modbus.parity;
-            serialPort.Handshake = lightsOutputData.modbus.handshake;
+                // Skrive satt parity i combobox feltet
+                cboParity.Text = lightsOutputData.modbus.parity.ToString();
 
-            // Timeout
-            serialPort.ReadTimeout = Constants.ModbusTimeout;       // NB! Brukes av ReadHoldingRegisters. Uten disse vil programmet fryse dersom ReadHoldingRegisters ikke får svar.
-            serialPort.WriteTimeout = Constants.ModbusTimeout;
+                // Handshake
+                ///////////////////////////////////////////////////////////
+                cboHandShake.Items.Add("None");
+                cboHandShake.Items.Add("XOnXOff");
+                cboHandShake.Items.Add("RequestToSend");
+                cboHandShake.Items.Add("RequestToSendXOnXOff");
 
-            // Skrive satt hand shake type i combobox feltet
-            cboHandShake.Text = lightsOutputData.modbus.handshake.ToString();
+                // Slave ID
+                ///////////////////////////////////////////////////////////
+                tbSlaveID.Text = lightsOutputData.modbus.slaveID.ToString();
 
-            // MODBUS RTU Reader
-            modbusReader.Tick += runModbusWriter;
+                // Sette serie port settings på SerialPort object 
+                ///////////////////////////////////////////////////////////
+                serialPort.PortName = lightsOutputData.modbus.portName;
+                serialPort.BaudRate = lightsOutputData.modbus.baudRate;
+                serialPort.DataBits = lightsOutputData.modbus.dataBits;
+                serialPort.StopBits = lightsOutputData.modbus.stopBits;
+                serialPort.Parity = lightsOutputData.modbus.parity;
+                serialPort.Handshake = lightsOutputData.modbus.handshake;
 
-            void runModbusWriter(object sender, EventArgs e)
-            {
-                ModbusSendLightsOutputCommand();
-                //Thread thread = new Thread(() => ModbusWrite());
-                //thread.IsBackground = true;
-                //thread.Start();
+                // Timeout
+                serialPort.ReadTimeout = Constants.ModbusTimeout;       // NB! Brukes av ReadHoldingRegisters. Uten disse vil programmet fryse dersom ReadHoldingRegisters ikke får svar.
+                serialPort.WriteTimeout = Constants.ModbusTimeout;
 
-                //void ModbusWrite()
-                //{
-                //    // Sende Data via MODBUS
-                //    ModbusSendLightsOutputCommand();
-                //}
+                // Skrive satt hand shake type i combobox feltet
+                cboHandShake.Text = lightsOutputData.modbus.handshake.ToString();
+
+                // MODBUS RTU Reader
+                modbusReader.Tick += runModbusWriter;
+
+                void runModbusWriter(object sender, EventArgs e)
+                {
+                    ModbusSendLightsOutputCommand();
+                    //Thread thread = new Thread(() => ModbusWrite());
+                    //thread.IsBackground = true;
+                    //thread.Start();
+
+                    //void ModbusWrite()
+                    //{
+                    //    // Sende Data via MODBUS
+                    //    ModbusSendLightsOutputCommand();
+                    //}
+                }
             }
         }
 
@@ -214,16 +210,6 @@ namespace HMS_Server
             tbOutputAddress2.IsEnabled = state;
             lbOutputAddress3.IsEnabled = state;
             tbOutputAddress3.IsEnabled = state;
-        }
-
-        private void EnableTestUI(bool state)
-        {
-            lbTestMode.IsEnabled = state;
-            chkTestMode.IsEnabled = state;
-            lbTestHelideckStatus.IsEnabled = state;
-            cboTestHelideckStatus.IsEnabled = state;
-            lbTestDisplayMode.IsEnabled = state;
-            cboTestDisplayMode.IsEnabled = state;
         }
 
         private void ReadAvailableCOMPorts()

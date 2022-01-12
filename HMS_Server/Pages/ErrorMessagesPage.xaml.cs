@@ -98,6 +98,8 @@ namespace HMS_Server
         {
             if (sender as RadComboBox != null)
             {
+                errorHandler.SetSelectedType((ErrorMessageType)Enum.Parse(typeof(ErrorMessageType), (sender as RadComboBox).SelectedIndex.ToString()));
+
                 // Lagre ny setting til config fil
                 config.Write(ConfigKey.ErrorMessagesType, (sender as RadComboBox).SelectedIndex.ToString(), ConfigSection.ErrorMessages);
             }

@@ -19,6 +19,9 @@ namespace HMS_Server
         // Latest Error Messages
         private RadObservableCollectionEx<ErrorMessage> errorMessageList = new RadObservableCollectionEx<ErrorMessage>();
 
+        // Selected type
+        private ErrorMessageType selectedType = ErrorMessageType.All;
+
         // Database Errors
         public enum DatabaseErrorType
         {
@@ -45,6 +48,7 @@ namespace HMS_Server
 
             TotalErrorTypes
         }
+        
         private List<bool> databaseErrorList = new List<bool>();
 
         public ErrorHandler(DatabaseHandler database)
@@ -61,15 +65,29 @@ namespace HMS_Server
             // Legge feilmelding inn i databasen
             database.InsertErrorMessage(errorMessage);
 
-            //lock (errorMessageList)
-            //{
-                // Legge feilmelring inn i feilmeldinglisten
-                errorMessageList.Add(errorMessage);
+            // Legge inn i live view listen
+            // Brukes også til å vise feilmeldinger på de individuelle sensorene på status siden
+            if (errorMessage.type == selectedType ||
+                selectedType == ErrorMessageType.All)
+            {
+                // Legge feilmelding inn i feilmeldinglisten
+                try
+                {
+                    Application.Current.Dispatcher.BeginInvoke(
+                        DispatcherPriority.Normal,
+                        new Action(() =>
+                        {
+                            errorMessageList.Add(errorMessage);
 
-                // Begrenser antallet i feilmeldingslisten
-                if (errorMessageList.Count > Constants.MaxErrorMessages)
-                    errorMessageList.RemoveAt(0);
-            //}
+                            if (errorMessageList.Count > Constants.MaxErrorMessages)
+                                errorMessageList.RemoveAt(0);
+                        }));
+                }
+                catch (Exception ex)
+                {
+                    DialogHandler.Warning("An error occured when inserting an error message into live view display.", ex.Message);
+                }
+            }
 
             // Vise melding på skjerm?
             switch (errorMessage.category)
@@ -194,6 +212,11 @@ namespace HMS_Server
             }
 
             return errorType;
+        }
+
+        public void SetSelectedType(ErrorMessageType type)
+        {
+            selectedType = type;
         }
     }
 }
