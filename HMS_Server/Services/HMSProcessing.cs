@@ -17,7 +17,7 @@
         // Init data prosessering
         public HMSProcessing(
             HelideckMotionLimits motionLimits,
-            DataCollection hmsOutputData,
+            HMSDataCollection hmsOutputData,
             AdminSettingsVM adminSettingsVM,
             UserInputs userInputs,
             ErrorHandler errorHandler,
@@ -39,7 +39,7 @@
         }
 
         // Kjøre prosessering og oppdatere data
-        public void Update(DataCollection hmsInputDataList, bool dataVerificationIsActive)
+        public void Update(HMSDataCollection hmsInputDataList, bool dataVerificationIsActive)
         {
             hmsProcessingSettings.Update();
             hmsProcessingUserInputs.Update();

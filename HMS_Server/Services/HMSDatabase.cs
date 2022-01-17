@@ -13,7 +13,7 @@ namespace HMS_Server
             this.errorHandler = errorHandler;
         }
 
-        public void InsertData(DataCollection hmsDataCollection)
+        public void InsertData(HMSDataCollection hmsDataCollection)
         {
             try
             {
@@ -34,7 +34,7 @@ namespace HMS_Server
             }
         }
 
-        public void CreateDataTables(DataCollection hmsDataCollection)
+        public void CreateDataTables(HMSDataCollection hmsDataCollection)
         {
             try
             {

@@ -43,7 +43,7 @@ namespace HMS_Server
         private AdminSettingsVM adminSettingsVM;
         private UserInputs userInputs;
 
-        public HMSProcessingWindHeading(DataCollection hmsOutputData, AdminSettingsVM adminSettingsVM, UserInputs userInputs, ErrorHandler errorHandler)
+        public HMSProcessingWindHeading(HMSDataCollection hmsOutputData, AdminSettingsVM adminSettingsVM, UserInputs userInputs, ErrorHandler errorHandler)
         {
             this.adminSettingsVM = adminSettingsVM;
             this.userInputs = userInputs;
@@ -201,7 +201,7 @@ namespace HMS_Server
             }
         }
 
-        public void Update(DataCollection hmsInputDataList)
+        public void Update(HMSDataCollection hmsInputDataList)
         {
             // Tar data fra input delen av server og overfører til HMS output delen
 

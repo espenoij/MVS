@@ -10,8 +10,8 @@ namespace HMS_Server
     {
         private UserInputs userInputs;
 
-        private DataCollection testData;
-        private DataCollection referenceData;
+        private HMSDataCollection testData;
+        private HMSDataCollection referenceData;
         private RadObservableCollectionEx<VerificationData> verificationData;
         private List<double> refTimeIDList = new List<double>();
 
@@ -24,11 +24,11 @@ namespace HMS_Server
             this.userInputs = userInputs;
 
             // Test data liste
-            testData = new DataCollection();
+            testData = new HMSDataCollection();
             testData.LoadTestData(config);
 
             // Referanse data liste
-            referenceData = new DataCollection();
+            referenceData = new HMSDataCollection();
             referenceData.LoadReferenceData(config);
 
             // Verification data
@@ -44,12 +44,12 @@ namespace HMS_Server
             userInputs.helideckCategory = HelideckCategory.Category1;
         }
 
-        public DataCollection GetTestData()
+        public HMSDataCollection GetTestData()
         {
             return testData;
         }
 
-        public DataCollection GetRefData()
+        public HMSDataCollection GetRefData()
         {
             return referenceData;
         }

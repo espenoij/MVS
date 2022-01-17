@@ -47,7 +47,7 @@ namespace HMS_Server
         public delegate void UserInputsCallback(UserInputs userInputs);
 
         // Liste med HMS sensor data: Data som skal gjennom HMS prosessen og sendes til HMS klient
-        private DataCollection hmsInputData;
+        private HMSDataCollection hmsInputData;
 
         // Verification data
         private bool dataVerificationIsActive = false;
@@ -58,7 +58,7 @@ namespace HMS_Server
 
         // HMS
         private HMSProcessing hmsProcessing;
-        private DataCollection hmsOutputData;
+        private HMSDataCollection hmsOutputData;
         private HMSDatabase hmsDatabase;
         private DispatcherTimer hmsTimer = new DispatcherTimer();
         private DispatcherTimer hmsDatabaseTimer = new DispatcherTimer();
@@ -104,7 +104,7 @@ namespace HMS_Server
             sensorDataRetrieval = new SensorDataRetrieval(config, database, errorHandler);
 
             // HMS Output data
-            hmsOutputData = new DataCollection();
+            hmsOutputData = new HMSDataCollection();
 
             // HMS Database
             hmsDatabase = new HMSDatabase(database, errorHandler);
@@ -292,7 +292,7 @@ namespace HMS_Server
             motionLimits = new HelideckMotionLimits(userInputs, config, adminSettingsVM);
 
             // HMS data list
-            hmsInputData = new DataCollection();
+            hmsInputData = new HMSDataCollection();
             hmsInputData.LoadHMSInput(config);
 
             // HMS data: Prosessering av input data til output data

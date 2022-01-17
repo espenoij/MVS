@@ -4,7 +4,7 @@ using Telerik.Windows.Data;
 
 namespace HMS_Server
 {
-    public class DataCollection
+    public class HMSDataCollection
     {
         // Configuration settings
         private Config config;

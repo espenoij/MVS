@@ -22,7 +22,7 @@ namespace HMS_Server
 
         public void Init(
             RadObservableCollectionEx<SensorData> serverSensorDataList,
-            DataCollection clientSensorData,
+            HMSDataCollection clientSensorData,
             Config config,
             HMSSensorGroupStatus sensorStatus)
         {

@@ -19,8 +19,8 @@ namespace HMS_Server
 
         public void Init(
             RadObservableCollectionEx<SensorData> serverSensorDataList,
-            DataCollection hmsInputDataList,
-            DataCollection hmsOutputDataList,
+            HMSDataCollection hmsInputDataList,
+            HMSDataCollection hmsOutputDataList,
             Config config)
         {
             this.config = config;

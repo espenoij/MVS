@@ -4,7 +4,7 @@ namespace HMS_Server
 {
     class HMSProcessingHelideckStatus
     {
-        private DataCollection hmsOutputData;
+        private HMSDataCollection hmsOutputData;
         private HelideckMotionLimits motionLimits;
         private UserInputs userInputs;
         private AdminSettingsVM adminSettingsVM;
@@ -15,7 +15,7 @@ namespace HMS_Server
 
         private HMSData helideckStatusData = new HMSData();
 
-        public HMSProcessingHelideckStatus(DataCollection hmsOutputData, HelideckMotionLimits motionLimits, AdminSettingsVM adminSettingsVM, UserInputs userInputs, HMSProcessingMotion hmsProcessingMotion, HMSProcessingWindHeading hmsProcessingWindHeading)
+        public HMSProcessingHelideckStatus(HMSDataCollection hmsOutputData, HelideckMotionLimits motionLimits, AdminSettingsVM adminSettingsVM, UserInputs userInputs, HMSProcessingMotion hmsProcessingMotion, HMSProcessingWindHeading hmsProcessingWindHeading)
         {
             this.hmsOutputData = hmsOutputData;
             this.motionLimits = motionLimits;

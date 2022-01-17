@@ -17,7 +17,7 @@ namespace HMS_Server
         private Config config;
         private AdminSettingsVM adminSettingsVM;
 
-        public void Init(DataCollection hmsOutputDataList, Config config, UserInputs userInputs, AdminSettingsVM adminSettingsVM)
+        public void Init(HMSDataCollection hmsOutputDataList, Config config, UserInputs userInputs, AdminSettingsVM adminSettingsVM)
         {
             this.userInputs = userInputs;
             this.config = config;

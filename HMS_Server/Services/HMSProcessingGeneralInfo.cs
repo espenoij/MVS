@@ -7,7 +7,7 @@ namespace HMS_Server
         private HMSData gpsLatitude = new HMSData();
         private HMSData gpsLongitude = new HMSData();
 
-        public HMSProcessingGeneralInfo(DataCollection hmsOutputData)
+        public HMSProcessingGeneralInfo(HMSDataCollection hmsOutputData)
         {
             // Fyller output listen med HMS Output data
             // NB! Variablene som legges inn i listen her fungerer som pekere: Oppdateres variabelen -> oppdateres listen
@@ -19,7 +19,7 @@ namespace HMS_Server
             hmsOutputDataList.Add(gpsLongitude);
         }
 
-        public void Update(DataCollection hmsInputDataList)
+        public void Update(HMSDataCollection hmsInputDataList)
         {
             // Tar data fra input delen av server og overfører til HMS output delen
 

@@ -389,7 +389,7 @@
     <Compile Include="Config\HMSDataConfigSection.cs" />
     <Compile Include="Helpers\HMSCalc.cs" />
     <Compile Include="Services\HMSProcessing.cs" />
-    <Compile Include="Services\DataCollection.cs" />
+    <Compile Include="Services\HMSDataCollection.cs" />
     <Compile Include="Config\HelicopterWSILimitConfig.cs" />
     <Compile Include="Config\HelicopterWSILimitConfigCollection.cs" />
     <Compile Include="Config\HelicopterWSILimitConfigSection.cs" />

@@ -9,7 +9,7 @@ namespace HMS_Server
         private HMSData sensorGyro = new HMSData();
         private HMSData sensorWind = new HMSData();
 
-        public HMSProcessingVerificationData(DataCollection hmsOutputData)
+        public HMSProcessingVerificationData(HMSDataCollection hmsOutputData)
         {
             // Fyller output listen med HMS Output data
             // NB! Variablene som legges inn i listen her fungerer som pekere: Oppdateres variabelen -> oppdateres listen
@@ -23,7 +23,7 @@ namespace HMS_Server
             hmsOutputDataList.Add(sensorWind);
         }
 
-        public void Update(DataCollection hmsInputDataList)
+        public void Update(HMSDataCollection hmsInputDataList)
         {
             // Tar data fra input delen av server og overfører til HMS output delen
             timeId.Set(hmsInputDataList.GetData(ValueType.TimeID));

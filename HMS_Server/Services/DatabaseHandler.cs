@@ -224,7 +224,7 @@ namespace HMS_Server
             }
         }
 
-        public void CreateTables(DataCollection hmsDataCollection)
+        public void CreateTables(HMSDataCollection hmsDataCollection)
         {
             try
             {
@@ -658,7 +658,7 @@ namespace HMS_Server
         }
 
 
-        public void Insert(DataCollection hmsDataCollection)
+        public void Insert(HMSDataCollection hmsDataCollection)
         {
             try
             {

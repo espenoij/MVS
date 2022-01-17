@@ -7,7 +7,7 @@ namespace HMS_Server
     public class HMSSensorGroupStatus
     {
         private RadObservableCollectionEx<SensorGroup> hmsSensorGroupList = new RadObservableCollectionEx<SensorGroup>();
-        private DataCollection hmsOutputDataList;
+        private HMSDataCollection hmsOutputDataList;
 
         // Config
         private Config config;
@@ -21,7 +21,7 @@ namespace HMS_Server
         // Update Sensor Status
         DispatcherTimer timer = new DispatcherTimer();
 
-        public HMSSensorGroupStatus(Config config, DatabaseHandler database, ErrorHandler errorHandler, DataCollection hmsOutputDataList)
+        public HMSSensorGroupStatus(Config config, DatabaseHandler database, ErrorHandler errorHandler, HMSDataCollection hmsOutputDataList)
         {
             this.config = config;
             this.database = database;

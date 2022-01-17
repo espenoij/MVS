@@ -18,7 +18,7 @@ namespace HMS_Server
         private UserInputs userInputs;
         private AdminSettingsVM adminSettingsVM;
 
-        public HMSProcessingUserInputs(DataCollection hmsOutputData, UserInputs userInputs, AdminSettingsVM adminSettings)
+        public HMSProcessingUserInputs(HMSDataCollection hmsOutputData, UserInputs userInputs, AdminSettingsVM adminSettings)
         {
             this.adminSettingsVM = adminSettings;
             this.userInputs = userInputs;

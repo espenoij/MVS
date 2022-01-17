@@ -23,7 +23,7 @@ namespace HMS_Server
 
         private AdminSettingsVM adminSettingsVM;
 
-        public HMSProcessingSettings(DataCollection hmsOutputData, AdminSettingsVM adminSettingsVM)
+        public HMSProcessingSettings(HMSDataCollection hmsOutputData, AdminSettingsVM adminSettingsVM)
         {
             this.adminSettingsVM = adminSettingsVM;
 

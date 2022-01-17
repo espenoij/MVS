@@ -25,7 +25,7 @@ namespace HMS_Server
 
         private AdminSettingsVM adminSettingsVM;
 
-        public HMSProcessingMeteorological(DataCollection hmsOutputData, AdminSettingsVM adminSettingsVM)
+        public HMSProcessingMeteorological(HMSDataCollection hmsOutputData, AdminSettingsVM adminSettingsVM)
         {
             this.adminSettingsVM = adminSettingsVM;
 
@@ -70,7 +70,7 @@ namespace HMS_Server
             hmsOutputDataList.Add(cloudLayer4Coverage);
         }
 
-        public void Update(DataCollection hmsInputDataList)
+        public void Update(HMSDataCollection hmsInputDataList)
         {
             // Tar data fra input delen av server og overfører til HMS output delen
 

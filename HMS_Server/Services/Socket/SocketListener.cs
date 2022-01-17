@@ -46,7 +46,7 @@ namespace HMS_Server
 
         private MainWindow.UserInputsCallback userInputCallback;
 
-        public SocketListener(DataCollection hmsOutputData, HMSSensorGroupStatus sensorStatusOutput, SocketConsole socketConsole, UserInputs userInputs, MainWindow.UserInputsCallback userInputCallback)
+        public SocketListener(HMSDataCollection hmsOutputData, HMSSensorGroupStatus sensorStatusOutput, SocketConsole socketConsole, UserInputs userInputs, MainWindow.UserInputsCallback userInputCallback)
         {
             config = new Config();
             serverPort = config.Read(ConfigKey.ServerPort, Constants.ServerPortDefault);
