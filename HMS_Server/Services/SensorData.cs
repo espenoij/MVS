@@ -39,196 +39,198 @@ namespace HMS_Server
 
         public SensorData(SensorConfig sensorConfig)
         {
-            try
+            if (sensorConfig != null)
             {
-                id = sensorConfig.id;
-                type = (SensorType)Enum.Parse(typeof(SensorType), sensorConfig.type);
-                name = sensorConfig.name;
-                description = sensorConfig.description;
-                saveToDatabase = bool.Parse(sensorConfig.saveToDatabase);
-                saveFreq = (DatabaseSaveFrequency)Enum.Parse(typeof(DatabaseSaveFrequency), sensorConfig.saveFreq);
-
-                switch (type)
+                try
                 {
-                    case SensorType.None:
-                        break;
+                    id = sensorConfig.id;
+                    type = (SensorType)Enum.Parse(typeof(SensorType), sensorConfig.type);
+                    name = sensorConfig.name;
+                    description = sensorConfig.description;
+                    saveToDatabase = bool.Parse(sensorConfig.saveToDatabase);
+                    saveFreq = (DatabaseSaveFrequency)Enum.Parse(typeof(DatabaseSaveFrequency), sensorConfig.saveFreq);
 
-                    case SensorType.SerialPort:
-                        serialPort = new SerialPortSetup();
+                    switch (type)
+                    {
+                        case SensorType.None:
+                            break;
 
-                        // Serial Port setup
-                        serialPort.portName = sensorConfig.serialPort.portName;
-                        serialPort.baudRate = Convert.ToInt32(sensorConfig.serialPort.baudRate);
-                        serialPort.dataBits = Convert.ToInt16(sensorConfig.serialPort.dataBits);
-                        serialPort.stopBits = (StopBits)Enum.Parse(typeof(StopBits), sensorConfig.serialPort.stopBits);
-                        serialPort.parity = (Parity)Enum.Parse(typeof(Parity), sensorConfig.serialPort.parity);
-                        serialPort.handshake = (Handshake)Enum.Parse(typeof(Handshake), sensorConfig.serialPort.handshake);
+                        case SensorType.SerialPort:
+                            serialPort = new SerialPortSetup();
 
-                        // Serial Port Data Extraction Parameters
-                        serialPort.packetHeader = TextHelper.UnescapeSpace(sensorConfig.serialPort.packetHeader);
-                        serialPort.packetEnd = sensorConfig.serialPort.packetEnd;
-                        serialPort.packetDelimiter = sensorConfig.serialPort.packetDelimiter;
-                        serialPort.packetCombineFields = (SerialPortSetup.CombineFields)Enum.Parse(typeof(SerialPortSetup.CombineFields), sensorConfig.serialPort.packetCombineFields);
+                            // Serial Port setup
+                            serialPort.portName = sensorConfig.serialPort.portName;
+                            serialPort.baudRate = Convert.ToInt32(sensorConfig.serialPort.baudRate);
+                            serialPort.dataBits = Convert.ToInt16(sensorConfig.serialPort.dataBits);
+                            serialPort.stopBits = (StopBits)Enum.Parse(typeof(StopBits), sensorConfig.serialPort.stopBits);
+                            serialPort.parity = (Parity)Enum.Parse(typeof(Parity), sensorConfig.serialPort.parity);
+                            serialPort.handshake = (Handshake)Enum.Parse(typeof(Handshake), sensorConfig.serialPort.handshake);
 
-                        serialPort.fixedPosData = bool.Parse(sensorConfig.serialPort.fixedPosData);
-                        serialPort.fixedPosStart = Convert.ToInt32(sensorConfig.serialPort.fixedPosStart);
-                        serialPort.fixedPosTotal = Convert.ToInt32(sensorConfig.serialPort.fixedPosTotal);
+                            // Serial Port Data Extraction Parameters
+                            serialPort.packetHeader = TextHelper.UnescapeSpace(sensorConfig.serialPort.packetHeader);
+                            serialPort.packetEnd = sensorConfig.serialPort.packetEnd;
+                            serialPort.packetDelimiter = sensorConfig.serialPort.packetDelimiter;
+                            serialPort.packetCombineFields = (SerialPortSetup.CombineFields)Enum.Parse(typeof(SerialPortSetup.CombineFields), sensorConfig.serialPort.packetCombineFields);
 
-                        serialPort.dataField = sensorConfig.serialPort.dataField;
-                        serialPort.decimalSeparator = (DecimalSeparator)Enum.Parse(typeof(DecimalSeparator), sensorConfig.serialPort.decimalSeparator); ;
-                        serialPort.autoExtractValue = bool.Parse(sensorConfig.serialPort.autoExtractValue);
+                            serialPort.fixedPosData = bool.Parse(sensorConfig.serialPort.fixedPosData);
+                            serialPort.fixedPosStart = Convert.ToInt32(sensorConfig.serialPort.fixedPosStart);
+                            serialPort.fixedPosTotal = Convert.ToInt32(sensorConfig.serialPort.fixedPosTotal);
 
-                        // Data Calculations
-                        double param;
+                            serialPort.dataField = sensorConfig.serialPort.dataField;
+                            serialPort.decimalSeparator = (DecimalSeparator)Enum.Parse(typeof(DecimalSeparator), sensorConfig.serialPort.decimalSeparator); ;
+                            serialPort.autoExtractValue = bool.Parse(sensorConfig.serialPort.autoExtractValue);
 
-                        serialPort.calculationSetup[0].type = (CalculationType)Enum.Parse(typeof(CalculationType), sensorConfig.serialPort.calculationType1);
-                        if (double.TryParse(sensorConfig.serialPort.calculationParameter1, Constants.numberStyle, Constants.cultureInfo, out param))
-                            serialPort.calculationSetup[0].parameter = param;
-                        else
-                            serialPort.calculationSetup[0].parameter = 0;
+                            // Data Calculations
+                            double param;
 
-                        serialPort.calculationSetup[1].type = (CalculationType)Enum.Parse(typeof(CalculationType), sensorConfig.serialPort.calculationType2);
-                        if (double.TryParse(sensorConfig.serialPort.calculationParameter2, Constants.numberStyle, Constants.cultureInfo, out param))
-                            serialPort.calculationSetup[1].parameter = param;
-                        else
-                            serialPort.calculationSetup[1].parameter = 0;
+                            serialPort.calculationSetup[0].type = (CalculationType)Enum.Parse(typeof(CalculationType), sensorConfig.serialPort.calculationType1);
+                            if (double.TryParse(sensorConfig.serialPort.calculationParameter1, Constants.numberStyle, Constants.cultureInfo, out param))
+                                serialPort.calculationSetup[0].parameter = param;
+                            else
+                                serialPort.calculationSetup[0].parameter = 0;
 
-                        serialPort.calculationSetup[2].type = (CalculationType)Enum.Parse(typeof(CalculationType), sensorConfig.serialPort.calculationType3);
-                        if (double.TryParse(sensorConfig.serialPort.calculationParameter3, Constants.numberStyle, Constants.cultureInfo, out param))
-                            serialPort.calculationSetup[2].parameter = param;
-                        else
-                            serialPort.calculationSetup[2].parameter = 0;
+                            serialPort.calculationSetup[1].type = (CalculationType)Enum.Parse(typeof(CalculationType), sensorConfig.serialPort.calculationType2);
+                            if (double.TryParse(sensorConfig.serialPort.calculationParameter2, Constants.numberStyle, Constants.cultureInfo, out param))
+                                serialPort.calculationSetup[1].parameter = param;
+                            else
+                                serialPort.calculationSetup[1].parameter = 0;
 
-                        serialPort.calculationSetup[3].type = (CalculationType)Enum.Parse(typeof(CalculationType), sensorConfig.serialPort.calculationType4);
-                        if (double.TryParse(sensorConfig.serialPort.calculationParameter4, Constants.numberStyle, Constants.cultureInfo, out param))
-                            serialPort.calculationSetup[3].parameter = param;
-                        else
-                            serialPort.calculationSetup[3].parameter = 0;
+                            serialPort.calculationSetup[2].type = (CalculationType)Enum.Parse(typeof(CalculationType), sensorConfig.serialPort.calculationType3);
+                            if (double.TryParse(sensorConfig.serialPort.calculationParameter3, Constants.numberStyle, Constants.cultureInfo, out param))
+                                serialPort.calculationSetup[2].parameter = param;
+                            else
+                                serialPort.calculationSetup[2].parameter = 0;
 
-                        dataCalculations.Clear();
-                        for (int i = 0; i < Constants.DataCalculationSteps; i++)
-                            dataCalculations.Add(new DataCalculations(serialPort.calculationSetup[i].type, serialPort.calculationSetup[i].parameter));
+                            serialPort.calculationSetup[3].type = (CalculationType)Enum.Parse(typeof(CalculationType), sensorConfig.serialPort.calculationType4);
+                            if (double.TryParse(sensorConfig.serialPort.calculationParameter4, Constants.numberStyle, Constants.cultureInfo, out param))
+                                serialPort.calculationSetup[3].parameter = param;
+                            else
+                                serialPort.calculationSetup[3].parameter = 0;
 
-                        break;
+                            dataCalculations.Clear();
+                            for (int i = 0; i < Constants.DataCalculationSteps; i++)
+                                dataCalculations.Add(new DataCalculations(serialPort.calculationSetup[i].type, serialPort.calculationSetup[i].parameter));
 
-                    case SensorType.ModbusRTU:
-                    case SensorType.ModbusASCII:
-                    case SensorType.ModbusTCP:
-                        modbus = new ModbusSetup();
+                            break;
 
-                        // MODBUS setup
-                        modbus.portName = sensorConfig.modbus.portName;
-                        modbus.baudRate = Convert.ToInt32(sensorConfig.modbus.baudRate);
-                        modbus.dataBits = Convert.ToInt16(sensorConfig.modbus.dataBits);
-                        modbus.stopBits = (StopBits)Enum.Parse(typeof(StopBits), sensorConfig.modbus.stopBits);
-                        modbus.parity = (Parity)Enum.Parse(typeof(Parity), sensorConfig.modbus.parity);
-                        modbus.handshake = (Handshake)Enum.Parse(typeof(Handshake), sensorConfig.modbus.handshake);
+                        case SensorType.ModbusRTU:
+                        case SensorType.ModbusASCII:
+                        case SensorType.ModbusTCP:
+                            modbus = new ModbusSetup();
 
-                        modbus.tcpAddress = sensorConfig.modbus.tcpAddress;
-                        modbus.tcpPort = Convert.ToInt32(sensorConfig.modbus.tcpPort);
+                            // MODBUS setup
+                            modbus.portName = sensorConfig.modbus.portName;
+                            modbus.baudRate = Convert.ToInt32(sensorConfig.modbus.baudRate);
+                            modbus.dataBits = Convert.ToInt16(sensorConfig.modbus.dataBits);
+                            modbus.stopBits = (StopBits)Enum.Parse(typeof(StopBits), sensorConfig.modbus.stopBits);
+                            modbus.parity = (Parity)Enum.Parse(typeof(Parity), sensorConfig.modbus.parity);
+                            modbus.handshake = (Handshake)Enum.Parse(typeof(Handshake), sensorConfig.modbus.handshake);
 
-                        // Modbus Data Extraction Parameters
-                        modbus.slaveID = Convert.ToByte(sensorConfig.modbus.slaveID);
-                        modbus.startAddress = Convert.ToInt32(sensorConfig.modbus.startAddress);
-                        modbus.totalAddresses = Convert.ToInt32(sensorConfig.modbus.totalAddresses);
-                        modbus.dataAddress = Convert.ToInt32(sensorConfig.modbus.dataAddress);
+                            modbus.tcpAddress = sensorConfig.modbus.tcpAddress;
+                            modbus.tcpPort = Convert.ToInt32(sensorConfig.modbus.tcpPort);
 
-                        // Data Calculations
-                        modbus.calculationSetup[0].type = (CalculationType)Enum.Parse(typeof(CalculationType), sensorConfig.modbus.calculationType1);
-                        if (double.TryParse(sensorConfig.modbus.calculationParameter1, Constants.numberStyle, Constants.cultureInfo, out param))
-                            modbus.calculationSetup[0].parameter = param;
-                        else
-                            modbus.calculationSetup[0].parameter = 0;
+                            // Modbus Data Extraction Parameters
+                            modbus.slaveID = Convert.ToByte(sensorConfig.modbus.slaveID);
+                            modbus.startAddress = Convert.ToInt32(sensorConfig.modbus.startAddress);
+                            modbus.totalAddresses = Convert.ToInt32(sensorConfig.modbus.totalAddresses);
+                            modbus.dataAddress = Convert.ToInt32(sensorConfig.modbus.dataAddress);
 
-                        modbus.calculationSetup[1].type = (CalculationType)Enum.Parse(typeof(CalculationType), sensorConfig.modbus.calculationType2);
-                        if (double.TryParse(sensorConfig.modbus.calculationParameter2, Constants.numberStyle, Constants.cultureInfo, out param))
-                            modbus.calculationSetup[1].parameter = param;
-                        else
-                            modbus.calculationSetup[1].parameter = 0;
+                            // Data Calculations
+                            modbus.calculationSetup[0].type = (CalculationType)Enum.Parse(typeof(CalculationType), sensorConfig.modbus.calculationType1);
+                            if (double.TryParse(sensorConfig.modbus.calculationParameter1, Constants.numberStyle, Constants.cultureInfo, out param))
+                                modbus.calculationSetup[0].parameter = param;
+                            else
+                                modbus.calculationSetup[0].parameter = 0;
 
-                        modbus.calculationSetup[2].type = (CalculationType)Enum.Parse(typeof(CalculationType), sensorConfig.modbus.calculationType3);
-                        if (double.TryParse(sensorConfig.modbus.calculationParameter3, Constants.numberStyle, Constants.cultureInfo, out param))
-                            modbus.calculationSetup[2].parameter = param;
-                        else
-                            modbus.calculationSetup[2].parameter = 0;
+                            modbus.calculationSetup[1].type = (CalculationType)Enum.Parse(typeof(CalculationType), sensorConfig.modbus.calculationType2);
+                            if (double.TryParse(sensorConfig.modbus.calculationParameter2, Constants.numberStyle, Constants.cultureInfo, out param))
+                                modbus.calculationSetup[1].parameter = param;
+                            else
+                                modbus.calculationSetup[1].parameter = 0;
 
-                        modbus.calculationSetup[3].type = (CalculationType)Enum.Parse(typeof(CalculationType), sensorConfig.modbus.calculationType4);
-                        if (double.TryParse(sensorConfig.modbus.calculationParameter4, Constants.numberStyle, Constants.cultureInfo, out param))
-                            modbus.calculationSetup[3].parameter = param;
-                        else
-                            modbus.calculationSetup[3].parameter = 0;
+                            modbus.calculationSetup[2].type = (CalculationType)Enum.Parse(typeof(CalculationType), sensorConfig.modbus.calculationType3);
+                            if (double.TryParse(sensorConfig.modbus.calculationParameter3, Constants.numberStyle, Constants.cultureInfo, out param))
+                                modbus.calculationSetup[2].parameter = param;
+                            else
+                                modbus.calculationSetup[2].parameter = 0;
 
-                        dataCalculations.Clear();
-                        for (int i = 0; i < Constants.DataCalculationSteps; i++)
-                            dataCalculations.Add(new DataCalculations(modbus.calculationSetup[i].type, modbus.calculationSetup[i].parameter));
+                            modbus.calculationSetup[3].type = (CalculationType)Enum.Parse(typeof(CalculationType), sensorConfig.modbus.calculationType4);
+                            if (double.TryParse(sensorConfig.modbus.calculationParameter4, Constants.numberStyle, Constants.cultureInfo, out param))
+                                modbus.calculationSetup[3].parameter = param;
+                            else
+                                modbus.calculationSetup[3].parameter = 0;
 
-                        break;
+                            dataCalculations.Clear();
+                            for (int i = 0; i < Constants.DataCalculationSteps; i++)
+                                dataCalculations.Add(new DataCalculations(modbus.calculationSetup[i].type, modbus.calculationSetup[i].parameter));
 
-                    case SensorType.FileReader:
-                        fileReader = new FileReaderSetup();
+                            break;
 
-                        fileReader.fileFolder = sensorConfig.fileReader.fileFolder;
-                        fileReader.fileName = sensorConfig.fileReader.fileName;
-                        fileReader.readFrequency = Convert.ToDouble(sensorConfig.fileReader.readFrequency);
+                        case SensorType.FileReader:
+                            fileReader = new FileReaderSetup();
 
-                        fileReader.delimiter = sensorConfig.fileReader.delimiter;
-                        fileReader.fixedPosData = bool.Parse(sensorConfig.fileReader.fixedPosData);
-                        fileReader.fixedPosStart = Convert.ToInt32(sensorConfig.fileReader.fixedPosStart);
-                        fileReader.fixedPosTotal = Convert.ToInt32(sensorConfig.fileReader.fixedPosTotal);
+                            fileReader.fileFolder = sensorConfig.fileReader.fileFolder;
+                            fileReader.fileName = sensorConfig.fileReader.fileName;
+                            fileReader.readFrequency = Convert.ToDouble(sensorConfig.fileReader.readFrequency);
 
-                        fileReader.dataField = sensorConfig.fileReader.dataField;
-                        fileReader.decimalSeparator = (DecimalSeparator)Enum.Parse(typeof(DecimalSeparator), sensorConfig.fileReader.decimalSeparator); ;
-                        fileReader.autoExtractValue = bool.Parse(sensorConfig.fileReader.autoExtractValue);
+                            fileReader.delimiter = sensorConfig.fileReader.delimiter;
+                            fileReader.fixedPosData = bool.Parse(sensorConfig.fileReader.fixedPosData);
+                            fileReader.fixedPosStart = Convert.ToInt32(sensorConfig.fileReader.fixedPosStart);
+                            fileReader.fixedPosTotal = Convert.ToInt32(sensorConfig.fileReader.fixedPosTotal);
 
-                        // Data Calculations
-                        fileReader.calculationSetup[0].type = (CalculationType)Enum.Parse(typeof(CalculationType), sensorConfig.fileReader.calculationType1);
-                        if (double.TryParse(sensorConfig.fileReader.calculationParameter1, Constants.numberStyle, Constants.cultureInfo, out param))
-                            fileReader.calculationSetup[0].parameter = param;
-                        else
-                            fileReader.calculationSetup[0].parameter = 0;
+                            fileReader.dataField = sensorConfig.fileReader.dataField;
+                            fileReader.decimalSeparator = (DecimalSeparator)Enum.Parse(typeof(DecimalSeparator), sensorConfig.fileReader.decimalSeparator); ;
+                            fileReader.autoExtractValue = bool.Parse(sensorConfig.fileReader.autoExtractValue);
 
-                        fileReader.calculationSetup[1].type = (CalculationType)Enum.Parse(typeof(CalculationType), sensorConfig.fileReader.calculationType2);
-                        if (double.TryParse(sensorConfig.fileReader.calculationParameter2, Constants.numberStyle, Constants.cultureInfo, out param))
-                            fileReader.calculationSetup[1].parameter = param;
-                        else
-                            fileReader.calculationSetup[1].parameter = 0;
+                            // Data Calculations
+                            fileReader.calculationSetup[0].type = (CalculationType)Enum.Parse(typeof(CalculationType), sensorConfig.fileReader.calculationType1);
+                            if (double.TryParse(sensorConfig.fileReader.calculationParameter1, Constants.numberStyle, Constants.cultureInfo, out param))
+                                fileReader.calculationSetup[0].parameter = param;
+                            else
+                                fileReader.calculationSetup[0].parameter = 0;
 
-                        fileReader.calculationSetup[2].type = (CalculationType)Enum.Parse(typeof(CalculationType), sensorConfig.fileReader.calculationType3);
-                        if (double.TryParse(sensorConfig.fileReader.calculationParameter3, Constants.numberStyle, Constants.cultureInfo, out param))
-                            fileReader.calculationSetup[2].parameter = param;
-                        else
-                            fileReader.calculationSetup[2].parameter = 0;
+                            fileReader.calculationSetup[1].type = (CalculationType)Enum.Parse(typeof(CalculationType), sensorConfig.fileReader.calculationType2);
+                            if (double.TryParse(sensorConfig.fileReader.calculationParameter2, Constants.numberStyle, Constants.cultureInfo, out param))
+                                fileReader.calculationSetup[1].parameter = param;
+                            else
+                                fileReader.calculationSetup[1].parameter = 0;
 
-                        fileReader.calculationSetup[3].type = (CalculationType)Enum.Parse(typeof(CalculationType), sensorConfig.fileReader.calculationType4);
-                        if (double.TryParse(sensorConfig.fileReader.calculationParameter4, Constants.numberStyle, Constants.cultureInfo, out param))
-                            fileReader.calculationSetup[3].parameter = param;
-                        else
-                            fileReader.calculationSetup[3].parameter = 0;
+                            fileReader.calculationSetup[2].type = (CalculationType)Enum.Parse(typeof(CalculationType), sensorConfig.fileReader.calculationType3);
+                            if (double.TryParse(sensorConfig.fileReader.calculationParameter3, Constants.numberStyle, Constants.cultureInfo, out param))
+                                fileReader.calculationSetup[2].parameter = param;
+                            else
+                                fileReader.calculationSetup[2].parameter = 0;
 
-                        dataCalculations.Clear();
-                        for (int i = 0; i < Constants.DataCalculationSteps; i++)
-                            dataCalculations.Add(new DataCalculations(fileReader.calculationSetup[i].type, fileReader.calculationSetup[i].parameter));
+                            fileReader.calculationSetup[3].type = (CalculationType)Enum.Parse(typeof(CalculationType), sensorConfig.fileReader.calculationType4);
+                            if (double.TryParse(sensorConfig.fileReader.calculationParameter4, Constants.numberStyle, Constants.cultureInfo, out param))
+                                fileReader.calculationSetup[3].parameter = param;
+                            else
+                                fileReader.calculationSetup[3].parameter = 0;
 
-                        break;
+                            dataCalculations.Clear();
+                            for (int i = 0; i < Constants.DataCalculationSteps; i++)
+                                dataCalculations.Add(new DataCalculations(fileReader.calculationSetup[i].type, fileReader.calculationSetup[i].parameter));
+
+                            break;
+                    }
+                }
+                catch (Exception ex)
+                {
+                    // Sette feilmelding
+                    new ErrorHandler(new DatabaseHandler(true)).Insert(
+                        new ErrorMessage(
+                            DateTime.UtcNow,
+                            ErrorMessageType.All,
+                            ErrorMessageCategory.None,
+                            string.Format("SensorData (constructor)\n\nSystem Message:\n{0}", ex.Message),
+                            id));
+
+                    // NB! Fordi jeg opprette en ny instans av ErrorHandler og database her så vil ikke
+                    // denne feilen legges inn i grensesnittet for utskrift av feil meldinger,
+                    // men den vil legges i databasen.
                 }
             }
-            catch (Exception ex)
-            {
-                // Sette feilmelding
-                new ErrorHandler(new DatabaseHandler(true)).Insert(
-                    new ErrorMessage(
-                        DateTime.UtcNow,
-                        ErrorMessageType.All,
-                        ErrorMessageCategory.None,
-                        string.Format("SensorData (constructor)\n\nSystem Message:\n{0}", ex.Message),
-                        id));
-
-                // NB! Fordi jeg opprette en ny instans av ErrorHandler og database her så vil ikke
-                // denne feilen legges inn i grensesnittet for utskrift av feil meldinger,
-                // men den vil legges i databasen.
-            }
         }
-
 
         // Setup
         private int _id { get; set; }

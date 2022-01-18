@@ -61,13 +61,13 @@ namespace HMS_Server
             databaseErrorMessageStorageTime = config.Read(ConfigKey.ErrorMessageStorageTime, Constants.DatabaseStorageTimeDefault);
 
             // Timing: Program Save Frequency
-            programSaveFrequency = config.Read(ConfigKey.ProgramSaveFrequency, Constants.ProgramSaveFreqDefault);
+            databaseSaveFrequency = config.Read(ConfigKey.ProgramSaveFrequency, Constants.ProgramSaveFreqDefault);
 
             // Timing: Data Timeout
             dataTimeout = config.Read(ConfigKey.DataTimeout, Constants.DataTimeoutDefault);
 
             // Timing: GUI Data Limit
-            guiDataLimit = config.Read(ConfigKey.GUIDataLimit, Constants.GUIDataLimitDefault);
+            setupGUIDataLimit = config.Read(ConfigKey.SetupGUIDataLimit, Constants.GUIDataLimitDefault);
 
             // Helideck Report
             if (config.Read(ConfigKey.NDBInstalled_NOROG) == "1")
@@ -678,16 +678,16 @@ namespace HMS_Server
         /////////////////////////////////////////////////////////////////////////////
         // Timing: 
         /////////////////////////////////////////////////////////////////////////////
-        private double _programSaveFrequency { get; set; }
-        public double programSaveFrequency
+        private double _databaseSaveFrequency { get; set; }
+        public double databaseSaveFrequency
         {
             get
             {
-                return _programSaveFrequency;
+                return _databaseSaveFrequency;
             }
             set
             {
-                _programSaveFrequency = value;
+                _databaseSaveFrequency = value;
                 config.Write(ConfigKey.ProgramSaveFrequency, value.ToString());
                 OnPropertyChanged();
             }
@@ -714,17 +714,17 @@ namespace HMS_Server
         /////////////////////////////////////////////////////////////////////////////
         // Timing: GUI Data Limit
         /////////////////////////////////////////////////////////////////////////////
-        private double _guiDataLimit { get; set; }
-        public double guiDataLimit
+        private double _setupGUIDataLimit { get; set; }
+        public double setupGUIDataLimit
         {
             get
             {
-                return _guiDataLimit;
+                return _setupGUIDataLimit;
             }
             set
             {
-                _guiDataLimit = value;
-                config.Write(ConfigKey.GUIDataLimit, value.ToString());
+                _setupGUIDataLimit = value;
+                config.Write(ConfigKey.SetupGUIDataLimit, value.ToString());
                 OnPropertyChanged();
             }
         }

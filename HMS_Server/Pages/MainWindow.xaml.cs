@@ -700,7 +700,7 @@ namespace HMS_Server
             {
                 tabHMS_LightsOutput.Visibility = Visibility.Collapsed;
 
-                ucHMSLightsOutput.Init(new SensorData(), hmsLightsOutputVM, config, adminSettingsVM, errorHandler);
+                ucHMSLightsOutput.Init(new SensorData(SensorType.ModbusRTU), hmsLightsOutputVM, config, adminSettingsVM, errorHandler);
             }
         }
 

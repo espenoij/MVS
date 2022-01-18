@@ -106,7 +106,7 @@
     public const string ErrorMessageStorageTime = "ErrorMessageStorageTime";
 
     // Server App: Various
-    public const string ProgramSaveFrequency = "ProgramSaveFrequency";
+    public const string DatabaseSaveFrequency = "DatabaseSaveFrequency";
     //public const string DataTimeout = "DataTimeout";
     public const string GUIDataLimit = "GUIDataLimit";
 

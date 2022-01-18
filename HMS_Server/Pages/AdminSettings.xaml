@@ -89,7 +89,7 @@
                         VerticalAlignment="Center" />
                     <TextBox
                         Name="tbHelideckHeadingOffset"
-                        Width="100"
+                        Width="110"
                         HorizontalAlignment="Right"
                         Text="{Binding Path=helideckHeadingOffset}"
                         LostFocus="tbHelideckHeadingOffset_LostFocus"
@@ -102,8 +102,8 @@
 
         <telerik:GroupBox
             Header="NOROG"
-            Grid.Row="0"
-            Grid.Column="1"
+            Grid.Row="1"
+            Grid.Column="2"
             Margin="8">
 
             <StackPanel
@@ -123,18 +123,192 @@
                     </telerik:RadComboBox>
                 </DockPanel>
 
+                <!--NDB Installed-->
+                <DockPanel>
+
+                    <telerik:Label
+                        Name="lbNDBInstalled_NOROG"
+                        Content="NDB Installed"
+                        VerticalAlignment="Center" />
+
+                    <CheckBox
+                        Name="cbNDBInstalled_NOROG"
+                        IsChecked="{Binding Path=ndbInstalled_NOROG, Mode=TwoWay}"
+                        VerticalAlignment="Center"
+                        HorizontalAlignment="Right"
+                        Click="chNDBInstalled_NOROG_Click" />
+
+                </DockPanel>
+
+                <!--NDB Frequency-->
+                <DockPanel>
+                    <telerik:Label
+                        Name="lbNDBFreq_NOROG"
+                        Content="NDB Frequency"
+                        VerticalAlignment="Center" />
+                    <TextBox
+                        Name="tbNDBFreq_NOROG"
+                        Width="110"
+                        HorizontalAlignment="Right"
+                        Text="{Binding Path=ndbFreq_NOROG}"
+                        LostFocus="tbNDBFreq_NOROG_LostFocus"
+                        KeyDown="tbNDBFreq_NOROG_KeyDown" />
+                </DockPanel>
+
+                <!--VHF Frequency-->
+                <DockPanel>
+                    <telerik:Label
+                        Name="lbVHFFreq_NOROG"
+                        Content="VHF Frequency"
+                        VerticalAlignment="Center" />
+                    <TextBox
+                        Name="tbVHFFreq_NOROG"
+                        Width="110"
+                        HorizontalAlignment="Right"
+                        Text="{Binding Path=vhfFreq}"
+                        LostFocus="tbVHF_LostFocus"
+                        KeyDown="tbVHF_KeyDown" />
+                </DockPanel>
+
             </StackPanel>
 
         </telerik:GroupBox>
 
         <telerik:GroupBox
             Header="CAP"
-            Grid.Column="2"
-            Grid.Row="0"
+            Grid.Column="3"
+            Grid.Row="1"
+            Grid.RowSpan="2"
             Margin="8">
 
             <StackPanel
                 Margin="8">
+
+                <!--NDB Installed-->
+                <DockPanel>
+
+                    <telerik:Label
+                        Name="lbNDBInstalled_CAP"
+                        Content="NDB Installed"
+                        VerticalAlignment="Center" />
+
+                    <CheckBox
+                        Name="cbNDBInstalled_CAP"
+                        IsChecked="{Binding Path=ndbInstalled_CAP, Mode=TwoWay}"
+                        VerticalAlignment="Center"
+                        HorizontalAlignment="Right"
+                        Click="chNDBInstalled_CAP_Click" />
+
+                </DockPanel>
+
+                <!--NDB Frequency-->
+                <DockPanel>
+                    <telerik:Label
+                        Name="lbNDBFreq_CAP"
+                        Content="NDB Frequency"
+                        VerticalAlignment="Center" />
+                    <TextBox
+                        Name="tbNDBFreq_CAP"
+                        Width="110"
+                        HorizontalAlignment="Right"
+                        Text="{Binding Path=ndbFreq_CAP}"
+                        LostFocus="tbNDBFreq_CAP_LostFocus"
+                        KeyDown="tbNDBFreq_CAP_KeyDown" />
+                </DockPanel>
+
+                <!--NDB Ident-->
+                <DockPanel>
+                    <telerik:Label
+                        Name="lbNDBIdent_CAP"
+                        Content="NDB Ident"
+                        VerticalAlignment="Center" />
+                    <TextBox
+                        Name="tbNDBIdent_CAP"
+                        Width="110"
+                        HorizontalAlignment="Right"
+                        Text="{Binding Path=ndbIdent}"
+                        LostFocus="tbNDBIdent_LostFocus"
+                        KeyDown="tbNDBIdent_KeyDown" />
+                </DockPanel>
+
+                <!--Traffic Frequency-->
+                <DockPanel>
+                    <telerik:Label
+                        Name="lbTrafficFreq_CAP"
+                        Content="Traffic Frequency"
+                        VerticalAlignment="Center" />
+                    <TextBox
+                        Name="tbTrafficFreq_CAP"
+                        Width="110"
+                        HorizontalAlignment="Right"
+                        Text="{Binding Path=vhfFreq}"
+                        LostFocus="tbVHF_LostFocus"
+                        KeyDown="tbVHF_KeyDown" />
+                </DockPanel>
+
+                <!--Log Frequency-->
+                <DockPanel>
+                    <telerik:Label
+                        Name="lbLogFreq_CAP"
+                        Content="Log. Frequency"
+                        VerticalAlignment="Center" />
+                    <TextBox
+                        Name="tbLogFreq_CAP"
+                        Width="110"
+                        HorizontalAlignment="Right"
+                        Text="{Binding Path=logFreq}"
+                        LostFocus="tbLogFreq_CAP_LostFocus"
+                        KeyDown="tbLogFreq_CAP_KeyDown" />
+                </DockPanel>
+
+                <!--Marine Channel-->
+                <DockPanel>
+                    <telerik:Label
+                        Name="lbMarineChannel"
+                        Content="Marine Channel"
+                        VerticalAlignment="Center" />
+                    <TextBox
+                        Name="tbMarineChannel"
+                        Width="110"
+                        HorizontalAlignment="Right"
+                        Text="{Binding Path=marineChannel}"
+                        LostFocus="tbMarineChannel_LostFocus"
+                        KeyDown="tbMarineChannel_KeyDown" />
+                </DockPanel>
+
+                <!--Restricted Sector-->
+                <DockPanel>
+
+                    <telerik:Label
+                        Name="lbRestrictedSectorFrom"
+                        Content="Restricted Sector: From"
+                        VerticalAlignment="Center" />
+
+                    <TextBox
+                        Name="tbRestrictedSectorFrom"
+                        Width="110"
+                        HorizontalAlignment="Right"
+                        Text="{Binding Path=restrictedSectorFrom}"
+                        LostFocus="tbRestrictedSectorFrom_LostFocus"
+                        KeyDown="tbRestrictedSectorFrom_KeyDown" />
+
+                </DockPanel>
+
+                <DockPanel>
+                    <telerik:Label
+                        Name="lbRestrictedSectorTo"
+                        Content="Restricted Sector: To"
+                        VerticalAlignment="Center" />
+
+                    <TextBox
+                        Name="tbRestrictedSectorTo"
+                        Width="110"
+                        HorizontalAlignment="Right"
+                        Text="{Binding Path=restrictedSectorTo}"
+                        LostFocus="tbRestrictedSectorTo_LostFocus"
+                        KeyDown="tbRestrictedSectorTo_KeyDown" />
+
+                </DockPanel>
 
                 <DockPanel>
                     <telerik:Label
@@ -143,7 +317,7 @@
                         VerticalAlignment="Center" />
                     <TextBox
                         Name="tbMSICorrectionR"
-                        Width="100"
+                        Width="110"
                         HorizontalAlignment="Right"
                         Text="{Binding Path=msiCorrectionR}"
                         LostFocus="tbMSICorrectionR_LostFocus"
@@ -194,48 +368,6 @@
 
                 </DockPanel>
 
-                <DockPanel>
-
-                    <StackPanel
-                        Orientation="Horizontal"
-                        DockPanel.Dock="Right">
-
-                        <telerik:Label
-                            Name="lbRestrictedSectorFrom"
-                            Content="From"
-                            VerticalAlignment="Center" />
-
-                        <TextBox
-                            Name="tbRestrictedSectorFrom"
-                            Width="80"
-                            HorizontalAlignment="Right"
-                            Text="{Binding Path=restrictedSectorFrom}"
-                            LostFocus="tbRestrictedSectorFrom_LostFocus"
-                            KeyDown="tbRestrictedSectorFrom_KeyDown" />
-
-                        <telerik:Label
-                            Name="lbRestrictedSectorTo"
-                            Content="To"
-                            VerticalAlignment="Center" />
-
-                        <TextBox
-                            Name="tbRestrictedSectorTo"
-                            Width="80"
-                            HorizontalAlignment="Right"
-                            Text="{Binding Path=restrictedSectorTo}"
-                            LostFocus="tbRestrictedSectorTo_LostFocus"
-                            KeyDown="tbRestrictedSectorTo_KeyDown" />
-
-                    </StackPanel>
-
-                    <telerik:Label
-                        Name="lbRestrictedSector"
-                        DockPanel.Dock="Left"
-                        Content="Restricted Sector"
-                        VerticalAlignment="Center" />
-                    
-                </DockPanel>
-
             </StackPanel>
 
         </telerik:GroupBox>
@@ -255,7 +387,7 @@
                         VerticalAlignment="Center" />
                     <Label
                         Name="lbSettingsServerAddress"
-                        Width="150"
+                        Width="110"
                         HorizontalAlignment="Right" />
                 </DockPanel>
 
@@ -265,7 +397,7 @@
                         VerticalAlignment="Center" />
                     <TextBox
                         Name="tbSettingsServerPort"
-                        Width="150"
+                        Width="110"
                         HorizontalAlignment="Right"
                         Text="{Binding Path=serverPort}"
                         LostFocus="tbSettingsServerPort_LostFocus"
@@ -277,8 +409,8 @@
         </telerik:GroupBox>
 
         <telerik:GroupBox
-            Grid.Row="1"
-            Grid.Column="0"
+            Grid.Row="0"
+            Grid.Column="1"
             Header="DATABASE"
             Margin="8">
 
@@ -290,7 +422,7 @@
                         VerticalAlignment="Center" />
                     <TextBox
                         Name="tbSettingsDatabaseAddress"
-                        Width="150"
+                        Width="110"
                         HorizontalContentAlignment="Left"
                         HorizontalAlignment="Right"
                         Text="{Binding Path=databaseAddress}"
@@ -304,7 +436,7 @@
                         VerticalAlignment="Center" />
                     <TextBox
                         Name="tbSettingsDatabasePort"
-                        Width="150"
+                        Width="110"
                         HorizontalAlignment="Right"
                         HorizontalContentAlignment="Left"
                         Text="{Binding Path=databasePort}"
@@ -318,7 +450,7 @@
                         VerticalAlignment="Center" />
                     <TextBox
                         Name="tbSettingsDatabaseName"
-                        Width="150"
+                        Width="110"
                         HorizontalAlignment="Right"
                         Text="{Binding Path=databaseName}"
                         LostFocus="tbSettingsDatabaseName_LostFocus"
@@ -331,7 +463,7 @@
                         VerticalAlignment="Center" />
                     <TextBox
                         Name="tbSettingsDatabaseUserID"
-                        Width="150"
+                        Width="110"
                         HorizontalAlignment="Right"
                         LostFocus="tbSettingsDatabaseUserID_LostFocus"
                         KeyDown="tbSettingsDatabaseUserID_KeyDown"/>
@@ -343,7 +475,7 @@
                         VerticalAlignment="Center" />
                     <TextBox
                         Name="tbSettingsDatabasePassword"
-                        Width="150"
+                        Width="110"
                         HorizontalAlignment="Right"
                         LostFocus="tbSettingsDatabasePassword_LostFocus"
                         KeyDown="tbSettingsDatabasePassword_KeyDown"/>
@@ -355,7 +487,7 @@
                         VerticalAlignment="Center" />
                     <TextBox
                         Name="tbSettingsDatabaseDataStorageTime"
-                        Width="150"
+                        Width="110"
                         HorizontalAlignment="Right"
                         Text="{Binding Path=databaseDataStorageTime}"
                         LostFocus="tbSettingsDatabaseDataStorageTime_LostFocus"
@@ -368,7 +500,7 @@
                         VerticalAlignment="Center" />
                     <TextBox
                         Name="tbSettingsDatabaseErrorMessagesStorageTime"
-                        Width="150"
+                        Width="110"
                         HorizontalAlignment="Right"
                         Text="{Binding Path=databaseErrorMessageStorageTime}"
                         LostFocus="tbSettingsDatabaseErrorMessagesStorageTime_LostFocus"
@@ -381,8 +513,8 @@
 
         <telerik:GroupBox
             Header="DATABASE OPERATIONS"
-            Grid.Row="1"
-            Grid.Column="1"
+            Grid.Row="0"
+            Grid.Column="2"
             Margin="8">
 
             <StackPanel
@@ -420,7 +552,7 @@
 
         <telerik:GroupBox
             Grid.Row="1"
-            Grid.Column="2"
+            Grid.Column="0"
             Margin="8"
             Header="TIMING">
 
@@ -429,37 +561,37 @@
 
                 <DockPanel>
                     <Label
-                        Content="GUI Data Limit (ms)"
+                        Content="Setup GUI Data Limit (ms)"
                         VerticalAlignment="Center" />
                     <TextBox
                         Name="tbSettingsGUIDataLimit"
-                        Width="100"
+                        Width="110"
                         HorizontalAlignment="Right"
-                        Text="{Binding Path=guiDataLimit}"
+                        Text="{Binding Path=setupGUIDataLimit}"
                         LostFocus="tbSettingsGUIDataLimit_LostFocus"
                         KeyDown="tbSettingsGUIDataLimit_KeyDown" />
                 </DockPanel>
 
                 <DockPanel>
                     <Label
-                        Content="Program Save Frequency (ms)"
+                        Content="Database Save Frequency (ms)"
                         VerticalAlignment="Center" />
                     <TextBox
-                        Name="tbSettingsProgramSaveFrequency"
-                        Width="100"
+                        Name="tbSettingsDatabaseSaveFrequency"
+                        Width="110"
                         HorizontalAlignment="Right"
-                        Text="{Binding Path=programSaveFrequency}"
-                        LostFocus="tbSettingsProgramSaveFrequency_LostFocus" 
-                        KeyDown="tbSettingsProgramSaveFrequency_KeyDown"/>
+                        Text="{Binding Path=databaseSaveFrequency}"
+                        LostFocus="tbSettingsDatabaseSaveFrequency_LostFocus" 
+                        KeyDown="tbSettingsDatabaseSaveFrequency_KeyDown"/>
                 </DockPanel>
 
                 <DockPanel>
                     <Label
-                        Content="Data Timeout (sec)"
+                        Content="Data Timeout (ms)"
                         VerticalAlignment="Center" />
                     <TextBox
                         Name="tbSettingsDataTimeOut"
-                        Width="100"
+                        Width="110"
                         HorizontalAlignment="Right"
                         Text="{Binding Path=dataTimeout}"
                         LostFocus="tbSettingsDataTimeOut_LostFocus"
@@ -473,7 +605,7 @@
         <!--SENSOR LOCATION-->
         <telerik:GroupBox
             Grid.Row="1"
-            Grid.Column="3"
+            Grid.Column="1"
             Margin="8"
             Header="SENSOR LOCATION">
 
@@ -486,7 +618,7 @@
                         VerticalAlignment="Center" />
                     <TextBox
                         Name="tbHelideckHeight"
-                        Width="100"
+                        Width="110"
                         HorizontalAlignment="Right"
                         Text="{Binding Path=helideckHeight}"
                         LostFocus="tbHelideckHeight_LostFocus"
@@ -500,7 +632,7 @@
                         VerticalAlignment="Center" />
                     <TextBox
                         Name="tbWindSensorHeight"
-                        Width="100"
+                        Width="110"
                         HorizontalAlignment="Right"
                         Text="{Binding Path=windSensorHeight}"
                         LostFocus="tbWindSensorHeight_LostFocus"
@@ -514,7 +646,7 @@
                         VerticalAlignment="Center" />
                     <TextBox
                         Name="tbWindSensorDistance"
-                        Width="100"
+                        Width="110"
                         HorizontalAlignment="Right"
                         Text="{Binding Path=windSensorDistance}"
                         LostFocus="tbWindSensorDistance_LostFocus"
@@ -528,7 +660,7 @@
                         VerticalAlignment="Center" />
                     <TextBox
                         Name="tbAirPressureSensorHeight"
-                        Width="100"
+                        Width="110"
                         HorizontalAlignment="Right"
                         Text="{Binding Path=airPressureSensorHeight}"
                         LostFocus="tbAirPressureSensorHeight_LostFocus"
@@ -540,177 +672,10 @@
 
         </telerik:GroupBox>
 
-        <!--HELIDECK REPORT-->
-        <telerik:GroupBox
-            Grid.Row="2"
-            Grid.Column="0"
-            Margin="8"
-            Header="HELIDECK REPORT">
-
-            <StackPanel
-                Margin="8">
-                
-                <!--NDB Installed-->
-                <DockPanel>
-
-                    <telerik:Label
-                        Name="lbNDBInstalled_NOROG"
-                        Content="NDB Installed"
-                        VerticalAlignment="Center" />
-
-                    <CheckBox
-                        Name="cbNDBInstalled_NOROG"
-                        IsChecked="{Binding Path=ndbInstalled_NOROG, Mode=TwoWay}"
-                        VerticalAlignment="Center"
-                        HorizontalAlignment="Right"
-                        Click="chNDBInstalled_NOROG_Click"/>
-
-                </DockPanel>
-
-                <!--NDB Frequency-->
-                <DockPanel>
-                    <telerik:Label
-                        Name="lbNDBFreq_NOROG"
-                        Content="NDB Frequency"
-                        VerticalAlignment="Center" />
-                    <TextBox
-                        Name="tbNDBFreq_NOROG"
-                        Width="150"
-                        HorizontalAlignment="Right"
-                        Text="{Binding Path=ndbFreq_NOROG}"
-                        LostFocus="tbNDBFreq_NOROG_LostFocus"
-                        KeyDown="tbNDBFreq_NOROG_KeyDown" />
-                </DockPanel>
-
-                <!--VHF Frequency-->
-                <DockPanel>
-                    <telerik:Label
-                        Name="lbVHFFreq_NOROG"
-                        Content="VHF Frequency"
-                        VerticalAlignment="Center" />
-                    <TextBox
-                        Name="tbVHFFreq_NOROG"
-                        Width="150"
-                        HorizontalAlignment="Right"
-                        Text="{Binding Path=vhfFreq}"
-                        LostFocus="tbVHF_LostFocus"
-                        KeyDown="tbVHF_KeyDown" />
-                </DockPanel>
-
-            </StackPanel>
-
-        </telerik:GroupBox>
-        
-        <!--OFFSHORE WEATHER REPORT-->
-        <telerik:GroupBox
-            Grid.Row="2"
-            Grid.Column="1"
-            Margin="8"
-            Header="OFFSHORE WEATHER REPORT">
-
-            <StackPanel
-                Margin="8">
-
-                <!--NDB Installed-->
-                <DockPanel>
-
-                    <telerik:Label
-                        Name="lbNDBInstalled_CAP"
-                        Content="NDB Installed"
-                        VerticalAlignment="Center" />
-
-                    <CheckBox
-                        Name="cbNDBInstalled_CAP"
-                        IsChecked="{Binding Path=ndbInstalled_CAP, Mode=TwoWay}"
-                        VerticalAlignment="Center"
-                        HorizontalAlignment="Right"
-                        Click="chNDBInstalled_CAP_Click"/>
-
-                </DockPanel>
-
-                <!--NDB Frequency-->
-                <DockPanel>
-                    <telerik:Label
-                        Name="lbNDBFreq_CAP"
-                        Content="NDB Frequency"
-                        VerticalAlignment="Center" />
-                    <TextBox
-                        Name="tbNDBFreq_CAP"
-                        Width="150"
-                        HorizontalAlignment="Right"
-                        Text="{Binding Path=ndbFreq_CAP}"
-                        LostFocus="tbNDBFreq_CAP_LostFocus"
-                        KeyDown="tbNDBFreq_CAP_KeyDown" />
-                </DockPanel>
-
-                <!--NDB Ident-->
-                <DockPanel>
-                    <telerik:Label
-                        Name="lbNDBIdent_CAP"
-                        Content="NDB Ident"
-                        VerticalAlignment="Center" />
-                    <TextBox
-                        Name="tbNDBIdent_CAP"
-                        Width="150"
-                        HorizontalAlignment="Right"
-                        Text="{Binding Path=ndbIdent}"
-                        LostFocus="tbNDBIdent_LostFocus"
-                        KeyDown="tbNDBIdent_KeyDown" />
-                </DockPanel>
-
-                <!--Traffic Frequency-->
-                <DockPanel>
-                    <telerik:Label
-                        Name="lbTrafficFreq_CAP"
-                        Content="Traffic Frequency"
-                        VerticalAlignment="Center" />
-                    <TextBox
-                        Name="tbTrafficFreq_CAP"
-                        Width="150"
-                        HorizontalAlignment="Right"
-                        Text="{Binding Path=vhfFreq}"
-                        LostFocus="tbVHF_LostFocus"
-                        KeyDown="tbVHF_KeyDown" />
-                </DockPanel>
-
-                <!--Log Frequency-->
-                <DockPanel>
-                    <telerik:Label
-                        Name="lbLogFreq_CAP"
-                        Content="Log. Frequency"
-                        VerticalAlignment="Center" />
-                    <TextBox
-                        Name="tbLogFreq_CAP"
-                        Width="150"
-                        HorizontalAlignment="Right"
-                        Text="{Binding Path=logFreq}"
-                        LostFocus="tbLogFreq_CAP_LostFocus"
-                        KeyDown="tbLogFreq_CAP_KeyDown" />
-                </DockPanel>
-
-                <!--Marine Channel-->
-                <DockPanel>
-                    <telerik:Label
-                        Name="lbMarineChannel"
-                        Content="Marine Channel"
-                        VerticalAlignment="Center" />
-                    <TextBox
-                        Name="tbMarineChannel"
-                        Width="150"
-                        HorizontalAlignment="Right"
-                        Text="{Binding Path=marineChannel}"
-                        LostFocus="tbMarineChannel_LostFocus"
-                        KeyDown="tbMarineChannel_KeyDown" />
-                </DockPanel>
-
-            </StackPanel>
-
-        </telerik:GroupBox>
-
         <!--EMAIL SERVER-->
         <telerik:GroupBox
             Grid.Row="2"
-            Grid.Column="2"
+            Grid.Column="0"
             Margin="8"
             Header="EMAIL SERVER">
 
@@ -791,7 +756,7 @@
         <!--DATA VERIFICATION-->
         <telerik:GroupBox
             Grid.Row="2"
-            Grid.Column="3"
+            Grid.Column="1"
             Margin="8"
             Header="DATA VERIFICATION">
 

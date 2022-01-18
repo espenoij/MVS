@@ -23,7 +23,8 @@
 
     <telerik:RadWindow.Icon>
         <Image
-            Source="../Icons/favicon.ico" />
+            Height="32"
+            Source="../Icons/swire_flag.ico" />
     </telerik:RadWindow.Icon>
 
     <DockPanel>

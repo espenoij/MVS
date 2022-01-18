@@ -12,7 +12,8 @@
 
     <telerik:RadWindow.Icon>
         <Image
-            Source="../Icons/swire_flag_icon.ico" />
+            Height="32"
+            Source="../Icons/swire_flag.ico" />
     </telerik:RadWindow.Icon>
 
     <telerik:RadWindow.Resources>

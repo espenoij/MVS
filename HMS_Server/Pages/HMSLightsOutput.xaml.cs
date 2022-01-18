@@ -90,7 +90,8 @@ namespace HMS_Server
                 cboBaudRate.Items.Add(256000);
 
                 // Skrive satt baud rate i combobox feltet
-                cboBaudRate.Text = lightsOutputData.modbus.baudRate.ToString();
+                if (lightsOutputData.modbus != null)
+                    cboBaudRate.Text = lightsOutputData.modbus.baudRate.ToString();
 
                 // Data Bits
                 ///////////////////////////////////////////////////////////
@@ -98,7 +99,8 @@ namespace HMS_Server
                 cboDataBits.Items.Add(8);
 
                 // Skrive satt data bit type i combobox feltet
-                cboDataBits.Text = lightsOutputData.modbus.dataBits.ToString();
+                if (lightsOutputData.modbus != null)
+                    cboDataBits.Text = lightsOutputData.modbus.dataBits.ToString();
 
                 // Stop Bits
                 ///////////////////////////////////////////////////////////
@@ -107,7 +109,8 @@ namespace HMS_Server
                 cboStopBits.Items.Add("Two");
 
                 // Skrive satt stop bit i combobox feltet
-                cboStopBits.Text = lightsOutputData.modbus.stopBits.ToString();
+                if (lightsOutputData.modbus != null)
+                    cboStopBits.Text = lightsOutputData.modbus.stopBits.ToString();
 
                 // Parity 
                 ///////////////////////////////////////////////////////////
@@ -118,7 +121,8 @@ namespace HMS_Server
                 cboParity.Items.Add("Space");
 
                 // Skrive satt parity i combobox feltet
-                cboParity.Text = lightsOutputData.modbus.parity.ToString();
+                if (lightsOutputData.modbus != null)
+                    cboParity.Text = lightsOutputData.modbus.parity.ToString();
 
                 // Handshake
                 ///////////////////////////////////////////////////////////
@@ -129,23 +133,28 @@ namespace HMS_Server
 
                 // Slave ID
                 ///////////////////////////////////////////////////////////
-                tbSlaveID.Text = lightsOutputData.modbus.slaveID.ToString();
+                if (lightsOutputData.modbus != null)
+                    tbSlaveID.Text = lightsOutputData.modbus.slaveID.ToString();
 
                 // Sette serie port settings på SerialPort object 
                 ///////////////////////////////////////////////////////////
-                serialPort.PortName = lightsOutputData.modbus.portName;
-                serialPort.BaudRate = lightsOutputData.modbus.baudRate;
-                serialPort.DataBits = lightsOutputData.modbus.dataBits;
-                serialPort.StopBits = lightsOutputData.modbus.stopBits;
-                serialPort.Parity = lightsOutputData.modbus.parity;
-                serialPort.Handshake = lightsOutputData.modbus.handshake;
+                if (lightsOutputData.modbus != null)
+                {
+                    serialPort.PortName = lightsOutputData.modbus.portName;
+                    serialPort.BaudRate = lightsOutputData.modbus.baudRate;
+                    serialPort.DataBits = lightsOutputData.modbus.dataBits;
+                    serialPort.StopBits = lightsOutputData.modbus.stopBits;
+                    serialPort.Parity = lightsOutputData.modbus.parity;
+                    serialPort.Handshake = lightsOutputData.modbus.handshake;
+                }
 
                 // Timeout
                 serialPort.ReadTimeout = Constants.ModbusTimeout;       // NB! Brukes av ReadHoldingRegisters. Uten disse vil programmet fryse dersom ReadHoldingRegisters ikke får svar.
                 serialPort.WriteTimeout = Constants.ModbusTimeout;
 
                 // Skrive satt hand shake type i combobox feltet
-                cboHandShake.Text = lightsOutputData.modbus.handshake.ToString();
+                if (lightsOutputData.modbus != null)
+                    cboHandShake.Text = lightsOutputData.modbus.handshake.ToString();
 
                 // MODBUS RTU Reader
                 modbusReader.Tick += runModbusWriter;
@@ -153,15 +162,6 @@ namespace HMS_Server
                 void runModbusWriter(object sender, EventArgs e)
                 {
                     ModbusSendLightsOutputCommand();
-                    //Thread thread = new Thread(() => ModbusWrite());
-                    //thread.IsBackground = true;
-                    //thread.Start();
-
-                    //void ModbusWrite()
-                    //{
-                    //    // Sende Data via MODBUS
-                    //    ModbusSendLightsOutputCommand();
-                    //}
                 }
             }
         }
@@ -228,7 +228,7 @@ namespace HMS_Server
                     cboPortName.Items.Add(comPortName);
 
                 // Skrive satt COM port i combobox tekst feltet
-                cboPortName.Text = lightsOutputData.modbus.portName;
+                cboPortName.Text = lightsOutputData.modbus?.portName;
             }
             else
             {
@@ -239,7 +239,7 @@ namespace HMS_Server
 
         private void ModbusSendLightsOutputCommand()
         {
-            if (lightsOutputData.type != SensorType.ModbusTCP)
+            if (lightsOutputData.modbus != null)
             {
                 try
                 {
@@ -353,17 +353,23 @@ namespace HMS_Server
         private void cboCOMPort_SelectionChanged(object sender, SelectionChangedEventArgs e)
         {
             // Lagre ny setting
-            lightsOutputData.modbus.portName = cboPortName.SelectedItem.ToString();
-            config.SetLightsOutputData(lightsOutputData);
+            if (lightsOutputData.modbus != null)
+            {
+                lightsOutputData.modbus.portName = cboPortName.SelectedItem.ToString();
+                config.SetLightsOutputData(lightsOutputData);
+            }
         }
 
         private void cboBaudRate_SelectionChanged(object sender, SelectionChangedEventArgs e)
         {
             try
             {
-                // Lagre ny setting
-                lightsOutputData.modbus.baudRate = Convert.ToInt32(cboBaudRate.SelectedItem.ToString());
-                config.SetLightsOutputData(lightsOutputData);
+                if (lightsOutputData.modbus != null)
+                {
+                    // Lagre ny setting
+                    lightsOutputData.modbus.baudRate = Convert.ToInt32(cboBaudRate.SelectedItem.ToString());
+                    config.SetLightsOutputData(lightsOutputData);
+                }
             }
             catch (Exception ex)
             {
@@ -375,9 +381,12 @@ namespace HMS_Server
         {
             try
             {
-                // Lagre ny setting
-                lightsOutputData.modbus.dataBits = Convert.ToInt16(cboDataBits.SelectedItem.ToString());
-                config.SetLightsOutputData(lightsOutputData);
+                if (lightsOutputData.modbus != null)
+                {
+                    // Lagre ny setting
+                    lightsOutputData.modbus.dataBits = Convert.ToInt16(cboDataBits.SelectedItem.ToString());
+                    config.SetLightsOutputData(lightsOutputData);
+                }
             }
             catch (Exception ex)
             {
@@ -389,9 +398,12 @@ namespace HMS_Server
         {
             try
             {
-                // Lagre ny setting
-                lightsOutputData.modbus.stopBits = (StopBits)Enum.Parse(typeof(StopBits), cboStopBits.SelectedItem.ToString());
-                config.SetLightsOutputData(lightsOutputData);
+                if (lightsOutputData.modbus != null)
+                {
+                    // Lagre ny setting
+                    lightsOutputData.modbus.stopBits = (StopBits)Enum.Parse(typeof(StopBits), cboStopBits.SelectedItem.ToString());
+                    config.SetLightsOutputData(lightsOutputData);
+                }
             }
             catch (Exception ex)
             {
@@ -403,9 +415,12 @@ namespace HMS_Server
         {
             try
             {
-                // Lagre ny setting
-                lightsOutputData.modbus.parity = (Parity)Enum.Parse(typeof(Parity), cboParity.SelectedItem.ToString());
-                config.SetLightsOutputData(lightsOutputData);
+                if (lightsOutputData.modbus != null)
+                {
+                    // Lagre ny setting
+                    lightsOutputData.modbus.parity = (Parity)Enum.Parse(typeof(Parity), cboParity.SelectedItem.ToString());
+                    config.SetLightsOutputData(lightsOutputData);
+                }
             }
             catch (Exception ex)
             {
@@ -417,9 +432,12 @@ namespace HMS_Server
         {
             try
             {
-                // Lagre ny setting
-                lightsOutputData.modbus.handshake = (Handshake)Enum.Parse(typeof(Handshake), cboHandShake.SelectedItem.ToString());
-                config.SetLightsOutputData(lightsOutputData);
+                if (lightsOutputData.modbus != null)
+                {
+                    // Lagre ny setting
+                    lightsOutputData.modbus.handshake = (Handshake)Enum.Parse(typeof(Handshake), cboHandShake.SelectedItem.ToString());
+                    config.SetLightsOutputData(lightsOutputData);
+                }
             }
             catch (Exception ex)
             {
@@ -443,16 +461,19 @@ namespace HMS_Server
 
         private void tbSlaveID_Update(object sender)
         {
-            // Sjekk av input
-            DataValidation.Double(
+            if (lightsOutputData.modbus != null)
+            {
+                // Sjekk av input
+                DataValidation.Double(
                 (sender as TextBox).Text,
                 Constants.MODBUSSlaveIDMin,
                 Constants.MODBUSSlaveIDMax,
                 Constants.MODBUSSlaveIDDefault,
                 out double validatedInput);
 
-            lightsOutputData.modbus.slaveID = (byte)validatedInput;
-            (sender as TextBox).Text = validatedInput.ToString();
+                lightsOutputData.modbus.slaveID = (byte)validatedInput;
+                (sender as TextBox).Text = validatedInput.ToString();
+            }
         }
 
         private void cboTestHelideckStatus_SelectionChanged(object sender, SelectionChangedEventArgs e)

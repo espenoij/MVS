@@ -53,7 +53,7 @@
     <WarningLevel>4</WarningLevel>
   </PropertyGroup>
   <PropertyGroup>
-    <ApplicationIcon>Icons\favicon.ico</ApplicationIcon>
+    <ApplicationIcon>Icons\swire_flag.ico</ApplicationIcon>
   </PropertyGroup>
   <PropertyGroup>
     <ManifestCertificateThumbprint>602CBF00AFA1A46A7624D6ED256205145E8071BA</ManifestCertificateThumbprint>
@@ -574,18 +574,12 @@
     </BootstrapperPackage>
   </ItemGroup>
   <ItemGroup>
-    <Resource Include="Icons\favicon.ico" />
-  </ItemGroup>
-  <ItemGroup>
     <Resource Include="Icons\input_white_36dp.png" />
     <Resource Include="Icons\output_white_36dp.png" />
   </ItemGroup>
   <ItemGroup>
     <Resource Include="Icons\helipad_white_36dp.png" />
     <Resource Include="Icons\outline_settings_white_36dp.png" />
-  </ItemGroup>
-  <ItemGroup>
-    <Resource Include="Icons\swire_flag_icon.ico" />
   </ItemGroup>
   <ItemGroup>
     <Resource Include="Icons\outline_verified_white_36dp.png" />
@@ -595,6 +589,9 @@
   </ItemGroup>
   <ItemGroup>
     <Resource Include="Icons\outline_error_outline_black_48dp.png" />
+  </ItemGroup>
+  <ItemGroup>
+    <Resource Include="Icons\swire_flag.ico" />
   </ItemGroup>
   <Import Project="$(MSBuildToolsPath)\Microsoft.CSharp.targets" />
   <Import Project="..\packages\NETStandard.Library.2.0.3\build\netstandard2.0\NETStandard.Library.targets" Condition="Exists('..\packages\NETStandard.Library.2.0.3\build\netstandard2.0\NETStandard.Library.targets')" />

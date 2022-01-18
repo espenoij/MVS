@@ -526,7 +526,7 @@ namespace HMS_Server
             {
                 // Timer som sørger for at vi ikke sender for mye data til UI thread
                 // Vi trenger ikke lese og behandle hver eneste sending på porten her
-                if (dataLimitTimer.ElapsedMilliseconds > config.Read(ConfigKey.GUIDataLimit, Constants.GUIDataLimitDefault))
+                if (dataLimitTimer.ElapsedMilliseconds > config.Read(ConfigKey.SetupGUIDataLimit, Constants.GUIDataLimitDefault))
                 {
                     // Sende leste data til skjermutskrift
                     if (!string.IsNullOrEmpty(inputData))

@@ -131,7 +131,6 @@ namespace HMS_Server
                 tbRestrictedSectorFrom.IsEnabled = false;
                 lbRestrictedSectorTo.IsEnabled = false;
                 tbRestrictedSectorTo.IsEnabled = false;
-                lbRestrictedSector.IsEnabled = false;
 
                 // Offshore Weather Report
                 lbNDBInstalled_CAP.IsEnabled = false;
@@ -214,21 +213,21 @@ namespace HMS_Server
             adminSettingsVM.serverPort = validatedInput;
         }
 
-        private void tbSettingsProgramSaveFrequency_LostFocus(object sender, RoutedEventArgs e)
+        private void tbSettingsDatabaseSaveFrequency_LostFocus(object sender, RoutedEventArgs e)
         {
-            tbSettingsProgramSaveFrequency_Update(sender);
+            tbSettingsDatabaseSaveFrequency_Update(sender);
         }
 
-        private void tbSettingsProgramSaveFrequency_KeyDown(object sender, KeyEventArgs e)
+        private void tbSettingsDatabaseSaveFrequency_KeyDown(object sender, KeyEventArgs e)
         {
             if (e.Key == Key.Return)
             {
-                tbSettingsProgramSaveFrequency_Update(sender);
+                tbSettingsDatabaseSaveFrequency_Update(sender);
                 Keyboard.ClearFocus();
             }
         }
 
-        private void tbSettingsProgramSaveFrequency_Update(object sender)
+        private void tbSettingsDatabaseSaveFrequency_Update(object sender)
         {
             // Sjekk av input
             DataValidation.Double(
@@ -238,10 +237,10 @@ namespace HMS_Server
                     Constants.ProgramSaveFreqDefault,
                     out double validatedInput);
 
-            if (adminSettingsVM.programSaveFrequency != validatedInput)
+            if (adminSettingsVM.databaseSaveFrequency != validatedInput)
                 adminSettingsVM.ApplicationRestartRequired();
 
-            adminSettingsVM.programSaveFrequency = validatedInput;
+            adminSettingsVM.databaseSaveFrequency = validatedInput;
         }
 
         private void tbSettingsDataTimeOut_LostFocus(object sender, RoutedEventArgs e)
@@ -298,10 +297,10 @@ namespace HMS_Server
                     Constants.GUIDataLimitDefault,
                     out double validatedInput);
 
-            if (adminSettingsVM.guiDataLimit != validatedInput)
+            if (adminSettingsVM.setupGUIDataLimit != validatedInput)
                 adminSettingsVM.ApplicationRestartRequired();
 
-            adminSettingsVM.guiDataLimit = validatedInput;
+            adminSettingsVM.setupGUIDataLimit = validatedInput;
         }
 
         private void tbSettingsDatabaseAddress_LostFocus(object sender, RoutedEventArgs e)

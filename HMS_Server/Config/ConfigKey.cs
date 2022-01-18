@@ -123,7 +123,7 @@
 
     // Server App: Various
     public const string ProgramSaveFrequency = "ProgramSaveFrequency";
-    public const string GUIDataLimit = "GUIDataLimit";
+    public const string SetupGUIDataLimit = "SetupGUIDataLimit";
 
     // Server App: Serial Port Configuration
     public const string ShowControlChars = "ShowControlChars";

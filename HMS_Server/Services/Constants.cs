@@ -135,7 +135,7 @@ class Constants
     public const double DataTimeoutMax = 180000;
 
     // GUI Data Limit
-    public const int GUIDataLimitDefault = 2000;
+    public const int GUIDataLimitDefault = 200;
     public const int GUIDataLimitMin = 100;
     public const int GUIDataLimitMax = 5000;
 
