@@ -68,7 +68,7 @@ namespace HMS_Server
         private SensorData lightsOutputData;
 
         // Data verification
-        DispatcherTimer verificationTimer = new DispatcherTimer();
+        private DispatcherTimer verificationTimer = new DispatcherTimer();
 
         // View Models
         private AdminSettingsVM adminSettingsVM = new AdminSettingsVM();
@@ -539,7 +539,7 @@ namespace HMS_Server
             bool databaseTablesCreated = false;
 
             // Dispatcher som oppdatere HMS prosessering
-            hmsTimer.Interval = TimeSpan.FromMilliseconds(Constants.ServerUpdateFrequencyHMS);
+            hmsTimer.Interval = TimeSpan.FromMilliseconds(config.Read(ConfigKey.HMSProcessingFrequency, Constants.HMSProcessingFrequencyDefault));
             hmsTimer.Tick += runHMSUpdate;
 
             void runHMSUpdate(object sender, EventArgs e)
@@ -597,7 +597,7 @@ namespace HMS_Server
             }
 
             // Dispatcher som lagrerer HMS data til databasen
-            hmsDatabaseTimer.Interval = TimeSpan.FromMilliseconds(Constants.HMSSaveToDatabaseFrequency);
+            hmsDatabaseTimer.Interval = TimeSpan.FromMilliseconds(config.Read(ConfigKey.DatabaseSaveFrequency, Constants.ProgramSaveFreqDefault));
             hmsDatabaseTimer.Tick += runSaveHMSData;
 
             void runSaveHMSData(object sender, EventArgs e)
@@ -639,7 +639,7 @@ namespace HMS_Server
                 ucHMSLightsOutput.Init(lightsOutputData, hmsLightsOutputVM, config, adminSettingsVM, errorHandler);
 
                 // Dispatcher som oppdaterer verification data (test og referanse data)
-                lightsOutputTimer.Interval = TimeSpan.FromMilliseconds(Constants.ServerUpdateFrequencyLightsOutput);
+                lightsOutputTimer.Interval = TimeSpan.FromMilliseconds(config.Read(ConfigKey.LightsOutputFrequency, Constants.LightsOutputFrequencyDefault));
                 lightsOutputTimer.Tick += runLightsOutputUpdate;
 
                 void runLightsOutputUpdate(object sender, EventArgs e)
@@ -709,7 +709,7 @@ namespace HMS_Server
             if (dataVerificationIsActive)
             {
                 // Dispatcher som oppdaterer verification data (test og referanse data)
-                verificationTimer.Interval = TimeSpan.FromMilliseconds(Constants.ServerUpdateFrequencyHMS);
+                verificationTimer.Interval = TimeSpan.FromMilliseconds(config.Read(ConfigKey.HMSProcessingFrequency, Constants.HMSProcessingFrequencyDefault));
                 verificationTimer.Tick += runLightsOutputUpdate;
 
                 void runLightsOutputUpdate(object sender, EventArgs e)

@@ -561,7 +561,7 @@
 
                 <DockPanel>
                     <Label
-                        Content="Setup GUI Data Limit (ms)"
+                        Content="Setup UI Data Limit (ms)"
                         VerticalAlignment="Center" />
                     <TextBox
                         Name="tbSettingsGUIDataLimit"
@@ -574,7 +574,20 @@
 
                 <DockPanel>
                     <Label
-                        Content="Database Save Frequency (ms)"
+                        Content="Server UI Update Frequency"
+                        VerticalAlignment="Center" />
+                    <TextBox
+                        Name="tbSettingsServerUIFrequency"
+                        Width="110"
+                        HorizontalAlignment="Right"
+                        Text="{Binding Path=serverUIUpdateFrequency}"
+                        LostFocus="tbSettingsServerUIFrequency_LostFocus"
+                        KeyDown="tbSettingsServerUIFrequency_KeyDown" />
+                </DockPanel>
+
+                <DockPanel>
+                    <Label
+                        Content="Database Save Frequency"
                         VerticalAlignment="Center" />
                     <TextBox
                         Name="tbSettingsDatabaseSaveFrequency"
@@ -587,7 +600,7 @@
 
                 <DockPanel>
                     <Label
-                        Content="Data Timeout (ms)"
+                        Content="Data Timeout"
                         VerticalAlignment="Center" />
                     <TextBox
                         Name="tbSettingsDataTimeOut"
@@ -596,6 +609,32 @@
                         Text="{Binding Path=dataTimeout}"
                         LostFocus="tbSettingsDataTimeOut_LostFocus"
                         KeyDown="tbSettingsDataTimeOut_KeyDown"/>
+                </DockPanel>
+
+                <DockPanel>
+                    <Label
+                        Content="HMS Processing Frequency"
+                        VerticalAlignment="Center" />
+                    <TextBox
+                        Name="tbSettingsHMSProcessingFrequency"
+                        Width="110"
+                        HorizontalAlignment="Right"
+                        Text="{Binding Path=hmsProcessingFrequency}"
+                        LostFocus="tbSettingsHMSProcessingFrequency_LostFocus"
+                        KeyDown="tbSettingsHMSProcessingFrequency_KeyDown" />
+                </DockPanel>
+
+                <DockPanel>
+                    <Label
+                        Content="Lights Output Frequency (CAP)"
+                        VerticalAlignment="Center" />
+                    <TextBox
+                        Name="tbSettingsLightsOutputFrequency"
+                        Width="110"
+                        HorizontalAlignment="Right"
+                        Text="{Binding Path=lightsOutputFrequency}"
+                        LostFocus="tbSettingsLightsOutputFrequency_LostFocus"
+                        KeyDown="tbSettingsLightsOutputFrequency_KeyDown" />
                 </DockPanel>
 
             </StackPanel>

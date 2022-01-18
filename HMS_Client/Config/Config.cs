@@ -124,7 +124,11 @@ namespace HMS_Client
                 DialogHandler.Warning("Config (Read 4): Error reading from config file", ex.Message);
             }
 
-            return readString;
+            // Sjekke om vi skal returnere default
+            if (readString == null)
+                return defaultValue;
+            else
+                return readString;
         }
 
         // Lese fra en bestemt seksjon

@@ -303,6 +303,101 @@ namespace HMS_Server
             adminSettingsVM.setupGUIDataLimit = validatedInput;
         }
 
+        private void tbSettingsServerUIFrequency_LostFocus(object sender, RoutedEventArgs e)
+        {
+            tbSettingsServerUIFrequency_Update(sender);
+        }
+
+        private void tbSettingsServerUIFrequency_KeyDown(object sender, KeyEventArgs e)
+        {
+            if (e.Key == Key.Return)
+            {
+                tbSettingsServerUIFrequency_Update(sender);
+                Keyboard.ClearFocus();
+            }
+        }
+
+        private void tbSettingsServerUIFrequency_Update(object sender)
+        {
+            // Sjekk av input
+            DataValidation.Double(
+                    (sender as TextBox).Text,
+                    Constants.ServerUIUpdateFrequencyMin,
+                    Constants.ServerUIUpdateFrequencyMax,
+                    Constants.ServerUIUpdateFrequencyDefault,
+                    out double validatedInput);
+
+            if (adminSettingsVM.serverUIUpdateFrequency != validatedInput)
+                adminSettingsVM.ApplicationRestartRequired();
+
+            adminSettingsVM.serverUIUpdateFrequency = validatedInput;
+        }
+
+        private void chkEnableDataVerification_Click(object sender, RoutedEventArgs e)
+        {
+            adminSettingsVM.ApplicationRestartRequired();
+        }
+
+        private void tbSettingsHMSProcessingFrequency_LostFocus(object sender, RoutedEventArgs e)
+        {
+            tbSettingsHMSProcessingFrequency_Update(sender);
+        }
+
+        private void tbSettingsHMSProcessingFrequency_KeyDown(object sender, KeyEventArgs e)
+        {
+            if (e.Key == Key.Return)
+            {
+                tbSettingsHMSProcessingFrequency_Update(sender);
+                Keyboard.ClearFocus();
+            }
+        }
+
+        private void tbSettingsHMSProcessingFrequency_Update(object sender)
+        {
+            // Sjekk av input
+            DataValidation.Double(
+                    (sender as TextBox).Text,
+                    Constants.HMSProcessingFrequencyMin,
+                    Constants.HMSProcessingFrequencyMax,
+                    Constants.HMSProcessingFrequencyDefault,
+                    out double validatedInput);
+
+            if (adminSettingsVM.hmsProcessingFrequency != validatedInput)
+                adminSettingsVM.ApplicationRestartRequired();
+
+            adminSettingsVM.hmsProcessingFrequency = validatedInput;
+        }
+
+        private void tbSettingsLightsOutputFrequency_LostFocus(object sender, RoutedEventArgs e)
+        {
+            tbSettingsLightsOutputFrequency_Update(sender);
+        }
+
+        private void tbSettingsLightsOutputFrequency_KeyDown(object sender, KeyEventArgs e)
+        {
+            if (e.Key == Key.Return)
+            {
+                tbSettingsLightsOutputFrequency_Update(sender);
+                Keyboard.ClearFocus();
+            }
+        }
+
+        private void tbSettingsLightsOutputFrequency_Update(object sender)
+        {
+            // Sjekk av input
+            DataValidation.Double(
+                    (sender as TextBox).Text,
+                    Constants.LightsOutputFrequencyMin,
+                    Constants.LightsOutputFrequencyMax,
+                    Constants.LightsOutputFrequencyDefault,
+                    out double validatedInput);
+
+            if (adminSettingsVM.lightsOutputFrequency != validatedInput)
+                adminSettingsVM.ApplicationRestartRequired();
+
+            adminSettingsVM.lightsOutputFrequency = validatedInput;
+        }
+
         private void tbSettingsDatabaseAddress_LostFocus(object sender, RoutedEventArgs e)
         {
             tbSettingsDatabaseAddress_Update(sender);
@@ -1125,11 +1220,6 @@ namespace HMS_Server
                 lbNDBFreq_CAP.IsEnabled = false;
                 lbNDBIdent_CAP.IsEnabled = false;
             }
-        }
-
-        private void chkEnableDataVerification_Click(object sender, RoutedEventArgs e)
-        {
-            adminSettingsVM.ApplicationRestartRequired();
         }
     }
 }

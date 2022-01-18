@@ -122,8 +122,11 @@
     public const string ErrorMessageStorageTime = "ErrorMessageStorageTime";
 
     // Server App: Various
-    public const string ProgramSaveFrequency = "ProgramSaveFrequency";
     public const string SetupGUIDataLimit = "SetupGUIDataLimit";
+    public const string ServerUIUpdateFrequency = "ServerUIUpdateFrequency";
+    public const string DatabaseSaveFrequency = "DatabaseSaveFrequency";
+    public const string HMSProcessingFrequency = "HMSProcessingFrequency";
+    public const string LightsOutputFrequency = "HMSProcessingFrequency";
 
     // Server App: Serial Port Configuration
     public const string ShowControlChars = "ShowControlChars";

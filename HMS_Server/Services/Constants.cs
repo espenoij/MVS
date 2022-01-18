@@ -18,9 +18,6 @@ class Constants
 
     // UI Update Frequency
     public const int ServerUpdateFrequencyUI = 2000;            // Millisekund, brukes til status og UI oppdatering
-    public const int ServerUpdateFrequencyHMS = 250;            // Millisekund, brukes til prosessering av HMS data. Normal lese hastighet for data er 500ms. 250ms sørger for at vi behandler alle data.
-    public const int HMSSaveToDatabaseFrequency = 500;          // Millisekund, brukes til lagring  av HMS data
-    public const int ServerUpdateFrequencyLightsOutput = 1000;
 
     public const int ClientUpdateFrequencyUIDefault = 500;
     public const int ClientUpdateFrequencyUIMin = 500;
@@ -38,6 +35,18 @@ class Constants
     public const int SensorStatusRequestFrequencyDefault = 5000;
     public const int SensorStatusRequestFrequencyMin = 500;
     public const int SensorStatusRequestFrequencyMax = 5000;
+
+    public const int HMSProcessingFrequencyDefault = 250;
+    public const int HMSProcessingFrequencyMin = 100;
+    public const int HMSProcessingFrequencyMax = 5000;
+
+    public const int LightsOutputFrequencyDefault = 1000;
+    public const int LightsOutputFrequencyMin = 100;
+    public const int LightsOutputFrequencyMax = 5000;
+
+    public const int ServerUIUpdateFrequencyDefault = 1000;
+    public const int ServerUIUpdateFrequencyMin = 100;
+    public const int ServerUIUpdateFrequencyMax = 5000;
 
     //  Maintenance Frequency
     public const int DBHMSSaveFrequency = 1000;

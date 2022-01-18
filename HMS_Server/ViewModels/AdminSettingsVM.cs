@@ -60,14 +60,13 @@ namespace HMS_Server
             // Database Data Storage Time
             databaseErrorMessageStorageTime = config.Read(ConfigKey.ErrorMessageStorageTime, Constants.DatabaseStorageTimeDefault);
 
-            // Timing: Program Save Frequency
-            databaseSaveFrequency = config.Read(ConfigKey.ProgramSaveFrequency, Constants.ProgramSaveFreqDefault);
-
-            // Timing: Data Timeout
-            dataTimeout = config.Read(ConfigKey.DataTimeout, Constants.DataTimeoutDefault);
-
-            // Timing: GUI Data Limit
+            // Timing
             setupGUIDataLimit = config.Read(ConfigKey.SetupGUIDataLimit, Constants.GUIDataLimitDefault);
+            serverUIUpdateFrequency = config.Read(ConfigKey.ServerUIUpdateFrequency, Constants.ServerUIUpdateFrequencyDefault);
+            databaseSaveFrequency = config.Read(ConfigKey.DatabaseSaveFrequency, Constants.ProgramSaveFreqDefault);
+            dataTimeout = config.Read(ConfigKey.DataTimeout, Constants.DataTimeoutDefault);
+            hmsProcessingFrequency = config.Read(ConfigKey.HMSProcessingFrequency, Constants.HMSProcessingFrequencyDefault);
+            lightsOutputFrequency = config.Read(ConfigKey.LightsOutputFrequency, Constants.LightsOutputFrequencyDefault);
 
             // Helideck Report
             if (config.Read(ConfigKey.NDBInstalled_NOROG) == "1")
@@ -676,7 +675,43 @@ namespace HMS_Server
         }
 
         /////////////////////////////////////////////////////////////////////////////
-        // Timing: 
+        // Timing: GUI Data Limit
+        /////////////////////////////////////////////////////////////////////////////
+        private double _setupGUIDataLimit { get; set; }
+        public double setupGUIDataLimit
+        {
+            get
+            {
+                return _setupGUIDataLimit;
+            }
+            set
+            {
+                _setupGUIDataLimit = value;
+                config.Write(ConfigKey.SetupGUIDataLimit, value.ToString());
+                OnPropertyChanged();
+            }
+        }
+
+        /////////////////////////////////////////////////////////////////////////////
+        // Timing: GUI Data Limit
+        /////////////////////////////////////////////////////////////////////////////
+        private double _serverUIUpdateFrequency { get; set; }
+        public double serverUIUpdateFrequency
+        {
+            get
+            {
+                return _serverUIUpdateFrequency;
+            }
+            set
+            {
+                _serverUIUpdateFrequency = value;
+                config.Write(ConfigKey.ServerUIUpdateFrequency, value.ToString());
+                OnPropertyChanged();
+            }
+        }
+
+        /////////////////////////////////////////////////////////////////////////////
+        // Timing: Save to Database
         /////////////////////////////////////////////////////////////////////////////
         private double _databaseSaveFrequency { get; set; }
         public double databaseSaveFrequency
@@ -688,7 +723,7 @@ namespace HMS_Server
             set
             {
                 _databaseSaveFrequency = value;
-                config.Write(ConfigKey.ProgramSaveFrequency, value.ToString());
+                config.Write(ConfigKey.DatabaseSaveFrequency, value.ToString());
                 OnPropertyChanged();
             }
         }
@@ -712,19 +747,37 @@ namespace HMS_Server
         }
 
         /////////////////////////////////////////////////////////////////////////////
-        // Timing: GUI Data Limit
+        // Timing: HMS Processing
         /////////////////////////////////////////////////////////////////////////////
-        private double _setupGUIDataLimit { get; set; }
-        public double setupGUIDataLimit
+        private double _hmsProcessingFrequency { get; set; }
+        public double hmsProcessingFrequency
         {
             get
             {
-                return _setupGUIDataLimit;
+                return _hmsProcessingFrequency;
             }
             set
             {
-                _setupGUIDataLimit = value;
-                config.Write(ConfigKey.SetupGUIDataLimit, value.ToString());
+                _hmsProcessingFrequency = value;
+                config.Write(ConfigKey.HMSProcessingFrequency, value.ToString());
+                OnPropertyChanged();
+            }
+        }
+
+        /////////////////////////////////////////////////////////////////////////////
+        // Timing: Lights Output Frequency (CAP)
+        /////////////////////////////////////////////////////////////////////////////
+        private double _lightsOutputFrequency { get; set; }
+        public double lightsOutputFrequency
+        {
+            get
+            {
+                return _lightsOutputFrequency;
+            }
+            set
+            {
+                _lightsOutputFrequency = value;
+                config.Write(ConfigKey.LightsOutputFrequency, value.ToString());
                 OnPropertyChanged();
             }
         }
