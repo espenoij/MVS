@@ -42,7 +42,7 @@ namespace HMS_Server
             }
 
             // Update Sensor Status
-            timer.Interval = TimeSpan.FromMilliseconds(Constants.ServerUpdateFrequencyUI);
+            timer.Interval = TimeSpan.FromMilliseconds(config.Read(ConfigKey.ServerUIUpdateFrequency, Constants.ServerUIUpdateFrequencyDefault));
             timer.Tick += UpdateSensorStatus;
 
             void UpdateSensorStatus(object sender, EventArgs e)

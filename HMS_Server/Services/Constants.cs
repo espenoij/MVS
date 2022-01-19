@@ -16,9 +16,7 @@ class Constants
     // Max antall datafelt i en pakke
     public const int PacketDataFields = 60;                     // Korresponderer til felt i XAML fil (lvPacketData)
 
-    // UI Update Frequency
-    public const int ServerUpdateFrequencyUI = 2000;            // Millisekund, brukes til status og UI oppdatering
-
+    // Timing
     public const int ClientUpdateFrequencyUIDefault = 500;
     public const int ClientUpdateFrequencyUIMin = 500;
     public const int ClientUpdateFrequencyUIMax = 5000;
@@ -29,11 +27,11 @@ class Constants
     public const int ChartUpdateFrequencyUIMax = 60000;
 
     public const int DataRequestFrequencyDefault = 1000;
-    public const int DataRequestFrequencyMin = 500;
+    public const int DataRequestFrequencyMin = 100;
     public const int DataRequestFrequencyMax = 5000;
 
     public const int SensorStatusRequestFrequencyDefault = 5000;
-    public const int SensorStatusRequestFrequencyMin = 500;
+    public const int SensorStatusRequestFrequencyMin = 100;
     public const int SensorStatusRequestFrequencyMax = 5000;
 
     public const int HMSProcessingFrequencyDefault = 250;
@@ -126,9 +124,9 @@ class Constants
     public const int DatabaseMessagesStorageTimeDefault = 90;
 
     // Program Save Frequency (default save to database frequency)
-    public const int ProgramSaveFreqDefault = 1000;
-    public const int ProgramSaveFreqMin = 500;
-    public const int ProgramSaveFreqMax = 5000;
+    public const int DatabaseSaveFreqDefault = 1000;
+    public const int DatabaseSaveFreqMin = 500;
+    public const int DatabaseSaveFreqMax = 5000;
 
     // File Read Frequency
     public const int FileReadFreqDefault = 500;

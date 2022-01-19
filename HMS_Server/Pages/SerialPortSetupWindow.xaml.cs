@@ -127,7 +127,7 @@ namespace HMS_Server
             double dataTimeout = config.Read(ConfigKey.DataTimeout, Constants.DataTimeoutDefault);
 
             DispatcherTimer statusTimer = new DispatcherTimer();
-            statusTimer.Interval = TimeSpan.FromMilliseconds(Constants.ServerUpdateFrequencyUI);
+            statusTimer.Interval = TimeSpan.FromMilliseconds(config.Read(ConfigKey.ServerUIUpdateFrequency, Constants.ServerUIUpdateFrequencyDefault));
             statusTimer.Tick += runPortStatusCheck;
             statusTimer.Start();
 

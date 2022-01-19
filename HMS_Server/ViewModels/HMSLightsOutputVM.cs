@@ -36,7 +36,7 @@ namespace HMS_Server
             outputAddress3 = (UInt16)config.ReadWithDefault(ConfigKey.LightsOutputAddress3, Constants.ModbusCoilMin);
 
             // Oppdatere UI
-            statusUpdateTimer.Interval = TimeSpan.FromMilliseconds(500);
+            statusUpdateTimer.Interval = TimeSpan.FromMilliseconds(config.Read(ConfigKey.LightsOutputFrequency, Constants.LightsOutputFrequencyDefault));
             statusUpdateTimer.Tick += UIUpdate;
             statusUpdateTimer.Start();
 

@@ -160,7 +160,7 @@ namespace HMS_Server
         {
             // Dispatcher som oppdatere UI
             DispatcherTimer statusTimer = new DispatcherTimer();
-            statusTimer.Interval = TimeSpan.FromMilliseconds(Constants.ServerUpdateFrequencyUI);
+            statusTimer.Interval = TimeSpan.FromMilliseconds(config.Read(ConfigKey.ServerUIUpdateFrequency, Constants.ServerUIUpdateFrequencyDefault));
             statusTimer.Tick += runUpdateSensorStatus;
             statusTimer.Start();
 
@@ -297,7 +297,7 @@ namespace HMS_Server
                     if (errorMessage != null)
                     {
                         // ...og at feilmeldingen er nyere enn evt.data(feilmeldingene kommer alltid etter forsøk på data henting / behandling i tid)
-                        if (errorMessage.timestamp.AddMilliseconds(Constants.ServerUpdateFrequencyUI) > sensorData.timestamp)
+                        if (errorMessage.timestamp.AddMilliseconds(config.Read(ConfigKey.ServerUIUpdateFrequency, Constants.ServerUIUpdateFrequencyDefault)) > sensorData.timestamp)
                         {
                             // Legge ut feilmeldingen på skjerm
                             sensorData.message = errorMessage.message;

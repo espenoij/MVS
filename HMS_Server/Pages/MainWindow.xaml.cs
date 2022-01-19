@@ -400,7 +400,7 @@ namespace HMS_Server
         {
             // Dispatcher som oppdatere UI
             DispatcherTimer uiTimer = new DispatcherTimer();
-            uiTimer.Interval = TimeSpan.FromMilliseconds(Constants.ServerUpdateFrequencyUI);
+            uiTimer.Interval = TimeSpan.FromMilliseconds(config.Read(ConfigKey.ServerUIUpdateFrequency, Constants.ServerUIUpdateFrequencyDefault));
             uiTimer.Tick += runUIInputUpdate;
             uiTimer.Start();
 
@@ -597,7 +597,7 @@ namespace HMS_Server
             }
 
             // Dispatcher som lagrerer HMS data til databasen
-            hmsDatabaseTimer.Interval = TimeSpan.FromMilliseconds(config.Read(ConfigKey.DatabaseSaveFrequency, Constants.ProgramSaveFreqDefault));
+            hmsDatabaseTimer.Interval = TimeSpan.FromMilliseconds(config.Read(ConfigKey.DatabaseSaveFrequency, Constants.DatabaseSaveFreqDefault));
             hmsDatabaseTimer.Tick += runSaveHMSData;
 
             void runSaveHMSData(object sender, EventArgs e)

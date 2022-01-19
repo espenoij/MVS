@@ -150,6 +150,10 @@ namespace HMS_Server
 
                 lbMarineChannel.IsEnabled = false;
                 tbMarineChannel.IsEnabled = false;
+
+                // Timing
+                lbSettingsLightsOutputFrequency.IsEnabled = false;
+                tbSettingsLightsOutputFrequency.IsEnabled = false;
             }
             else
             {
@@ -232,9 +236,9 @@ namespace HMS_Server
             // Sjekk av input
             DataValidation.Double(
                     (sender as TextBox).Text,
-                    Constants.ProgramSaveFreqMin,
-                    Constants.ProgramSaveFreqMax,
-                    Constants.ProgramSaveFreqDefault,
+                    Constants.DatabaseSaveFreqMin,
+                    Constants.DatabaseSaveFreqMax,
+                    Constants.DatabaseSaveFreqDefault,
                     out double validatedInput);
 
             if (adminSettingsVM.databaseSaveFrequency != validatedInput)

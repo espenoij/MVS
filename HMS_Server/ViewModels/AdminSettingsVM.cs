@@ -63,7 +63,7 @@ namespace HMS_Server
             // Timing
             setupGUIDataLimit = config.Read(ConfigKey.SetupGUIDataLimit, Constants.GUIDataLimitDefault);
             serverUIUpdateFrequency = config.Read(ConfigKey.ServerUIUpdateFrequency, Constants.ServerUIUpdateFrequencyDefault);
-            databaseSaveFrequency = config.Read(ConfigKey.DatabaseSaveFrequency, Constants.ProgramSaveFreqDefault);
+            databaseSaveFrequency = config.Read(ConfigKey.DatabaseSaveFrequency, Constants.DatabaseSaveFreqDefault);
             dataTimeout = config.Read(ConfigKey.DataTimeout, Constants.DataTimeoutDefault);
             hmsProcessingFrequency = config.Read(ConfigKey.HMSProcessingFrequency, Constants.HMSProcessingFrequencyDefault);
             lightsOutputFrequency = config.Read(ConfigKey.LightsOutputFrequency, Constants.LightsOutputFrequencyDefault);

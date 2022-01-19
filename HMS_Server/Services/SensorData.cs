@@ -460,7 +460,7 @@ namespace HMS_Server
             switch (saveFreq)
             {
                 case DatabaseSaveFrequency.Program:
-                    return config.Read(ConfigKey.DatabaseSaveFrequency, Constants.ProgramSaveFreqDefault);
+                    return config.Read(ConfigKey.DatabaseSaveFrequency, Constants.DatabaseSaveFreqDefault);
 
                 case DatabaseSaveFrequency.Freq_2hz:
                     return (int)DatabaseSaveFrequency.Freq_2hz;

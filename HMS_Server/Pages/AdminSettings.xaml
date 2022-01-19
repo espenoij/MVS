@@ -626,6 +626,7 @@
 
                 <DockPanel>
                     <Label
+                        Name="lbSettingsLightsOutputFrequency"
                         Content="Lights Output Frequency (CAP)"
                         VerticalAlignment="Center" />
                     <TextBox
