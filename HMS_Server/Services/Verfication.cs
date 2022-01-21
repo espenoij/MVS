@@ -9,6 +9,7 @@ namespace HMS_Server
     class Verfication
     {
         private UserInputs userInputs;
+        private ErrorHandler errorHandler;
 
         private HMSDataCollection testData;
         private HMSDataCollection referenceData;
@@ -19,9 +20,10 @@ namespace HMS_Server
 
         private bool deviationReset = false;
 
-        public Verfication(Config config, UserInputs userInputs)
+        public Verfication(Config config, UserInputs userInputs, ErrorHandler errorHandler)
         {
             this.userInputs = userInputs;
+            this.errorHandler = errorHandler;
 
             // Test data liste
             testData = new HMSDataCollection();
@@ -146,7 +148,24 @@ namespace HMS_Server
                 // Matcher time ID settet i referanse data filen fra CAA (OUT_PRE tab i excel ark)
                 if (refTimeIDList.Exists(x => x == verificationData.First().testData) && prevID != verificationData.First().testData)
                 {
-                    database.Insert(verificationData);
+                    try
+                    {
+                        // Lagre til databasen
+                        database.Insert(verificationData);
+
+                        errorHandler.ResetDatabaseError(ErrorHandler.DatabaseErrorType.Insert7_VerificationData);
+                    }
+                    catch (Exception ex)
+                    {
+                        errorHandler.Insert(
+                            new ErrorMessage(
+                                DateTime.UtcNow,
+                                ErrorMessageType.Database,
+                                ErrorMessageCategory.None,
+                                string.Format("Database Error (Insert verificationData)\n\nSystem Message:\n{0}", ex.Message)));
+
+                        errorHandler.SetDatabaseError(ErrorHandler.DatabaseErrorType.Insert7_VerificationData);
+                    }
 
                     // Forhinderer duplikater
                     prevID = verificationData.First().testData;

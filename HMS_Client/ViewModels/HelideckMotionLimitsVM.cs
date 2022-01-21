@@ -16,7 +16,7 @@ namespace HMS_Client
 
         public void Init(Config config, SensorGroupStatus sensorStatus)
         {
-            regulationStandard = (RegulationStandard)Enum.Parse(typeof(RegulationStandard), config.Read(ConfigKey.RegulationStandard));
+            regulationStandard = (RegulationStandard)Enum.Parse(typeof(RegulationStandard), config.ReadWithDefault(ConfigKey.RegulationStandard, RegulationStandard.NOROG.ToString()));
 
             // Init
             InitMotionLimits();

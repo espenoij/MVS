@@ -193,7 +193,10 @@ public enum ValueType
     SettingsEmailUsername,
     SettingsEmailPassword,
     SettingsEmailSecureConnection,
-    SettingsRestrictedSector
+    SettingsRestrictedSector,
+
+    // Database Status
+    //DatabaseStatus
 }
 
 public enum HelideckStatusType

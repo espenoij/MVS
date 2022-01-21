@@ -79,8 +79,8 @@ namespace HMS_Server
             // Generate encrypted password
             //config.Write(ConfigKey.DatabasePassword, Encryption.EncryptString(Encryption.ToSecureString("test99")));
 
-            string address = config.Read(ConfigKey.DatabaseAddress);
-            string port = config.Read(ConfigKey.DatabasePort);
+            string address = config.ReadWithDefault(ConfigKey.DatabaseAddress, Constants.DefaultDatabaseAddress);
+            string port = config.ReadWithDefault(ConfigKey.DatabasePort, Constants.DefaultDatabasePort).ToString();
             string database = config.Read(ConfigKey.DatabaseName);
 
             // Database login
@@ -179,50 +179,50 @@ namespace HMS_Server
             }
         }
 
-        public void CreateTables(RadObservableCollectionEx<HMSData> hmsInputDataList)
-        {
-            try
-            {
-                using (var connection = new MySqlConnection(connectionString))
-                {
-                    var cmd = new MySqlCommand();
-                    cmd.Connection = connection;
+        //public void CreateTables(RadObservableCollectionEx<HMSData> hmsInputDataList)
+        //{
+        //    try
+        //    {
+        //        using (var connection = new MySqlConnection(connectionString))
+        //        {
+        //            var cmd = new MySqlCommand();
+        //            cmd.Connection = connection;
 
-                    connection.Open();
+        //            connection.Open();
 
-                    // Opprette HMS data tabeller
-                    //////////////////////////////////////////////////////////
-                    lock (hmsInputDataList)
-                    {
-                        // For hver HMS data verdi som skal lagres oppretter vi en ny database tabell, dersom den ikke allerede eksisterer
-                        foreach (var hmsData in hmsInputDataList)
-                        {
-                            if (!string.IsNullOrEmpty(hmsData.dbColumn))
-                            {
-                                // Opprette nytt database table
-                                cmd.CommandText = string.Format(@"CREATE TABLE IF NOT EXISTS {0}(id INTEGER PRIMARY KEY AUTO_INCREMENT, {1} TIMESTAMP(3), {2} DOUBLE)", hmsData.dbColumn, columnTimestamp, columnData);
-                                cmd.ExecuteNonQuery();
-                            }
-                            else
-                            {
+        //            // Opprette HMS data tabeller
+        //            //////////////////////////////////////////////////////////
+        //            lock (hmsInputDataList)
+        //            {
+        //                // For hver HMS data verdi som skal lagres oppretter vi en ny database tabell, dersom den ikke allerede eksisterer
+        //                foreach (var hmsData in hmsInputDataList)
+        //                {
+        //                    if (!string.IsNullOrEmpty(hmsData.dbColumn))
+        //                    {
+        //                        // Opprette nytt database table
+        //                        cmd.CommandText = string.Format(@"CREATE TABLE IF NOT EXISTS {0}(id INTEGER PRIMARY KEY AUTO_INCREMENT, {1} TIMESTAMP(3), {2} DOUBLE)", hmsData.dbColumn, columnTimestamp, columnData);
+        //                        cmd.ExecuteNonQuery();
+        //                    }
+        //                    else
+        //                    {
 
-                            }
-                        }
-                    }
+        //                    }
+        //                }
+        //            }
 
-                    connection.Close();
+        //            connection.Close();
 
-                    isDatabaseConnectionOK = true;
-                }
-            }
-            catch (Exception)
-            {
-                isDatabaseConnectionOK = false;
+        //            isDatabaseConnectionOK = true;
+        //        }
+        //    }
+        //    catch (Exception)
+        //    {
+        //        isDatabaseConnectionOK = false;
 
-                // Sendes videre oppover fordi vi ikke kan lagre feilmeldinger herfra
-                throw;
-            }
-        }
+        //        // Sendes videre oppover fordi vi ikke kan lagre feilmeldinger herfra
+        //        throw;
+        //    }
+        //}
 
         public void CreateTables(HMSDataCollection hmsDataCollection)
         {
@@ -840,7 +840,7 @@ namespace HMS_Server
                                     cmd.CommandText = string.Format(@"DELETE FROM {0} WHERE {1} < TIMESTAMP(UTC_TIMESTAMP() - INTERVAL {2} DAY)",
                                         tableName,
                                         columnTimestamp,
-                                        config.Read(ConfigKey.DataStorageTime, Constants.DatabaseStorageTimeDefault));
+                                        config.ReadWithDefault(ConfigKey.DataStorageTime, Constants.DatabaseStorageTimeDefault));
 
                                     cmd.ExecuteNonQuery();
                                 }
@@ -852,7 +852,7 @@ namespace HMS_Server
                         cmd.CommandText = string.Format(@"DELETE FROM {0} WHERE {1} < TIMESTAMP(UTC_TIMESTAMP() - INTERVAL {2} DAY)",
                             tableNameErrorMessages,
                             columnTimestamp,
-                            config.Read(ConfigKey.ErrorMessageStorageTime, Constants.DatabaseMessagesStorageTimeDefault));
+                            config.ReadWithDefault(ConfigKey.ErrorMessageStorageTime, Constants.DatabaseMessagesStorageTimeDefault));
                         cmd.ExecuteNonQuery();
 
                         connection.Close();
@@ -886,7 +886,7 @@ namespace HMS_Server
                         cmd.CommandText = string.Format(@"DELETE FROM {0} WHERE {1} < TIMESTAMP(UTC_TIMESTAMP() - INTERVAL {2} DAY)",
                             tableNamePrefixHMSData,
                             columnTimestamp,
-                            config.Read(ConfigKey.DataStorageTime, Constants.DatabaseStorageTimeDefault));
+                            config.ReadWithDefault(ConfigKey.DataStorageTime, Constants.DatabaseStorageTimeDefault));
 
                         cmd.ExecuteNonQuery();
 
@@ -921,7 +921,7 @@ namespace HMS_Server
                         cmd.CommandText = string.Format(@"DELETE FROM {0} WHERE {1} < TIMESTAMP(UTC_TIMESTAMP() - INTERVAL {2} DAY)",
                             tableNamePrefixSensorStatus,
                             columnTimestamp,
-                            config.Read(ConfigKey.DataStorageTime, Constants.DatabaseStorageTimeDefault));
+                            config.ReadWithDefault(ConfigKey.DataStorageTime, Constants.DatabaseStorageTimeDefault));
 
                         cmd.ExecuteNonQuery();
 

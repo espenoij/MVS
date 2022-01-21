@@ -127,61 +127,61 @@ namespace HMS_Server
             return readString;
         }
 
-        // Lese double verdi fra appSettings med default verdi input
-        public double Read(string key, double defaultValue, ConfigType type = ConfigType.App)
-        {
-            string readString = string.Empty;
+        //// Lese double verdi fra appSettings med default verdi input
+        //public double ReadWithDefault(string key, double defaultValue, ConfigType type = ConfigType.App)
+        //{
+        //    string readString = string.Empty;
 
-            Configuration config;
-            if (type == ConfigType.App)
-                config = appConfig;
-            else
-                config = dataConfig;
+        //    Configuration config;
+        //    if (type == ConfigType.App)
+        //        config = appConfig;
+        //    else
+        //        config = dataConfig;
 
-            try
-            {
-                var settings = config.AppSettings.Settings;
-                readString = settings[key]?.Value;
-            }
-            catch (Exception ex)
-            {
-                RadWindow.Alert(string.Format("Config (Read 5)\n\nError reading from config file\n\n{0}", TextHelper.Wrap(ex.Message)));
-            }
+        //    try
+        //    {
+        //        var settings = config.AppSettings.Settings;
+        //        readString = settings[key]?.Value;
+        //    }
+        //    catch (Exception ex)
+        //    {
+        //        RadWindow.Alert(string.Format("Config (Read 5)\n\nError reading from config file\n\n{0}", TextHelper.Wrap(ex.Message)));
+        //    }
 
-            // Konvertere fra string til double
-            if (double.TryParse(readString, Constants.numberStyle, Constants.cultureInfo, out double readValue))
-                return readValue;
-            else
-                return defaultValue;
-        }
+        //    // Konvertere fra string til double
+        //    if (double.TryParse(readString, Constants.numberStyle, Constants.cultureInfo, out double readValue))
+        //        return readValue;
+        //    else
+        //        return defaultValue;
+        //}
 
-        // Lese double verdi fra appSettings med default verdi input
-        public int Read(string key, int defaultValue, ConfigType type = ConfigType.App)
-        {
-            string readString = string.Empty;
+        //// Lese double verdi fra appSettings med default verdi input
+        //public int ReadWithDefault(string key, int defaultValue, ConfigType type = ConfigType.App)
+        //{
+        //    string readString = string.Empty;
 
-            Configuration config;
-            if (type == ConfigType.App)
-                config = appConfig;
-            else
-                config = dataConfig;
+        //    Configuration config;
+        //    if (type == ConfigType.App)
+        //        config = appConfig;
+        //    else
+        //        config = dataConfig;
 
-            try
-            {
-                var settings = config.AppSettings.Settings;
-                readString = settings[key]?.Value;
-            }
-            catch (Exception ex)
-            {
-                RadWindow.Alert(string.Format("Config (Read 6)\n\nError reading from config file\n\n{0}", TextHelper.Wrap(ex.Message)));
-            }
+        //    try
+        //    {
+        //        var settings = config.AppSettings.Settings;
+        //        readString = settings[key]?.Value;
+        //    }
+        //    catch (Exception ex)
+        //    {
+        //        RadWindow.Alert(string.Format("Config (Read 6)\n\nError reading from config file\n\n{0}", TextHelper.Wrap(ex.Message)));
+        //    }
 
-            // Konvertere fra string til double
-            if (int.TryParse(readString, Constants.numberStyle, Constants.cultureInfo, out int readValue))
-                return readValue;
-            else
-                return defaultValue;
-        }
+        //    // Konvertere fra string til double
+        //    if (int.TryParse(readString, Constants.numberStyle, Constants.cultureInfo, out int readValue))
+        //        return readValue;
+        //    else
+        //        return defaultValue;
+        //}
 
         // Lese fra en bestemt seksjon
         public string Read(string key, string section, ConfigType type = ConfigType.App)
@@ -214,7 +214,7 @@ namespace HMS_Server
         }
 
         // Lese fra en bestemt seksjon, med default verdi input
-        public double Read(string key, string section, int defaultValue, ConfigType type = ConfigType.App)
+        public double ReadWithDefault(string key, string section, int defaultValue, ConfigType type = ConfigType.App)
         {
             string readString = string.Empty;
 

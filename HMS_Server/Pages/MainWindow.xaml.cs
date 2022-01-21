@@ -86,6 +86,9 @@ namespace HMS_Server
         // Kjører serveren?
         private bool serverStarted = false;
 
+        // Database tabeller opprettet
+        private bool databaseTablesCreated = false;
+
         // License
         //private ILicenseManager licenseManager;
         private bool licenseCheckOK = false;
@@ -128,7 +131,7 @@ namespace HMS_Server
             InitLightsOutput();
 
             // Sensor Status
-            sensorStatus = new HMSSensorGroupStatus(config, database, errorHandler, hmsOutputData);
+            sensorStatus = new HMSSensorGroupStatus(config, database, errorHandler);
 
             // Laste sensor data setups fra fil
             sensorDataRetrieval.LoadSensors();
@@ -163,6 +166,7 @@ namespace HMS_Server
                 database.CreateTables(sensorDataRetrieval.GetSensorDataList());
 
                 errorHandler.ResetDatabaseError(ErrorHandler.DatabaseErrorType.CreateTablesSensorData2);
+                errorHandler.ResetDatabaseError(ErrorHandler.DatabaseErrorType.CreateTablesSensorData1);
             }
             catch (Exception ex)
             {
@@ -316,7 +320,7 @@ namespace HMS_Server
         private void InitUIDataVerification()
         {
             // Data verification
-            verfication = new Verfication(config, userInputs);
+            verfication = new Verfication(config, userInputs, errorHandler);
 
             // Setup
             ucDataVerificationSetup.Init(
@@ -337,19 +341,19 @@ namespace HMS_Server
             try
             {
                 // Lese sist brukte user inputs fra fil
-                userInputs.helicopterType = (HelicopterType)Enum.Parse(typeof(HelicopterType), config.Read(ConfigKey.HelicopterType));
-                userInputs.helideckCategory = (HelideckCategory)Enum.Parse(typeof(HelideckCategory), config.Read(ConfigKey.HelideckCategory));
-                userInputs.dayNight = (DayNight)Enum.Parse(typeof(DayNight), config.Read(ConfigKey.DayNight));
-                userInputs.displayMode = (DisplayMode)Enum.Parse(typeof(DisplayMode), config.Read(ConfigKey.DisplayMode));
+                userInputs.helicopterType = (HelicopterType)Enum.Parse(typeof(HelicopterType), config.ReadWithDefault(ConfigKey.HelicopterType, HelicopterType.AS332.ToString()));
+                userInputs.helideckCategory = (HelideckCategory)Enum.Parse(typeof(HelideckCategory), config.ReadWithDefault(ConfigKey.HelideckCategory, HelideckCategory.Category1.ToString()));
+                userInputs.dayNight = (DayNight)Enum.Parse(typeof(DayNight), config.ReadWithDefault(ConfigKey.DayNight, DayNight.Day.ToString()));
+                userInputs.displayMode = (DisplayMode)Enum.Parse(typeof(DisplayMode), config.ReadWithDefault(ConfigKey.DisplayMode, DisplayMode.PreLanding.ToString()));
 
                 if (DateTime.TryParse(config.Read(ConfigKey.OnDeckTime), out DateTime onDeckTime))
                     userInputs.onDeckTime = onDeckTime;
                 else
                     userInputs.onDeckTime = DateTime.UtcNow;
 
-                userInputs.onDeckHelicopterHeading = config.Read(ConfigKey.OnDeckHelicopterHeading, Constants.HeadingDefault);
-                userInputs.onDeckVesselHeading = config.Read(ConfigKey.OnDeckVesselHeading, Constants.HeadingDefault);
-                userInputs.onDeckWindDirection = config.Read(ConfigKey.OnDeckWindDirection, Constants.HeadingDefault);
+                userInputs.onDeckHelicopterHeading = config.ReadWithDefault(ConfigKey.OnDeckHelicopterHeading, Constants.HeadingDefault);
+                userInputs.onDeckVesselHeading = config.ReadWithDefault(ConfigKey.OnDeckVesselHeading, Constants.HeadingDefault);
+                userInputs.onDeckWindDirection = config.ReadWithDefault(ConfigKey.OnDeckWindDirection, Constants.HeadingDefault);
             }
             catch (Exception ex)
             {
@@ -400,7 +404,7 @@ namespace HMS_Server
         {
             // Dispatcher som oppdatere UI
             DispatcherTimer uiTimer = new DispatcherTimer();
-            uiTimer.Interval = TimeSpan.FromMilliseconds(config.Read(ConfigKey.ServerUIUpdateFrequency, Constants.ServerUIUpdateFrequencyDefault));
+            uiTimer.Interval = TimeSpan.FromMilliseconds(config.ReadWithDefault(ConfigKey.ServerUIUpdateFrequency, Constants.ServerUIUpdateFrequencyDefault));
             uiTimer.Tick += runUIInputUpdate;
             uiTimer.Start();
 
@@ -421,7 +425,7 @@ namespace HMS_Server
                         foreach (var item in sensorDataRetrieval.GetSensorDataList().ToList())
                         {
                             // Finne igjen sensor i display listen
-                            var sensorDataList = statusDisplayList.Where(x => x.id == item.id);
+                            var sensorDataList = statusDisplayList.Where(x => x.id == item.id).ToList();
 
                             // Dersom vi fant sensor
                             if (sensorDataList.Count() > 0)
@@ -536,10 +540,8 @@ namespace HMS_Server
 
         private void InitHMSUpdate()
         {
-            bool databaseTablesCreated = false;
-
             // Dispatcher som oppdatere HMS prosessering
-            hmsTimer.Interval = TimeSpan.FromMilliseconds(config.Read(ConfigKey.HMSProcessingFrequency, Constants.HMSProcessingFrequencyDefault));
+            hmsTimer.Interval = TimeSpan.FromMilliseconds(config.ReadWithDefault(ConfigKey.HMSProcessingFrequency, Constants.HMSProcessingFrequencyDefault));
             hmsTimer.Tick += runHMSUpdate;
 
             void runHMSUpdate(object sender, EventArgs e)
@@ -561,6 +563,9 @@ namespace HMS_Server
                         // HMS: HMS Output Data
                         // Prosesserer sensor data om til data som kan sendes til HMS klient
                         hmsProcessing.Update(hmsInputData, dataVerificationIsActive);
+
+                        // Sette database status
+                        SetDatabaseStatus(hmsInputData);
 
 
                         // HMS: Lagre data i databasen
@@ -597,7 +602,7 @@ namespace HMS_Server
             }
 
             // Dispatcher som lagrerer HMS data til databasen
-            hmsDatabaseTimer.Interval = TimeSpan.FromMilliseconds(config.Read(ConfigKey.DatabaseSaveFrequency, Constants.DatabaseSaveFreqDefault));
+            hmsDatabaseTimer.Interval = TimeSpan.FromMilliseconds(config.ReadWithDefault(ConfigKey.DatabaseSaveFrequency, Constants.DatabaseSaveFreqDefault));
             hmsDatabaseTimer.Tick += runSaveHMSData;
 
             void runSaveHMSData(object sender, EventArgs e)
@@ -628,6 +633,22 @@ namespace HMS_Server
             }
         }
 
+        private void SetDatabaseStatus(HMSDataCollection hmsInputData)
+        {
+            // Finne match i mottaker data listen
+            var dbStatus = hmsInputData.GetDataList().Where(x => x?.id == Constants.DatabaseStatusID);
+
+            if (dbStatus.Count() > 0)
+            {
+                if (errorHandler.IsDatabaseError())
+                    dbStatus.First().status = DataStatus.TIMEOUT_ERROR;
+                else
+                    dbStatus.First().status = DataStatus.OK;
+
+                dbStatus.First().timestamp = DateTime.UtcNow;
+            }
+        }
+
         private void InitLightsOutput()
         {
             // CAP
@@ -639,7 +660,7 @@ namespace HMS_Server
                 ucHMSLightsOutput.Init(lightsOutputData, hmsLightsOutputVM, config, adminSettingsVM, errorHandler);
 
                 // Dispatcher som oppdaterer verification data (test og referanse data)
-                lightsOutputTimer.Interval = TimeSpan.FromMilliseconds(config.Read(ConfigKey.LightsOutputFrequency, Constants.LightsOutputFrequencyDefault));
+                lightsOutputTimer.Interval = TimeSpan.FromMilliseconds(config.ReadWithDefault(ConfigKey.LightsOutputFrequency, Constants.LightsOutputFrequencyDefault));
                 lightsOutputTimer.Tick += runLightsOutputUpdate;
 
                 void runLightsOutputUpdate(object sender, EventArgs e)
@@ -709,7 +730,7 @@ namespace HMS_Server
             if (dataVerificationIsActive)
             {
                 // Dispatcher som oppdaterer verification data (test og referanse data)
-                verificationTimer.Interval = TimeSpan.FromMilliseconds(config.Read(ConfigKey.HMSProcessingFrequency, Constants.HMSProcessingFrequencyDefault));
+                verificationTimer.Interval = TimeSpan.FromMilliseconds(config.ReadWithDefault(ConfigKey.HMSProcessingFrequency, Constants.HMSProcessingFrequencyDefault));
                 verificationTimer.Tick += runLightsOutputUpdate;
 
                 void runLightsOutputUpdate(object sender, EventArgs e)
@@ -824,7 +845,7 @@ namespace HMS_Server
             socketListener.Start();
 
             // Sensor Status
-            sensorStatus.Start();
+            sensorStatus.Start(hmsInputData);
 
             // Lights Output
             if (adminSettingsVM.regulationStandard == RegulationStandard.CAP)
@@ -858,7 +879,7 @@ namespace HMS_Server
             socketListener.Stop();
 
             // Sensor Status
-            sensorStatus.Start();
+            sensorStatus.Stop();
 
             // Lights Output
             if (adminSettingsVM.regulationStandard == RegulationStandard.CAP)
@@ -872,6 +893,9 @@ namespace HMS_Server
 
             // Server startet
             serverStarted = false;
+
+            // 
+            databaseTablesCreated = false;
         }
 
         private void ExitServer()

@@ -160,7 +160,7 @@ namespace HMS_Server
         {
             // Dispatcher som oppdatere UI
             DispatcherTimer statusTimer = new DispatcherTimer();
-            statusTimer.Interval = TimeSpan.FromMilliseconds(config.Read(ConfigKey.ServerUIUpdateFrequency, Constants.ServerUIUpdateFrequencyDefault));
+            statusTimer.Interval = TimeSpan.FromMilliseconds(config.ReadWithDefault(ConfigKey.ServerUIUpdateFrequency, Constants.ServerUIUpdateFrequencyDefault));
             statusTimer.Tick += runUpdateSensorStatus;
             statusTimer.Start();
 
@@ -201,7 +201,7 @@ namespace HMS_Server
                                     else
                                     {
                                         // Lese data timeout fra config
-                                        double dataTimeout = config.Read(ConfigKey.DataTimeout, Constants.DataTimeoutDefault);
+                                        double dataTimeout = config.ReadWithDefault(ConfigKey.DataTimeout, Constants.DataTimeoutDefault);
 
                                         // Dersom det ikke er satt data på porten innen timeout
                                         if (serialPortData.timestamp.AddMilliseconds(dataTimeout) < DateTime.UtcNow)
@@ -297,7 +297,7 @@ namespace HMS_Server
                     if (errorMessage != null)
                     {
                         // ...og at feilmeldingen er nyere enn evt.data(feilmeldingene kommer alltid etter forsøk på data henting / behandling i tid)
-                        if (errorMessage.timestamp.AddMilliseconds(config.Read(ConfigKey.ServerUIUpdateFrequency, Constants.ServerUIUpdateFrequencyDefault)) > sensorData.timestamp)
+                        if (errorMessage.timestamp.AddMilliseconds(config.ReadWithDefault(ConfigKey.ServerUIUpdateFrequency, Constants.ServerUIUpdateFrequencyDefault)) > sensorData.timestamp)
                         {
                             // Legge ut feilmeldingen på skjerm
                             sensorData.message = errorMessage.message;

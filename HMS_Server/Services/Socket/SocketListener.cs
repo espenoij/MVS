@@ -49,7 +49,7 @@ namespace HMS_Server
         public SocketListener(HMSDataCollection hmsOutputData, HMSSensorGroupStatus sensorStatusOutput, SocketConsole socketConsole, UserInputs userInputs, MainWindow.UserInputsCallback userInputCallback)
         {
             config = new Config();
-            serverPort = config.Read(ConfigKey.ServerPort, Constants.ServerPortDefault);
+            serverPort = config.ReadWithDefault(ConfigKey.ServerPort, Constants.ServerPortDefault);
 
             this.hmsOutputDataList = hmsOutputData.GetDataList();
             this.sensorStatusOutputList = sensorStatusOutput.GetSensorList();

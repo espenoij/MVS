@@ -76,7 +76,7 @@ namespace HMS_Server
             foreach (RegulationStandard value in Enum.GetValues(typeof(RegulationStandard)))
                 cboRegulationStandard.Items.Add(value.ToString());
 
-            adminSettingsVM.regulationStandard = (RegulationStandard)Enum.Parse(typeof(RegulationStandard), config.Read(ConfigKey.RegulationStandard));
+            adminSettingsVM.regulationStandard = (RegulationStandard)Enum.Parse(typeof(RegulationStandard), config.ReadWithDefault(ConfigKey.RegulationStandard, RegulationStandard.NOROG.ToString()));
 
             cboRegulationStandard.SelectedIndex = (int)adminSettingsVM.regulationStandard;
             cboRegulationStandard.Text = adminSettingsVM.regulationStandard.ToString();
@@ -109,7 +109,7 @@ namespace HMS_Server
             foreach (HelideckCategory value in Enum.GetValues(typeof(HelideckCategory)))
                 cboHelideckCategory.Items.Add(value.GetDescription());
 
-            adminSettingsVM.helideckCategory = (HelideckCategory)Enum.Parse(typeof(HelideckCategory), config.Read(ConfigKey.HelideckCategory));
+            adminSettingsVM.helideckCategory = (HelideckCategory)Enum.Parse(typeof(HelideckCategory), config.ReadWithDefault(ConfigKey.HelideckCategory, HelideckCategory.Category1.ToString()));
 
             cboHelideckCategory.Text = adminSettingsVM.helideckCategory.GetDescription();
             cboHelideckCategory.SelectedIndex = (int)adminSettingsVM.helideckCategory;
@@ -631,6 +631,7 @@ namespace HMS_Server
                         database.CreateTables(sensorDataList);
 
                         errorHandler.ResetDatabaseError(ErrorHandler.DatabaseErrorType.CreateTablesSensorData1);
+                        errorHandler.ResetDatabaseError(ErrorHandler.DatabaseErrorType.CreateTablesSensorData2);
                     }
                     catch (Exception ex)
                     {

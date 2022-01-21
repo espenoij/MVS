@@ -111,7 +111,7 @@ namespace HMS_Server
         public void TransferData(RadObservableCollectionEx<SensorData> sensorDataList)
         {
             // Lese timeout fra config
-            double dataTimeout = config.Read(ConfigKey.DataTimeout, Constants.DataTimeoutDefault);
+            double dataTimeout = config.ReadWithDefault(ConfigKey.DataTimeout, Constants.DataTimeoutDefault);
 
             // Løper gjennom data listen
             foreach (var hmsData in dataList.ToList())
@@ -147,7 +147,7 @@ namespace HMS_Server
         public void TransferData(RadObservableCollectionEx<HMSData> hmsDataList)
         {
             // Lese timeout fra config
-            double dataTimeout = config.Read(ConfigKey.DataTimeout, Constants.DataTimeoutDefault);
+            double dataTimeout = config.ReadWithDefault(ConfigKey.DataTimeout, Constants.DataTimeoutDefault);
 
             // Løper gjennom data listen
             foreach (var hmsData in dataList.ToList())

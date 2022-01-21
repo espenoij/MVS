@@ -124,10 +124,10 @@ namespace HMS_Server
             // Restarte porten dersom det ikke kommer data
 
             // Lese data timeout fra config
-            double dataTimeout = config.Read(ConfigKey.DataTimeout, Constants.DataTimeoutDefault);
+            double dataTimeout = config.ReadWithDefault(ConfigKey.DataTimeout, Constants.DataTimeoutDefault);
 
             DispatcherTimer statusTimer = new DispatcherTimer();
-            statusTimer.Interval = TimeSpan.FromMilliseconds(config.Read(ConfigKey.ServerUIUpdateFrequency, Constants.ServerUIUpdateFrequencyDefault));
+            statusTimer.Interval = TimeSpan.FromMilliseconds(config.ReadWithDefault(ConfigKey.ServerUIUpdateFrequency, Constants.ServerUIUpdateFrequencyDefault));
             statusTimer.Tick += runPortStatusCheck;
             statusTimer.Start();
 
@@ -257,7 +257,7 @@ namespace HMS_Server
             }
 
             // Data Lines
-            serialPortSetupWindowVM.totalDataLinesString = config.Read(ConfigKey.TotalDataLines, ConfigSection.SerialPortConfig, Constants.GUIDataLinesDefault).ToString();
+            serialPortSetupWindowVM.totalDataLinesString = config.ReadWithDefault(ConfigKey.TotalDataLines, ConfigSection.SerialPortConfig, Constants.GUIDataLinesDefault).ToString();
         }
 
         private void InitPacketSelection()
@@ -526,7 +526,7 @@ namespace HMS_Server
             {
                 // Timer som sørger for at vi ikke sender for mye data til UI thread
                 // Vi trenger ikke lese og behandle hver eneste sending på porten her
-                if (dataLimitTimer.ElapsedMilliseconds > config.Read(ConfigKey.SetupGUIDataLimit, Constants.GUIDataLimitDefault))
+                if (dataLimitTimer.ElapsedMilliseconds > config.ReadWithDefault(ConfigKey.SetupGUIDataLimit, Constants.GUIDataLimitDefault))
                 {
                     // Sende leste data til skjermutskrift
                     if (!string.IsNullOrEmpty(inputData))

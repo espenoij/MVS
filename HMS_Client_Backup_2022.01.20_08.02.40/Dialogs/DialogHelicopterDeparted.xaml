@@ -1,0 +1,92 @@
+﻿<telerik:RadWindow
+    x:Class="HMS_Client.DialogHelicopterDeparted"
+    xmlns="http://schemas.microsoft.com/winfx/2006/xaml/presentation"
+    xmlns:x="http://schemas.microsoft.com/winfx/2006/xaml"
+    xmlns:d="http://schemas.microsoft.com/expression/blend/2008"
+    xmlns:telerik="http://schemas.telerik.com/2008/xaml/presentation"
+    xmlns:mc="http://schemas.openxmlformats.org/markup-compatibility/2006"
+    mc:Ignorable="d"
+    xmlns:local="clr-namespace:HMS_Client"
+    telerik:Header="Confirm Helicopter Departed"
+    WindowStartupLocation="CenterScreen"
+    Height="300"
+    Width="600"
+    telerik:StyleManager.Theme="Material">
+
+    <telerik:RadWindow.Icon>
+        <Image
+            Height="32"
+            Source="../Icons/swire_flag.ico" />
+    </telerik:RadWindow.Icon>
+
+    <telerik:RadWindow.Resources>
+        <ResourceDictionary>
+            <Style
+                TargetType="local:DialogHelicopterDeparted"
+                BasedOn="{StaticResource RadWindowStyle}" />
+        </ResourceDictionary>
+    </telerik:RadWindow.Resources>
+
+    <Grid>
+
+        <Grid.RowDefinitions>
+            <RowDefinition
+                Height="4*" />
+            <RowDefinition
+                Height="1*" />
+        </Grid.RowDefinitions>
+
+        <Grid
+            Grid.Row="0">
+
+            <Grid.ColumnDefinitions>
+                <ColumnDefinition
+                    Width="2*" />
+                <ColumnDefinition
+                    Width="8*" />
+                <ColumnDefinition
+                    Width="1*" />
+            </Grid.ColumnDefinitions>
+
+            <Image
+                Grid.Column="0"
+                Width="48"
+                Source="..\Icons\helicopter_64dp.png" />
+
+            <StackPanel
+                Grid.Column="1"
+                VerticalAlignment="Center">
+
+                <TextBlock
+                    VerticalAlignment="Center"
+                    Margin="8"
+                    FontSize="{StaticResource fontSizeText}"
+                    TextWrapping="Wrap"
+                    Text="Please confirm the helicopter has departed before returning to the Pre-Landing display." />
+
+            </StackPanel>
+
+        </Grid>
+
+        <StackPanel
+            Grid.Row="1"
+            Orientation="Horizontal"
+            HorizontalAlignment="Right">
+
+            <telerik:RadButton
+                Margin="8"
+                Width="110"
+                Content="Cancel"
+                Click="btnCancel_Click"/>
+
+            <telerik:RadButton
+                Margin="8"
+                Width="110"
+                Content="OK"
+                Click="btnOK_Click" />
+
+        </StackPanel>
+
+    </Grid>
+
+</telerik:RadWindow>

@@ -23,7 +23,7 @@ namespace HMS_Server
             fileName = string.Empty;
             readFrequency = 0;
 
-            totalDataLinesString = config.Read(ConfigKey.TotalDataLines, ConfigSection.FileReaderConfig, Constants.GUIDataLinesDefault).ToString();
+            totalDataLinesString = config.ReadWithDefault(ConfigKey.TotalDataLines, ConfigSection.FileReaderConfig, Constants.GUIDataLinesDefault).ToString();
         }
 
         // Katalog lokasjon

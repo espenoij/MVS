@@ -34,23 +34,19 @@ namespace HMS_Client
             else
                 clientIsMaster = false;
 
-            // Update Frequencies
+            // Timing
+            dataRequestFrequency = config.ReadWithDefault(ConfigKey.DataRequestFrequency, Constants.DataRequestFrequencyDefault);
+            sensorStatusRequestFrequency = config.ReadWithDefault(ConfigKey.SensorStatusRequestFrequency, Constants.SensorStatusRequestFrequencyDefault);
             uiUpdateFrequency = config.ReadWithDefault(ConfigKey.ClientUpdateFrequencyUI, Constants.ClientUpdateFrequencyUIDefault);
             dataTimeout = config.ReadWithDefault(ConfigKey.DataTimeout, Constants.DataTimeoutDefault);
             chartDataUpdateFrequency20m = config.ReadWithDefault(ConfigKey.ChartDataUpdateFrequency20m, Constants.ChartUpdateFrequencyUI20mDefault);
             chartDataUpdateFrequency3h = config.ReadWithDefault(ConfigKey.ChartDataUpdateFrequency3h, Constants.ChartUpdateFrequencyUI3hDefault);
 
             // Server Address
-            serverAddress = config.Read(ConfigKey.ServerAddress);
+            serverAddress = config.ReadWithDefault(ConfigKey.ServerAddress, Constants.DefaultServerAddress);
 
             // Server Port
             serverPort = config.ReadWithDefault(ConfigKey.ServerPort, Constants.ServerPortDefault);
-
-            // Server: Data Request Frequency
-            dataRequestFrequency = config.ReadWithDefault(ConfigKey.DataRequestFrequency, Constants.DataRequestFrequencyDefault);
-
-            // Server: Sensor Status Request Frequency
-            sensorStatusRequestFrequency = config.ReadWithDefault(ConfigKey.SensorStatusRequestFrequency, Constants.SensorStatusRequestFrequencyDefault);
 
             // CAP: Enable Report Email
             if (config.Read(ConfigKey.EnableReportEmail) == "1")

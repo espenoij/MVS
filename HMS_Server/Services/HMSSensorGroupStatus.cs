@@ -7,7 +7,7 @@ namespace HMS_Server
     public class HMSSensorGroupStatus
     {
         private RadObservableCollectionEx<SensorGroup> hmsSensorGroupList = new RadObservableCollectionEx<SensorGroup>();
-        private HMSDataCollection hmsOutputDataList;
+        private HMSDataCollection hmsInputDataList;
 
         // Config
         private Config config;
@@ -21,12 +21,11 @@ namespace HMS_Server
         // Update Sensor Status
         DispatcherTimer timer = new DispatcherTimer();
 
-        public HMSSensorGroupStatus(Config config, DatabaseHandler database, ErrorHandler errorHandler, HMSDataCollection hmsOutputDataList)
+        public HMSSensorGroupStatus(Config config, DatabaseHandler database, ErrorHandler errorHandler)
         {
             this.config = config;
             this.database = database;
             this.errorHandler = errorHandler;
-            this.hmsOutputDataList = hmsOutputDataList;
 
             // Hente liste med data fra fil
             SensorGroupIDConfigCollection sensorIDConfigCollection = config.GetSensorGroupIDDataList();
@@ -42,7 +41,7 @@ namespace HMS_Server
             }
 
             // Update Sensor Status
-            timer.Interval = TimeSpan.FromMilliseconds(config.Read(ConfigKey.ServerUIUpdateFrequency, Constants.ServerUIUpdateFrequencyDefault));
+            timer.Interval = TimeSpan.FromMilliseconds(config.ReadWithDefault(ConfigKey.ServerUIUpdateFrequency, Constants.ServerUIUpdateFrequencyDefault));
             timer.Tick += UpdateSensorStatus;
 
             void UpdateSensorStatus(object sender, EventArgs e)
@@ -59,8 +58,10 @@ namespace HMS_Server
             }
         }
 
-        public void Start()
+        public void Start(HMSDataCollection hmsInputDataList)
         {
+            this.hmsInputDataList = hmsInputDataList;
+
             timer.Start();
         }
 
@@ -87,36 +88,39 @@ namespace HMS_Server
 
         private void UpdateStatus(int id)
         {
-            // Finne frem sensoren vi skal oppdatere status for
-            var sensorGroup = hmsSensorGroupList.Where(x => x.id == id);
-            if (sensorGroup.Count() == 1)
+            if (hmsInputDataList != null)
             {
-                // Finne sensor verdier knyttet til valgt sensor gruppe ID
-                var hmsDataList = hmsOutputDataList.GetDataList();
-
-                var clientData = hmsDataList.Where(x => x.sensorGroupId == id).ToList();
-
-                // Har funnet sensor verdier knyttet til sensor gruppe
-                if (clientData.Count() > 0)
+                // Finne frem sensoren vi skal oppdatere status for
+                var sensorGroup = hmsSensorGroupList.Where(x => x.id == id);
+                if (sensorGroup.Count() == 1)
                 {
-                    // Skjekke om noen av sensor verdiene har error status
-                    var errorList = clientData.Where(x => x.status == DataStatus.TIMEOUT_ERROR);
+                    // Finne sensor verdier knyttet til valgt sensor gruppe ID
+                    var hmsDataList = hmsInputDataList.GetDataList();
 
-                    // En eller flere error statuser funnet
-                    if (errorList.Count() > 0)
+                    var clientData = hmsDataList.Where(x => x.sensorGroupId == id).ToList();
+
+                    // Har funnet sensor verdier knyttet til sensor gruppe
+                    if (clientData.Count() > 0)
                     {
-                        sensorGroup.First().status = DataStatus.TIMEOUT_ERROR;
+                        // Skjekke om noen av sensor verdiene har error status
+                        var errorList = clientData.Where(x => x.status == DataStatus.TIMEOUT_ERROR);
+
+                        // En eller flere error statuser funnet
+                        if (errorList.Count() > 0)
+                        {
+                            sensorGroup.First().status = DataStatus.TIMEOUT_ERROR;
+                        }
+                        // Ingen error status funnet
+                        else
+                        {
+                            sensorGroup.First().status = DataStatus.OK;
+                        }
                     }
-                    // Ingen error status funnet
+                    // Ingen verdier knyttet til denne sensoren -> ingen feilmelding
                     else
                     {
                         sensorGroup.First().status = DataStatus.OK;
                     }
-                }
-                // Ingen verdier knyttet til denne sensoren -> ingen feilmelding
-                else
-                {
-                    sensorGroup.First().status = DataStatus.OK;
                 }
             }
         }

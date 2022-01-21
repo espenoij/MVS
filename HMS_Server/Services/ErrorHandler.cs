@@ -41,6 +41,7 @@ namespace HMS_Server
             Insert4,
             Insert5,
             Insert6,
+            Insert7_VerificationData,
             DatabaseMaintenance,
             InsertErrorMessage,
             GetLastErrorMessages,
@@ -188,6 +189,12 @@ namespace HMS_Server
         public void ResetDatabaseError(DatabaseErrorType type)
         {
             databaseErrorList[(int)type] = false;
+        }
+
+        public void ResetDatabaseError()
+        {
+            for (int i = 0; i < databaseErrorList.Count; i++)
+                databaseErrorList[i] = false;
         }
 
         public bool IsDatabaseError()

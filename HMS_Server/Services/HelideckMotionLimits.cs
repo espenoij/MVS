@@ -13,7 +13,7 @@ namespace HMS_Server
             this.userInputs = userInputs;
             this.adminSettingsVM = adminSettingsVM;
 
-            regulationStandard = (RegulationStandard)Enum.Parse(typeof(RegulationStandard), config.Read(ConfigKey.RegulationStandard));
+            regulationStandard = (RegulationStandard)Enum.Parse(typeof(RegulationStandard), config.ReadWithDefault(ConfigKey.RegulationStandard, RegulationStandard.NOROG.ToString()));
         }
 
         public double GetLimit(LimitType limitType)

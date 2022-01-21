@@ -268,7 +268,7 @@ namespace HMS_Server
             tbSelectDataAddress.Text = sensorData.modbus.dataAddress.ToString();
 
             // Data Lines
-            modbusSetupWindowVM.totalDataLinesString = config.Read(ConfigKey.TotalDataLines, ConfigSection.ModbusConfig, Constants.GUIDataLinesDefault).ToString();
+            modbusSetupWindowVM.totalDataLinesString = config.ReadWithDefault(ConfigKey.TotalDataLines, ConfigSection.ModbusConfig, Constants.GUIDataLinesDefault).ToString();
         }
 
         private void InitializeDataCalculations()

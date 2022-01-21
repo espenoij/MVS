@@ -63,10 +63,10 @@ namespace HMS_Client
                             sensorGroup.status = DataStatus.OK;
                         }
                     }
-                    // Ingen verdier knyttet til denne sensor gruppen -> ingen feilmelding
+                    // Ingen verdier knyttet til denne sensor gruppen
                     else
                     {
-                        sensorGroup.status = DataStatus.OK;
+                        //sensorGroup.status = DataStatus.OK;
                     }
                 }
             }

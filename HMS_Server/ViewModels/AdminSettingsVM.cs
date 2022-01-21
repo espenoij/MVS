@@ -20,7 +20,7 @@ namespace HMS_Server
             this.restartRequired = restartRequired;
 
             // Regulation Standard
-            regulationStandard = (RegulationStandard)Enum.Parse(typeof(RegulationStandard), config.Read(ConfigKey.RegulationStandard));
+            regulationStandard = (RegulationStandard)Enum.Parse(typeof(RegulationStandard), config.ReadWithDefault(ConfigKey.RegulationStandard, RegulationStandard.NOROG.ToString()));
 
             // Vessel Is Semi Submersible
             if (config.Read(ConfigKey.SemiSubmersible) == "1")
@@ -32,10 +32,10 @@ namespace HMS_Server
             vesselName = config.Read(ConfigKey.VesselName);
 
             // Helideck Heading Offset
-            helideckHeadingOffset = config.Read(ConfigKey.HelideckHeadingOffset, Constants.HeadingDefault);
+            helideckHeadingOffset = config.ReadWithDefault(ConfigKey.HelideckHeadingOffset, Constants.HeadingDefault);
 
             // CAP
-            msiCorrectionR = config.Read(ConfigKey.MSICorrectionR, Constants.MSICorrectionRMin);
+            msiCorrectionR = config.ReadWithDefault(ConfigKey.MSICorrectionR, Constants.MSICorrectionRMin);
             restrictedSectorFrom = config.Read(ConfigKey.RestrictedSectorFrom);
             restrictedSectorTo = config.Read(ConfigKey.RestrictedSectorTo);
 
@@ -43,30 +43,30 @@ namespace HMS_Server
             helideckCategory = (HelideckCategory)Enum.Parse(typeof(HelideckCategory), config.Read(ConfigKey.HelideckCategory));
 
             // Server Port
-            serverPort = config.Read(ConfigKey.ServerPort, Constants.ServerPortDefault);
+            serverPort = config.ReadWithDefault(ConfigKey.ServerPort, Constants.ServerPortDefault);
 
             // Database Address
-            databaseAddress = config.Read(ConfigKey.DatabaseAddress);
+            databaseAddress = config.ReadWithDefault(ConfigKey.DatabaseAddress, Constants.DefaultDatabaseAddress);
 
             // Database Port
-            databasePort = config.Read(ConfigKey.DatabasePort, Constants.DefaultDatabasePort);
+            databasePort = config.ReadWithDefault(ConfigKey.DatabasePort, Constants.DefaultDatabasePort);
 
             // Database Name
             databaseName = config.Read(ConfigKey.DatabaseName);
 
             // Database Data Storage Time
-            databaseDataStorageTime = config.Read(ConfigKey.DataStorageTime, Constants.DatabaseStorageTimeDefault);
+            databaseDataStorageTime = config.ReadWithDefault(ConfigKey.DataStorageTime, Constants.DatabaseStorageTimeDefault);
 
             // Database Data Storage Time
-            databaseErrorMessageStorageTime = config.Read(ConfigKey.ErrorMessageStorageTime, Constants.DatabaseStorageTimeDefault);
+            databaseErrorMessageStorageTime = config.ReadWithDefault(ConfigKey.ErrorMessageStorageTime, Constants.DatabaseStorageTimeDefault);
 
             // Timing
-            setupGUIDataLimit = config.Read(ConfigKey.SetupGUIDataLimit, Constants.GUIDataLimitDefault);
-            serverUIUpdateFrequency = config.Read(ConfigKey.ServerUIUpdateFrequency, Constants.ServerUIUpdateFrequencyDefault);
-            databaseSaveFrequency = config.Read(ConfigKey.DatabaseSaveFrequency, Constants.DatabaseSaveFreqDefault);
-            dataTimeout = config.Read(ConfigKey.DataTimeout, Constants.DataTimeoutDefault);
-            hmsProcessingFrequency = config.Read(ConfigKey.HMSProcessingFrequency, Constants.HMSProcessingFrequencyDefault);
-            lightsOutputFrequency = config.Read(ConfigKey.LightsOutputFrequency, Constants.LightsOutputFrequencyDefault);
+            setupGUIDataLimit = config.ReadWithDefault(ConfigKey.SetupGUIDataLimit, Constants.GUIDataLimitDefault);
+            serverUIUpdateFrequency = config.ReadWithDefault(ConfigKey.ServerUIUpdateFrequency, Constants.ServerUIUpdateFrequencyDefault);
+            databaseSaveFrequency = config.ReadWithDefault(ConfigKey.DatabaseSaveFrequency, Constants.DatabaseSaveFreqDefault);
+            dataTimeout = config.ReadWithDefault(ConfigKey.DataTimeout, Constants.DataTimeoutDefault);
+            hmsProcessingFrequency = config.ReadWithDefault(ConfigKey.HMSProcessingFrequency, Constants.HMSProcessingFrequencyDefault);
+            lightsOutputFrequency = config.ReadWithDefault(ConfigKey.LightsOutputFrequency, Constants.LightsOutputFrequencyDefault);
 
             // Helideck Report
             if (config.Read(ConfigKey.NDBInstalled_NOROG) == "1")
@@ -79,16 +79,16 @@ namespace HMS_Server
             else
                 ndbInstalled_CAP = false;
 
-            ndbFreq_NOROG = config.Read(ConfigKey.NDBFrequency_NOROG, Constants.NDBFrequencyDefault).ToString("0.000");
-            ndbFreq_CAP = config.Read(ConfigKey.NDBFrequency_CAP, Constants.NDBFrequencyDefault).ToString("0.000");
+            ndbFreq_NOROG = config.ReadWithDefault(ConfigKey.NDBFrequency_NOROG, Constants.NDBFrequencyDefault).ToString("0.000");
+            ndbFreq_CAP = config.ReadWithDefault(ConfigKey.NDBFrequency_CAP, Constants.NDBFrequencyDefault).ToString("0.000");
             ndbIdent = config.Read(ConfigKey.NDBIdent);
-            vhfFreq = config.Read(ConfigKey.VHFFrequency, Constants.VHFFrequencyDefault).ToString("0.000");
-            logFreq = config.Read(ConfigKey.LogFrequency, Constants.VHFFrequencyDefault).ToString("0.000");
-            marineChannel = (int)config.Read(ConfigKey.MarineChannel, Constants.MarineChannelDefault);
+            vhfFreq = config.ReadWithDefault(ConfigKey.VHFFrequency, Constants.VHFFrequencyDefault).ToString("0.000");
+            logFreq = config.ReadWithDefault(ConfigKey.LogFrequency, Constants.VHFFrequencyDefault).ToString("0.000");
+            marineChannel = (int)config.ReadWithDefault(ConfigKey.MarineChannel, Constants.MarineChannelDefault);
 
             // Email Server
             emailServer = config.Read(ConfigKey.EmailServer);
-            emailPort = config.Read(ConfigKey.EmailPort, Constants.DefaultSMTPPort);
+            emailPort = config.ReadWithDefault(ConfigKey.EmailPort, Constants.DefaultSMTPPort);
             emailUsername = Encryption.ToInsecureString(Encryption.DecryptString(config.Read(ConfigKey.EmailUsername)));
             emailPassword = Encryption.ToInsecureString(Encryption.DecryptString(config.Read(ConfigKey.EmailPassword)));
             if (config.Read(ConfigKey.EmailSecureConnection) == "1")
@@ -103,10 +103,10 @@ namespace HMS_Server
                 dataVerificationEnabled = false;
 
             // Sensor Location
-            helideckHeight = config.Read(ConfigKey.HelideckHeight, Constants.HelideckHeightDefault);
-            windSensorHeight = config.Read(ConfigKey.WindSensorHeight, Constants.WindSensorHeightDefault);
-            windSensorDistance = config.Read(ConfigKey.WindSensorDistance, Constants.WindSensorDistanceDefault);
-            airPressureSensorHeight = config.Read(ConfigKey.AirPressureSensorHeight, Constants.WindSensorHeightDefault);
+            helideckHeight = config.ReadWithDefault(ConfigKey.HelideckHeight, Constants.HelideckHeightDefault);
+            windSensorHeight = config.ReadWithDefault(ConfigKey.WindSensorHeight, Constants.WindSensorHeightDefault);
+            windSensorDistance = config.ReadWithDefault(ConfigKey.WindSensorDistance, Constants.WindSensorDistanceDefault);
+            airPressureSensorHeight = config.ReadWithDefault(ConfigKey.AirPressureSensorHeight, Constants.WindSensorHeightDefault);
         }
 
         public void ApplicationRestartRequired(bool showMessage = true)
