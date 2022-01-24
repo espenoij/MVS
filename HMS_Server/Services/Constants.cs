@@ -12,6 +12,7 @@ class Constants
 
     // Admin Mode Password
     public const string AdminModePassword = "a";
+    public const string ActivationPassword = "a";
 
     // Max antall datafelt i en pakke
     public const int PacketDataFields = 60;                     // Korresponderer til felt i XAML fil (lvPacketData)
@@ -267,4 +268,9 @@ class Constants
 
     // Name not set (pga admin mode ikke på i server)
     public const string NameNotSet = "No name (server admin mode is off)";
+
+    // License / Activation
+    public const int LicenseMaxClientsMin = 0;
+    public const int LicenseMaxClientsMax = 100;
+    public const int LicenseMaxClientsDefault = 0;
 }

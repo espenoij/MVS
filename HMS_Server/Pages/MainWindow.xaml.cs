@@ -92,6 +92,7 @@ namespace HMS_Server
         // License
         //private ILicenseManager licenseManager;
         private bool licenseCheckOK = false;
+        private ActivationVM activationVM;
 
         public MainWindow()
         {
@@ -247,6 +248,9 @@ namespace HMS_Server
         {
             // Init Admin Mode
             InitAdminMode();
+
+            // Activation
+            activationVM = new ActivationVM(config);
 
             // Skal vi aktivere data verification?
             if (adminSettingsVM.dataVerificationEnabled)
@@ -425,7 +429,7 @@ namespace HMS_Server
                         foreach (var item in sensorDataRetrieval.GetSensorDataList().ToList())
                         {
                             // Finne igjen sensor i display listen
-                            var sensorDataList = statusDisplayList.Where(x => x.id == item.id).ToList();
+                            var sensorDataList = statusDisplayList.ToList().Where(x => x.id == item.id); // Krasj ved oppstart 2022.01.24
 
                             // Dersom vi fant sensor
                             if (sensorDataList.Count() > 0)
@@ -795,70 +799,82 @@ namespace HMS_Server
 
         private void StartServer()
         {
-            try
+            if (activationVM.isActivated)
             {
-                // Oppretter tabellene dersom de ikke eksisterer
-                database.CreateTables(sensorDataRetrieval.GetSensorDataList());
+                try
+                {
+                    // Oppretter tabellene dersom de ikke eksisterer
+                    database.CreateTables(sensorDataRetrieval.GetSensorDataList());
 
-                errorHandler.ResetDatabaseError(ErrorHandler.DatabaseErrorType.CreateTablesStartServer);
+                    errorHandler.ResetDatabaseError(ErrorHandler.DatabaseErrorType.CreateTablesStartServer);
+                }
+                catch (Exception ex)
+                {
+                    errorHandler.Insert(
+                        new ErrorMessage(
+                            DateTime.UtcNow,
+                            ErrorMessageType.Database,
+                            ErrorMessageCategory.None,
+                            string.Format("Database Error (CreateTables 2)\n\nSystem Message:\n{0}", ex.Message)));
+
+                    errorHandler.SetDatabaseError(ErrorHandler.DatabaseErrorType.CreateTablesStartServer);
+                }
+
+                // Resette dataCalculations
+                if (dataVerificationIsActive)
+                {
+                    // Resetter data listene i dataCalculations kun ved data verifikasjons-testing
+                    // Under normal kjøring kan "gamle" data i listene være fullt brukelig ettersom
+                    // de uansett blir slettet automatisk når de faktisk er for gamle.
+                    hmsProcessing.ResetDataCalculations();
+
+                    // Resette sammenligningsdata
+                    verfication.Reset();
+                }
+
+                // Starter data-innhenting 
+                sensorDataRetrieval.SensorDataRetrieval_Start();
+
+                // Sette knappe status
+                SetStartStopButtons(false);
+                btnSetup.IsEnabled = false;
+
+                // HMS prosessering updater
+                hmsTimer.Start();
+                hmsDatabaseTimer.Start();
+
+                // Database Maintenance
+                DoDatabaseMaintenance(DatabaseMaintenanceType.SENSOR); // Kjør vedlikehold en gang ved oppstart
+                maintenanceTimer.Start();   // Og så hver X timer
+
+                // Socket Listener
+                socketListener.Start();
+
+                // Sensor Status
+                sensorStatus.Start(hmsInputData);
+
+                // Lights Output
+                if (adminSettingsVM.regulationStandard == RegulationStandard.CAP)
+                {
+                    lightsOutputTimer.Start();
+                    ucHMSLightsOutput.Start();
+                }
+
+                // Data verification
+                verificationTimer.Start();
+
+                // Server startet
+                serverStarted = true;
             }
-            catch (Exception ex)
+            // Server er ikke aktivert
+            else
             {
-                errorHandler.Insert(
-                    new ErrorMessage(
-                        DateTime.UtcNow,
-                        ErrorMessageType.Database,
-                        ErrorMessageCategory.None,
-                        string.Format("Database Error (CreateTables 2)\n\nSystem Message:\n{0}", ex.Message)));
+                // Åpne not activated dialog
+                DialogNotActivated notActivatedDlg = new DialogNotActivated();
+                notActivatedDlg.Owner = App.Current.MainWindow;
+                notActivatedDlg.ShowDialog();
 
-                errorHandler.SetDatabaseError(ErrorHandler.DatabaseErrorType.CreateTablesStartServer);
             }
-
-            // Resette dataCalculations
-            if (dataVerificationIsActive)
-            {
-                // Resetter data listene i dataCalculations kun ved data verifikasjons-testing
-                // Under normal kjøring kan "gamle" data i listene være fullt brukelig ettersom
-                // de uansett blir slettet automatisk når de faktisk er for gamle.
-                hmsProcessing.ResetDataCalculations();
-
-                // Resette sammenligningsdata
-                verfication.Reset();
-            }
-
-            // Starter data-innhenting 
-            sensorDataRetrieval.SensorDataRetrieval_Start();
-
-            // Sette knappe status
-            SetStartStopButtons(false);
-            btnSetup.IsEnabled = false;
-
-            // HMS prosessering updater
-            hmsTimer.Start();
-            hmsDatabaseTimer.Start();
-
-            // Database Maintenance
-            DoDatabaseMaintenance(DatabaseMaintenanceType.SENSOR); // Kjør vedlikehold en gang ved oppstart
-            maintenanceTimer.Start();   // Og så hver X timer
-
-            // Socket Listener
-            socketListener.Start();
-
-            // Sensor Status
-            sensorStatus.Start(hmsInputData);
-
-            // Lights Output
-            if (adminSettingsVM.regulationStandard == RegulationStandard.CAP)
-            {
-                lightsOutputTimer.Start();
-                ucHMSLightsOutput.Start();
-            }
-
-            // Data verification
-            verificationTimer.Start();
-
-            // Server startet
-            serverStarted = true;
         }
 
         private void StopServer()
@@ -1003,6 +1019,7 @@ namespace HMS_Server
             if ((Keyboard.Modifiers & ModifierKeys.Shift) == ModifierKeys.Shift &&
                 (Keyboard.Modifiers & ModifierKeys.Control) == ModifierKeys.Control)
             {
+                // Admin Mode grensesnitt
                 if (Keyboard.IsKeyDown(Key.H))
                 {
                     if (!AdminMode.IsActive)
@@ -1062,6 +1079,16 @@ namespace HMS_Server
 
                     // Setter start/stop status
                     SetStartStopButtons(!serverStarted);
+                }
+                else
+                // Aktiverings grensesnitt
+                if (Keyboard.IsKeyDown(Key.A))
+                {
+                    // Åpne activation passord vindu
+                    DialogActivationPassword activationPwDlg = new DialogActivationPassword();
+                    activationPwDlg.Init(activationVM);
+                    activationPwDlg.Owner = App.Current.MainWindow;
+                    activationPwDlg.ShowDialog();
                 }
             }
         }

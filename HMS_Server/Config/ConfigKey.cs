@@ -99,6 +99,11 @@
     public const string EmailPassword = "EmailPassword";
     public const string EmailSecureConnection = "EmailSecureConnection";
     public const string DataVerificationEnabled = "DataVerificationEnabled";
+    public const string LicenseOwner = "LicenseOwner";
+    public const string LicenseLocation = "LicenseLocation";
+    public const string LicenseMaxClients = "LicenseMaxClients";
+    public const string DeviceID = "DeviceID";
+    public const string ActivationStatus = "ActivationStatus";
 
     // Sensor Group ID Data
     public const string SensorGroupID = "SensorGroupID";

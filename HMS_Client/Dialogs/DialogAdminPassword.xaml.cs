@@ -4,11 +4,11 @@ using Telerik.Windows.Controls;
 namespace HMS_Client
 {
     /// <summary>
-    /// Interaction logic for DialogAdminMode.xaml
+    /// Interaction logic for DialogAdminPassword.xaml
     /// </summary>
-    public partial class DialogAdminMode : RadWindow
+    public partial class DialogAdminPassword : RadWindow
     {
-        public DialogAdminMode()
+        public DialogAdminPassword()
         {
             InitializeComponent();
         }

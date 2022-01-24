@@ -61,6 +61,15 @@
     <Reference Include="BouncyCastle.Crypto, Version=1.8.9.0, Culture=neutral, PublicKeyToken=0e99375e54769942">
       <HintPath>..\packages\BouncyCastle.1.8.9\lib\BouncyCastle.Crypto.dll</HintPath>
     </Reference>
+    <Reference Include="DeviceId, Version=6.2.0.0, Culture=neutral, PublicKeyToken=f755c371b5c59c52, processorArchitecture=MSIL">
+      <HintPath>..\packages\DeviceId.6.2.0\lib\net40\DeviceId.dll</HintPath>
+    </Reference>
+    <Reference Include="DeviceId.Windows, Version=6.2.0.0, Culture=neutral, PublicKeyToken=f755c371b5c59c52, processorArchitecture=MSIL">
+      <HintPath>..\packages\DeviceId.Windows.6.2.0\lib\net40\DeviceId.Windows.dll</HintPath>
+    </Reference>
+    <Reference Include="DeviceId.Windows.Wmi, Version=6.2.0.0, Culture=neutral, PublicKeyToken=f755c371b5c59c52, processorArchitecture=MSIL">
+      <HintPath>..\packages\DeviceId.Windows.Wmi.6.2.0\lib\net40\DeviceId.Windows.Wmi.dll</HintPath>
+    </Reference>
     <Reference Include="DocumentFormat.OpenXml, Version=2.14.0.0, Culture=neutral, PublicKeyToken=8fb06cb64d019a17, processorArchitecture=MSIL">
       <HintPath>..\packages\DocumentFormat.OpenXml.2.14.0\lib\net46\DocumentFormat.OpenXml.dll</HintPath>
     </Reference>
@@ -254,8 +263,8 @@
     <Compile Include="Dialogs\DialogHelicopterLanded.xaml.cs">
       <DependentUpon>DialogHelicopterLanded.xaml</DependentUpon>
     </Compile>
-    <Compile Include="Dialogs\DialogAdminMode.xaml.cs">
-      <DependentUpon>DialogAdminMode.xaml</DependentUpon>
+    <Compile Include="Dialogs\DialogAdminPassword.xaml.cs">
+      <DependentUpon>DialogAdminPassword.xaml</DependentUpon>
     </Compile>
     <Compile Include="Pages\AdminInputData.xaml.cs">
       <DependentUpon>AdminInputData.xaml</DependentUpon>
@@ -414,7 +423,7 @@
       <Generator>MSBuild:Compile</Generator>
       <SubType>Designer</SubType>
     </Page>
-    <Page Include="Dialogs\DialogAdminMode.xaml">
+    <Page Include="Dialogs\DialogAdminPassword.xaml">
       <SubType>Designer</SubType>
       <Generator>MSBuild:Compile</Generator>
     </Page>

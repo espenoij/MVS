@@ -329,12 +329,13 @@ namespace HMS_Client
             if ((Keyboard.Modifiers & ModifierKeys.Shift) == ModifierKeys.Shift &&
                 (Keyboard.Modifiers & ModifierKeys.Control) == ModifierKeys.Control)
             {
+                // Admin grensesnitt
                 if (Keyboard.IsKeyDown(Key.H))
                 {
                     if (!tabAdminSettings.IsVisible)
                     {
                         // Åpne admin passord vindu
-                        DialogAdminMode adminMode = new DialogAdminMode();
+                        DialogAdminPassword adminMode = new DialogAdminPassword();
                         adminMode.Owner = App.Current.MainWindow;
                         adminMode.ShowDialog();
 
