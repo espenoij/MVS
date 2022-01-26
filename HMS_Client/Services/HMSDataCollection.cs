@@ -27,7 +27,7 @@ namespace HMS_Client
         {
             lock (hmsDataList)
             {
-                var sensorData = hmsDataList?.Where(x => x.id == (int)id);
+                var sensorData = hmsDataList?.Where(x => x?.id == (int)id);
                 if (sensorData.Count() > 0)
                     return sensorData.First();
                 else

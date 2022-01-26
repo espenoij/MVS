@@ -348,6 +348,9 @@
     <Compile Include="..\HMS_Client\Services\CommonTypes.cs">
       <Link>Services\CommonTypes.cs</Link>
     </Compile>
+    <Compile Include="..\HMS_Client\Services\Socket\SocketPacket.cs">
+      <Link>Services\Socket\SocketPacket.cs</Link>
+    </Compile>
     <Compile Include="..\HMS_Client\Services\UserInputs.cs">
       <Link>Services\UserInputs.cs</Link>
     </Compile>

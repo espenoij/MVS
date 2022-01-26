@@ -8,9 +8,6 @@ namespace HMS_Client
 {
     public class ServerCom
     {
-        // Admin Settings
-        private AdminSettingsVM adminSettingsVM;
-
         // Configuration settings
         private Config config;
 
@@ -30,20 +27,12 @@ namespace HMS_Client
         private RadObservableCollectionEx<SensorGroup> sensorStatusList;
         private RadObservableCollectionEx<SensorGroup> socketSensorStatusList = new RadObservableCollectionEx<SensorGroup>();
 
-        // User Inputs
-        private UserInputs userInputsReceived = new UserInputs();
-
         // Socket client callback
         public delegate void SocketCallback();
 
         // Data Request callback
         private MainWindow.DataRequestCallback dataRequestCallback;
-
-        // User Inputs have been set callback
-        //private MainWindow.UserInputsSetCallback userInputsSetCallback;
-
-        private SensorStatusDisplayVM sensorStatusDisplayVM;
-        private UserInputsVM userInputsVM;
+        private MainWindow.ClientDeniedCallback clientDeniedCallback;
 
         // Tidspunkt for sist mottatt HMS data
         public DateTime lastDataReceivedTime = new DateTime();
@@ -51,12 +40,10 @@ namespace HMS_Client
         public void Init(
             SocketConsole socketConsole,
             HMSDataCollection hmsDataCollection,
-            AdminSettingsVM adminSettingsVM,
             SensorGroupStatus sensorStatus,
-            SensorStatusDisplayVM sensorStatusVM,
-            UserInputsVM userInputsVM,
+            Config config,
             MainWindow.DataRequestCallback dataRequestCallback,
-            Config config)
+            MainWindow.ClientDeniedCallback clientDeniedCallback)
         {
             // Socket Console
             this.socketConsole = socketConsole;
@@ -64,20 +51,12 @@ namespace HMS_Client
             // Data fra server
             hmsDataList = hmsDataCollection.GetDataList();
 
-            // Admin Settings
-            this.adminSettingsVM = adminSettingsVM;
-
             // Sensor Status fra server
             sensorStatusList = sensorStatus.GetSensorGroupList();
 
-            // Oppdatere sensor status på skjerm
-            this.sensorStatusDisplayVM = sensorStatusVM;
-
-            // User Inputs VM
-            this.userInputsVM = userInputsVM;
-
             // Data Request callback
             this.dataRequestCallback = dataRequestCallback;
+            this.clientDeniedCallback = clientDeniedCallback;
 
             // Config
             this.config = config;
@@ -102,11 +81,11 @@ namespace HMS_Client
                 SocketCallback socketCallback = new SocketCallback(ProcessSocketHMSDataList);
 
                 // Start en data fetch mot server
-                SocketClient socketClient = new SocketClient(socketConsole, socketCallback);
+                SocketClient socketClient = new SocketClient(socketConsole, socketCallback, clientDeniedCallback);
 
                 // Sette kommando og parametre
                 socketClient.SetParams(
-                    Constants.CommandGetDataUpdate,
+                    PacketCommand.GetDataUpdate,
                     socketHMSDataList);
 
                 socketClient.Start();
@@ -123,39 +102,16 @@ namespace HMS_Client
                 SocketCallback socketCallback = new SocketCallback(ProcessSocketSensorStatusList);
 
                 // Start en data fetch mot server
-                SocketClient socketClient = new SocketClient(socketConsole, socketCallback, sensorStatusDisplayVM);
+                SocketClient socketClient = new SocketClient(socketConsole, socketCallback, clientDeniedCallback);
 
                 // Sette kommando og parametre
                 socketClient.SetParams(
-                    Constants.CommandGetSensorStatus,
+                    PacketCommand.GetSensorStatus,
                     null,
                     socketSensorStatusList);
 
                 socketClient.Start();
             }
-
-            //// User Inputs Retrieval Timer
-            ///////////////////////////////////////////////////////////////
-            //userInputsRequestTimer.Interval = TimeSpan.FromMilliseconds(Constants.UserInputsSetCheckFrequency);
-            //userInputsRequestTimer.Tick += userInputsRequest;
-
-            //void userInputsRequest(object sender, EventArgs e)
-            //{
-            //    // Callback funksjon som kalles når socketClient er ferdig med å hente data
-            //    SocketCallback socketCallback = new SocketCallback(ProcessSocketUserInputs);
-
-            //    // Start en data fetch mot server
-            //    SocketClient socketClient = new SocketClient(socketConsole, socketCallback, sensorStatusDisplayVM);
-
-            //    // Sette kommando og parametre
-            //    socketClient.SetParams(
-            //        Constants.CommandGetUserInputs,
-            //        null,
-            //        null,
-            //        userInputsReceived);
-
-            //    socketClient.Start();
-            //}
         }
 
         public void SendUserInput(UserInputs userInputs, SocketCallback socketCallback)
@@ -163,18 +119,14 @@ namespace HMS_Client
             try
             {
                 // Start en data sending til server
-                SocketClient socketClient = new SocketClient(socketConsole, socketCallback);
-
-                // Serialiserer data til JSON objekt
-                string payload = JsonSerializer.Serialize(userInputs);
+                SocketClient socketClient = new SocketClient(socketConsole, socketCallback, clientDeniedCallback);
 
                 // Sette kommando og parametre
                 socketClient.SetParams(
-                    Constants.CommandSetUserInputs,
+                    PacketCommand.SetUserInputs,
                     null,
                     null,
-                    null,
-                    payload);
+                    userInputs);
 
                 socketClient.Start();
             }
@@ -296,44 +248,16 @@ namespace HMS_Client
             }
         }
 
-        //public void ProcessSocketUserInputs()
-        //{
-        //    // Prosessere data som kommer fra socketClient
-        //    if (socketSensorStatusList != null)
-        //    {
-        //        // Flytte data til UserInputsVM
-        //        userInputsVM.UserInputsReceived(userInputsReceived);
-
-        //        // Ferdig med å hente data fra server
-        //        if (dataRequestCallback != null)
-        //            dataRequestCallback();
-        //    }
-        //}
-
         public void Start()
         {
             dataRequestTimer.Start();
             sensorStatusRequestTimer.Start();
-
-            //if (!adminSettingsVM.clientIsMaster)
-            //    userInputsRequestTimer.Start();
         }
 
         public void Stop()
         {
             dataRequestTimer.Stop();
             sensorStatusRequestTimer.Stop();
-            //userInputsRequestTimer.Stop();
         }
-
-        //public void StartUserInputsRequest()
-        //{
-        //    userInputsRequestTimer.Start();
-        //}
-
-        //public void StopUserInputsRequest()
-        //{
-        //    userInputsRequestTimer.Stop();
-        //}
     }
 }

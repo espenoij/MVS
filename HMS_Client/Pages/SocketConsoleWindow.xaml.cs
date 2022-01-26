@@ -69,7 +69,7 @@ namespace HMS_Client
 
             // Sette kommando og parametre
             socketClient.SetParams(
-                Constants.CommandGetDataUpdate,
+                PacketCommand.GetDataUpdate,
                 hmsDataList);
 
             socketClient.Start();

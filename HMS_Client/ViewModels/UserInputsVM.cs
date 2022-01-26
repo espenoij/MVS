@@ -474,26 +474,6 @@ namespace HMS_Client
             }
         }
 
-
-        //public void UserInputsReceived(UserInputs userInputs)
-        //{
-        //    helicopterType = userInputs.helicopterType;
-        //    helideckCategory = userInputs.helideckCategory;
-        //    dayNight = userInputs.dayNight;
-        //    displayMode = userInputs.displayMode;
-
-        //    onDeckTime = userInputs.onDeckTime;
-        //    onDeckHelicopterHeading = userInputs.onDeckHelicopterHeading;
-        //    onDeckHelicopterHeadingIsCorrected = userInputs.onDeckHelicopterHeadingIsCorrected;
-        //    onDeckVesselHeading = userInputs.onDeckVesselHeading;
-        //    onDeckWindDirection = userInputs.onDeckWindDirection;
-
-        //    OnPropertyChanged(nameof(displayModeVisibilityPreLanding));
-        //    OnPropertyChanged(nameof(displayModeVisibilityOnDeck));
-        //    OnPropertyChanged(nameof(helicopterHeadingInfoString1));
-        //    OnPropertyChanged(nameof(helicopterHeadingInfoString2));
-        //}
-
         // Variabel oppdatert
         // Dersom navn ikke er satt brukes kallende medlem sitt navn
         protected void OnPropertyChanged([CallerMemberName] string name = null)

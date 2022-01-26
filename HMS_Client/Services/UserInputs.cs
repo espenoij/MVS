@@ -14,18 +14,25 @@ public class UserInputs
     public double onDeckVesselHeading { get; set; }
     public double onDeckWindDirection { get; set; }
 
+    public UserInputs()
+    {
+    }
+
     public void Set(UserInputs userInputs)
     {
-        helicopterType = userInputs.helicopterType;
-        helideckCategory = userInputs.helideckCategory;
-        dayNight = userInputs.dayNight;
-        displayMode = userInputs.displayMode;
+        if (userInputs != null)
+        {
+            helicopterType = userInputs.helicopterType;
+            helideckCategory = userInputs.helideckCategory;
+            dayNight = userInputs.dayNight;
+            displayMode = userInputs.displayMode;
 
-        onDeckTime = userInputs.onDeckTime;
-        onDeckHelicopterHeading = userInputs.onDeckHelicopterHeading;
-        onDeckHelicopterHeadingIsCorrected = userInputs.onDeckHelicopterHeadingIsCorrected;
-        onDeckVesselHeading = userInputs.onDeckVesselHeading;
-        onDeckWindDirection = userInputs.onDeckWindDirection;
+            onDeckTime = userInputs.onDeckTime;
+            onDeckHelicopterHeading = userInputs.onDeckHelicopterHeading;
+            onDeckHelicopterHeadingIsCorrected = userInputs.onDeckHelicopterHeadingIsCorrected;
+            onDeckVesselHeading = userInputs.onDeckVesselHeading;
+            onDeckWindDirection = userInputs.onDeckWindDirection;
+        }
     }
 
     // Helicopter Category

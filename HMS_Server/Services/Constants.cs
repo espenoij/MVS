@@ -83,9 +83,9 @@ class Constants
 
     // TCP/IP Socket
     public const string EOF = "<EOF>";
-    public const string CommandGetDataUpdate = "<get_data_update>";
-    public const string CommandGetSensorStatus = "<get_sensor_status>";
-    public const string CommandSetUserInputs = "<set_user_inputs>";
+    //public const string CommandGetDataUpdate = "<get_data_update>";
+    //public const string CommandGetSensorStatus = "<get_sensor_status>";
+    //public const string CommandSetUserInputs = "<set_user_inputs>";
     //public const string CommandGetUserInputs = "<get_user_inputs>";
 
     // Socket Timeout

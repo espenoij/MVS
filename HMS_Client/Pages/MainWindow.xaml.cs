@@ -39,6 +39,10 @@ namespace HMS_Client
         // Sette vind visning til 2-min mean callback
         public delegate void ResetWindDisplayCallback();
 
+        // Client denied callback
+        public delegate void ClientDeniedCallback();
+        private bool clientDeniedReceived = false;
+
         // View Model
         private MainWindowVM mainWindowVM = new MainWindowVM();
         private GeneralInformationVM generalInformationVM = new GeneralInformationVM();
@@ -287,17 +291,18 @@ namespace HMS_Client
         private void InitDataRequest()
         {
             // Callback funksjon som kalles når DataRequest er ferdig med å hente data
-            DataRequestCallback processCallback = new DataRequestCallback(DataRequestComplete);
+            DataRequestCallback dataRequestCallback = new DataRequestCallback(DataRequestComplete);
+
+            // Callback funksjon i tilfelle klienten blir avvist
+            ClientDeniedCallback clientDeniedCallback = new ClientDeniedCallback(ClientDenied);
 
             serverCom.Init(
                 socketConsole,
                 hmsDataCollection,
-                adminSettingsVM,
                 sensorStatus,
-                sensorStatusVM,
-                userInputsVM,
-                processCallback,
-                config);
+                config,
+                dataRequestCallback,
+                clientDeniedCallback);
         }
 
         public void ShowRestartRequiredMessage(bool showMessage)
@@ -322,6 +327,32 @@ namespace HMS_Client
         {
             // Admin mode key event
             this.KeyDown += new KeyEventHandler(OnAdminKeyCommand);
+        }
+
+        public void ClientDenied()
+        {
+            // Sørge for at denne koden kun kjøres en gang
+            if (!clientDeniedReceived)
+            {
+                clientDeniedReceived = true;
+
+                // Stopp sending av data request
+                serverCom.Stop();
+
+                // Kjøre på UI thread
+                Application.Current.Dispatcher.BeginInvoke(
+                DispatcherPriority.Normal,
+                new Action(() =>
+                {
+                    // Vise client denied dialog
+                    DialogClientDenied clientDeniedDialog = new DialogClientDenied();
+                    clientDeniedDialog.Owner = App.Current.MainWindow;
+                    clientDeniedDialog.ShowDialog();
+
+                    // Lukke programmet
+                    Close();
+                }));
+            }
         }
 
         private void OnAdminKeyCommand(object sender, KeyEventArgs e)

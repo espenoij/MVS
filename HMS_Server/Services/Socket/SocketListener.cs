@@ -21,11 +21,11 @@ namespace HMS_Server
         // Socker listener worker
         private BackgroundWorker socketWorker;
 
+        // Activation
+        private ActivationVM activationVM;
+
         // Socket Console - utskrift av socket meldinger for debug
         SocketConsole socketConsole;
-
-        // User Inputs
-        private UserInputs userInputs;
 
         // Liste med sensor data
         private RadObservableCollectionEx<HMSData> hmsOutputDataList;
@@ -44,9 +44,17 @@ namespace HMS_Server
         // Configuration
         private Config config;
 
+        // Klient ID liste
+        private List<string> clientIDList = new List<string>();
+
         private MainWindow.UserInputsCallback userInputCallback;
 
-        public SocketListener(HMSDataCollection hmsOutputData, HMSSensorGroupStatus sensorStatusOutput, SocketConsole socketConsole, UserInputs userInputs, MainWindow.UserInputsCallback userInputCallback)
+        public SocketListener(
+            HMSDataCollection hmsOutputData,
+            HMSSensorGroupStatus sensorStatusOutput,
+            SocketConsole socketConsole, 
+            ActivationVM activationVM, 
+            MainWindow.UserInputsCallback userInputCallback)
         {
             config = new Config();
             serverPort = config.ReadWithDefault(ConfigKey.ServerPort, Constants.ServerPortDefault);
@@ -54,7 +62,7 @@ namespace HMS_Server
             this.hmsOutputDataList = hmsOutputData.GetDataList();
             this.sensorStatusOutputList = sensorStatusOutput.GetSensorList();
             this.socketConsole = socketConsole;
-            this.userInputs = userInputs;
+            this.activationVM = activationVM;
             this.userInputCallback = userInputCallback;
 
             // Socket Listener Worker
@@ -229,7 +237,7 @@ namespace HMS_Server
         {
             try
             {
-                string packet = string.Empty;
+                string data = string.Empty;
 
                 // Hente socket og socket state objekt som skal håndtere lesing
                 SocketState state = (SocketState)ar.AsyncState;
@@ -245,16 +253,16 @@ namespace HMS_Server
 
                     // Sjekker etter end-of-file tag.
                     // Dersom ingen EOF tag, les mer...
-                    packet = state.sb.ToString();
-                    if (packet.IndexOf(Constants.EOF) > -1)
+                    data = state.sb.ToString();
+                    if (data.IndexOf(Constants.EOF) > -1)
                     {
                         // Alle data mottat
 
                         if (AdminMode.IsActive)
-                            socketConsole.Add(string.Format("Read {0} bytes from socket. Data : {1}", packet.Length, packet));
+                            socketConsole.Add(string.Format("Read {0} bytes from socket. Data : {1}", data.Length, data));
 
                         // Hvilken forespørsel har vi mottatt?
-                        CommandRequestHandler(handler, packet);
+                        CommandRequestHandler(handler, data);
                     }
                     else
                     {
@@ -329,73 +337,110 @@ namespace HMS_Server
         {
             try
             {
-                // Command: Get Data Update
-                ////////////////////////////////////////////////////////////////
-                if (inPacket.StartsWith(Constants.CommandGetDataUpdate))
+                if (!string.IsNullOrEmpty(inPacket) &&          // Har vi data?
+                    inPacket.LastIndexOf(Constants.EOF) > 0)    // Har vi EOF?
                 {
-                    // Serialisere HMS data og lage data pakke
-                    string outPacket = Constants.CommandGetDataUpdate + SerializeHMSData() + Constants.EOF;
-
-                    if (AdminMode.IsActive)
-                        socketConsole.Add(string.Format("Send: jsonData: {0}", outPacket));
-
-                    // Sende HMS data til klient
-                    Send(handler, outPacket);
-                }
-                else
-                // Command: Get Sensor Status
-                ////////////////////////////////////////////////////////////////
-                if (inPacket.StartsWith(Constants.CommandGetSensorStatus))
-                {
-                    // Serialisere sensor status data og lage data pakke
-                    string outPacket = Constants.CommandGetSensorStatus + SerializeSensorStatus() + Constants.EOF;
-
-                    if (AdminMode.IsActive)
-                        socketConsole.Add(string.Format("Send: jsonData: {0}", outPacket));
-
-                    // Sende sensor status til klient
-                    Send(handler, outPacket);
-                }
-                else
-                // Command: Set User Inputs
-                ////////////////////////////////////////////////////////////////
-                if (inPacket.StartsWith(Constants.CommandSetUserInputs))
-                {
-                    // Fjerne command
-                    string payload = inPacket.Substring(inPacket.IndexOf(Constants.CommandSetUserInputs) + Constants.CommandSetUserInputs.Length);
+                    SocketPacket outPacket = new SocketPacket();
 
                     // Fjerne end-of-file
-                    payload = payload.Substring(0, payload.LastIndexOf(Constants.EOF));
+                    inPacket = inPacket.Substring(0, inPacket.LastIndexOf(Constants.EOF));
 
-                    // De-serialisere fra JSON
-                    UserInputs userInputs = JsonSerializer.Deserialize<UserInputs>(payload);
+                    // De-serialisere packet
+                    SocketPacket packet = JsonSerializer.Deserialize<SocketPacket>(inPacket);
 
-                    // Callback funksjon for å behandle user inputs
-                    userInputCallback(userInputs);
+                    // Sjekke klient ID
+                    // Server aksepterer bare et gitt antall klienter (spesifisert i lisensen til kunden)
+                    bool clientIDCheckOK = true;
 
-                    // Sende svar til klient om at user inputs er mottatt
-                    string outPacket = Constants.CommandSetUserInputs + Constants.EOF; // Ingen payload data
+                    lock (clientIDList)
+                    {
+                        var foundClientID = clientIDList.Find(x => x == packet.clientID);
+                        if (foundClientID == null)
+                        {
+                            // Fant ikke klient -> sjekke om vi har plass til å legge den inn i listen over aksepterte klienter
+                            if (clientIDList.Count < activationVM.licenseMaxClients)
+                            {
+                                // Legge inn klient ID
+                                clientIDList.Add(packet.clientID);
+                            }
+                            // Klient ID ligger ikke i listen og vi har ikke plass til flere
+                            else
+                            {
+                                clientIDCheckOK = false;
+                            }
+                        }
+                    }
 
-                    if (AdminMode.IsActive)
-                        socketConsole.Add(string.Format("Send: jsonData: {0}", outPacket));
+                    // Klient ID sjekk ok - normal operasjon
+                    if (clientIDCheckOK)
+                    {
+                        switch (packet.command)
+                        {
+                            // Command: Get Data Update
+                            ////////////////////////////////////////////////////////////////
+                            case PacketCommand.GetDataUpdate:
+                                {
+                                    // Serialisere HMS data og lage data pakke
+                                    outPacket.command = packet.command;
+                                    outPacket.payload = SerializeHMSData();
 
-                    // Sende bekreftelse til klient
-                    Send(handler, outPacket);
+                                    if (AdminMode.IsActive)
+                                        socketConsole.Add(string.Format("Send: jsonData: {0}", outPacket));
+                                }
+                                break;
+
+                            // Command: Get Sensor Status
+                            ////////////////////////////////////////////////////////////////
+                            case PacketCommand.GetSensorStatus:
+                                {
+                                    // Serialisere sensor status data og lage data pakke
+                                    outPacket.command = packet.command;
+                                    outPacket.payload = SerializeSensorStatus();
+
+                                    if (AdminMode.IsActive)
+                                        socketConsole.Add(string.Format("Send: jsonData: {0}", outPacket));
+                                }
+                                break;
+
+                            // Command: Set User Inputs
+                            ////////////////////////////////////////////////////////////////
+                            case PacketCommand.SetUserInputs:
+                                {
+                                    // De-serialisere payload
+                                    UserInputs userInputs = JsonSerializer.Deserialize<UserInputs>(packet.payload);
+
+                                    // Callback funksjon for å behandle user inputs
+                                    userInputCallback(userInputs);
+
+                                    // Sende svar til klient om at user inputs er mottatt
+                                    outPacket.command = packet.command; // Ingen payload data
+
+                                    if (AdminMode.IsActive)
+                                        socketConsole.Add(string.Format("Send: jsonData: {0}", outPacket));
+                                }
+                                break;
+
+                            default:
+                                break;
+                        }
+                    }
+                    // Klient ID ikke ok
+                    else
+                    {
+                        // Send client denied melding og få klienten til å stoppe videre forspørsler/avslutte
+                        outPacket.command = PacketCommand.ClientDenied;
+
+                        if (AdminMode.IsActive)
+                            socketConsole.Add(string.Format("Send: jsonData: {0}", outPacket));
+                    }
+
+                    // Kommando/data som skal sendes
+                    // Må ha EOF til slutt
+                    string sendData = $"{JsonSerializer.Serialize(outPacket)}{Constants.EOF}";
+
+                    // Sende kommando/data til klient
+                    Send(handler, sendData);
                 }
-                //else
-                //// Command: Get User Inputs
-                //////////////////////////////////////////////////////////////////
-                //if (inPacket.StartsWith(Constants.CommandGetUserInputs))
-                //{
-                //    // Serialisere user inputs og lage data pakke
-                //    string outPacket = Constants.CommandGetUserInputs + SerializeUserInputs() + Constants.EOF;
-
-                //    if (AdminMode.IsActive)
-                //        socketConsole.Add(string.Format("Send: jsonData: {0}", outPacket));
-
-                //    // Sende sensor status til klient
-                //    Send(handler, outPacket);
-                //}
             }
             catch (Exception ex)
             {

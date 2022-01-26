@@ -1,4 +1,7 @@
-﻿using System.ComponentModel;
+﻿using System;
+using System.ComponentModel;
+using System.Windows;
+using System.Windows.Threading;
 
 namespace HMS_Server
 {
@@ -13,19 +16,19 @@ namespace HMS_Server
         public void Add(string msg)
         {
             // Legger til en ny melding i socket console listen
-            lock (socketConsoleMessages)
-            {
-                socketConsoleMessages.Add(new SocketConsoleMessage()
+            Application.Current.Dispatcher.BeginInvoke(
+                DispatcherPriority.Normal,
+                new Action(() =>
+                {
+                    socketConsoleMessages.Add(new SocketConsoleMessage()
                 {
                     text = msg
                 });
 
                 // Begrenser antallet i listen
-                while (socketConsoleMessages.Count > 100)
-                {
+                while (socketConsoleMessages.Count > Constants.MaxErrorMessages)
                     socketConsoleMessages.RemoveAt(0);
-                }
-            }
+            }));
         }
 
         public RadObservableCollectionEx<SocketConsoleMessage> Messages()

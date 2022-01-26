@@ -243,6 +243,9 @@
     <Compile Include="..\HMS_Server\Services\Weather.cs">
       <Link>Services\Weather.cs</Link>
     </Compile>
+    <Compile Include="Dialogs\DialogClientDenied.xaml.cs">
+      <DependentUpon>DialogClientDenied.xaml</DependentUpon>
+    </Compile>
     <Compile Include="Helpers\GraphBuffer.cs" />
     <Compile Include="Helpers\HMSCalc.cs" />
     <Compile Include="Services\AdminMode.cs" />
@@ -273,6 +276,7 @@
       <DependentUpon>AdminSettings.xaml</DependentUpon>
     </Compile>
     <Compile Include="Services\HMSData.cs" />
+    <Compile Include="Services\Socket\SocketPacket.cs" />
     <Compile Include="ViewModels\AdminSettingsVM.cs" />
     <Compile Include="Services\CommonTypes.cs" />
     <Compile Include="Pages\HelideckReport_CAP.xaml.cs">
@@ -404,6 +408,10 @@
     <Compile Include="Services\Socket\SocketConsole.cs" />
     <Compile Include="Services\Socket\SocketState.cs" />
     <Page Include="Dialogs\DialogHandlerWarning.xaml">
+      <Generator>MSBuild:Compile</Generator>
+      <SubType>Designer</SubType>
+    </Page>
+    <Page Include="Dialogs\DialogClientDenied.xaml">
       <Generator>MSBuild:Compile</Generator>
       <SubType>Designer</SubType>
     </Page>

@@ -1,4 +1,5 @@
-﻿using System;
+﻿using DeviceId;
+using System;
 using System.Collections.Generic;
 using System.ComponentModel;
 using System.Linq;
@@ -34,25 +35,20 @@ namespace HMS_Client
         private int serverPort;
 
         // Packet Parametre
-        // En packet består av:
-        // 1. Command
-        // 2. Payload
-        // 3. EOF
-        private string command;
-        private string payload;
+        private string clientID;
+        private PacketCommand command;
 
         // Configuration
         Config config;
 
         private ServerCom.SocketCallback socketCallback;
+        private MainWindow.ClientDeniedCallback clientDeniedCallback;
 
-        private SensorStatusDisplayVM sensorStatusDisplayVM;
-
-        public SocketClient(SocketConsole socketConsole, ServerCom.SocketCallback socketCallback = null, SensorStatusDisplayVM sensorStatusDisplayVM = null)
+        public SocketClient(SocketConsole socketConsole, ServerCom.SocketCallback socketCallback = null, MainWindow.ClientDeniedCallback clientDeniedCallback = null)
         {
             this.socketConsole = socketConsole;
             this.socketCallback = socketCallback;
-            this.sensorStatusDisplayVM = sensorStatusDisplayVM;
+            this.clientDeniedCallback = clientDeniedCallback;
 
             config = new Config();
 
@@ -63,18 +59,24 @@ namespace HMS_Client
             }
             catch (Exception) { } // Ingenting
 
+            // Leser device ID fra hardware
+            // Bruker hovedkort serienummer som identifikator
+            clientID = new DeviceIdBuilder()
+                .OnWindows(windows => windows
+                    .AddMotherboardSerialNumber())
+                .ToString();
+
             // Socket Listener Worker for kontinuerlig innhenting av data (data update)
             socketWorker = new BackgroundWorker();
             socketWorker.DoWork += DoSocketWork;
         }
 
-        public void SetParams(string command, RadObservableCollectionEx<HMSData> hmsDataList = null, RadObservableCollectionEx<SensorGroup> sensorStatusList = null, UserInputs userInputs = null, string payload = "")
+        public void SetParams(PacketCommand command, RadObservableCollectionEx<HMSData> hmsDataList = null, RadObservableCollectionEx<SensorGroup> sensorStatusList = null, UserInputs userInputs = null, string payload = "")
         {
             this.command = command;
             this.hmsDataList = hmsDataList;
             this.sensorStatusList = sensorStatusList;
             this.userInputs = userInputs;
-            this.payload = payload;
         }
 
         public void DoSocketWork(object sender, DoWorkEventArgs e)
@@ -82,26 +84,20 @@ namespace HMS_Client
             try
             {
                 // Forberede pakken som skal sendes
-                string packet;
+                SocketPacket packet = new SocketPacket();
+
+                // Legge in klient ID
+                packet.clientID = clientID;
 
                 switch (command)
                 {
                     // Get Data Update
-                    case Constants.CommandGetDataUpdate:
-
-                        // Bare kommando med eof
-                        packet = $"{command}{Constants.EOF}";
-
-                        if (AdminMode.IsActive)
-                            socketConsole?.Add("Requesting data update...");
-
-                        break;
-
+                    case PacketCommand.GetDataUpdate:
                     // Get Sensor Status
-                    case Constants.CommandGetSensorStatus:
+                    case PacketCommand.GetSensorStatus:
 
-                        // Bare kommando med eof
-                        packet = $"{command}{Constants.EOF}";
+                        // Kommando
+                        packet.command = command;
 
                         if (AdminMode.IsActive)
                             socketConsole?.Add("Requesting sensor status...");
@@ -109,31 +105,24 @@ namespace HMS_Client
                         break;
 
                     // Sende User Inputs
-                    case Constants.CommandSetUserInputs:
+                    case PacketCommand.SetUserInputs:
 
-                        // Kommando + user inputs + eof
-                        packet = $"{command}{payload}{Constants.EOF}";
+                        // Kommando
+                        packet.command = command;
+                        packet.payload = JsonSerializer.Serialize(userInputs);
 
                         if (AdminMode.IsActive)
                             socketConsole?.Add("Setting user inputs...");
 
                         break;
 
-                    //// Get User Inputs
-                    //case Constants.CommandGetUserInputs:
-
-                    //    // Bare kommando med eof
-                    //    packet = $"{command}{Constants.EOF}";
-
-                    //    if (AdminMode.IsActive)
-                    //        socketConsole?.Add("Requesting user inputs...");
-
-                    //    break;
-
                     default:
-                        packet = string.Empty;
                         break;
                 }
+
+                // Data som skal sendes
+                // Må ha EOF til slutt
+                string sendData = $"{JsonSerializer.Serialize(packet)}{Constants.EOF}";
 
                 // Init
                 connectDone.Reset();
@@ -156,10 +145,10 @@ namespace HMS_Client
                 IAsyncResult result = socket.BeginConnect(remoteIP, new AsyncCallback(ConnectCallback), socket);
                 connectDone.WaitOne(Constants.SocketTimeout, true);
 
-                if (socket.Connected && packet != string.Empty)
+                if (socket.Connected)
                 {
                     // Sende data/forespørsel
-                    Send(socket, packet);
+                    Send(socket, sendData);
                     sendDone.WaitOne(Constants.SocketTimeout, true);
 
                     // Motta svar/data
@@ -170,16 +159,24 @@ namespace HMS_Client
                     socket.Shutdown(SocketShutdown.Both);
                     socket.Disconnect(true);
 
+                    // Output til console
                     if (AdminMode.IsActive)
                         socketConsole?.Add(string.Format("Response received : {0}", response));
 
-                    // Prosessere mottatt data
-                    ProcessReceivedData(response, command);
+                    if (!string.IsNullOrEmpty(response) &&          // Har vi data?
+                        response.LastIndexOf(Constants.EOF) > 0)    // Har vi EOF?
+                    {
+                        // Fjerne end-of-file
+                        response = response.Substring(0, response.LastIndexOf(Constants.EOF));
+
+                        // Prosessere mottatt data
+                        ProcessReceivedData(response);
+                    }
                 }
                 else
                 {
                     if (AdminMode.IsActive)
-                        socketConsole?.Add("No responce from server");
+                        socketConsole?.Add("No response from server");
                 }
             }
             catch (ObjectDisposedException odx)
@@ -318,12 +315,12 @@ namespace HMS_Client
             }
         }
 
-        private void Send(Socket client, string packet)
+        private void Send(Socket client, string sendData)
         {
             try
             {
                 // Konverterer string data til byte data ved bruk av ASCII encoding
-                byte[] byteData = Encoding.ASCII.GetBytes(packet);
+                byte[] byteData = Encoding.ASCII.GetBytes(sendData);
 
                 // Start sending 
                 client.BeginSend(byteData, 0, byteData.Length, 0, new AsyncCallback(SendCallback), client);
@@ -385,77 +382,50 @@ namespace HMS_Client
             socketWorker.RunWorkerAsync();
         }
 
-        private void ProcessReceivedData(string receivedData, string command)
+        private void ProcessReceivedData(string receivedData)
         {
-            string payload;
-
             try
             {
-                switch (command)
+                // De-serialisere packet
+                SocketPacket packet = JsonSerializer.Deserialize<SocketPacket>(receivedData);
+
+                switch (packet.command)
                 {
                     // Get Data Update
                     //////////////////////////
-                    case Constants.CommandGetDataUpdate:
+                    case PacketCommand.GetDataUpdate:
 
-                        if (!string.IsNullOrEmpty(receivedData))
-                        {
-                            if (receivedData.IndexOf(command) < receivedData.Length)
-                            {
-                                // Fjerne command
-                                payload = receivedData.Substring(receivedData.IndexOf(command) + command.Length);
+                        // De-serialisere payload
+                        List<HMSData> dataList = JsonSerializer.Deserialize<List<HMSData>>(packet.payload);
 
-                                // Fjerne end-of-file
-                                payload = payload.Substring(0, payload.LastIndexOf(Constants.EOF));
+                        // Overføre mottatt data til lagringsplass
+                        TransferReceivedData(dataList);
 
-                                if (payload.CompareTo(string.Empty) != 0)
-                                {
-                                    // De-serialisere fra JSON
-                                    List<HMSData> dataList = JsonSerializer.Deserialize<List<HMSData>>(payload);
+                        // Ferdig med å hente data fra socket -> si i fra at vi er ferdig og prosessere data
+                        if (socketCallback != null)
+                            socketCallback();
 
-                                    // Overføre mottatt data til lagringsplass
-                                    TransferReceivedData(dataList);
-
-                                    // Ferdig med å hente data fra socket -> si i fra at vi er ferdig og prosessere data
-                                    if (socketCallback != null)
-                                        socketCallback();
-                                }
-                            }
-                        }
                         break;
 
                     // Get Sensor Status
                     //////////////////////////
-                    case Constants.CommandGetSensorStatus:
+                    case PacketCommand.GetSensorStatus:
 
-                        if (!string.IsNullOrEmpty(receivedData))
-                        {
-                            if (receivedData.IndexOf(command) < receivedData.Length)
-                            {
-                                // Fjerne command
-                                payload = receivedData.Substring(receivedData.IndexOf(command) + command.Length);
+                        // De-serialisere payload
+                        List<SensorGroup> sensorStatusListReceived = JsonSerializer.Deserialize<List<SensorGroup>>(packet.payload);
 
-                                // Fjerne end-of-file
-                                payload = payload.Substring(0, payload.LastIndexOf(Constants.EOF));
+                        // Overføre mottatt data til lagringsplass
+                        TransferReceivedSensorStatus(sensorStatusListReceived);
 
-                                if (payload.CompareTo(string.Empty) != 0)
-                                {
-                                    // De-serialisere fra JSON
-                                    List<SensorGroup> sensorStatusListReceived = JsonSerializer.Deserialize<List<SensorGroup>>(payload);
+                        // Ferdig med å hente data fra socket -> si i fra at vi er ferdig og prosessere data
+                        if (socketCallback != null)
+                            socketCallback();
 
-                                    // Overføre mottatt data til lagringsplass
-                                    TransferReceivedSensorStatus(sensorStatusListReceived);
-
-                                    // Ferdig med å hente data fra socket -> si i fra at vi er ferdig og prosessere data
-                                    if (socketCallback != null)
-                                        socketCallback();
-                                }
-                            }
-                        }
                         break;
 
                     // Set User Inputs
                     //////////////////////////
-                    case Constants.CommandSetUserInputs:
+                    case PacketCommand.SetUserInputs:
 
                         // Når vi mottar denne kommandoen i klienten betyr det at server verifiserer at den har mottatt kommandoen.
                         // Det kommer ingen data som skal behandles.
@@ -466,36 +436,20 @@ namespace HMS_Client
 
                         break;
 
-                    //// Get User Inputs
-                    ////////////////////////////
-                    //case Constants.CommandGetUserInputs:
+                    // Client Denied
+                    //////////////////////////
+                    case PacketCommand.ClientDenied:
 
-                    //    if (!string.IsNullOrEmpty(receivedData))
-                    //    {
-                    //        if (receivedData.IndexOf(command) < receivedData.Length)
-                    //        {
-                    //            // Fjerne command
-                    //            payload = receivedData.Substring(receivedData.IndexOf(command) + command.Length);
+                        // Nå vi mottar denne kommando betyr det at for mange klienter forsøker å koble seg på serveren.
+                        // Denne klienten må stanses.
 
-                    //            // Fjerne end-of-file
-                    //            payload = payload.Substring(0, payload.LastIndexOf(Constants.EOF));
+                        if (clientDeniedCallback != null)
+                            clientDeniedCallback();
 
-                    //            if (payload.CompareTo(string.Empty) != 0)
-                    //            {
-                    //                // De-serialisere fra JSON
-                    //                UserInputs userInputsReceived = JsonSerializer.Deserialize<UserInputs>(payload);
+                        break;
 
-                    //                // Overføre mottatt data til lagringsplass
-                    //                TransferReceivedUserInputs(userInputsReceived);
-
-                    //                // Ferdig med å hente data fra socket -> si i fra at vi er ferdig og prosessere data
-                    //                if (socketCallback != null)
-                    //                    socketCallback();
-                    //            }
-                    //        }
-                    //    }
-                    //    break;
-
+                    default:
+                        break;
                 }
             }
             catch (Exception ex)
@@ -625,11 +579,6 @@ namespace HMS_Client
                         socketConsole?.Add(string.Format("ProcessReceivedData: id:{0}, data:{1}, timestamp:{2}", item.id, item.name, item.active.ToString()));
                 }
             }
-        }
-
-        private void TransferReceivedUserInputs(UserInputs userInputsReceived)
-        {
-            userInputs.Set(userInputsReceived);
         }
 
         public static IPAddress GetIPAddress()
