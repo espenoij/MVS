@@ -79,11 +79,11 @@ namespace HMS_Server
             else
                 ndbInstalled_CAP = false;
 
-            ndbFreq_NOROG = config.ReadWithDefault(ConfigKey.NDBFrequency_NOROG, Constants.NDBFrequencyDefault).ToString("0.000");
-            ndbFreq_CAP = config.ReadWithDefault(ConfigKey.NDBFrequency_CAP, Constants.NDBFrequencyDefault).ToString("0.000");
+            ndbFreq_NOROG = config.ReadWithDefault(ConfigKey.NDBFrequency_NOROG, Constants.NDBFrequencyDefault).ToString("000.000");
+            ndbFreq_CAP = config.ReadWithDefault(ConfigKey.NDBFrequency_CAP, Constants.NDBFrequencyDefault).ToString("000.000");
             ndbIdent = config.Read(ConfigKey.NDBIdent);
-            vhfFreq = config.ReadWithDefault(ConfigKey.VHFFrequency, Constants.VHFFrequencyDefault).ToString("0.000");
-            logFreq = config.ReadWithDefault(ConfigKey.LogFrequency, Constants.VHFFrequencyDefault).ToString("0.000");
+            vhfFreq = config.ReadWithDefault(ConfigKey.VHFFrequency, Constants.VHFFrequencyDefault).ToString("000.000");
+            logFreq = config.ReadWithDefault(ConfigKey.LogFrequency, Constants.VHFFrequencyDefault).ToString("000.000");
             marineChannel = (int)config.ReadWithDefault(ConfigKey.MarineChannel, Constants.MarineChannelDefault);
 
             // Email Server
@@ -298,6 +298,14 @@ namespace HMS_Server
                 _helideckHeight = value;
                 config.Write(ConfigKey.HelideckHeight, value.ToString());
                 OnPropertyChanged();
+                OnPropertyChanged(nameof(helideckHeightString));
+            }
+        }
+        public string helideckHeightString
+        {
+            get
+            {
+                return _helideckHeight.ToString(Constants.cultureInfo);
             }
         }
 

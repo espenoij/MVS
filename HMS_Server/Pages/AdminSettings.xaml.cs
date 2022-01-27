@@ -879,7 +879,7 @@ namespace HMS_Server
                 Constants.NDBFrequencyDefault,
                 out double validatedInput);
 
-            adminSettingsVM.ndbFreq_NOROG = validatedInput.ToString("0.000", Constants.cultureInfo);
+            adminSettingsVM.ndbFreq_NOROG = validatedInput.ToString("000.000", Constants.cultureInfo);
         }
 
         private void tbNDBFreq_CAP_LostFocus(object sender, RoutedEventArgs e)
@@ -906,7 +906,7 @@ namespace HMS_Server
                 Constants.NDBFrequencyDefault,
                 out double validatedInput);
 
-            adminSettingsVM.ndbFreq_CAP = validatedInput.ToString("0.000", Constants.cultureInfo);
+            adminSettingsVM.ndbFreq_CAP = validatedInput.ToString("000.000", Constants.cultureInfo);
         }
 
         private void tbNDBIdent_LostFocus(object sender, RoutedEventArgs e)
@@ -952,7 +952,7 @@ namespace HMS_Server
                 Constants.VHFFrequencyDefault,
                 out double validatedInput);
 
-            adminSettingsVM.vhfFreq = validatedInput.ToString("0.000", Constants.cultureInfo);
+            adminSettingsVM.vhfFreq = validatedInput.ToString("000.000", Constants.cultureInfo);
         }
 
         private void tbHelideckHeight_LostFocus(object sender, RoutedEventArgs e)
@@ -1171,7 +1171,7 @@ namespace HMS_Server
                 Constants.VHFFrequencyDefault,
                 out double validatedInput);
 
-            adminSettingsVM.logFreq = validatedInput.ToString("0.000", Constants.cultureInfo);
+            adminSettingsVM.logFreq = validatedInput.ToString("000.000", Constants.cultureInfo);
         }
 
         private void tbMarineChannel_LostFocus(object sender, RoutedEventArgs e)
