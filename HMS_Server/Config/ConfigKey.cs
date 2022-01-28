@@ -131,7 +131,7 @@
     public const string ServerUIUpdateFrequency = "ServerUIUpdateFrequency";
     public const string DatabaseSaveFrequency = "DatabaseSaveFrequency";
     public const string HMSProcessingFrequency = "HMSProcessingFrequency";
-    public const string LightsOutputFrequency = "HMSProcessingFrequency";
+    public const string LightsOutputFrequency = "LightsOutputFrequency";
 
     // Server App: Serial Port Configuration
     public const string ShowControlChars = "ShowControlChars";

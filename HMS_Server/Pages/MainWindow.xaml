@@ -562,6 +562,43 @@
                 </DockPanel>
 
             </telerik:RadTabItem>
+
+            <!--==============================================================-->
+            <!--Side Menu: Settings-->
+            <!--==============================================================-->
+            <telerik:RadTabItem
+                Name="tabSettings"
+                Visibility="Collapsed">
+
+                <telerik:RadTabItem.Header>
+                    <Image
+                        Width="36"
+                        Source="../Icons/outline_settings_white_36dp.png" />
+                </telerik:RadTabItem.Header>
+
+                <uc:AdminSettings
+                    x:Name="ucAdminSettings" />
+
+            </telerik:RadTabItem>
+
+            <!--==============================================================-->
+            <!--Side Menu: Messages-->
+            <!--==============================================================-->
+            <telerik:RadTabItem
+                Name="tabErrorMessages"
+                Visibility="Collapsed">
+
+                <telerik:RadTabItem.Header>
+                    <Image
+                        Width="36"
+                        Source="../Icons/outline_announcement_white_36dp.png" />
+                </telerik:RadTabItem.Header>
+
+                <uc:ErrorMessagesPage
+                    x:Name="ucErrorMessagesPage" />
+
+            </telerik:RadTabItem>
+
             <!--==============================================================-->
             <!--Side Menu: Data Verification-->
             <!--==============================================================-->
@@ -649,46 +686,8 @@
                     </telerik:RadTabControl>
 
                 </DockPanel>
-                
-            </telerik:RadTabItem>
-
-            <!--==============================================================-->
-            <!--Side Menu: Settings-->
-            <!--==============================================================-->
-            <telerik:RadTabItem
-                Name="tabSettings"
-                Visibility="Collapsed">
-
-                <telerik:RadTabItem.Header>
-                    <Image
-                        Width="36"
-                        Source="../Icons/outline_settings_white_36dp.png" />
-                </telerik:RadTabItem.Header>
-
-                <uc:AdminSettings
-                    x:Name="ucAdminSettings" />
 
             </telerik:RadTabItem>
-
-            <!--==============================================================-->
-            <!--Side Menu: Messages-->
-            <!--==============================================================-->
-            <telerik:RadTabItem
-                Name="tabErrorMessages"
-                Visibility="Collapsed">
-
-                <telerik:RadTabItem.Header>
-                    <Image
-                        Width="36"
-                        Source="../Icons/outline_announcement_white_36dp.png" />
-                </telerik:RadTabItem.Header>
-
-                <uc:ErrorMessagesPage
-                    x:Name="ucErrorMessagesPage" />
-
-            </telerik:RadTabItem>
-
-
         </telerik:RadTabControl>
 
     </DockPanel>

@@ -197,7 +197,7 @@
                     <telerik:Label
                         Name="lbEnableReportEmail"
                         Width="200"
-                        Content="Enable report email"
+                        Content="Enable Offshore Weather Report Email"
                         VerticalAlignment="Center" />
 
                     <CheckBox
@@ -263,7 +263,7 @@
                 <DockPanel>
                     <telerik:Label
                         Width="300"
-                        Content="Data Timeout"
+                        Content="Sensor Data Timeout"
                         VerticalAlignment="Center" />
                     <TextBox
                         Name="tbDataTimeout"

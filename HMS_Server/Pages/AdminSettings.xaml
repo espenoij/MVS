@@ -600,7 +600,7 @@
 
                 <DockPanel>
                     <Label
-                        Content="Data Timeout"
+                        Content="Sensor Data Timeout"
                         VerticalAlignment="Center" />
                     <TextBox
                         Name="tbSettingsDataTimeOut"
