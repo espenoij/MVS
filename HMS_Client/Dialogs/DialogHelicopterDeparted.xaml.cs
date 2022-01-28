@@ -23,7 +23,7 @@ namespace HMS_Client
 
         private void btnOK_Click(object sender, RoutedEventArgs e)
         {
-            // Display Mode
+           // Display Mode
             userInputsVM.displayMode = DisplayMode.PreLanding;
 
             // Slette input feltet

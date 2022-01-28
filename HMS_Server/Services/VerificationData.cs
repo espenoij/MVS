@@ -115,6 +115,10 @@ namespace HMS_Server
                 if (differenceAbs != 0)
                     differenceTimePctCounterWrong++;
             }
+            else
+            {
+                differenceAbs = 0;
+            }
         }
 
         public void Reset()

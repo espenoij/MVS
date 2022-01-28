@@ -19,6 +19,8 @@ namespace HMS_Server
         private double prevID = 0;
 
         private bool deviationReset = false;
+        private bool helicopterSetLanded = false;
+        private bool helicopterSetTakeoff = false;
 
         public Verfication(Config config, UserInputs userInputs, ErrorHandler errorHandler)
         {
@@ -41,9 +43,10 @@ namespace HMS_Server
                 refTimeIDList.Add(i);
 
             // User input settings
-            userInputs.dayNight = DayNight.Day;
             userInputs.helicopterType = HelicopterType.EC225;
             userInputs.helideckCategory = HelideckCategory.Category1;
+            userInputs.dayNight = DayNight.Day;
+            userInputs.displayMode = DisplayMode.PreLanding;
         }
 
         public HMSDataCollection GetTestData()
@@ -124,13 +127,26 @@ namespace HMS_Server
                     deviationReset = true;
                 }
 
-                // Sette on-deck i user inputs
-                if (verificationData.First().testData == 56100)
+                // Helikopter lander: Sette on-deck i user inputs
+                if (verificationData.First().testData >= 56100 &&
+                    !helicopterSetLanded)
                 {
-                    userInputs.onDeckHelicopterHeading = 388;
+                    userInputs.displayMode = DisplayMode.OnDeck;
+                    userInputs.onDeckHelicopterHeading = 338;
                     userInputs.onDeckTime = DateTime.UtcNow;
                     userInputs.onDeckVesselHeading = 335;
                     userInputs.onDeckWindDirection = 334;
+
+                    helicopterSetLanded = true;
+                }
+
+                // Helikoptert tar av igjen
+                if (verificationData.First().testData >= 57300 &&
+                    !helicopterSetTakeoff)
+                {
+                    userInputs.displayMode = DisplayMode.PreLanding;
+
+                    helicopterSetTakeoff = true;
                 }
 
                 // Oppdatere/beregne forskjeller mellom test data og referanse data.
