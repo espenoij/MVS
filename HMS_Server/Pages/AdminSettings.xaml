@@ -642,12 +642,12 @@
 
         </telerik:GroupBox>
 
-        <!--SENSOR LOCATION-->
+        <!--SENSOR-->
         <telerik:GroupBox
             Grid.Row="1"
             Grid.Column="1"
             Margin="8"
-            Header="SENSOR LOCATION">
+            Header="SENSOR">
 
             <StackPanel
                 Margin="8">
@@ -705,6 +705,20 @@
                         Text="{Binding Path=airPressureSensorHeight}"
                         LostFocus="tbAirPressureSensorHeight_LostFocus"
                         KeyDown="tbAirPressureSensorHeight_KeyDown" />
+                </DockPanel>
+
+                <!--Magnetic Declination-->
+                <DockPanel>
+                    <telerik:Label
+                        Content="Magnetic Declination"
+                        VerticalAlignment="Center" />
+                    <TextBox
+                        Name="tbMagneticDeclination"
+                        Width="110"
+                        HorizontalAlignment="Right"
+                        Text="{Binding Path=airPressureSensorHeight}"
+                        LostFocus="tbMagneticDeclination_LostFocus"
+                        KeyDown="tbMagneticDeclination_KeyDown" />
                 </DockPanel>
 
 

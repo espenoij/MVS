@@ -78,8 +78,11 @@ namespace HMS_Client
                 vesselHdgDeltaAbsMax = FindAbsMax(vesselHdg20mDataList);
                 windDirDeltaAbsMax = FindAbsMax(windDir20mDataList);
 
-                // Oppdatere alignment datetime (nåtid) til alle chart
-                alignmentTime = DateTime.UtcNow.AddSeconds(Constants.Minutes30 + chartTimeCorrMax);
+                // Oppdatere alignment datetime (nåtid) til begge chart
+                if (userInputsVM.onDeckTime.AddSeconds(Constants.Minutes30) > DateTime.UtcNow)
+                    alignmentTime = userInputsVM.onDeckTime.AddSeconds(Constants.Minutes30 + chartTimeCorrMax);
+                else
+                    alignmentTime = DateTime.UtcNow;
 
                 //OnPropertyChanged(nameof(helideckTrendTimeString));
             }

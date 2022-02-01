@@ -167,7 +167,7 @@ namespace HMS_Client
                         response.LastIndexOf(Constants.EOF) > 0)    // Har vi EOF?
                     {
                         // Fjerne end-of-file
-                        response = response.Substring(0, response.LastIndexOf(Constants.EOF));
+                        response = response.Substring(0, response.LastIndexOf(Constants.EOF)); // TODO response.LastIndexOf(Constants.EOF) er mindre enn 0
 
                         // Prosessere mottatt data
                         ProcessReceivedData(response);

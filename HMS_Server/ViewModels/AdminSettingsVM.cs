@@ -102,11 +102,12 @@ namespace HMS_Server
             else
                 dataVerificationEnabled = false;
 
-            // Sensor Location
+            // Sensor
             helideckHeight = config.ReadWithDefault(ConfigKey.HelideckHeight, Constants.HelideckHeightDefault);
             windSensorHeight = config.ReadWithDefault(ConfigKey.WindSensorHeight, Constants.WindSensorHeightDefault);
             windSensorDistance = config.ReadWithDefault(ConfigKey.WindSensorDistance, Constants.WindSensorDistanceDefault);
             airPressureSensorHeight = config.ReadWithDefault(ConfigKey.AirPressureSensorHeight, Constants.WindSensorHeightDefault);
+            magneticDeclination = config.ReadWithDefault(ConfigKey.MagneticDeclination, Constants.MagneticDeclinationDefault);
         }
 
         public void ApplicationRestartRequired(bool showMessage = true)
@@ -359,6 +360,24 @@ namespace HMS_Server
             {
                 _airPressureSensorHeight = value;
                 config.Write(ConfigKey.AirPressureSensorHeight, _airPressureSensorHeight.ToString());
+                OnPropertyChanged();
+            }
+        }
+
+        /////////////////////////////////////////////////////////////////////////////
+        // Magnetic Declination
+        /////////////////////////////////////////////////////////////////////////////
+        private double _magneticDeclination { get; set; }
+        public double magneticDeclination
+        {
+            get
+            {
+                return _magneticDeclination;
+            }
+            set
+            {
+                _magneticDeclination = value;
+                config.Write(ConfigKey.MagneticDeclination, _magneticDeclination.ToString());
                 OnPropertyChanged();
             }
         }

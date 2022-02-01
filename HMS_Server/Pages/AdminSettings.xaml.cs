@@ -1226,5 +1226,33 @@ namespace HMS_Server
                 lbNDBIdent_CAP.IsEnabled = false;
             }
         }
+
+        private void tbMagneticDeclination_LostFocus(object sender, RoutedEventArgs e)
+        {
+            tbMagneticDeclination_Update(sender);
+        }
+
+        private void tbMagneticDeclination_KeyDown(object sender, KeyEventArgs e)
+        {
+            if (e.Key == Key.Return)
+            {
+                tbMagneticDeclination_Update(sender);
+                Keyboard.ClearFocus();
+            }
+        }
+
+        private void tbMagneticDeclination_Update(object sender)
+        {
+            // Sjekk av input
+            DataValidation.Double(
+                (sender as TextBox).Text,
+                Constants.HeadingMax * -1,
+                Constants.HeadingMax,
+                Constants.MagneticDeclinationDefault,
+                out double validatedInput);
+
+            adminSettingsVM.magneticDeclination = validatedInput;
+        }
+
     }
 }

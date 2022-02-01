@@ -396,7 +396,6 @@ namespace HMS_Client
 
                     onDeckHelicopterRelativeHeading = value - windHeadingVM.vesselHeading.data;
 
-                    onDeckTime = DateTime.UtcNow;
                     onDeckHelicopterHeadingIsCorrected = true;
                     OnPropertyChanged(nameof(helicopterHeadingInfoString1));
                     OnPropertyChanged(nameof(helicopterHeadingInfoString2));
@@ -406,7 +405,6 @@ namespace HMS_Client
             }
         }
         public double onDeckHelicopterRelativeHeading { get; set; }
-
 
         public bool onDeckHelicopterHeadingIsCorrected { get; set; }
 

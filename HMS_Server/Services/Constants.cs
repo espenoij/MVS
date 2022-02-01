@@ -222,6 +222,7 @@ class Constants
     public const int HeadingMin = 1;
     public const int HeadingMax = 360;
     public const int HeadingDefault = HeadingMax;
+    public const int MagneticDeclinationDefault = 0;
 
     // Helideck Status Trend
     public const int statusTrendDisplayListMax = 400; // Hvor mange segmenter trend linjen skal deles opp i / oppløsning på trend linjen
