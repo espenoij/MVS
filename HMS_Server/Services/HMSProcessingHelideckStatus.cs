@@ -93,7 +93,7 @@ namespace HMS_Server
                                 IsWithinLimits(ValueType.RollMax20m) &&
                                 IsWithinLimits(ValueType.InclinationMax20m) &&
                                 IsWithinLimits(ValueType.HeaveAmplitudeMax20m) &&
-                                IsWithinLimits(ValueType.SignificantHeaveRate95pct) && hmsProcessingMotion.IsSHR10mMeanBelowLimit()) // Utgår i CAP 9b
+                                IsWithinLimits(ValueType.SignificantHeaveRate95pct) && hmsProcessingMotion.IsSHR10mMeanBelowLimit()) // 95% regelen utgår i CAP 9b
                             {
                                 helideckStatus = HelideckStatusType.GREEN;
                             }
@@ -156,7 +156,7 @@ namespace HMS_Server
                                 if (IsWithinLimits(ValueType.PitchMax20m) &&
                                     IsWithinLimits(ValueType.RollMax20m) &&
                                     IsWithinLimits(ValueType.InclinationMax20m) &&
-                                    /*IsWithinLimits(ValueType.SignificantHeaveRate95pct) && */hmsProcessingMotion.IsSHR10mMeanBelowLimit()) // Utgår i CAP 9b
+                                    IsWithinLimits(ValueType.SignificantHeaveRate95pct) && hmsProcessingMotion.IsSHR10mMeanBelowLimit()) // 95% regelen utgår i CAP 9b
                                 {
                                     helideckStatus = GetMSIWSIState();
                                 }

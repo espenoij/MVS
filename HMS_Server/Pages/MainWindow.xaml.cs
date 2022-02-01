@@ -779,19 +779,23 @@ namespace HMS_Server
         {
             if (userInputs != null)
             {
-                // Overføre data
-                this.userInputs.Set(userInputs);
+                // Setter ikke user data fra klient dersom vi holder på med data verifikasjon
+                if (!adminSettingsVM.dataVerificationEnabled)
+                {
+                    // Overføre data
+                    this.userInputs.Set(userInputs);
 
-                // Lagre til fil
-                config.Write(ConfigKey.HelicopterType, userInputs.helicopterType.ToString());
-                config.Write(ConfigKey.HelideckCategory, userInputs.helideckCategory.ToString());
-                config.Write(ConfigKey.DayNight, userInputs.dayNight.ToString());
-                config.Write(ConfigKey.DisplayMode, userInputs.displayMode.ToString());
+                    // Lagre til fil
+                    config.Write(ConfigKey.HelicopterType, userInputs.helicopterType.ToString());
+                    config.Write(ConfigKey.HelideckCategory, userInputs.helideckCategory.ToString());
+                    config.Write(ConfigKey.DayNight, userInputs.dayNight.ToString());
+                    config.Write(ConfigKey.DisplayMode, userInputs.displayMode.ToString());
 
-                config.Write(ConfigKey.OnDeckTime, userInputs.onDeckTime.ToString());
-                config.Write(ConfigKey.OnDeckHelicopterHeading, userInputs.onDeckHelicopterHeading.ToString());
-                config.Write(ConfigKey.OnDeckVesselHeading, userInputs.onDeckVesselHeading.ToString());
-                config.Write(ConfigKey.OnDeckWindDirection, userInputs.onDeckWindDirection.ToString());
+                    config.Write(ConfigKey.OnDeckTime, userInputs.onDeckTime.ToString());
+                    config.Write(ConfigKey.OnDeckHelicopterHeading, userInputs.onDeckHelicopterHeading.ToString());
+                    config.Write(ConfigKey.OnDeckVesselHeading, userInputs.onDeckVesselHeading.ToString());
+                    config.Write(ConfigKey.OnDeckWindDirection, userInputs.onDeckWindDirection.ToString());
+                }
             }
         }
 

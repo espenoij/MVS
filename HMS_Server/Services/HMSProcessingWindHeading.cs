@@ -5,6 +5,7 @@ namespace HMS_Server
     class HMSProcessingWindHeading
     {
         private HMSData areaWindDirection2m = new HMSData();
+        private HMSData areaWindDirection2mNonRounded = new HMSData();
         private HMSData areaWindSpeed2m = new HMSData();
         private HMSData areaWindSpeed2mNonRounded = new HMSData();
         private HMSData areaWindGust2m = new HMSData();
@@ -92,9 +93,9 @@ namespace HMS_Server
             areaWindDirection2m.name = "Area Wind Direction (2m)";
             areaWindDirection2m.sensorGroupId = Constants.NO_SENSOR_GROUP_ID;
             areaWindDirection2m.dbColumn = "area_wind_direction_2m";
-            areaWindDirection2m.InitProcessing(errorHandler, ErrorMessageCategory.AdminUser);
-            areaWindDirection2m.AddProcessing(CalculationType.TimeAverage, 120); // 2 minutter
-            areaWindDirection2m.AddProcessing(CalculationType.RoundingDecimals, 0);
+
+            areaWindDirection2mNonRounded.InitProcessing(errorHandler, ErrorMessageCategory.AdminUser);
+            areaWindDirection2mNonRounded.AddProcessing(CalculationType.TimeAverage, 120); // 2 minutter
 
             areaWindSpeed2m.id = (int)ValueType.AreaWindSpeed2m;
             areaWindSpeed2m.name = "Area Wind Speed (2m)";
@@ -225,11 +226,13 @@ namespace HMS_Server
 
             // Area Wind: 2-minute data
             ///////////////////////////////////////////////////////////
-            areaWindDirection2m.DoProcessing(hmsInputDataList.GetData(ValueType.SensorWindDirection));
+            areaWindDirection2mNonRounded.DoProcessing(hmsInputDataList.GetData(ValueType.SensorWindDirection));
+            areaWindDirection2m.data = Math.Round(areaWindDirection2mNonRounded.data, 0, MidpointRounding.AwayFromZero);
+            areaWindDirection2m.status = areaWindDirection2mNonRounded.status;
+            areaWindDirection2m.timestamp = areaWindDirection2mNonRounded.timestamp;
             areaWindDirection2m.sensorGroupId = hmsInputDataList.GetData(ValueType.SensorWindDirection).sensorGroupId;
 
             areaWindSpeed2mNonRounded.DoProcessing(hmsInputDataList.GetData(ValueType.SensorWindSpeed));
-
             areaWindSpeed2m.data = Math.Round(areaWindSpeed2mNonRounded.data, 0, MidpointRounding.AwayFromZero);
             areaWindSpeed2m.status = areaWindSpeed2mNonRounded.status;
             areaWindSpeed2m.timestamp = areaWindSpeed2mNonRounded.timestamp;
@@ -298,7 +301,7 @@ namespace HMS_Server
                 if (areaWindDirection2m.status == DataStatus.OK &&
                     hmsInputDataList.GetData(ValueType.VesselHeading).status == DataStatus.OK)
                 {
-                    relativeWindDir.data = Math.Round(areaWindDirection2m.data - (hmsInputDataList.GetData(ValueType.VesselHeading).data + (userInputs.onDeckHelicopterHeading - userInputs.onDeckVesselHeading)), 0, MidpointRounding.AwayFromZero);
+                    relativeWindDir.data = Math.Round(areaWindDirection2mNonRounded.data - (hmsInputDataList.GetData(ValueType.VesselHeading).data + (userInputs.onDeckHelicopterHeading - userInputs.onDeckVesselHeading)), 0, MidpointRounding.AwayFromZero);
                 }
                 else
                 {
@@ -314,7 +317,7 @@ namespace HMS_Server
                     userInputs.onDeckTime != DateTime.MinValue &&
                     userInputs.onDeckVesselHeading != -1)
                 {
-                    vesselHeadingDelta.data = Math.Round(hmsInputDataList.GetData(ValueType.VesselHeading).data - userInputs.onDeckVesselHeading, 0, MidpointRounding.AwayFromZero);
+                    vesselHeadingDelta.data = Math.Round(userInputs.onDeckVesselHeading - Math.Round(hmsInputDataList.GetData(ValueType.VesselHeading).data, 1, MidpointRounding.AwayFromZero), 1, MidpointRounding.AwayFromZero);
                 }
                 else
                 {
@@ -330,7 +333,7 @@ namespace HMS_Server
                     userInputs.onDeckTime != DateTime.MinValue &&
                     userInputs.onDeckWindDirection != -1)
                 {
-                    windDirectionDelta.data = Math.Round(areaWindDirection2m.data - userInputs.onDeckWindDirection, 0, MidpointRounding.AwayFromZero);
+                    windDirectionDelta.data = Math.Round(userInputs.onDeckWindDirection - helideckWindDirectionRT.data, 0, MidpointRounding.AwayFromZero);
                 }
                 else
                 {
@@ -342,13 +345,13 @@ namespace HMS_Server
 
                 // Helicopter Heading
                 /////////////////////////////////////////////////////////////////////////////////////////
-                double heliHdg = userInputs.onDeckHelicopterHeading + (hmsInputDataList.GetData(ValueType.VesselHeading).data - userInputs.onDeckVesselHeading);
+                double heliHdg = userInputs.onDeckHelicopterHeading + (vesselHeading.data - userInputs.onDeckVesselHeading);
                 if (heliHdg > Constants.HeadingMax)
                     heliHdg -= Constants.HeadingMax;
                 if (heliHdg < Constants.HeadingMin)
                     heliHdg += Constants.HeadingMax;
 
-                helicopterHeading.data = heliHdg;
+                helicopterHeading.data = Math.Round(heliHdg, 0, MidpointRounding.AwayFromZero);
                 helicopterHeading.status = hmsInputDataList.GetData(ValueType.VesselHeading).status;
                 helicopterHeading.timestamp = hmsInputDataList.GetData(ValueType.VesselHeading).timestamp;
             }
