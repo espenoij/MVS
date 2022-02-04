@@ -94,6 +94,9 @@ namespace HMS_Server
         private bool licenseCheckOK = false;
         private ActivationVM activationVM;
 
+        // Lights output feilmelding
+        private bool lightsOutputError = false;
+
         public MainWindow()
         {
             InitializeComponent();
@@ -716,12 +719,17 @@ namespace HMS_Server
                         }
                         catch (Exception ex)
                         {
-                            errorHandler.Insert(
-                                new ErrorMessage(
-                                    DateTime.UtcNow,
-                                    ErrorMessageType.SerialPort,
-                                    ErrorMessageCategory.AdminUser,
-                                        string.Format("Lights Output Error\n\n{0}", ex.Message)));
+                            if (!lightsOutputError)
+                            {
+                                lightsOutputError = true;
+
+                                errorHandler.Insert(
+                                    new ErrorMessage(
+                                        DateTime.UtcNow,
+                                        ErrorMessageType.SerialPort,
+                                        ErrorMessageCategory.AdminUser,
+                                            string.Format("Lights Output Error\n\nCheck lights output setup.\n\n{0}", ex.Message)));
+                            }
                         }
                     }
                 }
@@ -807,6 +815,9 @@ namespace HMS_Server
         private void btnStop_Click(object sender, RoutedEventArgs e)
         {
             StopServer();
+
+            // Reset
+            lightsOutputError = false;
         }
 
         private void StartServer()

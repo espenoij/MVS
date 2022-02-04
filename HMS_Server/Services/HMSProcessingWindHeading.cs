@@ -596,7 +596,11 @@ namespace HMS_Server
                         gust3SecSum += item.spd;
 
                     // Snitt
-                    double gust3SecMean = gust3SecSum / gustData.gust3SecDataList.Count;
+                    double gust3SecMean;
+                    if (gustData.gust3SecDataList.Count > 0)
+                        gust3SecMean = gust3SecSum / gustData.gust3SecDataList.Count;
+                    else
+                        gust3SecMean = 0;
 
                     // Lagre i gust listen
                     gustData.gustDataList.Add(new Wind()

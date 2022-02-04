@@ -11,12 +11,8 @@ namespace HMS_Client
         public event PropertyChangedEventHandler PropertyChanged;
 
         private DispatcherTimer UIUpdateTimer = new DispatcherTimer();
-        private DispatcherTimer ChartDataUpdateTimer20m = new DispatcherTimer();
-        private DispatcherTimer ChartDataUpdateTimer3h = new DispatcherTimer();
 
         // MSI / WSI Graph buffer / data
-        private RadObservableCollectionEx<HMSData> msiwsi20mBuffer = new RadObservableCollectionEx<HMSData>();
-        private RadObservableCollectionEx<HMSData> msiwsi3hBuffer = new RadObservableCollectionEx<HMSData>();
         public RadObservableCollectionEx<HMSData> msiwsi20mDataList = new RadObservableCollectionEx<HMSData>();
         public RadObservableCollectionEx<HMSData> msiwsi3hDataList = new RadObservableCollectionEx<HMSData>();
 
@@ -43,40 +39,16 @@ namespace HMS_Client
                     OnPropertyChanged(nameof(msiwsiY));
                 }
 
-                // Oppdatere data som skal ut i grafer
-                if (msiwsi.status == DataStatus.OK)
+                // Her skal vi ikke ha 0 data i grafen
+                if (msiwsi.status != DataStatus.TIMEOUT_ERROR)
                 {
-                    GraphBuffer.Update(msiwsi, msiwsi20mBuffer);
-                    GraphBuffer.Update(msiwsi, msiwsi3hBuffer);
+                    // Oppdatere data som skal ut i grafer
+                    GraphBuffer.UpdateWithCull(msiwsi, msiwsi20mDataList, Constants.GraphCullFrequency20m);
+                    GraphBuffer.UpdateWithCull(msiwsi, msiwsi3hDataList, Constants.GraphCullFrequency3h);
                 }
-            }
-
-            // Oppdatere trend data i UI: 20 minutter
-            ChartDataUpdateTimer20m.Interval = TimeSpan.FromMilliseconds(config.ReadWithDefault(ConfigKey.ChartDataUpdateFrequency20m, Constants.ChartUpdateFrequencyUI20mDefault));
-            ChartDataUpdateTimer20m.Tick += ChartDataUpdate20m;
-            ChartDataUpdateTimer20m.Start();
-
-            void ChartDataUpdate20m(object sender, EventArgs e)
-            {
-                // Overføre data fra buffer til chart data: 20m
-                GraphBuffer.Transfer(msiwsi20mBuffer, msiwsi20mDataList);
 
                 // Fjerne gamle data fra chart data
                 GraphBuffer.RemoveOldData(msiwsi20mDataList, Constants.Minutes20);
-            }
-
-            // Oppdatere trend data i UI: 3 hours
-            ChartDataUpdateTimer3h.Interval = TimeSpan.FromMilliseconds(config.ReadWithDefault(ConfigKey.ChartDataUpdateFrequency3h, Constants.ChartUpdateFrequencyUI3hDefault));
-            ChartDataUpdateTimer3h.Tick += ChartDataUpdate3h;
-            ChartDataUpdateTimer3h.Start();
-
-            void ChartDataUpdate3h(object sender, EventArgs e)
-            {
-                // Overføre data fra buffer til chart data: 20m
-                GraphBuffer.Transfer(msiwsi3hBuffer, msiwsi3hDataList);
-
-
-                // Fjerne gamle data fra chart data
                 GraphBuffer.RemoveOldData(msiwsi3hDataList, Constants.Hours3);
             }
         }

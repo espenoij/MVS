@@ -469,54 +469,63 @@ namespace HMS_Client
             // aktivt og operatør driver å endrer og setter opp sensorer i server.
             // 2021.06.22: Tror kanskje det over er et tilbakelagt stadium.
             // 2021.08.16: Har ikke hatt krasj her siden sist. Suksess!
+            // 2022.02.03: Krasj ved startup
 
-            bool listResetRequired = false;
+            try
+            { 
+                bool listResetRequired = false;
 
-            // Sjekker først om lengden på innkommende data liste er like lagret data liste
-            if (dataList.Count() == hmsDataList?.Count())
-            {
-                // Starte overføring av data
-
-                // Legge nye data inn i lagringsliste
-                foreach (var item in dataList)
+                // Sjekker først om lengden på innkommende data liste er like lagret data liste
+                if (dataList.Count() == hmsDataList?.Count())
                 {
-                    // Finne igjen ID i lagringslisten
-                    var sensorData = hmsDataList.Where(x => x.id == item.id);
-                    if (sensorData.Count() > 0)
+                    // Starte overføring av data
+
+                    // Legge nye data inn i lagringsliste
+                    foreach (var item in dataList)
                     {
-                        // Lagre data
-                        sensorData.First().Set(item);
+                        // Finne igjen ID i lagringslisten
+                        var sensorData = hmsDataList.Where(x => x.id == item.id);
+                        if (sensorData.Count() > 0)
+                        {
+                            // Lagre data
+                            sensorData.First().Set(item);
+
+                            if (AdminMode.IsActive)
+                                socketConsole?.Add(string.Format("ProcessReceivedData: id:{0}, data:{1}, timestamp:{2}", item.id, item.data, item.timestamp.ToString()));
+                        }
+                        else
+                        {
+                            // Dersom vi ikke fant ID betyr det at listen er endret av server
+                            listResetRequired = true;
+                        }
+                    }
+                }
+                else
+                {
+                    // Ulike lengde på listene -> må legge inn alt på nytt
+                    listResetRequired = true;
+                }
+
+                // Data listen fra server er endret og hele listen på klient siden må legges inn på nytt
+                if (listResetRequired)
+                {
+                    // Fjerne alle tidligere data fra liste
+                    hmsDataList?.Clear();
+
+                    // Legge inn alle data på nytt
+                    foreach (var item in dataList)
+                    {
+                        hmsDataList?.Add(item);
 
                         if (AdminMode.IsActive)
                             socketConsole?.Add(string.Format("ProcessReceivedData: id:{0}, data:{1}, timestamp:{2}", item.id, item.data, item.timestamp.ToString()));
                     }
-                    else
-                    {
-                        // Dersom vi ikke fant ID betyr det at listen er endret av server
-                        listResetRequired = true;
-                    }
                 }
             }
-            else
+            catch (Exception ex)
             {
-                // Ulike lengde på listene -> må legge inn alt på nytt
-                listResetRequired = true;
-            }
-
-            // Data listen fra server er endret og hele listen på klient siden må legges inn på nytt
-            if (listResetRequired)
-            {
-                // Fjerne alle tidligere data fra liste
-                hmsDataList?.Clear();
-
-                // Legge inn alle data på nytt
-                foreach (var item in dataList)
-                {
-                    hmsDataList?.Add(item);
-
-                    if (AdminMode.IsActive)
-                        socketConsole?.Add(string.Format("ProcessReceivedData: id:{0}, data:{1}, timestamp:{2}", item.id, item.data, item.timestamp.ToString()));
-                }
+                if (AdminMode.IsActive)
+                    socketConsole?.Add(string.Format("TransferReceivedData: {0}", ex.Message));
             }
         }
 

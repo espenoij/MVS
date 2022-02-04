@@ -696,12 +696,15 @@ namespace HMS_Server
                 }
 
                 // Beregne gjennomsnitt av de verdiene som ligger i datasettet
-                significantHeaveRate10mMean = significantHeaveRate10mSum / significantHeaveRate10mMeanData.Count;
+                if (significantHeaveRate10mMeanData.Count > 0)
+                    significantHeaveRate10mMean = significantHeaveRate10mSum / significantHeaveRate10mMeanData.Count;
+                else
+                    significantHeaveRate10mMean = 0;
 
                 // 20-minute max
                 ///////////////////////////////////////////////////////////
-                ///
-                // Legge inn den nye verdien i data settet
+                    ///
+                    // Legge inn den nye verdien i data settet
                 significantHeaveRate20mMaxData.Add(new TimeData()
                 {
                     data = shrDataRounded,

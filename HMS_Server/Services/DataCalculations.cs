@@ -226,7 +226,8 @@ namespace HMS_Server
                             if (double.TryParse(newData, Constants.numberStyle, Constants.cultureInfo, out value))
                             {
                                 // Sjekke at ny verdi ikke er lik den forrige som ble lagt inn i datasettet -> unngå duplikater
-                                if (timeAverageDataList.LastOrDefault()?.timestamp != newTimeStamp)
+                                if (!double.IsNaN(value) && 
+                                    timeAverageDataList.LastOrDefault()?.timestamp != newTimeStamp)
                                 {
                                     // Legge inn den nye verdien i data settet
                                     timeAverageDataList.Add(new TimeData() { data = value, timestamp = newTimeStamp });
@@ -249,7 +250,10 @@ namespace HMS_Server
                                 }
 
                                 // Beregne gjennomsnitt av de verdiene som ligger i datasettet
-                                result = timeAverageTotal / timeAverageDataList.Count;
+                                if (timeAverageDataList.Count > 0)
+                                    result = timeAverageTotal / timeAverageDataList.Count;
+                                else
+                                    result = 0;
                             }
                             break;
 
@@ -270,7 +274,8 @@ namespace HMS_Server
                             if (double.TryParse(newData, Constants.numberStyle, Constants.cultureInfo, out value))
                             {
                                 // Sjekke at ny verdi ikke er lik den forrige som ble lagt inn i datasettet -> unngå duplikater
-                                if (timeMaxAbsoluteDataList.LastOrDefault()?.timestamp != newTimeStamp)
+                                if (!double.IsNaN(value) && 
+                                    timeMaxAbsoluteDataList.LastOrDefault()?.timestamp != newTimeStamp)
                                 {
 
                                     // Legge inn den nye absolutte verdien i data settet
@@ -351,7 +356,8 @@ namespace HMS_Server
                             if (double.TryParse(newData, Constants.numberStyle, Constants.cultureInfo, out value))
                             {
                                 // Sjekke at ny verdi ikke er lik den forrige som ble lagt inn i datasettet -> unngå duplikater
-                                if (timeMaxPositiveDataList.LastOrDefault()?.timestamp != newTimeStamp)
+                                if (!double.IsNaN(value) && 
+                                    timeMaxPositiveDataList.LastOrDefault()?.timestamp != newTimeStamp)
                                 {
                                     // Legge inn den nye verdien i data settet
                                     timeMaxPositiveDataList.Add(
@@ -430,7 +436,8 @@ namespace HMS_Server
                             if (double.TryParse(newData, Constants.numberStyle, Constants.cultureInfo, out value))
                             {
                                 // Sjekke at ny verdi ikke er lik den forrige som ble lagt inn i datasettet -> unngå duplikater
-                                if (timeMaxNegativeDataList.LastOrDefault()?.timestamp != newTimeStamp)
+                                if (!double.IsNaN(value) && 
+                                    timeMaxNegativeDataList.LastOrDefault()?.timestamp != newTimeStamp)
                                 {
                                     // Legge inn den nye verdien i data settet
                                     timeMaxNegativeDataList.Add(
@@ -508,7 +515,8 @@ namespace HMS_Server
                             if (double.TryParse(newData, Constants.numberStyle, Constants.cultureInfo, out value))
                             {
                                 // Sjekke at ny verdi ikke er lik den forrige som ble lagt inn i datasettet -> unngå duplikater
-                                if (significantHeaveRateDataList.LastOrDefault()?.timestamp != newTimeStamp)
+                                if (!double.IsNaN(value) &&
+                                    significantHeaveRateDataList.LastOrDefault()?.timestamp != newTimeStamp)
                                 {
                                     // Legge inn den nye absolutte verdien i data settet
                                     significantHeaveRateDataList.Add(
@@ -541,7 +549,11 @@ namespace HMS_Server
                                 // -> significantHeaveRateSquareSum
 
                                 // Mean
-                                double mean = significantHeaveRateSquareSum / (double)significantHeaveRateDataList.Count();
+                                double mean;
+                                if (significantHeaveRateDataList.Count() > 0)
+                                    mean = significantHeaveRateSquareSum / significantHeaveRateDataList.Count();
+                                else
+                                    mean = 0;
 
                                 // Root
                                 double root = Math.Sqrt(mean);

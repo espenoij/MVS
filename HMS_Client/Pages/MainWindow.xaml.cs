@@ -107,7 +107,7 @@ namespace HMS_Client
                 serverCom);
 
             helideckMotionLimitsVM.Init(config, sensorStatus);
-            helideckMotionTrendVM.Init(config, sensorStatus);
+            helideckMotionTrendVM.Init(adminSettingsVM, config, sensorStatus);
             helideckStabilityLimitsVM.Init(config, sensorStatus);
             helideckRelativeWindLimitsVM.Init(config, sensorStatus);
             helideckWindHeadingTrendVM.Init(config, sensorStatus, userInputsVM);
@@ -199,6 +199,11 @@ namespace HMS_Client
                 // Helideck Status Trend
                 ucHelideckStatusTrend_CAP.Visibility = Visibility.Collapsed;
 
+                // Motion History
+                tabHelideckMotionHistory_NOROG.Visibility = Visibility.Visible;
+                tabHelideckMotionHistory_CAP.Visibility = Visibility.Collapsed;
+                ucHelideckMotionHistory_NOROG.Init(helideckMotionTrendVM);
+
                 // Helideck Report
                 tabHelideckReport_NOROG.Visibility = Visibility.Visible;
                 tabHelideckReport_CAP.Visibility = Visibility.Collapsed;
@@ -255,14 +260,16 @@ namespace HMS_Client
                 ucHelideckStatusTrend_CAP.Visibility = Visibility.Visible;
                 ucHelideckStatusTrend_CAP.Init(helideckStatusTrendVM, config);
 
+                // Helideck Motion history
+                tabHelideckMotionHistory_CAP.Visibility = Visibility.Visible;
+                tabHelideckMotionHistory_NOROG.Visibility = Visibility.Collapsed;
+                ucHelideckMotionHistory_CAP.Init(helideckMotionTrendVM);
+
                 // Helideck Report
                 tabHelideckReport_CAP.Visibility = Visibility.Visible;
                 tabHelideckReport_NOROG.Visibility = Visibility.Collapsed;
                 ucHelideckReport_CAP.Init(helideckReportVM, config, adminSettingsVM);
             }
-
-            // Helideck Motion Trend Zoom
-            ucHelideckMotionHistory.Init(helideckMotionTrendVM);
 
             // Sensor Status Display
             ucSensorStatus.Init(sensorStatusVM);

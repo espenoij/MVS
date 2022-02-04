@@ -716,7 +716,7 @@
                         Name="tbMagneticDeclination"
                         Width="110"
                         HorizontalAlignment="Right"
-                        Text="{Binding Path=airPressureSensorHeight}"
+                        Text="{Binding Path=magneticDeclination}"
                         LostFocus="tbMagneticDeclination_LostFocus"
                         KeyDown="tbMagneticDeclination_KeyDown" />
                 </DockPanel>

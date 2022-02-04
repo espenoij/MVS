@@ -11,10 +11,8 @@ namespace HMS_Client
         public event PropertyChangedEventHandler PropertyChanged;
 
         private DispatcherTimer UIUpdateTimer = new DispatcherTimer();
-        private DispatcherTimer ChartDataUpdateTimer20m = new DispatcherTimer();
 
         // Relative Wind graph buffer/data
-        private RadObservableCollectionEx<HMSData> relativeWindDir20mBuffer = new RadObservableCollectionEx<HMSData>();
         public RadObservableCollectionEx<HMSData> relativeWindDir20mDataList = new RadObservableCollectionEx<HMSData>();
 
         public void Init(Config config, SensorGroupStatus sensorStatus)
@@ -33,18 +31,7 @@ namespace HMS_Client
 
                 // Oppdatere data som skal ut i grafer
                 if (rwdGraphData.status == DataStatus.OK)
-                    GraphBuffer.Update(rwdGraphData, relativeWindDir20mBuffer);
-            }
-
-            // Oppdatere trend data i UI: 20 minutter
-            ChartDataUpdateTimer20m.Interval = TimeSpan.FromMilliseconds(config.ReadWithDefault(ConfigKey.ChartDataUpdateFrequency20m, Constants.ChartUpdateFrequencyUI20mDefault));
-            ChartDataUpdateTimer20m.Tick += ChartDataUpdate20m;
-            ChartDataUpdateTimer20m.Start();
-
-            void ChartDataUpdate20m(object sender, EventArgs e)
-            {
-                // Overføre data fra buffer til chart data: 20m
-                GraphBuffer.Transfer(relativeWindDir20mBuffer, relativeWindDir20mDataList);
+                    GraphBuffer.UpdateWithCull(rwdGraphData, relativeWindDir20mDataList, Constants.GraphCullFrequency20m);
 
                 // Fjerne gamle data fra chart data
                 GraphBuffer.RemoveOldData(relativeWindDir20mDataList, Constants.Minutes20);
@@ -61,16 +48,13 @@ namespace HMS_Client
         public void Start()
         {
             UIUpdateTimer.Start();
-            ChartDataUpdateTimer20m.Start();
         }
 
         public void Stop()
         {
             UIUpdateTimer.Stop();
-            ChartDataUpdateTimer20m.Stop();
 
             // Slette Graph buffer/data
-            GraphBuffer.Clear(relativeWindDir20mBuffer);
             GraphBuffer.Clear(relativeWindDir20mDataList);
         }
 

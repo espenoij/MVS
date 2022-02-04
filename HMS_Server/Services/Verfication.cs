@@ -19,6 +19,7 @@ namespace HMS_Server
         private double prevID = 0;
 
         private bool deviationReset = false;
+        private bool helicopterSetInit = false;
         private bool helicopterSetLanded = false;
         private bool helicopterSetTakeoff = false;
 
@@ -117,74 +118,89 @@ namespace HMS_Server
                 }
             }
 
-            // Stopper alle verification operasjoner når vi passerer siste time ID
-            if (verificationData.First().testData <= 57600)
+            if (verificationData.Count > 0)
             {
-                // Resetter deviation variablene når vi starter med referanse data fra 54000
-                if (!deviationReset && verificationData.First().testData >= 54000)
+                // Stopper alle verification operasjoner når vi passerer siste time ID
+                if (verificationData.First().testData <= 57600)
                 {
-                    Reset();
-                    deviationReset = true;
-                }
-
-                // Helikopter lander: Sette on-deck i user inputs
-                if (verificationData.First().testData >= 56100 &&
-                    !helicopterSetLanded)
-                {
-                    userInputs.displayMode = DisplayMode.OnDeck;
-                    userInputs.onDeckHelicopterHeading = 338;
-                    userInputs.onDeckTime = DateTime.UtcNow;
-                    userInputs.onDeckVesselHeading = 335;
-                    userInputs.onDeckWindDirection = 334;
-
-                    helicopterSetLanded = true;
-                }
-
-                // Helikoptert tar av igjen
-                if (verificationData.First().testData >= 57300 &&
-                    !helicopterSetTakeoff)
-                {
-                    userInputs.displayMode = DisplayMode.PreLanding;
-
-                    helicopterSetTakeoff = true;
-                }
-
-                // Oppdatere/beregne forskjeller mellom test data og referanse data.
-                foreach (var item in verificationData)
-                {
-                    // Sammenligne test og referanse data
-                    if (item.id != VerificationType.TimeID) // Men aldri for Time ID
-                        item.Compare();
-                    else
-                        item.differenceAbs = 0;
-                }
-
-                // Legge test data inn i databasen
-                // Sjekke time ID mot listen med time ID'er vi er interessert i
-                // Matcher time ID settet i referanse data filen fra CAA (OUT_PRE tab i excel ark)
-                if (refTimeIDList.Exists(x => x == verificationData.First().testData) && prevID != verificationData.First().testData)
-                {
-                    try
+                    // Resetter deviation variablene når vi starter med referanse data fra 54000
+                    if (!deviationReset && verificationData.First().testData >= 54000)
                     {
-                        // Lagre til databasen
-                        database.Insert(verificationData);
-
-                        errorHandler.ResetDatabaseError(ErrorHandler.DatabaseErrorType.Insert7_VerificationData);
-                    }
-                    catch (Exception ex)
-                    {
-                        errorHandler.Insert(
-                            new ErrorMessage(
-                                DateTime.UtcNow,
-                                ErrorMessageType.Database,
-                                ErrorMessageCategory.None,
-                                string.Format("Database Error (Insert verificationData)\n\nSystem Message:\n{0}", ex.Message)));
-
-                        errorHandler.SetDatabaseError(ErrorHandler.DatabaseErrorType.Insert7_VerificationData);
+                        Reset();
+                        deviationReset = true;
                     }
 
-                    // Forhinderer duplikater
-                    prevID = verificationData.First().testData;
+                    // Helikopter Init
+                    if (!helicopterSetInit)
+                    {
+                        userInputs.displayMode = DisplayMode.PreLanding;
+                        userInputs.onDeckHelicopterHeading = 0;
+                        userInputs.onDeckTime = DateTime.MinValue;
+                        userInputs.onDeckVesselHeading = 0;
+                        userInputs.onDeckWindDirection = 0;
+
+                        helicopterSetInit = true;
+                    }
+
+                    // Helikopter lander: Sette on-deck i user inputs
+                    if (verificationData.First().testData >= 56100 &&
+                        !helicopterSetLanded)
+                    {
+                        userInputs.displayMode = DisplayMode.OnDeck;
+                        userInputs.onDeckHelicopterHeading = 338;
+                        userInputs.onDeckTime = DateTime.UtcNow;
+                        userInputs.onDeckVesselHeading = 335;
+                        userInputs.onDeckWindDirection = 334;
+
+                        helicopterSetLanded = true;
+                    }
+
+                    // Helikopteret tar av igjen
+                    if (verificationData.First().testData >= 57300 &&
+                        !helicopterSetTakeoff)
+                    {
+                        userInputs.displayMode = DisplayMode.PreLanding;
+
+                        helicopterSetTakeoff = true;
+                    }
+
+                    // Oppdatere/beregne forskjeller mellom test data og referanse data.
+                    foreach (var item in verificationData)
+                    {
+                        // Sammenligne test og referanse data
+                        if (item.id != VerificationType.TimeID) // Men aldri for Time ID
+                            item.Compare();
+                        else
+                            item.differenceAbs = 0;
+                    }
+
+                    // Legge test data inn i databasen
+                    // Sjekke time ID mot listen med time ID'er vi er interessert i
+                    // Matcher time ID settet i referanse data filen fra CAA (OUT_PRE tab i excel ark)
+                    if (refTimeIDList.Exists(x => x == verificationData.First().testData) && prevID != verificationData.First().testData)
+                    {
+                        try
+                        {
+                            // Lagre til databasen
+                            database.Insert(verificationData);
+
+                            errorHandler.ResetDatabaseError(ErrorHandler.DatabaseErrorType.Insert7_VerificationData);
+                        }
+                        catch (Exception ex)
+                        {
+                            errorHandler.Insert(
+                                new ErrorMessage(
+                                    DateTime.UtcNow,
+                                    ErrorMessageType.Database,
+                                    ErrorMessageCategory.None,
+                                    string.Format("Database Error (Insert verificationData)\n\nSystem Message:\n{0}", ex.Message)));
+
+                            errorHandler.SetDatabaseError(ErrorHandler.DatabaseErrorType.Insert7_VerificationData);
+                        }
+
+                        // Forhinderer duplikater
+                        prevID = verificationData.First().testData;
+                    }
                 }
             }
         }

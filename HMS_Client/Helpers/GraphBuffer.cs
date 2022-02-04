@@ -26,6 +26,31 @@ namespace HMS_Client
             }
         }
 
+        public static void UpdateWithCull(HMSData data, RadObservableCollectionEx<HMSData> dataList, double cullFrequency)
+        {
+            // Ny løsning ifht det over: Begrenser (cull) graf data ved å ikke ta inn alt, men f.eks. bare hvert 5. sekund.
+            // Dropper bruken av buffer.
+
+            // Har vi to eller flere data punkt?
+            if (dataList.Count >= 2)
+            {
+                // Sjekker om tiden mellom siste og nest siste data punkt er mindre enn cullFrequency
+                if (dataList[dataList.Count - 2].timestamp.AddMilliseconds(cullFrequency) > dataList[dataList.Count - 1].timestamp)
+                {
+                    // I så tilfelle skal vi fjerne/cull siste data punkt før vi legge inn nytt
+                    dataList.RemoveAt(dataList.Count - 1);
+                }
+            }
+
+            // Status ok?
+            if (data?.status == DataStatus.OK)
+                // Lagre data i listen
+                dataList.Add(new HMSData(data));
+            else
+                // Lagre 0 data
+                dataList.Add(new HMSData() { data = 0, timestamp = DateTime.UtcNow });
+        }
+
         public static void Transfer(RadObservableCollectionEx<HMSData> buffer, RadObservableCollectionEx<HMSData> dataList)
         {
             // Overfører alle data fra buffer til dataList

@@ -11,14 +11,11 @@ namespace HMS_Client
         public event PropertyChangedEventHandler PropertyChanged;
 
         private DispatcherTimer UIUpdateTimer = new DispatcherTimer();
-        private DispatcherTimer ChartDataUpdateTimer = new DispatcherTimer();
 
         // Graph buffer/data
-        private RadObservableCollectionEx<HMSData> vesselHdg20mBuffer = new RadObservableCollectionEx<HMSData>();
         public RadObservableCollectionEx<HMSData> vesselHdg20mDataList = new RadObservableCollectionEx<HMSData>();
         private double vesselHdgDeltaAbsMax = 0;
 
-        private RadObservableCollectionEx<HMSData> windDir20mBuffer = new RadObservableCollectionEx<HMSData>();
         public RadObservableCollectionEx<HMSData> windDir20mDataList = new RadObservableCollectionEx<HMSData>();
         private double windDirDeltaAbsMax = 0;
 
@@ -36,6 +33,10 @@ namespace HMS_Client
 
             void UIUpdate(object sender, EventArgs e)
             {
+                // Disse korreksjonene legges inn for å få tidspunkt-label på X aksen til å vises korrekt
+                int chartTimeCorrMin = 4;
+                int chartTimeCorrMax = -2;
+
                 // Sjekke om vi har data timeout
                 if (sensorStatus.TimeoutCheck(vesselHeadingDelta))
                 {
@@ -52,23 +53,8 @@ namespace HMS_Client
                 }
 
                 // Oppdatere data som skal ut i grafer
-                GraphBuffer.Update(vesselHeadingDelta, vesselHdg20mBuffer);
-                GraphBuffer.Update(windDirectionDelta, windDir20mBuffer);
-            }
-
-            // Oppdatere trend data i UI: 20 minutter
-            ChartDataUpdateTimer.Interval = TimeSpan.FromMilliseconds(config.ReadWithDefault(ConfigKey.ChartDataUpdateFrequency20m, Constants.ChartUpdateFrequencyUI20mDefault));
-            ChartDataUpdateTimer.Tick += ChartDataUpdate;
-
-            void ChartDataUpdate(object sender, EventArgs e)
-            {
-                // Disse korreksjonene legges inn for å få tidspunkt-label på X aksen til å vises korrekt
-                int chartTimeCorrMin = 4;
-                int chartTimeCorrMax = -2;
-
-                // Overføre data fra buffer til chart data: 20m
-                GraphBuffer.Transfer(vesselHdg20mBuffer, vesselHdg20mDataList);
-                GraphBuffer.Transfer(windDir20mBuffer, windDir20mDataList);
+                GraphBuffer.UpdateWithCull(vesselHeadingDelta, vesselHdg20mDataList, Constants.GraphCullFrequency20m);
+                GraphBuffer.UpdateWithCull(windDirectionDelta, windDir20mDataList, Constants.GraphCullFrequency20m);
 
                 //Fjerne gamle data fra chart data
                 GraphBuffer.RemoveOldData(vesselHdg20mDataList, Constants.Minutes30 + chartTimeCorrMin);
@@ -83,26 +69,20 @@ namespace HMS_Client
                     alignmentTime = userInputsVM.onDeckTime.AddSeconds(Constants.Minutes30 + chartTimeCorrMax);
                 else
                     alignmentTime = DateTime.UtcNow;
-
-                //OnPropertyChanged(nameof(helideckTrendTimeString));
             }
         }
 
         public void Start()
         {
             UIUpdateTimer.Start();
-            ChartDataUpdateTimer.Start();
         }
 
         public void Stop()
         {
             UIUpdateTimer.Stop();
-            ChartDataUpdateTimer.Stop();
 
             // Slette Graph buffer/data
-            GraphBuffer.Clear(vesselHdg20mBuffer);
             GraphBuffer.Clear(vesselHdg20mDataList);
-            GraphBuffer.Clear(windDir20mBuffer);
             GraphBuffer.Clear(windDir20mDataList);
         }
 

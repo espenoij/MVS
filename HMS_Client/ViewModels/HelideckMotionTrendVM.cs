@@ -58,7 +58,7 @@ namespace HMS_Client
             InitSignificantHeaveData();
         }
 
-        public void Init(Config config, SensorGroupStatus sensorStatus)
+        public void Init(AdminSettingsVM adminSettingsVM, Config config, SensorGroupStatus sensorStatus)
         {
             // Oppdatere UI
             UIUpdateTimer.Interval = TimeSpan.FromMilliseconds(config.ReadWithDefault(ConfigKey.ClientUpdateFrequencyUI, Constants.ClientUpdateFrequencyUIDefault));
@@ -104,18 +104,47 @@ namespace HMS_Client
                 sensorStatus.TimeoutCheck(motionLimitHeaveAmplitude);
                 sensorStatus.TimeoutCheck(motionLimitSignificantHeaveRate);
 
-                // Oppdatere data som skal ut i grafer
-                GraphBuffer.Update(pitchData, pitchBuffer20m);
-                GraphBuffer.Update(rollData, rollBuffer20m);
-                GraphBuffer.Update(inclinationData, inclinationBuffer20m);
-                GraphBuffer.Update(heaveAmplitudeData, heaveAmplitudeBuffer20m);
-                GraphBuffer.Update(significantHeaveRateData, significantHeaveRateBuffer20m);
+                if (adminSettingsVM.regulationStandard == RegulationStandard.NOROG)
+                {
+                    // Oppdatere data som skal ut i grafer
+                    GraphBuffer.Update(pitchData, pitchBuffer20m);
+                    GraphBuffer.Update(rollData, rollBuffer20m);
+                    GraphBuffer.Update(inclinationData, inclinationBuffer20m);
+                    GraphBuffer.Update(heaveAmplitudeData, heaveAmplitudeBuffer20m);
+                    GraphBuffer.Update(significantHeaveRateData, significantHeaveRateBuffer20m);
 
-                GraphBuffer.Update(pitchData, pitchBuffer3h);
-                GraphBuffer.Update(rollData, rollBuffer3h);
-                GraphBuffer.Update(inclinationData, inclinationBuffer3h);
-                GraphBuffer.Update(heaveAmplitudeData, heaveAmplitudeBuffer3h);
-                GraphBuffer.Update(significantHeaveRateData, significantHeaveRateBuffer3h);
+                    GraphBuffer.Update(pitchData, pitchBuffer3h);
+                    GraphBuffer.Update(rollData, rollBuffer3h);
+                    GraphBuffer.Update(inclinationData, inclinationBuffer3h);
+                    GraphBuffer.Update(heaveAmplitudeData, heaveAmplitudeBuffer3h);
+                    GraphBuffer.Update(significantHeaveRateData, significantHeaveRateBuffer3h);
+                }
+                else
+                {
+                    int chartTimeCorrMin = 4;
+
+                    // Oppdatere data som skal ut i grafer
+                    GraphBuffer.UpdateWithCull(pitchMax20mData, pitchData20mList, Constants.GraphCullFrequency20m);
+                    GraphBuffer.UpdateWithCull(rollMax20mData, rollData20mList, Constants.GraphCullFrequency20m);
+                    GraphBuffer.UpdateWithCull(inclinationMax20mData, inclinationData20mList, Constants.GraphCullFrequency20m);
+                    GraphBuffer.UpdateWithCull(significantHeaveRateData, significantHeaveRateData20mList, Constants.GraphCullFrequency20m);
+
+                    GraphBuffer.UpdateWithCull(pitchMax20mData, pitchData3hList, Constants.GraphCullFrequency3h);
+                    GraphBuffer.UpdateWithCull(rollMax20mData, rollData3hList, Constants.GraphCullFrequency3h);
+                    GraphBuffer.UpdateWithCull(inclinationMax20mData, inclinationData3hList, Constants.GraphCullFrequency3h);
+                    GraphBuffer.UpdateWithCull(significantHeaveRateData, significantHeaveRateData3hList, Constants.GraphCullFrequency3h);
+
+                    // Fjerne gamle data fra chart data
+                    GraphBuffer.RemoveOldData(pitchData20mList, Constants.Minutes20 + chartTimeCorrMin);
+                    GraphBuffer.RemoveOldData(rollData20mList, Constants.Minutes20 + chartTimeCorrMin);
+                    GraphBuffer.RemoveOldData(inclinationData20mList, Constants.Minutes20 + chartTimeCorrMin);
+                    GraphBuffer.RemoveOldData(significantHeaveRateData20mList, Constants.Minutes20 + chartTimeCorrMin);
+
+                    GraphBuffer.RemoveOldData(pitchData3hList, Constants.Hours3 + chartTimeCorrMin);
+                    GraphBuffer.RemoveOldData(rollData3hList, Constants.Hours3 + chartTimeCorrMin);
+                    GraphBuffer.RemoveOldData(inclinationData3hList, Constants.Hours3 + chartTimeCorrMin);
+                    GraphBuffer.RemoveOldData(significantHeaveRateData3hList, Constants.Hours3 + chartTimeCorrMin);
+                }
             }
 
             // Oppdatere trend data i UI: 20 minutter
@@ -129,19 +158,22 @@ namespace HMS_Client
                 int chartTimeCorrMin = 4;
                 int chartTimeCorrMax = -2;
 
-                // Overføre data fra buffer til chart data: 20m
-                GraphBuffer.Transfer(pitchBuffer20m, pitchData20mList);
-                GraphBuffer.Transfer(rollBuffer20m, rollData20mList);
-                GraphBuffer.Transfer(inclinationBuffer20m, inclinationData20mList);
-                GraphBuffer.Transfer(heaveAmplitudeBuffer20m, heaveAmplitudeData20mList);
-                GraphBuffer.Transfer(significantHeaveRateBuffer20m, significantHeaveRateData20mList);
+                if (adminSettingsVM.regulationStandard == RegulationStandard.NOROG)
+                {
+                    // Overføre data fra buffer til chart data: 20m
+                    GraphBuffer.Transfer(pitchBuffer20m, pitchData20mList);
+                    GraphBuffer.Transfer(rollBuffer20m, rollData20mList);
+                    GraphBuffer.Transfer(inclinationBuffer20m, inclinationData20mList);
+                    GraphBuffer.Transfer(heaveAmplitudeBuffer20m, heaveAmplitudeData20mList);
+                    GraphBuffer.Transfer(significantHeaveRateBuffer20m, significantHeaveRateData20mList);
 
-                // Fjerne gamle data fra chart data
-                GraphBuffer.RemoveOldData(pitchData20mList, Constants.Minutes20 + chartTimeCorrMin);
-                GraphBuffer.RemoveOldData(rollData20mList, Constants.Minutes20 + chartTimeCorrMin);
-                GraphBuffer.RemoveOldData(inclinationData20mList, Constants.Minutes20 + chartTimeCorrMin);
-                GraphBuffer.RemoveOldData(heaveAmplitudeData20mList, Constants.Minutes20 + chartTimeCorrMin);
-                GraphBuffer.RemoveOldData(significantHeaveRateData20mList, Constants.Minutes20 + chartTimeCorrMin);
+                    // Fjerne gamle data fra chart data
+                    GraphBuffer.RemoveOldData(pitchData20mList, Constants.Minutes20 + chartTimeCorrMin);
+                    GraphBuffer.RemoveOldData(rollData20mList, Constants.Minutes20 + chartTimeCorrMin);
+                    GraphBuffer.RemoveOldData(inclinationData20mList, Constants.Minutes20 + chartTimeCorrMin);
+                    GraphBuffer.RemoveOldData(heaveAmplitudeData20mList, Constants.Minutes20 + chartTimeCorrMin);
+                    GraphBuffer.RemoveOldData(significantHeaveRateData20mList, Constants.Minutes20 + chartTimeCorrMin);
+                }
 
                 // Oppdatere aksene og farget område på graf
                 OnPropertyChanged(nameof(pitchChartAxisMax20m));
@@ -195,19 +227,22 @@ namespace HMS_Client
                 // Disse korreksjonene legges inn for å få tidspunkt-label på X aksen til å vises korrekt
                 int chartTimeCorrMin = 4;
 
-                // Overføre data fra buffer til chart data: 20m
-                GraphBuffer.Transfer(pitchBuffer3h, pitchData3hList);
-                GraphBuffer.Transfer(rollBuffer3h, rollData3hList);
-                GraphBuffer.Transfer(inclinationBuffer3h, inclinationData3hList);
-                GraphBuffer.Transfer(heaveAmplitudeBuffer3h, heaveAmplitudeData3hList);
-                GraphBuffer.Transfer(significantHeaveRateBuffer3h, significantHeaveRateData3hList);
+                if (adminSettingsVM.regulationStandard == RegulationStandard.NOROG)
+                {
+                    // Overføre data fra buffer til chart data: 20m
+                    GraphBuffer.Transfer(pitchBuffer3h, pitchData3hList);
+                    GraphBuffer.Transfer(rollBuffer3h, rollData3hList);
+                    GraphBuffer.Transfer(inclinationBuffer3h, inclinationData3hList);
+                    GraphBuffer.Transfer(heaveAmplitudeBuffer3h, heaveAmplitudeData3hList);
+                    GraphBuffer.Transfer(significantHeaveRateBuffer3h, significantHeaveRateData3hList);
 
-                // Fjerne gamle data fra chart data
-                GraphBuffer.RemoveOldData(pitchData3hList, Constants.Hours3 + chartTimeCorrMin);
-                GraphBuffer.RemoveOldData(rollData3hList, Constants.Hours3 + chartTimeCorrMin);
-                GraphBuffer.RemoveOldData(inclinationData3hList, Constants.Hours3 + chartTimeCorrMin);
-                GraphBuffer.RemoveOldData(heaveAmplitudeData3hList, Constants.Hours3 + chartTimeCorrMin);
-                GraphBuffer.RemoveOldData(significantHeaveRateData3hList, Constants.Hours3 + chartTimeCorrMin);
+                    // Fjerne gamle data fra chart data
+                    GraphBuffer.RemoveOldData(pitchData3hList, Constants.Hours3 + chartTimeCorrMin);
+                    GraphBuffer.RemoveOldData(rollData3hList, Constants.Hours3 + chartTimeCorrMin);
+                    GraphBuffer.RemoveOldData(inclinationData3hList, Constants.Hours3 + chartTimeCorrMin);
+                    GraphBuffer.RemoveOldData(heaveAmplitudeData3hList, Constants.Hours3 + chartTimeCorrMin);
+                    GraphBuffer.RemoveOldData(significantHeaveRateData3hList, Constants.Hours3 + chartTimeCorrMin);
+                }
 
                 // Oppdatere aksene og farget område på graf
                 OnPropertyChanged(nameof(pitchChartAxisMax3h));

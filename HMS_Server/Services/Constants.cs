@@ -18,8 +18,8 @@ class Constants
     public const int PacketDataFields = 60;                     // Korresponderer til felt i XAML fil (lvPacketData)
 
     // Timing
-    public const int ClientUpdateFrequencyUIDefault = 500;
-    public const int ClientUpdateFrequencyUIMin = 500;
+    public const int ClientUpdateFrequencyUIDefault = 1000;
+    public const int ClientUpdateFrequencyUIMin = 100;
     public const int ClientUpdateFrequencyUIMax = 5000;
 
     public const int ChartUpdateFrequencyUI20mDefault = 5000;
@@ -274,4 +274,8 @@ class Constants
     public const int LicenseMaxClientsMin = 0;
     public const int LicenseMaxClientsMax = 100;
     public const int LicenseMaxClientsDefault = 0;
+
+    // Graph Accuracy
+    public const double GraphCullFrequency20m = 4750;
+    public const double GraphCullFrequency3h = 19750;
 }

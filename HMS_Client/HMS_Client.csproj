@@ -248,6 +248,9 @@
     </Compile>
     <Compile Include="Helpers\GraphBuffer.cs" />
     <Compile Include="Helpers\HMSCalc.cs" />
+    <Compile Include="Pages\HelideckMotionHistory_NOROG.xaml.cs">
+      <DependentUpon>HelideckMotionHistory_NOROG.xaml</DependentUpon>
+    </Compile>
     <Compile Include="Services\AdminMode.cs" />
     <Compile Include="Config\ConfigKey.cs" />
     <Compile Include="Dialogs\DialogHandler.cs" />
@@ -356,8 +359,8 @@
     <Compile Include="Services\ServerCom.cs" />
     <Compile Include="Helpers\EnumExtension.cs" />
     <Compile Include="ViewModels\GeneralInformationVM.cs" />
-    <Compile Include="Pages\HelideckMotionHistory.xaml.cs">
-      <DependentUpon>HelideckMotionHistory.xaml</DependentUpon>
+    <Compile Include="Pages\HelideckMotionHistory_CAP.xaml.cs">
+      <DependentUpon>HelideckMotionHistory_CAP.xaml</DependentUpon>
     </Compile>
     <Compile Include="ViewModels\HelideckMotionTrendVM.cs" />
     <Compile Include="ViewModels\HelideckMotionLimitsVM.cs" />
@@ -447,6 +450,10 @@
       <SubType>Designer</SubType>
       <Generator>MSBuild:Compile</Generator>
     </Page>
+    <Page Include="Pages\HelideckMotionHistory_NOROG.xaml">
+      <Generator>MSBuild:Compile</Generator>
+      <SubType>Designer</SubType>
+    </Page>
     <Page Include="Pages\HelideckMotionLimits_Touchdown_CAP.xaml">
       <SubType>Designer</SubType>
       <Generator>MSBuild:Compile</Generator>
@@ -491,7 +498,7 @@
       <SubType>Designer</SubType>
       <Generator>MSBuild:Compile</Generator>
     </Page>
-    <Page Include="Pages\HelideckMotionHistory.xaml">
+    <Page Include="Pages\HelideckMotionHistory_CAP.xaml">
       <Generator>MSBuild:Compile</Generator>
       <SubType>Designer</SubType>
     </Page>

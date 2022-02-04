@@ -51,7 +51,10 @@ namespace HMS_Server
             }
             set
             {
-                _testData = value;
+                if (!double.IsNaN(value))
+                    _testData = value;
+                else
+                    _testData = 0;
                 OnPropertyChanged();
             }
         }
@@ -65,7 +68,10 @@ namespace HMS_Server
             }
             set
             {
-                _refData = value;
+                if (!double.IsNaN(value))
+                    _refData = value;
+                else
+                    _refData = 0;
                 OnPropertyChanged();
             }
         }

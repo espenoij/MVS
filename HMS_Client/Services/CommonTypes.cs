@@ -72,6 +72,7 @@ public enum DataStatus
 
 public enum LimitStatus
 {
+    NA,
     OVER_LIMIT,
     OK
 }
