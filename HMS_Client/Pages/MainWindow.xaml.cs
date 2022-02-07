@@ -109,7 +109,7 @@ namespace HMS_Client
             helideckMotionLimitsVM.Init(config, sensorStatus);
             helideckMotionTrendVM.Init(adminSettingsVM, config, sensorStatus);
             helideckStabilityLimitsVM.Init(config, sensorStatus);
-            helideckRelativeWindLimitsVM.Init(config, sensorStatus);
+            helideckRelativeWindLimitsVM.Init(config, sensorStatus, userInputsVM);
             helideckWindHeadingTrendVM.Init(config, sensorStatus, userInputsVM);
             helideckStatusVM.Init(config, sensorStatus, userInputsVM);
             helideckStatusTrendVM.Init(helideckStatusVM, helideckStabilityLimitsVM, config);

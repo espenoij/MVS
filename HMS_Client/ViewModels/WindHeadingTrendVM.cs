@@ -53,10 +53,10 @@ namespace HMS_Client
                 }
 
                 // Oppdatere data som skal ut i grafer
-                GraphBuffer.UpdateWithCull(vesselHeadingDelta, vesselHdg20mDataList, Constants.GraphCullFrequency20m);
-                GraphBuffer.UpdateWithCull(windDirectionDelta, windDir20mDataList, Constants.GraphCullFrequency20m);
+                GraphBuffer.UpdateWithCull(vesselHeadingDelta, vesselHdg20mDataList, Constants.GraphCullFrequency30m);
+                GraphBuffer.UpdateWithCull(windDirectionDelta, windDir20mDataList, Constants.GraphCullFrequency30m);
 
-                //Fjerne gamle data fra chart data
+                // Fjerne gamle data fra chart data
                 GraphBuffer.RemoveOldData(vesselHdg20mDataList, Constants.Minutes30 + chartTimeCorrMin);
                 GraphBuffer.RemoveOldData(windDir20mDataList, Constants.Minutes30 + chartTimeCorrMin);
 

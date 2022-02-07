@@ -277,5 +277,6 @@ class Constants
 
     // Graph Accuracy
     public const double GraphCullFrequency20m = 4750;
+    public const double GraphCullFrequency30m = 9750;
     public const double GraphCullFrequency3h = 19750;
 }

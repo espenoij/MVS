@@ -752,7 +752,7 @@ namespace HMS_Server
 
                 void runLightsOutputUpdate(object sender, EventArgs e)
                 {
-                    verfication.Update(hmsOutputData.GetDataList(), sensorDataDisplayList, database);
+                    verfication.Update(hmsOutputData, sensorDataDisplayList, database);
                 }
             }
         }
@@ -788,8 +788,8 @@ namespace HMS_Server
             if (userInputs != null)
             {
                 // Setter ikke user data fra klient dersom vi holder på med data verifikasjon
-                if (!adminSettingsVM.dataVerificationEnabled)
-                {
+                //if (!adminSettingsVM.dataVerificationEnabled)
+                //{
                     // Overføre data
                     this.userInputs.Set(userInputs);
 
@@ -803,7 +803,7 @@ namespace HMS_Server
                     config.Write(ConfigKey.OnDeckHelicopterHeading, userInputs.onDeckHelicopterHeading.ToString());
                     config.Write(ConfigKey.OnDeckVesselHeading, userInputs.onDeckVesselHeading.ToString());
                     config.Write(ConfigKey.OnDeckWindDirection, userInputs.onDeckWindDirection.ToString());
-                }
+                //}
             }
         }
 

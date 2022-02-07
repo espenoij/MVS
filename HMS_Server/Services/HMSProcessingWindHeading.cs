@@ -301,7 +301,7 @@ namespace HMS_Server
                 if (areaWindDirection2m.status == DataStatus.OK &&
                     hmsInputDataList.GetData(ValueType.VesselHeading).status == DataStatus.OK)
                 {
-                    relativeWindDir.data = Math.Round(areaWindDirection2mNonRounded.data - (hmsInputDataList.GetData(ValueType.VesselHeading).data + (userInputs.onDeckHelicopterHeading - userInputs.onDeckVesselHeading)), 0, MidpointRounding.AwayFromZero);
+                    relativeWindDir.data = Math.Round(areaWindDirection2mNonRounded.data - (hmsInputDataList.GetData(ValueType.VesselHeading).data + (userInputs.onDeckHelicopterHeading - userInputs.onDeckVesselHeading)), 1, MidpointRounding.AwayFromZero);
 
                     if (relativeWindDir.data > 180)
                         relativeWindDir.data -= 180;
@@ -339,15 +339,15 @@ namespace HMS_Server
                     userInputs.onDeckTime != DateTime.MinValue &&
                     userInputs.onDeckWindDirection != -1)
                 {
-                    windDirectionDelta.data = Math.Round(userInputs.onDeckWindDirection - areaWindDirection2m.data, 1, MidpointRounding.AwayFromZero);
+                    windDirectionDelta.data = Math.Round(userInputs.onDeckWindDirection - areaWindDirection2mNonRounded.data, 1, MidpointRounding.AwayFromZero);
                 }
                 else
                 {
                     windDirectionDelta.data = 0;
                 }
 
-                windDirectionDelta.status = helideckWindDirectionRT.status;
-                windDirectionDelta.timestamp = helideckWindDirectionRT.timestamp;
+                windDirectionDelta.status = areaWindDirection2m.status;
+                windDirectionDelta.timestamp = areaWindDirection2m.timestamp;
 
                 // Helicopter Heading
                 /////////////////////////////////////////////////////////////////////////////////////////

@@ -332,7 +332,7 @@
                 <!--==============================================================-->
                 <!--Menu: Fuel-->
                 <!--==============================================================-->
-                <telerik:RadTabItem
+                <!--<telerik:RadTabItem
                     Name="tabFuel">
 
                     <telerik:RadTabItem.Header>
@@ -341,7 +341,7 @@
                             Source="../Icons/outline_opacity_white_36dp.png" />
                     </telerik:RadTabItem.Header>
 
-                </telerik:RadTabItem>
+                </telerik:RadTabItem>-->
 
                 <!--==============================================================-->
                 <!--Menu: Admin Settings-->

@@ -23,6 +23,8 @@ namespace HMS_Server
         private bool helicopterSetLanded = false;
         private bool helicopterSetTakeoff = false;
 
+        private HMSDataCollection hmsOutputData;
+
         public Verfication(Config config, UserInputs userInputs, ErrorHandler errorHandler)
         {
             this.userInputs = userInputs;
@@ -72,10 +74,12 @@ namespace HMS_Server
                 item.Reset();
         }
 
-        public void Update(RadObservableCollectionEx<HMSData> hmsDataList, RadObservableCollectionEx<SensorData> sensorDataList, DatabaseHandler database)
+        public void Update(HMSDataCollection hmsOutputData, RadObservableCollectionEx<SensorData> sensorDataList, DatabaseHandler database)
         {
+            this.hmsOutputData = hmsOutputData;
+
             // Test Data
-            testData.TransferData(hmsDataList);
+            testData.TransferData(hmsOutputData.GetDataList());
 
             // Referanse Data
             referenceData.TransferData(sensorDataList);
@@ -134,35 +138,35 @@ namespace HMS_Server
                     if (!helicopterSetInit)
                     {
                         userInputs.displayMode = DisplayMode.PreLanding;
-                        userInputs.onDeckHelicopterHeading = 0;
+                        userInputs.onDeckHelicopterHeading = -1;
                         userInputs.onDeckTime = DateTime.MinValue;
-                        userInputs.onDeckVesselHeading = 0;
-                        userInputs.onDeckWindDirection = 0;
+                        userInputs.onDeckVesselHeading = -1;
+                        userInputs.onDeckWindDirection = -1;
 
                         helicopterSetInit = true;
                     }
 
-                    // Helikopter lander: Sette on-deck i user inputs
-                    if (verificationData.First().testData >= 56100 &&
-                        !helicopterSetLanded)
-                    {
-                        userInputs.displayMode = DisplayMode.OnDeck;
-                        userInputs.onDeckHelicopterHeading = 338;
-                        userInputs.onDeckTime = DateTime.UtcNow;
-                        userInputs.onDeckVesselHeading = 335;
-                        userInputs.onDeckWindDirection = 334;
+                    //// Helikopter lander: Sette on-deck i user inputs
+                    //if (verificationData.First().testData >= 56100 &&
+                    //    !helicopterSetLanded)
+                    //{
+                    //    userInputs.displayMode = DisplayMode.OnDeck;
+                    //    userInputs.onDeckHelicopterHeading = 338;
+                    //    userInputs.onDeckTime = DateTime.UtcNow;
+                    //    userInputs.onDeckVesselHeading = hmsOutputData.GetData(ValueType.VesselHeading).data;
+                    //    userInputs.onDeckWindDirection = hmsOutputData.GetData(ValueType.HelideckWindDirection2m).data;
 
-                        helicopterSetLanded = true;
-                    }
+                    //    helicopterSetLanded = true;
+                    //}
 
-                    // Helikopteret tar av igjen
-                    if (verificationData.First().testData >= 57300 &&
-                        !helicopterSetTakeoff)
-                    {
-                        userInputs.displayMode = DisplayMode.PreLanding;
+                    //// Helikopteret tar av igjen
+                    //if (verificationData.First().testData >= 57300 &&
+                    //    !helicopterSetTakeoff)
+                    //{
+                    //    userInputs.displayMode = DisplayMode.PreLanding;
 
-                        helicopterSetTakeoff = true;
-                    }
+                    //    helicopterSetTakeoff = true;
+                    //}
 
                     // Oppdatere/beregne forskjeller mellom test data og referanse data.
                     foreach (var item in verificationData)
