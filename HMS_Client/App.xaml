@@ -65,6 +65,8 @@
             <SolidColorBrush
                 x:Key="ColorRedTranslucent">#50ee5c69</SolidColorBrush>
             <SolidColorBrush
+                x:Key="ColorAmberTranslucent">#50ebba47</SolidColorBrush>
+            <SolidColorBrush
                 x:Key="ColorGraphLine">#FF333333</SolidColorBrush>
 
             <!--Helicopter-->

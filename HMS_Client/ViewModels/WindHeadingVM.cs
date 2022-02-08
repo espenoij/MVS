@@ -21,11 +21,15 @@ namespace HMS_Client
         // Admin settings
         private AdminSettingsVM adminSettingsVM;
 
-        public void Init(Config config, SensorGroupStatus sensorStatus, UserInputsVM userInputsVM, AdminSettingsVM adminSettingsVM)
+        // Helideck Status
+        private HelideckStatusVM helideckStatusVM;
+        
+        public void Init(HelideckStatusVM helideckStatusVM, Config config, SensorGroupStatus sensorStatus, UserInputsVM userInputsVM, AdminSettingsVM adminSettingsVM)
         {
             this.config = config;
             this.userInputsVM = userInputsVM;
             this.adminSettingsVM = adminSettingsVM;
+            this.helideckStatusVM = helideckStatusVM;
 
             // Oppdatere UI
             UIUpdateTimer.Interval = TimeSpan.FromMilliseconds(config.ReadWithDefault(ConfigKey.ClientUpdateFrequencyUI, Constants.ClientUpdateFrequencyUIDefault));
@@ -65,9 +69,19 @@ namespace HMS_Client
                     OnPropertyChanged(nameof(helideckHeadingRotation));
                 }
 
+                if (sensorStatus.TimeoutCheck(vesselCOG))
+                {
+                    OnPropertyChanged(nameof(vesselCOGString));
+                }
+
                 if (sensorStatus.TimeoutCheck(vesselSpeed))
                 {
                     OnPropertyChanged(nameof(vesselSpeedString));
+                }
+
+                if (sensorStatus.TimeoutCheck(vesselSOG))
+                {
+                    OnPropertyChanged(nameof(vesselSOGString));
                 }
 
                 if (sensorStatus.TimeoutCheck(helideckHeading))
@@ -112,7 +126,9 @@ namespace HMS_Client
             windGust10m = clientSensorList.GetData(ValueType.HelideckWindGust10m);
 
             vesselHeading = clientSensorList.GetData(ValueType.VesselHeading);
+            vesselCOG = clientSensorList.GetData(ValueType.VesselCOG);
             vesselSpeed = clientSensorList.GetData(ValueType.VesselSpeed);
+            vesselSOG = clientSensorList.GetData(ValueType.VesselSOG);
 
             helideckHeading = clientSensorList.GetData(ValueType.HelideckHeading);
 
@@ -609,6 +625,54 @@ namespace HMS_Client
         }
 
         /////////////////////////////////////////////////////////////////////////////
+        // Vessel COG
+        /////////////////////////////////////////////////////////////////////////////
+        private HMSData _vesselCOG { get; set; } = new HMSData();
+        public HMSData vesselCOG
+        {
+            get
+            {
+                return _vesselCOG;
+            }
+            set
+            {
+                if (value != null)
+                {
+                    if (value.data != _vesselCOG.data ||
+                        value.timestamp != _vesselCOG.timestamp)
+                    {
+                        _vesselCOG.Set(value);
+
+                        OnPropertyChanged(nameof(vesselCOGString));
+                    }
+                }
+            }
+        }
+
+        public string vesselCOGString
+        {
+            get
+            {
+                if (vesselCOG != null)
+                {
+                    // Sjekke om data er gyldig
+                    if (vesselCOG.status == DataStatus.OK)
+                    {
+                        return string.Format("{0}°", vesselCOG.data.ToString("000"));
+                    }
+                    else
+                    {
+                        return Constants.NotAvailable;
+                    }
+                }
+                else
+                {
+                    return Constants.NotAvailable;
+                }
+            }
+        }
+
+        /////////////////////////////////////////////////////////////////////////////
         // Vessel Speed
         /////////////////////////////////////////////////////////////////////////////
         private HMSData _vesselSpeed { get; set; } = new HMSData();
@@ -657,6 +721,54 @@ namespace HMS_Client
             }
         }
 
+        /////////////////////////////////////////////////////////////////////////////
+        // Vessel SOG
+        /////////////////////////////////////////////////////////////////////////////
+        private HMSData _vesselSOG { get; set; } = new HMSData();
+        public HMSData vesselSOG
+        {
+            get
+            {
+                return _vesselSOG;
+            }
+            set
+            {
+                if (value != null &&
+                    _vesselSOG != null)
+                {
+                    if (value.data != _vesselSOG.data ||
+                        value.timestamp != _vesselSOG.timestamp)
+                    {
+                        _vesselSOG.Set(value);
+
+                        OnPropertyChanged(nameof(vesselSOGString));
+                    }
+                }
+            }
+        }
+
+        public string vesselSOGString
+        {
+            get
+            {
+                if (vesselSOG != null)
+                {
+                    // Sjekke om data er gyldig
+                    if (vesselSOG.status == DataStatus.OK)
+                    {
+                        return vesselSOG.data.ToString("0.0");
+                    }
+                    else
+                    {
+                        return Constants.NotAvailable;
+                    }
+                }
+                else
+                {
+                    return Constants.NotAvailable;
+                }
+            }
+        }
         /////////////////////////////////////////////////////////////////////////////
         // Visualization: Vessel Image
         /////////////////////////////////////////////////////////////////////////////
@@ -1058,6 +1170,43 @@ namespace HMS_Client
 
         public double rwdBlueStartAngle { get; set; }
         public double rwdBlueEndAngle { get; set; }
+
+        /////////////////////////////////////////////////////////////////////////////
+        // Wind Arrow Color
+        /////////////////////////////////////////////////////////////////////////////
+        public string windArrowColor
+        {
+            get
+            {
+                if (userInputsVM.displayMode == DisplayMode.OnDeck)
+                {
+                    switch (helideckStatusVM.helideckStatus)
+                    {
+                        case HelideckStatusType.OFF:
+                            return "white";
+
+                        case HelideckStatusType.BLUE:
+                            return "blue";
+
+                        case HelideckStatusType.AMBER:
+                            return "amber";
+
+                        case HelideckStatusType.RED:
+                            return "red";
+
+                        case HelideckStatusType.GREEN:
+                            return "green";
+
+                        default:
+                            return "white";
+                    }
+                }
+                else
+                {
+                    return "white";
+                }
+            }
+        }
 
         // Variabel oppdatert
         // Dersom navn ikke er satt brukes kallende medlem sitt navn

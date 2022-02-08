@@ -81,6 +81,7 @@
 
                         <telerik:RadCartesianChart.VerticalAxis>
                             <telerik:LinearAxis
+                                x:Name="chartVesselDeltaVertAxis"
                                 Maximum="{Binding vesselHeadingAxisMax}"
                                 Minimum="{Binding vesselHeadingAxisMin}"
                                 SmartLabelsMode="SmartStepAndRange"
@@ -127,6 +128,24 @@
                                 MajorLinesVisibility="XY" />
                         </telerik:RadCartesianChart.Grid>
 
+                        <telerik:RadCartesianChart.Annotations>
+                            
+                            <telerik:CartesianPlotBandAnnotation
+                                Axis="{Binding ElementName=chartVesselDeltaVertAxis}"
+                                From="10"
+                                To="180"
+                                StrokeThickness="1"
+                                Fill="{StaticResource ColorAmberTranslucent}" />
+
+                            <telerik:CartesianPlotBandAnnotation
+                                Axis="{Binding ElementName=chartVesselDeltaVertAxis}"
+                                From="-10"
+                                To="-180"
+                                StrokeThickness="1"
+                                Fill="{StaticResource ColorAmberTranslucent}" />
+
+                        </telerik:RadCartesianChart.Annotations>
+                        
                     </telerik:RadCartesianChart>
 
                     <!--Δ VESSEL HEADING READOUT-->
@@ -202,6 +221,7 @@
 
                         <telerik:RadCartesianChart.VerticalAxis>
                             <telerik:LinearAxis
+                                x:Name="chartWindDeltaVertAxis"
                                 Maximum="{Binding windDirectionAxisMax}"
                                 Minimum="{Binding windDirectionAxisMin}"
                                 SmartLabelsMode="SmartStepAndRange"
@@ -248,6 +268,24 @@
                             <telerik:CartesianChartGrid
                                 MajorLinesVisibility="XY" />
                         </telerik:RadCartesianChart.Grid>
+
+                        <telerik:RadCartesianChart.Annotations>
+
+                            <telerik:CartesianPlotBandAnnotation
+                                Axis="{Binding ElementName=chartWindDeltaVertAxis}"
+                                From="30"
+                                To="180"
+                                StrokeThickness="1"
+                                Fill="{StaticResource ColorAmberTranslucent}" />
+
+                            <telerik:CartesianPlotBandAnnotation
+                                Axis="{Binding ElementName=chartWindDeltaVertAxis}"
+                                From="-30"
+                                To="-180"
+                                StrokeThickness="1"
+                                Fill="{StaticResource ColorAmberTranslucent}" />
+
+                        </telerik:RadCartesianChart.Annotations>
 
                     </telerik:RadCartesianChart>
 

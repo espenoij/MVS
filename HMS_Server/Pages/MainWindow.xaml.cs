@@ -7,7 +7,6 @@ using System.Windows.Input;
 using System.Windows.Threading;
 using Telerik.Windows.Controls;
 using Telerik.Windows.Data;
-using LicenseSpring;
 
 namespace HMS_Server
 {
@@ -89,9 +88,7 @@ namespace HMS_Server
         // Database tabeller opprettet
         private bool databaseTablesCreated = false;
 
-        // License
-        //private ILicenseManager licenseManager;
-        private bool licenseCheckOK = false;
+        // License/Activation
         private ActivationVM activationVM;
 
         // Lights output feilmelding
@@ -277,7 +274,7 @@ namespace HMS_Server
 
         private void SetStartStopButtons(bool state)
         {
-            if (licenseCheckOK || AdminMode.IsActive)
+            if (activationVM.isActivated || AdminMode.IsActive)
             {
                 btnStart1.IsEnabled = state;
                 btnStart2.IsEnabled = state;
@@ -759,26 +756,6 @@ namespace HMS_Server
 
         private void InitLicense()
         {
-            licenseCheckOK = true;
-
-            //var configuration = new LicenseSpring.Configuration(
-            //  apiKey: "89529663-adce-4360-bf70-f40a7c951a74",
-            //  sharedKey: "kzrxuF3Nk0paxEc9-XFjS9OKyuhzWH5XOgT86PVq21M",
-            //  productCode: "hmsserver",
-            //  appName: "HMS Server",
-            //  appVersion: "v1.0");
-
-            //licenseManager = LicenseManager.GetInstance();
-
-            //licenseManager.Initialize(configuration);
-
-            //var currentLicense = licenseManager.CurrentLicense();
-
-            //if (currentLicense != null)
-            //{
-            //    licenseCheckOK = true;
-            //}
-
             // Sette start/stop knappene
             SetStartStopButtons(true);
         }
@@ -788,8 +765,8 @@ namespace HMS_Server
             if (userInputs != null)
             {
                 // Setter ikke user data fra klient dersom vi holder på med data verifikasjon
-                //if (!adminSettingsVM.dataVerificationEnabled)
-                //{
+                if (!adminSettingsVM.dataVerificationEnabled)
+                {
                     // Overføre data
                     this.userInputs.Set(userInputs);
 
@@ -803,7 +780,7 @@ namespace HMS_Server
                     config.Write(ConfigKey.OnDeckHelicopterHeading, userInputs.onDeckHelicopterHeading.ToString());
                     config.Write(ConfigKey.OnDeckVesselHeading, userInputs.onDeckVesselHeading.ToString());
                     config.Write(ConfigKey.OnDeckWindDirection, userInputs.onDeckWindDirection.ToString());
-                //}
+                }
             }
         }
 

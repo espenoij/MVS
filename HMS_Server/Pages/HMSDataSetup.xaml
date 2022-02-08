@@ -48,7 +48,7 @@
         </Grid.ColumnDefinitions>
 
         <telerik:GroupBox
-            Header="HMS DATA"
+            Header="SENSOR DATA"
             Grid.Column="0"
             Margin="8">
 

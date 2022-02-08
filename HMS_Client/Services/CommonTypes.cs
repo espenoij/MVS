@@ -80,7 +80,8 @@ public enum LimitStatus
 public enum ValueType
 {
     // NB! Matcher ID i config fil
-    // Dette er variabler som blir direkte linket til sensor data
+    // Dette er variabler som blir direkte linket til sensor data.
+    // Må matche med verdiene i SensorData.config.
     None = 0,
     Latitude = 1,
     Longitude = 2,
@@ -105,15 +106,17 @@ public enum ValueType
     SensorWindSpeed = 21,
     VesselHeading = 22,
     VesselSpeed = 23,
-    AccelerationX = 24,
-    AccelerationY = 25,
-    AccelerationZ = 26,
+    VesselCOG = 24,
+    VesselSOG = 25,
+    AccelerationX = 26,
+    AccelerationY = 27,
+    AccelerationZ = 28,
 
     // Data Verification
-    TimeID = 27,
-    SensorMRU = 28,
-    SensorGyro = 29,
-    SensorWind = 30,
+    TimeID = 29,
+    SensorMRU = 30,
+    SensorGyro = 31,
+    SensorWind = 32,
 
     // Ikke lagret i config fil
     // Dette er data som beregnes fra variablene over, dvs. fra sensor data
@@ -196,8 +199,6 @@ public enum ValueType
     SettingsEmailSecureConnection,
     SettingsRestrictedSector,
 
-    // Database Status
-    //DatabaseStatus
 }
 
 public enum HelideckStatusType

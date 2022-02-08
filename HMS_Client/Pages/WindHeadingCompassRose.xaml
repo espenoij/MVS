@@ -19,7 +19,7 @@
 
         <sys:Double
             x:Key="compassScale">0.88</sys:Double>
-
+        
     </UserControl.Resources>
 
     <Grid>
@@ -574,17 +574,6 @@
                         </TransformGroup>
                     </Canvas.RenderTransform>
 
-                    <!--Vessel Arrow-->
-                    <Canvas
-                        Visibility="{Binding Path=displayVesselImageTriangle, Converter={StaticResource BoolToVisConverter} }">
-
-                        <Path
-                            Fill="{StaticResource ColorVessel}"
-                            Stroke="Black"
-                            Data="M 220,230 220,50 210,50 228,25 228,20 232,20 232,25 250,50 240,50 240,230 Z" />
-
-                    </Canvas>
-
                     <!--Triangle Outline-->
                     <Path
                         Visibility="{Binding Path=displayVesselImageTriangle, Converter={StaticResource BoolToVisConverter} }"
@@ -644,6 +633,16 @@
                             Stroke="Black"
                             Canvas.Left="125"
                             Canvas.Top="285" />
+
+                    </Canvas>
+
+                    <!--Vessel Arrow-->
+                    <Canvas>
+
+                        <Path
+                            Fill="{StaticResource ColorVessel}"
+                            Stroke="Black"
+                            Data="M 220,230 220,50 210,50 228,25 228,20 232,20 232,25 250,50 240,50 240,230 Z" />
 
                     </Canvas>
 
@@ -715,18 +714,22 @@
                         Fill="{StaticResource ColorWhite}"
                         Data="M 255,210 205,210 205,220 225,220 225,240 205,240 205,250 255,250 255,240 235,240 235,220 255,220 255,210" />
 
-                    <!--Helideck Arrow Top-->
+                    <!--Helideck Arrow-->
                     <Path
+                        Fill="{StaticResource ColorWhite}"
+                        Stroke="Black"
+                        Data="M 224,165 224,137 218,137 230,122 242,137 236,137 236,165 Z" />
+                    <!--<Path
                         Fill="{StaticResource ColorGreen}"
                         Stroke="Black"
-                        Data="M 224,165 224,47 218,47 228,32 228,20 232,20 232,32 242,47 236,47 236,165 Z" />
+                        Data="M 224,165 224,47 218,47 228,32 228,20 232,20 232,32 242,47 236,47 236,165 Z" />-->
 
                     <!--Helideck Arrow Bottom-->
-                    <Path
+                    <!--<Path
                         Visibility="{Binding Path=displayModeVisibilityPreLanding, Converter={StaticResource BoolToVisConverter} }"
                         Fill="{StaticResource ColorGreen}"
                         Stroke="Black"
-                        Data="M 215,400 215,330 205,330 230,295 255,330 245,330 245,400 215,400" />
+                        Data="M 215,400 215,330 205,330 230,295 255,330 245,330 245,400 215,400" />-->
 
                     <!--Helideck Arrow Circle-->
                     <!--<Ellipse
@@ -767,10 +770,10 @@
 
 
                     <!--Helicopter Arrow Top-->
-                    <Path
+                    <!--<Path
                         Fill="{StaticResource ColorHelicopterFill}"
                         Stroke="{StaticResource ColorHelicopterStroke}"
-                        Data="M 227,175 227,47 218,47 228,32 228,20 232,20 232,32 242,47 233,47 233,175" />
+                        Data="M 227,175 227,47 218,47 228,32 228,20 232,20 232,32 242,47 233,47 233,175" />-->
 
                     <!--Landing Gear-->
                     <Rectangle
@@ -898,29 +901,76 @@
                     </Canvas.RenderTransform>
 
                     <Path
-                        Fill="{StaticResource ColorWind}"
+                        Name="pWindArrow"
+                        Fill="{StaticResource ColorWhite}"
                         Stroke="Black"
-                        Data="M 232,20 228,20 228,60 220,60 220,120 210,120 230,150 250,120 240,120 240,60 232,60 z" />
+                        Data="M 232,20 228,20 228,60 220,60 220,120 210,120 230,150 250,120 240,120 240,60 232,60 z">
+
+                        <Path.Style>
+                            <Style
+                                TargetType="Path">
+                                
+                                <Style.Triggers>
+                                    <DataTrigger
+                                        Binding="{Binding Path=windArrowColor}"
+                                        Value="white">
+                                        <Setter
+                                            Property="Fill"
+                                            Value="{StaticResource ColorWhite}" />
+                                    </DataTrigger>
+                                    <DataTrigger
+                                        Binding="{Binding Path=windArrowColor}"
+                                        Value="blue">
+                                        <Setter
+                                            Property="Fill"
+                                            Value="{StaticResource ColorBlue}" />
+                                    </DataTrigger>
+                                    <DataTrigger
+                                        Binding="{Binding Path=windArrowColor}"
+                                        Value="amber">
+                                        <Setter
+                                            Property="Fill"
+                                            Value="{StaticResource ColorAmber}" />
+                                    </DataTrigger>
+                                    <DataTrigger
+                                        Binding="{Binding Path=windArrowColor}"
+                                        Value="red">
+                                        <Setter
+                                            Property="Fill"
+                                            Value="{StaticResource ColorRed}" />
+                                    </DataTrigger>
+                                    <DataTrigger
+                                        Binding="{Binding Path=windArrowColor}"
+                                        Value="green">
+                                        <Setter
+                                            Property="Fill"
+                                            Value="{StaticResource ColorGreen}" />
+                                    </DataTrigger>
+                                </Style.Triggers>
+                            </Style>
+                        </Path.Style>
+
+                    </Path>
 
                     <!--Arrow Top Circle Inner-->
                     <Ellipse
-                        Width="10"
-                        Height="10"
+                        Width="12"
+                        Height="12"
                         Fill="White"
                         Stroke="Black"
-                        Canvas.Left="225"
-                        Canvas.Top="9"
+                        Canvas.Left="224"
+                        Canvas.Top="8"
                         Visibility="{Binding Path=displayOnDeckWindIndicator, Converter={StaticResource BoolToVisConverter} }"/>
 
                     <!--Arrow Top Circle Outer-->
-                    <Ellipse
+                    <!--<Ellipse
                         Width="40"
                         Height="40"
                         Stroke="Black"
                         StrokeThickness="2"
                         Canvas.Left="210"
                         Canvas.Top="-6"
-                        Visibility="{Binding Path=displayOnDeckWindIndicator, Converter={StaticResource BoolToVisConverter} }"/>
+                        Visibility="{Binding Path=displayOnDeckWindIndicator, Converter={StaticResource BoolToVisConverter} }"/>-->
 
                     <!--Vind pil tittel-->
                     <telerik:Label
