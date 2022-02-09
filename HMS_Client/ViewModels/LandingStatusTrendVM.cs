@@ -6,12 +6,12 @@ using System.Windows.Threading;
 
 namespace HMS_Client
 {
-    public class HelideckStatusTrendVM : INotifyPropertyChanged
+    public class LandingStatusTrendVM : INotifyPropertyChanged
     {
         // Change notification
         public event PropertyChangedEventHandler PropertyChanged;
 
-        private DispatcherTimer HelideckStatusUpdateTimer = new DispatcherTimer();
+        private DispatcherTimer landingStatusUpdateTimer = new DispatcherTimer();
         private DispatcherTimer ChartDataUpdateTimer20m = new DispatcherTimer();
         private DispatcherTimer ChartDataUpdateTimer3h = new DispatcherTimer();
 
@@ -19,7 +19,7 @@ namespace HMS_Client
         private RadObservableCollectionEx<HelideckStatus> statusTrendBuffer20m = new RadObservableCollectionEx<HelideckStatus>();
         // 20 minutters data liste
         public RadObservableCollectionEx<HelideckStatus> statusTrend20mList = new RadObservableCollectionEx<HelideckStatus>();
-        public List<HelideckStatusType> statusTrend20mDispList = new List<HelideckStatusType>();
+        public List<HelideckStatusType> landingTrend20mDispList = new List<HelideckStatusType>();
 
         // 3 timers buffer
         private RadObservableCollectionEx<HelideckStatus> statusTrendBuffer3h = new RadObservableCollectionEx<HelideckStatus>();
@@ -54,14 +54,14 @@ namespace HMS_Client
 
             for (int i = 0; i < Constants.statusTrendDisplayListMax; i++)
             {
-                statusTrend20mDispList.Add(new HelideckStatusType());
+                landingTrend20mDispList.Add(new HelideckStatusType());
                 statusTrend3hDispList.Add(new HelideckStatusType());
             }
 
             // Sample helideck status til trend buffer
-            HelideckStatusUpdateTimer.Interval = TimeSpan.FromMilliseconds(config.ReadWithDefault(ConfigKey.ClientUpdateFrequencyUI, Constants.ClientUpdateFrequencyUIDefault));
-            HelideckStatusUpdateTimer.Tick += HelideckStatusUpdate;
-            HelideckStatusUpdateTimer.Start();
+            landingStatusUpdateTimer.Interval = TimeSpan.FromMilliseconds(config.ReadWithDefault(ConfigKey.ClientUpdateFrequencyUI, Constants.ClientUpdateFrequencyUIDefault));
+            landingStatusUpdateTimer.Tick += HelideckStatusUpdate;
+            landingStatusUpdateTimer.Start();
 
             void HelideckStatusUpdate(object sender, EventArgs e)
             {
@@ -88,16 +88,16 @@ namespace HMS_Client
             void ChartDataUpdate20m(object sender, EventArgs e)
             {
                 // Overføre data fra buffer til chart data: 20m
-                TransferBuffer(statusTrendBuffer20m, statusTrend20mList);
+                GraphBuffer.Transfer(statusTrendBuffer20m, statusTrend20mList);
 
                 // Slette buffer
-                ClearBuffer(statusTrendBuffer20m);
+                GraphBuffer.Clear(statusTrendBuffer20m);
 
                 // Fjerne gamle data fra chart data
-                RemoveOldData(statusTrend20mList, Constants.Minutes20);
+                GraphBuffer.RemoveOldData(statusTrend20mList, Constants.Minutes20);
 
                 // Overføre til display data liste
-                TransferDisplayData(statusTrend20mList, statusTrend20mDispList);
+                TransferDisplayData(statusTrend20mList, landingTrend20mDispList);
 
                 OnPropertyChanged(nameof(helideckStatusTimeString));
             }
@@ -110,13 +110,13 @@ namespace HMS_Client
             void ChartDataUpdate3h(object sender, EventArgs e)
             {
                 // Overføre data fra buffer til chart data: 3h
-                TransferBuffer(statusTrendBuffer3h, statusTrend3hList);
+                GraphBuffer.Transfer(statusTrendBuffer3h, statusTrend3hList);
 
                 // Slette buffer
-                ClearBuffer(statusTrendBuffer3h);
+                GraphBuffer.Clear(statusTrendBuffer3h);
 
                 // Fjerne gamle data fra chart data
-                RemoveOldData(statusTrend3hList, Constants.Hours3);
+                GraphBuffer.RemoveOldData(statusTrend3hList, Constants.Hours3);
 
                 // Overføre til display data liste
                 TransferDisplayData(statusTrend3hList, statusTrend3hDispList);
@@ -125,29 +125,29 @@ namespace HMS_Client
             }
         }
 
-        private void TransferBuffer(RadObservableCollectionEx<HelideckStatus> buffer, RadObservableCollectionEx<HelideckStatus> dataList)
-        {
-            // Overfører alle data fra buffer til dataList
-            dataList.AddRange(buffer);
-        }
+        //private void TransferBuffer(RadObservableCollectionEx<HelideckStatus> buffer, RadObservableCollectionEx<HelideckStatus> dataList)
+        //{
+        //    // Overfører alle data fra buffer til dataList
+        //    dataList.AddRange(buffer);
+        //}
 
-        private void ClearBuffer(RadObservableCollectionEx<HelideckStatus> buffer)
-        {
-            // Sletter alle data fra buffer
-            buffer.Clear();
-        }
+        //private void ClearBuffer(RadObservableCollectionEx<HelideckStatus> buffer)
+        //{
+        //    // Sletter alle data fra buffer
+        //    buffer.Clear();
+        //}
 
-        private void RemoveOldData(RadObservableCollectionEx<HelideckStatus> dataList, double timeInterval)
-        {
-            if (dataList != null)
-            {
-                for (int i = 0; i < dataList.Count && dataList.Count > 0; i++)
-                {
-                    if (dataList[i]?.timestamp < DateTime.UtcNow.AddSeconds(-timeInterval))
-                        dataList.RemoveAt(i--);
-                }
-            }
-        }
+        //private void RemoveOldData(RadObservableCollectionEx<HelideckStatus> dataList, double timeInterval)
+        //{
+        //    if (dataList != null)
+        //    {
+        //        for (int i = 0; i < dataList.Count && dataList.Count > 0; i++)
+        //        {
+        //            if (dataList[i]?.timestamp < DateTime.UtcNow.AddSeconds(-timeInterval))
+        //                dataList.RemoveAt(i--);
+        //        }
+        //    }
+        //}
 
         private void TransferDisplayData(RadObservableCollectionEx<HelideckStatus> list, List<HelideckStatusType> dispList)
         {

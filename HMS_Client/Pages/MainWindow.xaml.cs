@@ -53,7 +53,7 @@ namespace HMS_Client
         private HelideckRelativeWindLimitsVM helideckRelativeWindLimitsVM = new HelideckRelativeWindLimitsVM();
         private WindHeadingChangeVM helideckWindHeadingTrendVM = new WindHeadingChangeVM();
         private HelideckStatusVM helideckStatusVM = new HelideckStatusVM();
-        private HelideckStatusTrendVM helideckStatusTrendVM = new HelideckStatusTrendVM();
+        private LandingStatusTrendVM helideckStatusTrendVM = new LandingStatusTrendVM();
         private MeteorologicalVM meteorologicalVM = new MeteorologicalVM();
         private SensorStatusDisplayVM sensorStatusVM = new SensorStatusDisplayVM();
         private WindHeadingVM windHeadingVM = new WindHeadingVM();

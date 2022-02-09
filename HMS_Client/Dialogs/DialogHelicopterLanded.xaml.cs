@@ -11,9 +11,9 @@ namespace HMS_Client
     {
         private UserInputsVM userInputsVM;
         private HelideckStabilityLimitsVM helideckStabilityLimitsVM;
-        private HelideckStatusTrendVM helideckStatusTrendVM;
+        private LandingStatusTrendVM helideckStatusTrendVM;
 
-        public DialogHelicopterLanded(UserInputsVM userInputsVM, HelideckStabilityLimitsVM helideckStabilityLimitsVM, HelideckStatusTrendVM helideckStatusTrendVM)
+        public DialogHelicopterLanded(UserInputsVM userInputsVM, HelideckStabilityLimitsVM helideckStabilityLimitsVM, LandingStatusTrendVM helideckStatusTrendVM)
         {
             InitializeComponent();
 

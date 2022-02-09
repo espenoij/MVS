@@ -329,7 +329,7 @@
       <DependentUpon>HelideckRelativeWindLimits_CAP.xaml</DependentUpon>
     </Compile>
     <Compile Include="ViewModels\HelideckRelativeWindLimitsVM.cs" />
-    <Compile Include="ViewModels\HelideckStatusTrendVM.cs" />
+    <Compile Include="ViewModels\LandingStatusTrendVM.cs" />
     <Compile Include="Pages\GeneralInformation_CAP.xaml.cs">
       <DependentUpon>GeneralInformation_CAP.xaml</DependentUpon>
     </Compile>
