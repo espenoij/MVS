@@ -35,7 +35,7 @@ namespace HMS_Client
 
             // Helicopter Type
             foreach (HelicopterType value in Enum.GetValues(typeof(HelicopterType)))
-                cboHelicopterType.Items.Add(value.ToString());
+                cboHelicopterType.Items.Add(value.GetDescription());
             cboHelicopterType.SelectedIndex = (int)userInputsVM.helicopterType;
 
             // Helideck Category

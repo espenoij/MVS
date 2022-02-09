@@ -299,8 +299,8 @@ namespace HMS_Server
             vesselCOG.Set(hmsInputDataList.GetData(ValueType.VesselCOG));
             vesselCOG.DoProcessing(hmsInputDataList.GetData(ValueType.VesselCOG));
 
-            vesselSOG.Set(hmsInputDataList.GetData(ValueType.VesselCOG));
-            vesselSOG.DoProcessing(hmsInputDataList.GetData(ValueType.VesselCOG));
+            vesselSOG.Set(hmsInputDataList.GetData(ValueType.VesselSOG));
+            vesselSOG.DoProcessing(hmsInputDataList.GetData(ValueType.VesselSOG));
 
             double heading = hmsInputDataList.GetData(ValueType.VesselHeading).data + adminSettingsVM.helideckHeadingOffset;
             if (heading > Constants.HeadingMax)
@@ -420,6 +420,8 @@ namespace HMS_Server
             // Strengt tatt ikke nødvendig da disse kalkulasjonen ikke bruker lagrede lister
             vesselHeading.ResetDataCalculations();
             vesselSpeed.ResetDataCalculations();
+            vesselCOG.ResetDataCalculations();
+            vesselSOG.ResetDataCalculations();
 
             if (adminSettingsVM.dataVerificationEnabled)
             {

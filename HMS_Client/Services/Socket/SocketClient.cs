@@ -163,11 +163,12 @@ namespace HMS_Client
                     if (AdminMode.IsActive)
                         socketConsole?.Add(string.Format("Response received : {0}", response));
 
+                    int eofPos = response.LastIndexOf(Constants.EOF);
                     if (!string.IsNullOrEmpty(response) &&          // Har vi data?
-                        response.LastIndexOf(Constants.EOF) > 0)    // Har vi EOF?
+                        eofPos > 0)    // Har vi EOF?
                     {
                         // Fjerne end-of-file
-                        response = response.Substring(0, response.LastIndexOf(Constants.EOF)); // TODO response.LastIndexOf(Constants.EOF) er mindre enn 0
+                        response = response.Substring(0, eofPos); // TODO response.LastIndexOf(Constants.EOF) er mindre enn 0
 
                         // Prosessere mottatt data
                         ProcessReceivedData(response);

@@ -30,22 +30,39 @@ public enum DayNight
 
 public enum HelicopterType
 {
+    [Description("AS332 - CAT A")]
     AS332,      // Heavy
+    [Description("AS365 - CAT B")]
     AS365,      // Medium
+    [Description("AW139 - CAT B")]
     AW139,      // Medium
+    [Description("AW169 - CAT B")]
     AW169,      // Medium
+    [Description("AW189 - CAT A")]
     AW189,      // Heavy
+    [Description("B212 - CAT B")]
     B212,       // Medium
+    [Description("B412 - CAT B")]
     B412,       // Medium
+    [Description("B525 - CAT B")]
     B525,       // Medium
+    [Description("EC135 - CAT B")]
     EC135,      // Medium
+    [Description("EC155 - CAT B")]
     EC155,      // Medium
+    [Description("EC175 - CAT B")]
     EC175,      // Medium
+    [Description("EC225 - CAT A")]
     EC225,      // Heavy
+    [Description("H145 - CAT B")]
     H145,       // Medium
+    [Description("H175 - CAT B")]
     H175,       // Medium
+    [Description("S61 - CAT A")]
     S61,        // Heavy
+    [Description("S76 - CAT B")]
     S76,        // Medium
+    [Description("S92 - CAT A")]
     S92         // Heavy
 }
 

@@ -637,7 +637,8 @@
                     </Canvas>
 
                     <!--Vessel Arrow-->
-                    <Canvas>
+                    <Canvas
+                        Visibility="{Binding Path=displayVesselHeadingArrow, Converter={StaticResource BoolToVisConverter} }">
 
                         <Path
                             Fill="{StaticResource ColorVessel}"
@@ -651,12 +652,12 @@
                         Visibility="{Binding Path=displayVesselImageDot, Converter={StaticResource BoolToVisConverter} }">
 
                         <Ellipse
-                            Width="20"
-                            Height="20"
+                            Width="30"
+                            Height="30"
                             Fill="{StaticResource ColorVessel}"
                             Stroke="Black"
-                            Canvas.Left="220"
-                            Canvas.Top="220" />
+                            Canvas.Left="215"
+                            Canvas.Top="215" />
 
                     </Canvas>
 
@@ -773,7 +774,14 @@
                     <!--<Path
                         Fill="{StaticResource ColorHelicopterFill}"
                         Stroke="{StaticResource ColorHelicopterStroke}"
-                        Data="M 227,175 227,47 218,47 228,32 228,20 232,20 232,32 242,47 233,47 233,175" />-->
+                        Data="M 228,175 228,47 218,47 228,32 228,20 232,20 232,32 242,47 232,47 232,175" />-->
+                    <!--<Rectangle
+                        Fill="{StaticResource ColorHelicopterFill}"
+                        Stroke="{StaticResource ColorHelicopterStroke}"
+                        Width="4"
+                        Height="155"
+                        Canvas.Left="228"
+                        Canvas.Top="20" />-->
 
                     <!--Landing Gear-->
                     <Rectangle
@@ -902,7 +910,6 @@
 
                     <Path
                         Name="pWindArrow"
-                        Fill="{StaticResource ColorWhite}"
                         Stroke="Black"
                         Data="M 232,20 228,20 228,60 220,60 220,120 210,120 230,150 250,120 240,120 240,60 232,60 z">
 

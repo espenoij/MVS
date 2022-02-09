@@ -109,6 +109,8 @@ namespace HMS_Client
                 OnPropertyChanged(nameof(displayVesselImageDot));
                 OnPropertyChanged(nameof(displayVesselHeadingArrow));
                 OnPropertyChanged(nameof(displayHelideckImage));
+
+                OnPropertyChanged(nameof(windArrowColor));
             }
         }
 

@@ -248,6 +248,9 @@
     <Compile Include="Pages\HelideckMotionHistory_NOROG.xaml.cs">
       <DependentUpon>HelideckMotionHistory_NOROG.xaml</DependentUpon>
     </Compile>
+    <Compile Include="Pages\SensorStatusDisplay_CAP.xaml.cs">
+      <DependentUpon>SensorStatusDisplay_CAP.xaml</DependentUpon>
+    </Compile>
     <Compile Include="Services\AdminMode.cs" />
     <Compile Include="Config\ConfigKey.cs" />
     <Compile Include="Dialogs\DialogHandler.cs" />
@@ -385,8 +388,8 @@
       <DependentUpon>Meteorological.xaml</DependentUpon>
     </Compile>
     <Compile Include="ViewModels\MeteorologicalVM.cs" />
-    <Compile Include="Pages\SensorStatusDisplay.xaml.cs">
-      <DependentUpon>SensorStatusDisplay.xaml</DependentUpon>
+    <Compile Include="Pages\SensorStatusDisplay_NOROG.xaml.cs">
+      <DependentUpon>SensorStatusDisplay_NOROG.xaml</DependentUpon>
     </Compile>
     <Compile Include="ViewModels\SensorStatusDisplayVM.cs" />
     <Compile Include="Pages\UserInputs_NOROG.xaml.cs">
@@ -462,6 +465,10 @@
     <Page Include="Pages\HelideckReport_NOROG.xaml">
       <SubType>Designer</SubType>
       <Generator>MSBuild:Compile</Generator>
+    </Page>
+    <Page Include="Pages\SensorStatusDisplay_CAP.xaml">
+      <Generator>MSBuild:Compile</Generator>
+      <SubType>Designer</SubType>
     </Page>
     <Page Include="Pages\WindHeadingReadouts_NOROG.xaml">
       <Generator>MSBuild:Compile</Generator>
@@ -539,7 +546,7 @@
       <SubType>Designer</SubType>
       <Generator>MSBuild:Compile</Generator>
     </Page>
-    <Page Include="Pages\SensorStatusDisplay.xaml">
+    <Page Include="Pages\SensorStatusDisplay_NOROG.xaml">
       <SubType>Designer</SubType>
       <Generator>MSBuild:Compile</Generator>
     </Page>

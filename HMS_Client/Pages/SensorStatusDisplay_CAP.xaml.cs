@@ -3,11 +3,11 @@
 namespace HMS_Client
 {
     /// <summary>
-    /// Interaction logic for NOROG_SensorStatus.xaml
+    /// Interaction logic for SensorStatusDisplay_CAP.xaml
     /// </summary>
-    public partial class SensorStatusDisplay : UserControl
+    public partial class SensorStatusDisplay_CAP : UserControl
     {
-        public SensorStatusDisplay()
+        public SensorStatusDisplay_CAP()
         {
             InitializeComponent();
         }

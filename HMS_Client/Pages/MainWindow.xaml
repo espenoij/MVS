@@ -83,6 +83,38 @@
                                     Width="17*" />
                             </Grid.ColumnDefinitions>
 
+                            <!--NOROG-->
+                            <Grid
+                                Grid.Column="0">
+
+                                <Grid.RowDefinitions>
+                                    <RowDefinition
+                                        Height="15*" />
+                                    <RowDefinition
+                                        Height="12*" />
+                                    <RowDefinition
+                                        Height="9*" />
+                                </Grid.RowDefinitions>
+
+                                <!--Basic Information NOROG-->
+                                <uc:GeneralInformation_NOROG
+                                    x:Name="ucGeneralInformation_NOROG"
+                                    Grid.Row="0"
+                                    Visibility="Visible" />
+
+                                <!--User Inputs NOROG-->
+                                <uc:UserInputs_NOROG
+                                    Grid.Row="1"
+                                    x:Name="ucUserInputs_NOROG" />
+
+                                <!--Sensor Status-->
+                                <uc:SensorStatusDisplay_NOROG
+                                    Grid.Row="2"
+                                    x:Name="ucSensorStatus_NOROG" />
+
+                            </Grid>
+
+                            <!--CAP-->
                             <Grid
                                 Grid.Column="0">
 
@@ -90,14 +122,9 @@
                                     <RowDefinition
                                         Height="2*" />
                                     <RowDefinition
-                                        x:Name="col1RowDef1"
                                         Height="14*" />
                                     <RowDefinition
-                                        x:Name="col1RowDef2"
                                         Height="13*" />
-                                    <RowDefinition
-                                        x:Name="col1RowDef3"
-                                        Height="9*" />
                                 </Grid.RowDefinitions>
 
                                 <Viewbox
@@ -114,36 +141,20 @@
 
                                 </Viewbox>
 
-                                <!--Basic Information NOROG-->
-                                <uc:GeneralInformation_NOROG
-                                    x:Name="ucGeneralInformation_NOROG"
-                                    Grid.Row="0"
-                                    Grid.RowSpan="2"
-                                    Visibility="Visible" />
-
                                 <!--Basic Information CAP-->
                                 <uc:GeneralInformation_CAP
                                     x:Name="ucGeneralInformation_CAP"
                                     Grid.Row="1"
                                     Visibility="Collapsed" />
 
-                                <!--User Inputs NOROG-->
-                                <uc:UserInputs_NOROG
-                                    Grid.Row="2"
-                                    x:Name="ucUserInputs_NOROG" />
-
-                                <!--User Inputs CAP-->
-                                <uc:UserInputs_CAP
-                                    Grid.Row="2"
-                                    x:Name="ucUserInputs_CAP" />
-
                                 <!--Sensor Status-->
-                                <uc:SensorStatusDisplay
-                                    Grid.Row="3"
-                                    x:Name="ucSensorStatus" />
+                                <uc:SensorStatusDisplay_CAP
+                                    Grid.Row="2"
+                                    x:Name="ucSensorStatus_CAP" />
 
                             </Grid>
 
+                            <!--NOROG-->
                             <Grid
                                 Grid.Column="1">
 
@@ -169,29 +180,11 @@
                                     Grid.Row="0"
                                     x:Name="ucHelideckMotionLimits_NOROG" />
 
-                                <!--Helideck Motion Limits CAP-->
-                                <uc:HelideckMotionLimits_Touchdown_CAP
-                                    Grid.Column="0"
-                                    Grid.Row="0"
-                                    x:Name="ucHelideckMotionLimits_CAP" />
-
-                                <!--Helideck Heading Trend CAP-->
-                                <uc:WindHeadingTrend_CAP
-                                    Grid.Column="0"
-                                    Grid.Row="0"
-                                    x:Name="ucHelideckWindHeadingTrend_CAP" />
-
                                 <!--Helideck Status NOROG-->
                                 <uc:HelideckStatus_NOROG
                                     Grid.Column="1"
                                     Grid.Row="0"
                                     x:Name="ucHelideckStatus_NOROG" />
-
-                                <!--Helideck Status CAP-->
-                                <uc:HelideckStatus_CAP
-                                    Grid.Column="1"
-                                    Grid.Row="0"
-                                    x:Name="ucHelideckStatus_CAP" />
 
                                 <!--Helideck Motion Trend-->
                                 <uc:HelideckMotionTrend_NOROG
@@ -200,6 +193,53 @@
                                     Grid.ColumnSpan="2"
                                     Grid.RowSpan="2"
                                     x:Name="ucHelideckMotionTrend_NOROG" />
+
+                                <!--Status Prediction-->
+                                <!--<uc:HelideckStatusPrediction
+                                Grid.Column="1"
+                                Grid.Row="1" />-->
+
+                            </Grid>
+                            
+                            <!--CAP-->
+                            <Grid
+                                Grid.Column="1">
+
+                                <Grid.RowDefinitions>
+                                    <RowDefinition
+                                        Height="6*" />
+                                    <RowDefinition
+                                        Height="9*" />
+                                    <RowDefinition
+                                        Height="3*" />
+                                    <RowDefinition
+                                        Height="6*" />
+                                </Grid.RowDefinitions>
+
+                                <Grid.ColumnDefinitions>
+                                    <ColumnDefinition
+                                        Width="7*" />
+                                    <ColumnDefinition
+                                        Width="2*" />
+                                </Grid.ColumnDefinitions>
+
+                                <!--User Inputs CAP-->
+                                <uc:UserInputs_CAP
+                                    Grid.Row="0"
+                                    x:Name="ucUserInputs_CAP" />
+
+                                <!--Helideck Heading Trend CAP-->
+                                <uc:WindHeadingTrend_CAP
+                                    Grid.Column="0"
+                                    Grid.ColumnSpan="2"
+                                    Grid.Row="3"
+                                    x:Name="ucHelideckWindHeadingTrend_CAP" />
+
+                                <!--Helideck Status CAP-->
+                                <uc:HelideckStatus_CAP
+                                    Grid.Column="1"
+                                    Grid.Row="0"
+                                    x:Name="ucHelideckStatus_CAP" />
 
                                 <!--Helideck Stability Limits-->
                                 <uc:HelideckStabilityLimits_CAP
@@ -222,10 +262,12 @@
                                     Grid.ColumnSpan="2"
                                     x:Name="ucHelideckStatusTrend_CAP" />
 
-                                <!--Status Prediction-->
-                                <!--<uc:HelideckStatusPrediction
-                                Grid.Column="1"
-                                Grid.Row="1" />-->
+                                <!--Helideck Motion Limits CAP-->
+                                <uc:HelideckMotionLimits_Touchdown_CAP
+                                    Grid.Column="0"
+                                    Grid.ColumnSpan="2"
+                                    Grid.Row="3"
+                                    x:Name="ucHelideckMotionLimits_CAP" />
 
                             </Grid>
 
