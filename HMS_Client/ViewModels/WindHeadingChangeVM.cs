@@ -143,9 +143,9 @@ namespace HMS_Client
                     if (vesselHeadingDelta.status == DataStatus.OK)
                     {
                         if (vesselHeadingDelta.data >= 0)
-                            return string.Format("{0}° R", vesselHeadingDelta.data.ToString("0"));
+                            return string.Format("{0}° R", vesselHeadingDelta.data.ToString(" 0"));
                         else
-                            return string.Format("{0}° L", Math.Abs(vesselHeadingDelta.data).ToString("0"));
+                            return string.Format("{0}° L", Math.Abs(vesselHeadingDelta.data).ToString(" 0"));
                     }
                     else
                     {

@@ -178,10 +178,10 @@ namespace HMS_Client
                                 return StatusBackground.BLANK;
 
                         case DataStatus.TIMEOUT_ERROR:
-                            return StatusBackground.AMBER;
+                            return StatusBackground.RED;
 
                         default:
-                            return StatusBackground.AMBER;
+                            return StatusBackground.RED;
                     }
                 }
             }
@@ -199,6 +199,6 @@ namespace HMS_Client
     {
         BLANK,
         BACKGROUND_SEPARATOR,
-        AMBER
+        RED
     }
 }

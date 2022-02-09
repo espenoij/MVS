@@ -50,7 +50,7 @@
                             <ColumnDefinition
                                 Width="*" />
                             <ColumnDefinition
-                                Width="16*" />
+                                Width="18*" />
                         </Grid.ColumnDefinitions>
 
                         <Viewbox
@@ -105,7 +105,7 @@
                                 <ColumnDefinition
                                     Width="*" />
                                 <ColumnDefinition
-                                    Width="16*" />
+                                    Width="18*" />
                             </Grid.ColumnDefinitions>
 
                             <Viewbox
@@ -114,7 +114,6 @@
                                 Stretch="Uniform">
 
                                 <Image
-                                    Width="24"
                                     Source="..\Icons\helipad_black_36dp.png" />
 
                             </Viewbox>
@@ -163,7 +162,7 @@
                                 <ColumnDefinition
                                     Width="*" />
                                 <ColumnDefinition
-                                    Width="16*" />
+                                    Width="18*" />
                             </Grid.ColumnDefinitions>
 
                             <Viewbox
@@ -220,7 +219,7 @@
                                 <ColumnDefinition
                                     Width="*" />
                                 <ColumnDefinition
-                                    Width="16*" />
+                                    Width="18*" />
                             </Grid.ColumnDefinitions>
 
                             <Viewbox
@@ -257,19 +256,11 @@
                     <DockPanel
                         Grid.Row="5">
 
-                        <Grid>
-
-                            <Grid.ColumnDefinitions>
-                                <ColumnDefinition
-                                    Width="*" />
-                                <ColumnDefinition
-                                    Width="*" />
-                            </Grid.ColumnDefinitions>
+                        <StackPanel
+                            HorizontalAlignment="Right"
+                            Orientation="Horizontal">
 
                             <Viewbox
-                                Grid.Column="0"
-                                Margin="8,0"
-                                HorizontalAlignment="Right"
                                 StretchDirection="Both"
                                 Stretch="Uniform">
 
@@ -283,9 +274,7 @@
                             </Viewbox>
 
                             <Viewbox
-                                Grid.Column="1"
-                                Margin="8,0"
-                                HorizontalAlignment="Left"
+                                Margin="16,0,0,0"
                                 StretchDirection="Both"
                                 Stretch="Uniform">
 
@@ -296,8 +285,8 @@
 
                             </Viewbox>
 
-                        </Grid>
-                        
+                        </StackPanel>
+
                     </DockPanel>
                     
                 </Grid>
@@ -356,48 +345,46 @@
 
                     </Grid>
 
-                    <Grid
+                    <DockPanel
                         Grid.Row="1">
 
                         <!--Helikopter heading korreksjon-->
-                        <Grid.ColumnDefinitions>
-                            <ColumnDefinition
-                                Width="*" />
-                            <ColumnDefinition
-                                Width="*" />
-                        </Grid.ColumnDefinitions>
 
-                        <Viewbox
-                            Grid.Column="0"
-                            Margin="8,0"
-                            HorizontalAlignment="Right"
-                            StretchDirection="Both"
-                            Stretch="Uniform">
+                        <StackPanel
+                            Orientation="Horizontal"
+                            HorizontalAlignment="Right">
+                            
+                            <Viewbox
+                                HorizontalAlignment="Right"
+                                StretchDirection="Both"
+                                Stretch="Uniform">
 
-                            <TextBox
-                                Width="135"
-                                FontSize="{StaticResource fontSizeLabel}"
-                                Name="tbCorrectedHelicopterHeading"
-                                LostFocus="tbCorrectedHelicopterHeading_LostFocus"
-                                KeyDown="tbCorrectedHelicopterHeading_KeyDown"/>
+                                <TextBox
+                                    Width="135"
+                                    FontSize="{StaticResource fontSizeLabel}"
+                                    Name="tbCorrectedHelicopterHeading"
+                                    LostFocus="tbCorrectedHelicopterHeading_LostFocus"
+                                    KeyDown="tbCorrectedHelicopterHeading_KeyDown" />
 
-                        </Viewbox>
+                            </Viewbox>
 
-                        <Viewbox
-                            Grid.Column="1"
-                            Margin="8,0"
-                            HorizontalAlignment="Left"
-                            StretchDirection="Both"
-                            Stretch="Uniform">
+                            <Viewbox
+                                Grid.Column="1"
+                                Margin="16,0,0,0"
+                                HorizontalAlignment="Left"
+                                StretchDirection="Both"
+                                Stretch="Uniform">
 
-                            <Button
-                                x:Name="btnEnterCorrectedHeading"
-                                Content="Enter Heading"
-                                Click="btn_EnterCorrectedHeading_Click"/>
+                                <Button
+                                    x:Name="btnEnterCorrectedHeading"
+                                    Content="Enter Heading"
+                                    Click="btn_EnterCorrectedHeading_Click" />
 
-                        </Viewbox>
+                            </Viewbox>
 
-                    </Grid>
+                        </StackPanel>
+
+                    </DockPanel>
 
                     <!--Helikopter heading korreksjon tekst-->
                     <Grid
@@ -438,7 +425,8 @@
                     <Viewbox
                         Grid.Row="5"
                         StretchDirection="Both"
-                        Stretch="Uniform">
+                        Stretch="Uniform"
+                        HorizontalAlignment="Right">
 
                         <Button
                             Grid.Row="4"

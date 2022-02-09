@@ -64,10 +64,10 @@
 
                 <DataTrigger
                     Binding="{Binding statusBackgroundColor}"
-                    Value="AMBER">
+                    Value="RED">
                     <Setter
                         Property="Background"
-                        Value="{StaticResource ColorAmber}" />
+                        Value="{StaticResource ColorRed}" />
                 </DataTrigger>
 
             </Style.Triggers>

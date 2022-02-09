@@ -156,27 +156,44 @@
 
                         <Grid.RowDefinitions>
                             <RowDefinition
-                                Height="*" />
+                                Height="4*" />
                             <RowDefinition
-                                Height="*" />
+                                Height="3*" />
+                            <RowDefinition
+                                Height="4*" />
+                            <RowDefinition
+                                Height="4*" />
                         </Grid.RowDefinitions>
 
-                        <telerik:Label
-                            Grid.Row="0"
-                            Content="Δ Vessel Heading"
-                            FontSize="{StaticResource fontSizeLabelSmall}"
-                            HorizontalAlignment="Center" />
+                        <Viewbox
+                            Grid.Row="1"
+                            StretchDirection="Both"
+                            Stretch="Uniform"
+                            HorizontalAlignment="Center">
+
+                            <telerik:Label
+                                Content="Δ Vessel Heading"
+                                HorizontalAlignment="Center" />
+
+                        </Viewbox>
 
                         <Separator
-                            Grid.Row="0"
+                            Grid.Row="1"
                             Height="1"
                             VerticalAlignment="Bottom" />
 
-                        <telerik:Label
-                            Grid.Row="1"
-                            Content="{Binding vesselHeadingDeltaString}"
-                            FontSize="{StaticResource fontSizeDataLarge}"
-                            HorizontalAlignment="Center" />
+                        <Viewbox
+                            Grid.Row="2"
+                            StretchDirection="Both"
+                            Stretch="Uniform"
+                            HorizontalAlignment="Center">
+
+                            <telerik:Label
+                                Content="{Binding vesselHeadingDeltaString}"
+                                FontSize="{StaticResource fontSizeDataLarge}"
+                                HorizontalAlignment="Center" />
+
+                        </Viewbox>
 
                     </Grid>
 
@@ -297,27 +314,45 @@
 
                         <Grid.RowDefinitions>
                             <RowDefinition
-                                Height="*" />
+                                Height="4*" />
                             <RowDefinition
-                                Height="*" />
+                                Height="3*" />
+                            <RowDefinition
+                                Height="4*" />
+                            <RowDefinition
+                                Height="4*" />
                         </Grid.RowDefinitions>
 
-                        <telerik:Label
-                            Grid.Row="0"
-                            Content="Δ Wind Direction"
-                            FontSize="{StaticResource fontSizeLabelSmall}"
-                            HorizontalAlignment="Center" />
+                        <Viewbox
+                            Grid.Row="1"
+                            StretchDirection="Both"
+                            Stretch="Uniform"
+                            HorizontalAlignment="Center">
+
+                            <telerik:Label
+                                Content="Δ Wind Direction"
+                                HorizontalAlignment="Center" />
+
+                        </Viewbox>
 
                         <Separator
-                            Grid.Row="0"
+                            Grid.Row="1"
                             Height="1"
                             VerticalAlignment="Bottom" />
 
-                        <telerik:Label
-                            Grid.Row="1"
-                            Content="{Binding deltaWindDirectionString}"
-                            FontSize="{StaticResource fontSizeDataLarge}"
-                            HorizontalAlignment="Center" />
+                        <Viewbox
+                            Grid.Row="2"
+                            StretchDirection="Both"
+                            Stretch="Uniform"
+                            HorizontalAlignment="Center">
+
+                            <telerik:Label
+                                Grid.Row="1"
+                                Content="{Binding deltaWindDirectionString}"
+                                FontSize="{StaticResource fontSizeDataLarge}"
+                                HorizontalAlignment="Center" />
+
+                        </Viewbox>
 
                     </Grid>
 
