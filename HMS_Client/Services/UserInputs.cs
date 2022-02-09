@@ -5,6 +5,7 @@ public class UserInputs
     public HelicopterType helicopterType { get; set; }
     public HelideckCategory helideckCategory { get; set; }
     public DayNight dayNight { get; set; }
+
     public DisplayMode displayMode { get; set; }
 
     // On-Deck variabler
@@ -25,6 +26,7 @@ public class UserInputs
             helicopterType = userInputs.helicopterType;
             helideckCategory = userInputs.helideckCategory;
             dayNight = userInputs.dayNight;
+
             displayMode = userInputs.displayMode;
 
             onDeckTime = userInputs.onDeckTime;

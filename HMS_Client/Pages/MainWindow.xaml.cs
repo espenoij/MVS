@@ -51,7 +51,7 @@ namespace HMS_Client
         private HelideckMotionTrendVM helideckMotionTrendVM = new HelideckMotionTrendVM();
         private HelideckStabilityLimitsVM helideckStabilityLimitsVM = new HelideckStabilityLimitsVM();
         private HelideckRelativeWindLimitsVM helideckRelativeWindLimitsVM = new HelideckRelativeWindLimitsVM();
-        private WindHeadingTrendVM helideckWindHeadingTrendVM = new WindHeadingTrendVM();
+        private WindHeadingChangeVM helideckWindHeadingTrendVM = new WindHeadingChangeVM();
         private HelideckStatusVM helideckStatusVM = new HelideckStatusVM();
         private HelideckStatusTrendVM helideckStatusTrendVM = new HelideckStatusTrendVM();
         private MeteorologicalVM meteorologicalVM = new MeteorologicalVM();
@@ -187,8 +187,9 @@ namespace HMS_Client
                 // Relative Wind Direction Limits
                 ucRelativeWindDirectionLimits_CAP.Visibility = Visibility.Collapsed;
 
-                // Helideck Wind & Heading Trend
-                ucHelideckWindHeadingTrend_CAP.Visibility = Visibility.Collapsed;
+                // Wind & Heading Change
+                ucWindHeadingChange_CAP.Visibility = Visibility.Collapsed;
+
                 // Helideck Status Trend
                 ucHelideckStatusTrend_CAP.Visibility = Visibility.Collapsed;
 
@@ -243,8 +244,8 @@ namespace HMS_Client
                 ucRelativeWindDirectionLimits_CAP.Init(helideckRelativeWindLimitsVM);
 
                 // Helideck Wind & Heading Trend
-                ucHelideckWindHeadingTrend_CAP.Visibility = Visibility.Visible;
-                ucHelideckWindHeadingTrend_CAP.Init(helideckWindHeadingTrendVM);
+                ucWindHeadingChange_CAP.Visibility = Visibility.Visible;
+                ucWindHeadingChange_CAP.Init(helideckWindHeadingTrendVM);
 
                 // Helideck Status Trend
                 ucHelideckStatusTrend_CAP.Visibility = Visibility.Visible;

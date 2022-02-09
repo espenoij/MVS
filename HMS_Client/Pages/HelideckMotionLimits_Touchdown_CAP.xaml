@@ -7,7 +7,7 @@
     xmlns:telerik="http://schemas.telerik.com/2008/xaml/presentation"
     xmlns:t="clr-namespace:System.Windows;assembly=PresentationFramework"
     mc:Ignorable="d"
-    d:DesignHeight="400"
+    d:DesignHeight="300"
     d:DesignWidth="700">
 
     <UserControl.Resources>
@@ -51,17 +51,15 @@
 
                     <Grid.ColumnDefinitions>
                         <ColumnDefinition
-                            Width="3*" />
+                            Width="8*" />
                         <ColumnDefinition
                             Width="3*" />
-                        <ColumnDefinition
-                            Width="4*" />
                         <ColumnDefinition
                             Width="3*" />
                     </Grid.ColumnDefinitions>
 
                     <Grid
-                        Grid.Column="2"
+                        Grid.Column="1"
                         HorizontalAlignment="Left"
                         Margin="4"
                         Background="{StaticResource ColorHorizontalBarBackground}">
@@ -93,14 +91,14 @@
                             <telerik:Label
                                 Foreground="White"
                                 FontSize="{StaticResource fontSizeTab}"
-                                Content="Value" />
+                                Content="Max Value" />
 
                         </Viewbox>
 
                     </Grid>
 
                     <Grid
-                        Grid.Column="3"
+                        Grid.Column="2"
                         HorizontalAlignment="Left"
                         Margin="4"
                         Background="{StaticResource ColorHorizontalBarBackground}">
@@ -147,27 +145,20 @@
                     Name="gridMaxPitch"
                     Background="{StaticResource ColorBackgroundSeparator}">
 
-                    <Grid.RowDefinitions>
-                        <RowDefinition
-                            Height="*" />
-                        <RowDefinition
-                            Height="*" />
-                    </Grid.RowDefinitions>
-
                     <Grid.ColumnDefinitions>
-                        <ColumnDefinition
-                            Width="4*" />
                         <ColumnDefinition
                             Width="3*" />
                         <ColumnDefinition
-                            Width="4*" />
+                            Width="3*" />
+                        <ColumnDefinition
+                            Width="3*" />
+                        <ColumnDefinition
+                            Width="3*" />
                         <ColumnDefinition
                             Width="3*" />
                     </Grid.ColumnDefinitions>
 
                     <Viewbox
-                        Grid.Row="0"
-                        Grid.RowSpan="2"
                         Grid.Column="0"
                         StretchDirection="Both"
                         Stretch="Uniform"
@@ -178,82 +169,33 @@
 
                     </Viewbox>
 
-                    <Grid
-                        Grid.Row="0"
-                        Grid.Column="1">
+                    <Viewbox
+                        Grid.Column="1"
+                        StretchDirection="Both"
+                        Stretch="Uniform">
 
-                        <Grid.ColumnDefinitions>
-                            <ColumnDefinition
-                                Width="*" />
-                            <ColumnDefinition
-                                Width="*" />
-                        </Grid.ColumnDefinitions>
+                        <telerik:Label
+                            Name="lbMaxPitchUp20m"
+                            Content="{Binding Path=pitchMaxUp20mString}"
+                            FontSize="{StaticResource fontSizeDataLarge}" />
 
-                        <Viewbox
-                            Grid.Column="0"
-                            StretchDirection="Both"
-                            Stretch="Uniform">
-
-                            <telerik:Label
-                                Name="lbMaxPitchUp20m"
-                                Content="{Binding Path=pitchMaxUp20mString}"
-                                FontSize="{StaticResource fontSizeDataLarge}" />
-
-                        </Viewbox>
-
-                        <Viewbox
-                            Grid.Column="1"
-                            StretchDirection="Both"
-                            Stretch="Uniform"
-                            HorizontalAlignment="Left">
-
-                            <telerik:Label
-                                Content="Up" />
-
-                        </Viewbox>
-
-                    </Grid>
-
-                    <Grid
-                        Grid.Row="1"
-                        Grid.Column="1">
-
-                        <Grid.ColumnDefinitions>
-                            <ColumnDefinition
-                                Width="*" />
-                            <ColumnDefinition
-                                Width="*" />
-                        </Grid.ColumnDefinitions>
-
-                        <Viewbox
-                            Grid.Column="0"
-                            StretchDirection="Both"
-                            Stretch="Uniform">
-
-                            <telerik:Label
-                                Name="lbMaxPitchDown20m"
-                                Content="{Binding Path=pitchMaxDown20mString}"
-                                FontSize="{StaticResource fontSizeDataLarge}" />
-
-                        </Viewbox>
-
-                        <Viewbox
-                            Grid.Column="1"
-                            StretchDirection="Both"
-                            Stretch="Uniform"
-                            HorizontalAlignment="Left">
-
-                            <telerik:Label
-                                Content="Down" />
-
-                        </Viewbox>
-
-                    </Grid>
+                    </Viewbox>
 
                     <Viewbox
-                        Grid.Row="0"
-                        Grid.RowSpan="2"
                         Grid.Column="2"
+                        StretchDirection="Both"
+                        HorizontalAlignment="Left"
+                        Stretch="Uniform">
+
+                        <telerik:Label
+                            Name="lbMaxPitchDown20m"
+                            Content="{Binding Path=pitchMaxDown20mString}"
+                            FontSize="{StaticResource fontSizeDataLarge}" />
+
+                    </Viewbox>
+
+                    <Viewbox
+                        Grid.Column="3"
                         HorizontalAlignment="Left"
                         StretchDirection="Both"
                         Stretch="Uniform">
@@ -266,9 +208,7 @@
                     </Viewbox>
 
                     <Viewbox
-                        Grid.Row="0"
-                        Grid.RowSpan="2"
-                        Grid.Column="3"
+                        Grid.Column="4"
                         StretchDirection="Both"
                         Stretch="Uniform"
                         HorizontalAlignment="Left">
@@ -285,27 +225,20 @@
                     Grid.Row="2"
                     Name="gridMaxRoll">
 
-                    <Grid.RowDefinitions>
-                        <RowDefinition
-                            Height="*" />
-                        <RowDefinition
-                            Height="*" />
-                    </Grid.RowDefinitions>
-
                     <Grid.ColumnDefinitions>
-                        <ColumnDefinition
-                            Width="4*" />
                         <ColumnDefinition
                             Width="3*" />
                         <ColumnDefinition
-                            Width="4*" />
+                            Width="3*" />
+                        <ColumnDefinition
+                            Width="3*" />
+                        <ColumnDefinition
+                            Width="3*" />
                         <ColumnDefinition
                             Width="3*" />
                     </Grid.ColumnDefinitions>
 
                     <Viewbox
-                        Grid.Row="0"
-                        Grid.RowSpan="2"
                         Grid.Column="0"
                         StretchDirection="Both"
                         Stretch="Uniform"
@@ -316,85 +249,36 @@
 
                     </Viewbox>
 
-                    <Grid
-                        Grid.Row="0"
-                        Grid.Column="1">
+                    <Viewbox
+                        Grid.Column="1"
+                        StretchDirection="Both"
+                        Stretch="Uniform">
 
-                        <Grid.ColumnDefinitions>
-                            <ColumnDefinition
-                                Width="*" />
-                            <ColumnDefinition
-                                Width="*" />
-                        </Grid.ColumnDefinitions>
-
-                        <Viewbox
-                            Grid.Column="0"
-                            StretchDirection="Both"
-                            Stretch="Uniform">
-
-                            <telerik:Label
-                                Grid.Column="1"
-                                Name="lbMaxRollLeft20m"
-                                Content="{Binding Path=rollMaxLeft20mString}"
-                                FontSize="{StaticResource fontSizeDataLarge}"
-                                HorizontalAlignment="Center" />
-
-                        </Viewbox>
-
-                        <Viewbox
+                        <telerik:Label
                             Grid.Column="1"
-                            StretchDirection="Both"
-                            Stretch="Uniform"
-                            HorizontalAlignment="Left">
+                            Name="lbMaxRollLeft20m"
+                            Content="{Binding Path=rollMaxLeft20mString}"
+                            FontSize="{StaticResource fontSizeDataLarge}"
+                            HorizontalAlignment="Center" />
 
-                            <telerik:Label
-                                Content="Left" />
-
-                        </Viewbox>
-
-                    </Grid>
-
-                    <Grid
-                        Grid.Row="1"
-                        Grid.Column="1">
-
-                        <Grid.ColumnDefinitions>
-                            <ColumnDefinition
-                                Width="*" />
-                            <ColumnDefinition
-                                Width="*" />
-                        </Grid.ColumnDefinitions>
-
-                        <Viewbox
-                            Grid.Column="0"
-                            StretchDirection="Both"
-                            Stretch="Uniform">
-
-                            <telerik:Label
-                                Name="lbMaxRollRight20m"
-                                Content="{Binding Path=rollMaxRight20mString}"
-                                FontSize="{StaticResource fontSizeDataLarge}"
-                                HorizontalAlignment="Center" />
-
-                        </Viewbox>
-
-                        <Viewbox
-                            Grid.Column="1"
-                            StretchDirection="Both"
-                            Stretch="Uniform"
-                            HorizontalAlignment="Left">
-
-                            <telerik:Label
-                                Content="Right" />
-
-                        </Viewbox>
-
-                    </Grid>
+                    </Viewbox>
 
                     <Viewbox
-                        Grid.Row="0"
-                        Grid.RowSpan="2"
                         Grid.Column="2"
+                        StretchDirection="Both"
+                        HorizontalAlignment="Left"
+                        Stretch="Uniform">
+
+                        <telerik:Label
+                            Name="lbMaxRollRight20m"
+                            Content="{Binding Path=rollMaxRight20mString}"
+                            FontSize="{StaticResource fontSizeDataLarge}"
+                            HorizontalAlignment="Center" />
+
+                    </Viewbox>
+
+                    <Viewbox
+                        Grid.Column="3"
                         HorizontalAlignment="Left"
                         StretchDirection="Both"
                         Stretch="Uniform">
@@ -408,9 +292,7 @@
                     </Viewbox>
 
                     <Viewbox
-                        Grid.Row="0"
-                        Grid.RowSpan="2"
-                        Grid.Column="3"
+                        Grid.Column="4"
                         StretchDirection="Both"
                         Stretch="Uniform"
                         HorizontalAlignment="Left">
@@ -433,9 +315,9 @@
 
                     <Grid.ColumnDefinitions>
                         <ColumnDefinition
-                            Width="7*" />
+                            Width="9*" />
                         <ColumnDefinition
-                            Width="4*" />
+                            Width="3*" />
                         <ColumnDefinition
                             Width="3*" />
                     </Grid.ColumnDefinitions>
@@ -484,9 +366,9 @@
 
                     <Grid.ColumnDefinitions>
                         <ColumnDefinition
-                            Width="7*" />
+                            Width="9*" />
                         <ColumnDefinition
-                            Width="4*" />
+                            Width="3*" />
                         <ColumnDefinition
                             Width="3*" />
                     </Grid.ColumnDefinitions>

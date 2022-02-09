@@ -183,31 +183,52 @@
 
                     <Grid.RowDefinitions>
                         <RowDefinition
-                            Height="*" />
+                            Height="1*" />
                         <RowDefinition
-                            Height="*" />
+                            Height="3*" />
+                        <RowDefinition
+                            Height="5*" />
                     </Grid.RowDefinitions>
 
-                    <StackPanel
-                        Grid.Row="0"
-                        VerticalAlignment="Center">
+                    <Grid
+                        Grid.Row="1">
 
-                        <telerik:Label
-                            Content="RWD"
-                            FontSize="{StaticResource fontSizeLabel}"
-                            TextBlock.TextAlignment="Center"
-                            HorizontalAlignment="Center" />
+                        <Grid.RowDefinitions>
+                            <RowDefinition
+                                Height="3*" />
+                            <RowDefinition
+                                Height="4*" />
+                        </Grid.RowDefinitions>
+
+                        <Viewbox
+                            Grid.Row="0"
+                            StretchDirection="Both"
+                            Stretch="Uniform"
+                            HorizontalAlignment="Center">
+
+                            <telerik:Label
+                                Content="RWD"
+                                FontSize="{StaticResource fontSizeLabel}" />
+
+                        </Viewbox>
 
                         <Separator
                             Height="1"
                             VerticalAlignment="Bottom" />
 
-                        <telerik:Label
-                            Content="{Binding relativeWindDirString}"
-                            FontSize="26"                            
-                            HorizontalAlignment="Center" />
+                        <Viewbox
+                            Grid.Row="2"
+                            StretchDirection="Both"
+                            Stretch="Uniform"
+                            HorizontalAlignment="Center">
 
-                    </StackPanel>
+                            <telerik:Label
+                                Content="{Binding Path=relativeWindDirString}"
+                                FontSize="{StaticResource fontSizeDataLarge}" />
+
+                        </Viewbox>
+
+                    </Grid>
 
                 </Grid>
 

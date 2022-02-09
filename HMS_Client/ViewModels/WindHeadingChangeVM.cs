@@ -5,7 +5,7 @@ using System.Windows.Threading;
 
 namespace HMS_Client
 {
-    public class WindHeadingTrendVM : INotifyPropertyChanged
+    public class WindHeadingChangeVM : INotifyPropertyChanged
     {
         // Change notification
         public event PropertyChangedEventHandler PropertyChanged;

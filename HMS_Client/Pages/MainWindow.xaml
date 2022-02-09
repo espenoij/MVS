@@ -228,13 +228,6 @@
                                     Grid.Row="0"
                                     x:Name="ucUserInputs_CAP" />
 
-                                <!--Helideck Heading Trend CAP-->
-                                <uc:WindHeadingTrend_CAP
-                                    Grid.Column="0"
-                                    Grid.ColumnSpan="2"
-                                    Grid.Row="3"
-                                    x:Name="ucHelideckWindHeadingTrend_CAP" />
-
                                 <!--Helideck Status CAP-->
                                 <uc:HelideckStatus_CAP
                                     Grid.Column="1"
@@ -255,12 +248,20 @@
                                     Grid.ColumnSpan="2"
                                     x:Name="ucRelativeWindDirectionLimits_CAP" />
 
-                                <!--Helideck Status Trend-->
-                                <uc:HelideckStatusTrend_CAP
+                                <!--Landing Status Trend-->
+                                <uc:LandingStatusTrend_CAP
                                     Grid.Column="0"
                                     Grid.Row="2"
                                     Grid.ColumnSpan="2"
                                     x:Name="ucHelideckStatusTrend_CAP" />
+
+                                <!--Wind & Heading Change CAP-->
+                                <uc:WindHeadingChange_CAP
+                                    Grid.Column="0"
+                                    Grid.ColumnSpan="2"
+                                    Grid.Row="2"
+                                    Grid.RowSpan="2"
+                                    x:Name="ucWindHeadingChange_CAP" />
 
                                 <!--Helideck Motion Limits CAP-->
                                 <uc:HelideckMotionLimits_Touchdown_CAP

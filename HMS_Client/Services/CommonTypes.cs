@@ -14,11 +14,11 @@ public enum HelicopterCategory
 
 public enum HelideckCategory
 {
-    [Description("Category 1")]
+    [Description("CAT 1")]
     Category1,
-    [Description("Category 2")]
+    [Description("CAT 2")]
     Category2,
-    [Description("Category 3")]
+    [Description("CAT 3")]
     Category3
 }
 

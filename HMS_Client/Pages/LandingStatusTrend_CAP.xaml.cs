@@ -9,14 +9,14 @@ using System.Windows.Threading;
 namespace HMS_Client
 {
     /// <summary>
-    /// Interaction logic for HelideckStatusTrend_CAP.xaml
+    /// Interaction logic for LandingStatusTrend_CAP.xaml
     /// </summary>
-    public partial class HelideckStatusTrend_CAP : UserControl
+    public partial class LandingStatusTrend_CAP : UserControl
     {
         private DispatcherTimer TrendUpdateTimer20m = new DispatcherTimer();
         private DispatcherTimer TrendUpdateTimer3h = new DispatcherTimer();
 
-        public HelideckStatusTrend_CAP()
+        public LandingStatusTrend_CAP()
         {
             InitializeComponent();
         }

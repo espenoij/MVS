@@ -320,7 +320,7 @@ namespace HMS_Client
                     if (pitchMaxUp20mData.status == DataStatus.OK)
                     {
                         double pitch = Math.Abs(pitchMaxUp20mData.data);
-                        return string.Format("{0} °", pitch.ToString("0.0"));
+                        return string.Format("{0} ° U", pitch.ToString("0.0"));
                     }
                     else
                     {
@@ -361,7 +361,7 @@ namespace HMS_Client
                     if (pitchMaxDown20mData.status == DataStatus.OK)
                     {
                         double pitch = Math.Abs(pitchMaxDown20mData.data);
-                        return string.Format("{0} °", pitch.ToString("0.0"));
+                        return string.Format("{0} ° D", pitch.ToString("0.0"));
                     }
                     else
                     {
@@ -452,7 +452,7 @@ namespace HMS_Client
                     if (rollMaxLeft20mData.status == DataStatus.OK)
                     {
                         double roll = Math.Abs(rollMaxLeft20mData.data);
-                        return string.Format("{0} °", roll.ToString("0.0"));
+                        return string.Format("{0} ° L", roll.ToString("0.0"));
                     }
                     else
                     {
@@ -493,7 +493,7 @@ namespace HMS_Client
                     if (rollMaxRight20mData.status == DataStatus.OK)
                     {
                         double roll = Math.Abs(rollMaxRight20mData.data);
-                        return string.Format("{0} °", roll.ToString("0.0"));
+                        return string.Format("{0} ° R", roll.ToString("0.0"));
                     }
                     else
                     {

@@ -161,7 +161,6 @@ namespace HMS_Server
                 cboHelideckCategory.IsEnabled = false;
                 lbHelideckCategory.IsEnabled = false;
 
-                // Helideck Report
                 lbNDBInstalled_NOROG.IsEnabled = false;
                 cbNDBInstalled_NOROG.IsEnabled = false;
 

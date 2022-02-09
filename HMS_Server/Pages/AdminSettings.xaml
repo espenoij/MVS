@@ -69,20 +69,7 @@
                         KeyDown="tbVesselName_KeyDown" />
                 </DockPanel>
 
-                <!--Semi-Submersible-->
-                <DockPanel>
-
-                    <telerik:Label
-                        Content="Semi-Submersible"
-                        VerticalAlignment="Center" />
-
-                    <CheckBox
-                        IsChecked="{Binding Path=vesselIsSemiSubmersible, Mode=TwoWay}"
-                        VerticalAlignment="Center"
-                        HorizontalAlignment="Right"/>
-
-                </DockPanel>
-
+                <!--Helideck Heading Offset-->
                 <DockPanel>
                     <telerik:Label
                         Content="Helideck Heading Offset"
@@ -94,6 +81,22 @@
                         Text="{Binding Path=helideckHeadingOffset}"
                         LostFocus="tbHelideckHeadingOffset_LostFocus"
                         KeyDown="tbHelideckHeadingOffset_KeyDown"/>
+                </DockPanel>
+
+                <!--Semi-Submersible-->
+                <DockPanel>
+
+                    <telerik:Label
+                        Name="lbSemiSub"
+                        Content="Semi-Submersible"
+                        VerticalAlignment="Center" />
+
+                    <CheckBox
+                        x:Name="cbSemiSub"
+                        IsChecked="{Binding Path=vesselIsSemiSubmersible, Mode=TwoWay}"
+                        VerticalAlignment="Center"
+                        HorizontalAlignment="Right" />
+
                 </DockPanel>
 
             </StackPanel>

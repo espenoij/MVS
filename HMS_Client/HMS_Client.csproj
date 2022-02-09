@@ -321,10 +321,10 @@
     <Compile Include="Pages\WindHeadingReadouts_CAP.xaml.cs">
       <DependentUpon>WindHeadingReadouts_CAP.xaml</DependentUpon>
     </Compile>
-    <Compile Include="Pages\WindHeadingTrend_CAP.xaml.cs">
-      <DependentUpon>WindHeadingTrend_CAP.xaml</DependentUpon>
+    <Compile Include="Pages\WindHeadingChange_CAP.xaml.cs">
+      <DependentUpon>WindHeadingChange_CAP.xaml</DependentUpon>
     </Compile>
-    <Compile Include="ViewModels\WindHeadingTrendVM.cs" />
+    <Compile Include="ViewModels\WindHeadingChangeVM.cs" />
     <Compile Include="Pages\HelideckRelativeWindLimits_CAP.xaml.cs">
       <DependentUpon>HelideckRelativeWindLimits_CAP.xaml</DependentUpon>
     </Compile>
@@ -343,8 +343,8 @@
     <Compile Include="Pages\HelideckStatus_CAP.xaml.cs">
       <DependentUpon>HelideckStatus_CAP.xaml</DependentUpon>
     </Compile>
-    <Compile Include="Pages\HelideckStatusTrend_CAP.xaml.cs">
-      <DependentUpon>HelideckStatusTrend_CAP.xaml</DependentUpon>
+    <Compile Include="Pages\LandingStatusTrend_CAP.xaml.cs">
+      <DependentUpon>LandingStatusTrend_CAP.xaml</DependentUpon>
     </Compile>
     <Compile Include="Config\HelicopterWSILimitConfig.cs" />
     <Compile Include="Config\HelicopterWSILimitConfigCollection.cs" />
@@ -478,7 +478,7 @@
       <SubType>Designer</SubType>
       <Generator>MSBuild:Compile</Generator>
     </Page>
-    <Page Include="Pages\WindHeadingTrend_CAP.xaml">
+    <Page Include="Pages\WindHeadingChange_CAP.xaml">
       <Generator>MSBuild:Compile</Generator>
       <SubType>Designer</SubType>
     </Page>
@@ -494,7 +494,7 @@
       <Generator>MSBuild:Compile</Generator>
       <SubType>Designer</SubType>
     </Page>
-    <Page Include="Pages\HelideckStatusTrend_CAP.xaml">
+    <Page Include="Pages\LandingStatusTrend_CAP.xaml">
       <Generator>MSBuild:Compile</Generator>
       <SubType>Designer</SubType>
     </Page>

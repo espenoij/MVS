@@ -59,7 +59,7 @@ namespace HMS_Client
             }
 
             // Sample helideck status til trend buffer
-            HelideckStatusUpdateTimer.Interval = TimeSpan.FromMilliseconds(1000);
+            HelideckStatusUpdateTimer.Interval = TimeSpan.FromMilliseconds(config.ReadWithDefault(ConfigKey.ClientUpdateFrequencyUI, Constants.ClientUpdateFrequencyUIDefault));
             HelideckStatusUpdateTimer.Tick += HelideckStatusUpdate;
             HelideckStatusUpdateTimer.Start();
 
@@ -76,6 +76,8 @@ namespace HMS_Client
 
                 // Legge inn ny status i buffer
                 statusTrendBuffer3h.Add(newStatus);
+
+                OnPropertyChanged(nameof(displayModeVisibilityPreLanding));
             }
 
             // Oppdatere trend data i UI: 20 minutter
@@ -289,6 +291,17 @@ namespace HMS_Client
                     return true;
                 else
                     return false;
+            }
+        }
+
+        /////////////////////////////////////////////////////////////////////////////
+        // Pre-Landing Visibility
+        /////////////////////////////////////////////////////////////////////////////
+        public bool displayModeVisibilityPreLanding
+        {
+            get
+            {
+                return helideckStabilityLimitsVM.displayModeVisibilityPreLanding;
             }
         }
 

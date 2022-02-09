@@ -101,7 +101,7 @@
                                 <telerik:LinearAxis
                                     Title="WSI %"
                                     Minimum="0"
-                                    Maximum="120" />
+                                    Maximum="140" />
                             </telerik:RadCartesianChart.HorizontalAxis>
 
                             <telerik:RadCartesianChart.VerticalAxis>
@@ -116,7 +116,7 @@
                                 <telerik:CartesianMarkedZoneAnnotation
                                     Fill="{StaticResource ColorAmber}"
                                     HorizontalFrom="0"
-                                    HorizontalTo="120"
+                                    HorizontalTo="140"
                                     VerticalFrom="0"
                                     VerticalTo="120"
                                     ZIndex="20" />
@@ -215,15 +215,15 @@
 
                             <Grid.RowDefinitions>
                                 <RowDefinition
-                                    Height="2*" />
+                                    Height="1*" />
                                 <RowDefinition
                                     Height="3*" />
                                 <RowDefinition
-                                    Height="2*" />
+                                    Height="1*" />
                                 <RowDefinition
                                     Height="3*" />
                                 <RowDefinition
-                                    Height="2*" />
+                                    Height="1*" />
                             </Grid.RowDefinitions>
 
                             <Grid
@@ -260,7 +260,7 @@
                                     HorizontalAlignment="Center">
 
                                     <telerik:Label
-                                        Content="{Binding Path=msiString}"
+                                        Content="{Binding Path=msiString, FallbackValue=34}"
                                         FontSize="{StaticResource fontSizeDataLarge}" />
 
                                 </Viewbox>
@@ -300,7 +300,7 @@
                                     HorizontalAlignment="Center">
 
                                     <telerik:Label
-                                        Content="{Binding Path=wsiString}"
+                                        Content="{Binding Path=wsiString, FallbackValue=77 %}"
                                         FontSize="{StaticResource fontSizeDataLarge}" />
 
                                 </Viewbox>

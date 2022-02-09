@@ -1,5 +1,5 @@
 ﻿<UserControl
-    x:Class="HMS_Client.HelideckStatusTrend_CAP"
+    x:Class="HMS_Client.LandingStatusTrend_CAP"
     xmlns="http://schemas.microsoft.com/winfx/2006/xaml/presentation"
     xmlns:x="http://schemas.microsoft.com/winfx/2006/xaml"
     xmlns:mc="http://schemas.openxmlformats.org/markup-compatibility/2006"
@@ -14,13 +14,15 @@
             x:Key="BoolToVisConverter" />
     </UserControl.Resources>
     
-    <Grid>
+    <Grid
+        Visibility="{Binding Path=displayModeVisibilityPreLanding, Converter={StaticResource BoolToVisConverter} }">
 
         <telerik:GroupBox
-            Header="HELIDECK STATUS TREND"
+            Header="LANDING STATUS TREND"
             Margin="8">
 
-            <Grid>
+            <Grid
+                Margin="8">
 
                 <Grid.RowDefinitions>
                     <RowDefinition
