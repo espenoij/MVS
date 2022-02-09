@@ -12,17 +12,15 @@ namespace HMS_Client
         public event PropertyChangedEventHandler PropertyChanged;
 
         private DispatcherTimer landingStatusUpdateTimer = new DispatcherTimer();
-        private DispatcherTimer ChartDataUpdateTimer20m = new DispatcherTimer();
-        private DispatcherTimer ChartDataUpdateTimer3h = new DispatcherTimer();
 
         // 20 minutters buffer
-        private RadObservableCollectionEx<HelideckStatus> statusTrendBuffer20m = new RadObservableCollectionEx<HelideckStatus>();
+        //private RadObservableCollectionEx<HelideckStatus> statusTrendBuffer20m = new RadObservableCollectionEx<HelideckStatus>();
         // 20 minutters data liste
         public RadObservableCollectionEx<HelideckStatus> statusTrend20mList = new RadObservableCollectionEx<HelideckStatus>();
         public List<HelideckStatusType> landingTrend20mDispList = new List<HelideckStatusType>();
 
         // 3 timers buffer
-        private RadObservableCollectionEx<HelideckStatus> statusTrendBuffer3h = new RadObservableCollectionEx<HelideckStatus>();
+        //private RadObservableCollectionEx<HelideckStatus> statusTrendBuffer3h = new RadObservableCollectionEx<HelideckStatus>();
         // 3 timers data liste
         public RadObservableCollectionEx<HelideckStatus> statusTrend3hList = new RadObservableCollectionEx<HelideckStatus>();
         public List<HelideckStatusType> statusTrend3hDispList = new List<HelideckStatusType>();
@@ -72,82 +70,21 @@ namespace HMS_Client
                 };
 
                 // Legge inn ny status i buffer
-                statusTrendBuffer20m.Add(newStatus);
-
-                // Legge inn ny status i buffer
-                statusTrendBuffer3h.Add(newStatus);
-
-                OnPropertyChanged(nameof(displayModeVisibilityPreLanding));
-            }
-
-            // Oppdatere trend data i UI: 20 minutter
-            ChartDataUpdateTimer20m.Interval = TimeSpan.FromMilliseconds(config.ReadWithDefault(ConfigKey.ChartDataUpdateFrequency20m, Constants.ChartUpdateFrequencyUI20mDefault));
-            ChartDataUpdateTimer20m.Tick += ChartDataUpdate20m;
-            ChartDataUpdateTimer20m.Start();
-
-            void ChartDataUpdate20m(object sender, EventArgs e)
-            {
-                // Overføre data fra buffer til chart data: 20m
-                GraphBuffer.Transfer(statusTrendBuffer20m, statusTrend20mList);
-
-                // Slette buffer
-                GraphBuffer.Clear(statusTrendBuffer20m);
+                statusTrend20mList.Add(newStatus);
+                statusTrend3hList.Add(newStatus);
 
                 // Fjerne gamle data fra chart data
                 GraphBuffer.RemoveOldData(statusTrend20mList, Constants.Minutes20);
-
-                // Overføre til display data liste
-                TransferDisplayData(statusTrend20mList, landingTrend20mDispList);
-
-                OnPropertyChanged(nameof(helideckStatusTimeString));
-            }
-
-            // Oppdatere trend data i UI: 3 hours
-            ChartDataUpdateTimer3h.Interval = TimeSpan.FromMilliseconds(config.ReadWithDefault(ConfigKey.ChartDataUpdateFrequency3h, Constants.ChartUpdateFrequencyUI3hDefault));
-            ChartDataUpdateTimer3h.Tick += ChartDataUpdate3h;
-            ChartDataUpdateTimer3h.Start();
-
-            void ChartDataUpdate3h(object sender, EventArgs e)
-            {
-                // Overføre data fra buffer til chart data: 3h
-                GraphBuffer.Transfer(statusTrendBuffer3h, statusTrend3hList);
-
-                // Slette buffer
-                GraphBuffer.Clear(statusTrendBuffer3h);
-
-                // Fjerne gamle data fra chart data
                 GraphBuffer.RemoveOldData(statusTrend3hList, Constants.Hours3);
 
                 // Overføre til display data liste
+                TransferDisplayData(statusTrend20mList, landingTrend20mDispList);
                 TransferDisplayData(statusTrend3hList, statusTrend3hDispList);
 
                 OnPropertyChanged(nameof(helideckStatusTimeString));
+                OnPropertyChanged(nameof(displayModeVisibilityPreLanding));
             }
         }
-
-        //private void TransferBuffer(RadObservableCollectionEx<HelideckStatus> buffer, RadObservableCollectionEx<HelideckStatus> dataList)
-        //{
-        //    // Overfører alle data fra buffer til dataList
-        //    dataList.AddRange(buffer);
-        //}
-
-        //private void ClearBuffer(RadObservableCollectionEx<HelideckStatus> buffer)
-        //{
-        //    // Sletter alle data fra buffer
-        //    buffer.Clear();
-        //}
-
-        //private void RemoveOldData(RadObservableCollectionEx<HelideckStatus> dataList, double timeInterval)
-        //{
-        //    if (dataList != null)
-        //    {
-        //        for (int i = 0; i < dataList.Count && dataList.Count > 0; i++)
-        //        {
-        //            if (dataList[i]?.timestamp < DateTime.UtcNow.AddSeconds(-timeInterval))
-        //                dataList.RemoveAt(i--);
-        //        }
-        //    }
-        //}
 
         private void TransferDisplayData(RadObservableCollectionEx<HelideckStatus> list, List<HelideckStatusType> dispList)
         {
