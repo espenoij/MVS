@@ -42,7 +42,7 @@ namespace HMS_Server
 
             void UIUpdate(object sender, EventArgs e)
             {
-                helideckStatusData = hmsOutputDataList?.GetData(ValueType.HelideckStatus);
+                helideckStatusData = hmsOutputDataList?.GetData(ValueType.HelideckLightStatus);
             }
         }
 

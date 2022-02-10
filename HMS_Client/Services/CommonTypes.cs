@@ -161,9 +161,11 @@ public enum ValueType
     AirDewPoint,
     AirPressureQNH,
     AirPressureQFE,
-    HelideckStatus,
-    MSI,
-    WSI,
+    HelideckLightStatus,
+    LandingStatus,          // CAP
+    RWDStatus,              // CAP
+    MSI,                    // CAP
+    WSI,                    // CAP
     RelativeWindDir,
     AreaWindDirection2m,
     AreaWindSpeed2m,

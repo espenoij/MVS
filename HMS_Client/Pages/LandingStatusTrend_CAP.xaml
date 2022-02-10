@@ -15,6 +15,7 @@
     </UserControl.Resources>
     
     <Grid
+        x:Name="gLandingStatusTrend"
         Visibility="{Binding Path=displayModeVisibilityPreLanding, Converter={StaticResource BoolToVisConverter} }">
 
         <telerik:GroupBox

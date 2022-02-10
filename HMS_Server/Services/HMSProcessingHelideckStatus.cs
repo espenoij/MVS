@@ -11,9 +11,13 @@ namespace HMS_Server
         private HMSProcessingMotion hmsProcessingMotion;
         private HMSProcessingWindHeading hmsProcessingWindHeading;
 
-        private HelideckStatusType helideckStatus;
+        private HelideckStatusType helideckLightStatus;
+        private HelideckStatusType landingStatus;
+        private HelideckStatusType rwdStatus;
 
-        private HMSData helideckStatusData = new HMSData();
+        private HMSData helideckLightStatusData = new HMSData();
+        private HMSData landingStatusData = new HMSData();
+        private HMSData rwdStatusData = new HMSData();
 
         public HMSProcessingHelideckStatus(HMSDataCollection hmsOutputData, HelideckMotionLimits motionLimits, AdminSettingsVM adminSettingsVM, UserInputs userInputs, HMSProcessingMotion hmsProcessingMotion, HMSProcessingWindHeading hmsProcessingWindHeading)
         {
@@ -25,7 +29,9 @@ namespace HMS_Server
             this.hmsProcessingWindHeading = hmsProcessingWindHeading;
 
             // Init status
-            helideckStatus = HelideckStatusType.OFF;
+            helideckLightStatus = HelideckStatusType.OFF;
+            landingStatus = HelideckStatusType.OFF;
+            rwdStatus = HelideckStatusType.OFF;
 
             // Fyller output listen med HMS Output data
             // NB! Variablene som legges inn i listen her fungerer som pekere: Oppdateres variabelen -> oppdateres listen
@@ -33,162 +39,236 @@ namespace HMS_Server
 
             RadObservableCollectionEx<HMSData> hmsOutputDataList = hmsOutputData.GetDataList();
 
-            hmsOutputDataList.Add(helideckStatusData);
+            hmsOutputDataList.Add(helideckLightStatusData);
+            hmsOutputDataList.Add(landingStatusData);
+            hmsOutputDataList.Add(rwdStatusData);
 
             // Sette grunnleggende data
-            helideckStatusData.id = (int)ValueType.HelideckStatus;
-            helideckStatusData.name = "Helideck Status";
-            helideckStatusData.sensorGroupId = Constants.NO_SENSOR_GROUP_ID;
-            helideckStatusData.dbColumn = "helideck_status";
+            helideckLightStatusData.id = (int)ValueType.HelideckLightStatus;
+            helideckLightStatusData.name = "Helideck Light Status";
+            helideckLightStatusData.sensorGroupId = Constants.NO_SENSOR_GROUP_ID;
+            helideckLightStatusData.dbColumn = "helideck_status";
+
+            landingStatusData.id = (int)ValueType.LandingStatus;
+            landingStatusData.name = "Landing Status";
+            landingStatusData.sensorGroupId = Constants.NO_SENSOR_GROUP_ID;
+            landingStatusData.dbColumn = "landing_status";
+
+            rwdStatusData.id = (int)ValueType.RWDStatus;
+            rwdStatusData.name = "RWD Status";
+            rwdStatusData.sensorGroupId = Constants.NO_SENSOR_GROUP_ID;
+            rwdStatusData.dbColumn = "rwd_status";
         }
 
-        public void Update()
+        public void UpdateHelideckLight()
         {
             // NOROG
             if (adminSettingsVM.regulationStandard == RegulationStandard.NOROG)
             {
-                // Slår av lysene når vi ikke har ordentlige data
-                if (hmsOutputData.GetData(ValueType.PitchMax20m).status == DataStatus.TIMEOUT_ERROR ||
-                    hmsOutputData.GetData(ValueType.RollMax20m).status == DataStatus.TIMEOUT_ERROR ||
-                    hmsOutputData.GetData(ValueType.HeaveAmplitudeMax20m).status == DataStatus.TIMEOUT_ERROR ||
-                    hmsOutputData.GetData(ValueType.SignificantHeaveRateMax20m).status == DataStatus.TIMEOUT_ERROR)
-                {
-                    helideckStatus = HelideckStatusType.OFF;
-                }
-                else
-                {
-                    switch (helideckStatus)
-                    {
-                        // Init
-                        case HelideckStatusType.OFF:
-                            if (IsWithinLimits(ValueType.PitchMax20m) &&
-                                IsWithinLimits(ValueType.RollMax20m) &&
-                                IsWithinLimits(ValueType.InclinationMax20m) &&
-                                IsWithinLimits(ValueType.HeaveAmplitudeMax20m) &&
-                                IsWithinLimits(ValueType.SignificantHeaveRate))
-                            {
-                                helideckStatus = HelideckStatusType.GREEN;
-                            }
-                            else
-                            {
-                                helideckStatus = HelideckStatusType.RED;
-                            }
-                            break;
+                helideckLightStatus = CheckHelideckLightStatusNOROG(helideckLightStatus);
 
-                        // Green -> Red
-                        case HelideckStatusType.GREEN:
-                            if (!IsWithinLimits(ValueType.PitchMax20m) ||
-                                !IsWithinLimits(ValueType.RollMax20m) ||
-                                !IsWithinLimits(ValueType.InclinationMax20m) ||
-                                !IsWithinLimits(ValueType.HeaveAmplitudeMax20m) ||
-                                (!IsWithinLimits(ValueType.SignificantHeaveRate) && hmsProcessingMotion.IsSHR2mMinAboveLimit()))
-                            {
-                                helideckStatus = HelideckStatusType.RED;
-                            }
-                            break;
-
-                        // Red -> Green
-                        case HelideckStatusType.RED:
-                            if (IsWithinLimits(ValueType.PitchMax20m) &&
-                                IsWithinLimits(ValueType.RollMax20m) &&
-                                IsWithinLimits(ValueType.InclinationMax20m) &&
-                                IsWithinLimits(ValueType.HeaveAmplitudeMax20m) &&
-                                /*IsWithinLimits(ValueType.SignificantHeaveRate95pct) && */hmsProcessingMotion.IsSHR10mMeanBelowLimit()) // 95% regelen utgår i CAP 9c
-                            {
-                                helideckStatus = HelideckStatusType.GREEN;
-                            }
-                            break;
-                    }
-                }
+                // Disse brukes bare til CAP
+                landingStatus = HelideckStatusType.OFF;
+                rwdStatus = HelideckStatusType.OFF;
             }
             else
             // CAP
             if (adminSettingsVM.regulationStandard == RegulationStandard.CAP)
             {
+                // Helideck Light Status
+                ///////////////////////////////////////////////////////////////////////////////////////
                 // PRE-LANDING page
                 if (userInputs.displayMode == DisplayMode.PreLanding)
                 {
-                    // Slår av lysene når vi ikke har ordentlige data
-                    if (hmsOutputData.GetData(ValueType.PitchMax20m).status == DataStatus.TIMEOUT_ERROR ||
-                        hmsOutputData.GetData(ValueType.RollMax20m).status == DataStatus.TIMEOUT_ERROR ||
-                        hmsOutputData.GetData(ValueType.SignificantHeaveRate).status == DataStatus.TIMEOUT_ERROR)
-                    {
-                        // Status: OFF
-                        helideckStatus = HelideckStatusType.OFF;
-                    }
-                    else
-                    {
-                        switch (helideckStatus)
-                        {
-                            // Init
-                            case HelideckStatusType.OFF:
-                                if (IsWithinLimits(ValueType.PitchMax20m) &&
-                                    IsWithinLimits(ValueType.RollMax20m) &&
-                                    IsWithinLimits(ValueType.InclinationMax20m) &&
-                                    IsWithinLimits(ValueType.SignificantHeaveRate))
-                                {
-                                    helideckStatus = GetMSIWSIState();
-                                }
-                                else
-                                {
-                                    helideckStatus = HelideckStatusType.RED;
-                                }
-                                break;
-
-                            // Blue/amber -> Red
-                            case HelideckStatusType.BLUE:
-                            case HelideckStatusType.AMBER:
-                                if (!IsWithinLimits(ValueType.PitchMax20m) ||
-                                    !IsWithinLimits(ValueType.RollMax20m) ||
-                                    !IsWithinLimits(ValueType.InclinationMax20m) ||
-                                    (!IsWithinLimits(ValueType.SignificantHeaveRate) && hmsProcessingMotion.IsSHR2mMinAboveLimit()))
-                                {
-                                    helideckStatus = HelideckStatusType.RED;
-                                }
-                                else
-                                {
-                                    helideckStatus = GetMSIWSIState();
-                                }
-                                break;
-
-                            // Red -> Blue/amber
-                            case HelideckStatusType.RED:
-                                if (IsWithinLimits(ValueType.PitchMax20m) &&
-                                    IsWithinLimits(ValueType.RollMax20m) &&
-                                    IsWithinLimits(ValueType.InclinationMax20m) &&
-                                    /*IsWithinLimits(ValueType.SignificantHeaveRate95pct) && */hmsProcessingMotion.IsSHR10mMeanBelowLimit()) // 95% regelen utgår i CAP 9c
-                                {
-                                    helideckStatus = GetMSIWSIState();
-                                }
-                                break;
-                        }
-                    }
+                    helideckLightStatus = CheckLandingStatusCAP(helideckLightStatus);
                 }
                 // ON-DECK page
                 else
                 {
-                    if (hmsOutputData.GetData(ValueType.HelideckWindSpeed2m).status == DataStatus.TIMEOUT_ERROR ||
-                        hmsOutputData.GetData(ValueType.RelativeWindDir).status == DataStatus.TIMEOUT_ERROR)
-                    {
-                        // Status: OFF
-                        helideckStatus = HelideckStatusType.OFF;
-                    }
-                    else
-                    {
-                        // Status: BLUE / AMBER / RED
-                        helideckStatus = hmsProcessingWindHeading.GetRWDLimitState;
-                    }
+                    helideckLightStatus = CheckRWDStatusCAP();
                 }
+
+                // Landing Status
+                ///////////////////////////////////////////////////////////////////////////////////////
+                landingStatus = CheckLandingStatusCAP(landingStatus);
+
+                // RWD Status
+                ///////////////////////////////////////////////////////////////////////////////////////
+                rwdStatus = CheckRWDStatusCAP();
             }
 
             // Overføre data til output liste
-            helideckStatusData.data = (double)helideckStatus;
-            helideckStatusData.timestamp = DateTime.UtcNow;
 
-            if (helideckStatus != HelideckStatusType.OFF)
-                helideckStatusData.status = DataStatus.OK;
+            // Helideck Light Status
+            helideckLightStatusData.data = (double)helideckLightStatus;
+            helideckLightStatusData.timestamp = DateTime.UtcNow;
+
+            if (helideckLightStatus != HelideckStatusType.OFF)
+                helideckLightStatusData.status = DataStatus.OK;
             else
-                helideckStatusData.status = DataStatus.TIMEOUT_ERROR;
+                helideckLightStatusData.status = DataStatus.TIMEOUT_ERROR;
+
+            // Landing Status
+            landingStatusData.data = (double)landingStatus;
+            landingStatusData.timestamp = DateTime.UtcNow;
+
+            if (landingStatus != HelideckStatusType.OFF)
+                landingStatusData.status = DataStatus.OK;
+            else
+                landingStatusData.status = DataStatus.TIMEOUT_ERROR;
+
+            // RWD Status
+            rwdStatusData.data = (double)rwdStatus;
+            rwdStatusData.timestamp = DateTime.UtcNow;
+
+            if (rwdStatus != HelideckStatusType.OFF)
+                rwdStatusData.status = DataStatus.OK;
+            else
+                rwdStatusData.status = DataStatus.TIMEOUT_ERROR;
+        }
+
+        private HelideckStatusType CheckLandingStatusCAP(HelideckStatusType status)
+        {
+            // Slår av lysene når vi ikke har ordentlige data
+            if (hmsOutputData.GetData(ValueType.PitchMax20m).status == DataStatus.TIMEOUT_ERROR ||
+                hmsOutputData.GetData(ValueType.RollMax20m).status == DataStatus.TIMEOUT_ERROR ||
+                hmsOutputData.GetData(ValueType.SignificantHeaveRate).status == DataStatus.TIMEOUT_ERROR)
+            {
+                // Status: OFF
+                return HelideckStatusType.OFF;
+            }
+            else
+            {
+                switch (status)
+                {
+                    // Init
+                    case HelideckStatusType.OFF:
+                        if (IsWithinLimits(ValueType.PitchMax20m) &&
+                            IsWithinLimits(ValueType.RollMax20m) &&
+                            IsWithinLimits(ValueType.InclinationMax20m) &&
+                            IsWithinLimits(ValueType.SignificantHeaveRate))
+                        {
+                            return GetMSIWSIState();
+                        }
+                        else
+                        {
+                            return HelideckStatusType.RED;
+                        }
+
+                    // Blue/amber -> Red
+                    case HelideckStatusType.BLUE:
+                    case HelideckStatusType.AMBER:
+                        if (!IsWithinLimits(ValueType.PitchMax20m) ||
+                            !IsWithinLimits(ValueType.RollMax20m) ||
+                            !IsWithinLimits(ValueType.InclinationMax20m) ||
+                            (!IsWithinLimits(ValueType.SignificantHeaveRate) && hmsProcessingMotion.IsSHR2mMinAboveLimit()))
+                        {
+                            return HelideckStatusType.RED;
+                        }
+                        else
+                        {
+                            return GetMSIWSIState();
+                        }
+
+                    // Red -> Blue/amber
+                    case HelideckStatusType.RED:
+                        if (IsWithinLimits(ValueType.PitchMax20m) &&
+                            IsWithinLimits(ValueType.RollMax20m) &&
+                            IsWithinLimits(ValueType.InclinationMax20m) &&
+                            /*IsWithinLimits(ValueType.SignificantHeaveRate95pct) && */hmsProcessingMotion.IsSHR10mMeanBelowLimit()) // 95% regelen utgår i CAP 9c
+                        {
+                            return GetMSIWSIState();
+                        }
+                        else
+                        {
+                            return status;
+                        }
+
+                    default:
+                        return status;
+                }
+            }
+        }
+
+        private HelideckStatusType CheckRWDStatusCAP()
+        {
+            if (hmsOutputData.GetData(ValueType.VesselHeading).status == DataStatus.TIMEOUT_ERROR ||
+                hmsOutputData.GetData(ValueType.HelideckWindSpeed2m).status == DataStatus.TIMEOUT_ERROR ||
+                hmsOutputData.GetData(ValueType.RelativeWindDir).status == DataStatus.TIMEOUT_ERROR)
+            {
+                // Status: OFF
+                return HelideckStatusType.OFF;
+            }
+            else
+            {
+                // Status: BLUE / AMBER / RED
+                return hmsProcessingWindHeading.GetRWDLimitState;
+            }
+        }
+
+        private HelideckStatusType CheckHelideckLightStatusNOROG(HelideckStatusType status)
+        {
+            // Slår av lysene når vi ikke har ordentlige data
+            if (hmsOutputData.GetData(ValueType.PitchMax20m).status == DataStatus.TIMEOUT_ERROR ||
+                hmsOutputData.GetData(ValueType.RollMax20m).status == DataStatus.TIMEOUT_ERROR ||
+                hmsOutputData.GetData(ValueType.HeaveAmplitudeMax20m).status == DataStatus.TIMEOUT_ERROR ||
+                hmsOutputData.GetData(ValueType.SignificantHeaveRateMax20m).status == DataStatus.TIMEOUT_ERROR)
+            {
+                return HelideckStatusType.OFF;
+            }
+            else
+            {
+                switch (status)
+                {
+                    // Init
+                    case HelideckStatusType.OFF:
+                        if (IsWithinLimits(ValueType.PitchMax20m) &&
+                            IsWithinLimits(ValueType.RollMax20m) &&
+                            IsWithinLimits(ValueType.InclinationMax20m) &&
+                            IsWithinLimits(ValueType.HeaveAmplitudeMax20m) &&
+                            IsWithinLimits(ValueType.SignificantHeaveRate))
+                        {
+                            return HelideckStatusType.GREEN;
+                        }
+                        else
+                        {
+                            return HelideckStatusType.RED;
+                        }
+
+                    // Green -> Red
+                    case HelideckStatusType.GREEN:
+                        if (!IsWithinLimits(ValueType.PitchMax20m) ||
+                            !IsWithinLimits(ValueType.RollMax20m) ||
+                            !IsWithinLimits(ValueType.InclinationMax20m) ||
+                            !IsWithinLimits(ValueType.HeaveAmplitudeMax20m) ||
+                            (!IsWithinLimits(ValueType.SignificantHeaveRate) && hmsProcessingMotion.IsSHR2mMinAboveLimit()))
+                        {
+                            return HelideckStatusType.RED;
+                        }
+                        else
+                        {
+                            return status;
+                        }
+
+                    // Red -> Green
+                    case HelideckStatusType.RED:
+                        if (IsWithinLimits(ValueType.PitchMax20m) &&
+                            IsWithinLimits(ValueType.RollMax20m) &&
+                            IsWithinLimits(ValueType.InclinationMax20m) &&
+                            IsWithinLimits(ValueType.HeaveAmplitudeMax20m) &&
+                            /*IsWithinLimits(ValueType.SignificantHeaveRate95pct) && */hmsProcessingMotion.IsSHR10mMeanBelowLimit()) // 95% regelen utgår i CAP 9c
+                        {
+                            return HelideckStatusType.GREEN;
+                        }
+                        else
+                        {
+                            return status;
+                        }
+
+                    default:
+                        return status;
+                }
+            }
         }
 
         /////////////////////////////////////////////////////////////////////////////

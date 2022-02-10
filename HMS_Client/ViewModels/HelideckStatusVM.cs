@@ -18,9 +18,9 @@ namespace HMS_Client
         {
             this.userInputsVM = userInputsVM;
 
-            _helideckStatusData = new HMSData();
-
-            OnPropertyChanged(nameof(helideckStatus));
+            OnPropertyChanged(nameof(helideckLightStatus));
+            OnPropertyChanged(nameof(landingStatus));
+            OnPropertyChanged(nameof(rwdStatus));
 
             // Oppdatere UI
             UIUpdateTimer.Interval = TimeSpan.FromMilliseconds(config.ReadWithDefault(ConfigKey.ClientUpdateFrequencyUI, Constants.ClientUpdateFrequencyUIDefault));
@@ -30,10 +30,9 @@ namespace HMS_Client
             void UIUpdate(object sender, EventArgs e)
             {
                 // Sjekke om vi har data timeout
-                if (sensorStatus.TimeoutCheck(helideckStatusData))
-                {
-                    OnPropertyChanged(nameof(helideckStatus));
-                }
+                if (sensorStatus.TimeoutCheck(helideckLightStatusData)) OnPropertyChanged(nameof(helideckLightStatus)); 
+                if (sensorStatus.TimeoutCheck(landingStatusData)) OnPropertyChanged(nameof(landingStatus));
+                if (sensorStatus.TimeoutCheck(rwdStatusData)) OnPropertyChanged(nameof(rwdStatus));
 
                 OnPropertyChanged(nameof(helideckStatusHeader));
             }
@@ -41,36 +40,104 @@ namespace HMS_Client
 
         public void UpdateData(HMSDataCollection hmsDataList)
         {
-            helideckStatusData = hmsDataList.GetData(ValueType.HelideckStatus);
+            helideckLightStatusData = hmsDataList.GetData(ValueType.HelideckLightStatus);
+            landingStatusData = hmsDataList.GetData(ValueType.LandingStatus);
+            rwdStatusData = hmsDataList.GetData(ValueType.RWDStatus);
         }
 
         /////////////////////////////////////////////////////////////////////////////
-        // Helideck Status
+        // Helideck Light Status
         /////////////////////////////////////////////////////////////////////////////
-        private HMSData _helideckStatusData { get; set; }
-        public HMSData helideckStatusData
+        private HMSData _helideckLightStatusData { get; set; } = new HMSData();
+        public HMSData helideckLightStatusData
         {
             get
             {
-                return _helideckStatusData;
+                return _helideckLightStatusData;
             }
             set
             {
                 if (value != null)
                 {
-                    _helideckStatusData.Set(value);
+                    _helideckLightStatusData.Set(value);
 
-                    OnPropertyChanged(nameof(helideckStatus));
+                    OnPropertyChanged(nameof(helideckLightStatus));
                 }
             }
         }
 
-        public HelideckStatusType helideckStatus
+        public HelideckStatusType helideckLightStatus
         {
             get
             {
-                if (_helideckStatusData.status == DataStatus.OK)
-                    return (HelideckStatusType)_helideckStatusData.data;
+                if (_helideckLightStatusData.status == DataStatus.OK)
+                    return (HelideckStatusType)_helideckLightStatusData.data;
+                else
+                    // Dersom vi har data timeout skal lyset slåes av
+                    return HelideckStatusType.OFF;
+            }
+        }
+
+        /////////////////////////////////////////////////////////////////////////////
+        // Landing Status
+        /////////////////////////////////////////////////////////////////////////////
+        private HMSData _landingStatusData { get; set; } = new HMSData();
+        public HMSData landingStatusData
+        {
+            get
+            {
+                return _landingStatusData;
+            }
+            set
+            {
+                if (value != null)
+                {
+                    _landingStatusData.Set(value);
+
+                    OnPropertyChanged(nameof(landingStatus));
+                }
+            }
+        }
+
+        public HelideckStatusType landingStatus
+        {
+            get
+            {
+                if (_landingStatusData.status == DataStatus.OK)
+                    return (HelideckStatusType)_landingStatusData.data;
+                else
+                    // Dersom vi har data timeout skal lyset slåes av
+                    return HelideckStatusType.OFF;
+            }
+        }
+
+        /////////////////////////////////////////////////////////////////////////////
+        // RWD Status
+        /////////////////////////////////////////////////////////////////////////////
+        private HMSData _rwdStatusData { get; set; } = new HMSData();
+        public HMSData rwdStatusData
+        {
+            get
+            {
+                return _rwdStatusData;
+            }
+            set
+            {
+                if (value != null)
+                {
+                    _rwdStatusData.Set(value);
+
+                    OnPropertyChanged(nameof(rwdStatus));
+                }
+            }
+        }
+
+        public HelideckStatusType rwdStatus
+        {
+            get
+            {
+                if (_rwdStatusData.status == DataStatus.OK)
+                    return (HelideckStatusType)_rwdStatusData.data;
                 else
                     // Dersom vi har data timeout skal lyset slåes av
                     return HelideckStatusType.OFF;

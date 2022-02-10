@@ -35,10 +35,13 @@ namespace HMS_Client
 
             void TrendUpdate20m(object sender, EventArgs e)
             {
-                if (viewModel.visibilityItems20m)
-                    UpdateTrendData(viewModel.landingTrend20mDispList, statusTrendGrid20m);
-                else
-                    UpdateTrendData(viewModel.statusTrend3hDispList, statusTrendGrid3h);
+                if (gLandingStatusTrend.Visibility == Visibility.Visible)
+                {
+                    if (viewModel.visibilityItems20m)
+                        UpdateTrendData(viewModel.landingTrend20mDispList, statusTrendGrid20m);
+                    else
+                        UpdateTrendData(viewModel.statusTrend3hDispList, statusTrendGrid3h);
+                }
             }
         }
 

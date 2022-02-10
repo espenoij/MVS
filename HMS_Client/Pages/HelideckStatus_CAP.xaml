@@ -23,28 +23,28 @@
             TargetType="Ellipse">
             <Style.Triggers>
                 <DataTrigger
-                    Binding="{Binding Path=helideckStatus}"
+                    Binding="{Binding Path=helideckLightStatus}"
                     Value="RED">
                     <Setter
                         Property="Fill"
                         Value="{StaticResource ColorRed}" />
                 </DataTrigger>
                 <DataTrigger
-                    Binding="{Binding Path=helideckStatus}"
+                    Binding="{Binding Path=helideckLightStatus}"
                     Value="BLUE">
                     <Setter
                         Property="Fill"
                         Value="{StaticResource ColorBackgroundSeparator}" />
                 </DataTrigger>
                 <DataTrigger
-                    Binding="{Binding Path=helideckStatus}"
+                    Binding="{Binding Path=helideckLightStatus}"
                     Value="AMBER">
                     <Setter
                         Property="Fill"
                         Value="{StaticResource ColorBackgroundSeparator}" />
                 </DataTrigger>
                 <DataTrigger
-                    Binding="{Binding Path=helideckStatus}"
+                    Binding="{Binding Path=helideckLightStatus}"
                     Value="OFF">
                     <Setter
                         Property="Fill"
@@ -58,28 +58,28 @@
             TargetType="Ellipse">
             <Style.Triggers>
                 <DataTrigger
-                    Binding="{Binding Path=helideckStatus}"
+                    Binding="{Binding Path=helideckLightStatus}"
                     Value="AMBER">
                     <Setter
                         Property="Fill"
                         Value="{StaticResource ColorAmber}" />
                 </DataTrigger>
                 <DataTrigger
-                    Binding="{Binding Path=helideckStatus}"
+                    Binding="{Binding Path=helideckLightStatus}"
                     Value="BLUE">
                     <Setter
                         Property="Fill"
                         Value="{StaticResource ColorBackgroundSeparator}" />
                 </DataTrigger>
                 <DataTrigger
-                    Binding="{Binding Path=helideckStatus}"
+                    Binding="{Binding Path=helideckLightStatus}"
                     Value="RED">
                     <Setter
                         Property="Fill"
                         Value="{StaticResource ColorBackgroundSeparator}" />
                 </DataTrigger>
                 <DataTrigger
-                    Binding="{Binding Path=helideckStatus}"
+                    Binding="{Binding Path=helideckLightStatus}"
                     Value="OFF">
                     <Setter
                         Property="Fill"
@@ -93,28 +93,28 @@
             TargetType="Ellipse">
             <Style.Triggers>
                 <DataTrigger
-                    Binding="{Binding Path=helideckStatus}"
+                    Binding="{Binding Path=helideckLightStatus}"
                     Value="BLUE">
                     <Setter
                         Property="Fill"
                         Value="{StaticResource ColorBlue}" />
                 </DataTrigger>
                 <DataTrigger
-                    Binding="{Binding Path=helideckStatus}"
+                    Binding="{Binding Path=helideckLightStatus}"
                     Value="RED">
                     <Setter
                         Property="Fill"
                         Value="{StaticResource ColorBackgroundSeparator}" />
                 </DataTrigger>
                 <DataTrigger
-                    Binding="{Binding Path=helideckStatus}"
+                    Binding="{Binding Path=helideckLightStatus}"
                     Value="AMBER">
                     <Setter
                         Property="Fill"
                         Value="{StaticResource ColorBackgroundSeparator}" />
                 </DataTrigger>
                 <DataTrigger
-                    Binding="{Binding Path=helideckStatus}"
+                    Binding="{Binding Path=helideckLightStatus}"
                     Value="OFF">
                     <Setter
                         Property="Fill"

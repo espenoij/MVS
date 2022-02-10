@@ -1182,7 +1182,7 @@ namespace HMS_Client
             {
                 if (userInputsVM.displayMode == DisplayMode.OnDeck)
                 {
-                    switch (helideckStatusVM.helideckStatus)
+                    switch (helideckStatusVM.rwdStatus)
                     {
                         case HelideckStatusType.OFF:
                             return "white";

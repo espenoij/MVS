@@ -65,7 +65,7 @@ namespace HMS_Client
             {
                 HelideckStatus newStatus = new HelideckStatus()
                 {
-                    status = helideckStatusVM.helideckStatus,
+                    status = helideckStatusVM.landingStatus,
                     timestamp = DateTime.UtcNow
                 };
 
