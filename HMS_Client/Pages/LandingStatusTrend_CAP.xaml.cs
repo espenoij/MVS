@@ -13,8 +13,7 @@ namespace HMS_Client
     /// </summary>
     public partial class LandingStatusTrend_CAP : UserControl
     {
-        private DispatcherTimer TrendUpdateTimer20m = new DispatcherTimer();
-        private DispatcherTimer TrendUpdateTimer3h = new DispatcherTimer();
+        private DispatcherTimer trendUpdateTimer = new DispatcherTimer();
 
         public LandingStatusTrend_CAP()
         {
@@ -30,23 +29,16 @@ namespace HMS_Client
             GenerateGridColumnDefinitions(statusTrendGrid3h);
 
             // Oppdatere UI
-            TrendUpdateTimer20m.Interval = TimeSpan.FromMilliseconds(config.ReadWithDefault(ConfigKey.ChartDataUpdateFrequency20m, Constants.ChartUpdateFrequencyUI20mDefault));
-            TrendUpdateTimer20m.Tick += TrendUpdate20m;
-            TrendUpdateTimer20m.Start();
+            trendUpdateTimer.Interval = TimeSpan.FromMilliseconds(config.ReadWithDefault(ConfigKey.ClientUpdateFrequencyUI, Constants.ClientUpdateFrequencyUIDefault));
+            trendUpdateTimer.Tick += TrendUpdate20m;
+            trendUpdateTimer.Start();
 
             void TrendUpdate20m(object sender, EventArgs e)
             {
-                UpdateTrendData(viewModel.landingTrend20mDispList, statusTrendGrid20m);
-            }
-
-            // Oppdatere UI
-            TrendUpdateTimer3h.Interval = TimeSpan.FromMilliseconds(config.ReadWithDefault(ConfigKey.ChartDataUpdateFrequency3h, Constants.ChartUpdateFrequencyUI3hDefault));
-            TrendUpdateTimer3h.Tick += TrendUpdate3h;
-            TrendUpdateTimer3h.Start();
-
-            void TrendUpdate3h(object sender, EventArgs e)
-            {
-                UpdateTrendData(viewModel.statusTrend3hDispList, statusTrendGrid3h);
+                if (viewModel.visibilityItems20m)
+                    UpdateTrendData(viewModel.landingTrend20mDispList, statusTrendGrid20m);
+                else
+                    UpdateTrendData(viewModel.statusTrend3hDispList, statusTrendGrid3h);
             }
         }
 
