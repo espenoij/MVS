@@ -297,3 +297,16 @@ public class HelicopterOperator
     public string name { get; set; }
     public string email { get; set; }
 }
+
+public enum LightsOutputType
+{
+    Off,
+    Blue,
+    BlueFlash,
+    Amber,
+    AmberFlash,
+    Red,
+    RedFlash,
+    Green,
+    GreenFlash
+}

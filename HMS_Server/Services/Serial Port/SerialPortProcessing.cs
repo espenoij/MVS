@@ -73,7 +73,7 @@ namespace HMS_Server
                             packetEndPos = dataString.IndexOf(packetEnd, packetStartPos, totalCount, StringComparison.Ordinal);
                         else
                             // Ingen end satt -> les til slutten
-                            packetEndPos = totalCount;
+                            packetEndPos = packetStartPos + totalCount;
 
                         // Fant ikke packetEnd -> finnes ikke i dataString -> avslutt
                         if (packetEndPos == -1)

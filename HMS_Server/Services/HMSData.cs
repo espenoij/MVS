@@ -284,15 +284,20 @@ namespace HMS_Server
         // Utfør alle innlagte prosesseringer/kalkulasjoner
         public void DoProcessing(HMSData newData)
         {
+            // Null sjekk
             if (newData != null)
             {
-                // Kalkulere nye data
-                data = dataProcess.DoProcessing(newData);
+                // Sjekke at input innholder reell verdi
+                if (!double.IsNaN(newData.data))
+                {
+                    // Kalkulere nye data
+                    data = dataProcess.DoProcessing(newData);
 
-                // Setter timestamp og status lik inndata
-                timestamp = newData.timestamp;
-                status = newData.status;
-                sensorGroupId = newData.sensorGroupId;
+                    // Setter timestamp og status lik inndata
+                    timestamp = newData.timestamp;
+                    status = newData.status;
+                    sensorGroupId = newData.sensorGroupId;
+                }
             }
         }
 

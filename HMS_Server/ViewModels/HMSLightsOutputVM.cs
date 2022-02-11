@@ -377,17 +377,4 @@ namespace HMS_Server
             PropertyChanged?.Invoke(this, new PropertyChangedEventArgs(name));
         }
     }
-
-    public enum LightsOutputType
-    {
-        Off,
-        Blue,
-        BlueFlash,
-        Amber,
-        AmberFlash,
-        Red,
-        RedFlash,
-        Green,
-        GreenFlash
-    }
 }
