@@ -8,7 +8,7 @@
     xmlns:sys="clr-namespace:System;assembly=mscorlib"
     mc:Ignorable="d"
     d:DesignHeight="400"
-    d:DesignWidth="650">
+    d:DesignWidth="600">
 
     <UserControl.Resources>
         <BooleanToVisibilityConverter
@@ -17,27 +17,193 @@
 
     <Grid>
 
-        <!--Helideck Motion Trend-->
+        <!--Wind & Heading Change-->
         <telerik:GroupBox
+            x:Name="gbWindHeadingChange"
             Header="WIND &amp; HEADING CHANGE SINCE TOUCHDOWN"
             Visibility="{Binding Path=displayModeVisibilityOnDeck, Converter={StaticResource BoolToVisConverter} }"
             Margin="8">
 
-            <DockPanel>
+            <Grid>
 
-                <!--<telerik:Label
-                    DockPanel.Dock="Top"
-                    Content="{Binding helideckTrendTimeString}"
-                    HorizontalAlignment="Center" />-->
+                <Grid.RowDefinitions>
+                    <RowDefinition
+                        Height="3*" />
+                    <RowDefinition
+                        Height="12*" />
+                    <RowDefinition
+                        Height="1*" />
+                </Grid.RowDefinitions>
 
                 <Grid
-                    DockPanel.Dock="Bottom">
+                    Grid.Row="0">
 
                     <Grid.ColumnDefinitions>
                         <ColumnDefinition
-                            Width="*" />
+                            Width="50" />
                         <ColumnDefinition
-                            Width="140" />
+                            Width="4*" />
+                        <ColumnDefinition
+                            Width="1*" />
+                    </Grid.ColumnDefinitions>
+
+                    <Grid.RowDefinitions>
+                        <RowDefinition
+                            Height="*" />
+                        <RowDefinition
+                            Height="*" />
+                        <RowDefinition
+                            Height="*" />
+                    </Grid.RowDefinitions>
+
+                    <Viewbox
+                        Grid.Column="1"
+                        StretchDirection="Both"
+                        Stretch="Uniform"
+                        HorizontalAlignment="Center">
+
+                        <Label
+                            HorizontalAlignment="Center"
+                            Content="{Binding Path=rwdStatusTimeString}" />
+
+                    </Viewbox>
+
+                    <Grid
+                        x:Name="statusTrendGrid"
+                        Grid.Row="1"
+                        Margin="0,0,28,0"
+                        Grid.Column="1">
+                    </Grid>
+
+                    <Grid
+                        Grid.Column="1"
+                        Grid.Row="2"
+                        Margin="0,0,28,0">
+
+                        <Grid.ColumnDefinitions>
+                            <ColumnDefinition
+                                Width="*" />
+                            <ColumnDefinition
+                                Width="*" />
+                            <ColumnDefinition
+                                Width="*" />
+                            <ColumnDefinition
+                                Width="*" />
+                            <ColumnDefinition
+                                Width="*" />
+                            <ColumnDefinition
+                                Width="*" />
+                            <ColumnDefinition
+                                Width="*" />
+                            <ColumnDefinition
+                                Width="*" />
+                            <ColumnDefinition
+                                Width="*" />
+                            <ColumnDefinition
+                                Width="*" />
+                            <ColumnDefinition
+                                Width="*" />
+                            <ColumnDefinition
+                                Width="*" />
+                        </Grid.ColumnDefinitions>
+
+                        <Viewbox
+                            Grid.Column="0"
+                            Grid.ColumnSpan="2"
+                            Margin="-16,0,0,0"
+                            StretchDirection="Both"
+                            Stretch="Uniform"
+                            HorizontalAlignment="Left">
+
+                            <Label
+                                Content="-30 mins" />
+
+                        </Viewbox>
+
+                        <Viewbox
+                            Grid.Column="1"
+                            Grid.ColumnSpan="2"
+                            StretchDirection="Both"
+                            Stretch="Uniform"
+                            HorizontalAlignment="Center">
+
+                            <Label
+                                Content="-25" />
+
+                        </Viewbox>
+
+                        <Viewbox
+                            Grid.Column="3"
+                            Grid.ColumnSpan="2"
+                            StretchDirection="Both"
+                            Stretch="Uniform"
+                            HorizontalAlignment="Center">
+
+                            <Label
+                                Content="-20" />
+
+                        </Viewbox>
+
+                        <Viewbox
+                            Grid.Column="5"
+                            Grid.ColumnSpan="2"
+                            StretchDirection="Both"
+                            Stretch="Uniform"
+                            HorizontalAlignment="Center">
+
+                            <Label
+                                Content="-15" />
+
+                        </Viewbox>
+
+                        <Viewbox
+                            Grid.Column="7"
+                            Grid.ColumnSpan="2"
+                            StretchDirection="Both"
+                            Stretch="Uniform"
+                            HorizontalAlignment="Center">
+
+                            <Label
+                                Content="-10" />
+
+                        </Viewbox>
+
+                        <Viewbox
+                            Grid.Column="9"
+                            Grid.ColumnSpan="2"
+                            StretchDirection="Both"
+                            Stretch="Uniform"
+                            HorizontalAlignment="Center">
+
+                            <Label
+                                Content="-5" />
+
+                        </Viewbox>
+
+                        <Viewbox
+                            Grid.Column="11"
+                            StretchDirection="Both"
+                            Stretch="Uniform"
+                            Margin="0,0,-8,0"
+                            HorizontalAlignment="Right">
+
+                            <Label
+                                Content="0" />
+
+                        </Viewbox>
+
+                    </Grid>
+
+                </Grid>
+
+                <Grid
+                    Grid.Row="1">
+
+                    <Grid.ColumnDefinitions>
+                        <ColumnDefinition
+                            Width="4*" />
+                        <ColumnDefinition
+                            Width="1*" />
                     </Grid.ColumnDefinitions>
 
                     <Grid.RowDefinitions>
@@ -52,7 +218,7 @@
                         Grid.Column="0"
                         Grid.Row="0"
                         Name="chartVesselHeading"
-                        Margin="-16,0,0,8">
+                        Margin="-16,0,18,8">
 
                         <telerik:LineSeries
                             ZIndex="200"
@@ -71,8 +237,7 @@
                             <telerik:DateTimeContinuousAxis
                                 MajorStepUnit="Minute"
                                 MajorStep="5"
-                                LabelInterval="2"
-                                LabelFormat="HH:mm"
+                                ShowLabels="False"
                                 PlotMode="OnTicks"
                                 TickOrigin="{Binding alignmentTime}"
                                 Minimum="{Binding alignmentTimeMin}"
@@ -129,40 +294,41 @@
                         </telerik:RadCartesianChart.Grid>
 
                         <telerik:RadCartesianChart.Annotations>
-                            
+
                             <telerik:CartesianPlotBandAnnotation
+                                ZIndex="0"
                                 Axis="{Binding ElementName=chartVesselDeltaVertAxis}"
                                 From="10"
                                 To="180"
                                 StrokeThickness="1"
-                                Fill="{StaticResource ColorAmberTranslucent}" />
+                                Fill="{StaticResource ColorAmber}" />
 
                             <telerik:CartesianPlotBandAnnotation
+                                ZIndex="0"
                                 Axis="{Binding ElementName=chartVesselDeltaVertAxis}"
                                 From="-10"
                                 To="-180"
-                                StrokeThickness="1"
-                                Fill="{StaticResource ColorAmberTranslucent}" />
+                                StrokeThickness="1"                                
+                                Fill="{StaticResource ColorAmber}" />
 
                         </telerik:RadCartesianChart.Annotations>
-                        
+
                     </telerik:RadCartesianChart>
 
                     <!--Δ VESSEL HEADING READOUT-->
                     <Grid
                         Grid.Row="0"
-                        Grid.Column="1"
-                        VerticalAlignment="Center">
+                        Grid.Column="1">
 
                         <Grid.RowDefinitions>
                             <RowDefinition
-                                Height="4*" />
+                                Height="2*" />
                             <RowDefinition
                                 Height="3*" />
                             <RowDefinition
                                 Height="4*" />
                             <RowDefinition
-                                Height="4*" />
+                                Height="2*" />
                         </Grid.RowDefinitions>
 
                         <Viewbox
@@ -209,7 +375,7 @@
                         Grid.Column="0"
                         Grid.Row="1"
                         Name="chartWindHeading"
-                        Margin="-16,8,0,0">
+                        Margin="-16,8,18,8">
 
                         <telerik:LineSeries
                             ZIndex="200"
@@ -228,8 +394,7 @@
                             <telerik:DateTimeContinuousAxis
                                 MajorStepUnit="Minute"
                                 MajorStep="5"
-                                LabelInterval="2"
-                                LabelFormat="HH:mm"
+                                ShowLabels="False"
                                 PlotMode="OnTicks"
                                 TickOrigin="{Binding alignmentTime}"
                                 Minimum="{Binding alignmentTimeMin}"
@@ -314,13 +479,13 @@
 
                         <Grid.RowDefinitions>
                             <RowDefinition
-                                Height="4*" />
+                                Height="2*" />
                             <RowDefinition
                                 Height="3*" />
                             <RowDefinition
                                 Height="4*" />
                             <RowDefinition
-                                Height="4*" />
+                                Height="2*" />
                         </Grid.RowDefinitions>
 
                         <Viewbox
@@ -358,10 +523,146 @@
 
                 </Grid>
 
-            </DockPanel>
+
+                <Grid
+                    Grid.Row="2">
+
+                    <Grid.ColumnDefinitions>
+                        <ColumnDefinition
+                            Width="50" />
+                        <ColumnDefinition
+                            Width="4*" />
+                        <ColumnDefinition
+                            Width="1*" />
+                    </Grid.ColumnDefinitions>
+
+                    <Grid
+                        Grid.Column="1"
+                        Grid.Row="2"
+                        Margin="0,0,28,0">
+
+                        <Grid.ColumnDefinitions>
+                            <ColumnDefinition
+                                Width="*" />
+                            <ColumnDefinition
+                                Width="*" />
+                            <ColumnDefinition
+                                Width="*" />
+                            <ColumnDefinition
+                                Width="*" />
+                            <ColumnDefinition
+                                Width="*" />
+                            <ColumnDefinition
+                                Width="*" />
+                            <ColumnDefinition
+                                Width="*" />
+                            <ColumnDefinition
+                                Width="*" />
+                            <ColumnDefinition
+                                Width="*" />
+                            <ColumnDefinition
+                                Width="*" />
+                            <ColumnDefinition
+                                Width="*" />
+                            <ColumnDefinition
+                                Width="*" />
+                        </Grid.ColumnDefinitions>
+
+                        <Viewbox
+                            Grid.Column="0"
+                            Grid.ColumnSpan="2"
+                            Margin="-16,0,0,0"
+                            StretchDirection="Both"
+                            Stretch="Uniform"
+                            HorizontalAlignment="Left">
+
+                            <Label
+                                Content="-30 mins" />
+
+                        </Viewbox>
+
+                        <Viewbox
+                            Grid.Column="1"
+                            Grid.ColumnSpan="2"
+                            StretchDirection="Both"
+                            Stretch="Uniform"
+                            HorizontalAlignment="Center">
+
+                            <Label
+                                Content="-25" />
+
+                        </Viewbox>
+
+                        <Viewbox
+                            Grid.Column="3"
+                            Grid.ColumnSpan="2"
+                            StretchDirection="Both"
+                            Stretch="Uniform"
+                            HorizontalAlignment="Center">
+
+                            <Label
+                                Content="-20" />
+
+                        </Viewbox>
+
+                        <Viewbox
+                            Grid.Column="5"
+                            Grid.ColumnSpan="2"
+                            StretchDirection="Both"
+                            Stretch="Uniform"
+                            HorizontalAlignment="Center">
+
+                            <Label
+                                Content="-15" />
+
+                        </Viewbox>
+
+                        <Viewbox
+                            Grid.Column="7"
+                            Grid.ColumnSpan="2"
+                            StretchDirection="Both"
+                            Stretch="Uniform"
+                            HorizontalAlignment="Center">
+
+                            <Label
+                                Content="-10" />
+
+                        </Viewbox>
+
+                        <Viewbox
+                            Grid.Column="9"
+                            Grid.ColumnSpan="2"
+                            StretchDirection="Both"
+                            Stretch="Uniform"
+                            HorizontalAlignment="Center">
+
+                            <Label
+                                Content="-5" />
+
+                        </Viewbox>
+
+                        <Viewbox
+                            Grid.Column="11"
+                            Margin="0,0,-8,0"
+                            StretchDirection="Both"
+                            Stretch="Uniform"
+                            HorizontalAlignment="Right">
+
+                            <Label
+                                Content="0" />
+
+                        </Viewbox>
+
+                    </Grid>
+
+                </Grid>
+
+            </Grid>
 
         </telerik:GroupBox>
 
     </Grid>
 
 </UserControl>
+
+    

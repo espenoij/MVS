@@ -1,4 +1,5 @@
 ﻿using System;
+using System.Collections.Generic;
 using System.ComponentModel;
 using System.Runtime.CompilerServices;
 using System.Windows.Threading;
@@ -19,12 +20,12 @@ namespace HMS_Client
         public RadObservableCollectionEx<HMSData> windDir20mDataList = new RadObservableCollectionEx<HMSData>();
         private double windDirDeltaAbsMax = 0;
 
-        private UserInputsVM userInputsVM;
+        // 30 minutters RWD data liste
+        private RadObservableCollectionEx<HelideckStatus> rwdTrend30mList = new RadObservableCollectionEx<HelideckStatus>();
+        public List<HelideckStatusType> rwdTrend30mDispList = new List<HelideckStatusType>();
 
-        public void Init(Config config, SensorGroupStatus sensorStatus, UserInputsVM userInputsVM)
+        public void Init(Config config, SensorGroupStatus sensorStatus, HelideckStatusVM helideckStatusVM)
         {
-            this.userInputsVM = userInputsVM;
-
             InitUI();
 
             // Oppdatere UI
@@ -35,7 +36,7 @@ namespace HMS_Client
             {
                 // Disse korreksjonene legges inn for å få tidspunkt-label på X aksen til å vises korrekt
                 int chartTimeCorrMin = 4;
-                int chartTimeCorrMax = -2;
+                //int chartTimeCorrMax = -2;
 
                 // Sjekke om vi har data timeout
                 if (sensorStatus.TimeoutCheck(vesselHeadingDelta))
@@ -52,6 +53,22 @@ namespace HMS_Client
                     OnPropertyChanged(nameof(windDirectionAxisMin));
                 }
 
+                // Oppdatering av RWD status
+                HelideckStatus newStatus = new HelideckStatus()
+                {
+                    status = helideckStatusVM.rwdStatus,
+                    timestamp = DateTime.UtcNow
+                };
+
+                // Legge inn ny trend status i data liste
+                rwdTrend30mList.Add(newStatus);
+
+                // Fjerne gamle data fra trend data
+                GraphBuffer.RemoveOldData(rwdTrend30mList, Constants.Minutes30);
+
+                // Overføre til display data liste
+                GraphBuffer.TransferDisplayData(rwdTrend30mList, rwdTrend30mDispList);
+
                 // Oppdatere data som skal ut i grafer
                 GraphBuffer.UpdateWithCull(vesselHeadingDelta, vesselHdg20mDataList, Constants.GraphCullFrequency30m);
                 GraphBuffer.UpdateWithCull(windDirectionDelta, windDir20mDataList, Constants.GraphCullFrequency30m);
@@ -64,16 +81,37 @@ namespace HMS_Client
                 vesselHdgDeltaAbsMax = FindAbsMax(vesselHdg20mDataList);
                 windDirDeltaAbsMax = FindAbsMax(windDir20mDataList);
 
-                // Oppdatere alignment datetime (nåtid) til begge chart
-                if (userInputsVM.onDeckTime.AddSeconds(Constants.Minutes30) > DateTime.UtcNow)
-                    alignmentTime = userInputsVM.onDeckTime.AddSeconds(Constants.Minutes30 + chartTimeCorrMax);
-                else
-                    alignmentTime = DateTime.UtcNow;
+                // Oppdatere alignment datetime (nåtid) til begge chart og trend line
+                alignmentTime = DateTime.UtcNow;
+
+                OnPropertyChanged(nameof(rwdStatusTimeString));
             }
         }
 
         public void Start()
         {
+            // Slette Graph buffer/data
+            GraphBuffer.Clear(rwdTrend30mList);
+            rwdTrend30mDispList.Clear();
+
+            GraphBuffer.Clear(vesselHdg20mDataList);
+            GraphBuffer.Clear(windDir20mDataList);
+
+            // Forhåndsfylle trend data med 0 data
+            for (int i = -Constants.Minutes30; i <= 0; i++)
+            {
+                rwdTrend30mList.Add(new HelideckStatus()
+                {
+                    status = HelideckStatusType.OFF,
+                    timestamp = DateTime.UtcNow.AddSeconds(i)
+                });
+            }
+
+            for (int i = 0; i < Constants.rwdTrendDisplayListMax; i++)
+            {
+                rwdTrend30mDispList.Add(new HelideckStatusType());
+            }
+
             UIUpdateTimer.Start();
         }
 
@@ -82,6 +120,7 @@ namespace HMS_Client
             UIUpdateTimer.Stop();
 
             // Slette Graph buffer/data
+            GraphBuffer.Clear(rwdTrend30mList);
             GraphBuffer.Clear(vesselHdg20mDataList);
             GraphBuffer.Clear(windDir20mDataList);
         }
@@ -326,10 +365,7 @@ namespace HMS_Client
         {
             get
             {
-                if (userInputsVM.onDeckTime.AddSeconds(Constants.Minutes30) > DateTime.UtcNow)
-                    return userInputsVM.onDeckTime;
-                else
-                    return DateTime.UtcNow.AddSeconds(-Constants.Minutes30);
+                return DateTime.UtcNow.AddSeconds(-Constants.Minutes30);
             }
         }
 
@@ -337,10 +373,27 @@ namespace HMS_Client
         {
             get
             {
-                if (userInputsVM.onDeckTime.AddSeconds(Constants.Minutes30) > DateTime.UtcNow)
-                    return userInputsVM.onDeckTime.AddSeconds(Constants.Minutes30);
+                return DateTime.UtcNow;
+            }
+        }
+
+        /////////////////////////////////////////////////////////////////////////////
+        // Helideck Status Trend Time
+        /////////////////////////////////////////////////////////////////////////////
+        public string rwdStatusTimeString
+        {
+            get
+            {
+                if (rwdTrend30mList.Count > 0)
+                {
+                    return string.Format("30-minute RWD Trend ({0} - {1} UTC)",
+                        rwdTrend30mList[0].timestamp.ToShortTimeString(),
+                        rwdTrend30mList[rwdTrend30mList.Count - 1].timestamp.ToShortTimeString());
+                }
                 else
-                    return DateTime.UtcNow;
+                {
+                    return string.Format("30-minute RWD Trend (--:-- - --:-- UTC)");
+                }
             }
         }
 

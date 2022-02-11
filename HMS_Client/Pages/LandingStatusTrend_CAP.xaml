@@ -42,7 +42,7 @@
 
                     <Label
                         HorizontalAlignment="Center"
-                        Content="{Binding Path=helideckStatusTimeString}" />
+                        Content="{Binding Path=landingStatusTimeString}" />
 
                 </Viewbox>
 

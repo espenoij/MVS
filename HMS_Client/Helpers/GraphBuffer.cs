@@ -1,4 +1,5 @@
 ﻿using System;
+using System.Collections.Generic;
 
 namespace HMS_Client
 {
@@ -109,6 +110,50 @@ namespace HMS_Client
             // Sletter alle data i buffer
             if (buffer != null)
                 buffer.Clear();
+        }
+
+        public static void TransferDisplayData(RadObservableCollectionEx<HelideckStatus> list, List<HelideckStatusType> dispList)
+        {
+            // Denne funksjonen mapper et visst antall statuser til en status indikator posisjon på tidslinjen på skjermen.
+            // Viser høyeste nivå fra sub-settet med statuser.
+
+            int subSetCounter = 0;
+            double subSetLength = (double)list.Count / (double)dispList.Count;
+
+            HelideckStatusType status = HelideckStatusType.OFF;
+
+            // Gå gjennom alle status data
+            for (int i = 0; i < list.Count; i++)
+            {
+                // Har vi kommet til nytt subSet?
+                if (i > (subSetLength * (double)subSetCounter) || i == list.Count - 1)
+                {
+                    // Sette status i display listen
+                    if (subSetCounter < dispList.Count)
+                        dispList[subSetCounter++] = status;
+
+                    status = HelideckStatusType.OFF;
+                }
+
+                // Finne høyeste status nivå
+                switch (list[i].status)
+                {
+                    case HelideckStatusType.RED:
+                        status = HelideckStatusType.RED;
+                        break;
+
+                    case HelideckStatusType.AMBER:
+                        if (status != HelideckStatusType.RED)
+                            status = HelideckStatusType.AMBER;
+                        break;
+
+                    case HelideckStatusType.BLUE:
+                        if (status != HelideckStatusType.RED &&
+                            status != HelideckStatusType.AMBER)
+                            status = HelideckStatusType.BLUE;
+                        break;
+                }
+            }
         }
     }
 }

@@ -110,7 +110,7 @@ namespace HMS_Client
             helideckMotionTrendVM.Init(adminSettingsVM, config, sensorStatus);
             helideckStabilityLimitsVM.Init(config, sensorStatus);
             helideckRelativeWindLimitsVM.Init(config, sensorStatus, userInputsVM);
-            helideckWindHeadingTrendVM.Init(config, sensorStatus, userInputsVM);
+            helideckWindHeadingTrendVM.Init(config, sensorStatus, helideckStatusVM);
             helideckStatusVM.Init(config, sensorStatus, userInputsVM);
             helideckStatusTrendVM.Init(helideckStatusVM, helideckStabilityLimitsVM, config);
             meteorologicalVM.Init(config, sensorStatus);
@@ -245,7 +245,7 @@ namespace HMS_Client
 
                 // Helideck Wind & Heading Trend
                 ucWindHeadingChange_CAP.Visibility = Visibility.Visible;
-                ucWindHeadingChange_CAP.Init(helideckWindHeadingTrendVM);
+                ucWindHeadingChange_CAP.Init(helideckWindHeadingTrendVM, config);
 
                 // Helideck Status Trend
                 ucHelideckStatusTrend_CAP.Visibility = Visibility.Visible;

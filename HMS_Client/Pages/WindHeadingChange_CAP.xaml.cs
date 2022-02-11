@@ -1,4 +1,7 @@
-﻿using System.Windows.Controls;
+﻿using System;
+using System.Windows;
+using System.Windows.Controls;
+using System.Windows.Threading;
 
 namespace HMS_Client
 {
@@ -7,29 +10,36 @@ namespace HMS_Client
     /// </summary>
     public partial class WindHeadingChange_CAP : UserControl
     {
-        // View Model
-        public WindHeadingChangeVM viewModel;
+        private DispatcherTimer trendUpdateTimer = new DispatcherTimer();
 
         public WindHeadingChange_CAP()
         {
             InitializeComponent();
         }
 
-        public void Init(WindHeadingChangeVM viewModel)
+        public void Init(WindHeadingChangeVM windHeadingChangeVM, Config config)
         {
-            this.viewModel = viewModel;
+            DataContext = windHeadingChangeVM;
 
-            DataContext = viewModel;
-
-            // Init UI
-            InitUI();
-        }
-
-        private void InitUI()
-        {
             // Koble chart til data
-            chartVesselHeading.Series[0].ItemsSource = viewModel.vesselHdg20mDataList;
-            chartWindHeading.Series[0].ItemsSource = viewModel.windDir20mDataList;
+            chartVesselHeading.Series[0].ItemsSource = windHeadingChangeVM.vesselHdg20mDataList;
+            chartWindHeading.Series[0].ItemsSource = windHeadingChangeVM.windDir20mDataList;
+
+            // Generere grid til status trend display
+            TrendLine.GenerateGridColumnDefinitions(statusTrendGrid, Constants.rwdTrendDisplayListMax);
+
+            // Oppdatere UI
+            trendUpdateTimer.Interval = TimeSpan.FromMilliseconds(config.ReadWithDefault(ConfigKey.ClientUpdateFrequencyUI, Constants.ClientUpdateFrequencyUIDefault));
+            trendUpdateTimer.Tick += TrendUpdate;
+            trendUpdateTimer.Start();
+
+            void TrendUpdate(object sender, EventArgs e)
+            {
+                if (gbWindHeadingChange.Visibility == Visibility.Visible)
+                {
+                    TrendLine.UpdateTrendData(windHeadingChangeVM.rwdTrend30mDispList, Constants.rwdTrendDisplayListMax, statusTrendGrid, Application.Current);
+                }
+            }
         }
     }
 }

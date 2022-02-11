@@ -224,8 +224,15 @@ class Constants
     public const int HeadingDefault = HeadingMax;
     public const int MagneticDeclinationDefault = 0;
 
-    // Helideck Status Trend
-    public const int statusTrendDisplayListMax = 400; // Hvor mange segmenter trend linjen skal deles opp i / oppløsning på trend linjen
+    // Landing Status Trend
+    public const int landingTrendDisplayListMax = 700;  // Hvor mange segmenter trend linjen skal deles opp i / oppløsning på trend linjen
+                                                        // På skjerm med 3840 pixel bredde er linjen ca 1400 pixler bred
+                                                        // På 1920 skjerm vil den være ca 700 pixler bred
+
+    // RWD Trend
+    public const int rwdTrendDisplayListMax = 500;      // Hvor mange segmenter trend linjen skal deles opp i / oppløsning på trend linjen
+                                                        // På skjerm med 3840 pixel bredde er linjen ca 1000 pixler bred
+                                                        // På 1920 skjerm vil den være ca 500 pixler bred
 
     // Motion Limit Defaults
     public const double MotionLimitDefaultPitchRoll = 4;

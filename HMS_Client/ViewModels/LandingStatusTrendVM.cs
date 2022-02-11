@@ -50,7 +50,7 @@ namespace HMS_Client
                 });
             }
 
-            for (int i = 0; i < Constants.statusTrendDisplayListMax; i++)
+            for (int i = 0; i < Constants.landingTrendDisplayListMax; i++)
             {
                 landingTrend20mDispList.Add(new HelideckStatusType());
                 statusTrend3hDispList.Add(new HelideckStatusType());
@@ -58,10 +58,10 @@ namespace HMS_Client
 
             // Sample helideck status til trend buffer
             landingStatusUpdateTimer.Interval = TimeSpan.FromMilliseconds(config.ReadWithDefault(ConfigKey.ClientUpdateFrequencyUI, Constants.ClientUpdateFrequencyUIDefault));
-            landingStatusUpdateTimer.Tick += HelideckStatusUpdate;
+            landingStatusUpdateTimer.Tick += landingStatusUpdate;
             landingStatusUpdateTimer.Start();
 
-            void HelideckStatusUpdate(object sender, EventArgs e)
+            void landingStatusUpdate(object sender, EventArgs e)
             {
                 HelideckStatus newStatus = new HelideckStatus()
                 {
@@ -78,57 +78,11 @@ namespace HMS_Client
                 GraphBuffer.RemoveOldData(statusTrend3hList, Constants.Hours3);
 
                 // Overføre til display data liste
-                TransferDisplayData(statusTrend20mList, landingTrend20mDispList);
-                TransferDisplayData(statusTrend3hList, statusTrend3hDispList);
+                GraphBuffer.TransferDisplayData(statusTrend20mList, landingTrend20mDispList);
+                GraphBuffer.TransferDisplayData(statusTrend3hList, statusTrend3hDispList);
 
-                OnPropertyChanged(nameof(helideckStatusTimeString));
+                OnPropertyChanged(nameof(landingStatusTimeString));
                 OnPropertyChanged(nameof(displayModeVisibilityPreLanding));
-            }
-        }
-
-        private void TransferDisplayData(RadObservableCollectionEx<HelideckStatus> list, List<HelideckStatusType> dispList)
-        {
-            // Denne funksjonen mapper et visst antall statuser til en status indikator posisjon på tidslinjen på skjermen.
-            // Viser høyeste nivå fra sub-settet med statuser.
-
-            int subSetCounter = 0;
-            double subSetLength = (double)list.Count / (double)dispList.Count;
-
-            HelideckStatusType status = HelideckStatusType.OFF;
-
-            // Gå gjennom alle status data
-            for (int i = 0; i < list.Count; i++)
-            {
-                // Har vi kommet til nytt subSet?
-                if (i > (subSetLength * (double)subSetCounter) || i == list.Count - 1)
-                {
-                    // Sette status i display listen
-                    if (subSetCounter < dispList.Count)
-                        dispList[subSetCounter++] = status;
-
-                    status = HelideckStatusType.OFF;
-                }
-                else
-                {
-                    // Finne høyeste status nivå
-                    switch (list[i].status)
-                    {
-                        case HelideckStatusType.RED:
-                            status = HelideckStatusType.RED;
-                            break;
-
-                        case HelideckStatusType.AMBER:
-                            if (status != HelideckStatusType.RED)
-                                status = HelideckStatusType.AMBER;
-                            break;
-
-                        case HelideckStatusType.BLUE:
-                            if (status != HelideckStatusType.RED &&
-                                status != HelideckStatusType.AMBER)
-                                status = HelideckStatusType.BLUE;
-                            break;
-                    }
-                }
             }
         }
 
@@ -154,7 +108,7 @@ namespace HMS_Client
         /////////////////////////////////////////////////////////////////////////////
         // Helideck Status Trend Time
         /////////////////////////////////////////////////////////////////////////////
-        public string helideckStatusTimeString
+        public string landingStatusTimeString
         {
             get
             {
@@ -202,7 +156,7 @@ namespace HMS_Client
 
                 OnPropertyChanged(nameof(visibilityItems20m));
                 OnPropertyChanged(nameof(visibilityItems3h));
-                OnPropertyChanged(nameof(helideckStatusTimeString));
+                OnPropertyChanged(nameof(landingStatusTimeString));
             }
         }
 

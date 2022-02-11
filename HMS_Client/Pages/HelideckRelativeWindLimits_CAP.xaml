@@ -34,7 +34,7 @@
                 <!--Relative Wind Chart-->
                 <telerik:RadCartesianChart
                     Name="chartRelativeWindLimits"
-                    Margin="0,16,0,0">
+                    Margin="0,8,0,0">
 
                     <telerik:RadCartesianChart.Grid>
                         <telerik:CartesianChartGrid
