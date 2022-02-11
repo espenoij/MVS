@@ -697,7 +697,7 @@ namespace HMS_Server
 
                 // Beregne gjennomsnitt av de verdiene som ligger i datasettet
                 if (significantHeaveRate10mMeanData.Count > 0)
-                    significantHeaveRate10mMean = significantHeaveRate10mSum / significantHeaveRate10mMeanData.Count;
+                    significantHeaveRate10mMean = Math.Round(significantHeaveRate10mSum / significantHeaveRate10mMeanData.Count, 1, MidpointRounding.AwayFromZero);
                 else
                     significantHeaveRate10mMean = 0;
 

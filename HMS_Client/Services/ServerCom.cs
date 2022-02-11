@@ -154,47 +154,55 @@ namespace HMS_Client
 
         private void ProcessSocketHMSData(RadObservableCollectionEx<HMSData> socketHMSDataList)
         {
-            // Lese data timeout fra config
-            double dataTimeout = config.ReadWithDefault(ConfigKey.DataTimeout, Constants.DataTimeoutDefault);
-
-            lock (hmsDataList)
+            try
             {
-                // Sjekke om listen vi har er like lang som listen som kommer inn
-                if (socketHMSDataList.Count() != hmsDataList.Count())
-                    // I så tilfelle sletter vi listen vår og ny blir generert under
-                    hmsDataList.Clear();
+                // Lese data timeout fra config
+                double dataTimeout = config.ReadWithDefault(ConfigKey.DataTimeout, Constants.DataTimeoutDefault);
 
-                // Løper gjennom HMS data listen fra socket
-                foreach (var socketHMSData in socketHMSDataList.ToList())
+                lock (hmsDataList)
                 {
-                    // Finne match i HMS data listen
-                    var hmsData = hmsDataList.Where(x => x?.id == socketHMSData?.id);
+                    // Sjekke om listen vi har er like lang som listen som kommer inn
+                    if (socketHMSDataList.Count() != hmsDataList.Count())
+                        // I så tilfelle sletter vi listen vår og ny blir generert under
+                        hmsDataList.Clear();
 
-                    // Fant match?
-                    if (hmsData?.Count() > 0 && socketHMSData != null)
+                    // Løper gjennom HMS data listen fra socket
+                    foreach (var socketHMSData in socketHMSDataList.ToList())
                     {
-                        // Overføre data
-                        hmsData.First().data = socketHMSData.data;
+                        // Finne match i HMS data listen
+                        var hmsData = hmsDataList.Where(x => x?.id == socketHMSData?.id);
 
-                        // Overføre time stamp
-                        hmsData.First().timestamp = socketHMSData.timestamp;
+                        // Fant match?
+                        if (hmsData?.Count() > 0 && socketHMSData != null)
+                        {
+                            // Overføre data
+                            hmsData.First().data = socketHMSData.data;
 
-                        // Name (dersom admin modus er aktiv på server)
-                        hmsData.First().name = socketHMSData.name;
+                            // Overføre time stamp
+                            hmsData.First().timestamp = socketHMSData.timestamp;
 
-                        // Sjekke timestamp for data timeout
-                        if (hmsData.First().timestamp.AddMilliseconds(dataTimeout) < DateTime.UtcNow)
-                            hmsData.First().status = DataStatus.TIMEOUT_ERROR;
+                            // Name (dersom admin modus er aktiv på server)
+                            hmsData.First().name = socketHMSData.name;
+
+                            // Sjekke timestamp for data timeout
+                            if (hmsData.First().timestamp.AddMilliseconds(dataTimeout) < DateTime.UtcNow)
+                                hmsData.First().status = DataStatus.TIMEOUT_ERROR;
+                            else
+                                hmsData.First().status = DataStatus.OK;
+                        }
+                        // Ikke match?
                         else
-                            hmsData.First().status = DataStatus.OK;
-                    }
-                    // Ikke match?
-                    else
-                    {
-                        // Legg inn i listen
-                        hmsDataList.Add(socketHMSData);
+                        {
+                            // Legg inn i listen
+                            hmsDataList.Add(socketHMSData);
+                        }
                     }
                 }
+            }
+            catch (Exception ex)
+            {
+                if (AdminMode.IsActive)
+                    socketConsole.Add(string.Format("ProcessSocketHMSData: {0}", ex.Message));
             }
         }
 
