@@ -35,7 +35,7 @@
                 Name="dpApplicationRestartRequired"
                 Visibility="Collapsed"
                 DockPanel.Dock="Top"
-                Background="{StaticResource ColorSwireRed}">
+                Background="{StaticResource ColorRed}">
 
                 <TextBlock
                     Margin="8"

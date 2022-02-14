@@ -44,15 +44,15 @@
                 x:Key="ColorWhite">White</SolidColorBrush>
 
             <SolidColorBrush
-                x:Key="ColorSwireRed">#ffe8002a</SolidColorBrush>
-
-            <SolidColorBrush
                 x:Key="ColorHorizontalBarBackground">#ff666666</SolidColorBrush>
             <SolidColorBrush
                 x:Key="ColorVerticalBarBackground">#ff000000</SolidColorBrush>
             <SolidColorBrush
                 x:Key="ColorBackgroundSeparator">#FFf0f0f0</SolidColorBrush>
-            
+
+            <SolidColorBrush
+                x:Key="ColorNABackground">#ff888888</SolidColorBrush>
+
             <!--Header høyde-->
             <sys:Double
                 x:Key="tabBarHeight">50</sys:Double>
