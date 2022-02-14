@@ -5,7 +5,7 @@ using System.Windows.Threading;
 
 namespace HMS_Client
 {
-    public class HelideckRelativeWindLimitsVM : INotifyPropertyChanged
+    public class RelativeWindLimitsVM : INotifyPropertyChanged
     {
         // Change notification
         public event PropertyChangedEventHandler PropertyChanged;
@@ -216,7 +216,8 @@ namespace HMS_Client
             {
                 if (value != null)
                 {
-                    if (_rwdGraphData.data != value.data)
+                    if (_rwdGraphData.data != value.data ||
+                        _rwdGraphData.data2 != value.data2)
                     {
                         OnPropertyChanged(nameof(rwdGraphDataX));
                         OnPropertyChanged(nameof(rwdGraphDataY));

@@ -31,8 +31,6 @@ namespace HMS_Client
             foreach (WindMeasurement value in Enum.GetValues(typeof(WindMeasurement)))
                 cboWindMeasurement.Items.Add(value.GetDescription());
 
-            windHeadingVM.windMeasurement = (WindMeasurement)Enum.Parse(typeof(WindMeasurement), config.ReadWithDefault(ConfigKey.WindMeasurement, WindMeasurement.TwoMinuteMean.ToString()));
-
             cboWindMeasurement.SelectedIndex = (int)windHeadingVM.windMeasurement;
         }
 

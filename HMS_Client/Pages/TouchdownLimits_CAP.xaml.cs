@@ -7,9 +7,9 @@ using Telerik.Windows.Controls;
 namespace HMS_Client
 {
     /// <summary>
-    /// Interaction logic for HelideckMotionLimits_Touchdown_CAP.xaml
+    /// Interaction logic for TouchdownLimits_CAP.xaml
     /// </summary>
-    public partial class HelideckMotionLimits_Touchdown_CAP : UserControl
+    public partial class TouchdownLimits_CAP : UserControl
     {
         // Configuration settings
         private Config config;
@@ -17,15 +17,18 @@ namespace HMS_Client
         // User Input Data
         private HelideckMotionLimitsVM viewModel;
 
-        public HelideckMotionLimits_Touchdown_CAP()
+        private RadTabControl tabControl;
+
+        public TouchdownLimits_CAP()
         {
             InitializeComponent();
         }
 
-        public void Init(HelideckMotionLimitsVM viewModel, Config config, RadTabItem tabHelicopterOps)
+        public void Init(HelideckMotionLimitsVM viewModel, Config config, RadTabItem tabHelicopterOps, RadTabControl tabControl)
         {
             this.viewModel = viewModel;
             this.config = config;
+            this.tabControl = tabControl;
 
             DataContext = this.viewModel;
 
@@ -119,6 +122,11 @@ namespace HMS_Client
                     }
                 }
             }
+        }
+
+        private void btnHelideckMotionHistory_Click(object sender, System.Windows.RoutedEventArgs e)
+        {
+            tabControl.SelectedIndex = 1;
         }
     }
 }

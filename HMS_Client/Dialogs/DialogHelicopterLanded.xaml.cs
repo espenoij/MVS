@@ -10,10 +10,10 @@ namespace HMS_Client
     public partial class DialogHelicopterLanded : RadWindow
     {
         private UserInputsVM userInputsVM;
-        private HelideckStabilityLimitsVM helideckStabilityLimitsVM;
+        private OnDeckStabilityLimitsVM helideckStabilityLimitsVM;
         private LandingStatusTrendVM helideckStatusTrendVM;
 
-        public DialogHelicopterLanded(UserInputsVM userInputsVM, HelideckStabilityLimitsVM helideckStabilityLimitsVM, LandingStatusTrendVM helideckStatusTrendVM)
+        public DialogHelicopterLanded(UserInputsVM userInputsVM, OnDeckStabilityLimitsVM helideckStabilityLimitsVM, LandingStatusTrendVM helideckStatusTrendVM)
         {
             InitializeComponent();
 

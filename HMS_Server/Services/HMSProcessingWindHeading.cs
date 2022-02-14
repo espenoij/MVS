@@ -217,7 +217,7 @@ namespace HMS_Server
             // Tar data fra input delen av server og overfører til HMS output delen
 
             // Vind retning
-            helideckWindDirectionRT.data = Math.Round(hmsInputDataList.GetData(ValueType.SensorWindDirection).data, 0, MidpointRounding.AwayFromZero);
+            helideckWindDirectionRT.data = Math.Round(hmsInputDataList.GetData(ValueType.SensorWindDirection).data, 1, MidpointRounding.AwayFromZero);
             helideckWindDirectionRT.status = hmsInputDataList.GetData(ValueType.SensorWindDirection).status;
             helideckWindDirectionRT.timestamp = hmsInputDataList.GetData(ValueType.SensorWindDirection).timestamp;
 
@@ -230,20 +230,20 @@ namespace HMS_Server
             windSpeedCorrectedToHelideck.timestamp = hmsInputDataList.GetData(ValueType.SensorWindSpeed).timestamp;
 
             // Vind hastighet
-            helideckWindSpeedRT.data = Math.Round(windSpeedCorrectedToHelideck.data, 0, MidpointRounding.AwayFromZero);
+            helideckWindSpeedRT.data = Math.Round(windSpeedCorrectedToHelideck.data, 1, MidpointRounding.AwayFromZero);
             helideckWindSpeedRT.status = hmsInputDataList.GetData(ValueType.SensorWindSpeed).status;
             helideckWindSpeedRT.timestamp = hmsInputDataList.GetData(ValueType.SensorWindSpeed).timestamp;
 
             // Area Wind: 2-minute data
             ///////////////////////////////////////////////////////////
             areaWindDirection2mNonRounded.DoProcessing(hmsInputDataList.GetData(ValueType.SensorWindDirection));
-            areaWindDirection2m.data = Math.Round(areaWindDirection2mNonRounded.data, 0, MidpointRounding.AwayFromZero);
+            areaWindDirection2m.data = Math.Round(areaWindDirection2mNonRounded.data, 1, MidpointRounding.AwayFromZero);
             areaWindDirection2m.status = areaWindDirection2mNonRounded.status;
             areaWindDirection2m.timestamp = areaWindDirection2mNonRounded.timestamp;
             areaWindDirection2m.sensorGroupId = hmsInputDataList.GetData(ValueType.SensorWindDirection).sensorGroupId;
 
             areaWindSpeed2mNonRounded.DoProcessing(hmsInputDataList.GetData(ValueType.SensorWindSpeed));
-            areaWindSpeed2m.data = Math.Round(areaWindSpeed2mNonRounded.data, 0, MidpointRounding.AwayFromZero);
+            areaWindSpeed2m.data = Math.Round(areaWindSpeed2mNonRounded.data, 1, MidpointRounding.AwayFromZero);
             areaWindSpeed2m.status = areaWindSpeed2mNonRounded.status;
             areaWindSpeed2m.timestamp = areaWindSpeed2mNonRounded.timestamp;
             areaWindSpeed2m.sensorGroupId = areaWindSpeed2mNonRounded.sensorGroupId;
@@ -260,7 +260,7 @@ namespace HMS_Server
 
             helideckWindSpeed2mNonRounded.DoProcessing(windSpeedCorrectedToHelideck);
 
-            helideckWindSpeed2m.data = Math.Round(helideckWindSpeed2mNonRounded.data, 0, MidpointRounding.AwayFromZero);
+            helideckWindSpeed2m.data = Math.Round(helideckWindSpeed2mNonRounded.data, 1, MidpointRounding.AwayFromZero);
             helideckWindSpeed2m.status = helideckWindSpeed2mNonRounded.status;
             helideckWindSpeed2m.timestamp = helideckWindSpeed2mNonRounded.timestamp;
             helideckWindSpeed2m.sensorGroupId = helideckWindSpeed2mNonRounded.sensorGroupId;
@@ -277,7 +277,7 @@ namespace HMS_Server
 
             helideckWindSpeed10mNonRounded.DoProcessing(windSpeedCorrectedToHelideck);
 
-            helideckWindSpeed10m.data = Math.Round(helideckWindSpeed10mNonRounded.data, 0, MidpointRounding.AwayFromZero);
+            helideckWindSpeed10m.data = Math.Round(helideckWindSpeed10mNonRounded.data, 1, MidpointRounding.AwayFromZero);
             helideckWindSpeed10m.status = helideckWindSpeed10mNonRounded.status;
             helideckWindSpeed10m.timestamp = helideckWindSpeed10mNonRounded.timestamp;
             helideckWindSpeed10m.sensorGroupId = helideckWindSpeed10mNonRounded.sensorGroupId;
@@ -305,7 +305,7 @@ namespace HMS_Server
             double heading = hmsInputDataList.GetData(ValueType.VesselHeading).data + adminSettingsVM.helideckHeadingOffset;
             if (heading > Constants.HeadingMax)
                 heading -= Constants.HeadingMax;
-            helideckHeading.data = Math.Round(heading, 0, MidpointRounding.AwayFromZero);
+            helideckHeading.data = Math.Round(heading, 1, MidpointRounding.AwayFromZero);
             helideckHeading.status = hmsInputDataList.GetData(ValueType.VesselHeading).status;
             helideckHeading.timestamp = hmsInputDataList.GetData(ValueType.VesselHeading).timestamp;
 
@@ -373,7 +373,7 @@ namespace HMS_Server
                 if (heliHdg < Constants.HeadingMin)
                     heliHdg += Constants.HeadingMax;
 
-                helicopterHeading.data = Math.Round(heliHdg, 0, MidpointRounding.AwayFromZero);
+                helicopterHeading.data = Math.Round(heliHdg, 1, MidpointRounding.AwayFromZero);
                 helicopterHeading.status = hmsInputDataList.GetData(ValueType.VesselHeading).status;
                 helicopterHeading.timestamp = hmsInputDataList.GetData(ValueType.VesselHeading).timestamp;
             }
@@ -404,7 +404,7 @@ namespace HMS_Server
             {
                 wsiData.status = helideckWindSpeed10mNonRounded.status;
                 wsiData.timestamp = helideckWindSpeed10mNonRounded.timestamp;
-                wsiData.data = Math.Round(helideckWindSpeed10mNonRounded.data / adminSettingsVM.GetWSILimit(userInputs.helicopterType) * 100, 0, MidpointRounding.AwayFromZero);
+                wsiData.data = Math.Round(helideckWindSpeed10mNonRounded.data / adminSettingsVM.GetWSILimit(userInputs.helicopterType) * 100, 1, MidpointRounding.AwayFromZero);
             }
             else
             {
@@ -674,7 +674,7 @@ namespace HMS_Server
                 }
 
                 // Return data
-                outputGust.data = Math.Round(gustData.windGust, 0, MidpointRounding.AwayFromZero);
+                outputGust.data = Math.Round(gustData.windGust, 1, MidpointRounding.AwayFromZero);
                 outputGust.status = windSpd.status;
                 outputGust.timestamp = windSpd.timestamp;
                 outputGust.sensorGroupId = windSpd.sensorGroupId;                

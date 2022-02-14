@@ -37,6 +37,8 @@
                         Height="*" />
                     <RowDefinition
                         Height="*" />
+                    <RowDefinition
+                        Height="*" />
                 </Grid.RowDefinitions>
 
                 <!--Fartøynavn-->
@@ -287,9 +289,80 @@
 
                 </Grid>
 
-                <!--Software Versjon-->
+                <!--Regulatory Standard-->
                 <Grid
                     Grid.Row="6"
+                    Background="{StaticResource ColorBackgroundSeparator}">
+
+                    <Grid.ColumnDefinitions>
+                        <ColumnDefinition
+                            Width="*" />
+                        <ColumnDefinition
+                            Width="12*" />
+                    </Grid.ColumnDefinitions>
+
+                    <Viewbox
+                        Grid.Column="0"
+                        StretchDirection="Both"
+                        Stretch="Uniform">
+
+                        <Image
+                            Source="..\Icons\check-decagram-outline.png" />
+
+                    </Viewbox>
+
+                    <Viewbox
+                        Grid.Column="1"
+                        StretchDirection="Both"
+                        Stretch="Uniform"
+                        HorizontalAlignment="Left">
+
+                        <telerik:Label
+                            FontSize="{StaticResource fontSizeLabel}"
+                            Content="{Binding Path=regulatoryStandard}" />
+
+                    </Viewbox>
+
+                </Grid>
+
+                <!--HLL Limits Version-->
+                <Grid
+                    Grid.Row="7">
+
+                    <Grid.ColumnDefinitions>
+                        <ColumnDefinition
+                            Width="*" />
+                        <ColumnDefinition
+                            Width="12*" />
+                    </Grid.ColumnDefinitions>
+
+                    <Viewbox
+                        Grid.Column="0"
+                        StretchDirection="Both"
+                        Stretch="Uniform">
+
+                        <Image
+                            Source="..\Icons\check-decagram-outline.png" />
+
+                    </Viewbox>
+
+                    <Viewbox
+                        Grid.Column="1"
+                        StretchDirection="Both"
+                        Stretch="Uniform"
+                        HorizontalAlignment="Left">
+
+                        <telerik:Label
+                            FontSize="{StaticResource fontSizeLabel}"
+                            Content="{Binding Path=hllLimitsVersion}" />
+
+                    </Viewbox>
+
+                </Grid>
+
+                <!--Software Versjon-->
+                <Grid
+                    Grid.Row="8"
                     Background="{StaticResource ColorBackgroundSeparator}">
 
                     <Grid.ColumnDefinitions>
@@ -316,7 +389,6 @@
                         HorizontalAlignment="Left">
 
                         <telerik:Label
-                            Name="lbSoftwareVersion"
                             FontSize="{StaticResource fontSizeLabel}"
                             Content="{Binding Path=softwareVersion}" />
 

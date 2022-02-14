@@ -22,7 +22,7 @@
 
         <!--WIND & HEADING - NOROG-->
         <telerik:GroupBox
-            Header="WIND &amp; HEADING"
+            Header="HELIDECK WIND &amp; HEADING"
             Grid.Row="0"
             Grid.Column="1"
             Grid.RowSpan="2"
@@ -37,6 +37,7 @@
                         Width="2*" />
                 </Grid.ColumnDefinitions>
 
+                <!--Magnetic North-->
                 <DockPanel
                     Grid.Column="0">
 
@@ -71,10 +72,44 @@
 
                     </DockPanel>
 
+                    <!--Wind 2-minute Mean-->
+                    <DockPanel
+                        DockPanel.Dock="Bottom"
+                        HorizontalAlignment="Center"
+                        Visibility="{Binding Path=displayCAP, Converter={StaticResource BoolToVisConverter} }">
+
+                        <Grid>
+
+                            <Grid.ColumnDefinitions>
+                                <ColumnDefinition
+                                    Width="3*" />
+                                <ColumnDefinition
+                                    Width="2*" />
+                                <ColumnDefinition
+                                    Width="3*" />
+                            </Grid.ColumnDefinitions>
+
+                            <Viewbox
+                                Grid.Column="1"
+                                StretchDirection="Both"
+                                Stretch="Uniform"
+                                HorizontalAlignment="Center">
+
+                                <telerik:Label
+                                    Content="Wind 2-minute Mean"
+                                    FontSize="{StaticResource fontSizeLabelSmall}" />
+
+                            </Viewbox>
+
+                        </Grid>
+
+                    </DockPanel>
+                    
                     <!--Wind Measurement-->
                     <DockPanel
                         DockPanel.Dock="Bottom"
-                        HorizontalAlignment="Center">
+                        HorizontalAlignment="Center"
+                        Visibility="{Binding Path=displayNOROG, Converter={StaticResource BoolToVisConverter} }">
 
                         <Grid>
 

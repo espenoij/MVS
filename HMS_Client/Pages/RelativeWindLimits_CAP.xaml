@@ -1,5 +1,5 @@
 ﻿<UserControl
-    x:Class="HMS_Client.HelideckRelativeWindLimits_CAP"
+    x:Class="HMS_Client.RelativeWindLimits_CAP"
     xmlns="http://schemas.microsoft.com/winfx/2006/xaml/presentation"
     xmlns:x="http://schemas.microsoft.com/winfx/2006/xaml"
     xmlns:mc="http://schemas.openxmlformats.org/markup-compatibility/2006"
@@ -79,15 +79,8 @@
 
                                 <Grid>
                                     <Ellipse
-                                        Width="40"
-                                        Height="40"
-                                        Stroke="White"
-                                        StrokeThickness="2">
-                                    </Ellipse>
-
-                                    <Ellipse
-                                        Width="10"
-                                        Height="10"
+                                        Width="12"
+                                        Height="12"
                                         Stroke="Black"
                                         Fill="White">
                                     </Ellipse>

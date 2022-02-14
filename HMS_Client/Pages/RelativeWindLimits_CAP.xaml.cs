@@ -5,16 +5,16 @@ namespace HMS_Client
     /// <summary>
     /// Interaction logic for HelideckRelativeWindLimits_CAP.xaml
     /// </summary>
-    public partial class HelideckRelativeWindLimits_CAP : UserControl
+    public partial class RelativeWindLimits_CAP : UserControl
     {
         //public RadObservableCollectionEx<Point> blueArea = new RadObservableCollectionEx<Point>();
 
-        public HelideckRelativeWindLimits_CAP()
+        public RelativeWindLimits_CAP()
         {
             InitializeComponent();
         }
 
-        public void Init(HelideckRelativeWindLimitsVM viewModel)
+        public void Init(RelativeWindLimitsVM viewModel)
         {
             DataContext = viewModel;
 

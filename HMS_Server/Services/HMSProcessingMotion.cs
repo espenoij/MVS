@@ -62,8 +62,6 @@ namespace HMS_Server
 
         private AdminSettingsVM adminSettingsVM;
 
-        private UserInputs userInputs;
-
         // Significant Heave Rate - Limit conditions
         private double significantHeaveRate2mMin = double.MaxValue;
         private double significantHeaveRate10mSum = 0;
@@ -74,11 +72,10 @@ namespace HMS_Server
         private RadObservableCollectionEx<TimeData> significantHeaveRate10mMeanData = new RadObservableCollectionEx<TimeData>();
         private RadObservableCollectionEx<TimeData> significantHeaveRate20mMaxData = new RadObservableCollectionEx<TimeData>();
 
-        public HMSProcessingMotion(HMSDataCollection hmsOutputData, HelideckMotionLimits motionLimits, AdminSettingsVM adminSettingsVM, UserInputs userInputs, ErrorHandler errorHandler)
+        public HMSProcessingMotion(HMSDataCollection hmsOutputData, HelideckMotionLimits motionLimits, AdminSettingsVM adminSettingsVM, ErrorHandler errorHandler)
         {
             this.motionLimits = motionLimits;
             this.adminSettingsVM = adminSettingsVM;
-            this.userInputs = userInputs;
 
             // Fyller output listen med HMS Output data
             // NB! Variablene som legges inn i listen her fungerer som pekere: Oppdateres variabelen -> oppdateres listen
@@ -379,7 +376,7 @@ namespace HMS_Server
                         mms = 0.0;
 
                     // Kalkulere MMS_MSI (CAP formel)
-                    mms_msi.data = Math.Round(10.0 * HMSCalc.ToDegrees(Math.Atan(mms)), 0, MidpointRounding.AwayFromZero);
+                    mms_msi.data = 10.0 * HMSCalc.ToDegrees(Math.Atan(mms));
                     mms_msi.status = DataStatus.OK;
                     mms_msi.timestamp = accelerationX.timestamp;
                 }

@@ -49,8 +49,8 @@ namespace HMS_Client
         private UserInputsVM userInputsVM = new UserInputsVM();
         private HelideckMotionLimitsVM helideckMotionLimitsVM = new HelideckMotionLimitsVM();
         private HelideckMotionTrendVM helideckMotionTrendVM = new HelideckMotionTrendVM();
-        private HelideckStabilityLimitsVM helideckStabilityLimitsVM = new HelideckStabilityLimitsVM();
-        private HelideckRelativeWindLimitsVM helideckRelativeWindLimitsVM = new HelideckRelativeWindLimitsVM();
+        private OnDeckStabilityLimitsVM helideckStabilityLimitsVM = new OnDeckStabilityLimitsVM();
+        private RelativeWindLimitsVM helideckRelativeWindLimitsVM = new RelativeWindLimitsVM();
         private WindHeadingChangeVM helideckWindHeadingTrendVM = new WindHeadingChangeVM();
         private HelideckStatusVM helideckStatusVM = new HelideckStatusVM();
         private LandingStatusTrendVM helideckStatusTrendVM = new LandingStatusTrendVM();
@@ -169,7 +169,7 @@ namespace HMS_Client
 
                 // Helideck Motion Limits
                 ucHelideckMotionLimits_NOROG.Visibility = Visibility.Visible;
-                ucHelideckMotionLimits_CAP.Visibility = Visibility.Collapsed;
+                ucTouchdownLimits_CAP.Visibility = Visibility.Collapsed;
                 ucHelideckMotionLimits_NOROG.Init(helideckMotionLimitsVM, config, tabHelicopterOps);
 
                 // Helideck Status
@@ -214,7 +214,7 @@ namespace HMS_Client
                 ucGeneralInformation_NOROG.Visibility = Visibility.Collapsed;
                 ucGeneralInformation_CAP.Visibility = Visibility.Visible;
 
-                ucGeneralInformation_CAP.Init(generalInformationVM, config);
+                ucGeneralInformation_CAP.Init(generalInformationVM);
 
                 // User Inputs
                 ucUserInputs_NOROG.Visibility = Visibility.Collapsed;
@@ -222,10 +222,10 @@ namespace HMS_Client
 
                 ucUserInputs_CAP.Init(userInputsVM, config, adminSettingsVM, helideckStabilityLimitsVM, helideckStatusTrendVM);
 
-                // Helideck Motion Limits
+                // Helideck Motion Limits / Touchdown Limits
                 ucHelideckMotionLimits_NOROG.Visibility = Visibility.Collapsed;
-                ucHelideckMotionLimits_CAP.Visibility = Visibility.Visible;
-                ucHelideckMotionLimits_CAP.Init(helideckMotionLimitsVM, config, tabHelicopterOps);
+                ucTouchdownLimits_CAP.Visibility = Visibility.Visible;
+                ucTouchdownLimits_CAP.Init(helideckMotionLimitsVM, config, tabHelicopterOps, tcMainMenu);
 
                 // Helideck Status
                 ucHelideckStatus_NOROG.Visibility = Visibility.Collapsed;

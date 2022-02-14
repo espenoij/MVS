@@ -5,21 +5,21 @@ using Telerik.Windows.Controls;
 namespace HMS_Client
 {
     /// <summary>
-    /// Interaction logic for HelideckStabilityLimits_CAP.xaml
+    /// Interaction logic for OnDeckStabilityLimits_CAP.xaml
     /// </summary>
-    public partial class HelideckStabilityLimits_CAP : UserControl
+    public partial class OnDeckStabilityLimits_CAP : UserControl
     {
         public RadObservableCollectionEx<Point> blueArea = new RadObservableCollectionEx<Point>();
 
-        private HelideckStabilityLimitsVM viewModel;
+        private OnDeckStabilityLimitsVM viewModel;
         private LandingStatusTrendVM helideckStatusTrendVM;
 
-        public HelideckStabilityLimits_CAP()
+        public OnDeckStabilityLimits_CAP()
         {
             InitializeComponent();
         }
 
-        public void Init(HelideckStabilityLimitsVM viewModel, LandingStatusTrendVM helideckStatusTrendVM)
+        public void Init(OnDeckStabilityLimitsVM viewModel, LandingStatusTrendVM helideckStatusTrendVM)
         {
             this.viewModel = viewModel;
             this.helideckStatusTrendVM = helideckStatusTrendVM;

@@ -25,9 +25,9 @@ namespace HMS_Client
         public RadObservableCollectionEx<HelideckStatus> statusTrend3hList = new RadObservableCollectionEx<HelideckStatus>();
         public List<HelideckStatusType> statusTrend3hDispList = new List<HelideckStatusType>();
 
-        private HelideckStabilityLimitsVM helideckStabilityLimitsVM;
+        private OnDeckStabilityLimitsVM helideckStabilityLimitsVM;
 
-        public void Init(HelideckStatusVM helideckStatusVM, HelideckStabilityLimitsVM helideckStabilityLimitsVM, Config config)
+        public void Init(HelideckStatusVM helideckStatusVM, OnDeckStabilityLimitsVM helideckStabilityLimitsVM, Config config)
         {
             this.helideckStabilityLimitsVM = helideckStabilityLimitsVM;
 

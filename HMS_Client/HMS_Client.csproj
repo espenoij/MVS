@@ -326,20 +326,20 @@
       <DependentUpon>WindHeadingChange_CAP.xaml</DependentUpon>
     </Compile>
     <Compile Include="ViewModels\WindHeadingChangeVM.cs" />
-    <Compile Include="Pages\HelideckRelativeWindLimits_CAP.xaml.cs">
-      <DependentUpon>HelideckRelativeWindLimits_CAP.xaml</DependentUpon>
+    <Compile Include="Pages\RelativeWindLimits_CAP.xaml.cs">
+      <DependentUpon>RelativeWindLimits_CAP.xaml</DependentUpon>
     </Compile>
-    <Compile Include="ViewModels\HelideckRelativeWindLimitsVM.cs" />
+    <Compile Include="ViewModels\RelativeWindLimitsVM.cs" />
     <Compile Include="ViewModels\LandingStatusTrendVM.cs" />
     <Compile Include="Pages\GeneralInformation_CAP.xaml.cs">
       <DependentUpon>GeneralInformation_CAP.xaml</DependentUpon>
     </Compile>
-    <Compile Include="ViewModels\HelideckStabilityLimitsVM.cs" />
-    <Compile Include="Pages\HelideckMotionLimits_Touchdown_CAP.xaml.cs">
-      <DependentUpon>HelideckMotionLimits_Touchdown_CAP.xaml</DependentUpon>
+    <Compile Include="ViewModels\OnDeckStabilityLimitsVM.cs" />
+    <Compile Include="Pages\TouchdownLimits_CAP.xaml.cs">
+      <DependentUpon>TouchdownLimits_CAP.xaml</DependentUpon>
     </Compile>
-    <Compile Include="Pages\HelideckStabilityLimits_CAP.xaml.cs">
-      <DependentUpon>HelideckStabilityLimits_CAP.xaml</DependentUpon>
+    <Compile Include="Pages\OnDeckStabilityLimits_CAP.xaml.cs">
+      <DependentUpon>OnDeckStabilityLimits_CAP.xaml</DependentUpon>
     </Compile>
     <Compile Include="Pages\HelideckStatus_CAP.xaml.cs">
       <DependentUpon>HelideckStatus_CAP.xaml</DependentUpon>
@@ -455,7 +455,7 @@
       <Generator>MSBuild:Compile</Generator>
       <SubType>Designer</SubType>
     </Page>
-    <Page Include="Pages\HelideckMotionLimits_Touchdown_CAP.xaml">
+    <Page Include="Pages\TouchdownLimits_CAP.xaml">
       <SubType>Designer</SubType>
       <Generator>MSBuild:Compile</Generator>
     </Page>
@@ -483,11 +483,11 @@
       <Generator>MSBuild:Compile</Generator>
       <SubType>Designer</SubType>
     </Page>
-    <Page Include="Pages\HelideckRelativeWindLimits_CAP.xaml">
+    <Page Include="Pages\RelativeWindLimits_CAP.xaml">
       <SubType>Designer</SubType>
       <Generator>XamlIntelliSenseFileGenerator</Generator>
     </Page>
-    <Page Include="Pages\HelideckStabilityLimits_CAP.xaml">
+    <Page Include="Pages\OnDeckStabilityLimits_CAP.xaml">
       <Generator>MSBuild:Compile</Generator>
       <SubType>Designer</SubType>
     </Page>
@@ -641,9 +641,6 @@
     <Resource Include="Icons\outline_schedule_black_48dp.png" />
   </ItemGroup>
   <ItemGroup>
-    <Resource Include="Icons\outline_verified_user_black_48dp.png" />
-  </ItemGroup>
-  <ItemGroup>
     <Resource Include="Icons\outline_person_black_48dp.png" />
   </ItemGroup>
   <ItemGroup>
@@ -674,9 +671,6 @@
     <Resource Include="Icons\oil_rig_48dp.png" />
   </ItemGroup>
   <ItemGroup>
-    <Resource Include="Icons\outline_show_chart_white_36dp.png" />
-  </ItemGroup>
-  <ItemGroup>
     <Resource Include="Icons\outline_article_white_48dp.png" />
   </ItemGroup>
   <ItemGroup>
@@ -699,6 +693,15 @@
   </ItemGroup>
   <ItemGroup>
     <Resource Include="Icons\swire_flag.ico" />
+  </ItemGroup>
+  <ItemGroup>
+    <Resource Include="Icons\chart-line.png" />
+  </ItemGroup>
+  <ItemGroup>
+    <Resource Include="Icons\check-decagram-outline.png" />
+  </ItemGroup>
+  <ItemGroup>
+    <Resource Include="Icons\shield-crown-outline.png" />
   </ItemGroup>
   <Import Project="$(MSBuildToolsPath)\Microsoft.CSharp.targets" />
   <Import Project="..\packages\System.Text.Json.6.0.0\build\System.Text.Json.targets" Condition="Exists('..\packages\System.Text.Json.6.0.0\build\System.Text.Json.targets')" />

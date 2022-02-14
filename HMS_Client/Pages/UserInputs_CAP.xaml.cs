@@ -16,7 +16,7 @@ namespace HMS_Client
 
         // User Inputs View Model
         private UserInputsVM userInputsVM;
-        private HelideckStabilityLimitsVM helideckStabilityLimitsVM;
+        private OnDeckStabilityLimitsVM helideckStabilityLimitsVM;
         private LandingStatusTrendVM helideckStatusTrendVM;
 
         public UserInputs_CAP()
@@ -24,7 +24,7 @@ namespace HMS_Client
             InitializeComponent();
         }
 
-        public void Init(UserInputsVM userInputsVM, Config config, AdminSettingsVM adminSettingsVM, HelideckStabilityLimitsVM helideckStabilityLimitsVM, LandingStatusTrendVM helideckStatusTrendVM)
+        public void Init(UserInputsVM userInputsVM, Config config, AdminSettingsVM adminSettingsVM, OnDeckStabilityLimitsVM helideckStabilityLimitsVM, LandingStatusTrendVM helideckStatusTrendVM)
         {
             DataContext = userInputsVM;
 

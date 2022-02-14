@@ -19,10 +19,10 @@ namespace HMS_Client
         private AdminSettingsVM adminSettingsVM;
         private HelideckMotionLimitsVM helideckMotionLimitsVM;
         private MainWindowVM mainWindowVM;
-        private HelideckRelativeWindLimitsVM relativeWindDirectionLimitsVM;
-        private HelideckStabilityLimitsVM helideckStabilityLimitsVM;
+        private RelativeWindLimitsVM relativeWindDirectionLimitsVM;
+        private OnDeckStabilityLimitsVM helideckStabilityLimitsVM;
         private WindHeadingChangeVM helideckWindHeadingTrendVM;
-        private HelideckRelativeWindLimitsVM helideckRelativeWindLimitsVM;
+        private RelativeWindLimitsVM helideckRelativeWindLimitsVM;
         private WindHeadingVM windHeadingVM;
 
         private MainWindow.ResetWindDisplayCallback resetWindDisplayCallback;
@@ -36,10 +36,10 @@ namespace HMS_Client
             HelideckMotionLimitsVM helideckMotionLimitsVM,
             Config config,
             MainWindowVM mainWindowVM,
-            HelideckRelativeWindLimitsVM relativeWindDirectionLimitsVM,
-            HelideckStabilityLimitsVM helideckStabilityLimitsVM,
+            RelativeWindLimitsVM relativeWindDirectionLimitsVM,
+            OnDeckStabilityLimitsVM helideckStabilityLimitsVM,
             WindHeadingChangeVM helideckWindHeadingTrendVM,
-            HelideckRelativeWindLimitsVM helideckRelativeWindLimitsVM,
+            RelativeWindLimitsVM helideckRelativeWindLimitsVM,
             WindHeadingVM windHeadingVM,
             MainWindow.ResetWindDisplayCallback resetWindDisplayCallback,
             ServerCom serverCom)

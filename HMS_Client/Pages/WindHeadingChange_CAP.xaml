@@ -13,6 +13,15 @@
     <UserControl.Resources>
         <BooleanToVisibilityConverter
             x:Key="BoolToVisConverter" />
+
+        <Style
+            x:Key="ticks"
+            TargetType="Rectangle">
+            <Setter
+                Property="Fill"
+                Value="Green" />
+        </Style>
+        
     </UserControl.Resources>
 
     <Grid>
@@ -238,7 +247,7 @@
                                 MajorStepUnit="Minute"
                                 MajorStep="5"
                                 ShowLabels="False"
-                                PlotMode="OnTicks"
+                                PlotMode="OnTicks"                                
                                 TickOrigin="{Binding alignmentTime}"
                                 Minimum="{Binding alignmentTimeMin}"
                                 Maximum="{Binding alignmentTimeMax}" />
@@ -294,7 +303,7 @@
                         </telerik:RadCartesianChart.Grid>
 
                         <telerik:RadCartesianChart.Annotations>
-
+                            
                             <telerik:CartesianPlotBandAnnotation
                                 ZIndex="0"
                                 Axis="{Binding ElementName=chartVesselDeltaVertAxis}"
@@ -394,6 +403,7 @@
                             <telerik:DateTimeContinuousAxis
                                 MajorStepUnit="Minute"
                                 MajorStep="5"
+                                MajorTickStyle="{StaticResource ticks}"
                                 ShowLabels="False"
                                 PlotMode="OnTicks"
                                 TickOrigin="{Binding alignmentTime}"

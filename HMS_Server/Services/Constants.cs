@@ -7,8 +7,14 @@ class Constants
     public const string appNameServer = "HMS_Server";
     public const string appNameClient = "HMS_Client";
 
-    // Sofware Version
-    public const string SoftwareVersion = "HMS version 0.9 (Dev)";
+    // Regulatory Standard
+    public const string RegulatoryStandard = "HMS Rev 9b";
+
+    // Regulatory Standard
+    public const string HLLLimitsVersion = "HCA Issue 4 (Nov 2020)";
+
+    // Software Version
+    public const string SoftwareVersion = "Version 0.9.0 (Dev)";
 
     // Admin Mode Password
     public const string AdminModePassword = "a";
@@ -285,7 +291,7 @@ class Constants
     public const int LicenseMaxClientsDefault = 0;
 
     // Graph Accuracy
-    public const double GraphCullFrequency20m = 4750;
-    public const double GraphCullFrequency30m = 9750;
+    public const double GraphCullFrequency20m = 2750; // Dette tallet er i millisekund. 3 sek. Avrundingspunktet mellom 2.5 og 3 sek.
+    public const double GraphCullFrequency30m = 3750;
     public const double GraphCullFrequency3h = 19750;
 }

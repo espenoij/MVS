@@ -23,8 +23,6 @@ namespace HMS_Server
         private bool helicopterSetLanded = false;
         private bool helicopterSetTakeoff = false;
 
-        private HMSDataCollection hmsOutputData;
-
         public Verfication(Config config, UserInputs userInputs, ErrorHandler errorHandler)
         {
             this.userInputs = userInputs;
@@ -76,8 +74,6 @@ namespace HMS_Server
 
         public void Update(HMSDataCollection hmsOutputData, RadObservableCollectionEx<SensorData> sensorDataList, DatabaseHandler database)
         {
-            this.hmsOutputData = hmsOutputData;
-
             // Test Data
             testData.TransferData(hmsOutputData.GetDataList());
 
@@ -97,6 +93,23 @@ namespace HMS_Server
                 var refData = referenceDataList.Where(x => x.id == item.id);
                 if (refData.Count() == 1)
                 {
+                    // Korrigere verdier som skal vises som heltall
+                    if (item.id == (int)VerificationType.MSI ||
+                        item.id == (int)VerificationType.WSI ||
+                        item.id == (int)VerificationType.RelativeWindDirection ||
+                        item.id == (int)VerificationType.VesselHeading ||
+                        item.id == (int)VerificationType.HelideckHeading ||
+                        item.id == (int)VerificationType.HelicopterHeading ||
+                        item.id == (int)VerificationType.WindSpeed2m ||
+                        item.id == (int)VerificationType.WindDir2m ||
+                        item.id == (int)VerificationType.WindGust2m ||
+                        item.id == (int)VerificationType.WindSpeed10m ||
+                        item.id == (int)VerificationType.WindDir10m ||
+                        item.id == (int)VerificationType.WindGust10m)
+                    {
+                        item.data = Math.Round(item.data, 0, MidpointRounding.AwayFromZero);
+                    }
+
                     // Finne data i verification data listen
                     var veriData = verificationData.Where(x => (int)x.id == item.id);
 

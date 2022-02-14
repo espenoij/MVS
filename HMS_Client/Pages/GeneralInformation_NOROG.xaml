@@ -349,7 +349,6 @@
                         HorizontalAlignment="Left">
 
                         <telerik:Label
-                            Name="lbSoftwareVersion"
                             FontSize="{StaticResource fontSizeLabel}"
                             Content="{Binding Path=softwareVersion}" />
 

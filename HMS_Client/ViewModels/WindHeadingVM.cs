@@ -31,6 +31,11 @@ namespace HMS_Client
             this.adminSettingsVM = adminSettingsVM;
             this.helideckStatusVM = helideckStatusVM;
 
+            if (adminSettingsVM.regulationStandard == RegulationStandard.NOROG)
+                windMeasurement = (WindMeasurement)Enum.Parse(typeof(WindMeasurement), config.ReadWithDefault(ConfigKey.WindMeasurement, WindMeasurement.TwoMinuteMean.ToString()));
+            else
+                windMeasurement = WindMeasurement.TwoMinuteMean;
+
             // Oppdatere UI
             UIUpdateTimer.Interval = TimeSpan.FromMilliseconds(config.ReadWithDefault(ConfigKey.ClientUpdateFrequencyUI, Constants.ClientUpdateFrequencyUIDefault));
             UIUpdateTimer.Tick += UIUpdate;
@@ -883,15 +888,24 @@ namespace HMS_Client
             {
                 if (value != _windMeasurement)
                 {
-                    _windMeasurement = value;
-                    config?.Write(ConfigKey.WindMeasurement, _windMeasurement.ToString());
+                    // Kan velge vind visning under NOROG
+                    if (adminSettingsVM.regulationStandard == RegulationStandard.NOROG)
+                    {
+                        _windMeasurement = value;
+                        config?.Write(ConfigKey.WindMeasurement, _windMeasurement.ToString());
 
-                    OnPropertyChanged(nameof(windDirectionRotation));
-                    OnPropertyChanged(nameof(windDirectionString));
-                    OnPropertyChanged(nameof(windSpeedString));
-                    OnPropertyChanged(nameof(windGustString));
-                    OnPropertyChanged(nameof(displayWindDirection));
-                    OnPropertyChanged(nameof(windMeasurementString));
+                        OnPropertyChanged(nameof(windDirectionRotation));
+                        OnPropertyChanged(nameof(windDirectionString));
+                        OnPropertyChanged(nameof(windSpeedString));
+                        OnPropertyChanged(nameof(windGustString));
+                        OnPropertyChanged(nameof(displayWindDirection));
+                        OnPropertyChanged(nameof(windMeasurementString));
+                    }
+                    // Vind vises alltid som 2-min mean under CAP
+                    else
+                    {
+                        _windMeasurement = WindMeasurement.TwoMinuteMean;
+                    }
                 }
             }
         }

@@ -56,6 +56,15 @@ namespace HMS_Client
             // Vessel Icon
             vesselImage = (VesselImage)Enum.Parse(typeof(VesselImage), config.ReadWithDefault(ConfigKey.VesselImage, VesselImage.Ship.ToString()));
 
+            // Software Version
+            softwareVersion = Constants.SoftwareVersion;
+
+            // Regulatory Standard
+            regulatoryStandard = Constants.RegulatoryStandard;
+
+            // HLL Limits Version
+            hllLimitsVersion = Constants.HLLLimitsVersion;
+
             // Position
             _latitude = new HMSData();
             _longitude = new HMSData();
@@ -384,7 +393,7 @@ namespace HMS_Client
             get
             {
                 if (adminSettingsVM.clientIsMaster)
-                    return "..\\Icons\\outline_verified_user_black_48dp.png";
+                    return "..\\Icons\\shield-crown-outline.png";
                 else
                     return "..\\Icons\\outline_person_black_48dp.png";
             }
@@ -405,6 +414,48 @@ namespace HMS_Client
                 if (value != _softwareVersion)
                 {
                     _softwareVersion = value;
+
+                    OnPropertyChanged();
+                }
+            }
+        }
+
+        /////////////////////////////////////////////////////////////////////////////
+        // Regulatory Standard
+        /////////////////////////////////////////////////////////////////////////////
+        private string _regulatoryStandard { get; set; }
+        public string regulatoryStandard
+        {
+            get
+            {
+                return _regulatoryStandard;
+            }
+            set
+            {
+                if (value != _regulatoryStandard)
+                {
+                    _regulatoryStandard = value;
+
+                    OnPropertyChanged();
+                }
+            }
+        }
+
+        /////////////////////////////////////////////////////////////////////////////
+        // HLL Limit Version
+        /////////////////////////////////////////////////////////////////////////////
+        private string _hllLimitVersion { get; set; }
+        public string hllLimitsVersion
+        {
+            get
+            {
+                return _hllLimitVersion;
+            }
+            set
+            {
+                if (value != _hllLimitVersion)
+                {
+                    _hllLimitVersion = value;
 
                     OnPropertyChanged();
                 }

@@ -5,7 +5,7 @@ using System.Windows.Threading;
 
 namespace HMS_Client
 {
-    public class HelideckStabilityLimitsVM : INotifyPropertyChanged
+    public class OnDeckStabilityLimitsVM : INotifyPropertyChanged
     {
         // Change notification
         public event PropertyChangedEventHandler PropertyChanged;

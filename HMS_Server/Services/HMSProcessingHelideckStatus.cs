@@ -282,7 +282,7 @@ namespace HMS_Server
             }
             else
             {
-                double maxWSI = Constants.MSIMax - (Constants.MSIMax * (hmsOutputData.GetData(ValueType.MSI).data / Constants.WSIMax));
+                double maxWSI = Constants.WSIMax - ((Constants.WSIMax * hmsOutputData.GetData(ValueType.MSI).data) / Constants.MSIMax);
 
                 if (hmsOutputData.GetData(ValueType.WSI).data > maxWSI)
                 {

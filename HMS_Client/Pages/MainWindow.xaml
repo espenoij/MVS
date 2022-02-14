@@ -235,14 +235,14 @@
                                     x:Name="ucHelideckStatus_CAP" />
 
                                 <!--Helideck Stability Limits-->
-                                <uc:HelideckStabilityLimits_CAP
+                                <uc:OnDeckStabilityLimits_CAP
                                     Grid.Column="0"
                                     Grid.Row="1"
                                     Grid.ColumnSpan="2"
                                     x:Name="ucHelideckStabilityLimits_CAP" />
 
                                 <!--Relative Wind Direction Limits-->
-                                <uc:HelideckRelativeWindLimits_CAP
+                                <uc:RelativeWindLimits_CAP
                                     Grid.Column="0"
                                     Grid.Row="1"
                                     Grid.ColumnSpan="2"
@@ -264,11 +264,11 @@
                                     x:Name="ucWindHeadingChange_CAP" />
 
                                 <!--Helideck Motion Limits CAP-->
-                                <uc:HelideckMotionLimits_Touchdown_CAP
+                                <uc:TouchdownLimits_CAP
                                     Grid.Column="0"
                                     Grid.ColumnSpan="2"
                                     Grid.Row="3"
-                                    x:Name="ucHelideckMotionLimits_CAP" />
+                                    x:Name="ucTouchdownLimits_CAP" />
 
                             </Grid>
 
@@ -309,7 +309,7 @@
                     <telerik:RadTabItem.Header>
                         <Image
                             Width="36"
-                            Source="../Icons/outline_show_chart_white_36dp.png" />
+                            Source="../Icons/chart-line.png" />
                     </telerik:RadTabItem.Header>
 
                     <!--Helideck Motion Details-->
@@ -327,7 +327,7 @@
                     <telerik:RadTabItem.Header>
                         <Image
                             Width="36"
-                            Source="../Icons/outline_show_chart_white_36dp.png" />
+                            Source="../Icons/chart-line.png" />
                     </telerik:RadTabItem.Header>
 
                     <!--Helideck Motion Details-->
