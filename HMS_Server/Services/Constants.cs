@@ -291,7 +291,7 @@ class Constants
     public const int LicenseMaxClientsDefault = 0;
 
     // Graph Accuracy
-    public const double GraphCullFrequency20m = 2750; // Dette tallet er i millisekund. 3 sek. Avrundingspunktet mellom 2.5 og 3 sek.
-    public const double GraphCullFrequency30m = 3750;
-    public const double GraphCullFrequency3h = 19750;
+    public const double GraphCullFrequency20m = 3750; // Dette tallet er i millisekund. 4 sek. Avrundingspunktet mellom 3.5 og 4 sek.
+    public const double GraphCullFrequency30m = 5750;
+    public const double GraphCullFrequency3h = 29750;
 }

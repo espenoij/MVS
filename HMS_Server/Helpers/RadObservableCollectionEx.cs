@@ -28,7 +28,7 @@ public class RadObservableCollectionEx<t> : RadObservableCollection<t>
                         continue;
                     }
                 }
-                nh?.Invoke(this, e);
+                nh?.Invoke(this, e); // TODO krasj her 2022.14.02
             }
         }
     }

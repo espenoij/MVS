@@ -15,13 +15,55 @@
             x:Key="BoolToVisConverter" />
 
         <Style
-            x:Key="ticks"
-            TargetType="Rectangle">
-            <Setter
-                Property="Fill"
-                Value="Green" />
+            x:Key="VesselHeadingBackground"
+            TargetType="StackPanel">
+
+            <Style.Triggers>
+
+                <DataTrigger
+                    Binding="{Binding vesselHeadingWarning}"
+                    Value="false">
+                    <Setter
+                        Property="Background"
+                        Value="{StaticResource ColorWhite}" />
+                </DataTrigger>
+
+                <DataTrigger
+                    Binding="{Binding vesselHeadingWarning}"
+                    Value="true">
+                    <Setter
+                        Property="Background"
+                        Value="{StaticResource ColorAmber}" />
+                </DataTrigger>
+
+            </Style.Triggers>
         </Style>
-        
+
+        <Style
+            x:Key="WindDirectionBackground"
+            TargetType="StackPanel">
+
+            <Style.Triggers>
+
+                <DataTrigger
+                    Binding="{Binding windDirectionWarning}"
+                    Value="0">
+                    <Setter
+                        Property="Background"
+                        Value="{StaticResource ColorWhite}" />
+                </DataTrigger>
+
+                <DataTrigger
+                    Binding="{Binding windDirectionWarning}"
+                    Value="1">
+                    <Setter
+                        Property="Background"
+                        Value="{StaticResource ColorAmber}" />
+                </DataTrigger>
+
+            </Style.Triggers>
+        </Style>
+
     </UserControl.Resources>
 
     <Grid>
@@ -247,7 +289,8 @@
                                 MajorStepUnit="Minute"
                                 MajorStep="5"
                                 ShowLabels="False"
-                                PlotMode="OnTicks"                                
+                                PlotMode="OnTicks"     
+                                TickThickness="0"
                                 TickOrigin="{Binding alignmentTime}"
                                 Minimum="{Binding alignmentTimeMin}"
                                 Maximum="{Binding alignmentTimeMax}" />
@@ -299,21 +342,21 @@
 
                         <telerik:RadCartesianChart.Grid>
                             <telerik:CartesianChartGrid
-                                MajorLinesVisibility="XY" />
+                                MajorLinesVisibility="Y" />
                         </telerik:RadCartesianChart.Grid>
 
                         <telerik:RadCartesianChart.Annotations>
                             
                             <telerik:CartesianPlotBandAnnotation
-                                ZIndex="0"
+                                ZIndex="10"
                                 Axis="{Binding ElementName=chartVesselDeltaVertAxis}"
                                 From="10"
                                 To="180"
                                 StrokeThickness="1"
-                                Fill="{StaticResource ColorAmber}" />
+                                Fill="{StaticResource ColorAmber}"/>
 
                             <telerik:CartesianPlotBandAnnotation
-                                ZIndex="0"
+                                ZIndex="10"
                                 Axis="{Binding ElementName=chartVesselDeltaVertAxis}"
                                 From="-10"
                                 To="-180"
@@ -339,6 +382,11 @@
                             <RowDefinition
                                 Height="2*" />
                         </Grid.RowDefinitions>
+
+                        <StackPanel
+                            Grid.Row="1"
+                            Grid.RowSpan="2"
+                            Style="{StaticResource VesselHeadingBackground}"/>
 
                         <Viewbox
                             Grid.Row="1"
@@ -403,7 +451,7 @@
                             <telerik:DateTimeContinuousAxis
                                 MajorStepUnit="Minute"
                                 MajorStep="5"
-                                MajorTickStyle="{StaticResource ticks}"
+                                TickThickness="0"
                                 ShowLabels="False"
                                 PlotMode="OnTicks"
                                 TickOrigin="{Binding alignmentTime}"
@@ -458,7 +506,7 @@
 
                         <telerik:RadCartesianChart.Grid>
                             <telerik:CartesianChartGrid
-                                MajorLinesVisibility="XY" />
+                                MajorLinesVisibility="Y" />
                         </telerik:RadCartesianChart.Grid>
 
                         <telerik:RadCartesianChart.Annotations>
@@ -468,14 +516,16 @@
                                 From="30"
                                 To="180"
                                 StrokeThickness="1"
-                                Fill="{StaticResource ColorAmberTranslucent}" />
+                                Fill="{StaticResource ColorAmber}"
+                                ZIndex="10"/>
 
                             <telerik:CartesianPlotBandAnnotation
                                 Axis="{Binding ElementName=chartWindDeltaVertAxis}"
                                 From="-30"
                                 To="-180"
                                 StrokeThickness="1"
-                                Fill="{StaticResource ColorAmberTranslucent}" />
+                                Fill="{StaticResource ColorAmber}"
+                                ZIndex="10" />
 
                         </telerik:RadCartesianChart.Annotations>
 
@@ -497,6 +547,11 @@
                             <RowDefinition
                                 Height="2*" />
                         </Grid.RowDefinitions>
+
+                        <StackPanel
+                            Grid.Row="1"
+                            Grid.RowSpan="2"
+                            Style="{StaticResource WindDirectionBackground}"/>
 
                         <Viewbox
                             Grid.Row="1"

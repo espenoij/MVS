@@ -44,6 +44,8 @@ namespace HMS_Client
                     OnPropertyChanged(nameof(vesselHeadingDeltaString));
                     OnPropertyChanged(nameof(vesselHeadingAxisMax));
                     OnPropertyChanged(nameof(vesselHeadingAxisMin));
+                    OnPropertyChanged(nameof(vesselHeadingWarning));
+                    OnPropertyChanged(nameof(windDirectionWarning));
                 }
                 
                 if (sensorStatus.TimeoutCheck(windDirectionDelta))
@@ -166,6 +168,8 @@ namespace HMS_Client
                     OnPropertyChanged(nameof(vesselHeadingDeltaString));
                     OnPropertyChanged(nameof(vesselHeadingAxisMax));
                     OnPropertyChanged(nameof(vesselHeadingAxisMin));
+                    OnPropertyChanged(nameof(vesselHeadingWarning));
+                    OnPropertyChanged(nameof(windDirectionWarning));
 
                     _vesselHeadingDelta.Set(value);
                 }
@@ -254,14 +258,7 @@ namespace HMS_Client
         {
             get
             {
-                int axisMax;
-
-                axisMax = (int)vesselHdgDeltaAbsMax - ((int)vesselHdgDeltaAbsMax % 5) + 5;
-
-                if (axisMax < 10)
-                    axisMax = 10;
-
-                return (double)axisMax;
+                return 10 + ((int)vesselHdgDeltaAbsMax / 10) * 10;
             }
         }
 
@@ -269,14 +266,7 @@ namespace HMS_Client
         {
             get
             {
-                int axisMin;
-
-                axisMin = (int)vesselHdgDeltaAbsMax - ((int)vesselHdgDeltaAbsMax % 5) + 5;
-
-                if (axisMin < 10)
-                    axisMin = 10;
-
-                return (double)axisMin * -1;
+                return -10 - ((int)vesselHdgDeltaAbsMax / 10) * 10;
             }
         }
 
@@ -284,14 +274,7 @@ namespace HMS_Client
         {
             get
             {
-                int axisMax;
-
-                axisMax = (int)windDirDeltaAbsMax - ((int)windDirDeltaAbsMax % 5) + 5;
-
-                if (axisMax < 10)
-                    axisMax = 10;
-
-                return (double)axisMax;
+                return 10 + ((int)windDirDeltaAbsMax / 10) * 10;
             }
         }
 
@@ -299,14 +282,7 @@ namespace HMS_Client
         {
             get
             {
-                int axisMin;
-
-                axisMin = (int)windDirDeltaAbsMax - ((int)windDirDeltaAbsMax % 5) + 5;
-
-                if (axisMin < 10)
-                    axisMin = 10;
-
-                return (double)axisMin * -1;
+                return -10 - ((int)windDirDeltaAbsMax / 10) * 10;
             }
         }
 
@@ -394,6 +370,34 @@ namespace HMS_Client
                 {
                     return string.Format("30-minute RWD Trend (--:-- - --:-- UTC)");
                 }
+            }
+        }
+
+        /////////////////////////////////////////////////////////////////////////////
+        // Vessel Heading background warning
+        /////////////////////////////////////////////////////////////////////////////
+        public bool vesselHeadingWarning
+        {
+            get
+            {
+                if (Math.Abs(vesselHeadingDelta.data) > 10)
+                    return true;
+                else
+                    return false;
+            }
+        }
+
+        /////////////////////////////////////////////////////////////////////////////
+        // Wind Direction background warning
+        /////////////////////////////////////////////////////////////////////////////
+        public int windDirectionWarning
+        {
+            get
+            {
+                if (Math.Abs(_windDirectionDelta.data) > 30)
+                    return 1;
+                else
+                    return 0;
             }
         }
 
