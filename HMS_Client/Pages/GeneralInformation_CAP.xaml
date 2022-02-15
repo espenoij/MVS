@@ -35,6 +35,8 @@
                         Height="*" />
                     <RowDefinition
                         Height="*" />
+                    <RowDefinition
+                        Height="*" />
                 </Grid.RowDefinitions>
 
                 <!--Fartøynavn-->

@@ -83,7 +83,7 @@ namespace HMS_Server
 
             // Helicopter WSI Limits: Helicopter Type
             foreach (HelicopterType value in Enum.GetValues(typeof(HelicopterType)))
-                cboHelicopterWSILimitType.Items.Add(value.ToString());
+                cboHelicopterWSILimitType.Items.Add(value.GetDescription());
 
             cboHelicopterWSILimitType.SelectedIndex = 0;
             cboHelicopterWSILimitType.Text = cboHelicopterWSILimitType.Items[0].ToString();
@@ -161,7 +161,6 @@ namespace HMS_Server
                 cboHelideckCategory.IsEnabled = false;
                 lbHelideckCategory.IsEnabled = false;
 
-                // Helideck Report
                 lbNDBInstalled_NOROG.IsEnabled = false;
                 cbNDBInstalled_NOROG.IsEnabled = false;
 

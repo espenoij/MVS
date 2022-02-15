@@ -1,0 +1,138 @@
+﻿<UserControl
+    x:Class="HMS_Client.SensorStatusDisplay_CAP"
+    xmlns="http://schemas.microsoft.com/winfx/2006/xaml/presentation"
+    xmlns:x="http://schemas.microsoft.com/winfx/2006/xaml"
+    xmlns:mc="http://schemas.openxmlformats.org/markup-compatibility/2006"
+    xmlns:d="http://schemas.microsoft.com/expression/blend/2008"
+    xmlns:telerik="http://schemas.telerik.com/2008/xaml/presentation"
+    xmlns:sys="clr-namespace:System;assembly=mscorlib"
+    mc:Ignorable="d"
+    d:DesignHeight="600"
+    d:DesignWidth="300">
+
+    <UserControl.Resources>
+
+        <sys:Double
+            x:Key="fontSize">12</sys:Double>
+
+        <Style
+            x:Key="SensorStatusIcon"
+            TargetType="Image">
+
+            <Style.Triggers>
+
+                <DataTrigger
+                    Binding="{Binding statusString}"
+                    Value="OK">
+                    <Setter
+                        Property="Source"
+                        Value="..\Icons\outline_check_circle_black_48dp.png" />
+                </DataTrigger>
+
+                <DataTrigger
+                    Binding="{Binding statusString}"
+                    Value="TIMEOUT_ERROR">
+                    <Setter
+                        Property="Source"
+                        Value="..\Icons\outline_info_black_48dp.png" />
+                </DataTrigger>
+
+            </Style.Triggers>
+        </Style>
+
+        <Style
+            x:Key="SensorStatusBackground"
+            TargetType="StackPanel">
+
+            <Style.Triggers>
+
+                <DataTrigger
+                    Binding="{Binding statusBackgroundColor}"
+                    Value="BACKGROUND_SEPARATOR">
+                    <Setter
+                        Property="Background"
+                        Value="{StaticResource ColorBackgroundSeparator}" />
+                </DataTrigger>
+
+                <DataTrigger
+                    Binding="{Binding statusBackgroundColor}"
+                    Value="BLANK">
+                    <Setter
+                        Property="Background"
+                        Value="Transparent" />
+                </DataTrigger>
+
+                <DataTrigger
+                    Binding="{Binding statusBackgroundColor}"
+                    Value="RED">
+                    <Setter
+                        Property="Background"
+                        Value="{StaticResource ColorRed}" />
+                </DataTrigger>
+
+            </Style.Triggers>
+        </Style>
+
+    </UserControl.Resources>
+
+    <Grid>
+
+        <telerik:GroupBox
+            Header="SENSOR STATUS"
+            Margin="8">
+
+            <ItemsControl
+                x:Name="lbSensorStatus"
+                Margin="8">
+
+                <ItemsControl.ItemTemplate>
+                    
+                    <DataTemplate>
+
+                        <StackPanel                            
+                            Orientation="Horizontal"
+                            VerticalAlignment="Center"
+                            Visibility="{Binding Path=sensorStatusVisibility}"
+                            Style="{StaticResource SensorStatusBackground}">
+
+                            <Viewbox
+                                StretchDirection="Both"
+                                Stretch="Uniform"
+                                HorizontalAlignment="Left">
+
+                                <Image
+                                    Margin="8"
+                                    Style="{StaticResource SensorStatusIcon}" />
+
+                            </Viewbox>
+
+                            <Viewbox
+                                StretchDirection="Both"
+                                Stretch="Uniform"
+                                HorizontalAlignment="Left">
+
+                                <telerik:Label
+                                    Content="{Binding Path=name}" />
+
+                            </Viewbox>
+
+                        </StackPanel>
+
+                    </DataTemplate>
+                    
+                </ItemsControl.ItemTemplate>
+
+                <ItemsControl.ItemsPanel>
+                    <ItemsPanelTemplate>
+                        <UniformGrid
+                            Columns="1" />
+                    </ItemsPanelTemplate>
+                </ItemsControl.ItemsPanel>
+
+            </ItemsControl>
+
+        </telerik:GroupBox>
+
+    </Grid>
+
+</UserControl>

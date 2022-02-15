@@ -51,9 +51,9 @@ namespace HMS_Client
         private HelideckMotionTrendVM helideckMotionTrendVM = new HelideckMotionTrendVM();
         private HelideckStabilityLimitsVM helideckStabilityLimitsVM = new HelideckStabilityLimitsVM();
         private HelideckRelativeWindLimitsVM helideckRelativeWindLimitsVM = new HelideckRelativeWindLimitsVM();
-        private WindHeadingTrendVM helideckWindHeadingTrendVM = new WindHeadingTrendVM();
+        private WindHeadingChangeVM helideckWindHeadingTrendVM = new WindHeadingChangeVM();
         private HelideckStatusVM helideckStatusVM = new HelideckStatusVM();
-        private HelideckStatusTrendVM helideckStatusTrendVM = new HelideckStatusTrendVM();
+        private LandingStatusTrendVM helideckStatusTrendVM = new LandingStatusTrendVM();
         private MeteorologicalVM meteorologicalVM = new MeteorologicalVM();
         private SensorStatusDisplayVM sensorStatusVM = new SensorStatusDisplayVM();
         private WindHeadingVM windHeadingVM = new WindHeadingVM();
@@ -109,13 +109,13 @@ namespace HMS_Client
             helideckMotionLimitsVM.Init(config, sensorStatus);
             helideckMotionTrendVM.Init(adminSettingsVM, config, sensorStatus);
             helideckStabilityLimitsVM.Init(config, sensorStatus);
-            helideckRelativeWindLimitsVM.Init(config, sensorStatus);
+            helideckRelativeWindLimitsVM.Init(config, sensorStatus, userInputsVM);
             helideckWindHeadingTrendVM.Init(config, sensorStatus, userInputsVM);
             helideckStatusVM.Init(config, sensorStatus, userInputsVM);
             helideckStatusTrendVM.Init(helideckStatusVM, helideckStabilityLimitsVM, config);
             meteorologicalVM.Init(config, sensorStatus);
-            sensorStatusVM.Init(sensorStatus, config);
-            windHeadingVM.Init(config, sensorStatus, userInputsVM, adminSettingsVM);
+            sensorStatusVM.Init(sensorStatus, config, adminSettingsVM);
+            windHeadingVM.Init(helideckStatusVM, config, sensorStatus, userInputsVM, adminSettingsVM);
 
             // XAML
             InitializeComponent();
@@ -154,13 +154,6 @@ namespace HMS_Client
             ///
             if (regulationStandard == RegulationStandard.NOROG)
             {
-                // Justere grid litt slik at det ser bra ut
-                // Grid i XAML er tilpasset CAP layout
-                GridLengthConverter gridLengthConverter = new GridLengthConverter();
-                col1RowDef1.Height = (GridLength)gridLengthConverter.ConvertFrom("15*");
-                col1RowDef2.Height = (GridLength)gridLengthConverter.ConvertFrom("12*");
-                col1RowDef3.Height = (GridLength)gridLengthConverter.ConvertFrom("9*");
-
                 // General Information
                 capDisplayMode.Visibility = Visibility.Collapsed;
                 ucGeneralInformation_NOROG.Visibility = Visibility.Visible;
@@ -194,8 +187,9 @@ namespace HMS_Client
                 // Relative Wind Direction Limits
                 ucRelativeWindDirectionLimits_CAP.Visibility = Visibility.Collapsed;
 
-                // Helideck Wind & Heading Trend
-                ucHelideckWindHeadingTrend_CAP.Visibility = Visibility.Collapsed;
+                // Wind & Heading Change
+                ucWindHeadingChange_CAP.Visibility = Visibility.Collapsed;
+
                 // Helideck Status Trend
                 ucHelideckStatusTrend_CAP.Visibility = Visibility.Collapsed;
 
@@ -208,16 +202,13 @@ namespace HMS_Client
                 tabHelideckReport_NOROG.Visibility = Visibility.Visible;
                 tabHelideckReport_CAP.Visibility = Visibility.Collapsed;
                 ucHelideckReport_NOROG.Init(helideckReportVM, config, adminSettingsVM);
+
+                // Sensor Status Display
+                ucSensorStatus_NOROG.Init(sensorStatusVM);
             }
             else
             if (regulationStandard == RegulationStandard.CAP)
             {
-                // Justere grid litt slik at det ser bra ut
-                GridLengthConverter gridLengthConverter = new GridLengthConverter();
-                col1RowDef1.Height = (GridLength)gridLengthConverter.ConvertFrom("14*");
-                col1RowDef2.Height = (GridLength)gridLengthConverter.ConvertFrom("13*");
-                col1RowDef3.Height = (GridLength)gridLengthConverter.ConvertFrom("9*");
-
                 // General Information
                 capDisplayMode.Visibility = Visibility.Visible;
                 ucGeneralInformation_NOROG.Visibility = Visibility.Collapsed;
@@ -253,8 +244,8 @@ namespace HMS_Client
                 ucRelativeWindDirectionLimits_CAP.Init(helideckRelativeWindLimitsVM);
 
                 // Helideck Wind & Heading Trend
-                ucHelideckWindHeadingTrend_CAP.Visibility = Visibility.Visible;
-                ucHelideckWindHeadingTrend_CAP.Init(helideckWindHeadingTrendVM);
+                ucWindHeadingChange_CAP.Visibility = Visibility.Visible;
+                ucWindHeadingChange_CAP.Init(helideckWindHeadingTrendVM);
 
                 // Helideck Status Trend
                 ucHelideckStatusTrend_CAP.Visibility = Visibility.Visible;
@@ -269,10 +260,10 @@ namespace HMS_Client
                 tabHelideckReport_CAP.Visibility = Visibility.Visible;
                 tabHelideckReport_NOROG.Visibility = Visibility.Collapsed;
                 ucHelideckReport_CAP.Init(helideckReportVM, config, adminSettingsVM);
-            }
 
-            // Sensor Status Display
-            ucSensorStatus.Init(sensorStatusVM);
+                // Sensor Status Display
+                ucSensorStatus_CAP.Init(sensorStatusVM);
+            }
 
             // Wind & Heading
             ucWindHeading.Init(windHeadingVM, config);

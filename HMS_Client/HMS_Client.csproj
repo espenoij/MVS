@@ -85,9 +85,6 @@
     <Reference Include="K4os.Hash.xxHash, Version=1.0.6.0, Culture=neutral, PublicKeyToken=32cd54395057cec3, processorArchitecture=MSIL">
       <HintPath>..\packages\K4os.Hash.xxHash.1.0.6\lib\net46\K4os.Hash.xxHash.dll</HintPath>
     </Reference>
-    <Reference Include="LicenseSpring, Version=7.6.1.0, Culture=neutral, PublicKeyToken=2d5c13cc31edbaaf, processorArchitecture=MSIL">
-      <HintPath>..\packages\LicenseSpring.NetSDK.7.6.1\lib\net472\LicenseSpring.dll</HintPath>
-    </Reference>
     <Reference Include="Microsoft.Bcl.AsyncInterfaces, Version=6.0.0.0, Culture=neutral, PublicKeyToken=cc7b13ffcd2ddd51, processorArchitecture=MSIL">
       <HintPath>..\packages\Microsoft.Bcl.AsyncInterfaces.6.0.0\lib\net461\Microsoft.Bcl.AsyncInterfaces.dll</HintPath>
     </Reference>
@@ -251,6 +248,9 @@
     <Compile Include="Pages\HelideckMotionHistory_NOROG.xaml.cs">
       <DependentUpon>HelideckMotionHistory_NOROG.xaml</DependentUpon>
     </Compile>
+    <Compile Include="Pages\SensorStatusDisplay_CAP.xaml.cs">
+      <DependentUpon>SensorStatusDisplay_CAP.xaml</DependentUpon>
+    </Compile>
     <Compile Include="Services\AdminMode.cs" />
     <Compile Include="Config\ConfigKey.cs" />
     <Compile Include="Dialogs\DialogHandler.cs" />
@@ -321,15 +321,15 @@
     <Compile Include="Pages\WindHeadingReadouts_CAP.xaml.cs">
       <DependentUpon>WindHeadingReadouts_CAP.xaml</DependentUpon>
     </Compile>
-    <Compile Include="Pages\WindHeadingTrend_CAP.xaml.cs">
-      <DependentUpon>WindHeadingTrend_CAP.xaml</DependentUpon>
+    <Compile Include="Pages\WindHeadingChange_CAP.xaml.cs">
+      <DependentUpon>WindHeadingChange_CAP.xaml</DependentUpon>
     </Compile>
-    <Compile Include="ViewModels\WindHeadingTrendVM.cs" />
+    <Compile Include="ViewModels\WindHeadingChangeVM.cs" />
     <Compile Include="Pages\HelideckRelativeWindLimits_CAP.xaml.cs">
       <DependentUpon>HelideckRelativeWindLimits_CAP.xaml</DependentUpon>
     </Compile>
     <Compile Include="ViewModels\HelideckRelativeWindLimitsVM.cs" />
-    <Compile Include="ViewModels\HelideckStatusTrendVM.cs" />
+    <Compile Include="ViewModels\LandingStatusTrendVM.cs" />
     <Compile Include="Pages\GeneralInformation_CAP.xaml.cs">
       <DependentUpon>GeneralInformation_CAP.xaml</DependentUpon>
     </Compile>
@@ -343,8 +343,8 @@
     <Compile Include="Pages\HelideckStatus_CAP.xaml.cs">
       <DependentUpon>HelideckStatus_CAP.xaml</DependentUpon>
     </Compile>
-    <Compile Include="Pages\HelideckStatusTrend_CAP.xaml.cs">
-      <DependentUpon>HelideckStatusTrend_CAP.xaml</DependentUpon>
+    <Compile Include="Pages\LandingStatusTrend_CAP.xaml.cs">
+      <DependentUpon>LandingStatusTrend_CAP.xaml</DependentUpon>
     </Compile>
     <Compile Include="Config\HelicopterWSILimitConfig.cs" />
     <Compile Include="Config\HelicopterWSILimitConfigCollection.cs" />
@@ -388,8 +388,8 @@
       <DependentUpon>Meteorological.xaml</DependentUpon>
     </Compile>
     <Compile Include="ViewModels\MeteorologicalVM.cs" />
-    <Compile Include="Pages\SensorStatusDisplay.xaml.cs">
-      <DependentUpon>SensorStatusDisplay.xaml</DependentUpon>
+    <Compile Include="Pages\SensorStatusDisplay_NOROG.xaml.cs">
+      <DependentUpon>SensorStatusDisplay_NOROG.xaml</DependentUpon>
     </Compile>
     <Compile Include="ViewModels\SensorStatusDisplayVM.cs" />
     <Compile Include="Pages\UserInputs_NOROG.xaml.cs">
@@ -466,6 +466,10 @@
       <SubType>Designer</SubType>
       <Generator>MSBuild:Compile</Generator>
     </Page>
+    <Page Include="Pages\SensorStatusDisplay_CAP.xaml">
+      <Generator>MSBuild:Compile</Generator>
+      <SubType>Designer</SubType>
+    </Page>
     <Page Include="Pages\WindHeadingReadouts_NOROG.xaml">
       <Generator>MSBuild:Compile</Generator>
       <SubType>Designer</SubType>
@@ -474,7 +478,7 @@
       <SubType>Designer</SubType>
       <Generator>MSBuild:Compile</Generator>
     </Page>
-    <Page Include="Pages\WindHeadingTrend_CAP.xaml">
+    <Page Include="Pages\WindHeadingChange_CAP.xaml">
       <Generator>MSBuild:Compile</Generator>
       <SubType>Designer</SubType>
     </Page>
@@ -490,7 +494,7 @@
       <Generator>MSBuild:Compile</Generator>
       <SubType>Designer</SubType>
     </Page>
-    <Page Include="Pages\HelideckStatusTrend_CAP.xaml">
+    <Page Include="Pages\LandingStatusTrend_CAP.xaml">
       <Generator>MSBuild:Compile</Generator>
       <SubType>Designer</SubType>
     </Page>
@@ -542,7 +546,7 @@
       <SubType>Designer</SubType>
       <Generator>MSBuild:Compile</Generator>
     </Page>
-    <Page Include="Pages\SensorStatusDisplay.xaml">
+    <Page Include="Pages\SensorStatusDisplay_NOROG.xaml">
       <SubType>Designer</SubType>
       <Generator>MSBuild:Compile</Generator>
     </Page>

@@ -23,6 +23,8 @@ namespace HMS_Server
 
         private HMSData vesselHeading = new HMSData();
         private HMSData vesselSpeed = new HMSData();
+        private HMSData vesselCOG = new HMSData();
+        private HMSData vesselSOG = new HMSData();
 
         private HMSData helideckHeading = new HMSData();
 
@@ -70,6 +72,8 @@ namespace HMS_Server
 
             hmsOutputDataList.Add(vesselHeading);
             hmsOutputDataList.Add(vesselSpeed);
+            hmsOutputDataList.Add(vesselCOG);
+            hmsOutputDataList.Add(vesselSOG);
 
             hmsOutputDataList.Add(helideckHeading);
 
@@ -167,6 +171,12 @@ namespace HMS_Server
 
             vesselSpeed.InitProcessing(errorHandler, ErrorMessageCategory.AdminUser);
             vesselSpeed.AddProcessing(CalculationType.RoundingDecimals, 1);
+
+            vesselCOG.InitProcessing(errorHandler, ErrorMessageCategory.AdminUser);
+            vesselCOG.AddProcessing(CalculationType.RoundingDecimals, 1);
+
+            vesselSOG.InitProcessing(errorHandler, ErrorMessageCategory.AdminUser);
+            vesselSOG.AddProcessing(CalculationType.RoundingDecimals, 1);
 
             relativeWindDir.id = (int)ValueType.RelativeWindDir;
             relativeWindDir.name = "Relative Wind Direction (CAP)";
@@ -286,6 +296,12 @@ namespace HMS_Server
             vesselSpeed.Set(hmsInputDataList.GetData(ValueType.VesselSpeed)); // Set for å overføre grunnleggende data
             vesselSpeed.DoProcessing(hmsInputDataList.GetData(ValueType.VesselSpeed)); // DoProcessing for å avrunde til en desimal
 
+            vesselCOG.Set(hmsInputDataList.GetData(ValueType.VesselCOG));
+            vesselCOG.DoProcessing(hmsInputDataList.GetData(ValueType.VesselCOG));
+
+            vesselSOG.Set(hmsInputDataList.GetData(ValueType.VesselSOG));
+            vesselSOG.DoProcessing(hmsInputDataList.GetData(ValueType.VesselSOG));
+
             double heading = hmsInputDataList.GetData(ValueType.VesselHeading).data + adminSettingsVM.helideckHeadingOffset;
             if (heading > Constants.HeadingMax)
                 heading -= Constants.HeadingMax;
@@ -404,6 +420,8 @@ namespace HMS_Server
             // Strengt tatt ikke nødvendig da disse kalkulasjonen ikke bruker lagrede lister
             vesselHeading.ResetDataCalculations();
             vesselSpeed.ResetDataCalculations();
+            vesselCOG.ResetDataCalculations();
+            vesselSOG.ResetDataCalculations();
 
             if (adminSettingsVM.dataVerificationEnabled)
             {

@@ -12,14 +12,14 @@ namespace HMS_Client
         public RadObservableCollectionEx<Point> blueArea = new RadObservableCollectionEx<Point>();
 
         private HelideckStabilityLimitsVM viewModel;
-        private HelideckStatusTrendVM helideckStatusTrendVM;
+        private LandingStatusTrendVM helideckStatusTrendVM;
 
         public HelideckStabilityLimits_CAP()
         {
             InitializeComponent();
         }
 
-        public void Init(HelideckStabilityLimitsVM viewModel, HelideckStatusTrendVM helideckStatusTrendVM)
+        public void Init(HelideckStabilityLimitsVM viewModel, LandingStatusTrendVM helideckStatusTrendVM)
         {
             this.viewModel = viewModel;
             this.helideckStatusTrendVM = helideckStatusTrendVM;

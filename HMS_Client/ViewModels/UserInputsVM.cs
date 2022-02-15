@@ -21,7 +21,7 @@ namespace HMS_Client
         private MainWindowVM mainWindowVM;
         private HelideckRelativeWindLimitsVM relativeWindDirectionLimitsVM;
         private HelideckStabilityLimitsVM helideckStabilityLimitsVM;
-        private WindHeadingTrendVM helideckWindHeadingTrendVM;
+        private WindHeadingChangeVM helideckWindHeadingTrendVM;
         private HelideckRelativeWindLimitsVM helideckRelativeWindLimitsVM;
         private WindHeadingVM windHeadingVM;
 
@@ -38,7 +38,7 @@ namespace HMS_Client
             MainWindowVM mainWindowVM,
             HelideckRelativeWindLimitsVM relativeWindDirectionLimitsVM,
             HelideckStabilityLimitsVM helideckStabilityLimitsVM,
-            WindHeadingTrendVM helideckWindHeadingTrendVM,
+            WindHeadingChangeVM helideckWindHeadingTrendVM,
             HelideckRelativeWindLimitsVM helideckRelativeWindLimitsVM,
             WindHeadingVM windHeadingVM,
             MainWindow.ResetWindDisplayCallback resetWindDisplayCallback,
@@ -120,8 +120,7 @@ namespace HMS_Client
 
                 OnPropertyChanged(nameof(displayModeVisibilityPreLanding));
                 OnPropertyChanged(nameof(displayModeVisibilityOnDeck));
-                OnPropertyChanged(nameof(helicopterHeadingInfoString1));
-                OnPropertyChanged(nameof(helicopterHeadingInfoString2));
+                OnPropertyChanged(nameof(helicopterHeadingInfoString));
             }
         }
 
@@ -335,8 +334,7 @@ namespace HMS_Client
 
                     OnPropertyChanged(nameof(displayModeVisibilityPreLanding));
                     OnPropertyChanged(nameof(displayModeVisibilityOnDeck));
-                    OnPropertyChanged(nameof(helicopterHeadingInfoString1));
-                    OnPropertyChanged(nameof(helicopterHeadingInfoString2));
+                    OnPropertyChanged(nameof(helicopterHeadingInfoString));
 
                     SendUserInputsToServer();
                 }
@@ -397,8 +395,7 @@ namespace HMS_Client
                     onDeckHelicopterRelativeHeading = value - windHeadingVM.vesselHeading.data;
 
                     onDeckHelicopterHeadingIsCorrected = true;
-                    OnPropertyChanged(nameof(helicopterHeadingInfoString1));
-                    OnPropertyChanged(nameof(helicopterHeadingInfoString2));
+                    OnPropertyChanged(nameof(helicopterHeadingInfoString));
 
                     SendUserInputsToServer();
                 }
@@ -440,24 +437,18 @@ namespace HMS_Client
         /////////////////////////////////////////////////////////////////////////////
         // Helicopter Heading / Corrected Heading text
         /////////////////////////////////////////////////////////////////////////////
-        public string helicopterHeadingInfoString1
+        public string helicopterHeadingInfoString
         {
             get
             {
                 if (!onDeckHelicopterHeadingIsCorrected)
-                    return "On-Deck Helicopter Heading";
+                    return string.Format("On-Deck Helicopter Heading {0}° M at {1} UTC",
+                                onDeckHelicopterHeading.ToString("000"),
+                                onDeckTime.ToShortTimeString());
                 else
-                    return "Corrected Helicopter Heading";
-            }
-        }
-
-        public string helicopterHeadingInfoString2
-        {
-            get
-            {
-                return string.Format("{0}° M at {1} UTC",
-                    onDeckHelicopterHeading.ToString("000"),
-                    onDeckTime.ToShortTimeString());
+                return string.Format("Corrected Helicopter Heading {0}° M at {1} UTC",
+                            onDeckHelicopterHeading.ToString("000"),
+                            onDeckTime.ToShortTimeString());
             }
         }
 

@@ -17,14 +17,14 @@ namespace HMS_Client
         // User Inputs View Model
         private UserInputsVM userInputsVM;
         private HelideckStabilityLimitsVM helideckStabilityLimitsVM;
-        private HelideckStatusTrendVM helideckStatusTrendVM;
+        private LandingStatusTrendVM helideckStatusTrendVM;
 
         public UserInputs_CAP()
         {
             InitializeComponent();
         }
 
-        public void Init(UserInputsVM userInputsVM, Config config, AdminSettingsVM adminSettingsVM, HelideckStabilityLimitsVM helideckStabilityLimitsVM, HelideckStatusTrendVM helideckStatusTrendVM)
+        public void Init(UserInputsVM userInputsVM, Config config, AdminSettingsVM adminSettingsVM, HelideckStabilityLimitsVM helideckStabilityLimitsVM, LandingStatusTrendVM helideckStatusTrendVM)
         {
             DataContext = userInputsVM;
 
@@ -35,7 +35,7 @@ namespace HMS_Client
 
             // Helicopter Type
             foreach (HelicopterType value in Enum.GetValues(typeof(HelicopterType)))
-                cboHelicopterType.Items.Add(value.ToString());
+                cboHelicopterType.Items.Add(value.GetDescription());
             cboHelicopterType.SelectedIndex = (int)userInputsVM.helicopterType;
 
             // Helideck Category

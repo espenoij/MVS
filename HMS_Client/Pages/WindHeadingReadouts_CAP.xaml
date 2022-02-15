@@ -25,8 +25,6 @@
                 Height="*" />
             <RowDefinition
                 Height="*" />
-            <RowDefinition
-                Height="*" />
         </Grid.RowDefinitions>
 
         <!--VESSEL HEADING-->
@@ -50,13 +48,13 @@
                     Width="7*" />
             </Grid.ColumnDefinitions>
 
-            <Separator
+            <!--<Separator
                 Grid.Row="0"
                 Grid.Column="0"
                 Grid.RowSpan="2"
                 Background="{StaticResource ColorVessel}"
                 Width="8"
-                Margin="0,8" />
+                Margin="0,8" />-->
 
             <Viewbox
                 Grid.Row="0"
@@ -106,9 +104,86 @@
 
         </Grid>
 
-        <!--VESSEL SPEED-->
+        <!--VESSEL COG-->
         <Grid
             Grid.Row="1"
+            MinWidth="140">
+
+            <Grid.RowDefinitions>
+                <RowDefinition
+                    Height="3*" />
+                <RowDefinition
+                    Height="4*" />
+            </Grid.RowDefinitions>
+
+            <Grid.ColumnDefinitions>
+                <ColumnDefinition
+                    Width="10" />
+                <ColumnDefinition
+                    Width="12*" />
+                <ColumnDefinition
+                    Width="7*" />
+            </Grid.ColumnDefinitions>
+
+            <!--<Separator
+                Grid.Row="0"
+                Grid.Column="0"
+                Grid.RowSpan="2"
+                Background="{StaticResource ColorVessel}"
+                Width="8"
+                Margin="0,8" />-->
+
+            <Viewbox
+                Grid.Row="0"
+                Grid.Column="1"
+                Grid.ColumnSpan="2"
+                StretchDirection="Both"
+                Stretch="Uniform"
+                HorizontalAlignment="Center">
+
+                <telerik:Label
+                    Content="Vessel COG"
+                    Grid.ColumnSpan="2"
+                    FontSize="{StaticResource fontSizeLabelSmall}" />
+
+            </Viewbox>
+
+            <Separator
+                Grid.Row="0"
+                Grid.Column="1"
+                Grid.ColumnSpan="2"
+                Height="1"
+                VerticalAlignment="Bottom" />
+
+            <Viewbox
+                Grid.Row="1"
+                Grid.Column="1"
+                StretchDirection="Both"
+                Stretch="Uniform">
+
+                <telerik:Label
+                    Content="{Binding Path=vesselCOGString}"
+                    FontSize="{StaticResource fontSizeDataLarge}" />
+
+            </Viewbox>
+
+            <Viewbox
+                Grid.Row="1"
+                Grid.Column="2"
+                StretchDirection="Both"
+                Stretch="Uniform">
+
+                <telerik:Label
+                    Content="M"
+                    FontSize="{StaticResource fontSizeUnits}" />
+
+            </Viewbox>
+
+        </Grid>
+        
+        <!--VESSEL SPEED-->
+        <Grid
+            Grid.Row="2"
             MinWidth="140">
 
             <Grid.RowDefinitions>
@@ -127,13 +202,13 @@
                     Width="7*" />
             </Grid.ColumnDefinitions>
 
-            <Separator
+            <!--<Separator
                 Grid.Row="0"
                 Grid.Column="0"
                 Grid.RowSpan="2"
                 Background="{StaticResource ColorVessel}"
                 Width="8"
-                Margin="0,8" />
+                Margin="0,8" />-->
 
             <Viewbox
                 Grid.Row="0"
@@ -182,83 +257,7 @@
 
         </Grid>
 
-        <!--HELIDECK HEADING-->
-        <Grid
-            Grid.Row="2"
-            MinWidth="140">
-
-            <Grid.RowDefinitions>
-                <RowDefinition
-                    Height="3*" />
-                <RowDefinition
-                    Height="4*" />
-            </Grid.RowDefinitions>
-
-            <Grid.ColumnDefinitions>
-                <ColumnDefinition
-                    Width="10" />
-                <ColumnDefinition
-                    Width="12*" />
-                <ColumnDefinition
-                    Width="7*" />
-            </Grid.ColumnDefinitions>
-
-            <Separator
-                Grid.Row="0"
-                Grid.Column="0"
-                Grid.RowSpan="2"
-                Background="{StaticResource ColorGreen}"
-                Width="8"
-                Margin="0,8" />
-
-            <Viewbox
-                Grid.Row="0"
-                Grid.Column="1"
-                Grid.ColumnSpan="2"
-                StretchDirection="Both"
-                Stretch="Uniform"
-                HorizontalAlignment="Center">
-
-                <telerik:Label
-                    Content="Helideck Heading"
-                    FontSize="{StaticResource fontSizeLabelSmall}" />
-
-            </Viewbox>
-
-            <Separator
-                Grid.Row="0"
-                Grid.Column="1"
-                Grid.ColumnSpan="2"
-                Height="1"
-                VerticalAlignment="Bottom" />
-
-            <Viewbox
-                Grid.Row="1"
-                Grid.Column="1"
-                StretchDirection="Both"
-                Stretch="Uniform">
-
-                <telerik:Label
-                    Content="{Binding Path=helideckHeadingString}"
-                    FontSize="{StaticResource fontSizeDataLarge}" />
-
-            </Viewbox>
-
-            <Viewbox
-                Grid.Row="1"
-                Grid.Column="2"
-                StretchDirection="Both"
-                Stretch="Uniform">
-
-                <telerik:Label
-                    Content="M"
-                    FontSize="{StaticResource fontSizeUnits}" />
-
-            </Viewbox>
-
-        </Grid>
-
-        <!--HELICOPTER HEADING-->
+        <!--WIND DIRECTION-->
         <Grid
             Grid.Row="3"
             MinWidth="140">
@@ -279,89 +278,13 @@
                     Width="7*" />
             </Grid.ColumnDefinitions>
 
-            <Separator
-                Grid.Row="0"
-                Grid.Column="0"
-                Grid.RowSpan="2"
-                Background="{StaticResource ColorHelicopterFill}"
-                Width="8"
-                Margin="0,8" />
-
-            <Viewbox
-                Grid.Row="0"
-                Grid.Column="1"
-                Grid.ColumnSpan="2"
-                StretchDirection="Both"
-                Stretch="Uniform"
-                HorizontalAlignment="Center">
-
-                <telerik:Label
-                    Content="Helicopter Heading"
-                    FontSize="{StaticResource fontSizeLabelSmall}" />
-
-            </Viewbox>
-
-            <Separator
-                Grid.Row="0"
-                Grid.Column="1"
-                Grid.ColumnSpan="2"
-                Height="1"
-                VerticalAlignment="Bottom" />
-
-            <Viewbox
-                Grid.Row="1"
-                Grid.Column="1"
-                StretchDirection="Both"
-                Stretch="Uniform">
-
-                <telerik:Label
-                    Content="{Binding Path=helicopterHeadingString}"
-                    FontSize="{StaticResource fontSizeDataLarge}" />
-
-            </Viewbox>
-
-            <Viewbox
-                Grid.Row="1"
-                Grid.Column="2"
-                StretchDirection="Both"
-                Stretch="Uniform">
-
-                <telerik:Label
-                    Content="M"
-                    FontSize="{StaticResource fontSizeUnits}" />
-
-            </Viewbox>
-
-        </Grid>
-
-        <!--WIND DIRECTION-->
-        <Grid
-            Grid.Row="4"
-            MinWidth="140">
-
-            <Grid.RowDefinitions>
-                <RowDefinition
-                    Height="3*" />
-                <RowDefinition
-                    Height="4*" />
-            </Grid.RowDefinitions>
-
-            <Grid.ColumnDefinitions>
-                <ColumnDefinition
-                    Width="10" />
-                <ColumnDefinition
-                    Width="12*" />
-                <ColumnDefinition
-                    Width="7*" />
-            </Grid.ColumnDefinitions>
-
-            <Separator
+            <!--<Separator
                 Grid.Row="0"
                 Grid.Column="0"
                 Grid.RowSpan="2"
                 Background="{StaticResource ColorWind}"
                 Width="8"
-                Margin="0,8" />
+                Margin="0,8" />-->
 
             <Viewbox
                 Grid.Row="0"
@@ -412,7 +335,7 @@
 
         <!--WIND SPEED-->
         <Grid
-            Grid.Row="5">
+            Grid.Row="4">
 
             <Grid.RowDefinitions>
                 <RowDefinition
@@ -430,13 +353,13 @@
                     Width="7*" />
             </Grid.ColumnDefinitions>
 
-            <Separator
+            <!--<Separator
                 Grid.Row="0"
                 Grid.Column="0"
                 Grid.RowSpan="2"
                 Background="{StaticResource ColorWind}"
                 Width="8"
-                Margin="0,8" />
+                Margin="0,8" />-->
 
             <Viewbox
                 Grid.Row="0"
@@ -488,7 +411,7 @@
 
         <!--WIND GUST-->
         <Grid
-            Grid.Row="6"
+            Grid.Row="5"
             MinWidth="140">
 
             <Grid.RowDefinitions>
@@ -507,13 +430,13 @@
                     Width="7*" />
             </Grid.ColumnDefinitions>
 
-            <Separator
+            <!--<Separator
                 Grid.Row="0"
                 Grid.Column="0"
                 Grid.RowSpan="2"
                 Background="{StaticResource ColorWind}"
                 Width="8"
-                Margin="0,8" />
+                Margin="0,8" />-->
 
             <Viewbox
                 Grid.Row="0"

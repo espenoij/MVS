@@ -56,10 +56,8 @@ namespace HMS_Server
             //////////////////////////////////////////////////////
             ///
 
-            string swireRed = "#ffe8002a";
-
             // Accent (tab indicator, etc)
-            MaterialPalette.Palette.AccentNormalColor = (Color)ColorConverter.ConvertFromString(swireRed);
+            MaterialPalette.Palette.AccentNormalColor = (Color)ColorConverter.ConvertFromString("#FFFFFF");
             MaterialPalette.Palette.AccentHoverColor = (Color)ColorConverter.ConvertFromString("#ff818181");
             MaterialPalette.Palette.AccentPressedColor = (Color)ColorConverter.ConvertFromString("#FFD3F069");
 
@@ -88,8 +86,6 @@ namespace HMS_Server
             MaterialPalette.Palette.RippleColor = (Color)ColorConverter.ConvertFromString("#FFFFFFFF");
             MaterialPalette.Palette.ReadOnlyBackgroundColor = (Color)ColorConverter.ConvertFromString("#00FFFFFF");
             MaterialPalette.Palette.ReadOnlyBorderColor = (Color)ColorConverter.ConvertFromString("#FFABABAB");
-
-            //MaterialPalette.Palette.SelectedUnfocusedColor = (Color)ColorConverter.ConvertFromString(swireRed);
 
             MaterialPalette.Palette.PrimaryOpacity = 0.87;
             MaterialPalette.Palette.SecondaryOpacity = 0.54;

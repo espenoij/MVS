@@ -6,7 +6,7 @@
     xmlns:d="http://schemas.microsoft.com/expression/blend/2008"
     xmlns:telerik="http://schemas.telerik.com/2008/xaml/presentation"
     mc:Ignorable="d"
-    d:DesignHeight="600"
+    d:DesignHeight="300"
     d:DesignWidth="600">
 
     <UserControl.Resources>
@@ -40,10 +40,6 @@
                             Height="*" />
                         <RowDefinition
                             Height="*" />
-                        <RowDefinition
-                            Height="*" />
-                        <RowDefinition
-                            Height="*" />
                     </Grid.RowDefinitions>
 
                     <!--Helikopter Type-->
@@ -54,9 +50,7 @@
                             <ColumnDefinition
                                 Width="*" />
                             <ColumnDefinition
-                                Width="6*" />
-                            <ColumnDefinition
-                                Width="6*" />
+                                Width="18*" />
                         </Grid.ColumnDefinitions>
 
                         <Viewbox
@@ -69,32 +63,35 @@
 
                         </Viewbox>
 
-                        <Viewbox
-                            Grid.Column="1"
-                            StretchDirection="Both"
-                            Stretch="Uniform"
-                            HorizontalAlignment="Left">
+                        <DockPanel
+                            Grid.Column="1">
+                            
+                            <Viewbox
+                                StretchDirection="Both"
+                                Stretch="Uniform"
+                                HorizontalAlignment="Left">
 
-                            <telerik:Label
-                                FontSize="{StaticResource fontSizeLabel}"
-                                Content="Helicopter Type" />
+                                <telerik:Label
+                                    FontSize="{StaticResource fontSizeLabel}"
+                                    Content="Helicopter Type" />
 
-                        </Viewbox>
+                            </Viewbox>
 
-                        <Viewbox
-                            Grid.Column="2"
-                            StretchDirection="Both"
-                            Stretch="Uniform"
-                            HorizontalAlignment="Right">
+                            <Viewbox
+                                StretchDirection="Both"
+                                Stretch="Uniform"
+                                HorizontalAlignment="Right">
 
-                            <telerik:RadComboBox
-                                Grid.Column="1"
-                                Name="cboHelicopterType"
-                                Text="{Binding Path=helicopterTypeString}"
-                                FontSize="{StaticResource fontSizeData}"
-                                SelectionChanged="cboHelicopterType_SelectionChanged" />
+                                <telerik:RadComboBox
+                                    Grid.Column="1"
+                                    Name="cboHelicopterType"
+                                    Text="{Binding Path=helicopterTypeString}"
+                                    FontSize="{StaticResource fontSizeData}"
+                                    SelectionChanged="cboHelicopterType_SelectionChanged" />
 
-                        </Viewbox>
+                            </Viewbox>
+                            
+                        </DockPanel>
 
                     </Grid>
 
@@ -108,9 +105,7 @@
                                 <ColumnDefinition
                                     Width="*" />
                                 <ColumnDefinition
-                                    Width="6*" />
-                                <ColumnDefinition
-                                    Width="6*" />
+                                    Width="18*" />
                             </Grid.ColumnDefinitions>
 
                             <Viewbox
@@ -119,37 +114,39 @@
                                 Stretch="Uniform">
 
                                 <Image
-                                    Width="24"
                                     Source="..\Icons\helipad_black_36dp.png" />
 
                             </Viewbox>
 
-                            <Viewbox
-                                Grid.Column="1"
-                                StretchDirection="Both"
-                                Stretch="Uniform"
-                                HorizontalAlignment="Left">
+                            <DockPanel
+                                Grid.Column="1">
 
-                                <telerik:Label
-                                    FontSize="{StaticResource fontSizeLabel}"
-                                    Content="Helideck Category" />
+                                <Viewbox
+                                    StretchDirection="Both"
+                                    Stretch="Uniform"
+                                    HorizontalAlignment="Left">
 
-                            </Viewbox>
+                                    <telerik:Label
+                                        FontSize="{StaticResource fontSizeLabel}"
+                                        Content="Helideck Category" />
 
-                            <Viewbox
-                                Grid.Column="2"
-                                StretchDirection="Both"
-                                Stretch="Uniform"
-                                HorizontalAlignment="Right">
+                                </Viewbox>
 
-                                <telerik:RadComboBox
-                                    Name="cboHelideckCategory"
-                                    Grid.Column="1"
-                                    Text="{Binding Path=helideckCategoryString}"
-                                    FontSize="{StaticResource fontSizeData}"
-                                    SelectionChanged="cboHelideckCategory_SelectionChanged" />
+                                <Viewbox
+                                    StretchDirection="Both"
+                                    Stretch="Uniform"
+                                    HorizontalAlignment="Right">
 
-                            </Viewbox>
+                                    <telerik:RadComboBox
+                                        Name="cboHelideckCategory"
+                                        Grid.Column="1"
+                                        Text="{Binding Path=helideckCategoryString}"
+                                        FontSize="{StaticResource fontSizeData}"
+                                        SelectionChanged="cboHelideckCategory_SelectionChanged" />
+
+                                </Viewbox>
+
+                            </DockPanel>
 
                         </Grid>
 
@@ -165,9 +162,7 @@
                                 <ColumnDefinition
                                     Width="*" />
                                 <ColumnDefinition
-                                    Width="6*" />
-                                <ColumnDefinition
-                                    Width="6*" />
+                                    Width="18*" />
                             </Grid.ColumnDefinitions>
 
                             <Viewbox
@@ -181,39 +176,42 @@
 
                             </Viewbox>
 
-                            <Viewbox
-                                Grid.Column="1"
-                                StretchDirection="Both"
-                                Stretch="Uniform"
-                                HorizontalAlignment="Left">
+                            <DockPanel
+                                Grid.Column="1">
 
-                                <telerik:Label
-                                    Content="Day / Night"
-                                    FontSize="{StaticResource fontSizeLabel}" />
+                                <Viewbox
+                                    StretchDirection="Both"
+                                    Stretch="Uniform"
+                                    HorizontalAlignment="Left">
 
-                            </Viewbox>
+                                    <telerik:Label
+                                        Content="Day / Night"
+                                        FontSize="{StaticResource fontSizeLabel}" />
 
-                            <Viewbox
-                                Grid.Column="2"
-                                StretchDirection="Both"
-                                Stretch="Uniform"
-                                HorizontalAlignment="Right">
+                                </Viewbox>
 
-                                <telerik:RadComboBox
-                                    Name="cboDayNight"
-                                    Text="{Binding Path=dayNightString}"
-                                    FontSize="{StaticResource fontSizeData}"
-                                    SelectionChanged="cboDayNight_SelectionChanged" />
+                                <Viewbox
+                                    StretchDirection="Both"
+                                    Stretch="Uniform"
+                                    HorizontalAlignment="Right">
 
-                            </Viewbox>
+                                    <telerik:RadComboBox
+                                        Name="cboDayNight"
+                                        Text="{Binding Path=dayNightString}"
+                                        FontSize="{StaticResource fontSizeData}"
+                                        SelectionChanged="cboDayNight_SelectionChanged" />
+
+                                </Viewbox>
+
+                            </DockPanel>
 
                         </Grid>
 
                     </DockPanel>
 
-                    <!--Helikopter har landet-->
+                    <!--Helikopter Heading-->
                     <DockPanel
-                        Grid.Row="6">
+                        Grid.Row="4">
 
                         <Grid>
 
@@ -221,7 +219,7 @@
                                 <ColumnDefinition
                                     Width="*" />
                                 <ColumnDefinition
-                                    Width="12*" />
+                                    Width="18*" />
                             </Grid.ColumnDefinitions>
 
                             <Viewbox
@@ -234,36 +232,35 @@
 
                             </Viewbox>
 
-                            <Viewbox
-                                Grid.Column="1"
-                                StretchDirection="Both"
-                                Stretch="Uniform"
-                                HorizontalAlignment="Left">
+                            <DockPanel
+                                Grid.Column="1">
 
-                                <telerik:Label
-                                    FontSize="{StaticResource fontSizeLabel}"
-                                    Content="Helicopter Heading (°M)" />
+                                <Viewbox
+                                    StretchDirection="Both"
+                                    Stretch="Uniform"
+                                    HorizontalAlignment="Left">
 
-                            </Viewbox>
+                                    <telerik:Label
+                                        FontSize="{StaticResource fontSizeLabel}"
+                                        Content="Helicopter Heading (°M)" />
+
+                                </Viewbox>
+
+                            </DockPanel>
 
                         </Grid>
 
                     </DockPanel>
 
+                    <!--Helikopter Heading Input-->
                     <DockPanel
-                        Grid.Row="7">
+                        Grid.Row="5">
 
-                        <Grid>
-
-                            <Grid.ColumnDefinitions>
-                                <ColumnDefinition
-                                    Width="*" />
-                                <ColumnDefinition
-                                    Width="*" />
-                            </Grid.ColumnDefinitions>
+                        <StackPanel
+                            HorizontalAlignment="Right"
+                            Orientation="Horizontal">
 
                             <Viewbox
-                                Grid.Column="0"
                                 StretchDirection="Both"
                                 Stretch="Uniform">
 
@@ -272,15 +269,14 @@
                                     Name="tbHelicopterHeading"
                                     FontSize="{StaticResource fontSizeLabel}"
                                     LostFocus="tbHelicopterHeading_LostFocus"
-                                    KeyDown="tbHelicopterHeading_KeyDown"/>
+                                    KeyDown="tbHelicopterHeading_KeyDown" />
 
                             </Viewbox>
 
                             <Viewbox
-                                Grid.Column="1"
+                                Margin="16,0,0,0"
                                 StretchDirection="Both"
-                                Stretch="Uniform"
-                                HorizontalAlignment="Center">
+                                Stretch="Uniform">
 
                                 <Button
                                     x:Name="btnEnterHeading"
@@ -289,10 +285,10 @@
 
                             </Viewbox>
 
-                        </Grid>
+                        </StackPanel>
 
                     </DockPanel>
-
+                    
                 </Grid>
 
                 <Grid
@@ -300,10 +296,6 @@
                     Visibility="{Binding Path=displayModeVisibilityOnDeck, Converter={StaticResource BoolToVisConverter} }">
 
                     <Grid.RowDefinitions>
-                        <RowDefinition
-                            Height="*" />
-                        <RowDefinition
-                            Height="*" />
                         <RowDefinition
                             Height="*" />
                         <RowDefinition
@@ -326,7 +318,7 @@
                             <ColumnDefinition
                                 Width="*" />
                             <ColumnDefinition
-                                Width="12*" />
+                                Width="16*" />
                         </Grid.ColumnDefinitions>
 
                         <Viewbox
@@ -353,44 +345,46 @@
 
                     </Grid>
 
-                    <Grid
+                    <DockPanel
                         Grid.Row="1">
 
                         <!--Helikopter heading korreksjon-->
-                        <Grid.ColumnDefinitions>
-                            <ColumnDefinition
-                                Width="*" />
-                            <ColumnDefinition
-                                Width="*" />
-                        </Grid.ColumnDefinitions>
 
-                        <Viewbox
-                            Grid.Column="0"
-                            StretchDirection="Both"
-                            Stretch="Uniform">
+                        <StackPanel
+                            Orientation="Horizontal"
+                            HorizontalAlignment="Right">
+                            
+                            <Viewbox
+                                HorizontalAlignment="Right"
+                                StretchDirection="Both"
+                                Stretch="Uniform">
 
-                            <TextBox
-                                Width="135"
-                                FontSize="{StaticResource fontSizeLabel}"
-                                Name="tbCorrectedHelicopterHeading"
-                                LostFocus="tbCorrectedHelicopterHeading_LostFocus"
-                                KeyDown="tbCorrectedHelicopterHeading_KeyDown"/>
+                                <TextBox
+                                    Width="135"
+                                    FontSize="{StaticResource fontSizeLabel}"
+                                    Name="tbCorrectedHelicopterHeading"
+                                    LostFocus="tbCorrectedHelicopterHeading_LostFocus"
+                                    KeyDown="tbCorrectedHelicopterHeading_KeyDown" />
 
-                        </Viewbox>
+                            </Viewbox>
 
-                        <Viewbox
-                            Grid.Column="1"
-                            StretchDirection="Both"
-                            Stretch="Uniform">
+                            <Viewbox
+                                Grid.Column="1"
+                                Margin="16,0,0,0"
+                                HorizontalAlignment="Left"
+                                StretchDirection="Both"
+                                Stretch="Uniform">
 
-                            <Button
-                                x:Name="btnEnterCorrectedHeading"
-                                Content="Enter Heading"
-                                Click="btn_EnterCorrectedHeading_Click"/>
+                                <Button
+                                    x:Name="btnEnterCorrectedHeading"
+                                    Content="Enter Heading"
+                                    Click="btn_EnterCorrectedHeading_Click" />
 
-                        </Viewbox>
+                            </Viewbox>
 
-                    </Grid>
+                        </StackPanel>
+
+                    </DockPanel>
 
                     <!--Helikopter heading korreksjon tekst-->
                     <Grid
@@ -400,7 +394,7 @@
                             <ColumnDefinition
                                 Width="*" />
                             <ColumnDefinition
-                                Width="12*" />
+                                Width="16*" />
                         </Grid.ColumnDefinitions>
 
 
@@ -422,40 +416,17 @@
 
                             <telerik:Label
                                 FontSize="{StaticResource fontSizeLabel}"
-                                Content="{Binding Path=helicopterHeadingInfoString1}" />
-
-                        </Viewbox>
-
-                    </Grid>
-
-                    <Grid
-                        Grid.Row="4">
-
-                        <Grid.ColumnDefinitions>
-                            <ColumnDefinition
-                                Width="*" />
-                            <ColumnDefinition
-                                Width="12*" />
-                        </Grid.ColumnDefinitions>
-
-                        <Viewbox
-                            Grid.Column="1"
-                            StretchDirection="Both"
-                            Stretch="Uniform"
-                            HorizontalAlignment="Left">
-
-                            <telerik:Label
-                                FontSize="{StaticResource fontSizeLabel}"
-                                Content="{Binding Path=helicopterHeadingInfoString2}" />
+                                Content="{Binding Path=helicopterHeadingInfoString}" />
 
                         </Viewbox>
 
                     </Grid>
 
                     <Viewbox
-                        Grid.Row="7"
+                        Grid.Row="5"
                         StretchDirection="Both"
-                        Stretch="Uniform">
+                        Stretch="Uniform"
+                        HorizontalAlignment="Right">
 
                         <Button
                             Grid.Row="4"

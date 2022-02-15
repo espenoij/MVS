@@ -5,7 +5,7 @@ using System.Windows.Threading;
 
 namespace HMS_Client
 {
-    public class WindHeadingTrendVM : INotifyPropertyChanged
+    public class WindHeadingChangeVM : INotifyPropertyChanged
     {
         // Change notification
         public event PropertyChangedEventHandler PropertyChanged;
@@ -53,10 +53,10 @@ namespace HMS_Client
                 }
 
                 // Oppdatere data som skal ut i grafer
-                GraphBuffer.UpdateWithCull(vesselHeadingDelta, vesselHdg20mDataList, Constants.GraphCullFrequency20m);
-                GraphBuffer.UpdateWithCull(windDirectionDelta, windDir20mDataList, Constants.GraphCullFrequency20m);
+                GraphBuffer.UpdateWithCull(vesselHeadingDelta, vesselHdg20mDataList, Constants.GraphCullFrequency30m);
+                GraphBuffer.UpdateWithCull(windDirectionDelta, windDir20mDataList, Constants.GraphCullFrequency30m);
 
-                //Fjerne gamle data fra chart data
+                // Fjerne gamle data fra chart data
                 GraphBuffer.RemoveOldData(vesselHdg20mDataList, Constants.Minutes30 + chartTimeCorrMin);
                 GraphBuffer.RemoveOldData(windDir20mDataList, Constants.Minutes30 + chartTimeCorrMin);
 
@@ -143,9 +143,9 @@ namespace HMS_Client
                     if (vesselHeadingDelta.status == DataStatus.OK)
                     {
                         if (vesselHeadingDelta.data >= 0)
-                            return string.Format("{0}° R", vesselHeadingDelta.data.ToString("0"));
+                            return string.Format("{0}° R", vesselHeadingDelta.data.ToString(" 0"));
                         else
-                            return string.Format("{0}° L", Math.Abs(vesselHeadingDelta.data).ToString("0"));
+                            return string.Format("{0}° L", Math.Abs(vesselHeadingDelta.data).ToString(" 0"));
                     }
                     else
                     {

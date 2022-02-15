@@ -14,11 +14,11 @@ public enum HelicopterCategory
 
 public enum HelideckCategory
 {
-    [Description("Category 1")]
+    [Description("CAT 1")]
     Category1,
-    [Description("Category 2")]
+    [Description("CAT 2")]
     Category2,
-    [Description("Category 3")]
+    [Description("CAT 3")]
     Category3
 }
 
@@ -30,22 +30,39 @@ public enum DayNight
 
 public enum HelicopterType
 {
+    [Description("AS332 - CAT A")]
     AS332,      // Heavy
+    [Description("AS365 - CAT B")]
     AS365,      // Medium
+    [Description("AW139 - CAT B")]
     AW139,      // Medium
+    [Description("AW169 - CAT B")]
     AW169,      // Medium
+    [Description("AW189 - CAT A")]
     AW189,      // Heavy
+    [Description("B212 - CAT B")]
     B212,       // Medium
+    [Description("B412 - CAT B")]
     B412,       // Medium
+    [Description("B525 - CAT B")]
     B525,       // Medium
+    [Description("EC135 - CAT B")]
     EC135,      // Medium
+    [Description("EC155 - CAT B")]
     EC155,      // Medium
+    [Description("EC175 - CAT B")]
     EC175,      // Medium
+    [Description("EC225 - CAT A")]
     EC225,      // Heavy
+    [Description("H145 - CAT B")]
     H145,       // Medium
+    [Description("H175 - CAT B")]
     H175,       // Medium
+    [Description("S61 - CAT A")]
     S61,        // Heavy
+    [Description("S76 - CAT B")]
     S76,        // Medium
+    [Description("S92 - CAT A")]
     S92         // Heavy
 }
 
@@ -80,7 +97,8 @@ public enum LimitStatus
 public enum ValueType
 {
     // NB! Matcher ID i config fil
-    // Dette er variabler som blir direkte linket til sensor data
+    // Dette er variabler som blir direkte linket til sensor data.
+    // Må matche med verdiene i SensorData.config.
     None = 0,
     Latitude = 1,
     Longitude = 2,
@@ -105,15 +123,17 @@ public enum ValueType
     SensorWindSpeed = 21,
     VesselHeading = 22,
     VesselSpeed = 23,
-    AccelerationX = 24,
-    AccelerationY = 25,
-    AccelerationZ = 26,
+    VesselCOG = 24,
+    VesselSOG = 25,
+    AccelerationX = 26,
+    AccelerationY = 27,
+    AccelerationZ = 28,
 
     // Data Verification
-    TimeID = 27,
-    SensorMRU = 28,
-    SensorGyro = 29,
-    SensorWind = 30,
+    TimeID = 29,
+    SensorMRU = 30,
+    SensorGyro = 31,
+    SensorWind = 32,
 
     // Ikke lagret i config fil
     // Dette er data som beregnes fra variablene over, dvs. fra sensor data
@@ -196,8 +216,6 @@ public enum ValueType
     SettingsEmailSecureConnection,
     SettingsRestrictedSector,
 
-    // Database Status
-    //DatabaseStatus
 }
 
 public enum HelideckStatusType

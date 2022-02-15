@@ -13,9 +13,12 @@ namespace HMS_Client
 
         public RadObservableCollectionEx<SensorStatusDisplay> sensorStatusDisplayList = new RadObservableCollectionEx<SensorStatusDisplay>();
 
-        public void Init(SensorGroupStatus sensorStatus, Config config)
+        public AdminSettingsVM adminSettingsVM;
+
+        public void Init(SensorGroupStatus sensorStatus, Config config, AdminSettingsVM adminSettingsVM)
         {
             this.sensorStatus = sensorStatus;
+            this.adminSettingsVM = adminSettingsVM;
 
             InitUI(config);
         }
@@ -26,16 +29,26 @@ namespace HMS_Client
             {
                 sensorStatusDisplayList.Add(new SensorStatusDisplay());
 
-                int t = i % 10;
-                if (t == 0 ||
-                    t == 1 ||
-                    t == 4 ||
-                    t == 5 ||
-                    t == 8 ||
-                    t == 9)
-                    sensorStatusDisplayList[i].even = true;
+                if (adminSettingsVM.regulationStandard == RegulationStandard.NOROG)
+                {
+                    int t = i % 10;
+                    if (t == 0 ||
+                        t == 1 ||
+                        t == 4 ||
+                        t == 5 ||
+                        t == 8 ||
+                        t == 9)
+                        sensorStatusDisplayList[i].even = true;
+                    else
+                        sensorStatusDisplayList[i].even = false;
+                }
                 else
-                    sensorStatusDisplayList[i].even = false;
+                {
+                    if (i % 2 == 0)
+                        sensorStatusDisplayList[i].even = true;
+                    else
+                        sensorStatusDisplayList[i].even = false;
+                }
             }
 
             DispatcherTimer statusUpdate = new DispatcherTimer();
@@ -165,10 +178,10 @@ namespace HMS_Client
                                 return StatusBackground.BLANK;
 
                         case DataStatus.TIMEOUT_ERROR:
-                            return StatusBackground.AMBER;
+                            return StatusBackground.RED;
 
                         default:
-                            return StatusBackground.AMBER;
+                            return StatusBackground.RED;
                     }
                 }
             }
@@ -186,6 +199,6 @@ namespace HMS_Client
     {
         BLANK,
         BACKGROUND_SEPARATOR,
-        AMBER
+        RED
     }
 }

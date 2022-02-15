@@ -1,5 +1,5 @@
 ﻿<UserControl
-    x:Class="HMS_Client.WindHeadingTrend_CAP"
+    x:Class="HMS_Client.WindHeadingChange_CAP"
     xmlns="http://schemas.microsoft.com/winfx/2006/xaml/presentation"
     xmlns:x="http://schemas.microsoft.com/winfx/2006/xaml"
     xmlns:mc="http://schemas.openxmlformats.org/markup-compatibility/2006"
@@ -19,7 +19,7 @@
 
         <!--Helideck Motion Trend-->
         <telerik:GroupBox
-            Header="WIND &amp; HEADING TREND SINCE TOUCHDOWN"
+            Header="WIND &amp; HEADING CHANGE SINCE TOUCHDOWN"
             Visibility="{Binding Path=displayModeVisibilityOnDeck, Converter={StaticResource BoolToVisConverter} }"
             Margin="8">
 
@@ -81,6 +81,7 @@
 
                         <telerik:RadCartesianChart.VerticalAxis>
                             <telerik:LinearAxis
+                                x:Name="chartVesselDeltaVertAxis"
                                 Maximum="{Binding vesselHeadingAxisMax}"
                                 Minimum="{Binding vesselHeadingAxisMin}"
                                 SmartLabelsMode="SmartStepAndRange"
@@ -127,6 +128,24 @@
                                 MajorLinesVisibility="XY" />
                         </telerik:RadCartesianChart.Grid>
 
+                        <telerik:RadCartesianChart.Annotations>
+                            
+                            <telerik:CartesianPlotBandAnnotation
+                                Axis="{Binding ElementName=chartVesselDeltaVertAxis}"
+                                From="10"
+                                To="180"
+                                StrokeThickness="1"
+                                Fill="{StaticResource ColorAmberTranslucent}" />
+
+                            <telerik:CartesianPlotBandAnnotation
+                                Axis="{Binding ElementName=chartVesselDeltaVertAxis}"
+                                From="-10"
+                                To="-180"
+                                StrokeThickness="1"
+                                Fill="{StaticResource ColorAmberTranslucent}" />
+
+                        </telerik:RadCartesianChart.Annotations>
+                        
                     </telerik:RadCartesianChart>
 
                     <!--Δ VESSEL HEADING READOUT-->
@@ -137,27 +156,44 @@
 
                         <Grid.RowDefinitions>
                             <RowDefinition
-                                Height="*" />
+                                Height="4*" />
                             <RowDefinition
-                                Height="*" />
+                                Height="3*" />
+                            <RowDefinition
+                                Height="4*" />
+                            <RowDefinition
+                                Height="4*" />
                         </Grid.RowDefinitions>
 
-                        <telerik:Label
-                            Grid.Row="0"
-                            Content="Δ Vessel Heading"
-                            FontSize="{StaticResource fontSizeLabelSmall}"
-                            HorizontalAlignment="Center" />
+                        <Viewbox
+                            Grid.Row="1"
+                            StretchDirection="Both"
+                            Stretch="Uniform"
+                            HorizontalAlignment="Center">
+
+                            <telerik:Label
+                                Content="Δ Vessel Heading"
+                                HorizontalAlignment="Center" />
+
+                        </Viewbox>
 
                         <Separator
-                            Grid.Row="0"
+                            Grid.Row="1"
                             Height="1"
                             VerticalAlignment="Bottom" />
 
-                        <telerik:Label
-                            Grid.Row="1"
-                            Content="{Binding vesselHeadingDeltaString}"
-                            FontSize="{StaticResource fontSizeDataLarge}"
-                            HorizontalAlignment="Center" />
+                        <Viewbox
+                            Grid.Row="2"
+                            StretchDirection="Both"
+                            Stretch="Uniform"
+                            HorizontalAlignment="Center">
+
+                            <telerik:Label
+                                Content="{Binding vesselHeadingDeltaString}"
+                                FontSize="{StaticResource fontSizeDataLarge}"
+                                HorizontalAlignment="Center" />
+
+                        </Viewbox>
 
                     </Grid>
 
@@ -202,6 +238,7 @@
 
                         <telerik:RadCartesianChart.VerticalAxis>
                             <telerik:LinearAxis
+                                x:Name="chartWindDeltaVertAxis"
                                 Maximum="{Binding windDirectionAxisMax}"
                                 Minimum="{Binding windDirectionAxisMin}"
                                 SmartLabelsMode="SmartStepAndRange"
@@ -249,6 +286,24 @@
                                 MajorLinesVisibility="XY" />
                         </telerik:RadCartesianChart.Grid>
 
+                        <telerik:RadCartesianChart.Annotations>
+
+                            <telerik:CartesianPlotBandAnnotation
+                                Axis="{Binding ElementName=chartWindDeltaVertAxis}"
+                                From="30"
+                                To="180"
+                                StrokeThickness="1"
+                                Fill="{StaticResource ColorAmberTranslucent}" />
+
+                            <telerik:CartesianPlotBandAnnotation
+                                Axis="{Binding ElementName=chartWindDeltaVertAxis}"
+                                From="-30"
+                                To="-180"
+                                StrokeThickness="1"
+                                Fill="{StaticResource ColorAmberTranslucent}" />
+
+                        </telerik:RadCartesianChart.Annotations>
+
                     </telerik:RadCartesianChart>
 
                     <!--Δ WIND HEADING READOUT-->
@@ -259,27 +314,45 @@
 
                         <Grid.RowDefinitions>
                             <RowDefinition
-                                Height="*" />
+                                Height="4*" />
                             <RowDefinition
-                                Height="*" />
+                                Height="3*" />
+                            <RowDefinition
+                                Height="4*" />
+                            <RowDefinition
+                                Height="4*" />
                         </Grid.RowDefinitions>
 
-                        <telerik:Label
-                            Grid.Row="0"
-                            Content="Δ Wind Direction"
-                            FontSize="{StaticResource fontSizeLabelSmall}"
-                            HorizontalAlignment="Center" />
+                        <Viewbox
+                            Grid.Row="1"
+                            StretchDirection="Both"
+                            Stretch="Uniform"
+                            HorizontalAlignment="Center">
+
+                            <telerik:Label
+                                Content="Δ Wind Direction"
+                                HorizontalAlignment="Center" />
+
+                        </Viewbox>
 
                         <Separator
-                            Grid.Row="0"
+                            Grid.Row="1"
                             Height="1"
                             VerticalAlignment="Bottom" />
 
-                        <telerik:Label
-                            Grid.Row="1"
-                            Content="{Binding deltaWindDirectionString}"
-                            FontSize="{StaticResource fontSizeDataLarge}"
-                            HorizontalAlignment="Center" />
+                        <Viewbox
+                            Grid.Row="2"
+                            StretchDirection="Both"
+                            Stretch="Uniform"
+                            HorizontalAlignment="Center">
+
+                            <telerik:Label
+                                Grid.Row="1"
+                                Content="{Binding deltaWindDirectionString}"
+                                FontSize="{StaticResource fontSizeDataLarge}"
+                                HorizontalAlignment="Center" />
+
+                        </Viewbox>
 
                     </Grid>
 

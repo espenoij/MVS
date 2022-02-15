@@ -3,19 +3,19 @@
 namespace HMS_Client
 {
     /// <summary>
-    /// Interaction logic for HelideckWindHeadingTrend_CAP.xaml
+    /// Interaction logic for WindHeadingChange_CAP.xaml
     /// </summary>
-    public partial class WindHeadingTrend_CAP : UserControl
+    public partial class WindHeadingChange_CAP : UserControl
     {
         // View Model
-        public WindHeadingTrendVM viewModel;
+        public WindHeadingChangeVM viewModel;
 
-        public WindHeadingTrend_CAP()
+        public WindHeadingChange_CAP()
         {
             InitializeComponent();
         }
 
-        public void Init(WindHeadingTrendVM viewModel)
+        public void Init(WindHeadingChangeVM viewModel)
         {
             this.viewModel = viewModel;
 

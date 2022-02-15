@@ -9,19 +9,19 @@ using System.Windows.Threading;
 namespace HMS_Client
 {
     /// <summary>
-    /// Interaction logic for HelideckStatusTrend_CAP.xaml
+    /// Interaction logic for LandingStatusTrend_CAP.xaml
     /// </summary>
-    public partial class HelideckStatusTrend_CAP : UserControl
+    public partial class LandingStatusTrend_CAP : UserControl
     {
         private DispatcherTimer TrendUpdateTimer20m = new DispatcherTimer();
         private DispatcherTimer TrendUpdateTimer3h = new DispatcherTimer();
 
-        public HelideckStatusTrend_CAP()
+        public LandingStatusTrend_CAP()
         {
             InitializeComponent();
         }
 
-        public void Init(HelideckStatusTrendVM viewModel, Config config)
+        public void Init(LandingStatusTrendVM viewModel, Config config)
         {
             DataContext = viewModel;
 
@@ -36,7 +36,7 @@ namespace HMS_Client
 
             void TrendUpdate20m(object sender, EventArgs e)
             {
-                UpdateTrendData(viewModel.statusTrend20mDispList, statusTrendGrid20m);
+                UpdateTrendData(viewModel.landingTrend20mDispList, statusTrendGrid20m);
             }
 
             // Oppdatere UI
@@ -76,7 +76,6 @@ namespace HMS_Client
 
         private void UpdateTrendData(List<HelideckStatusType> statusTrendDispList, Grid grid)
         {
-            var converter = new BrushConverter();
             var amberBrush = (Brush)this.FindResource("ColorAmber");
             var redBrush = (Brush)this.FindResource("ColorRed");
             var blueBrush = (Brush)this.FindResource("ColorBlue");

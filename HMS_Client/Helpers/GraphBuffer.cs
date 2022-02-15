@@ -62,6 +62,17 @@ namespace HMS_Client
             }
         }
 
+        public static void Transfer(RadObservableCollectionEx<HelideckStatus> buffer, RadObservableCollectionEx<HelideckStatus> dataList)
+        {
+            // Overfører alle data fra buffer til dataList
+            if (buffer != null &&
+                dataList != null)
+            {
+                dataList.AddRange(buffer);
+                buffer.Clear();
+            }
+        }
+
         public static void RemoveOldData(RadObservableCollectionEx<HMSData> dataList, double timeInterval)
         {
             if (dataList != null)
@@ -74,7 +85,26 @@ namespace HMS_Client
             }
         }
 
+        public static void RemoveOldData(RadObservableCollectionEx<HelideckStatus> dataList, double timeInterval)
+        {
+            if (dataList != null)
+            {
+                for (int i = 0; i < dataList.Count && dataList.Count > 0; i++)
+                {
+                    if (dataList[i]?.timestamp < DateTime.UtcNow.AddSeconds(-timeInterval))
+                        dataList.RemoveAt(i--);
+                }
+            }
+        }
+
         public static void Clear(RadObservableCollectionEx<HMSData> buffer)
+        {
+            // Sletter alle data i buffer
+            if (buffer != null)
+                buffer.Clear();
+        }
+
+        public static void Clear(RadObservableCollectionEx<HelideckStatus> buffer)
         {
             // Sletter alle data i buffer
             if (buffer != null)

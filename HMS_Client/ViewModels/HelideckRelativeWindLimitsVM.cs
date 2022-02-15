@@ -15,8 +15,15 @@ namespace HMS_Client
         // Relative Wind graph buffer/data
         public RadObservableCollectionEx<HMSData> relativeWindDir20mDataList = new RadObservableCollectionEx<HMSData>();
 
-        public void Init(Config config, SensorGroupStatus sensorStatus)
+        // Lagret helicopter heading
+        private double savedHelicopterHeading = -1;
+
+        private UserInputsVM userInputsVM;
+
+        public void Init(Config config, SensorGroupStatus sensorStatus, UserInputsVM userInputsVM)
         {
+            this.userInputsVM = userInputsVM;
+
             InitUI();
 
             // Oppdatere UI
@@ -100,6 +107,28 @@ namespace HMS_Client
 
                 OnPropertyChanged(nameof(rwdGraphDataX));
                 OnPropertyChanged(nameof(rwdGraphDataY));
+            }
+
+            // On-deck display?
+            if (userInputsVM.displayMode == DisplayMode.OnDeck)
+            {
+                // Er on-deck helicopter heading korrigert?
+                if (userInputsVM.onDeckHelicopterHeading != savedHelicopterHeading)
+                {
+                    if (savedHelicopterHeading != -1)
+                        CorrectRWDGraph(savedHelicopterHeading - userInputsVM.onDeckHelicopterHeading);
+
+                    savedHelicopterHeading = userInputsVM.onDeckHelicopterHeading;
+                }
+            }
+        }
+
+        private void CorrectRWDGraph(double correction)
+        {
+            // Løper gjennom hele listen og legger til korreksjon på RWD komponenten
+            foreach (var item in relativeWindDir20mDataList)
+            {
+                item.data += correction;
             }
         }
 

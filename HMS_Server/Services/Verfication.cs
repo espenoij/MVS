@@ -23,6 +23,8 @@ namespace HMS_Server
         private bool helicopterSetLanded = false;
         private bool helicopterSetTakeoff = false;
 
+        private HMSDataCollection hmsOutputData;
+
         public Verfication(Config config, UserInputs userInputs, ErrorHandler errorHandler)
         {
             this.userInputs = userInputs;
@@ -72,10 +74,12 @@ namespace HMS_Server
                 item.Reset();
         }
 
-        public void Update(RadObservableCollectionEx<HMSData> hmsDataList, RadObservableCollectionEx<SensorData> sensorDataList, DatabaseHandler database)
+        public void Update(HMSDataCollection hmsOutputData, RadObservableCollectionEx<SensorData> sensorDataList, DatabaseHandler database)
         {
+            this.hmsOutputData = hmsOutputData;
+
             // Test Data
-            testData.TransferData(hmsDataList);
+            testData.TransferData(hmsOutputData.GetDataList());
 
             // Referanse Data
             referenceData.TransferData(sensorDataList);
@@ -155,18 +159,8 @@ namespace HMS_Server
                             userInputs.onDeckHelicopterHeading = -1;
 
                         userInputs.onDeckTime = DateTime.UtcNow;
-
-                        var vesselHdg = referenceDataList.Where(x => x.id == 10);
-                        if (vesselHdg.Count() == 1)
-                            userInputs.onDeckVesselHeading = vesselHdg.First().data;
-                        else
-                            userInputs.onDeckVesselHeading = -1;
-
-                        var windDir = referenceDataList.Where(x => x.id == 18);
-                        if (windDir.Count() == 1)
-                            userInputs.onDeckWindDirection = windDir.First().data;
-                        else
-                            userInputs.onDeckWindDirection = -1;
+                        userInputs.onDeckVesselHeading = hmsOutputData.GetData(ValueType.VesselHeading).data;
+                        userInputs.onDeckWindDirection = hmsOutputData.GetData(ValueType.HelideckWindDirection2m).data;
 
                         helicopterSetLanded = true;
                     }
