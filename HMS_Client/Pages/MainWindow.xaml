@@ -91,10 +91,10 @@
                                         Height="2*" />
                                     <RowDefinition
                                         x:Name="col1RowDef1"
-                                        Height="14*" />
+                                        Height="13*" />
                                     <RowDefinition
                                         x:Name="col1RowDef2"
-                                        Height="13*" />
+                                        Height="14*" />
                                     <RowDefinition
                                         x:Name="col1RowDef3"
                                         Height="9*" />
@@ -114,28 +114,28 @@
 
                                 </Viewbox>
 
+                                <!--User Inputs NOROG-->
+                                <uc:UserInputs_NOROG
+                                    Grid.Row="0"
+                                    Grid.RowSpan="2"
+                                    x:Name="ucUserInputs_NOROG" />
+
+                                <!--User Inputs CAP-->
+                                <uc:UserInputs_CAP
+                                    Grid.Row="1"
+                                    x:Name="ucUserInputs_CAP" />
+
                                 <!--Basic Information NOROG-->
                                 <uc:GeneralInformation_NOROG
                                     x:Name="ucGeneralInformation_NOROG"
-                                    Grid.Row="0"
-                                    Grid.RowSpan="2"
+                                    Grid.Row="2"
                                     Visibility="Visible" />
 
                                 <!--Basic Information CAP-->
                                 <uc:GeneralInformation_CAP
                                     x:Name="ucGeneralInformation_CAP"
-                                    Grid.Row="1"
+                                    Grid.Row="2"
                                     Visibility="Collapsed" />
-
-                                <!--User Inputs NOROG-->
-                                <uc:UserInputs_NOROG
-                                    Grid.Row="2"
-                                    x:Name="ucUserInputs_NOROG" />
-
-                                <!--User Inputs CAP-->
-                                <uc:UserInputs_CAP
-                                    Grid.Row="2"
-                                    x:Name="ucUserInputs_CAP" />
 
                                 <!--Sensor Status-->
                                 <uc:SensorStatusDisplay

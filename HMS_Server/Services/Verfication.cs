@@ -134,10 +134,10 @@ namespace HMS_Server
                     if (!helicopterSetInit)
                     {
                         userInputs.displayMode = DisplayMode.PreLanding;
-                        userInputs.onDeckHelicopterHeading = 0;
+                        userInputs.onDeckHelicopterHeading = -1;
                         userInputs.onDeckTime = DateTime.MinValue;
-                        userInputs.onDeckVesselHeading = 0;
-                        userInputs.onDeckWindDirection = 0;
+                        userInputs.onDeckVesselHeading = -1;
+                        userInputs.onDeckWindDirection = -1;
 
                         helicopterSetInit = true;
                     }
@@ -147,10 +147,26 @@ namespace HMS_Server
                         !helicopterSetLanded)
                     {
                         userInputs.displayMode = DisplayMode.OnDeck;
-                        userInputs.onDeckHelicopterHeading = 338;
+
+                        var time = referenceDataList.Where(x => x.id == 12);
+                        if (time.Count() == 1)
+                            userInputs.onDeckHelicopterHeading = time.First().data;
+                        else
+                            userInputs.onDeckHelicopterHeading = -1;
+
                         userInputs.onDeckTime = DateTime.UtcNow;
-                        userInputs.onDeckVesselHeading = 335;
-                        userInputs.onDeckWindDirection = 334;
+
+                        var vesselHdg = referenceDataList.Where(x => x.id == 10);
+                        if (vesselHdg.Count() == 1)
+                            userInputs.onDeckVesselHeading = vesselHdg.First().data;
+                        else
+                            userInputs.onDeckVesselHeading = -1;
+
+                        var windDir = referenceDataList.Where(x => x.id == 18);
+                        if (windDir.Count() == 1)
+                            userInputs.onDeckWindDirection = windDir.First().data;
+                        else
+                            userInputs.onDeckWindDirection = -1;
 
                         helicopterSetLanded = true;
                     }
