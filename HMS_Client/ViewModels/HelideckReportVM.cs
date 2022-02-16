@@ -144,7 +144,7 @@ namespace HMS_Client
             }
 
             // Sjekke sensor/data status
-            DataStatusTimer.Interval = TimeSpan.FromMilliseconds(config.ReadWithDefault(ConfigKey.ClientUpdateFrequencyUI, Constants.ClientUpdateFrequencyUIDefault));
+            DataStatusTimer.Interval = TimeSpan.FromMilliseconds(config.ReadWithDefault(ConfigKey.ClientUpdateFrequencyUI, Constants.ClientUIUpdateFrequencyDefault));
             DataStatusTimer.Tick += DataStatusCheck;
             DataStatusTimer.Start();
 

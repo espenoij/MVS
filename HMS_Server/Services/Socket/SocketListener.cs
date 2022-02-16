@@ -89,7 +89,7 @@ namespace HMS_Server
                     // Socket opprettet?
                     if (listener != null)
                     {
-                        // Er socket tilkoblet?
+                        // Er socket ikke tilkoblet?
                         if (!SocketConnected(listener))
                         {
                             // Restarte socket

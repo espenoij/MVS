@@ -4,9 +4,6 @@
     public const string ServerAddress = "ServerAddress";
     public const string ServerPort = "ServerPort";
     public const string DataTimeout = "DataTimeout";
-    public const string ClientUpdateFrequencyUI = "ClientUpdateFrequencyUI";
-    public const string ChartDataUpdateFrequency20m = "ChartDataUpdateFrequency20m";
-    public const string ChartDataUpdateFrequency3h = "ChartDataUpdateFrequency3h";
 
     // App: General Settings
     public const string RegulationStandard = "RegulationStandard";

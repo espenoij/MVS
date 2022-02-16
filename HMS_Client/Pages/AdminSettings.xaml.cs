@@ -322,9 +322,9 @@ namespace HMS_Client
             // Sjekk av input
             DataValidation.Double(
                 (sender as TextBox).Text,
-                Constants.ClientUpdateFrequencyUIMin,
-                Constants.ClientUpdateFrequencyUIMax,
-                Constants.ClientUpdateFrequencyUIDefault,
+                Constants.ClientUIUpdateFrequencyMin,
+                Constants.ClientUIUpdateFrequencyMax,
+                Constants.ClientUIUpdateFrequencyDefault,
                 out double validatedInput);
 
             if (adminSettingsVM.uiUpdateFrequency != validatedInput)

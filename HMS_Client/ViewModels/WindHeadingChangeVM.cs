@@ -29,7 +29,7 @@ namespace HMS_Client
             InitUI();
 
             // Oppdatere UI
-            UIUpdateTimer.Interval = TimeSpan.FromMilliseconds(config.ReadWithDefault(ConfigKey.ClientUpdateFrequencyUI, Constants.ClientUpdateFrequencyUIDefault));
+            UIUpdateTimer.Interval = TimeSpan.FromMilliseconds(config.ReadWithDefault(ConfigKey.ClientUpdateFrequencyUI, Constants.ClientUIUpdateFrequencyDefault));
             UIUpdateTimer.Tick += UIUpdate;
 
             void UIUpdate(object sender, EventArgs e)

@@ -24,9 +24,9 @@ class Constants
     public const int PacketDataFields = 60;                     // Korresponderer til felt i XAML fil (lvPacketData)
 
     // Timing
-    public const int ClientUpdateFrequencyUIDefault = 1000;
-    public const int ClientUpdateFrequencyUIMin = 100;
-    public const int ClientUpdateFrequencyUIMax = 5000;
+    public const int ClientUIUpdateFrequencyDefault = 1000;
+    public const int ClientUIUpdateFrequencyMin = 100;
+    public const int ClientUIUpdateFrequencyMax = 5000;
 
     public const int ChartUpdateFrequencyUI20mDefault = 5000;
     public const int ChartUpdateFrequencyUI3hDefault = 15000;

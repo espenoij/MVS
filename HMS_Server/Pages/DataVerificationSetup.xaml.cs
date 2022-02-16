@@ -1,6 +1,7 @@
 ﻿using System.Windows.Controls;
 using Telerik.Windows.Controls;
 using Telerik.Windows.Controls.GridView;
+using Telerik.Windows.Data;
 
 namespace HMS_Server
 {
@@ -20,7 +21,7 @@ namespace HMS_Server
         public void Init(
             HMSDataCollection hmsOutputDataList,
             HMSDataCollection testDataList,
-            RadObservableCollectionEx<SensorData> serverSensorDataList,
+            RadObservableCollection<SensorData> serverSensorDataList,
             HMSDataCollection referenceDataList,
             Config config)
         {

@@ -5,6 +5,7 @@ using System.Windows;
 using System.Windows.Controls;
 using System.Windows.Input;
 using Telerik.Windows.Controls;
+using Telerik.Windows.Data;
 
 namespace HMS_Server
 {
@@ -26,17 +27,14 @@ namespace HMS_Server
         private ErrorHandler errorHandler;
 
         // Sensor Data List
-        private RadObservableCollectionEx<SensorData> sensorDataList = new RadObservableCollectionEx<SensorData>();
-
-        // HMS Data
-        private RadObservableCollectionEx<HMSData> hmsOutputDataList;
+        private RadObservableCollection<SensorData> sensorDataList = new RadObservableCollection<SensorData>();
 
         public AdminSettings()
         {
             InitializeComponent();
         }
 
-        public void Init(AdminSettingsVM adminSettingsVM, Config config, DatabaseHandler database, ErrorHandler errorHandler, RadObservableCollectionEx<SensorData> sensorDataList, RadObservableCollectionEx<HMSData> hmsOutputDataList)
+        public void Init(AdminSettingsVM adminSettingsVM, Config config, DatabaseHandler database, ErrorHandler errorHandler, RadObservableCollection<SensorData> sensorDataList)
         {
             DataContext = adminSettingsVM;
             this.adminSettingsVM = adminSettingsVM;
@@ -52,9 +50,6 @@ namespace HMS_Server
 
             // Sensor Data List
             this.sensorDataList = sensorDataList;
-
-            // HMS Data
-            this.hmsOutputDataList = hmsOutputDataList;
 
             InitUI();
 

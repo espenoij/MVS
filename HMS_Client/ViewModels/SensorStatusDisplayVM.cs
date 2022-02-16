@@ -52,7 +52,7 @@ namespace HMS_Client
             }
 
             DispatcherTimer statusUpdate = new DispatcherTimer();
-            statusUpdate.Interval = TimeSpan.FromMilliseconds(config.ReadWithDefault(ConfigKey.ClientUpdateFrequencyUI, Constants.ClientUpdateFrequencyUIDefault));
+            statusUpdate.Interval = TimeSpan.FromMilliseconds(config.ReadWithDefault(ConfigKey.ClientUpdateFrequencyUI, Constants.ClientUIUpdateFrequencyDefault));
             statusUpdate.Tick += UpdateStatus;
             statusUpdate.Start();
 

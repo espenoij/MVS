@@ -21,6 +21,16 @@ namespace HMS_Server
             this.rowId = rowId;
         }
 
+        public ErrorMessage(ErrorMessage errorMessage)
+        {
+            this.timestamp = errorMessage.timestamp;
+            this.type = errorMessage.type;
+            this.category = errorMessage.category;
+            this.message = errorMessage.message;
+            this.id = errorMessage.id;
+            this.rowId = errorMessage.rowId;
+        }
+
         private DateTime _timestamp { get; set; }
         public DateTime timestamp
         {

@@ -17,6 +17,22 @@ namespace HMS_Server
             portStatus = PortStatus.Closed;
         }
 
+        public SerialPortData(SerialPortData serialPortData)
+        {
+            portName = serialPortData.portName;
+            data = serialPortData.data;
+            firstRead = serialPortData.firstRead;
+            portStatus = serialPortData.portStatus;
+        }
+
+        public void Set(SerialPortData serialPortData)
+        {
+            portName = serialPortData.portName;
+            data = serialPortData.data;
+            firstRead = serialPortData.firstRead;
+            portStatus = serialPortData.portStatus;
+        }
+
         // Port Name
         private string _portName { get; set; }
         public string portName

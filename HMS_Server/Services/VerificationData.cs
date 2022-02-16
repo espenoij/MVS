@@ -11,7 +11,22 @@ namespace HMS_Server
 
         public VerificationData()
         {
+        }
 
+        public VerificationData(VerificationData verificationData)
+        {
+            Set(verificationData);
+        }
+
+        public void Set(VerificationData verificationData)
+        {
+            id = verificationData.id;
+            name = verificationData.name;
+            testData = verificationData.testData;
+            refData = verificationData.refData;
+            differenceAbs = verificationData.differenceAbs;
+            differenceTimePctCounterTotal = verificationData.differenceTimePctCounterTotal;
+            differenceTimePctCounterWrong = verificationData.differenceTimePctCounterWrong;
         }
 
         private VerificationType _id { get; set; }

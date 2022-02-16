@@ -108,7 +108,7 @@ namespace HMS_Server
         // Overføre data fra liste i input to denne data samlingen
         // HMS: Overføre fra sensor data liste til HMS data liste
         // Verification: Overføre fra sensor data liste til referanse data liste
-        public void TransferData(RadObservableCollectionEx<SensorData> sensorDataList)
+        public void TransferData(RadObservableCollection<SensorData> sensorDataList)
         {
             // Lese timeout fra config
             double dataTimeout = config.ReadWithDefault(ConfigKey.DataTimeout, Constants.DataTimeoutDefault);

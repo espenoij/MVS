@@ -57,7 +57,7 @@ namespace HMS_Client
             }
 
             // Sample helideck status til trend buffer
-            landingStatusUpdateTimer.Interval = TimeSpan.FromMilliseconds(config.ReadWithDefault(ConfigKey.ClientUpdateFrequencyUI, Constants.ClientUpdateFrequencyUIDefault));
+            landingStatusUpdateTimer.Interval = TimeSpan.FromMilliseconds(config.ReadWithDefault(ConfigKey.ClientUpdateFrequencyUI, Constants.ClientUIUpdateFrequencyDefault));
             landingStatusUpdateTimer.Tick += landingStatusUpdate;
             landingStatusUpdateTimer.Start();
 

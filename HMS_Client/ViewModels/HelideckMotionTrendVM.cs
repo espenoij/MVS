@@ -61,7 +61,7 @@ namespace HMS_Client
         public void Init(AdminSettingsVM adminSettingsVM, Config config, SensorGroupStatus sensorStatus)
         {
             // Oppdatere UI
-            UIUpdateTimer.Interval = TimeSpan.FromMilliseconds(config.ReadWithDefault(ConfigKey.ClientUpdateFrequencyUI, Constants.ClientUpdateFrequencyUIDefault));
+            UIUpdateTimer.Interval = TimeSpan.FromMilliseconds(config.ReadWithDefault(ConfigKey.ClientUpdateFrequencyUI, Constants.ClientUIUpdateFrequencyDefault));
             UIUpdateTimer.Tick += UIUpdate;
             UIUpdateTimer.Start();
 
@@ -148,7 +148,7 @@ namespace HMS_Client
             }
 
             // Oppdatere trend data i UI: 20 minutter
-            ChartDataUpdateTimer20m.Interval = TimeSpan.FromMilliseconds(config.ReadWithDefault(ConfigKey.ChartDataUpdateFrequency20m, Constants.ClientUpdateFrequencyUIDefault));
+            ChartDataUpdateTimer20m.Interval = TimeSpan.FromMilliseconds(config.ReadWithDefault(ConfigKey.ChartDataUpdateFrequency20m, Constants.ClientUIUpdateFrequencyDefault));
             ChartDataUpdateTimer20m.Tick += ChartDataUpdate20m;
             ChartDataUpdateTimer20m.Start();
 

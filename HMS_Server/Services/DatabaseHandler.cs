@@ -97,7 +97,7 @@ namespace HMS_Server
             this.isDatabaseConnectionOK = isDatabaseConnectionOK;
         }
 
-        public void CreateTables(RadObservableCollectionEx<SensorData> sensorDataList)
+        public void CreateTables(RadObservableCollection<SensorData> sensorDataList)
         {
             try
             {
@@ -305,7 +305,7 @@ namespace HMS_Server
                 throw;
             }
         }
-        public void RemoveUnusedTables(RadObservableCollectionEx<SensorData> sensorDataList)
+        public void RemoveUnusedTables(RadObservableCollection<SensorData> sensorDataList)
         {
             try
             {
@@ -350,7 +350,7 @@ namespace HMS_Server
             }
         }
 
-        public void DeleteAllData(RadObservableCollectionEx<SensorData> sensorDataList)
+        public void DeleteAllData(RadObservableCollection<SensorData> sensorDataList)
         {
             // NB! Tabellen må eksistere ellers gies feilmelding
 
@@ -811,7 +811,7 @@ namespace HMS_Server
             }
         }
 
-        public void DatabaseMaintenance(RadObservableCollectionEx<SensorData> sensorDataList)
+        public void DatabaseMaintenance(RadObservableCollection<SensorData> sensorDataList)
         {
             // Slette data eldre enn angitt antall dager
             try

@@ -26,7 +26,7 @@ namespace HMS_Client
             OnPropertyChanged(nameof(rwdStatus));
 
             // Oppdatere UI
-            UIUpdateTimer.Interval = TimeSpan.FromMilliseconds(config.ReadWithDefault(ConfigKey.ClientUpdateFrequencyUI, Constants.ClientUpdateFrequencyUIDefault));
+            UIUpdateTimer.Interval = TimeSpan.FromMilliseconds(config.ReadWithDefault(ConfigKey.ClientUpdateFrequencyUI, Constants.ClientUIUpdateFrequencyDefault));
             UIUpdateTimer.Tick += UIUpdate;
             UIUpdateTimer.Start();
 

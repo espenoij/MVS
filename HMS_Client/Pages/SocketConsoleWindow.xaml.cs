@@ -32,7 +32,7 @@ namespace HMS_Client
             // Dispatcher for å oppdatere meldingene i socket console
             socketConsoleUpdater = new DispatcherTimer();
 
-            socketConsoleUpdater.Interval = TimeSpan.FromMilliseconds(config.ReadWithDefault(ConfigKey.ClientUpdateFrequencyUI, Constants.ClientUpdateFrequencyUIDefault));
+            socketConsoleUpdater.Interval = TimeSpan.FromMilliseconds(config.ReadWithDefault(ConfigKey.ClientUpdateFrequencyUI, Constants.ClientUIUpdateFrequencyDefault));
             socketConsoleUpdater.Tick += UpdateConsoleMessages;
             socketConsoleUpdater.Start();
 
@@ -54,7 +54,10 @@ namespace HMS_Client
                     if (displayList.Where(x => x.text == item.text).Count() == 0)
                     {
                         // Legge inn my melding
-                        displayList.Add(item);
+                        displayList.Add(new SocketConsoleMessage()
+                        {
+                            text = item.text
+                        });
                     }
                 }
             }

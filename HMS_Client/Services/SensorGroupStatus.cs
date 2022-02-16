@@ -21,7 +21,7 @@ namespace HMS_Client
             // Update Sensor Status
             DispatcherTimer timer = new DispatcherTimer();
 
-            timer.Interval = TimeSpan.FromMilliseconds(config.ReadWithDefault(ConfigKey.ClientUpdateFrequencyUI, Constants.ClientUpdateFrequencyUIDefault));
+            timer.Interval = TimeSpan.FromMilliseconds(config.ReadWithDefault(ConfigKey.ClientUpdateFrequencyUI, Constants.ClientUIUpdateFrequencyDefault));
             timer.Tick += DoSensorStatusUpdate;
             timer.Start();
 

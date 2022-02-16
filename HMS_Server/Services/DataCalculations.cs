@@ -67,6 +67,12 @@ namespace HMS_Server
             parameter = 0.0;
         }
 
+        public DataCalculations(DataCalculations dataCalculations)
+        {
+            type = dataCalculations.type;
+            parameter = dataCalculations.parameter;
+        }
+
         public DataCalculations(CalculationType type, double parameter)
         {
             this.type = type;
@@ -279,8 +285,7 @@ namespace HMS_Server
                                 {
 
                                     // Legge inn den nye absolutte verdien i data settet
-                                    timeMaxAbsoluteDataList.Add(
-                                    new TimeData()
+                                    timeMaxAbsoluteDataList.Add(new TimeData()
                                     {
                                         data = Math.Abs(value),
                                         timestamp = newTimeStamp
@@ -360,8 +365,7 @@ namespace HMS_Server
                                     timeMaxPositiveDataList.LastOrDefault()?.timestamp != newTimeStamp)
                                 {
                                     // Legge inn den nye verdien i data settet
-                                    timeMaxPositiveDataList.Add(
-                                    new TimeData()
+                                    timeMaxPositiveDataList.Add(new TimeData()
                                     {
                                         data = value,
                                         timestamp = newTimeStamp
@@ -440,8 +444,7 @@ namespace HMS_Server
                                     timeMaxNegativeDataList.LastOrDefault()?.timestamp != newTimeStamp)
                                 {
                                     // Legge inn den nye verdien i data settet
-                                    timeMaxNegativeDataList.Add(
-                                    new TimeData()
+                                    timeMaxNegativeDataList.Add(new TimeData()
                                     {
                                         data = value,
                                         timestamp = newTimeStamp
@@ -519,8 +522,7 @@ namespace HMS_Server
                                     significantHeaveRateDataList.LastOrDefault()?.timestamp != newTimeStamp)
                                 {
                                     // Legge inn den nye absolutte verdien i data settet
-                                    significantHeaveRateDataList.Add(
-                                    new TimeData()
+                                    significantHeaveRateDataList.Add(new TimeData()
                                     {
                                         data = Math.Abs(value),
                                         timestamp = newTimeStamp
@@ -632,8 +634,7 @@ namespace HMS_Server
                                                 // Legge til bølgehøyde sist i listen
                                                 else
                                                 {
-                                                    swhDataList.Add(
-                                                        new TimeData()
+                                                    swhDataList.Add(new TimeData()
                                                         {
                                                             data = amplitude,
                                                             timestamp = newTimeStamp
@@ -689,8 +690,7 @@ namespace HMS_Server
                                                 // Legge til bølgehøyde sist i listen
                                                 else
                                                 {
-                                                    swhDataList.Add(
-                                                        new TimeData()
+                                                    swhDataList.Add(new TimeData()
                                                         {
                                                             data = amplitude,
                                                             timestamp = newTimeStamp
@@ -795,8 +795,7 @@ namespace HMS_Server
                                                 double amplitude = Math.Abs(timeMaxAmplitudeWaveTop) + Math.Abs(timeMaxAmplitudeWaveBottom);
 
                                                 // Legge inn amplitude i data listen
-                                                timeMaxAmplitudeDataList.Add(
-                                                    new TimeData()
+                                                timeMaxAmplitudeDataList.Add(new TimeData()
                                                     {
                                                         data = amplitude,
                                                         timestamp = newTimeStamp
@@ -825,8 +824,7 @@ namespace HMS_Server
                                                 double amplitude = Math.Abs(timeMaxAmplitudeWaveTop) + Math.Abs(timeMaxAmplitudeWaveBottom);
 
                                                 // Legge inn amplitude i data listen
-                                                timeMaxAmplitudeDataList.Add(
-                                                    new TimeData()
+                                                timeMaxAmplitudeDataList.Add(new TimeData()
                                                     {
                                                         data = amplitude,
                                                         timestamp = newTimeStamp
@@ -999,8 +997,7 @@ namespace HMS_Server
                                                 TimeSpan period = newTimeStamp.Subtract(timeMeanPeriodLastWaveTop);
 
                                                 // Legge inn periode i data listen
-                                                timeMeanPeriodDataList.Add(
-                                                    new TimeData()
+                                                timeMeanPeriodDataList.Add(new TimeData()
                                                     {
                                                         data = period.TotalSeconds,
                                                         timestamp = newTimeStamp

@@ -53,8 +53,8 @@ namespace HMS_Server
 
             // Selection
             cboErrorMessageSelection.Items.Add("Last 100");
+            cboErrorMessageSelection.Items.Add("Last 200");
             cboErrorMessageSelection.Items.Add("Last 500");
-            cboErrorMessageSelection.Items.Add("Last 1000");
 
             cboErrorMessageSelection.SelectedIndex = int.Parse(config.Read(ConfigKey.ErrorMessagesSelection, ConfigSection.ErrorMessages));
             cboErrorMessageSelection.Text = cboErrorMessageSelection.SelectedItem.ToString();
@@ -64,7 +64,7 @@ namespace HMS_Server
             // Dispatcher for å oppdatere meldingene i error message list
             errorMessageDisplayListUpdater = new DispatcherTimer();
 
-            errorMessageDisplayListUpdater.Interval = TimeSpan.FromMilliseconds(config.ReadWithDefault(ConfigKey.ClientUpdateFrequencyUI, Constants.ClientUpdateFrequencyUIDefault));
+            errorMessageDisplayListUpdater.Interval = TimeSpan.FromMilliseconds(config.ReadWithDefault(ConfigKey.ServerUIUpdateFrequency, Constants.ServerUIUpdateFrequencyDefault));
             errorMessageDisplayListUpdater.Tick += UpdateErrorMessageDisplayList;
 
             void UpdateErrorMessageDisplayList(object sender, EventArgs e)
@@ -89,7 +89,7 @@ namespace HMS_Server
                     if (displayList.Where(x => x.timestamp == item.timestamp).Count() == 0)
                     {
                         // Legge inn my melding
-                        displayList.Add(item);
+                        displayList.Add(new ErrorMessage(item));
                     }
                 }
             }
@@ -151,10 +151,10 @@ namespace HMS_Server
                     number = 100;
                     break;
                 case 1:
-                    number = 500;
+                    number = 200;
                     break;
                 case 2:
-                    number = 1000;
+                    number = 500;
                     break;
             }
 

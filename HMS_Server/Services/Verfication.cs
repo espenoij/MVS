@@ -3,6 +3,7 @@ using System.Collections.Generic;
 using System.Linq;
 using System.Text;
 using System.Threading.Tasks;
+using Telerik.Windows.Data;
 
 namespace HMS_Server
 {
@@ -72,7 +73,7 @@ namespace HMS_Server
                 item.Reset();
         }
 
-        public void Update(HMSDataCollection hmsOutputData, RadObservableCollectionEx<SensorData> sensorDataList, DatabaseHandler database)
+        public void Update(HMSDataCollection hmsOutputData, RadObservableCollection<SensorData> sensorDataList, DatabaseHandler database)
         {
             // Test Data
             testData.TransferData(hmsOutputData.GetDataList());
