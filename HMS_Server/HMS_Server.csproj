@@ -400,6 +400,7 @@
     <Compile Include="Services\HMSProcessingMotion.cs" />
     <Compile Include="Services\HMSProcessingSettings.cs" />
     <Compile Include="Services\HMSProcessingWindHeading.cs" />
+    <Compile Include="Services\ObservableCollectionEx.cs" />
     <Compile Include="Services\Verfication.cs" />
     <Compile Include="Services\VerificationData.cs" />
     <Compile Include="ViewModels\AdminSettingsVM.cs" />

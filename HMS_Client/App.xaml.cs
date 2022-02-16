@@ -37,6 +37,8 @@ namespace HMS_Client
                 ex.Handled = true;
             }
 
+            string version = Application.ResourceAssembly.GetName().Version.ToString();
+
             // Starte klient vinduet
             MainWindow mainWindow = new MainWindow();
             mainWindow.Show();

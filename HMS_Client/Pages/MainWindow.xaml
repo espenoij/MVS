@@ -141,18 +141,11 @@
 
                                 </Viewbox>
 
-                                <!--Basic Information NOROG-->
-                                <uc:GeneralInformation_NOROG
-                                    x:Name="ucGeneralInformation_NOROG"
-                                    Grid.Row="0"
-                                    Grid.RowSpan="2"
-                                    Visibility="Visible" />
-
                                 <!--Basic Information CAP-->
                                 <uc:GeneralInformation_CAP
                                     x:Name="ucGeneralInformation_CAP"
-                                    Grid.Row="2"
-                                    Visibility="Collapsed" />
+                                    Grid.Row="1"
+                                    Visibility="Visible" />
 
                                 <!--Sensor Status-->
                                 <uc:SensorStatusDisplay_CAP

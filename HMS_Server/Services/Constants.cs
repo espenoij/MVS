@@ -11,10 +11,10 @@ class Constants
     public const string RegulatoryStandard = "HMS Rev 9b";
 
     // Regulatory Standard
-    public const string HLLLimitsVersion = "HCA Issue 4 (Nov 2020)";
+    public const string HLLLimitsVersion = "HLL Issue 4 (Nov 2020)";
 
     // Software Version
-    public const string SoftwareVersion = "Version 0.9.0 (Dev)";
+    public const string SoftwareVersionPostfix = "(Dev)";
 
     // Admin Mode Password
     public const string AdminModePassword = "a";

@@ -1,26 +1,26 @@
-﻿using System;
-using System.ComponentModel;
-using System.Windows;
-using System.Windows.Threading;
+﻿using System.ComponentModel;
+using System.Windows.Data;
+using Telerik.Windows.Data;
 
 namespace HMS_Server
 {
     class SocketConsole
     {
-        private RadObservableCollectionEx<SocketConsoleMessage> socketConsoleMessages = new RadObservableCollectionEx<SocketConsoleMessage>();
+        private RadObservableCollection<SocketConsoleMessage> socketConsoleMessages = new RadObservableCollection<SocketConsoleMessage>();
+        private object socketConsoleMessagesLock = new object();
 
         public SocketConsole()
         {
+            socketConsoleMessages = new RadObservableCollection<SocketConsoleMessage>();
+            BindingOperations.EnableCollectionSynchronization(socketConsoleMessages, socketConsoleMessagesLock);
         }
 
         public void Add(string msg)
         {
             // Legger til en ny melding i socket console listen
-            Application.Current.Dispatcher.BeginInvoke(
-                DispatcherPriority.Normal,
-                new Action(() =>
-                {
-                    socketConsoleMessages.Add(new SocketConsoleMessage()
+            lock (socketConsoleMessagesLock)
+            {
+                socketConsoleMessages.Add(new SocketConsoleMessage()
                 {
                     text = msg
                 });
@@ -28,10 +28,10 @@ namespace HMS_Server
                 // Begrenser antallet i listen
                 while (socketConsoleMessages.Count > Constants.MaxErrorMessages)
                     socketConsoleMessages.RemoveAt(0);
-            }));
+            }
         }
 
-        public RadObservableCollectionEx<SocketConsoleMessage> Messages()
+        public RadObservableCollection<SocketConsoleMessage> Messages()
         {
             return socketConsoleMessages;
         }

@@ -1,4 +1,5 @@
-﻿using System.Windows.Controls;
+﻿using System;
+using System.Windows.Controls;
 
 namespace HMS_Client
 {
@@ -15,17 +16,17 @@ namespace HMS_Client
             InitializeComponent();
         }
 
-        public void Init(GeneralInformationVM viewModel)
+        public void Init(GeneralInformationVM viewModel, Version version)
         {
             DataContext = viewModel;
 
             this.viewModel = viewModel;
 
             // Init av UI
-            InitUI();
+            InitUI(version);
         }
 
-        private void InitUI()
+        private void InitUI(Version version)
         {
             // Vessel Name
             // Settes i admin general settings
@@ -34,7 +35,9 @@ namespace HMS_Client
             // Settes i admin general settings
 
             // Software Version
-            viewModel.softwareVersion = Constants.SoftwareVersion;
+            viewModel.softwareVersion = string.Format("Version {0} {1}",
+                version.ToString(),
+                Constants.SoftwareVersionPostfix);
         }
     }
 }

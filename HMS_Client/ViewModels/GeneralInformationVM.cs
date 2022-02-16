@@ -16,12 +16,12 @@ namespace HMS_Client
         private DispatcherTimer UIUpdateTimer = new DispatcherTimer();
         private DispatcherTimer TimeTimer = new DispatcherTimer();
 
-        public void Init(Config config, AdminSettingsVM adminSettingsVM, SensorGroupStatus sensorStatus)
+        public void Init(Config config, AdminSettingsVM adminSettingsVM, SensorGroupStatus sensorStatus, Version version)
         {
             this.config = config;
             this.adminSettingsVM = adminSettingsVM;
 
-            InitUI();
+            InitUI(version);
 
             // Oppdatere UI
             UIUpdateTimer.Interval = TimeSpan.FromMilliseconds(config.ReadWithDefault(ConfigKey.ClientUpdateFrequencyUI, Constants.ClientUpdateFrequencyUIDefault));
@@ -51,13 +51,15 @@ namespace HMS_Client
             }
         }
 
-        private void InitUI()
+        private void InitUI(Version version)
         {
             // Vessel Icon
             vesselImage = (VesselImage)Enum.Parse(typeof(VesselImage), config.ReadWithDefault(ConfigKey.VesselImage, VesselImage.Ship.ToString()));
 
             // Software Version
-            softwareVersion = Constants.SoftwareVersion;
+            softwareVersion = string.Format("Version {0} {1}",
+                version.ToString(),
+                Constants.SoftwareVersionPostfix);
 
             // Regulatory Standard
             regulatoryStandard = Constants.RegulatoryStandard;

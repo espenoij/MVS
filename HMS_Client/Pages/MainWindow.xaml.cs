@@ -91,7 +91,7 @@ namespace HMS_Client
             mainWindowVM.Init();
             adminSettingsVM.Init(config, serverCom, restartRequired);
             helideckReportVM.Init(config, adminSettingsVM, sensorStatus);
-            generalInformationVM.Init(config, adminSettingsVM, sensorStatus);
+            generalInformationVM.Init(config, adminSettingsVM, sensorStatus, Application.ResourceAssembly.GetName().Version);
 
             userInputsVM.Init(
                 adminSettingsVM,
@@ -159,7 +159,7 @@ namespace HMS_Client
                 ucGeneralInformation_NOROG.Visibility = Visibility.Visible;
                 ucGeneralInformation_CAP.Visibility = Visibility.Collapsed;
 
-                ucGeneralInformation_NOROG.Init(generalInformationVM);
+                ucGeneralInformation_NOROG.Init(generalInformationVM, Application.ResourceAssembly.GetName().Version);
 
                 // User Inputs
                 ucUserInputs_NOROG.Visibility = Visibility.Visible;

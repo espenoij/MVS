@@ -2,6 +2,7 @@
 using System.Collections.Generic;
 using System.Linq;
 using System.Windows;
+using System.Windows.Data;
 using System.Windows.Threading;
 using Telerik.Windows.Controls;
 using Telerik.Windows.Data;
@@ -17,7 +18,8 @@ namespace HMS_Server
         private DatabaseHandler database;
 
         // Latest Error Messages
-        private RadObservableCollectionEx<ErrorMessage> errorMessageList = new RadObservableCollectionEx<ErrorMessage>();
+        private RadObservableCollection<ErrorMessage> errorMessageList;
+        private object errorMessageListLock = new object();
 
         // Selected type
         private ErrorMessageType selectedType = ErrorMessageType.All;
@@ -56,6 +58,9 @@ namespace HMS_Server
         {
             this.database = database;
 
+            errorMessageList = new RadObservableCollection<ErrorMessage>();
+            BindingOperations.EnableCollectionSynchronization(errorMessageList, errorMessageListLock);
+
             // Database Errors
             for (int i = 0; i < (int)DatabaseErrorType.TotalErrorTypes; i++)
                 databaseErrorList.Add(false);
@@ -71,18 +76,16 @@ namespace HMS_Server
             if (errorMessage.type == selectedType ||
                 selectedType == ErrorMessageType.All)
             {
-                // Legge feilmelding inn i feilmeldinglisten
+                // Legge feilmelding inn i feilmeldingslisten
                 try
                 {
-                    Application.Current.Dispatcher.BeginInvoke(
-                        DispatcherPriority.Normal,
-                        new Action(() =>
-                        {
-                            errorMessageList.Add(errorMessage);
+                    lock (errorMessageListLock)
+                    {
+                        errorMessageList.Add(errorMessage);
 
-                            if (errorMessageList.Count > Constants.MaxErrorMessages)
-                                errorMessageList.RemoveAt(0);
-                        }));
+                        if (errorMessageList.Count > Constants.MaxErrorMessages)
+                            errorMessageList.RemoveAt(0);
+                    }
                 }
                 catch (Exception ex)
                 {
@@ -132,12 +135,13 @@ namespace HMS_Server
         public ErrorMessage GetErrorMessage(int id)
         {
             // NB! Returnerer null dersom melding med angitt id ikke ble funnet
-            return errorMessageList?.ToList().Where(x => x?.id == id)?.FirstOrDefault();
+            lock (errorMessageListLock)
+                return errorMessageList?.ToList().Where(x => x?.id == id)?.DefaultIfEmpty(null).First();
         }
 
-        public RadObservableCollectionEx<ErrorMessage> GetErrorMessageList()
+        public RadObservableCollection<ErrorMessage> GetErrorMessageList()
         {
-            return errorMessageList;
+                return errorMessageList;
         }
 
         public List<ErrorMessage> ReadLast(ErrorMessageType type, int number)
@@ -178,7 +182,8 @@ namespace HMS_Server
 
         public void ClearAllMessages()
         {
-            errorMessageList?.Clear();
+            lock (errorMessageListLock)
+                errorMessageList?.Clear();
         }
 
         public void SetDatabaseError(DatabaseErrorType type)

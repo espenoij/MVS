@@ -36,15 +36,16 @@ namespace HMS_Client
         private void UpdateSensorStatus()
         {
             // Løper gjennom alle sensorene...
-            for (int i = 0; i < sensorGroupList.Count; i++)
+            for (int sensorGroupId = 0; sensorGroupId < sensorGroupList.Count; sensorGroupId++)
             {
-                SensorGroup sensorGroup = sensorGroupList[i];
+                SensorGroup sensorGroup = sensorGroupList[sensorGroupId];
 
                 // Finne sensor verdier knyttet til valgt sensor gruppe
-                var clientDataList = clientSensorDataCollection.GetDataList().ToList();
-                lock (clientDataList)
+                var clientDataList = clientSensorDataCollection.GetDataList(sensorGroupId);
+
+                if (clientDataList != null)
                 {
-                    var clientData = clientDataList?.Where(x => x.sensorGroupId == i);
+                    var clientData = clientDataList?.Where(x => x.sensorGroupId == sensorGroupId);
 
                     // Har funnet sensor verdier knyttet til sensor gruppe
                     if (clientData.Count() > 0)

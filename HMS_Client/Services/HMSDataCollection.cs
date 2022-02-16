@@ -1,4 +1,5 @@
 ﻿using System.Linq;
+using System.Windows.Data;
 using Telerik.Windows.Data;
 
 namespace HMS_Client
@@ -11,11 +12,14 @@ namespace HMS_Client
         // - Hente individuelle data basert på ID
 
         // Liste med HMS data
-        public RadObservableCollectionEx<HMSData> hmsDataList = new RadObservableCollectionEx<HMSData>();
+        public RadObservableCollectionEx<HMSData> hmsDataList;
+        private object hmsDataListLock = new object();
 
         // Init
         public HMSDataCollection()
         {
+            hmsDataList = new RadObservableCollectionEx<HMSData>();
+            BindingOperations.EnableCollectionSynchronization(hmsDataList, hmsDataListLock);
         }
 
         public RadObservableCollectionEx<HMSData> GetDataList()
@@ -23,9 +27,21 @@ namespace HMS_Client
             return hmsDataList;
         }
 
+        public RadObservableCollectionEx<HMSData> GetDataList(int sensorGroupId)
+        {
+            lock (hmsDataListLock)
+            {
+                var sensorData = hmsDataList?.Where(x => x?.sensorGroupId == sensorGroupId);
+                if (sensorData.Count() > 0)
+                    return sensorData as RadObservableCollectionEx<HMSData>;
+                else
+                    return null;
+            }
+        }
+
         public HMSData GetData(ValueType id)
         {
-            lock (hmsDataList)
+            lock (hmsDataListLock)
             {
                 var sensorData = hmsDataList?.Where(x => x?.id == (int)id);
                 if (sensorData.Count() > 0)
