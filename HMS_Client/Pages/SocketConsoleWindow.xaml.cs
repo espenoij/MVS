@@ -14,12 +14,12 @@ namespace HMS_Client
     {
         private SocketConsole socketConsole;
 
-        private RadObservableCollectionEx<SocketConsoleMessage> socketConsoleMessages = new RadObservableCollectionEx<SocketConsoleMessage>();
+        private RadObservableCollection<SocketConsoleMessage> socketConsoleDisplayList = new RadObservableCollection<SocketConsoleMessage>();
         private DispatcherTimer socketConsoleUpdater;
 
         private RadObservableCollectionEx<HMSData> hmsDataList = new RadObservableCollectionEx<HMSData>();
 
-        public SocketConsoleWindow(SocketConsole socketConsole)
+        public SocketConsoleWindow(SocketConsole socketConsole, Config config)
         {
             InitializeComponent();
 
@@ -27,22 +27,22 @@ namespace HMS_Client
             this.socketConsole = socketConsole;
 
             // Listview source binding
-            lvClientSocketConsole.ItemsSource = socketConsoleMessages;
+            lvClientSocketConsole.ItemsSource = socketConsoleDisplayList;
 
             // Dispatcher for å oppdatere meldingene i socket console
             socketConsoleUpdater = new DispatcherTimer();
 
-            socketConsoleUpdater.Interval = TimeSpan.FromMilliseconds(1000);
+            socketConsoleUpdater.Interval = TimeSpan.FromMilliseconds(config.ReadWithDefault(ConfigKey.ClientUpdateFrequencyUI, Constants.ClientUpdateFrequencyUIDefault));
             socketConsoleUpdater.Tick += UpdateConsoleMessages;
             socketConsoleUpdater.Start();
 
             void UpdateConsoleMessages(object sender, EventArgs e)
             {
-                InsertNewMessages(socketConsoleMessages, socketConsole.GetMessages());
+                TransferNewMessages(socketConsoleDisplayList, socketConsole.GetMessages());
             }
         }
 
-        private void InsertNewMessages(RadObservableCollectionEx<SocketConsoleMessage> socketConsoleMessages, RadObservableCollection<SocketConsoleMessage> newMessages)
+        private void TransferNewMessages(RadObservableCollection<SocketConsoleMessage> displayList, RadObservableCollection<SocketConsoleMessage> newMessages)
         {
             // Gå gjennom meldingslisten
             foreach (var item in newMessages.ToList())
@@ -51,10 +51,10 @@ namespace HMS_Client
                 {
                     // Finne ut om melding ligger inne fra før
                     // Dersom den ikke ligger inne -> legg den inn, ellers gjør vi ingenting
-                    if (socketConsoleMessages.Where(x => x.text == item.text).Count() == 0)
+                    if (displayList.Where(x => x.text == item.text).Count() == 0)
                     {
                         // Legge inn my melding
-                        socketConsoleMessages.Add(item);
+                        displayList.Add(item);
                     }
                 }
             }
@@ -76,7 +76,7 @@ namespace HMS_Client
         private void chkSocketComClear_Click(object sender, RoutedEventArgs e)
         {
             socketConsole.Clear();
-            socketConsoleMessages.Clear();
+            socketConsoleDisplayList.Clear();
         }
     }
 

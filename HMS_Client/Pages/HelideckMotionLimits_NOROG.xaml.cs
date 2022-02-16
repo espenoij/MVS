@@ -29,9 +29,6 @@ namespace HMS_Client
 
             DataContext = this.viewModel;
 
-            //if (!viewModel.IsWithinLimits(ValueType.SignificantHeaveRate))
-            //    SHRIsWithinLimits = false;
-
             InitUIUpdate(tabHelicopterOps);
         }
 

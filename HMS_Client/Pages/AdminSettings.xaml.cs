@@ -163,7 +163,7 @@ namespace HMS_Client
             // Open window (men kun 1 instans av dette vinduet)
             if (serverTrafficWindow == null)
             {
-                serverTrafficWindow = new SocketConsoleWindow(socketConsole);
+                serverTrafficWindow = new SocketConsoleWindow(socketConsole, config);
                 serverTrafficWindow.Closed += (a, b) => serverTrafficWindow = null;
 
                 serverTrafficWindow.Show();

@@ -3,6 +3,7 @@ using System.Collections.Generic;
 using System.Linq;
 using System.Windows;
 using System.Windows.Controls;
+using System.Windows.Threading;
 using Telerik.Windows.Controls;
 using Telerik.Windows.Data;
 
@@ -20,7 +21,8 @@ namespace HMS_Server
         private ErrorHandler errorHandler;
 
         // Error Message List
-        private RadObservableCollectionEx<ErrorMessage> errorMessageList = new RadObservableCollectionEx<ErrorMessage>();
+        private RadObservableCollection<ErrorMessage> errorMessageDisplayList = new RadObservableCollection<ErrorMessage>();
+        private DispatcherTimer errorMessageDisplayListUpdater;
 
         public ErrorMessagesPage()
         {
@@ -31,6 +33,9 @@ namespace HMS_Server
         {
             this.config = config;
             this.errorHandler = errorHandler;
+
+            // Data liste
+            lvErrorMessagesData.ItemsSource = errorMessageDisplayList;
 
             // View
             cboErrorMessageView.Items.Add("Live View");
@@ -56,15 +61,37 @@ namespace HMS_Server
 
             cboErrorMessageSelection.IsEnabled = false;
 
-            // Liste med feil meldinger
-            // ...dersom live view er valgt
-            if (cboErrorMessageView.SelectedIndex == 0)
+            // Dispatcher for å oppdatere meldingene i error message list
+            errorMessageDisplayListUpdater = new DispatcherTimer();
+
+            errorMessageDisplayListUpdater.Interval = TimeSpan.FromMilliseconds(config.ReadWithDefault(ConfigKey.ClientUpdateFrequencyUI, Constants.ClientUpdateFrequencyUIDefault));
+            errorMessageDisplayListUpdater.Tick += UpdateErrorMessageDisplayList;
+
+            void UpdateErrorMessageDisplayList(object sender, EventArgs e)
             {
-                lvErrorMessagesData.ItemsSource = errorHandler.GetErrorMessageList();
+                TransferNewMessages(errorMessageDisplayList, errorHandler.GetErrorMessageList());
             }
-            else
+
+            // Starte overføring av error messages til display listen dersom live view er valgt
+            if (cboErrorMessageView.SelectedIndex == 0)
+                errorMessageDisplayListUpdater.Start();
+        }
+
+        private void TransferNewMessages(RadObservableCollection<ErrorMessage> displayList, RadObservableCollection<ErrorMessage> newMessages)
+        {
+            // Gå gjennom meldingslisten
+            foreach (var item in newMessages.ToList())
             {
-                lvErrorMessagesData.ItemsSource = errorMessageList;
+                if (item != null)
+                {
+                    // Finne ut om melding ligger inne fra før
+                    // Dersom den ikke ligger inne -> legg den inn, ellers gjør vi ingenting
+                    if (displayList.Where(x => x.timestamp == item.timestamp).Count() == 0)
+                    {
+                        // Legge inn my melding
+                        displayList.Add(item);
+                    }
+                }
             }
         }
 
@@ -78,14 +105,14 @@ namespace HMS_Server
                     case 0:
                         cboErrorMessageSelection.IsEnabled = false;
                         btnReadDB.IsEnabled = false;
-                        lvErrorMessagesData.ItemsSource = errorHandler.GetErrorMessageList();
+                        errorMessageDisplayListUpdater?.Start();
                         break;
 
                     // Stored Messages
                     case 1:
                         cboErrorMessageSelection.IsEnabled = true;
                         btnReadDB.IsEnabled = true;
-                        lvErrorMessagesData.ItemsSource = errorMessageList;
+                        errorMessageDisplayListUpdater?.Stop();
                         break;
                 }
 
@@ -142,11 +169,11 @@ namespace HMS_Server
                 List<ErrorMessage> sortedErrorMessages = newErrorMessages.OrderBy(x => x.timestamp).ToList();
 
                 // Slette display feil listen
-                errorMessageList.Clear();
+                errorMessageDisplayList.Clear();
 
                 // Overføre feil data til display listen/listview
                 foreach (var errorMessage in sortedErrorMessages)
-                    errorMessageList.Add(errorMessage);
+                    errorMessageDisplayList.Add(errorMessage);
             }
         }
 
@@ -162,7 +189,7 @@ namespace HMS_Server
                     errorHandler.DeleteErrorMessageData();
 
                     // Slette display feil listen
-                    errorMessageList.Clear();
+                    errorMessageDisplayList.Clear();
                 }
             }
         }
@@ -170,7 +197,7 @@ namespace HMS_Server
         private void btnClearDisplay_Click(object sender, RoutedEventArgs e)
         {
             errorHandler.ClearAllMessages();
-            errorMessageList.Clear();
+            errorMessageDisplayList.Clear();
         }
     }
 }
