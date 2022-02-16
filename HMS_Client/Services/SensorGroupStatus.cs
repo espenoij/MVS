@@ -42,7 +42,6 @@ namespace HMS_Client
 
                 // Finne sensor verdier knyttet til valgt sensor gruppe
                 var clientDataList = clientSensorDataCollection.GetDataList(sensorGroupId);
-
                 if (clientDataList != null)
                 {
                     var clientData = clientDataList?.Where(x => x.sensorGroupId == sensorGroupId);

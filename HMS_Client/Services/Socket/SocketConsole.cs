@@ -1,12 +1,11 @@
-﻿using System;
-using System.Windows;
-using System.Windows.Threading;
+﻿using Telerik.Windows.Data;
 
 namespace HMS_Client
 {
     public class SocketConsole
     {
-        private RadObservableCollectionEx<SocketConsoleMessage> socketConsoleMessages = new RadObservableCollectionEx<SocketConsoleMessage>();
+        private RadObservableCollection<SocketConsoleMessage> socketConsoleMessages = new RadObservableCollection<SocketConsoleMessage>();
+        private object socketConsoleMessagesLock = new object();
 
         public SocketConsole()
         {
@@ -15,29 +14,28 @@ namespace HMS_Client
         public void Add(string msg)
         {
             // Legger til en ny melding i socket console listen
-            Application.Current.Dispatcher.BeginInvoke(
-                DispatcherPriority.Normal,
-                new Action(() =>
+            lock (socketConsoleMessagesLock)
+            {
+                socketConsoleMessages.Add(new SocketConsoleMessage()
                 {
-                    socketConsoleMessages.Add(new SocketConsoleMessage()
-                    {
-                        text = msg
-                    });
+                    text = msg
+                });
 
-                    // Begrenser antallet i listen
-                    while (socketConsoleMessages.Count > Constants.MaxErrorMessages)
-                        socketConsoleMessages.RemoveAt(0);
-                }));
+                // Begrenser antallet i listen
+                while (socketConsoleMessages.Count > Constants.MaxErrorMessages)
+                    socketConsoleMessages.RemoveAt(0);
+            }
         }
 
-        public RadObservableCollectionEx<SocketConsoleMessage> Messages()
+        public RadObservableCollection<SocketConsoleMessage> GetMessages()
         {
             return socketConsoleMessages;
         }
 
         public void Clear()
         {
-            socketConsoleMessages.Clear();
+            lock (socketConsoleMessagesLock)
+                socketConsoleMessages.Clear();
         }
     }
 

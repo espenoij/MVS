@@ -32,31 +32,29 @@ namespace HMS_Client
             // Dispatcher for å oppdatere meldingene i socket console
             socketConsoleUpdater = new DispatcherTimer();
 
-            socketConsoleUpdater.Interval = TimeSpan.FromMilliseconds(500);
+            socketConsoleUpdater.Interval = TimeSpan.FromMilliseconds(1000);
             socketConsoleUpdater.Tick += UpdateConsoleMessages;
             socketConsoleUpdater.Start();
 
             void UpdateConsoleMessages(object sender, EventArgs e)
             {
-                // Hente liste med melding fra socket console
-                RadObservableCollectionEx<SocketConsoleMessage> socketMessages = socketConsole.Messages();
+                InsertNewMessages(socketConsoleMessages, socketConsole.GetMessages());
+            }
+        }
 
-                // Låse meldingslisten
-                lock (socketMessages)
+        private void InsertNewMessages(RadObservableCollectionEx<SocketConsoleMessage> socketConsoleMessages, RadObservableCollection<SocketConsoleMessage> newMessages)
+        {
+            // Gå gjennom meldingslisten
+            foreach (var item in newMessages.ToList())
+            {
+                if (item != null)
                 {
-                    // Gå gjennom meldingslisten
-                    foreach (var item in socketMessages.ToList())
+                    // Finne ut om melding ligger inne fra før
+                    // Dersom den ikke ligger inne -> legg den inn, ellers gjør vi ingenting
+                    if (socketConsoleMessages.Where(x => x.text == item.text).Count() == 0)
                     {
-                        if (item != null)
-                        {
-                            // Finne ut om melding ligger inne fra før
-                            // Dersom den ikke ligger inne -> legg den inn, ellers gjør vi ingenting
-                            if (socketConsoleMessages.Where(x => x.text == item.text).Count() == 0)
-                            {
-                                // Legge inn my melding
-                                socketConsoleMessages.Add(item);
-                            }
-                        }
+                        // Legge inn my melding
+                        socketConsoleMessages.Add(item);
                     }
                 }
             }
