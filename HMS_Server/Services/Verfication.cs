@@ -164,7 +164,13 @@ namespace HMS_Server
                         !helicopterSetLanded)
                     {
                         userInputs.displayMode = DisplayMode.OnDeck;
-                        userInputs.onDeckHelicopterHeading = 338;
+
+                        var time = referenceDataList.Where(x => x.id == 12);
+                        if (time.Count() == 1)
+                            userInputs.onDeckHelicopterHeading = time.First().data;
+                        else
+                            userInputs.onDeckHelicopterHeading = -1;
+
                         userInputs.onDeckTime = DateTime.UtcNow;
                         userInputs.onDeckVesselHeading = hmsOutputData.GetData(ValueType.VesselHeading).data;
                         userInputs.onDeckWindDirection = hmsOutputData.GetData(ValueType.HelideckWindDirection2m).data;
