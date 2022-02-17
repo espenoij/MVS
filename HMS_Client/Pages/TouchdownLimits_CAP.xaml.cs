@@ -63,8 +63,8 @@ namespace HMS_Client
                     }
                     else
                     {
-                        // Grå bakgrunn
-                        gridMaxPitch.Background = (Brush)this.FindResource("ColorNABackground");
+                        // Blank bakgrunn
+                        gridMaxPitch.Background = (Brush)FindResource("ColorBackgroundSeparator");
                     }
 
                     ///////////////////////////////////////////////////////////////////////////////////////////
@@ -81,8 +81,8 @@ namespace HMS_Client
                     }
                     else
                     {
-                        // Grå bakgrunn
-                        gridMaxRoll.Background = (Brush)this.FindResource("ColorNABackground");
+                        // Blank bakgrunn
+                        gridMaxRoll.ClearValue(Grid.BackgroundProperty);
                     }
 
                     ///////////////////////////////////////////////////////////////////////////////////////////
@@ -99,8 +99,8 @@ namespace HMS_Client
                     }
                     else
                     {
-                        // Grå bakgrunn
-                        gridSignificantHeaveRate.Background = (Brush)this.FindResource("ColorNABackground");
+                        // Blank bakgrunn
+                        gridSignificantHeaveRate.Background = (Brush)FindResource("ColorBackgroundSeparator");
                     }
 
                     ///////////////////////////////////////////////////////////////////////////////////////////
@@ -117,8 +117,8 @@ namespace HMS_Client
                     }
                     else
                     {
-                        // Grå bakgrunn
-                        gridMaxInclination.Background = (Brush)this.FindResource("ColorNABackground");
+                        // Blank bakgrunn
+                        gridMaxInclination.ClearValue(Grid.BackgroundProperty);
                     }
                 }
             }

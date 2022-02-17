@@ -49,17 +49,18 @@ namespace HMS_Client
         private HMSData motionLimitHeaveAmplitude = new HMSData();
         private HMSData motionLimitSignificantHeaveRate = new HMSData();
 
-        public HelideckMotionTrendVM()
+        private AdminSettingsVM adminSettingsVM;
+
+        public void Init(AdminSettingsVM adminSettingsVM, Config config, SensorGroupStatus sensorStatus)
         {
+            this.adminSettingsVM = adminSettingsVM;
+
             InitPitchData();
             InitRollData();
             InitInclinationData();
             InitHeaveAmplitudeData();
             InitSignificantHeaveData();
-        }
 
-        public void Init(AdminSettingsVM adminSettingsVM, Config config, SensorGroupStatus sensorStatus)
-        {
             // Oppdatere UI
             UIUpdateTimer.Interval = TimeSpan.FromMilliseconds(config.ReadWithDefault(ConfigKey.ClientUpdateFrequencyUI, Constants.ClientUIUpdateFrequencyDefault));
             UIUpdateTimer.Tick += UIUpdate;
@@ -67,6 +68,8 @@ namespace HMS_Client
 
             void UIUpdate(object sender, EventArgs e)
             {
+                int chartTimeCorrMax = -2;
+
                 // Sjekke om vi har data timeout
 
                 // Pitch
@@ -144,6 +147,14 @@ namespace HMS_Client
                     GraphBuffer.RemoveOldData(rollData3hList, Constants.Hours3 + chartTimeCorrMin);
                     GraphBuffer.RemoveOldData(inclinationData3hList, Constants.Hours3 + chartTimeCorrMin);
                     GraphBuffer.RemoveOldData(significantHeaveRateData3hList, Constants.Hours3 + chartTimeCorrMin);
+
+                    // Oppdatere alignment datetime (nåtid) til alle chart (20m og 3h)
+                    alignmentDate = DateTime.UtcNow.AddSeconds(chartTimeCorrMax);
+
+                    // Tick alignment
+                    //tickAlignment5 = DateTime.UtcNow.AddMinutes(-5);
+                    //tickAlignment10 = DateTime.UtcNow.AddMinutes(-10);
+                    //tickAlignment15 = DateTime.UtcNow.AddMinutes(-15);
                 }
             }
 
@@ -173,6 +184,9 @@ namespace HMS_Client
                     GraphBuffer.RemoveOldData(inclinationData20mList, Constants.Minutes20 + chartTimeCorrMin);
                     GraphBuffer.RemoveOldData(heaveAmplitudeData20mList, Constants.Minutes20 + chartTimeCorrMin);
                     GraphBuffer.RemoveOldData(significantHeaveRateData20mList, Constants.Minutes20 + chartTimeCorrMin);
+
+                    // Oppdatere alignment datetime (nåtid) til alle chart (20m og 3h)
+                    alignmentDate = DateTime.UtcNow.AddSeconds(chartTimeCorrMax);
                 }
 
                 // Oppdatere aksene og farget område på graf
@@ -212,9 +226,6 @@ namespace HMS_Client
                 OnPropertyChanged(nameof(pitchRollLimitString));
                 OnPropertyChanged(nameof(inclinationLimitString));
                 OnPropertyChanged(nameof(significantHeaveRateLimitString));
-
-                // Oppdatere alignment datetime (nåtid) til alle chart (20m og 3h)
-                alignmentDate = DateTime.UtcNow.AddSeconds(chartTimeCorrMax);
             }
 
             // Oppdatere trend data i UI: 3 hours
@@ -226,6 +237,7 @@ namespace HMS_Client
             {
                 // Disse korreksjonene legges inn for å få tidspunkt-label på X aksen til å vises korrekt
                 int chartTimeCorrMin = 4;
+                int chartTimeCorrMax = -2;
 
                 if (adminSettingsVM.regulationStandard == RegulationStandard.NOROG)
                 {
@@ -242,6 +254,9 @@ namespace HMS_Client
                     GraphBuffer.RemoveOldData(inclinationData3hList, Constants.Hours3 + chartTimeCorrMin);
                     GraphBuffer.RemoveOldData(heaveAmplitudeData3hList, Constants.Hours3 + chartTimeCorrMin);
                     GraphBuffer.RemoveOldData(significantHeaveRateData3hList, Constants.Hours3 + chartTimeCorrMin);
+
+                    // Oppdatere alignment datetime (nåtid) til alle chart (20m og 3h)
+                    alignmentDate = DateTime.UtcNow.AddSeconds(chartTimeCorrMax);
                 }
 
                 // Oppdatere aksene og farget område på graf
@@ -358,22 +373,45 @@ namespace HMS_Client
             _pitchMax3hData = new HMSData();
 
             // Init av chart data
-            for (int i = -Constants.Minutes20; i <= 0; i++)
+            if (adminSettingsVM.regulationStandard == RegulationStandard.CAP)
             {
-                pitchData20mList.Add(new HMSData()
+                for (double i = Constants.Minutes20 * -1000; i <= 0; i += Constants.GraphCullFrequency20m + 250)
                 {
-                    data = 0,
-                    timestamp = DateTime.UtcNow.AddSeconds(i)
-                });
-            }
+                    pitchData20mList.Add(new HMSData()
+                    {
+                        data = 0,
+                        timestamp = DateTime.UtcNow.AddMilliseconds(i)
+                    });
+                }
 
-            for (int i = -Constants.Hours3; i <= 0; i++)
-            {
-                pitchData3hList.Add(new HMSData()
+                for (double i = Constants.Hours3 * -1000; i <= 0; i += Constants.GraphCullFrequency3h + 250)
                 {
-                    data = 0,
-                    timestamp = DateTime.UtcNow.AddSeconds(i)
-                });
+                    pitchData3hList.Add(new HMSData()
+                    {
+                        data = 0,
+                        timestamp = DateTime.UtcNow.AddMilliseconds(i)
+                    });
+                }
+            }
+            else
+            {
+                for (int i = -Constants.Minutes20; i <= 0; i++)
+                {
+                    pitchData20mList.Add(new HMSData()
+                    {
+                        data = 0,
+                        timestamp = DateTime.UtcNow.AddSeconds(i)
+                    });
+                }
+
+                for (int i = -Constants.Hours3; i <= 0; i++)
+                {
+                    pitchData3hList.Add(new HMSData()
+                    {
+                        data = 0,
+                        timestamp = DateTime.UtcNow.AddSeconds(i)
+                    });
+                }
             }
         }
 
@@ -540,22 +578,45 @@ namespace HMS_Client
             _rollMax3hData = new HMSData();
 
             // Init av chart data
-            for (int i = -Constants.Minutes20; i <= 0; i++)
+            if (adminSettingsVM.regulationStandard == RegulationStandard.CAP)
             {
-                rollData20mList.Add(new HMSData()
+                for (double i = Constants.Minutes20 * -1000; i <= 0; i += Constants.GraphCullFrequency20m + 250)
                 {
-                    data = 0,
-                    timestamp = DateTime.UtcNow.AddSeconds(i)
-                });
-            }
+                    rollData20mList.Add(new HMSData()
+                    {
+                        data = 0,
+                        timestamp = DateTime.UtcNow.AddMilliseconds(i)
+                    });
+                }
 
-            for (int i = -Constants.Hours3; i <= 0; i++)
-            {
-                rollData3hList.Add(new HMSData()
+                for (double i = Constants.Hours3 * -1000; i <= 0; i += Constants.GraphCullFrequency3h + 250)
                 {
-                    data = 0,
-                    timestamp = DateTime.UtcNow.AddSeconds(i)
-                });
+                    rollData3hList.Add(new HMSData()
+                    {
+                        data = 0,
+                        timestamp = DateTime.UtcNow.AddMilliseconds(i)
+                    });
+                }
+            }
+            else
+            {
+                for (int i = -Constants.Minutes20; i <= 0; i++)
+                {
+                    rollData20mList.Add(new HMSData()
+                    {
+                        data = 0,
+                        timestamp = DateTime.UtcNow.AddSeconds(i)
+                    });
+                }
+
+                for (int i = -Constants.Hours3; i <= 0; i++)
+                {
+                    rollData3hList.Add(new HMSData()
+                    {
+                        data = 0,
+                        timestamp = DateTime.UtcNow.AddSeconds(i)
+                    });
+                }
             }
         }
 
@@ -720,22 +781,45 @@ namespace HMS_Client
             _inclinationMax3hData = new HMSData();
 
             // Init av chart data
-            for (int i = -Constants.Minutes20; i <= 0; i++)
+            if (adminSettingsVM.regulationStandard == RegulationStandard.CAP)
             {
-                inclinationData20mList.Add(new HMSData()
+                for (double i = Constants.Minutes20 * -1000; i <= 0; i += Constants.GraphCullFrequency20m + 250)
                 {
-                    data = 0,
-                    timestamp = DateTime.UtcNow.AddSeconds(i)
-                });
-            }
+                    inclinationData20mList.Add(new HMSData()
+                    {
+                        data = 0,
+                        timestamp = DateTime.UtcNow.AddMilliseconds(i)
+                    });
+                }
 
-            for (int i = -Constants.Hours3; i <= 0; i++)
-            {
-                inclinationData3hList.Add(new HMSData()
+                for (double i = Constants.Hours3 * -1000; i <= 0; i += Constants.GraphCullFrequency3h + 250)
                 {
-                    data = 0,
-                    timestamp = DateTime.UtcNow.AddSeconds(i)
-                });
+                    inclinationData3hList.Add(new HMSData()
+                    {
+                        data = 0,
+                        timestamp = DateTime.UtcNow.AddMilliseconds(i)
+                    });
+                }
+            }
+            else
+            {
+                for (int i = -Constants.Minutes20; i <= 0; i++)
+                {
+                    inclinationData20mList.Add(new HMSData()
+                    {
+                        data = 0,
+                        timestamp = DateTime.UtcNow.AddSeconds(i)
+                    });
+                }
+
+                for (int i = -Constants.Hours3; i <= 0; i++)
+                {
+                    inclinationData3hList.Add(new HMSData()
+                    {
+                        data = 0,
+                        timestamp = DateTime.UtcNow.AddSeconds(i)
+                    });
+                }
             }
         }
 
@@ -822,22 +906,45 @@ namespace HMS_Client
             _heaveAmplitudeMax3hData = new HMSData();
 
             // Init av chart data
-            for (int i = -Constants.Minutes20; i <= 0; i++)
+            if (adminSettingsVM.regulationStandard == RegulationStandard.CAP)
             {
-                heaveAmplitudeData20mList.Add(new HMSData()
+                for (double i = Constants.Minutes20 * -1000; i <= 0; i += Constants.GraphCullFrequency20m + 250)
                 {
-                    data = 0,
-                    timestamp = DateTime.UtcNow.AddSeconds(i)
-                });
-            }
+                    heaveAmplitudeData20mList.Add(new HMSData()
+                    {
+                        data = 0,
+                        timestamp = DateTime.UtcNow.AddMilliseconds(i)
+                    });
+                }
 
-            for (int i = -Constants.Hours3; i <= 0; i++)
-            {
-                heaveAmplitudeData3hList.Add(new HMSData()
+                for (double i = Constants.Hours3 * -1000; i <= 0; i += Constants.GraphCullFrequency3h + 250)
                 {
-                    data = 0,
-                    timestamp = DateTime.UtcNow.AddSeconds(i)
-                });
+                    heaveAmplitudeData3hList.Add(new HMSData()
+                    {
+                        data = 0,
+                        timestamp = DateTime.UtcNow.AddMilliseconds(i)
+                    });
+                }
+            }
+            else
+            {
+                for (int i = -Constants.Minutes20; i <= 0; i++)
+                {
+                    heaveAmplitudeData20mList.Add(new HMSData()
+                    {
+                        data = 0,
+                        timestamp = DateTime.UtcNow.AddSeconds(i)
+                    });
+                }
+
+                for (int i = -Constants.Hours3; i <= 0; i++)
+                {
+                    heaveAmplitudeData3hList.Add(new HMSData()
+                    {
+                        data = 0,
+                        timestamp = DateTime.UtcNow.AddSeconds(i)
+                    });
+                }
             }
         }
 
@@ -924,22 +1031,45 @@ namespace HMS_Client
             _significantHeaveRateMax3hData = new HMSData();
 
             // Init av chart data
-            for (int i = -Constants.Minutes20; i <= 0; i++)
+            if (adminSettingsVM.regulationStandard == RegulationStandard.CAP)
             {
-                significantHeaveRateData20mList.Add(new HMSData()
+                for (double i = Constants.Minutes20 * -1000; i <= 0; i += Constants.GraphCullFrequency20m + 250)
                 {
-                    data = 0,
-                    timestamp = DateTime.UtcNow.AddSeconds(i)
-                });
-            }
+                    significantHeaveRateData20mList.Add(new HMSData()
+                    {
+                        data = 0,
+                        timestamp = DateTime.UtcNow.AddMilliseconds(i)
+                    });
+                }
 
-            for (int i = -Constants.Hours3; i <= 0; i++)
-            {
-                significantHeaveRateData3hList.Add(new HMSData()
+                for (double i = Constants.Hours3 * -1000; i <= 0; i += Constants.GraphCullFrequency3h + 250)
                 {
-                    data = 0,
-                    timestamp = DateTime.UtcNow.AddSeconds(i)
-                });
+                    significantHeaveRateData3hList.Add(new HMSData()
+                    {
+                        data = 0,
+                        timestamp = DateTime.UtcNow.AddMilliseconds(i)
+                    });
+                }
+            }
+            else
+            {
+                for (int i = -Constants.Minutes20; i <= 0; i++)
+                {
+                    significantHeaveRateData20mList.Add(new HMSData()
+                    {
+                        data = 0,
+                        timestamp = DateTime.UtcNow.AddSeconds(i)
+                    });
+                }
+
+                for (int i = -Constants.Hours3; i <= 0; i++)
+                {
+                    significantHeaveRateData3hList.Add(new HMSData()
+                    {
+                        data = 0,
+                        timestamp = DateTime.UtcNow.AddSeconds(i)
+                    });
+                }
             }
         }
 
@@ -1024,9 +1154,66 @@ namespace HMS_Client
             set
             {
                 if (_alignmentDate != value)
+                {
                     _alignmentDate = value;
+                    OnPropertyChanged();
+                }
             }
         }
+
+        /////////////////////////////////////////////////////////////////////////////
+        // Chart X axis tick alignment
+        /////////////////////////////////////////////////////////////////////////////
+        //private DateTime _tickAlignment5;
+        //public DateTime tickAlignment5
+        //{
+        //    get
+        //    {
+        //        return _tickAlignment5;
+        //    }
+        //    set
+        //    {
+        //        if (_tickAlignment5 != value)
+        //        {
+        //            _tickAlignment5 = value;
+        //            OnPropertyChanged();
+        //        }
+        //    }
+        //}
+
+        //private DateTime _tickAlignment10;
+        //public DateTime tickAlignment10
+        //{
+        //    get
+        //    {
+        //        return _tickAlignment10;
+        //    }
+        //    set
+        //    {
+        //        if (_tickAlignment10 != value)
+        //        {
+        //            _tickAlignment10 = value;
+        //            OnPropertyChanged();
+        //        }
+        //    }
+        //}
+
+        //private DateTime _tickAlignment15;
+        //public DateTime tickAlignment15
+        //{
+        //    get
+        //    {
+        //        return _tickAlignment15;
+        //    }
+        //    set
+        //    {
+        //        if (_tickAlignment15 != value)
+        //        {
+        //            _tickAlignment15 = value;
+        //            OnPropertyChanged();
+        //        }
+        //    }
+        //}
 
         /////////////////////////////////////////////////////////////////////////////
         // Chart Axis Min/Max
