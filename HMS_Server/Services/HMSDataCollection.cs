@@ -10,7 +10,7 @@ namespace HMS_Server
         private Config config;
 
         // Liste med data
-        private RadObservableCollectionEx<HMSData> dataList = new RadObservableCollectionEx<HMSData>();
+        private RadObservableCollection<HMSData> dataList = new RadObservableCollection<HMSData>();
 
         public void LoadHMSInput(Config config)
         {
@@ -144,7 +144,7 @@ namespace HMS_Server
 
         // Overføre data fra liste i input to denne data samlingen
         // Verification: Overføre fra HMS data liste til test data liste
-        public void TransferData(RadObservableCollectionEx<HMSData> hmsDataList)
+        public void TransferData(RadObservableCollection<HMSData> hmsDataList)
         {
             // Lese timeout fra config
             double dataTimeout = config.ReadWithDefault(ConfigKey.DataTimeout, Constants.DataTimeoutDefault);
@@ -179,7 +179,7 @@ namespace HMS_Server
         }
 
         // Hente datalisten
-        public RadObservableCollectionEx<HMSData> GetDataList()
+        public RadObservableCollection<HMSData> GetDataList()
         {
             return dataList;
         }

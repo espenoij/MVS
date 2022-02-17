@@ -39,6 +39,11 @@ namespace HMS_Client
             }
         }
 
+        public object GetDataListLock()
+        {
+            return hmsDataListLock;
+        }
+
         public HMSData GetData(ValueType id)
         {
             lock (hmsDataListLock)

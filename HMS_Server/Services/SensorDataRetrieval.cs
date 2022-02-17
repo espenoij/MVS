@@ -5,7 +5,7 @@ using System.Windows.Threading;
 
 namespace HMS_Server
 {
-    class SensorDataRetrieval
+    public class SensorDataRetrieval
     {
         // Configuration
         private Config config;

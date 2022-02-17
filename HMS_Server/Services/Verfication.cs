@@ -7,7 +7,7 @@ using Telerik.Windows.Data;
 
 namespace HMS_Server
 {
-    class Verfication
+    public class Verfication
     {
         private UserInputs userInputs;
         private ErrorHandler errorHandler;
@@ -84,8 +84,8 @@ namespace HMS_Server
             // Verification
             // Overføre og regn ut forskjellene mellom test data og referanse data
             // Input til listen er test data og referanse data.
-            RadObservableCollectionEx<HMSData> testDataList = testData.GetDataList();
-            RadObservableCollectionEx<HMSData> referenceDataList = referenceData.GetDataList();
+            RadObservableCollection<HMSData> testDataList = testData.GetDataList();
+            RadObservableCollection<HMSData> referenceDataList = referenceData.GetDataList();
 
             // Løper gjennom listen med test data
             foreach (var item in testDataList)

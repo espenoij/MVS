@@ -13,24 +13,7 @@ namespace HMS_Server
 
         public SensorData(SensorData sensorData)
         {
-            id = sensorData.id;
-            type = sensorData.type;
-            name = sensorData.name;
-            description = sensorData.description;
-
-            for (int i = 0; i < Constants.DataCalculationSteps; i++)
-                dataCalculations.Add(new DataCalculations(sensorData.dataCalculations[i]));
-
-            saveToDatabase = sensorData.saveToDatabase;
-            saveFreq = sensorData.saveFreq;
-            data = sensorData.data;
-            timestamp = sensorData.timestamp;
-            portStatus = sensorData.portStatus;
-            message = sensorData.message;
-
-            serialPort = sensorData.serialPort;
-            modbus = sensorData.modbus;
-            fileReader = sensorData.fileReader;
+            Set(sensorData);
         }
 
         public SensorData(SensorType type = SensorType.None)

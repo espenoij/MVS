@@ -20,7 +20,7 @@ namespace HMS_Client
         //private DispatcherTimer userInputsRequestTimer = new DispatcherTimer();
 
         // Liste med HMS data
-        private RadObservableCollectionEx<HMSData> hmsDataList;
+        private HMSDataCollection hmsDataCollection;
         private RadObservableCollectionEx<HMSData> socketHMSDataList = new RadObservableCollectionEx<HMSData>();
 
         // Liste med sensor status
@@ -49,7 +49,7 @@ namespace HMS_Client
             this.socketConsole = socketConsole;
 
             // Data fra server
-            hmsDataList = hmsDataCollection.GetDataList();
+            this.hmsDataCollection = hmsDataCollection;
 
             // Sensor Status fra server
             sensorStatusList = sensorStatus.GetSensorGroupList();
@@ -159,8 +159,10 @@ namespace HMS_Client
                 // Lese data timeout fra config
                 double dataTimeout = config.ReadWithDefault(ConfigKey.DataTimeout, Constants.DataTimeoutDefault);
 
-                lock (hmsDataList)
+                lock (hmsDataCollection.GetDataListLock())
                 {
+                    RadObservableCollectionEx<HMSData> hmsDataList = hmsDataCollection.GetDataList();
+
                     // Sjekke om listen vi har er like lang som listen som kommer inn
                     if (socketHMSDataList.Count() != hmsDataList.Count())
                         // I så tilfelle sletter vi listen vår og ny blir generert under

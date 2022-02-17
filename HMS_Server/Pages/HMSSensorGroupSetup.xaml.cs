@@ -1,4 +1,6 @@
-﻿using System.Windows.Controls;
+﻿using System;
+using System.Windows.Controls;
+using System.Windows.Threading;
 using Telerik.Windows.Controls;
 using Telerik.Windows.Controls.GridView;
 using Telerik.Windows.Data;
@@ -13,8 +15,8 @@ namespace HMS_Server
         // Configuration settings
         private Config config;
 
-        // Sensor Status
-        private HMSSensorGroupStatus sensorStatus;
+        private RadObservableCollection<HMSData> hmsDisplayList = new RadObservableCollection<HMSData>();
+        private RadObservableCollection<SensorGroup> sensorDisplayList = new RadObservableCollection<SensorGroup>();
 
         public HMSSensorGroupSetup()
         {
@@ -22,19 +24,33 @@ namespace HMS_Server
         }
 
         public void Init(
-            RadObservableCollection<SensorData> serverSensorDataList,
             HMSDataCollection clientSensorData,
             Config config,
             HMSSensorGroupStatus sensorStatus)
         {
             this.config = config;
-            this.sensorStatus = sensorStatus;
 
             // Liste med client sensor data
-            gvHMSData.ItemsSource = clientSensorData.GetDataList();
+            gvHMSData.ItemsSource = hmsDisplayList;
 
             // Liste med sensor ID verdier
-            gvSensorID.ItemsSource = sensorStatus.GetSensorList();
+            gvSensorID.ItemsSource = sensorDisplayList;
+
+            // Dispatcher som oppdatere UI
+            DispatcherTimer uiTimer = new DispatcherTimer();
+            uiTimer.Interval = TimeSpan.FromMilliseconds(config.ReadWithDefault(ConfigKey.ServerUIUpdateFrequency, Constants.ServerUIUpdateFrequencyDefault));
+            uiTimer.Tick += runUIInputUpdate;
+            uiTimer.Start();
+
+            void runUIInputUpdate(object sender, EventArgs e)
+            {
+                if (AdminMode.IsActive)
+                {
+                    // Overføre fra data lister til display lister
+                    DisplayList.Transfer(clientSensorData.GetDataList(), hmsDisplayList);
+                    DisplayList.Transfer(sensorStatus.GetSensorList(), sensorDisplayList);
+                }
+            }
         }
 
         private void gvHMSData_BeginningEdit(object sender, GridViewBeginningEditRoutedEventArgs e)

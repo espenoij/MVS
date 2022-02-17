@@ -1,12 +1,13 @@
 ﻿using System;
 using System.Linq;
 using System.Windows.Threading;
+using Telerik.Windows.Data;
 
 namespace HMS_Server
 {
     public class HMSSensorGroupStatus
     {
-        private RadObservableCollectionEx<SensorGroup> hmsSensorGroupList = new RadObservableCollectionEx<SensorGroup>();
+        private RadObservableCollection<SensorGroup> hmsSensorGroupList = new RadObservableCollection<SensorGroup>();
         private HMSDataCollection hmsInputDataList;
 
         // Config
@@ -70,7 +71,7 @@ namespace HMS_Server
             timer.Stop();
         }
 
-        public RadObservableCollectionEx<SensorGroup> GetSensorList()
+        public RadObservableCollection<SensorGroup> GetSensorList()
         {
             return hmsSensorGroupList;
         }

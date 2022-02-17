@@ -1,4 +1,5 @@
 ﻿using System;
+using Telerik.Windows.Data;
 
 namespace HMS_Server
 {
@@ -26,7 +27,7 @@ namespace HMS_Server
             // Fyller output listen med HMS Output data
             // NB! Variablene som legges inn i listen her fungerer som pekere: Oppdateres variabelen -> oppdateres listen
 
-            RadObservableCollectionEx<HMSData> hmsOutputDataList = hmsOutputData.GetDataList();
+            RadObservableCollection<HMSData> hmsOutputDataList = hmsOutputData.GetDataList();
 
             hmsOutputDataList.Add(helicopterType);
             hmsOutputDataList.Add(helideckCategory);

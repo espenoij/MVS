@@ -265,7 +265,7 @@ namespace HMS_Server
             }
         }
 
-        public void CreateTables(RadObservableCollectionEx<SensorGroup> sensorGroupList)
+        public void CreateTables(RadObservableCollection<SensorGroup> sensorGroupList)
         {
             try
             {
@@ -571,7 +571,7 @@ namespace HMS_Server
         //    }
         //}
 
-        public void Insert(RadObservableCollectionEx<SensorGroup> sensorGroupList)
+        public void Insert(RadObservableCollection<SensorGroup> sensorGroupList)
         {
             try
             {

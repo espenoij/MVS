@@ -314,7 +314,6 @@ namespace HMS_Server
 
             // Sensor Groups
             ucHMSSensorGroups.Init(
-                sensorDataRetrieval.GetSensorDataList(),
                 hmsInputData,
                 config,
                 sensorStatus);
@@ -329,13 +328,14 @@ namespace HMS_Server
             ucDataVerificationSetup.Init(
                 hmsOutputData,
                 verfication.GetTestData(),
-                sensorDataRetrieval.GetSensorDataList(),
+                sensorDataRetrieval,
                 verfication.GetRefData(),
                 config);
 
             // Results
             ucDataVerificationResult.Init(
-                verfication.GetVerificationData());
+                verfication,
+                config);
         }
 
         private void InitUserInput()
@@ -417,117 +417,14 @@ namespace HMS_Server
 
             void runUIInputUpdate(object sender, EventArgs e)
             {
-                try
+                // Overføre fra data lister til display lister
+                DisplayList.Transfer(sensorDataRetrieval.GetSensorDataList(), statusDisplayList);
+
+                if (AdminMode.IsActive)
                 {
-                    // Input: Status
-                    /////////////////////////////////////////////////////////////////////////////////////////////////////
-
-                    // Hente listen med prosesserte sensor data
-                    foreach (var item in sensorDataRetrieval.GetSensorDataList().ToList())
-                    {
-                        // Finne igjen sensor i display listen
-                        var sensorDataList = statusDisplayList.ToList().Where(x => x.id == item.id); // Krasj ved oppstart 2022.01.24
-
-                        // Dersom vi fant sensor
-                        if (sensorDataList.Count() > 0)
-                        {
-                            // Oppdater data
-                            sensorDataList.First().Set(item); ;
-                        }
-                        // ...fant ikke sensor
-                        else
-                        {
-                            // Legg den inn i listen
-                            statusDisplayList.Add(new SensorData(item));
-                        }
-                    }
-
-                    if (AdminMode.IsActive)
-                    {
-                        // TAB: Sensor Data
-                        /////////////////////////////////////////////////////////////////////////////////////////////////////
-
-                        // Hente listen med prosesserte sensor data
-                        foreach (var item in sensorDataRetrieval.GetSensorDataList().ToList())
-                        {
-                            // Finne igjen sensor i display listen
-                            var sensorDataList = sensorDataDisplayList.Where(x => x.id == item.id);
-
-                            // Dersom vi fant sensor
-                            if (sensorDataList.Count() > 0)
-                            {
-                                // Oppdater data
-                                sensorDataList.First().Set(item);
-                            }
-                            // ...fant ikke sensor
-                            else
-                            {
-                                // Legg den inn i listen
-                                sensorDataDisplayList.Add(new SensorData(item));
-                            }
-                        }
-
-                        // TAB: Serial Ports
-                        /////////////////////////////////////////////////////////////////////////////////////////////////////
-
-                        // Gå gjennom listen med mottatte data fra serie port
-                        foreach (var item in sensorDataRetrieval.GetSerialPortDataReceivedList().ToList())
-                        {
-                            // Finne korrekt serie port
-                            var serialPortDataList = serialPortDataDisplayList.Where(x => x.portName == item.portName);
-
-                            // Port eksisterer -> Oppdater data
-                            if (serialPortDataList.Count() > 0)
-                            {
-                                // Oppdatere data hentet fra serie port
-                                serialPortDataList.First().Set(item);
-                            }
-                            // Dersom den ikke eksisterer -> legge inn ny i listen for serie port data display
-                            else
-                            {
-                                // Lagre i listen
-                                serialPortDataDisplayList.Add(new SerialPortData(item));
-                            }
-                        }
-
-                        // TAB: File Reader
-                        /////////////////////////////////////////////////////////////////////////////////////////////////////
-
-                        // Gå gjennom listen med mottatte data fra fil
-                        foreach (var item in sensorDataRetrieval.GetFileReaderList().ToList())
-                        {
-                            // Finne korrekt fil
-                            var fileReaderData = fileReaderDataDisplayList.Where(x => x.fileFolder == item.fileFolder && x.fileName == item.fileName);
-
-                            // Fil eksisterer -> Oppdater data
-                            if (fileReaderData.Count() > 0)
-                            {
-                                // Oppdatere data hentet fra fil
-                                fileReaderData.First().dataLine = item.dataLine;
-                                fileReaderData.First().timestamp = item.timestamp;
-
-                                // Oppdatere lese status
-                                fileReaderData.First().portStatus = item.portStatus;
-                            }
-                            // Dersom den ikke eksisterer -> legge inn ny i listen for fil data display
-                            else
-                            {
-                                // Lagre ny i listen
-                                fileReaderDataDisplayList.Add(new FileReaderSetup(item));
-                            }
-                        }
-                    }
-                }
-                catch (Exception ex)
-                {
-                    errorHandler.Insert(
-                        new ErrorMessage(
-                            DateTime.UtcNow,
-                            ErrorMessageType.Database,
-                            ErrorMessageCategory.Admin,
-                            string.Format("UI Update Error (runUIInputUpdate)\n\nSystem Message:\n{0}", ex.Message)));
-
-                    errorHandler.SetDatabaseError(ErrorHandler.DatabaseErrorType.DatabaseMaintenance);
+                    DisplayList.Transfer(sensorDataRetrieval.GetSensorDataList(), sensorDataDisplayList);
+                    DisplayList.Transfer(sensorDataRetrieval.GetSerialPortDataReceivedList(), serialPortDataDisplayList);
+                    DisplayList.Transfer(sensorDataRetrieval.GetFileReaderList(), fileReaderDataDisplayList);
                 }
             }
         }

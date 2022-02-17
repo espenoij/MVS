@@ -7,6 +7,7 @@ using System.Text;
 using System.Text.Json;
 using System.Threading;
 using System.Windows.Threading;
+using Telerik.Windows.Data;
 
 namespace HMS_Server
 {
@@ -28,10 +29,10 @@ namespace HMS_Server
         SocketConsole socketConsole;
 
         // Liste med sensor data
-        private RadObservableCollectionEx<HMSData> hmsOutputDataList;
+        private RadObservableCollection<HMSData> hmsOutputDataList;
 
         // Liste med sensor status
-        private RadObservableCollectionEx<SensorGroup> sensorStatusOutputList;
+        private RadObservableCollection<SensorGroup> sensorStatusOutputList;
 
         // Server Port
         private int serverPort;

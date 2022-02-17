@@ -4,7 +4,7 @@ using System.Runtime.CompilerServices;
 
 namespace HMS_Server
 {
-    class SerialPortData : INotifyPropertyChanged
+    public class SerialPortData : INotifyPropertyChanged
     {
         // Change notification
         public event PropertyChangedEventHandler PropertyChanged;

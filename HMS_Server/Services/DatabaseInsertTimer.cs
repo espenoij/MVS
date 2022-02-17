@@ -3,7 +3,7 @@ using System.Threading;
 
 namespace HMS_Server
 {
-    class DatabaseInsertTimer
+    public class DatabaseInsertTimer
     {
         // Database Save Frequency timers
         private System.Timers.Timer saveTimer;

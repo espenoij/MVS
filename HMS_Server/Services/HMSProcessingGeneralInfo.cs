@@ -1,4 +1,5 @@
 ﻿using System;
+using Telerik.Windows.Data;
 
 namespace HMS_Server
 {
@@ -13,7 +14,7 @@ namespace HMS_Server
             // NB! Variablene som legges inn i listen her fungerer som pekere: Oppdateres variabelen -> oppdateres listen
             // NB! Dersom nye variabler legges til i hmsOutputDataList må databasen opprettes på nytt
 
-            RadObservableCollectionEx<HMSData> hmsOutputDataList = hmsOutputData.GetDataList();
+            RadObservableCollection<HMSData> hmsOutputDataList = hmsOutputData.GetDataList();
 
             hmsOutputDataList.Add(gpsLatitude);
             hmsOutputDataList.Add(gpsLongitude);

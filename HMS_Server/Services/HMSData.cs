@@ -222,20 +222,7 @@ namespace HMS_Server
 
         public HMSData(HMSData inputData)
         {
-            if (inputData != null)
-            {
-                id = inputData.id;
-                name = inputData.name;
-                dataId = inputData.dataId;
-                data = inputData.data;
-                data2 = inputData.data2;
-                data3 = inputData.data3;
-                timestamp = inputData.timestamp;
-                status = inputData.status;
-                limitStatus = inputData.limitStatus;
-                sensorGroupId = inputData.sensorGroupId;
-                dbColumn = inputData.dbColumn;
-            }
+            Set(inputData);
         }
 
         public void Set(HMSData inputData)

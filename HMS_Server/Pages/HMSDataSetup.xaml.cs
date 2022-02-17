@@ -1,4 +1,7 @@
-﻿using System.Windows.Controls;
+﻿using System;
+using System.Linq;
+using System.Windows.Controls;
+using System.Windows.Threading;
 using Telerik.Windows.Controls;
 using Telerik.Windows.Controls.GridView;
 using Telerik.Windows.Data;
@@ -12,6 +15,10 @@ namespace HMS_Server
     {
         // Configuration settings
         private Config config;
+
+        private RadObservableCollection<SensorData> sensorDisplayList = new RadObservableCollection<SensorData>();
+        private RadObservableCollection<HMSData> hmsInputDisplayList = new RadObservableCollection<HMSData>();
+        private RadObservableCollection<HMSData> hmsOutputDisplayList = new RadObservableCollection<HMSData>();
 
         public HMSDataSetup()
         {
@@ -27,13 +34,30 @@ namespace HMS_Server
             this.config = config;
 
             // Liste med sensor verdier
-            gvSensorInputData.ItemsSource = serverSensorDataList;
+            gvSensorInputData.ItemsSource = sensorDisplayList;
 
             // Liste med HMS input data
-            gvHMSInputData.ItemsSource = hmsInputDataList.GetDataList();
+            gvHMSInputData.ItemsSource = hmsInputDisplayList;
 
             // Liste med HMS output data
-            gvHMSOutputData.ItemsSource = hmsOutputDataList.GetDataList();
+            gvHMSOutputData.ItemsSource = hmsOutputDisplayList;
+
+            // Dispatcher som oppdatere UI
+            DispatcherTimer uiTimer = new DispatcherTimer();
+            uiTimer.Interval = TimeSpan.FromMilliseconds(config.ReadWithDefault(ConfigKey.ServerUIUpdateFrequency, Constants.ServerUIUpdateFrequencyDefault));
+            uiTimer.Tick += runUIInputUpdate;
+            uiTimer.Start();
+
+            void runUIInputUpdate(object sender, EventArgs e)
+            {
+                if (AdminMode.IsActive)
+                {
+                    // Overføre fra data lister til display lister
+                    DisplayList.Transfer(serverSensorDataList, sensorDisplayList);
+                    DisplayList.Transfer(hmsInputDataList.GetDataList(), hmsInputDisplayList);
+                    DisplayList.Transfer(hmsOutputDataList.GetDataList(), hmsOutputDisplayList);
+                }
+            }
         }
 
         private void gvClientData_BeginningEdit(object sender, GridViewBeginningEditRoutedEventArgs e)
