@@ -2,6 +2,8 @@
 
 public static class HMSCalc
 {
+    public const double KnotsToMSFactor = 0.51444444;
+
     public static double ToRadians(this double val)
     {
         return (Math.PI / 180) * val;
@@ -29,5 +31,15 @@ public static class HMSCalc
 
         // Konvertere tilbake til grader
         return ToDegrees(inclinationRad);
+    }
+
+    public static double KnotsToMS(double val)
+    {
+        return val * KnotsToMSFactor;
+    }
+
+    public static double MStoKnots(double val)
+    {
+        return val / KnotsToMSFactor;
     }
 }

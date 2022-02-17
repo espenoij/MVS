@@ -1,12 +1,34 @@
 ﻿using System.ComponentModel;
 using System.Runtime.CompilerServices;
 
+//////////////////////////////////////////////////////////////
+// NB! Må matche SensorGroup i HMS_Server
+//////////////////////////////////////////////////////////////
+
 namespace HMS_Client
 {
     public class SensorGroup : INotifyPropertyChanged
     {
         // Change notification
         public event PropertyChangedEventHandler PropertyChanged;
+
+        public SensorGroup()
+        {
+        }
+
+        public SensorGroup(SensorGroup sensorGroup)
+        {
+            Set(sensorGroup);
+        }
+
+        public void Set(SensorGroup sensorGroup)
+        {
+            id = sensorGroup.id;
+            name = sensorGroup.name;
+            dbColumn = sensorGroup.dbColumn;
+            active = sensorGroup.active;
+            status = sensorGroup.status;
+        }
 
         private int _id { get; set; }
         public int id
@@ -32,6 +54,20 @@ namespace HMS_Client
             set
             {
                 _name = value;
+                OnPropertyChanged();
+            }
+        }
+
+        private string _dbColumn { get; set; }
+        public string dbColumn
+        {
+            get
+            {
+                return _dbColumn;
+            }
+            set
+            {
+                _dbColumn = value;
                 OnPropertyChanged();
             }
         }
@@ -70,14 +106,6 @@ namespace HMS_Client
             {
                 return status.ToString();
             }
-        }
-
-        public void Set(SensorGroup sensorGroup)
-        {
-            id = sensorGroup.id;
-            name = sensorGroup.name;
-            active = sensorGroup.active;
-            status = sensorGroup.status;
         }
 
         // Variabel oppdatert

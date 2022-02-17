@@ -726,8 +726,8 @@ namespace HMS_Server
                 hmsDatabaseTimer.Start();
 
                 // Database Maintenance
-                DoDatabaseMaintenance(DatabaseMaintenanceType.SENSOR); // Kjør vedlikehold en gang ved oppstart
-                maintenanceTimer.Start();   // Og så hver X timer
+                DoDatabaseMaintenance(DatabaseMaintenanceType.SENSOR);  // Kjør vedlikehold en gang ved oppstart
+                maintenanceTimer.Start();                               // Og så hver X timer
 
                 // Socket Listener
                 socketListener.Start();

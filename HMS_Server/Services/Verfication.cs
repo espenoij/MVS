@@ -84,14 +84,12 @@ namespace HMS_Server
             // Verification
             // Overføre og regn ut forskjellene mellom test data og referanse data
             // Input til listen er test data og referanse data.
-            RadObservableCollection<HMSData> testDataList = testData.GetDataList();
-            RadObservableCollection<HMSData> referenceDataList = referenceData.GetDataList();
 
             // Løper gjennom listen med test data
-            foreach (var item in testDataList)
+            foreach (var item in testData.GetDataList().ToList())
             {
                 // Finner tilsvarende data i referanse data listen
-                var refData = referenceDataList.Where(x => x.id == item.id);
+                var refData = referenceData.GetDataList().ToList().Where(x => x.id == item.id);
                 if (refData.Count() == 1)
                 {
                     // Korrigere verdier som skal vises som heltall
@@ -166,7 +164,7 @@ namespace HMS_Server
                     {
                         userInputs.displayMode = DisplayMode.OnDeck;
 
-                        var time = referenceDataList.Where(x => x.id == 12);
+                        var time = referenceData.GetDataList().ToList().Where(x => x.id == 12);
                         if (time.Count() == 1)
                             userInputs.onDeckHelicopterHeading = time.First().data;
                         else

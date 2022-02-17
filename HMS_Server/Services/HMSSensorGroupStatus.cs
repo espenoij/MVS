@@ -96,7 +96,7 @@ namespace HMS_Server
                 if (sensorGroup.Count() == 1)
                 {
                     // Finne sensor verdier knyttet til valgt sensor gruppe ID
-                    var hmsDataList = hmsInputDataList.GetDataList();
+                    var hmsDataList = hmsInputDataList.GetDataList().ToList();
 
                     var clientData = hmsDataList.Where(x => x.sensorGroupId == id).ToList();
 

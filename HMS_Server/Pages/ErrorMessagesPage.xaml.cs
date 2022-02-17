@@ -63,7 +63,6 @@ namespace HMS_Server
 
             // Dispatcher for å oppdatere meldingene i error message list
             errorMessageDisplayListUpdater = new DispatcherTimer();
-
             errorMessageDisplayListUpdater.Interval = TimeSpan.FromMilliseconds(config.ReadWithDefault(ConfigKey.ServerUIUpdateFrequency, Constants.ServerUIUpdateFrequencyDefault));
             errorMessageDisplayListUpdater.Tick += UpdateErrorMessageDisplayList;
 

@@ -25,6 +25,7 @@ namespace HMS_Client
 
         // Liste med sensor status
         private RadObservableCollectionEx<SensorGroup> sensorStatusList;
+        private object sensorStatusListLock;
         private RadObservableCollectionEx<SensorGroup> socketSensorStatusList = new RadObservableCollectionEx<SensorGroup>();
 
         // Socket client callback
@@ -53,6 +54,7 @@ namespace HMS_Client
 
             // Sensor Status fra server
             sensorStatusList = sensorStatus.GetSensorGroupList();
+            sensorStatusListLock = sensorStatus.GetSensorGroupListLock();
 
             // Data Request callback
             this.dataRequestCallback = dataRequestCallback;
@@ -196,7 +198,7 @@ namespace HMS_Client
                         else
                         {
                             // Legg inn i listen
-                            hmsDataList.Add(socketHMSData);
+                            hmsDataList.Add(new HMSData(socketHMSData));
                         }
                     }
                 }
@@ -226,7 +228,7 @@ namespace HMS_Client
             // Lese data timeout fra config
             double dataTimeout = config.ReadWithDefault(ConfigKey.DataTimeout, Constants.DataTimeoutDefault);
 
-            lock (sensorStatusList)
+            lock (sensorStatusListLock)
             {
                 // Sjekke om listen vi har er like lang som listen som kommer inn
                 if (socketSensorStatusList.Count() != sensorStatusList.Count())
@@ -251,7 +253,7 @@ namespace HMS_Client
                         else
                         {
                             // Legg inn i listen
-                            sensorStatusList.Add(socketSensorStatus);
+                            sensorStatusList.Add(new SensorGroup(socketSensorStatus));
                         }
                     }
                 }

@@ -1,11 +1,13 @@
 ﻿using System;
 using System.Collections.Generic;
 using System.ComponentModel;
+using System.Linq;
 using System.Net;
 using System.Net.Sockets;
 using System.Text;
 using System.Text.Json;
 using System.Threading;
+using System.Windows.Data;
 using System.Windows.Threading;
 using Telerik.Windows.Data;
 
@@ -46,7 +48,8 @@ namespace HMS_Server
         private Config config;
 
         // Klient ID liste
-        private List<string> clientIDList = new List<string>();
+        private List<string> clientIDList;
+        private object clientIDListLock = new object();
 
         private MainWindow.UserInputsCallback userInputCallback;
 
@@ -65,6 +68,9 @@ namespace HMS_Server
             this.socketConsole = socketConsole;
             this.activationVM = activationVM;
             this.userInputCallback = userInputCallback;
+
+            clientIDList = new List<string>();
+            BindingOperations.EnableCollectionSynchronization(clientIDList, clientIDListLock);
 
             // Socket Listener Worker
             socketWorker = new BackgroundWorker();
@@ -353,7 +359,7 @@ namespace HMS_Server
                     // Server aksepterer bare et gitt antall klienter (spesifisert i lisensen til kunden)
                     bool clientIDCheckOK = true;
 
-                    lock (clientIDList)
+                    lock (clientIDListLock)
                     {
                         var foundClientID = clientIDList.Find(x => x == packet.clientID);
                         if (foundClientID == null)
@@ -457,37 +463,34 @@ namespace HMS_Server
                 // Liste med data som skal sendes
                 List<HMSData> sendData = new List<HMSData>();
 
-                lock (hmsOutputDataList)
+                // Plukke data fra HMS data listen
+                foreach (var hmsOutputData in hmsOutputDataList.ToList())
                 {
-                    // Plukke data fra HMS data listen
-                    foreach (var hmsOutputData in hmsOutputDataList)
+                    //if (AdminMode.IsActive)
+                    //    socketConsole.Add(string.Format("SerializeSensorData: id:{0}, data:{1}, timestamp:{2}", sensorData.id, sensorData.calculatedData, sensorData.timeStampString));
+
+                    HMSData hmsData = new HMSData();
+
+                    // Kopiere alle data
+                    hmsData.Set(hmsOutputData);
+
+                    // JSON håndterer ikke NaN
+                    // Sender derfor 0 i data og timestamp settes til minimumsverdi for å indikere ubrukelige data
+                    if (double.IsNaN(hmsData.data))
                     {
-                        //if (AdminMode.IsActive)
-                        //    socketConsole.Add(string.Format("SerializeSensorData: id:{0}, data:{1}, timestamp:{2}", sensorData.id, sensorData.calculatedData, sensorData.timeStampString));
-
-                        HMSData hmsData = new HMSData();
-
-                        // Kopiere alle data
-                        hmsData.Set(hmsOutputData);
-
-                        // JSON håndterer ikke NaN
-                        // Sender derfor 0 i data og timestamp settes til minimumsverdi for å indikere ubrukelige data
-                        if (double.IsNaN(hmsData.data))
-                        {
-                            hmsData.data = 0;
-                            hmsData.timestamp = DateTime.MinValue;
-                        }
-
-                        if (double.IsNaN(hmsData.data2))
-                            hmsData.data2 = 0;
-
-                        // Fjerner navnet på sensor data under vanlig kjøring for å redusere data mengden som sendes
-                        if (!AdminMode.IsActive)
-                            hmsData.name = string.Empty;
-
-                        // Legge til i listen som skal sendes
-                        sendData.Add(hmsData);
+                        hmsData.data = 0;
+                        hmsData.timestamp = DateTime.MinValue;
                     }
+
+                    if (double.IsNaN(hmsData.data2))
+                        hmsData.data2 = 0;
+
+                    // Fjerner navnet på sensor data under vanlig kjøring for å redusere data mengden som sendes
+                    if (!AdminMode.IsActive)
+                        hmsData.name = string.Empty;
+
+                    // Legge til i listen som skal sendes
+                    sendData.Add(hmsData);
                 }
 
                 // Serialiserer data til JSON objekt
@@ -509,15 +512,12 @@ namespace HMS_Server
                 // Liste med data som skal sendes
                 List<SensorGroup> sendData = new List<SensorGroup>();
 
-                lock (sensorStatusOutputList)
+                // Plukke data fra HMS data listen
+                foreach (var sensorStatusOutputData in sensorStatusOutputList.ToList())
                 {
-                    // Plukke data fra HMS data listen
-                    foreach (var sensorStatusOutputData in sensorStatusOutputList)
-                    {
-                        // Kopiere alle data
-                        // Legge til i listen som skal sendes
-                        sendData.Add(new SensorGroup(sensorStatusOutputData));
-                    }
+                    // Kopiere alle data
+                    // Legge til i listen som skal sendes
+                    sendData.Add(new SensorGroup(sensorStatusOutputData));
                 }
 
                 // Serialiserer data til JSON objekt

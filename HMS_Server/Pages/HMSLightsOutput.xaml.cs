@@ -19,9 +19,6 @@ namespace HMS_Server
         // Configuration settings
         private Config config;
 
-        // Error Handler
-        private ErrorHandler errorHandler;
-
         private SensorData lightsOutputData;
         private HMSLightsOutputVM hmsLightsOutputVM;
         private AdminSettingsVM adminSettingsVM;
@@ -33,7 +30,7 @@ namespace HMS_Server
         private ModbusFactory modbusFactory = new ModbusFactory();
         private ModbusHelper modbusHelper = new ModbusHelper();
 
-        private DispatcherTimer modbusReader = new DispatcherTimer();
+        private DispatcherTimer modbusWriter = new DispatcherTimer();
 
         public HMSLightsOutput()
         {
@@ -48,7 +45,6 @@ namespace HMS_Server
             this.hmsLightsOutputVM = hmsLightsOutputVM;
             this.config = config;
             this.adminSettingsVM = adminSettingsVM;
-            this.errorHandler = errorHandler;
 
             if (adminSettingsVM.regulationStandard == RegulationStandard.CAP)
             {
@@ -156,12 +152,69 @@ namespace HMS_Server
                 if (lightsOutputData.modbus != null)
                     cboHandShake.Text = lightsOutputData.modbus.handshake.ToString();
 
-                // MODBUS RTU Reader
-                modbusReader.Tick += runModbusWriter;
+                // MODBUS RTU Writer
+                modbusWriter.Interval = TimeSpan.FromMilliseconds(config.ReadWithDefault(ConfigKey.LightsOutputFrequency, Constants.LightsOutputFrequencyDefault));
+                modbusWriter.Tick += runModbusWriter;
 
                 void runModbusWriter(object sender, EventArgs e)
                 {
-                    ModbusSendLightsOutputCommand();
+                    Thread thread = new Thread(() => ModbusSendLightsOutputCommand());
+                    thread.IsBackground = true;
+                    thread.Start();
+
+                    void ModbusSendLightsOutputCommand()
+                    {
+                        if (lightsOutputData.modbus != null)
+                        {
+                            try
+                            {
+                                // Sjekke om porten er åpen
+                                if (!serialPort.IsOpen)
+                                    serialPort.Open();
+
+                                if (serialPort.IsOpen)
+                                {
+                                    // Starte MODBUS
+                                    IModbusSerialMaster modbusSerialMaster = modbusFactory.CreateRtuMaster(new SerialPortAdapter(serialPort));
+
+                                    int i = 1;
+                                    foreach (var outputAddress in hmsLightsOutputVM.outputAddressList)
+                                    {
+                                        // Finne ut hvor det skal skrives
+                                        ModbusObjectType modbusObjectType = modbusHelper.AddressToObjectType(outputAddress);
+
+                                        // Skrive til registers (kun til coil)
+                                        switch (modbusObjectType)
+                                        {
+                                            case ModbusObjectType.Coil:
+                                                {
+                                                    modbusSerialMaster.WriteSingleCoil(
+                                                        lightsOutputData.modbus.slaveID,
+                                                        outputAddress,
+                                                        LightOutputToWriteValue(hmsLightsOutputVM.HMSLightsOutput, i++));
+                                                }
+                                                break;
+                                        }
+                                    }
+
+                                    // Lukke port
+                                    serialPort.Close();
+                                }
+                            }
+                            catch (Exception ex)
+                            {
+                                errorHandler.Insert(
+                                    new ErrorMessage(
+                                        DateTime.UtcNow,
+                                        ErrorMessageType.MODBUS,
+                                        ErrorMessageCategory.AdminUser,
+                                        string.Format("Modbus_Write\n\nSystem Message:\n{0}", ex.Message)));
+
+                                // Lukke port
+                                serialPort.Close();
+                            }
+                        }
+                    }
                 }
             }
         }
@@ -237,72 +290,14 @@ namespace HMS_Server
             }
         }
 
-        private void ModbusSendLightsOutputCommand()
-        {
-            if (lightsOutputData.modbus != null)
-            {
-                try
-                {
-                    // Sjekke om porten er åpen
-                    if (!serialPort.IsOpen)
-                        serialPort.Open();
-
-                    if (serialPort.IsOpen)
-                    {
-                        // Starte MODBUS
-                        IModbusSerialMaster modbusSerialMaster = modbusFactory.CreateRtuMaster(new SerialPortAdapter(serialPort));
-
-                        int i = 1;
-                        foreach (var outputAddress in hmsLightsOutputVM.outputAddressList)
-                        {
-                            // Finne ut hvor det skal skrives
-                            ModbusObjectType modbusObjectType = modbusHelper.AddressToObjectType(outputAddress);
-
-                            // Skrive til registers (kun til coil)
-                            switch (modbusObjectType)
-                            {
-                                case ModbusObjectType.Coil:
-                                    {
-                                        modbusSerialMaster.WriteSingleCoil(
-                                            lightsOutputData.modbus.slaveID,
-                                            outputAddress,
-                                            LightOutputToWriteValue(hmsLightsOutputVM.HMSLightsOutput, i++));
-                                    }
-                                    break;
-                            }
-                        }
-
-                        // Lukke port
-                        serialPort.Close();
-                    }
-                }
-                catch (Exception ex)
-                {
-                    errorHandler.Insert(
-                        new ErrorMessage(
-                            DateTime.UtcNow,
-                            ErrorMessageType.MODBUS,
-                            ErrorMessageCategory.AdminUser,
-                            string.Format("Modbus_Write\n\nSystem Message:\n{0}", ex.Message)));
-
-                    // Lukke port
-                    serialPort.Close();
-                }
-            }
-        }
-
         private void Modbus_Start()
         {
-            // Gjør dette trikset med Interval her for å få dispatchertimer til å kjøre med en gang.
-            // Ellers venter den til intervallet er gått før den kjører første gang.
-            modbusReader.Interval = TimeSpan.FromMilliseconds(0);
-            modbusReader.Start();
-            modbusReader.Interval = TimeSpan.FromMilliseconds(lightsOutputData.GetSaveFrequency(config));
+            modbusWriter.Start();
         }
 
         private void Modbus_Stop()
         {
-            modbusReader.Stop();
+            modbusWriter.Stop();
         }
 
         private bool LightOutputToWriteValue(LightsOutputType lightsOutput, int output)

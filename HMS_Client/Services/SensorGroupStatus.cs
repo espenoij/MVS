@@ -1,12 +1,14 @@
 ﻿using System;
 using System.Linq;
+using System.Windows.Data;
 using System.Windows.Threading;
 
 namespace HMS_Client
 {
     public class SensorGroupStatus
     {
-        private RadObservableCollectionEx<SensorGroup> sensorGroupList = new RadObservableCollectionEx<SensorGroup>();
+        private RadObservableCollectionEx<SensorGroup> sensorGroupList;
+        private object sensorGroupListLock = new object();
         private HMSDataCollection clientSensorDataCollection;
 
         private double dataTimeout;
@@ -14,6 +16,9 @@ namespace HMS_Client
         public SensorGroupStatus(Config config, HMSDataCollection clientSensorDataCollection)
         {
             this.clientSensorDataCollection = clientSensorDataCollection;
+
+            sensorGroupList = new RadObservableCollectionEx<SensorGroup>();
+            BindingOperations.EnableCollectionSynchronization(sensorGroupList, sensorGroupListLock);
 
             // Lese data timeout fra config
             dataTimeout = config.ReadWithDefault(ConfigKey.DataTimeout, Constants.DataTimeoutDefault);
@@ -35,38 +40,41 @@ namespace HMS_Client
 
         private void UpdateSensorStatus()
         {
-            // Løper gjennom alle sensorene...
-            for (int sensorGroupId = 0; sensorGroupId < sensorGroupList.Count; sensorGroupId++)
+            lock (sensorGroupListLock)
             {
-                SensorGroup sensorGroup = sensorGroupList[sensorGroupId];
-
-                // Finne sensor verdier knyttet til valgt sensor gruppe
-                var clientDataList = clientSensorDataCollection.GetDataList(sensorGroupId);
-                if (clientDataList != null)
+                // Løper gjennom alle sensorene...
+                for (int sensorGroupId = 0; sensorGroupId < sensorGroupList.Count; sensorGroupId++)
                 {
-                    var clientData = clientDataList?.Where(x => x.sensorGroupId == sensorGroupId);
+                    SensorGroup sensorGroup = sensorGroupList[sensorGroupId];
 
-                    // Har funnet sensor verdier knyttet til sensor gruppe
-                    if (clientData.Count() > 0)
+                    // Finne sensor verdier knyttet til valgt sensor gruppe
+                    var clientDataList = clientSensorDataCollection.GetDataList(sensorGroupId);
+                    if (clientDataList != null)
                     {
-                        // Skjekke om noen av sensor verdiene har error status
-                        var errorList = clientData.Where(x => x.status == DataStatus.TIMEOUT_ERROR);
+                        var clientData = clientDataList?.Where(x => x.sensorGroupId == sensorGroupId);
 
-                        // En eller flere error statuser funnet
-                        if (errorList.Count() > 0)
+                        // Har funnet sensor verdier knyttet til sensor gruppe
+                        if (clientData.Count() > 0)
                         {
-                            sensorGroup.status = DataStatus.TIMEOUT_ERROR;
+                            // Skjekke om noen av sensor verdiene har error status
+                            var errorList = clientData.Where(x => x.status == DataStatus.TIMEOUT_ERROR);
+
+                            // En eller flere error statuser funnet
+                            if (errorList.Count() > 0)
+                            {
+                                sensorGroup.status = DataStatus.TIMEOUT_ERROR;
+                            }
+                            // Ingen error status funnet
+                            else
+                            {
+                                sensorGroup.status = DataStatus.OK;
+                            }
                         }
-                        // Ingen error status funnet
+                        // Ingen verdier knyttet til denne sensor gruppen
                         else
                         {
-                            sensorGroup.status = DataStatus.OK;
+                            //sensorGroup.status = DataStatus.OK;
                         }
-                    }
-                    // Ingen verdier knyttet til denne sensor gruppen
-                    else
-                    {
-                        //sensorGroup.status = DataStatus.OK;
                     }
                 }
             }
@@ -116,6 +124,11 @@ namespace HMS_Client
         public RadObservableCollectionEx<SensorGroup> GetSensorGroupList()
         {
             return sensorGroupList;
+        }
+
+        public object GetSensorGroupListLock()
+        {
+            return sensorGroupListLock;
         }
     }
 }

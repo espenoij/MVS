@@ -73,7 +73,7 @@ class Constants
     public const string TimestampNotSet = "-";
 
     // MODBUS
-    public const int ModbusTimeout = 200;                   // Millisekund
+    public const int ModbusTimeout = 500;                   // Millisekund
     public const int ModbusCoilMin = 1;
     public const int ModbusCoilMax = 9999;
     public const int ModbusDiscreteInputMin = 10001;

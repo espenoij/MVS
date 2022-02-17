@@ -1229,7 +1229,7 @@ namespace HMS_Server
                             break;
 
                         ////////////////////////////////////////////////////////////////////////////////////////////////
-                        /// Rounding Decimals
+                        /// Absolute
                         ////////////////////////////////////////////////////////////////////////////////////////////////
                         /// Beskrivelse:
                         /// Avrunder svaret med angitt antall desimaler.
@@ -1240,6 +1240,36 @@ namespace HMS_Server
                             if (double.TryParse(newData, Constants.numberStyle, Constants.cultureInfo, out value))
                             {
                                 result = Math.Abs(value);
+                            }
+                            break;
+
+                        ////////////////////////////////////////////////////////////////////////////////////////////////
+                        /// Knots to m/s
+                        ////////////////////////////////////////////////////////////////////////////////////////////////
+                        /// Beskrivelse:
+                        /// Avrunder svaret med angitt antall desimaler.
+                        /// 
+                        case CalculationType.KnotsToMS:
+
+                            // Sjekke om data string er numerisk
+                            if (double.TryParse(newData, Constants.numberStyle, Constants.cultureInfo, out value))
+                            {
+                                result = HMSCalc.KnotsToMS(value);
+                            }
+                            break;
+
+                        ////////////////////////////////////////////////////////////////////////////////////////////////
+                        /// M/S to Knots
+                        ////////////////////////////////////////////////////////////////////////////////////////////////
+                        /// Beskrivelse:
+                        /// Avrunder svaret med angitt antall desimaler.
+                        /// 
+                        case CalculationType.MSToKnots:
+
+                            // Sjekke om data string er numerisk
+                            if (double.TryParse(newData, Constants.numberStyle, Constants.cultureInfo, out value))
+                            {
+                                result = HMSCalc.MStoKnots(value);
                             }
                             break;
 
@@ -1381,6 +1411,10 @@ namespace HMS_Server
         [Description("Significant Wave Height")]
         SignificantWaveHeight,
          [Description("Absolute Value")]
-        Absolute
+        Absolute,
+        [Description("Knots to m/s")]
+        KnotsToMS,
+        [Description("m/s to knots")]
+        MSToKnots
     }
 }

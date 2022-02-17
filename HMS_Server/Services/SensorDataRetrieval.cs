@@ -1,6 +1,8 @@
 ﻿using System;
 using System.Collections.Generic;
 using System.IO.Ports;
+using System.Linq;
+using System.Windows.Data;
 using System.Windows.Threading;
 
 namespace HMS_Server
@@ -17,7 +19,8 @@ namespace HMS_Server
         private ErrorHandler errorHandler;
 
         // Sensor Data List
-        private RadObservableCollectionEx<SensorData> sensorDataList = new RadObservableCollectionEx<SensorData>();
+        private RadObservableCollectionEx<SensorData> sensorDataList;
+        private object sensorDataListLock = new object();
 
         // Database Save Frequency dispatcher
         public List<DatabaseInsertTimer> databaseSaveTimer = new List<DatabaseInsertTimer>();
@@ -39,6 +42,9 @@ namespace HMS_Server
             this.config = config;
             this.database = database;
             this.errorHandler = errorHandler;
+
+            sensorDataList = new RadObservableCollectionEx<SensorData>();
+            BindingOperations.EnableCollectionSynchronization(sensorDataList, sensorDataListLock);
 
             // Serial Port data innhenting
             serialPortDataRetrieval = new SerialPortDataRetrieval(config, sensorDataList, database, errorHandler);
@@ -167,153 +173,156 @@ namespace HMS_Server
             void runUpdateSensorStatus(object sender, EventArgs e)
             {
                 // Gå gjennom listen
-                foreach (SensorData sensorData in sensorDataList)
+                lock (sensorDataListLock)
                 {
-                    switch (sensorData.type)
+                    foreach (SensorData sensorData in sensorDataList.ToList())
                     {
-                        // Serial Port
-                        //////////////////////////////////////////////////////////////////////////////////////
-                        case SensorType.SerialPort:
+                        switch (sensorData.type)
+                        {
+                            // Serial Port
+                            //////////////////////////////////////////////////////////////////////////////////////
+                            case SensorType.SerialPort:
 
-                            // Finne korrekt serie port data
-                            SerialPortData serialPortData = serialPortDataRetrieval.GetSerialPortDataReceivedList().Find(x => x.portName == sensorData.serialPort.portName);
-                            if (serialPortData != null)
-                            {
-                                // Oppdatere serie port status
-                                SerialPort serialPort = serialPortDataRetrieval.GetSerialPortList().Find(x => x.PortName == serialPortData.portName);
-                                if (serialPort != null)
+                                // Finne korrekt serie port data
+                                SerialPortData serialPortData = serialPortDataRetrieval.GetSerialPortDataReceivedList().Find(x => x.portName == sensorData.serialPort.portName);
+                                if (serialPortData != null)
                                 {
-                                    // Porten er ikke åpen
-                                    if (!serialPort.IsOpen)
+                                    // Oppdatere serie port status
+                                    SerialPort serialPort = serialPortDataRetrieval.GetSerialPortList().Find(x => x.PortName == serialPortData.portName);
+                                    if (serialPort != null)
                                     {
-                                        // Data innhenting er startet -> port skal være åpen
-                                        if (dataRetrievalStarted)
+                                        // Porten er ikke åpen
+                                        if (!serialPort.IsOpen)
                                         {
-                                            // Prøv å restarte porten
-                                            serialPortDataRetrieval.Restart(serialPortData.portName);
-                                        }
-                                        else
-                                        {
-                                            serialPortData.portStatus = PortStatus.Closed;
-                                        }
-                                    }
-                                    // Porten er åpen
-                                    else
-                                    {
-                                        // Lese data timeout fra config
-                                        double dataTimeout = config.ReadWithDefault(ConfigKey.DataTimeout, Constants.DataTimeoutDefault);
-
-                                        // Dersom det ikke er satt data på porten innen timeout
-                                        if (serialPortData.timestamp.AddMilliseconds(dataTimeout) < DateTime.UtcNow)
-                                        {
-                                            // Sette status
-                                            serialPortData.portStatus = PortStatus.NoData;
-
-                                            // Fjerne data fra data feltet
-                                            serialPortData.data = string.Empty;
-
-                                            // Prøv å restarte porten
-                                            serialPortDataRetrieval.Restart(serialPortData.portName);
-
-                                            // Sette feilmelding
-                                            errorHandler.Insert(
-                                                new ErrorMessage(
-                                                    DateTime.UtcNow,
-                                                    ErrorMessageType.SerialPort,
-                                                    ErrorMessageCategory.AdminUser,
-                                                    string.Format("Serial port data timeout: {0}", sensorData.serialPort.portName),
-                                                    sensorData.id));
-                                        }
-                                        // Det er data på porten
-                                        else
-                                        {
-                                            // Sette status
-                                            if (serialPortData.portStatus == PortStatus.Closed)
+                                            // Data innhenting er startet -> port skal være åpen
+                                            if (dataRetrievalStarted)
                                             {
-                                                serialPortData.portStatus = PortStatus.Open;
+                                                // Prøv å restarte porten
+                                                serialPortDataRetrieval.Restart(serialPortData.portName);
+                                            }
+                                            else
+                                            {
+                                                serialPortData.portStatus = PortStatus.Closed;
+                                            }
+                                        }
+                                        // Porten er åpen
+                                        else
+                                        {
+                                            // Lese data timeout fra config
+                                            double dataTimeout = config.ReadWithDefault(ConfigKey.DataTimeout, Constants.DataTimeoutDefault);
+
+                                            // Dersom det ikke er satt data på porten innen timeout
+                                            if (serialPortData.timestamp.AddMilliseconds(dataTimeout) < DateTime.UtcNow)
+                                            {
+                                                // Sette status
+                                                serialPortData.portStatus = PortStatus.NoData;
+
+                                                // Fjerne data fra data feltet
+                                                serialPortData.data = string.Empty;
+
+                                                // Prøv å restarte porten
+                                                serialPortDataRetrieval.Restart(serialPortData.portName);
+
+                                                // Sette feilmelding
+                                                errorHandler.Insert(
+                                                    new ErrorMessage(
+                                                        DateTime.UtcNow,
+                                                        ErrorMessageType.SerialPort,
+                                                        ErrorMessageCategory.AdminUser,
+                                                        string.Format("Serial port data timeout: {0}", sensorData.serialPort.portName),
+                                                        sensorData.id));
+                                            }
+                                            // Det er data på porten
+                                            else
+                                            {
+                                                // Sette status
+                                                if (serialPortData.portStatus == PortStatus.Closed)
+                                                {
+                                                    serialPortData.portStatus = PortStatus.Open;
+                                                }
                                             }
                                         }
                                     }
+
+                                    // Overføre status til sensor data item
+                                    sensorData.portStatus = serialPortData.portStatus;
                                 }
+                                break;
 
-                                // Overføre status til sensor data item
-                                sensorData.portStatus = serialPortData.portStatus;
-                            }
-                            break;
+                            // MODBUS
+                            //////////////////////////////////////////////////////////////////////////////////////
+                            case SensorType.ModbusRTU:
+                            case SensorType.ModbusASCII:
+                            case SensorType.ModbusTCP:
 
-                        // MODBUS
-                        //////////////////////////////////////////////////////////////////////////////////////
-                        case SensorType.ModbusRTU:
-                        case SensorType.ModbusASCII:
-                        case SensorType.ModbusTCP:
-
-                            if (dataRetrievalStarted)
-                            {
-                                if (sensorData.portStatus == PortStatus.Closed)
+                                if (dataRetrievalStarted)
                                 {
-                                    sensorData.portStatus = PortStatus.Open;
+                                    if (sensorData.portStatus == PortStatus.Closed)
+                                    {
+                                        sensorData.portStatus = PortStatus.Open;
+                                    }
                                 }
-                            }
-                            else
-                            {
-                                sensorData.portStatus = PortStatus.Closed;
-                            }
-                            break;
-
-                        // File Reader
-                        //////////////////////////////////////////////////////////////////////////////////////
-                        case SensorType.FileReader:
-
-                            // Finne korrekt serie port data
-                            FileReaderSetup fileReaderData = fileReaderDataRetrieval.GetFileReaderList().Find(x =>
-                                x.fileFolder == sensorData.fileReader.fileFolder &&
-                                x.fileName == sensorData.fileReader.fileName);
-
-                            if (dataRetrievalStarted)
-                            {
-                                if (sensorData.portStatus == PortStatus.Closed)
+                                else
                                 {
-                                    sensorData.portStatus = PortStatus.Open;
+                                    sensorData.portStatus = PortStatus.Closed;
+                                }
+                                break;
+
+                            // File Reader
+                            //////////////////////////////////////////////////////////////////////////////////////
+                            case SensorType.FileReader:
+
+                                // Finne korrekt serie port data
+                                FileReaderSetup fileReaderData = fileReaderDataRetrieval.GetFileReaderList().Find(x =>
+                                    x.fileFolder == sensorData.fileReader.fileFolder &&
+                                    x.fileName == sensorData.fileReader.fileName);
+
+                                if (dataRetrievalStarted)
+                                {
+                                    if (sensorData.portStatus == PortStatus.Closed)
+                                    {
+                                        sensorData.portStatus = PortStatus.Open;
+
+                                        // Oppdatere status
+                                        if (fileReaderData != null)
+                                            fileReaderData.portStatus = sensorData.portStatus;
+                                    }
+                                }
+                                else
+                                {
+                                    sensorData.portStatus = PortStatus.Closed;
 
                                     // Oppdatere status
                                     if (fileReaderData != null)
                                         fileReaderData.portStatus = sensorData.portStatus;
                                 }
+
+                                break;
+                        }
+
+                        // Sjekke om det ligger inne feilmeldinger på denne sensor verdien
+                        ErrorMessage errorMessage = errorHandler.GetErrorMessage(sensorData.id);
+                        if (errorMessage != null)
+                        {
+                            // ...og at feilmeldingen er nyere enn evt.data(feilmeldingene kommer alltid etter forsøk på data henting / behandling i tid)
+                            if (errorMessage.timestamp.AddMilliseconds(config.ReadWithDefault(ConfigKey.ServerUIUpdateFrequency, Constants.ServerUIUpdateFrequencyDefault)) > sensorData.timestamp)
+                            {
+                                // Legge ut feilmeldingen på skjerm
+                                sensorData.message = errorMessage.message;
                             }
                             else
                             {
-                                sensorData.portStatus = PortStatus.Closed;
-
-                                // Oppdatere status
-                                if (fileReaderData != null)
-                                    fileReaderData.portStatus = sensorData.portStatus;
+                                // Fjerne melding fra skjerm
+                                sensorData.message = string.Empty;
                             }
-
-                            break;
-                    }
-
-                    // Sjekke om det ligger inne feilmeldinger på denne sensor verdien
-                    ErrorMessage errorMessage = errorHandler.GetErrorMessage(sensorData.id);
-                    if (errorMessage != null)
-                    {
-                        // ...og at feilmeldingen er nyere enn evt.data(feilmeldingene kommer alltid etter forsøk på data henting / behandling i tid)
-                        if (errorMessage.timestamp.AddMilliseconds(config.ReadWithDefault(ConfigKey.ServerUIUpdateFrequency, Constants.ServerUIUpdateFrequencyDefault)) > sensorData.timestamp)
-                        {
-                            // Legge ut feilmeldingen på skjerm
-                            sensorData.message = errorMessage.message;
                         }
-                        else
-                        {
-                            // Fjerne melding fra skjerm
-                            sensorData.message = string.Empty;
-                        }
-                    }
 
-                    // Sette Warning status dersom vi leser data, men har en feilmelding
-                    if (sensorData.portStatus == PortStatus.Reading &&
-                        sensorData.HasMessage)
-                    {
-                        sensorData.portStatus = PortStatus.Warning;
+                        // Sette Warning status dersom vi leser data, men har en feilmelding
+                        if (sensorData.portStatus == PortStatus.Reading &&
+                            sensorData.HasMessage)
+                        {
+                            sensorData.portStatus = PortStatus.Warning;
+                        }
                     }
                 }
             }

@@ -683,7 +683,6 @@ namespace HMS_Server
             DispatcherPriority.Normal,
             new Action(() =>
             {
-
                 // Legg ut data i packet data listview
                 selectedDataItems.Add(modbusData);
 

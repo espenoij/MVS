@@ -8,13 +8,13 @@ namespace HMS_Server
         // Change notification
         public event PropertyChangedEventHandler PropertyChanged;
 
-        public SensorGroup(SensorGroup sensor)
+        public SensorGroup()
         {
-            id = sensor.id;
-            name = sensor.name;
-            dbColumn = sensor.dbColumn;
-            active = sensor.active;
-            status = sensor.status;
+        }
+
+        public SensorGroup(SensorGroup sensorGroup)
+        {
+            Set(sensorGroup);
         }
 
         public SensorGroup(SensorGroupIDConfig sensorIDConfig)
@@ -24,6 +24,15 @@ namespace HMS_Server
             dbColumn = sensorIDConfig.dbColumn;
             active = bool.Parse(sensorIDConfig.active);
             status = DataStatus.OK;
+        }
+
+        public void Set(SensorGroup sensorGroup)
+        {
+            id = sensorGroup.id;
+            name = sensorGroup.name;
+            dbColumn = sensorGroup.dbColumn;
+            active = sensorGroup.active;
+            status = sensorGroup.status;
         }
 
         private int _id { get; set; }
@@ -102,14 +111,6 @@ namespace HMS_Server
             {
                 return status.ToString();
             }
-        }
-
-        public void Set(SensorGroup sensorGroup)
-        {
-            id = sensorGroup.id;
-            name = sensorGroup.name;
-            active = sensorGroup.active;
-            status = sensorGroup.status;
         }
 
         // Variabel oppdatert

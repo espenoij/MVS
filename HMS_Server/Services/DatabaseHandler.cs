@@ -113,7 +113,7 @@ namespace HMS_Server
                     lock (sensorDataList)
                     {
                         // For hver sensor verdi som skal lagres oppretter vi en ny database tabell, dersom den ikke allerede eksisterer
-                        foreach (var sensorData in sensorDataList)
+                        foreach (var sensorData in sensorDataList.ToList())
                         {
                             if (sensorData.saveToDatabase)
                             {
@@ -237,7 +237,7 @@ namespace HMS_Server
 
                     // Liste med database column navn
                     string columnNames = "";
-                    foreach (var hmsData in hmsDataCollection.GetDataList())
+                    foreach (var hmsData in hmsDataCollection.GetDataList().ToList())
                     {
                         // Kun variabler som har column navn satt skal legges inn
                         if (!string.IsNullOrEmpty(hmsData.dbColumn))
@@ -329,7 +329,7 @@ namespace HMS_Server
                         {
                             for (int i = 0; i < totalIDs; i++)
                             {
-                                if (sensorDataList.Where(x => x.id == i)?.Count() == 0)
+                                if (sensorDataList.ToList().Where(x => x.id == i)?.Count() == 0)
                                 {
                                     string tableName = string.Format("{0}_{1}", tableNamePrefixSensorData, i);
 
@@ -366,7 +366,7 @@ namespace HMS_Server
                     lock (sensorDataList)
                     {
                         // Slå opp tabellene for hver sensor verdi og slette data
-                        foreach (var sensorData in sensorDataList)
+                        foreach (var sensorData in sensorDataList.ToList())
                         {
                             if (sensorData.saveToDatabase)
                             {
@@ -673,7 +673,7 @@ namespace HMS_Server
                         // Liste med database column navn
                         string columnNames = "";
                         bool first = true;
-                        foreach (var hmsData in hmsDataCollection.GetDataList())
+                        foreach (var hmsData in hmsDataCollection.GetDataList().ToList())
                         {
                             // Kun variabler som har column navn satt skal legges inn
                             if (!string.IsNullOrEmpty(hmsData.dbColumn))
@@ -691,7 +691,7 @@ namespace HMS_Server
                         string valueNumbers = "";
                         first = true;
                         int i = 1;
-                        foreach (var hmsData in hmsDataCollection.GetDataList())
+                        foreach (var hmsData in hmsDataCollection.GetDataList().ToList())
                         {
                             // Kun variabler som har column navn satt skal legges inn
                             if (!string.IsNullOrEmpty(hmsData.dbColumn))
@@ -713,7 +713,7 @@ namespace HMS_Server
 
                         // Insert value parametre
                         i = 1;
-                        foreach (var hmsData in hmsDataCollection.GetDataList())
+                        foreach (var hmsData in hmsDataCollection.GetDataList().ToList())
                         {
                             // Kun variabler som har column navn satt skal legges inn
                             if (!string.IsNullOrEmpty(hmsData.dbColumn))
@@ -830,7 +830,7 @@ namespace HMS_Server
                         lock (sensorDataList)
                         {
                             // Slå opp tabellene for hver sensor verdi og slette data
-                            foreach (var sensorData in sensorDataList)
+                            foreach (var sensorData in sensorDataList.ToList())
                             {
                                 if (sensorData.saveToDatabase)
                                 {

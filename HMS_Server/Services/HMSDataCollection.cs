@@ -1,5 +1,6 @@
 ﻿using System;
 using System.Linq;
+using System.Windows.Data;
 using Telerik.Windows.Data;
 
 namespace HMS_Server
@@ -10,7 +11,14 @@ namespace HMS_Server
         private Config config;
 
         // Liste med data
-        private RadObservableCollection<HMSData> dataList = new RadObservableCollection<HMSData>();
+        private RadObservableCollection<HMSData> dataList;
+        private object hmsDataListLock = new object();
+
+        public HMSDataCollection()
+        {
+            dataList = new RadObservableCollection<HMSData>();
+            BindingOperations.EnableCollectionSynchronization(dataList, hmsDataListLock);
+        }
 
         public void LoadHMSInput(Config config)
         {
@@ -42,7 +50,8 @@ namespace HMS_Server
                     clientSensorData.dbColumn = item.dbTableName;
 
                     // Legge inn i data listen
-                    dataList.Add(clientSensorData);
+                    lock (hmsDataListLock)
+                        dataList.Add(clientSensorData);
                 }
             }
         }
@@ -71,7 +80,8 @@ namespace HMS_Server
                     clientSensorData.dataId = int.Parse(item.dataId, Constants.cultureInfo);
 
                     // Legge inn i data listen
-                    dataList.Add(clientSensorData);
+                    lock (hmsDataListLock)
+                        dataList.Add(clientSensorData);
                 }
             }
         }
@@ -100,7 +110,8 @@ namespace HMS_Server
                     clientSensorData.dataId = int.Parse(item.dataId, Constants.cultureInfo);
 
                     // Legge inn i data listen
-                    dataList.Add(clientSensorData);
+                    lock (hmsDataListLock)
+                        dataList.Add(clientSensorData);
                 }
             }
         }
@@ -114,30 +125,33 @@ namespace HMS_Server
             double dataTimeout = config.ReadWithDefault(ConfigKey.DataTimeout, Constants.DataTimeoutDefault);
 
             // Løper gjennom data listen
-            foreach (var hmsData in dataList.ToList())
+            lock (hmsDataListLock)
             {
-                // Finne match i mottaker data listen
-                var serverData = sensorDataList.Where(x => x?.id == hmsData?.dataId);
-
-                // Fant match?
-                if (serverData.Count() > 0 && hmsData != null)
+                foreach (var hmsData in dataList.ToList())
                 {
-                    // Overføre data
-                    hmsData.data = serverData.First().data;
+                    // Finne match i mottaker data listen
+                    var serverData = sensorDataList.Where(x => x?.id == hmsData?.dataId);
 
-                    // Overføre time stamp
-                    hmsData.timestamp = serverData.First().timestamp;
+                    // Fant match?
+                    if (serverData.Count() > 0 && hmsData != null)
+                    {
+                        // Overføre data
+                        hmsData.data = serverData.First().data;
 
-                    // Sjekke timestamp for data timeout
-                    if (hmsData.timestamp.AddMilliseconds(dataTimeout) < DateTime.UtcNow)
-                        hmsData.status = DataStatus.TIMEOUT_ERROR;
+                        // Overføre time stamp
+                        hmsData.timestamp = serverData.First().timestamp;
+
+                        // Sjekke timestamp for data timeout
+                        if (hmsData.timestamp.AddMilliseconds(dataTimeout) < DateTime.UtcNow)
+                            hmsData.status = DataStatus.TIMEOUT_ERROR;
+                        else
+                            hmsData.status = DataStatus.OK;
+                    }
+                    // Ingen verdi i data samlingen knyttet til verdi i mottaker listen
                     else
-                        hmsData.status = DataStatus.OK;
-                }
-                // Ingen verdi i data samlingen knyttet til verdi i mottaker listen
-                else
-                {
-                    hmsData.status = DataStatus.TIMEOUT_ERROR;
+                    {
+                        hmsData.status = DataStatus.TIMEOUT_ERROR;
+                    }
                 }
             }
         }
@@ -150,30 +164,33 @@ namespace HMS_Server
             double dataTimeout = config.ReadWithDefault(ConfigKey.DataTimeout, Constants.DataTimeoutDefault);
 
             // Løper gjennom data listen
-            foreach (var hmsData in dataList.ToList())
+            lock (hmsDataListLock)
             {
-                // Finne match i mottaker data listen
-                var serverData = hmsDataList.Where(x => x?.id == hmsData?.dataId);
-
-                // Fant match?
-                if (serverData.Count() > 0 && hmsData != null)
+                foreach (var hmsData in dataList.ToList())
                 {
-                    // Overføre data
-                    hmsData.data = serverData.First().data;
+                    // Finne match i mottaker data listen
+                    var serverData = hmsDataList.ToList().Where(x => x?.id == hmsData?.dataId);
 
-                    // Overføre time stamp
-                    hmsData.timestamp = serverData.First().timestamp;
+                    // Fant match?
+                    if (serverData.Count() > 0 && hmsData != null)
+                    {
+                        // Overføre data
+                        hmsData.data = serverData.First().data;
 
-                    // Sjekke timestamp for data timeout
-                    if (hmsData.timestamp.AddMilliseconds(dataTimeout) < DateTime.UtcNow)
-                        hmsData.status = DataStatus.TIMEOUT_ERROR;
+                        // Overføre time stamp
+                        hmsData.timestamp = serverData.First().timestamp;
+
+                        // Sjekke timestamp for data timeout
+                        if (hmsData.timestamp.AddMilliseconds(dataTimeout) < DateTime.UtcNow)
+                            hmsData.status = DataStatus.TIMEOUT_ERROR;
+                        else
+                            hmsData.status = DataStatus.OK;
+                    }
+                    // Ingen verdi i data samlingen knyttet til verdi i mottaker listen
                     else
-                        hmsData.status = DataStatus.OK;
-                }
-                // Ingen verdi i data samlingen knyttet til verdi i mottaker listen
-                else
-                {
-                    hmsData.status = DataStatus.TIMEOUT_ERROR;
+                    {
+                        hmsData.status = DataStatus.TIMEOUT_ERROR;
+                    }
                 }
             }
         }
@@ -187,7 +204,7 @@ namespace HMS_Server
         // Hente data fra samlingen
         public HMSData GetData(ValueType id)
         {
-            var sensorData = dataList.Where(x => x.id == (int)id);
+            var sensorData = dataList.ToList().Where(x => x.id == (int)id);
             if (sensorData.Count() > 0)
                 return sensorData.First();
             else
