@@ -3,8 +3,6 @@
     // Klasse for prosessering av data fra sensor til HMS output
     public class HMSProcessing
     {
-        private AdminSettingsVM adminSettingsVM;
-
         private HMSProcessingSettings hmsProcessingSettings;
         private HMSProcessingUserInputs hmsProcessingUserInputs;
         private HMSProcessingGeneralInfo hmsProcessingGeneralInfo;
@@ -21,8 +19,6 @@
             UserInputs userInputs,
             ErrorHandler errorHandler)
         {
-            this.adminSettingsVM = adminSettingsVM;
-
             hmsProcessingSettings = new HMSProcessingSettings(hmsOutputData, adminSettingsVM);
             hmsProcessingUserInputs = new HMSProcessingUserInputs(hmsOutputData, userInputs, adminSettingsVM);
             hmsProcessingGeneralInfo = new HMSProcessingGeneralInfo(hmsOutputData);

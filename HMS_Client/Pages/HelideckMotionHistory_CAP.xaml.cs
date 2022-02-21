@@ -135,6 +135,24 @@ namespace HMS_Client
                         // Blank bakgrunn
                         gridMaxInclination.ClearValue(Panel.BackgroundProperty);
                     }
+
+                    ///////////////////////////////////////////////////////////////////////////////////////////
+                    // Helideck Motion: SHR
+                    ///////////////////////////////////////////////////////////////////////////////////////////                  
+                    if (helideckMotionTrendVM.significantHeaveRateData?.status == DataStatus.OK)
+                    {
+                        if (helideckMotionTrendVM.significantHeaveRateData.limitStatus == LimitStatus.OK)
+                            // Blank bakgrunn
+                            gridSHR.ClearValue(Panel.BackgroundProperty);
+                        else
+                            // Rød bakgrunn
+                            gridSHR.Background = (Brush)FindResource("ColorRed");
+                    }
+                    else
+                    {
+                        // Blank bakgrunn
+                        gridSHR.ClearValue(Panel.BackgroundProperty);
+                    }
                 }
             }
         }
