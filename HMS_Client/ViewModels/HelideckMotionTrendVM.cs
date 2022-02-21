@@ -68,8 +68,6 @@ namespace HMS_Client
 
             void UIUpdate(object sender, EventArgs e)
             {
-                int chartTimeCorrMax = -2;
-
                 // Sjekke om vi har data timeout
 
                 // Pitch
@@ -124,8 +122,6 @@ namespace HMS_Client
                 }
                 else
                 {
-                    int chartTimeCorrMin = 4;
-
                     // Oppdatere data som skal ut i grafer
                     GraphBuffer.UpdateWithCull(pitchMax20mData, pitchData20mList, Constants.GraphCullFrequency20m);
                     GraphBuffer.UpdateWithCull(rollMax20mData, rollData20mList, Constants.GraphCullFrequency20m);
@@ -138,18 +134,18 @@ namespace HMS_Client
                     GraphBuffer.UpdateWithCull(significantHeaveRateData, significantHeaveRateData3hList, Constants.GraphCullFrequency3h);
 
                     // Fjerne gamle data fra chart data
-                    GraphBuffer.RemoveOldData(pitchData20mList, Constants.Minutes20 + chartTimeCorrMin);
-                    GraphBuffer.RemoveOldData(rollData20mList, Constants.Minutes20 + chartTimeCorrMin);
-                    GraphBuffer.RemoveOldData(inclinationData20mList, Constants.Minutes20 + chartTimeCorrMin);
-                    GraphBuffer.RemoveOldData(significantHeaveRateData20mList, Constants.Minutes20 + chartTimeCorrMin);
+                    GraphBuffer.RemoveOldData(pitchData20mList, Constants.Minutes20 + Constants.ChartTimeCorrMin);
+                    GraphBuffer.RemoveOldData(rollData20mList, Constants.Minutes20 + Constants.ChartTimeCorrMin);
+                    GraphBuffer.RemoveOldData(inclinationData20mList, Constants.Minutes20 + Constants.ChartTimeCorrMin);
+                    GraphBuffer.RemoveOldData(significantHeaveRateData20mList, Constants.Minutes20 + Constants.ChartTimeCorrMin);
 
-                    GraphBuffer.RemoveOldData(pitchData3hList, Constants.Hours3 + chartTimeCorrMin);
-                    GraphBuffer.RemoveOldData(rollData3hList, Constants.Hours3 + chartTimeCorrMin);
-                    GraphBuffer.RemoveOldData(inclinationData3hList, Constants.Hours3 + chartTimeCorrMin);
-                    GraphBuffer.RemoveOldData(significantHeaveRateData3hList, Constants.Hours3 + chartTimeCorrMin);
+                    GraphBuffer.RemoveOldData(pitchData3hList, Constants.Hours3 + Constants.ChartTimeCorrMin);
+                    GraphBuffer.RemoveOldData(rollData3hList, Constants.Hours3 + Constants.ChartTimeCorrMin);
+                    GraphBuffer.RemoveOldData(inclinationData3hList, Constants.Hours3 + Constants.ChartTimeCorrMin);
+                    GraphBuffer.RemoveOldData(significantHeaveRateData3hList, Constants.Hours3 + Constants.ChartTimeCorrMin);
 
                     // Oppdatere alignment datetime (nåtid) til alle chart (20m og 3h)
-                    alignmentDate = DateTime.UtcNow.AddSeconds(chartTimeCorrMax);
+                    alignmentTime = DateTime.UtcNow.AddSeconds(Constants.ChartTimeCorrMax);
 
                     // Tick alignment
                     //tickAlignment5 = DateTime.UtcNow.AddMinutes(-5);
@@ -165,10 +161,6 @@ namespace HMS_Client
 
             void ChartDataUpdate20m(object sender, EventArgs e)
             {
-                // Disse korreksjonene legges inn for å få tidspunkt-label på X aksen til å vises korrekt
-                int chartTimeCorrMin = 4;
-                int chartTimeCorrMax = -2;
-
                 if (adminSettingsVM.regulationStandard == RegulationStandard.NOROG)
                 {
                     // Overføre data fra buffer til chart data: 20m
@@ -179,14 +171,14 @@ namespace HMS_Client
                     GraphBuffer.Transfer(significantHeaveRateBuffer20m, significantHeaveRateData20mList);
 
                     // Fjerne gamle data fra chart data
-                    GraphBuffer.RemoveOldData(pitchData20mList, Constants.Minutes20 + chartTimeCorrMin);
-                    GraphBuffer.RemoveOldData(rollData20mList, Constants.Minutes20 + chartTimeCorrMin);
-                    GraphBuffer.RemoveOldData(inclinationData20mList, Constants.Minutes20 + chartTimeCorrMin);
-                    GraphBuffer.RemoveOldData(heaveAmplitudeData20mList, Constants.Minutes20 + chartTimeCorrMin);
-                    GraphBuffer.RemoveOldData(significantHeaveRateData20mList, Constants.Minutes20 + chartTimeCorrMin);
+                    GraphBuffer.RemoveOldData(pitchData20mList, Constants.Minutes20 + Constants.ChartTimeCorrMin);
+                    GraphBuffer.RemoveOldData(rollData20mList, Constants.Minutes20 + Constants.ChartTimeCorrMin);
+                    GraphBuffer.RemoveOldData(inclinationData20mList, Constants.Minutes20 + Constants.ChartTimeCorrMin);
+                    GraphBuffer.RemoveOldData(heaveAmplitudeData20mList, Constants.Minutes20 + Constants.ChartTimeCorrMin);
+                    GraphBuffer.RemoveOldData(significantHeaveRateData20mList, Constants.Minutes20 + Constants.ChartTimeCorrMin);
 
                     // Oppdatere alignment datetime (nåtid) til alle chart (20m og 3h)
-                    alignmentDate = DateTime.UtcNow.AddSeconds(chartTimeCorrMax);
+                    alignmentTime = DateTime.UtcNow.AddSeconds(Constants.ChartTimeCorrMax);
                 }
 
                 // Oppdatere aksene og farget område på graf
@@ -235,10 +227,6 @@ namespace HMS_Client
 
             void ChartDataUpdate3h(object sender, EventArgs e)
             {
-                // Disse korreksjonene legges inn for å få tidspunkt-label på X aksen til å vises korrekt
-                int chartTimeCorrMin = 4;
-                int chartTimeCorrMax = -2;
-
                 if (adminSettingsVM.regulationStandard == RegulationStandard.NOROG)
                 {
                     // Overføre data fra buffer til chart data: 20m
@@ -249,14 +237,14 @@ namespace HMS_Client
                     GraphBuffer.Transfer(significantHeaveRateBuffer3h, significantHeaveRateData3hList);
 
                     // Fjerne gamle data fra chart data
-                    GraphBuffer.RemoveOldData(pitchData3hList, Constants.Hours3 + chartTimeCorrMin);
-                    GraphBuffer.RemoveOldData(rollData3hList, Constants.Hours3 + chartTimeCorrMin);
-                    GraphBuffer.RemoveOldData(inclinationData3hList, Constants.Hours3 + chartTimeCorrMin);
-                    GraphBuffer.RemoveOldData(heaveAmplitudeData3hList, Constants.Hours3 + chartTimeCorrMin);
-                    GraphBuffer.RemoveOldData(significantHeaveRateData3hList, Constants.Hours3 + chartTimeCorrMin);
+                    GraphBuffer.RemoveOldData(pitchData3hList, Constants.Hours3 + Constants.ChartTimeCorrMin);
+                    GraphBuffer.RemoveOldData(rollData3hList, Constants.Hours3 + Constants.ChartTimeCorrMin);
+                    GraphBuffer.RemoveOldData(inclinationData3hList, Constants.Hours3 + Constants.ChartTimeCorrMin);
+                    GraphBuffer.RemoveOldData(heaveAmplitudeData3hList, Constants.Hours3 + Constants.ChartTimeCorrMin);
+                    GraphBuffer.RemoveOldData(significantHeaveRateData3hList, Constants.Hours3 + Constants.ChartTimeCorrMin);
 
                     // Oppdatere alignment datetime (nåtid) til alle chart (20m og 3h)
-                    alignmentDate = DateTime.UtcNow.AddSeconds(chartTimeCorrMax);
+                    alignmentTime = DateTime.UtcNow.AddSeconds(Constants.ChartTimeCorrMax);
                 }
 
                 // Oppdatere aksene og farget område på graf
@@ -1144,20 +1132,38 @@ namespace HMS_Client
         /////////////////////////////////////////////////////////////////////////////
         // Chart X axis alignment
         /////////////////////////////////////////////////////////////////////////////
-        private DateTime _alignmentDate;
-        public DateTime alignmentDate
+        private DateTime _alignmentTime;
+        public DateTime alignmentTime
         {
             get
             {
-                return _alignmentDate;
+                return _alignmentTime;
             }
             set
             {
-                if (_alignmentDate != value)
+                if (_alignmentTime != value)
                 {
-                    _alignmentDate = value;
+                    _alignmentTime = value;
                     OnPropertyChanged();
+                    OnPropertyChanged(nameof(alignmentTimeMin));
+                    OnPropertyChanged(nameof(alignmentTimeMax));
                 }
+            }
+        }
+
+        public DateTime alignmentTimeMin
+        {
+            get
+            {
+                return DateTime.UtcNow.AddSeconds(-Constants.Minutes20 - Constants.ChartTimeCorrMin);
+            }
+        }
+
+        public DateTime alignmentTimeMax
+        {
+            get
+            {
+                return alignmentTime;
             }
         }
 

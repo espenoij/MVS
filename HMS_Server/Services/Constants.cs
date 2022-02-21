@@ -294,4 +294,10 @@ class Constants
     public const double GraphCullFrequency20m = 3750; // Dette tallet er i millisekund. 4 sek. Avrundingspunktet mellom 3.5 og 4 sek.
     public const double GraphCullFrequency30m = 5750;
     public const double GraphCullFrequency3h = 29750;
+
+    // Korreksjoner for DateTimeContinuousAxis
+    // Disse korreksjonene legges inn for å få tidspunkt-label på X aksen til å vises korrekt
+    public const int ChartTimeCorrMin = 3;
+    public const int ChartTimeCorrMax = -2;
+
 }

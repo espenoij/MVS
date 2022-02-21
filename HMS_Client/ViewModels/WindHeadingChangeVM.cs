@@ -34,10 +34,6 @@ namespace HMS_Client
 
             void UIUpdate(object sender, EventArgs e)
             {
-                // Disse korreksjonene legges inn for å få tidspunkt-label på X aksen til å vises korrekt
-                int chartTimeCorrMin = 4;
-                //int chartTimeCorrMax = -2;
-
                 // Sjekke om vi har data timeout
                 if (sensorStatus.TimeoutCheck(vesselHeadingDelta))
                 {
@@ -76,8 +72,8 @@ namespace HMS_Client
                 GraphBuffer.UpdateWithCull(windDirectionDelta, windDir20mDataList, Constants.GraphCullFrequency30m);
 
                 // Fjerne gamle data fra chart data
-                GraphBuffer.RemoveOldData(vesselHdg20mDataList, Constants.Minutes30 + chartTimeCorrMin);
-                GraphBuffer.RemoveOldData(windDir20mDataList, Constants.Minutes30 + chartTimeCorrMin);
+                GraphBuffer.RemoveOldData(vesselHdg20mDataList, Constants.Minutes30 + Constants.ChartTimeCorrMin);
+                GraphBuffer.RemoveOldData(windDir20mDataList, Constants.Minutes30 + Constants.ChartTimeCorrMin);
 
                 // Finne absolute max verdi
                 vesselHdgDeltaAbsMax = FindAbsMax(vesselHdg20mDataList);

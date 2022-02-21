@@ -118,7 +118,7 @@
                                     LabelInterval="5"
                                     LabelFormat="HH:mm"
                                     PlotMode="OnTicks"
-                                    TickOrigin="{Binding alignmentDate}" />
+                                    TickOrigin="{Binding alignmentTime}" />
                             </telerik:RadCartesianChart.HorizontalAxis>
 
                             <telerik:RadCartesianChart.VerticalAxis>
@@ -346,7 +346,7 @@
                                     LabelInterval="5"
                                     LabelFormat="HH:mm"
                                     PlotMode="OnTicks"
-                                    TickOrigin="{Binding alignmentDate}" />
+                                    TickOrigin="{Binding alignmentTime}" />
                             </telerik:RadCartesianChart.HorizontalAxis>
 
                             <telerik:RadCartesianChart.VerticalAxis>
@@ -574,7 +574,7 @@
                                     LabelInterval="5"
                                     LabelFormat="HH:mm"
                                     PlotMode="OnTicks"
-                                    TickOrigin="{Binding alignmentDate}" />
+                                    TickOrigin="{Binding alignmentTime}" />
                             </telerik:RadCartesianChart.HorizontalAxis>
 
                             <telerik:RadCartesianChart.VerticalAxis>
@@ -730,7 +730,7 @@
                                     LabelInterval="5"
                                     LabelFormat="HH:mm"
                                     PlotMode="OnTicks"
-                                    TickOrigin="{Binding alignmentDate}" />
+                                    TickOrigin="{Binding alignmentTime}" />
                             </telerik:RadCartesianChart.HorizontalAxis>
 
                             <telerik:RadCartesianChart.VerticalAxis>
@@ -898,7 +898,7 @@
                                     LabelInterval="5"
                                     LabelFormat="HH:mm"
                                     PlotMode="OnTicks"
-                                    TickOrigin="{Binding alignmentDate}" />
+                                    TickOrigin="{Binding alignmentTime}" />
                             </telerik:RadCartesianChart.HorizontalAxis>
 
                             <telerik:RadCartesianChart.VerticalAxis>
@@ -1085,7 +1085,7 @@
                                     LabelInterval="6"
                                     LabelFormat="HH:mm"
                                     PlotMode="OnTicks"
-                                    TickOrigin="{Binding alignmentDate}" />
+                                    TickOrigin="{Binding alignmentTime}" />
                             </telerik:RadCartesianChart.HorizontalAxis>
 
                             <telerik:RadCartesianChart.VerticalAxis>
@@ -1188,7 +1188,7 @@
                                     LabelInterval="6"
                                     LabelFormat="HH:mm"
                                     PlotMode="OnTicks"
-                                    TickOrigin="{Binding alignmentDate}" />
+                                    TickOrigin="{Binding alignmentTime}" />
                             </telerik:RadCartesianChart.HorizontalAxis>
 
                             <telerik:RadCartesianChart.VerticalAxis>
@@ -1291,7 +1291,7 @@
                                     LabelInterval="6"
                                     LabelFormat="HH:mm"
                                     PlotMode="OnTicks"
-                                    TickOrigin="{Binding alignmentDate}" />
+                                    TickOrigin="{Binding alignmentTime}" />
                             </telerik:RadCartesianChart.HorizontalAxis>
 
                             <telerik:RadCartesianChart.VerticalAxis>
@@ -1398,7 +1398,7 @@
                                     LabelInterval="6"
                                     LabelFormat="HH:mm"
                                     PlotMode="OnTicks"
-                                    TickOrigin="{Binding alignmentDate}" />
+                                    TickOrigin="{Binding alignmentTime}" />
                             </telerik:RadCartesianChart.HorizontalAxis>
 
                             <telerik:RadCartesianChart.VerticalAxis>
@@ -1539,7 +1539,7 @@
                                     LabelInterval="6"
                                     LabelFormat="HH:mm"
                                     PlotMode="OnTicks"
-                                    TickOrigin="{Binding alignmentDate}" />
+                                    TickOrigin="{Binding alignmentTime}" />
                             </telerik:RadCartesianChart.HorizontalAxis>
 
                             <telerik:RadCartesianChart.VerticalAxis>
