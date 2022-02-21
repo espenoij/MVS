@@ -40,7 +40,7 @@ namespace HMS_Server
             restrictedSectorTo = config.Read(ConfigKey.RestrictedSectorTo);
 
             // Helideck Category
-            helideckCategory = (HelideckCategory)Enum.Parse(typeof(HelideckCategory), config.Read(ConfigKey.HelideckCategory));
+            helideckCategory = (HelideckCategory)Enum.Parse(typeof(HelideckCategory), config.ReadWithDefault(ConfigKey.HelideckCategory, HelideckCategory.Category1.ToString()));
 
             // Server Port
             serverPort = config.ReadWithDefault(ConfigKey.ServerPort, Constants.ServerPortDefault);
@@ -103,11 +103,12 @@ namespace HMS_Server
                 dataVerificationEnabled = false;
 
             // Sensor
+            windDirRef = (WindDirectionReference)Enum.Parse(typeof(WindDirectionReference), config.ReadWithDefault(ConfigKey.WindDirectionReference, WindDirectionReference.VesselHeading.ToString()));
+            magneticDeclination = config.ReadWithDefault(ConfigKey.MagneticDeclination, Constants.MagneticDeclinationDefault);
             helideckHeight = config.ReadWithDefault(ConfigKey.HelideckHeight, Constants.HelideckHeightDefault);
             windSensorHeight = config.ReadWithDefault(ConfigKey.WindSensorHeight, Constants.WindSensorHeightDefault);
             windSensorDistance = config.ReadWithDefault(ConfigKey.WindSensorDistance, Constants.WindSensorDistanceDefault);
             airPressureSensorHeight = config.ReadWithDefault(ConfigKey.AirPressureSensorHeight, Constants.WindSensorHeightDefault);
-            magneticDeclination = config.ReadWithDefault(ConfigKey.MagneticDeclination, Constants.MagneticDeclinationDefault);
         }
 
         public void ApplicationRestartRequired(bool showMessage = true)
@@ -285,6 +286,50 @@ namespace HMS_Server
         }
 
         /////////////////////////////////////////////////////////////////////////////
+        // Wind Direction Reference
+        /////////////////////////////////////////////////////////////////////////////
+        private WindDirectionReference _windDirRef { get; set; }
+        public WindDirectionReference windDirRef
+        {
+            get
+            {
+                return _windDirRef;
+            }
+            set
+            {
+                _windDirRef = value;
+                config.Write(ConfigKey.WindDirectionReference, value.ToString());
+                OnPropertyChanged();
+                OnPropertyChanged(nameof(windDirRefString));
+            }
+        }
+        public string windDirRefString
+        {
+            get
+            {
+                return _windDirRef.GetDescription();
+            }
+        }
+
+        /////////////////////////////////////////////////////////////////////////////
+        // Magnetic Declination
+        /////////////////////////////////////////////////////////////////////////////
+        private double _magneticDeclination { get; set; }
+        public double magneticDeclination
+        {
+            get
+            {
+                return _magneticDeclination;
+            }
+            set
+            {
+                _magneticDeclination = value;
+                config.Write(ConfigKey.MagneticDeclination, _magneticDeclination.ToString());
+                OnPropertyChanged();
+            }
+        }
+
+        /////////////////////////////////////////////////////////////////////////////
         // Helideck Height
         /////////////////////////////////////////////////////////////////////////////
         private double _helideckHeight { get; set; }
@@ -299,14 +344,6 @@ namespace HMS_Server
                 _helideckHeight = value;
                 config.Write(ConfigKey.HelideckHeight, value.ToString());
                 OnPropertyChanged();
-                OnPropertyChanged(nameof(helideckHeightString));
-            }
-        }
-        public string helideckHeightString
-        {
-            get
-            {
-                return _helideckHeight.ToString(Constants.cultureInfo);
             }
         }
 
@@ -360,24 +397,6 @@ namespace HMS_Server
             {
                 _airPressureSensorHeight = value;
                 config.Write(ConfigKey.AirPressureSensorHeight, _airPressureSensorHeight.ToString());
-                OnPropertyChanged();
-            }
-        }
-
-        /////////////////////////////////////////////////////////////////////////////
-        // Magnetic Declination
-        /////////////////////////////////////////////////////////////////////////////
-        private double _magneticDeclination { get; set; }
-        public double magneticDeclination
-        {
-            get
-            {
-                return _magneticDeclination;
-            }
-            set
-            {
-                _magneticDeclination = value;
-                config.Write(ConfigKey.MagneticDeclination, _magneticDeclination.ToString());
                 OnPropertyChanged();
             }
         }

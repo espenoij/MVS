@@ -1,6 +1,8 @@
 ﻿using System;
+using System.Globalization;
 using System.Threading;
 using System.Windows;
+using System.Windows.Markup;
 using System.Windows.Media;
 using Telerik.Windows.Controls;
 
@@ -15,6 +17,12 @@ namespace HMS_Server
 
         public App()
         {
+            // Sette culture info globalt
+            FrameworkElement.LanguageProperty.OverrideMetadata(
+                   typeof(FrameworkElement),
+                   new FrameworkPropertyMetadata(
+                       XmlLanguage.GetLanguage(CultureInfo.CurrentCulture.IetfLanguageTag)));
+            
             // Generell exception handler
             Dispatcher.UnhandledException += OnDispatcherUnhandledException;
         }
@@ -22,7 +30,7 @@ namespace HMS_Server
         // Generell exception handler
         void OnDispatcherUnhandledException(object sender, System.Windows.Threading.DispatcherUnhandledExceptionEventArgs e)
         {
-            RadWindow.Alert(string.Format("(App) An unhandled general exception occurred:\n{0}", TextHelper.Wrap(e.Exception.Message)));
+            RadWindow.Alert(string.Format("(HMS Server) An unhandled general exception occurred:\n{0}", TextHelper.Wrap(e.Exception.Message)));
             e.Handled = true;
         }
 

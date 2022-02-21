@@ -71,8 +71,6 @@ namespace HMS_Server
             foreach (RegulationStandard value in Enum.GetValues(typeof(RegulationStandard)))
                 cboRegulationStandard.Items.Add(value.ToString());
 
-            adminSettingsVM.regulationStandard = (RegulationStandard)Enum.Parse(typeof(RegulationStandard), config.ReadWithDefault(ConfigKey.RegulationStandard, RegulationStandard.NOROG.ToString()));
-
             cboRegulationStandard.SelectedIndex = (int)adminSettingsVM.regulationStandard;
             cboRegulationStandard.Text = adminSettingsVM.regulationStandard.ToString();
 
@@ -103,8 +101,6 @@ namespace HMS_Server
             // NOROG: Helideck Category
             foreach (HelideckCategory value in Enum.GetValues(typeof(HelideckCategory)))
                 cboHelideckCategory.Items.Add(value.GetDescription());
-
-            adminSettingsVM.helideckCategory = (HelideckCategory)Enum.Parse(typeof(HelideckCategory), config.ReadWithDefault(ConfigKey.HelideckCategory, HelideckCategory.Category1.ToString()));
 
             cboHelideckCategory.Text = adminSettingsVM.helideckCategory.GetDescription();
             cboHelideckCategory.SelectedIndex = (int)adminSettingsVM.helideckCategory;
@@ -165,6 +161,13 @@ namespace HMS_Server
                 lbVHFFreq_NOROG.IsEnabled = false;
                 tbVHFFreq_NOROG.IsEnabled = false;
             }
+
+            // Wind Direction Reference
+            foreach (WindDirectionReference value in Enum.GetValues(typeof(WindDirectionReference)))
+                cboWindDirRef.Items.Add(value.GetDescription());
+
+            cboWindDirRef.SelectedIndex = (int)adminSettingsVM.windDirRef;
+            cboWindDirRef.Text = adminSettingsVM.windDirRef.GetDescription();
         }
 
         public static IPAddress GetIPAddress()
@@ -1248,5 +1251,9 @@ namespace HMS_Server
             adminSettingsVM.magneticDeclination = validatedInput;
         }
 
+        private void cboWindDirRef_SelectionChanged(object sender, SelectionChangedEventArgs e)
+        {
+            adminSettingsVM.windDirRef = (WindDirectionReference)cboWindDirRef.SelectedIndex;
+        }
     }
 }

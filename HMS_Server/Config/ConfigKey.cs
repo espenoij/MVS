@@ -24,6 +24,7 @@
     public const string RestrictedSectorFrom = "RestrictedSectorFrom";
     public const string RestrictedSectorTo = "RestrictedSectorTo";
     public const string HelideckHeight = "HelideckHeight";
+    public const string WindDirectionReference = "WindDirectionReference";
     public const string WindSensorHeight = "WindSensorHeight";
     public const string WindSensorDistance = "WindSensorDistance";
     public const string AirPressureSensorHeight = "AirPressureSensorHeight";

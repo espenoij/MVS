@@ -5,6 +5,8 @@ namespace HMS_Server
 {
     class HMSProcessingWindHeading
     {
+        private HMSData sensorWindDirectionCorrected = new HMSData();
+
         private HMSData areaWindDirection2m = new HMSData();
         private HMSData areaWindDirection2mNonRounded = new HMSData();
         private HMSData areaWindSpeed2m = new HMSData();
@@ -215,12 +217,36 @@ namespace HMS_Server
 
         public void Update(HMSDataCollection hmsInputDataList)
         {
+            // Korrigere vind retning ihht referanse retning
+            sensorWindDirectionCorrected.Set(hmsInputDataList.GetData(ValueType.SensorWindDirection));
+
+            switch (adminSettingsVM.windDirRef)
+            {
+                case WindDirectionReference.VesselHeading:
+                    sensorWindDirectionCorrected.data = hmsInputDataList.GetData(ValueType.VesselHeading).data + hmsInputDataList.GetData(ValueType.SensorWindDirection).data;
+                    if (sensorWindDirectionCorrected.data > 360)
+                        sensorWindDirectionCorrected.data -= 360;
+                    break;
+
+                case WindDirectionReference.MagneticNorth:
+                    sensorWindDirectionCorrected.data = hmsInputDataList.GetData(ValueType.SensorWindDirection).data;
+                    break;
+
+                case WindDirectionReference.TrueNorth:
+                    sensorWindDirectionCorrected.data = hmsInputDataList.GetData(ValueType.SensorWindDirection).data + adminSettingsVM.magneticDeclination;
+                    break;
+
+                default:
+                    sensorWindDirectionCorrected.data = hmsInputDataList.GetData(ValueType.SensorWindDirection).data;
+                    break;
+            }
+
             // Tar data fra input delen av server og overfører til HMS output delen
 
             // Vind retning
-            helideckWindDirectionRT.data = Math.Round(hmsInputDataList.GetData(ValueType.SensorWindDirection).data, 1, MidpointRounding.AwayFromZero);
-            helideckWindDirectionRT.status = hmsInputDataList.GetData(ValueType.SensorWindDirection).status;
-            helideckWindDirectionRT.timestamp = hmsInputDataList.GetData(ValueType.SensorWindDirection).timestamp;
+            helideckWindDirectionRT.data = Math.Round(sensorWindDirectionCorrected.data, 1, MidpointRounding.AwayFromZero);
+            helideckWindDirectionRT.status = sensorWindDirectionCorrected.status;
+            helideckWindDirectionRT.timestamp = sensorWindDirectionCorrected.timestamp;
 
             // Vind hastighet
             // Korrigerer for høyde
@@ -237,11 +263,11 @@ namespace HMS_Server
 
             // Area Wind: 2-minute data
             ///////////////////////////////////////////////////////////
-            areaWindDirection2mNonRounded.DoProcessing(hmsInputDataList.GetData(ValueType.SensorWindDirection));
+            areaWindDirection2mNonRounded.DoProcessing(sensorWindDirectionCorrected);
             areaWindDirection2m.data = Math.Round(areaWindDirection2mNonRounded.data, 1, MidpointRounding.AwayFromZero);
             areaWindDirection2m.status = areaWindDirection2mNonRounded.status;
             areaWindDirection2m.timestamp = areaWindDirection2mNonRounded.timestamp;
-            areaWindDirection2m.sensorGroupId = hmsInputDataList.GetData(ValueType.SensorWindDirection).sensorGroupId;
+            areaWindDirection2m.sensorGroupId = sensorWindDirectionCorrected.sensorGroupId;
 
             areaWindSpeed2mNonRounded.DoProcessing(hmsInputDataList.GetData(ValueType.SensorWindSpeed));
             areaWindSpeed2m.data = Math.Round(areaWindSpeed2mNonRounded.data, 1, MidpointRounding.AwayFromZero);
@@ -257,7 +283,7 @@ namespace HMS_Server
 
             // Helideck Wind: 2-minute data
             ///////////////////////////////////////////////////////////
-            helideckWindDirection2m.DoProcessing(hmsInputDataList.GetData(ValueType.SensorWindDirection));
+            helideckWindDirection2m.DoProcessing(sensorWindDirectionCorrected);
 
             helideckWindSpeed2mNonRounded.DoProcessing(windSpeedCorrectedToHelideck);
 
@@ -274,7 +300,7 @@ namespace HMS_Server
 
             // Helideck Wind: 10-minute data
             ///////////////////////////////////////////////////////////
-            helideckWindDirection10m.DoProcessing(hmsInputDataList.GetData(ValueType.SensorWindDirection));
+            helideckWindDirection10m.DoProcessing(sensorWindDirectionCorrected);
 
             helideckWindSpeed10mNonRounded.DoProcessing(windSpeedCorrectedToHelideck);
 

@@ -66,6 +66,7 @@ namespace HMS_Server
             catch (Exception ex)
             {
                 DialogHandler.Warning("Config (Read 2): Error reading from config file", ex.Message);
+                return defaultValue;
             }
 
             // Konvertere fra string til double
@@ -94,6 +95,7 @@ namespace HMS_Server
             catch (Exception ex)
             {
                 DialogHandler.Warning("Config (Read 3): Error reading from config file", ex.Message);
+                return defaultValue;
             }
 
             // Konvertere fra string til double
@@ -103,7 +105,7 @@ namespace HMS_Server
                 return defaultValue;
         }
 
-        // Lese int verdi fra appSettings med default verdi input
+        // Lese string verdi fra appSettings med default verdi input
         public string ReadWithDefault(string key, string defaultValue, ConfigType type = ConfigType.App)
         {
             string readString = string.Empty;
@@ -122,9 +124,13 @@ namespace HMS_Server
             catch (Exception ex)
             {
                 DialogHandler.Warning("Config (Read 4): Error reading from config file", ex.Message);
+                return defaultValue;
             }
 
-            return readString;
+            if (!string.IsNullOrEmpty(readString))
+                return readString;
+            else
+                return defaultValue;
         }
 
         //// Lese double verdi fra appSettings med default verdi input

@@ -310,3 +310,13 @@ public enum LightsOutputType
     Green,
     GreenFlash
 }
+
+public enum WindDirectionReference
+{
+    [Description("Vessel Heading")]
+    VesselHeading,
+    [Description("Magnetic North")]
+    MagneticNorth,
+    [Description("True North")]
+    TrueNorth
+}

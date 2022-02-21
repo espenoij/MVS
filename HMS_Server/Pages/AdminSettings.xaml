@@ -655,6 +655,34 @@
             <StackPanel
                 Margin="8">
 
+                <!--Wind Direction Reference-->
+                <DockPanel>
+                    <telerik:Label
+                        Name="lbWindDirRef"
+                        Content="Wind Direction Reference"
+                        VerticalAlignment="Center" />
+                    <telerik:RadComboBox
+                        Name="cboWindDirRef"
+                        Width="160"
+                        HorizontalAlignment="Right"
+                        SelectionChanged="cboWindDirRef_SelectionChanged">
+                    </telerik:RadComboBox>
+                </DockPanel>
+
+                <!--Magnetic Declination-->
+                <DockPanel>
+                    <telerik:Label
+                        Content="Magnetic Declination"
+                        VerticalAlignment="Center" />
+                    <TextBox
+                        Name="tbMagneticDeclination"
+                        Width="110"
+                        HorizontalAlignment="Right"
+                        Text="{Binding Path=magneticDeclination}"
+                        LostFocus="tbMagneticDeclination_LostFocus"
+                        KeyDown="tbMagneticDeclination_KeyDown" />
+                </DockPanel>
+
                 <DockPanel>
                     <telerik:Label
                         Content="Helideck Height (above MSL)"
@@ -709,21 +737,6 @@
                         LostFocus="tbAirPressureSensorHeight_LostFocus"
                         KeyDown="tbAirPressureSensorHeight_KeyDown" />
                 </DockPanel>
-
-                <!--Magnetic Declination-->
-                <DockPanel>
-                    <telerik:Label
-                        Content="Magnetic Declination"
-                        VerticalAlignment="Center" />
-                    <TextBox
-                        Name="tbMagneticDeclination"
-                        Width="110"
-                        HorizontalAlignment="Right"
-                        Text="{Binding Path=magneticDeclination}"
-                        LostFocus="tbMagneticDeclination_LostFocus"
-                        KeyDown="tbMagneticDeclination_KeyDown" />
-                </DockPanel>
-
 
             </StackPanel>
 

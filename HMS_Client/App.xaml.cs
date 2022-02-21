@@ -1,5 +1,7 @@
-﻿using System.Threading;
+﻿using System.Globalization;
+using System.Threading;
 using System.Windows;
+using System.Windows.Markup;
 using System.Windows.Media;
 using System.Windows.Threading;
 using Telerik.Windows.Controls;
@@ -12,6 +14,15 @@ namespace HMS_Client
     public partial class App : Application
     {
         private static Mutex mutex = null;
+
+        public App()
+        {
+            // Sette culture info globalt
+            FrameworkElement.LanguageProperty.OverrideMetadata(
+                   typeof(FrameworkElement),
+                   new FrameworkPropertyMetadata(
+                       XmlLanguage.GetLanguage(CultureInfo.CurrentCulture.IetfLanguageTag)));
+        }
 
         protected override void OnStartup(StartupEventArgs e)
         {
@@ -33,7 +44,7 @@ namespace HMS_Client
 
             void App_DispatcherUnhandledException(object sender, DispatcherUnhandledExceptionEventArgs ex)
             {
-                DialogHandler.Warning("Dispatcher Unhandled Exception", ex.Exception.Message);
+                RadWindow.Alert(string.Format("(HMS Client) An unhandled general exception occurred:\n{0}", TextHelper.Wrap(ex.Exception.Message)));
                 ex.Handled = true;
             }
 
