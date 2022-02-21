@@ -281,13 +281,10 @@ namespace HMS_Server
             motionLimitSignificantHeaveRate.sensorGroupId = Constants.NO_SENSOR_GROUP_ID;
             motionLimitSignificantHeaveRate.dbColumn = "motion_limit_shr";
 
-            if (adminSettingsVM.regulationStandard == RegulationStandard.CAP)
-            {
-                msiData.id = (int)ValueType.MSI;
-                msiData.name = "MSI";
-                msiData.sensorGroupId = Constants.NO_SENSOR_GROUP_ID;
-                msiData.dbColumn = "msi";
-            }
+            msiData.id = (int)ValueType.MSI;
+            msiData.name = "MSI";
+            msiData.sensorGroupId = Constants.NO_SENSOR_GROUP_ID;
+            msiData.dbColumn = "msi";
         }
 
         public void Update(HMSDataCollection hmsInputDataList)

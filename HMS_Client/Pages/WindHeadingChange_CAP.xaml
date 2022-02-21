@@ -290,7 +290,6 @@
                                 MajorStep="5"
                                 ShowLabels="False"
                                 PlotMode="OnTicks"     
-                                TickThickness="0"
                                 TickOrigin="{Binding alignmentTime}"
                                 Minimum="{Binding alignmentTimeMin}"
                                 Maximum="{Binding alignmentTimeMax}" />
@@ -342,7 +341,7 @@
 
                         <telerik:RadCartesianChart.Grid>
                             <telerik:CartesianChartGrid
-                                MajorLinesVisibility="Y" />
+                                MajorLinesVisibility="XY" />
                         </telerik:RadCartesianChart.Grid>
 
                         <telerik:RadCartesianChart.Annotations>

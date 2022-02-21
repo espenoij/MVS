@@ -206,13 +206,10 @@ namespace HMS_Server
             helicopterHeading.sensorGroupId = Constants.NO_SENSOR_GROUP_ID;
             helicopterHeading.dbColumn = "helicopter_heading";
 
-            if (adminSettingsVM.regulationStandard == RegulationStandard.CAP)
-            {
-                wsiData.id = (int)ValueType.WSI;
-                wsiData.name = "WSI";
-                wsiData.sensorGroupId = Constants.NO_SENSOR_GROUP_ID;
-                wsiData.dbColumn = "wsi";
-            }
+            wsiData.id = (int)ValueType.WSI;
+            wsiData.name = "WSI";
+            wsiData.sensorGroupId = Constants.NO_SENSOR_GROUP_ID;
+            wsiData.dbColumn = "wsi";
         }
 
         public void Update(HMSDataCollection hmsInputDataList)

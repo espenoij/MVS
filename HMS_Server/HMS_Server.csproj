@@ -395,7 +395,6 @@
     <Compile Include="Services\HMSProcessingDatabase.cs" />
     <Compile Include="Services\HMSProcessingUserInputs.cs" />
     <Compile Include="Services\HMSProcessingGeneralInfo.cs" />
-    <Compile Include="Services\HMSProcessingVerificationData.cs" />
     <Compile Include="Services\HMSProcessingHelideckStatus.cs" />
     <Compile Include="Services\HMSProcessingMeteorological.cs" />
     <Compile Include="Services\HMSProcessingMotion.cs" />

@@ -165,34 +165,37 @@ namespace HMS_Client
                 {
                     RadObservableCollectionEx<HMSData> hmsDataList = hmsDataCollection.GetDataList();
 
-                    // Sjekke om listen vi har er like lang som listen som kommer inn
-                    if (socketHMSDataList.Count() != hmsDataList.Count())
-                        // I så tilfelle sletter vi listen vår og ny blir generert under
-                        hmsDataList.Clear();
+                    //// Sjekke om listen vi har er like lang som listen som kommer inn
+                    //if (socketHMSDataList.Count() != hmsDataList.Count())
+                    //    // I så tilfelle sletter vi listen vår og ny blir generert under
+                    //    hmsDataList.Clear();
 
                     // Løper gjennom HMS data listen fra socket
                     foreach (var socketHMSData in socketHMSDataList.ToList())
                     {
-                        // Finne match i HMS data listen
-                        var hmsData = hmsDataList.Where(x => x?.id == socketHMSData?.id);
-
-                        // Fant match?
-                        if (hmsData?.Count() > 0 && socketHMSData != null)
+                        if (socketHMSData != null)
                         {
-                            // Overføre data
-                            hmsData.First().Set(socketHMSData);
+                            // Finne match i HMS data listen
+                            var hmsData = hmsDataList.Where(x => x?.id == socketHMSData?.id);
 
-                            // Sjekke timestamp for data timeout
-                            if (hmsData.First().timestamp.AddMilliseconds(dataTimeout) < DateTime.UtcNow)
-                                hmsData.First().status = DataStatus.TIMEOUT_ERROR;
+                            // Fant match?
+                            if (hmsData?.Count() > 0 && socketHMSData != null)
+                            {
+                                // Overføre data
+                                hmsData.First().Set(socketHMSData);
+
+                                // Sjekke timestamp for data timeout
+                                if (hmsData.First().timestamp.AddMilliseconds(dataTimeout) < DateTime.UtcNow)
+                                    hmsData.First().status = DataStatus.TIMEOUT_ERROR;
+                                else
+                                    hmsData.First().status = DataStatus.OK;
+                            }
+                            // Ikke match?
                             else
-                                hmsData.First().status = DataStatus.OK;
-                        }
-                        // Ikke match?
-                        else
-                        {
-                            // Legg inn i listen
-                            hmsDataList.Add(new HMSData(socketHMSData));
+                            {
+                                // Legg inn i listen
+                                hmsDataList.Add(new HMSData(socketHMSData));
+                            }
                         }
                     }
                 }
@@ -224,10 +227,10 @@ namespace HMS_Client
 
             lock (sensorStatusListLock)
             {
-                // Sjekke om listen vi har er like lang som listen som kommer inn
-                if (socketSensorStatusList.Count() != sensorStatusList.Count())
-                    // I så tilfelle sletter vi listen vår og ny blir generert under
-                    sensorStatusList.Clear();
+                //// Sjekke om listen vi har er like lang som listen som kommer inn
+                //if (socketSensorStatusList.Count() != sensorStatusList.Count())
+                //    // I så tilfelle sletter vi listen vår og ny blir generert under
+                //    sensorStatusList.Clear();
 
                 // Løper gjennom sensor group status listen fra socket
                 foreach (var socketSensorStatus in socketSensorStatusList.ToList())

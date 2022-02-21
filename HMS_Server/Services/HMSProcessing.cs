@@ -12,8 +12,6 @@
         private HMSProcessingWindHeading hmsProcessingWindHeading;
         private HMSProcessingMeteorological hmsProcessingMeteorological;
         private HMSProcessingHelideckStatus hmsProcessingHelideckStatus;
-        private HMSProcessingVerificationData hmsProcessingVerificationData;
-        //private HMSProcessingDatabase hmsProcessingDatabase;
 
         // Init data prosessering
         public HMSProcessing(
@@ -21,8 +19,7 @@
             HMSDataCollection hmsOutputData,
             AdminSettingsVM adminSettingsVM,
             UserInputs userInputs,
-            ErrorHandler errorHandler,
-            bool dataVerificationIsActive)
+            ErrorHandler errorHandler)
         {
             this.adminSettingsVM = adminSettingsVM;
 
@@ -33,15 +30,10 @@
             hmsProcessingWindHeading = new HMSProcessingWindHeading(hmsOutputData, adminSettingsVM, userInputs, errorHandler);
             hmsProcessingMeteorological = new HMSProcessingMeteorological(hmsOutputData, adminSettingsVM);
             hmsProcessingHelideckStatus = new HMSProcessingHelideckStatus(hmsOutputData, motionLimits, adminSettingsVM, userInputs, hmsProcessingMotion, hmsProcessingWindHeading);
-            //hmsProcessingDatabase = new HMSProcessingDatabase(hmsOutputData, errorHandler);
-
-            // Data Verification Module
-            if (dataVerificationIsActive)
-                hmsProcessingVerificationData = new HMSProcessingVerificationData(hmsOutputData);
         }
 
         // Kjøre prosessering og oppdatere data
-        public void Update(HMSDataCollection hmsInputDataList, bool dataVerificationIsActive)
+        public void Update(HMSDataCollection hmsInputDataList)
         {
             hmsProcessingSettings.Update();
             hmsProcessingUserInputs.Update();
@@ -50,11 +42,6 @@
             hmsProcessingWindHeading.Update(hmsInputDataList);
             hmsProcessingMeteorological.Update(hmsInputDataList);
             hmsProcessingHelideckStatus.UpdateHelideckLight();
-            //hmsProcessingDatabase.Update();
-
-            // Data Verification Module
-            if (dataVerificationIsActive)
-                hmsProcessingVerificationData.Update(hmsInputDataList);
         }
 
         public void ResetDataCalculations()

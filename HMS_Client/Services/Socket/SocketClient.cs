@@ -516,7 +516,7 @@ namespace HMS_Client
                     // Legge inn alle data på nytt
                     foreach (var item in dataList)
                     {
-                        hmsDataList?.Add(item);
+                        hmsDataList?.Add(new HMSData(item));
 
                         if (AdminMode.IsActive)
                             socketConsole?.Add(string.Format("ProcessReceivedData: id:{0}, data:{1}, timestamp:{2}", item.id, item.data, item.timestamp.ToString()));
@@ -583,7 +583,7 @@ namespace HMS_Client
                 // Legge inn alle data på nytt
                 foreach (var item in dataList)
                 {
-                    sensorStatusList?.Add(item);
+                    sensorStatusList?.Add(new SensorGroup(item));
 
                     if (AdminMode.IsActive)
                         socketConsole?.Add(string.Format("ProcessReceivedData: id:{0}, data:{1}, timestamp:{2}", item.id, item.name, item.active.ToString()));

@@ -304,12 +304,11 @@ namespace HMS_Server
 
             // HMS data: Prosessering av input data til output data
             hmsProcessing = new HMSProcessing(
-                motionLimits, 
-                hmsOutputData, 
-                adminSettingsVM, 
-                userInputs, 
-                errorHandler, 
-                dataVerificationIsActive);
+                motionLimits,
+                hmsOutputData,
+                adminSettingsVM,
+                userInputs,
+                errorHandler);
 
             // Data Flow
             ucHMSDataSetup.Init(
@@ -459,7 +458,7 @@ namespace HMS_Server
 
                         // HMS: HMS Output Data
                         // Prosesserer sensor data om til data som kan sendes til HMS klient
-                        hmsProcessing.Update(hmsInputData, dataVerificationIsActive);
+                        hmsProcessing.Update(hmsInputData);
 
                         // Sette database status
                         SetDatabaseStatus(hmsInputData);
