@@ -415,8 +415,8 @@
 
                                         <Grid>
                                             <Ellipse
-                                                Width="10"
-                                                Height="10"
+                                                Width="12"
+                                                Height="12"
                                                 Stroke="Black"
                                                 Fill="White">
                                             </Ellipse>
