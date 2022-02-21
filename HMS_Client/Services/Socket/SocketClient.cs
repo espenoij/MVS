@@ -470,7 +470,7 @@ namespace HMS_Client
             // aktivt og operatør driver å endrer og setter opp sensorer i server.
             // 2021.06.22: Tror kanskje det over er et tilbakelagt stadium.
             // 2021.08.16: Har ikke hatt krasj her siden sist. Suksess!
-            // 2022.02.03: Krasj ved startup
+            // 2022.02.03: Krasj ved startup - kan ha vært ram problem på hjemme pc
 
             try
             { 

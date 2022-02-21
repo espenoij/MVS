@@ -34,7 +34,7 @@
 
                 <Grid.RowDefinitions>
                     <RowDefinition
-                        Height="50" />
+                        Height="{StaticResource tabBarGridHeight}" />
                     <RowDefinition
                         Height="*" />
                     <RowDefinition

@@ -62,19 +62,19 @@
 
                         <Grid.RowDefinitions>
                             <RowDefinition
-                                Height="10*" />
+                                Height="9*" />
                             <RowDefinition
                                 Height="*" />
                             <RowDefinition
-                                Height="10*" />
+                                Height="9*" />
                             <RowDefinition
                                 Height="*" />
                             <RowDefinition
-                                Height="10*" />
+                                Height="9*" />
                             <RowDefinition
                                 Height="*" />
                             <RowDefinition
-                                Height="10*" />
+                                Height="9*" />
                             <RowDefinition
                                 Height="*" />
                         </Grid.RowDefinitions>

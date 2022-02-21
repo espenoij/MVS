@@ -207,7 +207,7 @@ namespace HMS_Client
         }
 
         private string _dbTableName { get; set; }
-        public string dbTableName
+        public string dbColumn
         {
             get
             {
@@ -222,20 +222,7 @@ namespace HMS_Client
 
         public HMSData(HMSData inputData)
         {
-            if (inputData != null)
-            {
-                id = inputData.id;
-                name = inputData.name;
-                dataId = inputData.dataId;
-                data = inputData.data;
-                data2 = inputData.data2;
-                data3 = inputData.data3;
-                timestamp = inputData.timestamp;
-                status = inputData.status;
-                limitStatus = inputData.limitStatus;
-                sensorGroupId = inputData.sensorGroupId;
-                dbTableName = inputData.dbTableName;
-            }
+            Set(inputData);
         }
 
         public void Set(HMSData inputData)
@@ -252,7 +239,7 @@ namespace HMS_Client
                 status = inputData.status;
                 limitStatus = inputData.limitStatus;
                 sensorGroupId = inputData.sensorGroupId;
-                dbTableName = inputData.dbTableName;
+                dbColumn = inputData.dbColumn;
             }
         }
 
@@ -263,7 +250,7 @@ namespace HMS_Client
             PropertyChanged?.Invoke(this, new PropertyChangedEventArgs(name));
         }
 
-        // Server spesifikk:
+        // Klient spesifikk:
         ////////////////////////////////////////////////////////////////////
         ///
         public string nameString

@@ -180,13 +180,16 @@ namespace HMS_Client
                         if (hmsData?.Count() > 0 && socketHMSData != null)
                         {
                             // Overføre data
-                            hmsData.First().data = socketHMSData.data;
+                            hmsData.First().Set(socketHMSData);
 
-                            // Overføre time stamp
-                            hmsData.First().timestamp = socketHMSData.timestamp;
+                            //// Overføre data
+                            //hmsData.First().data = socketHMSData.data;
 
-                            // Name (dersom admin modus er aktiv på server)
-                            hmsData.First().name = socketHMSData.name;
+                            //// Overføre time stamp
+                            //hmsData.First().timestamp = socketHMSData.timestamp;
+
+                            //// Name (dersom admin modus er aktiv på server)
+                            //hmsData.First().name = socketHMSData.name;
 
                             // Sjekke timestamp for data timeout
                             if (hmsData.First().timestamp.AddMilliseconds(dataTimeout) < DateTime.UtcNow)

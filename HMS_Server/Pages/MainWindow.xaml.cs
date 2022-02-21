@@ -303,7 +303,13 @@ namespace HMS_Server
             hmsInputData.LoadHMSInput(config);
 
             // HMS data: Prosessering av input data til output data
-            hmsProcessing = new HMSProcessing(motionLimits, hmsOutputData, adminSettingsVM, userInputs, errorHandler, dataVerificationIsActive);
+            hmsProcessing = new HMSProcessing(
+                motionLimits, 
+                hmsOutputData, 
+                adminSettingsVM, 
+                userInputs, 
+                errorHandler, 
+                dataVerificationIsActive);
 
             // Data Flow
             ucHMSDataSetup.Init(

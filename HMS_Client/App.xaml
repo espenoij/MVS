@@ -55,9 +55,9 @@
 
             <!--Header høyde-->
             <sys:Double
-                x:Key="tabBarHeight">50</sys:Double>
+                x:Key="tabBarHeight">47</sys:Double>
             <GridLength
-                x:Key="tabBarGridHeight">50</GridLength>
+                x:Key="tabBarGridHeight">47</GridLength>
 
             <!--Chart Farger-->
             <SolidColorBrush

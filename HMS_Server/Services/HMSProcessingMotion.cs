@@ -528,7 +528,7 @@ namespace HMS_Server
             // Significant Heave Rate
             if (SHRIsWithinLimits)
             {
-                if (IsSHR2mMinAboveLimit())
+                if (IsSHR2mMinAboveLimit() && significantHeaveRateData.data >= motionLimits.GetLimit(LimitType.SignificantHeaveRate))
                 {
                     SHRIsWithinLimits = false;
                     significantHeaveRateData.limitStatus = LimitStatus.OVER_LIMIT;
@@ -540,7 +540,7 @@ namespace HMS_Server
             }
             else
             {
-                if (IsSHR10mMeanBelowLimit()/* && significantHeaveRateData.data <= motionLimits.GetLimit(LimitType.SignificantHeaveRate) * 0.95*/)
+                if (IsSHR10mMeanBelowLimit() && significantHeaveRateData.data < motionLimits.GetLimit(LimitType.SignificantHeaveRate))
                 {
                     SHRIsWithinLimits = true;
                     significantHeaveRateData.limitStatus = LimitStatus.OK;

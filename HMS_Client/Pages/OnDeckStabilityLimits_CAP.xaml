@@ -10,8 +10,10 @@
     d:DesignWidth="900">
 
     <UserControl.Resources>
+        
         <BooleanToVisibilityConverter
             x:Key="BoolToVisConverter" />
+        
     </UserControl.Resources>
 
     <Grid>
@@ -23,7 +25,7 @@
             Margin="8">
 
             <telerik:RadTabControl
-                Margin="8"
+                Margin="8"                
                 HeaderBackground="{StaticResource ColorHorizontalBarBackground}"
                 SelectionChanged="RadTabControl_SelectionChanged">
 
@@ -51,7 +53,7 @@
                                     Stretch="Uniform">
 
                                     <Image
-                                        Width="24"
+                                        Width="22"
                                         Source="..\Icons\outline_schedule_white_48dp.png" />
 
                                 </Viewbox>
@@ -331,7 +333,7 @@
                                     Stretch="Uniform">
 
                                     <Image
-                                        Width="24"
+                                        Width="22"
                                         Source="..\Icons\outline_schedule_white_48dp.png" />
 
                                 </Viewbox>
