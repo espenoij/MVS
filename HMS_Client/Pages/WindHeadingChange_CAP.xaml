@@ -341,7 +341,7 @@
 
                         <telerik:RadCartesianChart.Grid>
                             <telerik:CartesianChartGrid
-                                MajorLinesVisibility="Y" />
+                                MajorLinesVisibility="XY" />
                         </telerik:RadCartesianChart.Grid>
 
                         <telerik:RadCartesianChart.Annotations>
@@ -505,7 +505,7 @@
 
                         <telerik:RadCartesianChart.Grid>
                             <telerik:CartesianChartGrid
-                                MajorLinesVisibility="Y" />
+                                MajorLinesVisibility="XY" />
                         </telerik:RadCartesianChart.Grid>
 
                         <telerik:RadCartesianChart.Annotations>

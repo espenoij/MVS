@@ -80,7 +80,7 @@ namespace HMS_Client
                 windDirDeltaAbsMax = FindAbsMax(windDir20mDataList);
 
                 // Oppdatere alignment datetime (nåtid) til begge chart og trend line
-                alignmentTime = DateTime.UtcNow;
+                alignmentTime = DateTime.UtcNow.AddSeconds(Constants.ChartTimeCorrMax);
 
                 OnPropertyChanged(nameof(rwdStatusTimeString));
             }
@@ -327,6 +327,7 @@ namespace HMS_Client
                 {
                     _alignmentTime = value;
 
+                    OnPropertyChanged();
                     OnPropertyChanged(nameof(alignmentTimeMin));
                     OnPropertyChanged(nameof(alignmentTimeMax));
                 }
@@ -337,7 +338,7 @@ namespace HMS_Client
         {
             get
             {
-                return DateTime.UtcNow.AddSeconds(-Constants.Minutes30);
+                return DateTime.UtcNow.AddSeconds(-Constants.Minutes30 - Constants.ChartTimeCorrMin);
             }
         }
 
@@ -345,7 +346,7 @@ namespace HMS_Client
         {
             get
             {
-                return DateTime.UtcNow;
+                return alignmentTime;
             }
         }
 
