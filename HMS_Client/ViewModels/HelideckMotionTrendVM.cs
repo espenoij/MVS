@@ -145,7 +145,7 @@ namespace HMS_Client
                     GraphBuffer.RemoveOldData(significantHeaveRateData3hList, Constants.Hours3 + Constants.ChartTimeCorrMin);
 
                     // Oppdatere alignment datetime (nåtid) til alle chart (20m og 3h)
-                    alignmentTime = DateTime.UtcNow.AddSeconds(Constants.ChartTimeCorrMax);
+                    alignmentTime = DateTime.UtcNow;
 
                     // Tick alignment
                     //tickAlignment5 = DateTime.UtcNow.AddMinutes(-5);
@@ -1145,17 +1145,25 @@ namespace HMS_Client
                 {
                     _alignmentTime = value;
                     OnPropertyChanged();
-                    OnPropertyChanged(nameof(alignmentTimeMin));
+                    OnPropertyChanged(nameof(alignmentTimeMin20m));
                     OnPropertyChanged(nameof(alignmentTimeMax));
                 }
             }
         }
 
-        public DateTime alignmentTimeMin
+        public DateTime alignmentTimeMin20m
         {
             get
             {
-                return DateTime.UtcNow.AddSeconds(-Constants.Minutes20 - Constants.ChartTimeCorrMin);
+                return DateTime.UtcNow.AddSeconds(-Constants.Minutes20);
+            }
+        }
+
+        public DateTime alignmentTimeMin3h
+        {
+            get
+            {
+                return DateTime.UtcNow.AddSeconds(-Constants.Hours3);
             }
         }
 

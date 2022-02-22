@@ -35,10 +35,10 @@ namespace HMS_Client
 
         public static void UpdateTrendData(List<HelideckStatusType> statusTrendDispList, double listLength, Grid grid, Application app)
         {
-            var amberBrush = (Brush)app.FindResource("ColorAmber");
-            var redBrush = (Brush)app.FindResource("ColorRed");
-            var blueBrush = (Brush)app.FindResource("ColorBlue");
-            var bakgroundBrush = (Brush)app.FindResource("ColorBackgroundSeparator");
+            Brush amberBrush = (Brush)app.FindResource("ColorAmber");
+            Brush redBrush = (Brush)app.FindResource("ColorRed");
+            Brush blueBrush = (Brush)app.FindResource("ColorBlue");
+            Brush bakgroundBrush = (Brush)app.FindResource("ColorBackgroundSeparator");
 
             for (int i = 0; i < listLength; i++)
             {

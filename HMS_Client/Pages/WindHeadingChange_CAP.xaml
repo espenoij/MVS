@@ -117,7 +117,7 @@
                             HorizontalAlignment="Center"
                             Content="{Binding Path=rwdStatusTimeString}" />
 
-                    </Viewbox>
+                    </Viewbox> 
 
                     <Grid
                         x:Name="statusTrendGrid"
@@ -450,7 +450,6 @@
                             <telerik:DateTimeContinuousAxis
                                 MajorStepUnit="Minute"
                                 MajorStep="5"
-                                TickThickness="0"
                                 ShowLabels="False"
                                 PlotMode="OnTicks"
                                 TickOrigin="{Binding alignmentTime}"
