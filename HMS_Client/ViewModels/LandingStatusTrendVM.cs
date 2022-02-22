@@ -31,8 +31,10 @@ namespace HMS_Client
         {
             this.helideckStabilityLimitsVM = helideckStabilityLimitsVM;
 
+            double uiUpdateFreq = config.ReadWithDefault(ConfigKey.ClientUpdateFrequencyUI, Constants.ClientUIUpdateFrequencyDefault);
+
             // Init av chart data
-            for (int i = -Constants.Minutes20; i <= 0; i++)
+            for (int i = (int)(-Constants.Minutes20 * (1000 / uiUpdateFreq)); i <= 0; i++)
             {
                 statusTrend20mList.Add(new HelideckStatus()
                 {
@@ -41,7 +43,7 @@ namespace HMS_Client
                 });
             }
 
-            for (int i = -Constants.Hours3; i <= 0; i++)
+            for (int i = (int)(-Constants.Hours3 * (1000 / uiUpdateFreq)); i <= 0; i++)
             {
                 statusTrend3hList.Add(new HelideckStatus()
                 {
@@ -208,6 +210,16 @@ namespace HMS_Client
     {
         public HelideckStatusType status { get; set; }
         public DateTime timestamp { get; set; }
+
+        public HelideckStatus()
+        {
+        }
+
+        public HelideckStatus(HelideckStatus helideckStatus)
+        {
+            status = helideckStatus.status;
+            timestamp = helideckStatus.timestamp;
+        }
 
         //public int statusNumeric
         //{

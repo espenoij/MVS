@@ -24,8 +24,12 @@ namespace HMS_Client
         private RadObservableCollectionEx<HelideckStatus> rwdTrend30mList = new RadObservableCollectionEx<HelideckStatus>();
         public List<HelideckStatusType> rwdTrend30mDispList = new List<HelideckStatusType>();
 
+        private Config config;
+
         public void Init(Config config, SensorGroupStatus sensorStatus, HelideckStatusVM helideckStatusVM)
         {
+            this.config = config;
+
             InitUI();
 
             // Oppdatere UI
@@ -95,8 +99,10 @@ namespace HMS_Client
             GraphBuffer.Clear(vesselHdg20mDataList);
             GraphBuffer.Clear(windDir20mDataList);
 
+            double uiUpdateFreq = config.ReadWithDefault(ConfigKey.ClientUpdateFrequencyUI, Constants.ClientUIUpdateFrequencyDefault);
+
             // Forhåndsfylle trend data med 0 data
-            for (int i = -Constants.Minutes30; i <= 0; i++)
+            for (int i = (int)(-Constants.Minutes30 * (1000 / uiUpdateFreq)); i <= 0; i++)
             {
                 rwdTrend30mList.Add(new HelideckStatus()
                 {
@@ -146,6 +152,59 @@ namespace HMS_Client
 
             return max;
         }
+
+        /////////////////////////////////////////////////////////////////////////////
+        // Relative Wind Direction Limit State
+        /////////////////////////////////////////////////////////////////////////////
+        //public HelideckStatusType GetRWDLimitState
+        //{
+        //    get
+        //    {
+        //        double wind = helideckWindSpeed2m.data;
+        //        double rwd = Math.Abs(relativeWindDir.data);
+
+        //        if (wind <= 15 || rwd <= 25)
+        //        {
+        //            return HelideckStatusType.BLUE;
+        //        }
+        //        else
+        //        {
+        //            if (rwd > 45)
+        //            {
+        //                if (wind <= 20)
+        //                    return HelideckStatusType.AMBER;
+        //                else
+        //                    return HelideckStatusType.RED;
+        //            }
+        //            else
+        //            if (wind > 35)
+        //            {
+        //                if (rwd <= 30)
+        //                    return HelideckStatusType.AMBER;
+        //                else
+        //                    return HelideckStatusType.RED;
+        //            }
+        //            else
+        //            {
+        //                double maxWindRed = 20 + (45 - rwd);
+
+        //                if (wind > maxWindRed)
+        //                {
+        //                    return HelideckStatusType.RED;
+        //                }
+        //                else
+        //                {
+        //                    double maxWindAmber = 15 + (45 - rwd);
+
+        //                    if (wind > maxWindAmber)
+        //                        return HelideckStatusType.AMBER;
+        //                    else
+        //                        return HelideckStatusType.BLUE;
+        //                }
+        //            }
+        //        }
+        //    }
+        //}
 
         /////////////////////////////////////////////////////////////////////////////
         // Wind Calculations: Wind Speed
@@ -243,6 +302,25 @@ namespace HMS_Client
                 else
                 {
                     return Constants.NotAvailable;
+                }
+            }
+        }
+
+        /////////////////////////////////////////////////////////////////////////////
+        // Wind Calculations: Wind Speed
+        /////////////////////////////////////////////////////////////////////////////
+        public HMSData _helideckWindSpeed2m { get; set; }
+        public HMSData helideckWindSpeed2m
+        {
+            get
+            {
+                return _helideckWindSpeed2m;
+            }
+            set
+            {
+                if (value != null)
+                {
+                    _helideckWindSpeed2m.Set(value);
                 }
             }
         }

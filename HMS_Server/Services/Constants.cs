@@ -230,18 +230,6 @@ class Constants
     public const int HeadingDefault = HeadingMax;
     public const int MagneticDeclinationDefault = 0;
 
-    // Landing Status Trend
-    public const int landingTrendDisplayListMax = 400;  // Hvor mange segmenter trend linjen skal deles opp i / oppløsning på trend linjen
-                                                        // På skjerm med 3840 pixel bredde er linjen ca 1400 pixler bred
-                                                        // På 1920 skjerm vil den være ca 700 pixler bred
-                                                        // Opplever "flicker" på trend linjen med for høy oppløsning, satt ned til 400
-
-    // RWD Trend
-    public const int rwdTrendDisplayListMax = 300;      // Hvor mange segmenter trend linjen skal deles opp i / oppløsning på trend linjen
-                                                        // På skjerm med 3840 pixel bredde er linjen ca 1000 pixler bred
-                                                        // På 1920 skjerm vil den være ca 500 pixler bred
-                                                        // Opplever "flicker" på trend linjen med for høy oppløsning, satt ned til 300
-
     // Motion Limit Defaults
     public const double MotionLimitDefaultPitchRoll = 4;
     public const double MotionLimitDefaultInclination = 4.5;
@@ -290,10 +278,22 @@ class Constants
     public const int LicenseMaxClientsMax = 100;
     public const int LicenseMaxClientsDefault = 0;
 
+    // Landing Status Trend
+    public const int landingTrendDisplayListMax = 400;  // Hvor mange segmenter trend linjen skal deles opp i / oppløsning på trend linjen
+                                                        // På skjerm med 3840 pixel bredde er linjen ca 1400 pixler bred
+                                                        // På 1920 skjerm vil den være ca 700 pixler bred
+                                                        // Opplever "flicker" på trend linjen med for høy oppløsning, satt ned til 400
+
+    // RWD Trend
+    public const int rwdTrendDisplayListMax = 300;      // Hvor mange segmenter trend linjen skal deles opp i / oppløsning på trend linjen
+                                                        // På skjerm med 3840 pixel bredde er linjen ca 1000 pixler bred
+                                                        // På 1920 skjerm vil den være ca 500 pixler bred
+                                                        // Opplever "flicker" på trend linjen med for høy oppløsning, satt ned til 300
+
     // Graph Accuracy
-    public const double GraphCullFrequency20m = 3750; // Dette tallet er i millisekund. 4 sek. Avrundingspunktet mellom 3.5 og 4 sek.
-    public const double GraphCullFrequency30m = 5750;
-    public const double GraphCullFrequency3h = 29750;
+    public const double GraphCullFrequency20m = 4000;   // 4 sek
+    public const double GraphCullFrequency30m = 6000;   // 6 sek
+    public const double GraphCullFrequency3h = 30000;   // 30 sek
 
     // Korreksjoner for DateTimeContinuousAxis
     // Disse korreksjonene legges inn for å få tidspunkt-label på X aksen til å vises korrekt

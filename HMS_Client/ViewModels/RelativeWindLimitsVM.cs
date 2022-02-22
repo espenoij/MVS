@@ -13,7 +13,7 @@ namespace HMS_Client
         private DispatcherTimer UIUpdateTimer = new DispatcherTimer();
 
         // Relative Wind graph buffer/data
-        public RadObservableCollectionEx<HMSData> relativeWindDir20mDataList = new RadObservableCollectionEx<HMSData>();
+        public RadObservableCollectionEx<HMSData> relativeWindDir30mDataList = new RadObservableCollectionEx<HMSData>();
 
         // Lagret helicopter heading
         private double savedHelicopterHeading = -1;
@@ -38,10 +38,10 @@ namespace HMS_Client
 
                 // Oppdatere data som skal ut i grafer
                 if (rwdGraphData.status == DataStatus.OK)
-                    GraphBuffer.UpdateWithCull(rwdGraphData, relativeWindDir20mDataList, Constants.GraphCullFrequency20m);
+                    GraphBuffer.UpdateWithCull(rwdGraphData, relativeWindDir30mDataList, Constants.GraphCullFrequency30m);
 
                 // Fjerne gamle data fra chart data
-                GraphBuffer.RemoveOldData(relativeWindDir20mDataList, Constants.Minutes20);
+                GraphBuffer.RemoveOldData(relativeWindDir30mDataList, Constants.Minutes30);
             }
         }
 
@@ -62,7 +62,7 @@ namespace HMS_Client
             UIUpdateTimer.Stop();
 
             // Slette Graph buffer/data
-            GraphBuffer.Clear(relativeWindDir20mDataList);
+            GraphBuffer.Clear(relativeWindDir30mDataList);
         }
 
         public void UpdateData(HMSDataCollection clientSensorList)
@@ -126,7 +126,7 @@ namespace HMS_Client
         private void CorrectRWDGraph(double correction)
         {
             // Løper gjennom hele listen og legger til korreksjon på RWD komponenten
-            foreach (var item in relativeWindDir20mDataList)
+            foreach (var item in relativeWindDir30mDataList)
             {
                 item.data += correction;
             }

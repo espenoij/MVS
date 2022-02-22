@@ -19,7 +19,7 @@ namespace HMS_Client
             DataContext = viewModel;
 
             // Koble chart til data
-            chartRelativeWindLimits.Series[0].ItemsSource = viewModel.relativeWindDir20mDataList;
+            chartRelativeWindLimits.Series[0].ItemsSource = viewModel.relativeWindDir30mDataList;
         }
     }
 }
