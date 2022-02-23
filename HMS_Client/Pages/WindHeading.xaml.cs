@@ -8,28 +8,39 @@ namespace HMS_Client
     /// </summary>
     public partial class WindHeading : UserControl
     {
-        WindHeadingVM windHeadingVM;
+        private WindHeadingVM windHeadingVM;
+        private UserInputsVM userInputsVM;
 
         public WindHeading()
         {
             InitializeComponent();
         }
 
-        public void Init(WindHeadingVM viewModel, Config config)
+        public void Init(WindHeadingVM windHeadingVM, UserInputsVM userInputsVM, AdminSettingsVM adminSettingsVM)
         {
-            windHeadingVM = viewModel;
-            DataContext = viewModel;
+            this.windHeadingVM = windHeadingVM;
+            this.userInputsVM = userInputsVM;
+            DataContext = windHeadingVM;
 
             // Compass init
-            ucCompass.Init(viewModel);
+            ucCompass.Init(windHeadingVM);
 
             // Wind & Heading readouts init
-            ucReadouts_CAP.Init(viewModel);
-            ucReadouts_NOROG.Init(viewModel);
+            ucReadouts_CAP.Init(windHeadingVM);
+            ucReadouts_NOROG.Init(windHeadingVM);
 
-            // Wind Measurement
-            foreach (WindMeasurement value in Enum.GetValues(typeof(WindMeasurement)))
-                cboWindMeasurement.Items.Add(value.GetDescription());
+            // Wind Measurement - NOROG
+            if (adminSettingsVM.regulationStandard == RegulationStandard.NOROG)
+            {
+                foreach (WindMeasurement value in Enum.GetValues(typeof(WindMeasurement)))
+                    cboWindMeasurement.Items.Add(value.GetDescription());
+            }
+            // Wind Measurement - CAP
+            else
+            {
+                cboWindMeasurement.Items.Add(WindMeasurement.TwoMinuteMean.GetDescription());
+                cboWindMeasurement.Items.Add(WindMeasurement.TenMinuteMean.GetDescription());
+            }
 
             cboWindMeasurement.SelectedIndex = (int)windHeadingVM.windMeasurement;
         }
@@ -39,10 +50,20 @@ namespace HMS_Client
             windHeadingVM.windMeasurement = (WindMeasurement)cboWindMeasurement.SelectedIndex;
         }
 
-        public void ResetWindDisplay()
+        public void SetDefaultWindMeasurement()
         {
-            // Sette Wind & Heading til å vise 2-min mean vind
-            windHeadingVM.windMeasurement = WindMeasurement.TwoMinuteMean;
+            // Sette Wind & Heading til å vise: 
+            if (userInputsVM.displayMode == DisplayMode.OnDeck)
+            {
+                // 2 - min mean vind ved on-deck
+                windHeadingVM.windMeasurement = WindMeasurement.TwoMinuteMean;
+            }
+            else
+            {
+                // 10 - min mean vind ved pre-landing
+                windHeadingVM.windMeasurement = WindMeasurement.TenMinuteMean;
+                cboWindMeasurement.SelectedIndex = (int)windHeadingVM.windMeasurement;
+            }
         }
     }
 }

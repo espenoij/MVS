@@ -25,7 +25,7 @@ namespace HMS_Client
         private RelativeWindLimitsVM helideckRelativeWindLimitsVM;
         private WindHeadingVM windHeadingVM;
 
-        private MainWindow.ResetWindDisplayCallback resetWindDisplayCallback;
+        private MainWindow.SetDefaultWindMeasurementCallback setDefaultWindMeasurementCallback;
 
         private bool isUserInputsSet = false;
 
@@ -41,7 +41,7 @@ namespace HMS_Client
             WindHeadingChangeVM helideckWindHeadingTrendVM,
             RelativeWindLimitsVM helideckRelativeWindLimitsVM,
             WindHeadingVM windHeadingVM,
-            MainWindow.ResetWindDisplayCallback resetWindDisplayCallback,
+            MainWindow.SetDefaultWindMeasurementCallback setDefaultWindMeasurementCallback,
             ServerCom serverCom)
         {
             this.adminSettingsVM = adminSettingsVM;
@@ -53,7 +53,7 @@ namespace HMS_Client
             this.helideckWindHeadingTrendVM = helideckWindHeadingTrendVM;
             this.helideckRelativeWindLimitsVM = helideckRelativeWindLimitsVM;
             this.windHeadingVM = windHeadingVM;
-            this.resetWindDisplayCallback = resetWindDisplayCallback;
+            this.setDefaultWindMeasurementCallback = setDefaultWindMeasurementCallback;
             this.serverCom = serverCom;
 
             InitUI();
@@ -321,9 +321,6 @@ namespace HMS_Client
                         // Start oppdatering av grafer
                         helideckWindHeadingTrendVM.Start();
                         helideckRelativeWindLimitsVM.Start();
-
-                        // Sette Wind & Heading til å vise 2-min mean vind
-                        resetWindDisplayCallback();
                     }
                     else
                     {
@@ -331,6 +328,9 @@ namespace HMS_Client
                         helideckWindHeadingTrendVM.Stop();
                         helideckRelativeWindLimitsVM.Stop();
                     }
+
+                    // Sette Wind & Heading til å vise default mean vind
+                    setDefaultWindMeasurementCallback();
 
                     OnPropertyChanged(nameof(displayModeVisibilityPreLanding));
                     OnPropertyChanged(nameof(displayModeVisibilityOnDeck));

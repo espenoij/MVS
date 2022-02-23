@@ -76,7 +76,7 @@
                     <DockPanel
                         DockPanel.Dock="Bottom"
                         HorizontalAlignment="Center"
-                        Visibility="{Binding Path=displayCAP, Converter={StaticResource BoolToVisConverter} }">
+                        Visibility="{Binding Path=notDisplayWindMeasurementSelection, Converter={StaticResource BoolToVisConverter} }">
 
                         <Grid>
 
@@ -109,7 +109,7 @@
                     <DockPanel
                         DockPanel.Dock="Bottom"
                         HorizontalAlignment="Center"
-                        Visibility="{Binding Path=displayNOROG, Converter={StaticResource BoolToVisConverter} }">
+                        Visibility="{Binding Path=displayWindMeasurementSelection, Converter={StaticResource BoolToVisConverter} }">
 
                         <Grid>
 
@@ -133,11 +133,10 @@
                                     <telerik:Label
                                         Content="Wind"
                                         VerticalAlignment="Center" />
-
                                     <telerik:RadComboBox
                                         Width="180"
-                                        Name="cboWindMeasurement"
-                                        Text="{Binding Path=windMeasurementString}"
+                                        x:Name="cboWindMeasurement"
+                                        Text="{Binding windMeasurementString}"
                                         SelectionChanged="cboWindMeasurement_SelectionChanged" />
 
                                 </StackPanel>

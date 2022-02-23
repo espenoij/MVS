@@ -37,7 +37,7 @@ namespace HMS_Client
         public delegate void RestartRequiredCallback(bool showMessage);
 
         // Sette vind visning til 2-min mean callback
-        public delegate void ResetWindDisplayCallback();
+        public delegate void SetDefaultWindMeasurementCallback();
 
         // Client denied callback
         public delegate void ClientDeniedCallback();
@@ -85,7 +85,7 @@ namespace HMS_Client
             RestartRequiredCallback restartRequired = new RestartRequiredCallback(ShowRestartRequiredMessage);
 
             // Sette vind visning til 2-min mean callback
-            ResetWindDisplayCallback resetWindDisplayCallback = new ResetWindDisplayCallback(ResetWindDisplay);
+            SetDefaultWindMeasurementCallback setDefaultWindMeasurementCallback = new SetDefaultWindMeasurementCallback(SetDefaultWindMeasurement);
 
             // View Model Init
             mainWindowVM.Init();
@@ -103,7 +103,7 @@ namespace HMS_Client
                 helideckWindHeadingTrendVM,
                 helideckRelativeWindLimitsVM,
                 windHeadingVM,
-                resetWindDisplayCallback,
+                setDefaultWindMeasurementCallback,
                 serverCom);
 
             helideckMotionLimitsVM.Init(config, sensorStatus);
@@ -266,7 +266,7 @@ namespace HMS_Client
             }
 
             // Wind & Heading
-            ucWindHeading.Init(windHeadingVM, config);
+            ucWindHeading.Init(windHeadingVM, userInputsVM, adminSettingsVM);
 
             // Meteorological
             ucMeteorological.Init(meteorologicalVM);
@@ -311,9 +311,9 @@ namespace HMS_Client
                 dpApplicationRestartRequired.Visibility = Visibility.Collapsed;
         }
 
-        public void ResetWindDisplay()
+        public void SetDefaultWindMeasurement()
         {
-            ucWindHeading.ResetWindDisplay();
+            ucWindHeading.SetDefaultWindMeasurement();
         }
 
         public void DataRequestComplete()
