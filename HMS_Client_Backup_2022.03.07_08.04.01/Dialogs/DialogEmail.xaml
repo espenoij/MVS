@@ -1,0 +1,189 @@
+﻿<telerik:RadWindow
+    x:Class="HMS_Client.DialogEmail"
+    xmlns="http://schemas.microsoft.com/winfx/2006/xaml/presentation"
+    xmlns:x="http://schemas.microsoft.com/winfx/2006/xaml"
+    xmlns:d="http://schemas.microsoft.com/expression/blend/2008"
+    xmlns:telerik="http://schemas.telerik.com/2008/xaml/presentation"
+    xmlns:mc="http://schemas.openxmlformats.org/markup-compatibility/2006"
+    mc:Ignorable="d"
+    xmlns:local="clr-namespace:HMS_Client"
+    telerik:Header="Send Helideck Report"
+    WindowStartupLocation="CenterScreen"
+    telerik:StyleManager.Theme="Material"
+    Height="500"
+    Width="700">
+
+    <telerik:RadWindow.Icon>
+        <Image
+            Height="32"
+            Source="../Icons/swire_flag.ico" />
+    </telerik:RadWindow.Icon>
+
+    <telerik:RadWindow.Resources>
+        <ResourceDictionary>
+            <Style
+                TargetType="local:DialogEmail"
+                BasedOn="{StaticResource RadWindowStyle}" />
+        </ResourceDictionary>
+    </telerik:RadWindow.Resources>
+
+    <Grid>
+
+        <DockPanel>
+
+            <!--Knapper nederst-->
+            <StackPanel
+                DockPanel.Dock="Bottom"
+                Height="52"
+                Orientation="Horizontal"
+                HorizontalAlignment="Right">
+
+                <Button
+                    Visibility="{Binding Path=emailStatusPreview}"
+                    x:Name="btnSend"
+                    Margin="8"
+                    Width="110"
+                    Content="Send"
+                    Click="btnSend_Click" />
+
+                <Button
+                    Visibility="{Binding Path=emailStatusPreview}"
+                    x:Name="btnCancel"
+                    Margin="8"
+                    Width="110"
+                    Content="Cancel"
+                    Click="btnCancel_Click" />
+
+                <Button
+                    Visibility="{Binding Path=emailStatusSuccess}"
+                    x:Name="btnClose"
+                    Margin="8"
+                    Width="110"
+                    Content="Close"
+                    Click="btnClose_Click" />
+
+            </StackPanel>
+
+            <!--EMAIL SUMMARY-->
+            <telerik:GroupBox
+                Header="EMAIL SUMMARY"
+                DockPanel.Dock="Top"
+                Margin="8">
+
+                <Grid>
+
+                    <!--Email info-->
+                    <StackPanel
+                        Visibility="{Binding Path=emailStatusPreview}"
+                        Margin="8">
+
+                        <!--From-->
+                        <DockPanel>
+                            <telerik:Label
+                                Width="150"
+                                Content="From:"
+                                HorizontalAlignment="Left" />
+                            <telerik:Label
+                                Content="{Binding Path=emailFrom}"
+                                HorizontalAlignment="Left" />
+                        </DockPanel>
+
+                        <!--TO-->
+                        <DockPanel>
+                            <telerik:Label
+                                Width="150"
+                                Content="To:"
+                                HorizontalAlignment="Left" />
+                            <telerik:Label
+                                Content="{Binding Path=emailTo}"
+                                HorizontalAlignment="Left" />
+                        </DockPanel>
+
+                        <!--CC-->
+                        <DockPanel>
+                            <telerik:Label
+                                Width="150"
+                                Content="CC:"
+                                HorizontalAlignment="Left" />
+                            <telerik:Label
+                                Content="{Binding Path=emailCC}"
+                                HorizontalAlignment="Left" />
+                        </DockPanel>
+
+                        <!--Subject-->
+                        <DockPanel>
+                            <telerik:Label
+                                Width="150"
+                                Content="Subject:"
+                                HorizontalAlignment="Left" />
+                            <telerik:Label
+                                Content="{Binding Path=emailSubject}"
+                                HorizontalAlignment="Left" />
+                        </DockPanel>
+
+                        <!--Attachemnt 1-->
+                        <DockPanel>
+                            <telerik:Label
+                                Width="150"
+                                Content="Attachment 1:"
+                                HorizontalAlignment="Left" />
+                            <TextBlock
+                                Margin="8"
+                                Text="{Binding Path=emailAttachment1}"
+                                HorizontalAlignment="Left" />
+                        </DockPanel>
+
+                        <!--Attachemnt 2-->
+                        <DockPanel
+                            Name="dpEmailAttachment2">
+                            <telerik:Label
+                                Width="150"
+                                Content="Attachment 2:"
+                                HorizontalAlignment="Left" />
+                            <TextBlock
+                                Margin="8"
+                                Text="{Binding Path=emailAttachment2}"
+                                HorizontalAlignment="Left" />
+                        </DockPanel>
+
+                        <TextBlock
+                            Margin="8"
+                            Text="{Binding Path=warningMessage}"
+                            TextWrapping="Wrap"
+                            HorizontalAlignment="Center" 
+                            Foreground="{StaticResource ColorRed}"/>
+
+                    </StackPanel>
+
+                    <!--Sending email-->
+                    <StackPanel
+                        Visibility="{Binding Path=emailStatusSending}"
+                        Margin="8"
+                        VerticalAlignment="Center">
+
+                        <telerik:Label
+                            HorizontalAlignment="Center"
+                            Content="Sending Helideck Report..." />
+
+                        <telerik:RadProgressBar
+                            Width="500"
+                            IsIndeterminate="True" 
+                            HorizontalAlignment="Center"/>
+
+                    </StackPanel>
+
+                    <!--Email sent successfully-->
+                    <telerik:Label
+                        Visibility="{Binding Path=emailStatusSuccess}"
+                        Content="Email sent successfully."
+                        HorizontalAlignment="Center" />
+
+                </Grid>
+
+            </telerik:GroupBox>
+
+        </DockPanel>
+
+    </Grid>
+
+</telerik:RadWindow>

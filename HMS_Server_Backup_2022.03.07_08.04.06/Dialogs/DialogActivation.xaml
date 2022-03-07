@@ -1,0 +1,158 @@
+﻿<telerik:RadWindow
+    x:Class="HMS_Server.DialogActivation"
+    xmlns="http://schemas.microsoft.com/winfx/2006/xaml/presentation"
+    xmlns:x="http://schemas.microsoft.com/winfx/2006/xaml"
+    xmlns:d="http://schemas.microsoft.com/expression/blend/2008"
+    xmlns:telerik="http://schemas.telerik.com/2008/xaml/presentation"
+    xmlns:mc="http://schemas.openxmlformats.org/markup-compatibility/2006"
+    mc:Ignorable="d"
+    xmlns:local="clr-namespace:HMS_Server"
+    telerik:Header="License Activation"
+    WindowStartupLocation="CenterScreen"
+    Height="450"
+    Width="600"
+    telerik:StyleManager.Theme="Material">
+
+    <telerik:RadWindow.Icon>
+        <Image
+            Height="32"
+            Source="../Icons/swire_flag.ico" />
+    </telerik:RadWindow.Icon>
+
+    <telerik:RadWindow.Resources>
+        <ResourceDictionary>
+            <Style
+                TargetType="local:DialogActivation"
+                BasedOn="{StaticResource RadWindowStyle}" />
+        </ResourceDictionary>
+    </telerik:RadWindow.Resources>
+
+    <DockPanel>
+
+        <Grid>
+
+            <Grid.RowDefinitions>
+                <RowDefinition
+                    Height="3*" />
+                <RowDefinition
+                    Height="2*" />
+            </Grid.RowDefinitions>
+
+            <!--LICENSE INFORMATION-->
+            <telerik:GroupBox
+                Header="LICENSE INFORMATION"
+                Grid.Row="0"
+                Margin="8">
+
+                <Grid>
+
+                    <StackPanel
+                        Margin="8">
+
+                        <!--License Owner-->
+                        <DockPanel>
+
+                            <telerik:Label
+                                Width="150"
+                                Content="License Owner" />
+
+                            <TextBox
+                                Name="tbLicenseOwner"
+                                Text="{Binding Path=licenseOwner}"
+                                LostFocus="tbLicenseOwner_LostFocus"
+                                KeyDown="tbLicenseOwner_KeyDown" />
+
+                        </DockPanel>
+
+                        <!--License Location-->
+                        <DockPanel>
+
+                            <telerik:Label
+                                Width="150"
+                                Content="License Location" />
+
+                            <TextBox
+                                Name="tbLicenseLocation"
+                                Text="{Binding Path=licenseLocation}"
+                                LostFocus="tbLicenseLocation_LostFocus"
+                                KeyDown="tbLicenseLocation_KeyDown" />
+
+                        </DockPanel>
+
+                        <!--Max Clients-->
+                        <DockPanel>
+
+                            <telerik:Label
+                                Width="150"
+                                Content="Max Clients" />
+
+                            <TextBox
+                                Name="tbLicenseMaxClients"
+                                Text="{Binding Path=licenseMaxClients}"
+                                LostFocus="tbLicenseMaxClients_LostFocus"
+                                KeyDown="tbLicenseMaxClients_KeyDown" />
+
+                        </DockPanel>
+
+                        <!--HWID-->
+                        <!--<DockPanel>
+
+                            <telerik:Label
+                                Width="150"
+                                Content="Hardware ID" />
+
+                            <telerik:Label
+                                Content="{Binding Path=deviceID}"
+                                HorizontalAlignment="Left" />
+
+                        </DockPanel>-->
+
+                    </StackPanel>
+
+                </Grid>
+
+            </telerik:GroupBox>
+
+            <!--ACTIVATION-->
+            <telerik:GroupBox
+                Header="ACTIVATION"
+                Grid.Row="1"
+                Margin="8">
+
+                <Grid>
+
+                    <StackPanel
+                        Margin="8">
+
+                        <!--Status-->
+                        <DockPanel>
+
+                            <telerik:Label
+                                Content="Status"
+                                HorizontalAlignment="Left" />
+
+                            <telerik:Label
+                                Content="{Binding Path=activationStatusString}"
+                                HorizontalAlignment="Right" />
+
+                        </DockPanel>
+
+                        <Button
+                            x:Name="btnActivate"
+                            Margin="8"
+                            Width="150"
+                            HorizontalAlignment="Center"
+                            Content="ACTIVATE"
+                            Click="btnActivate_Click" />
+
+                    </StackPanel>
+
+                </Grid>
+
+            </telerik:GroupBox>
+
+        </Grid>
+
+    </DockPanel>
+
+</telerik:RadWindow>

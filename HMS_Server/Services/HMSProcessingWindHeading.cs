@@ -710,6 +710,7 @@ namespace HMS_Server
         /////////////////////////////////////////////////////////////////////////////
         public HelideckStatusType GetRWDLimitState
         {
+            // NB! Samme kode som i klient (GetRWDLimitState)
             get
             {
                 double wind = helideckWindSpeed2m.data;
