@@ -117,6 +117,7 @@ namespace HMS_Client
             {
                 tbHelicopterHeading_Update(sender);
                 Keyboard.ClearFocus();
+                EnterHeading();
             }
         }
 
@@ -134,6 +135,11 @@ namespace HMS_Client
         }
 
         private void btnEnterHeading_Click(object sender, RoutedEventArgs e)
+        {
+            EnterHeading();
+        }
+
+        private void EnterHeading()
         {
             if (tbHelicopterHeading.Text.Length > 0)
             {
@@ -156,6 +162,7 @@ namespace HMS_Client
             {
                 tbCorrectedHelicopterHeading_Update(sender);
                 Keyboard.ClearFocus();
+                EnterCorrectedHeading();
             }
         }
 
@@ -173,6 +180,11 @@ namespace HMS_Client
         }
 
         private void btn_EnterCorrectedHeading_Click(object sender, RoutedEventArgs e)
+        {
+            EnterCorrectedHeading();
+        }
+
+        private void EnterCorrectedHeading()
         {
             if (tbCorrectedHelicopterHeading.Text != string.Empty)
             {
