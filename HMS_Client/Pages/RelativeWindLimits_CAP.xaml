@@ -96,8 +96,8 @@
                         <telerik:ScatterLineSeries
                             Stroke="Black"
                             StrokeThickness="3"
-                            XValueBinding="data2"
-                            YValueBinding="data"
+                            XValueBinding="graphDataX"
+                            YValueBinding="graphDataY"
                             ZIndex="300">
 
                             <!--Kun til visualisering i editor

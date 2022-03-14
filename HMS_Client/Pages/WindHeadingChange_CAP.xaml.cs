@@ -1,4 +1,5 @@
 ﻿using System;
+using System.Collections.Generic;
 using System.Windows;
 using System.Windows.Controls;
 using System.Windows.Threading;
@@ -22,11 +23,11 @@ namespace HMS_Client
             DataContext = windHeadingChangeVM;
 
             // Koble chart til data
-            chartVesselHeading.Series[0].ItemsSource = windHeadingChangeVM.vesselHdg20mDataList;
-            chartWindHeading.Series[0].ItemsSource = windHeadingChangeVM.windDir20mDataList;
+            chartVesselHeading.Series[0].ItemsSource = windHeadingChangeVM.vesselHdg30mDataList;
+            chartWindHeading.Series[0].ItemsSource = windHeadingChangeVM.windDir30mDataList;
 
             // Generere grid til status trend display
-            TrendLine.GenerateGridColumnDefinitions(statusTrendGrid, Constants.rwdTrendDisplayListMax);
+            TrendLine.GenerateGridColumnDefinitions(statusTrendCanvas, Constants.rwdTrendDisplayListMax);
 
             // Oppdatere UI
             trendUpdateTimer.Interval = TimeSpan.FromMilliseconds(config.ReadWithDefault(ConfigKey.ClientUpdateFrequencyUI, Constants.ClientUIUpdateFrequencyDefault));
@@ -37,7 +38,7 @@ namespace HMS_Client
             {
                 if (gbWindHeadingChange.Visibility == Visibility.Visible)
                 {
-                    TrendLine.UpdateTrendData(windHeadingChangeVM.rwdTrend30mDispList, Constants.rwdTrendDisplayListMax, statusTrendGrid, Application.Current);
+                    TrendLine.UpdateTrendData(windHeadingChangeVM.rwdTrend30mDispList, statusTrendCanvas, Application.Current);
                 }
             }
         }

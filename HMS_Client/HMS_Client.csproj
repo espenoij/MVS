@@ -325,6 +325,7 @@
     <Compile Include="Pages\WindHeadingChange_CAP.xaml.cs">
       <DependentUpon>WindHeadingChange_CAP.xaml</DependentUpon>
     </Compile>
+    <Compile Include="ViewModels\LandingStatusTrendVM.cs" />
     <Compile Include="ViewModels\WindHeadingChangeVM.cs" />
     <Compile Include="Pages\RelativeWindLimits_CAP.xaml.cs">
       <DependentUpon>RelativeWindLimits_CAP.xaml</DependentUpon>

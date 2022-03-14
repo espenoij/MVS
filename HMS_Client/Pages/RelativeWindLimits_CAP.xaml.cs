@@ -14,12 +14,12 @@ namespace HMS_Client
             InitializeComponent();
         }
 
-        public void Init(RelativeWindLimitsVM viewModel)
+        public void Init(RelativeWindLimitsVM relativeWindLimitsVM)
         {
-            DataContext = viewModel;
+            DataContext = relativeWindLimitsVM;
 
             // Koble chart til data
-            chartRelativeWindLimits.Series[0].ItemsSource = viewModel.relativeWindDir30mDataList;
+            chartRelativeWindLimits.Series[0].ItemsSource = relativeWindLimitsVM.relativeWindDir30mDataList;
         }
     }
 }

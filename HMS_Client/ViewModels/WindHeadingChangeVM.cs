@@ -1,6 +1,7 @@
 ﻿using System;
 using System.Collections.Generic;
 using System.ComponentModel;
+using System.Linq;
 using System.Runtime.CompilerServices;
 using System.Windows.Threading;
 
@@ -14,22 +15,18 @@ namespace HMS_Client
         private DispatcherTimer UIUpdateTimer = new DispatcherTimer();
 
         // Graph buffer/data
-        public RadObservableCollectionEx<HMSData> vesselHdg20mDataList = new RadObservableCollectionEx<HMSData>();
+        public RadObservableCollectionEx<HMSData> vesselHdg30mDataList = new RadObservableCollectionEx<HMSData>();
         private double vesselHdgDeltaAbsMax = 0;
 
-        public RadObservableCollectionEx<HMSData> windDir20mDataList = new RadObservableCollectionEx<HMSData>();
+        public RadObservableCollectionEx<HMSData> windDir30mDataList = new RadObservableCollectionEx<HMSData>();
         private double windDirDeltaAbsMax = 0;
 
         // 30 minutters RWD data liste
         private RadObservableCollectionEx<HelideckStatus> rwdTrend30mList = new RadObservableCollectionEx<HelideckStatus>();
         public List<HelideckStatusType> rwdTrend30mDispList = new List<HelideckStatusType>();
 
-        private Config config;
-
-        public void Init(Config config, SensorGroupStatus sensorStatus, HelideckStatusVM helideckStatusVM)
+        public void Init(Config config, SensorGroupStatus sensorStatus, RelativeWindLimitsVM relativeWindLimitsVM)
         {
-            this.config = config;
-
             InitUI();
 
             // Oppdatere UI
@@ -58,8 +55,10 @@ namespace HMS_Client
                 // Oppdatering av RWD status
                 HelideckStatus newStatus = new HelideckStatus()
                 {
-                    status = helideckStatusVM.rwdStatus,
-                    timestamp = DateTime.UtcNow
+                    status = GetRWDLimitState(relativeWindLimitsVM.rwdGraphData.wind, relativeWindLimitsVM.rwdGraphData.rwd),
+                    timestamp = relativeWindLimitsVM.rwdGraphData.timestamp,
+                    wind = relativeWindLimitsVM.rwdGraphData.wind,
+                    rwd = relativeWindLimitsVM.rwdGraphData.rwd
                 };
 
                 // Legge inn ny trend status i data liste
@@ -69,19 +68,19 @@ namespace HMS_Client
                 GraphBuffer.RemoveOldData(rwdTrend30mList, Constants.Minutes30);
 
                 // Overføre til display data liste
-                GraphBuffer.TransferDisplayData(rwdTrend30mList, rwdTrend30mDispList);
+                GraphBuffer.TransferDisplayData(rwdTrend30mList, rwdTrend30mDispList, Constants.Minutes30);
 
                 // Oppdatere data som skal ut i grafer
-                GraphBuffer.UpdateWithCull(vesselHeadingDelta, vesselHdg20mDataList, Constants.GraphCullFrequency30m);
-                GraphBuffer.UpdateWithCull(windDirectionDelta, windDir20mDataList, Constants.GraphCullFrequency30m);
+                GraphBuffer.UpdateWithCull(vesselHeadingDelta, vesselHdg30mDataList, Constants.GraphCullFrequency30m);
+                GraphBuffer.UpdateWithCull(windDirectionDelta, windDir30mDataList, Constants.GraphCullFrequency30m);
 
                 // Fjerne gamle data fra chart data
-                GraphBuffer.RemoveOldData(vesselHdg20mDataList, Constants.Minutes30 + Constants.ChartTimeCorrMin);
-                GraphBuffer.RemoveOldData(windDir20mDataList, Constants.Minutes30 + Constants.ChartTimeCorrMin);
+                GraphBuffer.RemoveOldData(vesselHdg30mDataList, Constants.Minutes30 + Constants.ChartTimeCorrMin);
+                GraphBuffer.RemoveOldData(windDir30mDataList, Constants.Minutes30 + Constants.ChartTimeCorrMin);
 
                 // Finne absolute max verdi
-                vesselHdgDeltaAbsMax = FindAbsMax(vesselHdg20mDataList);
-                windDirDeltaAbsMax = FindAbsMax(windDir20mDataList);
+                vesselHdgDeltaAbsMax = FindAbsMax(vesselHdg30mDataList);
+                windDirDeltaAbsMax = FindAbsMax(windDir30mDataList);
 
                 // Oppdatere alignment datetime (nåtid) til begge chart og trend line
                 alignmentTime = DateTime.UtcNow;
@@ -94,20 +93,18 @@ namespace HMS_Client
         {
             // Slette Graph buffer/data
             GraphBuffer.Clear(rwdTrend30mList);
-            rwdTrend30mDispList.Clear();
+            GraphBuffer.Clear(rwdTrend30mDispList);
 
-            GraphBuffer.Clear(vesselHdg20mDataList);
-            GraphBuffer.Clear(windDir20mDataList);
-
-            double uiUpdateFreq = config.ReadWithDefault(ConfigKey.ClientUpdateFrequencyUI, Constants.ClientUIUpdateFrequencyDefault);
+            GraphBuffer.Clear(vesselHdg30mDataList);
+            GraphBuffer.Clear(windDir30mDataList);
 
             // Forhåndsfylle trend data med 0 data
-            for (int i = (int)(-Constants.Minutes30 * (1000 / uiUpdateFreq)); i <= 0; i++)
+            for (double i = -Constants.Minutes30 * 1000; i <= 0; i += Constants.GraphCullFrequency30m)
             {
                 rwdTrend30mList.Add(new HelideckStatus()
                 {
                     status = HelideckStatusType.OFF,
-                    timestamp = DateTime.UtcNow.AddSeconds(i)
+                    timestamp = DateTime.UtcNow.AddMilliseconds(i)
                 });
             }
 
@@ -125,8 +122,8 @@ namespace HMS_Client
 
             // Slette Graph buffer/data
             GraphBuffer.Clear(rwdTrend30mList);
-            GraphBuffer.Clear(vesselHdg20mDataList);
-            GraphBuffer.Clear(windDir20mDataList);
+            GraphBuffer.Clear(vesselHdg30mDataList);
+            GraphBuffer.Clear(windDir30mDataList);
         }
 
         private void InitUI()
@@ -153,58 +150,21 @@ namespace HMS_Client
             return max;
         }
 
-        /////////////////////////////////////////////////////////////////////////////
-        // Relative Wind Direction Limit State
-        /////////////////////////////////////////////////////////////////////////////
-        //public HelideckStatusType GetRWDLimitState
-        //{
-        //    get
-        //    {
-        //        double wind = helideckWindSpeed2m.data;
-        //        double rwd = Math.Abs(relativeWindDir.data);
+        public void CorrectRWDTrend(double correction)
+        {
+            // Legge inn rekalkulerte RWD data
+            foreach (var item in rwdTrend30mList)
+            {
+                if (item.status != HelideckStatusType.OFF)
+                {
+                    item.rwd += correction;
+                    item.status = GetRWDLimitState(item.wind, item.rwd);
+                }
+            }
 
-        //        if (wind <= 15 || rwd <= 25)
-        //        {
-        //            return HelideckStatusType.BLUE;
-        //        }
-        //        else
-        //        {
-        //            if (rwd > 45)
-        //            {
-        //                if (wind <= 20)
-        //                    return HelideckStatusType.AMBER;
-        //                else
-        //                    return HelideckStatusType.RED;
-        //            }
-        //            else
-        //            if (wind > 35)
-        //            {
-        //                if (rwd <= 30)
-        //                    return HelideckStatusType.AMBER;
-        //                else
-        //                    return HelideckStatusType.RED;
-        //            }
-        //            else
-        //            {
-        //                double maxWindRed = 20 + (45 - rwd);
-
-        //                if (wind > maxWindRed)
-        //                {
-        //                    return HelideckStatusType.RED;
-        //                }
-        //                else
-        //                {
-        //                    double maxWindAmber = 15 + (45 - rwd);
-
-        //                    if (wind > maxWindAmber)
-        //                        return HelideckStatusType.AMBER;
-        //                    else
-        //                        return HelideckStatusType.BLUE;
-        //                }
-        //            }
-        //        }
-        //    }
-        //}
+            // Overføre til display data liste
+            GraphBuffer.TransferDisplayData(rwdTrend30mList, rwdTrend30mDispList, Constants.Minutes30);
+        }
 
         /////////////////////////////////////////////////////////////////////////////
         // Wind Calculations: Wind Speed
@@ -473,6 +433,56 @@ namespace HMS_Client
                     return 1;
                 else
                     return 0;
+            }
+        }
+
+        /////////////////////////////////////////////////////////////////////////////
+        // Relative Wind Direction Limit State
+        /////////////////////////////////////////////////////////////////////////////
+        public HelideckStatusType GetRWDLimitState(double wind, double rwdInput)
+        {
+            double rwd = Math.Abs(rwdInput);
+
+            // NB! Samme kode som i server (GetRWDLimitState)
+            if (wind <= 15 || rwd <= 25)
+            {
+                return HelideckStatusType.BLUE;
+            }
+            else
+            {
+                if (rwd > 45)
+                {
+                    if (wind <= 20)
+                        return HelideckStatusType.AMBER;
+                    else
+                        return HelideckStatusType.RED;
+                }
+                else
+                if (wind > 35)
+                {
+                    if (rwd <= 30)
+                        return HelideckStatusType.AMBER;
+                    else
+                        return HelideckStatusType.RED;
+                }
+                else
+                {
+                    double maxWindRed = 20 + (45 - rwd);
+
+                    if (wind > maxWindRed)
+                    {
+                        return HelideckStatusType.RED;
+                    }
+                    else
+                    {
+                        double maxWindAmber = 15 + (45 - rwd);
+
+                        if (wind > maxWindAmber)
+                            return HelideckStatusType.AMBER;
+                        else
+                            return HelideckStatusType.BLUE;
+                    }
+                }
             }
         }
 

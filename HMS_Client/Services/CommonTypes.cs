@@ -1,6 +1,7 @@
 ﻿using System;
 using System.Collections.Generic;
 using System.ComponentModel;
+using System.Runtime.CompilerServices;
 
 class CommonTypes
 {
@@ -326,6 +327,9 @@ public class HelideckStatus
     public HelideckStatusType status { get; set; }
     public DateTime timestamp { get; set; }
 
+    public double wind { get; set; }
+    public double rwd { get; set; }
+
     public HelideckStatus()
     {
     }
@@ -334,5 +338,86 @@ public class HelideckStatus
     {
         status = helideckStatus.status;
         timestamp = helideckStatus.timestamp;
+    }
+
+    public void CorrectRWD(double correction)
+    {
+        rwd += correction;
+    }
+}
+
+public class RWDData : INotifyPropertyChanged
+{
+    // Change notification
+    public event PropertyChangedEventHandler PropertyChanged;
+
+    public double _rwd { get; set; }
+    public double rwd 
+    {
+        get
+        {
+            return _rwd;
+        }
+
+        set
+        {
+            _rwd = value;
+            OnPropertyChanged(nameof(graphDataY));
+        }
+    }
+
+    public double _wind { get; set; }
+    public double wind
+    {
+        get
+        {
+            return _wind;
+        }
+
+        set
+        {
+            _wind = value;
+            OnPropertyChanged(nameof(graphDataX));
+        }
+    }
+
+    public DataStatus status { get; set; }
+    public DateTime timestamp { get; set; }
+
+    public void Set(RWDData rwdData)
+    {
+        rwd = rwdData.rwd;
+        wind = rwdData.wind;
+        status = rwdData.status;
+        timestamp = rwdData.timestamp;
+    }
+
+    public double graphDataX
+    {
+        get
+        {
+            double val = wind;
+            if (val > 60)
+                val = 60;
+            return val;
+        }
+    }
+
+    public double graphDataY
+    {
+        get
+        {
+            double val = Math.Abs(rwd);
+            if (val > 60)
+                val = 60;
+            return val;
+        }
+    }
+
+    // Variabel oppdatert
+    // Dersom navn ikke er satt brukes kallende medlem sitt navn
+    protected void OnPropertyChanged([CallerMemberName] string name = null)
+    {
+        PropertyChanged?.Invoke(this, new PropertyChangedEventArgs(name));
     }
 }

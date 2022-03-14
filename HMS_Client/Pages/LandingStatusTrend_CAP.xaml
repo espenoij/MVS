@@ -46,7 +46,45 @@
 
                 </Viewbox>
 
-                <Grid
+                <Viewbox
+                    Grid.Row="1"
+                    StretchDirection="Both"
+                    Stretch="Uniform">
+
+                    <Canvas
+                        x:Name="statusTrendGrid20m"
+                        Width="400"
+                        Height="10"
+                        Visibility="{Binding Path=visibilityItems20m, Converter={StaticResource BoolToVisConverter} }">
+
+                        <!--<Rectangle
+                            Width="400"
+                            Height="10"/>-->
+
+                    </Canvas>
+
+                </Viewbox>
+
+                <Viewbox
+                    Grid.Row="1"
+                    StretchDirection="Both"
+                    Stretch="Uniform">
+
+                    <Canvas
+                        x:Name="statusTrendGrid3h"
+                        Width="400"
+                        Height="10"
+                        Visibility="{Binding Path=visibilityItems3h, Converter={StaticResource BoolToVisConverter} }">
+
+                        <!--<Rectangle
+                            Width="400"
+                            Height="10" />-->
+
+                    </Canvas>
+
+                </Viewbox>
+
+                <!--<Grid
                     x:Name="statusTrendGrid20m"
                     Grid.Row="1"
                     Visibility="{Binding Path=visibilityItems20m, Converter={StaticResource BoolToVisConverter} }">
@@ -56,7 +94,7 @@
                     x:Name="statusTrendGrid3h"
                     Grid.Row="1"
                     Visibility="{Binding Path=visibilityItems3h, Converter={StaticResource BoolToVisConverter} }">
-                </Grid>
+                </Grid>-->
 
                 <Grid
                     Grid.Row="2"
@@ -145,6 +183,7 @@
 
                 <Grid
                     Grid.Row="2"
+                    Margin="-8,0,-8,0"
                     Visibility="{Binding Path=visibilityItems3h, Converter={StaticResource BoolToVisConverter} }">
                     
                     <Grid.ColumnDefinitions>

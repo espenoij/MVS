@@ -52,6 +52,43 @@ namespace HMS_Client
                 dataList.Add(new HMSData() { data = 0, timestamp = DateTime.UtcNow });
         }
 
+        public static void UpdateWithCull(RWDData data, RadObservableCollectionEx<RWDData> dataList, double cullFrequency)
+        {
+            // Ny løsning ifht det over: Begrenser (cull) graf data ved å ikke ta inn alt, men f.eks. bare hvert 5. sekund.
+            // Dropper bruken av buffer.
+
+            // Har vi to eller flere data punkt?
+            if (dataList.Count >= 2)
+            {
+                // Sjekker om tiden mellom siste og nest siste data punkt er mindre enn cullFrequency
+                if (dataList[dataList.Count - 2].timestamp.AddMilliseconds(cullFrequency) > dataList[dataList.Count - 1].timestamp)
+                {
+                    // I så tilfelle skal vi fjerne/cull siste data punkt før vi legge inn nytt
+                    dataList.RemoveAt(dataList.Count - 1);
+                }
+            }
+
+            // Status ok?
+            if (data?.status == DataStatus.OK)
+                // Lagre data i listen
+                dataList.Add(new RWDData()
+                {
+                    rwd = data.rwd,
+                    wind = data.wind,
+                    status = data.status,
+                    timestamp = data.timestamp
+                });
+            else
+                // Lagre 0 data
+                dataList.Add(new RWDData() 
+                { 
+                    rwd = 0,
+                    wind = 0,
+                    status = DataStatus.OK,
+                    timestamp = DateTime.UtcNow
+                });
+        }
+
         public static void Transfer(RadObservableCollectionEx<HMSData> buffer, RadObservableCollectionEx<HMSData> dataList)
         {
             // Overfører alle data fra buffer til dataList
@@ -86,6 +123,18 @@ namespace HMS_Client
             }
         }
 
+        public static void RemoveOldData(RadObservableCollectionEx<RWDData> dataList, double timeInterval)
+        {
+            if (dataList != null)
+            {
+                for (int i = 0; i < dataList.Count && dataList.Count > 0; i++)
+                {
+                    if (dataList[i]?.timestamp < DateTime.UtcNow.AddSeconds(-timeInterval))
+                        dataList.RemoveAt(i--);
+                }
+            }
+        }
+
         public static void RemoveOldData(RadObservableCollectionEx<HelideckStatus> dataList, double timeInterval)
         {
             if (dataList != null)
@@ -105,6 +154,13 @@ namespace HMS_Client
                 buffer.Clear();
         }
 
+        public static void Clear(RadObservableCollectionEx<RWDData> buffer)
+        {
+            // Sletter alle data i buffer
+            if (buffer != null)
+                buffer.Clear();
+        }
+
         public static void Clear(RadObservableCollectionEx<HelideckStatus> buffer)
         {
             // Sletter alle data i buffer
@@ -112,46 +168,92 @@ namespace HMS_Client
                 buffer.Clear();
         }
 
-        public static void TransferDisplayData(RadObservableCollectionEx<HelideckStatus> list, List<HelideckStatusType> dispList)
+        public static void Clear(List<HelideckStatusType> buffer)
+        {
+            // Sletter alle data i buffer
+            if (buffer != null)
+                buffer.Clear();
+        }
+
+        public static void TransferDisplayData(RadObservableCollectionEx<HelideckStatus> list, List<HelideckStatusType> dispList, double timeFrame)
         {
             // Denne funksjonen mapper et visst antall statuser til en status indikator posisjon på tidslinjen på skjermen.
             // Viser høyeste nivå fra sub-settet med statuser.
 
-            int subSetCounter = 0;
-            double subSetLength = (double)list.Count / (double)dispList.Count;
-
-            HelideckStatusType status = HelideckStatusType.OFF;
-
-            // Gå gjennom alle status data
-            for (int i = 0; i < list.Count; i++)
+            if (list.Count > 0 && dispList.Count > 0)
             {
-                // Har vi kommet til nytt subSet?
-                if (i > (subSetLength * (double)subSetCounter) || i == list.Count - 1)
-                {
-                    // Sette status i display listen
-                    if (subSetCounter < dispList.Count)
-                        dispList[subSetCounter++] = status;
+                DateTime subsetStartTime = list[list.Count - 1].timestamp.AddSeconds(-timeFrame);
+                //DateTime subsetStartTime = DateTime.UtcNow.AddSeconds(-timeFrame);
+                double subsetTime = timeFrame * 1000 / (double)dispList.Count;
 
-                    status = HelideckStatusType.OFF;
+                HelideckStatusType status = HelideckStatusType.OFF;
+
+                int dataCounter = 0;
+                int subsetCounter = 0;
+
+                bool dataFound = false;
+
+                // Har vi ennå ikke kommet til data?
+                while (!dataFound)
+                {
+                    if (subsetStartTime < list[dataCounter].timestamp)
+                    {
+                        dispList[subsetCounter++] = HelideckStatusType.OFF;
+
+                        // Gå til neste subset
+                        subsetStartTime = subsetStartTime.AddMilliseconds(subsetTime);
+                    }
+                    else
+                    {
+                        dataFound = true;
+                    }
                 }
 
-                // Finne høyeste status nivå
-                switch (list[i].status)
+                // Vi har kommet til data
+                if (dataFound)
                 {
-                    case HelideckStatusType.RED:
-                        status = HelideckStatusType.RED;
-                        break;
+                    for (; subsetCounter < dispList.Count && dataCounter < list.Count; subsetCounter++)               
+                    {
+                        bool nextSubset = false;
 
-                    case HelideckStatusType.AMBER:
-                        if (status != HelideckStatusType.RED)
-                            status = HelideckStatusType.AMBER;
-                        break;
+                        for (; !nextSubset && dataCounter < list.Count; dataCounter++)
+                        {
+                            // Har vi kommet til nytt subSet?
+                            if (list[dataCounter].timestamp > subsetStartTime.AddMilliseconds(subsetTime))
+                            {
+                                // Sette status i display listen
+                                dispList[subsetCounter] = status;
 
-                    case HelideckStatusType.BLUE:
-                        if (status != HelideckStatusType.RED &&
-                            status != HelideckStatusType.AMBER)
-                            status = HelideckStatusType.BLUE;
-                        break;
+                                // Gå til neste subset
+                                subsetStartTime = subsetStartTime.AddMilliseconds(subsetTime);
+
+                                // Resette høyeste status nivå
+                                status = HelideckStatusType.OFF;
+
+                                // Exit denne loopen
+                                nextSubset = true;
+                            }
+
+                            // Finne høyeste status nivå
+                            switch (list[dataCounter].status)
+                            {
+                                case HelideckStatusType.RED:
+                                    status = HelideckStatusType.RED;
+                                    break;
+
+                                case HelideckStatusType.AMBER:
+                                    if (status != HelideckStatusType.RED)
+                                        status = HelideckStatusType.AMBER;
+                                    break;
+
+                                case HelideckStatusType.BLUE:
+                                    if (status != HelideckStatusType.RED &&
+                                        status != HelideckStatusType.AMBER)
+                                        status = HelideckStatusType.BLUE;
+                                    break;
+                            }
+                        }
+                    }
                 }
             }
         }

@@ -17,21 +17,21 @@ namespace HMS_Client
         // User Inputs View Model
         private UserInputsVM userInputsVM;
         private OnDeckStabilityLimitsVM helideckStabilityLimitsVM;
-        private RelativeWindLimitsVM relativeWindLimitsVM;
+        private LandingStatusTrendVM landingStatusTrendVM;
 
         public UserInputs_CAP()
         {
             InitializeComponent();
         }
 
-        public void Init(UserInputsVM userInputsVM, Config config, AdminSettingsVM adminSettingsVM, OnDeckStabilityLimitsVM helideckStabilityLimitsVM, RelativeWindLimitsVM relativeWindLimitsVM)
+        public void Init(UserInputsVM userInputsVM, Config config, AdminSettingsVM adminSettingsVM, OnDeckStabilityLimitsVM helideckStabilityLimitsVM, LandingStatusTrendVM landingStatusTrendVM)
         {
             DataContext = userInputsVM;
 
             this.config = config;
             this.userInputsVM = userInputsVM;
             this.helideckStabilityLimitsVM = helideckStabilityLimitsVM;
-            this.relativeWindLimitsVM = relativeWindLimitsVM;
+            this.landingStatusTrendVM = landingStatusTrendVM;
 
             // Helicopter Type
             foreach (HelicopterType value in Enum.GetValues(typeof(HelicopterType)))
@@ -138,7 +138,7 @@ namespace HMS_Client
             if (tbHelicopterHeading.Text.Length > 0)
             {
                 // Åpne dialog vindu
-                DialogHelicopterLanded dialog = new DialogHelicopterLanded(userInputsVM, helideckStabilityLimitsVM, relativeWindLimitsVM);
+                DialogHelicopterLanded dialog = new DialogHelicopterLanded(userInputsVM, helideckStabilityLimitsVM, landingStatusTrendVM);
                 dialog.Owner = App.Current.MainWindow;
                 dialog.Heading(Convert.ToDouble(tbHelicopterHeading.Text)); // Data er allerede validert i metoden ovenfor
                 dialog.ShowDialog();

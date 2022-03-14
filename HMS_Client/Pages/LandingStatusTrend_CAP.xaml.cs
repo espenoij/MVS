@@ -17,9 +17,9 @@ namespace HMS_Client
             InitializeComponent();
         }
 
-        public void Init(RelativeWindLimitsVM relativeWindLimitsVM, Config config)
+        public void Init(LandingStatusTrendVM landingStatusTrendVM, Config config)
         {
-            DataContext = relativeWindLimitsVM;
+            DataContext = landingStatusTrendVM;
 
             // Generere grid til status trend display
             TrendLine.GenerateGridColumnDefinitions(statusTrendGrid20m, Constants.landingTrendDisplayListMax);
@@ -35,10 +35,10 @@ namespace HMS_Client
                 if (gLandingStatusTrend.Visibility == Visibility.Visible)
                 {
                     // Overføre trend data fra data liste til display liste
-                    if (relativeWindLimitsVM.visibilityItems20m)
-                        TrendLine.UpdateTrendData(relativeWindLimitsVM.landingTrend20mDispList, Constants.landingTrendDisplayListMax, statusTrendGrid20m, Application.Current);
+                    if (landingStatusTrendVM.visibilityItems20m)
+                        TrendLine.UpdateTrendData(landingStatusTrendVM.landingTrend20mDispList, statusTrendGrid20m, Application.Current);
                     else
-                        TrendLine.UpdateTrendData(relativeWindLimitsVM.statusTrend3hDispList, Constants.landingTrendDisplayListMax, statusTrendGrid3h, Application.Current);
+                        TrendLine.UpdateTrendData(landingStatusTrendVM.statusTrend3hDispList, statusTrendGrid3h, Application.Current);
                 }
             }
         }

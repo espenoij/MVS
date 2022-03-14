@@ -9,42 +9,41 @@ namespace HMS_Client
 {
     static class TrendLine
     {
-        public static void GenerateGridColumnDefinitions(Grid grid, double listMaxLength)
+        public static void GenerateGridColumnDefinitions(Canvas canvas, double listMaxLength)
         {
+            int width = (int)(canvas.Width / listMaxLength);
+
             for (int i = 0; i < listMaxLength; i++)
             {
-                // Ny kolonnedefinisjon
-                ColumnDefinition newColumn = new ColumnDefinition();
+                // Create the rectangle
+                Rectangle rec = new Rectangle()
+                {
+                    Width = width,
+                    Height = 10
+                };
 
-                // Kolonne bredde
-                newColumn.Width = new GridLength(1, GridUnitType.Star);
-
-                // Legge til ny kolonnedefinisjon i grid
-                grid.ColumnDefinitions.Add(newColumn);
-
-                // Nytt rektangel som bakgrunn i en grid celle
-                Rectangle rect = new Rectangle();
-
-                // Grid posisjon
-                Grid.SetColumn(rect, i);
-
-                // Legge inn i grid
-                grid.Children.Add(rect);
+                // Add to a canvas for example
+                canvas.Children.Add(rec);
+                Canvas.SetTop(rec, 0);
+                Canvas.SetLeft(rec, i * width);
             }
         }
 
-        public static void UpdateTrendData(List<HelideckStatusType> statusTrendDispList, double listLength, Grid grid, Application app)
+        public static void UpdateTrendData(List<HelideckStatusType> statusTrendDispList, Canvas canvas, Application app)
         {
             Brush amberBrush = (Brush)app.FindResource("ColorAmber");
             Brush redBrush = (Brush)app.FindResource("ColorRed");
             Brush blueBrush = (Brush)app.FindResource("ColorBlue");
             Brush bakgroundBrush = (Brush)app.FindResource("ColorBackgroundSeparator");
 
-            for (int i = 0; i < listLength; i++)
+            for (int i = 0; i < statusTrendDispList.Count; i++)
             {
-                var rect = GetChildren(grid, 0, i) as Rectangle;
+                Rectangle rect = null;
 
-                if (i < statusTrendDispList.Count)
+                if (i < canvas.Children.Count)
+                    rect = canvas.Children[i] as Rectangle;
+
+                if (rect != null)
                 {
                     switch (statusTrendDispList[i])
                     {
@@ -66,21 +65,6 @@ namespace HMS_Client
                     }
                 }
             }
-        }
-
-        private static UIElement GetChildren(Grid grid, int row, int column)
-        {
-            UIElement foundChild = null;
-
-            foreach (UIElement child in grid.Children)
-            {
-                if (Grid.GetRow(child) == row && Grid.GetColumn(child) == column)
-                {
-                    foundChild = child;
-                }
-            }
-
-            return foundChild;
         }
     }
 }

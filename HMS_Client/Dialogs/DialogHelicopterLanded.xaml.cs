@@ -11,9 +11,9 @@ namespace HMS_Client
     {
         private UserInputsVM userInputsVM;
         private OnDeckStabilityLimitsVM helideckStabilityLimitsVM;
-        private RelativeWindLimitsVM relativeWindLimitsVM;
+        private LandingStatusTrendVM landingStatusTrendVM;
 
-        public DialogHelicopterLanded(UserInputsVM userInputsVM, OnDeckStabilityLimitsVM helideckStabilityLimitsVM, RelativeWindLimitsVM helideckStatusTrendVM)
+        public DialogHelicopterLanded(UserInputsVM userInputsVM, OnDeckStabilityLimitsVM helideckStabilityLimitsVM, LandingStatusTrendVM landingStatusTrendVM)
         {
             InitializeComponent();
 
@@ -21,7 +21,7 @@ namespace HMS_Client
 
             this.userInputsVM = userInputsVM;
             this.helideckStabilityLimitsVM = helideckStabilityLimitsVM;
-            this.relativeWindLimitsVM = helideckStatusTrendVM;
+            this.landingStatusTrendVM = landingStatusTrendVM;
         }
 
         public void Heading(double heading)
@@ -39,7 +39,7 @@ namespace HMS_Client
 
             // Resetter trend grafene til å vise 20 minutter data
             helideckStabilityLimitsVM.selectedGraphTime = GraphTime.Minutes20;
-            relativeWindLimitsVM.selectedGraphTime = GraphTime.Minutes20;
+            landingStatusTrendVM.selectedGraphTime = GraphTime.Minutes20;
 
             Close();
         }

@@ -12,17 +12,17 @@ namespace HMS_Client
         public RadObservableCollectionEx<Point> blueArea = new RadObservableCollectionEx<Point>();
 
         private OnDeckStabilityLimitsVM viewModel;
-        private RelativeWindLimitsVM relativeWindLimitsVM;
+        private LandingStatusTrendVM landingStatusTrendVM;
 
         public OnDeckStabilityLimits_CAP()
         {
             InitializeComponent();
         }
 
-        public void Init(OnDeckStabilityLimitsVM viewModel, RelativeWindLimitsVM relativeWindLimitsVM)
+        public void Init(OnDeckStabilityLimitsVM viewModel, LandingStatusTrendVM landingStatusTrendVM)
         {
             this.viewModel = viewModel;
-            this.relativeWindLimitsVM = relativeWindLimitsVM;
+            this.landingStatusTrendVM = landingStatusTrendVM;
             DataContext = viewModel;
 
             // Koble chart til data
@@ -46,12 +46,12 @@ namespace HMS_Client
                 {
                     case 0:
                         viewModel.selectedGraphTime = GraphTime.Minutes20;
-                        relativeWindLimitsVM.selectedGraphTime = GraphTime.Minutes20;
+                        landingStatusTrendVM.selectedGraphTime = GraphTime.Minutes20;
                         break;
 
                     case 1:
                         viewModel.selectedGraphTime = GraphTime.Hours3;
-                        relativeWindLimitsVM.selectedGraphTime = GraphTime.Hours3;
+                        landingStatusTrendVM.selectedGraphTime = GraphTime.Hours3;
                         break;
                 }
             }

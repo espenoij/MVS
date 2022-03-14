@@ -19,15 +19,17 @@ namespace HMS_Client
         private AdminSettingsVM adminSettingsVM;
         private HelideckMotionLimitsVM helideckMotionLimitsVM;
         private MainWindowVM mainWindowVM;
-        private RelativeWindLimitsVM relativeWindDirectionLimitsVM;
-        private OnDeckStabilityLimitsVM helideckStabilityLimitsVM;
-        private WindHeadingChangeVM helideckWindHeadingTrendVM;
-        private RelativeWindLimitsVM helideckRelativeWindLimitsVM;
+        private OnDeckStabilityLimitsVM onDeckStabilityLimitsVM;
+        private WindHeadingChangeVM windHeadingTrendVM;
+        private RelativeWindLimitsVM relativeWindLimitsVM;
+        private LandingStatusTrendVM landingStatusTrendVM;
         private WindHeadingVM windHeadingVM;
 
         private MainWindow.SetDefaultWindMeasurementCallback setDefaultWindMeasurementCallback;
 
         private bool isUserInputsSet = false;
+
+        private double onDeckHelicopterHeadingPrev = -1;
 
         private DispatcherTimer UserInputsSetCheckDispatcher = new DispatcherTimer();
 
@@ -36,10 +38,10 @@ namespace HMS_Client
             HelideckMotionLimitsVM helideckMotionLimitsVM,
             Config config,
             MainWindowVM mainWindowVM,
-            RelativeWindLimitsVM relativeWindDirectionLimitsVM,
-            OnDeckStabilityLimitsVM helideckStabilityLimitsVM,
-            WindHeadingChangeVM helideckWindHeadingTrendVM,
-            RelativeWindLimitsVM helideckRelativeWindLimitsVM,
+            OnDeckStabilityLimitsVM onDeckStabilityLimitsVM,
+            WindHeadingChangeVM windHeadingTrendVM,
+            RelativeWindLimitsVM relativeWindLimitsVM,
+            LandingStatusTrendVM landingStatusTrendVM,
             WindHeadingVM windHeadingVM,
             MainWindow.SetDefaultWindMeasurementCallback setDefaultWindMeasurementCallback,
             ServerCom serverCom)
@@ -48,10 +50,10 @@ namespace HMS_Client
             this.helideckMotionLimitsVM = helideckMotionLimitsVM;
             this.config = config;
             this.mainWindowVM = mainWindowVM;
-            this.relativeWindDirectionLimitsVM = relativeWindDirectionLimitsVM;
-            this.helideckStabilityLimitsVM = helideckStabilityLimitsVM;
-            this.helideckWindHeadingTrendVM = helideckWindHeadingTrendVM;
-            this.helideckRelativeWindLimitsVM = helideckRelativeWindLimitsVM;
+            this.onDeckStabilityLimitsVM = onDeckStabilityLimitsVM;
+            this.windHeadingTrendVM = windHeadingTrendVM;
+            this.relativeWindLimitsVM = relativeWindLimitsVM;
+            this.landingStatusTrendVM = landingStatusTrendVM;
             this.windHeadingVM = windHeadingVM;
             this.setDefaultWindMeasurementCallback = setDefaultWindMeasurementCallback;
             this.serverCom = serverCom;
@@ -115,12 +117,41 @@ namespace HMS_Client
                     onDeckHelicopterHeadingIsCorrected = true;
                 else
                     onDeckHelicopterHeadingIsCorrected = false;
+
                 onDeckVesselHeading = hmsDataList.GetData(ValueType.SettingsOnDeckVesselHeading).data;
                 onDeckWindDirection = hmsDataList.GetData(ValueType.SettingsOnDeckWindDirection).data;
 
                 OnPropertyChanged(nameof(displayModeVisibilityPreLanding));
                 OnPropertyChanged(nameof(displayModeVisibilityOnDeck));
                 OnPropertyChanged(nameof(helicopterHeadingInfoString));
+            }
+
+            if (displayMode != DisplayMode.PreLanding)
+            {
+                // Er helikopter heading korrigert?
+                if (onDeckHelicopterHeadingIsCorrected)
+                {
+                    // Er heading endret?
+                    if (onDeckHelicopterHeadingPrev != onDeckHelicopterHeading)
+                    {
+                        // Korrigere RWD
+                        // Trekker gammel heading fra ny heading
+                        relativeWindLimitsVM.CorrectRWD(onDeckHelicopterHeadingPrev - onDeckHelicopterHeading);
+
+                        // Resette forrige-verdi
+                        onDeckHelicopterHeadingPrev = onDeckHelicopterHeading;
+                    }
+                }
+                else
+                {
+                    // Resette forrige-verdi
+                    onDeckHelicopterHeadingPrev = onDeckHelicopterHeading;
+                }
+            }
+            else
+            {
+                // Reset
+                onDeckHelicopterHeadingPrev = -1;
             }
         }
 
@@ -295,10 +326,10 @@ namespace HMS_Client
 
                     // Sette display mode
                     mainWindowVM.displayMode = _displayMode;
-                    relativeWindDirectionLimitsVM.displayMode = _displayMode;
+                    relativeWindLimitsVM.displayMode = _displayMode;
                     helideckMotionLimitsVM.displayMode = _displayMode;
-                    helideckStabilityLimitsVM.displayMode = _displayMode;
-                    helideckWindHeadingTrendVM.displayMode = _displayMode;
+                    onDeckStabilityLimitsVM.displayMode = _displayMode;
+                    windHeadingTrendVM.displayMode = _displayMode;
 
                     if (_displayMode == DisplayMode.OnDeck)
                     {
@@ -315,18 +346,18 @@ namespace HMS_Client
                         else
                             onDeckWindDirection = -1;
 
-                        // Korreksjon aktiv
+                        // Korreksjon ikke aktiv
                         onDeckHelicopterHeadingIsCorrected = false;
 
                         // Start oppdatering av grafer
-                        helideckWindHeadingTrendVM.Start();
-                        helideckRelativeWindLimitsVM.Start();
+                        windHeadingTrendVM.Start();
+                        relativeWindLimitsVM.Start();
                     }
                     else
                     {
                         // Stopp oppdatering av grafer
-                        helideckWindHeadingTrendVM.Stop();
-                        helideckRelativeWindLimitsVM.Stop();
+                        windHeadingTrendVM.Stop();
+                        relativeWindLimitsVM.Stop();
                     }
 
                     // Sette Wind & Heading til å vise default mean vind
@@ -390,6 +421,10 @@ namespace HMS_Client
             {
                 if (value >= Constants.HeadingMin && value <= Constants.HeadingMax)
                 {
+                    //// Korrigerer RWD data
+                    //relativeWindLimitsVM.CorrectRWD(value - _onDeckHelicopterHeading); 
+
+                    // Setter ny heading
                     _onDeckHelicopterHeading = value;
 
                     onDeckHelicopterRelativeHeading = value - windHeadingVM.vesselHeading.data;
