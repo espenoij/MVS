@@ -520,12 +520,25 @@
 
                         <telerik:RadTabItem
                             Name="tabHMS_SensorData"
-                            Header="Sensor Data">
+                            Header="Input Setup">
 
                             <DockPanel>
 
-                                <uc:HMSDataSetup
-                                    x:Name="ucHMSDataSetup" />
+                                <uc:HMSInputSetup
+                                    x:Name="ucHMSInputSetup" />
+
+                            </DockPanel>
+
+                        </telerik:RadTabItem>
+
+                        <telerik:RadTabItem
+                            Name="tabHMS_HMSOutput"
+                            Header="HMS Output">
+
+                            <DockPanel>
+
+                                <uc:HMSOutput
+                                    x:Name="ucHMSOutput" />
 
                             </DockPanel>
 

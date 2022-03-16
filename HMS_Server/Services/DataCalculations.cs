@@ -1353,6 +1353,18 @@ namespace HMS_Server
             timeMeanPeriodLastWaveTop = DateTime.MinValue;
             timeMeanPeriodDataList.Clear();
         }
+
+        public double BufferCount()
+        {
+            switch (type)
+            {
+                case CalculationType.TimeAverage:
+                    return timeAverageDataList.Count;
+
+                default:
+                    return 0;
+            }
+        }
     }
 
     public enum WavePhase

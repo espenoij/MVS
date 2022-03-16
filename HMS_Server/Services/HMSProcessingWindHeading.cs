@@ -261,15 +261,23 @@ namespace HMS_Server
             // Area Wind: 2-minute data
             ///////////////////////////////////////////////////////////
             areaWindDirection2mNonRounded.DoProcessing(sensorWindDirectionCorrected);
+
+            if (adminSettingsVM.regulationStandard == RegulationStandard.CAP)
+                areaWindDirection2mNonRounded.BufferFillCheck(Constants.WindBufferFill95Pct2m);
+
             areaWindDirection2m.data = Math.Round(areaWindDirection2mNonRounded.data, 1, MidpointRounding.AwayFromZero);
-            areaWindDirection2m.status = areaWindDirection2mNonRounded.status;
             areaWindDirection2m.timestamp = areaWindDirection2mNonRounded.timestamp;
+            areaWindDirection2m.status = areaWindDirection2mNonRounded.status;
             areaWindDirection2m.sensorGroupId = sensorWindDirectionCorrected.sensorGroupId;
 
             areaWindSpeed2mNonRounded.DoProcessing(hmsInputDataList.GetData(ValueType.SensorWindSpeed));
+
+            if (adminSettingsVM.regulationStandard == RegulationStandard.CAP)
+                areaWindSpeed2mNonRounded.BufferFillCheck(Constants.WindBufferFill95Pct2m);
+
             areaWindSpeed2m.data = Math.Round(areaWindSpeed2mNonRounded.data, 1, MidpointRounding.AwayFromZero);
-            areaWindSpeed2m.status = areaWindSpeed2mNonRounded.status;
             areaWindSpeed2m.timestamp = areaWindSpeed2mNonRounded.timestamp;
+            areaWindSpeed2m.status = areaWindSpeed2mNonRounded.status;
             areaWindSpeed2m.sensorGroupId = areaWindSpeed2mNonRounded.sensorGroupId;
 
             UpdateGustData(
@@ -282,11 +290,17 @@ namespace HMS_Server
             ///////////////////////////////////////////////////////////
             helideckWindDirection2m.DoProcessing(sensorWindDirectionCorrected);
 
+            if (adminSettingsVM.regulationStandard == RegulationStandard.CAP)
+                helideckWindDirection2m.BufferFillCheck(Constants.WindBufferFill95Pct2m);
+
             helideckWindSpeed2mNonRounded.DoProcessing(windSpeedCorrectedToHelideck);
 
+            if (adminSettingsVM.regulationStandard == RegulationStandard.CAP)
+                helideckWindSpeed2mNonRounded.BufferFillCheck(Constants.WindBufferFill95Pct2m);
+
             helideckWindSpeed2m.data = Math.Round(helideckWindSpeed2mNonRounded.data, 1, MidpointRounding.AwayFromZero);
-            helideckWindSpeed2m.status = helideckWindSpeed2mNonRounded.status;
             helideckWindSpeed2m.timestamp = helideckWindSpeed2mNonRounded.timestamp;
+            helideckWindSpeed2m.status = helideckWindSpeed2mNonRounded.status;
             helideckWindSpeed2m.sensorGroupId = helideckWindSpeed2mNonRounded.sensorGroupId;
 
             UpdateGustData(
@@ -299,11 +313,17 @@ namespace HMS_Server
             ///////////////////////////////////////////////////////////
             helideckWindDirection10m.DoProcessing(sensorWindDirectionCorrected);
 
+            if (adminSettingsVM.regulationStandard == RegulationStandard.CAP)
+                helideckWindDirection10m.BufferFillCheck(Constants.WindBufferFill95Pct10m);
+
             helideckWindSpeed10mNonRounded.DoProcessing(windSpeedCorrectedToHelideck);
 
+            if (adminSettingsVM.regulationStandard == RegulationStandard.CAP)
+                helideckWindSpeed10mNonRounded.BufferFillCheck(Constants.WindBufferFill95Pct10m);
+
             helideckWindSpeed10m.data = Math.Round(helideckWindSpeed10mNonRounded.data, 1, MidpointRounding.AwayFromZero);
-            helideckWindSpeed10m.status = helideckWindSpeed10mNonRounded.status;
             helideckWindSpeed10m.timestamp = helideckWindSpeed10mNonRounded.timestamp;
+            helideckWindSpeed10m.status = helideckWindSpeed10mNonRounded.status;
             helideckWindSpeed10m.sensorGroupId = helideckWindSpeed10mNonRounded.sensorGroupId;
 
             UpdateGustData(
@@ -424,7 +444,7 @@ namespace HMS_Server
             // WSI
             /////////////////////////////////////////////////////////////////////////////////////////
             if (adminSettingsVM.regulationStandard == RegulationStandard.CAP &&
-                helideckWindSpeed10mNonRounded.status == DataStatus.OK)
+                (helideckWindSpeed10mNonRounded.status == DataStatus.OK || helideckWindSpeed10mNonRounded.status == DataStatus.OK_NA))
             {
                 wsiData.status = helideckWindSpeed10mNonRounded.status;
                 wsiData.timestamp = helideckWindSpeed10mNonRounded.timestamp;
@@ -441,12 +461,20 @@ namespace HMS_Server
         // Resette dataCalculations
         public void ResetDataCalculations()
         {
-            // Strengt tatt ikke nødvendig da disse kalkulasjonen ikke bruker lagrede lister
+            areaWindDirection2mNonRounded.ResetDataCalculations();
+            areaWindSpeed2mNonRounded.ResetDataCalculations();
+            helideckWindDirection2m.ResetDataCalculations();
+            helideckWindSpeed2mNonRounded.ResetDataCalculations();
+            helideckWindDirection10m.ResetDataCalculations();
+            helideckWindSpeed10mNonRounded.ResetDataCalculations();
+
+            // Strengt tatt ikke nødvendig for disse ettersom kalkulasjonen ikke bruker lagrede lister
             vesselHeading.ResetDataCalculations();
             vesselSpeed.ResetDataCalculations();
             vesselCOG.ResetDataCalculations();
             vesselSOG.ResetDataCalculations();
 
+            // Spesialtilfelle for data verifisering
             if (adminSettingsVM.dataVerificationEnabled)
             {
                 areaWindAverageData2m.Reset();
@@ -699,7 +727,12 @@ namespace HMS_Server
 
                 // Return data
                 outputGust.data = Math.Round(gustData.windGust, 1, MidpointRounding.AwayFromZero);
-                outputGust.status = windSpd.status;
+
+                if (windSpd.status == DataStatus.OK && windSpdMean.status == DataStatus.OK_NA)
+                    outputGust.status = DataStatus.OK_NA;
+                else
+                    outputGust.status = windSpd.status;
+
                 outputGust.timestamp = windSpd.timestamp;
                 outputGust.sensorGroupId = windSpd.sensorGroupId;                
             }

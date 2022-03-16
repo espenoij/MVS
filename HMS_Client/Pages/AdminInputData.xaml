@@ -32,6 +32,14 @@
                         Value="{StaticResource ColorGreen}" />
                 </DataTrigger>
 
+                <DataTrigger
+                    Binding="{Binding statusString}"
+                    Value="OK_NA">
+                    <Setter
+                        Property="Background"
+                        Value="{StaticResource ColorGreen}" />
+                </DataTrigger>
+
             </Style.Triggers>
         </Style>
 

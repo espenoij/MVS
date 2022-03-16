@@ -310,10 +310,14 @@ namespace HMS_Server
                 userInputs,
                 errorHandler);
 
-            // Data Flow
-            ucHMSDataSetup.Init(
+            // HMS Input Setup
+            ucHMSInputSetup.Init(
                 sensorDataRetrieval.GetSensorDataList(),
                 hmsInputData,
+                config);
+
+            // HMS Output
+            ucHMSOutput.Init(
                 hmsOutputData,
                 config);
 

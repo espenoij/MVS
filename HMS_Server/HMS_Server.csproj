@@ -379,6 +379,9 @@
     <Compile Include="Pages\DataVerificationSetup.xaml.cs">
       <DependentUpon>DataVerificationSetup.xaml</DependentUpon>
     </Compile>
+    <Compile Include="Pages\HMSOutput.xaml.cs">
+      <DependentUpon>HMSOutput.xaml</DependentUpon>
+    </Compile>
     <Compile Include="Pages\HMSLightsOutput.xaml.cs">
       <DependentUpon>HMSLightsOutput.xaml</DependentUpon>
     </Compile>
@@ -415,8 +418,8 @@
     <Compile Include="Pages\HMSSensorGroupSetup.xaml.cs">
       <DependentUpon>HMSSensorGroupSetup.xaml</DependentUpon>
     </Compile>
-    <Compile Include="Pages\HMSDataSetup.xaml.cs">
-      <DependentUpon>HMSDataSetup.xaml</DependentUpon>
+    <Compile Include="Pages\HMSInputSetup.xaml.cs">
+      <DependentUpon>HMSInputSetup.xaml</DependentUpon>
     </Compile>
     <Compile Include="Services\AdminMode.cs" />
     <Compile Include="Dialogs\DialogAdminMode.xaml.cs">
@@ -509,6 +512,10 @@
       <Generator>MSBuild:Compile</Generator>
       <SubType>Designer</SubType>
     </Page>
+    <Page Include="Pages\HMSOutput.xaml">
+      <Generator>MSBuild:Compile</Generator>
+      <SubType>Designer</SubType>
+    </Page>
     <Page Include="Pages\HMSLightsOutput.xaml">
       <Generator>MSBuild:Compile</Generator>
       <SubType>Designer</SubType>
@@ -517,7 +524,7 @@
       <Generator>MSBuild:Compile</Generator>
       <SubType>Designer</SubType>
     </Page>
-    <Page Include="Pages\HMSDataSetup.xaml">
+    <Page Include="Pages\HMSInputSetup.xaml">
       <Generator>MSBuild:Compile</Generator>
       <SubType>Designer</SubType>
     </Page>

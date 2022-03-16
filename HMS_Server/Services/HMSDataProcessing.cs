@@ -56,6 +56,11 @@ namespace HMS_Server
                 return double.NaN;
         }
 
+        public double BufferCount()
+        {
+            return dataCalculations[0].BufferCount();
+        }
+
         public void ResetDataCalculations()
         {
             // Resette dataCalculations

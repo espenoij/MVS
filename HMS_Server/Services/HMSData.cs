@@ -288,6 +288,16 @@ namespace HMS_Server
             }
         }
 
+        public void BufferFillCheck(double targetCount)
+        {
+            // Er bufferet fyllt opp
+            if (dataProcess.BufferCount() < targetCount)
+                // Hvis ikke, sjekk status, dersom OK
+                if (status == DataStatus.OK)
+                    // Set OK, men ikke tilgjengelig
+                    status = DataStatus.OK_NA;
+        }
+
         public void ResetDataCalculations()
         {
             // Resette dataCalculations

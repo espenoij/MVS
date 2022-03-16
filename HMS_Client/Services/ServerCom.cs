@@ -187,8 +187,6 @@ namespace HMS_Client
                                 // Sjekke timestamp for data timeout
                                 if (hmsData.First().timestamp.AddMilliseconds(dataTimeout) < DateTime.UtcNow)
                                     hmsData.First().status = DataStatus.TIMEOUT_ERROR;
-                                else
-                                    hmsData.First().status = DataStatus.OK;
                             }
                             // Ikke match?
                             else
