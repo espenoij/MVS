@@ -84,7 +84,11 @@
             <!--Vessel-->
             <SolidColorBrush
                 x:Key="ColorVessel">gainsboro</SolidColorBrush>
-            
+
+            <!--Meteorological-->
+            <SolidColorBrush
+                x:Key="ColorMeteorologicalBackground">gainsboro</SolidColorBrush>
+
             <!--Helideck Report NOROG-->
             <SolidColorBrush
                 x:Key="ColorReportLines">Black</SolidColorBrush>
