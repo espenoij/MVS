@@ -133,7 +133,11 @@ namespace HMS_Server
             // Slår av lysene når vi ikke har ordentlige data
             if (hmsOutputData.GetData(ValueType.PitchMax20m).status == DataStatus.TIMEOUT_ERROR ||
                 hmsOutputData.GetData(ValueType.RollMax20m).status == DataStatus.TIMEOUT_ERROR ||
-                hmsOutputData.GetData(ValueType.SignificantHeaveRate).status == DataStatus.TIMEOUT_ERROR)
+                hmsOutputData.GetData(ValueType.SignificantHeaveRate).status == DataStatus.TIMEOUT_ERROR ||
+                hmsOutputData.GetData(ValueType.MSI).status == DataStatus.TIMEOUT_ERROR ||
+                hmsOutputData.GetData(ValueType.MSI).status == DataStatus.OK_NA ||
+                hmsOutputData.GetData(ValueType.WSI).status == DataStatus.TIMEOUT_ERROR ||
+                hmsOutputData.GetData(ValueType.WSI).status == DataStatus.OK_NA)
             {
                 // Status: OFF
                 return HelideckStatusType.OFF;
