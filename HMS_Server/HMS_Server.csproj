@@ -370,14 +370,17 @@
     </Compile>
     <Compile Include="Helpers\DisplayList.cs" />
     <Compile Include="Helpers\GraphBuffer.cs" />
-    <Compile Include="Pages\DataVerificationResult.xaml.cs">
-      <DependentUpon>DataVerificationResult.xaml</DependentUpon>
+    <Compile Include="Pages\VerificationResult.xaml.cs">
+      <DependentUpon>VerificationResult.xaml</DependentUpon>
     </Compile>
     <Compile Include="Pages\FileReaderSetupWindow.xaml.cs">
       <DependentUpon>FileReaderSetupWindow.xaml</DependentUpon>
     </Compile>
-    <Compile Include="Pages\DataVerificationSetup.xaml.cs">
-      <DependentUpon>DataVerificationSetup.xaml</DependentUpon>
+    <Compile Include="Pages\VerificationSetupRefData.xaml.cs">
+      <DependentUpon>VerificationSetupRefData.xaml</DependentUpon>
+    </Compile>
+    <Compile Include="Pages\VerificationSetupTestData.xaml.cs">
+      <DependentUpon>VerificationSetupTestData.xaml</DependentUpon>
     </Compile>
     <Compile Include="Pages\HMSOutput.xaml.cs">
       <DependentUpon>HMSOutput.xaml</DependentUpon>
@@ -401,6 +404,7 @@
     <Compile Include="Services\HMSProcessingMeteorological.cs" />
     <Compile Include="Services\HMSProcessingMotion.cs" />
     <Compile Include="Services\HMSProcessingSettings.cs" />
+    <Compile Include="Services\HMSProcessingVerificationData.cs" />
     <Compile Include="Services\HMSProcessingWindHeading.cs" />
     <Compile Include="Services\ObservableCollectionEx.cs" />
     <Compile Include="Services\Verfication.cs" />
@@ -504,11 +508,15 @@
       <Generator>MSBuild:Compile</Generator>
       <SubType>Designer</SubType>
     </Page>
-    <Page Include="Pages\DataVerificationResult.xaml">
+    <Page Include="Pages\VerificationResult.xaml">
       <Generator>MSBuild:Compile</Generator>
       <SubType>Designer</SubType>
     </Page>
-    <Page Include="Pages\DataVerificationSetup.xaml">
+    <Page Include="Pages\VerificationSetupRefData.xaml">
+      <Generator>MSBuild:Compile</Generator>
+      <SubType>Designer</SubType>
+    </Page>
+    <Page Include="Pages\VerificationSetupTestData.xaml">
       <Generator>MSBuild:Compile</Generator>
       <SubType>Designer</SubType>
     </Page>

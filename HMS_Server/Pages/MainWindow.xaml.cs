@@ -49,7 +49,6 @@ namespace HMS_Server
         private HMSDataCollection hmsInputData;
 
         // Verification data
-        private bool dataVerificationIsActive = false;
         private Verfication verfication;
 
         // Sensor Status
@@ -251,10 +250,6 @@ namespace HMS_Server
             // Activation
             activationVM = new ActivationVM(config);
 
-            // Skal vi aktivere data verification?
-            if (adminSettingsVM.dataVerificationEnabled)
-                dataVerificationIsActive = true;
-
             // Liste med sensor status
             gvStatusDisplay.ItemsSource = statusDisplayList;
 
@@ -308,7 +303,8 @@ namespace HMS_Server
                 hmsOutputData,
                 adminSettingsVM,
                 userInputs,
-                errorHandler);
+                errorHandler,
+                adminSettingsVM.dataVerificationEnabled);
 
             // HMS Input Setup
             ucHMSInputSetup.Init(
@@ -334,9 +330,12 @@ namespace HMS_Server
             verfication = new Verfication(config, userInputs, errorHandler);
 
             // Setup
-            ucDataVerificationSetup.Init(
+            ucDataVerificationSetupTestData.Init(
                 hmsOutputData,
                 verfication.GetTestData(),
+                config);
+
+            ucDataVerificationSetupRefData.Init(
                 sensorDataRetrieval,
                 verfication.GetRefData(),
                 config);
@@ -462,7 +461,7 @@ namespace HMS_Server
 
                         // HMS: HMS Output Data
                         // Prosesserer sensor data om til data som kan sendes til HMS klient
-                        hmsProcessing.Update(hmsInputData);
+                        hmsProcessing.Update(hmsInputData, adminSettingsVM.dataVerificationEnabled);
 
                         // Sette database status
                         SetDatabaseStatus(hmsInputData);
@@ -632,7 +631,7 @@ namespace HMS_Server
 
         private void InitVerificationUpdate()
         {
-            if (dataVerificationIsActive)
+            if (adminSettingsVM.dataVerificationEnabled)
             {
                 // Dispatcher som oppdaterer verification data (test og referanse data)
                 verificationTimer.Interval = TimeSpan.FromMilliseconds(config.ReadWithDefault(ConfigKey.HMSProcessingFrequency, Constants.HMSProcessingFrequencyDefault));
@@ -712,7 +711,7 @@ namespace HMS_Server
                 }
 
                 // Resette dataCalculations
-                if (dataVerificationIsActive)
+                if (adminSettingsVM.dataVerificationEnabled)
                 {
                     // Resetter data listene i dataCalculations kun ved data verifikasjons-testing
                     // Under normal kjøring kan "gamle" data i listene være fullt brukelig ettersom

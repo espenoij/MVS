@@ -132,10 +132,10 @@ public enum ValueType
     AccelerationZ = 28,
 
     // Data Verification
-    //TimeID = 29,
-    //SensorMRU = 30,
-    //SensorGyro = 31,
-    //SensorWind = 32,
+    TimeID = 29,
+    SensorMRU = 30,
+    SensorGyro = 31,
+    SensorWind = 32,
 
     // Ikke lagret i config fil
     // Dette er data som beregnes fra variablene over, dvs. fra sensor data

@@ -671,13 +671,26 @@
                         Margin="10,0,10,10">
 
                         <telerik:RadTabItem
-                            Name="tabDataVerification_Setup"
-                            Header="Setup">
+                            Name="tabDataVerification_SetupTestData"
+                            Header="Test Data Setup">
 
                             <DockPanel>
 
-                                <uc:DataVerificationSetup
-                                    x:Name="ucDataVerificationSetup" />
+                                <uc:VerificationSetupTestData
+                                    x:Name="ucDataVerificationSetupTestData" />
+
+                            </DockPanel>
+
+                        </telerik:RadTabItem>
+
+                        <telerik:RadTabItem
+                            Name="tabDataVerification_SetupRefData"
+                            Header="Reference Data Setup">
+
+                            <DockPanel>
+
+                                <uc:VerificationSetupRefData
+                                    x:Name="ucDataVerificationSetupRefData" />
 
                             </DockPanel>
 
@@ -689,7 +702,7 @@
 
                             <DockPanel>
 
-                                <uc:DataVerificationResult
+                                <uc:VerificationResult
                                     x:Name="ucDataVerificationResult" />
 
                             </DockPanel>
