@@ -17,13 +17,13 @@ namespace HMS_Client
         private ServerCom serverCom;
 
         // App Restart Required
-        private MainWindow.RestartRequiredCallback restartRequired;
+        private MainWindow.WarningBarMessage warningBarMessage;
 
-        public void Init(Config config, ServerCom serverCom, MainWindow.RestartRequiredCallback restartRequired)
+        public void Init(Config config, ServerCom serverCom, MainWindow.WarningBarMessage warningBarMessage)
         {
             this.config = config;
             this.serverCom = serverCom;
-            this.restartRequired = restartRequired;
+            this.warningBarMessage = warningBarMessage;
 
             // Regulation Standard
             regulationStandard = (RegulationStandard)Enum.Parse(typeof(RegulationStandard), config.ReadWithDefault(ConfigKey.RegulationStandard, RegulationStandard.NOROG.ToString()));
@@ -55,10 +55,19 @@ namespace HMS_Client
                 enableReportEmail = false;
         }
 
-        public void ApplicationRestartRequired(bool showMessage = true)
+        public void UpdateData(HMSDataCollection clientSensorList)
+        {
+            if (clientIsMaster)
+            {
+                if (clientSensorList.GetData(ValueType.SettingsDataVerification)?.data == 1)                    
+                    warningBarMessage(WarningBarMessageType.DataVerification);
+            }
+        }
+
+        public void ApplicationRestartRequired()
         {
             // Callback funksjon for å vise restart app melding
-            restartRequired(showMessage);
+            warningBarMessage(WarningBarMessageType.RestartRequired);
         }
 
         /////////////////////////////////////////////////////////////////////////////

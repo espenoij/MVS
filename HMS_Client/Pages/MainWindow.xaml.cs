@@ -34,7 +34,7 @@ namespace HMS_Client
         private SensorGroupStatus sensorStatus;
 
         // Application Restart Required callback
-        public delegate void RestartRequiredCallback(bool showMessage);
+        public delegate void WarningBarMessage(WarningBarMessageType message);
 
         // Sette vind visning til 2-min mean callback
         public delegate void SetDefaultWindMeasurementCallback();
@@ -82,14 +82,14 @@ namespace HMS_Client
             regulationStandard = (RegulationStandard)Enum.Parse(typeof(RegulationStandard), config.ReadWithDefault(ConfigKey.RegulationStandard, RegulationStandard.NOROG.ToString()));
 
             // Callback funksjon som kalles når application restart er påkrevd
-            RestartRequiredCallback restartRequired = new RestartRequiredCallback(ShowRestartRequiredMessage);
+            WarningBarMessage warningBarMessage = new WarningBarMessage(ShowWarningBarMessage);
 
             // Sette vind visning til 2-min mean callback
             SetDefaultWindMeasurementCallback setDefaultWindMeasurementCallback = new SetDefaultWindMeasurementCallback(SetDefaultWindMeasurement);
 
             // View Model Init
             mainWindowVM.Init();
-            adminSettingsVM.Init(config, serverCom, restartRequired);
+            adminSettingsVM.Init(config, serverCom, warningBarMessage);
             helideckReportVM.Init(config, adminSettingsVM, sensorStatus);
             generalInformationVM.Init(config, adminSettingsVM, sensorStatus, Application.ResourceAssembly.GetName().Version);
 
@@ -303,12 +303,23 @@ namespace HMS_Client
                 clientDeniedCallback);
         }
 
-        public void ShowRestartRequiredMessage(bool showMessage)
+        public void ShowWarningBarMessage(WarningBarMessageType message)
         {
-            if (showMessage)
-                dpApplicationRestartRequired.Visibility = Visibility.Visible;
-            else
-                dpApplicationRestartRequired.Visibility = Visibility.Collapsed;
+            Application.Current.Dispatcher.BeginInvoke(
+            DispatcherPriority.Normal,
+            new Action(() =>
+            {
+
+                if (message == WarningBarMessageType.RestartRequired)
+                    dpApplicationRestartRequired.Visibility = Visibility.Visible;
+                else
+                    dpApplicationRestartRequired.Visibility = Visibility.Collapsed;
+
+                if (message == WarningBarMessageType.DataVerification)
+                    dpDataVerificationActiveWarning.Visibility = Visibility.Visible;
+                else
+                    dpDataVerificationActiveWarning.Visibility = Visibility.Collapsed;
+            }));
         }
 
         public void SetDefaultWindMeasurement()
@@ -388,6 +399,9 @@ namespace HMS_Client
         private void UpdateHMSData(HMSDataCollection hmsDataCollection)
         {
             // Fordele data videre ut i UI
+
+            // Admin Settings
+            adminSettingsVM.UpdateData(hmsDataCollection);
 
             // General Information
             generalInformationVM.UpdateData(hmsDataCollection);

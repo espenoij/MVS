@@ -76,19 +76,6 @@ namespace HMS_Server
             // CAP
             if (adminSettingsVM.regulationStandard == RegulationStandard.CAP)
             {
-                // Helideck Light Status
-                ///////////////////////////////////////////////////////////////////////////////////////
-                // PRE-LANDING page
-                if (userInputs.displayMode == DisplayMode.PreLanding)
-                {
-                    helideckLightStatus = CheckLandingStatusCAP(helideckLightStatus);
-                }
-                // ON-DECK page
-                else
-                {
-                    helideckLightStatus = CheckRWDStatusCAP();
-                }
-
                 // Landing Status
                 ///////////////////////////////////////////////////////////////////////////////////////
                 landingStatus = CheckLandingStatusCAP(landingStatus);
@@ -96,6 +83,19 @@ namespace HMS_Server
                 // RWD Status
                 ///////////////////////////////////////////////////////////////////////////////////////
                 rwdStatus = CheckRWDStatusCAP();
+
+                // Helideck Light Status
+                ///////////////////////////////////////////////////////////////////////////////////////
+                // PRE-LANDING page
+                if (userInputs.displayMode == DisplayMode.PreLanding)
+                {
+                    helideckLightStatus = landingStatus;
+                }
+                // ON-DECK page
+                else
+                {
+                    helideckLightStatus = rwdStatus;
+                }
             }
 
             // Overføre data til output liste

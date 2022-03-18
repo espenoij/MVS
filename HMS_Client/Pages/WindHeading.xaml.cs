@@ -10,6 +10,7 @@ namespace HMS_Client
     {
         private WindHeadingVM windHeadingVM;
         private UserInputsVM userInputsVM;
+        private AdminSettingsVM adminSettingsVM;
 
         public WindHeading()
         {
@@ -20,6 +21,8 @@ namespace HMS_Client
         {
             this.windHeadingVM = windHeadingVM;
             this.userInputsVM = userInputsVM;
+            this.adminSettingsVM = adminSettingsVM;
+
             DataContext = windHeadingVM;
 
             // Compass init
@@ -47,7 +50,25 @@ namespace HMS_Client
 
         private void cboWindMeasurement_SelectionChanged(object sender, SelectionChangedEventArgs e)
         {
-            windHeadingVM.windMeasurement = (WindMeasurement)cboWindMeasurement.SelectedIndex;
+            if (adminSettingsVM.regulationStandard == RegulationStandard.NOROG)
+            {
+                windHeadingVM.windMeasurement = (WindMeasurement)cboWindMeasurement.SelectedIndex;
+            }
+            else
+            {
+                switch (cboWindMeasurement.SelectedIndex)
+                {
+                    case 0:
+                        windHeadingVM.windMeasurement = WindMeasurement.TwoMinuteMean;
+                        break;
+                    case 1:
+                        windHeadingVM.windMeasurement = WindMeasurement.TenMinuteMean;
+                        break;
+                    default:
+                        windHeadingVM.windMeasurement = WindMeasurement.TwoMinuteMean;
+                        break;
+                }
+            }
         }
 
         public void SetDefaultWindMeasurement()
@@ -57,12 +78,13 @@ namespace HMS_Client
             {
                 // 2 - min mean vind ved on-deck
                 windHeadingVM.windMeasurement = WindMeasurement.TwoMinuteMean;
+                cboWindMeasurement.SelectedIndex = 0;
             }
             else
             {
                 // 10 - min mean vind ved pre-landing
                 windHeadingVM.windMeasurement = WindMeasurement.TenMinuteMean;
-                cboWindMeasurement.SelectedIndex = (int)windHeadingVM.windMeasurement;
+                cboWindMeasurement.SelectedIndex = 1;
             }
         }
     }

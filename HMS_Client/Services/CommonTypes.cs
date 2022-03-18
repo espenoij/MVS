@@ -219,7 +219,7 @@ public enum ValueType
     SettingsEmailPassword,
     SettingsEmailSecureConnection,
     SettingsRestrictedSector,
-
+    SettingsDataVerification,
 }
 
 public enum HelideckStatusType
@@ -421,4 +421,10 @@ public class RWDData : INotifyPropertyChanged
     {
         PropertyChanged?.Invoke(this, new PropertyChangedEventArgs(name));
     }
+}
+
+public enum WarningBarMessageType
+{
+    RestartRequired,
+    DataVerification,
 }

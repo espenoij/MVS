@@ -876,24 +876,15 @@ namespace HMS_Client
             {
                 if (value != _windMeasurement)
                 {
-                    // Kan velge vind visning under NOROG
-                    if (adminSettingsVM.regulationStandard == RegulationStandard.NOROG)
-                    {
-                        _windMeasurement = value;
-                        config?.Write(ConfigKey.WindMeasurement, _windMeasurement.ToString());
+                    _windMeasurement = value;
+                    config?.Write(ConfigKey.WindMeasurement, _windMeasurement.ToString());
 
-                        OnPropertyChanged(nameof(windDirectionRotation));
-                        OnPropertyChanged(nameof(windDirectionString));
-                        OnPropertyChanged(nameof(windSpeedString));
-                        OnPropertyChanged(nameof(windGustString));
-                        OnPropertyChanged(nameof(displayWindDirection));
-                        OnPropertyChanged(nameof(windMeasurementString));
-                    }
-                    // Vind vises alltid som 2-min mean under CAP
-                    else
-                    {
-                        _windMeasurement = WindMeasurement.TwoMinuteMean;
-                    }
+                    OnPropertyChanged(nameof(windDirectionRotation));
+                    OnPropertyChanged(nameof(windDirectionString));
+                    OnPropertyChanged(nameof(windSpeedString));
+                    OnPropertyChanged(nameof(windGustString));
+                    OnPropertyChanged(nameof(displayWindDirection));
+                    OnPropertyChanged(nameof(windMeasurementString));
                 }
             }
         }

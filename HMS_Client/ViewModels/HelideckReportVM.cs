@@ -287,7 +287,6 @@ namespace HMS_Client
 
             // Restriction Sector
             restrictionSector = clientSensorList.GetData(ValueType.SettingsRestrictedSector);
-
         }
 
         /////////////////////////////////////////////////////////////////////////////
