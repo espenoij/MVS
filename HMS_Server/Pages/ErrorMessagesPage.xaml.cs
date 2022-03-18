@@ -68,7 +68,7 @@ namespace HMS_Server
 
             void UpdateErrorMessageDisplayList(object sender, EventArgs e)
             {
-                TransferNewMessages(errorMessageDisplayList, errorHandler.GetErrorMessageList());
+                TransferNewMessages(errorMessageDisplayList, errorHandler);
             }
 
             // Starte overføring av error messages til display listen dersom live view er valgt
@@ -76,19 +76,22 @@ namespace HMS_Server
                 errorMessageDisplayListUpdater.Start();
         }
 
-        private void TransferNewMessages(RadObservableCollection<ErrorMessage> displayList, RadObservableCollection<ErrorMessage> newMessages)
+        private void TransferNewMessages(RadObservableCollection<ErrorMessage> displayList, ErrorHandler errorHandler)
         {
-            // Gå gjennom meldingslisten
-            foreach (var item in newMessages.ToList())
+            lock (errorHandler.GetErrorMessageListLock())
             {
-                if (item != null)
+                // Gå gjennom meldingslisten
+                foreach (var item in errorHandler.GetErrorMessageList().ToList())
                 {
-                    // Finne ut om melding ligger inne fra før
-                    // Dersom den ikke ligger inne -> legg den inn, ellers gjør vi ingenting
-                    if (displayList.Where(x => x.timestamp == item.timestamp).Count() == 0)
+                    if (item != null)
                     {
-                        // Legge inn my melding
-                        displayList.Add(new ErrorMessage(item));
+                        // Finne ut om melding ligger inne fra før
+                        // Dersom den ikke ligger inne -> legg den inn, ellers gjør vi ingenting
+                        if (displayList.Where(x => x.timestamp == item.timestamp).Count() == 0)
+                        {
+                            // Legge inn my melding
+                            displayList.Add(new ErrorMessage(item));
+                        }
                     }
                 }
             }

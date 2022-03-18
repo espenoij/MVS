@@ -141,7 +141,12 @@ namespace HMS_Server
 
         public RadObservableCollection<ErrorMessage> GetErrorMessageList()
         {
-                return errorMessageList;
+            return errorMessageList;
+        }
+
+        public object GetErrorMessageListLock()
+        {
+            return errorMessageListLock;
         }
 
         public List<ErrorMessage> ReadLast(ErrorMessageType type, int number)

@@ -299,6 +299,14 @@ namespace HMS_Server
             pitchMaxUp20mData.DoProcessing(pitchData);
             pitchMaxDown20mData.DoProcessing(pitchData);
 
+            if (adminSettingsVM.regulationStandard == RegulationStandard.CAP)
+            {
+                pitchMax20mData.BufferFillCheck(Constants.MotionBufferFill99Pct);
+                //pitchMax3hData.BufferFillCheck(Constants.MotionBufferFill99Pct);
+                pitchMaxUp20mData.BufferFillCheck(Constants.MotionBufferFill99Pct);
+                pitchMaxDown20mData.BufferFillCheck(Constants.MotionBufferFill99Pct);
+            }
+
             // Roll
             rollData.Set(hmsInputDataList.GetData(ValueType.Roll));
             rollMax20mData.DoProcessing(rollData);
@@ -306,9 +314,23 @@ namespace HMS_Server
             rollMaxLeft20mData.DoProcessing(rollData);
             rollMaxRight20mData.DoProcessing(rollData);
 
+            if (adminSettingsVM.regulationStandard == RegulationStandard.CAP)
+            {
+                rollMax20mData.BufferFillCheck(Constants.MotionBufferFill99Pct);
+                //rollMax3hData.BufferFillCheck(Constants.MotionBufferFill99Pct);
+                rollMaxLeft20mData.BufferFillCheck(Constants.MotionBufferFill99Pct);
+                rollMaxRight20mData.BufferFillCheck(Constants.MotionBufferFill99Pct);
+            }
+
             // Inclination
             UpdateInclinationData(pitchData, rollData, inclination20mMaxData, Constants.Minutes20);
             UpdateInclinationData(pitchData, rollData, inclination3hMaxData, Constants.Hours3);
+
+            if (adminSettingsVM.regulationStandard == RegulationStandard.CAP)
+            {
+                inclination20mMaxData.status = pitchMax20mData.status;
+                inclination3hMaxData.status = pitchMax3hData.status;
+            }
 
             // Heave Amplitude
             heaveAmplitudeData.DoProcessing(hmsInputDataList.GetData(ValueType.Heave));
@@ -323,8 +345,18 @@ namespace HMS_Server
             significantHeaveRateMax20mData.DoProcessing(significantHeaveRateData);
             significantHeaveRateMax3hData.DoProcessing(significantHeaveRateData);
 
+            if (adminSettingsVM.regulationStandard == RegulationStandard.CAP)
+            {
+                significantHeaveRateData.BufferFillCheck(Constants.MotionBufferFill99Pct);
+                significantHeaveRateMax20mData.BufferFillCheck(Constants.MotionBufferFill99Pct);
+                //significantHeaveRateMax3hData.BufferFillCheck(Constants.MotionBufferFill99Pct);
+            }
+
             // Maximum Heave Rate
             maxHeaveRateData.DoProcessing(hmsInputDataList.GetData(ValueType.HeaveRate));
+
+            if (adminSettingsVM.regulationStandard == RegulationStandard.CAP)
+                maxHeaveRateData.BufferFillCheck(Constants.MotionBufferFill99Pct);
 
             // Significant Wave Height
             significantWaveHeightData.DoProcessing(hmsInputDataList.GetData(ValueType.Heave));

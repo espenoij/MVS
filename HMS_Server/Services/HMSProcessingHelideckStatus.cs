@@ -103,20 +103,12 @@ namespace HMS_Server
             // Helideck Light Status
             helideckLightStatusData.data = (double)helideckLightStatus;
             helideckLightStatusData.timestamp = DateTime.UtcNow;
-
-            if (helideckLightStatus != HelideckStatusType.OFF)
-                helideckLightStatusData.status = DataStatus.OK;
-            else
-                helideckLightStatusData.status = DataStatus.TIMEOUT_ERROR;
+            helideckLightStatusData.status = DataStatus.OK;
 
             // Landing Status
             landingStatusData.data = (double)landingStatus;
             landingStatusData.timestamp = DateTime.UtcNow;
-
-            if (landingStatus != HelideckStatusType.OFF)
-                landingStatusData.status = DataStatus.OK;
-            else
-                landingStatusData.status = DataStatus.TIMEOUT_ERROR;
+            landingStatusData.status = DataStatus.OK;
 
             // RWD Status
             rwdStatusData.data = (double)rwdStatus;

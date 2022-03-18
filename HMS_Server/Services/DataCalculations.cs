@@ -1361,6 +1361,18 @@ namespace HMS_Server
                 case CalculationType.TimeAverage:
                     return timeAverageDataList.Count;
 
+                case CalculationType.TimeMaxAbsolute:
+                    return timeMaxAbsoluteDataList.Count;
+
+                case CalculationType.TimeMaxPositive:
+                    return timeMaxPositiveDataList.Count;
+
+                case CalculationType.TimeMaxNegative:
+                    return timeMaxNegativeDataList.Count;
+
+                case CalculationType.SignificantHeaveRate:
+                    return significantHeaveRateDataList.Count;
+
                 default:
                     return 0;
             }
