@@ -459,11 +459,11 @@ namespace HMS_Client
 
         private void tcMainMenu_SelectionChanged(object sender, RadSelectionChangedEventArgs e)
         {
-            // Viser screen capture knappen kun på hovedsiden og når NOROG standard er valgt
-            if (tabHelicopterOps.IsSelected && adminSettingsVM.regulationStandard == RegulationStandard.NOROG)
-                btnScreenCapture.Visibility = Visibility.Visible;
-            else
-                btnScreenCapture.Visibility = Visibility.Collapsed;
+            //// Viser screen capture knappen kun på hovedsiden og når NOROG standard er valgt
+            //if (tabHelicopterOps.IsSelected && adminSettingsVM.regulationStandard == RegulationStandard.NOROG)
+            //    btnScreenCapture.Visibility = Visibility.Visible;
+            //else
+            //    btnScreenCapture.Visibility = Visibility.Collapsed;
 
             // Fjerne fokus fra alle elementer slik at ikke knapper og felt lyser opp i rødt når vi bytter tab
             Dispatcher.BeginInvoke((Action)(() =>

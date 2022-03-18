@@ -58,7 +58,6 @@
                 <DockPanel>
 
                     <telerik:Label
-                        Width="200"
                         Content="Client is Master"
                         VerticalAlignment="Center" />
 
@@ -196,7 +195,6 @@
 
                     <telerik:Label
                         Name="lbEnableReportEmail"
-                        Width="200"
                         Content="Enable Offshore Weather Report Email"
                         VerticalAlignment="Center" />
 

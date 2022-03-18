@@ -152,10 +152,20 @@ namespace HMS_Server
             areaWindSensorDistance.status = DataStatus.OK;
 
             // NDB
-            if (double.TryParse(adminSettingsVM.ndbFreq_NOROG, out double ndbFreqValue))
-                ndbFrequency.data = ndbFreqValue;
+            if (adminSettingsVM.regulationStandard == RegulationStandard.NOROG)
+            {
+                if (double.TryParse(adminSettingsVM.ndbFreq_NOROG, out double ndbFreqValue))
+                    ndbFrequency.data = ndbFreqValue;
+                else
+                    ndbFrequency.data = Constants.NDBFrequencyDefault;
+            }
             else
-                ndbFrequency.data = Constants.NDBFrequencyDefault;
+            {
+                if (double.TryParse(adminSettingsVM.ndbFreq_CAP, out double ndbFreqValue))
+                    ndbFrequency.data = ndbFreqValue;
+                else
+                    ndbFrequency.data = Constants.NDBFrequencyDefault;
+            }
 
             ndbFrequency.timestamp = DateTime.UtcNow;
             ndbFrequency.status = DataStatus.OK;
