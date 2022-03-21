@@ -64,7 +64,10 @@ namespace HMS_Client
         private void InitUI()
         {
             // Helicopter Type
-            helicopterType = (HelicopterType)Enum.Parse(typeof(HelicopterType), config.ReadWithDefault(ConfigKey.HelicopterType, HelicopterType.AS332.ToString()));
+            if (adminSettingsVM.regulationStandard == RegulationStandard.NOROG)
+                helicopterType = (HelicopterType)Enum.Parse(typeof(HelicopterType), config.ReadWithDefault(ConfigKey.HelicopterType, HelicopterType.Default.ToString()));
+            else
+                helicopterType = HelicopterType.Default;
 
             // Helideck Category
             helideckCategory = (HelideckCategory)Enum.Parse(typeof(HelideckCategory), config.ReadWithDefault(ConfigKey.HelideckCategory, HelideckCategory.Category1.ToString()));

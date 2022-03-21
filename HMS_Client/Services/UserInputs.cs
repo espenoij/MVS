@@ -45,6 +45,7 @@ public class UserInputs
             switch (helicopterType)
             {
                 // Heavy / A
+                case HelicopterType.Default:
                 case HelicopterType.AS332:
                 case HelicopterType.EC225:
                 case HelicopterType.AW189:

@@ -131,7 +131,7 @@
                             Grid.Column="0"
                             Orientation="Horizontal"
                             HorizontalAlignment="Left"
-                            Margin="10">
+                            Margin="8">
 
                             <telerik:RadButton
                                 Name="btnStart1"
@@ -152,7 +152,7 @@
                             Grid.Column="1"
                             Orientation="Horizontal"
                             HorizontalAlignment="Right"
-                            Margin="10">
+                            Margin="8">
 
                             <Button
                                 Name="btnSetup"
@@ -167,7 +167,7 @@
                     <telerik:RadTabControl
                         DockPanel.Dock="Top"
                         HeaderBackground="{StaticResource ColorHorizontalBarBackground}"
-                        Margin="10,0,10,10">
+                        Margin="8,0,8,8">
 
                         <telerik:RadTabItem
                             Name="tabInput_Status"
@@ -403,7 +403,7 @@
                                             Name="chkSocketComClear"
                                             Click="chkSocketComClear_Click"
                                             Width="90"
-                                            Margin="10,0,0,0"
+                                            Margin="8,0,0,0"
                                             HorizontalAlignment="Left">Clear</Button>
 
                                     </StackPanel>
@@ -496,7 +496,7 @@
                             Grid.Column="0"
                             Orientation="Horizontal"
                             HorizontalAlignment="Left"
-                            Margin="10">
+                            Margin="8">
 
                             <telerik:RadButton
                                 Name="btnStart2"
@@ -516,7 +516,7 @@
                     <telerik:RadTabControl
                         DockPanel.Dock="Top"
                         HeaderBackground="{StaticResource ColorHorizontalBarBackground}"
-                        Margin="10,0,10,10">
+                        Margin="8,0,8,8">
 
                         <telerik:RadTabItem
                             Name="tabHMS_SensorData"
@@ -648,7 +648,7 @@
                             Grid.Column="0"
                             Orientation="Horizontal"
                             HorizontalAlignment="Left"
-                            Margin="10">
+                            Margin="8">
 
                             <telerik:RadButton
                                 Name="btnStart3"
@@ -668,7 +668,7 @@
                     <telerik:RadTabControl
                         DockPanel.Dock="Top"
                         HeaderBackground="{StaticResource ColorHorizontalBarBackground}"
-                        Margin="10,0,10,10">
+                        Margin="8,0,8,8">
 
                         <telerik:RadTabItem
                             Name="tabDataVerification_SetupTestData"

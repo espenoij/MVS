@@ -351,7 +351,11 @@ namespace HMS_Server
             try
             {
                 // Lese sist brukte user inputs fra fil
-                userInputs.helicopterType = (HelicopterType)Enum.Parse(typeof(HelicopterType), config.ReadWithDefault(ConfigKey.HelicopterType, HelicopterType.AS332.ToString()));
+                if (adminSettingsVM.regulationStandard == RegulationStandard.NOROG)
+                    userInputs.helicopterType = (HelicopterType)Enum.Parse(typeof(HelicopterType), config.ReadWithDefault(ConfigKey.HelicopterType, HelicopterType.Default.ToString()));
+                else
+                    userInputs.helicopterType = HelicopterType.Default;
+
                 userInputs.helideckCategory = (HelideckCategory)Enum.Parse(typeof(HelideckCategory), config.ReadWithDefault(ConfigKey.HelideckCategory, HelideckCategory.Category1.ToString()));
                 userInputs.dayNight = (DayNight)Enum.Parse(typeof(DayNight), config.ReadWithDefault(ConfigKey.DayNight, DayNight.Day.ToString()));
                 userInputs.displayMode = (DisplayMode)Enum.Parse(typeof(DisplayMode), config.ReadWithDefault(ConfigKey.DisplayMode, DisplayMode.PreLanding.ToString()));

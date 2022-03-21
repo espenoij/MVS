@@ -778,6 +778,7 @@ namespace HMS_Server
                 out double validatedInput);
 
             adminSettingsVM.restrictedSectorFrom = validatedInput.ToString("000");
+            tbRestrictedSectorFrom.Text = adminSettingsVM.restrictedSectorFrom;
         }
 
         private void tbRestrictedSectorTo_LostFocus(object sender, RoutedEventArgs e)
@@ -805,6 +806,7 @@ namespace HMS_Server
                 out double validatedInput);
 
             adminSettingsVM.restrictedSectorTo = validatedInput.ToString("000");
+            tbRestrictedSectorTo.Text = adminSettingsVM.restrictedSectorTo;
         }
 
         private void cboHelicopterWSILimitType_SelectionChanged(object sender, SelectionChangedEventArgs e)

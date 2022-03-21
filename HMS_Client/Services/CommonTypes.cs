@@ -31,6 +31,8 @@ public enum DayNight
 
 public enum HelicopterType
 {
+    [Description("Default - CAT A")]
+    Default,    // Heavy
     [Description("AS332 - CAT A")]
     AS332,      // Heavy
     [Description("AS365 - CAT B")]

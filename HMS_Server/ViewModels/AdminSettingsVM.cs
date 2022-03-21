@@ -969,7 +969,6 @@ namespace HMS_Server
         CAP
     }
 
-
     public class HelicopterWSILimit
     {
         public HelicopterType helicopterType { get; set; }

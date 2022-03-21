@@ -3288,7 +3288,8 @@ namespace HMS_Client
         {
             get
             {
-                if (_restrictionSector.status == DataStatus.OK)
+                if (_restrictionSector.status == DataStatus.OK &&
+                    restrictionSector.data != restrictionSector.data2)  // Dersom to/from sector er lik setter vi blank
                     return _restrictionSector.data.ToString("000");
                 else
                     return Constants.HelideckReportNoData;
@@ -3299,7 +3300,8 @@ namespace HMS_Client
         {
             get
             {
-                if (_restrictionSector.status == DataStatus.OK)
+                if (_restrictionSector.status == DataStatus.OK &&
+                    restrictionSector.data != restrictionSector.data2)  // Dersom to/from sector er lik setter vi blank
                     return _restrictionSector.data2.ToString("000");
                 else
                     return Constants.HelideckReportNoData;
