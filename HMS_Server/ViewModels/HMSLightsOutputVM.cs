@@ -42,25 +42,25 @@ namespace HMS_Server
 
             void UIUpdate(object sender, EventArgs e)
             {
-                helideckStatusData = hmsOutputDataList?.GetData(ValueType.HelideckLightStatus);
+                helideckLightData = hmsOutputDataList?.GetData(ValueType.HelideckLight);
             }
         }
 
         /////////////////////////////////////////////////////////////////////////////
-        // Helideck Status
+        // Helideck Light Status
         /////////////////////////////////////////////////////////////////////////////
-        private HMSData _helideckStatusData { get; set; } = new HMSData();
-        public HMSData helideckStatusData
+        private HMSData _helideckLightData { get; set; } = new HMSData();
+        public HMSData helideckLightData
         {
             get
             {
-                return _helideckStatusData;
+                return _helideckLightData;
             }
             set
             {
                 if (value != null)
                 {
-                    _helideckStatusData.Set(value);
+                    _helideckLightData.Set(value);
 
                     OnPropertyChanged(nameof(helideckStatus));
                     OnPropertyChanged(nameof(HMSLightsOutput));
@@ -75,8 +75,8 @@ namespace HMS_Server
             {
                 HelideckStatusType status;
 
-                if (_helideckStatusData.status == DataStatus.OK)
-                    status = (HelideckStatusType)_helideckStatusData.data;
+                if (_helideckLightData.status == DataStatus.OK)
+                    status = (HelideckStatusType)_helideckLightData.data;
                 else
                     // Dersom vi har data timeout skal lyset slåes av
                     status = HelideckStatusType.OFF;

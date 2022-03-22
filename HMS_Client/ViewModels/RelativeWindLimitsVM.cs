@@ -68,14 +68,8 @@ namespace HMS_Client
             if (windSpd.status == DataStatus.OK &&
                 relativeWindDir.status == DataStatus.OK)
             {
-                // Begrenser RWD i grafen til 60 grader
-                double rwd = relativeWindDir.data;
-
-                // Begrense vind i grafen til 60 kts
-                double wind = windSpd.data;
-
-                rwdGraphData.rwd = rwd;
-                rwdGraphData.wind = wind;
+                rwdGraphData.rwd = relativeWindDir.data;
+                rwdGraphData.wind = windSpd.data;
                 rwdGraphData.status = DataStatus.OK;
                 rwdGraphData.timestamp = windSpd.timestamp;
 
@@ -87,7 +81,7 @@ namespace HMS_Client
                 rwdGraphData.rwd = 0;
                 rwdGraphData.wind = 0;
                 rwdGraphData.status = DataStatus.TIMEOUT_ERROR;
-                rwdGraphData.timestamp = windSpd.timestamp;
+                rwdGraphData.timestamp = DateTime.UtcNow;
 
                 OnPropertyChanged(nameof(rwdGraphDataX));
                 OnPropertyChanged(nameof(rwdGraphDataY));
@@ -99,8 +93,9 @@ namespace HMS_Client
             // Løper gjennom hele listen og legger til korreksjon på RWD komponenten
             foreach (var item in relativeWindDir30mDataList)
             {
-                // Lagre korrigert data
-                item.rwd += correction;
+                if (item.status == DataStatus.OK)
+                    // Lagre korrigert data
+                    item.rwd += correction;
             }
 
             // Korrigere siste input fra server

@@ -402,6 +402,23 @@
                 </telerik:RadTabItem>-->
 
                 <!--==============================================================-->
+                <!--Menu: Information-->
+                <!--==============================================================-->
+                <telerik:RadTabItem
+                    Name="tabInformation">
+
+                    <telerik:RadTabItem.Header>
+                        <Image
+                            Width="36"
+                            Source="../Icons/information-outline.png" />
+                    </telerik:RadTabItem.Header>
+
+                    <uc:Information_CAP
+                        x:Name="ucInformation" />
+
+                </telerik:RadTabItem>
+
+                <!--==============================================================-->
                 <!--Menu: Admin Settings-->
                 <!--==============================================================-->
                 <telerik:RadTabItem
@@ -453,7 +470,7 @@
             
                 <Image
                     Width="36"
-                    Source="..\Icons\outline_camera_white_48dp.png" />
+                    Source="..\Icons\camera.png" />
             
             </StackPanel>
             

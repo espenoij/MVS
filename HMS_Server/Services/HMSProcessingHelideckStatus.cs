@@ -45,7 +45,7 @@ namespace HMS_Server
             hmsOutputDataList.Add(rwdStatusData);
 
             // Sette grunnleggende data
-            helideckLightStatusData.id = (int)ValueType.HelideckLightStatus;
+            helideckLightStatusData.id = (int)ValueType.HelideckLight;
             helideckLightStatusData.name = "Helideck Light Status";
             helideckLightStatusData.sensorGroupId = Constants.NO_SENSOR_GROUP_ID;
             helideckLightStatusData.dbColumn = "helideck_status";
@@ -191,7 +191,9 @@ namespace HMS_Server
         {
             if (hmsOutputData.GetData(ValueType.VesselHeading).status == DataStatus.TIMEOUT_ERROR ||
                 hmsOutputData.GetData(ValueType.HelideckWindSpeed2m).status == DataStatus.TIMEOUT_ERROR ||
-                hmsOutputData.GetData(ValueType.RelativeWindDir).status == DataStatus.TIMEOUT_ERROR)
+                hmsOutputData.GetData(ValueType.RelativeWindDir).status == DataStatus.TIMEOUT_ERROR ||
+                hmsOutputData.GetData(ValueType.HelideckWindSpeed2m).status == DataStatus.OK_NA ||
+                hmsOutputData.GetData(ValueType.RelativeWindDir).status == DataStatus.OK_NA)
             {
                 // Status: OFF
                 return HelideckStatusType.OFF;

@@ -105,6 +105,7 @@ namespace HMS_Client
                 OnPropertyChanged(nameof(displayModeVisibilityOnDeck));
                 OnPropertyChanged(nameof(displayOnDeckWindIndicator));
                 OnPropertyChanged(nameof(displayHelicopterOnDeck));
+                OnPropertyChanged(nameof(displayRWDArc));
                 OnPropertyChanged(nameof(displayCAP));
                 OnPropertyChanged(nameof(displayNOROG));
                 OnPropertyChanged(nameof(displayWindMeasurementSelection));
@@ -996,6 +997,19 @@ namespace HMS_Client
             {
                 if (userInputsVM.displayMode == DisplayMode.OnDeck &&
                     vesselHeadingRotation != -1)
+                    return true;
+                else
+                    return false;
+            }
+        }
+
+        public bool displayRWDArc
+        {
+            get
+            {
+                if (userInputsVM.displayMode == DisplayMode.OnDeck &&
+                    vesselHeadingRotation != -1 &&
+                    helideckStatusVM.rwdStatus != HelideckStatusType.OFF)
                     return true;
                 else
                     return false;

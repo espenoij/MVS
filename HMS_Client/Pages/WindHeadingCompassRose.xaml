@@ -30,7 +30,7 @@
 
             <Viewbox
                 Stretch="Uniform"
-                Visibility="{Binding Path=displayHelicopterOnDeck, Converter={StaticResource BoolToVisConverter} }">
+                Visibility="{Binding Path=displayRWDArc, Converter={StaticResource BoolToVisConverter} }">
 
                 <!--Relative Wind Limits-->
                 <Canvas

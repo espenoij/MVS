@@ -165,7 +165,7 @@ public enum ValueType
     AirDewPoint,
     AirPressureQNH,
     AirPressureQFE,
-    HelideckLightStatus,
+    HelideckLight,
     LandingStatus,          // CAP
     RWDStatus,              // CAP
     MSI,                    // CAP

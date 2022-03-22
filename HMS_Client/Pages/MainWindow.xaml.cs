@@ -138,6 +138,13 @@ namespace HMS_Client
 
             ucAdminSettings.UIUpdateServerRunning(true);
 
+            // Information (CAP)
+            if (adminSettingsVM.regulationStandard == RegulationStandard.CAP)
+                tabInformation.Visibility = Visibility.Visible;
+            else
+                tabInformation.Visibility = Visibility.Collapsed;
+
+
             //// TODO: DEBUG DEBUG DEBUG !!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!! Fjerne det under før release
             //AdminMode.IsActive = true;
             //tabAdminSettings.Visibility = Visibility.Visible;

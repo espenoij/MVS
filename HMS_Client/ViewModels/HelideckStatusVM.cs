@@ -53,7 +53,7 @@ namespace HMS_Client
 
         public void UpdateData(HMSDataCollection hmsDataList)
         {
-            helideckLightStatusData = hmsDataList.GetData(ValueType.HelideckLightStatus);
+            helideckLightStatusData = hmsDataList.GetData(ValueType.HelideckLight);
             landingStatusData = hmsDataList.GetData(ValueType.LandingStatus);
             rwdStatusData = hmsDataList.GetData(ValueType.RWDStatus);
         }
