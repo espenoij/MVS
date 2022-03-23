@@ -413,6 +413,9 @@ namespace HMS_Server
 
                 // Find max value
                 CalculateMSIMax(mms_msi, mms_msi_list, msiData, Constants.Minutes20);
+
+                // Sjekke buffer fyllingsgrad
+                MSIBufferFillCheck(mms_msi_list, Constants.MotionBufferFill99Pct, msiData);
             }
 
             // Sjekker motion limits
@@ -534,6 +537,16 @@ namespace HMS_Server
                     }
                 }
             }
+        }
+
+        private void MSIBufferFillCheck(List<TimeData> dataList, double targetCount, HMSData msi)
+        {
+            // Er bufferet fyllt opp
+            if (dataList.Count < targetCount)
+                // Hvis ikke, sjekk status, dersom OK
+                if (msi.status == DataStatus.OK)
+                    // Set OK, men ikke tilgjengelig
+                    msi.status = DataStatus.OK_NA;
         }
 
         private void CheckLimits()

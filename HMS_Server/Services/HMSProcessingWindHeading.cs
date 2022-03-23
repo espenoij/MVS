@@ -395,7 +395,7 @@ namespace HMS_Server
 
                 // Wind Direction Delta
                 /////////////////////////////////////////////////////////////////////////////////////////
-                if (areaWindDirection2m.status == DataStatus.OK &&
+                if (areaWindDirection2mNonRounded.status == DataStatus.OK &&
                     userInputs.onDeckTime != DateTime.MinValue &&
                     userInputs.onDeckWindDirection != -1)
                 {
@@ -406,8 +406,8 @@ namespace HMS_Server
                     windDirectionDelta.data = 0;
                 }
 
-                windDirectionDelta.status = areaWindDirection2m.status;
-                windDirectionDelta.timestamp = areaWindDirection2m.timestamp;
+                windDirectionDelta.status = areaWindDirection2mNonRounded.status;
+                windDirectionDelta.timestamp = areaWindDirection2mNonRounded.timestamp;
 
                 // Helicopter Heading
                 /////////////////////////////////////////////////////////////////////////////////////////

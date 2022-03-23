@@ -724,14 +724,20 @@
                     <StackPanel
                         Margin="8">
 
-                        <DockPanel
+                        <Grid
                             Margin="8">
+
+                            <Grid.ColumnDefinitions>
+                                <ColumnDefinition
+                                    Width="*" />
+                                <ColumnDefinition
+                                    Width="*" />
+                            </Grid.ColumnDefinitions>
 
                             <!--Helikopter type-->
                             <StackPanel
-                                DockPanel.Dock="Left"
-                                Orientation="Vertical"
-                                Margin="0,0,8,0">
+                                Grid.Column="0"
+                                Orientation="Vertical">
 
                                 <telerik:Label
                                     Name="lbHelicopterWSILimitType"
@@ -739,31 +745,30 @@
 
                                 <telerik:RadComboBox
                                     Name="cboHelicopterWSILimitType"
-                                    Width="200"
-                                    SelectionChanged="cboHelicopterWSILimitType_SelectionChanged">
-                                </telerik:RadComboBox>
+                                    HorizontalAlignment="Left"
+                                    Width="180"
+                                    SelectionChanged="cboHelicopterWSILimitType_SelectionChanged" />
+
 
                             </StackPanel>
 
                             <StackPanel
-                                DockPanel.Dock="Right"
-                                Orientation="Vertical"
-                                Margin="8,0,0,0">
+                                Grid.Column="1"
+                                Orientation="Vertical">
 
                                 <telerik:Label
                                     Name="lbHelicopterWSILimit"
-                                    Content="WSI Limit:"
-                                    VerticalAlignment="Center" />
-
+                                    Content="WSI Limit:" />
                                 <TextBox
-                                    Width="200"
+                                    Width="180"
+                                    HorizontalAlignment="Left"
                                     Name="tbHelicopterWSILimit"
                                     LostFocus="tbHelicopterWSILimit_LostFocus"
                                     KeyDown="tbHelicopterWSILimit_KeyDown" />
 
                             </StackPanel>
 
-                        </DockPanel>
+                        </Grid>
 
                     </StackPanel>
 
