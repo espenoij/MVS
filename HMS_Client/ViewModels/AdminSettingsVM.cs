@@ -48,6 +48,9 @@ namespace HMS_Client
             // Server Port
             serverPort = config.ReadWithDefault(ConfigKey.ServerPort, Constants.ServerPortDefault);
 
+            // CAP: Helideck Category
+            helideckCategory = (HelideckCategory)Enum.Parse(typeof(HelideckCategory), config.ReadWithDefault(ConfigKey.HelideckCategorySetting, HelideckCategory.Category1.ToString()));
+
             // CAP: Enable Report Email
             if (config.Read(ConfigKey.EnableReportEmail) == "1")
                 enableReportEmail = true;
@@ -290,6 +293,26 @@ namespace HMS_Client
             get
             {
                 return _vesselImage.ToString();
+            }
+        }
+
+        /////////////////////////////////////////////////////////////////////////////
+        // CAP: Helideck Category
+        /////////////////////////////////////////////////////////////////////////////
+        private HelideckCategory _helideckCategory { get; set; }
+        public HelideckCategory helideckCategory
+        {
+            get
+            {
+                return _helideckCategory;
+            }
+            set
+            {
+                if (value != _helideckCategory)
+                {
+                    _helideckCategory = value;
+                    config.Write(ConfigKey.HelideckCategorySetting, _helideckCategory.ToString());
+                }
             }
         }
 

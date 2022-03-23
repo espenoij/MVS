@@ -83,6 +83,31 @@ namespace HMS_Client
 
             cboVisVesselImage.Text = viewModel.vesselImage.ToString();
 
+            // CAP: Helideck Category
+            cboHelideckCategory_CAP.Items.Add(HelideckCategory.Category1.GetDescription());
+            cboHelideckCategory_CAP.Items.Add(HelideckCategory.Category1_Semisub.GetDescription());
+            cboHelideckCategory_CAP.Items.Add(HelideckCategory.Category2.GetDescription());
+            cboHelideckCategory_CAP.Items.Add(HelideckCategory.Category2_or_3.GetDescription());
+
+            switch ((HelideckCategory)Enum.Parse(typeof(HelideckCategory), config.ReadWithDefault(ConfigKey.HelideckCategorySetting, HelideckCategory.Category1.ToString())))
+            {
+                case HelideckCategory.Category1:
+                    cboHelideckCategory_CAP.SelectedIndex = 0;
+                    break;
+                case HelideckCategory.Category1_Semisub:
+                    cboHelideckCategory_CAP.SelectedIndex = 1;
+                    break;
+                case HelideckCategory.Category2:
+                    cboHelideckCategory_CAP.SelectedIndex = 2;
+                    break;
+                case HelideckCategory.Category2_or_3:
+                    cboHelideckCategory_CAP.SelectedIndex = 3;
+                    break;
+                default:
+                    cboHelideckCategory_CAP.SelectedIndex = 0;
+                    break;
+            }
+
             // Visualization: Helideck Location
             //viewModel.helideckLocation = (HelideckLocation)Enum.Parse(typeof(HelideckLocation), config.Read(ConfigKey.HelideckLocation));
             //LoadHelideckLocationComboBox();
@@ -453,6 +478,15 @@ namespace HMS_Client
                 adminSettingsVM.ApplicationRestartRequired();
 
             prevClientIsMaster = adminSettingsVM.clientIsMaster;
+        }
+
+        private void cboHelideckCategory_CAP_SelectionChanged(object sender, SelectionChangedEventArgs e)
+        {
+            if (adminSettingsVM.helideckCategory != EnumExtension.GetEnumValueFromDescription<HelideckCategory>(cboHelideckCategory_CAP.Text))
+            {
+                adminSettingsVM.helideckCategory = EnumExtension.GetEnumValueFromDescription<HelideckCategory>(cboHelideckCategory_CAP.Text);
+                adminSettingsVM.ApplicationRestartRequired();
+            }
         }
 
         private void chkEnableReportEmail_Checked(object sender, RoutedEventArgs e)

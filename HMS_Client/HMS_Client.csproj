@@ -711,7 +711,7 @@
     <Resource Include="Icons\information-outline.png" />
   </ItemGroup>
   <ItemGroup>
-    <Resource Include="Icons\camera.png" />
+    <Resource Include="Icons\outline_photo_camera_white_48dp.png" />
   </ItemGroup>
   <Import Project="$(MSBuildToolsPath)\Microsoft.CSharp.targets" />
   <Import Project="..\packages\System.Text.Json.6.0.0\build\System.Text.Json.targets" Condition="Exists('..\packages\System.Text.Json.6.0.0\build\System.Text.Json.targets')" />

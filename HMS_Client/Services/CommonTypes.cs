@@ -17,10 +17,14 @@ public enum HelideckCategory
 {
     [Description("CAT 1")]
     Category1,
+    [Description("CAT 1 (Semi-Sub)")]
+    Category1_Semisub,
     [Description("CAT 2")]
     Category2,
     [Description("CAT 3")]
-    Category3
+    Category3,
+    [Description("CAT 2 or CAT 3")]
+    Category2_or_3
 }
 
 public enum DayNight

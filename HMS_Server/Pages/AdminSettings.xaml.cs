@@ -99,11 +99,13 @@ namespace HMS_Server
                 tbHelicopterWSILimit.Text = adminSettingsVM.helicopterWSILimitList[0].limit.ToString();
 
             // NOROG: Helideck Category
-            foreach (HelideckCategory value in Enum.GetValues(typeof(HelideckCategory)))
-                cboHelideckCategory.Items.Add(value.GetDescription());
+            cboHelideckCategory_NOROG.Items.Add(HelideckCategory.Category1.GetDescription());
+            cboHelideckCategory_NOROG.Items.Add(HelideckCategory.Category1_Semisub.GetDescription());
+            cboHelideckCategory_NOROG.Items.Add(HelideckCategory.Category2.GetDescription());
+            cboHelideckCategory_NOROG.Items.Add(HelideckCategory.Category3.GetDescription());
 
-            cboHelideckCategory.Text = adminSettingsVM.helideckCategory.GetDescription();
-            cboHelideckCategory.SelectedIndex = (int)adminSettingsVM.helideckCategory;
+            cboHelideckCategory_NOROG.Text = adminSettingsVM.helideckCategory.GetDescription();
+            cboHelideckCategory_NOROG.SelectedIndex = (int)adminSettingsVM.helideckCategory;
 
             // NOROG / CAP Options available
             if (adminSettingsVM.regulationStandard == RegulationStandard.NOROG)
@@ -149,8 +151,8 @@ namespace HMS_Server
             else
             {
                 // NOROG
-                cboHelideckCategory.IsEnabled = false;
-                lbHelideckCategory.IsEnabled = false;
+                cboHelideckCategory_NOROG.IsEnabled = false;
+                lbHelideckCategory_NOROG.IsEnabled = false;
 
                 lbNDBInstalled_NOROG.IsEnabled = false;
                 cbNDBInstalled_NOROG.IsEnabled = false;
@@ -849,9 +851,13 @@ namespace HMS_Server
             (sender as TextBox).Text = validatedInput.ToString();
         }
 
-        private void cboHelideckCategory_SelectionChanged(object sender, SelectionChangedEventArgs e)
+        private void cboHelideckCategory_NOROG_SelectionChanged(object sender, SelectionChangedEventArgs e)
         {
-            adminSettingsVM.helideckCategory = (HelideckCategory)cboHelideckCategory.SelectedIndex;
+            if (adminSettingsVM.helideckCategory != EnumExtension.GetEnumValueFromDescription<HelideckCategory>(cboHelideckCategory_NOROG.Text))
+            {
+                adminSettingsVM.helideckCategory = EnumExtension.GetEnumValueFromDescription<HelideckCategory>(cboHelideckCategory_NOROG.Text);
+                adminSettingsVM.ApplicationRestartRequired();
+            }
         }
 
         private void tbNDBFreq_NOROG_LostFocus(object sender, RoutedEventArgs e)

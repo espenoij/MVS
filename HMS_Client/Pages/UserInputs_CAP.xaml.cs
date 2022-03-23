@@ -39,9 +39,45 @@ namespace HMS_Client
             cboHelicopterType.SelectedIndex = (int)userInputsVM.helicopterType;
 
             // Helideck Category
-            foreach (HelideckCategory value in Enum.GetValues(typeof(HelideckCategory)))
-                cboHelideckCategory.Items.Add(value.GetDescription());
-            cboHelideckCategory.SelectedIndex = (int)Enum.Parse(typeof(HelideckCategory), config.ReadWithDefault(ConfigKey.HelideckCategory, HelideckCategory.Category1.ToString()));
+            //adminSettingsVM.helideckCategory = (HelideckCategory)Enum.Parse(typeof(HelideckCategory), config.ReadWithDefault(ConfigKey.HelideckCategorySetting, HelideckCategory.Category1.ToString()));
+            switch (adminSettingsVM.helideckCategory)
+            {
+                case HelideckCategory.Category1:
+                    cboHelideckCategory.Items.Add(HelideckCategory.Category1.GetDescription());
+                    break;
+                case HelideckCategory.Category1_Semisub:
+                    cboHelideckCategory.Items.Add(HelideckCategory.Category1_Semisub.GetDescription());
+                    break;
+                case HelideckCategory.Category2:
+                    cboHelideckCategory.Items.Add(HelideckCategory.Category2.GetDescription());
+                    break;
+                case HelideckCategory.Category2_or_3:
+                    cboHelideckCategory.Items.Add(HelideckCategory.Category2.GetDescription());
+                    cboHelideckCategory.Items.Add(HelideckCategory.Category3.GetDescription());
+                    break;
+                default:
+                    cboHelideckCategory.Items.Add(HelideckCategory.Category1.GetDescription());
+                    break;
+            }
+
+            switch ((HelideckCategory)Enum.Parse(typeof(HelideckCategory), config.ReadWithDefault(ConfigKey.HelideckCategory, HelideckCategory.Category1.ToString())))
+            {
+                case HelideckCategory.Category1:
+                    cboHelideckCategory.SelectedIndex = 0;
+                    break;
+                case HelideckCategory.Category1_Semisub:
+                    cboHelideckCategory.SelectedIndex = 1;
+                    break;
+                case HelideckCategory.Category2:
+                    cboHelideckCategory.SelectedIndex = 2;
+                    break;
+                case HelideckCategory.Category3:
+                    cboHelideckCategory.SelectedIndex = 3;
+                    break;
+                default:
+                    cboHelideckCategory.SelectedIndex = 0;
+                    break;
+            }
 
             // Day / Night
             foreach (DayNight value in Enum.GetValues(typeof(DayNight)))
@@ -87,7 +123,7 @@ namespace HMS_Client
 
         private void cboHelideckCategory_SelectionChanged(object sender, SelectionChangedEventArgs e)
         {
-            userInputsVM.helideckCategory = (HelideckCategory)cboHelideckCategory.SelectedIndex;
+            userInputsVM.helideckCategory = EnumExtension.GetEnumValueFromDescription<HelideckCategory>(cboHelideckCategory.Text);
         }
 
         private void cboDayNight_SelectionChanged(object sender, SelectionChangedEventArgs e)

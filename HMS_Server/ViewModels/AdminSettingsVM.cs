@@ -22,12 +22,6 @@ namespace HMS_Server
             // Regulation Standard
             regulationStandard = (RegulationStandard)Enum.Parse(typeof(RegulationStandard), config.ReadWithDefault(ConfigKey.RegulationStandard, RegulationStandard.NOROG.ToString()));
 
-            // Vessel Is Semi Submersible
-            if (config.Read(ConfigKey.SemiSubmersible) == "1")
-                vesselIsSemiSubmersible = true;
-            else
-                vesselIsSemiSubmersible = false;
-
             // Vessel Name
             vesselName = config.Read(ConfigKey.VesselName);
 
@@ -161,30 +155,6 @@ namespace HMS_Server
                 {
                     _vesselName = value;
                     config.Write(ConfigKey.VesselName, value);
-                    OnPropertyChanged();
-                }
-            }
-        }
-
-        /////////////////////////////////////////////////////////////////////////////
-        // Vessel Is Semi Submersible
-        /////////////////////////////////////////////////////////////////////////////
-        private bool _vesselIsSemiSubmersible { get; set; }
-        public bool vesselIsSemiSubmersible
-        {
-            get
-            {
-                return _vesselIsSemiSubmersible;
-            }
-            set
-            {
-                if (_vesselIsSemiSubmersible != value)
-                {
-                    _vesselIsSemiSubmersible = value;
-                    if (value)
-                        config.Write(ConfigKey.SemiSubmersible, "1");
-                    else
-                        config.Write(ConfigKey.SemiSubmersible, "0");
                     OnPropertyChanged();
                 }
             }

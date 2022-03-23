@@ -95,22 +95,6 @@
                                 KeyDown="tbHelideckHeadingOffset_KeyDown" />
                         </DockPanel>
 
-                        <!--Semi-Submersible-->
-                        <DockPanel>
-
-                            <telerik:Label
-                                Name="lbSemiSub"
-                                Content="Semi-Submersible"
-                                VerticalAlignment="Center" />
-
-                            <CheckBox
-                                x:Name="cbSemiSub"
-                                IsChecked="{Binding Path=vesselIsSemiSubmersible, Mode=TwoWay}"
-                                VerticalAlignment="Center"
-                                HorizontalAlignment="Right" />
-
-                        </DockPanel>
-
                     </StackPanel>
 
                 </telerik:GroupBox>
@@ -601,14 +585,14 @@
                         <!--Helideck Category-->
                         <DockPanel>
                             <telerik:Label
-                                Name="lbHelideckCategory"
+                                Name="lbHelideckCategory_NOROG"
                                 Content="Helideck Category"
                                 VerticalAlignment="Center" />
                             <telerik:RadComboBox
-                                Name="cboHelideckCategory"
+                                Name="cboHelideckCategory_NOROG"
                                 Width="160"
                                 HorizontalAlignment="Right"
-                                SelectionChanged="cboHelideckCategory_SelectionChanged">
+                                SelectionChanged="cboHelideckCategory_NOROG_SelectionChanged">
                             </telerik:RadComboBox>
                         </DockPanel>
 
@@ -712,6 +696,7 @@
                     <StackPanel
                         Margin="8">
 
+                        <!--MSI Correction-->
                         <DockPanel>
                             <telerik:Label
                                 Name="lbMSICorrectionR"
@@ -719,7 +704,7 @@
                                 VerticalAlignment="Center" />
                             <TextBox
                                 Name="tbMSICorrectionR"
-                                Width="110"
+                                Width="160"
                                 HorizontalAlignment="Right"
                                 Text="{Binding Path=msiCorrectionR}"
                                 LostFocus="tbMSICorrectionR_LostFocus"

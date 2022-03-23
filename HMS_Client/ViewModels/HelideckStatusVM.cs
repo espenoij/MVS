@@ -90,53 +90,60 @@ namespace HMS_Client
                 {
                     LightsOutputType lightsOutput;
 
-                    if (userInputsVM.displayMode == DisplayMode.PreLanding)
+                    if (helideckLightStatusData.status == DataStatus.OK)
                     {
-                        switch ((HelideckStatusType)helideckLightStatusData.data)
+                        if (userInputsVM.displayMode == DisplayMode.PreLanding)
                         {
-                            case HelideckStatusType.OFF:
-                                lightsOutput = LightsOutputType.Off;
-                                break;
-                            case HelideckStatusType.BLUE:
-                                lightsOutput = LightsOutputType.Blue;
-                                break;
-                            case HelideckStatusType.AMBER:
-                                lightsOutput = LightsOutputType.Amber;
-                                break;
-                            case HelideckStatusType.RED:
-                                lightsOutput = LightsOutputType.Red;
-                                break;
-                            case HelideckStatusType.GREEN:
-                                lightsOutput = LightsOutputType.Green;
-                                break;
-                            default:
-                                lightsOutput = LightsOutputType.Off;
-                                break;
+                            switch ((HelideckStatusType)helideckLightStatusData.data)
+                            {
+                                case HelideckStatusType.OFF:
+                                    lightsOutput = LightsOutputType.Off;
+                                    break;
+                                case HelideckStatusType.BLUE:
+                                    lightsOutput = LightsOutputType.Blue;
+                                    break;
+                                case HelideckStatusType.AMBER:
+                                    lightsOutput = LightsOutputType.Amber;
+                                    break;
+                                case HelideckStatusType.RED:
+                                    lightsOutput = LightsOutputType.Red;
+                                    break;
+                                case HelideckStatusType.GREEN:
+                                    lightsOutput = LightsOutputType.Green;
+                                    break;
+                                default:
+                                    lightsOutput = LightsOutputType.Off;
+                                    break;
+                            }
+                        }
+                        else
+                        {
+                            switch ((HelideckStatusType)helideckLightStatusData.data)
+                            {
+                                case HelideckStatusType.OFF:
+                                    lightsOutput = LightsOutputType.Off;
+                                    break;
+                                case HelideckStatusType.BLUE:
+                                    lightsOutput = LightsOutputType.BlueFlash;
+                                    break;
+                                case HelideckStatusType.AMBER:
+                                    lightsOutput = LightsOutputType.AmberFlash;
+                                    break;
+                                case HelideckStatusType.RED:
+                                    lightsOutput = LightsOutputType.RedFlash;
+                                    break;
+                                case HelideckStatusType.GREEN:
+                                    lightsOutput = LightsOutputType.GreenFlash;
+                                    break;
+                                default:
+                                    lightsOutput = LightsOutputType.Off;
+                                    break;
+                            }
                         }
                     }
                     else
                     {
-                        switch ((HelideckStatusType)helideckLightStatusData.data)
-                        {
-                            case HelideckStatusType.OFF:
-                                lightsOutput = LightsOutputType.Off;
-                                break;
-                            case HelideckStatusType.BLUE:
-                                lightsOutput = LightsOutputType.BlueFlash;
-                                break;
-                            case HelideckStatusType.AMBER:
-                                lightsOutput = LightsOutputType.AmberFlash;
-                                break;
-                            case HelideckStatusType.RED:
-                                lightsOutput = LightsOutputType.RedFlash;
-                                break;
-                            case HelideckStatusType.GREEN:
-                                lightsOutput = LightsOutputType.GreenFlash;
-                                break;
-                            default:
-                                lightsOutput = LightsOutputType.Off;
-                                break;
-                        }
+                        lightsOutput = LightsOutputType.Off;
                     }
 
                     switch (lightsOutput)

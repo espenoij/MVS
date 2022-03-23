@@ -470,7 +470,7 @@
             
                 <Image
                     Width="36"
-                    Source="..\Icons\camera.png" />
+                    Source="..\Icons\outline_photo_camera_white_48dp.png" />
             
             </StackPanel>
             

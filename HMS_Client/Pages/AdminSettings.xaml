@@ -191,6 +191,21 @@
             <StackPanel
                 Margin="8">
 
+                <!--Helideck Category-->
+                <DockPanel>
+                    <telerik:Label
+                        Name="lbHelideckCategory_CAP"
+                        Content="Helideck Category"
+                        VerticalAlignment="Center" />
+                    <telerik:RadComboBox
+                        Name="cboHelideckCategory_CAP"
+                        Width="200"
+                        HorizontalAlignment="Right"
+                        SelectionChanged="cboHelideckCategory_CAP_SelectionChanged">
+                    </telerik:RadComboBox>
+                </DockPanel>
+
+                <!--Offshore Weather Report Email-->
                 <DockPanel>
 
                     <telerik:Label

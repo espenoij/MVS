@@ -2,6 +2,7 @@
 using System.Collections.Generic;
 using System.ComponentModel;
 using System.Runtime.CompilerServices;
+using System.Windows.Data;
 using System.Windows.Threading;
 
 namespace HMS_Client
@@ -15,6 +16,7 @@ namespace HMS_Client
 
         // Relative Wind graph buffer/data
         public RadObservableCollectionEx<RWDData> relativeWindDir30mDataList = new RadObservableCollectionEx<RWDData>();
+        private object relativeWindDir30mDataListLock = new object();
 
         private OnDeckStabilityLimitsVM onDeckStabilityLimitsVM;
         private WindHeadingChangeVM windHeadingChangeVM;
@@ -23,6 +25,8 @@ namespace HMS_Client
         {
             this.onDeckStabilityLimitsVM = onDeckStabilityLimitsVM;
             this.windHeadingChangeVM = windHeadingChangeVM;
+
+            BindingOperations.EnableCollectionSynchronization(relativeWindDir30mDataList, relativeWindDir30mDataListLock);
 
             // Oppdatere UI
             UIUpdateTimer.Interval = TimeSpan.FromMilliseconds(config.ReadWithDefault(ConfigKey.ClientUpdateFrequencyUI, Constants.ClientUIUpdateFrequencyDefault));
@@ -34,12 +38,15 @@ namespace HMS_Client
                 sensorStatus.TimeoutCheck(windSpd);
                 if (sensorStatus.TimeoutCheck(relativeWindDir)) OnPropertyChanged(nameof(relativeWindDirString));
 
-                // Oppdatere data som skal ut i grafer
-                if (rwdGraphData.status == DataStatus.OK)
-                    GraphBuffer.UpdateWithCull(rwdGraphData, relativeWindDir30mDataList, Constants.GraphCullFrequency30m);
+                lock (relativeWindDir30mDataListLock)
+                {
+                    // Oppdatere data som skal ut i grafer
+                    if (rwdGraphData.status == DataStatus.OK)
+                        GraphBuffer.UpdateWithCull(rwdGraphData, relativeWindDir30mDataList, Constants.GraphCullFrequency30m);
 
-                // Fjerne gamle data fra chart data
-                GraphBuffer.RemoveOldData(relativeWindDir30mDataList, Constants.Minutes30);
+                    // Fjerne gamle data fra chart data
+                    GraphBuffer.RemoveOldData(relativeWindDir30mDataList, Constants.Minutes30);
+                }
 
                 OnPropertyChanged(nameof(landingStatusTimeString));
                 OnPropertyChanged(nameof(displayModeVisibilityPreLanding));
@@ -56,7 +63,8 @@ namespace HMS_Client
             UIUpdateTimer.Stop();
 
             // Slette Graph buffer/data
-            GraphBuffer.Clear(relativeWindDir30mDataList);
+            lock (relativeWindDir30mDataListLock)
+                GraphBuffer.Clear(relativeWindDir30mDataList);
         }
 
         public void UpdateData(HMSDataCollection clientSensorList)
@@ -91,16 +99,18 @@ namespace HMS_Client
         public void CorrectRWD(double correction)
         {
             // Løper gjennom hele listen og legger til korreksjon på RWD komponenten
-            foreach (var item in relativeWindDir30mDataList)
+            lock (relativeWindDir30mDataListLock)
             {
-                if (item.status == DataStatus.OK)
-                    // Lagre korrigert data
-                    item.rwd += correction;
+                foreach (var item in relativeWindDir30mDataList)
+                {
+                    if (item.status == DataStatus.OK)
+                        // Lagre korrigert data
+                        item.rwd += correction;
+                }
             }
 
-            // Korrigere siste input fra server
-            //rwdGraphData.rwd -= newHeading - oldHeading;
-            rwdGraphData.status = DataStatus.TIMEOUT_ERROR; // Sikrere å merke data som ubrukelige
+            // Merke graf data som ubrukelig
+            rwdGraphData.status = DataStatus.TIMEOUT_ERROR;
 
             // Oppdatere trend data
             windHeadingChangeVM.CorrectRWDTrend(correction);
@@ -132,15 +142,18 @@ namespace HMS_Client
         {
             get
             {
-                if (relativeWindDir30mDataList.Count > 0)
+                lock (relativeWindDir30mDataListLock)
                 {
-                    return string.Format("30-minute Trend ({1} - {2} UTC)",
-                        relativeWindDir30mDataList[0].timestamp.ToShortTimeString(),
-                        relativeWindDir30mDataList[relativeWindDir30mDataList.Count - 1].timestamp.ToShortTimeString());
-                }
-                else
-                {
-                    return string.Format("30-minute Trend (--:-- - --:-- UTC)");
+                    if (relativeWindDir30mDataList.Count > 0)
+                    {
+                        return string.Format("30-minute Trend ({1} - {2} UTC)",
+                            relativeWindDir30mDataList[0].timestamp.ToShortTimeString(),
+                            relativeWindDir30mDataList[relativeWindDir30mDataList.Count - 1].timestamp.ToShortTimeString());
+                    }
+                    else
+                    {
+                        return string.Format("30-minute Trend (--:-- - --:-- UTC)");
+                    }
                 }
             }
         }

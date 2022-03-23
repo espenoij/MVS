@@ -32,6 +32,7 @@ namespace HMS_Server
                         switch (adminSettingsVM.helideckCategory)
                         {
                             case HelideckCategory.Category1:
+                            case HelideckCategory.Category1_Semisub:
 
                                 switch (userInputs.helicopterCategory)
                                 {
@@ -43,7 +44,7 @@ namespace HMS_Server
                                                 limit = 3;
                                                 break;
                                             case DayNight.Night:
-                                                if (adminSettingsVM.vesselIsSemiSubmersible)
+                                                if (adminSettingsVM.helideckCategory == HelideckCategory.Category1_Semisub)
                                                     limit = 3;
                                                 else
                                                     limit = 2;
@@ -137,6 +138,7 @@ namespace HMS_Server
                         switch (adminSettingsVM.helideckCategory)
                         {
                             case HelideckCategory.Category1:
+                            case HelideckCategory.Category1_Semisub:
 
                                 switch (userInputs.helicopterCategory)
                                 {
@@ -148,7 +150,7 @@ namespace HMS_Server
                                                 limit = 3.5;
                                                 break;
                                             case DayNight.Night:
-                                                if (adminSettingsVM.vesselIsSemiSubmersible)
+                                                if (adminSettingsVM.helideckCategory == HelideckCategory.Category1_Semisub)
                                                     limit = 3.5;
                                                 else
                                                     limit = 2.5;
@@ -242,6 +244,7 @@ namespace HMS_Server
                         switch (adminSettingsVM.helideckCategory)
                         {
                             case HelideckCategory.Category1:
+                            case HelideckCategory.Category1_Semisub:
 
                                 switch (userInputs.helicopterCategory)
                                 {
@@ -308,6 +311,7 @@ namespace HMS_Server
                         switch (adminSettingsVM.helideckCategory)
                         {
                             case HelideckCategory.Category1:
+                            case HelideckCategory.Category1_Semisub:
 
                                 switch (userInputs.helicopterCategory)
                                 {
@@ -364,6 +368,7 @@ namespace HMS_Server
                         switch (userInputs.helideckCategory)
                         {
                             case HelideckCategory.Category1:
+                            case HelideckCategory.Category1_Semisub:
 
                                 switch (userInputs.helicopterCategory)
                                 {
@@ -375,7 +380,7 @@ namespace HMS_Server
                                                 limit = 3;
                                                 break;
                                             case DayNight.Night:
-                                                if (adminSettingsVM.vesselIsSemiSubmersible)
+                                                if (adminSettingsVM.helideckCategory == HelideckCategory.Category1_Semisub)
                                                     limit = 3;
                                                 else
                                                     limit = 2;
@@ -391,7 +396,7 @@ namespace HMS_Server
                                                 limit = 4;
                                                 break;
                                             case DayNight.Night:
-                                                if (adminSettingsVM.vesselIsSemiSubmersible)
+                                                if (adminSettingsVM.helideckCategory == HelideckCategory.Category1_Semisub)
                                                     limit = 4;
                                                 else
                                                     limit = 3;
@@ -472,6 +477,7 @@ namespace HMS_Server
                         switch (userInputs.helideckCategory)
                         {
                             case HelideckCategory.Category1:
+                            case HelideckCategory.Category1_Semisub:
 
                                 switch (userInputs.helicopterCategory)
                                 {
@@ -483,7 +489,7 @@ namespace HMS_Server
                                                 limit = 3.5;
                                                 break;
                                             case DayNight.Night:
-                                                if (adminSettingsVM.vesselIsSemiSubmersible)
+                                                if (adminSettingsVM.helideckCategory == HelideckCategory.Category1_Semisub)
                                                     limit = 3.5;
                                                 else
                                                     limit = 2.5;
@@ -499,7 +505,7 @@ namespace HMS_Server
                                                 limit = 4.5;
                                                 break;
                                             case DayNight.Night:
-                                                if (adminSettingsVM.vesselIsSemiSubmersible)
+                                                if (adminSettingsVM.helideckCategory == HelideckCategory.Category1_Semisub)
                                                     limit = 4.5;
                                                 else
                                                     limit = 3.5;
@@ -580,6 +586,7 @@ namespace HMS_Server
                         switch (userInputs.helideckCategory)
                         {
                             case HelideckCategory.Category1:
+                            case HelideckCategory.Category1_Semisub:
 
                                 switch (userInputs.helicopterCategory)
                                 {
@@ -604,7 +611,7 @@ namespace HMS_Server
                                                 limit = 1.3;
                                                 break;
                                             case DayNight.Night:
-                                                if (adminSettingsVM.vesselIsSemiSubmersible)
+                                                if (adminSettingsVM.helideckCategory == HelideckCategory.Category1_Semisub)
                                                     limit = 1.3;
                                                 else
                                                     limit = 1;
