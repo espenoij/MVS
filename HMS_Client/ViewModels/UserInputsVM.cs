@@ -134,6 +134,7 @@ namespace HMS_Client
 
         public void UpdateData(HMSDataCollection hmsDataList)
         {
+            // Setter ikke user input fra server dersom klient er master
             if (!adminSettingsVM.clientIsMaster)
             {
                 helicopterType = (HelicopterType)hmsDataList.GetData(ValueType.SettingsHelicopterType).data;
@@ -157,6 +158,16 @@ namespace HMS_Client
                 OnPropertyChanged(nameof(displayModeVisibilityPreLanding));
                 OnPropertyChanged(nameof(displayModeVisibilityOnDeck));
                 OnPropertyChanged(nameof(helicopterHeadingInfoString));
+            }
+            else
+            {
+                // Dersomm klient er master, setter vi likevel vessel heading og wind direction ved landing,
+                // dersom disse to variablene ikke var tilgjengelig da on-deck mode ble valgt.
+                if (onDeckVesselHeading == -1)
+                    onDeckVesselHeading = hmsDataList.GetData(ValueType.SettingsOnDeckVesselHeading).data;
+
+                if (onDeckWindDirection == -1)
+                    onDeckWindDirection = hmsDataList.GetData(ValueType.SettingsOnDeckWindDirection).data;
             }
 
             if (displayMode != DisplayMode.PreLanding)

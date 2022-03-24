@@ -383,6 +383,11 @@ namespace HMS_Server
                     userInputs.onDeckTime != DateTime.MinValue &&
                     userInputs.onDeckVesselHeading != -1)
                 {
+                    // Dersom vi gikk til on-deck display før vind data buffer ble fyllt opp, kan vi komme
+                    // her uten en utgangs-vind-retning å beregne mot.
+                    if (userInputs.onDeckVesselHeading == -1)
+                        userInputs.onDeckVesselHeading = hmsInputDataList.GetData(ValueType.VesselHeading).data;
+
                     vesselHeadingDelta.data = Math.Round(userInputs.onDeckVesselHeading - Math.Round(hmsInputDataList.GetData(ValueType.VesselHeading).data, 1, MidpointRounding.AwayFromZero), 1, MidpointRounding.AwayFromZero);
                 }
                 else
@@ -396,9 +401,13 @@ namespace HMS_Server
                 // Wind Direction Delta
                 /////////////////////////////////////////////////////////////////////////////////////////
                 if (areaWindDirection2mNonRounded.status == DataStatus.OK &&
-                    userInputs.onDeckTime != DateTime.MinValue &&
-                    userInputs.onDeckWindDirection != -1)
+                    userInputs.onDeckTime != DateTime.MinValue)
                 {
+                    // Dersom vi gikk til on-deck display før vind data buffer ble fyllt opp, kan vi komme
+                    // her uten en utgangs-vind-retning å beregne mot.
+                    if (userInputs.onDeckWindDirection == -1)
+                        userInputs.onDeckWindDirection = areaWindDirection2mNonRounded.data;
+
                     windDirectionDelta.data = Math.Round(userInputs.onDeckWindDirection - areaWindDirection2mNonRounded.data, 1, MidpointRounding.AwayFromZero);
                 }
                 else

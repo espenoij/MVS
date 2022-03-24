@@ -43,6 +43,11 @@ namespace HMS_Server
             activationVM.deviceID = deviceId;
             activationVM.isActivated = true;
             btnActivate.IsEnabled = false;
+
+            // Åpne activation OK vindu
+            DialogActivationOK activationDialogOK = new DialogActivationOK();
+            activationDialogOK.Owner = App.Current.MainWindow;
+            activationDialogOK.ShowDialog();
         }
 
         private void tbLicenseOwner_LostFocus(object sender, RoutedEventArgs e)

@@ -357,6 +357,9 @@
     <Compile Include="Config\TestDataConfigCollection.cs" />
     <Compile Include="Config\ReferenceDataConfigSection.cs" />
     <Compile Include="Config\TestDataConfigSection.cs" />
+    <Compile Include="Dialogs\DialogActivationOK.xaml.cs">
+      <DependentUpon>DialogActivationOK.xaml</DependentUpon>
+    </Compile>
     <Compile Include="Dialogs\DialogNotActivated.xaml.cs">
       <DependentUpon>DialogNotActivated.xaml</DependentUpon>
     </Compile>
@@ -492,6 +495,10 @@
     <Compile Include="Helpers\Sorter.cs" />
     <Compile Include="Helpers\TextHelper.cs" />
     <Compile Include="Services\Weather.cs" />
+    <Page Include="Dialogs\DialogActivationOK.xaml">
+      <Generator>MSBuild:Compile</Generator>
+      <SubType>Designer</SubType>
+    </Page>
     <Page Include="Dialogs\DialogNotActivated.xaml">
       <Generator>MSBuild:Compile</Generator>
       <SubType>Designer</SubType>
