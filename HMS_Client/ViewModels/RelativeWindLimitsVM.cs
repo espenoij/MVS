@@ -41,8 +41,7 @@ namespace HMS_Client
                 lock (relativeWindDir30mDataListLock)
                 {
                     // Oppdatere data som skal ut i grafer
-                    if (rwdGraphData.status == DataStatus.OK)
-                        GraphBuffer.UpdateWithCull(rwdGraphData, relativeWindDir30mDataList, Constants.GraphCullFrequency30m);
+                    GraphBuffer.UpdateWithCull(rwdGraphData, relativeWindDir30mDataList, Constants.GraphCullFrequency30m);
 
                     // Fjerne gamle data fra chart data
                     GraphBuffer.RemoveOldData(relativeWindDir30mDataList, Constants.Minutes30);
@@ -88,7 +87,10 @@ namespace HMS_Client
             {
                 rwdGraphData.rwd = 0;
                 rwdGraphData.wind = 0;
-                rwdGraphData.status = DataStatus.TIMEOUT_ERROR;
+                if (windSpd.status == DataStatus.OK_NA || relativeWindDir.status == DataStatus.OK_NA)
+                    rwdGraphData.status = DataStatus.OK_NA;
+                else
+                    rwdGraphData.status = DataStatus.TIMEOUT_ERROR;
                 rwdGraphData.timestamp = DateTime.UtcNow;
 
                 OnPropertyChanged(nameof(rwdGraphDataX));

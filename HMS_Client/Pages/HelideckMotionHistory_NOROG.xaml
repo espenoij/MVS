@@ -107,7 +107,7 @@
                                 ZIndex="200"
                                 Stroke="{StaticResource ColorGraphLine}"
                                 CategoryBinding="timestamp"
-                                ValueBinding="data">
+                                ValueBinding="graphData">
 
                                 <telerik:LineSeries.RenderOptions>
                                     <telerik:XamlRenderOptions
@@ -372,7 +372,7 @@
                                 ZIndex="200"
                                 Stroke="{StaticResource ColorGraphLine}"
                                 CategoryBinding="timestamp"
-                                ValueBinding="data">
+                                ValueBinding="graphData">
 
                                 <telerik:LineSeries.RenderOptions>
                                     <telerik:XamlRenderOptions
@@ -639,7 +639,7 @@
                                 ZIndex="200"
                                 Stroke="{StaticResource ColorGraphLine}"
                                 CategoryBinding="timestamp"
-                                ValueBinding="data">
+                                ValueBinding="graphData">
 
                                 <telerik:LineSeries.RenderOptions>
                                     <telerik:XamlRenderOptions
@@ -850,7 +850,7 @@
                                 ZIndex="200"
                                 Stroke="{StaticResource ColorGraphLine}"
                                 CategoryBinding="timestamp"
-                                ValueBinding="data">
+                                ValueBinding="graphData">
 
                                 <telerik:LineSeries.RenderOptions>
                                     <telerik:XamlRenderOptions
@@ -1073,7 +1073,7 @@
                                 ZIndex="200"
                                 Stroke="{StaticResource ColorGraphLine}"
                                 CategoryBinding="timestamp"
-                                ValueBinding="data">
+                                ValueBinding="graphData">
 
                                 <telerik:LineSeries.RenderOptions>
                                     <telerik:XamlRenderOptions
@@ -1174,7 +1174,7 @@
                                 ZIndex="200"
                                 Stroke="{StaticResource ColorGraphLine}"
                                 CategoryBinding="timestamp"
-                                ValueBinding="data">
+                                ValueBinding="graphData">
 
                                 <telerik:LineSeries.RenderOptions>
                                     <telerik:XamlRenderOptions
@@ -1274,7 +1274,7 @@
                                 ZIndex="200"
                                 Stroke="{StaticResource ColorGraphLine}"
                                 CategoryBinding="timestamp"
-                                ValueBinding="data">
+                                ValueBinding="graphData">
 
                                 <telerik:LineSeries.RenderOptions>
                                     <telerik:XamlRenderOptions
@@ -1393,7 +1393,7 @@
                                 ZIndex="200"
                                 Stroke="{StaticResource ColorGraphLine}"
                                 CategoryBinding="timestamp"
-                                ValueBinding="data">
+                                ValueBinding="graphData">
 
                                 <telerik:LineSeries.RenderOptions>
                                     <telerik:XamlRenderOptions

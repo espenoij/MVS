@@ -73,6 +73,7 @@ namespace HMS_Client
                 _data = value;
                 OnPropertyChanged();
                 OnPropertyChanged(nameof(dataString));
+                OnPropertyChanged(nameof(graphData));
             }
         }
 
@@ -261,6 +262,17 @@ namespace HMS_Client
                     return name;
                 else
                     return Constants.NameNotSet;
+            }
+        }
+
+        public double graphData
+        {
+            get
+            {
+                if (status == DataStatus.OK)
+                    return data;
+                else
+                    return double.NaN;
             }
         }
     }

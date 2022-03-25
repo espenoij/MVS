@@ -230,6 +230,7 @@ public enum ValueType
 
 public enum HelideckStatusType
 {
+    NO_DATA,
     OFF,
     BLUE,
     AMBER,

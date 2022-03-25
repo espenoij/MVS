@@ -70,7 +70,7 @@ namespace HMS_Client
             {
                 statusTrend20mList.Add(new HelideckStatus()
                 {
-                    status = HelideckStatusType.OFF,
+                    status = HelideckStatusType.NO_DATA,
                     timestamp = DateTime.UtcNow.AddSeconds(i)
                 });
             }
@@ -79,7 +79,7 @@ namespace HMS_Client
             {
                 statusTrend3hList.Add(new HelideckStatus()
                 {
-                    status = HelideckStatusType.OFF,
+                    status = HelideckStatusType.NO_DATA,
                     timestamp = DateTime.UtcNow.AddSeconds(i)
                 });
             }

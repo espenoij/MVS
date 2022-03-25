@@ -106,7 +106,7 @@ namespace HMS_Client
             {
                 rwdTrend30mList.Add(new HelideckStatus()
                 {
-                    status = HelideckStatusType.OFF,
+                    status = HelideckStatusType.NO_DATA,
                     timestamp = DateTime.UtcNow.AddMilliseconds(i)
                 });
             }

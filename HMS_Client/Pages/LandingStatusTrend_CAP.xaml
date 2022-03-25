@@ -29,7 +29,7 @@
                     <RowDefinition
                         Height="*" />
                     <RowDefinition
-                        Height="*" />
+                        Height="28" />
                     <RowDefinition
                         Height="*" />
                 </Grid.RowDefinitions>
@@ -54,12 +54,8 @@
                     <Canvas
                         x:Name="statusTrendGrid20m"
                         Width="400"
-                        Height="10"
+                        Height="12"
                         Visibility="{Binding Path=visibilityItems20m, Converter={StaticResource BoolToVisConverter} }">
-
-                        <!--<Rectangle
-                            Width="400"
-                            Height="10"/>-->
 
                     </Canvas>
 
@@ -76,25 +72,14 @@
                         Height="10"
                         Visibility="{Binding Path=visibilityItems3h, Converter={StaticResource BoolToVisConverter} }">
 
-                        <!--<Rectangle
-                            Width="400"
-                            Height="10" />-->
-
                     </Canvas>
 
                 </Viewbox>
 
-                <!--<Grid
-                    x:Name="statusTrendGrid20m"
+                <Rectangle
                     Grid.Row="1"
-                    Visibility="{Binding Path=visibilityItems20m, Converter={StaticResource BoolToVisConverter} }">
-                </Grid>
-
-                <Grid
-                    x:Name="statusTrendGrid3h"
-                    Grid.Row="1"
-                    Visibility="{Binding Path=visibilityItems3h, Converter={StaticResource BoolToVisConverter} }">
-                </Grid>-->
+                    Grid.Column="1"
+                    Stroke="Silver" />
 
                 <Grid
                     Grid.Row="2"

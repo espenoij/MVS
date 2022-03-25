@@ -51,7 +51,7 @@
                 x:Key="ColorBackgroundSeparator">#FFf0f0f0</SolidColorBrush>
 
             <SolidColorBrush
-                x:Key="ColorNABackground">#ff888888</SolidColorBrush>
+                x:Key="ColorOFF">#FFf0f0f0</SolidColorBrush>
 
             <!--Header høyde-->
             <sys:Double

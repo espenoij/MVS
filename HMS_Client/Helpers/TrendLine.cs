@@ -19,7 +19,7 @@ namespace HMS_Client
                 Rectangle rec = new Rectangle()
                 {
                     Width = width,
-                    Height = 10
+                    Height = 12
                 };
 
                 // Add to a canvas for example
@@ -34,7 +34,8 @@ namespace HMS_Client
             Brush amberBrush = (Brush)app.FindResource("ColorAmber");
             Brush redBrush = (Brush)app.FindResource("ColorRed");
             Brush blueBrush = (Brush)app.FindResource("ColorBlue");
-            Brush bakgroundBrush = (Brush)app.FindResource("ColorBackgroundSeparator");
+            Brush offBrush = (Brush)app.FindResource("ColorOFF");
+            Brush whiteBrush = (Brush)app.FindResource("ColorWhite");
 
             for (int i = 0; i < statusTrendDispList.Count; i++)
             {
@@ -47,8 +48,13 @@ namespace HMS_Client
                 {
                     switch (statusTrendDispList[i])
                     {
+                        case HelideckStatusType.NO_DATA:
+                            rect.Fill = whiteBrush;
+                            break;
+
                         case HelideckStatusType.OFF:
-                            rect.Fill = bakgroundBrush;
+                            // Blank
+                            rect.Fill = offBrush;
                             break;
 
                         case HelideckStatusType.BLUE:

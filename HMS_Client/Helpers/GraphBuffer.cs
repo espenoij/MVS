@@ -33,7 +33,7 @@ namespace HMS_Client
             // Dropper bruken av buffer.
 
             // Har vi to eller flere data punkt?
-            if (dataList.Count >= 2)
+            if (dataList?.Count >= 2)
             {
                 // Sjekker om tiden mellom siste og nest siste data punkt er mindre enn cullFrequency
                 if (dataList[dataList.Count - 2].timestamp.AddMilliseconds(cullFrequency) > dataList[dataList.Count - 1].timestamp)
@@ -70,6 +70,7 @@ namespace HMS_Client
 
             // Status ok?
             if (data?.status == DataStatus.OK)
+            {
                 // Lagre data i listen
                 dataList.Add(new RWDData()
                 {
@@ -78,15 +79,8 @@ namespace HMS_Client
                     status = data.status,
                     timestamp = data.timestamp
                 });
-            else
-                // Lagre 0 data
-                dataList.Add(new RWDData() 
-                { 
-                    rwd = 0,
-                    wind = 0,
-                    status = DataStatus.OK,
-                    timestamp = DateTime.UtcNow
-                });
+            }
+            // Legger ikke inn data dersom status er ulik OK
         }
 
         public static void Transfer(RadObservableCollectionEx<HMSData> buffer, RadObservableCollectionEx<HMSData> dataList)
@@ -182,11 +176,13 @@ namespace HMS_Client
 
             if (list.Count > 0 && dispList.Count > 0)
             {
-                DateTime subsetStartTime = list[list.Count - 1].timestamp.AddSeconds(-timeFrame);
-                //DateTime subsetStartTime = DateTime.UtcNow.AddSeconds(-timeFrame);
-                double subsetTime = timeFrame * 1000 / (double)dispList.Count;
+                //DateTime subsetStartTime = list[list.Count - 1].timestamp.AddSeconds(-timeFrame);
+                //double subsetTime = timeFrame * 1000 / (double)dispList.Count;
 
-                HelideckStatusType status = HelideckStatusType.OFF;
+                DateTime subsetStartTime = list[0].timestamp;
+                double subsetTime = (list[list.Count - 1].timestamp - list[0].timestamp).TotalMilliseconds / (double)dispList.Count;
+
+                HelideckStatusType status = HelideckStatusType.NO_DATA;
 
                 int dataCounter = 0;
                 int subsetCounter = 0;
@@ -228,7 +224,7 @@ namespace HMS_Client
                                 subsetStartTime = subsetStartTime.AddMilliseconds(subsetTime);
 
                                 // Resette høyeste status nivå
-                                status = HelideckStatusType.OFF;
+                                status = HelideckStatusType.NO_DATA;
 
                                 // Exit denne loopen
                                 nextSubset = true;
@@ -250,6 +246,13 @@ namespace HMS_Client
                                     if (status != HelideckStatusType.RED &&
                                         status != HelideckStatusType.AMBER)
                                         status = HelideckStatusType.BLUE;
+                                    break;
+
+                                case HelideckStatusType.OFF:
+                                    if (status != HelideckStatusType.RED &&
+                                        status != HelideckStatusType.AMBER &&
+                                        status != HelideckStatusType.BLUE)
+                                        status = HelideckStatusType.OFF;
                                     break;
                             }
                         }
