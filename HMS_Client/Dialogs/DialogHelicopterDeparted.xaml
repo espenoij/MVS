@@ -9,7 +9,7 @@
     xmlns:local="clr-namespace:HMS_Client"
     telerik:Header="Activation"
     WindowStartupLocation="CenterScreen"
-    Height="300"
+    Height="280"
     Width="600"
     telerik:StyleManager.Theme="Material">
 
@@ -27,17 +27,29 @@
         </ResourceDictionary>
     </telerik:RadWindow.Resources>
 
-    <Grid>
+    <DockPanel>
 
-        <Grid.RowDefinitions>
-            <RowDefinition
-                Height="4*" />
-            <RowDefinition
-                Height="1*" />
-        </Grid.RowDefinitions>
+        <StackPanel
+            DockPanel.Dock="Bottom"
+            Orientation="Horizontal"
+            HorizontalAlignment="Right">
+
+            <telerik:RadButton
+                Margin="8"
+                Width="110"
+                Content="Cancel"
+                Click="btnCancel_Click" />
+
+            <telerik:RadButton
+                Margin="8"
+                Width="110"
+                Content="OK"
+                Click="btnOK_Click" />
+
+        </StackPanel>
 
         <Grid
-            Grid.Row="0">
+            DockPanel.Dock="Top">
 
             <Grid.ColumnDefinitions>
                 <ColumnDefinition
@@ -68,25 +80,6 @@
 
         </Grid>
 
-        <StackPanel
-            Grid.Row="1"
-            Orientation="Horizontal"
-            HorizontalAlignment="Right">
-
-            <telerik:RadButton
-                Margin="8"
-                Width="110"
-                Content="Cancel"
-                Click="btnCancel_Click"/>
-
-            <telerik:RadButton
-                Margin="8"
-                Width="110"
-                Content="OK"
-                Click="btnOK_Click" />
-
-        </StackPanel>
-
-    </Grid>
+    </DockPanel>
 
 </telerik:RadWindow>

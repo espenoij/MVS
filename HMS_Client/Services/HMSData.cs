@@ -272,6 +272,8 @@ namespace HMS_Client
                 if (status == DataStatus.OK)
                     return data;
                 else
+                    // Ved å sende NaN til graf får vi mellomrom på graf-linjen
+                    // der det ikke er gyldige data tilgjengelig.
                     return double.NaN;
             }
         }

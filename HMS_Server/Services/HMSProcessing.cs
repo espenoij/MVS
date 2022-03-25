@@ -47,7 +47,7 @@
 
             // Data Verification Module
             if (dataVerificationIsActive)
-                hmsProcessingVerificationData.Update(hmsInputDataList);
+                hmsProcessingVerificationData?.Update(hmsInputDataList);
         }
 
         public void ResetDataCalculations()

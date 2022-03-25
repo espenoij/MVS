@@ -254,45 +254,9 @@
 
                 </Grid>
 
-                <!--Klient Modus-->
-                <Grid
-                    Grid.Row="5">
-
-                    <Grid.ColumnDefinitions>
-                        <ColumnDefinition
-                            Width="*" />
-                        <ColumnDefinition
-                            Width="12*" />
-                    </Grid.ColumnDefinitions>
-
-                    <Viewbox
-                        Grid.Column="0"
-                        StretchDirection="Both"
-                        Stretch="Uniform">
-
-                        <Image
-                            Source="{Binding Path=clientModeIcon}" />
-
-                    </Viewbox>
-
-                    <Viewbox
-                        Grid.Column="1"
-                        StretchDirection="Both"
-                        Stretch="Uniform"
-                        HorizontalAlignment="Left">
-
-                        <telerik:Label
-                            Content="{Binding Path=clientMode}"
-                            FontSize="{StaticResource fontSizeLabel}" />
-
-                    </Viewbox>
-
-                </Grid>
-
                 <!--Regulatory Standard-->
                 <Grid
-                    Grid.Row="6"
-                    Background="{StaticResource ColorBackgroundSeparator}">
+                    Grid.Row="5">
 
                     <Grid.ColumnDefinitions>
                         <ColumnDefinition
@@ -327,7 +291,8 @@
 
                 <!--HLL Limits Version-->
                 <Grid
-                    Grid.Row="7">
+                    Grid.Row="6"
+                    Background="{StaticResource ColorBackgroundSeparator}">
 
                     <Grid.ColumnDefinitions>
                         <ColumnDefinition
@@ -362,8 +327,7 @@
 
                 <!--Software Versjon-->
                 <Grid
-                    Grid.Row="8"
-                    Background="{StaticResource ColorBackgroundSeparator}">
+                    Grid.Row="7">
 
                     <Grid.ColumnDefinitions>
                         <ColumnDefinition
@@ -391,6 +355,42 @@
                         <telerik:Label
                             FontSize="{StaticResource fontSizeLabel}"
                             Content="{Binding Path=softwareVersion}" />
+
+                    </Viewbox>
+
+                </Grid>
+
+                <!--Klient Modus-->
+                <Grid
+                    Grid.Row="8"
+                    Background="{StaticResource ColorBackgroundSeparator}">
+
+                    <Grid.ColumnDefinitions>
+                        <ColumnDefinition
+                            Width="*" />
+                        <ColumnDefinition
+                            Width="12*" />
+                    </Grid.ColumnDefinitions>
+
+                    <Viewbox
+                        Grid.Column="0"
+                        StretchDirection="Both"
+                        Stretch="Uniform">
+
+                        <Image
+                            Source="{Binding Path=clientModeIcon}" />
+
+                    </Viewbox>
+
+                    <Viewbox
+                        Grid.Column="1"
+                        StretchDirection="Both"
+                        Stretch="Uniform"
+                        HorizontalAlignment="Left">
+
+                        <telerik:Label
+                            Content="{Binding Path=clientMode}"
+                            FontSize="{StaticResource fontSizeLabel}" />
 
                     </Viewbox>
 

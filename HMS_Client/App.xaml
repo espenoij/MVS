@@ -200,9 +200,9 @@
 
             <!--Information: Landing Limits-->
             <sys:Double
-                x:Key="fontSizeInfo1">24</sys:Double>
+                x:Key="fontSizeInfo1">20</sys:Double>
             <sys:Double
-                x:Key="fontSizeInfo2">20</sys:Double>
+                x:Key="fontSizeInfo2">18</sys:Double>
             <sys:Double
                 x:Key="infoStrokeThickness">1</sys:Double>
             <SolidColorBrush

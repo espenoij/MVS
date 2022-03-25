@@ -10,1255 +10,1260 @@
     d:DesignWidth="1900">
 
     <Grid>
-
+            
         <Grid>
 
             <Grid.ColumnDefinitions>
                 <ColumnDefinition
-                    Width="3*" />
+                    Width="*" />
                 <ColumnDefinition
-                    Width="2*" />
+                    Width="*" />
             </Grid.ColumnDefinitions>
 
             <Grid.RowDefinitions>
                 <RowDefinition
-                    Height="2*" />
+                    Height="*" />
                 <RowDefinition
-                    Height="3*" />
+                    Height="*" />
             </Grid.RowDefinitions>
 
-            <telerik:GroupBox
-                Header="Landing Limits"
+                <telerik:GroupBox
                 Grid.Column="0"
                 Grid.Row="0"
-                Margin="8">
-
-                <Grid>
-
-                    <Grid.ColumnDefinitions>
-                        <ColumnDefinition
-                            Width="2*" />
-                        <ColumnDefinition
-                            Width="2*" />
-                        <ColumnDefinition
-                            Width="1*" />
-                        <ColumnDefinition
-                            Width="1*" />
-                        <ColumnDefinition
-                            Width="1*" />
-                        <ColumnDefinition
-                            Width="1*" />
-                        <ColumnDefinition
-                            Width="1*" />
-                        <ColumnDefinition
-                            Width="1*" />
-                        <ColumnDefinition
-                            Width="1*" />
-                        <ColumnDefinition
-                            Width="1*" />
-                        <ColumnDefinition
-                            Width="1*" />
-                    </Grid.ColumnDefinitions>
-
-                    <Grid.RowDefinitions>
-                        <RowDefinition
-                            Height="*" />
-                        <RowDefinition
-                            Height="*" />
-                        <RowDefinition
-                            Height="*" />
-                        <RowDefinition
-                            Height="*" />
-                        <RowDefinition
-                            Height="*" />
-                        <RowDefinition
-                            Height="*" />
-                        <RowDefinition
-                            Height="*" />
-                        <RowDefinition
-                            Height="*" />
-                        <RowDefinition
-                            Height="*" />
-                    </Grid.RowDefinitions>
-
-                    <!--****************************************************-->
-                    <!--Labels-->
-                    <!--****************************************************-->
-                    <Grid
-                        Grid.Column="0"
-                        Grid.Row="0"
-                        Grid.RowSpan="3">
-
-                        <TextBlock
-                            Text="Aircraft&#x0a;Category"
-                            TextAlignment="Center"
-                            VerticalAlignment="Center"
-                            HorizontalAlignment="Center"
-                            FontSize="{StaticResource fontSizeInfo1}" />
-
-                        <Rectangle
-                            Stroke="{StaticResource infoLineStroke}"
-                            StrokeThickness="{StaticResource infoStrokeThickness}" />
-
-                    </Grid>
-
-                    <Grid
-                        Grid.Column="1"
-                        Grid.Row="0"
-                        Grid.RowSpan="3">
-
-                        <TextBlock
-                            Text="Day /&#x0a;Night"
-                            TextAlignment="Center"
-                            VerticalAlignment="Center"
-                            HorizontalAlignment="Center"
-                            FontSize="{StaticResource fontSizeInfo1}" />
-
-                        <Rectangle
-                            Stroke="{StaticResource infoLineStroke}"
-                            StrokeThickness="{StaticResource infoStrokeThickness}" />
-
-                    </Grid>
-
-                    <Grid
-                        Grid.Column="2"
-                        Grid.ColumnSpan="9"
-                        Grid.Row="0">
-
-                        <TextBlock
-                            Text="HELIDECK CATEGORY"
-                            VerticalAlignment="Center"
-                            HorizontalAlignment="Center"
-                            FontSize="{StaticResource fontSizeInfo1}" />
-
-                        <Rectangle
-                            Stroke="{StaticResource infoLineStroke}"
-                            StrokeThickness="{StaticResource infoStrokeThickness}" />
-
-                    </Grid>
-
-                    <Grid
-                        Grid.Column="2"
-                        Grid.ColumnSpan="3"
-                        Grid.Row="1">
+                Header="Landing Limits"
+                    Margin="8">
+
+                    <StackPanel
+                        Margin="8">
+
+                        <Grid>
+
+                            <Grid.ColumnDefinitions>
+                                <ColumnDefinition
+                                    Width="2*" />
+                                <ColumnDefinition
+                                    Width="2*" />
+                                <ColumnDefinition
+                                    Width="1*" />
+                                <ColumnDefinition
+                                    Width="1*" />
+                                <ColumnDefinition
+                                    Width="1*" />
+                                <ColumnDefinition
+                                    Width="1*" />
+                                <ColumnDefinition
+                                    Width="1*" />
+                                <ColumnDefinition
+                                    Width="1*" />
+                                <ColumnDefinition
+                                    Width="1*" />
+                                <ColumnDefinition
+                                    Width="1*" />
+                                <ColumnDefinition
+                                    Width="1*" />
+                            </Grid.ColumnDefinitions>
+
+                            <Grid.RowDefinitions>
+                                <RowDefinition
+                                    Height="*" />
+                                <RowDefinition
+                                    Height="*" />
+                                <RowDefinition
+                                    Height="*" />
+                                <RowDefinition
+                                    Height="*" />
+                                <RowDefinition
+                                    Height="*" />
+                                <RowDefinition
+                                    Height="*" />
+                                <RowDefinition
+                                    Height="*" />
+                                <RowDefinition
+                                    Height="*" />
+                                <RowDefinition
+                                    Height="*" />
+                            </Grid.RowDefinitions>
+
+                            <!--****************************************************-->
+                            <!--Labels-->
+                            <!--****************************************************-->
+                            <Grid
+                                Grid.Column="0"
+                                Grid.Row="0"
+                                Grid.RowSpan="3">
+
+                                <TextBlock
+                                    Text="Aircraft&#x0a;Category"
+                                    TextAlignment="Center"
+                                    VerticalAlignment="Center"
+                                    HorizontalAlignment="Center"
+                                    FontSize="{StaticResource fontSizeInfo1}" />
+
+                                <Rectangle
+                                    Stroke="{StaticResource infoLineStroke}"
+                                    StrokeThickness="{StaticResource infoStrokeThickness}" />
+
+                            </Grid>
+
+                            <Grid
+                                Grid.Column="1"
+                                Grid.Row="0"
+                                Grid.RowSpan="3">
+
+                                <TextBlock
+                                    Text="Day /&#x0a;Night"
+                                    TextAlignment="Center"
+                                    VerticalAlignment="Center"
+                                    HorizontalAlignment="Center"
+                                    FontSize="{StaticResource fontSizeInfo1}" />
+
+                                <Rectangle
+                                    Stroke="{StaticResource infoLineStroke}"
+                                    StrokeThickness="{StaticResource infoStrokeThickness}" />
+
+                            </Grid>
+
+                            <Grid
+                                Grid.Column="2"
+                                Grid.ColumnSpan="9"
+                                Grid.Row="0">
+
+                                <TextBlock
+                                    Text="HELIDECK CATEGORY"
+                                    VerticalAlignment="Center"
+                                    HorizontalAlignment="Center"
+                                    FontSize="{StaticResource fontSizeInfo1}" />
+
+                                <Rectangle
+                                    Stroke="{StaticResource infoLineStroke}"
+                                    StrokeThickness="{StaticResource infoStrokeThickness}" />
+
+                            </Grid>
+
+                            <Grid
+                                Grid.Column="2"
+                                Grid.ColumnSpan="3"
+                                Grid.Row="1">
 
-                        <TextBlock
-                            Text="1"
-                            VerticalAlignment="Center"
-                            HorizontalAlignment="Center"
-                            FontSize="{StaticResource fontSizeInfo1}" />
+                                <TextBlock
+                                    Text="1"
+                                    VerticalAlignment="Center"
+                                    HorizontalAlignment="Center"
+                                    FontSize="{StaticResource fontSizeInfo1}" />
 
-                        <Rectangle
-                            Stroke="{StaticResource infoLineStroke}"
-                            StrokeThickness="{StaticResource infoStrokeThickness}" />
+                                <Rectangle
+                                    Stroke="{StaticResource infoLineStroke}"
+                                    StrokeThickness="{StaticResource infoStrokeThickness}" />
 
-                    </Grid>
+                            </Grid>
 
 
-                    <Grid
-                        Grid.Column="5"
-                        Grid.ColumnSpan="3"
-                        Grid.Row="1">
+                            <Grid
+                                Grid.Column="5"
+                                Grid.ColumnSpan="3"
+                                Grid.Row="1">
 
-                        <TextBlock
-                            Text="2"
-                            VerticalAlignment="Center"
-                            HorizontalAlignment="Center"
-                            FontSize="{StaticResource fontSizeInfo1}" />
-
-                        <Rectangle
-                            Stroke="{StaticResource infoLineStroke}"
-                            StrokeThickness="{StaticResource infoStrokeThickness}" />
+                                <TextBlock
+                                    Text="2"
+                                    VerticalAlignment="Center"
+                                    HorizontalAlignment="Center"
+                                    FontSize="{StaticResource fontSizeInfo1}" />
+
+                                <Rectangle
+                                    Stroke="{StaticResource infoLineStroke}"
+                                    StrokeThickness="{StaticResource infoStrokeThickness}" />
 
-                    </Grid>
+                            </Grid>
 
-                    <Grid
-                        Grid.Column="8"
-                        Grid.ColumnSpan="3"
-                        Grid.Row="1">
-
-                        <TextBlock
-                            Text="3"
-                            VerticalAlignment="Center"
-                            HorizontalAlignment="Center"
-                            FontSize="{StaticResource fontSizeInfo1}" />
-
-                        <Rectangle
-                            Stroke="{StaticResource infoLineStroke}"
-                            StrokeThickness="{StaticResource infoStrokeThickness}" />
+                            <Grid
+                                Grid.Column="8"
+                                Grid.ColumnSpan="3"
+                                Grid.Row="1">
+
+                                <TextBlock
+                                    Text="3"
+                                    VerticalAlignment="Center"
+                                    HorizontalAlignment="Center"
+                                    FontSize="{StaticResource fontSizeInfo1}" />
+
+                                <Rectangle
+                                    Stroke="{StaticResource infoLineStroke}"
+                                    StrokeThickness="{StaticResource infoStrokeThickness}" />
 
-                    </Grid>
-
-                    <Grid
-                        Grid.Row="2"
-                        Grid.Column="2">
-
-                        <TextBlock
-                            Text="P/R"
-                            VerticalAlignment="Center"
-                            HorizontalAlignment="Center"
-                            FontSize="{StaticResource fontSizeInfo1}" />
-
-                        <Rectangle
-                            Stroke="{StaticResource infoLineStroke}"
-                            StrokeThickness="{StaticResource infoStrokeThickness}" />
+                            </Grid>
+
+                            <Grid
+                                Grid.Row="2"
+                                Grid.Column="2">
+
+                                <TextBlock
+                                    Text="P/R"
+                                    VerticalAlignment="Center"
+                                    HorizontalAlignment="Center"
+                                    FontSize="{StaticResource fontSizeInfo1}" />
+
+                                <Rectangle
+                                    Stroke="{StaticResource infoLineStroke}"
+                                    StrokeThickness="{StaticResource infoStrokeThickness}" />
 
-                    </Grid>
-
-                    <Grid
-                        Grid.Row="2"
-                        Grid.Column="3">
-
-                        <TextBlock
-                            Text="INC"
-                            VerticalAlignment="Center"
-                            HorizontalAlignment="Center"
-                            FontSize="{StaticResource fontSizeInfo1}" />
-
-                        <Rectangle
-                            Stroke="{StaticResource infoLineStroke}"
-                            StrokeThickness="{StaticResource infoStrokeThickness}" />
+                            </Grid>
+
+                            <Grid
+                                Grid.Row="2"
+                                Grid.Column="3">
+
+                                <TextBlock
+                                    Text="INC"
+                                    VerticalAlignment="Center"
+                                    HorizontalAlignment="Center"
+                                    FontSize="{StaticResource fontSizeInfo1}" />
+
+                                <Rectangle
+                                    Stroke="{StaticResource infoLineStroke}"
+                                    StrokeThickness="{StaticResource infoStrokeThickness}" />
 
-                    </Grid>
-
-                    <Grid
-                        Grid.Row="2"
-                        Grid.Column="4">
-
-                        <TextBlock
-                            Text="SHR"
-                            VerticalAlignment="Center"
-                            HorizontalAlignment="Center"
-                            FontSize="{StaticResource fontSizeInfo1}" />
-
-                        <Rectangle
-                            Stroke="{StaticResource infoLineStroke}"
-                            StrokeThickness="{StaticResource infoStrokeThickness}" />
+                            </Grid>
+
+                            <Grid
+                                Grid.Row="2"
+                                Grid.Column="4">
+
+                                <TextBlock
+                                    Text="SHR"
+                                    VerticalAlignment="Center"
+                                    HorizontalAlignment="Center"
+                                    FontSize="{StaticResource fontSizeInfo1}" />
+
+                                <Rectangle
+                                    Stroke="{StaticResource infoLineStroke}"
+                                    StrokeThickness="{StaticResource infoStrokeThickness}" />
 
-                    </Grid>
-
-                    <Grid
-                        Grid.Row="2"
-                        Grid.Column="5">
-
-                        <TextBlock
-                            Text="P/R"
-                            VerticalAlignment="Center"
-                            HorizontalAlignment="Center"
-                            FontSize="{StaticResource fontSizeInfo1}" />
-
-                        <Rectangle
-                            Stroke="{StaticResource infoLineStroke}"
-                            StrokeThickness="{StaticResource infoStrokeThickness}" />
-
-                    </Grid>
-
-                    <Grid
-                        Grid.Row="2"
-                        Grid.Column="6">
-
-                        <TextBlock
-                            Text="INC"
-                            VerticalAlignment="Center"
-                            HorizontalAlignment="Center"
-                            FontSize="{StaticResource fontSizeInfo1}" />
-
-                        <Rectangle
-                            Stroke="{StaticResource infoLineStroke}"
-                            StrokeThickness="{StaticResource infoStrokeThickness}" />
-
-                    </Grid>
-
-                    <Grid
-                        Grid.Row="2"
-                        Grid.Column="7">
-
-                        <TextBlock
-                            Text="SHR"
-                            VerticalAlignment="Center"
-                            HorizontalAlignment="Center"
-                            FontSize="{StaticResource fontSizeInfo1}" />
-
-                        <Rectangle
-                            Stroke="{StaticResource infoLineStroke}"
-                            StrokeThickness="{StaticResource infoStrokeThickness}" />
-
-                    </Grid>
-
-                    <Grid
-                        Grid.Row="2"
-                        Grid.Column="8">
-
-                        <TextBlock
-                            Text="P/R"
-                            VerticalAlignment="Center"
-                            HorizontalAlignment="Center"
-                            FontSize="{StaticResource fontSizeInfo1}" />
-
-                        <Rectangle
-                            Stroke="{StaticResource infoLineStroke}"
-                            StrokeThickness="{StaticResource infoStrokeThickness}" />
-
-                    </Grid>
-
-                    <Grid
-                        Grid.Row="2"
-                        Grid.Column="9">
-
-                        <TextBlock
-                            Text="INC"
-                            VerticalAlignment="Center"
-                            HorizontalAlignment="Center"
-                            FontSize="{StaticResource fontSizeInfo1}" />
-
-                        <Rectangle
-                            Stroke="{StaticResource infoLineStroke}"
-                            StrokeThickness="{StaticResource infoStrokeThickness}" />
-
-                    </Grid>
-
-                    <Grid
-                        Grid.Row="2"
-                        Grid.Column="10">
-
-                        <TextBlock
-                            Text="SHR"
-                            VerticalAlignment="Center"
-                            HorizontalAlignment="Center"
-                            FontSize="{StaticResource fontSizeInfo1}" />
-
-                        <Rectangle
-                            Stroke="{StaticResource infoLineStroke}"
-                            StrokeThickness="{StaticResource infoStrokeThickness}" />
-
-                    </Grid>
-
-                    <Grid
-                        Grid.Column="0"
-                        Grid.Row="3"
-                        Grid.RowSpan="3">
-
-                        <TextBlock
-                            Text="A"
-                            TextAlignment="Center"
-                            VerticalAlignment="Center"
-                            HorizontalAlignment="Center"
-                            FontSize="{StaticResource fontSizeInfo1}" />
-
-                        <Rectangle
-                            Stroke="{StaticResource infoLineStroke}"
-                            StrokeThickness="{StaticResource infoStrokeThickness}" />
-
-                    </Grid>
-
-                    <Grid
-                        Grid.Column="0"
-                        Grid.Row="6"
-                        Grid.RowSpan="3">
-
-                        <TextBlock
-                            Text="B"
-                            TextAlignment="Center"
-                            VerticalAlignment="Center"
-                            HorizontalAlignment="Center"
-                            FontSize="{StaticResource fontSizeInfo1}" />
-
-                        <Rectangle
-                            Stroke="{StaticResource infoLineStroke}"
-                            StrokeThickness="{StaticResource infoStrokeThickness}" />
-
-                    </Grid>
-
-                    <Grid
-                        Grid.Row="3"
-                        Grid.Column="1">
-
-                        <TextBlock
-                            Text="DAY"
-                            VerticalAlignment="Center"
-                            HorizontalAlignment="Center"
-                            FontSize="{StaticResource fontSizeInfo1}" />
-
-                        <Rectangle
-                            Stroke="{StaticResource infoLineStroke}"
-                            StrokeThickness="{StaticResource infoStrokeThickness}" />
-
-                    </Grid>
-
-                    <Grid
-                        Grid.Row="4"
-                        Grid.Column="1">
-
-                        <TextBlock
-                            Text="Night Semi-subs"
-                            VerticalAlignment="Center"
-                            HorizontalAlignment="Center"
-                            FontSize="{StaticResource fontSizeInfo1}" />
-
-                        <Rectangle
-                            Stroke="{StaticResource infoLineStroke}"
-                            StrokeThickness="{StaticResource infoStrokeThickness}" />
-
-                    </Grid>
-
-                    <Grid
-                        Grid.Row="5"
-                        Grid.Column="1">
-
-                        <TextBlock
-                            Text="Night Other"
-                            VerticalAlignment="Center"
-                            HorizontalAlignment="Center"
-                            FontSize="{StaticResource fontSizeInfo1}" />
-
-                        <Rectangle
-                            Stroke="{StaticResource infoLineStroke}"
-                            StrokeThickness="{StaticResource infoStrokeThickness}" />
-
-                    </Grid>
-
-                    <Grid
-                        Grid.Row="6"
-                        Grid.Column="1">
-
-                        <TextBlock
-                            Text="DAY"
-                            VerticalAlignment="Center"
-                            HorizontalAlignment="Center"
-                            FontSize="{StaticResource fontSizeInfo1}" />
-
-                        <Rectangle
-                            Stroke="{StaticResource infoLineStroke}"
-                            StrokeThickness="{StaticResource infoStrokeThickness}" />
-
-                    </Grid>
-
-                    <Grid
-                        Grid.Row="7"
-                        Grid.Column="1">
-
-                        <TextBlock
-                            Text="Night Semi-subs"
-                            VerticalAlignment="Center"
-                            HorizontalAlignment="Center"
-                            FontSize="{StaticResource fontSizeInfo1}" />
-
-                        <Rectangle
-                            Stroke="{StaticResource infoLineStroke}"
-                            StrokeThickness="{StaticResource infoStrokeThickness}" />
-
-                    </Grid>
-
-                    <Grid
-                        Grid.Row="8"
-                        Grid.Column="1">
-
-                        <TextBlock
-                            Text="Night Other"
-                            VerticalAlignment="Center"
-                            HorizontalAlignment="Center"
-                            FontSize="{StaticResource fontSizeInfo1}" />
-
-                        <Rectangle
-                            Stroke="{StaticResource infoLineStroke}"
-                            StrokeThickness="{StaticResource infoStrokeThickness}" />
-
-                    </Grid>
-
-                    <!--****************************************************-->
-                    <!--Data: 1: P/R-->
-                    <!--****************************************************-->
-                    <Grid
-                        Grid.Row="3"
-                        Grid.Column="2">
-
-                        <TextBlock
-                            Text="&#x00b1;3"
-                            VerticalAlignment="Center"
-                            HorizontalAlignment="Center"
-                            FontSize="{StaticResource fontSizeInfo2}" />
-
-                        <Rectangle
-                            Stroke="{StaticResource infoLineStroke}"
-                            StrokeThickness="{StaticResource infoStrokeThickness}" />
-
-                    </Grid>
-
-                    <Grid
-                        Grid.Row="4"
-                        Grid.Column="2">
-
-                        <TextBlock
-                            Text="&#x00b1;3"
-                            VerticalAlignment="Center"
-                            HorizontalAlignment="Center"
-                            FontSize="{StaticResource fontSizeInfo2}" />
-
-                        <Rectangle
-                            Stroke="{StaticResource infoLineStroke}"
-                            StrokeThickness="{StaticResource infoStrokeThickness}" />
-
-                    </Grid>
-
-                    <Grid
-                        Grid.Row="5"
-                        Grid.Column="2">
-
-                        <TextBlock
-                            Text="&#x00b1;2"
-                            VerticalAlignment="Center"
-                            HorizontalAlignment="Center"
-                            FontSize="{StaticResource fontSizeInfo2}" />
-
-                        <Rectangle
-                            Stroke="{StaticResource infoLineStroke}"
-                            StrokeThickness="{StaticResource infoStrokeThickness}" />
-
-                    </Grid>
-
-                    <Grid
-                        Grid.Row="6"
-                        Grid.Column="2">
-
-                        <TextBlock
-                            Text="&#x00b1;4"
-                            VerticalAlignment="Center"
-                            HorizontalAlignment="Center"
-                            FontSize="{StaticResource fontSizeInfo2}" />
-
-                        <Rectangle
-                            Stroke="{StaticResource infoLineStroke}"
-                            StrokeThickness="{StaticResource infoStrokeThickness}" />
-
-                    </Grid>
-
-                    <Grid
-                        Grid.Row="7"
-                        Grid.Column="2">
-
-                        <TextBlock
-                            Text="&#x00b1;4"
-                            VerticalAlignment="Center"
-                            HorizontalAlignment="Center"
-                            FontSize="{StaticResource fontSizeInfo2}" />
-
-                        <Rectangle
-                            Stroke="{StaticResource infoLineStroke}"
-                            StrokeThickness="{StaticResource infoStrokeThickness}" />
-
-                    </Grid>
-
-                    <Grid
-                        Grid.Row="8"
-                        Grid.Column="2">
-
-                        <TextBlock
-                            Text="&#x00b1;3"
-                            VerticalAlignment="Center"
-                            HorizontalAlignment="Center"
-                            FontSize="{StaticResource fontSizeInfo2}" />
-
-                        <Rectangle
-                            Stroke="{StaticResource infoLineStroke}"
-                            StrokeThickness="{StaticResource infoStrokeThickness}" />
-
-                    </Grid>
-
-                    <!--****************************************************-->
-                    <!--Data: 1: INC-->
-                    <!--****************************************************-->
-                    <Grid
-                        Grid.Row="3"
-                        Grid.Column="3">
-
-                        <TextBlock
-                            Text="3.5"
-                            VerticalAlignment="Center"
-                            HorizontalAlignment="Center"
-                            FontSize="{StaticResource fontSizeInfo2}" />
-
-                        <Rectangle
-                            Stroke="{StaticResource infoLineStroke}"
-                            StrokeThickness="{StaticResource infoStrokeThickness}" />
-
-                    </Grid>
-
-                    <Grid
-                        Grid.Row="4"
-                        Grid.Column="3">
-
-                        <TextBlock
-                            Text="3.5"
-                            VerticalAlignment="Center"
-                            HorizontalAlignment="Center"
-                            FontSize="{StaticResource fontSizeInfo2}" />
-
-                        <Rectangle
-                            Stroke="{StaticResource infoLineStroke}"
-                            StrokeThickness="{StaticResource infoStrokeThickness}" />
-
-                    </Grid>
-
-                    <Grid
-                        Grid.Row="5"
-                        Grid.Column="3">
-
-                        <TextBlock
-                            Text="2.5"
-                            VerticalAlignment="Center"
-                            HorizontalAlignment="Center"
-                            FontSize="{StaticResource fontSizeInfo2}" />
-
-                        <Rectangle
-                            Stroke="{StaticResource infoLineStroke}"
-                            StrokeThickness="{StaticResource infoStrokeThickness}" />
-
-                    </Grid>
-
-                    <Grid
-                        Grid.Row="6"
-                        Grid.Column="3">
-
-                        <TextBlock
-                            Text="4.5"
-                            VerticalAlignment="Center"
-                            HorizontalAlignment="Center"
-                            FontSize="{StaticResource fontSizeInfo2}" />
-
-                        <Rectangle
-                            Stroke="{StaticResource infoLineStroke}"
-                            StrokeThickness="{StaticResource infoStrokeThickness}" />
-
-                    </Grid>
-
-                    <Grid
-                        Grid.Row="7"
-                        Grid.Column="3">
-
-                        <TextBlock
-                            Text="4.5"
-                            VerticalAlignment="Center"
-                            HorizontalAlignment="Center"
-                            FontSize="{StaticResource fontSizeInfo2}" />
-
-                        <Rectangle
-                            Stroke="{StaticResource infoLineStroke}"
-                            StrokeThickness="{StaticResource infoStrokeThickness}" />
-
-                    </Grid>
-
-                    <Grid
-                        Grid.Row="8"
-                        Grid.Column="3">
-
-                        <TextBlock
-                            Text="3.5"
-                            VerticalAlignment="Center"
-                            HorizontalAlignment="Center"
-                            FontSize="{StaticResource fontSizeInfo2}" />
-
-                        <Rectangle
-                            Stroke="{StaticResource infoLineStroke}"
-                            StrokeThickness="{StaticResource infoStrokeThickness}" />
-
-                    </Grid>
-
-                    <!--****************************************************-->
-                    <!--Data: 1: SHR-->
-                    <!--****************************************************-->
-                    <Grid
-                        Grid.Row="3"
-                        Grid.Column="4">
-
-                        <TextBlock
-                            Text="1.3"
-                            VerticalAlignment="Center"
-                            HorizontalAlignment="Center"
-                            FontSize="{StaticResource fontSizeInfo2}" />
-
-                        <Rectangle
-                            Stroke="{StaticResource infoLineStroke}"
-                            StrokeThickness="{StaticResource infoStrokeThickness}" />
-
-                    </Grid>
-
-                    <Grid
-                        Grid.Row="4"
-                        Grid.Column="4">
-
-                        <TextBlock
-                            Text="1.0"
-                            VerticalAlignment="Center"
-                            HorizontalAlignment="Center"
-                            FontSize="{StaticResource fontSizeInfo2}" />
-
-                        <Rectangle
-                            Stroke="{StaticResource infoLineStroke}"
-                            StrokeThickness="{StaticResource infoStrokeThickness}" />
-
-                    </Grid>
-
-                    <Grid
-                        Grid.Row="5"
-                        Grid.Column="4">
-
-                        <TextBlock
-                            Text="1.0"
-                            VerticalAlignment="Center"
-                            HorizontalAlignment="Center"
-                            FontSize="{StaticResource fontSizeInfo2}" />
-
-                        <Rectangle
-                            Stroke="{StaticResource infoLineStroke}"
-                            StrokeThickness="{StaticResource infoStrokeThickness}" />
-
-                    </Grid>
-
-                    <Grid
-                        Grid.Row="6"
-                        Grid.Column="4">
-
-                        <TextBlock
-                            Text="1.3"
-                            VerticalAlignment="Center"
-                            HorizontalAlignment="Center"
-                            FontSize="{StaticResource fontSizeInfo2}" />
-
-                        <Rectangle
-                            Stroke="{StaticResource infoLineStroke}"
-                            StrokeThickness="{StaticResource infoStrokeThickness}" />
-
-                    </Grid>
-
-                    <Grid
-                        Grid.Row="7"
-                        Grid.Column="4">
-
-                        <TextBlock
-                            Text="1.3"
-                            VerticalAlignment="Center"
-                            HorizontalAlignment="Center"
-                            FontSize="{StaticResource fontSizeInfo2}" />
-
-                        <Rectangle
-                            Stroke="{StaticResource infoLineStroke}"
-                            StrokeThickness="{StaticResource infoStrokeThickness}" />
-
-                    </Grid>
-
-                    <Grid
-                        Grid.Row="8"
-                        Grid.Column="4">
-
-                        <TextBlock
-                            Text="1.0"
-                            VerticalAlignment="Center"
-                            HorizontalAlignment="Center"
-                            FontSize="{StaticResource fontSizeInfo2}" />
-
-                        <Rectangle
-                            Stroke="{StaticResource infoLineStroke}"
-                            StrokeThickness="{StaticResource infoStrokeThickness}" />
-
-                    </Grid>
-
-                    <!--****************************************************-->
-                    <!--Data: 2: P/R-->
-                    <!--****************************************************-->
-                    <Grid
-                        Grid.Row="3"
-                        Grid.Column="5">
-
-                        <TextBlock
-                            Text="&#x00b1;2"
-                            VerticalAlignment="Center"
-                            HorizontalAlignment="Center"
-                            FontSize="{StaticResource fontSizeInfo2}" />
-
-                        <Rectangle
-                            Stroke="{StaticResource infoLineStroke}"
-                            StrokeThickness="{StaticResource infoStrokeThickness}" />
-
-                    </Grid>
-
-                    <Grid
-                        Grid.Row="4"
-                        Grid.Column="5"
-                        Grid.ColumnSpan="3">
-
-                        <TextBlock
-                            Text="Not Applicable"
-                            VerticalAlignment="Center"
-                            HorizontalAlignment="Center"
-                            FontSize="{StaticResource fontSizeInfo2}" />
-
-                        <Rectangle
-                            Stroke="{StaticResource infoLineStroke}"
-                            StrokeThickness="{StaticResource infoStrokeThickness}" />
-
-                    </Grid>
-                    
-                    <Grid
-                        Grid.Row="5"
-                        Grid.Column="5">
-
-                        <TextBlock
-                            Text="&#x00b1;2"
-                            VerticalAlignment="Center"
-                            HorizontalAlignment="Center"
-                            FontSize="{StaticResource fontSizeInfo2}" />
-
-                        <Rectangle
-                            Stroke="{StaticResource infoLineStroke}"
-                            StrokeThickness="{StaticResource infoStrokeThickness}" />
-
-                    </Grid>
-
-                    <Grid
-                        Grid.Row="6"
-                        Grid.Column="5">
-
-                        <TextBlock
-                            Text="&#x00b1;3"
-                            VerticalAlignment="Center"
-                            HorizontalAlignment="Center"
-                            FontSize="{StaticResource fontSizeInfo2}" />
-
-                        <Rectangle
-                            Stroke="{StaticResource infoLineStroke}"
-                            StrokeThickness="{StaticResource infoStrokeThickness}" />
-
-                    </Grid>
-
-                    <Grid
-                        Grid.Row="7"
-                        Grid.Column="5"
-                        Grid.ColumnSpan="3">
-
-                        <TextBlock
-                            Text="Not Applicable"
-                            VerticalAlignment="Center"
-                            HorizontalAlignment="Center"
-                            FontSize="{StaticResource fontSizeInfo2}" />
-
-                        <Rectangle
-                            Stroke="{StaticResource infoLineStroke}"
-                            StrokeThickness="{StaticResource infoStrokeThickness}" />
-
-                    </Grid>
-
-                    <Grid
-                        Grid.Row="8"
-                        Grid.Column="5">
-
-                        <TextBlock
-                            Text="&#x00b1;2"
-                            VerticalAlignment="Center"
-                            HorizontalAlignment="Center"
-                            FontSize="{StaticResource fontSizeInfo2}" />
-
-                        <Rectangle
-                            Stroke="{StaticResource infoLineStroke}"
-                            StrokeThickness="{StaticResource infoStrokeThickness}" />
-
-                    </Grid>
-
-                    <!--****************************************************-->
-                    <!--Data: 2: INC-->
-                    <!--****************************************************-->
-                    <Grid
-                        Grid.Row="3"
-                        Grid.Column="6">
-
-                        <TextBlock
-                            Text="2.5"
-                            VerticalAlignment="Center"
-                            HorizontalAlignment="Center"
-                            FontSize="{StaticResource fontSizeInfo2}" />
-
-                        <Rectangle
-                            Stroke="{StaticResource infoLineStroke}"
-                            StrokeThickness="{StaticResource infoStrokeThickness}" />
-
-                    </Grid>
-
-                    <Grid
-                        Grid.Row="5"
-                        Grid.Column="6">
-
-                        <TextBlock
-                            Text="2.5"
-                            VerticalAlignment="Center"
-                            HorizontalAlignment="Center"
-                            FontSize="{StaticResource fontSizeInfo2}" />
-
-                        <Rectangle
-                            Stroke="{StaticResource infoLineStroke}"
-                            StrokeThickness="{StaticResource infoStrokeThickness}" />
-
-                    </Grid>
-
-                    <Grid
-                        Grid.Row="6"
-                        Grid.Column="6">
-
-                        <TextBlock
-                            Text="3.5"
-                            VerticalAlignment="Center"
-                            HorizontalAlignment="Center"
-                            FontSize="{StaticResource fontSizeInfo2}" />
-
-                        <Rectangle
-                            Stroke="{StaticResource infoLineStroke}"
-                            StrokeThickness="{StaticResource infoStrokeThickness}" />
-
-                    </Grid>
-
-                    <Grid
-                        Grid.Row="8"
-                        Grid.Column="6">
-
-                        <TextBlock
-                            Text="2.5"
-                            VerticalAlignment="Center"
-                            HorizontalAlignment="Center"
-                            FontSize="{StaticResource fontSizeInfo2}" />
-
-                        <Rectangle
-                            Stroke="{StaticResource infoLineStroke}"
-                            StrokeThickness="{StaticResource infoStrokeThickness}" />
-
-                    </Grid>
-
-                    <!--****************************************************-->
-                    <!--Data: 2: SHR-->
-                    <!--****************************************************-->
-                    <Grid
-                        Grid.Row="3"
-                        Grid.Column="7">
-
-                        <TextBlock
-                            Text="1.0"
-                            VerticalAlignment="Center"
-                            HorizontalAlignment="Center"
-                            FontSize="{StaticResource fontSizeInfo2}" />
-
-                        <Rectangle
-                            Stroke="{StaticResource infoLineStroke}"
-                            StrokeThickness="{StaticResource infoStrokeThickness}" />
-
-                    </Grid>
-
-                    <Grid
-                        Grid.Row="5"
-                        Grid.Column="7">
-
-                        <TextBlock
-                            Text="0.5"
-                            VerticalAlignment="Center"
-                            HorizontalAlignment="Center"
-                            FontSize="{StaticResource fontSizeInfo2}" />
-
-                        <Rectangle
-                            Stroke="{StaticResource infoLineStroke}"
-                            StrokeThickness="{StaticResource infoStrokeThickness}" />
-
-                    </Grid>
-
-                    <Grid
-                        Grid.Row="6"
-                        Grid.Column="7">
-
-                        <TextBlock
-                            Text="1.0"
-                            VerticalAlignment="Center"
-                            HorizontalAlignment="Center"
-                            FontSize="{StaticResource fontSizeInfo2}" />
-
-                        <Rectangle
-                            Stroke="{StaticResource infoLineStroke}"
-                            StrokeThickness="{StaticResource infoStrokeThickness}" />
-
-                    </Grid>
-
-                    <Grid
-                        Grid.Row="8"
-                        Grid.Column="7">
-
-                        <TextBlock
-                            Text="0.5"
-                            VerticalAlignment="Center"
-                            HorizontalAlignment="Center"
-                            FontSize="{StaticResource fontSizeInfo2}" />
-
-                        <Rectangle
-                            Stroke="{StaticResource infoLineStroke}"
-                            StrokeThickness="{StaticResource infoStrokeThickness}" />
-
-                    </Grid>
-
-                    <!--****************************************************-->
-                    <!--Data: 3: P/R-->
-                    <!--****************************************************-->
-                    <Grid
-                        Grid.Row="3"
-                        Grid.Column="8">
-
-                        <TextBlock
-                            Text="&#x00b1;2"
-                            VerticalAlignment="Center"
-                            HorizontalAlignment="Center"
-                            FontSize="{StaticResource fontSizeInfo2}" />
-
-                        <Rectangle
-                            Stroke="{StaticResource infoLineStroke}"
-                            StrokeThickness="{StaticResource infoStrokeThickness}" />
-
-                    </Grid>
-
-                    <Grid
-                        Grid.Row="4"
-                        Grid.Column="8"
-                        Grid.ColumnSpan="3">
-
-                        <TextBlock
-                            Text="Not Applicable"
-                            VerticalAlignment="Center"
-                            HorizontalAlignment="Center"
-                            FontSize="{StaticResource fontSizeInfo2}" />
-
-                        <Rectangle
-                            Stroke="{StaticResource infoLineStroke}"
-                            StrokeThickness="{StaticResource infoStrokeThickness}" />
-
-                    </Grid>
-
-                    <Grid
-                        Grid.Row="5"
-                        Grid.Column="8">
-
-                        <TextBlock
-                            Text="&#x00b1;1 *"
-                            VerticalAlignment="Center"
-                            HorizontalAlignment="Center"
-                            FontSize="{StaticResource fontSizeInfo2}" />
-
-                        <Rectangle
-                            Stroke="{StaticResource infoLineStroke}"
-                            StrokeThickness="{StaticResource infoStrokeThickness}" />
-
-                    </Grid>
-
-                    <Grid
-                        Grid.Row="6"
-                        Grid.Column="8">
-
-                        <TextBlock
-                            Text="&#x00b1;3"
-                            VerticalAlignment="Center"
-                            HorizontalAlignment="Center"
-                            FontSize="{StaticResource fontSizeInfo2}" />
-
-                        <Rectangle
-                            Stroke="{StaticResource infoLineStroke}"
-                            StrokeThickness="{StaticResource infoStrokeThickness}" />
-
-                    </Grid>
-
-                    <Grid
-                        Grid.Row="7"
-                        Grid.Column="8"
-                        Grid.ColumnSpan="3">
-
-                        <TextBlock
-                            Text="Not Applicable"
-                            VerticalAlignment="Center"
-                            HorizontalAlignment="Center"
-                            FontSize="{StaticResource fontSizeInfo2}" />
-
-                        <Rectangle
-                            Stroke="{StaticResource infoLineStroke}"
-                            StrokeThickness="{StaticResource infoStrokeThickness}" />
-
-                    </Grid>
-
-                    <Grid
-                        Grid.Row="8"
-                        Grid.Column="8">
-
-                        <TextBlock
-                            Text="&#x00b1;1.5 *"
-                            VerticalAlignment="Center"
-                            HorizontalAlignment="Center"
-                            FontSize="{StaticResource fontSizeInfo2}" />
-
-                        <Rectangle
-                            Stroke="{StaticResource infoLineStroke}"
-                            StrokeThickness="{StaticResource infoStrokeThickness}" />
-
-                    </Grid>
-
-                    <!--****************************************************-->
-                    <!--Data: 3: INC-->
-                    <!--****************************************************-->
-                    <Grid
-                        Grid.Row="3"
-                        Grid.Column="9">
-
-                        <TextBlock
-                            Text="2.5"
-                            VerticalAlignment="Center"
-                            HorizontalAlignment="Center"
-                            FontSize="{StaticResource fontSizeInfo2}" />
-
-                        <Rectangle
-                            Stroke="{StaticResource infoLineStroke}"
-                            StrokeThickness="{StaticResource infoStrokeThickness}" />
-
-                    </Grid>
-
-                    <Grid
-                        Grid.Row="5"
-                        Grid.Column="9">
-
-                        <TextBlock
-                            Text="1.5 *"
-                            VerticalAlignment="Center"
-                            HorizontalAlignment="Center"
-                            FontSize="{StaticResource fontSizeInfo2}" />
-
-                        <Rectangle
-                            Stroke="{StaticResource infoLineStroke}"
-                            StrokeThickness="{StaticResource infoStrokeThickness}" />
-
-                    </Grid>
-
-                    <Grid
-                        Grid.Row="6"
-                        Grid.Column="9">
-
-                        <TextBlock
-                            Text="3.5"
-                            VerticalAlignment="Center"
-                            HorizontalAlignment="Center"
-                            FontSize="{StaticResource fontSizeInfo2}" />
-
-                        <Rectangle
-                            Stroke="{StaticResource infoLineStroke}"
-                            StrokeThickness="{StaticResource infoStrokeThickness}" />
-
-                    </Grid>
-
-                    <Grid
-                        Grid.Row="8"
-                        Grid.Column="9">
-
-                        <TextBlock
-                            Text="2.0 *"
-                            VerticalAlignment="Center"
-                            HorizontalAlignment="Center"
-                            FontSize="{StaticResource fontSizeInfo2}" />
-
-                        <Rectangle
-                            Stroke="{StaticResource infoLineStroke}"
-                            StrokeThickness="{StaticResource infoStrokeThickness}" />
-
-                    </Grid>
-
-                    <!--****************************************************-->
-                    <!--Data: 3: SHR-->
-                    <!--****************************************************-->
-                    <Grid
-                        Grid.Row="3"
-                        Grid.Column="10">
-
-                        <TextBlock
-                            Text="1.0"
-                            VerticalAlignment="Center"
-                            HorizontalAlignment="Center"
-                            FontSize="{StaticResource fontSizeInfo2}" />
-
-                        <Rectangle
-                            Stroke="{StaticResource infoLineStroke}"
-                            StrokeThickness="{StaticResource infoStrokeThickness}" />
-
-                    </Grid>
-
-                    <Grid
-                        Grid.Row="5"
-                        Grid.Column="10">
-
-                        <TextBlock
-                            Text="0.5 *"
-                            VerticalAlignment="Center"
-                            HorizontalAlignment="Center"
-                            FontSize="{StaticResource fontSizeInfo2}" />
-
-                        <Rectangle
-                            Stroke="{StaticResource infoLineStroke}"
-                            StrokeThickness="{StaticResource infoStrokeThickness}" />
-
-                    </Grid>
-
-                    <Grid
-                        Grid.Row="6"
-                        Grid.Column="10">
-
-                        <TextBlock
-                            Text="1.0"
-                            VerticalAlignment="Center"
-                            HorizontalAlignment="Center"
-                            FontSize="{StaticResource fontSizeInfo2}" />
-
-                        <Rectangle
-                            Stroke="{StaticResource infoLineStroke}"
-                            StrokeThickness="{StaticResource infoStrokeThickness}" />
-
-                    </Grid>
-
-                    <Grid
-                        Grid.Row="8"
-                        Grid.Column="10">
-
-                        <TextBlock
-                            Text="0.5 *"
-                            VerticalAlignment="Center"
-                            HorizontalAlignment="Center"
-                            FontSize="{StaticResource fontSizeInfo2}" />
-
-                        <Rectangle
-                            Stroke="{StaticResource infoLineStroke}"
-                            StrokeThickness="{StaticResource infoStrokeThickness}" />
-
-                    </Grid>
-
-                </Grid>
+                            </Grid>
+
+                            <Grid
+                                Grid.Row="2"
+                                Grid.Column="5">
+
+                                <TextBlock
+                                    Text="P/R"
+                                    VerticalAlignment="Center"
+                                    HorizontalAlignment="Center"
+                                    FontSize="{StaticResource fontSizeInfo1}" />
+
+                                <Rectangle
+                                    Stroke="{StaticResource infoLineStroke}"
+                                    StrokeThickness="{StaticResource infoStrokeThickness}" />
+
+                            </Grid>
+
+                            <Grid
+                                Grid.Row="2"
+                                Grid.Column="6">
+
+                                <TextBlock
+                                    Text="INC"
+                                    VerticalAlignment="Center"
+                                    HorizontalAlignment="Center"
+                                    FontSize="{StaticResource fontSizeInfo1}" />
+
+                                <Rectangle
+                                    Stroke="{StaticResource infoLineStroke}"
+                                    StrokeThickness="{StaticResource infoStrokeThickness}" />
+
+                            </Grid>
+
+                            <Grid
+                                Grid.Row="2"
+                                Grid.Column="7">
+
+                                <TextBlock
+                                    Text="SHR"
+                                    VerticalAlignment="Center"
+                                    HorizontalAlignment="Center"
+                                    FontSize="{StaticResource fontSizeInfo1}" />
+
+                                <Rectangle
+                                    Stroke="{StaticResource infoLineStroke}"
+                                    StrokeThickness="{StaticResource infoStrokeThickness}" />
+
+                            </Grid>
+
+                            <Grid
+                                Grid.Row="2"
+                                Grid.Column="8">
+
+                                <TextBlock
+                                    Text="P/R"
+                                    VerticalAlignment="Center"
+                                    HorizontalAlignment="Center"
+                                    FontSize="{StaticResource fontSizeInfo1}" />
+
+                                <Rectangle
+                                    Stroke="{StaticResource infoLineStroke}"
+                                    StrokeThickness="{StaticResource infoStrokeThickness}" />
+
+                            </Grid>
+
+                            <Grid
+                                Grid.Row="2"
+                                Grid.Column="9">
+
+                                <TextBlock
+                                    Text="INC"
+                                    VerticalAlignment="Center"
+                                    HorizontalAlignment="Center"
+                                    FontSize="{StaticResource fontSizeInfo1}" />
+
+                                <Rectangle
+                                    Stroke="{StaticResource infoLineStroke}"
+                                    StrokeThickness="{StaticResource infoStrokeThickness}" />
+
+                            </Grid>
+
+                            <Grid
+                                Grid.Row="2"
+                                Grid.Column="10">
+
+                                <TextBlock
+                                    Text="SHR"
+                                    VerticalAlignment="Center"
+                                    HorizontalAlignment="Center"
+                                    FontSize="{StaticResource fontSizeInfo1}" />
+
+                                <Rectangle
+                                    Stroke="{StaticResource infoLineStroke}"
+                                    StrokeThickness="{StaticResource infoStrokeThickness}" />
+
+                            </Grid>
+
+                            <Grid
+                                Grid.Column="0"
+                                Grid.Row="3"
+                                Grid.RowSpan="3">
+
+                                <TextBlock
+                                    Text="A"
+                                    TextAlignment="Center"
+                                    VerticalAlignment="Center"
+                                    HorizontalAlignment="Center"
+                                    FontSize="{StaticResource fontSizeInfo1}" />
+
+                                <Rectangle
+                                    Stroke="{StaticResource infoLineStroke}"
+                                    StrokeThickness="{StaticResource infoStrokeThickness}" />
+
+                            </Grid>
+
+                            <Grid
+                                Grid.Column="0"
+                                Grid.Row="6"
+                                Grid.RowSpan="3">
+
+                                <TextBlock
+                                    Text="B"
+                                    TextAlignment="Center"
+                                    VerticalAlignment="Center"
+                                    HorizontalAlignment="Center"
+                                    FontSize="{StaticResource fontSizeInfo1}" />
+
+                                <Rectangle
+                                    Stroke="{StaticResource infoLineStroke}"
+                                    StrokeThickness="{StaticResource infoStrokeThickness}" />
+
+                            </Grid>
+
+                            <Grid
+                                Grid.Row="3"
+                                Grid.Column="1">
+
+                                <TextBlock
+                                    Text="DAY"
+                                    VerticalAlignment="Center"
+                                    HorizontalAlignment="Center"
+                                    FontSize="{StaticResource fontSizeInfo1}" />
+
+                                <Rectangle
+                                    Stroke="{StaticResource infoLineStroke}"
+                                    StrokeThickness="{StaticResource infoStrokeThickness}" />
+
+                            </Grid>
+
+                            <Grid
+                                Grid.Row="4"
+                                Grid.Column="1">
+
+                                <TextBlock
+                                    Text="Night Semi-subs"
+                                    VerticalAlignment="Center"
+                                    HorizontalAlignment="Center"
+                                    FontSize="{StaticResource fontSizeInfo1}" />
+
+                                <Rectangle
+                                    Stroke="{StaticResource infoLineStroke}"
+                                    StrokeThickness="{StaticResource infoStrokeThickness}" />
+
+                            </Grid>
+
+                            <Grid
+                                Grid.Row="5"
+                                Grid.Column="1">
+
+                                <TextBlock
+                                    Text="Night Other"
+                                    VerticalAlignment="Center"
+                                    HorizontalAlignment="Center"
+                                    FontSize="{StaticResource fontSizeInfo1}" />
+
+                                <Rectangle
+                                    Stroke="{StaticResource infoLineStroke}"
+                                    StrokeThickness="{StaticResource infoStrokeThickness}" />
+
+                            </Grid>
+
+                            <Grid
+                                Grid.Row="6"
+                                Grid.Column="1">
+
+                                <TextBlock
+                                    Text="DAY"
+                                    VerticalAlignment="Center"
+                                    HorizontalAlignment="Center"
+                                    FontSize="{StaticResource fontSizeInfo1}" />
+
+                                <Rectangle
+                                    Stroke="{StaticResource infoLineStroke}"
+                                    StrokeThickness="{StaticResource infoStrokeThickness}" />
+
+                            </Grid>
+
+                            <Grid
+                                Grid.Row="7"
+                                Grid.Column="1">
+
+                                <TextBlock
+                                    Text="Night Semi-subs"
+                                    VerticalAlignment="Center"
+                                    HorizontalAlignment="Center"
+                                    FontSize="{StaticResource fontSizeInfo1}" />
+
+                                <Rectangle
+                                    Stroke="{StaticResource infoLineStroke}"
+                                    StrokeThickness="{StaticResource infoStrokeThickness}" />
+
+                            </Grid>
+
+                            <Grid
+                                Grid.Row="8"
+                                Grid.Column="1">
+
+                                <TextBlock
+                                    Text="Night Other"
+                                    VerticalAlignment="Center"
+                                    HorizontalAlignment="Center"
+                                    FontSize="{StaticResource fontSizeInfo1}" />
+
+                                <Rectangle
+                                    Stroke="{StaticResource infoLineStroke}"
+                                    StrokeThickness="{StaticResource infoStrokeThickness}" />
+
+                            </Grid>
+
+                            <!--****************************************************-->
+                            <!--Data: 1: P/R-->
+                            <!--****************************************************-->
+                            <Grid
+                                Grid.Row="3"
+                                Grid.Column="2">
+
+                                <TextBlock
+                                    Text="&#x00b1;3"
+                                    VerticalAlignment="Center"
+                                    HorizontalAlignment="Center"
+                                    FontSize="{StaticResource fontSizeInfo2}" />
+
+                                <Rectangle
+                                    Stroke="{StaticResource infoLineStroke}"
+                                    StrokeThickness="{StaticResource infoStrokeThickness}" />
+
+                            </Grid>
+
+                            <Grid
+                                Grid.Row="4"
+                                Grid.Column="2">
+
+                                <TextBlock
+                                    Text="&#x00b1;3"
+                                    VerticalAlignment="Center"
+                                    HorizontalAlignment="Center"
+                                    FontSize="{StaticResource fontSizeInfo2}" />
+
+                                <Rectangle
+                                    Stroke="{StaticResource infoLineStroke}"
+                                    StrokeThickness="{StaticResource infoStrokeThickness}" />
+
+                            </Grid>
+
+                            <Grid
+                                Grid.Row="5"
+                                Grid.Column="2">
+
+                                <TextBlock
+                                    Text="&#x00b1;2"
+                                    VerticalAlignment="Center"
+                                    HorizontalAlignment="Center"
+                                    FontSize="{StaticResource fontSizeInfo2}" />
+
+                                <Rectangle
+                                    Stroke="{StaticResource infoLineStroke}"
+                                    StrokeThickness="{StaticResource infoStrokeThickness}" />
+
+                            </Grid>
+
+                            <Grid
+                                Grid.Row="6"
+                                Grid.Column="2">
+
+                                <TextBlock
+                                    Text="&#x00b1;4"
+                                    VerticalAlignment="Center"
+                                    HorizontalAlignment="Center"
+                                    FontSize="{StaticResource fontSizeInfo2}" />
+
+                                <Rectangle
+                                    Stroke="{StaticResource infoLineStroke}"
+                                    StrokeThickness="{StaticResource infoStrokeThickness}" />
+
+                            </Grid>
+
+                            <Grid
+                                Grid.Row="7"
+                                Grid.Column="2">
+
+                                <TextBlock
+                                    Text="&#x00b1;4"
+                                    VerticalAlignment="Center"
+                                    HorizontalAlignment="Center"
+                                    FontSize="{StaticResource fontSizeInfo2}" />
+
+                                <Rectangle
+                                    Stroke="{StaticResource infoLineStroke}"
+                                    StrokeThickness="{StaticResource infoStrokeThickness}" />
+
+                            </Grid>
+
+                            <Grid
+                                Grid.Row="8"
+                                Grid.Column="2">
+
+                                <TextBlock
+                                    Text="&#x00b1;3"
+                                    VerticalAlignment="Center"
+                                    HorizontalAlignment="Center"
+                                    FontSize="{StaticResource fontSizeInfo2}" />
+
+                                <Rectangle
+                                    Stroke="{StaticResource infoLineStroke}"
+                                    StrokeThickness="{StaticResource infoStrokeThickness}" />
+
+                            </Grid>
+
+                            <!--****************************************************-->
+                            <!--Data: 1: INC-->
+                            <!--****************************************************-->
+                            <Grid
+                                Grid.Row="3"
+                                Grid.Column="3">
+
+                                <TextBlock
+                                    Text="3.5"
+                                    VerticalAlignment="Center"
+                                    HorizontalAlignment="Center"
+                                    FontSize="{StaticResource fontSizeInfo2}" />
+
+                                <Rectangle
+                                    Stroke="{StaticResource infoLineStroke}"
+                                    StrokeThickness="{StaticResource infoStrokeThickness}" />
+
+                            </Grid>
+
+                            <Grid
+                                Grid.Row="4"
+                                Grid.Column="3">
+
+                                <TextBlock
+                                    Text="3.5"
+                                    VerticalAlignment="Center"
+                                    HorizontalAlignment="Center"
+                                    FontSize="{StaticResource fontSizeInfo2}" />
+
+                                <Rectangle
+                                    Stroke="{StaticResource infoLineStroke}"
+                                    StrokeThickness="{StaticResource infoStrokeThickness}" />
+
+                            </Grid>
+
+                            <Grid
+                                Grid.Row="5"
+                                Grid.Column="3">
+
+                                <TextBlock
+                                    Text="2.5"
+                                    VerticalAlignment="Center"
+                                    HorizontalAlignment="Center"
+                                    FontSize="{StaticResource fontSizeInfo2}" />
+
+                                <Rectangle
+                                    Stroke="{StaticResource infoLineStroke}"
+                                    StrokeThickness="{StaticResource infoStrokeThickness}" />
+
+                            </Grid>
+
+                            <Grid
+                                Grid.Row="6"
+                                Grid.Column="3">
+
+                                <TextBlock
+                                    Text="4.5"
+                                    VerticalAlignment="Center"
+                                    HorizontalAlignment="Center"
+                                    FontSize="{StaticResource fontSizeInfo2}" />
+
+                                <Rectangle
+                                    Stroke="{StaticResource infoLineStroke}"
+                                    StrokeThickness="{StaticResource infoStrokeThickness}" />
+
+                            </Grid>
+
+                            <Grid
+                                Grid.Row="7"
+                                Grid.Column="3">
+
+                                <TextBlock
+                                    Text="4.5"
+                                    VerticalAlignment="Center"
+                                    HorizontalAlignment="Center"
+                                    FontSize="{StaticResource fontSizeInfo2}" />
+
+                                <Rectangle
+                                    Stroke="{StaticResource infoLineStroke}"
+                                    StrokeThickness="{StaticResource infoStrokeThickness}" />
+
+                            </Grid>
+
+                            <Grid
+                                Grid.Row="8"
+                                Grid.Column="3">
+
+                                <TextBlock
+                                    Text="3.5"
+                                    VerticalAlignment="Center"
+                                    HorizontalAlignment="Center"
+                                    FontSize="{StaticResource fontSizeInfo2}" />
+
+                                <Rectangle
+                                    Stroke="{StaticResource infoLineStroke}"
+                                    StrokeThickness="{StaticResource infoStrokeThickness}" />
+
+                            </Grid>
+
+                            <!--****************************************************-->
+                            <!--Data: 1: SHR-->
+                            <!--****************************************************-->
+                            <Grid
+                                Grid.Row="3"
+                                Grid.Column="4">
+
+                                <TextBlock
+                                    Text="1.3"
+                                    VerticalAlignment="Center"
+                                    HorizontalAlignment="Center"
+                                    FontSize="{StaticResource fontSizeInfo2}" />
+
+                                <Rectangle
+                                    Stroke="{StaticResource infoLineStroke}"
+                                    StrokeThickness="{StaticResource infoStrokeThickness}" />
+
+                            </Grid>
+
+                            <Grid
+                                Grid.Row="4"
+                                Grid.Column="4">
+
+                                <TextBlock
+                                    Text="1.0"
+                                    VerticalAlignment="Center"
+                                    HorizontalAlignment="Center"
+                                    FontSize="{StaticResource fontSizeInfo2}" />
+
+                                <Rectangle
+                                    Stroke="{StaticResource infoLineStroke}"
+                                    StrokeThickness="{StaticResource infoStrokeThickness}" />
+
+                            </Grid>
+
+                            <Grid
+                                Grid.Row="5"
+                                Grid.Column="4">
+
+                                <TextBlock
+                                    Text="1.0"
+                                    VerticalAlignment="Center"
+                                    HorizontalAlignment="Center"
+                                    FontSize="{StaticResource fontSizeInfo2}" />
+
+                                <Rectangle
+                                    Stroke="{StaticResource infoLineStroke}"
+                                    StrokeThickness="{StaticResource infoStrokeThickness}" />
+
+                            </Grid>
+
+                            <Grid
+                                Grid.Row="6"
+                                Grid.Column="4">
+
+                                <TextBlock
+                                    Text="1.3"
+                                    VerticalAlignment="Center"
+                                    HorizontalAlignment="Center"
+                                    FontSize="{StaticResource fontSizeInfo2}" />
+
+                                <Rectangle
+                                    Stroke="{StaticResource infoLineStroke}"
+                                    StrokeThickness="{StaticResource infoStrokeThickness}" />
+
+                            </Grid>
+
+                            <Grid
+                                Grid.Row="7"
+                                Grid.Column="4">
+
+                                <TextBlock
+                                    Text="1.3"
+                                    VerticalAlignment="Center"
+                                    HorizontalAlignment="Center"
+                                    FontSize="{StaticResource fontSizeInfo2}" />
+
+                                <Rectangle
+                                    Stroke="{StaticResource infoLineStroke}"
+                                    StrokeThickness="{StaticResource infoStrokeThickness}" />
+
+                            </Grid>
+
+                            <Grid
+                                Grid.Row="8"
+                                Grid.Column="4">
+
+                                <TextBlock
+                                    Text="1.0"
+                                    VerticalAlignment="Center"
+                                    HorizontalAlignment="Center"
+                                    FontSize="{StaticResource fontSizeInfo2}" />
+
+                                <Rectangle
+                                    Stroke="{StaticResource infoLineStroke}"
+                                    StrokeThickness="{StaticResource infoStrokeThickness}" />
+
+                            </Grid>
+
+                            <!--****************************************************-->
+                            <!--Data: 2: P/R-->
+                            <!--****************************************************-->
+                            <Grid
+                                Grid.Row="3"
+                                Grid.Column="5">
+
+                                <TextBlock
+                                    Text="&#x00b1;2"
+                                    VerticalAlignment="Center"
+                                    HorizontalAlignment="Center"
+                                    FontSize="{StaticResource fontSizeInfo2}" />
+
+                                <Rectangle
+                                    Stroke="{StaticResource infoLineStroke}"
+                                    StrokeThickness="{StaticResource infoStrokeThickness}" />
+
+                            </Grid>
+
+                            <Grid
+                                Grid.Row="4"
+                                Grid.Column="5"
+                                Grid.ColumnSpan="3">
+
+                                <TextBlock
+                                    Text="Not Applicable"
+                                    VerticalAlignment="Center"
+                                    HorizontalAlignment="Center"
+                                    FontSize="{StaticResource fontSizeInfo2}" />
+
+                                <Rectangle
+                                    Stroke="{StaticResource infoLineStroke}"
+                                    StrokeThickness="{StaticResource infoStrokeThickness}" />
+
+                            </Grid>
+
+                            <Grid
+                                Grid.Row="5"
+                                Grid.Column="5">
+
+                                <TextBlock
+                                    Text="&#x00b1;2"
+                                    VerticalAlignment="Center"
+                                    HorizontalAlignment="Center"
+                                    FontSize="{StaticResource fontSizeInfo2}" />
+
+                                <Rectangle
+                                    Stroke="{StaticResource infoLineStroke}"
+                                    StrokeThickness="{StaticResource infoStrokeThickness}" />
+
+                            </Grid>
+
+                            <Grid
+                                Grid.Row="6"
+                                Grid.Column="5">
+
+                                <TextBlock
+                                    Text="&#x00b1;3"
+                                    VerticalAlignment="Center"
+                                    HorizontalAlignment="Center"
+                                    FontSize="{StaticResource fontSizeInfo2}" />
+
+                                <Rectangle
+                                    Stroke="{StaticResource infoLineStroke}"
+                                    StrokeThickness="{StaticResource infoStrokeThickness}" />
+
+                            </Grid>
+
+                            <Grid
+                                Grid.Row="7"
+                                Grid.Column="5"
+                                Grid.ColumnSpan="3">
+
+                                <TextBlock
+                                    Text="Not Applicable"
+                                    VerticalAlignment="Center"
+                                    HorizontalAlignment="Center"
+                                    FontSize="{StaticResource fontSizeInfo2}" />
+
+                                <Rectangle
+                                    Stroke="{StaticResource infoLineStroke}"
+                                    StrokeThickness="{StaticResource infoStrokeThickness}" />
+
+                            </Grid>
+
+                            <Grid
+                                Grid.Row="8"
+                                Grid.Column="5">
+
+                                <TextBlock
+                                    Text="&#x00b1;2"
+                                    VerticalAlignment="Center"
+                                    HorizontalAlignment="Center"
+                                    FontSize="{StaticResource fontSizeInfo2}" />
+
+                                <Rectangle
+                                    Stroke="{StaticResource infoLineStroke}"
+                                    StrokeThickness="{StaticResource infoStrokeThickness}" />
+
+                            </Grid>
+
+                            <!--****************************************************-->
+                            <!--Data: 2: INC-->
+                            <!--****************************************************-->
+                            <Grid
+                                Grid.Row="3"
+                                Grid.Column="6">
+
+                                <TextBlock
+                                    Text="2.5"
+                                    VerticalAlignment="Center"
+                                    HorizontalAlignment="Center"
+                                    FontSize="{StaticResource fontSizeInfo2}" />
+
+                                <Rectangle
+                                    Stroke="{StaticResource infoLineStroke}"
+                                    StrokeThickness="{StaticResource infoStrokeThickness}" />
+
+                            </Grid>
+
+                            <Grid
+                                Grid.Row="5"
+                                Grid.Column="6">
+
+                                <TextBlock
+                                    Text="2.5"
+                                    VerticalAlignment="Center"
+                                    HorizontalAlignment="Center"
+                                    FontSize="{StaticResource fontSizeInfo2}" />
+
+                                <Rectangle
+                                    Stroke="{StaticResource infoLineStroke}"
+                                    StrokeThickness="{StaticResource infoStrokeThickness}" />
+
+                            </Grid>
+
+                            <Grid
+                                Grid.Row="6"
+                                Grid.Column="6">
+
+                                <TextBlock
+                                    Text="3.5"
+                                    VerticalAlignment="Center"
+                                    HorizontalAlignment="Center"
+                                    FontSize="{StaticResource fontSizeInfo2}" />
+
+                                <Rectangle
+                                    Stroke="{StaticResource infoLineStroke}"
+                                    StrokeThickness="{StaticResource infoStrokeThickness}" />
+
+                            </Grid>
+
+                            <Grid
+                                Grid.Row="8"
+                                Grid.Column="6">
+
+                                <TextBlock
+                                    Text="2.5"
+                                    VerticalAlignment="Center"
+                                    HorizontalAlignment="Center"
+                                    FontSize="{StaticResource fontSizeInfo2}" />
+
+                                <Rectangle
+                                    Stroke="{StaticResource infoLineStroke}"
+                                    StrokeThickness="{StaticResource infoStrokeThickness}" />
+
+                            </Grid>
+
+                            <!--****************************************************-->
+                            <!--Data: 2: SHR-->
+                            <!--****************************************************-->
+                            <Grid
+                                Grid.Row="3"
+                                Grid.Column="7">
+
+                                <TextBlock
+                                    Text="1.0"
+                                    VerticalAlignment="Center"
+                                    HorizontalAlignment="Center"
+                                    FontSize="{StaticResource fontSizeInfo2}" />
+
+                                <Rectangle
+                                    Stroke="{StaticResource infoLineStroke}"
+                                    StrokeThickness="{StaticResource infoStrokeThickness}" />
+
+                            </Grid>
+
+                            <Grid
+                                Grid.Row="5"
+                                Grid.Column="7">
+
+                                <TextBlock
+                                    Text="0.5"
+                                    VerticalAlignment="Center"
+                                    HorizontalAlignment="Center"
+                                    FontSize="{StaticResource fontSizeInfo2}" />
+
+                                <Rectangle
+                                    Stroke="{StaticResource infoLineStroke}"
+                                    StrokeThickness="{StaticResource infoStrokeThickness}" />
+
+                            </Grid>
+
+                            <Grid
+                                Grid.Row="6"
+                                Grid.Column="7">
+
+                                <TextBlock
+                                    Text="1.0"
+                                    VerticalAlignment="Center"
+                                    HorizontalAlignment="Center"
+                                    FontSize="{StaticResource fontSizeInfo2}" />
+
+                                <Rectangle
+                                    Stroke="{StaticResource infoLineStroke}"
+                                    StrokeThickness="{StaticResource infoStrokeThickness}" />
+
+                            </Grid>
+
+                            <Grid
+                                Grid.Row="8"
+                                Grid.Column="7">
+
+                                <TextBlock
+                                    Text="0.5"
+                                    VerticalAlignment="Center"
+                                    HorizontalAlignment="Center"
+                                    FontSize="{StaticResource fontSizeInfo2}" />
+
+                                <Rectangle
+                                    Stroke="{StaticResource infoLineStroke}"
+                                    StrokeThickness="{StaticResource infoStrokeThickness}" />
+
+                            </Grid>
+
+                            <!--****************************************************-->
+                            <!--Data: 3: P/R-->
+                            <!--****************************************************-->
+                            <Grid
+                                Grid.Row="3"
+                                Grid.Column="8">
+
+                                <TextBlock
+                                    Text="&#x00b1;2"
+                                    VerticalAlignment="Center"
+                                    HorizontalAlignment="Center"
+                                    FontSize="{StaticResource fontSizeInfo2}" />
+
+                                <Rectangle
+                                    Stroke="{StaticResource infoLineStroke}"
+                                    StrokeThickness="{StaticResource infoStrokeThickness}" />
+
+                            </Grid>
+
+                            <Grid
+                                Grid.Row="4"
+                                Grid.Column="8"
+                                Grid.ColumnSpan="3">
+
+                                <TextBlock
+                                    Text="Not Applicable"
+                                    VerticalAlignment="Center"
+                                    HorizontalAlignment="Center"
+                                    FontSize="{StaticResource fontSizeInfo2}" />
+
+                                <Rectangle
+                                    Stroke="{StaticResource infoLineStroke}"
+                                    StrokeThickness="{StaticResource infoStrokeThickness}" />
+
+                            </Grid>
+
+                            <Grid
+                                Grid.Row="5"
+                                Grid.Column="8">
+
+                                <TextBlock
+                                    Text="&#x00b1;1 *"
+                                    VerticalAlignment="Center"
+                                    HorizontalAlignment="Center"
+                                    FontSize="{StaticResource fontSizeInfo2}" />
+
+                                <Rectangle
+                                    Stroke="{StaticResource infoLineStroke}"
+                                    StrokeThickness="{StaticResource infoStrokeThickness}" />
+
+                            </Grid>
+
+                            <Grid
+                                Grid.Row="6"
+                                Grid.Column="8">
+
+                                <TextBlock
+                                    Text="&#x00b1;3"
+                                    VerticalAlignment="Center"
+                                    HorizontalAlignment="Center"
+                                    FontSize="{StaticResource fontSizeInfo2}" />
+
+                                <Rectangle
+                                    Stroke="{StaticResource infoLineStroke}"
+                                    StrokeThickness="{StaticResource infoStrokeThickness}" />
+
+                            </Grid>
+
+                            <Grid
+                                Grid.Row="7"
+                                Grid.Column="8"
+                                Grid.ColumnSpan="3">
+
+                                <TextBlock
+                                    Text="Not Applicable"
+                                    VerticalAlignment="Center"
+                                    HorizontalAlignment="Center"
+                                    FontSize="{StaticResource fontSizeInfo2}" />
+
+                                <Rectangle
+                                    Stroke="{StaticResource infoLineStroke}"
+                                    StrokeThickness="{StaticResource infoStrokeThickness}" />
+
+                            </Grid>
+
+                            <Grid
+                                Grid.Row="8"
+                                Grid.Column="8">
+
+                                <TextBlock
+                                    Text="&#x00b1;1.5 *"
+                                    VerticalAlignment="Center"
+                                    HorizontalAlignment="Center"
+                                    FontSize="{StaticResource fontSizeInfo2}" />
+
+                                <Rectangle
+                                    Stroke="{StaticResource infoLineStroke}"
+                                    StrokeThickness="{StaticResource infoStrokeThickness}" />
+
+                            </Grid>
+
+                            <!--****************************************************-->
+                            <!--Data: 3: INC-->
+                            <!--****************************************************-->
+                            <Grid
+                                Grid.Row="3"
+                                Grid.Column="9">
+
+                                <TextBlock
+                                    Text="2.5"
+                                    VerticalAlignment="Center"
+                                    HorizontalAlignment="Center"
+                                    FontSize="{StaticResource fontSizeInfo2}" />
+
+                                <Rectangle
+                                    Stroke="{StaticResource infoLineStroke}"
+                                    StrokeThickness="{StaticResource infoStrokeThickness}" />
+
+                            </Grid>
+
+                            <Grid
+                                Grid.Row="5"
+                                Grid.Column="9">
+
+                                <TextBlock
+                                    Text="1.5 *"
+                                    VerticalAlignment="Center"
+                                    HorizontalAlignment="Center"
+                                    FontSize="{StaticResource fontSizeInfo2}" />
+
+                                <Rectangle
+                                    Stroke="{StaticResource infoLineStroke}"
+                                    StrokeThickness="{StaticResource infoStrokeThickness}" />
+
+                            </Grid>
+
+                            <Grid
+                                Grid.Row="6"
+                                Grid.Column="9">
+
+                                <TextBlock
+                                    Text="3.5"
+                                    VerticalAlignment="Center"
+                                    HorizontalAlignment="Center"
+                                    FontSize="{StaticResource fontSizeInfo2}" />
+
+                                <Rectangle
+                                    Stroke="{StaticResource infoLineStroke}"
+                                    StrokeThickness="{StaticResource infoStrokeThickness}" />
+
+                            </Grid>
+
+                            <Grid
+                                Grid.Row="8"
+                                Grid.Column="9">
+
+                                <TextBlock
+                                    Text="2.0 *"
+                                    VerticalAlignment="Center"
+                                    HorizontalAlignment="Center"
+                                    FontSize="{StaticResource fontSizeInfo2}" />
+
+                                <Rectangle
+                                    Stroke="{StaticResource infoLineStroke}"
+                                    StrokeThickness="{StaticResource infoStrokeThickness}" />
+
+                            </Grid>
+
+                            <!--****************************************************-->
+                            <!--Data: 3: SHR-->
+                            <!--****************************************************-->
+                            <Grid
+                                Grid.Row="3"
+                                Grid.Column="10">
+
+                                <TextBlock
+                                    Text="1.0"
+                                    VerticalAlignment="Center"
+                                    HorizontalAlignment="Center"
+                                    FontSize="{StaticResource fontSizeInfo2}" />
+
+                                <Rectangle
+                                    Stroke="{StaticResource infoLineStroke}"
+                                    StrokeThickness="{StaticResource infoStrokeThickness}" />
+
+                            </Grid>
+
+                            <Grid
+                                Grid.Row="5"
+                                Grid.Column="10">
+
+                                <TextBlock
+                                    Text="0.5 *"
+                                    VerticalAlignment="Center"
+                                    HorizontalAlignment="Center"
+                                    FontSize="{StaticResource fontSizeInfo2}" />
+
+                                <Rectangle
+                                    Stroke="{StaticResource infoLineStroke}"
+                                    StrokeThickness="{StaticResource infoStrokeThickness}" />
+
+                            </Grid>
+
+                            <Grid
+                                Grid.Row="6"
+                                Grid.Column="10">
+
+                                <TextBlock
+                                    Text="1.0"
+                                    VerticalAlignment="Center"
+                                    HorizontalAlignment="Center"
+                                    FontSize="{StaticResource fontSizeInfo2}" />
+
+                                <Rectangle
+                                    Stroke="{StaticResource infoLineStroke}"
+                                    StrokeThickness="{StaticResource infoStrokeThickness}" />
+
+                            </Grid>
+
+                            <Grid
+                                Grid.Row="8"
+                                Grid.Column="10">
+
+                                <TextBlock
+                                    Text="0.5 *"
+                                    VerticalAlignment="Center"
+                                    HorizontalAlignment="Center"
+                                    FontSize="{StaticResource fontSizeInfo2}" />
+
+                                <Rectangle
+                                    Stroke="{StaticResource infoLineStroke}"
+                                    StrokeThickness="{StaticResource infoStrokeThickness}" />
+
+                            </Grid>
+
+                        </Grid>
+
+                        <StackPanel
+                            Grid.Row="1"
+                            Grid.Column="0"
+                            Margin="8">
+
+                            <TextBlock
+                                Margin="0,0,0,16"
+                                Text="* Night operations to Category 3 vessels are not permitted in UK waters."
+                                FontSize="{StaticResource fontSizeInfo2}" />
+
+                            <TextBlock
+                                Text="P/R = Pitch and Roll (deg)"
+                                FontSize="{StaticResource fontSizeInfo2}" />
+
+                            <TextBlock
+                                Text="INC = Helideck Inclination (deg)"
+                                FontSize="{StaticResource fontSizeInfo2}" />
+
+                            <TextBlock
+                                Text="SHR = Significant Heave Rate (m/s)"
+                                FontSize="{StaticResource fontSizeInfo2}" />
+
+                        </StackPanel>
+
+                </StackPanel>
 
             </telerik:GroupBox>
-
-            <StackPanel
-                Grid.Row="1"
-                Grid.Column="0"
-                Margin="8">
-
-                <TextBlock
-                    Margin="0,0,0,16"
-                    Text="* Night operations to Category 3 vessels are not permitted in UK waters."
-                    FontSize="{StaticResource fontSizeInfo2}" />
-
-                <TextBlock
-                    Text="P/R = Pitch and Roll (deg)"
-                    FontSize="{StaticResource fontSizeInfo2}"/>
-
-                <TextBlock
-                    Text="INC = Helideck Inclination (deg)"
-                    FontSize="{StaticResource fontSizeInfo2}"/>
-
-                <TextBlock
-                    Text="SHR = Significant Heave Rate (m/s)"
-                    FontSize="{StaticResource fontSizeInfo2}"/>
-
-            </StackPanel>
 
         </Grid>
 
