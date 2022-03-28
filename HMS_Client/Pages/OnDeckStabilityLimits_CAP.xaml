@@ -151,8 +151,8 @@
                                 <telerik:ScatterLineSeries
                                     Stroke="Black"
                                     StrokeThickness="3"
-                                    XValueBinding="data2"
-                                    YValueBinding="data"
+                                    XValueBinding="graphData2"
+                                    YValueBinding="graphData"
                                     ZIndex="300">
 
                                     <!--Kun til visualisering i editor-->

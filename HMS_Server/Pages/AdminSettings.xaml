@@ -95,6 +95,34 @@
                                 KeyDown="tbHelideckHeadingOffset_KeyDown" />
                         </DockPanel>
 
+                        <!--Vessel Heading Reference-->
+                        <DockPanel>
+                            <telerik:Label
+                                Name="lbVesselHdgRef"
+                                Content="Vessel Heading Reference"
+                                VerticalAlignment="Center" />
+                            <telerik:RadComboBox
+                                Name="cboVesselHdgRef"
+                                Width="160"
+                                HorizontalAlignment="Right"
+                                SelectionChanged="cboVesselHdgRef_SelectionChanged">
+                            </telerik:RadComboBox>
+                        </DockPanel>
+
+                        <!--Magnetic Declination-->
+                        <DockPanel>
+                            <telerik:Label
+                                Content="Magnetic Declination"
+                                VerticalAlignment="Center" />
+                            <TextBox
+                                Name="tbMagneticDeclination"
+                                Width="110"
+                                HorizontalAlignment="Right"
+                                Text="{Binding Path=magneticDeclination}"
+                                LostFocus="tbMagneticDeclination_LostFocus"
+                                KeyDown="tbMagneticDeclination_KeyDown" />
+                        </DockPanel>
+
                     </StackPanel>
 
                 </telerik:GroupBox>
@@ -393,20 +421,7 @@
                             </telerik:RadComboBox>
                         </DockPanel>
 
-                        <!--Magnetic Declination-->
-                        <DockPanel>
-                            <telerik:Label
-                                Content="Magnetic Declination"
-                                VerticalAlignment="Center" />
-                            <TextBox
-                                Name="tbMagneticDeclination"
-                                Width="110"
-                                HorizontalAlignment="Right"
-                                Text="{Binding Path=magneticDeclination}"
-                                LostFocus="tbMagneticDeclination_LostFocus"
-                                KeyDown="tbMagneticDeclination_KeyDown" />
-                        </DockPanel>
-
+                        <!--Helideck Height (above MSL)-->
                         <DockPanel>
                             <telerik:Label
                                 Content="Helideck Height (above MSL)"

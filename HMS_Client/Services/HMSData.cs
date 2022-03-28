@@ -88,6 +88,7 @@ namespace HMS_Client
             {
                 _data2 = value;
                 OnPropertyChanged();
+                OnPropertyChanged(nameof(graphData2));
             }
         }
 
@@ -265,12 +266,27 @@ namespace HMS_Client
             }
         }
 
+        // Data som skal ut i graf
+        ////////////////////////////////////////////////////////////////////
         public double graphData
         {
             get
             {
                 if (status == DataStatus.OK)
                     return data;
+                else
+                    // Ved å sende NaN til graf får vi mellomrom på graf-linjen
+                    // der det ikke er gyldige data tilgjengelig.
+                    return double.NaN;
+            }
+        }
+
+        public double graphData2
+        {
+            get
+            {
+                if (status == DataStatus.OK)
+                    return data2;
                 else
                     // Ved å sende NaN til graf får vi mellomrom på graf-linjen
                     // der det ikke er gyldige data tilgjengelig.

@@ -18,6 +18,8 @@ namespace HMS_Server
 
         private RadObservableCollection<HMSData> hmsOutputDisplayList = new RadObservableCollection<HMSData>();
 
+        DispatcherTimer uiTimer = new DispatcherTimer();
+
         public HMSOutput()
         {
             InitializeComponent();
@@ -33,10 +35,8 @@ namespace HMS_Server
             gvHMSOutputData.ItemsSource = hmsOutputDisplayList;
 
             // Dispatcher som oppdatere UI
-            DispatcherTimer uiTimer = new DispatcherTimer();
             uiTimer.Interval = TimeSpan.FromMilliseconds(config.ReadWithDefault(ConfigKey.ServerUIUpdateFrequency, Constants.ServerUIUpdateFrequencyDefault));
             uiTimer.Tick += runUIInputUpdate;
-            uiTimer.Start();
 
             void runUIInputUpdate(object sender, EventArgs e)
             {
@@ -46,6 +46,16 @@ namespace HMS_Server
                     DisplayList.Transfer(hmsOutputDataList.GetDataList(), hmsOutputDisplayList);
                 }
             }
+        }
+
+        public void Start()
+        {
+            uiTimer.Start();
+        }
+
+        public void Stop()
+        {
+            uiTimer.Stop();
         }
     }
 }

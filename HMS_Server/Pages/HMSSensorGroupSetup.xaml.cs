@@ -18,16 +18,23 @@ namespace HMS_Server
         private RadObservableCollection<HMSData> hmsDisplayList = new RadObservableCollection<HMSData>();
         private RadObservableCollection<SensorGroup> sensorDisplayList = new RadObservableCollection<SensorGroup>();
 
+        private DispatcherTimer uiTimer = new DispatcherTimer();
+
+        private HMSDataCollection hmsInputData;
+        private HMSSensorGroupStatus sensorStatus;
+
         public HMSSensorGroupSetup()
         {
             InitializeComponent();
         }
 
         public void Init(
-            HMSDataCollection clientSensorData,
-            Config config,
-            HMSSensorGroupStatus sensorStatus)
+            HMSDataCollection hmsInputData,
+            HMSSensorGroupStatus sensorStatus,
+            Config config)
         {
+            this.hmsInputData = hmsInputData;
+            this.sensorStatus = sensorStatus;
             this.config = config;
 
             // Liste med client sensor data
@@ -37,20 +44,28 @@ namespace HMS_Server
             gvSensorID.ItemsSource = sensorDisplayList;
 
             // Dispatcher som oppdatere UI
-            DispatcherTimer uiTimer = new DispatcherTimer();
             uiTimer.Interval = TimeSpan.FromMilliseconds(config.ReadWithDefault(ConfigKey.ServerUIUpdateFrequency, Constants.ServerUIUpdateFrequencyDefault));
             uiTimer.Tick += runUIInputUpdate;
-            uiTimer.Start();
 
             void runUIInputUpdate(object sender, EventArgs e)
             {
                 if (AdminMode.IsActive)
                 {
                     // Overføre fra data lister til display lister
-                    DisplayList.Transfer(clientSensorData.GetDataList(), hmsDisplayList);
+                    DisplayList.Transfer(hmsInputData.GetDataList(), hmsDisplayList);
                     DisplayList.Transfer(sensorStatus.GetSensorList(), sensorDisplayList);
                 }
             }
+        }
+
+        public void Start()
+        {
+            uiTimer.Start();
+        }
+
+        public void Stop()
+        {
+            uiTimer.Stop();
         }
 
         private void gvHMSData_BeginningEdit(object sender, GridViewBeginningEditRoutedEventArgs e)
@@ -68,6 +83,9 @@ namespace HMS_Server
             {
                 // Hente oppdaterte data
                 HMSData hmsData = (sender as RadGridView).SelectedItem as HMSData;
+
+                // Lagre til HMS input data
+                hmsInputData.SetData(hmsData);
 
                 // Lagre til fil
                 config.SetClientData(hmsData);
@@ -89,6 +107,9 @@ namespace HMS_Server
             {
                 // Hente oppdaterte data
                 SensorGroup sensor = (sender as RadGridView).SelectedItem as SensorGroup;
+
+                // Lagre til sensor group
+                sensorStatus.SetSensorGroupName(sensor);
 
                 // Lagre til fil
                 config.SetSensorGroupIDData(sensor);

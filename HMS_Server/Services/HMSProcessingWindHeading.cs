@@ -5,6 +5,11 @@ namespace HMS_Server
 {
     class HMSProcessingWindHeading
     {
+        private HMSData vesselHeading = new HMSData();
+        private HMSData vesselSpeed = new HMSData();
+        private HMSData vesselCOG = new HMSData();
+        private HMSData vesselSOG = new HMSData();
+
         private HMSData sensorWindDirectionCorrected = new HMSData();
 
         private HMSData areaWindDirection2m = new HMSData();
@@ -23,11 +28,6 @@ namespace HMS_Server
         private HMSData helideckWindSpeed10mNonRounded = new HMSData();
         private HMSData helideckWindGust2m = new HMSData();
         private HMSData helideckWindGust10m = new HMSData();
-
-        private HMSData vesselHeading = new HMSData();
-        private HMSData vesselSpeed = new HMSData();
-        private HMSData vesselCOG = new HMSData();
-        private HMSData vesselSOG = new HMSData();
 
         private HMSData helideckHeading = new HMSData();
 
@@ -60,6 +60,11 @@ namespace HMS_Server
 
             RadObservableCollection<HMSData> hmsOutputDataList = hmsOutputData.GetDataList();
 
+            hmsOutputDataList.Add(vesselHeading);
+            hmsOutputDataList.Add(vesselSpeed);
+            hmsOutputDataList.Add(vesselCOG);
+            hmsOutputDataList.Add(vesselSOG);
+
             hmsOutputDataList.Add(areaWindDirection2m);
             hmsOutputDataList.Add(areaWindSpeed2m);
             hmsOutputDataList.Add(areaWindGust2m);
@@ -73,11 +78,6 @@ namespace HMS_Server
             hmsOutputDataList.Add(helideckWindGust2m);
             hmsOutputDataList.Add(helideckWindGust10m);
 
-            hmsOutputDataList.Add(vesselHeading);
-            hmsOutputDataList.Add(vesselSpeed);
-            hmsOutputDataList.Add(vesselCOG);
-            hmsOutputDataList.Add(vesselSOG);
-
             hmsOutputDataList.Add(helideckHeading);
 
             hmsOutputDataList.Add(relativeWindDir);
@@ -90,7 +90,19 @@ namespace HMS_Server
             // NB! Selv om WSI ikke brukes i NOROG må vi legge den inn her
             // slik at database-tabell blir lik for CAP/NOROG.
             // Får database-feil ved bytte mellom CAP/NOROG når tabellene ikke er like.
-            hmsOutputDataList.Add(wsiData); 
+            hmsOutputDataList.Add(wsiData);
+
+            vesselHeading.InitProcessing(errorHandler, ErrorMessageCategory.AdminUser);
+            vesselHeading.AddProcessing(CalculationType.RoundingDecimals, 0);
+
+            vesselSpeed.InitProcessing(errorHandler, ErrorMessageCategory.AdminUser);
+            vesselSpeed.AddProcessing(CalculationType.RoundingDecimals, 1);
+
+            vesselCOG.InitProcessing(errorHandler, ErrorMessageCategory.AdminUser);
+            vesselCOG.AddProcessing(CalculationType.RoundingDecimals, 1);
+
+            vesselSOG.InitProcessing(errorHandler, ErrorMessageCategory.AdminUser);
+            vesselSOG.AddProcessing(CalculationType.RoundingDecimals, 1);
 
             areaWindAverageData2m.minutes = 2;
             helideckGustData2m.minutes = 2;
@@ -169,18 +181,6 @@ namespace HMS_Server
             helideckWindGust10m.sensorGroupId = Constants.NO_SENSOR_GROUP_ID;
             helideckWindGust10m.dbColumn = "helideck_wind_gust_10m";
 
-            vesselHeading.InitProcessing(errorHandler, ErrorMessageCategory.AdminUser);
-            vesselHeading.AddProcessing(CalculationType.RoundingDecimals, 0);
-
-            vesselSpeed.InitProcessing(errorHandler, ErrorMessageCategory.AdminUser);
-            vesselSpeed.AddProcessing(CalculationType.RoundingDecimals, 1);
-
-            vesselCOG.InitProcessing(errorHandler, ErrorMessageCategory.AdminUser);
-            vesselCOG.AddProcessing(CalculationType.RoundingDecimals, 1);
-
-            vesselSOG.InitProcessing(errorHandler, ErrorMessageCategory.AdminUser);
-            vesselSOG.AddProcessing(CalculationType.RoundingDecimals, 1);
-
             relativeWindDir.id = (int)ValueType.RelativeWindDir;
             relativeWindDir.name = "Relative Wind Direction (CAP)";
             relativeWindDir.sensorGroupId = Constants.NO_SENSOR_GROUP_ID;
@@ -214,23 +214,59 @@ namespace HMS_Server
 
         public void Update(HMSDataCollection hmsInputDataList)
         {
+            // Vessel Heading & Speed
+            ///////////////////////////////////////////////////////////
+            vesselHeading.Set(hmsInputDataList.GetData(ValueType.VesselHeading)); // Set for å overføre grunnleggende data
+            vesselHeading.DoProcessing(hmsInputDataList.GetData(ValueType.VesselHeading)); // DoProcessing for å avrunde til heltall
+
+            vesselCOG.Set(hmsInputDataList.GetData(ValueType.VesselCOG));
+            vesselCOG.DoProcessing(hmsInputDataList.GetData(ValueType.VesselCOG));
+
+            switch (adminSettingsVM.vesselHdgRef)
+            {
+                case DirectionReference.MagneticNorth:
+                    // Trenger ikke gjør korrigeringer
+                    break;
+
+                case DirectionReference.TrueNorth:
+                    vesselHeading.data = Math.Round(hmsInputDataList.GetData(ValueType.VesselHeading).data - adminSettingsVM.magneticDeclination, 0, MidpointRounding.AwayFromZero);
+                    vesselCOG.data = Math.Round(hmsInputDataList.GetData(ValueType.VesselCOG).data - adminSettingsVM.magneticDeclination, 0, MidpointRounding.AwayFromZero);
+                    break;
+
+                default:
+                    break;
+            }
+
+            vesselSpeed.Set(hmsInputDataList.GetData(ValueType.VesselSpeed)); // Set for å overføre grunnleggende data
+            vesselSpeed.DoProcessing(hmsInputDataList.GetData(ValueType.VesselSpeed)); // DoProcessing for å avrunde til en desimal
+
+            vesselSOG.Set(hmsInputDataList.GetData(ValueType.VesselSOG));
+            vesselSOG.DoProcessing(hmsInputDataList.GetData(ValueType.VesselSOG));
+
+            double heading = hmsInputDataList.GetData(ValueType.VesselHeading).data + adminSettingsVM.helideckHeadingOffset;
+            if (heading > Constants.HeadingMax)
+                heading -= Constants.HeadingMax;
+            helideckHeading.data = Math.Round(heading, 1, MidpointRounding.AwayFromZero);
+            helideckHeading.status = hmsInputDataList.GetData(ValueType.VesselHeading).status;
+            helideckHeading.timestamp = hmsInputDataList.GetData(ValueType.VesselHeading).timestamp;
+
             // Korrigere vind retning ihht referanse retning
             sensorWindDirectionCorrected.Set(hmsInputDataList.GetData(ValueType.SensorWindDirection));
 
             switch (adminSettingsVM.windDirRef)
             {
-                case WindDirectionReference.VesselHeading:
-                    sensorWindDirectionCorrected.data = hmsInputDataList.GetData(ValueType.VesselHeading).data + hmsInputDataList.GetData(ValueType.SensorWindDirection).data;
+                case DirectionReference.VesselHeading:
+                    sensorWindDirectionCorrected.data = vesselHeading.data + hmsInputDataList.GetData(ValueType.SensorWindDirection).data;
                     if (sensorWindDirectionCorrected.data > 360)
                         sensorWindDirectionCorrected.data -= 360;
                     break;
 
-                case WindDirectionReference.MagneticNorth:
+                case DirectionReference.MagneticNorth:
                     sensorWindDirectionCorrected.data = hmsInputDataList.GetData(ValueType.SensorWindDirection).data;
                     break;
 
-                case WindDirectionReference.TrueNorth:
-                    sensorWindDirectionCorrected.data = hmsInputDataList.GetData(ValueType.SensorWindDirection).data + adminSettingsVM.magneticDeclination;
+                case DirectionReference.TrueNorth:
+                    sensorWindDirectionCorrected.data = hmsInputDataList.GetData(ValueType.SensorWindDirection).data - adminSettingsVM.magneticDeclination;
                     break;
 
                 default:
@@ -249,14 +285,25 @@ namespace HMS_Server
             // Korrigerer for høyde
             // (Midlertidig variabel som brukes i beregninger -> ikke rund av!)
             HMSData windSpeedCorrectedToHelideck = new HMSData();
-            windSpeedCorrectedToHelideck.data = WindSpeedHeightCorrection(hmsInputDataList.GetData(ValueType.SensorWindSpeed).data);
-            windSpeedCorrectedToHelideck.status = hmsInputDataList.GetData(ValueType.SensorWindSpeed).status;
-            windSpeedCorrectedToHelideck.timestamp = hmsInputDataList.GetData(ValueType.SensorWindSpeed).timestamp;
+
+            if (hmsInputDataList.GetData(ValueType.SensorWindSpeed).status == DataStatus.OK &&
+                vesselSOG.status == DataStatus.OK)
+            {
+                windSpeedCorrectedToHelideck.data = WindSpeedHeightCorrection(hmsInputDataList.GetData(ValueType.SensorWindSpeed).data, vesselSOG.data);
+                windSpeedCorrectedToHelideck.status = hmsInputDataList.GetData(ValueType.SensorWindSpeed).status;
+                windSpeedCorrectedToHelideck.timestamp = hmsInputDataList.GetData(ValueType.SensorWindSpeed).timestamp;
+            }
+            else
+            {
+                windSpeedCorrectedToHelideck.data = 0;
+                windSpeedCorrectedToHelideck.status = DataStatus.TIMEOUT_ERROR;
+                windSpeedCorrectedToHelideck.timestamp = DateTime.UtcNow;
+            }
 
             // Vind hastighet
             helideckWindSpeedRT.data = Math.Round(windSpeedCorrectedToHelideck.data, 1, MidpointRounding.AwayFromZero);
-            helideckWindSpeedRT.status = hmsInputDataList.GetData(ValueType.SensorWindSpeed).status;
-            helideckWindSpeedRT.timestamp = hmsInputDataList.GetData(ValueType.SensorWindSpeed).timestamp;
+            helideckWindSpeedRT.status = windSpeedCorrectedToHelideck.status;
+            helideckWindSpeedRT.timestamp = windSpeedCorrectedToHelideck.timestamp;
 
             // Area Wind: 2-minute data
             ///////////////////////////////////////////////////////////
@@ -332,27 +379,8 @@ namespace HMS_Server
                 helideckWindAverageData10m,
                 helideckWindGust10m);
 
-            // Vessel Heading & Speed
-            ///////////////////////////////////////////////////////////
-            vesselHeading.Set(hmsInputDataList.GetData(ValueType.VesselHeading)); // Set for å overføre grunnleggende data
-            vesselHeading.DoProcessing(hmsInputDataList.GetData(ValueType.VesselHeading)); // DoProcessing for å avrunde til heltall
-
-            vesselSpeed.Set(hmsInputDataList.GetData(ValueType.VesselSpeed)); // Set for å overføre grunnleggende data
-            vesselSpeed.DoProcessing(hmsInputDataList.GetData(ValueType.VesselSpeed)); // DoProcessing for å avrunde til en desimal
-
-            vesselCOG.Set(hmsInputDataList.GetData(ValueType.VesselCOG));
-            vesselCOG.DoProcessing(hmsInputDataList.GetData(ValueType.VesselCOG));
-
-            vesselSOG.Set(hmsInputDataList.GetData(ValueType.VesselSOG));
-            vesselSOG.DoProcessing(hmsInputDataList.GetData(ValueType.VesselSOG));
-
-            double heading = hmsInputDataList.GetData(ValueType.VesselHeading).data + adminSettingsVM.helideckHeadingOffset;
-            if (heading > Constants.HeadingMax)
-                heading -= Constants.HeadingMax;
-            helideckHeading.data = Math.Round(heading, 1, MidpointRounding.AwayFromZero);
-            helideckHeading.status = hmsInputDataList.GetData(ValueType.VesselHeading).status;
-            helideckHeading.timestamp = hmsInputDataList.GetData(ValueType.VesselHeading).timestamp;
-
+            // RWD, Delta heading/Wind
+            /////////////////////////////////////////////////////////////////////////////////////////
             if (adminSettingsVM.regulationStandard == RegulationStandard.CAP &&
                 userInputs.displayMode == DisplayMode.OnDeck)
             {
@@ -801,14 +829,22 @@ namespace HMS_Server
             }
         }
 
-        private double WindSpeedHeightCorrection(double windSpeed)
+        private double WindSpeedHeightCorrection(double anemometerWindSpeed, double vesselSOG)
         {
+            double windSpeed;
+
+            // Trekker av fartøyets hastighet over bakken
+            windSpeed = anemometerWindSpeed - vesselSOG;
+
             // Power law approximation of a marine atmospheric boundary layer (0.13 er en konstant i denne formelen)
             // Justert til X m over helideck
             if (adminSettingsVM.windSensorHeight != 0)
-                return windSpeed * Math.Pow((adminSettingsVM.helideckHeight + Constants.WindAdjustmentAboveHelideck) / adminSettingsVM.windSensorHeight, 0.13);
-            else
-                return windSpeed;
+                windSpeed *= Math.Pow((adminSettingsVM.helideckHeight + Constants.WindAdjustmentAboveHelideck) / adminSettingsVM.windSensorHeight, 0.13);
+
+            // Legget tilbake fartøyets hastighet over bakken
+            windSpeed += vesselSOG;
+
+            return windSpeed;
         }
     }
 }

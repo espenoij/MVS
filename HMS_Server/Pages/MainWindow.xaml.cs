@@ -320,8 +320,8 @@ namespace HMS_Server
             // Sensor Groups
             ucHMSSensorGroups.Init(
                 hmsInputData,
-                config,
-                sensorStatus);
+                sensorStatus,
+                config);
         }
 
         private void InitUIDataVerification()
@@ -747,6 +747,11 @@ namespace HMS_Server
                 // Sensor Status
                 sensorStatus.Start(hmsInputData);
 
+                // HMS
+                ucHMSInputSetup.Start();
+                ucHMSOutput.Start();
+                ucHMSSensorGroups.Start();
+
                 // Lights Output
                 if (adminSettingsVM.regulationStandard == RegulationStandard.CAP)
                 {
@@ -790,6 +795,11 @@ namespace HMS_Server
 
             // Sensor Status
             sensorStatus.Stop();
+
+            // HMS
+            ucHMSInputSetup.Stop();
+            ucHMSOutput.Stop();
+            ucHMSSensorGroups.Stop();
 
             // Lights Output
             if (adminSettingsVM.regulationStandard == RegulationStandard.CAP)

@@ -320,7 +320,7 @@ public enum LightsOutputType
     GreenFlash
 }
 
-public enum WindDirectionReference
+public enum DirectionReference
 {
     [Description("Vessel Heading")]
     VesselHeading,
@@ -404,10 +404,17 @@ public class RWDData : INotifyPropertyChanged
     {
         get
         {
-            double val = wind;
-            if (val > 60)
-                val = 60;
-            return val;
+            if (status == DataStatus.OK)
+            {
+                double val = wind;
+                if (val > 60)
+                    val = 60;
+                return val;
+            }
+            else
+            {
+                return double.NaN;
+            }
         }
     }
 
@@ -415,10 +422,17 @@ public class RWDData : INotifyPropertyChanged
     {
         get
         {
-            double val = Math.Abs(rwd);
-            if (val > 60)
-                val = 60;
-            return val;
+            if (status == DataStatus.OK)
+            {
+                double val = Math.Abs(rwd);
+                if (val > 60)
+                    val = 60;
+                return val;
+            }
+            else
+            {
+                return double.NaN;
+            }
         }
     }
 

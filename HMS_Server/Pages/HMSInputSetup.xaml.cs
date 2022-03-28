@@ -19,6 +19,10 @@ namespace HMS_Server
         private RadObservableCollection<SensorData> sensorDisplayList = new RadObservableCollection<SensorData>();
         private RadObservableCollection<HMSData> hmsInputDisplayList = new RadObservableCollection<HMSData>();
 
+        private DispatcherTimer uiTimer = new DispatcherTimer();
+
+        private HMSDataCollection hmsInputDataList;
+
         public HMSInputSetup()
         {
             InitializeComponent();
@@ -29,6 +33,7 @@ namespace HMS_Server
             HMSDataCollection hmsInputDataList,
             Config config)
         {
+            this.hmsInputDataList = hmsInputDataList;
             this.config = config;
 
             // Liste med sensor verdier
@@ -38,10 +43,8 @@ namespace HMS_Server
             gvHMSInputData.ItemsSource = hmsInputDisplayList;
 
             // Dispatcher som oppdatere UI
-            DispatcherTimer uiTimer = new DispatcherTimer();
             uiTimer.Interval = TimeSpan.FromMilliseconds(config.ReadWithDefault(ConfigKey.ServerUIUpdateFrequency, Constants.ServerUIUpdateFrequencyDefault));
             uiTimer.Tick += runUIInputUpdate;
-            uiTimer.Start();
 
             void runUIInputUpdate(object sender, EventArgs e)
             {
@@ -52,6 +55,16 @@ namespace HMS_Server
                     DisplayList.Transfer(hmsInputDataList.GetDataList(), hmsInputDisplayList);
                 }
             }
+        }
+
+        public void Start()
+        {
+            uiTimer.Start();
+        }
+
+        public void Stop()
+        {
+            uiTimer.Stop();
         }
 
         private void gvClientData_BeginningEdit(object sender, GridViewBeginningEditRoutedEventArgs e)
@@ -69,6 +82,9 @@ namespace HMS_Server
             {
                 // Hente oppdaterte data
                 HMSData hmsData = (sender as RadGridView).SelectedItem as HMSData;
+
+                // Lagre til data samling
+                hmsInputDataList.SetData(hmsData);
 
                 // Lagre til fil
                 config.SetClientData(hmsData);

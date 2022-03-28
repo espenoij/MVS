@@ -97,7 +97,8 @@ namespace HMS_Server
                 dataVerificationEnabled = false;
 
             // Sensor
-            windDirRef = (WindDirectionReference)Enum.Parse(typeof(WindDirectionReference), config.ReadWithDefault(ConfigKey.WindDirectionReference, WindDirectionReference.VesselHeading.ToString()));
+            windDirRef = (DirectionReference)Enum.Parse(typeof(DirectionReference), config.ReadWithDefault(ConfigKey.WindDirectionReference, DirectionReference.VesselHeading.ToString()));
+            vesselHdgRef = (DirectionReference)Enum.Parse(typeof(DirectionReference), config.ReadWithDefault(ConfigKey.VesselHeadingReference, DirectionReference.MagneticNorth.ToString()));
             magneticDeclination = config.ReadWithDefault(ConfigKey.MagneticDeclination, Constants.MagneticDeclinationDefault);
             helideckHeight = config.ReadWithDefault(ConfigKey.HelideckHeight, Constants.HelideckHeightDefault);
             windSensorHeight = config.ReadWithDefault(ConfigKey.WindSensorHeight, Constants.WindSensorHeightDefault);
@@ -175,6 +176,32 @@ namespace HMS_Server
                 _helideckHeadingOffset = value;
                 config.Write(ConfigKey.HelideckHeadingOffset, value.ToString());
                 OnPropertyChanged();
+            }
+        }
+
+        /////////////////////////////////////////////////////////////////////////////
+        // Vessel Heading Reference
+        /////////////////////////////////////////////////////////////////////////////
+        private DirectionReference _vesselHdgRef { get; set; }
+        public DirectionReference vesselHdgRef
+        {
+            get
+            {
+                return _vesselHdgRef;
+            }
+            set
+            {
+                _vesselHdgRef = value;
+                config.Write(ConfigKey.WindDirectionReference, value.ToString());
+                OnPropertyChanged();
+                OnPropertyChanged(nameof(VesselHdgRefString));
+            }
+        }
+        public string VesselHdgRefString
+        {
+            get
+            {
+                return _vesselHdgRef.GetDescription();
             }
         }
 
@@ -258,8 +285,8 @@ namespace HMS_Server
         /////////////////////////////////////////////////////////////////////////////
         // Wind Direction Reference
         /////////////////////////////////////////////////////////////////////////////
-        private WindDirectionReference _windDirRef { get; set; }
-        public WindDirectionReference windDirRef
+        private DirectionReference _windDirRef { get; set; }
+        public DirectionReference windDirRef
         {
             get
             {

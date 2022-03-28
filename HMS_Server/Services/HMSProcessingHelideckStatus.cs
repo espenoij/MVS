@@ -114,10 +114,10 @@ namespace HMS_Server
             rwdStatusData.data = (double)rwdStatus;
             rwdStatusData.timestamp = DateTime.UtcNow;
 
-            if (rwdStatus != HelideckStatusType.OFF)
-                rwdStatusData.status = DataStatus.OK;
+            if (rwdStatus == HelideckStatusType.OFF)
+                rwdStatusData.status = DataStatus.OK_NA;
             else
-                rwdStatusData.status = DataStatus.TIMEOUT_ERROR;
+                rwdStatusData.status = DataStatus.OK;
         }
 
         private HelideckStatusType CheckLandingStatusCAP(HelideckStatusType status)

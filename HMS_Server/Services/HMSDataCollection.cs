@@ -210,5 +210,15 @@ namespace HMS_Server
             else
                 return null;
         }
+
+        // Oppdatere data i samlingen
+        public void SetData(HMSData hmsData)
+        {
+            var sensorData = dataList.ToList().Where(x => x.id == (int)hmsData.id);
+            if (sensorData.Count() > 0)
+            {
+                sensorData.First().Set(hmsData);
+            }
+        }
     }
 }

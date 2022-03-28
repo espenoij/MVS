@@ -165,11 +165,18 @@ namespace HMS_Server
             }
 
             // Wind Direction Reference
-            foreach (WindDirectionReference value in Enum.GetValues(typeof(WindDirectionReference)))
+            foreach (DirectionReference value in Enum.GetValues(typeof(DirectionReference)))
                 cboWindDirRef.Items.Add(value.GetDescription());
 
             cboWindDirRef.SelectedIndex = (int)adminSettingsVM.windDirRef;
             cboWindDirRef.Text = adminSettingsVM.windDirRef.GetDescription();
+
+            // Vessel Heading Reference
+            cboVesselHdgRef.Items.Add(DirectionReference.MagneticNorth.GetDescription());
+            cboVesselHdgRef.Items.Add(DirectionReference.TrueNorth.GetDescription());
+
+            cboVesselHdgRef.SelectedIndex = (int)EnumExtension.GetEnumValueFromDescription<DirectionReference>(adminSettingsVM.vesselHdgRef.GetDescription());
+            cboVesselHdgRef.Text = adminSettingsVM.vesselHdgRef.GetDescription();
         }
 
         public static IPAddress GetIPAddress()
@@ -1261,7 +1268,12 @@ namespace HMS_Server
 
         private void cboWindDirRef_SelectionChanged(object sender, SelectionChangedEventArgs e)
         {
-            adminSettingsVM.windDirRef = (WindDirectionReference)cboWindDirRef.SelectedIndex;
+            adminSettingsVM.windDirRef = (DirectionReference)cboWindDirRef.SelectedIndex;
+        }
+
+        private void cboVesselHdgRef_SelectionChanged(object sender, SelectionChangedEventArgs e)
+        {
+            adminSettingsVM.vesselHdgRef = EnumExtension.GetEnumValueFromDescription<DirectionReference>(cboVesselHdgRef.Text);
         }
     }
 }
