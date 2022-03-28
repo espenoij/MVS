@@ -511,16 +511,12 @@ namespace HMS_Server
             vesselCOG.ResetDataCalculations();
             vesselSOG.ResetDataCalculations();
 
-            // Spesialtilfelle for data verifisering
-            if (adminSettingsVM.dataVerificationEnabled)
-            {
-                areaWindAverageData2m.Reset();
-                helideckGustData2m.Reset();
-                helideckWindAverageData10m.Reset();
+            areaWindAverageData2m.Reset();
+            helideckGustData2m.Reset();
+            helideckWindAverageData10m.Reset();
 
-                // WSI
-                wsiData.data = 0;
-            }
+            // WSI
+            wsiData.data = 0;
         }
         
         private void UpdateGustData(HMSData windSpd, HMSData windSpdMean, GustData gustData, HMSData outputGust)

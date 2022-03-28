@@ -325,10 +325,5 @@ namespace HMS_Server
                     return false;
             }
         }
-
-        public void ResetDataCalculations()
-        {
-
-        }
     }
 }
