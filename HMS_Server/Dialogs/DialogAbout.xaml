@@ -1,0 +1,157 @@
+﻿<telerik:RadWindow
+    x:Class="HMS_Server.DialogAbout"
+    xmlns="http://schemas.microsoft.com/winfx/2006/xaml/presentation"
+    xmlns:x="http://schemas.microsoft.com/winfx/2006/xaml"
+    xmlns:d="http://schemas.microsoft.com/expression/blend/2008"
+    xmlns:telerik="http://schemas.telerik.com/2008/xaml/presentation"
+    xmlns:mc="http://schemas.openxmlformats.org/markup-compatibility/2006"
+    mc:Ignorable="d"
+    xmlns:local="clr-namespace:HMS_Server"
+    telerik:Header="About"
+    WindowStartupLocation="CenterScreen"
+    Height="750"
+    Width="800"
+    telerik:StyleManager.Theme="Material">
+
+    <telerik:RadWindow.Icon>
+        <Image
+            Height="32"
+            Source="../Icons/swire_flag.ico" />
+    </telerik:RadWindow.Icon>
+
+    <telerik:RadWindow.Resources>
+        <ResourceDictionary>
+            <Style
+                TargetType="local:DialogAbout"
+                BasedOn="{StaticResource RadWindowStyle}" />
+        </ResourceDictionary>
+    </telerik:RadWindow.Resources>
+
+    <DockPanel>
+
+        <Button
+            DockPanel.Dock="Bottom"
+            Margin="8"
+            Width="150"
+            HorizontalAlignment="Center"
+            Content="Close"
+            Click="btnActivate_Click" />
+
+        <!--SOFTWARE-->
+        <telerik:GroupBox
+            Header="Software"
+            DockPanel.Dock="Bottom"
+            Margin="8">
+
+            <StackPanel>
+
+                <!--Software Version-->
+                <DockPanel>
+
+                    <telerik:Label
+                        Width="200"
+                        Content="Version" />
+
+                    <telerik:Label
+                        Content="{Binding Path=softwareVersion}" />
+
+                </DockPanel>
+
+            </StackPanel>
+
+        </telerik:GroupBox>
+
+        <Grid>
+
+            <Grid.RowDefinitions>
+                <RowDefinition
+                    Height="3*" />
+                <RowDefinition
+                    Height="2*" />
+            </Grid.RowDefinitions>
+            
+            <!--INFO-->
+            <telerik:GroupBox
+                Header="Infomation"
+                Grid.Row="0"
+                Margin="8">
+
+                <StackPanel>
+
+                    <!--Info-->
+                    <DockPanel>
+
+                        <telerik:Label
+                            Content="Information/about/EULA/copyright/trademarks/etc..." />
+
+                    </DockPanel>
+
+                </StackPanel>
+
+            </telerik:GroupBox>
+
+            <!--LICENSE-->
+            <telerik:GroupBox
+                Header="License"
+                Grid.Row="1"
+                Margin="8">
+
+                <StackPanel>
+
+                    <!--License Owner-->
+                    <DockPanel>
+
+                        <telerik:Label
+                            Width="200"
+                            Content="License Owner" />
+
+                        <telerik:Label
+                            Content="{Binding Path=licenseOwner}" />
+
+                    </DockPanel>
+
+                    <!--License Location-->
+                    <DockPanel>
+
+                        <telerik:Label
+                            Width="200"
+                            Content="License Location" />
+
+                        <telerik:Label
+                            Content="{Binding Path=licenseLocation}" />
+
+                    </DockPanel>
+
+                    <!--Max Clients-->
+                    <DockPanel>
+
+                        <telerik:Label
+                            Width="200"
+                            Content="Max Clients" />
+
+                        <telerik:Label
+                            Content="{Binding Path=licenseMaxClients}" />
+
+                    </DockPanel>
+                    
+                    <!--Status-->
+                    <DockPanel>
+
+                        <telerik:Label
+                            Width="200"
+                            Content="License Status" />
+
+                        <telerik:Label
+                            Content="{Binding Path=activationStatusString}" />
+
+                    </DockPanel>
+
+                </StackPanel>
+
+            </telerik:GroupBox>
+
+        </Grid>
+
+    </DockPanel>
+
+</telerik:RadWindow>

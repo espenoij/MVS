@@ -248,7 +248,7 @@ namespace HMS_Server
             InitAdminMode();
 
             // Activation
-            activationVM = new ActivationVM(config);
+            activationVM = new ActivationVM(config, Application.ResourceAssembly.GetName().Version);
 
             // Liste med sensor status
             gvStatusDisplay.ItemsSource = statusDisplayList;
@@ -1004,6 +1004,15 @@ namespace HMS_Server
             {
                 (sender as RadTabControl).Focus();
             }), DispatcherPriority.ApplicationIdle);
+        }
+
+        private void btnAbout_Click(object sender, RoutedEventArgs e)
+        {
+            // Åpne about dialog vindu
+            DialogAbout aboutDlg = new DialogAbout();
+            aboutDlg.Owner = App.Current.MainWindow;
+            aboutDlg.Init(activationVM);
+            aboutDlg.ShowDialog();
         }
     }
 }

@@ -16,7 +16,7 @@ namespace HMS_Server
 
         private Config config;
 
-        public ActivationVM(Config config)
+        public ActivationVM(Config config, Version version)
         {
             this.config = config;
 
@@ -42,6 +42,11 @@ namespace HMS_Server
                 isActivated = true;
             else
                 isActivated = false;
+
+            // Software Version
+            softwareVersion = string.Format("{0} {1}",
+                version.ToString(),
+                Constants.SoftwareVersionPostfix);
         }
 
         // License Owner
@@ -131,6 +136,27 @@ namespace HMS_Server
                     return "Activated";
                 else
                     return "Not activated";
+            }
+        }
+
+        /////////////////////////////////////////////////////////////////////////////
+        // Software Version
+        /////////////////////////////////////////////////////////////////////////////
+        private string _softwareVersion { get; set; }
+        public string softwareVersion
+        {
+            get
+            {
+                return _softwareVersion;
+            }
+            set
+            {
+                if (value != _softwareVersion)
+                {
+                    _softwareVersion = value;
+
+                    OnPropertyChanged();
+                }
             }
         }
 

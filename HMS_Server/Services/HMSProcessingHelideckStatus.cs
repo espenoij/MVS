@@ -123,7 +123,8 @@ namespace HMS_Server
         private HelideckStatusType CheckLandingStatusCAP(HelideckStatusType status)
         {
             // Slår av lysene når vi ikke har ordentlige data
-            if (hmsOutputData.GetData(ValueType.PitchMax20m).status == DataStatus.TIMEOUT_ERROR ||
+            if (hmsOutputData.GetData(ValueType.VesselHeading).status == DataStatus.TIMEOUT_ERROR || 
+                hmsOutputData.GetData(ValueType.PitchMax20m).status == DataStatus.TIMEOUT_ERROR ||
                 hmsOutputData.GetData(ValueType.RollMax20m).status == DataStatus.TIMEOUT_ERROR ||
                 hmsOutputData.GetData(ValueType.SignificantHeaveRate).status == DataStatus.TIMEOUT_ERROR ||
                 hmsOutputData.GetData(ValueType.MSI).status == DataStatus.TIMEOUT_ERROR ||

@@ -71,7 +71,7 @@ namespace HMS_Client
                 GraphBuffer.RemoveOldData(rwdTrend30mList, Constants.Minutes30);
 
                 // Overføre til display data liste
-                GraphBuffer.TransferDisplayData(rwdTrend30mList, rwdTrend30mDispList, Constants.Minutes30);
+                GraphBuffer.TransferDisplayData(rwdTrend30mList, rwdTrend30mDispList);
 
                 // Oppdatere data som skal ut i grafer
                 GraphBuffer.UpdateWithCull(vesselHeadingDelta, vesselHdg30mDataList, Constants.GraphCullFrequency30m);
@@ -166,7 +166,7 @@ namespace HMS_Client
             }
 
             // Overføre til display data liste
-            GraphBuffer.TransferDisplayData(rwdTrend30mList, rwdTrend30mDispList, Constants.Minutes30);
+            GraphBuffer.TransferDisplayData(rwdTrend30mList, rwdTrend30mDispList);
         }
 
         /////////////////////////////////////////////////////////////////////////////
