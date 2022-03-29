@@ -302,7 +302,6 @@ namespace HMS_Server
             if (adminSettingsVM.regulationStandard == RegulationStandard.CAP)
             {
                 pitchMax20mData.BufferFillCheck(Constants.MotionBufferFill99Pct);
-                //pitchMax3hData.BufferFillCheck(Constants.MotionBufferFill99Pct);
                 pitchMaxUp20mData.BufferFillCheck(Constants.MotionBufferFill99Pct);
                 pitchMaxDown20mData.BufferFillCheck(Constants.MotionBufferFill99Pct);
             }
@@ -317,7 +316,6 @@ namespace HMS_Server
             if (adminSettingsVM.regulationStandard == RegulationStandard.CAP)
             {
                 rollMax20mData.BufferFillCheck(Constants.MotionBufferFill99Pct);
-                //rollMax3hData.BufferFillCheck(Constants.MotionBufferFill99Pct);
                 rollMaxLeft20mData.BufferFillCheck(Constants.MotionBufferFill99Pct);
                 rollMaxRight20mData.BufferFillCheck(Constants.MotionBufferFill99Pct);
             }

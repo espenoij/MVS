@@ -169,92 +169,70 @@ namespace HMS_Client
                 buffer.Clear();
         }
 
-        public static void TransferDisplayData(RadObservableCollectionEx<HelideckStatus> list, List<HelideckStatusType> dispList, double timeFrame)
+        public static void TransferDisplayData(RadObservableCollectionEx<HelideckStatus> list, List<HelideckStatusType> dispList)
         {
             // Denne funksjonen mapper et visst antall statuser til en status indikator posisjon på tidslinjen på skjermen.
             // Viser høyeste nivå fra sub-settet med statuser.
 
             if (list.Count > 0 && dispList.Count > 0)
             {
-                //DateTime subsetStartTime = list[list.Count - 1].timestamp.AddSeconds(-timeFrame);
-                //double subsetTime = timeFrame * 1000 / (double)dispList.Count;
-
                 DateTime subsetStartTime = list[0].timestamp;
-                double subsetTime = (list[list.Count - 1].timestamp - list[0].timestamp).TotalMilliseconds / (double)dispList.Count;
+                double subsetTime = (list[list.Count - 1].timestamp - list[0].timestamp).TotalMilliseconds / dispList.Count;
 
                 HelideckStatusType status = HelideckStatusType.NO_DATA;
 
                 int dataCounter = 0;
                 int subsetCounter = 0;
 
-                bool dataFound = false;
-
-                // Har vi ennå ikke kommet til data?
-                while (!dataFound)
+                for (; subsetCounter < dispList.Count && dataCounter < list.Count; subsetCounter++)               
                 {
-                    if (subsetStartTime < list[dataCounter].timestamp)
-                    {
-                        dispList[subsetCounter++] = HelideckStatusType.OFF;
+                    bool nextSubset = false;
 
-                        // Gå til neste subset
-                        subsetStartTime = subsetStartTime.AddMilliseconds(subsetTime);
-                    }
-                    else
+                    for (; !nextSubset && dataCounter < list.Count; dataCounter++)
                     {
-                        dataFound = true;
-                    }
-                }
-
-                // Vi har kommet til data
-                if (dataFound)
-                {
-                    for (; subsetCounter < dispList.Count && dataCounter < list.Count; subsetCounter++)               
-                    {
-                        bool nextSubset = false;
-
-                        for (; !nextSubset && dataCounter < list.Count; dataCounter++)
+                        // Har vi kommet til nytt subSet?
+                        if (list[dataCounter].timestamp >= subsetStartTime.AddMilliseconds(subsetTime))
                         {
-                            // Har vi kommet til nytt subSet?
-                            if (list[dataCounter].timestamp > subsetStartTime.AddMilliseconds(subsetTime))
-                            {
-                                // Sette status i display listen
-                                dispList[subsetCounter] = status;
+                            // Sette status i display listen
+                            dispList[subsetCounter] = status;
 
-                                // Gå til neste subset
-                                subsetStartTime = subsetStartTime.AddMilliseconds(subsetTime);
+                            // Gå til neste subset
+                            subsetStartTime = subsetStartTime.AddMilliseconds(subsetTime);
 
-                                // Resette høyeste status nivå
-                                status = HelideckStatusType.NO_DATA;
+                            // Resette høyeste status nivå
+                            status = HelideckStatusType.NO_DATA;
 
-                                // Exit denne loopen
-                                nextSubset = true;
-                            }
+                            // Exit denne loopen
+                            nextSubset = true;
+                        }
 
-                            // Finne høyeste status nivå
-                            switch (list[dataCounter].status)
-                            {
-                                case HelideckStatusType.RED:
-                                    status = HelideckStatusType.RED;
-                                    break;
+                        // Finne høyeste status nivå
+                        switch (list[dataCounter].status)
+                        {
+                            case HelideckStatusType.RED:
+                                status = HelideckStatusType.RED;
+                                break;
 
-                                case HelideckStatusType.AMBER:
-                                    if (status != HelideckStatusType.RED)
-                                        status = HelideckStatusType.AMBER;
-                                    break;
+                            case HelideckStatusType.AMBER:
+                                if (status != HelideckStatusType.RED)
+                                    status = HelideckStatusType.AMBER;
+                                break;
 
-                                case HelideckStatusType.BLUE:
-                                    if (status != HelideckStatusType.RED &&
-                                        status != HelideckStatusType.AMBER)
-                                        status = HelideckStatusType.BLUE;
-                                    break;
+                            case HelideckStatusType.BLUE:
+                                if (status != HelideckStatusType.RED &&
+                                    status != HelideckStatusType.AMBER)
+                                    status = HelideckStatusType.BLUE;
+                                break;
 
-                                case HelideckStatusType.OFF:
-                                    if (status != HelideckStatusType.RED &&
-                                        status != HelideckStatusType.AMBER &&
-                                        status != HelideckStatusType.BLUE)
-                                        status = HelideckStatusType.OFF;
-                                    break;
-                            }
+                            case HelideckStatusType.OFF:
+                                if (status != HelideckStatusType.RED &&
+                                    status != HelideckStatusType.AMBER &&
+                                    status != HelideckStatusType.BLUE)
+                                    status = HelideckStatusType.OFF;
+                                break;
+
+                            default:
+                                break;
                         }
                     }
                 }

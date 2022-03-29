@@ -52,8 +52,10 @@ namespace HMS_Client
                 GraphBuffer.RemoveOldData(statusTrend3hList, Constants.Hours3);
 
                 // Overføre til display data liste
-                GraphBuffer.TransferDisplayData(statusTrend20mList, landingTrend20mDispList, Constants.Minutes20);
-                GraphBuffer.TransferDisplayData(statusTrend3hList, statusTrend3hDispList, Constants.Hours3);
+                if (selectedGraphTime == GraphTime.Minutes20)
+                    GraphBuffer.TransferDisplayData(statusTrend20mList, landingTrend20mDispList);
+                else
+                    GraphBuffer.TransferDisplayData(statusTrend3hList, statusTrend3hDispList);
 
                 OnPropertyChanged(nameof(landingStatusTimeString));
                 OnPropertyChanged(nameof(displayModeVisibilityPreLanding));

@@ -714,17 +714,12 @@ namespace HMS_Server
                     errorHandler.SetDatabaseError(ErrorHandler.DatabaseErrorType.CreateTablesStartServer);
                 }
 
-                // Resette dataCalculations
+                // Resette sammenligningsdata
                 if (adminSettingsVM.dataVerificationEnabled)
-                {
-                    // Resetter data listene i dataCalculations kun ved data verifikasjons-testing
-                    // Under normal kjøring kan "gamle" data i listene være fullt brukelig ettersom
-                    // de uansett blir slettet automatisk når de faktisk er for gamle.
-                    hmsProcessing.ResetDataCalculations();
-
-                    // Resette sammenligningsdata
                     verfication.Reset();
-                }
+
+                // Resetter data listene i dataCalculations
+                hmsProcessing.ResetDataCalculations();
 
                 // Starter data-innhenting 
                 sensorDataRetrieval.SensorDataRetrieval_Start();
