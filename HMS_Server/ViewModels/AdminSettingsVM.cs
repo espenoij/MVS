@@ -192,7 +192,7 @@ namespace HMS_Server
             set
             {
                 _vesselHdgRef = value;
-                config.Write(ConfigKey.WindDirectionReference, value.ToString());
+                config.Write(ConfigKey.VesselHeadingReference, value.ToString());
                 OnPropertyChanged();
                 OnPropertyChanged(nameof(VesselHdgRefString));
             }

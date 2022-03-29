@@ -175,7 +175,16 @@ namespace HMS_Server
             cboVesselHdgRef.Items.Add(DirectionReference.MagneticNorth.GetDescription());
             cboVesselHdgRef.Items.Add(DirectionReference.TrueNorth.GetDescription());
 
-            cboVesselHdgRef.SelectedIndex = (int)EnumExtension.GetEnumValueFromDescription<DirectionReference>(adminSettingsVM.vesselHdgRef.GetDescription());
+            switch (EnumExtension.GetEnumValueFromDescription<DirectionReference>(adminSettingsVM.vesselHdgRef.GetDescription()))
+            {
+                case DirectionReference.TrueNorth:
+                    cboVesselHdgRef.SelectedIndex = 1;
+                    break;
+
+                default:
+                    cboVesselHdgRef.SelectedIndex = 0;
+                    break;
+            }
             cboVesselHdgRef.Text = adminSettingsVM.vesselHdgRef.GetDescription();
         }
 
