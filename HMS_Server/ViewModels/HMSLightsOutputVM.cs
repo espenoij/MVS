@@ -36,13 +36,17 @@ namespace HMS_Server
             outputAddress3 = (UInt16)config.ReadWithDefault(ConfigKey.LightsOutputAddress3, Constants.ModbusCoilMin);
 
             // Oppdatere UI
-            statusUpdateTimer.Interval = TimeSpan.FromMilliseconds(config.ReadWithDefault(ConfigKey.LightsOutputFrequency, Constants.LightsOutputFrequencyDefault));
+            statusUpdateTimer.Interval = TimeSpan.FromMilliseconds(config.ReadWithDefault(ConfigKey.ServerUIUpdateFrequency, Constants.ServerUIUpdateFrequencyDefault));
             statusUpdateTimer.Tick += UIUpdate;
             statusUpdateTimer.Start();
 
             void UIUpdate(object sender, EventArgs e)
             {
                 helideckLightData = hmsOutputDataList?.GetData(ValueType.HelideckLight);
+
+                OnPropertyChanged(nameof(helideckStatus));
+                OnPropertyChanged(nameof(HMSLightsOutput));
+                OnPropertyChanged(nameof(HMSLightsOutputToDisplay));
             }
         }
 
@@ -92,7 +96,7 @@ namespace HMS_Server
         {
             get
             {
-                LightsOutputType lightsOutput = LightsOutputType.Off;
+                LightsOutputType lightsOutput;
 
                 if (!testMode)
                 {

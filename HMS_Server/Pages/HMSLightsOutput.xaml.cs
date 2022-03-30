@@ -28,6 +28,7 @@ namespace HMS_Server
 
         // MODBUS
         private ModbusFactory modbusFactory = new ModbusFactory();
+        private IModbusSerialMaster modbusSerialMaster = null;
         private ModbusHelper modbusHelper = new ModbusHelper();
 
         private DispatcherTimer modbusWriter = new DispatcherTimer();
@@ -175,30 +176,30 @@ namespace HMS_Server
                                 if (serialPort.IsOpen)
                                 {
                                     // Starte MODBUS
-                                    IModbusSerialMaster modbusSerialMaster = modbusFactory.CreateRtuMaster(new SerialPortAdapter(serialPort));
+                                    if (modbusSerialMaster == null)
+                                        modbusSerialMaster = modbusFactory.CreateRtuMaster(new SerialPortAdapter(serialPort));
 
-                                    int i = 1;
-                                    foreach (var outputAddress in hmsLightsOutputVM.outputAddressList)
+                                    if (modbusSerialMaster != null)
                                     {
-                                        // Finne ut hvor det skal skrives
-                                        ModbusObjectType modbusObjectType = modbusHelper.AddressToObjectType(outputAddress);
-
-                                        // Skrive til registers (kun til coil)
-                                        switch (modbusObjectType)
+                                        for (int i = 0; i < hmsLightsOutputVM.outputAddressList.Count; i++)
                                         {
-                                            case ModbusObjectType.Coil:
-                                                {
-                                                    modbusSerialMaster.WriteSingleCoil(
-                                                        lightsOutputData.modbus.slaveID,
-                                                        outputAddress,
-                                                        LightOutputToWriteValue(hmsLightsOutputVM.HMSLightsOutput, i++));
-                                                }
-                                                break;
+                                            // Finne ut hvor det skal skrives
+                                            ModbusObjectType modbusObjectType = modbusHelper.AddressToObjectType(hmsLightsOutputVM.outputAddressList[i]);
+
+                                            // Skrive til registers (kun til coil)
+                                            switch (modbusObjectType)
+                                            {
+                                                case ModbusObjectType.Coil:
+                                                    {
+                                                        modbusSerialMaster.WriteSingleCoil(
+                                                            lightsOutputData.modbus.slaveID,
+                                                            hmsLightsOutputVM.outputAddressList[i],
+                                                            LightOutputToWriteValue(hmsLightsOutputVM.HMSLightsOutput, i));
+                                                    }
+                                                    break;
+                                            }
                                         }
                                     }
-
-                                    // Lukke port
-                                    serialPort.Close();
                                 }
                             }
                             catch (Exception ex)
@@ -208,7 +209,7 @@ namespace HMS_Server
                                         DateTime.UtcNow,
                                         ErrorMessageType.MODBUS,
                                         ErrorMessageCategory.AdminUser,
-                                        string.Format("Modbus_Write\n\nSystem Message:\n{0}", ex.Message)));
+                                        string.Format("Modbus_Write (Lights Output)\n\nSystem Message:\n{0}", ex.Message)));
 
                                 // Lukke port
                                 serialPort.Close();
@@ -298,6 +299,11 @@ namespace HMS_Server
         private void Modbus_Stop()
         {
             modbusWriter.Stop();
+
+            // Lukke port
+            serialPort.Close();
+
+            modbusSerialMaster.Dispose();
         }
 
         private bool LightOutputToWriteValue(LightsOutputType lightsOutput, int output)
@@ -305,7 +311,7 @@ namespace HMS_Server
             // Q - Aviation: Q40RI03L HMS Repeater Light System
             switch (output)
             {
-                case 1:
+                case 0:
                     switch (lightsOutput)
                     {
                         case LightsOutputType.Amber:
@@ -317,7 +323,7 @@ namespace HMS_Server
                             return false;
                     }
 
-                case 2:
+                case 1:
                     switch (lightsOutput)
                     {
                         case LightsOutputType.Blue:
@@ -329,7 +335,7 @@ namespace HMS_Server
                             return false;
                     }
 
-                case 3:
+                case 2:
                     switch (lightsOutput)
                     {
                         case LightsOutputType.BlueFlash:
