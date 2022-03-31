@@ -3,6 +3,7 @@ using System.Collections.Generic;
 using System.ComponentModel;
 using System.IO;
 using System.Runtime.CompilerServices;
+using System.Threading;
 using System.Timers;
 
 namespace HMS_Server
@@ -198,48 +199,52 @@ namespace HMS_Server
                 timer.AutoReset = true;
                 timer.Elapsed += runReader;
 
-                // Kjøre leseren en gang manuellt, ellers må vi vente til elapsed time har gått
-                //runReader(timer, new EventArgs());
-
                 // Starte timer
                 timer.Start();
 
                 void runReader(Object source, EventArgs e)
                 {
-                    if (fsReader != null)
+                    Thread thread = new Thread(() => runReaderTask());
+                    thread.IsBackground = true;
+                    thread.Start();
+
+                    void runReaderTask()
                     {
-                        // Sjekke at vi ikke er kommet til end of file
-                        if (!fsReader.EndOfStream)
+                        if (fsReader != null)
                         {
-                            // Lese en linje fra fil
-                            dataLine = fsReader.ReadLine();
-                            fileReaderData.dataLine = dataLine;
+                            // Sjekke at vi ikke er kommet til end of file
+                            if (!fsReader.EndOfStream)
+                            {
+                                // Lese en linje fra fil
+                                dataLine = fsReader.ReadLine();
+                                fileReaderData.dataLine = dataLine;
 
-                            // Sette timestamp
-                            timestamp = DateTime.UtcNow;
-                            fileReaderData.timestamp = timestamp;
+                                // Sette timestamp
+                                timestamp = DateTime.UtcNow;
+                                fileReaderData.timestamp = timestamp;
 
-                            // Status
-                            portStatus = PortStatus.Reading;
+                                // Status
+                                portStatus = PortStatus.Reading;
+                            }
+                            else
+                            {
+                                // Status
+                                portStatus = PortStatus.EndOfFile;
+                            }
                         }
                         else
                         {
                             // Status
-                            portStatus = PortStatus.EndOfFile;
+                            portStatus = PortStatus.OpenError;
                         }
-                    }
-                    else
-                    {
+
                         // Status
-                        portStatus = PortStatus.OpenError;
+                        fileReaderData.portStatus = portStatus;
+
+                        // Callback for å sende lest data linje tilbake for prosessering
+                        if (fileReaderCallback != null)
+                            fileReaderCallback(fileReaderData);
                     }
-
-                    // Status
-                    fileReaderData.portStatus = portStatus;
-
-                    // Callback for å sende lest data linje tilbake for prosessering
-                    if (fileReaderCallback != null)
-                        fileReaderCallback(fileReaderData);
                 }
             }
             catch (Exception ex)

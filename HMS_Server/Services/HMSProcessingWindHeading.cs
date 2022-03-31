@@ -231,18 +231,22 @@ namespace HMS_Server
                     sensorWindDirectionCorrected.data = vesselHeading.data + hmsInputDataList.GetData(ValueType.SensorWindDirection).data;
                     if (sensorWindDirectionCorrected.data > 360)
                         sensorWindDirectionCorrected.data -= 360;
+                    if (sensorWindDirectionCorrected.data < 1)
+                        sensorWindDirectionCorrected.data += 360;
                     break;
 
                 case DirectionReference.MagneticNorth:
-                    sensorWindDirectionCorrected.data = hmsInputDataList.GetData(ValueType.SensorWindDirection).data;
                     break;
 
                 case DirectionReference.TrueNorth:
                     sensorWindDirectionCorrected.data = hmsInputDataList.GetData(ValueType.SensorWindDirection).data - adminSettingsVM.magneticDeclination;
+                    if (sensorWindDirectionCorrected.data > 360)
+                        sensorWindDirectionCorrected.data -= 360;
+                    if (sensorWindDirectionCorrected.data < 1)
+                        sensorWindDirectionCorrected.data += 360;
                     break;
 
                 default:
-                    sensorWindDirectionCorrected.data = hmsInputDataList.GetData(ValueType.SensorWindDirection).data;
                     break;
             }
 
