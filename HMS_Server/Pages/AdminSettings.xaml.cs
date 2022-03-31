@@ -125,6 +125,9 @@ namespace HMS_Server
                 lbRestrictedSectorTo.IsEnabled = false;
                 tbRestrictedSectorTo.IsEnabled = false;
 
+                lbEnableDataVerification.IsEnabled = false;
+                chkEnableDataVerification.IsEnabled = false;
+
                 // Offshore Weather Report
                 lbNDBInstalled_CAP.IsEnabled = false;
                 cbNDBInstalled_CAP.IsEnabled = false;

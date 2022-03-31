@@ -929,36 +929,9 @@
 
                 </telerik:GroupBox>
 
-            </Grid>
-
-        </telerik:RadTabItem>
-
-        <telerik:RadTabItem
-            Header="Test">
-
-            <Grid>
-
-                <Grid.ColumnDefinitions>
-                    <ColumnDefinition
-                        Width="*" />
-                    <ColumnDefinition
-                        Width="*" />
-                    <ColumnDefinition
-                        Width="*" />
-                </Grid.ColumnDefinitions>
-
-                <Grid.RowDefinitions>
-                    <RowDefinition
-                        Height="*" />
-                    <RowDefinition
-                        Height="*" />
-                    <RowDefinition
-                        Height="*" />
-                </Grid.RowDefinitions>
-
                 <!--DATA VERIFICATION-->
                 <telerik:GroupBox
-                    Grid.Row="0"
+                    Grid.Row="1"
                     Grid.Column="0"
                     Margin="8"
                     Header="DATA VERIFICATION">
@@ -969,6 +942,7 @@
                         <!--Secure Connection-->
                         <DockPanel>
                             <telerik:Label
+                                Name="lbEnableDataVerification"
                                 Content="Enable Data Verification Module"
                                 VerticalAlignment="Center" />
                             <CheckBox
