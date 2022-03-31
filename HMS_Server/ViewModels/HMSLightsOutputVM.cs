@@ -46,6 +46,16 @@ namespace HMS_Server
 
                 OnPropertyChanged(nameof(helideckStatus));
                 OnPropertyChanged(nameof(HMSLightsOutput));
+            }
+
+            // Oppdatere lys i display
+            DispatcherTimer lightDisplayTimer = new DispatcherTimer();
+            lightDisplayTimer.Interval = TimeSpan.FromMilliseconds(100);
+            lightDisplayTimer.Tick += LightUpdate;
+            lightDisplayTimer.Start();
+
+            void LightUpdate(object sender, EventArgs e)
+            {
                 OnPropertyChanged(nameof(HMSLightsOutputToDisplay));
             }
         }

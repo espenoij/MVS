@@ -303,6 +303,7 @@ namespace HMS_Server
             // Lukke port
             serialPort.Close();
 
+            // Stenge MODBUS grensesnitt
             modbusSerialMaster.Dispose();
         }
 
