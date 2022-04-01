@@ -409,6 +409,12 @@ namespace HMS_Server
                     mms_msi.status = DataStatus.OK;
                     mms_msi.timestamp = accelerationX.timestamp;
                 }
+                else
+                {
+                    mms_msi.data = 0;
+                    mms_msi.status = accelerationX.status;
+                    mms_msi.timestamp = accelerationX.timestamp;
+                }
 
                 // Find max value
                 CalculateMSIMax(mms_msi, mms_msi_list, msiData, Constants.Minutes20);
@@ -470,8 +476,8 @@ namespace HMS_Server
                 // Sjekke status
                 if (value.status == DataStatus.OK)
                 {
-                    // Korreksjon R
-                    double valueCorr = value.data * adminSettingsVM.msiCorrectionR;
+                    // Korreksjon R og avrunding til en desimal
+                    double valueCorr = Math.Round(value.data * adminSettingsVM.msiCorrectionR, 1, MidpointRounding.AwayFromZero);
 
                     // Legge inn den nye verdien i data settet
                     dataList.Add(new TimeData() { data = valueCorr, timestamp = value.timestamp });
@@ -479,7 +485,8 @@ namespace HMS_Server
                     // Større max verdi?
                     if (valueCorr > maxValue.data)
                     {
-                        maxValue.data = Math.Round(valueCorr, 1, MidpointRounding.AwayFromZero);
+                        // Sett ny max verdi
+                        maxValue.data = valueCorr;
                     }
 
                     // Timestamp og status
@@ -490,53 +497,53 @@ namespace HMS_Server
                 {
                     maxValue.status = value.status;
                 }
+            }
 
-                // Sjekke om vi skal ta ut gamle verdier
-                bool findNewMaxValue = false;
+            // Sjekke om vi skal ta ut gamle verdier
+            bool findNewMaxValue = false;
 
-                for (int i = 0; i < dataList.Count && dataList.Count > 0; i++)
+            for (int i = 0; i < dataList.Count && dataList.Count > 0; i++)
+            {
+                // Time stamp eldre enn satt grense?
+                if (dataList[i]?.timestamp.AddSeconds(time) < DateTime.UtcNow)
                 {
-                    // Time stamp eldre enn satt grense?
-                    if (dataList[i]?.timestamp.AddSeconds(time) < DateTime.UtcNow)
+                    // Sjekke om dette var høyeste verdi
+                    if (dataList[i].data == maxValue.data)
                     {
-                        // Sjekke om dette var høyeste verdi
-                        if (dataList[i].data == maxValue.data)
-                        {
-                            // Finne ny høyeste verdi
-                            findNewMaxValue = true;
-                        }
-
-                        // Fjerne gammel verdi fra verdiliste
-                        dataList.RemoveAt(i--);
+                        // Finne ny høyeste verdi
+                        findNewMaxValue = true;
                     }
+
+                    // Fjerne gammel verdi fra verdiliste
+                    dataList.RemoveAt(i--);
                 }
+            }
 
-                // Finne ny høyeste verdi
-                if (findNewMaxValue)
+            // Finne ny høyeste verdi
+            if (findNewMaxValue)
+            {
+                double oldMaxValue = maxValue.data;
+                maxValue.data = 0;
+                bool foundNewMax = false;
+
+                for (int i = 0; i < dataList.Count && !foundNewMax; i++)
                 {
-                    double oldMaxValue = maxValue.data;
-                    maxValue.data = 0;
-                    bool foundNewMax = false;
-
-                    for (int i = 0; i < dataList.Count && !foundNewMax; i++)
+                    // Kan avslutte søket dersom vi finner en verdi like den gamle max verdien (ingen er høyere)
+                    if (dataList[i]?.data == oldMaxValue)
                     {
-                        // Kan avslutte søket dersom vi finne en verdi like den gamle max verdien (ingen er høyere)
-                        if (dataList[i]?.data == oldMaxValue)
+                        maxValue.data = Math.Round(dataList[i].data * adminSettingsVM.msiCorrectionR, 1, MidpointRounding.AwayFromZero);
+                        maxValue.timestamp = dataList[i].timestamp;
+                        maxValue.status = DataStatus.OK;
+
+                        foundNewMax = true;
+                    }
+                    else
+                    {
+                        if (dataList[i]?.data > maxValue.data)
                         {
                             maxValue.data = Math.Round(dataList[i].data * adminSettingsVM.msiCorrectionR, 1, MidpointRounding.AwayFromZero);
                             maxValue.timestamp = dataList[i].timestamp;
                             maxValue.status = DataStatus.OK;
-
-                            foundNewMax = true;
-                        }
-                        else
-                        {
-                            if (dataList[i]?.data > maxValue.data)
-                            {
-                                maxValue.data = Math.Round(dataList[i].data * adminSettingsVM.msiCorrectionR, 1, MidpointRounding.AwayFromZero);
-                                maxValue.timestamp = dataList[i].timestamp;
-                                maxValue.status = DataStatus.OK;
-                            }
                         }
                     }
                 }

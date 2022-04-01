@@ -502,17 +502,16 @@ namespace HMS_Server
             wsiData.data = 0;
         }
         
-        private void UpdateGustData(HMSData windSpd, HMSData windSpdMean, GustData gustData, HMSData outputGust)
+        private void UpdateGustData(HMSData newWindSpd, HMSData windSpdMean, GustData gustData, HMSData outputGust)
         {
             // Sjekker status på data først
-            if (windSpd?.status == DataStatus.OK &&             // Status OK
-                windSpd?.timestamp != gustData.lastTimeStamp)   // Unngå duplikate data
+            if (newWindSpd?.status == DataStatus.OK &&             // Status OK
+                newWindSpd?.timestamp != gustData.lastTimeStamp)   // Unngå duplikate data
             {
-                DateTime newTimestamp = windSpd.timestamp;
                 bool findNewMaxGust = false;
 
                 // Oppdatere siste timestamp
-                gustData.lastTimeStamp = windSpd.timestamp;
+                gustData.lastTimeStamp = newWindSpd.timestamp;
 
                 // Gust: NOROG
                 //////////////////////////////////////////////
@@ -524,14 +523,14 @@ namespace HMS_Server
                         // Lagre i 3 sekund-listen
                         gustData.gust3SecDataList.Add(new Wind()
                         {
-                            spd = windSpd.data,
-                            timestamp = windSpd.timestamp
+                            spd = newWindSpd.data,
+                            timestamp = newWindSpd.timestamp
                         });
 
                         // Sjekke om vi skal fjerne data fra 3-sek gust listen
                         for (int i = 0; i < gustData.gust3SecDataList.Count && gustData.gust3SecDataList.Count > 0; i++)
                         {
-                            if (gustData.gust3SecDataList[i]?.timestamp.AddSeconds(3) < newTimestamp)
+                            if (gustData.gust3SecDataList[i]?.timestamp.AddSeconds(3) < newWindSpd.timestamp)
                                 gustData.gust3SecDataList.RemoveAt(i--);
                         }
 
@@ -546,7 +545,7 @@ namespace HMS_Server
                         gustData.gustDataList.Add(new Wind()
                         {
                             spd = gust3SecLow,
-                            timestamp = windSpd.timestamp
+                            timestamp = newWindSpd.timestamp
                         });
 
                         // Ny max verdi?
@@ -558,7 +557,7 @@ namespace HMS_Server
                         // Sjekke om vi skal fjerne data fra gust listen
                         for (int i = 0; i < gustData.gustDataList.Count && gustData.gustDataList.Count > 0; i++)
                         {
-                            if (gustData.gustDataList[i]?.timestamp.AddMinutes(gustData.minutes) < newTimestamp)
+                            if (gustData.gustDataList[i]?.timestamp.AddMinutes(gustData.minutes) < newWindSpd.timestamp)
                             {
                                 // Sjekke om dette var max gust
                                 if (gustData.gustDataList[i].spd == gustData.windDataGustMax)
@@ -604,20 +603,20 @@ namespace HMS_Server
                         // Lagre i gust listen
                         gustData.gustDataList.Add(new Wind()
                         {
-                            spd = windSpd.data,
-                            timestamp = windSpd.timestamp
+                            spd = newWindSpd.data,
+                            timestamp = newWindSpd.timestamp
                         });
 
                         // Ny max verdi?
-                        if (windSpd.data > gustData.windDataGustMax)
+                        if (newWindSpd.data > gustData.windDataGustMax)
                         {
-                            gustData.windDataGustMax = windSpd.data;
+                            gustData.windDataGustMax = newWindSpd.data;
                         }
 
                         // Sjekke om vi skal fjerne data fra gust listen
                         for (int i = 0; i < gustData.gustDataList.Count && gustData.gustDataList.Count > 0; i++)
                         {
-                            if (gustData.gustDataList[i]?.timestamp.AddMinutes(gustData.minutes) < newTimestamp)
+                            if (gustData.gustDataList[i]?.timestamp.AddMinutes(gustData.minutes) < newWindSpd.timestamp)
                             {
                                 // Sjekke om dette var max gust
                                 if (gustData.gustDataList[i].spd == gustData.windDataGustMax)
@@ -665,14 +664,14 @@ namespace HMS_Server
                     // Lagre i 3 sekund-listen
                     gustData.gust3SecDataList.Add(new Wind()
                     {
-                        spd = windSpd.data,
-                        timestamp = windSpd.timestamp
+                        spd = newWindSpd.data,
+                        timestamp = newWindSpd.timestamp
                     });
 
                     // Sjekke om vi skal fjerne data fra 3-sek gust listen
                     for (int i = 0; i < gustData.gust3SecDataList.Count && gustData.gust3SecDataList.Count > 0; i++)
                     {
-                        if (gustData.gust3SecDataList[i]?.timestamp.AddSeconds(3) < newTimestamp)
+                        if (gustData.gust3SecDataList[i]?.timestamp.AddSeconds(3) < newWindSpd.timestamp)
                             gustData.gust3SecDataList.RemoveAt(i--);
                     }
 
@@ -692,7 +691,7 @@ namespace HMS_Server
                     gustData.gustDataList.Add(new Wind()
                     {
                         spd = gust3SecMean,
-                        timestamp = windSpd.timestamp
+                        timestamp = newWindSpd.timestamp
                     });
 
                     // Ny max gust verdi?
@@ -704,7 +703,7 @@ namespace HMS_Server
                     // Sjekke om vi skal fjerne data fra gust listen
                     for (int i = 0; i < gustData.gustDataList.Count && gustData.gustDataList.Count > 0; i++)
                     {
-                        if (gustData.gustDataList[0]?.timestamp.AddMinutes(gustData.minutes) < newTimestamp)
+                        if (gustData.gustDataList[0]?.timestamp.AddMinutes(gustData.minutes) < newWindSpd.timestamp)
                         {
                             // Sjekke om dette var max gust
                             if (gustData.gustDataList[i]?.spd == gustData.windDataGustMax)
@@ -744,13 +743,13 @@ namespace HMS_Server
                 // Return data
                 outputGust.data = Math.Round(gustData.windGust, 1, MidpointRounding.AwayFromZero);
 
-                if (windSpd.status == DataStatus.OK && windSpdMean.status == DataStatus.OK_NA)
+                if (newWindSpd.status == DataStatus.OK && windSpdMean.status == DataStatus.OK_NA)
                     outputGust.status = DataStatus.OK_NA;
                 else
-                    outputGust.status = windSpd.status;
+                    outputGust.status = newWindSpd.status;
 
-                outputGust.timestamp = windSpd.timestamp;
-                outputGust.sensorGroupId = windSpd.sensorGroupId;                
+                outputGust.timestamp = newWindSpd.timestamp;
+                outputGust.sensorGroupId = newWindSpd.sensorGroupId;                
             }
         }
 
