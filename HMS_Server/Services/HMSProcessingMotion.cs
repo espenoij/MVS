@@ -477,16 +477,16 @@ namespace HMS_Server
                 if (value.status == DataStatus.OK)
                 {
                     // Korreksjon R og avrunding til en desimal
-                    double valueCorr = Math.Round(value.data * adminSettingsVM.msiCorrectionR, 1, MidpointRounding.AwayFromZero);
+                    double newValueCorrR = Math.Round(value.data * adminSettingsVM.msiCorrectionR, 1, MidpointRounding.AwayFromZero);
 
                     // Legge inn den nye verdien i data settet
-                    dataList.Add(new TimeData() { data = valueCorr, timestamp = value.timestamp });
+                    dataList.Add(new TimeData() { data = newValueCorrR, timestamp = value.timestamp });
 
                     // Større max verdi?
-                    if (valueCorr > maxValue.data)
+                    if (newValueCorrR > maxValue.data)
                     {
                         // Sett ny max verdi
-                        maxValue.data = valueCorr;
+                        maxValue.data = newValueCorrR;
                     }
 
                     // Timestamp og status
