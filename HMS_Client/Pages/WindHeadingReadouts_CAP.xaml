@@ -41,24 +41,20 @@
 
             <Grid.ColumnDefinitions>
                 <ColumnDefinition
-                    Width="10" />
-                <ColumnDefinition
                     Width="12*" />
                 <ColumnDefinition
                     Width="7*" />
             </Grid.ColumnDefinitions>
 
-            <!--<Separator
-                Grid.Row="0"
-                Grid.Column="0"
+            <Rectangle
+                Grid.ColumnSpan="3"
                 Grid.RowSpan="2"
-                Background="{StaticResource ColorVessel}"
-                Width="8"
-                Margin="0,8" />-->
+                Margin="8"
+                Fill="{StaticResource ColorBackgroundSeparator}" />
 
             <Viewbox
                 Grid.Row="0"
-                Grid.Column="1"
+                Grid.Column="0"
                 Grid.ColumnSpan="2"
                 StretchDirection="Both"
                 Stretch="Uniform"
@@ -73,14 +69,15 @@
 
             <Separator
                 Grid.Row="0"
-                Grid.Column="1"
+                Grid.Column="0"
                 Grid.ColumnSpan="2"
                 Height="1"
+                Margin="8,0,8,0"
                 VerticalAlignment="Bottom" />
 
             <Viewbox
                 Grid.Row="1"
-                Grid.Column="1"
+                Grid.Column="0"
                 StretchDirection="Both"
                 Stretch="Uniform">
 
@@ -92,7 +89,7 @@
 
             <Viewbox
                 Grid.Row="1"
-                Grid.Column="2"
+                Grid.Column="1"
                 StretchDirection="Both"
                 Stretch="Uniform">
 
@@ -118,24 +115,20 @@
 
             <Grid.ColumnDefinitions>
                 <ColumnDefinition
-                    Width="10" />
-                <ColumnDefinition
                     Width="12*" />
                 <ColumnDefinition
                     Width="7*" />
             </Grid.ColumnDefinitions>
 
-            <!--<Separator
-                Grid.Row="0"
-                Grid.Column="0"
+            <Rectangle
+                Grid.ColumnSpan="3"
                 Grid.RowSpan="2"
-                Background="{StaticResource ColorVessel}"
-                Width="8"
-                Margin="0,8" />-->
+                Margin="8"
+                Fill="{StaticResource ColorBackgroundSeparator}" />
 
             <Viewbox
                 Grid.Row="0"
-                Grid.Column="1"
+                Grid.Column="0"
                 Grid.ColumnSpan="2"
                 StretchDirection="Both"
                 Stretch="Uniform"
@@ -150,14 +143,15 @@
 
             <Separator
                 Grid.Row="0"
-                Grid.Column="1"
+                Grid.Column="0"
                 Grid.ColumnSpan="2"
+                Margin="8,0,8,0"
                 Height="1"
                 VerticalAlignment="Bottom" />
 
             <Viewbox
                 Grid.Row="1"
-                Grid.Column="1"
+                Grid.Column="0"
                 StretchDirection="Both"
                 Stretch="Uniform">
 
@@ -169,7 +163,7 @@
 
             <Viewbox
                 Grid.Row="1"
-                Grid.Column="2"
+                Grid.Column="1"
                 StretchDirection="Both"
                 Stretch="Uniform">
 
@@ -195,24 +189,20 @@
 
             <Grid.ColumnDefinitions>
                 <ColumnDefinition
-                    Width="10" />
-                <ColumnDefinition
                     Width="9*" />
                 <ColumnDefinition
                     Width="7*" />
             </Grid.ColumnDefinitions>
 
-            <!--<Separator
-                Grid.Row="0"
-                Grid.Column="0"
+            <Rectangle
+                Grid.ColumnSpan="3"
                 Grid.RowSpan="2"
-                Background="{StaticResource ColorVessel}"
-                Width="8"
-                Margin="0,8" />-->
+                Margin="8"
+                Fill="{StaticResource ColorBackgroundSeparator}" />
 
             <Viewbox
                 Grid.Row="0"
-                Grid.Column="1"
+                Grid.Column="0"
                 Grid.ColumnSpan="2"
                 StretchDirection="Both"
                 Stretch="Uniform"
@@ -226,14 +216,15 @@
 
             <Separator
                 Grid.Row="0"
-                Grid.Column="1"
+                Grid.Column="0"
                 Grid.ColumnSpan="2"
+                Margin="8,0,8,0"
                 Height="1"
                 VerticalAlignment="Bottom" />
 
             <Viewbox
                 Grid.Row="1"
-                Grid.Column="1"
+                Grid.Column="0"
                 StretchDirection="Both"
                 Stretch="Uniform">
 
@@ -245,7 +236,7 @@
 
             <Viewbox
                 Grid.Row="1"
-                Grid.Column="2"
+                Grid.Column="1"
                 StretchDirection="Both"
                 Stretch="Uniform">
 
@@ -271,24 +262,20 @@
 
             <Grid.ColumnDefinitions>
                 <ColumnDefinition
-                    Width="10" />
-                <ColumnDefinition
                     Width="12*" />
                 <ColumnDefinition
                     Width="7*" />
             </Grid.ColumnDefinitions>
 
-            <!--<Separator
-                Grid.Row="0"
-                Grid.Column="0"
+            <Rectangle
+                Grid.ColumnSpan="3"
                 Grid.RowSpan="2"
-                Background="{StaticResource ColorWind}"
-                Width="8"
-                Margin="0,8" />-->
+                Margin="8"
+                Fill="{StaticResource ColorBackgroundSeparator}" />
 
             <Viewbox
                 Grid.Row="0"
-                Grid.Column="1"
+                Grid.Column="0"
                 Grid.ColumnSpan="2"
                 StretchDirection="Both"
                 Stretch="Uniform"
@@ -302,14 +289,15 @@
 
             <Separator
                 Grid.Row="0"
-                Grid.Column="1"
+                Grid.Column="0"
                 Grid.ColumnSpan="2"
+                Margin="8,0,8,0"
                 Height="1"
                 VerticalAlignment="Bottom" />
 
             <Viewbox
                 Grid.Row="1"
-                Grid.Column="1"
+                Grid.Column="0"
                 StretchDirection="Both"
                 Stretch="Uniform">
 
@@ -321,7 +309,7 @@
 
             <Viewbox
                 Grid.Row="1"
-                Grid.Column="2"
+                Grid.Column="1"
                 StretchDirection="Both"
                 Stretch="Uniform">
 
@@ -346,24 +334,20 @@
 
             <Grid.ColumnDefinitions>
                 <ColumnDefinition
-                    Width="10" />
-                <ColumnDefinition
                     Width="9*" />
                 <ColumnDefinition
                     Width="7*" />
             </Grid.ColumnDefinitions>
 
-            <!--<Separator
-                Grid.Row="0"
-                Grid.Column="0"
+            <Rectangle
+                Grid.ColumnSpan="3"
                 Grid.RowSpan="2"
-                Background="{StaticResource ColorWind}"
-                Width="8"
-                Margin="0,8" />-->
+                Margin="8"
+                Fill="{StaticResource ColorBackgroundSeparator}" />
 
             <Viewbox
                 Grid.Row="0"
-                Grid.Column="1"
+                Grid.Column="0"
                 Grid.ColumnSpan="2"
                 StretchDirection="Both"
                 Stretch="Uniform"
@@ -377,14 +361,15 @@
 
             <Separator
                 Grid.Row="0"
-                Grid.Column="1"
+                Grid.Column="0"
                 Grid.ColumnSpan="2"
+                Margin="8,0,8,0"
                 Height="1"
                 VerticalAlignment="Bottom" />
 
             <Viewbox
                 Grid.Row="1"
-                Grid.Column="1"
+                Grid.Column="0"
                 StretchDirection="Both"
                 Stretch="Uniform">
 
@@ -396,7 +381,7 @@
 
             <Viewbox
                 Grid.Row="1"
-                Grid.Column="2"
+                Grid.Column="1"
                 StretchDirection="Both"
                 Stretch="Uniform">
 
@@ -423,24 +408,20 @@
 
             <Grid.ColumnDefinitions>
                 <ColumnDefinition
-                    Width="10" />
-                <ColumnDefinition
                     Width="9*" />
                 <ColumnDefinition
                     Width="7*" />
             </Grid.ColumnDefinitions>
 
-            <!--<Separator
-                Grid.Row="0"
-                Grid.Column="0"
+            <Rectangle
+                Grid.ColumnSpan="3"
                 Grid.RowSpan="2"
-                Background="{StaticResource ColorWind}"
-                Width="8"
-                Margin="0,8" />-->
+                Margin="8"
+                Fill="{StaticResource ColorBackgroundSeparator}" />
 
             <Viewbox
                 Grid.Row="0"
-                Grid.Column="1"
+                Grid.Column="0"
                 Grid.ColumnSpan="2"
                 StretchDirection="Both"
                 Stretch="Uniform"
@@ -454,14 +435,15 @@
 
             <Separator
                 Grid.Row="0"
-                Grid.Column="1"
+                Grid.Column="0"
                 Grid.ColumnSpan="2"
+                Margin="8,0,8,0"
                 Height="1"
                 VerticalAlignment="Bottom" />
 
             <Viewbox
                 Grid.Row="1"
-                Grid.Column="1"
+                Grid.Column="0"
                 StretchDirection="Both"
                 Stretch="Uniform">
 
@@ -473,7 +455,7 @@
 
             <Viewbox
                 Grid.Row="1"
-                Grid.Column="2"
+                Grid.Column="1"
                 StretchDirection="Both"
                 Stretch="Uniform">
 

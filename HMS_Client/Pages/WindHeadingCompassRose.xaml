@@ -716,10 +716,10 @@
                         Data="M 255,210 205,210 205,220 225,220 225,240 205,240 205,250 255,250 255,240 235,240 235,220 255,220 255,210" />
 
                     <!--Helideck Arrow-->
-                    <Path
+                    <!--<Path
                         Fill="{StaticResource ColorWhite}"
                         Stroke="Black"
-                        Data="M 224,165 224,137 218,137 230,122 242,137 236,137 236,165 Z" />
+                        Data="M 224,165 224,137 218,137 230,122 242,137 236,137 236,165 Z" />-->
                     <!--<Path
                         Fill="{StaticResource ColorGreen}"
                         Stroke="Black"
