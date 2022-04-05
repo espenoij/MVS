@@ -298,10 +298,10 @@ namespace HMS_Server
             modbusWriter.Stop();
 
             // Lukke port
-            serialPort.Close();
+            serialPort?.Close();
 
             // Stenge MODBUS grensesnitt
-            modbusSerialMaster.Dispose();
+            modbusSerialMaster?.Dispose();
         }
 
         private bool LightOutputToWriteValue(LightsOutputType lightsOutput, int output)

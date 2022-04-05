@@ -98,7 +98,7 @@
                 SelectionChanged="tcMainMenu_SelectionChanged">
 
                 <!--==============================================================-->
-                <!--Side Menu: Input-->
+                <!--Side Menu: Sensor Input-->
                 <!--==============================================================-->
                 <telerik:RadTabItem
                     Name="tabInput">
@@ -145,22 +145,6 @@
                                     Click="btnStop_Click"
                                     Width="110"
                                     VerticalAlignment="Top">Stop</telerik:RadButton>
-
-                            </StackPanel>
-
-                            <!--Setup-->
-                            <StackPanel
-                                Grid.Row="0"
-                                Grid.Column="1"
-                                Orientation="Horizontal"
-                                HorizontalAlignment="Right"
-                                Margin="8">
-
-                                <Button
-                                    Name="btnSetup"
-                                    Click="btnSetup_Click"
-                                    Width="110"
-                                    Visibility="Collapsed">Setup</Button>
 
                             </StackPanel>
 
@@ -443,6 +427,24 @@
                         </telerik:RadTabControl>
 
                     </DockPanel>
+
+                </telerik:RadTabItem>
+
+                <!--==============================================================-->
+                <!--Side Menu: Sensopr Input Edit-->
+                <!--==============================================================-->
+                <telerik:RadTabItem
+                    Name="tabInputEdit"
+                    Visibility="Collapsed">
+
+                    <telerik:RadTabItem.Header>
+                        <Image
+                            Width="36"
+                            Source="../Icons/input_edit_white_36dp.png" />
+                    </telerik:RadTabItem.Header>
+
+                    <uc:SensorSetupPage
+                        x:Name="ucSensorSetupPage" />
 
                 </telerik:RadTabItem>
 

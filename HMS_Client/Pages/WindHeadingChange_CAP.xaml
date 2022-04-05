@@ -126,20 +126,24 @@
                         StretchDirection="Both"
                         Stretch="Uniform">
 
-                        <Canvas
-                            x:Name="statusTrendCanvas"
-                            Width="300"
-                            Height="12">
+                        <Grid>
 
-                        </Canvas>
+                            <Rectangle
+                                Grid.Row="1"
+                                Grid.Column="1"
+                                Stroke="Silver"
+                                Margin="-1"/>
+
+                            <Canvas
+                                x:Name="statusTrendCanvas"
+                                Width="300"
+                                Height="12">
+
+                            </Canvas>
+
+                        </Grid>
 
                     </Viewbox>
-
-                    <Rectangle
-                        Grid.Row="1"
-                        Grid.Column="1"
-                        Stroke="Silver"
-                        Margin="0,0,28,0" />
 
                     <!--<Grid
                         x:Name="statusTrendGrid"

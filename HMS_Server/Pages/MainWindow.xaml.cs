@@ -93,6 +93,12 @@ namespace HMS_Server
         // Lights output feilmelding
         private bool lightsOutputError = false;
 
+        // Stop server callback
+        public delegate void StopServerCallback();
+
+        // Kommer fra sensor input edit
+        private bool sensorInputEdited = false;
+
         public MainWindow()
         {
             InitializeComponent();
@@ -122,6 +128,10 @@ namespace HMS_Server
                 database,
                 errorHandler,
                 sensorDataRetrieval.GetSensorDataList());
+
+            // Sensor Input Edit
+            StopServerCallback stopServerCallback = new StopServerCallback(StopServer);
+            ucSensorSetupPage.Init(config, errorHandler, stopServerCallback);
 
             // Error Message
             ucErrorMessagesPage.Init(config, errorHandler);
@@ -726,7 +736,6 @@ namespace HMS_Server
 
                 // Sette knappe status
                 SetStartStopButtons(false);
-                btnSetup.IsEnabled = false;
 
                 // HMS prosessering updater
                 hmsTimer.Start();
@@ -776,7 +785,6 @@ namespace HMS_Server
             sensorDataRetrieval.SensorDataRetrieval_Stop();
 
             SetStartStopButtons(true);
-            btnSetup.IsEnabled = true;
 
             // HMS prosessering updater
             hmsTimer.Stop();
@@ -816,30 +824,6 @@ namespace HMS_Server
         private void ExitServer()
         {
             socketListener.Exit();
-        }
-
-        private void btnSetup_Click(object sender, RoutedEventArgs e)
-        {
-            // Forhåndsvalgt sensor data
-            //int id;
-            //if (sensorDataSelected != null)
-            //    id = sensorDataSelected.id;
-            //else
-            //    id = -1;
-
-            // Open new modal window 
-            SensorSetupWindow sensorSetupWindow = new SensorSetupWindow(config, errorHandler/*, id*/);
-            sensorSetupWindow.Owner = Application.Current.MainWindow;
-            sensorSetupWindow.ShowDialog();
-
-            // Laste sensor data setups fra fil
-            sensorDataRetrieval.LoadSensors();
-
-            // Resette display lister
-            statusDisplayList.Clear();
-            sensorDataDisplayList.Clear();
-            serialPortDataDisplayList.Clear();
-            fileReaderDataDisplayList.Clear();
         }
 
         private void gvStatusDisplay_SelectionChanged(object sender, SelectionChangeEventArgs e)
@@ -931,8 +915,7 @@ namespace HMS_Server
                         if (AdminMode.IsActive)
                         {
                             // Vise admin grensesnittet
-                            btnSetup.Visibility = Visibility.Visible;
-
+                            tabInputEdit.Visibility = Visibility.Visible;
                             tabOutput.Visibility = Visibility.Visible;
                             tabHMS.Visibility = Visibility.Visible;
                             tabSettings.Visibility = Visibility.Visible;
@@ -950,11 +933,11 @@ namespace HMS_Server
                     else
                     {
                         // Skjule admin grensesnittet
-                        btnSetup.Visibility = Visibility.Collapsed;
 
                         // Sette Input tab som valgt tab og skjule resten
                         tabInput.IsSelected = true;
 
+                        tabInputEdit.Visibility = Visibility.Collapsed;
                         tabOutput.Visibility = Visibility.Collapsed;
                         tabHMS.Visibility = Visibility.Collapsed;
                         tabDataVerification.Visibility = Visibility.Collapsed;
@@ -1004,6 +987,30 @@ namespace HMS_Server
             {
                 (sender as RadTabControl).Focus();
             }), DispatcherPriority.ApplicationIdle);
+
+            // Dersom vi har vært innom input edit, og forlatt siden igjen, må vi anta at sensor input er endret
+            // -> laste display lister på nytt i tilfelle sensor input er redigert
+            if (!tabInputEdit.IsSelected && sensorInputEdited)
+            {
+                // Laste sensor data setups fra fil
+                sensorDataRetrieval.LoadSensors();
+
+                // Resette display lister
+                statusDisplayList.Clear();
+                sensorDataDisplayList.Clear();
+                serialPortDataDisplayList.Clear();
+                fileReaderDataDisplayList.Clear();
+            }
+
+            if (tabInputEdit.IsSelected)
+            {
+                ucSensorSetupPage.ServerStartedCheck(serverStarted);
+                sensorInputEdited = true;
+            }
+            else
+            {
+                sensorInputEdited = false;
+            }
         }
 
         private void btnAbout_Click(object sender, RoutedEventArgs e)

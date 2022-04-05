@@ -66,20 +66,25 @@
                     StretchDirection="Both"
                     Stretch="Uniform">
 
-                    <Canvas
-                        x:Name="statusTrendGrid3h"
-                        Width="400"
-                        Height="12"
-                        Visibility="{Binding Path=visibilityItems3h, Converter={StaticResource BoolToVisConverter} }">
+                    <Grid>
 
-                    </Canvas>
+                        <Rectangle
+                            Grid.Row="1"
+                            Grid.Column="1"
+                            Stroke="Silver"
+                            Margin="-1"/>
+
+                        <Canvas
+                            x:Name="statusTrendGrid3h"
+                            Width="400"
+                            Height="12"
+                            Visibility="{Binding Path=visibilityItems3h, Converter={StaticResource BoolToVisConverter} }">
+
+                        </Canvas>
+
+                    </Grid>
 
                 </Viewbox>
-
-                <Rectangle
-                    Grid.Row="1"
-                    Grid.Column="1"
-                    Stroke="Silver" />
 
                 <Grid
                     Grid.Row="2"
