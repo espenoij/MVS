@@ -48,6 +48,8 @@ namespace HMS_Server
             DialogActivationOK activationDialogOK = new DialogActivationOK();
             activationDialogOK.Owner = App.Current.MainWindow;
             activationDialogOK.ShowDialog();
+
+            Close();
         }
 
         private void tbLicenseOwner_LostFocus(object sender, RoutedEventArgs e)
