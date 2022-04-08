@@ -49,7 +49,9 @@
                 <Viewbox
                     Grid.Row="1"
                     StretchDirection="Both"
-                    Stretch="Uniform">
+                    Stretch="Uniform"
+                    VerticalAlignment="Stretch"
+                    HorizontalAlignment="Stretch">
 
                     <Grid>
 

@@ -280,7 +280,7 @@ namespace HMS_Server
                     // Kalkulere nye data
                     data = dataProcess.DoProcessing(newData);
 
-                    // Setter timestamp og status lik inndata
+                    // Setter timestamp og sensorGroup lik inndata
                     timestamp = newData.timestamp;
                     status = newData.status;
                     sensorGroupId = newData.sensorGroupId;

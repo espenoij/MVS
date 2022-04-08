@@ -232,7 +232,7 @@ namespace HMS_Server
                             if (double.TryParse(newData, Constants.numberStyle, Constants.cultureInfo, out value))
                             {
                                 // Sjekke at ny verdi ikke er lik den forrige som ble lagt inn i datasettet -> unngå duplikater
-                                if (!double.IsNaN(value) && 
+                                if (!double.IsNaN(value) &&
                                     timeAverageDataList.LastOrDefault()?.timestamp != newTimeStamp)
                                 {
                                     // Legge inn den nye verdien i data settet
@@ -242,17 +242,31 @@ namespace HMS_Server
                                     timeAverageTotal += value;
 
                                     // Sjekke om vi skal ta ut gamle verdier
-                                    for (int i = 0; i < timeAverageDataList.Count && timeAverageDataList.Count > 0; i++)
+                                    while (timeAverageDataList.Count > 0 && timeAverageDataList[0]?.timestamp.AddSeconds(parameter) < newTimeStamp)
                                     {
-                                        if (timeAverageDataList[i]?.timestamp.AddSeconds(parameter) < newTimeStamp)
-                                        {
-                                            // Trekke fra i total summen
-                                            timeAverageTotal -= timeAverageDataList[i].data;
+                                        // Trekke fra i total summen
+                                        timeAverageTotal -= timeAverageDataList[0].data;
 
-                                            // Fjerne fra verdi listen
-                                            timeAverageDataList.RemoveAt(i--);
-                                        }
+                                        // Fjerne fra verdi listen
+                                        timeAverageDataList.RemoveAt(0);
                                     }
+
+                                    //bool done = false;
+                                    //for (int i = 0; i < timeAverageDataList.Count && timeAverageDataList.Count > 0 && !done; i++)
+                                    //{
+                                    //    if (timeAverageDataList[i]?.timestamp.AddSeconds(parameter) < newTimeStamp)
+                                    //    {
+                                    //        // Trekke fra i total summen
+                                    //        timeAverageTotal -= timeAverageDataList[i].data;
+
+                                    //        // Fjerne fra verdi listen
+                                    //        timeAverageDataList.RemoveAt(i--);
+                                    //    }
+                                    //    else
+                                    //    {
+                                    //        done = true;
+                                    //    }
+                                    //}
                                 }
 
                                 // Beregne gjennomsnitt av de verdiene som ligger i datasettet
@@ -299,22 +313,41 @@ namespace HMS_Server
 
                                     // Sjekke om vi skal ta ut gamle verdier
                                     bool findNewMaxValue = false;
-                                    for (int i = 0; i < timeMaxAbsoluteDataList.Count && timeMaxAbsoluteDataList.Count > 0; i++)
-                                    {
-                                        // Time stamp eldre enn satt grense?
-                                        if (timeMaxAbsoluteDataList[i]?.timestamp.AddSeconds(parameter) < newTimeStamp)
-                                        {
-                                            // Sjekke om dette var høyeste verdi
-                                            if (timeMaxAbsoluteDataList[i].data == timeMaxAbsoluteMaxValue)
-                                            {
-                                                // Finne ny høyeste verdi
-                                                findNewMaxValue = true;
-                                            }
 
-                                            // Fjerne gammel verdi fra verdiliste
-                                            timeMaxAbsoluteDataList.RemoveAt(i--);
+                                    while (timeMaxAbsoluteDataList.Count > 0 && timeMaxAbsoluteDataList[0]?.timestamp.AddSeconds(parameter) < newTimeStamp)
+                                    {
+                                        // Sjekke om dette var høyeste verdi
+                                        if (timeMaxAbsoluteDataList[0].data == timeMaxAbsoluteMaxValue)
+                                        {
+                                            // Finne ny høyeste verdi
+                                            findNewMaxValue = true;
                                         }
+
+                                        // Fjerne gammel verdi fra verdiliste
+                                        timeMaxAbsoluteDataList.RemoveAt(0);
                                     }
+
+                                    //bool done = false;
+                                    //for (int i = 0; i < timeMaxAbsoluteDataList.Count && timeMaxAbsoluteDataList.Count > 0 && !done; i++)
+                                    //{
+                                    //    // Time stamp eldre enn satt grense?
+                                    //    if (timeMaxAbsoluteDataList[i]?.timestamp.AddSeconds(parameter) < newTimeStamp)
+                                    //    {
+                                    //        // Sjekke om dette var høyeste verdi
+                                    //        if (timeMaxAbsoluteDataList[i].data == timeMaxAbsoluteMaxValue)
+                                    //        {
+                                    //            // Finne ny høyeste verdi
+                                    //            findNewMaxValue = true;
+                                    //        }
+
+                                    //        // Fjerne gammel verdi fra verdiliste
+                                    //        timeMaxAbsoluteDataList.RemoveAt(i--);
+                                    //    }
+                                    //    else
+                                    //    {
+                                    //        done = true;
+                                    //    }
+                                    //}
 
                                     // Finne ny høyeste verdi
                                     if (findNewMaxValue)
@@ -379,22 +412,41 @@ namespace HMS_Server
 
                                     // Sjekke om vi skal ta ut gamle verdier
                                     bool findNewMaxValue = false;
-                                    for (int i = 0; i < timeMaxPositiveDataList.Count && timeMaxPositiveDataList.Count > 0; i++)
-                                    {
-                                        // Time stamp eldre enn satt grense?
-                                        if (timeMaxPositiveDataList[i]?.timestamp.AddSeconds(parameter) < newTimeStamp)
-                                        {
-                                            // Sjekke om dette var høyeste verdi
-                                            if (timeMaxPositiveDataList[i].data == timeMaxPositiveMaxValue)
-                                            {
-                                                // Finne ny høyeste verdi
-                                                findNewMaxValue = true;
-                                            }
 
-                                            // Fjerne gammel verdi fra verdiliste
-                                            timeMaxPositiveDataList.RemoveAt(i--);
+                                    while (timeMaxPositiveDataList.Count > 0 && timeMaxPositiveDataList[0]?.timestamp.AddSeconds(parameter) < newTimeStamp)
+                                    {
+                                        // Sjekke om dette var høyeste verdi
+                                        if (timeMaxPositiveDataList[0].data == timeMaxPositiveMaxValue)
+                                        {
+                                            // Finne ny høyeste verdi
+                                            findNewMaxValue = true;
                                         }
+
+                                        // Fjerne gammel verdi fra verdiliste
+                                        timeMaxPositiveDataList.RemoveAt(0);
                                     }
+
+                                    //bool done = false;
+                                    //for (int i = 0; i < timeMaxPositiveDataList.Count && timeMaxPositiveDataList.Count > 0 && !done; i++)
+                                    //{
+                                    //    // Time stamp eldre enn satt grense?
+                                    //    if (timeMaxPositiveDataList[i]?.timestamp.AddSeconds(parameter) < newTimeStamp)
+                                    //    {
+                                    //        // Sjekke om dette var høyeste verdi
+                                    //        if (timeMaxPositiveDataList[i].data == timeMaxPositiveMaxValue)
+                                    //        {
+                                    //            // Finne ny høyeste verdi
+                                    //            findNewMaxValue = true;
+                                    //        }
+
+                                    //        // Fjerne gammel verdi fra verdiliste
+                                    //        timeMaxPositiveDataList.RemoveAt(i--);
+                                    //    }
+                                    //    else
+                                    //    {
+                                    //        done = true;
+                                    //    }
+                                    //}
 
                                     // Finne ny høyeste verdi
                                     if (findNewMaxValue)
@@ -458,22 +510,41 @@ namespace HMS_Server
 
                                     // Sjekke om vi skal ta ut gamle verdier
                                     bool findNewMaxValue = false;
-                                    for (int i = 0; i < timeMaxNegativeDataList.Count && timeMaxNegativeDataList.Count > 0; i++)
-                                    {
-                                        // Time stamp eldre enn satt grense?
-                                        if (timeMaxNegativeDataList[i]?.timestamp.AddSeconds(parameter) < newTimeStamp)
-                                        {
-                                            // Sjekke om dette var laveste verdi
-                                            if (timeMaxNegativeDataList[i].data == timeMaxNegativeMaxValue)
-                                            {
-                                                // Finne ny laveste verdi
-                                                findNewMaxValue = true;
-                                            }
 
-                                            // Fjerne gammel verdi fra verdiliste
-                                            timeMaxNegativeDataList.RemoveAt(i--);
+                                    while (timeMaxNegativeDataList.Count > 0 && timeMaxNegativeDataList[0]?.timestamp.AddSeconds(parameter) < newTimeStamp)
+                                    {
+                                        // Sjekke om dette var laveste verdi
+                                        if (timeMaxNegativeDataList[0].data == timeMaxNegativeMaxValue)
+                                        {
+                                            // Finne ny laveste verdi
+                                            findNewMaxValue = true;
                                         }
+
+                                        // Fjerne gammel verdi fra verdiliste
+                                        timeMaxNegativeDataList.RemoveAt(0);
                                     }
+
+                                    //bool done = false;
+                                    //for (int i = 0; i < timeMaxNegativeDataList.Count && timeMaxNegativeDataList.Count > 0 && !done; i++)
+                                    //{
+                                    //    // Time stamp eldre enn satt grense?
+                                    //    if (timeMaxNegativeDataList[i]?.timestamp.AddSeconds(parameter) < newTimeStamp)
+                                    //    {
+                                    //        // Sjekke om dette var laveste verdi
+                                    //        if (timeMaxNegativeDataList[i].data == timeMaxNegativeMaxValue)
+                                    //        {
+                                    //            // Finne ny laveste verdi
+                                    //            findNewMaxValue = true;
+                                    //        }
+
+                                    //        // Fjerne gammel verdi fra verdiliste
+                                    //        timeMaxNegativeDataList.RemoveAt(i--);
+                                    //    }
+                                    //    else
+                                    //    {
+                                    //        done = true;
+                                    //    }
+                                    //}
 
                                     // Finne ny høyeste verdi
                                     if (findNewMaxValue)
@@ -532,17 +603,31 @@ namespace HMS_Server
                                     significantHeaveRateSquareSum += Math.Pow(value, 2);
 
                                     // Sjekke om vi skal ta ut gamle verdier
-                                    for (int i = 0; i < significantHeaveRateDataList.Count && significantHeaveRateDataList.Count > 0; i++)
+                                    while (significantHeaveRateDataList.Count > 0 && significantHeaveRateDataList[0]?.timestamp.AddSeconds(parameter) < newTimeStamp)
                                     {
-                                        if (significantHeaveRateDataList[i]?.timestamp.AddSeconds(parameter) < newTimeStamp)
-                                        {
-                                            // Trekke fra gammel verdi i square total
-                                            significantHeaveRateSquareSum -= Math.Pow(significantHeaveRateDataList[i].data, 2);
+                                        // Trekke fra gammel verdi i square total
+                                        significantHeaveRateSquareSum -= Math.Pow(significantHeaveRateDataList[0].data, 2);
 
-                                            // Fjerne fra verdiliste
-                                            significantHeaveRateDataList.RemoveAt(i--);
-                                        }
+                                        // Fjerne fra verdiliste
+                                        significantHeaveRateDataList.RemoveAt(0);
                                     }
+
+                                    //bool done = false;
+                                    //for (int i = 0; i < significantHeaveRateDataList.Count && significantHeaveRateDataList.Count > 0 && !done; i++)
+                                    //{
+                                    //    if (significantHeaveRateDataList[i]?.timestamp.AddSeconds(parameter) < newTimeStamp)
+                                    //    {
+                                    //        // Trekke fra gammel verdi i square total
+                                    //        significantHeaveRateSquareSum -= Math.Pow(significantHeaveRateDataList[i].data, 2);
+
+                                    //        // Fjerne fra verdiliste
+                                    //        significantHeaveRateDataList.RemoveAt(i--);
+                                    //    }
+                                    //    else 
+                                    //    {
+                                    //        done = true;
+                                    //    }
+                                    //}
                                 }
 
                                 // Regne 2 x RMS
@@ -711,7 +796,8 @@ namespace HMS_Server
                                 // Oppdatere siste verdi
                                 swhLast = value;
 
-                                // Sjekke om vi skal ta ut gamle verdier
+                                // Sjekke om vi skal ta ut gamle verdier.
+                                // NB! Må løpe gjennom hele listen og sjekke da disse verdiene ikke er sortert på tid, men på bølgehøyde
                                 int deletedValues = 0;
                                 for (int i = 0; i < swhDataList.Count && i >= 0; i++)
                                 {
@@ -846,21 +932,39 @@ namespace HMS_Server
 
                                 // Sjekke om vi skal ta ut gamle verdier
                                 bool findNewMaxValue = false;
-                                for (int i = 0; i < timeMaxAmplitudeDataList.Count && timeMaxAmplitudeDataList.Count > 0; i++)
+                                while (timeMaxAmplitudeDataList.Count > 0 && timeMaxAmplitudeDataList[0]?.timestamp.AddSeconds(parameter) < newTimeStamp)
                                 {
-                                    if (timeMaxAmplitudeDataList[i]?.timestamp.AddSeconds(parameter) < newTimeStamp)
+                                    // Var dette gammel max verdi?
+                                    if (timeMaxAmplitudeDataList[0].data == timeMaxAmplitudeMaxValue)
                                     {
-                                        // Var dette gammel max verdi?
-                                        if (timeMaxAmplitudeDataList[i].data == timeMaxAmplitudeMaxValue)
-                                        {
-                                            // Finne ny høyeste verdi
-                                            findNewMaxValue = true;
-                                        }
-
-                                        // Fjerne fra verdiliste
-                                        timeMaxAmplitudeDataList.RemoveAt(i--);
+                                        // Finne ny høyeste verdi
+                                        findNewMaxValue = true;
                                     }
+
+                                    // Fjerne fra verdiliste
+                                    timeMaxAmplitudeDataList.RemoveAt(0);
                                 }
+
+                                //bool done = false;
+                                //for (int i = 0; i < timeMaxAmplitudeDataList.Count && timeMaxAmplitudeDataList.Count > 0 && !done; i++)
+                                //{
+                                //    if (timeMaxAmplitudeDataList[i]?.timestamp.AddSeconds(parameter) < newTimeStamp)
+                                //    {
+                                //        // Var dette gammel max verdi?
+                                //        if (timeMaxAmplitudeDataList[i].data == timeMaxAmplitudeMaxValue)
+                                //        {
+                                //            // Finne ny høyeste verdi
+                                //            findNewMaxValue = true;
+                                //        }
+
+                                //        // Fjerne fra verdiliste
+                                //        timeMaxAmplitudeDataList.RemoveAt(i--);
+                                //    }
+                                //    else
+                                //    {
+                                //        done = true;
+                                //    }
+                                //}
 
                                 // Finne ny høyeste verdi
                                 if (findNewMaxValue)
@@ -1033,17 +1137,31 @@ namespace HMS_Server
                                 timeMeanPeriodLast = value;
 
                                 // Sjekke om vi skal ta ut gamle verdier
-                                for (int i = 0; i < timeMeanPeriodDataList.Count && timeMeanPeriodDataList.Count > 0; i++)
+                                while (timeMeanPeriodDataList.Count > 0 && timeMeanPeriodDataList[0]?.timestamp.AddSeconds(parameter) < newTimeStamp)
                                 {
-                                    if (timeMeanPeriodDataList[i]?.timestamp.AddSeconds(parameter) < newTimeStamp)
-                                    {
-                                        // Trekke fra data fra gammel periode
-                                        timeMeanPeriodTotal -= timeMeanPeriodDataList[i].data;
+                                    // Trekke fra data fra gammel periode
+                                    timeMeanPeriodTotal -= timeMeanPeriodDataList[0].data;
 
-                                        // Fjerne fra verdiliste
-                                        timeMeanPeriodDataList.RemoveAt(i--);
-                                    }
+                                    // Fjerne fra verdiliste
+                                    timeMeanPeriodDataList.RemoveAt(0);
                                 }
+
+                                //bool done = false;
+                                //for (int i = 0; i < timeMeanPeriodDataList.Count && timeMeanPeriodDataList.Count > 0 && !done; i++)
+                                //{
+                                //    if (timeMeanPeriodDataList[i]?.timestamp.AddSeconds(parameter) < newTimeStamp)
+                                //    {
+                                //        // Trekke fra data fra gammel periode
+                                //        timeMeanPeriodTotal -= timeMeanPeriodDataList[i].data;
+
+                                //        // Fjerne fra verdiliste
+                                //        timeMeanPeriodDataList.RemoveAt(i--);
+                                //    }
+                                //    else
+                                //    {
+                                //        done = true;
+                                //    }
+                                //}
 
                                 // Finne gjennomsnitt verdi
                                 if (timeMeanPeriodDataList.Count > 0)

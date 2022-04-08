@@ -21,7 +21,7 @@ namespace HMS_Client
         {
             DataContext = landingStatusTrendVM;
 
-            // Generere grid til status trend display
+            // Generere grid til landing status trend display
             TrendLine.GenerateGridColumnDefinitions(statusTrendGrid20m, Constants.landingTrendDisplayListMax);
             TrendLine.GenerateGridColumnDefinitions(statusTrendGrid3h, Constants.landingTrendDisplayListMax);
 

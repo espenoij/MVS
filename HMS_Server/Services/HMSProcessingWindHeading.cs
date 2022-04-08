@@ -5,6 +5,21 @@ namespace HMS_Server
 {
     class HMSProcessingWindHeading
     {
+        // Input data
+        private HMSData inputVesselHeading = new HMSData();
+        private HMSData inputVesselSpeed = new HMSData();
+        private HMSData inputVesselCOG = new HMSData();
+        private HMSData inputVesselSOG = new HMSData();
+        private HMSData inputSensorWindDirection = new HMSData();
+        private HMSData inputSensorWindSpeed = new HMSData();
+
+        private HMSData inputVesselHeadingPrev = new HMSData();
+        private HMSData inputVesselSpeedPrev = new HMSData();
+        private HMSData inputVesselCOGPrev = new HMSData();
+        private HMSData inputVesselSOGPrev = new HMSData();
+        private HMSData inputSensorWindDirectionPrev = new HMSData();
+        private HMSData inputSensorWindSpeedPrev = new HMSData();
+
         private HMSData vesselHeading = new HMSData();
         private HMSData vesselSpeed = new HMSData();
         private HMSData vesselCOG = new HMSData();
@@ -44,6 +59,9 @@ namespace HMS_Server
 
         private AdminSettingsVM adminSettingsVM;
         private UserInputs userInputs;
+
+        // Må ha en gjennomkjøring av data første gang for lagre grunnleggende data i HMS output data strukturen
+        private bool firstRun = true;
 
         public HMSProcessingWindHeading(HMSDataCollection hmsOutputData, AdminSettingsVM adminSettingsVM, UserInputs userInputs, ErrorHandler errorHandler)
         {
@@ -192,290 +210,319 @@ namespace HMS_Server
 
         public void Update(HMSDataCollection hmsInputDataList)
         {
-            // Vessel Heading & Speed
-            ///////////////////////////////////////////////////////////
-            vesselHeading.Set(hmsInputDataList.GetData(ValueType.VesselHeading));
-            vesselCOG.Set(hmsInputDataList.GetData(ValueType.VesselCOG));
+            // Overføre input data vi skal bruke
+            inputVesselHeading.Set(hmsInputDataList.GetData(ValueType.VesselHeading));
+            inputVesselSpeed.Set(hmsInputDataList.GetData(ValueType.VesselSpeed));
+            inputVesselCOG.Set(hmsInputDataList.GetData(ValueType.VesselCOG));
+            inputVesselSOG.Set(hmsInputDataList.GetData(ValueType.VesselSOG));
+            inputSensorWindDirection.Set(hmsInputDataList.GetData(ValueType.SensorWindDirection));
+            inputSensorWindSpeed.Set(hmsInputDataList.GetData(ValueType.SensorWindSpeed));
 
-            switch (adminSettingsVM.vesselHdgRef)
+            // Sjekke om det er endring i input data
+            // Dersom det ikke er endring, trenger vi ikke utføre kalkulasjoner
+            if (inputVesselHeading.timestamp != inputVesselHeadingPrev.timestamp ||
+                inputVesselSpeed.timestamp != inputVesselSpeedPrev.timestamp ||
+                inputVesselCOG.timestamp != inputVesselCOGPrev.timestamp ||
+                inputVesselSOG.timestamp != inputVesselSOGPrev.timestamp ||
+                inputSensorWindDirection.timestamp != inputSensorWindDirectionPrev.timestamp ||
+                inputSensorWindSpeed.timestamp != inputSensorWindSpeedPrev.timestamp ||
+                firstRun)
             {
-                case DirectionReference.MagneticNorth:
-                    // Trenger ikke gjør korrigeringer
-                    break;
+                firstRun = false; // Første gjennomkjøring unnagjort
 
-                case DirectionReference.TrueNorth:
-                    vesselHeading.data = hmsInputDataList.GetData(ValueType.VesselHeading).data - adminSettingsVM.magneticDeclination;
-                    vesselCOG.data = hmsInputDataList.GetData(ValueType.VesselCOG).data - adminSettingsVM.magneticDeclination;
-                    break;
+                // Vessel Heading & Speed
+                ///////////////////////////////////////////////////////////
+                vesselHeading.Set(inputVesselHeading);
+                vesselCOG.Set(inputVesselCOG);
 
-                default:
-                    break;
-            }
-
-            vesselSpeed.Set(hmsInputDataList.GetData(ValueType.VesselSpeed));
-            vesselSOG.Set(hmsInputDataList.GetData(ValueType.VesselSOG));
-
-            double heading = vesselHeading.data + adminSettingsVM.helideckHeadingOffset;
-            if (heading > Constants.HeadingMax)
-                heading -= Constants.HeadingMax;
-            helideckHeading.data = heading;
-            helideckHeading.status = vesselHeading.status;
-            helideckHeading.timestamp = vesselHeading.timestamp;
-
-            // Korrigere vind retning ihht referanse retning
-            sensorWindDirectionCorrected.Set(hmsInputDataList.GetData(ValueType.SensorWindDirection));
-
-            switch (adminSettingsVM.windDirRef)
-            {
-                case DirectionReference.VesselHeading:
-                    sensorWindDirectionCorrected.data = vesselHeading.data + hmsInputDataList.GetData(ValueType.SensorWindDirection).data;
-                    if (sensorWindDirectionCorrected.data > 360)
-                        sensorWindDirectionCorrected.data -= 360;
-                    if (sensorWindDirectionCorrected.data < 1)
-                        sensorWindDirectionCorrected.data += 360;
-                    break;
-
-                case DirectionReference.MagneticNorth:
-                    break;
-
-                case DirectionReference.TrueNorth:
-                    sensorWindDirectionCorrected.data = hmsInputDataList.GetData(ValueType.SensorWindDirection).data - adminSettingsVM.magneticDeclination;
-                    if (sensorWindDirectionCorrected.data > 360)
-                        sensorWindDirectionCorrected.data -= 360;
-                    if (sensorWindDirectionCorrected.data < 1)
-                        sensorWindDirectionCorrected.data += 360;
-                    break;
-
-                default:
-                    break;
-            }
-
-            // Tar data fra input delen av server og overfører til HMS output delen
-
-            // Vind retning
-            helideckWindDirectionRT.Set(sensorWindDirectionCorrected);
-
-            // Vind hastighet
-            // Korrigerer for høyde
-            // (Midlertidig variabel som brukes i beregninger -> ikke rund av!)
-            HMSData windSpeedCorrectedToHelideck = new HMSData();
-
-            if (hmsInputDataList.GetData(ValueType.SensorWindSpeed).status == DataStatus.OK &&
-                vesselSOG.status == DataStatus.OK)
-            {
-                windSpeedCorrectedToHelideck.data = WindSpeedHeightCorrection(hmsInputDataList.GetData(ValueType.SensorWindSpeed).data, vesselSOG.data);
-                windSpeedCorrectedToHelideck.status = hmsInputDataList.GetData(ValueType.SensorWindSpeed).status;
-                windSpeedCorrectedToHelideck.timestamp = hmsInputDataList.GetData(ValueType.SensorWindSpeed).timestamp;
-            }
-            else
-            {
-                windSpeedCorrectedToHelideck.data = 0;
-                windSpeedCorrectedToHelideck.status = DataStatus.TIMEOUT_ERROR;
-                windSpeedCorrectedToHelideck.timestamp = DateTime.UtcNow;
-            }
-
-            // Vind hastighet
-            helideckWindSpeedRT.Set(windSpeedCorrectedToHelideck);
-
-            // Area Wind: 2-minute data
-            ///////////////////////////////////////////////////////////
-            areaWindDirection2m.DoProcessing(sensorWindDirectionCorrected);
-
-            if (adminSettingsVM.regulationStandard == RegulationStandard.CAP)
-                areaWindDirection2m.BufferFillCheck(Constants.WindBufferFill95Pct2m);
-
-            areaWindSpeed2m.DoProcessing(hmsInputDataList.GetData(ValueType.SensorWindSpeed));
-
-            if (adminSettingsVM.regulationStandard == RegulationStandard.CAP)
-                areaWindSpeed2m.BufferFillCheck(Constants.WindBufferFill95Pct2m);
-
-            UpdateGustData(
-                hmsInputDataList.GetData(ValueType.SensorWindSpeed),
-                areaWindSpeed2m,
-                areaWindAverageData2m,
-                areaWindGust2m);
-
-            // Helideck Wind: 2-minute data
-            ///////////////////////////////////////////////////////////
-            helideckWindDirection2m.DoProcessing(sensorWindDirectionCorrected);
-
-            if (adminSettingsVM.regulationStandard == RegulationStandard.CAP)
-                helideckWindDirection2m.BufferFillCheck(Constants.WindBufferFill95Pct2m);
-
-            helideckWindSpeed2m.DoProcessing(windSpeedCorrectedToHelideck);
-
-            if (adminSettingsVM.regulationStandard == RegulationStandard.CAP)
-                helideckWindSpeed2m.BufferFillCheck(Constants.WindBufferFill95Pct2m);
-
-            UpdateGustData(
-                windSpeedCorrectedToHelideck,
-                helideckWindSpeed2m,
-                helideckGustData2m,
-                helideckWindGust2m);
-
-            // Helideck Wind: 10-minute data
-            ///////////////////////////////////////////////////////////
-            helideckWindDirection10m.DoProcessing(sensorWindDirectionCorrected);
-
-            if (adminSettingsVM.regulationStandard == RegulationStandard.CAP)
-                helideckWindDirection10m.BufferFillCheck(Constants.WindBufferFill95Pct10m);
-
-            helideckWindSpeed10m.DoProcessing(windSpeedCorrectedToHelideck);
-
-            if (adminSettingsVM.regulationStandard == RegulationStandard.CAP)
-                helideckWindSpeed10m.BufferFillCheck(Constants.WindBufferFill95Pct10m);
-
-            UpdateGustData(
-                windSpeedCorrectedToHelideck,
-                helideckWindSpeed10m,
-                helideckWindAverageData10m,
-                helideckWindGust10m);
-
-            // RWD, Delta heading/Wind
-            /////////////////////////////////////////////////////////////////////////////////////////
-            if (adminSettingsVM.regulationStandard == RegulationStandard.CAP &&
-                userInputs.displayMode == DisplayMode.OnDeck)
-            {
-                // Relative Wind Direction
-                /////////////////////////////////////////////////////////////////////////////////////////
-                if (areaWindDirection2m.status == DataStatus.OK &&
-                    hmsInputDataList.GetData(ValueType.VesselHeading).status == DataStatus.OK)
+                switch (adminSettingsVM.vesselHdgRef)
                 {
-                    relativeWindDir.data = areaWindDirection2m.data - (hmsInputDataList.GetData(ValueType.VesselHeading).data + (userInputs.onDeckHelicopterHeading - userInputs.onDeckVesselHeading));
+                    case DirectionReference.MagneticNorth:
+                        // Trenger ikke gjør korrigeringer
+                        break;
 
-                    if (relativeWindDir.data > 180)
-                        relativeWindDir.data -= 180;
+                    case DirectionReference.TrueNorth:
+                        vesselHeading.data = inputVesselHeading.data - adminSettingsVM.magneticDeclination;
+                        vesselCOG.data = inputVesselCOG.data - adminSettingsVM.magneticDeclination;
+                        break;
+
+                    default:
+                        break;
+                }
+
+                vesselSpeed.Set(inputVesselSpeed);
+                vesselSOG.Set(inputVesselSOG);
+
+                double heading = vesselHeading.data + adminSettingsVM.helideckHeadingOffset;
+                if (heading > Constants.HeadingMax)
+                    heading -= Constants.HeadingMax;
+                helideckHeading.data = heading;
+                helideckHeading.status = vesselHeading.status;
+                helideckHeading.timestamp = vesselHeading.timestamp;
+
+                // Korrigere vind retning ihht referanse retning
+                sensorWindDirectionCorrected.Set(inputSensorWindDirection);
+
+                switch (adminSettingsVM.windDirRef)
+                {
+                    case DirectionReference.VesselHeading:
+                        sensorWindDirectionCorrected.data = vesselHeading.data + inputSensorWindDirection.data;
+                        if (sensorWindDirectionCorrected.data > 360)
+                            sensorWindDirectionCorrected.data -= 360;
+                        if (sensorWindDirectionCorrected.data < 1)
+                            sensorWindDirectionCorrected.data += 360;
+                        break;
+
+                    case DirectionReference.MagneticNorth:
+                        break;
+
+                    case DirectionReference.TrueNorth:
+                        sensorWindDirectionCorrected.data = inputSensorWindDirection.data - adminSettingsVM.magneticDeclination;
+                        if (sensorWindDirectionCorrected.data > 360)
+                            sensorWindDirectionCorrected.data -= 360;
+                        if (sensorWindDirectionCorrected.data < 1)
+                            sensorWindDirectionCorrected.data += 360;
+                        break;
+
+                    default:
+                        break;
+                }
+
+                // Tar data fra input delen av server og overfører til HMS output delen
+
+                // Vind retning
+                helideckWindDirectionRT.Set(sensorWindDirectionCorrected);
+
+                // Vind hastighet
+                // Korrigerer for høyde
+                // (Midlertidig variabel som brukes i beregninger -> ikke rund av!)
+                HMSData windSpeedCorrectedToHelideck = new HMSData();
+
+                if (inputSensorWindSpeed.status == DataStatus.OK &&
+                    vesselSOG.status == DataStatus.OK)
+                {
+                    windSpeedCorrectedToHelideck.data = WindSpeedHeightCorrection(inputSensorWindSpeed.data, vesselSOG.data);
+                    windSpeedCorrectedToHelideck.status = inputSensorWindSpeed.status;
+                    windSpeedCorrectedToHelideck.timestamp = inputSensorWindSpeed.timestamp;
+                }
+                else
+                {
+                    windSpeedCorrectedToHelideck.data = 0;
+                    windSpeedCorrectedToHelideck.status = DataStatus.TIMEOUT_ERROR;
+                    windSpeedCorrectedToHelideck.timestamp = DateTime.UtcNow;
+                }
+
+                // Vind hastighet
+                helideckWindSpeedRT.Set(windSpeedCorrectedToHelideck);
+
+                // Area Wind: 2-minute data
+                ///////////////////////////////////////////////////////////
+                areaWindDirection2m.DoProcessing(sensorWindDirectionCorrected);
+
+                if (adminSettingsVM.regulationStandard == RegulationStandard.CAP)
+                    areaWindDirection2m.BufferFillCheck(Constants.WindBufferFill95Pct2m);
+
+                areaWindSpeed2m.DoProcessing(inputSensorWindSpeed);
+
+                if (adminSettingsVM.regulationStandard == RegulationStandard.CAP)
+                    areaWindSpeed2m.BufferFillCheck(Constants.WindBufferFill95Pct2m);
+
+                UpdateGustData(
+                    inputSensorWindSpeed,
+                    areaWindSpeed2m,
+                    areaWindAverageData2m,
+                    areaWindGust2m);
+
+                // Helideck Wind: 2-minute data
+                ///////////////////////////////////////////////////////////
+                helideckWindDirection2m.DoProcessing(sensorWindDirectionCorrected);
+
+                if (adminSettingsVM.regulationStandard == RegulationStandard.CAP)
+                    helideckWindDirection2m.BufferFillCheck(Constants.WindBufferFill95Pct2m);
+
+                helideckWindSpeed2m.DoProcessing(windSpeedCorrectedToHelideck);
+
+                if (adminSettingsVM.regulationStandard == RegulationStandard.CAP)
+                    helideckWindSpeed2m.BufferFillCheck(Constants.WindBufferFill95Pct2m);
+
+                UpdateGustData(
+                    windSpeedCorrectedToHelideck,
+                    helideckWindSpeed2m,
+                    helideckGustData2m,
+                    helideckWindGust2m);
+
+                // Helideck Wind: 10-minute data
+                ///////////////////////////////////////////////////////////
+                helideckWindDirection10m.DoProcessing(sensorWindDirectionCorrected);
+
+                if (adminSettingsVM.regulationStandard == RegulationStandard.CAP)
+                    helideckWindDirection10m.BufferFillCheck(Constants.WindBufferFill95Pct10m);
+
+                helideckWindSpeed10m.DoProcessing(windSpeedCorrectedToHelideck);
+
+                if (adminSettingsVM.regulationStandard == RegulationStandard.CAP)
+                    helideckWindSpeed10m.BufferFillCheck(Constants.WindBufferFill95Pct10m);
+
+                UpdateGustData(
+                    windSpeedCorrectedToHelideck,
+                    helideckWindSpeed10m,
+                    helideckWindAverageData10m,
+                    helideckWindGust10m);
+
+                // RWD, Delta heading/Wind
+                /////////////////////////////////////////////////////////////////////////////////////////
+                if (adminSettingsVM.regulationStandard == RegulationStandard.CAP &&
+                    userInputs.displayMode == DisplayMode.OnDeck)
+                {
+                    // Relative Wind Direction
+                    /////////////////////////////////////////////////////////////////////////////////////////
+                    if (areaWindDirection2m.status == DataStatus.OK &&
+                        inputVesselHeading.status == DataStatus.OK)
+                    {
+                        relativeWindDir.data = areaWindDirection2m.data - (inputVesselHeading.data + (userInputs.onDeckHelicopterHeading - userInputs.onDeckVesselHeading));
+
+                        if (relativeWindDir.data > 180)
+                            relativeWindDir.data -= 180;
+                        else
+                            if (relativeWindDir.data < -180)
+                            relativeWindDir.data += 180;
+                    }
                     else
-                        if (relativeWindDir.data < -180)
-                        relativeWindDir.data += 180;
+                    {
+                        relativeWindDir.data = 0;
+                    }
+
+                    relativeWindDir.status = areaWindDirection2m.status;
+                    relativeWindDir.timestamp = areaWindDirection2m.timestamp;
+
+                    // Vessel Heading Delta
+                    /////////////////////////////////////////////////////////////////////////////////////////
+                    if (inputVesselHeading.status == DataStatus.OK &&
+                        userInputs.onDeckTime != DateTime.MinValue &&
+                        userInputs.onDeckVesselHeading != -1)
+                    {
+                        // Dersom vi gikk til on-deck display før vind data buffer ble fyllt opp, kan vi komme
+                        // her uten en utgangs-vind-retning å beregne mot.
+                        if (userInputs.onDeckVesselHeading == -1)
+                            userInputs.onDeckVesselHeading = inputVesselHeading.data;
+
+                        vesselHeadingDelta.data = userInputs.onDeckVesselHeading - inputVesselHeading.data;
+                    }
+                    else
+                    {
+                        vesselHeadingDelta.data = 0;
+                    }
+
+                    vesselHeadingDelta.status = inputVesselHeading.status;
+                    vesselHeadingDelta.timestamp = inputVesselHeading.timestamp;
+
+                    // Wind Direction Delta
+                    /////////////////////////////////////////////////////////////////////////////////////////
+                    if (areaWindDirection2m.status == DataStatus.OK &&
+                        userInputs.onDeckTime != DateTime.MinValue)
+                    {
+                        // Dersom vi gikk til on-deck display før vind data buffer ble fyllt opp, kan vi komme
+                        // her uten en utgangs-vind-retning å beregne mot.
+                        if (userInputs.onDeckWindDirection == -1)
+                            userInputs.onDeckWindDirection = areaWindDirection2m.data;
+
+                        windDirectionDelta.data = userInputs.onDeckWindDirection - areaWindDirection2m.data;
+                    }
+                    else
+                    {
+                        windDirectionDelta.data = 0;
+                    }
+
+                    windDirectionDelta.status = areaWindDirection2m.status;
+                    windDirectionDelta.timestamp = areaWindDirection2m.timestamp;
+
+                    // Helicopter Heading
+                    /////////////////////////////////////////////////////////////////////////////////////////
+                    double heliHdg = userInputs.onDeckHelicopterHeading + (vesselHeading.data - userInputs.onDeckVesselHeading);
+                    if (heliHdg > Constants.HeadingMax)
+                        heliHdg -= Constants.HeadingMax;
+                    if (heliHdg < Constants.HeadingMin)
+                        heliHdg += Constants.HeadingMax;
+
+                    helicopterHeading.data = heliHdg;
+                    helicopterHeading.status = inputVesselHeading.status;
+                    helicopterHeading.timestamp = inputVesselHeading.timestamp;
                 }
                 else
                 {
+                    //  Disse dataene trenger vi ikke å beregne, men status og timestamp må likevel settes slik at det ikke ser ut som feil
                     relativeWindDir.data = 0;
-                }
+                    relativeWindDir.status = areaWindDirection2m.status;
+                    relativeWindDir.timestamp = areaWindDirection2m.timestamp;
 
-                relativeWindDir.status = areaWindDirection2m.status;
-                relativeWindDir.timestamp = areaWindDirection2m.timestamp;
-
-                // Vessel Heading Delta
-                /////////////////////////////////////////////////////////////////////////////////////////
-                if (hmsInputDataList.GetData(ValueType.VesselHeading).status == DataStatus.OK &&
-                    userInputs.onDeckTime != DateTime.MinValue &&
-                    userInputs.onDeckVesselHeading != -1)
-                {
-                    // Dersom vi gikk til on-deck display før vind data buffer ble fyllt opp, kan vi komme
-                    // her uten en utgangs-vind-retning å beregne mot.
-                    if (userInputs.onDeckVesselHeading == -1)
-                        userInputs.onDeckVesselHeading = hmsInputDataList.GetData(ValueType.VesselHeading).data;
-
-                    vesselHeadingDelta.data = userInputs.onDeckVesselHeading - hmsInputDataList.GetData(ValueType.VesselHeading).data;
-                }
-                else
-                {
                     vesselHeadingDelta.data = 0;
+                    vesselHeadingDelta.status = inputVesselHeading.status;
+                    vesselHeadingDelta.timestamp = inputVesselHeading.timestamp;
+
+                    windDirectionDelta.data = 0;
+                    windDirectionDelta.status = areaWindDirection2m.status;
+                    windDirectionDelta.timestamp = areaWindDirection2m.timestamp;
+
+                    helicopterHeading.data = 0;
+                    helicopterHeading.status = inputVesselHeading.status;
+                    helicopterHeading.timestamp = inputVesselHeading.timestamp;
                 }
 
-                vesselHeadingDelta.status = hmsInputDataList.GetData(ValueType.VesselHeading).status;
-                vesselHeadingDelta.timestamp = hmsInputDataList.GetData(ValueType.VesselHeading).timestamp;
-
-                // Wind Direction Delta
+                // WSI
                 /////////////////////////////////////////////////////////////////////////////////////////
-                if (areaWindDirection2m.status == DataStatus.OK &&
-                    userInputs.onDeckTime != DateTime.MinValue)
+                if (adminSettingsVM.regulationStandard == RegulationStandard.CAP &&
+                    (helideckWindSpeed10m.status == DataStatus.OK || helideckWindSpeed10m.status == DataStatus.OK_NA))
                 {
-                    // Dersom vi gikk til on-deck display før vind data buffer ble fyllt opp, kan vi komme
-                    // her uten en utgangs-vind-retning å beregne mot.
-                    if (userInputs.onDeckWindDirection == -1)
-                        userInputs.onDeckWindDirection = areaWindDirection2m.data;
-
-                    windDirectionDelta.data = userInputs.onDeckWindDirection - areaWindDirection2m.data;
+                    wsiData.status = helideckWindSpeed10m.status;
+                    wsiData.timestamp = helideckWindSpeed10m.timestamp;
+                    wsiData.data = helideckWindSpeed10m.data / adminSettingsVM.GetWSILimit(userInputs.helicopterType) * 100;
                 }
                 else
                 {
-                    windDirectionDelta.data = 0;
+                    wsiData.status = DataStatus.TIMEOUT_ERROR;
+                    wsiData.timestamp = DateTime.UtcNow;
+                    wsiData.data = 0;
                 }
 
-                windDirectionDelta.status = areaWindDirection2m.status;
-                windDirectionDelta.timestamp = areaWindDirection2m.timestamp;
-
-                // Helicopter Heading
+                // Avrunding
                 /////////////////////////////////////////////////////////////////////////////////////////
-                double heliHdg = userInputs.onDeckHelicopterHeading + (vesselHeading.data - userInputs.onDeckVesselHeading);
-                if (heliHdg > Constants.HeadingMax)
-                    heliHdg -= Constants.HeadingMax;
-                if (heliHdg < Constants.HeadingMin)
-                    heliHdg += Constants.HeadingMax;
+                vesselHeading.data = Math.Round(vesselHeading.data, 0, MidpointRounding.AwayFromZero);
+                vesselSpeed.data = Math.Round(vesselSpeed.data, 1, MidpointRounding.AwayFromZero);
+                vesselCOG.data = Math.Round(vesselCOG.data, 1, MidpointRounding.AwayFromZero);
+                vesselSOG.data = Math.Round(vesselSOG.data, 1, MidpointRounding.AwayFromZero);
 
-                helicopterHeading.data = heliHdg;
-                helicopterHeading.status = hmsInputDataList.GetData(ValueType.VesselHeading).status;
-                helicopterHeading.timestamp = hmsInputDataList.GetData(ValueType.VesselHeading).timestamp;
-            }
-            else
-            {
-                //  Disse dataene trenger vi ikke å beregne, men status og timestamp må likevel settes slik at det ikke ser ut som feil
-                relativeWindDir.data = 0;
-                relativeWindDir.status = areaWindDirection2m.status;
-                relativeWindDir.timestamp = areaWindDirection2m.timestamp;
+                areaWindDirection2m.data = Math.Round(areaWindDirection2m.data, 0, MidpointRounding.AwayFromZero);
+                areaWindSpeed2m.data = Math.Round(areaWindSpeed2m.data, 1, MidpointRounding.AwayFromZero);
+                areaWindGust2m.data = Math.Round(areaWindGust2m.data, 1, MidpointRounding.AwayFromZero);
 
-                vesselHeadingDelta.data = 0;
-                vesselHeadingDelta.status = hmsInputDataList.GetData(ValueType.VesselHeading).status;
-                vesselHeadingDelta.timestamp = hmsInputDataList.GetData(ValueType.VesselHeading).timestamp;
+                helideckWindDirectionRT.data = Math.Round(helideckWindDirectionRT.data, 0, MidpointRounding.AwayFromZero);
+                helideckWindDirection2m.data = Math.Round(helideckWindDirection2m.data, 0, MidpointRounding.AwayFromZero);
+                helideckWindDirection10m.data = Math.Round(helideckWindDirection10m.data, 0, MidpointRounding.AwayFromZero);
 
-                windDirectionDelta.data = 0;
-                windDirectionDelta.status = areaWindDirection2m.status;
-                windDirectionDelta.timestamp = areaWindDirection2m.timestamp;
+                helideckWindSpeedRT.data = Math.Round(helideckWindSpeedRT.data, 1, MidpointRounding.AwayFromZero);
+                helideckWindSpeed2m.data = Math.Round(helideckWindSpeed2m.data, 1, MidpointRounding.AwayFromZero);
+                helideckWindSpeed10m.data = Math.Round(helideckWindSpeed10m.data, 1, MidpointRounding.AwayFromZero);
 
-                helicopterHeading.data = 0;
-                helicopterHeading.status = hmsInputDataList.GetData(ValueType.VesselHeading).status;
-                helicopterHeading.timestamp = hmsInputDataList.GetData(ValueType.VesselHeading).timestamp;
-            }
+                helideckWindGust2m.data = Math.Round(helideckWindGust2m.data, 1, MidpointRounding.AwayFromZero);
+                helideckWindGust10m.data = Math.Round(helideckWindGust10m.data, 1, MidpointRounding.AwayFromZero);
 
-            // WSI
-            /////////////////////////////////////////////////////////////////////////////////////////
-            if (adminSettingsVM.regulationStandard == RegulationStandard.CAP &&
-                (helideckWindSpeed10m.status == DataStatus.OK || helideckWindSpeed10m.status == DataStatus.OK_NA))
-            {
-                wsiData.status = helideckWindSpeed10m.status;
-                wsiData.timestamp = helideckWindSpeed10m.timestamp;
-                wsiData.data = helideckWindSpeed10m.data / adminSettingsVM.GetWSILimit(userInputs.helicopterType) * 100;
-            }
-            else
-            {
-                wsiData.status = DataStatus.TIMEOUT_ERROR;
-                wsiData.timestamp = DateTime.UtcNow;
-                wsiData.data = 0;
+                relativeWindDir.data = Math.Round(relativeWindDir.data, 1, MidpointRounding.AwayFromZero);
+                vesselHeadingDelta.data = Math.Round(vesselHeadingDelta.data, 1, MidpointRounding.AwayFromZero);
+                windDirectionDelta.data = Math.Round(windDirectionDelta.data, 1, MidpointRounding.AwayFromZero);
+
+                helideckHeading.data = Math.Round(helideckHeading.data, 0, MidpointRounding.AwayFromZero);
+                helicopterHeading.data = Math.Round(helicopterHeading.data, 0, MidpointRounding.AwayFromZero);
+
+                wsiData.data = Math.Round(wsiData.data, 1, MidpointRounding.AwayFromZero);
             }
 
-            // Avrunding
-            /////////////////////////////////////////////////////////////////////////////////////////
-            vesselHeading.data = Math.Round(vesselHeading.data, 0, MidpointRounding.AwayFromZero);
-            vesselSpeed.data = Math.Round(vesselSpeed.data, 1, MidpointRounding.AwayFromZero);
-            vesselCOG.data = Math.Round(vesselCOG.data, 1, MidpointRounding.AwayFromZero);
-            vesselSOG.data = Math.Round(vesselSOG.data, 1, MidpointRounding.AwayFromZero);
-
-            areaWindDirection2m.data = Math.Round(areaWindDirection2m.data, 0, MidpointRounding.AwayFromZero);
-            areaWindSpeed2m.data = Math.Round(areaWindSpeed2m.data, 1, MidpointRounding.AwayFromZero);
-            areaWindGust2m.data = Math.Round(areaWindGust2m.data, 1, MidpointRounding.AwayFromZero);
-
-            helideckWindDirectionRT.data = Math.Round(helideckWindDirectionRT.data, 0, MidpointRounding.AwayFromZero);
-            helideckWindDirection2m.data = Math.Round(helideckWindDirection2m.data, 0, MidpointRounding.AwayFromZero);
-            helideckWindDirection10m.data = Math.Round(helideckWindDirection10m.data, 0, MidpointRounding.AwayFromZero);
-
-            helideckWindSpeedRT.data = Math.Round(helideckWindSpeedRT.data, 1, MidpointRounding.AwayFromZero);
-            helideckWindSpeed2m.data = Math.Round(helideckWindSpeed2m.data, 1, MidpointRounding.AwayFromZero);
-            helideckWindSpeed10m.data = Math.Round(helideckWindSpeed10m.data, 1, MidpointRounding.AwayFromZero);
-
-            helideckWindGust2m.data = Math.Round(helideckWindGust2m.data, 1, MidpointRounding.AwayFromZero);
-            helideckWindGust10m.data = Math.Round(helideckWindGust10m.data, 1, MidpointRounding.AwayFromZero);
-
-            relativeWindDir.data = Math.Round(relativeWindDir.data, 1, MidpointRounding.AwayFromZero);
-            vesselHeadingDelta.data = Math.Round(vesselHeadingDelta.data, 1, MidpointRounding.AwayFromZero);
-            windDirectionDelta.data = Math.Round(windDirectionDelta.data, 1, MidpointRounding.AwayFromZero);
-
-            helideckHeading.data = Math.Round(helideckHeading.data, 0, MidpointRounding.AwayFromZero);
-            helicopterHeading.data = Math.Round(helicopterHeading.data, 0, MidpointRounding.AwayFromZero);
-
-            wsiData.data = Math.Round(wsiData.data, 1, MidpointRounding.AwayFromZero);
+            // Oppdatere "forrige" verdiene
+            inputVesselHeadingPrev.Set(inputVesselHeading);
+            inputVesselSpeedPrev.Set(inputVesselSpeed);
+            inputVesselCOGPrev.Set(inputVesselCOG);
+            inputVesselSOGPrev.Set(inputVesselSOG);
+            inputSensorWindDirectionPrev.Set(inputSensorWindDirection);
+            inputSensorWindSpeedPrev.Set(inputSensorWindSpeed);
         }
 
         // Resette dataCalculations

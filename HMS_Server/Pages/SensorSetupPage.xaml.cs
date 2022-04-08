@@ -585,7 +585,7 @@ namespace HMS_Server
                     gbSetupSummaryModbus.Visibility = Visibility.Collapsed;
                     gbSetupSummaryFileReader.Visibility = Visibility.Collapsed;
 
-                    if (serverStarted)
+                    if (!serverStarted)
                     {
                         btnSerialPortSetup.Visibility = Visibility.Visible;
                         btnModbusSetup.Visibility = Visibility.Collapsed;
@@ -611,7 +611,7 @@ namespace HMS_Server
                     gbSetupSummaryModbus.Visibility = Visibility.Visible;
                     gbSetupSummaryFileReader.Visibility = Visibility.Collapsed;
 
-                    if (serverStarted)
+                    if (!serverStarted)
                     {
                         btnSerialPortSetup.Visibility = Visibility.Collapsed;
                         btnModbusSetup.Visibility = Visibility.Visible;
@@ -690,7 +690,7 @@ namespace HMS_Server
                     gbSetupSummaryModbus.Visibility = Visibility.Collapsed;
                     gbSetupSummaryFileReader.Visibility = Visibility.Visible;
 
-                    if (serverStarted)
+                    if (!serverStarted)
                     {
                         btnSerialPortSetup.Visibility = Visibility.Collapsed;
                         btnModbusSetup.Visibility = Visibility.Collapsed;

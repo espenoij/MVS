@@ -123,14 +123,14 @@ namespace HMS_Server
         private HelideckStatusType CheckLandingStatusCAP(HelideckStatusType status)
         {
             // Slår av lysene når vi ikke har ordentlige data
-            if (hmsOutputData.GetData(ValueType.VesselHeading).status == DataStatus.TIMEOUT_ERROR || 
-                hmsOutputData.GetData(ValueType.PitchMax20m).status == DataStatus.TIMEOUT_ERROR ||
-                hmsOutputData.GetData(ValueType.RollMax20m).status == DataStatus.TIMEOUT_ERROR ||
-                hmsOutputData.GetData(ValueType.SignificantHeaveRate).status == DataStatus.TIMEOUT_ERROR ||
-                hmsOutputData.GetData(ValueType.MSI).status == DataStatus.TIMEOUT_ERROR ||
-                hmsOutputData.GetData(ValueType.MSI).status == DataStatus.OK_NA ||
-                hmsOutputData.GetData(ValueType.WSI).status == DataStatus.TIMEOUT_ERROR ||
-                hmsOutputData.GetData(ValueType.WSI).status == DataStatus.OK_NA)
+            if (hmsOutputData.GetData(ValueType.VesselHeading)?.status == DataStatus.TIMEOUT_ERROR || 
+                hmsOutputData.GetData(ValueType.PitchMax20m)?.status == DataStatus.TIMEOUT_ERROR ||
+                hmsOutputData.GetData(ValueType.RollMax20m)?.status == DataStatus.TIMEOUT_ERROR ||
+                hmsOutputData.GetData(ValueType.SignificantHeaveRate)?.status == DataStatus.TIMEOUT_ERROR ||
+                hmsOutputData.GetData(ValueType.MSI)?.status == DataStatus.TIMEOUT_ERROR ||
+                hmsOutputData.GetData(ValueType.MSI)?.status == DataStatus.OK_NA ||
+                hmsOutputData.GetData(ValueType.WSI)?.status == DataStatus.TIMEOUT_ERROR ||
+                hmsOutputData.GetData(ValueType.WSI)?.status == DataStatus.OK_NA)
             {
                 // Status: OFF
                 return HelideckStatusType.OFF;
@@ -190,33 +190,29 @@ namespace HMS_Server
 
         private HelideckStatusType CheckRWDStatusCAP()
         {
-            if (hmsOutputData.GetData(ValueType.VesselHeading).status == DataStatus.TIMEOUT_ERROR ||
-                hmsOutputData.GetData(ValueType.HelideckWindSpeed2m).status == DataStatus.TIMEOUT_ERROR ||
-                hmsOutputData.GetData(ValueType.RelativeWindDir).status == DataStatus.TIMEOUT_ERROR ||
-                hmsOutputData.GetData(ValueType.HelideckWindSpeed2m).status == DataStatus.OK_NA ||
-                hmsOutputData.GetData(ValueType.RelativeWindDir).status == DataStatus.OK_NA)
-            {
-                // Status: OFF
-                return HelideckStatusType.OFF;
-            }
-            else
+            if (hmsOutputData.GetData(ValueType.VesselHeading)?.status != DataStatus.TIMEOUT_ERROR &&
+                hmsOutputData.GetData(ValueType.HelideckWindSpeed2m)?.status != DataStatus.TIMEOUT_ERROR &&
+                hmsOutputData.GetData(ValueType.RelativeWindDir)?.status != DataStatus.TIMEOUT_ERROR &&
+                hmsOutputData.GetData(ValueType.HelideckWindSpeed2m)?.status != DataStatus.OK_NA &&
+                hmsOutputData.GetData(ValueType.RelativeWindDir)?.status != DataStatus.OK_NA)
             {
                 // Status: BLUE / AMBER / RED
                 return hmsProcessingWindHeading.GetRWDLimitState;
+            }
+            else
+            {
+                // Status: OFF
+                return HelideckStatusType.OFF;
             }
         }
 
         private HelideckStatusType CheckHelideckLightStatusNOROG(HelideckStatusType status)
         {
-            // Slår av lysene når vi ikke har ordentlige data
-            if (hmsOutputData.GetData(ValueType.PitchMax20m).status == DataStatus.TIMEOUT_ERROR ||
-                hmsOutputData.GetData(ValueType.RollMax20m).status == DataStatus.TIMEOUT_ERROR ||
-                hmsOutputData.GetData(ValueType.HeaveAmplitudeMax20m).status == DataStatus.TIMEOUT_ERROR ||
-                hmsOutputData.GetData(ValueType.SignificantHeaveRateMax20m).status == DataStatus.TIMEOUT_ERROR)
-            {
-                return HelideckStatusType.OFF;
-            }
-            else
+            // Sjekke først at vi har gyldige data
+            if (hmsOutputData.GetData(ValueType.PitchMax20m)?.status != DataStatus.TIMEOUT_ERROR &&
+                hmsOutputData.GetData(ValueType.RollMax20m)?.status != DataStatus.TIMEOUT_ERROR &&
+                hmsOutputData.GetData(ValueType.HeaveAmplitudeMax20m)?.status != DataStatus.TIMEOUT_ERROR &&
+                hmsOutputData.GetData(ValueType.SignificantHeaveRateMax20m)?.status != DataStatus.TIMEOUT_ERROR)
             {
                 switch (status)
                 {
@@ -268,6 +264,11 @@ namespace HMS_Server
                     default:
                         return status;
                 }
+            }
+            // Slår av lysene når vi ikke har ordentlige data
+            else
+            {
+                return HelideckStatusType.OFF;
             }
         }
 
