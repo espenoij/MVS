@@ -757,7 +757,8 @@ namespace HMS_Server
                 ucHMSSensorGroups.Start();
 
                 // Lights Output
-                if (adminSettingsVM.regulationStandard == RegulationStandard.CAP)
+                if (adminSettingsVM.regulationStandard == RegulationStandard.CAP &&
+                    !adminSettingsVM.dataVerificationEnabled)
                 {
                     lightsOutputTimer.Start();
                     ucHMSLightsOutput.Start();
