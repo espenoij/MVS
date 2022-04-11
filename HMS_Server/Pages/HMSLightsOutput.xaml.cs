@@ -196,6 +196,7 @@ namespace HMS_Server
                             }
                             catch (Exception ex)
                             {
+                                // WinModbus må settes opp med RTU og autocreate datamap må være på, ellers får vi feilmeldinger
                                 errorHandler.Insert(
                                     new ErrorMessage(
                                         DateTime.UtcNow,

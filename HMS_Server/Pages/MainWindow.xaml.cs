@@ -90,9 +90,6 @@ namespace HMS_Server
         // License/Activation
         private ActivationVM activationVM;
 
-        // Lights output feilmelding
-        private bool lightsOutputError = false;
-
         // Stop server callback
         public delegate void StopServerCallback();
 
@@ -570,71 +567,10 @@ namespace HMS_Server
                 // Hente lights output data fra fil
                 lightsOutputData = new SensorData(config.GetLightsOutputData());
 
+                // Init
                 ucHMSLightsOutput.Init(lightsOutputData, hmsLightsOutputVM, config, adminSettingsVM, errorHandler);
-
-                // Dispatcher som oppdaterer verification data (test og referanse data)
-                lightsOutputTimer.Interval = TimeSpan.FromMilliseconds(config.ReadWithDefault(ConfigKey.LightsOutputFrequency, Constants.LightsOutputFrequencyDefault));
-                lightsOutputTimer.Tick += runLightsOutputUpdate;
-
-                void runLightsOutputUpdate(object sender, EventArgs e)
-                {
-                    Thread thread = new Thread(() => SendLightsOutput_Thread());
-                    thread.IsBackground = true;
-                    thread.Start();
-
-                    void SendLightsOutput_Thread()
-                    {
-                        try
-                        {
-                            // Sende lys signal
-                            SerialPort serialPort = new SerialPort();
-
-                            // Serie port parametre
-                            serialPort.PortName = lightsOutputData.modbus.portName;
-                            serialPort.BaudRate = lightsOutputData.modbus.baudRate;
-                            serialPort.DataBits = lightsOutputData.modbus.dataBits;
-                            serialPort.StopBits = lightsOutputData.modbus.stopBits;
-                            serialPort.Parity = lightsOutputData.modbus.parity;
-                            serialPort.Handshake = lightsOutputData.modbus.handshake;
-
-                            // Åpne serie port
-                            serialPort.Open();
-
-                            if (serialPort.IsOpen)
-                            {
-                                // Sende lys signal
-                                serialPort.Write(hmsLightsOutputVM.HMSLightsOutput.ToString());
-                            }
-                            else
-                            {
-                                errorHandler.Insert(
-                                    new ErrorMessage(
-                                        DateTime.UtcNow,
-                                        ErrorMessageType.SerialPort,
-                                        ErrorMessageCategory.None,
-                                        string.Format("Lights Output Error: Unable to open port.")));
-                            }
-
-                            // Lukke serie port
-                            serialPort.Close();
-                        }
-                        catch (Exception ex)
-                        {
-                            if (!lightsOutputError)
-                            {
-                                lightsOutputError = true;
-
-                                errorHandler.Insert(
-                                    new ErrorMessage(
-                                        DateTime.UtcNow,
-                                        ErrorMessageType.SerialPort,
-                                        ErrorMessageCategory.AdminUser,
-                                            string.Format("Lights Output Error: Check lights output setup. {0}", ex.Message)));
-                            }
-                        }
-                    }
-                }
             }
+            // NOROG
             else
             {
                 tabHMS_LightsOutput.Visibility = Visibility.Collapsed;
@@ -696,9 +632,6 @@ namespace HMS_Server
         private void btnStop_Click(object sender, RoutedEventArgs e)
         {
             StopServer();
-
-            // Reset
-            lightsOutputError = false;
         }
 
         private void StartServer()
