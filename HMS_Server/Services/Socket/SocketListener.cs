@@ -194,9 +194,13 @@ namespace HMS_Server
             }
             catch (ObjectDisposedException ex)
             {
-                // Ingen melding, socket lukket OK
                 if (AdminMode.IsActive)
                     socketConsole.Add(string.Format("ObjectDisposedException:\n\n{0}", ex.Message));
+            }
+            catch (UnauthorizedAccessException ex)
+            {
+                if (AdminMode.IsActive)
+                    socketConsole.Add(string.Format("UnauthorizedAccessException:\n\n{0}", ex.Message));
             }
             catch (Exception ex)
             {
@@ -205,7 +209,7 @@ namespace HMS_Server
             }
         }
 
-        private void StopSocketListener(object sender, RunWorkerCompletedEventArgs e)
+            private void StopSocketListener(object sender, RunWorkerCompletedEventArgs e)
         {
             listener.Shutdown(SocketShutdown.Both);
             listener.Disconnect(true);

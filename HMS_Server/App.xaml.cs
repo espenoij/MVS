@@ -24,7 +24,7 @@ namespace HMS_Server
                        XmlLanguage.GetLanguage(CultureInfo.CurrentCulture.IetfLanguageTag)));
             
             // Generell exception handler
-            Dispatcher.UnhandledException += OnDispatcherUnhandledException;
+            //Dispatcher.UnhandledException += OnDispatcherUnhandledException;
         }
 
         // Generell exception handler

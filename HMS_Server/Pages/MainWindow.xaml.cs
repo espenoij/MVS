@@ -612,7 +612,7 @@ namespace HMS_Server
                                         DateTime.UtcNow,
                                         ErrorMessageType.SerialPort,
                                         ErrorMessageCategory.None,
-                                        string.Format("Lights Output Error\n\nUnable to open port.")));
+                                        string.Format("Lights Output Error: Unable to open port.")));
                             }
 
                             // Lukke serie port
@@ -629,7 +629,7 @@ namespace HMS_Server
                                         DateTime.UtcNow,
                                         ErrorMessageType.SerialPort,
                                         ErrorMessageCategory.AdminUser,
-                                            string.Format("Lights Output Error\n\nCheck lights output setup.\n\n{0}", ex.Message)));
+                                            string.Format("Lights Output Error: Check lights output setup. {0}", ex.Message)));
                             }
                         }
                     }

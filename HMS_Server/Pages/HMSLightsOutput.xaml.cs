@@ -179,25 +179,17 @@ namespace HMS_Server
                                     if (modbusSerialMaster == null)
                                         modbusSerialMaster = modbusFactory.CreateRtuMaster(new SerialPortAdapter(serialPort));
 
-                                    if (modbusSerialMaster != null)
+                                    // Ok master?
+                                    if (modbusSerialMaster.Transport != null)
                                     {
+                                        // Løpe gjennom adressene det skal sendes på
                                         for (int i = 0; i < hmsLightsOutputVM.outputAddressList.Count; i++)
                                         {
-                                            // Finne ut hvor det skal skrives
-                                            ModbusObjectType modbusObjectType = modbusHelper.AddressToObjectType(hmsLightsOutputVM.outputAddressList[i]);
-
-                                            // Skrive til registers (kun til coil)
-                                            switch (modbusObjectType)
-                                            {
-                                                case ModbusObjectType.Coil:
-                                                    {
-                                                        modbusSerialMaster.WriteSingleCoil(
-                                                            lightsOutputData.modbus.slaveID,
-                                                            hmsLightsOutputVM.outputAddressList[i],
-                                                            LightOutputToWriteValue(hmsLightsOutputVM.HMSLightsOutput, i));
-                                                    }
-                                                    break;
-                                            }
+                                            // Sende data (true/false)
+                                            modbusSerialMaster?.WriteSingleCoil(
+                                               lightsOutputData.modbus.slaveID,
+                                               hmsLightsOutputVM.outputAddressList[i],
+                                               LightOutputToWriteValue(hmsLightsOutputVM.HMSLightsOutput, i));
                                         }
                                     }
                                 }
@@ -209,7 +201,7 @@ namespace HMS_Server
                                         DateTime.UtcNow,
                                         ErrorMessageType.MODBUS,
                                         ErrorMessageCategory.AdminUser,
-                                        string.Format("Modbus_Write (Lights Output)\n\nSystem Message:\n{0}", ex.Message)));
+                                        string.Format("Modbus_Write (Lights Output): {0}", ex.Message)));
                             }
                         }
                     }
@@ -503,6 +495,8 @@ namespace HMS_Server
         {
             try
             {
+                bool inputOK = false;
+
                 // Lagre ny setting
                 if (!string.IsNullOrEmpty((sender as TextBox).Text))
                 {
@@ -512,20 +506,18 @@ namespace HMS_Server
                         if (modbusHelper.ValidAddressSpaceCoil(address))
                         {
                             hmsLightsOutputVM.outputAddress1 = (UInt16)address;
-                        }
-                        else
-                        {
-                            RadWindow.Alert(
-                                string.Format("Input Error\n\nValid address space:\n{0} - {1}",
-                                    Constants.ModbusCoilMin,
-                                    Constants.ModbusCoilMax));
-
-                            hmsLightsOutputVM.outputAddress1 = Constants.ModbusDefaultAddress;
+                            inputOK = true;
                         }
                     }
                 }
-                else
+
+                if (!inputOK)
                 {
+                    RadWindow.Alert(
+                       string.Format("Input Error\n\nValid address space:\n{0} - {1}",
+                       Constants.ModbusCoilMin,
+                       Constants.ModbusCoilMax));
+
                     hmsLightsOutputVM.outputAddress1 = Constants.ModbusDefaultAddress;
                 }
 
@@ -555,6 +547,8 @@ namespace HMS_Server
         {
             try
             {
+                bool inputOK = false;
+
                 // Lagre ny setting
                 if (!string.IsNullOrEmpty((sender as TextBox).Text))
                 {
@@ -564,20 +558,18 @@ namespace HMS_Server
                         if (modbusHelper.ValidAddressSpaceCoil(address))
                         {
                             hmsLightsOutputVM.outputAddress2 = (UInt16)address;
-                        }
-                        else
-                        {
-                            RadWindow.Alert(
-                                string.Format("Input Error\n\nValid address space:\n{0} - {1}",
-                                    Constants.ModbusCoilMin,
-                                    Constants.ModbusCoilMax));
-
-                            hmsLightsOutputVM.outputAddress2 = Constants.ModbusDefaultAddress;
+                            inputOK = true;
                         }
                     }
                 }
-                else
+
+                if (!inputOK)
                 {
+                    RadWindow.Alert(
+                       string.Format("Input Error\n\nValid address space:\n{0} - {1}",
+                       Constants.ModbusCoilMin,
+                       Constants.ModbusCoilMax));
+
                     hmsLightsOutputVM.outputAddress2 = Constants.ModbusDefaultAddress;
                 }
 
@@ -608,6 +600,8 @@ namespace HMS_Server
         {
             try
             {
+                bool inputOK = false;
+
                 // Lagre ny setting
                 if (!string.IsNullOrEmpty((sender as TextBox).Text))
                 {
@@ -617,20 +611,18 @@ namespace HMS_Server
                         if (modbusHelper.ValidAddressSpaceCoil(address))
                         {
                             hmsLightsOutputVM.outputAddress3 = (UInt16)address;
-                        }
-                        else
-                        {
-                            RadWindow.Alert(
-                                string.Format("Input Error\n\nValid address space:\n{0} - {1}",
-                                    Constants.ModbusCoilMin,
-                                    Constants.ModbusCoilMax));
-
-                            hmsLightsOutputVM.outputAddress3 = Constants.ModbusDefaultAddress;
+                            inputOK = true;
                         }
                     }
                 }
-                else
+
+                if (!inputOK)
                 {
+                    RadWindow.Alert(
+                       string.Format("Input Error\n\nValid address space:\n{0} - {1}",
+                       Constants.ModbusCoilMin,
+                       Constants.ModbusCoilMax));
+
                     hmsLightsOutputVM.outputAddress3 = Constants.ModbusDefaultAddress;
                 }
 
