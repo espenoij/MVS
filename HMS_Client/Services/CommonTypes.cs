@@ -288,7 +288,11 @@ public enum DatabaseMaintenanceType
 
 public enum DecimalSeparator
 {
+    //[Description("OS Default")]
+    //OSDefault,
+    [Description("Point")]
     Point,
+    [Description("Comma")]
     Comma
 }
 

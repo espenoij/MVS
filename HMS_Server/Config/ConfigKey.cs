@@ -30,6 +30,7 @@
     public const string WindSensorDistance = "WindSensorDistance";
     public const string AirPressureSensorHeight = "AirPressureSensorHeight";
     public const string MagneticDeclination = "MagneticDeclination";
+    public const string HelideckLightsOutput = "HelideckLightsOutput";
     public const string NDBInstalled_NOROG = "NDBInstalled_NOROG";
     public const string NDBInstalled_CAP = "NDBInstalled_CAP";
     public const string NDBFrequency_NOROG = "NDBFrequency_NOROG";

@@ -1287,5 +1287,15 @@ namespace HMS_Server
         {
             adminSettingsVM.vesselHdgRef = EnumExtension.GetEnumValueFromDescription<DirectionReference>(cboVesselHdgRef.Text);
         }
+
+        private void cbHelideckLightsOutput_Click(object sender, RoutedEventArgs e)
+        {
+            adminSettingsVM.ApplicationRestartRequired();
+        }
+
+        private void cboDecimalSeparator_SelectionChanged(object sender, SelectionChangedEventArgs e)
+        {
+
+        }
     }
 }

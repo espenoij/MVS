@@ -1,6 +1,8 @@
 ﻿using System;
 using System.Collections.Generic;
+using System.Collections.ObjectModel;
 using System.ComponentModel;
+using System.Drawing;
 using System.Linq;
 using System.Runtime.CompilerServices;
 using System.Windows.Threading;
@@ -116,6 +118,20 @@ namespace HMS_Client
                 rwdTrend30mDispList.Add(new HelideckStatusType());
             }
 
+            // Delta vessel heading/Delta wind direction change exceedance
+            DeltaChangeExceedanceAnnotations = new ObservableCollection<object>()
+            {
+                new MarkedZoneAnnotationModel()
+                {
+                    HorizontalFrom = DateTime.UtcNow.AddMinutes(-5),
+                    HorizontalTo = DateTime.UtcNow.AddMinutes(5),
+                    VerticalTo = 30,
+                    VerticalFrom = -30,
+                    Fill = Brushes.Green,
+                }
+            };
+
+            // Starte oppdatering av graf data
             UIUpdateTimer.Start();
         }
 
@@ -489,11 +505,26 @@ namespace HMS_Client
             }
         }
 
+        /////////////////////////////////////////////////////////////////////////////
+        // Delta vessel heading/Delta wind direction change exceedance
+        /////////////////////////////////////////////////////////////////////////////
+        public ObservableCollection<object> DeltaChangeExceedanceAnnotations { get; set; }
+
+
         // Variabel oppdatert
         // Dersom navn ikke er satt brukes kallende medlem sitt navn
         protected void OnPropertyChanged([CallerMemberName] string name = null)
         {
             PropertyChanged?.Invoke(this, new PropertyChangedEventArgs(name));
         }
+    }
+
+    public class MarkedZoneAnnotationModel
+    {
+        public DateTime HorizontalFrom { get; set; }
+        public DateTime HorizontalTo { get; set; }
+        public double VerticalFrom { get; set; }
+        public double VerticalTo { get; set; }
+        public Brush Fill { get; set; }
     }
 }

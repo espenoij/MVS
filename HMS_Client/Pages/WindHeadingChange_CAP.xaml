@@ -6,6 +6,7 @@
     xmlns:d="http://schemas.microsoft.com/expression/blend/2008"
     xmlns:telerik="http://schemas.telerik.com/2008/xaml/presentation"
     xmlns:sys="clr-namespace:System;assembly=mscorlib"
+    xmlns:local="clr-namespace:HMS_Client"
     mc:Ignorable="d"
     d:DesignHeight="400"
     d:DesignWidth="600">
@@ -367,7 +368,7 @@
                                 MajorLinesVisibility="XY" />
                         </telerik:RadCartesianChart.Grid>
 
-                        <telerik:RadCartesianChart.Annotations>
+                        <!--<telerik:RadCartesianChart.Annotations>
                             
                             <telerik:CartesianPlotBandAnnotation
                                 ZIndex="10"
@@ -385,7 +386,47 @@
                                 StrokeThickness="1"                                
                                 Fill="{StaticResource ColorAmber}" />
 
-                        </telerik:RadCartesianChart.Annotations>
+                        </telerik:RadCartesianChart.Annotations>-->
+
+                        <telerik:RadCartesianChart.AnnotationsProvider>
+                            <telerik:ChartAnnotationsProvider
+                                Source="{Binding Path=DeltaChangeExceedanceAnnotations}">
+                                
+                                <telerik:ChartAnnotationsProvider.AnnotationDescriptorSelector>
+                                    <local:MyAnnotationsDescriptorSelector>
+                                        <local:MyAnnotationsDescriptorSelector.MarkedZoneAnnotationDescriptor>
+                                            <telerik:ChartAnnotationDescriptor>
+                                                <telerik:ChartAnnotationDescriptor.Style>
+                                                    <Style
+                                                        TargetType="telerik:CartesianMarkedZoneAnnotation">
+                                                        <Setter
+                                                            Property="VerticalFrom"
+                                                            Value="{Binding Path=VerticalFrom}" />
+                                                        <Setter
+                                                            Property="VerticalTo"
+                                                            Value="{Binding Path=VerticalTo}" />
+                                                        <Setter
+                                                            Property="HorizontalFrom"
+                                                            Value="{Binding Path=HorizontalFrom}" />
+                                                        <Setter
+                                                            Property="HorizontalTo"
+                                                            Value="{Binding Path=HorizontalTo}" />
+                                                        <Setter
+                                                            Property="Fill"
+                                                            Value="{Binding Path=Fill}" />
+                                                        <Setter
+                                                            Property="Opacity"
+                                                            Value="0.5" />
+                                                    </Style>
+                                                </telerik:ChartAnnotationDescriptor.Style>
+                                            </telerik:ChartAnnotationDescriptor>
+                                        </local:MyAnnotationsDescriptorSelector.MarkedZoneAnnotationDescriptor>
+                                    </local:MyAnnotationsDescriptorSelector>
+                                    
+                                </telerik:ChartAnnotationsProvider.AnnotationDescriptorSelector>
+                            </telerik:ChartAnnotationsProvider>
+
+                        </telerik:RadCartesianChart.AnnotationsProvider>
 
                     </telerik:RadCartesianChart>
 

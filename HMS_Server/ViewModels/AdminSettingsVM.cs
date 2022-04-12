@@ -96,10 +96,18 @@ namespace HMS_Server
             else
                 dataVerificationEnabled = false;
 
+            // Magnetic Declination
+            magneticDeclination = config.ReadWithDefault(ConfigKey.MagneticDeclination, Constants.MagneticDeclinationDefault);
+
+            // Helideck Lights Output
+            if (config.ReadWithDefault(ConfigKey.HelideckLightsOutput, "1") == "1")
+                helideckLightsOutput = true;
+            else
+                helideckLightsOutput = false;
+
             // Sensor
             windDirRef = (DirectionReference)Enum.Parse(typeof(DirectionReference), config.ReadWithDefault(ConfigKey.WindDirectionReference, DirectionReference.VesselHeading.ToString()));
             vesselHdgRef = (DirectionReference)Enum.Parse(typeof(DirectionReference), config.ReadWithDefault(ConfigKey.VesselHeadingReference, DirectionReference.MagneticNorth.ToString()));
-            magneticDeclination = config.ReadWithDefault(ConfigKey.MagneticDeclination, Constants.MagneticDeclinationDefault);
             helideckHeight = config.ReadWithDefault(ConfigKey.HelideckHeight, Constants.HelideckHeightDefault);
             windSensorHeight = config.ReadWithDefault(ConfigKey.WindSensorHeight, Constants.WindSensorHeightDefault);
             windSensorDistance = config.ReadWithDefault(ConfigKey.WindSensorDistance, Constants.WindSensorDistanceDefault);
@@ -322,6 +330,29 @@ namespace HMS_Server
             {
                 _magneticDeclination = value;
                 config.Write(ConfigKey.MagneticDeclination, _magneticDeclination.ToString());
+                OnPropertyChanged();
+            }
+        }
+
+        /////////////////////////////////////////////////////////////////////////////
+        // Helideck Lights Output
+        /////////////////////////////////////////////////////////////////////////////
+        private bool _helideckLightsOutput { get; set; }
+        public bool helideckLightsOutput
+        {
+            get
+            {
+                return _helideckLightsOutput;
+            }
+            set
+            {
+                _helideckLightsOutput = value;
+
+                if (_helideckLightsOutput)
+                    config.Write(ConfigKey.HelideckLightsOutput, "1");
+                else
+                    config.Write(ConfigKey.HelideckLightsOutput, "0");
+
                 OnPropertyChanged();
             }
         }

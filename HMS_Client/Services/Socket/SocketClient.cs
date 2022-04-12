@@ -299,13 +299,11 @@ namespace HMS_Client
             }
             catch (ObjectDisposedException odx)
             {
-                // Ingen melding, socket lukket
                 if (AdminMode.IsActive)
                     socketConsole?.Add(string.Format("ReceiveCallback ObjectDisposedException: {0}", odx.Message));
             }
             catch (SocketException sx)
             {
-                //if (sx.SocketErrorCode == SocketError.ConnectionRefused)
                 if (AdminMode.IsActive)
                     socketConsole?.Add(string.Format("ReceiveCallback SocketException: {0}", sx.Message));
             }

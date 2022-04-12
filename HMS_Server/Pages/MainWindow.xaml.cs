@@ -561,21 +561,28 @@ namespace HMS_Server
 
         private void InitLightsOutput()
         {
-            // CAP
-            if (adminSettingsVM.regulationStandard == RegulationStandard.CAP)
+            // Enable/disable helideck lights output
+            if (adminSettingsVM.helideckLightsOutput)
             {
-                // Hente lights output data fra fil
-                lightsOutputData = new SensorData(config.GetLightsOutputData());
+                // CAP
+                if (adminSettingsVM.regulationStandard == RegulationStandard.CAP)
+                {
+                    // Hente lights output data fra fil
+                    lightsOutputData = new SensorData(config.GetLightsOutputData());
 
-                // Init
-                ucHMSLightsOutput.Init(lightsOutputData, hmsLightsOutputVM, config, adminSettingsVM, errorHandler);
+                    // Init
+                    ucHMSLightsOutput.Init(lightsOutputData, hmsLightsOutputVM, config, adminSettingsVM, errorHandler);
+                }
+                // NOROG
+                else
+                {
+                    // TODO: Modulen for output til NOROG lys system er ikke ferdig implementert.
+                    ucHMSLightsOutput.Init(new SensorData(SensorType.ModbusRTU), hmsLightsOutputVM, config, adminSettingsVM, errorHandler);
+                }
             }
-            // NOROG
             else
             {
                 tabHMS_LightsOutput.Visibility = Visibility.Collapsed;
-
-                ucHMSLightsOutput.Init(new SensorData(SensorType.ModbusRTU), hmsLightsOutputVM, config, adminSettingsVM, errorHandler);
             }
         }
 
@@ -691,6 +698,7 @@ namespace HMS_Server
 
                 // Lights Output
                 if (adminSettingsVM.regulationStandard == RegulationStandard.CAP &&
+                    adminSettingsVM.helideckLightsOutput &&
                     !adminSettingsVM.dataVerificationEnabled)
                 {
                     lightsOutputTimer.Start();
