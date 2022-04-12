@@ -313,6 +313,35 @@
 
         </telerik:GroupBox>
 
+        <telerik:GroupBox
+            Header="EMS"
+            Grid.Column="1"
+            Grid.Row="1"
+            Margin="8">
+
+            <StackPanel
+                Margin="8">
+
+                <DockPanel>
+
+                    <telerik:Label
+                        Content="Activate EMS Page"
+                        VerticalAlignment="Center" />
+
+                    <CheckBox
+                        Name="chkActivateEMS"
+                        IsChecked="{Binding Path=activateEMS, Mode=TwoWay}"
+                        Margin="5"
+                        VerticalAlignment="Center"
+                        HorizontalAlignment="Right"
+                        Click="chkActivateEMS_Click" />
+
+                </DockPanel>
+
+            </StackPanel>
+
+        </telerik:GroupBox>
+
     </Grid>
 
 </UserControl>

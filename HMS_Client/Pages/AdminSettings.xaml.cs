@@ -504,5 +504,10 @@ namespace HMS_Client
 
             prevEnableReportEmail = adminSettingsVM.enableReportEmail;
         }
+
+        private void chkActivateEMS_Click(object sender, RoutedEventArgs e)
+        {
+            adminSettingsVM.ApplicationRestartRequired();
+        }
     }
 }

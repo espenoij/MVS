@@ -11,7 +11,6 @@
     // App: General Settings
     public const string RegulationStandard = "RegulationStandard";
     public const string ClientIsMaster = "ClientIsMaster";
-    public const string SemiSubmersible = "SemiSubmersible";
     public const string HelicopterType = "HelicopterType";
     public const string HelideckCategory = "HelideckCategory";
     public const string HelideckCategorySetting = "HelideckCategorySetting";
@@ -31,6 +30,7 @@
     public const string NDBFrequency = "NDBFrequency";
     public const string VHFFrequency = "VHFFrequency";
     public const string EnableReportEmail = "EnableReportEmail";
+    public const string ActivateEMS = "ClientIsMaster";
 
     // App: Wind/Heading
     public const string WindMeasurement = "WindMeasurement";

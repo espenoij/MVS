@@ -52,10 +52,16 @@ namespace HMS_Client
             helideckCategory = (HelideckCategory)Enum.Parse(typeof(HelideckCategory), config.ReadWithDefault(ConfigKey.HelideckCategorySetting, HelideckCategory.Category1.ToString()));
 
             // CAP: Enable Report Email
-            if (config.Read(ConfigKey.EnableReportEmail) == "1")
+            if (config.ReadWithDefault(ConfigKey.EnableReportEmail, "0") == "1")
                 enableReportEmail = true;
             else
                 enableReportEmail = false;
+
+            // EMS: Activate EMS Page
+            if (config.ReadWithDefault(ConfigKey.ActivateEMS, "0") == "1")
+                activateEMS = true;
+            else
+                activateEMS = false;
         }
 
         public void UpdateData(HMSDataCollection clientSensorList)
@@ -337,6 +343,33 @@ namespace HMS_Client
                 else
                 {
                     config.Write(ConfigKey.EnableReportEmail, "0");
+                }
+
+                OnPropertyChanged();
+            }
+        }
+
+        /////////////////////////////////////////////////////////////////////////////
+        // EMS: Activate EMS Page
+        /////////////////////////////////////////////////////////////////////////////
+        private bool _activateEMS { get; set; }
+        public bool activateEMS
+        {
+            get
+            {
+                return _activateEMS;
+            }
+            set
+            {
+                _activateEMS = value;
+
+                if (_activateEMS)
+                {
+                    config.Write(ConfigKey.ActivateEMS, "1");
+                }
+                else
+                {
+                    config.Write(ConfigKey.ActivateEMS, "0");
                 }
 
                 OnPropertyChanged();

@@ -419,6 +419,23 @@
                 </telerik:RadTabItem>
 
                 <!--==============================================================-->
+                <!--Menu: EMS - Environment Monitoring System-->
+                <!--==============================================================-->
+                <telerik:RadTabItem
+                    Name="tabEMS">
+
+                    <telerik:RadTabItem.Header>
+                        <Image
+                            Width="36"
+                            Source="../Icons/outline_wb_sunny_white_48dp.png" />
+                    </telerik:RadTabItem.Header>
+
+                    <uc:EMS
+                        x:Name="ucEMS" />
+
+                </telerik:RadTabItem>
+
+                <!--==============================================================-->
                 <!--Menu: Admin Settings-->
                 <!--==============================================================-->
                 <telerik:RadTabItem

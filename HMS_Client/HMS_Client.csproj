@@ -250,6 +250,9 @@
     <Compile Include="Pages\HelideckMotionHistory_NOROG.xaml.cs">
       <DependentUpon>HelideckMotionHistory_NOROG.xaml</DependentUpon>
     </Compile>
+    <Compile Include="Pages\EMS.xaml.cs">
+      <DependentUpon>EMS.xaml</DependentUpon>
+    </Compile>
     <Compile Include="Pages\Information_CAP.xaml.cs">
       <DependentUpon>Information_CAP.xaml</DependentUpon>
     </Compile>
@@ -456,6 +459,10 @@
       <Generator>MSBuild:Compile</Generator>
     </Page>
     <Page Include="Pages\HelideckMotionHistory_NOROG.xaml">
+      <Generator>MSBuild:Compile</Generator>
+      <SubType>Designer</SubType>
+    </Page>
+    <Page Include="Pages\EMS.xaml">
       <Generator>MSBuild:Compile</Generator>
       <SubType>Designer</SubType>
     </Page>
