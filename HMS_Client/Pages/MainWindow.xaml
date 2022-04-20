@@ -5,19 +5,12 @@
     xmlns:d="http://schemas.microsoft.com/expression/blend/2008"
     xmlns:telerik="http://schemas.telerik.com/2008/xaml/presentation"
     xmlns:mc="http://schemas.openxmlformats.org/markup-compatibility/2006"
-    xmlns:sys="clr-namespace:System;assembly=mscorlib"
     xmlns:uc="clr-namespace:HMS_Client"
-    xmlns:local="clr-namespace:HMS_Client"
     mc:Ignorable="d"
     telerik:Header="Helideck Monitoring System"
     WindowState="Maximized"
     Height="1080"
     Width="1920">
-
-    <telerik:RadWindow.Resources>
-        <BooleanToVisibilityConverter
-            x:Key="BoolToVisConverter" />
-    </telerik:RadWindow.Resources>
 
     <telerik:RadWindow.Icon>
         <Image

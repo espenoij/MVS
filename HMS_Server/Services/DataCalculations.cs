@@ -1546,8 +1546,8 @@ namespace HMS_Server
         SignificantHeaveRate,
         [Description("Amplitude")]
         Amplitude,
-        [Description("NWS Codes")]
-        NWSCodes,
+        //[Description("NWS Codes")]
+        //NWSCodes,
         [Description("METAR Codes")]
         METARCodes,
         [Description("Significant Wave Height")]

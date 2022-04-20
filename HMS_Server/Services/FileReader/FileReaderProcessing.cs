@@ -183,7 +183,7 @@ namespace HMS_Server
                         switch (dataCalculations[i].type)
                         {
                             case CalculationType.GPSPosition:
-                            case CalculationType.NWSCodes:
+                            //case CalculationType.NWSCodes:
                             case CalculationType.METARCodes:
                                 calculatedData.data = dataCalculations[i].DoCalculations(selectedData.selectedDataFieldString, timestamp, errorHandler, errorMessageCat);
                                 break;

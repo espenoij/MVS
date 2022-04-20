@@ -1,11 +1,10 @@
 ﻿using System;
 using System.Collections.Generic;
-using System.Collections.ObjectModel;
 using System.ComponentModel;
-using System.Drawing;
-using System.Linq;
 using System.Runtime.CompilerServices;
 using System.Windows.Threading;
+using System.Windows.Media;
+using System.Collections.ObjectModel;
 
 namespace HMS_Client
 {
@@ -18,19 +17,30 @@ namespace HMS_Client
 
         // Graph buffer/data
         public RadObservableCollectionEx<HMSData> vesselHdg30mDataList = new RadObservableCollectionEx<HMSData>();
-        private double vesselHdgDeltaAbsMax = 0;
-
         public RadObservableCollectionEx<HMSData> windDir30mDataList = new RadObservableCollectionEx<HMSData>();
-        private double windDirDeltaAbsMax = 0;
 
         // 30 minutters RWD data liste
         private RadObservableCollectionEx<HelideckStatus> rwdTrend30mList = new RadObservableCollectionEx<HelideckStatus>();
         public List<HelideckStatusType> rwdTrend30mDispList = new List<HelideckStatusType>();
 
+        public WindHeadingChangeVM()
+        {
+            // Delta vessel heading/Delta wind direction change exceedance
+            DeltaVesselHeadingExceedanceAnnotations = new ObservableCollection<object>()
+            {
+                new MarkedZoneAnnotationModel()
+                {
+                    HorizontalFrom = DateTime.UtcNow.AddMinutes(2),
+                    HorizontalTo = DateTime.UtcNow.AddMinutes(4),
+                    VerticalTo = 30,
+                    VerticalFrom = -30,
+                    Fill = Brushes.Green,
+                }
+            };
+        }
+
         public void Init(Config config, SensorGroupStatus sensorStatus, RelativeWindLimitsVM relativeWindLimitsVM)
         {
-            InitUI();
-
             // Oppdatere UI
             UIUpdateTimer.Interval = TimeSpan.FromMilliseconds(config.ReadWithDefault(ConfigKey.ClientUpdateFrequencyUI, Constants.ClientUIUpdateFrequencyDefault));
             UIUpdateTimer.Tick += UIUpdate;
@@ -41,8 +51,6 @@ namespace HMS_Client
                 if (sensorStatus.TimeoutCheck(vesselHeadingDelta))
                 {
                     OnPropertyChanged(nameof(vesselHeadingDeltaString));
-                    OnPropertyChanged(nameof(vesselHeadingAxisMax));
-                    OnPropertyChanged(nameof(vesselHeadingAxisMin));
                     OnPropertyChanged(nameof(vesselHeadingWarning));
                     OnPropertyChanged(nameof(windDirectionWarning));
                 }
@@ -50,8 +58,6 @@ namespace HMS_Client
                 if (sensorStatus.TimeoutCheck(windDirectionDelta))
                 {
                     OnPropertyChanged(nameof(deltaWindDirectionString));
-                    OnPropertyChanged(nameof(windDirectionAxisMax));
-                    OnPropertyChanged(nameof(windDirectionAxisMin));
                 }
 
                 // Oppdatering av RWD status
@@ -82,10 +88,6 @@ namespace HMS_Client
                 // Fjerne gamle data fra chart data
                 GraphBuffer.RemoveOldData(vesselHdg30mDataList, Constants.Minutes30 + Constants.ChartTimeCorrMin);
                 GraphBuffer.RemoveOldData(windDir30mDataList, Constants.Minutes30 + Constants.ChartTimeCorrMin);
-
-                // Finne absolute max verdi
-                vesselHdgDeltaAbsMax = FindAbsMax(vesselHdg30mDataList);
-                windDirDeltaAbsMax = FindAbsMax(windDir30mDataList);
 
                 // Oppdatere alignment datetime (nåtid) til begge chart og trend line
                 alignmentTime = DateTime.UtcNow;
@@ -118,19 +120,6 @@ namespace HMS_Client
                 rwdTrend30mDispList.Add(new HelideckStatusType());
             }
 
-            // Delta vessel heading/Delta wind direction change exceedance
-            DeltaChangeExceedanceAnnotations = new ObservableCollection<object>()
-            {
-                new MarkedZoneAnnotationModel()
-                {
-                    HorizontalFrom = DateTime.UtcNow.AddMinutes(-5),
-                    HorizontalTo = DateTime.UtcNow.AddMinutes(5),
-                    VerticalTo = 30,
-                    VerticalFrom = -30,
-                    Fill = Brushes.Green,
-                }
-            };
-
             // Starte oppdatering av graf data
             UIUpdateTimer.Start();
         }
@@ -145,28 +134,11 @@ namespace HMS_Client
             GraphBuffer.Clear(windDir30mDataList);
         }
 
-        private void InitUI()
-        {
-            _vesselHeadingDelta = new HMSData();
-            _windDirectionDelta = new HMSData();
-        }
-
         public void UpdateData(HMSDataCollection clientSensorList)
         {
             // Heading Data
             vesselHeadingDelta = clientSensorList.GetData(ValueType.VesselHeadingDelta);
             windDirectionDelta = clientSensorList.GetData(ValueType.WindDirectionDelta);
-        }
-
-        private double FindAbsMax(RadObservableCollectionEx<HMSData> dataList)
-        {
-            double max = 0;
-
-            foreach (var item in dataList)
-                if (Math.Abs(item.data) > max)
-                    max = Math.Abs(item.data);
-
-            return max;
         }
 
         public void CorrectRWDTrend(double correction)
@@ -188,7 +160,7 @@ namespace HMS_Client
         /////////////////////////////////////////////////////////////////////////////
         // Wind Calculations: Wind Speed
         /////////////////////////////////////////////////////////////////////////////
-        public HMSData _vesselHeadingDelta { get; set; }
+        public HMSData _vesselHeadingDelta { get; set; } = new HMSData();
         public HMSData vesselHeadingDelta
         {
             get
@@ -200,8 +172,6 @@ namespace HMS_Client
                 if (value != null)
                 {
                     OnPropertyChanged(nameof(vesselHeadingDeltaString));
-                    OnPropertyChanged(nameof(vesselHeadingAxisMax));
-                    OnPropertyChanged(nameof(vesselHeadingAxisMin));
                     OnPropertyChanged(nameof(vesselHeadingWarning));
                     OnPropertyChanged(nameof(windDirectionWarning));
 
@@ -239,7 +209,7 @@ namespace HMS_Client
         /////////////////////////////////////////////////////////////////////////////
         // Relative Wind Direction
         /////////////////////////////////////////////////////////////////////////////
-        public HMSData _windDirectionDelta { get; set; }
+        public HMSData _windDirectionDelta { get; set; } = new HMSData();
         public HMSData windDirectionDelta
         {
             get
@@ -251,8 +221,6 @@ namespace HMS_Client
                 if (value != null)
                 {
                     OnPropertyChanged(nameof(deltaWindDirectionString));
-                    OnPropertyChanged(nameof(windDirectionAxisMax));
-                    OnPropertyChanged(nameof(windDirectionAxisMin));
 
                     _windDirectionDelta.Set(value);
                 }
@@ -301,41 +269,6 @@ namespace HMS_Client
                 {
                     _helideckWindSpeed2m.Set(value);
                 }
-            }
-        }
-
-        /////////////////////////////////////////////////////////////////////////////
-        // Chart Axis Min/Max
-        /////////////////////////////////////////////////////////////////////////////
-        public double vesselHeadingAxisMax
-        {
-            get
-            {
-                return 10 + ((int)vesselHdgDeltaAbsMax / 10) * 10;
-            }
-        }
-
-        public double vesselHeadingAxisMin
-        {
-            get
-            {
-                return -10 - ((int)vesselHdgDeltaAbsMax / 10) * 10;
-            }
-        }
-
-        public double windDirectionAxisMax
-        {
-            get
-            {
-                return 10 + ((int)windDirDeltaAbsMax / 10) * 10;
-            }
-        }
-
-        public double windDirectionAxisMin
-        {
-            get
-            {
-                return -10 - ((int)windDirDeltaAbsMax / 10) * 10;
             }
         }
 
@@ -508,7 +441,16 @@ namespace HMS_Client
         /////////////////////////////////////////////////////////////////////////////
         // Delta vessel heading/Delta wind direction change exceedance
         /////////////////////////////////////////////////////////////////////////////
-        public ObservableCollection<object> DeltaChangeExceedanceAnnotations { get; set; }
+        public ObservableCollection<object> DeltaVesselHeadingExceedanceAnnotations { get; set; }
+
+        public class MarkedZoneAnnotationModel
+        {
+            public DateTime HorizontalFrom { get; set; }
+            public DateTime HorizontalTo { get; set; }
+            public double VerticalFrom { get; set; }
+            public double VerticalTo { get; set; }
+            public Brush Fill { get; set; }
+        }
 
 
         // Variabel oppdatert
@@ -517,14 +459,5 @@ namespace HMS_Client
         {
             PropertyChanged?.Invoke(this, new PropertyChangedEventArgs(name));
         }
-    }
-
-    public class MarkedZoneAnnotationModel
-    {
-        public DateTime HorizontalFrom { get; set; }
-        public DateTime HorizontalTo { get; set; }
-        public double VerticalFrom { get; set; }
-        public double VerticalTo { get; set; }
-        public Brush Fill { get; set; }
     }
 }

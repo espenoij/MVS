@@ -37,8 +37,6 @@ namespace HMS_Client
                 Application.Current.Shutdown();
             }
 
-            base.OnStartup(e);
-
             // Generell dispatcher exception handler
             this.Dispatcher.UnhandledException += new DispatcherUnhandledExceptionEventHandler(App_DispatcherUnhandledException);
 

@@ -245,7 +245,6 @@
     </Compile>
     <Compile Include="Helpers\GraphBuffer.cs" />
     <Compile Include="Helpers\HMSCalc.cs" />
-    <Compile Include="Helpers\MyAnnotationsDescriptorSelector.cs" />
     <Compile Include="Helpers\TrendLine.cs" />
     <Compile Include="Pages\HelideckMotionHistory_NOROG.xaml.cs">
       <DependentUpon>HelideckMotionHistory_NOROG.xaml</DependentUpon>

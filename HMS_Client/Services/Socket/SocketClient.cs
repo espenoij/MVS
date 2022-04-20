@@ -469,6 +469,7 @@ namespace HMS_Client
             // 2021.06.22: Tror kanskje det over er et tilbakelagt stadium.
             // 2021.08.16: Har ikke hatt krasj her siden sist. Suksess!
             // 2022.02.03: Krasj ved startup - kan ha vært ram problem på hjemme pc
+            // 2022.04.19: foreach (var item in dataList) , Collection (dataList) was modified. Satte på .ToList()
 
             try
             { 
@@ -512,7 +513,7 @@ namespace HMS_Client
                     hmsDataList?.Clear();
 
                     // Legge inn alle data på nytt
-                    foreach (var item in dataList)
+                    foreach (var item in dataList.ToList())
                     {
                         hmsDataList?.Add(new HMSData(item));
 
@@ -531,13 +532,6 @@ namespace HMS_Client
         private void TransferReceivedSensorStatus(List<SensorGroup> dataList)
         {
             // NB! Samme problem som over!
-            // Gjør en del sjekker, søk og kopiering av data her. Hvorfor ikke bare slette alle data og så kopiere alt?
-            // Får i skjeldne tilfeller problem med lesing av data i kode som kjører fra andre tråder. Kan krasje klient programmet.
-            // Sletting av hele data listen bør derfor unngåes om mulig.
-            // Endring i listen som krever at hele listen må slettes vil nå kun være aktuelt når admin modus er
-            // aktivt og operatør driver å endrer og setter opp sensorer i server.
-            // 22.06.2021: Tror kanskje det over er et tilbakelagt stadium.
-            // 2021.08.16: Har ikke hatt krasj her siden sist. Suksess!
 
             bool listResetRequired = false;
 
@@ -579,7 +573,7 @@ namespace HMS_Client
                 sensorStatusList?.Clear();
 
                 // Legge inn alle data på nytt
-                foreach (var item in dataList)
+                foreach (var item in dataList.ToList())
                 {
                     sensorStatusList?.Add(new SensorGroup(item));
 
