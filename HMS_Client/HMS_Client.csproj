@@ -322,9 +322,6 @@
     <Compile Include="Config\HelicopterOperatorConfigCollection.cs" />
     <Compile Include="Config\HelicopterOperatorConfigSection.cs" />
     <Compile Include="Services\ScreenCapture.cs" />
-    <Compile Include="Pages\WindHeadingReadouts_NOROG.xaml.cs">
-      <DependentUpon>WindHeadingReadouts_NOROG.xaml</DependentUpon>
-    </Compile>
     <Compile Include="Pages\WindHeadingReadouts_CAP.xaml.cs">
       <DependentUpon>WindHeadingReadouts_CAP.xaml</DependentUpon>
     </Compile>
@@ -482,10 +479,6 @@
       <Generator>MSBuild:Compile</Generator>
     </Page>
     <Page Include="Pages\SensorStatusDisplay_CAP.xaml">
-      <Generator>MSBuild:Compile</Generator>
-      <SubType>Designer</SubType>
-    </Page>
-    <Page Include="Pages\WindHeadingReadouts_NOROG.xaml">
       <Generator>MSBuild:Compile</Generator>
       <SubType>Designer</SubType>
     </Page>

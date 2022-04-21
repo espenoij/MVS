@@ -156,13 +156,7 @@
                 <!--READOUTS-->
                 <uc:WindHeadingReadouts_CAP
                     Grid.Column="1"
-                    x:Name="ucReadouts_CAP"
-                    Visibility="{Binding Path=displayCAP, Converter={StaticResource BoolToVisConverter} }"/>
-
-                <uc:WindHeadingReadouts_NOROG
-                    Grid.Column="1"
-                    x:Name="ucReadouts_NOROG"
-                    Visibility="{Binding Path=displayNOROG, Converter={StaticResource BoolToVisConverter} }" />
+                    x:Name="ucReadouts_CAP"/>
 
             </Grid>
 
