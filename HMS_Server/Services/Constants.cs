@@ -213,6 +213,11 @@ class Constants
     // 3 hours in seconds
     public const int Hours3 = 10800;
 
+    // Data Calculations Buffer størrelse
+    //public const double Minutes20Buffer = 5;
+    //public const double Minutes30Buffer = 6;
+    //public const double Hours3Buffer = 20;
+
     // MSI / WSI Max
     public const double MSIMax = 91;  // CAP
     public const double WSIMax = 100; // CAP

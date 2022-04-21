@@ -142,8 +142,9 @@ namespace HMS_Server
         {
             // Stoppe serial ports
             foreach (var serialPort in serialPortList)
-                if (serialPort.IsOpen)
-                    serialPort.Close();
+                if (serialPort != null)
+                    if (serialPort.IsOpen)
+                        serialPort.Close();
         }
 
         public void Restart(string portName)
@@ -171,8 +172,9 @@ namespace HMS_Server
                             string.Format("Error restarting serial port: {0} (Restart), System Message: {1}", serialPort.PortName, ex.Message)));
 
                     // Lukke port
-                    if (serialPort.IsOpen)
-                        serialPort.Close();
+                    if (serialPort != null)
+                        if (serialPort.IsOpen)
+                            serialPort.Close();
                 }
             }
         }

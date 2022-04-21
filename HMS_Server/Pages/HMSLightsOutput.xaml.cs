@@ -205,8 +205,9 @@ namespace HMS_Server
                                         string.Format("Modbus_Write (Lights Output): {0}", ex.Message)));
 
                                 // Lukke port
-                                if (serialPort.IsOpen)
-                                    serialPort.Close();
+                                if (serialPort != null)
+                                    if (serialPort.IsOpen)
+                                        serialPort.Close();
                             }
                         }
                     }

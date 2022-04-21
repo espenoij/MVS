@@ -166,7 +166,10 @@ namespace HMS_Client
         {
             // Sletter alle data i buffer
             if (buffer != null)
+            {
                 buffer.Clear();
+                buffer.TrimExcess();
+            }
         }
 
         public static void TransferDisplayData(RadObservableCollectionEx<HelideckStatus> list, List<HelideckStatusType> dispList)

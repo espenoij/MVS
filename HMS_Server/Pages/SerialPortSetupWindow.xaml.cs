@@ -89,8 +89,9 @@ namespace HMS_Server
         private void Window_Closing(object sender, CancelEventArgs e)
         {
             // Lukke serie porten dersom den er åpen
-            if (serialPort.IsOpen)
-                serialPort.Close();
+            if (serialPort != null)
+                if (serialPort.IsOpen)
+                    serialPort.Close();
         }
 
         private void InitializeApplicationSettings()
@@ -789,24 +790,27 @@ namespace HMS_Server
 
         private void btnSerialPortReaderClose_Click(object sender, RoutedEventArgs e)
         {
-            if (serialPort.IsOpen)
+            if (serialPort != null)
             {
-                serialPort.Close();
-
-                // Status
-                sensorMonitorStatus.Text = "Serial Port closed.";
-
-                if (!serialPort.IsOpen)
+                if (serialPort.IsOpen)
                 {
-                    cboPortName.IsEnabled = true;
-                    cboBaudRate.IsEnabled = true;
-                    cboDataBits.IsEnabled = true;
-                    cboStopBits.IsEnabled = true;
-                    cboParity.IsEnabled = true;
-                    cboHandShake.IsEnabled = true;
+                    serialPort.Close();
 
-                    btnSerialPortReaderStart.IsEnabled = true;
-                    btnSerialPortReaderStop.IsEnabled = false;
+                    // Status
+                    sensorMonitorStatus.Text = "Serial Port closed.";
+
+                    if (!serialPort.IsOpen)
+                    {
+                        cboPortName.IsEnabled = true;
+                        cboBaudRate.IsEnabled = true;
+                        cboDataBits.IsEnabled = true;
+                        cboStopBits.IsEnabled = true;
+                        cboParity.IsEnabled = true;
+                        cboHandShake.IsEnabled = true;
+
+                        btnSerialPortReaderStart.IsEnabled = true;
+                        btnSerialPortReaderStop.IsEnabled = false;
+                    }
                 }
             }
 
@@ -1214,11 +1218,10 @@ namespace HMS_Server
         private void RadWindow_Closed(object sender, WindowClosedEventArgs e)
         {
             // Når vinduet lukkes sjekker vi om port fortsatt er åpen
-            if (serialPort.IsOpen)
-            {
-                // Lukke port
-                serialPort.Close();
-            }
+            if (serialPort != null)
+                if (serialPort.IsOpen)
+                    // Lukke port
+                    serialPort.Close();
         }
 
         private void tbDataLines_KeyDown(object sender, KeyEventArgs e)

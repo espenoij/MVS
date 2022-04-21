@@ -49,8 +49,13 @@ namespace HMS_Server
             name = sensorData.name;
             description = sensorData.description;
 
+            // Sjekke om datacalculation objektene er opprettet
+            if (dataCalculations.Count != Constants.DataCalculationSteps)
+                for (int i = 0; i < Constants.DataCalculationSteps; i++)
+                    dataCalculations.Add(new DataCalculations());
+
             for (int i = 0; i < Constants.DataCalculationSteps; i++)
-                dataCalculations.Add(new DataCalculations(sensorData.dataCalculations[i]));
+                dataCalculations[i] = sensorData.dataCalculations[i];
 
             saveToDatabase = sensorData.saveToDatabase;
             saveFreq = sensorData.saveFreq;
