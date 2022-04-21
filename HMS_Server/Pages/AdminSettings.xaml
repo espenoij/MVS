@@ -140,7 +140,7 @@
                         <DockPanel>
 
                             <telerik:Label
-                                Content="Enable EMS Page"
+                                Content="Enable EMS Module"
                                 VerticalAlignment="Center" />
 
                             <CheckBox

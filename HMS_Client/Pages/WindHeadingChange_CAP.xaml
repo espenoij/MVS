@@ -482,7 +482,8 @@
                                 <telerik:ChartAnnotationDescriptor>
                                     <telerik:ChartAnnotationDescriptor.Style>
                                         <Style
-                                            TargetType="telerik:CartesianMarkedZoneAnnotation">
+                                            TargetType="telerik:CartesianMarkedZoneAnnotation"
+                                            BasedOn="{StaticResource CartesianMarkedZoneAnnotationStyle}">
                                             <Setter
                                                 Property="VerticalFrom"
                                                 Value="{Binding Path=VerticalFrom}" />

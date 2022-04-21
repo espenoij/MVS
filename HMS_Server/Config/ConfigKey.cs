@@ -40,6 +40,7 @@
     public const string TrafficFrequency = "TrafficFrequency";
     public const string LogFrequency = "LogFrequency";
     public const string MarineChannel = "MarineChannel";
+    public const string EnableEMS = "EnableEMS";
 
     // Lights output
     public const string LightsOutputAddress1 = "LightsOutputAddress1";

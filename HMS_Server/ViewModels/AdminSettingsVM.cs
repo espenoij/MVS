@@ -105,6 +105,12 @@ namespace HMS_Server
             else
                 helideckLightsOutput = false;
 
+            // EMS: Enable EMS Module
+            if (config.ReadWithDefault(ConfigKey.EnableEMS, "0") == "1")
+                enableEMS = true;
+            else
+                enableEMS = false;
+
             // Sensor
             windDirRef = (DirectionReference)Enum.Parse(typeof(DirectionReference), config.ReadWithDefault(ConfigKey.WindDirectionReference, DirectionReference.VesselHeading.ToString()));
             vesselHdgRef = (DirectionReference)Enum.Parse(typeof(DirectionReference), config.ReadWithDefault(ConfigKey.VesselHeadingReference, DirectionReference.MagneticNorth.ToString()));
@@ -352,6 +358,33 @@ namespace HMS_Server
                     config.Write(ConfigKey.HelideckLightsOutput, "1");
                 else
                     config.Write(ConfigKey.HelideckLightsOutput, "0");
+
+                OnPropertyChanged();
+            }
+        }
+
+        /////////////////////////////////////////////////////////////////////////////
+        // EMS: Enable EMS Page
+        /////////////////////////////////////////////////////////////////////////////
+        private bool _enableEMS { get; set; }
+        public bool enableEMS
+        {
+            get
+            {
+                return _enableEMS;
+            }
+            set
+            {
+                _enableEMS = value;
+
+                if (_enableEMS)
+                {
+                    config.Write(ConfigKey.EnableEMS, "1");
+                }
+                else
+                {
+                    config.Write(ConfigKey.EnableEMS, "0");
+                }
 
                 OnPropertyChanged();
             }
