@@ -1,5 +1,5 @@
 ﻿<UserControl
-    x:Class="HMS_Client.NOROG_Meteorological"
+    x:Class="HMS_Client.Meteorological"
     xmlns="http://schemas.microsoft.com/winfx/2006/xaml/presentation"
     xmlns:x="http://schemas.microsoft.com/winfx/2006/xaml"
     xmlns:mc="http://schemas.openxmlformats.org/markup-compatibility/2006"

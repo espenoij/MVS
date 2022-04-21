@@ -60,8 +60,6 @@ namespace HMS_Client
         private AdminSettingsVM adminSettingsVM = new AdminSettingsVM();
         private HelideckReportVM helideckReportVM = new HelideckReportVM();
 
-        private RegulationStandard regulationStandard;
-
         public MainWindow()
         {
             DataContext = mainWindowVM;
@@ -77,9 +75,6 @@ namespace HMS_Client
 
             // Sensor Status
             sensorStatus = new SensorGroupStatus(config, hmsDataCollection);
-
-            // Regulation Standard
-            regulationStandard = (RegulationStandard)Enum.Parse(typeof(RegulationStandard), config.ReadWithDefault(ConfigKey.RegulationStandard, RegulationStandard.NOROG.ToString()));
 
             // Callback funksjon som kalles når application restart er påkrevd
             WarningBarMessage warningBarMessage = new WarningBarMessage(ShowWarningBarMessage);
@@ -146,6 +141,11 @@ namespace HMS_Client
             else
                 tabInformation.Visibility = Visibility.Collapsed;
 
+            // EMS Page
+            if (adminSettingsVM.enableEMS)
+                tabEMS.Visibility = Visibility.Visible;
+            else
+                tabEMS.Visibility = Visibility.Collapsed;
 
             //// TODO: DEBUG DEBUG DEBUG !!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!! Fjerne det under før release
             //AdminMode.IsActive = true;
@@ -161,7 +161,7 @@ namespace HMS_Client
             // Gi data tilgang til de forskjellige sub-delene av UI
             //////////////////////////////////////////////////////////
             ///
-            if (regulationStandard == RegulationStandard.NOROG)
+            if (adminSettingsVM.regulationStandard == RegulationStandard.NOROG)
             {
                 // General Information
                 capDisplayMode.Visibility = Visibility.Collapsed;
@@ -216,7 +216,7 @@ namespace HMS_Client
                 ucSensorStatus_NOROG.Init(sensorStatusVM);
             }
             else
-            if (regulationStandard == RegulationStandard.CAP)
+            if (adminSettingsVM.regulationStandard == RegulationStandard.CAP)
             {
                 // General Information
                 capDisplayMode.Visibility = Visibility.Visible;
@@ -279,6 +279,16 @@ namespace HMS_Client
 
             // Meteorological
             ucMeteorological.Init(meteorologicalVM);
+
+            // EMS Page
+            if (adminSettingsVM.enableEMS)
+            {
+                // EMS Wind & Heading
+                ucEMSWindHeading.Init(windHeadingVM, userInputsVM, adminSettingsVM);
+
+                // EMS Meteorological (samme som HMS met)
+                ucEMSMeteorological.Init(meteorologicalVM);
+            }
 
             // Admin Settings
             ucAdminSettings.Init(
@@ -424,11 +434,11 @@ namespace HMS_Client
             // Helideck Motion Trend
             helideckMotionTrendVM.UpdateData(hmsDataCollection);
 
-            if (regulationStandard == RegulationStandard.NOROG)
+            if (adminSettingsVM.regulationStandard == RegulationStandard.NOROG)
             {
             }
             else
-            if (regulationStandard == RegulationStandard.CAP)
+            if (adminSettingsVM.regulationStandard == RegulationStandard.CAP)
             {
                 // Helideck Stability Limits
                 onDeckStabilityLimitsVM.UpdateData(hmsDataCollection);

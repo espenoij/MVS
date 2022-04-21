@@ -57,11 +57,11 @@ namespace HMS_Client
             else
                 enableReportEmail = false;
 
-            // EMS: Activate EMS Page
-            if (config.ReadWithDefault(ConfigKey.ActivateEMS, "0") == "1")
-                activateEMS = true;
+            // EMS: Enable EMS Page
+            if (config.ReadWithDefault(ConfigKey.EnableEMS, "0") == "1")
+                enableEMS = true;
             else
-                activateEMS = false;
+                enableEMS = false;
         }
 
         public void UpdateData(HMSDataCollection clientSensorList)
@@ -350,26 +350,26 @@ namespace HMS_Client
         }
 
         /////////////////////////////////////////////////////////////////////////////
-        // EMS: Activate EMS Page
+        // EMS: Enable EMS Page
         /////////////////////////////////////////////////////////////////////////////
-        private bool _activateEMS { get; set; }
-        public bool activateEMS
+        private bool _enableEMS { get; set; }
+        public bool enableEMS
         {
             get
             {
-                return _activateEMS;
+                return _enableEMS;
             }
             set
             {
-                _activateEMS = value;
+                _enableEMS = value;
 
-                if (_activateEMS)
+                if (_enableEMS)
                 {
-                    config.Write(ConfigKey.ActivateEMS, "1");
+                    config.Write(ConfigKey.EnableEMS, "1");
                 }
                 else
                 {
-                    config.Write(ConfigKey.ActivateEMS, "0");
+                    config.Write(ConfigKey.EnableEMS, "0");
                 }
 
                 OnPropertyChanged();

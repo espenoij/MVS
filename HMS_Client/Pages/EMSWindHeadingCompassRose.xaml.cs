@@ -3,11 +3,11 @@
 namespace HMS_Client
 {
     /// <summary>
-    /// Interaction logic for WindHeadingReadouts_CAP.xaml
+    /// Interaction logic for EMSWindHeadingCompassRose.xaml
     /// </summary>
-    public partial class WindHeadingReadouts_CAP : UserControl
+    public partial class EMSWindHeadingCompassRose : UserControl
     {
-        public WindHeadingReadouts_CAP()
+        public EMSWindHeadingCompassRose()
         {
             InitializeComponent();
         }

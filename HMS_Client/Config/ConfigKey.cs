@@ -30,7 +30,7 @@
     public const string NDBFrequency = "NDBFrequency";
     public const string VHFFrequency = "VHFFrequency";
     public const string EnableReportEmail = "EnableReportEmail";
-    public const string ActivateEMS = "ClientIsMaster";
+    public const string EnableEMS = "EnableEMS";
 
     // App: Wind/Heading
     public const string WindMeasurement = "WindMeasurement";

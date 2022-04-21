@@ -136,6 +136,22 @@
                                 HorizontalAlignment="Right"/>
                         </DockPanel>
 
+                        <!--Enable EMS Page-->
+                        <DockPanel>
+
+                            <telerik:Label
+                                Content="Enable EMS Page"
+                                VerticalAlignment="Center" />
+
+                            <CheckBox
+                                Name="chkEnableEMS"
+                                IsChecked="{Binding Path=enableEMS, Mode=TwoWay}"
+                                VerticalAlignment="Center"
+                                HorizontalAlignment="Right"
+                                Click="chkEnableEMS_Click" />
+
+                        </DockPanel>
+
                         <!--Decimal Separator-->
                         <!--<DockPanel>
                             <telerik:Label

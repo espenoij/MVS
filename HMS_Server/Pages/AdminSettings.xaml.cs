@@ -1293,9 +1293,13 @@ namespace HMS_Server
             adminSettingsVM.ApplicationRestartRequired();
         }
 
-        private void cboDecimalSeparator_SelectionChanged(object sender, SelectionChangedEventArgs e)
-        {
+        //private void cboDecimalSeparator_SelectionChanged(object sender, SelectionChangedEventArgs e)
+        //{
+        //}
 
+        private void chkEnableEMS_Click(object sender, RoutedEventArgs e)
+        {
+            adminSettingsVM.ApplicationRestartRequired();
         }
     }
 }

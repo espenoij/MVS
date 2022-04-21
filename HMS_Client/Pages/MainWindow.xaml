@@ -296,7 +296,7 @@
                                     x:Name="ucWindHeading" />
 
                                 <!--Meteorological-->
-                                <uc:NOROG_Meteorological
+                                <uc:Meteorological
                                     Grid.Row="1"
                                     x:Name="ucMeteorological" />
 
@@ -423,8 +423,39 @@
                             Source="../Icons/outline_wb_sunny_white_48dp.png" />
                     </telerik:RadTabItem.Header>
 
-                    <uc:EMS
-                        x:Name="ucEMS" />
+                    <Grid>
+
+                        <Grid.ColumnDefinitions>
+                            <ColumnDefinition
+                                Width="24*" />
+                            <ColumnDefinition
+                                Width="17*" />
+                        </Grid.ColumnDefinitions>
+
+
+                        <Grid
+                            Grid.Column="2">
+
+                            <Grid.RowDefinitions>
+                                <RowDefinition
+                                    Height="10*" />
+                                <RowDefinition
+                                    Height="6*" />
+                            </Grid.RowDefinitions>
+
+                            <!--Wind & Heading-->
+                            <uc:EMSWindHeading
+                                Grid.Row="0"
+                                x:Name="ucEMSWindHeading" />
+
+                            <!--Meteorological-->
+                            <uc:Meteorological
+                                Grid.Row="1"
+                                x:Name="ucEMSMeteorological" />
+
+                        </Grid>
+
+                    </Grid>
 
                 </telerik:RadTabItem>
 

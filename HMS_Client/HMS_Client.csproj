@@ -249,14 +249,17 @@
     <Compile Include="Pages\HelideckMotionHistory_NOROG.xaml.cs">
       <DependentUpon>HelideckMotionHistory_NOROG.xaml</DependentUpon>
     </Compile>
-    <Compile Include="Pages\EMS.xaml.cs">
-      <DependentUpon>EMS.xaml</DependentUpon>
-    </Compile>
     <Compile Include="Pages\Information_CAP.xaml.cs">
       <DependentUpon>Information_CAP.xaml</DependentUpon>
     </Compile>
     <Compile Include="Pages\SensorStatusDisplay_CAP.xaml.cs">
       <DependentUpon>SensorStatusDisplay_CAP.xaml</DependentUpon>
+    </Compile>
+    <Compile Include="Pages\EMSWindHeading.xaml.cs">
+      <DependentUpon>EMSWindHeading.xaml</DependentUpon>
+    </Compile>
+    <Compile Include="Pages\EMSWindHeadingCompassRose.xaml.cs">
+      <DependentUpon>EMSWindHeadingCompassRose.xaml</DependentUpon>
     </Compile>
     <Compile Include="Services\AdminMode.cs" />
     <Compile Include="Config\ConfigKey.cs" />
@@ -322,8 +325,8 @@
     <Compile Include="Config\HelicopterOperatorConfigCollection.cs" />
     <Compile Include="Config\HelicopterOperatorConfigSection.cs" />
     <Compile Include="Services\ScreenCapture.cs" />
-    <Compile Include="Pages\WindHeadingReadouts_CAP.xaml.cs">
-      <DependentUpon>WindHeadingReadouts_CAP.xaml</DependentUpon>
+    <Compile Include="Pages\WindHeadingReadouts.xaml.cs">
+      <DependentUpon>WindHeadingReadouts.xaml</DependentUpon>
     </Compile>
     <Compile Include="Pages\WindHeadingChange_CAP.xaml.cs">
       <DependentUpon>WindHeadingChange_CAP.xaml</DependentUpon>
@@ -458,10 +461,6 @@
       <Generator>MSBuild:Compile</Generator>
       <SubType>Designer</SubType>
     </Page>
-    <Page Include="Pages\EMS.xaml">
-      <Generator>MSBuild:Compile</Generator>
-      <SubType>Designer</SubType>
-    </Page>
     <Page Include="Pages\Information_CAP.xaml">
       <SubType>Designer</SubType>
       <Generator>MSBuild:Compile</Generator>
@@ -482,7 +481,15 @@
       <Generator>MSBuild:Compile</Generator>
       <SubType>Designer</SubType>
     </Page>
-    <Page Include="Pages\WindHeadingReadouts_CAP.xaml">
+    <Page Include="Pages\EMSWindHeading.xaml">
+      <Generator>MSBuild:Compile</Generator>
+      <SubType>Designer</SubType>
+    </Page>
+    <Page Include="Pages\EMSWindHeadingCompassRose.xaml">
+      <Generator>MSBuild:Compile</Generator>
+      <SubType>Designer</SubType>
+    </Page>
+    <Page Include="Pages\WindHeadingReadouts.xaml">
       <SubType>Designer</SubType>
       <Generator>MSBuild:Compile</Generator>
     </Page>

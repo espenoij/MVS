@@ -4,15 +4,15 @@ using System.Windows.Controls;
 namespace HMS_Client
 {
     /// <summary>
-    /// Interaction logic for WindHeading.xaml
+    /// Interaction logic for EMSWindHeading.xaml
     /// </summary>
-    public partial class WindHeading : UserControl
+    public partial class EMSWindHeading : UserControl
     {
         private WindHeadingVM windHeadingVM;
         private UserInputsVM userInputsVM;
         private AdminSettingsVM adminSettingsVM;
 
-        public WindHeading()
+        public EMSWindHeading()
         {
             InitializeComponent();
         }
@@ -26,7 +26,7 @@ namespace HMS_Client
             DataContext = windHeadingVM;
 
             // Compass init
-            ucWindHeadingCompassRose.Init(windHeadingVM);
+            ucEMSWindHeadingCompassRose.Init(windHeadingVM);
 
             // Wind & Heading readouts init
             ucWindHeadingReadouts.Init(windHeadingVM);

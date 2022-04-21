@@ -325,16 +325,15 @@
                 <DockPanel>
 
                     <telerik:Label
-                        Content="Activate EMS Page"
+                        Content="Enable EMS Page"
                         VerticalAlignment="Center" />
 
                     <CheckBox
-                        Name="chkActivateEMS"
-                        IsChecked="{Binding Path=activateEMS, Mode=TwoWay}"
-                        Margin="5"
+                        Name="chkEnableEMS"
+                        IsChecked="{Binding Path=enableEMS, Mode=TwoWay}"
                         VerticalAlignment="Center"
                         HorizontalAlignment="Right"
-                        Click="chkActivateEMS_Click" />
+                        Click="chkEnableEMS_Click" />
 
                 </DockPanel>
 

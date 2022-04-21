@@ -3,16 +3,16 @@
 namespace HMS_Client
 {
     /// <summary>
-    /// Interaction logic for Meteorological.xaml
+    /// Interaction logic for WindHeadingReadouts.xaml
     /// </summary>
-    public partial class Meteorological : UserControl
+    public partial class WindHeadingReadouts : UserControl
     {
-        public Meteorological()
+        public WindHeadingReadouts()
         {
             InitializeComponent();
         }
 
-        public void Init(MeteorologicalVM viewModel)
+        public void Init(WindHeadingVM viewModel)
         {
             DataContext = viewModel;
         }
