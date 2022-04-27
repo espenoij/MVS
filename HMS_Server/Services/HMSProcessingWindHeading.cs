@@ -418,12 +418,12 @@ namespace HMS_Server
                 ///////////////////////////////////////////////////////////
                 areaWindDirection2m.DoProcessing(sensorWindDirectionCorrected);
 
-                if (adminSettingsVM.regulationStandard == RegulationStandard.CAP)
+                if (adminSettingsVM.regulationStandard == RegulationStandard.CAP && !adminSettingsVM.overrideWindBuffer)
                     areaWindDirection2m.BufferFillCheck(Constants.WindBufferFill95Pct2m);
 
                 areaWindSpeed2m.DoProcessing(inputSensorWindSpeed);
 
-                if (adminSettingsVM.regulationStandard == RegulationStandard.CAP)
+                if (adminSettingsVM.regulationStandard == RegulationStandard.CAP && !adminSettingsVM.overrideWindBuffer)
                     areaWindSpeed2m.BufferFillCheck(Constants.WindBufferFill95Pct2m);
 
                 UpdateGustData(
@@ -437,7 +437,7 @@ namespace HMS_Server
                 helideckWindDirection2m.DoProcessing(sensorWindDirectionCorrected);
                 emsWindDirection2m.DoProcessing(sensorWindDirectionCorrected);
 
-                if (adminSettingsVM.regulationStandard == RegulationStandard.CAP)
+                if (adminSettingsVM.regulationStandard == RegulationStandard.CAP && !adminSettingsVM.overrideWindBuffer)
                 {
                     helideckWindDirection2m.BufferFillCheck(Constants.WindBufferFill95Pct2m);
                     emsWindDirection2m.BufferFillCheck(Constants.WindBufferFill95Pct2m);
@@ -446,7 +446,7 @@ namespace HMS_Server
                 helideckWindSpeed2m.DoProcessing(windSpeedCorrectedToHelideck);
                 emsWindSpeed2m.DoProcessing(windSpeedCorrectedTo10m);
 
-                if (adminSettingsVM.regulationStandard == RegulationStandard.CAP)
+                if (adminSettingsVM.regulationStandard == RegulationStandard.CAP && !adminSettingsVM.overrideWindBuffer)
                 {
                     helideckWindSpeed2m.BufferFillCheck(Constants.WindBufferFill95Pct2m);
                     emsWindSpeed2m.BufferFillCheck(Constants.WindBufferFill95Pct2m);
@@ -469,7 +469,7 @@ namespace HMS_Server
                 helideckWindDirection10m.DoProcessing(sensorWindDirectionCorrected);
                 emsWindDirection10m.DoProcessing(sensorWindDirectionCorrected);
 
-                if (adminSettingsVM.regulationStandard == RegulationStandard.CAP)
+                if (adminSettingsVM.regulationStandard == RegulationStandard.CAP && !adminSettingsVM.overrideWindBuffer)
                 {
                     helideckWindDirection10m.BufferFillCheck(Constants.WindBufferFill95Pct10m);
                     emsWindDirection10m.BufferFillCheck(Constants.WindBufferFill95Pct10m);
@@ -478,7 +478,7 @@ namespace HMS_Server
                 helideckWindSpeed10m.DoProcessing(windSpeedCorrectedToHelideck);
                 emsWindSpeed10m.DoProcessing(windSpeedCorrectedToHelideck);
 
-                if (adminSettingsVM.regulationStandard == RegulationStandard.CAP)
+                if (adminSettingsVM.regulationStandard == RegulationStandard.CAP && !adminSettingsVM.overrideWindBuffer)
                 {
                     helideckWindSpeed10m.BufferFillCheck(Constants.WindBufferFill95Pct10m);
                     emsWindSpeed10m.BufferFillCheck(Constants.WindBufferFill95Pct10m);

@@ -758,6 +758,40 @@
                                 KeyDown="tbMSICorrectionR_KeyDown" />
                         </DockPanel>
 
+                        <!--Override Wind Buffer-->
+                        <DockPanel>
+
+                            <telerik:Label
+                                Name="lbOverrideWindBuffer"
+                                Content="Override CAP 9c Wind Buffer"
+                                VerticalAlignment="Center" />
+
+                            <CheckBox
+                                Name="chkOverrideWindBuffer"
+                                IsChecked="{Binding Path=overrideWindBuffer, Mode=TwoWay}"
+                                Margin="5"
+                                VerticalAlignment="Center"
+                                HorizontalAlignment="Right" />
+
+                        </DockPanel>
+
+                        <!--Override Motion Buffer-->
+                        <DockPanel>
+
+                            <telerik:Label
+                                Name="lbOverrideMotionBuffer"
+                                Content="Override CAP 9c Motion Buffer"
+                                VerticalAlignment="Center" />
+
+                            <CheckBox
+                                Name="chkOverrideMotionBuffer"
+                                IsChecked="{Binding Path=overrideMotionBuffer, Mode=TwoWay}"
+                                Margin="5"
+                                VerticalAlignment="Center"
+                                HorizontalAlignment="Right" />
+
+                        </DockPanel>
+
                     </StackPanel>
 
                 </telerik:GroupBox>

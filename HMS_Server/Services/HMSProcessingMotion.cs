@@ -341,7 +341,7 @@ namespace HMS_Server
                 pitchMaxUp20mData.DoProcessing(pitchData);
                 pitchMaxDown20mData.DoProcessing(pitchData);
 
-                if (adminSettingsVM.regulationStandard == RegulationStandard.CAP)
+                if (adminSettingsVM.regulationStandard == RegulationStandard.CAP && !adminSettingsVM.overrideMotionBuffer)
                 {
                     pitchMax20mData.BufferFillCheck(Constants.MotionBufferFill99Pct);
                     pitchMaxUp20mData.BufferFillCheck(Constants.MotionBufferFill99Pct);
@@ -355,7 +355,7 @@ namespace HMS_Server
                 rollMaxLeft20mData.DoProcessing(rollData);
                 rollMaxRight20mData.DoProcessing(rollData);
 
-                if (adminSettingsVM.regulationStandard == RegulationStandard.CAP)
+                if (adminSettingsVM.regulationStandard == RegulationStandard.CAP && !adminSettingsVM.overrideMotionBuffer)
                 {
                     rollMax20mData.BufferFillCheck(Constants.MotionBufferFill99Pct);
                     rollMaxLeft20mData.BufferFillCheck(Constants.MotionBufferFill99Pct);
@@ -385,7 +385,7 @@ namespace HMS_Server
                 significantHeaveRateMax20mData.DoProcessing(significantHeaveRateData);
                 significantHeaveRateMax3hData.DoProcessing(significantHeaveRateData);
 
-                if (adminSettingsVM.regulationStandard == RegulationStandard.CAP)
+                if (adminSettingsVM.regulationStandard == RegulationStandard.CAP && !adminSettingsVM.overrideMotionBuffer)
                 {
                     significantHeaveRateData.BufferFillCheck(Constants.MotionBufferFill99Pct);
                     significantHeaveRateMax20mData.BufferFillCheck(Constants.MotionBufferFill99Pct);
@@ -395,7 +395,7 @@ namespace HMS_Server
                 // Maximum Heave Rate
                 maxHeaveRateData.DoProcessing(inputHeaveRateData);
 
-                if (adminSettingsVM.regulationStandard == RegulationStandard.CAP)
+                if (adminSettingsVM.regulationStandard == RegulationStandard.CAP && !adminSettingsVM.overrideMotionBuffer)
                     maxHeaveRateData.BufferFillCheck(Constants.MotionBufferFill99Pct);
 
                 // Significant Wave Height
@@ -461,7 +461,8 @@ namespace HMS_Server
                     CalculateMSIMax(mms_msi, mms_msi_list, msiData, Constants.Minutes20);
 
                     // Sjekke buffer fyllingsgrad
-                    MSIBufferFillCheck(mms_msi_list, Constants.MotionBufferFill99Pct, msiData);
+                    if (!adminSettingsVM.overrideMotionBuffer)
+                        MSIBufferFillCheck(mms_msi_list, Constants.MotionBufferFill99Pct, msiData);
                 }
 
                 // Sjekker motion limits

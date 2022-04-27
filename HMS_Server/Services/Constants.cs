@@ -284,22 +284,22 @@ class Constants
     public const int LicenseMaxClientsDefault = 0;
 
     // Landing Status Trend
-    public const int landingTrendDisplayListMax = 400;  // Hvor mange segmenter trend linjen skal deles opp i / oppløsning på trend linjen
-                                                        // På skjerm med 3840 pixel bredde er linjen ca 1400 pixler bred
-                                                        // På 1920 skjerm vil den være ca 700 pixler bred
-                                                        // Opplever "flicker" på trend linjen med for høy oppløsning, satt ned til 400
+    public const int landingTrendDisplayListMax = 400;          // Hvor mange segmenter trend linjen skal deles opp i / oppløsning på trend linjen
+                                                                // På skjerm med 3840 pixel bredde er linjen ca 1400 pixler bred
+                                                                // På 1920 skjerm vil den være ca 700 pixler bred
+                                                                // Opplever "flicker" på trend linjen med for høy oppløsning, satt ned til 400
     public const int landingTrendHistoryDisplayListMax = 1000;
 
     // RWD Trend
-    public const int rwdTrendDisplayListMax = 300;      // Hvor mange segmenter trend linjen skal deles opp i / oppløsning på trend linjen
-                                                        // På skjerm med 3840 pixel bredde er linjen ca 1000 pixler bred
-                                                        // På 1920 skjerm vil den være ca 500 pixler bred
-                                                        // Opplever "flicker" på trend linjen med for høy oppløsning, satt ned til 300
+    public const int rwdTrendDisplayListMax = 300;              // Hvor mange segmenter trend linjen skal deles opp i / oppløsning på trend linjen
+                                                                // På skjerm med 3840 pixel bredde er linjen ca 1000 pixler bred
+                                                                // På 1920 skjerm vil den være ca 500 pixler bred
+                                                                // Opplever "flicker" på trend linjen med for høy oppløsning, satt ned til 300
 
     // Graph Accuracy
-    public const double GraphCullFrequency20m = 4000;   // 4 sek
-    public const double GraphCullFrequency30m = 6000;   // 6 sek
-    public const double GraphCullFrequency3h = 30000;   // 30 sek
+    public const double GraphCullFrequency20m = 4000;           // 4 sek
+    public const double GraphCullFrequency30m = 6000;           // 6 sek
+    public const double GraphCullFrequency3h = 30000;           // 30 sek
 
     // Korreksjoner for DateTimeContinuousAxis
     // Disse korreksjonene legges inn for å få tidspunkt-label på X aksen til å vises korrekt
@@ -307,7 +307,7 @@ class Constants
     public const int ChartTimeCorrMax = -2;
 
     // Buffer Fill
-    public const double WindBufferFill95Pct2m = 0;//456;    // 4 hz * 2 min * 60 sek * 0.95 (95%)
-    public const double WindBufferFill95Pct10m = 0;//2280;  // 4 hz * 10 min * 60 sek * 0.95 (95%)
-    public const double MotionBufferFill99Pct = 0;//2376;   // 2 hz * 20 min * 60 sek * 0.99 (99%)
+    public const double WindBufferFill95Pct2m = 456;            // 4 hz * 2 min * 60 sek * 0.95 (95%)
+    public const double WindBufferFill95Pct10m = 2280;          // 4 hz * 10 min * 60 sek * 0.95 (95%)
+    public const double MotionBufferFill99Pct = 2376;           // 2 hz * 20 min * 60 sek * 0.99 (99%)
 }

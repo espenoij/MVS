@@ -30,6 +30,20 @@ namespace HMS_Server
 
             // CAP
             msiCorrectionR = config.ReadWithDefault(ConfigKey.MSICorrectionR, Constants.MSICorrectionRMin);
+
+            // CAP: Override Wind Buffer
+            if (config.ReadWithDefault(ConfigKey.OverrideWindBuffer, "0") == "1")
+                overrideWindBuffer = true;
+            else
+                overrideWindBuffer = false;
+
+            // CAP: Override Wind Buffer
+            if (config.ReadWithDefault(ConfigKey.OverrideMotionBuffer, "0") == "1")
+                overrideMotionBuffer = true;
+            else
+                overrideMotionBuffer = false;
+
+            // CAP: Restricted Sector
             restrictedSectorFrom = config.Read(ConfigKey.RestrictedSectorFrom);
             restrictedSectorTo = config.Read(ConfigKey.RestrictedSectorTo);
 
@@ -240,7 +254,7 @@ namespace HMS_Server
         }
 
         /////////////////////////////////////////////////////////////////////////////
-        // MSI Correction R
+        // CAP: MSI Correction R
         /////////////////////////////////////////////////////////////////////////////
         private double _msiCorrectionR { get; set; }
         public double msiCorrectionR
@@ -253,6 +267,60 @@ namespace HMS_Server
             {
                 _msiCorrectionR = value;
                 config.Write(ConfigKey.MSICorrectionR, _msiCorrectionR.ToString());
+            }
+        }
+
+        /////////////////////////////////////////////////////////////////////////////
+        // CAP: Override CAP 9c Wind Buffer
+        /////////////////////////////////////////////////////////////////////////////
+        private bool _overrideWindBuffer { get; set; }
+        public bool overrideWindBuffer
+        {
+            get
+            {
+                return _overrideWindBuffer;
+            }
+            set
+            {
+                _overrideWindBuffer = value;
+
+                if (_overrideWindBuffer)
+                {
+                    config.Write(ConfigKey.OverrideWindBuffer, "1");
+                }
+                else
+                {
+                    config.Write(ConfigKey.OverrideWindBuffer, "0");
+                }
+
+                OnPropertyChanged();
+            }
+        }
+
+        /////////////////////////////////////////////////////////////////////////////
+        // CAP: Override CAP 9c Motion Buffer
+        /////////////////////////////////////////////////////////////////////////////
+        private bool _overrideMotionBuffer { get; set; }
+        public bool overrideMotionBuffer
+        {
+            get
+            {
+                return _overrideMotionBuffer;
+            }
+            set
+            {
+                _overrideMotionBuffer = value;
+
+                if (_overrideMotionBuffer)
+                {
+                    config.Write(ConfigKey.OverrideMotionBuffer, "1");
+                }
+                else
+                {
+                    config.Write(ConfigKey.OverrideMotionBuffer, "0");
+                }
+
+                OnPropertyChanged();
             }
         }
 
