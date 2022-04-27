@@ -38,8 +38,8 @@ namespace HMS_Server
             lvErrorMessagesData.ItemsSource = errorMessageDisplayList;
 
             // View
-            cboErrorMessageView.Items.Add("Live View");
             cboErrorMessageView.Items.Add("From Database");
+            cboErrorMessageView.Items.Add("Live View");
 
             cboErrorMessageView.SelectedIndex = int.Parse(config.Read(ConfigKey.ErrorMessagesView, ConfigSection.ErrorMessages));
             cboErrorMessageView.Text = cboErrorMessageView.SelectedItem.ToString();
@@ -72,7 +72,7 @@ namespace HMS_Server
             }
 
             // Starte overføring av error messages til display listen dersom live view er valgt
-            if (cboErrorMessageView.SelectedIndex == 0)
+            if (cboErrorMessageView.SelectedIndex == 1)
                 errorMessageDisplayListUpdater.Start();
         }
 
@@ -91,6 +91,10 @@ namespace HMS_Server
                         {
                             // Legge inn my melding
                             displayList.Add(new ErrorMessage(item));
+
+                            // Slette første når listen blir for lang
+                            if (displayList.Count > Constants.MaxErrorMessages)
+                                displayList.RemoveAt(0);
                         }
                     }
                 }
@@ -103,18 +107,18 @@ namespace HMS_Server
             {
                 switch ((sender as RadComboBox).SelectedIndex)
                 {
-                    // Live View
-                    case 0:
-                        cboErrorMessageSelection.IsEnabled = false;
-                        btnReadDB.IsEnabled = false;
-                        errorMessageDisplayListUpdater?.Start();
-                        break;
-
                     // Stored Messages
-                    case 1:
+                    case 0:
                         cboErrorMessageSelection.IsEnabled = true;
                         btnReadDB.IsEnabled = true;
                         errorMessageDisplayListUpdater?.Stop();
+                        break;
+
+                    // Live View
+                    case 1:
+                        cboErrorMessageSelection.IsEnabled = false;
+                        btnReadDB.IsEnabled = false;
+                        errorMessageDisplayListUpdater?.Start();
                         break;
                 }
 

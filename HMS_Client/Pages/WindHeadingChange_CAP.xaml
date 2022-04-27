@@ -288,7 +288,7 @@
                     </Grid.RowDefinitions>
 
                     <!--Δ VESSEL HEADING GRAPH-->
-                    <!--<telerik:RadCartesianChart
+                    <telerik:RadCartesianChart
                         Grid.Column="0"
                         Grid.Row="0"
                         Name="chartVesselHeading"
@@ -364,115 +364,8 @@
 
                         <telerik:RadCartesianChart.Grid>
                             <telerik:CartesianChartGrid
-                                MajorLinesVisibility="XY" />
-                        </telerik:RadCartesianChart.Grid>
-
-                        <telerik:RadCartesianChart.AnnotationsProvider>
-                            <telerik:ChartAnnotationsProvider
-                                Source="{Binding Path=DeltaChangeExceedanceAnnotations}">
-
-                                <telerik:ChartAnnotationDescriptor>
-                                    <telerik:ChartAnnotationDescriptor.Style>
-                                        <Style
-                                            TargetType="telerik:CartesianMarkedZoneAnnotation">
-                                            <Setter
-                                                Property="VerticalFrom"
-                                                Value="{Binding Path=VerticalFrom}" />
-                                            <Setter
-                                                Property="VerticalTo"
-                                                Value="{Binding Path=VerticalTo}" />
-                                            <Setter
-                                                Property="HorizontalFrom"
-                                                Value="{Binding Path=HorizontalFrom}" />
-                                            <Setter
-                                                Property="HorizontalTo"
-                                                Value="{Binding Path=HorizontalTo}" />
-                                            <Setter
-                                                Property="Fill"
-                                                Value="{Binding Path=Fill}" />
-                                            <Setter
-                                                Property="Opacity"
-                                                Value="0.5" />
-                                        </Style>
-                                    </telerik:ChartAnnotationDescriptor.Style>
-                                </telerik:ChartAnnotationDescriptor>
-
-                            </telerik:ChartAnnotationsProvider>
-                        </telerik:RadCartesianChart.AnnotationsProvider>
-                        
-                    </telerik:RadCartesianChart>-->
-
-
-                    <!--Δ VESSEL HEADING GRAPH-->
-                    <telerik:RadCartesianChart
-                        Grid.Column="0"
-                        Grid.Row="0"
-                        Name="chartVesselHeading"
-                        Margin="-16,0,18,8">
-
-                        <telerik:LineSeries
-                            x:Name="LineSeries"
-                            ZIndex="200"
-                            Stroke="Green">
-
-                            <telerik:LineSeries.RenderOptions>
-                                <telerik:XamlRenderOptions
-                                    DefaultVisualsRenderMode="Batch" />
-                            </telerik:LineSeries.RenderOptions>
-
-                        </telerik:LineSeries>
-
-                        <telerik:RadCartesianChart.HorizontalAxis>
-                            <telerik:DateTimeContinuousAxis
-                                ShowLabels="False"
-                                PlotMode="OnTicks" />
-                        </telerik:RadCartesianChart.HorizontalAxis>
-
-                        <telerik:RadCartesianChart.VerticalAxis>
-                            <telerik:LinearAxis
-                                x:Name="chartVesselDeltaVertAxis"
-                                SmartLabelsMode="SmartStepAndRange"
-                                LabelInterval="2">
-                                <telerik:LinearAxis.TitleTemplate>
-                                    <DataTemplate>
-                                        <DockPanel
-                                            Margin="0,16,0,0">
-                                            <Label
-                                                Content="R"
-                                                DockPanel.Dock="Right"
-                                                Margin="30,0,0,0">
-                                                <Label.LayoutTransform>
-                                                    <TransformGroup>
-                                                        <RotateTransform
-                                                            Angle="-90" />
-                                                        <ScaleTransform
-                                                            ScaleX="-1"
-                                                            ScaleY="-1" />
-                                                    </TransformGroup>
-                                                </Label.LayoutTransform>
-                                            </Label>
-                                            <Label
-                                                Content="L"
-                                                DockPanel.Dock="Left">
-                                                <Label.LayoutTransform>
-                                                    <TransformGroup>
-                                                        <RotateTransform
-                                                            Angle="-90" />
-                                                        <ScaleTransform
-                                                            ScaleX="-1"
-                                                            ScaleY="-1" />
-                                                    </TransformGroup>
-                                                </Label.LayoutTransform>
-                                            </Label>
-                                        </DockPanel>
-                                    </DataTemplate>
-                                </telerik:LinearAxis.TitleTemplate>
-                            </telerik:LinearAxis>
-                        </telerik:RadCartesianChart.VerticalAxis>
-
-                        <telerik:RadCartesianChart.Grid>
-                            <telerik:CartesianChartGrid
-                                MajorLinesVisibility="XY" />
+                                MajorLinesVisibility="XY"
+                                ZIndex="250"/>
                         </telerik:RadCartesianChart.Grid>
 
                         <telerik:RadCartesianChart.AnnotationsProvider>
@@ -486,10 +379,10 @@
                                             BasedOn="{StaticResource CartesianMarkedZoneAnnotationStyle}">
                                             <Setter
                                                 Property="VerticalFrom"
-                                                Value="{Binding Path=VerticalFrom}" />
+                                                Value="10" />
                                             <Setter
                                                 Property="VerticalTo"
-                                                Value="{Binding Path=VerticalTo}" />
+                                                Value="-10" />
                                             <Setter
                                                 Property="HorizontalFrom"
                                                 Value="{Binding Path=HorizontalFrom}" />
@@ -498,17 +391,17 @@
                                                 Value="{Binding Path=HorizontalTo}" />
                                             <Setter
                                                 Property="Fill"
-                                                Value="{Binding Path=Fill}" />
+                                                Value="{StaticResource ColorAmber}" />
                                             <Setter
                                                 Property="Opacity"
-                                                Value="0.5" />
+                                                Value="1" />
                                         </Style>
                                     </telerik:ChartAnnotationDescriptor.Style>
                                 </telerik:ChartAnnotationDescriptor>
 
                             </telerik:ChartAnnotationsProvider>
                         </telerik:RadCartesianChart.AnnotationsProvider>
-
+                        
                     </telerik:RadCartesianChart>
 
                     <!--Δ VESSEL HEADING READOUT-->
@@ -604,7 +497,6 @@
 
                         <telerik:RadCartesianChart.VerticalAxis>
                             <telerik:LinearAxis
-                                x:Name="chartWindDeltaVertAxis"
                                 Maximum="30"
                                 Minimum="-30"
                                 SmartLabelsMode="SmartStepAndRange"
@@ -652,25 +544,39 @@
                                 MajorLinesVisibility="XY" />
                         </telerik:RadCartesianChart.Grid>
 
-                        <telerik:RadCartesianChart.Annotations>
+                        <telerik:RadCartesianChart.AnnotationsProvider>
+                            <telerik:ChartAnnotationsProvider
+                                Source="{Binding Path=DeltaWindDirectionExceedanceAnnotations}">
 
-                            <telerik:CartesianPlotBandAnnotation
-                                Axis="{Binding ElementName=chartWindDeltaVertAxis}"
-                                From="30"
-                                To="180"
-                                StrokeThickness="1"
-                                Fill="{StaticResource ColorAmber}"
-                                ZIndex="10"/>
+                                <telerik:ChartAnnotationDescriptor>
+                                    <telerik:ChartAnnotationDescriptor.Style>
+                                        <Style
+                                            TargetType="telerik:CartesianMarkedZoneAnnotation"
+                                            BasedOn="{StaticResource CartesianMarkedZoneAnnotationStyle}">
+                                            <Setter
+                                                Property="VerticalFrom"
+                                                Value="30" />
+                                            <Setter
+                                                Property="VerticalTo"
+                                                Value="-30" />
+                                            <Setter
+                                                Property="HorizontalFrom"
+                                                Value="{Binding Path=HorizontalFrom}" />
+                                            <Setter
+                                                Property="HorizontalTo"
+                                                Value="{Binding Path=HorizontalTo}" />
+                                            <Setter
+                                                Property="Fill"
+                                                Value="{StaticResource ColorAmber}" />
+                                            <Setter
+                                                Property="Opacity"
+                                                Value="1" />
+                                        </Style>
+                                    </telerik:ChartAnnotationDescriptor.Style>
+                                </telerik:ChartAnnotationDescriptor>
 
-                            <telerik:CartesianPlotBandAnnotation
-                                Axis="{Binding ElementName=chartWindDeltaVertAxis}"
-                                From="-30"
-                                To="-180"
-                                StrokeThickness="1"
-                                Fill="{StaticResource ColorAmber}"
-                                ZIndex="10" />
-
-                        </telerik:RadCartesianChart.Annotations>
+                            </telerik:ChartAnnotationsProvider>
+                        </telerik:RadCartesianChart.AnnotationsProvider>
 
                     </telerik:RadCartesianChart>
 

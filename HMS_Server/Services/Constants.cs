@@ -288,6 +288,7 @@ class Constants
                                                         // På skjerm med 3840 pixel bredde er linjen ca 1400 pixler bred
                                                         // På 1920 skjerm vil den være ca 700 pixler bred
                                                         // Opplever "flicker" på trend linjen med for høy oppløsning, satt ned til 400
+    public const int landingTrendHistoryDisplayListMax = 1000;
 
     // RWD Trend
     public const int rwdTrendDisplayListMax = 300;      // Hvor mange segmenter trend linjen skal deles opp i / oppløsning på trend linjen

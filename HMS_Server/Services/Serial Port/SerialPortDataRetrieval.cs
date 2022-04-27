@@ -171,10 +171,10 @@ namespace HMS_Server
                             ErrorMessageCategory.AdminUser,
                             string.Format("Error restarting serial port: {0} (Restart), System Message: {1}", serialPort.PortName, ex.Message)));
 
-                    // Lukke port
-                    if (serialPort != null)
-                        if (serialPort.IsOpen)
-                            serialPort.Close();
+                    //// Lukke port
+                    //if (serialPort != null)
+                    //    if (serialPort.IsOpen)
+                    //        serialPort.Close();
                 }
             }
         }

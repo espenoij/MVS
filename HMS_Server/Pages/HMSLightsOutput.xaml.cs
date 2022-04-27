@@ -204,10 +204,10 @@ namespace HMS_Server
                                         ErrorMessageCategory.AdminUser,
                                         string.Format("Modbus_Write (Lights Output): {0}", ex.Message)));
 
-                                // Lukke port
-                                if (serialPort != null)
-                                    if (serialPort.IsOpen)
-                                        serialPort.Close();
+                                //// Lukke port
+                                //if (serialPort != null)
+                                //    if (serialPort.IsOpen)
+                                //        serialPort.Close();
                             }
                         }
                     }

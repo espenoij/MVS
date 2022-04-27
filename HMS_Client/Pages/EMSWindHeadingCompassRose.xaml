@@ -638,63 +638,8 @@
                     <Path
                         Name="pWindArrow"
                         Stroke="Black"
-                        Data="M 232,20 228,20 228,60 220,60 220,120 210,120 230,150 250,120 240,120 240,60 232,60 z">
-
-                        <Path.Style>
-                            <Style
-                                TargetType="Path">
-                                
-                                <Style.Triggers>
-                                    <DataTrigger
-                                        Binding="{Binding Path=windArrowColor}"
-                                        Value="white">
-                                        <Setter
-                                            Property="Fill"
-                                            Value="{StaticResource ColorWhite}" />
-                                    </DataTrigger>
-                                    <DataTrigger
-                                        Binding="{Binding Path=windArrowColor}"
-                                        Value="blue">
-                                        <Setter
-                                            Property="Fill"
-                                            Value="{StaticResource ColorBlue}" />
-                                    </DataTrigger>
-                                    <DataTrigger
-                                        Binding="{Binding Path=windArrowColor}"
-                                        Value="amber">
-                                        <Setter
-                                            Property="Fill"
-                                            Value="{StaticResource ColorAmber}" />
-                                    </DataTrigger>
-                                    <DataTrigger
-                                        Binding="{Binding Path=windArrowColor}"
-                                        Value="red">
-                                        <Setter
-                                            Property="Fill"
-                                            Value="{StaticResource ColorRed}" />
-                                    </DataTrigger>
-                                    <DataTrigger
-                                        Binding="{Binding Path=windArrowColor}"
-                                        Value="green">
-                                        <Setter
-                                            Property="Fill"
-                                            Value="{StaticResource ColorGreen}" />
-                                    </DataTrigger>
-                                </Style.Triggers>
-                            </Style>
-                        </Path.Style>
-
-                    </Path>
-
-                    <!--Arrow Top Circle Inner-->
-                    <Ellipse
-                        Width="12"
-                        Height="12"
-                        Fill="White"
-                        Stroke="Black"
-                        Canvas.Left="224"
-                        Canvas.Top="8"
-                        Visibility="{Binding Path=displayOnDeckWindIndicator, Converter={StaticResource BoolToVisConverter} }"/>
+                        Fill="{StaticResource ColorWhite}"
+                        Data="M 232,20 228,20 228,60 220,60 220,120 210,120 230,150 250,120 240,120 240,60 232,60 z" />
 
                     <!--Vind pil tittel-->
                     <telerik:Label

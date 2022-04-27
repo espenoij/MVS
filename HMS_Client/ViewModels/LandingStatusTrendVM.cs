@@ -15,11 +15,9 @@ namespace HMS_Client
 
         // 20 minutters data liste
         public RadObservableCollectionEx<HelideckStatus> statusTrend20mList = new RadObservableCollectionEx<HelideckStatus>();
-        public List<HelideckStatusType> landingTrend20mDispList = new List<HelideckStatusType>();
 
         // 3 timers data liste
         public RadObservableCollectionEx<HelideckStatus> statusTrend3hList = new RadObservableCollectionEx<HelideckStatus>();
-        public List<HelideckStatusType> statusTrend3hDispList = new List<HelideckStatusType>();
 
         private OnDeckStabilityLimitsVM onDeckStabilityLimitsVM;
 
@@ -51,12 +49,6 @@ namespace HMS_Client
                 GraphBuffer.RemoveOldData(statusTrend20mList, Constants.Minutes20);
                 GraphBuffer.RemoveOldData(statusTrend3hList, Constants.Hours3);
 
-                // Overføre til display data liste
-                if (selectedGraphTime == GraphTime.Minutes20)
-                    GraphBuffer.TransferDisplayData(statusTrend20mList, landingTrend20mDispList);
-                else
-                    GraphBuffer.TransferDisplayData(statusTrend3hList, statusTrend3hDispList);
-
                 OnPropertyChanged(nameof(landingStatusTimeString));
                 OnPropertyChanged(nameof(displayModeVisibilityPreLanding));
             }
@@ -84,12 +76,6 @@ namespace HMS_Client
                     status = HelideckStatusType.NO_DATA,
                     timestamp = DateTime.UtcNow.AddSeconds(i)
                 });
-            }
-
-            for (int i = 0; i < Constants.landingTrendDisplayListMax; i++)
-            {
-                landingTrend20mDispList.Add(new HelideckStatusType());
-                statusTrend3hDispList.Add(new HelideckStatusType());
             }
         }
 

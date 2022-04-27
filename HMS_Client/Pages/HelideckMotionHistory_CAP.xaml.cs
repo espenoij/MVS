@@ -1,4 +1,5 @@
 ﻿using System;
+using System.Collections.Generic;
 using System.Windows;
 using System.Windows.Controls;
 using System.Windows.Media;
@@ -12,6 +13,9 @@ namespace HMS_Client
     /// </summary>
     public partial class HelideckMotionHistory_CAP : UserControl
     {
+        public List<HelideckStatusType> landingTrend20mDispList = new List<HelideckStatusType>();
+        public List<HelideckStatusType> statusTrend3hDispList = new List<HelideckStatusType>();
+
         public HelideckMotionHistory_CAP()
         {
             InitializeComponent();
@@ -23,6 +27,12 @@ namespace HMS_Client
             DataContext = helideckMotionTrendVM;
 
             // Init UI
+            for (int i = 0; i < Constants.landingTrendHistoryDisplayListMax; i++)
+            {
+                landingTrend20mDispList.Add(new HelideckStatusType());
+                statusTrend3hDispList.Add(new HelideckStatusType());
+            }
+
             // Koble pitch chart til pitch data
             chartPitch20m.Series[0].ItemsSource = helideckMotionTrendVM.pitchData20mList;
             chartRoll20m.Series[0].ItemsSource = helideckMotionTrendVM.rollData20mList;
@@ -35,8 +45,8 @@ namespace HMS_Client
             chartInclination3h.Series[0].ItemsSource = helideckMotionTrendVM.inclinationData3hList;
 
             // Generere grid til landing status trend display
-            TrendLine.GenerateGridColumnDefinitions(statusTrendGrid20m, Constants.landingTrendDisplayListMax);
-            TrendLine.GenerateGridColumnDefinitions(statusTrendGrid3h, Constants.landingTrendDisplayListMax);
+            TrendLine.GenerateGridColumnDefinitions(statusTrendGrid20m, Constants.landingTrendHistoryDisplayListMax);
+            TrendLine.GenerateGridColumnDefinitions(statusTrendGrid3h, Constants.landingTrendHistoryDisplayListMax);
 
             DispatcherTimer timerUI = new DispatcherTimer();
 
@@ -49,15 +59,17 @@ namespace HMS_Client
             {
                 if (tabHelideckMotionHistory.IsSelected)
                 {
-                    // Overføre trend data fra data liste til display liste
-                    if (landingStatusTrendGrid20m.Visibility == Visibility.Visible)
+                    // Overføre til display data liste og overføre trend data fra data liste til display liste
+                    if (tab20Minutes.IsSelected)
                     {
-                        TrendLine.UpdateTrendData(landingStatusTrendVM.landingTrend20mDispList, statusTrendGrid20m, Application.Current);
+                        GraphBuffer.TransferDisplayData(landingStatusTrendVM.statusTrend20mList, landingTrend20mDispList);
+                        TrendLine.UpdateTrendData(landingTrend20mDispList, statusTrendGrid20m, Application.Current);
                     }
                     else
-                    if (landingStatusTrendGrid3h.Visibility == Visibility.Visible)
+                    if (tab3Hours.IsSelected)
                     {
-                        TrendLine.UpdateTrendData(landingStatusTrendVM.statusTrend3hDispList, statusTrendGrid3h, Application.Current);
+                        GraphBuffer.TransferDisplayData(landingStatusTrendVM.statusTrend3hList, statusTrend3hDispList);
+                        TrendLine.UpdateTrendData(statusTrend3hDispList, statusTrendGrid3h, Application.Current);
                     }
 
                     if (helideckMotionTrendVM != null)

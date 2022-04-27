@@ -25,22 +25,14 @@ namespace HMS_Client
 
         public WindHeadingChangeVM()
         {
-            // Delta vessel heading/Delta wind direction change exceedance
-            DeltaVesselHeadingExceedanceAnnotations = new ObservableCollection<object>()
-            {
-                new MarkedZoneAnnotationModel()
-                {
-                    HorizontalFrom = DateTime.UtcNow.AddMinutes(2),
-                    HorizontalTo = DateTime.UtcNow.AddMinutes(4),
-                    VerticalTo = 30,
-                    VerticalFrom = -30,
-                    Fill = Brushes.Green,
-                }
-            };
         }
 
         public void Init(Config config, SensorGroupStatus sensorStatus, RelativeWindLimitsVM relativeWindLimitsVM)
         {
+            // Delta vessel heading/Delta wind direction change exceedance
+            DeltaVesselHeadingExceedanceAnnotations = new ObservableCollection<object>();
+            DeltaWindDirectionExceedanceAnnotations = new ObservableCollection<object>();
+
             // Oppdatere UI
             UIUpdateTimer.Interval = TimeSpan.FromMilliseconds(config.ReadWithDefault(ConfigKey.ClientUpdateFrequencyUI, Constants.ClientUIUpdateFrequencyDefault));
             UIUpdateTimer.Tick += UIUpdate;
@@ -91,6 +83,88 @@ namespace HMS_Client
 
                 // Oppdatere alignment datetime (nåtid) til begge chart og trend line
                 alignmentTime = DateTime.UtcNow;
+
+                // Oppdatere delta vessel heading delta exceedance markering
+                ////////////////////////////////////////////////////////////////////
+                bool exceedanceFound = false;
+                DateTime exceedanceStart = new DateTime();
+                DateTime exceedanceEnd = new DateTime();
+
+                DeltaVesselHeadingExceedanceAnnotations.Clear();
+
+                // Søker etter vessel heading exceedance områder
+                foreach (var item in vesselHdg30mDataList)
+                {
+                    if (Math.Abs(item.data) > 10 && !exceedanceFound)
+                    {
+                        exceedanceStart = item.timestamp;
+                        exceedanceFound = true;
+                    }
+                    else
+                    if (Math.Abs(item.data) < 10 && exceedanceFound)
+                    {
+                        exceedanceEnd = item.timestamp;
+                        exceedanceFound = false;
+
+                        // Legge inn vessel heading exceedance område
+                        DeltaVesselHeadingExceedanceAnnotations.Add(new MarkedZoneAnnotationModel()
+                        {
+                            HorizontalFrom = exceedanceStart,
+                            HorizontalTo = exceedanceEnd
+                        });
+                    }
+                }
+
+                // Sjekke om siste item over var vessel heading exceedance
+                if (exceedanceFound)
+                {
+                    // Legge inn vessel heading exceedance område
+                    DeltaVesselHeadingExceedanceAnnotations.Add(new MarkedZoneAnnotationModel()
+                    {
+                        HorizontalFrom = exceedanceStart,
+                        HorizontalTo = DateTime.UtcNow
+                    });
+                }
+
+                // Oppdatere delta wind direction delta exceedance markering
+                ////////////////////////////////////////////////////////////////////
+                exceedanceFound = false;
+
+                DeltaWindDirectionExceedanceAnnotations.Clear();
+
+                // Søker etter wind direction exceedance områder
+                foreach (var item in windDir30mDataList)
+                {
+                    if (Math.Abs(item.data) > 30 && !exceedanceFound)
+                    {
+                        exceedanceStart = item.timestamp;
+                        exceedanceFound = true;
+                    }
+                    else
+                    if (Math.Abs(item.data) < 30 && exceedanceFound)
+                    {
+                        exceedanceEnd = item.timestamp;
+                        exceedanceFound = false;
+
+                        // Legge inn wind direction exceedance område
+                        DeltaWindDirectionExceedanceAnnotations.Add(new MarkedZoneAnnotationModel()
+                        {
+                            HorizontalFrom = exceedanceStart,
+                            HorizontalTo = exceedanceEnd
+                        });
+                    }
+                }
+
+                // Sjekke om siste item over var wind direction exceedance
+                if (exceedanceFound)
+                {
+                    // Legge inn wind direction exceedance område
+                    DeltaWindDirectionExceedanceAnnotations.Add(new MarkedZoneAnnotationModel()
+                    {
+                        HorizontalFrom = exceedanceStart,
+                        HorizontalTo = DateTime.UtcNow
+                    });
+                }
 
                 OnPropertyChanged(nameof(rwdStatusTimeString));
             }
@@ -442,6 +516,7 @@ namespace HMS_Client
         // Delta vessel heading/Delta wind direction change exceedance
         /////////////////////////////////////////////////////////////////////////////
         public ObservableCollection<object> DeltaVesselHeadingExceedanceAnnotations { get; set; }
+        public ObservableCollection<object> DeltaWindDirectionExceedanceAnnotations { get; set; }
 
         public class MarkedZoneAnnotationModel
         {

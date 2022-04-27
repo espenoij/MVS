@@ -34,7 +34,8 @@
                 <!--==========================================================================-->
                 <!--20-MINUTES-->
                 <!--==========================================================================-->
-                <telerik:RadTabItem>
+                <telerik:RadTabItem
+                    Name="tab20Minutes">
                     <telerik:RadTabItem.Header>
                         <StackPanel
                             Orientation="Horizontal">
@@ -56,30 +57,32 @@
                             <ColumnDefinition
                                 Width="4*" />
                             <ColumnDefinition
-                                Width="48*" />
+                                Width="54*" />
                             <ColumnDefinition
                                 Width="6*" />
                         </Grid.ColumnDefinitions>
 
                         <Grid.RowDefinitions>
                             <RowDefinition
-                                Height="3*" />
+                                Height="2*" />
+                            <RowDefinition
+                                Height="30" />
                             <RowDefinition
                                 Height="9*" />
                             <RowDefinition
-                                Height="*" />
+                                Height="30" />
                             <RowDefinition
                                 Height="9*" />
                             <RowDefinition
-                                Height="*" />
+                                Height="30" />
                             <RowDefinition
                                 Height="9*" />
                             <RowDefinition
-                                Height="*" />
+                                Height="30" />
                             <RowDefinition
                                 Height="9*" />
                             <RowDefinition
-                                Height="*" />
+                                Height="30" />
                         </Grid.RowDefinitions>
 
                         <!--Landing Status Trend 20m-->
@@ -93,11 +96,11 @@
 
                                 <Grid.RowDefinitions>
                                     <RowDefinition
-                                        Height="*" />
+                                        Height="3*" />
                                     <RowDefinition
                                         Height="28" />
                                     <RowDefinition
-                                        Height="*" />
+                                        Height="5*" />
                                 </Grid.RowDefinitions>
 
                                 <Viewbox
@@ -123,8 +126,8 @@
 
                                         <Canvas
                                             x:Name="statusTrendGrid20m"
-                                            Width="400"
-                                            Height="12" />
+                                            Width="1000"
+                                            Height="12"/>
 
                                         <Rectangle
                                             Height="12"
@@ -132,109 +135,116 @@
                                             StrokeThickness="0.5" />
 
                                     </Grid>
-                                    
+
                                 </Viewbox>
-                                    
-                                <Grid
-                                    Grid.Row="2"
-                                    Margin="20,0,0,0">
-
-                                    <Grid.ColumnDefinitions>
-                                        <ColumnDefinition
-                                            Width="*" />
-                                        <ColumnDefinition
-                                            Width="*" />
-                                        <ColumnDefinition
-                                            Width="*" />
-                                        <ColumnDefinition
-                                            Width="*" />
-                                        <ColumnDefinition
-                                            Width="*" />
-                                        <ColumnDefinition
-                                            Width="*" />
-                                        <ColumnDefinition
-                                            Width="*" />
-                                        <ColumnDefinition
-                                            Width="*" />
-                                    </Grid.ColumnDefinitions>
-
-                                    <Viewbox
-                                        Grid.Column="0"
-                                        Grid.ColumnSpan="2"
-                                        StretchDirection="Both"
-                                        Stretch="Uniform"
-                                        HorizontalAlignment="Left">
-
-                                        <Label
-                                            Content="-20 mins" />
-
-                                    </Viewbox>
-
-                                    <Viewbox
-                                        Grid.Column="1"
-                                        Grid.ColumnSpan="2"
-                                        StretchDirection="Both"
-                                        Stretch="Uniform"
-                                        HorizontalAlignment="Center">
-
-                                        <Label
-                                            Content="-15" />
-
-                                    </Viewbox>
-
-                                    <Viewbox
-                                        Grid.Column="3"
-                                        Grid.ColumnSpan="2"
-                                        StretchDirection="Both"
-                                        Stretch="Uniform"
-                                        HorizontalAlignment="Center">
-
-                                        <Label
-                                            Content="-10" />
-
-                                    </Viewbox>
-
-                                    <Viewbox
-                                        Grid.Column="5"
-                                        Grid.ColumnSpan="2"
-                                        StretchDirection="Both"
-                                        Stretch="Uniform"
-                                        HorizontalAlignment="Center">
-
-                                        <Label
-                                            Content="-5" />
-
-                                    </Viewbox>
-
-                                    <Viewbox
-                                        Grid.Column="10"
-                                        StretchDirection="Both"
-                                        Stretch="Uniform"
-                                        HorizontalAlignment="Right">
-
-                                        <Label
-                                            Content="0" />
-
-                                    </Viewbox>
-
-                                </Grid>
 
                             </Grid>
 
                         </Grid>
 
+                        <Grid
+                            Grid.Column="1"
+                            Grid.Row="1"
+                            Margin="16,0,0,0">
+
+                            <Grid.ColumnDefinitions>
+                                <ColumnDefinition
+                                    Width="*" />
+                                <ColumnDefinition
+                                    Width="*" />
+                                <ColumnDefinition
+                                    Width="*" />
+                                <ColumnDefinition
+                                    Width="*" />
+                                <ColumnDefinition
+                                    Width="*" />
+                                <ColumnDefinition
+                                    Width="*" />
+                                <ColumnDefinition
+                                    Width="*" />
+                                <ColumnDefinition
+                                    Width="*" />
+                            </Grid.ColumnDefinitions>
+
+                            <Viewbox
+                                Grid.Column="0"
+                                Grid.ColumnSpan="2"
+                                StretchDirection="Both"
+                                Stretch="Uniform"
+                                HorizontalAlignment="Left">
+
+                                <Label
+                                    Content="-20 mins" />
+
+                            </Viewbox>
+
+                            <Viewbox
+                                Grid.Column="1"
+                                Grid.ColumnSpan="2"
+                                StretchDirection="Both"
+                                Stretch="Uniform"
+                                HorizontalAlignment="Center">
+
+                                <Label
+                                    Content="-15" />
+
+                            </Viewbox>
+
+                            <Viewbox
+                                Grid.Column="3"
+                                Grid.ColumnSpan="2"
+                                StretchDirection="Both"
+                                Stretch="Uniform"
+                                HorizontalAlignment="Center">
+
+                                <Label
+                                    Content="-10" />
+
+                            </Viewbox>
+
+                            <Viewbox
+                                Grid.Column="5"
+                                Grid.ColumnSpan="2"
+                                StretchDirection="Both"
+                                Stretch="Uniform"
+                                HorizontalAlignment="Center">
+
+                                <Label
+                                    Content="-5" />
+
+                            </Viewbox>
+
+                            <Viewbox
+                                Grid.Column="10"
+                                StretchDirection="Both"
+                                Stretch="Uniform"
+                                HorizontalAlignment="Right">
+
+                                <Label
+                                    Content="0" />
+
+                            </Viewbox>
+
+                        </Grid>
+
+                        <Separator
+                            Grid.Column="0"
+                            Grid.Row="1"
+                            Grid.ColumnSpan="3"
+                            VerticalAlignment="Bottom" />
+
                         <!--PITCH-->
                         <Grid
                             Grid.Column="0"
-                            Grid.Row="1">
+                            Grid.Row="2">
 
                             <Grid.RowDefinitions>
                                 <RowDefinition
-                                    Height="6*" />
+                                    Height="4*" />
                                 <RowDefinition
                                     Height="*" />
                                 <RowDefinition
-                                    Height="6*" />
+                                    Height="4*" />
                             </Grid.RowDefinitions>
 
 
@@ -250,10 +260,10 @@
                             </Viewbox>
 
                         </Grid>
-                        
+
                         <telerik:RadCartesianChart
                             Grid.Column="1"
-                            Grid.Row="1"
+                            Grid.Row="2"
                             Name="chartPitch20m">
 
                             <telerik:LineSeries
@@ -294,37 +304,12 @@
                             </telerik:RadCartesianChart.Grid>
 
                             <telerik:RadCartesianChart.Annotations>
-                                <telerik:CartesianPlotBandAnnotation
-                                    Axis="{Binding ElementName=chartPitchVerticalAxis20m}"
-                                    From="{Binding pitchChartAnnotationGreenMax20m}"
-                                    To="0"
-                                    StrokeThickness="1"
-                                    Fill="{StaticResource ColorGreenTranslucent}" />
-
-                                <telerik:CartesianPlotBandAnnotation
-                                    Axis="{Binding ElementName=chartPitchVerticalAxis20m}"
-                                    From="{Binding pitchChartAnnotationRedTopMax20m}"
-                                    To="{Binding pitchChartAnnotationRedTopMin20m}"
-                                    StrokeThickness="1"
-                                    Fill="{StaticResource ColorRedTranslucent}" />
-
-                                <!--<telerik:CartesianGridLineAnnotation
-                                    Axis="{Binding ElementName=chartPitchHorizontalAxis20m}"
-                                    Value="{Binding tickAlignment5}"
-                                    Stroke="Gray"
-                                    StrokeThickness="1" />
 
                                 <telerik:CartesianGridLineAnnotation
-                                    Axis="{Binding ElementName=chartPitchHorizontalAxis20m}"
-                                    Value="{Binding tickAlignment10}"
-                                    Stroke="Gray"
+                                    Axis="{Binding ElementName=chartPitchVerticalAxis20m}"
+                                    Value="{Binding pitchChartAnnotationRedTopMin20m}"
+                                    Stroke="{StaticResource ColorRed}"
                                     StrokeThickness="1" />
-
-                                <telerik:CartesianGridLineAnnotation
-                                    Axis="{Binding ElementName=chartPitchHorizontalAxis20m}"
-                                    Value="{Binding tickAlignment15}"
-                                    Stroke="Gray"
-                                    StrokeThickness="1" />-->
 
                             </telerik:RadCartesianChart.Annotations>
 
@@ -332,8 +317,8 @@
 
                         <Grid
                             Grid.Column="2"
-                            Grid.Row="1"
-                            Margin="8">
+                            Grid.Row="2"
+                            Margin="8,8,8,8">
 
                             <Grid.RowDefinitions>
                                 <RowDefinition
@@ -347,7 +332,7 @@
                                 <RowDefinition
                                     Height="*" />
                                 <RowDefinition
-                                    Height="7*" />
+                                    Height="5*" />
                             </Grid.RowDefinitions>
 
                             <Grid
@@ -463,7 +448,7 @@
                         <!--Pitch X-axis labels-->
                         <Grid
                             Grid.Column="1"
-                            Grid.Row="2"
+                            Grid.Row="3"
                             Margin="20,0,0,0">
 
                             <Grid.ColumnDefinitions>
@@ -548,22 +533,22 @@
 
                         <Separator
                             Grid.Column="0"
-                            Grid.Row="2"
+                            Grid.Row="3"
                             Grid.ColumnSpan="3"
-                            VerticalAlignment="Bottom" />
+                            VerticalAlignment="Bottom"/>
 
                         <!--ROLL-->
                         <Grid
                             Grid.Column="0"
-                            Grid.Row="3">
+                            Grid.Row="4">
 
                             <Grid.RowDefinitions>
                                 <RowDefinition
-                                    Height="6*" />
+                                    Height="4*" />
                                 <RowDefinition
                                     Height="*" />
                                 <RowDefinition
-                                    Height="6*" />
+                                    Height="4*" />
                             </Grid.RowDefinitions>
 
 
@@ -582,7 +567,7 @@
 
                         <telerik:RadCartesianChart
                             Grid.Column="1"
-                            Grid.Row="3"
+                            Grid.Row="4"
                             Name="chartRoll20m">
 
                             <telerik:LineSeries
@@ -622,37 +607,12 @@
                             </telerik:RadCartesianChart.Grid>
 
                             <telerik:RadCartesianChart.Annotations>
-                                <telerik:CartesianPlotBandAnnotation
-                                    Axis="{Binding ElementName=chartRollVerticalAxis20m}"
-                                    From="{Binding rollChartAnnotationGreenMax20m}"
-                                    To="{Binding rollChartAnnotationGreenMin20m}"
-                                    StrokeThickness="1"
-                                    Fill="{StaticResource ColorGreenTranslucent}" />
-
-                                <telerik:CartesianPlotBandAnnotation
-                                    Axis="{Binding ElementName=chartRollVerticalAxis20m}"
-                                    From="{Binding rollChartAnnotationRedTopMax20m}"
-                                    To="{Binding rollChartAnnotationRedTopMin20m}"
-                                    StrokeThickness="1"
-                                    Fill="{StaticResource ColorRedTranslucent}" />
-
-                                <!--<telerik:CartesianGridLineAnnotation
-                                    Axis="{Binding ElementName=chartPitchHorizontalAxis20m}"
-                                    Value="{Binding tickAlignment5}"
-                                    Stroke="Gray"
-                                    StrokeThickness="1" />
 
                                 <telerik:CartesianGridLineAnnotation
-                                    Axis="{Binding ElementName=chartPitchHorizontalAxis20m}"
-                                    Value="{Binding tickAlignment10}"
-                                    Stroke="Gray"
+                                    Axis="{Binding ElementName=chartRollVerticalAxis20m}"
+                                    Value="{Binding rollChartAnnotationRedTopMin20m}"
+                                    Stroke="{StaticResource ColorRed}"
                                     StrokeThickness="1" />
-
-                                <telerik:CartesianGridLineAnnotation
-                                    Axis="{Binding ElementName=chartPitchHorizontalAxis20m}"
-                                    Value="{Binding tickAlignment15}"
-                                    Stroke="Gray"
-                                    StrokeThickness="1" />-->
 
                             </telerik:RadCartesianChart.Annotations>
 
@@ -660,8 +620,8 @@
 
                         <Grid
                             Grid.Column="2"
-                            Grid.Row="3"
-                            Margin="8">
+                            Grid.Row="4"
+                            Margin="8,8,8,8">
 
                             <Grid.RowDefinitions>
                                 <RowDefinition
@@ -675,7 +635,7 @@
                                 <RowDefinition
                                     Height="*" />
                                 <RowDefinition
-                                    Height="7*" />
+                                    Height="5*" />
                             </Grid.RowDefinitions>
 
                             <Grid
@@ -789,11 +749,11 @@
                             </Grid>
 
                         </Grid>
-                        
+
                         <!--Roll X-axis labels-->
                         <Grid
                             Grid.Column="1"
-                            Grid.Row="4"
+                            Grid.Row="5"
                             Margin="20,0,0,0">
 
                             <Grid.ColumnDefinitions>
@@ -878,22 +838,22 @@
 
                         <Separator
                             Grid.Column="0"
-                            Grid.Row="4"
-                            Grid.ColumnSpan="3"
+                            Grid.Row="5"
+                            Grid.ColumnSpan="4"
                             VerticalAlignment="Bottom" />
 
                         <!--INCLINATION-->
                         <Grid
                             Grid.Column="0"
-                            Grid.Row="5">
+                            Grid.Row="6">
 
                             <Grid.RowDefinitions>
                                 <RowDefinition
-                                    Height="6*" />
+                                    Height="4*" />
                                 <RowDefinition
                                     Height="*" />
                                 <RowDefinition
-                                    Height="6*" />
+                                    Height="4*" />
                             </Grid.RowDefinitions>
 
 
@@ -912,7 +872,7 @@
 
                         <telerik:RadCartesianChart
                             Grid.Column="1"
-                            Grid.Row="5"
+                            Grid.Row="6"
                             Name="chartInclination20m">
 
                             <telerik:LineSeries
@@ -952,37 +912,12 @@
                             </telerik:RadCartesianChart.Grid>
 
                             <telerik:RadCartesianChart.Annotations>
-                                <telerik:CartesianPlotBandAnnotation
-                                    Axis="{Binding ElementName=chartInclinationVerticalAxis20m}"
-                                    From="{Binding inclinationChartAnnotationGreenMax20m}"
-                                    To="0"
-                                    StrokeThickness="1"
-                                    Fill="{StaticResource ColorGreenTranslucent}" />
-
-                                <telerik:CartesianPlotBandAnnotation
-                                    Axis="{Binding ElementName=chartInclinationVerticalAxis20m}"
-                                    From="{Binding inclinationChartAnnotationRedMax20m}"
-                                    To="{Binding inclinationChartAnnotationRedMin20m}"
-                                    StrokeThickness="1"
-                                    Fill="{StaticResource ColorRedTranslucent}" />
-
-                                <!--<telerik:CartesianGridLineAnnotation
-                                    Axis="{Binding ElementName=chartPitchHorizontalAxis20m}"
-                                    Value="{Binding tickAlignment5}"
-                                    Stroke="Gray"
-                                    StrokeThickness="1" />
 
                                 <telerik:CartesianGridLineAnnotation
-                                    Axis="{Binding ElementName=chartPitchHorizontalAxis20m}"
-                                    Value="{Binding tickAlignment10}"
-                                    Stroke="Gray"
+                                    Axis="{Binding ElementName=chartInclinationVerticalAxis20m}"
+                                    Value="{Binding inclinationChartAnnotationRedMin20m}"
+                                    Stroke="{StaticResource ColorRed}"
                                     StrokeThickness="1" />
-
-                                <telerik:CartesianGridLineAnnotation
-                                    Axis="{Binding ElementName=chartPitchHorizontalAxis20m}"
-                                    Value="{Binding tickAlignment15}"
-                                    Stroke="Gray"
-                                    StrokeThickness="1" />-->
 
                             </telerik:RadCartesianChart.Annotations>
 
@@ -991,8 +926,8 @@
                         <!--INCLINATION-->
                         <Grid
                             Grid.Column="2"
-                            Grid.Row="5"
-                            Margin="8">
+                            Grid.Row="6"
+                            Margin="8,8,8,8">
 
                             <Grid.RowDefinitions>
                                 <RowDefinition
@@ -1004,7 +939,7 @@
                                 <RowDefinition
                                     Height="*" />
                                 <RowDefinition
-                                    Height="8*" />
+                                    Height="6*" />
                             </Grid.RowDefinitions>
 
                             <Grid
@@ -1084,8 +1019,8 @@
                         <!--Inclination X-axis labels-->
                         <Grid
                             Grid.Column="1"
-                            Grid.Row="6"
-                            Margin="20,0,0,0">
+                            Grid.Row="7"
+                            Margin="20,0,0,-1">
 
                             <Grid.ColumnDefinitions>
                                 <ColumnDefinition
@@ -1166,21 +1101,21 @@
                             </Viewbox>
 
                         </Grid>
-                        
+
                         <Separator
                             Grid.Column="0"
-                            Grid.Row="6"
+                            Grid.Row="7"
                             Grid.ColumnSpan="3"
                             VerticalAlignment="Bottom" />
 
                         <!--Significant Heave Rate-->
                         <Grid
                             Grid.Column="0"
-                            Grid.Row="7">
+                            Grid.Row="8">
 
                             <Grid.RowDefinitions>
                                 <RowDefinition
-                                    Height="5*" />
+                                    Height="3*" />
                                 <RowDefinition
                                     Height="*" />
                                 <RowDefinition
@@ -1188,7 +1123,7 @@
                                 <RowDefinition
                                     Height="*" />
                                 <RowDefinition
-                                    Height="5*" />
+                                    Height="3*" />
                             </Grid.RowDefinitions>
 
                             <Viewbox
@@ -1228,8 +1163,8 @@
 
                         <telerik:RadCartesianChart
                             Grid.Column="1"
-                            Grid.Row="7"
-                            Margin="-10,0,0,0"
+                            Grid.Row="8"
+                            Margin="-10,1,0,0"
                             Name="chartSignificantHeaveRate20m">
 
                             <telerik:LineSeries
@@ -1269,37 +1204,12 @@
                             </telerik:RadCartesianChart.Grid>
 
                             <telerik:RadCartesianChart.Annotations>
-                                <telerik:CartesianPlotBandAnnotation
-                                    Axis="{Binding ElementName=chartSignificantHeaveRateVerticalAxis20m}"
-                                    From="{Binding significantHeaveRateChartAnnotationGreenMax20m}"
-                                    To="0"
-                                    StrokeThickness="1"
-                                    Fill="{StaticResource ColorGreenTranslucent}" />
-
-                                <telerik:CartesianPlotBandAnnotation
-                                    Axis="{Binding ElementName=chartSignificantHeaveRateVerticalAxis20m}"
-                                    From="{Binding significantHeaveRateChartAnnotationRedMax20m}"
-                                    To="{Binding significantHeaveRateChartAnnotationRedMin20m}"
-                                    StrokeThickness="1"
-                                    Fill="{StaticResource ColorRedTranslucent}" />
-
-                                <!--<telerik:CartesianGridLineAnnotation
-                                    Axis="{Binding ElementName=chartPitchHorizontalAxis20m}"
-                                    Value="{Binding tickAlignment5}"
-                                    Stroke="Gray"
-                                    StrokeThickness="1" />
 
                                 <telerik:CartesianGridLineAnnotation
-                                    Axis="{Binding ElementName=chartPitchHorizontalAxis20m}"
-                                    Value="{Binding tickAlignment10}"
-                                    Stroke="Gray"
+                                    Axis="{Binding ElementName=chartSignificantHeaveRateVerticalAxis20m}"
+                                    Value="{Binding significantHeaveRateChartAnnotationRedMin20m}"
+                                    Stroke="{StaticResource ColorRed}"
                                     StrokeThickness="1" />
-
-                                <telerik:CartesianGridLineAnnotation
-                                    Axis="{Binding ElementName=chartPitchHorizontalAxis20m}"
-                                    Value="{Binding tickAlignment15}"
-                                    Stroke="Gray"
-                                    StrokeThickness="1" />-->
 
                             </telerik:RadCartesianChart.Annotations>
 
@@ -1308,8 +1218,8 @@
                         <!--Significant Heave Rate-->
                         <Grid
                             Grid.Column="2"
-                            Grid.Row="7"
-                            Margin="8">
+                            Grid.Row="8"
+                            Margin="8,9,8,8">
 
                             <Grid.RowDefinitions>
                                 <RowDefinition
@@ -1321,7 +1231,7 @@
                                 <RowDefinition
                                     Height="*" />
                                 <RowDefinition
-                                    Height="8*" />
+                                    Height="6*" />
                             </Grid.RowDefinitions>
 
                             <Grid
@@ -1401,7 +1311,7 @@
                         <!--SHR X-axis labels-->
                         <Grid
                             Grid.Column="1"
-                            Grid.Row="8"
+                            Grid.Row="9"
                             Margin="20,0,0,0">
 
                             <Grid.ColumnDefinitions>
@@ -1491,7 +1401,8 @@
                 <!--==========================================================================-->
                 <!--3-HOURS-->
                 <!--==========================================================================-->
-                <telerik:RadTabItem>
+                <telerik:RadTabItem
+                    Name="tab3Hours">
                     <telerik:RadTabItem.Header>
                         <StackPanel
                             Orientation="Horizontal">
@@ -1514,27 +1425,31 @@
                                 Width="4*" />
                             <ColumnDefinition
                                 Width="54*" />
+                            <ColumnDefinition
+                                Width="6*" />
                         </Grid.ColumnDefinitions>
 
                         <Grid.RowDefinitions>
                             <RowDefinition
-                                Height="3*" />
+                                Height="2*" />
+                            <RowDefinition
+                                Height="30" />
                             <RowDefinition
                                 Height="9*" />
                             <RowDefinition
-                                Height="*" />
+                                Height="30" />
                             <RowDefinition
                                 Height="9*" />
                             <RowDefinition
-                                Height="*" />
+                                Height="30" />
                             <RowDefinition
                                 Height="9*" />
                             <RowDefinition
-                                Height="*" />
+                                Height="30" />
                             <RowDefinition
                                 Height="9*" />
                             <RowDefinition
-                                Height="*" />
+                                Height="30" />
                         </Grid.RowDefinitions>
 
                         <!--Landing Status Trend 3h-->
@@ -1548,11 +1463,11 @@
 
                                 <Grid.RowDefinitions>
                                     <RowDefinition
-                                        Height="*" />
+                                        Height="3*" />
                                     <RowDefinition
                                         Height="28" />
                                     <RowDefinition
-                                        Height="*" />
+                                        Height="5*" />
                                 </Grid.RowDefinitions>
 
                                 <Viewbox
@@ -1588,95 +1503,103 @@
 
                                 </Viewbox>
 
-                                <Grid
-                                    Grid.Row="2">
-
-                                    <Grid.ColumnDefinitions>
-                                        <ColumnDefinition
-                                            Width="*" />
-                                        <ColumnDefinition
-                                            Width="*" />
-                                        <ColumnDefinition
-                                            Width="*" />
-                                        <ColumnDefinition
-                                            Width="*" />
-                                        <ColumnDefinition
-                                            Width="*" />
-                                        <ColumnDefinition
-                                            Width="*" />
-                                    </Grid.ColumnDefinitions>
-
-                                    <Viewbox
-                                        Grid.Column="0"
-                                        StretchDirection="Both"
-                                        Stretch="Uniform"
-                                        HorizontalAlignment="Left">
-
-                                        <Label
-                                            Grid.Column="0"
-                                            Content="-3 hours" />
-
-                                    </Viewbox>
-
-                                    <Viewbox
-                                        Grid.Column="1"
-                                        Grid.ColumnSpan="2"
-                                        StretchDirection="Both"
-                                        Stretch="Uniform"
-                                        HorizontalAlignment="Center">
-
-                                        <Label
-                                            Grid.Column="2"
-                                            Content="-2"
-                                            HorizontalAlignment="Left" />
-
-                                    </Viewbox>
-
-                                    <Viewbox
-                                        Grid.Column="3"
-                                        Grid.ColumnSpan="2"
-                                        StretchDirection="Both"
-                                        Stretch="Uniform"
-                                        HorizontalAlignment="Center">
-
-                                        <Label
-                                            Grid.Column="4"
-                                            Content="-1"
-                                            HorizontalAlignment="Right" />
-
-                                    </Viewbox>
-
-                                    <Viewbox
-                                        Grid.Column="5"
-                                        StretchDirection="Both"
-                                        Stretch="Uniform"
-                                        HorizontalAlignment="Right">
-
-                                        <Label
-                                            Grid.Column="6"
-                                            Content="0" />
-
-                                    </Viewbox>
-
-                                </Grid>
-
                             </Grid>
 
                         </Grid>
 
 
+                        <Grid
+                            Grid.Column="1"
+                            Grid.Row="1"
+                            Margin="16,0,0,0">
+
+                            <Grid.ColumnDefinitions>
+                                <ColumnDefinition
+                                    Width="*" />
+                                <ColumnDefinition
+                                    Width="*" />
+                                <ColumnDefinition
+                                    Width="*" />
+                                <ColumnDefinition
+                                    Width="*" />
+                                <ColumnDefinition
+                                    Width="*" />
+                                <ColumnDefinition
+                                    Width="*" />
+                            </Grid.ColumnDefinitions>
+
+                            <Viewbox
+                                Grid.Column="0"
+                                StretchDirection="Both"
+                                Stretch="Uniform"
+                                HorizontalAlignment="Left">
+
+                                <Label
+                                    Grid.Column="0"
+                                    Content="-3 hours" />
+
+                            </Viewbox>
+
+                            <Viewbox
+                                Grid.Column="1"
+                                Grid.ColumnSpan="2"
+                                StretchDirection="Both"
+                                Stretch="Uniform"
+                                HorizontalAlignment="Center">
+
+                                <Label
+                                    Grid.Column="2"
+                                    Content="-2"
+                                    HorizontalAlignment="Left" />
+
+                            </Viewbox>
+
+                            <Viewbox
+                                Grid.Column="3"
+                                Grid.ColumnSpan="2"
+                                StretchDirection="Both"
+                                Stretch="Uniform"
+                                HorizontalAlignment="Center">
+
+                                <Label
+                                    Grid.Column="4"
+                                    Content="-1"
+                                    HorizontalAlignment="Right" />
+
+                            </Viewbox>
+
+                            <Viewbox
+                                Grid.Column="5"
+                                StretchDirection="Both"
+                                Stretch="Uniform"
+                                HorizontalAlignment="Right">
+
+                                <Label
+                                    Grid.Column="6"
+                                    Content="0" />
+
+                            </Viewbox>
+
+                        </Grid>
+
+                        <Separator
+                            Grid.Column="0"
+                            Grid.Row="1"
+                            Grid.ColumnSpan="3"
+                            VerticalAlignment="Bottom" />
+
                         <!--PITCH-->
                         <Grid
                             Grid.Column="0"
-                            Grid.Row="1">
+                            Grid.Row="2">
 
                             <Grid.RowDefinitions>
                                 <RowDefinition
-                                    Height="6*" />
+                                    Height="4*" />
                                 <RowDefinition
                                     Height="*" />
                                 <RowDefinition
-                                    Height="6*" />
+                                    Height="4*" />
                             </Grid.RowDefinitions>
 
 
@@ -1695,7 +1618,7 @@
 
                         <telerik:RadCartesianChart
                             Grid.Column="1"
-                            Grid.Row="1"
+                            Grid.Row="2"
                             Name="chartPitch3h">
 
                             <telerik:LineSeries
@@ -1735,19 +1658,12 @@
                             </telerik:RadCartesianChart.Grid>
 
                             <telerik:RadCartesianChart.Annotations>
-                                <telerik:CartesianPlotBandAnnotation
-                                    Axis="{Binding ElementName=chartPitchVerticalAxis3h}"
-                                    From="{Binding pitchChartAnnotationGreenMax3h}"
-                                    To="0"
-                                    StrokeThickness="1"
-                                    Fill="{StaticResource ColorGreenTranslucent}" />
 
-                                <telerik:CartesianPlotBandAnnotation
+                                <telerik:CartesianGridLineAnnotation
                                     Axis="{Binding ElementName=chartPitchVerticalAxis3h}"
-                                    From="{Binding pitchChartAnnotationRedTopMax3h}"
-                                    To="{Binding pitchChartAnnotationRedTopMin3h}"
-                                    StrokeThickness="1"
-                                    Fill="{StaticResource ColorRedTranslucent}" />
+                                    Value="{Binding pitchChartAnnotationRedTopMin3h}"
+                                    Stroke="{StaticResource ColorRed}"
+                                    StrokeThickness="1" />
 
                             </telerik:RadCartesianChart.Annotations>
 
@@ -1756,7 +1672,7 @@
                         <!--Pitch X-axis labels-->
                         <Grid
                             Grid.Column="1"
-                            Grid.Row="2"
+                            Grid.Row="3"
                             Margin="16,0,0,0">
 
                             <Grid.ColumnDefinitions>
@@ -1833,22 +1749,22 @@
 
                         <Separator
                             Grid.Column="0"
-                            Grid.Row="2"
+                            Grid.Row="3"
                             Grid.ColumnSpan="3"
                             VerticalAlignment="Bottom" />
 
                         <!--ROLL-->
                         <Grid
                             Grid.Column="0"
-                            Grid.Row="3">
+                            Grid.Row="4">
 
                             <Grid.RowDefinitions>
                                 <RowDefinition
-                                    Height="6*" />
+                                    Height="4*" />
                                 <RowDefinition
                                     Height="*" />
                                 <RowDefinition
-                                    Height="6*" />
+                                    Height="4*" />
                             </Grid.RowDefinitions>
 
 
@@ -1868,7 +1784,7 @@
 
                         <telerik:RadCartesianChart
                             Grid.Column="1"
-                            Grid.Row="3"
+                            Grid.Row="4"
                             Name="chartRoll3h">
 
                             <telerik:LineSeries
@@ -1908,28 +1824,21 @@
                             </telerik:RadCartesianChart.Grid>
 
                             <telerik:RadCartesianChart.Annotations>
-                                <telerik:CartesianPlotBandAnnotation
-                                    Axis="{Binding ElementName=chartRollVerticalAxis3h}"
-                                    From="{Binding rollChartAnnotationGreenMax3h}"
-                                    To="{Binding rollChartAnnotationGreenMin3h}"
-                                    StrokeThickness="1"
-                                    Fill="{StaticResource ColorGreenTranslucent}" />
 
-                                <telerik:CartesianPlotBandAnnotation
+                                <telerik:CartesianGridLineAnnotation
                                     Axis="{Binding ElementName=chartRollVerticalAxis3h}"
-                                    From="{Binding rollChartAnnotationRedTopMax3h}"
-                                    To="{Binding rollChartAnnotationRedTopMin3h}"
-                                    StrokeThickness="1"
-                                    Fill="{StaticResource ColorRedTranslucent}" />
+                                    Value="{Binding rollChartAnnotationRedTopMin3h}"
+                                    Stroke="{StaticResource ColorRed}"
+                                    StrokeThickness="1" />
 
                             </telerik:RadCartesianChart.Annotations>
 
                         </telerik:RadCartesianChart>
-                        
+
                         <!--Roll X-axis labels-->
                         <Grid
                             Grid.Column="1"
-                            Grid.Row="4"
+                            Grid.Row="5"
                             Margin="16,0,0,0">
 
                             <Grid.ColumnDefinitions>
@@ -2006,22 +1915,22 @@
 
                         <Separator
                             Grid.Column="0"
-                            Grid.Row="4"
+                            Grid.Row="5"
                             Grid.ColumnSpan="3"
                             VerticalAlignment="Bottom" />
 
                         <!--INCLINATION-->
                         <Grid
                             Grid.Column="0"
-                            Grid.Row="5">
+                            Grid.Row="6">
 
                             <Grid.RowDefinitions>
                                 <RowDefinition
-                                    Height="6*" />
+                                    Height="4*" />
                                 <RowDefinition
                                     Height="*" />
                                 <RowDefinition
-                                    Height="6*" />
+                                    Height="4*" />
                             </Grid.RowDefinitions>
 
 
@@ -2040,7 +1949,7 @@
 
                         <telerik:RadCartesianChart
                             Grid.Column="1"
-                            Grid.Row="5"
+                            Grid.Row="6"
                             Name="chartInclination3h">
 
                             <telerik:LineSeries
@@ -2080,28 +1989,21 @@
                             </telerik:RadCartesianChart.Grid>
 
                             <telerik:RadCartesianChart.Annotations>
-                                <telerik:CartesianPlotBandAnnotation
-                                    Axis="{Binding ElementName=chartInclinationVerticalAxis3h}"
-                                    From="{Binding inclinationChartAnnotationGreenMax3h}"
-                                    To="0"
-                                    StrokeThickness="1"
-                                    Fill="{StaticResource ColorGreenTranslucent}" />
 
-                                <telerik:CartesianPlotBandAnnotation
+                                <telerik:CartesianGridLineAnnotation
                                     Axis="{Binding ElementName=chartInclinationVerticalAxis3h}"
-                                    From="{Binding inclinationChartAnnotationRedMax3h}"
-                                    To="{Binding inclinationChartAnnotationRedMin3h}"
-                                    StrokeThickness="1"
-                                    Fill="{StaticResource ColorRedTranslucent}" />
+                                    Value="{Binding inclinationChartAnnotationRedMin3h}"
+                                    Stroke="{StaticResource ColorRed}"
+                                    StrokeThickness="1" />
 
                             </telerik:RadCartesianChart.Annotations>
 
                         </telerik:RadCartesianChart>
-                        
+
                         <!--Inclination X-axis labels-->
                         <Grid
                             Grid.Column="1"
-                            Grid.Row="6"
+                            Grid.Row="7"
                             Margin="16,0,0,0">
 
                             <Grid.ColumnDefinitions>
@@ -2178,18 +2080,18 @@
 
                         <Separator
                             Grid.Column="0"
-                            Grid.Row="6"
+                            Grid.Row="7"
                             Grid.ColumnSpan="3"
                             VerticalAlignment="Bottom" />
 
                         <!--Significant Heave Rate-->
                         <Grid
                             Grid.Column="0"
-                            Grid.Row="7">
+                            Grid.Row="8">
 
                             <Grid.RowDefinitions>
                                 <RowDefinition
-                                    Height="5*" />
+                                    Height="3*" />
                                 <RowDefinition
                                     Height="*" />
                                 <RowDefinition
@@ -2197,7 +2099,7 @@
                                 <RowDefinition
                                     Height="*" />
                                 <RowDefinition
-                                    Height="5*" />
+                                    Height="3*" />
                             </Grid.RowDefinitions>
 
                             <Viewbox
@@ -2237,7 +2139,8 @@
 
                         <telerik:RadCartesianChart
                             Grid.Column="1"
-                            Grid.Row="7"
+                            Grid.Row="8"
+                            Margin="-10,1,0,0"
                             Name="chartSignificantHeaveRate3h">
 
                             <telerik:LineSeries
@@ -2277,28 +2180,21 @@
                             </telerik:RadCartesianChart.Grid>
 
                             <telerik:RadCartesianChart.Annotations>
-                                <telerik:CartesianPlotBandAnnotation
-                                    Axis="{Binding ElementName=chartSignificantHeaveRateVerticalAxis3h}"
-                                    From="{Binding significantHeaveRateChartAnnotationGreenMax3h}"
-                                    To="0"
-                                    StrokeThickness="1"
-                                    Fill="{StaticResource ColorGreenTranslucent}" />
 
-                                <telerik:CartesianPlotBandAnnotation
+                                <telerik:CartesianGridLineAnnotation
                                     Axis="{Binding ElementName=chartSignificantHeaveRateVerticalAxis3h}"
-                                    From="{Binding significantHeaveRateChartAnnotationRedMax3h}"
-                                    To="{Binding significantHeaveRateChartAnnotationRedMin3h}"
-                                    StrokeThickness="1"
-                                    Fill="{StaticResource ColorRedTranslucent}" />
+                                    Value="{Binding significantHeaveRateChartAnnotationRedMin3h}"
+                                    Stroke="{StaticResource ColorRed}"
+                                    StrokeThickness="1" />
 
                             </telerik:RadCartesianChart.Annotations>
 
                         </telerik:RadCartesianChart>
-                        
+
                         <!--SHR X-axis labels-->
                         <Grid
                             Grid.Column="1"
-                            Grid.Row="8"
+                            Grid.Row="9"
                             Margin="16,0,0,0">
 
                             <Grid.ColumnDefinitions>

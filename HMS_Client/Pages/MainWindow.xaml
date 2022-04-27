@@ -309,6 +309,42 @@
                 </telerik:RadTabItem>
 
                 <!--==============================================================-->
+                <!--Menu: Helideck Motion History CAP-->
+                <!--==============================================================-->
+                <telerik:RadTabItem
+                    Name="tabHelideckMotionHistory_CAP">
+
+                    <telerik:RadTabItem.Header>
+                        <Image
+                            Width="36"
+                            Source="../Icons/chart-line.png" />
+                    </telerik:RadTabItem.Header>
+
+                    <!--Helideck Motion Details-->
+                    <uc:HelideckMotionHistory_CAP
+                        x:Name="ucHelideckMotionHistory_CAP" />
+
+                </telerik:RadTabItem>
+
+                <!--==============================================================-->
+                <!--Menu: Helideck Motion History NOROG-->
+                <!--==============================================================-->
+                <telerik:RadTabItem
+                    Name="tabHelideckMotionHistory_NOROG">
+
+                    <telerik:RadTabItem.Header>
+                        <Image
+                            Width="36"
+                            Source="../Icons/chart-line.png" />
+                    </telerik:RadTabItem.Header>
+
+                    <!--Helideck Motion Details-->
+                    <uc:HelideckMotionHistory_NOROG
+                        x:Name="ucHelideckMotionHistory_NOROG" />
+
+                </telerik:RadTabItem>
+
+                <!--==============================================================-->
                 <!--Menu: EMS - Environment Monitoring System-->
                 <!--==============================================================-->
                 <telerik:RadTabItem
@@ -352,42 +388,6 @@
                         </Grid>
 
                     </Grid>
-
-                </telerik:RadTabItem>
-
-                <!--==============================================================-->
-                <!--Menu: Helideck Motion History CAP-->
-                <!--==============================================================-->
-                <telerik:RadTabItem
-                    Name="tabHelideckMotionHistory_CAP">
-
-                    <telerik:RadTabItem.Header>
-                        <Image
-                            Width="36"
-                            Source="../Icons/chart-line.png" />
-                    </telerik:RadTabItem.Header>
-
-                    <!--Helideck Motion Details-->
-                    <uc:HelideckMotionHistory_CAP
-                        x:Name="ucHelideckMotionHistory_CAP" />
-
-                </telerik:RadTabItem>
-
-                <!--==============================================================-->
-                <!--Menu: Helideck Motion History NOROG-->
-                <!--==============================================================-->
-                <telerik:RadTabItem
-                    Name="tabHelideckMotionHistory_NOROG">
-
-                    <telerik:RadTabItem.Header>
-                        <Image
-                            Width="36"
-                            Source="../Icons/chart-line.png" />
-                    </telerik:RadTabItem.Header>
-
-                    <!--Helideck Motion Details-->
-                    <uc:HelideckMotionHistory_NOROG
-                        x:Name="ucHelideckMotionHistory_NOROG" />
 
                 </telerik:RadTabItem>
 
