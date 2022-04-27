@@ -242,6 +242,12 @@
                             Unchecked="chkShowControlChars_Unchecked"
                             Content="Show Control Chars" />
 
+                        <CheckBox
+                            x:Name="chkBinaryData"
+                            Checked="chkBinaryData_Checked"
+                            Unchecked="chkBinaryData_Unchecked"
+                            Content="Binary Data" />
+
                         <Button
                             x:Name="chkRawDataAllClear"
                             Click="chkRawDataAllClear_Click"

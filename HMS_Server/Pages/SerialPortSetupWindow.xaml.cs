@@ -52,6 +52,7 @@ namespace HMS_Server
 
         // Noen globale variabler som brukes i og oppdateres av forskjellige tråder
         private bool showControlChars;
+        private bool binaryData;
 
         // Lister for visning
         private RadObservableCollectionEx<Packet> rawDataItems = new RadObservableCollectionEx<Packet>();
@@ -255,6 +256,18 @@ namespace HMS_Server
             {
                 chkShowControlChars.IsChecked = false;
                 showControlChars = false;
+            }
+
+            // Lese binary data option
+            if (config.Read(ConfigKey.BinaryData, ConfigSection.SerialPortConfig) == "1")
+            {
+                chkBinaryData.IsChecked = true;
+                binaryData = true;
+            }
+            else
+            {
+                chkBinaryData.IsChecked = false;
+                binaryData = false;
             }
 
             // Data Lines
@@ -1241,6 +1254,22 @@ namespace HMS_Server
         private void tbDataLines_Update(object sender)
         {
             serialPortSetupWindowVM.totalDataLinesString = (sender as TextBox).Text;
+        }
+
+        private void chkBinaryData_Checked(object sender, RoutedEventArgs e)
+        {
+            binaryData = true;
+
+            // Lagre ny setting til config fil
+            config.Write(ConfigKey.BinaryData, "1", ConfigSection.SerialPortConfig);
+        }
+
+        private void chkBinaryData_Unchecked(object sender, RoutedEventArgs e)
+        {
+            binaryData = false;
+
+            // Lagre ny setting til config fil
+            config.Write(ConfigKey.BinaryData, "0", ConfigSection.SerialPortConfig);
         }
     }
 
