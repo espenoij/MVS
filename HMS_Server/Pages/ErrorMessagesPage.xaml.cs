@@ -93,7 +93,7 @@ namespace HMS_Server
                             displayList.Add(new ErrorMessage(item));
 
                             // Slette første når listen blir for lang
-                            if (displayList.Count > Constants.MaxErrorMessages)
+                            while (displayList.Count > Constants.MaxErrorMessages)
                                 displayList.RemoveAt(0);
                         }
                     }

@@ -769,7 +769,6 @@
                             <CheckBox
                                 Name="chkOverrideWindBuffer"
                                 IsChecked="{Binding Path=overrideWindBuffer, Mode=TwoWay}"
-                                Margin="5"
                                 VerticalAlignment="Center"
                                 HorizontalAlignment="Right" />
 
@@ -786,7 +785,6 @@
                             <CheckBox
                                 Name="chkOverrideMotionBuffer"
                                 IsChecked="{Binding Path=overrideMotionBuffer, Mode=TwoWay}"
-                                Margin="5"
                                 VerticalAlignment="Center"
                                 HorizontalAlignment="Right" />
 

@@ -58,6 +58,10 @@ namespace HMS_Client
                         {
                             text = item.text
                         });
+
+                        // Slette første når listen blir for lang
+                        while (displayList.Count > Constants.MaxErrorMessages)
+                            displayList.RemoveAt(0);
                     }
                 }
             }

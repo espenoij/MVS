@@ -64,7 +64,6 @@
                     <CheckBox
                         Name="chkClientIsMaster"
                         IsChecked="{Binding Path=clientIsMaster, Mode=TwoWay}"
-                        Margin="5"
                         VerticalAlignment="Center"
                         HorizontalAlignment="Right"
                         Checked="chkClientIsMaster_Checked" 
@@ -216,7 +215,6 @@
                     <CheckBox
                         Name="chkEnableReportEmail"
                         IsChecked="{Binding Path=enableReportEmail, Mode=TwoWay}"
-                        Margin="5"
                         VerticalAlignment="Center"
                         HorizontalAlignment="Right"
                         Checked="chkEnableReportEmail_Checked"
