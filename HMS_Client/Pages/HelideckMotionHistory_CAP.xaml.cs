@@ -13,8 +13,7 @@ namespace HMS_Client
     /// </summary>
     public partial class HelideckMotionHistory_CAP : UserControl
     {
-        public List<HelideckStatusType> landingTrend20mDispList = new List<HelideckStatusType>();
-        public List<HelideckStatusType> statusTrend3hDispList = new List<HelideckStatusType>();
+        private HelideckMotionTrendVM helideckMotionTrendVM;
 
         public HelideckMotionHistory_CAP()
         {
@@ -26,21 +25,22 @@ namespace HMS_Client
             // Context
             DataContext = helideckMotionTrendVM;
 
-            // Init UI
-            for (int i = 0; i < Constants.landingTrendHistoryDisplayListMax; i++)
-            {
-                landingTrend20mDispList.Add(new HelideckStatusType());
-                statusTrend3hDispList.Add(new HelideckStatusType());
-            }
+            this.helideckMotionTrendVM = helideckMotionTrendVM;
 
-            // Koble pitch chart til pitch data
-            chartPitch20m.Series[0].ItemsSource = helideckMotionTrendVM.pitchData20mList;
-            chartRoll20m.Series[0].ItemsSource = helideckMotionTrendVM.rollData20mList;
+            // Koble chart til data
+            chartPitch20m.Series[0].ItemsSource = helideckMotionTrendVM.pitchMaxUp20mList;
+            chartPitch20m.Series[1].ItemsSource = helideckMotionTrendVM.pitchMaxDown20mList;
+            chartRoll20m.Series[0].ItemsSource = helideckMotionTrendVM.rollMaxLeft20mList;
+            chartRoll20m.Series[1].ItemsSource = helideckMotionTrendVM.rollMaxRight20mList;
+            
             chartSignificantHeaveRate20m.Series[0].ItemsSource = helideckMotionTrendVM.significantHeaveRateData20mList;
             chartInclination20m.Series[0].ItemsSource = helideckMotionTrendVM.inclinationData20mList;
 
-            chartPitch3h.Series[0].ItemsSource = helideckMotionTrendVM.pitchData3hList;
-            chartRoll3h.Series[0].ItemsSource = helideckMotionTrendVM.rollData3hList;
+            chartPitch3h.Series[0].ItemsSource = helideckMotionTrendVM.pitchMaxUp3hList;
+            chartPitch3h.Series[1].ItemsSource = helideckMotionTrendVM.pitchMaxDown3hList;
+            chartRoll3h.Series[0].ItemsSource = helideckMotionTrendVM.rollMaxLeft3hList;
+            chartRoll3h.Series[1].ItemsSource = helideckMotionTrendVM.rollMaxRight3hList;
+
             chartSignificantHeaveRate3h.Series[0].ItemsSource = helideckMotionTrendVM.significantHeaveRateData3hList;
             chartInclination3h.Series[0].ItemsSource = helideckMotionTrendVM.inclinationData3hList;
 
@@ -59,17 +59,39 @@ namespace HMS_Client
             {
                 if (tabHelideckMotionHistory.IsSelected)
                 {
+                    // Status string variabler
+                    RadObservableCollectionEx<HelideckStatus> statusList;
+                    string timeString;
+
                     // Overføre til display data liste og overføre trend data fra data liste til display liste
                     if (tab20Minutes.IsSelected)
                     {
-                        GraphBuffer.TransferDisplayData(landingStatusTrendVM.statusTrend20mList, landingTrend20mDispList);
-                        TrendLine.UpdateTrendData(landingTrend20mDispList, statusTrendGrid20m, Application.Current);
+                        GraphBuffer.TransferDisplayData(landingStatusTrendVM.statusTrend20mList, helideckMotionTrendVM.landingTrend20mDispList);
+                        TrendLine.UpdateTrendData(helideckMotionTrendVM.landingTrend20mDispList, statusTrendGrid20m, Application.Current);
+
+                        statusList = landingStatusTrendVM.statusTrend20mList;
+                        timeString = "20-minute";
                     }
                     else
-                    if (tab3Hours.IsSelected)
                     {
-                        GraphBuffer.TransferDisplayData(landingStatusTrendVM.statusTrend3hList, statusTrend3hDispList);
-                        TrendLine.UpdateTrendData(statusTrend3hDispList, statusTrendGrid3h, Application.Current);
+                        GraphBuffer.TransferDisplayData(landingStatusTrendVM.statusTrend3hList, helideckMotionTrendVM.statusTrend3hDispList);
+                        TrendLine.UpdateTrendData(helideckMotionTrendVM.statusTrend3hDispList, statusTrendGrid3h, Application.Current);
+
+                        statusList = landingStatusTrendVM.statusTrend3hList;
+                        timeString = "3-hour";
+                    }
+
+                    // Status string
+                    if (statusList.Count > 0)
+                    {
+                        helideckMotionTrendVM.landingStatusTimeString = string.Format("{0} Trend ({1} - {2} UTC)",
+                            timeString,
+                            statusList[0].timestamp.ToShortTimeString(),
+                            statusList[statusList.Count - 1].timestamp.ToShortTimeString());
+                    }
+                    else
+                    {
+                        helideckMotionTrendVM.landingStatusTimeString = string.Format("{0} Trend (--:-- - --:-- UTC)", timeString);
                     }
 
                     if (helideckMotionTrendVM != null)
@@ -80,16 +102,23 @@ namespace HMS_Client
                         if (helideckMotionTrendVM.pitchMaxUp20mData?.status == DataStatus.OK)
                         {
                             if (helideckMotionTrendVM.pitchMaxUp20mData.limitStatus == LimitStatus.OK)
+                            {
                                 // Blank bakgrunn
-                                gridMaxPitchUp.ClearValue(Panel.BackgroundProperty);
+                                gridMaxPitchUp20m.ClearValue(Panel.BackgroundProperty);
+                                gridMaxPitchUp3h.ClearValue(Panel.BackgroundProperty);
+                            }
                             else
+                            {
                                 // Rød bakgrunn
-                                gridMaxPitchUp.Background = (Brush)FindResource("ColorRed");
+                                gridMaxPitchUp20m.Background = (Brush)FindResource("ColorRed");
+                                gridMaxPitchUp3h.Background = (Brush)FindResource("ColorRed");
+                            }
                         }
                         else
                         {
                             // Blank bakgrunn
-                            gridMaxPitchUp.ClearValue(Panel.BackgroundProperty);
+                            gridMaxPitchUp20m.ClearValue(Panel.BackgroundProperty);
+                            gridMaxPitchUp3h.ClearValue(Panel.BackgroundProperty);
                         }
 
                         ///////////////////////////////////////////////////////////////////////////////////////////
@@ -98,16 +127,23 @@ namespace HMS_Client
                         if (helideckMotionTrendVM.pitchMaxDown20mData?.status == DataStatus.OK)
                         {
                             if (helideckMotionTrendVM.pitchMaxDown20mData.limitStatus == LimitStatus.OK)
+                            {
                                 // Blank bakgrunn
-                                gridMaxPitchDown.ClearValue(Panel.BackgroundProperty);
+                                gridMaxPitchDown20m.ClearValue(Panel.BackgroundProperty);
+                                gridMaxPitchDown3h.ClearValue(Panel.BackgroundProperty);
+                            }
                             else
+                            {
                                 // Rød bakgrunn
-                                gridMaxPitchDown.Background = (Brush)FindResource("ColorRed");
+                                gridMaxPitchDown20m.Background = (Brush)FindResource("ColorRed");
+                                gridMaxPitchDown3h.Background = (Brush)FindResource("ColorRed");
+                            }
                         }
                         else
                         {
                             // Blank bakgrunn
-                            gridMaxPitchDown.ClearValue(Panel.BackgroundProperty);
+                            gridMaxPitchDown20m.ClearValue(Panel.BackgroundProperty);
+                            gridMaxPitchDown3h.ClearValue(Panel.BackgroundProperty);
                         }
 
                         ///////////////////////////////////////////////////////////////////////////////////////////
@@ -116,16 +152,23 @@ namespace HMS_Client
                         if (helideckMotionTrendVM.rollMaxRight20mData?.status == DataStatus.OK)
                         {
                             if (helideckMotionTrendVM.rollMaxRight20mData.limitStatus == LimitStatus.OK)
+                            {
                                 // Blank bakgrunn
-                                gridMaxRollRight.ClearValue(Panel.BackgroundProperty);
+                                gridMaxRollRight20m.ClearValue(Panel.BackgroundProperty);
+                                gridMaxRollRight3h.ClearValue(Panel.BackgroundProperty);
+                            }
                             else
+                            {
                                 // Rød bakgrunn
-                                gridMaxRollRight.Background = (Brush)FindResource("ColorRed");
+                                gridMaxRollRight20m.Background = (Brush)FindResource("ColorRed");
+                                gridMaxRollRight3h.Background = (Brush)FindResource("ColorRed");
+                            }
                         }
                         else
                         {
                             // Blank bakgrunn
-                            gridMaxRollRight.ClearValue(Panel.BackgroundProperty);
+                            gridMaxRollRight20m.ClearValue(Panel.BackgroundProperty);
+                            gridMaxRollRight3h.ClearValue(Panel.BackgroundProperty);
                         }
 
                         ///////////////////////////////////////////////////////////////////////////////////////////
@@ -134,16 +177,23 @@ namespace HMS_Client
                         if (helideckMotionTrendVM.rollMaxLeft20mData?.status == DataStatus.OK)
                         {
                             if (helideckMotionTrendVM.rollMaxLeft20mData.limitStatus == LimitStatus.OK)
+                            {
                                 // Blank bakgrunn
-                                gridMaxRollLeft.ClearValue(Panel.BackgroundProperty);
+                                gridMaxRollLeft20m.ClearValue(Panel.BackgroundProperty);
+                                gridMaxRollLeft3h.ClearValue(Panel.BackgroundProperty);
+                            }
                             else
+                            {
                                 // Rød bakgrunn
-                                gridMaxRollLeft.Background = (Brush)FindResource("ColorRed");
+                                gridMaxRollLeft20m.Background = (Brush)FindResource("ColorRed");
+                                gridMaxRollLeft3h.Background = (Brush)FindResource("ColorRed");
+                            }
                         }
                         else
                         {
                             // Blank bakgrunn
-                            gridMaxRollLeft.ClearValue(Panel.BackgroundProperty);
+                            gridMaxRollLeft20m.ClearValue(Panel.BackgroundProperty);
+                            gridMaxRollLeft3h.ClearValue(Panel.BackgroundProperty);
                         }
 
                         ///////////////////////////////////////////////////////////////////////////////////////////
@@ -152,16 +202,23 @@ namespace HMS_Client
                         if (helideckMotionTrendVM.inclinationMax20mData?.status == DataStatus.OK)
                         {
                             if (helideckMotionTrendVM.inclinationMax20mData.limitStatus == LimitStatus.OK)
+                            {
                                 // Blank bakgrunn
-                                gridMaxInclination.ClearValue(Panel.BackgroundProperty);
+                                gridMaxInclination20m.ClearValue(Panel.BackgroundProperty);
+                                gridMaxInclination3h.ClearValue(Panel.BackgroundProperty);
+                            }
                             else
+                            {
                                 // Rød bakgrunn
-                                gridMaxInclination.Background = (Brush)FindResource("ColorRed");
+                                gridMaxInclination20m.Background = (Brush)FindResource("ColorRed");
+                                gridMaxInclination3h.Background = (Brush)FindResource("ColorRed");
+                            }
                         }
                         else
                         {
                             // Blank bakgrunn
-                            gridMaxInclination.ClearValue(Panel.BackgroundProperty);
+                            gridMaxInclination20m.ClearValue(Panel.BackgroundProperty);
+                            gridMaxInclination3h.ClearValue(Panel.BackgroundProperty);
                         }
 
                         ///////////////////////////////////////////////////////////////////////////////////////////
@@ -170,16 +227,23 @@ namespace HMS_Client
                         if (helideckMotionTrendVM.significantHeaveRateData?.status == DataStatus.OK)
                         {
                             if (helideckMotionTrendVM.significantHeaveRateData.limitStatus == LimitStatus.OK)
+                            {
                                 // Blank bakgrunn
-                                gridSHR.ClearValue(Panel.BackgroundProperty);
+                                gridSHR20m.ClearValue(Panel.BackgroundProperty);
+                                gridSHR3h.ClearValue(Panel.BackgroundProperty);
+                            }
                             else
+                            {
                                 // Rød bakgrunn
-                                gridSHR.Background = (Brush)FindResource("ColorRed");
+                                gridSHR20m.Background = (Brush)FindResource("ColorRed");
+                                gridSHR3h.Background = (Brush)FindResource("ColorRed");
+                            }
                         }
                         else
                         {
                             // Blank bakgrunn
-                            gridSHR.ClearValue(Panel.BackgroundProperty);
+                            gridSHR20m.ClearValue(Panel.BackgroundProperty);
+                            gridSHR3h.ClearValue(Panel.BackgroundProperty);
                         }
                     }
                 }

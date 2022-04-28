@@ -1,6 +1,5 @@
 ﻿using System;
 using System.Configuration;
-using Telerik.Windows.Controls;
 
 namespace HMS_Server
 {
@@ -12,8 +11,12 @@ namespace HMS_Server
         private Configuration appConfig;
         private Configuration dataConfig;
 
-        public Config()
+        private ErrorHandler errorHandler;
+
+        public Config(ErrorHandler errorHandler = null)
         {
+            this.errorHandler = errorHandler;
+
             // App config (standard fil)
             appConfig = ConfigurationManager.OpenExeConfiguration(ConfigurationUserLevel.None);
 
@@ -41,7 +44,13 @@ namespace HMS_Server
             }
             catch (Exception ex)
             {
-                RadWindow.Alert(string.Format("Config (Read 1)\n\nError reading from config file\n\n{0}", TextHelper.Wrap(ex.Message)));
+                // Sette feilmelding
+                errorHandler?.Insert(
+                    new ErrorMessage(
+                        DateTime.UtcNow,
+                        ErrorMessageType.Config,
+                        ErrorMessageCategory.AdminUser,
+                        string.Format("Config (Read 1): Error reading from config file. {0}", ex.Message)));
             }
 
             return result;
@@ -65,7 +74,14 @@ namespace HMS_Server
             }
             catch (Exception ex)
             {
-                DialogHandler.Warning("Config (Read 2): Error reading from config file", ex.Message);
+                // Sette feilmelding
+                errorHandler?.Insert(
+                    new ErrorMessage(
+                        DateTime.UtcNow,
+                        ErrorMessageType.Config,
+                        ErrorMessageCategory.AdminUser,
+                        string.Format("Config (ReadWithDefault 2): Error reading from config file. {0}", ex.Message)));
+
                 return defaultValue;
             }
 
@@ -94,7 +110,14 @@ namespace HMS_Server
             }
             catch (Exception ex)
             {
-                DialogHandler.Warning("Config (Read 3): Error reading from config file", ex.Message);
+                // Sette feilmelding
+                errorHandler?.Insert(
+                    new ErrorMessage(
+                        DateTime.UtcNow,
+                        ErrorMessageType.Config,
+                        ErrorMessageCategory.AdminUser,
+                        string.Format("Config (ReadWithDefault 3): Error reading from config file. {0}", ex.Message)));
+
                 return defaultValue;
             }
 
@@ -123,7 +146,14 @@ namespace HMS_Server
             }
             catch (Exception ex)
             {
-                DialogHandler.Warning("Config (Read 4): Error reading from config file", ex.Message);
+                // Sette feilmelding
+                errorHandler?.Insert(
+                    new ErrorMessage(
+                        DateTime.UtcNow,
+                        ErrorMessageType.Config,
+                        ErrorMessageCategory.AdminUser,
+                        string.Format("Config (ReadWithDefault 4): Error reading from config file. {0}", ex.Message)));
+
                 return defaultValue;
             }
 
@@ -213,7 +243,13 @@ namespace HMS_Server
             }
             catch (Exception ex)
             {
-                RadWindow.Alert(string.Format("Config (Read 7)\n\nError reading from config file\n\n{0}", TextHelper.Wrap(ex.Message)));
+                // Sette feilmelding
+                errorHandler?.Insert(
+                    new ErrorMessage(
+                        DateTime.UtcNow,
+                        ErrorMessageType.Config,
+                        ErrorMessageCategory.AdminUser,
+                        string.Format("Config (Read 7): Error reading from config file. {0}", ex.Message)));
             }
 
             return result;
@@ -243,7 +279,13 @@ namespace HMS_Server
             }
             catch (Exception ex)
             {
-                RadWindow.Alert(string.Format("Config (Read 8)\n\nError reading from config file\n\n{0}", TextHelper.Wrap(ex.Message)));
+                // Sette feilmelding
+                errorHandler?.Insert(
+                    new ErrorMessage(
+                        DateTime.UtcNow,
+                        ErrorMessageType.Config,
+                        ErrorMessageCategory.AdminUser,
+                        string.Format("Config (ReadWithDefault 8): Error reading from config file. {0}", ex.Message)));
             }
 
             // Konvertere fra string til double
@@ -280,7 +322,13 @@ namespace HMS_Server
             }
             catch (Exception ex)
             {
-                RadWindow.Alert(string.Format("Config (Write 1)\n\nError writing to config file\n\n{0}", TextHelper.Wrap(ex.Message)));
+                // Sette feilmelding
+                errorHandler?.Insert(
+                    new ErrorMessage(
+                        DateTime.UtcNow,
+                        ErrorMessageType.Config,
+                        ErrorMessageCategory.AdminUser,
+                        string.Format("Config (Write 1): Error writing to config file. {0}", ex.Message)));
             }
         }
 
@@ -316,7 +364,13 @@ namespace HMS_Server
             }
             catch (Exception ex)
             {
-                RadWindow.Alert(string.Format("Config (Write 2)\n\nError writing to config file\n\n{0}", TextHelper.Wrap(ex.Message)));
+                // Sette feilmelding
+                errorHandler?.Insert(
+                    new ErrorMessage(
+                        DateTime.UtcNow,
+                        ErrorMessageType.Config,
+                        ErrorMessageCategory.AdminUser,
+                        string.Format("Config (Write 2): Error writing to config file. {0}", ex.Message)));
             }
         }
 
@@ -361,7 +415,13 @@ namespace HMS_Server
             }
             catch (Exception ex)
             {
-                RadWindow.Alert(string.Format("Config (NewData)\n\nCould not add sensor data to config file\n\n{0}", TextHelper.Wrap(ex.Message)));
+                // Sette feilmelding
+                errorHandler?.Insert(
+                    new ErrorMessage(
+                        DateTime.UtcNow,
+                        ErrorMessageType.Config,
+                        ErrorMessageCategory.AdminUser,
+                        string.Format("Config (NewData): Could not add new sensor data to config file. {0}", ex.Message)));
             }
         }
 
@@ -398,7 +458,13 @@ namespace HMS_Server
             }
             catch (Exception ex)
             {
-                RadWindow.Alert(string.Format("Config (SetData)\n\nCould not add sensor data to config file\n\n{0}", TextHelper.Wrap(ex.Message)));
+                // Sette feilmelding
+                errorHandler?.Insert(
+                    new ErrorMessage(
+                        DateTime.UtcNow,
+                        ErrorMessageType.Config,
+                        ErrorMessageCategory.AdminUser,
+                        string.Format("Config (SetData): Could not set sensor data in config file. {0}", ex.Message)));
             }
         }
 
@@ -416,7 +482,13 @@ namespace HMS_Server
             }
             catch (Exception ex)
             {
-                RadWindow.Alert(string.Format("Config (GetAllData)\n\nCould not read all sensor data from config file\n\n{0}", TextHelper.Wrap(ex.Message)));
+                // Sette feilmelding
+                errorHandler?.Insert(
+                    new ErrorMessage(
+                        DateTime.UtcNow,
+                        ErrorMessageType.Config,
+                        ErrorMessageCategory.AdminUser,
+                        string.Format("Config (GetAllData): Could not read all sensor data to config file. {0}", ex.Message)));
             }
 
             return null;
@@ -441,7 +513,13 @@ namespace HMS_Server
             }
             catch (Exception ex)
             {
-                RadWindow.Alert(string.Format("Config (DeleteData)\n\nCould not delete sensor data from config file\n\n{0}", TextHelper.Wrap(ex.Message)));
+                // Sette feilmelding
+                errorHandler?.Insert(
+                    new ErrorMessage(
+                        DateTime.UtcNow,
+                        ErrorMessageType.Config,
+                        ErrorMessageCategory.AdminUser,
+                        string.Format("Config (DeleteData): Could not delete sensor data from config file. {0}", ex.Message)));
             }
         }
 
@@ -478,7 +556,13 @@ namespace HMS_Server
             }
             catch (Exception ex)
             {
-                RadWindow.Alert(string.Format("Client Config (SetClientData)\n\nCould not update sensor data in config file\n\n{0}", TextHelper.Wrap(ex.Message)));
+                // Sette feilmelding
+                errorHandler?.Insert(
+                    new ErrorMessage(
+                        DateTime.UtcNow,
+                        ErrorMessageType.Config,
+                        ErrorMessageCategory.AdminUser,
+                        string.Format("Client Config (SetClientData): Could not update sensor data in config file. {0}", ex.Message)));
             }
         }
 
@@ -496,7 +580,13 @@ namespace HMS_Server
             }
             catch (Exception ex)
             {
-                RadWindow.Alert(string.Format("Client Config (GetClientDataList)\n\nCould not read all sensor data from config file\n\n{0}", TextHelper.Wrap(ex.Message)));
+                // Sette feilmelding
+                errorHandler?.Insert(
+                    new ErrorMessage(
+                        DateTime.UtcNow,
+                        ErrorMessageType.Config,
+                        ErrorMessageCategory.AdminUser,
+                        string.Format("Client Config (GetClientDataList): Could not read all sensor data from config file. {0}", ex.Message)));
             }
 
             return null;
@@ -535,7 +625,13 @@ namespace HMS_Server
             }
             catch (Exception ex)
             {
-                RadWindow.Alert(string.Format("Client Config (SetTestData)\n\nCould not update test data in config file\n\n{0}", TextHelper.Wrap(ex.Message)));
+                // Sette feilmelding
+                errorHandler?.Insert(
+                    new ErrorMessage(
+                        DateTime.UtcNow,
+                        ErrorMessageType.Config,
+                        ErrorMessageCategory.AdminUser,
+                        string.Format("Client Config (SetTestData): Could not update test data in config file. {0}", ex.Message)));
             }
         }
 
@@ -553,7 +649,13 @@ namespace HMS_Server
             }
             catch (Exception ex)
             {
-                RadWindow.Alert(string.Format("Client Config (GetTestDataList)\n\nCould not read all test data from config file\n\n{0}", TextHelper.Wrap(ex.Message)));
+                // Sette feilmelding
+                errorHandler?.Insert(
+                    new ErrorMessage(
+                        DateTime.UtcNow,
+                        ErrorMessageType.Config,
+                        ErrorMessageCategory.AdminUser,
+                        string.Format("Client Config (GetTestDataList): Could not read all test data from config file. {0}", ex.Message)));
             }
 
             return null;
@@ -592,7 +694,13 @@ namespace HMS_Server
             }
             catch (Exception ex)
             {
-                RadWindow.Alert(string.Format("Client Config (SetReferenceData)\n\nCould not update reference data in config file\n\n{0}", TextHelper.Wrap(ex.Message)));
+                // Sette feilmelding
+                errorHandler?.Insert(
+                    new ErrorMessage(
+                        DateTime.UtcNow,
+                        ErrorMessageType.Config,
+                        ErrorMessageCategory.AdminUser,
+                        string.Format("Client Config (SetReferenceData): Could not update reference data in config file. {0}", ex.Message)));
             }
         }
 
@@ -610,7 +718,13 @@ namespace HMS_Server
             }
             catch (Exception ex)
             {
-                RadWindow.Alert(string.Format("Client Config (GetReferenceDataList)\n\nCould not read all reference data from config file\n\n{0}", TextHelper.Wrap(ex.Message)));
+                // Sette feilmelding
+                errorHandler?.Insert(
+                    new ErrorMessage(
+                        DateTime.UtcNow,
+                        ErrorMessageType.Config,
+                        ErrorMessageCategory.AdminUser,
+                        string.Format("Client Config (GetReferenceDataList): Could not read all reference data from config file. {0}", ex.Message)));
             }
 
             return null;
@@ -650,7 +764,13 @@ namespace HMS_Server
             }
             catch (Exception ex)
             {
-                RadWindow.Alert(string.Format("Sensor Group ID Config (SetSensorIDData)\n\nCould not update sensor data in config file\n\n{0}", TextHelper.Wrap(ex.Message)));
+                // Sette feilmelding
+                errorHandler?.Insert(
+                    new ErrorMessage(
+                        DateTime.UtcNow,
+                        ErrorMessageType.Config,
+                        ErrorMessageCategory.AdminUser,
+                        string.Format("Sensor Group ID Config (SetSensorIDData): Could not update sensor data in config file. {0}", ex.Message)));
             }
         }
 
@@ -668,7 +788,13 @@ namespace HMS_Server
             }
             catch (Exception ex)
             {
-                RadWindow.Alert(string.Format("Sensor Group ID Config (GetSensorIDDataList)\n\nCould not read all sensor ID data from config file\n\n{0}", TextHelper.Wrap(ex.Message)));
+                // Sette feilmelding
+                errorHandler?.Insert(
+                    new ErrorMessage(
+                        DateTime.UtcNow,
+                        ErrorMessageType.Config,
+                        ErrorMessageCategory.AdminUser,
+                        string.Format("Sensor Group ID Config (GetSensorIDDataList): Could not read all sensor ID data from config file. {0}", ex.Message)));
             }
 
             return null;
@@ -707,7 +833,13 @@ namespace HMS_Server
             }
             catch (Exception ex)
             {
-                RadWindow.Alert(string.Format("Helicopter WSI Limit Config (SetHelicopterWSILimit)\n\nCould not update helicopter WSI limit data in config file\n\n{0}", TextHelper.Wrap(ex.Message)));
+                // Sette feilmelding
+                errorHandler?.Insert(
+                    new ErrorMessage(
+                        DateTime.UtcNow,
+                        ErrorMessageType.Config,
+                        ErrorMessageCategory.AdminUser,
+                        string.Format("Helicopter WSI Limit Config (SetHelicopterWSILimit): Could not update helicopter WSI limit data in config file. {0}", ex.Message)));
             }
         }
 
@@ -725,7 +857,13 @@ namespace HMS_Server
             }
             catch (Exception ex)
             {
-                RadWindow.Alert(string.Format("Helicopter WSI Limit Config (GetHelicopterWSILimits)\n\nCould not read all helicopter WSI limit data from config file\n\n{0}", TextHelper.Wrap(ex.Message)));
+                // Sette feilmelding
+                errorHandler?.Insert(
+                    new ErrorMessage(
+                        DateTime.UtcNow,
+                        ErrorMessageType.Config,
+                        ErrorMessageCategory.AdminUser,
+                        string.Format("Helicopter WSI Limit Config (GetHelicopterWSILimits): Could not read all helicopter WSI limit data from config file. {0}", ex.Message)));
             }
 
             return null;
@@ -764,7 +902,13 @@ namespace HMS_Server
             }
             catch (Exception ex)
             {
-                RadWindow.Alert(string.Format("Config (SetLightsOutputData)\n\nCould not update lights output data in config file\n\n{0}", TextHelper.Wrap(ex.Message)));
+                // Sette feilmelding
+                errorHandler?.Insert(
+                    new ErrorMessage(
+                        DateTime.UtcNow,
+                        ErrorMessageType.Config,
+                        ErrorMessageCategory.AdminUser,
+                        string.Format("Config (SetLightsOutputData): Could not update lights output data in config file. {0}", ex.Message)));
             }
         }
 
@@ -782,7 +926,13 @@ namespace HMS_Server
             }
             catch (Exception ex)
             {
-                RadWindow.Alert(string.Format("Config (GetLightsOutputData)\n\nCould not read lights output data from config file\n\n{0}", TextHelper.Wrap(ex.Message)));
+                // Sette feilmelding
+                errorHandler?.Insert(
+                    new ErrorMessage(
+                        DateTime.UtcNow,
+                        ErrorMessageType.Config,
+                        ErrorMessageCategory.AdminUser,
+                        string.Format("Config (GetLightsOutputData): Could not read lights output data from config file. {0}", ex.Message)));
             }
 
             return null;

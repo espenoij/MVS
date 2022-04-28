@@ -284,7 +284,6 @@
                         <telerik:Label
                             Grid.Column="1"
                             Grid.Row="3"
-                            Name="lbMaxInclination20m"
                             Content="{Binding Path=inclinationMax20mString}"
                             FontSize="{StaticResource fontSizeData}" />
 
@@ -395,7 +394,6 @@
                         <telerik:Label
                             Grid.Column="1"
                             Grid.Row="4"
-                            Name="lbSignificantHeaveRate20m"
                             Content="{Binding Path=significantHeaveRateString}"
                             FontSize="{StaticResource fontSizeData}" />
 

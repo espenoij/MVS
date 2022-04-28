@@ -100,11 +100,11 @@ namespace HMS_Server
         {
             InitializeComponent();
 
-            // Config
-            config = new Config();
-
             // Error Handler
             errorHandler = new ErrorHandler(database);
+
+            // Config
+            config = new Config();
 
             // Init
             sensorDataRetrieval = new SensorDataRetrieval(config, database, errorHandler);

@@ -198,7 +198,6 @@
                         HorizontalAlignment="Left">
 
                         <telerik:Label
-                            Name="lbMaxPitchUp20m"
                             Content="{Binding Path=pitchMaxUp20mString}"
                             FontSize="{StaticResource fontSizeDataLarge}" />
 
@@ -211,7 +210,6 @@
                         HorizontalAlignment="Left">
 
                         <telerik:Label
-                            Name="lbMaxPitchDown20m"
                             Content="{Binding Path=pitchMaxDown20mString}"
                             FontSize="{StaticResource fontSizeDataLarge}" />
 
@@ -267,7 +265,6 @@
 
                         <telerik:Label
                             Grid.Column="1"
-                            Name="lbMaxRollLeft20m"
                             Content="{Binding Path=rollMaxLeft20mString}"
                             FontSize="{StaticResource fontSizeDataLarge}"
                             HorizontalAlignment="Center" />
@@ -281,7 +278,6 @@
                         HorizontalAlignment="Left">
 
                         <telerik:Label
-                            Name="lbMaxRollRight20m"
                             Content="{Binding Path=rollMaxRight20mString}"
                             FontSize="{StaticResource fontSizeDataLarge}"
                             HorizontalAlignment="Center" />
@@ -339,7 +335,6 @@
                         Stretch="Uniform">
 
                         <telerik:Label
-                            Name="lbSignificantHeaveRate20m"
                             Content="{Binding Path=significantHeaveRateString}"
                             FontSize="{StaticResource fontSizeDataLarge}" />
 
@@ -392,7 +387,6 @@
                         Stretch="Uniform">
 
                         <telerik:Label
-                            Name="lbMaxInclination20m"
                             Content="{Binding Path=inclinationMax20mString}"
                             FontSize="{StaticResource fontSizeDataLarge}"/>
 

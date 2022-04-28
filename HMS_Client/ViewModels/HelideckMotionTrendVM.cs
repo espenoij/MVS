@@ -1,4 +1,5 @@
 ﻿using System;
+using System.Collections.Generic;
 using System.ComponentModel;
 using System.Runtime.CompilerServices;
 using System.Windows.Threading;
@@ -16,7 +17,7 @@ namespace HMS_Client
 
         // 20 minutters buffer
         private RadObservableCollectionEx<HMSData> pitchBuffer20m = new RadObservableCollectionEx<HMSData>();
-        private RadObservableCollectionEx<HMSData> rollBuffer20m = new RadObservableCollectionEx<HMSData>();
+        private RadObservableCollectionEx<HMSData> rollBuffer20m = new RadObservableCollectionEx<HMSData>();      
         private RadObservableCollectionEx<HMSData> inclinationBuffer20m = new RadObservableCollectionEx<HMSData>();
         private RadObservableCollectionEx<HMSData> heaveAmplitudeBuffer20m = new RadObservableCollectionEx<HMSData>();
         private RadObservableCollectionEx<HMSData> significantHeaveRateBuffer20m = new RadObservableCollectionEx<HMSData>();
@@ -29,15 +30,27 @@ namespace HMS_Client
         private RadObservableCollectionEx<HMSData> significantHeaveRateBuffer3h = new RadObservableCollectionEx<HMSData>();
 
         // 20 minutters grafer
-        public RadObservableCollectionEx<HMSData> pitchData20mList = new RadObservableCollectionEx<HMSData>();
-        public RadObservableCollectionEx<HMSData> rollData20mList = new RadObservableCollectionEx<HMSData>();
+        public RadObservableCollectionEx<HMSData> pitch20mList = new RadObservableCollectionEx<HMSData>();
+        public RadObservableCollectionEx<HMSData> pitchMaxUp20mList = new RadObservableCollectionEx<HMSData>();
+        public RadObservableCollectionEx<HMSData> pitchMaxDown20mList = new RadObservableCollectionEx<HMSData>();
+
+        public RadObservableCollectionEx<HMSData> roll20mList = new RadObservableCollectionEx<HMSData>();
+        public RadObservableCollectionEx<HMSData> rollMaxLeft20mList = new RadObservableCollectionEx<HMSData>();
+        public RadObservableCollectionEx<HMSData> rollMaxRight20mList = new RadObservableCollectionEx<HMSData>();
+
         public RadObservableCollectionEx<HMSData> inclinationData20mList = new RadObservableCollectionEx<HMSData>();
         public RadObservableCollectionEx<HMSData> heaveAmplitudeData20mList = new RadObservableCollectionEx<HMSData>();
         public RadObservableCollectionEx<HMSData> significantHeaveRateData20mList = new RadObservableCollectionEx<HMSData>();
 
         // 3 timers grafer
-        public RadObservableCollectionEx<HMSData> pitchData3hList = new RadObservableCollectionEx<HMSData>();
+        public RadObservableCollectionEx<HMSData> pitch3hList = new RadObservableCollectionEx<HMSData>();
+        public RadObservableCollectionEx<HMSData> pitchMaxUp3hList = new RadObservableCollectionEx<HMSData>();
+        public RadObservableCollectionEx<HMSData> pitchMaxDown3hList = new RadObservableCollectionEx<HMSData>();
+
         public RadObservableCollectionEx<HMSData> rollData3hList = new RadObservableCollectionEx<HMSData>();
+        public RadObservableCollectionEx<HMSData> rollMaxLeft3hList = new RadObservableCollectionEx<HMSData>();
+        public RadObservableCollectionEx<HMSData> rollMaxRight3hList = new RadObservableCollectionEx<HMSData>();
+
         public RadObservableCollectionEx<HMSData> inclinationData3hList = new RadObservableCollectionEx<HMSData>();
         public RadObservableCollectionEx<HMSData> heaveAmplitudeData3hList = new RadObservableCollectionEx<HMSData>();
         public RadObservableCollectionEx<HMSData> significantHeaveRateData3hList = new RadObservableCollectionEx<HMSData>();
@@ -49,17 +62,31 @@ namespace HMS_Client
         private HMSData motionLimitHeaveAmplitude = new HMSData();
         private HMSData motionLimitSignificantHeaveRate = new HMSData();
 
+        // Helideck Motion History
+        public List<HelideckStatusType> landingTrend20mDispList = new List<HelideckStatusType>();
+        public List<HelideckStatusType> statusTrend3hDispList = new List<HelideckStatusType>();
+
+
         private AdminSettingsVM adminSettingsVM;
 
         public void Init(AdminSettingsVM adminSettingsVM, Config config, SensorGroupStatus sensorStatus)
         {
             this.adminSettingsVM = adminSettingsVM;
 
+            //selectedGraphTime = GraphTime.Minutes20;
+
             InitPitchData();
             InitRollData();
             InitInclinationData();
             InitHeaveAmplitudeData();
             InitSignificantHeaveData();
+
+            // Init UI
+            for (int i = 0; i < Constants.landingTrendHistoryDisplayListMax; i++)
+            {
+                landingTrend20mDispList.Add(new HelideckStatusType());
+                statusTrend3hDispList.Add(new HelideckStatusType());
+            }
 
             // Oppdatere UI
             UIUpdateTimer.Interval = TimeSpan.FromMilliseconds(config.ReadWithDefault(ConfigKey.ClientUpdateFrequencyUI, Constants.ClientUIUpdateFrequencyDefault));
@@ -123,34 +150,50 @@ namespace HMS_Client
                 else
                 {
                     // Oppdatere data som skal ut i grafer
-                    GraphBuffer.UpdateWithCull(pitchMax20mData, pitchData20mList, Constants.GraphCullFrequency20m);
-                    GraphBuffer.UpdateWithCull(rollMax20mData, rollData20mList, Constants.GraphCullFrequency20m);
+                    GraphBuffer.UpdateWithCull(pitchMax20mData, pitch20mList, Constants.GraphCullFrequency20m);
+                    GraphBuffer.UpdateWithCull(pitchMaxUp20mData, pitchMaxUp20mList, Constants.GraphCullFrequency20m);
+                    GraphBuffer.UpdateWithCull(pitchMaxDown20mData, pitchMaxDown20mList, Constants.GraphCullFrequency20m);
+
+                    GraphBuffer.UpdateWithCull(rollMax20mData, roll20mList, Constants.GraphCullFrequency20m);
+                    GraphBuffer.UpdateWithCull(rollMaxLeft20mData, rollMaxLeft20mList, Constants.GraphCullFrequency20m);
+                    GraphBuffer.UpdateWithCull(rollMaxRight20mData, rollMaxRight20mList, Constants.GraphCullFrequency20m);
+
                     GraphBuffer.UpdateWithCull(inclinationMax20mData, inclinationData20mList, Constants.GraphCullFrequency20m);
                     GraphBuffer.UpdateWithCull(significantHeaveRateData, significantHeaveRateData20mList, Constants.GraphCullFrequency20m);
 
-                    GraphBuffer.UpdateWithCull(pitchMax20mData, pitchData3hList, Constants.GraphCullFrequency3h);
-                    GraphBuffer.UpdateWithCull(rollMax20mData, rollData3hList, Constants.GraphCullFrequency3h);
+                    GraphBuffer.UpdateWithCull(pitchMax3hData, pitch3hList, Constants.GraphCullFrequency3h);
+                    GraphBuffer.UpdateWithCull(pitchMaxUp20mData, pitchMaxUp3hList, Constants.GraphCullFrequency3h);
+                    GraphBuffer.UpdateWithCull(pitchMaxDown20mData, pitchMaxDown3hList, Constants.GraphCullFrequency3h);
+
+                    GraphBuffer.UpdateWithCull(rollMax3hData, rollData3hList, Constants.GraphCullFrequency3h);
+                    GraphBuffer.UpdateWithCull(rollMaxLeft20mData, rollMaxLeft3hList, Constants.GraphCullFrequency3h);
+                    GraphBuffer.UpdateWithCull(rollMaxRight20mData, rollMaxRight3hList, Constants.GraphCullFrequency3h);
+
                     GraphBuffer.UpdateWithCull(inclinationMax20mData, inclinationData3hList, Constants.GraphCullFrequency3h);
                     GraphBuffer.UpdateWithCull(significantHeaveRateData, significantHeaveRateData3hList, Constants.GraphCullFrequency3h);
 
                     // Fjerne gamle data fra chart data
-                    GraphBuffer.RemoveOldData(pitchData20mList, Constants.Minutes20 + Constants.ChartTimeCorrMin);
-                    GraphBuffer.RemoveOldData(rollData20mList, Constants.Minutes20 + Constants.ChartTimeCorrMin);
+                    GraphBuffer.RemoveOldData(pitch20mList, Constants.Minutes20 + Constants.ChartTimeCorrMin);
+                    GraphBuffer.RemoveOldData(pitchMaxUp20mList, Constants.Minutes20 + Constants.ChartTimeCorrMin);
+                    GraphBuffer.RemoveOldData(pitchMaxDown20mList, Constants.Minutes20 + Constants.ChartTimeCorrMin);
+                    
+                    GraphBuffer.RemoveOldData(roll20mList, Constants.Minutes20 + Constants.ChartTimeCorrMin);
+                    GraphBuffer.RemoveOldData(rollMaxLeft20mList, Constants.Minutes20 + Constants.ChartTimeCorrMin);
+                    GraphBuffer.RemoveOldData(rollMaxRight20mList, Constants.Minutes20 + Constants.ChartTimeCorrMin);
+
                     GraphBuffer.RemoveOldData(inclinationData20mList, Constants.Minutes20 + Constants.ChartTimeCorrMin);
                     GraphBuffer.RemoveOldData(significantHeaveRateData20mList, Constants.Minutes20 + Constants.ChartTimeCorrMin);
 
-                    GraphBuffer.RemoveOldData(pitchData3hList, Constants.Hours3 + Constants.ChartTimeCorrMin);
+                    GraphBuffer.RemoveOldData(pitch3hList, Constants.Hours3 + Constants.ChartTimeCorrMin);
+                    GraphBuffer.RemoveOldData(pitchMaxUp3hList, Constants.Hours3 + Constants.ChartTimeCorrMin);
+                    GraphBuffer.RemoveOldData(pitchMaxDown3hList, Constants.Hours3 + Constants.ChartTimeCorrMin);
+
                     GraphBuffer.RemoveOldData(rollData3hList, Constants.Hours3 + Constants.ChartTimeCorrMin);
                     GraphBuffer.RemoveOldData(inclinationData3hList, Constants.Hours3 + Constants.ChartTimeCorrMin);
                     GraphBuffer.RemoveOldData(significantHeaveRateData3hList, Constants.Hours3 + Constants.ChartTimeCorrMin);
 
                     // Oppdatere alignment datetime (nåtid) til alle chart (20m og 3h)
                     alignmentTime = DateTime.UtcNow;
-
-                    // Tick alignment
-                    //tickAlignment5 = DateTime.UtcNow.AddMinutes(-5);
-                    //tickAlignment10 = DateTime.UtcNow.AddMinutes(-10);
-                    //tickAlignment15 = DateTime.UtcNow.AddMinutes(-15);
                 }
             }
 
@@ -164,15 +207,15 @@ namespace HMS_Client
                 if (adminSettingsVM.regulationStandard == RegulationStandard.NOROG)
                 {
                     // Overføre data fra buffer til chart data: 20m
-                    GraphBuffer.Transfer(pitchBuffer20m, pitchData20mList);
-                    GraphBuffer.Transfer(rollBuffer20m, rollData20mList);
+                    GraphBuffer.Transfer(pitchBuffer20m, pitch20mList);
+                    GraphBuffer.Transfer(rollBuffer20m, roll20mList);
                     GraphBuffer.Transfer(inclinationBuffer20m, inclinationData20mList);
                     GraphBuffer.Transfer(heaveAmplitudeBuffer20m, heaveAmplitudeData20mList);
                     GraphBuffer.Transfer(significantHeaveRateBuffer20m, significantHeaveRateData20mList);
 
                     // Fjerne gamle data fra chart data
-                    GraphBuffer.RemoveOldData(pitchData20mList, Constants.Minutes20 + Constants.ChartTimeCorrMin);
-                    GraphBuffer.RemoveOldData(rollData20mList, Constants.Minutes20 + Constants.ChartTimeCorrMin);
+                    GraphBuffer.RemoveOldData(pitch20mList, Constants.Minutes20 + Constants.ChartTimeCorrMin);
+                    GraphBuffer.RemoveOldData(roll20mList, Constants.Minutes20 + Constants.ChartTimeCorrMin);
                     GraphBuffer.RemoveOldData(inclinationData20mList, Constants.Minutes20 + Constants.ChartTimeCorrMin);
                     GraphBuffer.RemoveOldData(heaveAmplitudeData20mList, Constants.Minutes20 + Constants.ChartTimeCorrMin);
                     GraphBuffer.RemoveOldData(significantHeaveRateData20mList, Constants.Minutes20 + Constants.ChartTimeCorrMin);
@@ -230,14 +273,14 @@ namespace HMS_Client
                 if (adminSettingsVM.regulationStandard == RegulationStandard.NOROG)
                 {
                     // Overføre data fra buffer til chart data: 20m
-                    GraphBuffer.Transfer(pitchBuffer3h, pitchData3hList);
+                    GraphBuffer.Transfer(pitchBuffer3h, pitch3hList);
                     GraphBuffer.Transfer(rollBuffer3h, rollData3hList);
                     GraphBuffer.Transfer(inclinationBuffer3h, inclinationData3hList);
                     GraphBuffer.Transfer(heaveAmplitudeBuffer3h, heaveAmplitudeData3hList);
                     GraphBuffer.Transfer(significantHeaveRateBuffer3h, significantHeaveRateData3hList);
 
                     // Fjerne gamle data fra chart data
-                    GraphBuffer.RemoveOldData(pitchData3hList, Constants.Hours3 + Constants.ChartTimeCorrMin);
+                    GraphBuffer.RemoveOldData(pitch3hList, Constants.Hours3 + Constants.ChartTimeCorrMin);
                     GraphBuffer.RemoveOldData(rollData3hList, Constants.Hours3 + Constants.ChartTimeCorrMin);
                     GraphBuffer.RemoveOldData(inclinationData3hList, Constants.Hours3 + Constants.ChartTimeCorrMin);
                     GraphBuffer.RemoveOldData(heaveAmplitudeData3hList, Constants.Hours3 + Constants.ChartTimeCorrMin);
@@ -365,7 +408,7 @@ namespace HMS_Client
             {
                 for (double i = Constants.Minutes20 * -1000; i <= 0; i += Constants.GraphCullFrequency20m + 250)
                 {
-                    pitchData20mList.Add(new HMSData()
+                    pitch20mList.Add(new HMSData()
                     {
                         data = 0,
                         timestamp = DateTime.UtcNow.AddMilliseconds(i)
@@ -374,7 +417,7 @@ namespace HMS_Client
 
                 for (double i = Constants.Hours3 * -1000; i <= 0; i += Constants.GraphCullFrequency3h + 250)
                 {
-                    pitchData3hList.Add(new HMSData()
+                    pitch3hList.Add(new HMSData()
                     {
                         data = 0,
                         timestamp = DateTime.UtcNow.AddMilliseconds(i)
@@ -385,7 +428,7 @@ namespace HMS_Client
             {
                 for (int i = -Constants.Minutes20; i <= 0; i++)
                 {
-                    pitchData20mList.Add(new HMSData()
+                    pitch20mList.Add(new HMSData()
                     {
                         data = 0,
                         timestamp = DateTime.UtcNow.AddSeconds(i)
@@ -394,7 +437,7 @@ namespace HMS_Client
 
                 for (int i = -Constants.Hours3; i <= 0; i++)
                 {
-                    pitchData3hList.Add(new HMSData()
+                    pitch3hList.Add(new HMSData()
                     {
                         data = 0,
                         timestamp = DateTime.UtcNow.AddSeconds(i)
@@ -570,7 +613,7 @@ namespace HMS_Client
             {
                 for (double i = Constants.Minutes20 * -1000; i <= 0; i += Constants.GraphCullFrequency20m + 250)
                 {
-                    rollData20mList.Add(new HMSData()
+                    roll20mList.Add(new HMSData()
                     {
                         data = 0,
                         timestamp = DateTime.UtcNow.AddMilliseconds(i)
@@ -590,7 +633,7 @@ namespace HMS_Client
             {
                 for (int i = -Constants.Minutes20; i <= 0; i++)
                 {
-                    rollData20mList.Add(new HMSData()
+                    roll20mList.Add(new HMSData()
                     {
                         data = 0,
                         timestamp = DateTime.UtcNow.AddSeconds(i)
@@ -1789,6 +1832,23 @@ namespace HMS_Client
                 {
                     return Constants.NotAvailable;
                 }
+            }
+        }
+
+        /////////////////////////////////////////////////////////////////////////////
+        // Helideck Status Trend Time
+        /////////////////////////////////////////////////////////////////////////////
+        private string _landingStatusTimeString { get; set; }
+        public string landingStatusTimeString
+        {
+            get
+            {
+                return _landingStatusTimeString;
+            }
+            set
+            {
+                _landingStatusTimeString = value;
+                OnPropertyChanged();
             }
         }
 

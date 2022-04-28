@@ -249,7 +249,6 @@
                                     HorizontalAlignment="Right">
 
                                     <TextBlock
-                                        Name="lbMaxPitchUp20m"
                                         Text="{Binding Path=pitchMaxUp20mString}"
                                         FontSize="{StaticResource fontSizeData}" />
 
@@ -515,7 +514,6 @@
                                     HorizontalAlignment="Right">
 
                                     <TextBlock
-                                        Name="lbMaxRollLeft20m"
                                         Text="{Binding Path=rollMaxLeft20mString}"
                                         FontSize="{StaticResource fontSizeData}" />
 
@@ -551,7 +549,6 @@
                                     HorizontalAlignment="Right">
 
                                     <TextBlock
-                                        Name="lbMaxRollRight20m"
                                         Text="{Binding Path=rollMaxRight20mString}"
                                         FontSize="{StaticResource fontSizeData}" />
 
@@ -737,7 +734,6 @@
                                     HorizontalAlignment="Right">
 
                                     <TextBlock
-                                        Name="lbMaxInclination20m"
                                         Text="{Binding Path=inclinationMax20mString}"
                                         FontSize="{StaticResource fontSizeData}" />
 
@@ -948,7 +944,6 @@
                                     HorizontalAlignment="Right">
 
                                     <TextBlock
-                                        Name="lbSignificantHeaveRate20m"
                                         Text="{Binding Path=significantHeaveRateString}"
                                         FontSize="{StaticResource fontSizeData}" />
 

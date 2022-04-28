@@ -15,7 +15,7 @@ namespace HMS_Client
         private Config config;
 
         // User Input Data
-        private HelideckMotionLimitsVM viewModel;
+        private HelideckMotionLimitsVM helideckMotionLimitsVM;
 
         private RadTabControl tabControl;
 
@@ -24,13 +24,13 @@ namespace HMS_Client
             InitializeComponent();
         }
 
-        public void Init(HelideckMotionLimitsVM viewModel, Config config, RadTabItem tabHelicopterOps, RadTabControl tabControl)
+        public void Init(HelideckMotionLimitsVM helideckMotionLimitsVM, Config config, RadTabItem tabHelicopterOps, RadTabControl tabControl)
         {
-            this.viewModel = viewModel;
+            this.helideckMotionLimitsVM = helideckMotionLimitsVM;
             this.config = config;
             this.tabControl = tabControl;
 
-            DataContext = this.viewModel;
+            DataContext = this.helideckMotionLimitsVM;
 
             InitUIUpdate(tabHelicopterOps);
         }
@@ -46,15 +46,15 @@ namespace HMS_Client
 
             void UpdateUI(object sender, EventArgs e)
             {
-                if (viewModel != null &&
+                if (helideckMotionLimitsVM != null &&
                     tabHelicopterOps.IsSelected)
                 {
                     ///////////////////////////////////////////////////////////////////////////////////////////
                     // Helideck Motion: Max Pitch
                     ///////////////////////////////////////////////////////////////////////////////////////////                  
-                    if (viewModel.pitchMax20mData?.status == DataStatus.OK)
+                    if (helideckMotionLimitsVM.pitchMax20mData?.status == DataStatus.OK)
                     {
-                        if (viewModel.pitchMax20mData.limitStatus == LimitStatus.OK)
+                        if (helideckMotionLimitsVM.pitchMax20mData.limitStatus == LimitStatus.OK)
                             // Blank bakgrunn
                             gridMaxPitch.Background = (Brush)FindResource("ColorBackgroundSeparator");
                         else
@@ -70,9 +70,9 @@ namespace HMS_Client
                     ///////////////////////////////////////////////////////////////////////////////////////////
                     // Helideck Motion: Roll Max
                     ///////////////////////////////////////////////////////////////////////////////////////////
-                    if (viewModel.rollMax20mData?.status == DataStatus.OK)
+                    if (helideckMotionLimitsVM.rollMax20mData?.status == DataStatus.OK)
                     {
-                        if (viewModel.rollMax20mData.limitStatus == LimitStatus.OK)
+                        if (helideckMotionLimitsVM.rollMax20mData.limitStatus == LimitStatus.OK)
                             // Blank bakgrunn
                             gridMaxRoll.ClearValue(Grid.BackgroundProperty);
                         else
@@ -88,9 +88,9 @@ namespace HMS_Client
                     ///////////////////////////////////////////////////////////////////////////////////////////
                     // Helideck Motion: Significant Heave Rate
                     ///////////////////////////////////////////////////////////////////////////////////////////
-                    if (viewModel.significantHeaveRateData?.status == DataStatus.OK)
+                    if (helideckMotionLimitsVM.significantHeaveRateData?.status == DataStatus.OK)
                     {
-                        if (viewModel.significantHeaveRateData.limitStatus == LimitStatus.OK)
+                        if (helideckMotionLimitsVM.significantHeaveRateData.limitStatus == LimitStatus.OK)
                             // Blank bakgrunn
                             gridSignificantHeaveRate.Background = (Brush)FindResource("ColorBackgroundSeparator");
                         else
@@ -106,9 +106,9 @@ namespace HMS_Client
                     ///////////////////////////////////////////////////////////////////////////////////////////
                     // Helideck Motion: Max Inclination
                     ///////////////////////////////////////////////////////////////////////////////////////////
-                    if (viewModel.inclinationMax20mData?.status == DataStatus.OK)
+                    if (helideckMotionLimitsVM.inclinationMax20mData?.status == DataStatus.OK)
                     {
-                        if (viewModel.inclinationMax20mData.limitStatus == LimitStatus.OK)
+                        if (helideckMotionLimitsVM.inclinationMax20mData.limitStatus == LimitStatus.OK)
                             // Blank bakgrunn
                             gridMaxInclination.ClearValue(Grid.BackgroundProperty);
                         else

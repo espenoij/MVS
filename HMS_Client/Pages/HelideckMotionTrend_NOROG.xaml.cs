@@ -32,13 +32,13 @@ namespace HMS_Client
         private void InitUI()
         {
             // Koble chart til data
-            chartPitch20m.Series[0].ItemsSource = viewModel.pitchData20mList;
-            chartRoll20m.Series[0].ItemsSource = viewModel.rollData20mList;
+            chartPitch20m.Series[0].ItemsSource = viewModel.pitch20mList;
+            chartRoll20m.Series[0].ItemsSource = viewModel.roll20mList;
             chartInclination20m.Series[0].ItemsSource = viewModel.inclinationData20mList;
             chartHeaveAmplitude20m.Series[0].ItemsSource = viewModel.heaveAmplitudeData20mList;
             chartSignificantHeaveRate20m.Series[0].ItemsSource = viewModel.significantHeaveRateData20mList;
 
-            chartPitch3h.Series[0].ItemsSource = viewModel.pitchData3hList;
+            chartPitch3h.Series[0].ItemsSource = viewModel.pitch3hList;
             chartRoll3h.Series[0].ItemsSource = viewModel.rollData3hList;
             chartInclination3h.Series[0].ItemsSource = viewModel.inclinationData3hList;
             chartHeaveAmplitude3h.Series[0].ItemsSource = viewModel.heaveAmplitudeData3hList;
