@@ -530,47 +530,6 @@ namespace HMS_Server
             }
         }
 
-        //public void Insert(HMSData hmsData)
-        //{
-        //    try
-        //    {
-        //        if (isDatabaseConnectionOK)
-        //        {
-        //            if (hmsData.timestamp != DateTime.MinValue &&
-        //                !double.IsNaN(hmsData.data) &&
-        //                !string.IsNullOrEmpty(hmsData.dbColumnName))
-        //            {
-        //                using (var connection = new MySqlConnection(connectionString))
-        //                {
-        //                    // SQL kommando
-        //                    var cmd = new MySqlCommand();
-        //                    cmd.Connection = connection;
-
-        //                    // Insert kommando
-        //                    cmd.CommandText = string.Format("INSERT INTO {0}({1}, {2}) VALUES(@1, @2)", hmsData.dbColumnName, columnTimestamp, columnData);
-
-        //                    // Insert parametre
-        //                    cmd.Parameters.AddWithValue("@1", hmsData.timestamp);
-        //                    cmd.Parameters.AddWithValue("@2", hmsData.data);
-
-        //                    // Åpne database connection
-        //                    connection.Open();
-
-        //                    // Insert execute
-        //                    cmd.ExecuteNonQuery();
-
-        //                    // Lukke database connection
-        //                    connection.Close();
-        //                }
-        //            }
-        //        }
-        //    }
-        //    catch (Exception)
-        //    {
-        //        throw;
-        //    }
-        //}
-
         public void Insert(RadObservableCollection<SensorGroup> sensorGroupList)
         {
             try
@@ -606,15 +565,18 @@ namespace HMS_Server
                         int i = 1;
                         foreach (var sensorGroup in sensorGroupList)
                         {
-                            // Kun variabler som har column navn satt skal legges inn
-                            if (!string.IsNullOrEmpty(sensorGroup.dbColumn))
+                            if (sensorGroup != null)
                             {
-                                if (first)
-                                    valueNumbers += string.Format("@{0}", i++);
-                                else
-                                    valueNumbers += ", " + string.Format("@{0}", i++);
+                                // Kun variabler som har column navn satt skal legges inn
+                                if (!string.IsNullOrEmpty(sensorGroup.dbColumn))
+                                {
+                                    if (first)
+                                        valueNumbers += string.Format("@{0}", i++);
+                                    else
+                                        valueNumbers += ", " + string.Format("@{0}", i++);
 
-                                first = false;
+                                    first = false;
+                                }
                             }
                         }
 
@@ -628,15 +590,18 @@ namespace HMS_Server
                         i = 1;
                         foreach (var sensorGroup in sensorGroupList)
                         {
-                            // Kun variabler som har column navn satt skal legges inn
-                            if (!string.IsNullOrEmpty(sensorGroup.dbColumn))
+                            if (sensorGroup != null)
                             {
-                                string paramName = string.Format("@{0}", i++);
+                                // Kun variabler som har column navn satt skal legges inn
+                                if (!string.IsNullOrEmpty(sensorGroup.dbColumn))
+                                {
+                                    string paramName = string.Format("@{0}", i++);
 
-                                if (sensorGroup.status == DataStatus.OK)
-                                    cmd.Parameters.AddWithValue(paramName, 1);
-                                else
-                                    cmd.Parameters.AddWithValue(paramName, 0);
+                                    if (sensorGroup.status == DataStatus.OK)
+                                        cmd.Parameters.AddWithValue(paramName, 1);
+                                    else
+                                        cmd.Parameters.AddWithValue(paramName, 0);
+                                }
                             }
                         }
 
@@ -693,15 +658,18 @@ namespace HMS_Server
                         int i = 1;
                         foreach (var hmsData in hmsDataCollection.GetDataList().ToList())
                         {
-                            // Kun variabler som har column navn satt skal legges inn
-                            if (!string.IsNullOrEmpty(hmsData.dbColumn))
+                            if (hmsData != null)
                             {
-                                if (first)
-                                    valueNumbers += string.Format("@{0}", i++);
-                                else
-                                    valueNumbers += ", " + string.Format("@{0}", i++);
+                                // Kun variabler som har column navn satt skal legges inn
+                                if (!string.IsNullOrEmpty(hmsData.dbColumn))
+                                {
+                                    if (first)
+                                        valueNumbers += string.Format("@{0}", i++);
+                                    else
+                                        valueNumbers += ", " + string.Format("@{0}", i++);
 
-                                first = false;
+                                    first = false;
+                                }
                             }
                         }
 
@@ -715,12 +683,15 @@ namespace HMS_Server
                         i = 1;
                         foreach (var hmsData in hmsDataCollection.GetDataList().ToList())
                         {
-                            // Kun variabler som har column navn satt skal legges inn
-                            if (!string.IsNullOrEmpty(hmsData.dbColumn))
+                            if (hmsData != null)
                             {
-                                string paramName = string.Format("@{0}", i++);
+                                // Kun variabler som har column navn satt skal legges inn
+                                if (!string.IsNullOrEmpty(hmsData.dbColumn))
+                                {
+                                    string paramName = string.Format("@{0}", i++);
 
-                                cmd.Parameters.AddWithValue(paramName, hmsData.data.ToString());
+                                    cmd.Parameters.AddWithValue(paramName, hmsData.data.ToString());
+                                }
                             }
                         }
 

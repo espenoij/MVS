@@ -411,8 +411,13 @@ namespace HMS_Server
                 }
 
                 // Vind hastighet
-                helideckWindSpeedRT.Set(windSpeedCorrectedToHelideck);
-                emsWindSpeedRT.Set(windSpeedCorrectedTo10m);
+                helideckWindSpeedRT.data = windSpeedCorrectedToHelideck.data;
+                helideckWindSpeedRT.status = windSpeedCorrectedToHelideck.status;
+                helideckWindSpeedRT.timestamp = windSpeedCorrectedToHelideck.timestamp;
+
+                emsWindSpeedRT.data = windSpeedCorrectedToHelideck.data;
+                emsWindSpeedRT.status = windSpeedCorrectedToHelideck.status;
+                emsWindSpeedRT.timestamp = windSpeedCorrectedToHelideck.timestamp;
 
                 // Area Wind: 2-minute data
                 ///////////////////////////////////////////////////////////

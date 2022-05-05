@@ -15,6 +15,10 @@ namespace HMS_Server
             parity = Parity.None;
             handshake = Handshake.None;
 
+            inputType = InputDataType.Text;
+            totalBytes = 1;
+            binarySigned = false;
+            
             packetHeader = string.Empty;
             packetEnd = "\\r\\n";
             packetDelimiter = string.Empty;
@@ -43,6 +47,10 @@ namespace HMS_Server
             parity = sps.parity;
             handshake = sps.handshake;
 
+            inputType = sps.inputType;
+            totalBytes = sps.totalBytes;
+            binarySigned = sps.binarySigned;
+
             packetHeader = sps.packetHeader;
             packetEnd = sps.packetEnd;
             packetDelimiter = sps.packetDelimiter;
@@ -70,13 +78,19 @@ namespace HMS_Server
         public Handshake handshake { get; set; }
 
         // Data Extraction Setup
+        public InputDataType inputType { get; set; }
+        public int totalBytes { get; set; }
+        public bool binarySigned { get; set; }
+
         public string packetHeader { get; set; }
         public string packetEnd { get; set; }
+        
         public string packetDelimiter { get; set; }
         public CombineFields packetCombineFields { get; set; }
         public bool fixedPosData { get; set; }
         public int fixedPosStart { get; set; }
         public int fixedPosTotal { get; set; }
+        
         public string dataField { get; set; }
         public DecimalSeparator decimalSeparator { get; set; }
         public bool autoExtractValue { get; set; }

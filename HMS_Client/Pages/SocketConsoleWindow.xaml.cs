@@ -38,30 +38,33 @@ namespace HMS_Client
 
             void UpdateConsoleMessages(object sender, EventArgs e)
             {
-                TransferNewMessages(socketConsoleDisplayList, socketConsole.GetMessages());
+                TransferNewMessages(socketConsoleDisplayList, socketConsole);
             }
         }
 
-        private void TransferNewMessages(RadObservableCollection<SocketConsoleMessage> displayList, RadObservableCollection<SocketConsoleMessage> newMessages)
+        private void TransferNewMessages(RadObservableCollection<SocketConsoleMessage> displayList, SocketConsole socketConsole)
         {
-            // Gå gjennom meldingslisten
-            foreach (var item in newMessages.ToList())
+            lock (socketConsole.GetMessageListLock())
             {
-                if (item != null)
+                // Gå gjennom meldingslisten
+                foreach (var item in socketConsole.GetMessages().ToList())
                 {
-                    // Finne ut om melding ligger inne fra før
-                    // Dersom den ikke ligger inne -> legg den inn, ellers gjør vi ingenting
-                    if (displayList.Where(x => x.text == item.text).Count() == 0)
+                    if (item != null)
                     {
-                        // Legge inn my melding
-                        displayList.Add(new SocketConsoleMessage()
+                        // Finne ut om melding ligger inne fra før
+                        // Dersom den ikke ligger inne -> legg den inn, ellers gjør vi ingenting
+                        if (displayList.Where(x => x.text == item.text).Count() == 0)
                         {
-                            text = item.text
-                        });
+                            // Legge inn my melding
+                            displayList.Add(new SocketConsoleMessage()
+                            {
+                                text = item.text
+                            });
 
-                        // Slette første når listen blir for lang
-                        while (displayList.Count > Constants.MaxErrorMessages)
-                            displayList.RemoveAt(0);
+                            // Slette første når listen blir for lang
+                            while (displayList.Count > Constants.MaxErrorMessages)
+                                displayList.RemoveAt(0);
+                        }
                     }
                 }
             }

@@ -7,6 +7,10 @@ namespace HMS_Server
 {
     class SerialPortProcessing
     {
+        public InputDataType inputType { get; set; }
+        public int totalBytes { get; set; }
+        public bool binarySigned { get; set; }
+
         public string packetHeader { get; set; }
         public string packetEnd { get; set; }
 
@@ -83,13 +87,23 @@ namespace HMS_Server
                         // packetEnd funnet
                         else
                         {
-                            // Korrigerer packetEnd slik at vi får med packetEnd i resultatet
-                            packetEndPos += packetEnd.Length;
-
                             if (packetEndPos - packetStartPos > 0)
                             {
-                                // Plukke ut data mellom packetStartPos og packetEndPos for videre prosessering
-                                packetString.Add(dataString.Substring(packetStartPos, packetEndPos - packetStartPos));
+                                switch (inputType)
+                                {
+                                    case InputDataType.Text:
+                                        // Korrigerer packetEnd slik at vi får med packetEnd i resultatet
+                                        packetEndPos += packetEnd.Length;
+
+                                        // Plukke ut data mellom packetStartPos og packetEndPos for videre prosessering
+                                        packetString.Add(dataString.Substring(packetStartPos, packetEndPos - packetStartPos));
+                                        break;
+
+                                    case InputDataType.Binary:
+                                        // Sendere hele pakken videre
+                                        packetString.Add(dataString);
+                                        break;
+                                }
 
                                 // Neste iterasjon
                                 startPos = packetEndPos;
@@ -123,15 +137,15 @@ namespace HMS_Server
                     string trimmedDataString = dataString;
 
                     // Trimme bort start
-                    if (packetHeader != string.Empty)
+                    if (packetHeader != string.Empty && inputType == InputDataType.Text)
                         trimmedDataString = trimmedDataString.Substring(packetHeader.Length);
 
                     // Trimme bort evt delimiter etter start
-                    if (trimmedDataString.StartsWith(delimiter[0].ToString(), StringComparison.Ordinal))
+                    if (trimmedDataString.StartsWith(delimiter[0].ToString(), StringComparison.Ordinal) && inputType == InputDataType.Text)
                         trimmedDataString = trimmedDataString.Substring(delimiter[0].ToString().Length);
 
                     // Trimme bort end
-                    if (!string.IsNullOrEmpty(packetEnd) && !string.IsNullOrEmpty(trimmedDataString))
+                    if (!string.IsNullOrEmpty(packetEnd) && !string.IsNullOrEmpty(trimmedDataString) && inputType == InputDataType.Text)
                     {
                         int length = trimmedDataString.IndexOf(packetEnd, StringComparison.Ordinal);
                         if (length > 0)
@@ -188,85 +202,126 @@ namespace HMS_Server
         {
             SelectedDataField selectedData = new SelectedDataField();
 
-            if (!string.IsNullOrEmpty(packetDataFields.dataField[dataField]))
-                selectedData.selectedDataFieldString = packetDataFields.dataField[dataField];
-
-            // Vise selected data på skjerm
-            if (!string.IsNullOrEmpty(selectedData.selectedDataFieldString))
+            if (inputType == InputDataType.Text)
             {
-                // Har vi automatisk number extraction?
-                if (autoExtractValue)
+                if (!string.IsNullOrEmpty(packetDataFields.dataField[dataField]))
+                    selectedData.selectedDataFieldString = packetDataFields.dataField[dataField];
+
+                // Vise selected data på skjerm
+                if (!string.IsNullOrEmpty(selectedData.selectedDataFieldString))
                 {
-                    double doubleValue;
-                    int intValue;
-                    string valueStr;
-                    bool valueFound = false;
-
-                    // NB! Viktig å bruke cultureInfo i konvertering til og fra string
-
-                    // 1. Søker først etter desimal-tall verdier
-
-                    // Søker etter substring med desimal-tall
-                    CultureInfo cultureInfo;
-
-                    if (decimalSeparator == DecimalSeparator.Point)
+                    // Har vi automatisk number extraction?
+                    if (autoExtractValue)
                     {
-                        valueStr = Regex.Match(selectedData.selectedDataFieldString, @"-?\d*\.\d*").ToString();
-                        cultureInfo = new CultureInfo("en-US");
-                    }
-                    else
-                    {
-                        valueStr = Regex.Match(selectedData.selectedDataFieldString, @"-?\d*\,\d*").ToString();
-                        cultureInfo = new CultureInfo("nb-NO");
-                    }
+                        double doubleValue;
+                        int intValue;
+                        string valueStr;
+                        bool valueFound = false;
 
-                    // Fant vi substring med tall?
-                    if (!string.IsNullOrEmpty(valueStr))
-                    {
-                        // Konvertere substring til double for å verifisere gyldig double
-                        valueFound = double.TryParse(valueStr, NumberStyles.Any, cultureInfo, out doubleValue);
+                        // NB! Viktig å bruke cultureInfo i konvertering til og fra string
 
-                        // Fant desimal tall
-                        if (valueFound)
+                        // 1. Søker først etter desimal-tall verdier
+
+                        // Søker etter substring med desimal-tall
+                        CultureInfo cultureInfo;
+
+                        if (decimalSeparator == DecimalSeparator.Point)
                         {
-                            selectedData.selectedDataFieldString = doubleValue.ToString(Constants.cultureInfo);
+                            valueStr = Regex.Match(selectedData.selectedDataFieldString, @"-?\d*\.\d*").ToString();
+                            cultureInfo = new CultureInfo("en-US");
                         }
-                    }
-
-                    // ...dersom vi ikke fant desimal-tall verdier
-                    if (!valueFound)
-                    {
-                        // 2. Søker etter integer verdier
-
-                        // Søker etter substring med integer tall
-                        valueStr = Regex.Match(selectedData.selectedDataFieldString, @"-?\d+").ToString();
+                        else
+                        {
+                            valueStr = Regex.Match(selectedData.selectedDataFieldString, @"-?\d*\,\d*").ToString();
+                            cultureInfo = new CultureInfo("nb-NO");
+                        }
 
                         // Fant vi substring med tall?
                         if (!string.IsNullOrEmpty(valueStr))
                         {
-                            // Konvertere substring til int for å verifisere gyldig int
-                            valueFound = int.TryParse(valueStr, NumberStyles.Any, cultureInfo, out intValue);
+                            // Konvertere substring til double for å verifisere gyldig double
+                            valueFound = double.TryParse(valueStr, NumberStyles.Any, cultureInfo, out doubleValue);
 
-                            // Fant integer tall
+                            // Fant desimal tall
                             if (valueFound)
                             {
-                                selectedData.selectedDataFieldString = intValue.ToString(Constants.cultureInfo);
+                                selectedData.selectedDataFieldString = doubleValue.ToString(Constants.cultureInfo);
+                            }
+                        }
+
+                        // ...dersom vi ikke fant desimal-tall verdier
+                        if (!valueFound)
+                        {
+                            // 2. Søker etter integer verdier
+
+                            // Søker etter substring med integer tall
+                            valueStr = Regex.Match(selectedData.selectedDataFieldString, @"-?\d+").ToString();
+
+                            // Fant vi substring med tall?
+                            if (!string.IsNullOrEmpty(valueStr))
+                            {
+                                // Konvertere substring til int for å verifisere gyldig int
+                                valueFound = int.TryParse(valueStr, NumberStyles.Any, cultureInfo, out intValue);
+
+                                // Fant integer tall
+                                if (valueFound)
+                                {
+                                    selectedData.selectedDataFieldString = intValue.ToString(Constants.cultureInfo);
+                                }
                             }
                         }
                     }
+                    //else
+                    //{
+                    //    // Sjekke at vi har korrekt desimal separator
+                    //    if (decimalSeparator == DecimalSeparator.Point)
+                    //    {
+                    //        selectedData.selectedDataFieldString.Replace(",", ".");
+                    //    }
+                    //    else
+                    //    {
+                    //        selectedData.selectedDataFieldString.Replace(".", ",");
+                    //    }
+                    //}
                 }
-                //else
-                //{
-                //    // Sjekke at vi har korrekt desimal separator
-                //    if (decimalSeparator == DecimalSeparator.Point)
-                //    {
-                //        selectedData.selectedDataFieldString.Replace(",", ".");
-                //    }
-                //    else
-                //    {
-                //        selectedData.selectedDataFieldString.Replace(".", ",");
-                //    }
-                //}
+            }
+            else
+            if (inputType == InputDataType.Binary)
+            {
+                // Generere en hex string
+                string hexValue = "0x";
+                for (int i = 0; i < totalBytes; i++)
+                    hexValue += packetDataFields.dataField[dataField + i];
+
+                // Konvertere hex string til desimal verdi, og lagre som string igjen
+                switch (totalBytes)
+                {
+                    case 1:
+                        // Kun 1 byte -> ikke signed
+                        selectedData.selectedDataFieldString = Convert.ToByte(hexValue, 16).ToString();
+                        break;
+
+                    case 2:
+                        if (binarySigned)
+                            selectedData.selectedDataFieldString = Convert.ToInt16(hexValue, 16).ToString();
+                        else
+                            selectedData.selectedDataFieldString = Convert.ToUInt16(hexValue, 16).ToString();
+                        break;
+
+                    case 4:
+                        if (binarySigned)
+                            selectedData.selectedDataFieldString = Convert.ToInt32(hexValue, 16).ToString();
+                        else
+                            selectedData.selectedDataFieldString = Convert.ToUInt32(hexValue, 16).ToString();
+                        break;
+
+                    case 8:
+                        if (binarySigned)
+                            selectedData.selectedDataFieldString = Convert.ToInt64(hexValue, 16).ToString();
+                        else
+                            selectedData.selectedDataFieldString = Convert.ToUInt64(hexValue, 16).ToString();
+                        break;
+                }
             }
 
             return selectedData;

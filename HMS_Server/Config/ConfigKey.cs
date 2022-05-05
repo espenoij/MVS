@@ -139,7 +139,7 @@
 
     // Server App: Serial Port Configuration
     public const string ShowControlChars = "ShowControlChars";
-    public const string BinaryData = "BinaryData";
+    public const string SensorDataType = "SensorDataType";
     public const string TotalDataLines = "TotalDataLines";
 
     // Server App: Error Messages

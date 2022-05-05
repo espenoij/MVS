@@ -14,11 +14,13 @@
     Width="1600">
 
     <telerik:RadWindow.Resources>
+
         <ResourceDictionary>
             <Style
                 TargetType="local:SerialPortSetupWindow"
                 BasedOn="{StaticResource RadWindowStyle}" />
         </ResourceDictionary>
+
     </telerik:RadWindow.Resources>
 
     <telerik:RadWindow.Icon>
@@ -216,6 +218,27 @@
 
                 <!--Data Display-->
                 <telerik:GroupBox
+                    Header="Sensor Output"
+                    Margin="8">
+
+                    <StackPanel>
+
+                        <DockPanel>
+                            <Label
+                                Width="160"
+                                Content="Data Type"
+                                VerticalAlignment="Center" />
+                            <telerik:RadComboBox
+                                Name="cboSensorDataType"
+                                SelectionChanged="cboSensorDataType_SelectionChanged" />
+                        </DockPanel>
+
+                    </StackPanel>
+
+                </telerik:GroupBox>
+
+                <!--Data Display-->
+                <telerik:GroupBox
                     Header="Data Display"
                     Margin="8">
 
@@ -224,7 +247,7 @@
                         <DockPanel>
                             
                             <Label
-                                Width="200"
+                                Width="160"
                                 Content="Data Lines"
                                 VerticalAlignment="Center" />
 
@@ -241,12 +264,6 @@
                             Checked="chkShowControlChars_Checked"
                             Unchecked="chkShowControlChars_Unchecked"
                             Content="Show Control Chars" />
-
-                        <CheckBox
-                            x:Name="chkBinaryData"
-                            Checked="chkBinaryData_Checked"
-                            Unchecked="chkBinaryData_Unchecked"
-                            Content="Binary Data" />
 
                         <Button
                             x:Name="chkRawDataAllClear"
@@ -357,7 +374,7 @@
 
                                 <DockPanel>
                                     <Label
-                                        Width="120"
+                                        Width="160"
                                         Content="Packet Header"
                                         VerticalAlignment="Center" />
                                     <TextBox
@@ -368,7 +385,7 @@
 
                                 <DockPanel>
                                     <Label
-                                        Width="120"
+                                        Width="160"
                                         Content="Packet End"
                                         VerticalAlignment="Center" />
                                     <TextBox
@@ -766,7 +783,8 @@
 
                                 <DockPanel>
                                     <Label
-                                        Width="120"
+                                        Name="lbPacketDataDelimiter"
+                                        Width="160"
                                         Content="Delimiter"
                                         VerticalAlignment="Center" />
                                     <TextBox
@@ -777,11 +795,11 @@
 
                                 <DockPanel>
                                     <Label
-                                        Width="120"
+                                        Name="lbCombineFields"
+                                        Width="160"
                                         Content="Combine Fields"
                                         VerticalAlignment="Center" />
                                     <telerik:RadComboBox
-                                        Width="auto"
                                         Name="cboCombineFields"
                                         SelectionChanged="cboCombineFields_SelectionChanged" />
                                 </DockPanel>
@@ -798,7 +816,7 @@
                                 <DockPanel>
                                     <Label
                                         Name="lblFixedPositionDataStart"
-                                        Width="120"
+                                        Width="160"
                                         Content="Start"
                                         VerticalAlignment="Center" />
                                     <TextBox
@@ -810,7 +828,7 @@
                                 <DockPanel>
                                     <Label
                                         Name="lblFixedPositionDataTotal"
-                                        Width="120"
+                                        Width="160"
                                         Content="Total"
                                         VerticalAlignment="Center" />
                                     <TextBox
@@ -836,32 +854,49 @@
                                 <!--Selected Data Field-->
                                 <DockPanel>
                                     <Label
-                                        Width="120"
+                                        Width="160"
                                         Content="Data Field"
                                         VerticalAlignment="Center" />
                                     <telerik:RadComboBox
-                                        Width="auto"
                                         Name="cboSelectedDataField"
                                         SelectionChanged="cboSelectedDataField_SelectionChanged" />
                                 </DockPanel>
 
-                                <!--Decimal Separator-->
+                                <!--Text: Decimal Separator-->
                                 <DockPanel>
                                     <Label
-                                        Width="100"
+                                        Name="lbDecimalSeparator"
+                                        Width="160"
                                         Content="Decimal Separator"
                                         VerticalAlignment="Center" />
                                     <telerik:RadComboBox
-                                        Width="auto"
                                         Name="cboDecimalSeparator"
                                         SelectionChanged="cboDecimalSeparator_SelectionChanged" />
                                 </DockPanel>
 
-                                <!--Auto Extract Value-->
+                                <!--Text: Auto Extract Value-->
                                 <CheckBox
                                     Name="cboSelectedDataAutoExtract"
                                     Checked="cboSelectedDataAutoExtract_Checked"
                                     Unchecked="cboSelectedDataAutoExtract_Unchecked">Auto Extract Value</CheckBox>
+
+                                <!--Binary/Hex: Total Bytes-->
+                                <DockPanel>
+                                    <Label
+                                        Name="lbSelectedDataBytesInValue"
+                                        Width="160"
+                                        Content="Total Bytes"
+                                        VerticalAlignment="Center" />
+                                    <telerik:RadComboBox
+                                        Name="cboSelectedDataBytesInValue"
+                                        SelectionChanged="cboSelectedDataBytesInValue_SelectionChanged" />
+                                </DockPanel>
+
+                                <!--Binary/Hex: Signed Value-->
+                                <CheckBox
+                                    Name="cboSelectedDataDataIsSigned"
+                                    Checked="cboSelectedDataDataIsSigned_Checked"
+                                    Unchecked="cboSelectedDataDataIsSigned_Unchecked">Signed Value</CheckBox>
 
                             </StackPanel>
 

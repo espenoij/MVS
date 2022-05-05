@@ -14,6 +14,9 @@ namespace HMS_Server
             this.stopBits = sensorData.serialPort.stopBits.ToString();
             this.parity = sensorData.serialPort.parity.ToString();
             this.handshake = sensorData.serialPort.handshake.ToString();
+            this.inputType = sensorData.serialPort.inputType.ToString();
+            this.totalBytes = sensorData.serialPort.totalBytes.ToString();
+            this.binarySigned = sensorData.serialPort.binarySigned.ToString();
             this.packetHeader = sensorData.serialPort.packetHeader;
             this.packetEnd = sensorData.serialPort.packetEnd;
             this.packetDelimiter = sensorData.serialPort.packetDelimiter;
@@ -81,6 +84,27 @@ namespace HMS_Server
         {
             get { return (string)this["packetHeader"]; }
             set { this["packetHeader"] = value; }
+        }
+
+        [ConfigurationProperty("inputType", DefaultValue = "", IsRequired = true, IsKey = false)]
+        public string inputType
+        {
+            get { return (string)this["inputType"]; }
+            set { this["inputType"] = value; }
+        }
+
+        [ConfigurationProperty("totalBytes", DefaultValue = "", IsRequired = true, IsKey = false)]
+        public string totalBytes
+        {
+            get { return (string)this["totalBytes"]; }
+            set { this["totalBytes"] = value; }
+        }
+
+        [ConfigurationProperty("binarySigned", DefaultValue = "", IsRequired = true, IsKey = false)]
+        public string binarySigned
+        {
+            get { return (string)this["binarySigned"]; }
+            set { this["binarySigned"] = value; }
         }
 
         [ConfigurationProperty("packetEnd", DefaultValue = "", IsRequired = true, IsKey = false)]

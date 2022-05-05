@@ -204,7 +204,7 @@
                                 Content="Save Frequency"
                                 VerticalAlignment="Center" />
                             <telerik:RadComboBox
-                                Width="200"
+                                Width="auto"
                                 Name="cboDBStorageFrequencyType"
                                 SelectionChanged="cboDBStorageFrequencyType_SelectionChanged"
                                 HorizontalAlignment="Right" />
@@ -307,6 +307,40 @@
                                 Content="Packet End" />
                             <Label
                                 Name="lbSerialPortPacketEnd"
+                                Width="auto"
+                                Content="" />
+                        </DockPanel>
+
+                        <Separator />
+
+                        <DockPanel>
+                            <Label
+                                Width="180"
+                                Content="Input Type" />
+                            <Label
+                                Name="lbSerialPortInputType"
+                                Width="auto"
+                                Content="" />
+                        </DockPanel>
+
+                        <DockPanel
+                            Name="dpSerialPortBinaryBytes">
+                            <Label
+                                Width="180"
+                                Content="Binary Bytes" />
+                            <Label
+                                Name="lbSerialPortBinaryBytes"
+                                Width="auto"
+                                Content="" />
+                        </DockPanel>
+
+                        <DockPanel
+                            Name="dpSerialPortBinarySigned">
+                            <Label
+                                Width="180"
+                                Content="Binary Signed" />
+                            <Label
+                                Name="lbSerialPortBinarySigned"
                                 Width="auto"
                                 Content="" />
                         </DockPanel>

@@ -59,6 +59,7 @@ namespace HMS_Server
 
             saveToDatabase = sensorData.saveToDatabase;
             saveFreq = sensorData.saveFreq;
+            //inputType = sensorData.inputType;
             data = sensorData.data;
             timestamp = sensorData.timestamp;
             portStatus = sensorData.portStatus;
@@ -81,6 +82,7 @@ namespace HMS_Server
                     description = sensorConfig.description;
                     saveToDatabase = bool.Parse(sensorConfig.saveToDatabase);
                     saveFreq = (DatabaseSaveFrequency)Enum.Parse(typeof(DatabaseSaveFrequency), sensorConfig.saveFreq);
+                    //inputType = (InputDataType)Enum.Parse(typeof(InputDataType), sensorConfig.inputType);
 
                     switch (type)
                     {
@@ -99,6 +101,10 @@ namespace HMS_Server
                             serialPort.handshake = (Handshake)Enum.Parse(typeof(Handshake), sensorConfig.serialPort.handshake);
 
                             // Serial Port Data Extraction Parameters
+                            serialPort.inputType = (InputDataType)Enum.Parse(typeof(InputDataType), sensorConfig.serialPort.inputType);
+                            serialPort.totalBytes = Convert.ToInt32(sensorConfig.serialPort.totalBytes);
+                            serialPort.binarySigned = bool.Parse(sensorConfig.serialPort.binarySigned);
+
                             serialPort.packetHeader = TextHelper.UnescapeSpace(sensorConfig.serialPort.packetHeader);
                             serialPort.packetEnd = sensorConfig.serialPort.packetEnd;
                             serialPort.packetDelimiter = sensorConfig.serialPort.packetDelimiter;
@@ -359,6 +365,19 @@ namespace HMS_Server
         // Database lagringsfrekvens
         public DatabaseSaveFrequency saveFreq { get; set; }
 
+        //// Input Data Type
+        //private InputDataType _inputType { get; set; }
+        //public InputDataType inputType
+        //{
+        //    get
+        //    {
+        //        return _inputType;
+        //    }
+        //    set
+        //    {
+        //        _inputType = value;
+        //    }
+        //}
 
         // Resultat data
         public double data { get; set; }

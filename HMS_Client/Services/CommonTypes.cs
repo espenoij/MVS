@@ -461,3 +461,9 @@ public enum WarningBarMessageType
     RestartRequired,
     DataVerification,
 }
+
+public enum InputDataType
+{
+    Text,
+    Binary
+}

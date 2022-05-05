@@ -457,17 +457,24 @@ namespace HMS_Server
 
         private void btnFileReaderSetup_Click(object sender, RoutedEventArgs e)
         {
-            // Open new modal window 
-            FileReaderSetupWindow newWindow = new FileReaderSetupWindow(sensorDataSelected, config, errorHandler);
-            newWindow.Owner = App.Current.MainWindow;
-            newWindow.Closed += FileReaderSetupWindow_Closed;
-            newWindow.ShowDialog();
+            try
+            {
+                // Open new modal window 
+                FileReaderSetupWindow newWindow = new FileReaderSetupWindow(sensorDataSelected, config, errorHandler);
+                newWindow.Owner = App.Current.MainWindow;
+                newWindow.Closed += FileReaderSetupWindow_Closed;
+                newWindow.ShowDialog();
 
-            // Lagre til disk når vi går ut av vinduet
-            config.SetData(sensorDataSelected);
+                // Lagre til disk når vi går ut av vinduet
+                config.SetData(sensorDataSelected);
 
-            // Sync settings
-            SyncFileReaderSettings(sensorDataSelected);
+                // Sync settings
+                SyncFileReaderSettings(sensorDataSelected);
+            }
+            catch (Exception ex)
+            {
+                RadWindow.Alert(string.Format("Open File Reader Setup (btnFileReaderSetup_Click):\n\nCheck file name and path.\n\n{0}", TextHelper.Wrap(ex.Message)));
+            }
         }
 
         private void SyncSerialPortSettings(SensorData sensorData)
@@ -547,6 +554,7 @@ namespace HMS_Server
         {
             // Laste inn sensor setup data på nytt
             UILoadData_SerialPort();
+            UISensorSetup_Load(SensorType.SerialPort);
         }
 
         void ModbusSetupWindow_Closed(object sender, EventArgs e)
@@ -596,6 +604,17 @@ namespace HMS_Server
                         btnSerialPortSetup.Visibility = Visibility.Collapsed;
                         btnModbusSetup.Visibility = Visibility.Collapsed;
                         btnFileReaderSetup.Visibility = Visibility.Collapsed;
+                    }
+
+                    if (sensorDataSelected.serialPort.inputType == InputDataType.Binary)
+                    {
+                        dpSerialPortBinaryBytes.Visibility = Visibility.Visible;
+                        dpSerialPortBinarySigned.Visibility = Visibility.Visible;
+                    }
+                    else
+                    {
+                        dpSerialPortBinaryBytes.Visibility = Visibility.Collapsed;
+                        dpSerialPortBinarySigned.Visibility = Visibility.Collapsed;
                     }
 
                     // Laste data inn i UI
@@ -725,6 +744,10 @@ namespace HMS_Server
             lbSerialPortStopBits.Content = sensorDataSelected.serialPort.stopBits.ToString();
             lbSerialPortHandShake.Content = sensorDataSelected.serialPort.handshake.ToString();
             lbSerialPortParity.Content = sensorDataSelected.serialPort.parity.ToString();
+
+            lbSerialPortInputType.Content = sensorDataSelected.serialPort.inputType;
+            lbSerialPortBinaryBytes.Content = sensorDataSelected.serialPort.totalBytes.ToString();
+            lbSerialPortBinarySigned.Content = sensorDataSelected.serialPort.binarySigned.ToString();
 
             lbSerialPortPacketHeader.Content = sensorDataSelected.serialPort.packetHeader;
             lbSerialPortPacketEnd.Content = sensorDataSelected.serialPort.packetEnd;

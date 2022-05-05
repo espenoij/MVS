@@ -4,6 +4,7 @@ using System.ComponentModel;
 using System.Diagnostics;
 using System.IO.Ports;
 using System.Linq;
+using System.Text;
 using System.Text.RegularExpressions;
 using System.Windows;
 using System.Windows.Controls;
@@ -52,7 +53,6 @@ namespace HMS_Server
 
         // Noen globale variabler som brukes i og oppdateres av forskjellige tråder
         private bool showControlChars;
-        private bool binaryData;
 
         // Lister for visning
         private RadObservableCollectionEx<Packet> rawDataItems = new RadObservableCollectionEx<Packet>();
@@ -102,6 +102,8 @@ namespace HMS_Server
             InitBasicInformation();
 
             InitSerialPortConfiguration(serialPort);
+
+            InitSensorInput();
 
             InitDataDisplayOptions();
 
@@ -244,6 +246,35 @@ namespace HMS_Server
             }
         }
 
+        private void InitSensorInput()
+        {
+            // Data Type
+            foreach (InputDataType value in Enum.GetValues(typeof(InputDataType)))
+                cboSensorDataType.Items.Add(value.ToString());
+            cboSensorDataType.Text = sensorData.serialPort.inputType.ToString();
+            process.inputType = sensorData.serialPort.inputType;
+
+            // Data Bytes in value
+            cboSelectedDataBytesInValue.Items.Add("1");
+            cboSelectedDataBytesInValue.Items.Add("2");
+            cboSelectedDataBytesInValue.Items.Add("4");
+            cboSelectedDataBytesInValue.Items.Add("8");
+            cboSelectedDataBytesInValue.Text = sensorData.serialPort.totalBytes.ToString();
+            process.totalBytes = sensorData.serialPort.totalBytes;
+
+            // Binary data is signed
+            if (sensorData.serialPort.binarySigned)
+            {
+                cboSelectedDataDataIsSigned.IsChecked = true;
+                process.binarySigned = true;
+            }
+            else
+            {
+                cboSelectedDataDataIsSigned.IsChecked = false;
+                process.binarySigned = false;
+            }
+        }
+
         private void InitDataDisplayOptions()
         {
             // Lese kontroll chars option
@@ -256,18 +287,6 @@ namespace HMS_Server
             {
                 chkShowControlChars.IsChecked = false;
                 showControlChars = false;
-            }
-
-            // Lese binary data option
-            if (config.Read(ConfigKey.BinaryData, ConfigSection.SerialPortConfig) == "1")
-            {
-                chkBinaryData.IsChecked = true;
-                binaryData = true;
-            }
-            else
-            {
-                chkBinaryData.IsChecked = false;
-                binaryData = false;
             }
 
             // Data Lines
@@ -313,6 +332,7 @@ namespace HMS_Server
             // Delimiter
             tbPacketDataDelimiter.Text = TextHelper.UnescapeSpace(sensorData.serialPort.packetDelimiter);
             process.packetDelimiter = tbPacketDataDelimiter.Text;
+            SetDataFieldSplitDisplay();
 
             // Combine Fields
             foreach (var value in Enum.GetValues(typeof(SerialPortSetup.CombineFields)))
@@ -334,10 +354,7 @@ namespace HMS_Server
             }
 
             // Enable/Disable fixed position input
-            lblFixedPositionDataStart.IsEnabled = process.fixedPosData;
-            tbFixedPositionDataStart.IsEnabled = process.fixedPosData;
-            lblFixedPositionDataTotal.IsEnabled = process.fixedPosData;
-            tbFixedPositionDataTotal.IsEnabled = process.fixedPosData;
+            SetDataSelectionDisplay();
 
             tbFixedPositionDataStart.Text = sensorData.serialPort.fixedPosStart.ToString();
             tbFixedPositionDataTotal.Text = sensorData.serialPort.fixedPosTotal.ToString();
@@ -518,18 +535,58 @@ namespace HMS_Server
         {
             // Trinn 1: Lese fra port
             //////////////////////////////////////////////////////////////////////////////
-            string inputData = serialPort.ReadExisting();
+            string inputData = string.Empty;
 
-            //// Alternativ måte å lese fra port
-            //int bytes = serialPort.BytesToRead;
-            //byte[] array = new byte[bytes];
-            //int i = 0;
-            //while (serialPort.BytesToRead > 0)
-            //{
-            //    array[i] = Convert.ToByte(serialPort.ReadByte());
-            //    i++;
-            //}
-            //string inputData = System.Text.Encoding.UTF8.GetString(array, 0, array.Length);
+            switch (sensorData.serialPort.inputType)
+            {
+                case InputDataType.Text:
+                    {
+                        inputData = serialPort.ReadExisting();
+
+                        //// Alternativ metode
+                        //int bytes = serialPort.BytesToRead;
+                        //byte[] array = new byte[bytes];
+                        //int i = 0;
+                        //while (serialPort.BytesToRead > 0)
+                        //{
+                        //    array[i++] = Convert.ToByte(serialPort.ReadByte());
+                        //}
+                        //inputData = Encoding.UTF8.GetString(array, 0, array.Length);
+                    }
+                    break;
+
+                case InputDataType.Binary:
+                    {
+                        try
+                        {
+                            // Av en eller annen grunn leverer ikke denne koden samme resulat som koden under
+                            //inputData = serialPort.ReadExisting();
+                            //byte[] byteArray = Encoding.Default.GetBytes(inputData);
+                            //inputData = BitConverter.ToString(byteArray);
+
+                            int bytes = serialPort.BytesToRead;
+                            byte[] array = new byte[bytes];
+                            for (int i = 0; serialPort.BytesToRead > 0 && i < bytes; i++)
+                            {
+                                array[i] = Convert.ToByte(serialPort.ReadByte());
+                            }
+                            inputData = BitConverter.ToString(array);
+                        }
+                        catch (Exception ex)
+                        {
+                            // Sette feilmelding
+                            errorHandler?.Insert(
+                                new ErrorMessage(
+                                    DateTime.UtcNow,
+                                    ErrorMessageType.SerialPort,
+                                    ErrorMessageCategory.AdminUser,
+                                    string.Format("SerialPort_DataReceived (Binary): Binary conversion failed. {0}", ex.Message)));
+
+                            inputData = string.Empty;
+                        }
+                    }
+                    break;
+            }
 
             // Sette time stamp
             dataTimeStamp = DateTime.UtcNow;
@@ -708,6 +765,66 @@ namespace HMS_Server
                 while (calculatedDataItems.Count() > serialPortSetupWindowVM.totalDataLines)
                     calculatedDataItems.RemoveAt(0);
             }));
+        }
+
+        private void SetDataFieldSplitDisplay()
+        {
+            if (sensorData.serialPort.inputType == InputDataType.Binary)
+            {
+                lbPacketDataDelimiter.IsEnabled = false;
+                tbPacketDataDelimiter.IsEnabled = false;
+                lbCombineFields.IsEnabled = false;
+                cboCombineFields.IsEnabled = false;
+                cboFixedPositionData.IsEnabled = false;
+            }
+            else
+            {
+                lbPacketDataDelimiter.IsEnabled = true;
+                tbPacketDataDelimiter.IsEnabled = true;
+                lbCombineFields.IsEnabled = true;
+                cboCombineFields.IsEnabled = true;
+                cboFixedPositionData.IsEnabled = true;
+            }
+        }
+
+        private void SetDataSelectionDisplay()
+        {
+            if (sensorData.serialPort.inputType == InputDataType.Binary)
+            {
+                cboFixedPositionData.IsEnabled = false;
+                lblFixedPositionDataStart.IsEnabled = false;
+                tbFixedPositionDataStart.IsEnabled = false;
+                lblFixedPositionDataTotal.IsEnabled = false;
+                tbFixedPositionDataTotal.IsEnabled = false;
+
+                lbDecimalSeparator.IsEnabled = false;
+                cboDecimalSeparator.IsEnabled = false;
+                cboSelectedDataAutoExtract.IsEnabled = false;
+
+                lbSelectedDataBytesInValue.IsEnabled = true;
+                cboSelectedDataBytesInValue.IsEnabled = true;
+
+                if (sensorData.serialPort.totalBytes == 1)
+                    cboSelectedDataDataIsSigned.IsEnabled = false;
+                else
+                    cboSelectedDataDataIsSigned.IsEnabled = true;
+            }
+            else
+            {
+                cboFixedPositionData.IsEnabled = true;
+                lblFixedPositionDataStart.IsEnabled = process.fixedPosData;
+                tbFixedPositionDataStart.IsEnabled = process.fixedPosData;
+                lblFixedPositionDataTotal.IsEnabled = process.fixedPosData;
+                tbFixedPositionDataTotal.IsEnabled = process.fixedPosData;
+
+                lbDecimalSeparator.IsEnabled = true;
+                cboDecimalSeparator.IsEnabled = true;
+                cboSelectedDataAutoExtract.IsEnabled = true;
+
+                lbSelectedDataBytesInValue.IsEnabled = false;
+                cboSelectedDataBytesInValue.IsEnabled = false;
+                cboSelectedDataDataIsSigned.IsEnabled = false;
+            }
         }
 
         private void cboCOMPort_SelectionChanged(object sender, SelectionChangedEventArgs e)
@@ -1144,10 +1261,7 @@ namespace HMS_Server
             sensorData.serialPort.fixedPosData = process.fixedPosData;
 
             // Enable position input
-            lblFixedPositionDataStart.IsEnabled = process.fixedPosData;
-            tbFixedPositionDataStart.IsEnabled = process.fixedPosData;
-            lblFixedPositionDataTotal.IsEnabled = process.fixedPosData;
-            tbFixedPositionDataTotal.IsEnabled = process.fixedPosData;
+            SetDataSelectionDisplay();
         }
 
         private void cboFixedPositionData_Unchecked(object sender, RoutedEventArgs e)
@@ -1158,10 +1272,7 @@ namespace HMS_Server
             sensorData.serialPort.fixedPosData = process.fixedPosData;
 
             // Disable position input
-            lblFixedPositionDataStart.IsEnabled = process.fixedPosData;
-            tbFixedPositionDataStart.IsEnabled = process.fixedPosData;
-            lblFixedPositionDataTotal.IsEnabled = process.fixedPosData;
-            tbFixedPositionDataTotal.IsEnabled = process.fixedPosData;
+            SetDataSelectionDisplay();
         }
 
         private void tbFixedPositionDataStart_LostFocus(object sender, RoutedEventArgs e)
@@ -1256,20 +1367,53 @@ namespace HMS_Server
             serialPortSetupWindowVM.totalDataLinesString = (sender as TextBox).Text;
         }
 
-        private void chkBinaryData_Checked(object sender, RoutedEventArgs e)
+        private void cboSensorDataType_SelectionChanged(object sender, SelectionChangedEventArgs e)
         {
-            binaryData = true;
+            try
+            {
+                // Lagre ny setting
+                sensorData.serialPort.inputType = (InputDataType)Enum.Parse(typeof(InputDataType), cboSensorDataType.SelectedItem.ToString());
 
-            // Lagre ny setting til config fil
-            config.Write(ConfigKey.BinaryData, "1", ConfigSection.SerialPortConfig);
+                if (sensorData.serialPort.inputType == InputDataType.Binary)
+                {
+                    process.packetDelimiter = Constants.BinaryDataDelimiter;
+                    sensorData.serialPort.packetDelimiter = Constants.BinaryDataDelimiter;
+                    tbPacketDataDelimiter.Text = Constants.BinaryDataDelimiter;
+                }
+
+                SetDataFieldSplitDisplay();
+                SetDataSelectionDisplay();
+            }
+            catch (Exception ex)
+            {
+                RadWindow.Alert(string.Format("cboSensorDataType_SelectionChanged\n\n{0}", TextHelper.Wrap(ex.Message)));
+            }
         }
 
-        private void chkBinaryData_Unchecked(object sender, RoutedEventArgs e)
+        private void cboSelectedDataBytesInValue_SelectionChanged(object sender, SelectionChangedEventArgs e)
         {
-            binaryData = false;
+            process.totalBytes = Convert.ToInt32(cboSelectedDataBytesInValue.Text.ToString());
 
-            // Lagre ny setting til config fil
-            config.Write(ConfigKey.BinaryData, "0", ConfigSection.SerialPortConfig);
+            // Lagre ny setting
+            sensorData.serialPort.totalBytes = process.totalBytes;
+
+            SetDataSelectionDisplay();
+        }
+
+        private void cboSelectedDataDataIsSigned_Checked(object sender, RoutedEventArgs e)
+        {
+            process.binarySigned = true;
+
+            // Lagre ny setting
+            sensorData.serialPort.binarySigned = process.binarySigned;
+        }
+
+        private void cboSelectedDataDataIsSigned_Unchecked(object sender, RoutedEventArgs e)
+        {
+            process.binarySigned = false;
+
+            // Lagre ny setting
+            sensorData.serialPort.binarySigned = process.binarySigned;
         }
     }
 

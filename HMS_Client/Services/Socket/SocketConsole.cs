@@ -32,6 +32,11 @@ namespace HMS_Client
             return socketConsoleMessages;
         }
 
+        public object GetMessageListLock()
+        {
+            return socketConsoleMessagesLock;
+        }
+
         public void Clear()
         {
             lock (socketConsoleMessagesLock)
