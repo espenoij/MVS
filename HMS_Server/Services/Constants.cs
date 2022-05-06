@@ -167,17 +167,17 @@ class Constants
     // Helideck Height
     public const double HelideckHeightMin = 0;
     public const double HelideckHeightMax = 500;
-    public const double HelideckHeightDefault = 10;
+    public const double HelideckHeightDefault = 0;
 
     // Wind Sensor Height
     public const double WindSensorHeightMin = 0;
     public const double WindSensorHeightMax = 500;
-    public const double WindSensorHeightDefault = 20;
+    public const double WindSensorHeightDefault = 0;
 
     // Wind Sensor Distance
     public const double WindSensorDistanceMin = 0;
     public const double WindSensorDistanceMax = 500;
-    public const double WindSensorDistanceDefault = 10;
+    public const double WindSensorDistanceDefault = 0;
 
     // Vind justert til X meter over helideck
     public const double WindAdjustmentAboveHelideck = 10;

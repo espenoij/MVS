@@ -114,7 +114,7 @@ namespace HMS_Server
             magneticDeclination = config.ReadWithDefault(ConfigKey.MagneticDeclination, Constants.MagneticDeclinationDefault);
 
             // Helideck Lights Output
-            if (config.ReadWithDefault(ConfigKey.HelideckLightsOutput, "1") == "1")
+            if (config.ReadWithDefault(ConfigKey.HelideckLightsOutput, "0") == "1")
                 helideckLightsOutput = true;
             else
                 helideckLightsOutput = false;

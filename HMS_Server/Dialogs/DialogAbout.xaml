@@ -37,10 +37,70 @@
             Content="Close"
             Click="btnActivate_Click" />
 
+        <!--LICENSE-->
+        <telerik:GroupBox
+            Header="License"
+            DockPanel.Dock="Top"
+            Margin="8">
+
+            <StackPanel>
+
+                <!--License Owner-->
+                <DockPanel>
+
+                    <telerik:Label
+                        Width="200"
+                        Content="License Owner" />
+
+                    <telerik:Label
+                        Content="{Binding Path=licenseOwner}" />
+
+                </DockPanel>
+
+                <!--License Location-->
+                <DockPanel>
+
+                    <telerik:Label
+                        Width="200"
+                        Content="License Location" />
+
+                    <telerik:Label
+                        Content="{Binding Path=licenseLocation}" />
+
+                </DockPanel>
+
+                <!--Max Clients-->
+                <DockPanel>
+
+                    <telerik:Label
+                        Width="200"
+                        Content="Max Clients" />
+
+                    <telerik:Label
+                        Content="{Binding Path=licenseMaxClients}" />
+
+                </DockPanel>
+
+                <!--Status-->
+                <DockPanel>
+
+                    <telerik:Label
+                        Width="200"
+                        Content="License Status" />
+
+                    <telerik:Label
+                        Content="{Binding Path=activationStatusString}" />
+
+                </DockPanel>
+
+            </StackPanel>
+
+        </telerik:GroupBox>
+
         <!--SOFTWARE-->
         <telerik:GroupBox
             Header="Software"
-            DockPanel.Dock="Bottom"
+            DockPanel.Dock="Top"
             Margin="8">
 
             <StackPanel>
@@ -61,96 +121,26 @@
 
         </telerik:GroupBox>
 
-        <Grid>
+        <!--INFO-->
+        <telerik:GroupBox
+            Header="Infomation"
+            DockPanel.Dock="Bottom"
+            Margin="8">
 
-            <Grid.RowDefinitions>
-                <RowDefinition
-                    Height="3*" />
-                <RowDefinition
-                    Height="2*" />
-            </Grid.RowDefinitions>
-            
-            <!--INFO-->
-            <telerik:GroupBox
-                Header="Infomation"
-                Grid.Row="0"
-                Margin="8">
+            <StackPanel>
 
-                <StackPanel>
+                <!--Info-->
+                <DockPanel>
 
-                    <!--Info-->
-                    <DockPanel>
+                    <telerik:Label
+                        Content="Information/about/EULA/copyright/trademarks/etc..." />
 
-                        <telerik:Label
-                            Content="Information/about/EULA/copyright/trademarks/etc..." />
+                </DockPanel>
 
-                    </DockPanel>
+            </StackPanel>
 
-                </StackPanel>
+        </telerik:GroupBox>
 
-            </telerik:GroupBox>
-
-            <!--LICENSE-->
-            <telerik:GroupBox
-                Header="License"
-                Grid.Row="1"
-                Margin="8">
-
-                <StackPanel>
-
-                    <!--License Owner-->
-                    <DockPanel>
-
-                        <telerik:Label
-                            Width="200"
-                            Content="License Owner" />
-
-                        <telerik:Label
-                            Content="{Binding Path=licenseOwner}" />
-
-                    </DockPanel>
-
-                    <!--License Location-->
-                    <DockPanel>
-
-                        <telerik:Label
-                            Width="200"
-                            Content="License Location" />
-
-                        <telerik:Label
-                            Content="{Binding Path=licenseLocation}" />
-
-                    </DockPanel>
-
-                    <!--Max Clients-->
-                    <DockPanel>
-
-                        <telerik:Label
-                            Width="200"
-                            Content="Max Clients" />
-
-                        <telerik:Label
-                            Content="{Binding Path=licenseMaxClients}" />
-
-                    </DockPanel>
-                    
-                    <!--Status-->
-                    <DockPanel>
-
-                        <telerik:Label
-                            Width="200"
-                            Content="License Status" />
-
-                        <telerik:Label
-                            Content="{Binding Path=activationStatusString}" />
-
-                    </DockPanel>
-
-                </StackPanel>
-
-            </telerik:GroupBox>
-
-        </Grid>
 
     </DockPanel>
 

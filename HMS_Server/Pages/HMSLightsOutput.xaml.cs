@@ -213,7 +213,7 @@ namespace HMS_Server
         public void Start()
         {
             // Stenge tilgang til å konfigurere porten
-            if (adminSettingsVM.regulationStandard == RegulationStandard.CAP)
+            if (adminSettingsVM?.regulationStandard == RegulationStandard.CAP)
             {
                 EnableModbusUI(false);
 
@@ -224,7 +224,7 @@ namespace HMS_Server
         public void Stop()
         {
             // Åpne tilgang til å konfigurere porten
-            if (adminSettingsVM.regulationStandard == RegulationStandard.CAP)
+            if (adminSettingsVM?.regulationStandard == RegulationStandard.CAP)
             {
                 EnableModbusUI(true);
 

@@ -326,6 +326,7 @@ namespace HMS_Server
                 }
 
                 OnPropertyChanged();
+                OnPropertyChanged(nameof(source));
             }
         }
 

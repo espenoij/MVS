@@ -166,28 +166,33 @@ namespace HMS_Server
             InitVerificationUpdate();
 
             // Opprette database tabeller
-            // CreateTables gjør selv sjekk på om tabell finnes fra før eller må opprettes
-            try
+            // Sjekker først om bruker og passord for databasen er satt (ikke satt rett etter installasjon)
+            if (!string.IsNullOrEmpty(config.Read(ConfigKey.DatabaseUserID)) &&
+                !string.IsNullOrEmpty(config.Read(ConfigKey.DatabasePassword)))
             {
-                database.CreateTables(sensorDataRetrieval.GetSensorDataList());
+                try
+                {
+                    // CreateTables gjør selv sjekk på om tabell finnes fra før eller må opprettes
+                    database.CreateTables(sensorDataRetrieval.GetSensorDataList());
 
-                errorHandler.ResetDatabaseError(ErrorHandler.DatabaseErrorType.CreateTablesSensorData2);
-                errorHandler.ResetDatabaseError(ErrorHandler.DatabaseErrorType.CreateTablesSensorData1);
+                    errorHandler.ResetDatabaseError(ErrorHandler.DatabaseErrorType.CreateTablesSensorData2);
+                    errorHandler.ResetDatabaseError(ErrorHandler.DatabaseErrorType.CreateTablesSensorData1);
+                }
+                catch (Exception ex)
+                {
+                    errorHandler.Insert(
+                         new ErrorMessage(
+                             DateTime.UtcNow,
+                             ErrorMessageType.Database,
+                             ErrorMessageCategory.None,
+                             string.Format("Database Error (CreateTables 1)\n\nSystem Message:\n{0}", ex.Message)));
+
+                    errorHandler.SetDatabaseError(ErrorHandler.DatabaseErrorType.CreateTablesSensorData2);
+                }
+
+                // Database Maintenance Init
+                DatabaseMaintenanceInit();
             }
-            catch (Exception ex)
-            {
-                errorHandler.Insert(
-                     new ErrorMessage(
-                         DateTime.UtcNow,
-                         ErrorMessageType.Database,
-                         ErrorMessageCategory.None,
-                         string.Format("Database Error (CreateTables 1)\n\nSystem Message:\n{0}", ex.Message)));
-
-                errorHandler.SetDatabaseError(ErrorHandler.DatabaseErrorType.CreateTablesSensorData2);
-            }
-
-            // Database Maintenance Init
-            DatabaseMaintenanceInit();
 
             // Database Status Check
             DispatcherTimer databaseStatusCheck = new DispatcherTimer();
@@ -561,26 +566,24 @@ namespace HMS_Server
 
         private void InitLightsOutput()
         {
-            // Enable/disable helideck lights output
-            if (adminSettingsVM.helideckLightsOutput)
+            // CAP
+            if (adminSettingsVM.regulationStandard == RegulationStandard.CAP)
             {
-                // CAP
-                if (adminSettingsVM.regulationStandard == RegulationStandard.CAP)
-                {
-                    // Hente lights output data fra fil
-                    lightsOutputData = new SensorData(config.GetLightsOutputData());
+                // Hente lights output data fra fil
+                lightsOutputData = new SensorData(config.GetLightsOutputData());
 
-                    // Init
-                    ucHMSLightsOutput.Init(lightsOutputData, hmsLightsOutputVM, config, adminSettingsVM, errorHandler);
-                }
-                // NOROG
-                else
-                {
-                    // TODO: Modulen for output til NOROG lys system er ikke ferdig implementert.
-                    ucHMSLightsOutput.Init(new SensorData(SensorType.ModbusRTU), hmsLightsOutputVM, config, adminSettingsVM, errorHandler);
-                }
+                // Init
+                ucHMSLightsOutput.Init(lightsOutputData, hmsLightsOutputVM, config, adminSettingsVM, errorHandler);
             }
+            // NOROG
             else
+            {
+                // TODO: Modulen for output til NOROG lys system er ikke ferdig implementert.
+                ucHMSLightsOutput.Init(new SensorData(SensorType.ModbusRTU), hmsLightsOutputVM, config, adminSettingsVM, errorHandler);
+            }
+
+            // Enable/disable helideck lights output
+            if (!adminSettingsVM.helideckLightsOutput)
             {
                 tabHMS_LightsOutput.Visibility = Visibility.Collapsed;
             }
