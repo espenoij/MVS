@@ -25,6 +25,7 @@
     <DockPanel>
 
         <Grid
+            Margin="8"
             DockPanel.Dock="Top">
             <Grid.ColumnDefinitions>
                 <ColumnDefinition

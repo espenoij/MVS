@@ -218,7 +218,7 @@ namespace HMS_Client
             set
             {
                 _serverAddress = value;
-
+                config.Write(ConfigKey.ServerAddress, value.ToString());
                 OnPropertyChanged();
             }
         }

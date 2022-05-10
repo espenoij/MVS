@@ -153,21 +153,21 @@ namespace HMS_Server
             // Starte opp socket og lytte etter innkommende kommunikasjon
             try
             {
-                // Sette maskinens DNS som local endpoint
-                IPHostEntry ipHostInfo = Dns.GetHostEntry(Dns.GetHostName());
-                IPAddress ipAddress = ipHostInfo.AddressList[0];
-                IPEndPoint localEndPoint = new IPEndPoint(ipAddress, serverPort);
+                // Sette local endpoint
+                // Tar imot forespørsler fra alle IP adresser
+                IPEndPoint localEndPoint = new IPEndPoint(IPAddress.Any, serverPort);
 
                 // Opprette TCP/IP socket 
-                listener = new Socket(ipAddress.AddressFamily, SocketType.Stream, ProtocolType.Tcp);
+                listener = new Socket(localEndPoint.AddressFamily, SocketType.Stream, ProtocolType.Tcp);
 
                 // Socket Options
                 listener.SendTimeout = 1000;
                 listener.ReceiveTimeout = 1000;
 
                 // Binde socket til endpoint
+                //listener.Blocking = false;
                 listener.Bind(localEndPoint);
-                listener.Listen(10);
+                listener.Listen(100);
 
                 while (!socketExit)
                 {
@@ -209,10 +209,24 @@ namespace HMS_Server
             }
         }
 
-            private void StopSocketListener(object sender, RunWorkerCompletedEventArgs e)
+        private void StopSocketListener(object sender, RunWorkerCompletedEventArgs e)
         {
-            listener.Shutdown(SocketShutdown.Both);
-            listener.Disconnect(true);
+            try
+            {
+                if (listener.Connected)
+                {
+                    listener.Shutdown(SocketShutdown.Both);
+                    //listener.Disconnect(true);
+                    listener.Close();
+                    listener.Dispose();
+                    listener = null;
+                }
+            }
+            catch (Exception ex)
+            {
+                if (AdminMode.IsActive)
+                    socketConsole.Add(string.Format("StopSocketListener:\n\n{0}", ex.Message));
+            }
         }
 
         public void AcceptCallback(IAsyncResult ar)

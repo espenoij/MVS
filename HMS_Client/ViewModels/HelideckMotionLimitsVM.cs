@@ -320,7 +320,14 @@ namespace HMS_Client
                     if (pitchMaxUp20mData.status == DataStatus.OK)
                     {
                         double pitch = Math.Abs(pitchMaxUp20mData.data);
-                        return string.Format("{0} ° U", pitch.ToString("0.0"));
+
+                        string dir;
+                        if (pitchMaxUp20mData.data > 0)
+                            dir = "U";
+                        else
+                            dir = "D";
+
+                        return string.Format("{0} ° {1}", pitch.ToString("0.0"), dir);
                     }
                     else
                     {
@@ -361,7 +368,14 @@ namespace HMS_Client
                     if (pitchMaxDown20mData.status == DataStatus.OK)
                     {
                         double pitch = Math.Abs(pitchMaxDown20mData.data);
-                        return string.Format("{0} ° D", pitch.ToString("0.0"));
+
+                        string dir;
+                        if (pitchMaxUp20mData.data > 0)
+                            dir = "U";
+                        else
+                            dir = "D";
+                        
+                        return string.Format("{0} ° {1}", pitch.ToString("0.0"), dir);
                     }
                     else
                     {
@@ -452,7 +466,14 @@ namespace HMS_Client
                     if (rollMaxLeft20mData.status == DataStatus.OK)
                     {
                         double roll = Math.Abs(rollMaxLeft20mData.data);
-                        return string.Format("{0} ° L", roll.ToString("0.0"));
+
+                        string dir;
+                        if (rollMaxLeft20mData.data > 0)
+                            dir = "R";
+                        else
+                            dir = "L";
+
+                        return string.Format("{0} ° {1}", roll.ToString("0.0"), dir);
                     }
                     else
                     {
@@ -493,7 +514,14 @@ namespace HMS_Client
                     if (rollMaxRight20mData.status == DataStatus.OK)
                     {
                         double roll = Math.Abs(rollMaxRight20mData.data);
-                        return string.Format("{0} ° R", roll.ToString("0.0"));
+
+                        string dir;
+                        if (rollMaxRight20mData.data > 0)
+                            dir = "R";
+                        else
+                            dir = "L";
+                        
+                        return string.Format("{0} ° {1}", roll.ToString("0.0"), dir);
                     }
                     else
                     {

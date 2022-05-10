@@ -19,13 +19,13 @@ namespace HMS_Server
         private double timeMaxAbsoluteMaxValue = 0;
         private List<TimeData> timeMaxAbsoluteDataList = new List<TimeData>();
 
-        // Time Max Positive
-        private double timeMaxPositiveMaxValue = 0;
-        private List<TimeData> timeMaxPositiveDataList = new List<TimeData>();
+        // Time Heighest
+        private double timeHighestMaxValue = double.MinValue;
+        private List<TimeData> timeHighestDataList = new List<TimeData>();
 
-        // Time Max Positive
-        private double timeMaxNegativeMaxValue = 0;
-        private List<TimeData> timeMaxNegativeDataList = new List<TimeData>();
+        // Time Lowest
+        private double timeLowestMinValue = double.MaxValue;
+        private List<TimeData> timeLowestDataList = new List<TimeData>();
 
         // Significant Heave Rate
         private double significantHeaveRateSquareSum = 0;
@@ -342,156 +342,156 @@ namespace HMS_Server
 
 
                         ////////////////////////////////////////////////////////////////////////////////////////////////
-                        /// Time Max Positive
+                        /// Time Heighest
                         ////////////////////////////////////////////////////////////////////////////////////////////////
                         /// Beskrivelse:
-                        /// Returnerer høyeste positive verdi i et datasett innsamlet over en angitt tid.
+                        /// Returnerer høyeste verdi i et datasett innsamlet over en angitt tid.
 
                         /// Brukes til:
                         /// Max pitch up
                         /// Max roll left
 
-                        case CalculationType.TimeMaxPositive:
+                        case CalculationType.TimeHeighest:
 
                             // Sjekke om string er numerisk
                             if (double.TryParse(newData, Constants.numberStyle, Constants.cultureInfo, out value))
                             {
                                 // Sjekke at ny verdi ikke er lik den forrige som ble lagt inn i datasettet -> unngå duplikater
                                 if (!double.IsNaN(value) && 
-                                    timeMaxPositiveDataList.LastOrDefault()?.timestamp != newTimeStamp)
+                                    timeHighestDataList.LastOrDefault()?.timestamp != newTimeStamp)
                                 {
                                     // Legge inn den nye verdien i data settet
-                                    timeMaxPositiveDataList.Add(new TimeData()
+                                    timeHighestDataList.Add(new TimeData()
                                     {
                                         data = value,
                                         timestamp = newTimeStamp
                                     });
 
                                     // Større max verdi?
-                                    if (value > timeMaxPositiveMaxValue)
+                                    if (value > timeHighestMaxValue)
                                     {
-                                        timeMaxPositiveMaxValue = value;
+                                        timeHighestMaxValue = value;
                                     }
 
                                     // Sjekke om vi skal ta ut gamle verdier
                                     bool findNewMaxValue = false;
 
-                                    while (timeMaxPositiveDataList.Count > 0 && timeMaxPositiveDataList[0]?.timestamp.AddSeconds(parameter) < newTimeStamp)
+                                    while (timeHighestDataList.Count > 0 && timeHighestDataList[0]?.timestamp.AddSeconds(parameter) < newTimeStamp)
                                     {
                                         // Sjekke om dette var høyeste verdi
-                                        if (timeMaxPositiveDataList[0].data == timeMaxPositiveMaxValue)
+                                        if (timeHighestDataList[0].data == timeHighestMaxValue)
                                         {
                                             // Finne ny høyeste verdi
                                             findNewMaxValue = true;
                                         }
 
                                         // Fjerne gammel verdi fra verdiliste
-                                        timeMaxPositiveDataList.RemoveAt(0);
+                                        timeHighestDataList.RemoveAt(0);
                                     }
                                     //timeMaxPositiveDataList.TrimExcess();
 
                                     // Finne ny høyeste verdi
                                     if (findNewMaxValue)
                                     {
-                                        double oldMaxValue = timeMaxPositiveMaxValue;
-                                        timeMaxPositiveMaxValue = 0;
+                                        double oldMaxValue = timeHighestMaxValue;
+                                        timeHighestMaxValue = double.MinValue;
                                         bool foundNewMax = false;
 
-                                        for (int i = 0; i < timeMaxPositiveDataList.Count && !foundNewMax; i++)
+                                        for (int i = 0; i < timeHighestDataList.Count && !foundNewMax; i++)
                                         {
                                             // Kan avslutte søket dersom vi finne en verdi like den gamle max verdien (ingen er høyere)
-                                            if (timeMaxPositiveDataList[i]?.data == oldMaxValue)
+                                            if (timeHighestDataList[i]?.data == oldMaxValue)
                                             {
-                                                timeMaxPositiveMaxValue = oldMaxValue;
+                                                timeHighestMaxValue = oldMaxValue;
                                                 foundNewMax = true; ;
                                             }
                                             else
                                             {
-                                                if (timeMaxPositiveDataList[i]?.data > timeMaxPositiveMaxValue)
-                                                    timeMaxPositiveMaxValue = timeMaxPositiveDataList[i].data;
+                                                if (timeHighestDataList[i]?.data > timeHighestMaxValue)
+                                                    timeHighestMaxValue = timeHighestDataList[i].data;
                                             }
                                         }
                                     }
                                 }
 
-                                result = timeMaxPositiveMaxValue;
+                                result = timeHighestMaxValue;
                             }
                             break;
 
                         ////////////////////////////////////////////////////////////////////////////////////////////////
-                        /// Time Max Negative
+                        /// Time Low
                         ////////////////////////////////////////////////////////////////////////////////////////////////
                         /// Beskrivelse:
-                        /// Returnerer laveste negative verdi i et datasett innsamlet over en angitt tid.
+                        /// Returnerer laveste verdi i et datasett innsamlet over en angitt tid.
 
                         /// Brukes til:
                         /// Max pitch up
                         /// Max roll left
 
-                        case CalculationType.TimeMaxNegative:
+                        case CalculationType.TimeLowest:
 
                             // Sjekke om string er numerisk
                             if (double.TryParse(newData, Constants.numberStyle, Constants.cultureInfo, out value))
                             {
                                 // Sjekke at ny verdi ikke er lik den forrige som ble lagt inn i datasettet -> unngå duplikater
                                 if (!double.IsNaN(value) && 
-                                    timeMaxNegativeDataList.LastOrDefault()?.timestamp != newTimeStamp)
+                                    timeLowestDataList.LastOrDefault()?.timestamp != newTimeStamp)
                                 {
                                     // Legge inn den nye verdien i data settet
-                                    timeMaxNegativeDataList.Add(new TimeData()
+                                    timeLowestDataList.Add(new TimeData()
                                     {
                                         data = value,
                                         timestamp = newTimeStamp
                                     });
 
-                                    // Større max verdi?
-                                    if (value < timeMaxNegativeMaxValue)
+                                    // Mindre enn minste verdi?
+                                    if (value < timeLowestMinValue)
                                     {
-                                        timeMaxNegativeMaxValue = value;
+                                        timeLowestMinValue = value;
                                     }
 
                                     // Sjekke om vi skal ta ut gamle verdier
                                     bool findNewMaxValue = false;
 
-                                    while (timeMaxNegativeDataList.Count > 0 && timeMaxNegativeDataList[0]?.timestamp.AddSeconds(parameter) < newTimeStamp)
+                                    while (timeLowestDataList.Count > 0 && timeLowestDataList[0]?.timestamp.AddSeconds(parameter) < newTimeStamp)
                                     {
                                         // Sjekke om dette var laveste verdi
-                                        if (timeMaxNegativeDataList[0].data == timeMaxNegativeMaxValue)
+                                        if (timeLowestDataList[0].data == timeLowestMinValue)
                                         {
                                             // Finne ny laveste verdi
                                             findNewMaxValue = true;
                                         }
 
                                         // Fjerne gammel verdi fra verdiliste
-                                        timeMaxNegativeDataList.RemoveAt(0);
+                                        timeLowestDataList.RemoveAt(0);
                                     }
                                     //timeMaxNegativeDataList.TrimExcess();
 
-                                    // Finne ny høyeste verdi
+                                    // Finne ny laveste verdi
                                     if (findNewMaxValue)
                                     {
-                                        double oldMaxValue = timeMaxNegativeMaxValue;
-                                        timeMaxNegativeMaxValue = 0;
-                                        bool foundNewMax = false;
+                                        double oldMinValue = timeLowestMinValue;
+                                        timeLowestMinValue = double.MaxValue;
+                                        bool foundNewMin = false;
 
-                                        for (int i = 0; i < timeMaxNegativeDataList.Count && !foundNewMax; i++)
+                                        for (int i = 0; i < timeLowestDataList.Count && !foundNewMin; i++)
                                         {
                                             // Kan avslutte søket dersom vi finne en verdi like den gamle max verdien (ingen er høyere)
-                                            if (timeMaxNegativeDataList[i]?.data == oldMaxValue)
+                                            if (timeLowestDataList[i]?.data == oldMinValue)
                                             {
-                                                timeMaxNegativeMaxValue = oldMaxValue;
-                                                foundNewMax = true;
+                                                timeLowestMinValue = oldMinValue;
+                                                foundNewMin = true;
                                             }
                                             else
                                             {
-                                                if (timeMaxNegativeDataList[i]?.data < timeMaxNegativeMaxValue)
-                                                    timeMaxNegativeMaxValue = timeMaxNegativeDataList[i].data;
+                                                if (timeLowestDataList[i]?.data < timeLowestMinValue)
+                                                    timeLowestMinValue = timeLowestDataList[i].data;
                                             }
                                         }
                                     }
                                 }
 
-                                result = timeMaxNegativeMaxValue;
+                                result = timeLowestMinValue;
                             }
                             break;
 
@@ -1300,12 +1300,12 @@ namespace HMS_Server
             timeMaxAbsoluteDataList.Clear();
 
             // Time Max Positive
-            timeMaxPositiveMaxValue = 0;
-            timeMaxPositiveDataList.Clear();
+            timeHighestMaxValue = 0;
+            timeHighestDataList.Clear();
 
             // Time Max Positive
-            timeMaxNegativeMaxValue = 0;
-            timeMaxNegativeDataList.Clear();
+            timeLowestMinValue = 0;
+            timeLowestDataList.Clear();
 
             // Significant Heave Rate
             significantHeaveRateSquareSum = 0;
@@ -1352,11 +1352,11 @@ namespace HMS_Server
                 case CalculationType.TimeMaxAbsolute:
                     return timeMaxAbsoluteDataList.Count;
 
-                case CalculationType.TimeMaxPositive:
-                    return timeMaxPositiveDataList.Count;
+                case CalculationType.TimeHeighest:
+                    return timeHighestDataList.Count;
 
-                case CalculationType.TimeMaxNegative:
-                    return timeMaxNegativeDataList.Count;
+                case CalculationType.TimeLowest:
+                    return timeLowestDataList.Count;
 
                 case CalculationType.SignificantHeaveRate:
                     return significantHeaveRateDataList.Count;
@@ -1400,10 +1400,10 @@ namespace HMS_Server
         GPSPosition,
         [Description("Time Average")]
         TimeAverage,
-        [Description("Time Max Positive")]
-        TimeMaxPositive,
-        [Description("Time Max Negative")]
-        TimeMaxNegative,
+        [Description("Time Highest")]
+        TimeHeighest,
+        [Description("Time Lowest")]
+        TimeLowest,
         [Description("Time Max Absolute")]
         TimeMaxAbsolute,
         [Description("Time Max Amplitude")]

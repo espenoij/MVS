@@ -165,16 +165,16 @@ namespace HMS_Server
             pitchMaxUp20mData.dbColumn = "pitch_max_up_20m";
             pitchMaxUp20mData.InitProcessing(errorHandler, ErrorMessageCategory.AdminUser);
             pitchMaxUp20mData.AddProcessing(CalculationType.RoundingDecimals, 1);
-            pitchMaxUp20mData.AddProcessing(CalculationType.TimeMaxPositive, Constants.Minutes20);
-            pitchMaxUp20mData.AddProcessing(CalculationType.Absolute, 0);
+            pitchMaxUp20mData.AddProcessing(CalculationType.TimeHeighest, Constants.Minutes20);
+            //pitchMaxUp20mData.AddProcessing(CalculationType.Absolute, 0);
 
             pitchMaxDown20mData.id = (int)ValueType.PitchMaxDown20m;
             pitchMaxDown20mData.name = "Pitch Max Down (20m)";
             pitchMaxDown20mData.dbColumn = "pitch_max_down_20m";
             pitchMaxDown20mData.InitProcessing(errorHandler, ErrorMessageCategory.AdminUser);
             pitchMaxDown20mData.AddProcessing(CalculationType.RoundingDecimals, 1);
-            pitchMaxDown20mData.AddProcessing(CalculationType.TimeMaxNegative, Constants.Minutes20);
-            pitchMaxDown20mData.AddProcessing(CalculationType.Absolute, 0);
+            pitchMaxDown20mData.AddProcessing(CalculationType.TimeLowest, Constants.Minutes20);
+            //pitchMaxDown20mData.AddProcessing(CalculationType.Absolute, 0);
 
             rollMax20mData.id = (int)ValueType.RollMax20m;
             rollMax20mData.name = "Roll Max (20m)";
@@ -195,16 +195,16 @@ namespace HMS_Server
             rollMaxLeft20mData.dbColumn = "roll_max_left_20m";
             rollMaxLeft20mData.InitProcessing(errorHandler, ErrorMessageCategory.AdminUser);
             rollMaxLeft20mData.AddProcessing(CalculationType.RoundingDecimals, 1);
-            rollMaxLeft20mData.AddProcessing(CalculationType.TimeMaxNegative, Constants.Minutes20);
-            rollMaxLeft20mData.AddProcessing(CalculationType.Absolute, 0);
+            rollMaxLeft20mData.AddProcessing(CalculationType.TimeLowest, Constants.Minutes20);
+            //rollMaxLeft20mData.AddProcessing(CalculationType.Absolute, 0);
 
             rollMaxRight20mData.id = (int)ValueType.RollMaxRight20m;
             rollMaxRight20mData.name = "Roll Max Right (20m)";
             rollMaxRight20mData.dbColumn = "roll_max_right_20m";
             rollMaxRight20mData.InitProcessing(errorHandler, ErrorMessageCategory.AdminUser);
             rollMaxRight20mData.AddProcessing(CalculationType.RoundingDecimals, 1);
-            rollMaxRight20mData.AddProcessing(CalculationType.TimeMaxPositive, Constants.Minutes20);
-            rollMaxRight20mData.AddProcessing(CalculationType.Absolute, 0);
+            rollMaxRight20mData.AddProcessing(CalculationType.TimeHeighest, Constants.Minutes20);
+            //rollMaxRight20mData.AddProcessing(CalculationType.Absolute, 0);
 
             inclinationData.id = (int)ValueType.Inclination;
             inclinationData.name = "Inclination";
@@ -258,14 +258,14 @@ namespace HMS_Server
             significantHeaveRateMax20mData.dbColumn = "shr_max_20m";
             significantHeaveRateMax20mData.InitProcessing(errorHandler, ErrorMessageCategory.AdminUser);
             significantHeaveRateMax20mData.AddProcessing(CalculationType.RoundingDecimals, 1);
-            significantHeaveRateMax20mData.AddProcessing(CalculationType.TimeMaxPositive, Constants.Minutes20);
+            significantHeaveRateMax20mData.AddProcessing(CalculationType.TimeHeighest, Constants.Minutes20);
 
             significantHeaveRateMax3hData.id = (int)ValueType.SignificantHeaveRateMax3h; // Brukes til å justere akse på graf
             significantHeaveRateMax3hData.name = "Significant Heave Rate Max (3h)";
             significantHeaveRateMax3hData.dbColumn = "shr_max_3h";
             significantHeaveRateMax3hData.InitProcessing(errorHandler, ErrorMessageCategory.AdminUser);
             significantHeaveRateMax3hData.AddProcessing(CalculationType.RoundingDecimals, 1);
-            significantHeaveRateMax3hData.AddProcessing(CalculationType.TimeMaxPositive, Constants.Hours3);
+            significantHeaveRateMax3hData.AddProcessing(CalculationType.TimeHeighest, Constants.Hours3);
 
             maxHeaveRateData.id = (int)ValueType.MaxHeaveRate;
             maxHeaveRateData.name = "Max Heave Rate";

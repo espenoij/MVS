@@ -242,7 +242,7 @@ namespace HMS_Server
             //tabInput_SocketConsole.Visibility = Visibility.Visible;
 
             // Starte server automatisk ved oppstart
-            //StartServer();
+            StartServer();
         }
 
         private void InitViewModel()

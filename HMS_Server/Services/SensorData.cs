@@ -54,7 +54,7 @@ namespace HMS_Server
                 for (int i = 0; i < Constants.DataCalculationSteps; i++)
                     dataCalculations.Add(new DataCalculations());
 
-            for (int i = 0; i < Constants.DataCalculationSteps; i++)
+            for (int i = 0; i < Constants.DataCalculationSteps && i < sensorData.dataCalculations.Count; i++)
                 dataCalculations[i] = sensorData.dataCalculations[i];
 
             saveToDatabase = sensorData.saveToDatabase;

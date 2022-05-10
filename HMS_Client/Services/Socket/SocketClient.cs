@@ -131,8 +131,20 @@ namespace HMS_Client
                 response = string.Empty;
 
                 // Sette opp endpoint for socket forbindelsen 
-                IPHostEntry ipHostInfo = Dns.GetHostEntry(serverAddress);
-                IPAddress ipAddress = ipHostInfo.AddressList[0];
+                IPAddress ipAddress;
+                if (IPAddress.TryParse(serverAddress, out ipAddress))
+                {
+                    // serverAddress is a valid IP address already, don't need to do a DNS lookup
+                }
+                else
+                {
+                    // serverAddress isn't a valid IP address, do a DNS lookup for it by name
+                    IPHostEntry ipHostInfo = Dns.GetHostEntry(IPAddress.Parse(serverAddress));
+                    if (ipHostInfo.AddressList.Length > 0)
+                        ipAddress = ipHostInfo.AddressList[0];
+                }
+
+                //IPAddress ipAddress = ipHostInfo.AddressList[0];
                 IPEndPoint remoteIP = new IPEndPoint(ipAddress, serverPort);
 
                 // Opprette TCP/IP socket.  
@@ -177,8 +189,14 @@ namespace HMS_Client
                 else
                 {
                     if (AdminMode.IsActive)
-                        socketConsole?.Add("No response from server");
+                        socketConsole?.Add("No response from server.");
                 }
+                //}
+                //else
+                //{
+                //    if (AdminMode.IsActive)
+                //        socketConsole?.Add("Server not found (Dns.GetHostEntry failed to return an IP address).");
+                //}
             }
             catch (ObjectDisposedException odx)
             {
