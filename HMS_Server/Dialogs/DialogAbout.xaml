@@ -9,7 +9,7 @@
     xmlns:local="clr-namespace:HMS_Server"
     telerik:Header="About"
     WindowStartupLocation="CenterScreen"
-    Height="750"
+    Height="700"
     Width="800"
     telerik:StyleManager.Theme="Material">
 
@@ -133,7 +133,7 @@
                 <DockPanel>
 
                     <telerik:Label
-                        Content="Information/about/EULA/copyright/trademarks/etc..." />
+                        Content="{Binding Path=aboutInformation}" />
 
                 </DockPanel>
 

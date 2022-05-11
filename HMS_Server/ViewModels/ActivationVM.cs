@@ -33,7 +33,7 @@ namespace HMS_Server
                     .AddMotherboardSerialNumber())
                 .ToString();
 
-            // Sammenligne device ID fra hardware med den lagre i config fil
+            // Sammenligne device ID fra hardware med den lagret i config fil
             if (deviceID.CompareTo(deviceId) == 0)
                 isActivated = true;
             else
@@ -43,6 +43,9 @@ namespace HMS_Server
             softwareVersion = string.Format("{0} {1}",
                 version.ToString(),
                 Constants.SoftwareVersionPostfix);
+
+            // About Information
+            aboutInformation = string.Format("Copyright © 2022-{0} Swire Energy Services\n\nFor support and other inquiries, please contact Swire Energy Services - Aviation.", DateTime.UtcNow.Year);
         }
 
         // License Owner
@@ -150,6 +153,27 @@ namespace HMS_Server
                 if (value != _softwareVersion)
                 {
                     _softwareVersion = value;
+
+                    OnPropertyChanged();
+                }
+            }
+        }
+
+        /////////////////////////////////////////////////////////////////////////////
+        // About Information
+        /////////////////////////////////////////////////////////////////////////////
+        private string _aboutInformation { get; set; }
+        public string aboutInformation
+        {
+            get
+            {
+                return _aboutInformation;
+            }
+            set
+            {
+                if (value != _aboutInformation)
+                {
+                    _aboutInformation = value;
 
                     OnPropertyChanged();
                 }
