@@ -125,6 +125,12 @@ namespace HMS_Server
             else
                 enableEMS = false;
 
+            // Auto Start HMS Processing
+            if (config.ReadWithDefault(ConfigKey.AutoStartHMS, "1") == "1")
+                autoStartHMS = true;
+            else
+                autoStartHMS = false;
+
             // Sensor
             windDirRef = (DirectionReference)Enum.Parse(typeof(DirectionReference), config.ReadWithDefault(ConfigKey.WindDirectionReference, DirectionReference.VesselHeading.ToString()));
             vesselHdgRef = (DirectionReference)Enum.Parse(typeof(DirectionReference), config.ReadWithDefault(ConfigKey.VesselHeadingReference, DirectionReference.MagneticNorth.ToString()));
@@ -452,6 +458,33 @@ namespace HMS_Server
                 else
                 {
                     config.Write(ConfigKey.EnableEMS, "0");
+                }
+
+                OnPropertyChanged();
+            }
+        }
+
+        /////////////////////////////////////////////////////////////////////////////
+        // EMS: Enable EMS Page
+        /////////////////////////////////////////////////////////////////////////////
+        private bool _autoStartHMS { get; set; }
+        public bool autoStartHMS
+        {
+            get
+            {
+                return _autoStartHMS;
+            }
+            set
+            {
+                _autoStartHMS = value;
+
+                if (_autoStartHMS)
+                {
+                    config.Write(ConfigKey.AutoStartHMS, "1");
+                }
+                else
+                {
+                    config.Write(ConfigKey.AutoStartHMS, "0");
                 }
 
                 OnPropertyChanged();

@@ -152,6 +152,21 @@
 
                         </DockPanel>
 
+                        <!--Auto Start HMS Processing-->
+                        <DockPanel>
+
+                            <telerik:Label
+                                Content="Auto Start HMS Processing"
+                                VerticalAlignment="Center" />
+
+                            <CheckBox
+                                Name="chkAutoStartHMS"
+                                IsChecked="{Binding Path=autoStartHMS, Mode=TwoWay}"
+                                VerticalAlignment="Center"
+                                HorizontalAlignment="Right" />
+
+                        </DockPanel>
+
                         <!--Decimal Separator-->
                         <!--<DockPanel>
                             <telerik:Label

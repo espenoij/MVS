@@ -242,7 +242,8 @@ namespace HMS_Server
             //tabInput_SocketConsole.Visibility = Visibility.Visible;
 
             // Starte server automatisk ved oppstart
-            StartServer();
+            if (adminSettingsVM.autoStartHMS && activationVM.isActivated)
+                StartServer();
         }
 
         private void InitViewModel()
@@ -686,7 +687,7 @@ namespace HMS_Server
 
                 // Database Maintenance
                 DoDatabaseMaintenance(DatabaseMaintenanceType.SENSOR);  // Kjør vedlikehold en gang ved oppstart
-                maintenanceTimer.Start();                               // Og så hver X timer
+                maintenanceTimer?.Start();                               // Og så hver X timer
 
                 // Socket Listener
                 socketListener.Start();
@@ -736,7 +737,7 @@ namespace HMS_Server
             hmsDatabaseTimer.Stop();
 
             // Database Maintenance
-            maintenanceTimer.Stop();
+            maintenanceTimer?.Stop();
 
             // Socket Listener
             socketListener.Stop();

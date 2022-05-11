@@ -43,6 +43,7 @@
     public const string LogFrequency = "LogFrequency";
     public const string MarineChannel = "MarineChannel";
     public const string EnableEMS = "EnableEMS";
+    public const string AutoStartHMS = "AutoStartHMS";
 
     // Lights output
     public const string LightsOutputAddress1 = "LightsOutputAddress1";

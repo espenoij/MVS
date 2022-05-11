@@ -288,39 +288,47 @@ namespace HMS_Server
             else
             if (inputType == InputDataType.Binary)
             {
-                // Generere en hex string
-                string hexValue = "0x";
-                for (int i = 0; i < totalBytes; i++)
-                    hexValue += packetDataFields.dataField[dataField + i];
-
-                // Konvertere hex string til desimal verdi, og lagre som string igjen
-                switch (totalBytes)
+                try
                 {
-                    case 1:
-                        // Kun 1 byte -> ikke signed
-                        selectedData.selectedDataFieldString = Convert.ToByte(hexValue, 16).ToString();
-                        break;
+                    // Generere en hex string
+                    string hexValue = "0x";
+                    for (int i = 0; i < totalBytes; i++)
+                        hexValue += packetDataFields.dataField[dataField + i];
 
-                    case 2:
-                        if (binarySigned)
-                            selectedData.selectedDataFieldString = Convert.ToInt16(hexValue, 16).ToString();
-                        else
-                            selectedData.selectedDataFieldString = Convert.ToUInt16(hexValue, 16).ToString();
-                        break;
+                    // Konvertere hex string til desimal verdi, og lagre som string igjen
+                    switch (totalBytes)
+                    {
+                        case 1:
+                            // Kun 1 byte -> ikke signed
+                            selectedData.selectedDataFieldString = Convert.ToByte(hexValue, 16).ToString();
+                            break;
 
-                    case 4:
-                        if (binarySigned)
-                            selectedData.selectedDataFieldString = Convert.ToInt32(hexValue, 16).ToString();
-                        else
-                            selectedData.selectedDataFieldString = Convert.ToUInt32(hexValue, 16).ToString();
-                        break;
+                        case 2:
+                            if (binarySigned)
+                                selectedData.selectedDataFieldString = Convert.ToInt16(hexValue, 16).ToString();
+                            else
+                                selectedData.selectedDataFieldString = Convert.ToUInt16(hexValue, 16).ToString();
+                            break;
 
-                    case 8:
-                        if (binarySigned)
-                            selectedData.selectedDataFieldString = Convert.ToInt64(hexValue, 16).ToString();
-                        else
-                            selectedData.selectedDataFieldString = Convert.ToUInt64(hexValue, 16).ToString();
-                        break;
+                        case 4:
+                            if (binarySigned)
+                                selectedData.selectedDataFieldString = Convert.ToInt32(hexValue, 16).ToString();
+                            else
+                                selectedData.selectedDataFieldString = Convert.ToUInt32(hexValue, 16).ToString();
+                            break;
+
+                        case 8:
+                            if (binarySigned)
+                                selectedData.selectedDataFieldString = Convert.ToInt64(hexValue, 16).ToString();
+                            else
+                                selectedData.selectedDataFieldString = Convert.ToUInt64(hexValue, 16).ToString();
+                            break;
+                    }
+                }
+                catch (Exception)
+                {
+                    // Invalid input til int convert
+                    // Trenger ikke gjøre noe
                 }
             }
 
