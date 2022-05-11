@@ -1023,6 +1023,12 @@
         }
         "Entry"
         {
+        "MsmKey" = "8:_DF9D4841CDF34C4193DE2AA00FF68C4E"
+        "OwnerKey" = "8:_UNDEFINED"
+        "MsmSig" = "8:_UNDEFINED"
+        }
+        "Entry"
+        {
         "MsmKey" = "8:_E15CE02B74B88FFD34D7570CB8D3A3B9"
         "OwnerKey" = "8:_336A8A9323A44B21A4DCD6B341263246"
         "MsmSig" = "8:_UNDEFINED"
@@ -2120,6 +2126,14 @@
             "PrerequisitesLocation" = "2:1"
             "Url" = "8:"
             "ComponentsUrl" = "8:"
+                "Items"
+                {
+                    "{EDC2488A-8267-493A-A98E-7D9C3B36CDF3}:.NETFramework,Version=v4.7.2"
+                    {
+                    "Name" = "8:Microsoft .NET Framework 4.7.2 (x86 and x64)"
+                    "ProductCode" = "8:.NETFramework,Version=v4.7.2"
+                    }
+                }
             }
         }
         "Release"
@@ -5984,6 +5998,26 @@
             "IsDependency" = "11:TRUE"
             "IsolateTo" = "8:"
             }
+            "{1FB2D0AE-D3B9-43D4-B9DD-F88EC61E35DE}:_DF9D4841CDF34C4193DE2AA00FF68C4E"
+            {
+            "SourcePath" = "8:..\\Config filer\\New\\SensorData.config"
+            "TargetName" = "8:SensorData.config"
+            "Tag" = "8:"
+            "Folder" = "8:_A24087BB685A4FBEBE170C4531E1F616"
+            "Condition" = "8:"
+            "Transitive" = "11:FALSE"
+            "Vital" = "11:TRUE"
+            "ReadOnly" = "11:FALSE"
+            "Hidden" = "11:FALSE"
+            "System" = "11:FALSE"
+            "Permanent" = "11:FALSE"
+            "SharedLegacy" = "11:FALSE"
+            "PackageAs" = "3:1"
+            "Register" = "3:1"
+            "Exclude" = "11:FALSE"
+            "IsDependency" = "11:FALSE"
+            "IsolateTo" = "8:"
+            }
             "{9F6F8455-1EF1-4B85-886A-4223BCC8E7F7}:_E15CE02B74B88FFD34D7570CB8D3A3B9"
             {
             "AssemblyRegister" = "3:1"
@@ -6734,7 +6768,7 @@
         "Name" = "8:Microsoft Visual Studio"
         "ProductName" = "8:HMS Server"
         "ProductCode" = "8:{B0C86DFE-7A1D-4038-89A1-D05CD3B81292}"
-        "PackageCode" = "8:{61E7D314-D83A-4709-80FF-9AB8AA2EFDD6}"
+        "PackageCode" = "8:{59BEB6A0-3650-4DEB-8F10-04F11D9F3C43}"
         "UpgradeCode" = "8:{44EA59C4-56B5-48CE-A55F-0F474184B0A8}"
         "AspNetVersion" = "8:4.0.30319.0"
         "RestartWWWService" = "11:FALSE"
@@ -7283,7 +7317,7 @@
         {
             "{5259A561-127C-4D43-A0A1-72F10C7B3BF8}:_336A8A9323A44B21A4DCD6B341263246"
             {
-            "SourcePath" = "8:..\\HMS_Server\\obj\\Release\\HMS_Server.exe"
+            "SourcePath" = "8:"
             "TargetName" = "8:"
             "Tag" = "8:"
             "Folder" = "8:_A24087BB685A4FBEBE170C4531E1F616"

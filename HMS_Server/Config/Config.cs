@@ -21,6 +21,7 @@ namespace HMS_Server
             appConfig = ConfigurationManager.OpenExeConfiguration(ConfigurationUserLevel.None);
 
             // Data config (egen fil)
+            // Lokasjon installert: C:\Users\<username>\AppData\Local\VirtualStore\Program files (x86)\Swire Energy Services\HMS Server
             ExeConfigurationFileMap configMap = new ExeConfigurationFileMap();
             configMap.ExeConfigFilename = @"SensorData.config";
             dataConfig = ConfigurationManager.OpenMappedExeConfiguration(configMap, ConfigurationUserLevel.None);
