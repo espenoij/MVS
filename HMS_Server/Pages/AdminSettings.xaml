@@ -766,43 +766,52 @@
                                 VerticalAlignment="Center" />
                             <TextBox
                                 Name="tbMSICorrectionR"
-                                Width="160"
+                                Width="110"
                                 HorizontalAlignment="Right"
                                 Text="{Binding Path=msiCorrectionR}"
                                 LostFocus="tbMSICorrectionR_LostFocus"
                                 KeyDown="tbMSICorrectionR_KeyDown" />
                         </DockPanel>
 
+                        <!--Wind Samples Received-->
+                        <DockPanel>
+                            <telerik:Label
+                                Name="lbWindSamplesPerTransmission"
+                                Content="Wind Samples per Transmission"
+                                VerticalAlignment="Center" />
+                            <TextBox
+                                Name="tbWindSamplesPerTransmission"
+                                Width="110"
+                                HorizontalAlignment="Right"
+                                Text="{Binding Path=windSamplesPerTransmission}"
+                                LostFocus="tbWindSamplesPerTransmission_LostFocus"
+                                KeyDown="tbWindSamplesPerTransmission_KeyDown" />
+                        </DockPanel>
+
                         <!--Override Wind Buffer-->
                         <DockPanel>
-
                             <telerik:Label
                                 Name="lbOverrideWindBuffer"
                                 Content="Override CAP 9c Wind Buffer"
                                 VerticalAlignment="Center" />
-
                             <CheckBox
                                 Name="chkOverrideWindBuffer"
                                 IsChecked="{Binding Path=overrideWindBuffer, Mode=TwoWay}"
                                 VerticalAlignment="Center"
                                 HorizontalAlignment="Right" />
-
                         </DockPanel>
 
                         <!--Override Motion Buffer-->
                         <DockPanel>
-
                             <telerik:Label
                                 Name="lbOverrideMotionBuffer"
                                 Content="Override CAP 9c Motion Buffer"
                                 VerticalAlignment="Center" />
-
                             <CheckBox
                                 Name="chkOverrideMotionBuffer"
                                 IsChecked="{Binding Path=overrideMotionBuffer, Mode=TwoWay}"
                                 VerticalAlignment="Center"
                                 HorizontalAlignment="Right" />
-
                         </DockPanel>
 
                     </StackPanel>

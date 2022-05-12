@@ -145,7 +145,7 @@ class Constants
     public const string FileReaderDelimiterDefault = ",";
 
     // Data Timeout
-    public const double DataTimeoutDefault = 5000;
+    public const double DataTimeoutDefault = 10000;
     public const double DataTimeoutMin = 500;
     public const double DataTimeoutMax = 180000; // 3 min
 
@@ -200,6 +200,11 @@ class Constants
     // Wind Correction R
     public const double MSICorrectionRMin = 1;
     public const double WindCorrectionRMax = 2;
+
+    // Wind Samples per Transmission
+    public const double WindSamplesPerTransmissionMin = 1;
+    public const double WindSamplesPerTransmissionMax = 240;
+    public const double WindSamplesPerTransmissionDefault = 20;
 
     // Helicopter WSI Limits
     public const double HelicopterWSIMin = 1;

@@ -21,6 +21,7 @@
     public const string VesselImage = "VesselImage";
     public const string HelideckLocation = "HelideckLocation";
     public const string MSICorrectionR = "MSICorrectionR";
+    public const string WindSamplesPerTransmission = "WindSamplesPerTransmission";
     public const string OverrideWindBuffer = "OverrideWindBuffer";
     public const string OverrideMotionBuffer = "OverrideMotionBuffer";
     public const string RestrictedSectorFrom = "RestrictedSectorFrom";
