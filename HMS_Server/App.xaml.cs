@@ -30,7 +30,7 @@ namespace HMS_Server
         // Generell exception handler
         void OnDispatcherUnhandledException(object sender, System.Windows.Threading.DispatcherUnhandledExceptionEventArgs e)
         {
-            RadWindow.Alert(string.Format("(HMS Server) An unhandled general exception occurred:\n{0}", TextHelper.Wrap(e.Exception.Message)));
+            RadWindow.Alert(string.Format("(HMS Server) An unhandled general exception occurred:\n\n{0}", TextHelper.Wrap(e.Exception.Message)));
             e.Handled = true;
         }
 

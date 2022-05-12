@@ -30,7 +30,7 @@ namespace HMS_Server
 
             // CAP
             msiCorrectionR = config.ReadWithDefault(ConfigKey.MSICorrectionR, Constants.MSICorrectionRMin);
-            windSamplesPerTransmission = config.ReadWithDefault(ConfigKey.WindSamplesPerTransmission, Constants.MSICorrectionRMin);
+            windSamplesPerTransmission = config.ReadWithDefault(ConfigKey.WindSamplesPerTransmission, Constants.WindSamplesPerTransmissionDefault);
 
             // CAP: Override Wind Buffer
             if (config.ReadWithDefault(ConfigKey.OverrideWindBuffer, "0") == "1")

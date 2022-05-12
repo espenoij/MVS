@@ -17,8 +17,8 @@ class Constants
     public const string SoftwareVersionPostfix = "(Dev)";
 
     // Admin Mode Password
-    public const string AdminModePassword = "a";
-    public const string ActivationPassword = "a";
+    public const string AdminModePassword = "swireworld";
+    public const string ActivationPassword = "swireworld";
 
     // Max antall datafelt i en pakke
     public const int PacketDataFields = 60;                     // Korresponderer til felt i XAML fil (lvPacketData)
@@ -204,7 +204,7 @@ class Constants
     // Wind Samples per Transmission
     public const double WindSamplesPerTransmissionMin = 1;
     public const double WindSamplesPerTransmissionMax = 240;
-    public const double WindSamplesPerTransmissionDefault = 20;
+    public const double WindSamplesPerTransmissionDefault = 4;
 
     // Helicopter WSI Limits
     public const double HelicopterWSIMin = 1;

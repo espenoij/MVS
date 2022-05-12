@@ -424,12 +424,12 @@ namespace HMS_Server
                 areaWindDirection2m.DoProcessing(sensorWindDirectionCorrected);
 
                 if (adminSettingsVM.regulationStandard == RegulationStandard.CAP && !adminSettingsVM.overrideWindBuffer)
-                    areaWindDirection2m.BufferFillCheck(Constants.WindBufferFill95Pct2m);
+                    areaWindDirection2m.BufferFillCheck(Constants.WindBufferFill95Pct2m / adminSettingsVM.windSamplesPerTransmission);
 
                 areaWindSpeed2m.DoProcessing(inputSensorWindSpeed);
 
                 if (adminSettingsVM.regulationStandard == RegulationStandard.CAP && !adminSettingsVM.overrideWindBuffer)
-                    areaWindSpeed2m.BufferFillCheck(Constants.WindBufferFill95Pct2m);
+                    areaWindSpeed2m.BufferFillCheck(Constants.WindBufferFill95Pct2m / adminSettingsVM.windSamplesPerTransmission);
 
                 UpdateGustData(
                     inputSensorWindSpeed,
@@ -444,8 +444,8 @@ namespace HMS_Server
 
                 if (adminSettingsVM.regulationStandard == RegulationStandard.CAP && !adminSettingsVM.overrideWindBuffer)
                 {
-                    helideckWindDirection2m.BufferFillCheck(Constants.WindBufferFill95Pct2m);
-                    emsWindDirection2m.BufferFillCheck(Constants.WindBufferFill95Pct2m);
+                    helideckWindDirection2m.BufferFillCheck(Constants.WindBufferFill95Pct2m / adminSettingsVM.windSamplesPerTransmission);
+                    emsWindDirection2m.BufferFillCheck(Constants.WindBufferFill95Pct2m / adminSettingsVM.windSamplesPerTransmission);
                 }
 
                 helideckWindSpeed2m.DoProcessing(windSpeedCorrectedToHelideck);
@@ -453,8 +453,8 @@ namespace HMS_Server
 
                 if (adminSettingsVM.regulationStandard == RegulationStandard.CAP && !adminSettingsVM.overrideWindBuffer)
                 {
-                    helideckWindSpeed2m.BufferFillCheck(Constants.WindBufferFill95Pct2m);
-                    emsWindSpeed2m.BufferFillCheck(Constants.WindBufferFill95Pct2m);
+                    helideckWindSpeed2m.BufferFillCheck(Constants.WindBufferFill95Pct2m / adminSettingsVM.windSamplesPerTransmission);
+                    emsWindSpeed2m.BufferFillCheck(Constants.WindBufferFill95Pct2m / adminSettingsVM.windSamplesPerTransmission);
                 }
 
                 UpdateGustData(
@@ -476,8 +476,8 @@ namespace HMS_Server
 
                 if (adminSettingsVM.regulationStandard == RegulationStandard.CAP && !adminSettingsVM.overrideWindBuffer)
                 {
-                    helideckWindDirection10m.BufferFillCheck(Constants.WindBufferFill95Pct10m);
-                    emsWindDirection10m.BufferFillCheck(Constants.WindBufferFill95Pct10m);
+                    helideckWindDirection10m.BufferFillCheck(Constants.WindBufferFill95Pct10m / adminSettingsVM.windSamplesPerTransmission);
+                    emsWindDirection10m.BufferFillCheck(Constants.WindBufferFill95Pct10m / adminSettingsVM.windSamplesPerTransmission);
                 }
 
                 helideckWindSpeed10m.DoProcessing(windSpeedCorrectedToHelideck);
@@ -485,8 +485,8 @@ namespace HMS_Server
 
                 if (adminSettingsVM.regulationStandard == RegulationStandard.CAP && !adminSettingsVM.overrideWindBuffer)
                 {
-                    helideckWindSpeed10m.BufferFillCheck(Constants.WindBufferFill95Pct10m);
-                    emsWindSpeed10m.BufferFillCheck(Constants.WindBufferFill95Pct10m);
+                    helideckWindSpeed10m.BufferFillCheck(Constants.WindBufferFill95Pct10m / adminSettingsVM.windSamplesPerTransmission);
+                    emsWindSpeed10m.BufferFillCheck(Constants.WindBufferFill95Pct10m / adminSettingsVM.windSamplesPerTransmission);
                 }
 
                 UpdateGustData(

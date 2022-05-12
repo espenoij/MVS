@@ -137,16 +137,29 @@ namespace HMS_Server
 
             void runPortStatusCheck(object sender, EventArgs e)
             {
-                if (serialPort != null)
+                try
                 {
-                    if (serialPort.IsOpen)
+                    if (serialPort != null)
                     {
-                        if (dataTimeStamp.AddMilliseconds(dataTimeout) < DateTime.UtcNow)
+                        if (serialPort.IsOpen)
                         {
-                            serialPort.Close();
-                            serialPort.Open();
+                            if (dataTimeStamp.AddMilliseconds(dataTimeout) < DateTime.UtcNow)
+                            {
+                                serialPort.Close();
+                                serialPort.Open();
+                            }
                         }
                     }
+                }
+                catch (Exception ex)
+                {
+                    // Sette feilmelding
+                    errorHandler.Insert(
+                        new ErrorMessage(
+                            DateTime.UtcNow,
+                            ErrorMessageType.SerialPort,
+                            ErrorMessageCategory.AdminUser,
+                            string.Format("Port Restart Failed ({0}) (runPortStatusCheck): System Message: {1}", serialPort.PortName, ex.Message)));
                 }
             }
         }
