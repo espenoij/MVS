@@ -812,6 +812,14 @@
             "PrerequisitesLocation" = "2:1"
             "Url" = "8:"
             "ComponentsUrl" = "8:"
+                "Items"
+                {
+                    "{EDC2488A-8267-493A-A98E-7D9C3B36CDF3}:.NETFramework,Version=v4.7.2"
+                    {
+                    "Name" = "8:Microsoft .NET Framework 4.7.2 (x86 and x64)"
+                    "ProductCode" = "8:.NETFramework,Version=v4.7.2"
+                    }
+                }
             }
         }
         "Release"
@@ -836,6 +844,14 @@
             "PrerequisitesLocation" = "2:1"
             "Url" = "8:"
             "ComponentsUrl" = "8:"
+                "Items"
+                {
+                    "{EDC2488A-8267-493A-A98E-7D9C3B36CDF3}:.NETFramework,Version=v4.7.2"
+                    {
+                    "Name" = "8:Microsoft .NET Framework 4.7.2 (x86 and x64)"
+                    "ProductCode" = "8:.NETFramework,Version=v4.7.2"
+                    }
+                }
             }
         }
     }
@@ -2132,7 +2148,7 @@
         "Name" = "8:Microsoft Visual Studio"
         "ProductName" = "8:HMS Client"
         "ProductCode" = "8:{78C9DC2B-0B5C-4915-8E1B-CD74874BD2AA}"
-        "PackageCode" = "8:{AF7375B4-9279-423C-B337-897FA41171DE}"
+        "PackageCode" = "8:{BD7B39AC-F747-4814-829D-33B335CE423E}"
         "UpgradeCode" = "8:{117169AF-B62C-4438-BA43-013C2DC3AF10}"
         "AspNetVersion" = "8:4.0.30319.0"
         "RestartWWWService" = "11:FALSE"
@@ -2681,7 +2697,7 @@
         {
             "{5259A561-127C-4D43-A0A1-72F10C7B3BF8}:_1AE0F9E221BE44BA9B4EF9C4D8CE0BC1"
             {
-            "SourcePath" = "8:..\\HMS_Client\\obj\\Debug\\HMS_Client.exe"
+            "SourcePath" = "8:..\\HMS_Client\\obj\\Release\\HMS_Client.exe"
             "TargetName" = "8:"
             "Tag" = "8:"
             "Folder" = "8:_3193BC1BD43F4D53844CC4CC7B5BC1FD"

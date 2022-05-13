@@ -1,0 +1,245 @@
+﻿<UserControl
+    x:Class="HMS_Client.LandingStatusTrend_CAP"
+    xmlns="http://schemas.microsoft.com/winfx/2006/xaml/presentation"
+    xmlns:x="http://schemas.microsoft.com/winfx/2006/xaml"
+    xmlns:mc="http://schemas.openxmlformats.org/markup-compatibility/2006"
+    xmlns:d="http://schemas.microsoft.com/expression/blend/2008"
+    xmlns:telerik="http://schemas.telerik.com/2008/xaml/presentation"
+    mc:Ignorable="d"
+    d:DesignHeight="150"
+    d:DesignWidth="700">
+
+    <UserControl.Resources>
+        <BooleanToVisibilityConverter
+            x:Key="BoolToVisConverter" />
+    </UserControl.Resources>
+    
+    <Grid
+        x:Name="gLandingStatusTrend"
+        Visibility="{Binding Path=displayModeVisibilityPreLanding, Converter={StaticResource BoolToVisConverter} }">
+
+        <telerik:GroupBox
+            Header="LANDING STATUS TREND"
+            Margin="8">
+
+            <Grid
+                Margin="8,0,8,0">
+
+                <Grid.RowDefinitions>
+                    <RowDefinition
+                        Height="*" />
+                    <RowDefinition
+                        Height="28" />
+                    <RowDefinition
+                        Height="*" />
+                </Grid.RowDefinitions>
+
+                <Viewbox
+                    Grid.Row="0"
+                    StretchDirection="Both"
+                    Stretch="Uniform"
+                    HorizontalAlignment="Center">
+
+                    <Label
+                        HorizontalAlignment="Center"
+                        Content="{Binding Path=landingStatusTimeString}" />
+
+                </Viewbox>
+
+                <Viewbox
+                    Grid.Row="1"
+                    StretchDirection="Both"
+                    Stretch="Uniform"
+                    VerticalAlignment="Stretch"
+                    HorizontalAlignment="Stretch">
+
+                    <Grid>
+
+                        <Canvas
+                            x:Name="statusTrendGrid20m"
+                            Width="400"
+                            Height="12"
+                            Visibility="{Binding Path=visibilityItems20m, Converter={StaticResource BoolToVisConverter} }" />
+
+                        <Canvas
+                            x:Name="statusTrendGrid3h"
+                            Width="400"
+                            Height="12"
+                            Visibility="{Binding Path=visibilityItems3h, Converter={StaticResource BoolToVisConverter} }" />
+
+                        <Rectangle
+                            Width="400"
+                            Height="12"
+                            Stroke="Silver"
+                            StrokeThickness="0.5" />
+
+                    </Grid>
+
+                </Viewbox>
+
+                <Grid
+                    Grid.Row="2"
+                    Margin="-8,0,-8,0"
+                    Visibility="{Binding Path=visibilityItems20m, Converter={StaticResource BoolToVisConverter} }">
+
+                    <Grid.ColumnDefinitions>
+                        <ColumnDefinition
+                            Width="*" />
+                        <ColumnDefinition
+                            Width="*" />
+                        <ColumnDefinition
+                            Width="*" />
+                        <ColumnDefinition
+                            Width="*" />
+                        <ColumnDefinition
+                            Width="*" />
+                        <ColumnDefinition
+                            Width="*" />
+                        <ColumnDefinition
+                            Width="*" />
+                        <ColumnDefinition
+                            Width="*" />
+                    </Grid.ColumnDefinitions>
+
+                    <Viewbox
+                        Grid.Column="0"
+                        Grid.ColumnSpan="2"
+                        StretchDirection="Both"
+                        Stretch="Uniform"
+                        HorizontalAlignment="Left">
+                        
+                        <Label
+                            Content="-20 mins" />
+                        
+                    </Viewbox>
+
+                    <Viewbox
+                        Grid.Column="1"
+                        Grid.ColumnSpan="2"
+                        StretchDirection="Both"
+                        Stretch="Uniform"
+                        HorizontalAlignment="Center">
+
+                        <Label
+                            Content="-15"/>
+
+                    </Viewbox>
+
+                    <Viewbox
+                        Grid.Column="3"
+                        Grid.ColumnSpan="2"
+                        StretchDirection="Both"
+                        Stretch="Uniform"
+                        HorizontalAlignment="Center">
+
+                        <Label
+                            Content="-10" />
+
+                    </Viewbox>
+
+                    <Viewbox
+                        Grid.Column="5"
+                        Grid.ColumnSpan="2"
+                        StretchDirection="Both"
+                        Stretch="Uniform"
+                        HorizontalAlignment="Center">
+
+                        <Label
+                            Content="-5" />
+
+                    </Viewbox>
+
+                    <Viewbox
+                        Grid.Column="10"
+                        StretchDirection="Both"
+                        Stretch="Uniform"
+                        HorizontalAlignment="Right">
+
+                        <Label
+                            Content="0" />
+
+                    </Viewbox>
+                    
+                </Grid>
+
+                <Grid
+                    Grid.Row="2"
+                    Margin="-8,0,-8,0"
+                    Visibility="{Binding Path=visibilityItems3h, Converter={StaticResource BoolToVisConverter} }">
+                    
+                    <Grid.ColumnDefinitions>
+                        <ColumnDefinition
+                            Width="*" />
+                        <ColumnDefinition
+                            Width="*" />
+                        <ColumnDefinition
+                            Width="*" />
+                        <ColumnDefinition
+                            Width="*" />
+                        <ColumnDefinition
+                            Width="*" />
+                        <ColumnDefinition
+                            Width="*" />
+                    </Grid.ColumnDefinitions>
+
+                    <Viewbox
+                        Grid.Column="0"
+                        StretchDirection="Both"
+                        Stretch="Uniform"
+                        HorizontalAlignment="Left">
+
+                        <Label
+                            Grid.Column="0"
+                            Content="-3 hours" />
+
+                    </Viewbox>
+
+                    <Viewbox
+                        Grid.Column="1"
+                        Grid.ColumnSpan="2"
+                        StretchDirection="Both"
+                        Stretch="Uniform"
+                        HorizontalAlignment="Center">
+
+                        <Label
+                            Grid.Column="2"
+                            Content="-2 hours"
+                            HorizontalAlignment="Left" />
+
+                    </Viewbox>
+
+                    <Viewbox
+                        Grid.Column="3"
+                        Grid.ColumnSpan="2"
+                        StretchDirection="Both"
+                        Stretch="Uniform"
+                        HorizontalAlignment="Center">
+
+                        <Label
+                            Grid.Column="4"
+                            Content="-1 hours"
+                            HorizontalAlignment="Right" />
+
+                    </Viewbox>
+
+                    <Viewbox
+                        Grid.Column="5"
+                        StretchDirection="Both"
+                        Stretch="Uniform"
+                        HorizontalAlignment="Right">
+
+                        <Label
+                            Grid.Column="6"
+                            Content="0"/>
+                        
+                    </Viewbox>
+                    
+                </Grid>
+
+            </Grid>
+
+        </telerik:GroupBox>
+
+    </Grid>
+
+</UserControl>

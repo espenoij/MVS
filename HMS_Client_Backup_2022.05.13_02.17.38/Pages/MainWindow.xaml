@@ -1,0 +1,521 @@
+﻿<telerik:RadWindow
+    x:Class="HMS_Client.MainWindow"
+    xmlns="http://schemas.microsoft.com/winfx/2006/xaml/presentation"
+    xmlns:x="http://schemas.microsoft.com/winfx/2006/xaml"
+    xmlns:d="http://schemas.microsoft.com/expression/blend/2008"
+    xmlns:telerik="http://schemas.telerik.com/2008/xaml/presentation"
+    xmlns:mc="http://schemas.openxmlformats.org/markup-compatibility/2006"
+    xmlns:uc="clr-namespace:HMS_Client"
+    mc:Ignorable="d"
+    telerik:Header="Helideck Monitoring System"
+    WindowState="Maximized"
+    Height="1080"
+    Width="1920">
+
+    <telerik:RadWindow.Icon>
+        <Image
+            Height="32"
+            Source="../Icons/swire_flag.ico" />
+    </telerik:RadWindow.Icon>
+
+    <Grid
+        x:Name="mainLayoutRoot">
+
+        <DockPanel>
+
+            <!--Data Verification active warning-->
+            <DockPanel
+                Name="dpDataVerificationActiveWarning"
+                Visibility="Collapsed"
+                DockPanel.Dock="Top"
+                Background="{StaticResource ColorRed}">
+
+                <TextBlock
+                    Margin="8"
+                    Foreground="White"
+                    HorizontalAlignment="Center"
+                    Text="Data Verification is active on the server. The server will not accept user inputs. The client display may be incorrect." />
+
+            </DockPanel>
+
+            <!--Application restart warning-->
+            <DockPanel
+                Name="dpApplicationRestartRequired"
+                Visibility="Collapsed"
+                DockPanel.Dock="Top"
+                Background="{StaticResource ColorRed}">
+
+                <TextBlock
+                    Margin="8"
+                    Foreground="White"
+                    HorizontalAlignment="Center"
+                    Text="A restart of the application is required to enable new settings." />
+
+            </DockPanel>
+
+            <telerik:RadTabControl
+                Name="tcMainMenu"
+                DockPanel.Dock="Top"
+                TabStripPlacement="Left"
+                Align="Right"
+                TabOrientation="Vertical"
+                HeaderBackground="{StaticResource ColorVerticalBarBackground}"
+                SelectionChanged="tcMainMenu_SelectionChanged">
+
+                <!--==============================================================-->
+                <!--Menu: Helicopter operations-->
+                <!--==============================================================-->
+                <telerik:RadTabItem
+                    Name="tabHelicopterOps">
+
+                    <telerik:RadTabItem.Header>
+                        <Image
+                            Width="36"
+                            Source="../Icons/helipad_white_36dp.png" />
+                    </telerik:RadTabItem.Header>
+
+                    <DockPanel>
+
+                        <!--==============================================================-->
+                        <!--Helicopter Ops-->
+                        <!--==============================================================-->
+                        <Grid
+                            Visibility="Visible">
+
+                            <Grid.ColumnDefinitions>
+                                <ColumnDefinition
+                                    Width="8*" />
+                                <ColumnDefinition
+                                    Width="16*" />
+                                <ColumnDefinition
+                                    Width="17*" />
+                            </Grid.ColumnDefinitions>
+
+                            <!--NOROG-->
+                            <Grid
+                                Grid.Column="0">
+
+                                <Grid.RowDefinitions>
+                                    <RowDefinition
+                                        Height="15*" />
+                                    <RowDefinition
+                                        Height="12*" />
+                                    <RowDefinition
+                                        Height="9*" />
+                                </Grid.RowDefinitions>
+
+                                <!--Basic Information NOROG-->
+                                <uc:GeneralInformation_NOROG
+                                    x:Name="ucGeneralInformation_NOROG"
+                                    Grid.Row="0"
+                                    Visibility="Visible" />
+
+                                <!--User Inputs NOROG-->
+                                <uc:UserInputs_NOROG
+                                    Grid.Row="1"
+                                    x:Name="ucUserInputs_NOROG" />
+
+                                <!--Sensor Status-->
+                                <uc:SensorStatusDisplay_NOROG
+                                    Grid.Row="2"
+                                    x:Name="ucSensorStatus_NOROG" />
+
+                            </Grid>
+
+                            <!--CAP-->
+                            <Grid
+                                Grid.Column="0">
+
+                                <Grid.RowDefinitions>
+                                    <RowDefinition
+                                        Height="2*" />
+                                    <RowDefinition
+                                        Height="14*" />
+                                    <RowDefinition
+                                        Height="13*" />
+                                </Grid.RowDefinitions>
+
+                                <Viewbox
+                                    Grid.Row="0"
+                                    StretchDirection="Both"
+                                    Stretch="Uniform"
+                                    HorizontalAlignment="Left">
+
+                                    <telerik:Label
+                                        DockPanel.Dock="Top"
+                                        Name="capDisplayMode"
+                                        Content="{Binding Path=displayModeString}"
+                                        FontSize="{StaticResource fontSizePageTitle}" />
+
+                                </Viewbox>
+
+                                <!--Basic Information CAP-->
+                                <uc:GeneralInformation_CAP
+                                    x:Name="ucGeneralInformation_CAP"
+                                    Grid.Row="1"
+                                    Visibility="Visible" />
+
+                                <!--Sensor Status-->
+                                <uc:SensorStatusDisplay_CAP
+                                    Grid.Row="2"
+                                    x:Name="ucSensorStatus_CAP" />
+
+                            </Grid>
+
+                            <!--NOROG-->
+                            <Grid
+                                Grid.Column="1">
+
+                                <Grid.RowDefinitions>
+                                    <RowDefinition
+                                        Height="10*" />
+                                    <RowDefinition
+                                        Height="15*" />
+                                    <RowDefinition
+                                        Height="4*" />
+                                </Grid.RowDefinitions>
+
+                                <Grid.ColumnDefinitions>
+                                    <ColumnDefinition
+                                        Width="7*" />
+                                    <ColumnDefinition
+                                        Width="2*" />
+                                </Grid.ColumnDefinitions>
+
+                                <!--Helideck Motion Limits NOROG-->
+                                <uc:HelideckMotionLimits_NOROG
+                                    Grid.Column="0"
+                                    Grid.Row="0"
+                                    x:Name="ucHelideckMotionLimits_NOROG" />
+
+                                <!--Helideck Status NOROG-->
+                                <uc:HelideckStatus_NOROG
+                                    Grid.Column="1"
+                                    Grid.Row="0"
+                                    x:Name="ucHelideckStatus_NOROG" />
+
+                                <!--Helideck Motion Trend-->
+                                <uc:HelideckMotionTrend_NOROG
+                                    Grid.Column="0"
+                                    Grid.Row="1"
+                                    Grid.ColumnSpan="2"
+                                    Grid.RowSpan="2"
+                                    x:Name="ucHelideckMotionTrend_NOROG" />
+
+                                <!--Status Prediction-->
+                                <!--<uc:HelideckStatusPrediction
+                                Grid.Column="1"
+                                Grid.Row="1" />-->
+
+                            </Grid>
+                            
+                            <!--CAP-->
+                            <Grid
+                                Grid.Column="1">
+
+                                <Grid.RowDefinitions>
+                                    <RowDefinition
+                                        Height="6*" />
+                                    <RowDefinition
+                                        Height="9*" />
+                                    <RowDefinition
+                                        Height="3*" />
+                                    <RowDefinition
+                                        Height="6*" />
+                                </Grid.RowDefinitions>
+
+                                <Grid.ColumnDefinitions>
+                                    <ColumnDefinition
+                                        Width="7*" />
+                                    <ColumnDefinition
+                                        Width="2*" />
+                                </Grid.ColumnDefinitions>
+
+                                <!--User Inputs CAP-->
+                                <uc:UserInputs_CAP
+                                    Grid.Row="0"
+                                    x:Name="ucUserInputs_CAP" />
+
+                                <!--Helideck Status CAP-->
+                                <uc:HelideckStatus_CAP
+                                    Grid.Column="1"
+                                    Grid.Row="0"
+                                    x:Name="ucHelideckStatus_CAP" />
+
+                                <!--Helideck Stability Limits-->
+                                <uc:OnDeckStabilityLimits_CAP
+                                    Grid.Column="0"
+                                    Grid.Row="1"
+                                    Grid.ColumnSpan="2"
+                                    x:Name="ucHelideckStabilityLimits_CAP" />
+
+                                <!--Relative Wind Direction Limits-->
+                                <uc:RelativeWindLimits_CAP
+                                    Grid.Column="0"
+                                    Grid.Row="1"
+                                    Grid.ColumnSpan="2"
+                                    x:Name="ucRelativeWindDirectionLimits_CAP" />
+
+                                <!--Landing Status Trend-->
+                                <uc:LandingStatusTrend_CAP
+                                    Grid.Column="0"
+                                    Grid.Row="2"
+                                    Grid.ColumnSpan="2"
+                                    x:Name="ucHelideckStatusTrend_CAP" />
+
+                                <!--Wind & Heading Change CAP-->
+                                <uc:WindHeadingChange_CAP
+                                    Grid.Column="0"
+                                    Grid.ColumnSpan="2"
+                                    Grid.Row="2"
+                                    Grid.RowSpan="2"
+                                    x:Name="ucWindHeadingChange_CAP" />
+
+                                <!--Helideck Motion Limits CAP-->
+                                <uc:TouchdownLimits_CAP
+                                    Grid.Column="0"
+                                    Grid.ColumnSpan="2"
+                                    Grid.Row="3"
+                                    x:Name="ucTouchdownLimits_CAP" />
+
+                            </Grid>
+
+                            <Grid
+                                Grid.Column="2">
+
+                                <Grid.RowDefinitions>
+                                    <RowDefinition
+                                        Height="10*" />
+                                    <RowDefinition
+                                        Height="6*" />
+                                </Grid.RowDefinitions>
+
+                                <!--Wind & Heading-->
+                                <uc:WindHeading
+                                    Grid.Row="0"
+                                    x:Name="ucWindHeading" />
+
+                                <!--Meteorological-->
+                                <uc:Meteorological
+                                    Grid.Row="1"
+                                    x:Name="ucMeteorological" />
+
+                            </Grid>
+
+                        </Grid>
+
+                    </DockPanel>
+
+                </telerik:RadTabItem>
+
+                <!--==============================================================-->
+                <!--Menu: Helideck Motion History CAP-->
+                <!--==============================================================-->
+                <telerik:RadTabItem
+                    Name="tabHelideckMotionHistory_CAP">
+
+                    <telerik:RadTabItem.Header>
+                        <Image
+                            Width="36"
+                            Source="../Icons/chart-line.png" />
+                    </telerik:RadTabItem.Header>
+
+                    <!--Helideck Motion Details-->
+                    <uc:HelideckMotionHistory_CAP
+                        x:Name="ucHelideckMotionHistory_CAP" />
+
+                </telerik:RadTabItem>
+
+                <!--==============================================================-->
+                <!--Menu: Helideck Motion History NOROG-->
+                <!--==============================================================-->
+                <telerik:RadTabItem
+                    Name="tabHelideckMotionHistory_NOROG">
+
+                    <telerik:RadTabItem.Header>
+                        <Image
+                            Width="36"
+                            Source="../Icons/chart-line.png" />
+                    </telerik:RadTabItem.Header>
+
+                    <!--Helideck Motion Details-->
+                    <uc:HelideckMotionHistory_NOROG
+                        x:Name="ucHelideckMotionHistory_NOROG" />
+
+                </telerik:RadTabItem>
+
+                <!--==============================================================-->
+                <!--Menu: EMS - Environment Monitoring System-->
+                <!--==============================================================-->
+                <telerik:RadTabItem
+                    Name="tabEMS">
+
+                    <telerik:RadTabItem.Header>
+                        <Image
+                            Width="36"
+                            Source="../Icons/waves.png" />
+                    </telerik:RadTabItem.Header>
+
+                    <Grid>
+
+                        <Grid.ColumnDefinitions>
+                            <ColumnDefinition
+                                Width="24*" />
+                            <ColumnDefinition
+                                Width="17*" />
+                        </Grid.ColumnDefinitions>
+
+                        <Grid
+                            Grid.Column="2">
+
+                            <Grid.RowDefinitions>
+                                <RowDefinition
+                                    Height="10*" />
+                                <RowDefinition
+                                    Height="6*" />
+                            </Grid.RowDefinitions>
+
+                            <!--Wind & Heading-->
+                            <uc:EMSWindHeading
+                                Grid.Row="0"
+                                x:Name="ucEMSWindHeading" />
+
+                            <!--Meteorological-->
+                            <uc:Meteorological
+                                Grid.Row="1"
+                                x:Name="ucEMSMeteorological" />
+
+                        </Grid>
+
+                    </Grid>
+
+                </telerik:RadTabItem>
+
+                <!--==============================================================-->
+                <!--Menu: Helideck Report NOROG-->
+                <!--==============================================================-->
+                <telerik:RadTabItem
+                    Name="tabHelideckReport_NOROG">
+
+                    <telerik:RadTabItem.Header>
+                        <Image
+                            Width="36"
+                            Source="../Icons/outline_article_white_48dp.png" />
+                    </telerik:RadTabItem.Header>
+
+                    <!--Helideck Report-->
+                    <uc:HelideckReport_NOROG
+                        x:Name="ucHelideckReport_NOROG" />
+
+                </telerik:RadTabItem>
+
+                <!--==============================================================-->
+                <!--Menu: Helideck Report CAP-->
+                <!--==============================================================-->
+                <telerik:RadTabItem
+                    Name="tabHelideckReport_CAP">
+
+                    <telerik:RadTabItem.Header>
+                        <Image
+                            Width="36"
+                            Source="../Icons/outline_article_white_48dp.png" />
+                    </telerik:RadTabItem.Header>
+
+                    <!--Helideck Report-->
+                    <uc:HelideckReport_CAP
+                        x:Name="ucHelideckReport_CAP" />
+
+                </telerik:RadTabItem>
+
+                <!--==============================================================-->
+                <!--Menu: Fuel-->
+                <!--==============================================================-->
+                <!--<telerik:RadTabItem
+                    Name="tabFuel">
+
+                    <telerik:RadTabItem.Header>
+                        <Image
+                            Width="36"
+                            Source="../Icons/outline_opacity_white_36dp.png" />
+                    </telerik:RadTabItem.Header>
+
+                </telerik:RadTabItem>-->
+
+                <!--==============================================================-->
+                <!--Menu: Information-->
+                <!--==============================================================-->
+                <telerik:RadTabItem
+                    Name="tabInformation">
+
+                    <telerik:RadTabItem.Header>
+                        <Image
+                            Width="36"
+                            Source="../Icons/information-outline.png" />
+                    </telerik:RadTabItem.Header>
+
+                    <uc:Information_CAP
+                        x:Name="ucInformation" />
+
+                </telerik:RadTabItem>
+
+                <!--==============================================================-->
+                <!--Menu: Admin Settings-->
+                <!--==============================================================-->
+                <telerik:RadTabItem
+                    Name="tabAdminSettings">
+
+                    <telerik:RadTabItem.Header>
+                        <Image
+                            Width="36"
+                            Source="../Icons/outline_settings_white_36dp.png" />
+                    </telerik:RadTabItem.Header>
+
+                    <uc:AdminSettings
+                        x:Name="ucAdminSettings" />
+
+                </telerik:RadTabItem>
+
+                <!--==============================================================-->
+                <!--Menu: Admin Data Flow-->
+                <!--==============================================================-->
+                <telerik:RadTabItem
+                    Name="tabAdminDataFlow">
+
+                    <telerik:RadTabItem.Header>
+                        <Image
+                            Width="36"
+                            Source="../Icons/input_white_36dp.png" />
+                    </telerik:RadTabItem.Header>
+
+                    <uc:AdminInputData
+                        x:Name="ucAdminDataFlow" />
+
+                </telerik:RadTabItem>
+
+            </telerik:RadTabControl>
+
+
+        </DockPanel>
+
+        <!--Screen Capture button-->
+        <Button
+            x:Name="btnScreenCapture"
+            Margin="8"
+            HorizontalAlignment="Left"
+            VerticalAlignment="Bottom"            
+            Background="Transparent"
+            Click="btnScreenCapture_Click">
+            
+            <StackPanel>
+            
+                <Image
+                    Width="36"
+                    Source="..\Icons\outline_photo_camera_white_48dp.png" />
+            
+            </StackPanel>
+            
+        </Button>
+        
+    </Grid>
+    
+</telerik:RadWindow>

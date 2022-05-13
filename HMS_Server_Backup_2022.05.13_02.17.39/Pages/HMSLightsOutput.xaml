@@ -1,0 +1,403 @@
+﻿<UserControl
+    x:Class="HMS_Server.HMSLightsOutput"
+    xmlns="http://schemas.microsoft.com/winfx/2006/xaml/presentation"
+    xmlns:x="http://schemas.microsoft.com/winfx/2006/xaml"
+    xmlns:mc="http://schemas.openxmlformats.org/markup-compatibility/2006"
+    xmlns:d="http://schemas.microsoft.com/expression/blend/2008"
+    xmlns:telerik="http://schemas.telerik.com/2008/xaml/presentation"
+    xmlns:sys="clr-namespace:System;assembly=mscorlib"
+    mc:Ignorable="d"
+    d:DesignHeight="1100"
+    d:DesignWidth="1400">
+
+    <UserControl.Resources>
+
+        <sys:Double
+            x:Key="circleSizeLarge_CAP">40</sys:Double>
+        <sys:Double
+            x:Key="circleSizeSmall_CAP">25</sys:Double>
+
+        <!--CAP-->
+        <Style
+            x:Key="TrafficLightRed_CAP"
+            TargetType="Ellipse">
+            <Style.Triggers>
+                <DataTrigger
+                    Binding="{Binding Path=HMSLightsOutputToDisplay}"
+                    Value="RED">
+                    <Setter
+                        Property="Fill"
+                        Value="{StaticResource ColorRed}" />
+                </DataTrigger>
+                <DataTrigger
+                    Binding="{Binding Path=HMSLightsOutputToDisplay}"
+                    Value="BLUE">
+                    <Setter
+                        Property="Fill"
+                        Value="{StaticResource ColorBackgroundSeparator}" />
+                </DataTrigger>
+                <DataTrigger
+                    Binding="{Binding Path=HMSLightsOutputToDisplay}"
+                    Value="AMBER">
+                    <Setter
+                        Property="Fill"
+                        Value="{StaticResource ColorBackgroundSeparator}" />
+                </DataTrigger>
+                <DataTrigger
+                    Binding="{Binding Path=HMSLightsOutputToDisplay}"
+                    Value="OFF">
+                    <Setter
+                        Property="Fill"
+                        Value="{StaticResource ColorBackgroundSeparator}" />
+                </DataTrigger>
+            </Style.Triggers>
+        </Style>
+
+        <Style
+            x:Key="TrafficLightAmber"
+            TargetType="Ellipse">
+            <Style.Triggers>
+                <DataTrigger
+                    Binding="{Binding Path=HMSLightsOutputToDisplay}"
+                    Value="AMBER">
+                    <Setter
+                        Property="Fill"
+                        Value="{StaticResource ColorAmber}" />
+                </DataTrigger>
+                <DataTrigger
+                    Binding="{Binding Path=HMSLightsOutputToDisplay}"
+                    Value="BLUE">
+                    <Setter
+                        Property="Fill"
+                        Value="{StaticResource ColorBackgroundSeparator}" />
+                </DataTrigger>
+                <DataTrigger
+                    Binding="{Binding Path=HMSLightsOutputToDisplay}"
+                    Value="RED">
+                    <Setter
+                        Property="Fill"
+                        Value="{StaticResource ColorBackgroundSeparator}" />
+                </DataTrigger>
+                <DataTrigger
+                    Binding="{Binding Path=HMSLightsOutputToDisplay}"
+                    Value="OFF">
+                    <Setter
+                        Property="Fill"
+                        Value="{StaticResource ColorBackgroundSeparator}" />
+                </DataTrigger>
+            </Style.Triggers>
+        </Style>
+
+        <Style
+            x:Key="TrafficLightBlue"
+            TargetType="Ellipse">
+            <Style.Triggers>
+                <DataTrigger
+                    Binding="{Binding Path=HMSLightsOutputToDisplay}"
+                    Value="BLUE">
+                    <Setter
+                        Property="Fill"
+                        Value="{StaticResource ColorBlue}" />
+                </DataTrigger>
+                <DataTrigger
+                    Binding="{Binding Path=HMSLightsOutputToDisplay}"
+                    Value="RED">
+                    <Setter
+                        Property="Fill"
+                        Value="{StaticResource ColorBackgroundSeparator}" />
+                </DataTrigger>
+                <DataTrigger
+                    Binding="{Binding Path=HMSLightsOutputToDisplay}"
+                    Value="AMBER">
+                    <Setter
+                        Property="Fill"
+                        Value="{StaticResource ColorBackgroundSeparator}" />
+                </DataTrigger>
+                <DataTrigger
+                    Binding="{Binding Path=HMSLightsOutputToDisplay}"
+                    Value="OFF">
+                    <Setter
+                        Property="Fill"
+                        Value="{StaticResource ColorBackgroundSeparator}" />
+                </DataTrigger>
+            </Style.Triggers>
+        </Style>
+
+    </UserControl.Resources>
+    
+    <Grid>
+
+        <Grid.ColumnDefinitions>
+            <ColumnDefinition
+                Width="*" />
+            <ColumnDefinition
+                Width="*" />
+            <ColumnDefinition
+                Width="*" />
+        </Grid.ColumnDefinitions>
+
+        <Grid.RowDefinitions>
+            <RowDefinition
+                Height="*" />
+            <RowDefinition
+                Height="*" />
+        </Grid.RowDefinitions>
+
+        <!--MODBUS Connection-->
+        <telerik:GroupBox
+            Grid.Column="0"
+            Grid.Row="0"
+            Header="MODBUS Connection"
+            Margin="8">
+
+            <StackPanel>
+
+                <DockPanel>
+                    <Label
+                        Name="lbPortName"
+                        Width="140"
+                        Content="Port Name"
+                        VerticalAlignment="Center" />
+                    <telerik:RadComboBox
+                        Width="auto"
+                        Name="cboPortName"
+                        SelectionChanged="cboCOMPort_SelectionChanged" />
+                </DockPanel>
+
+                <DockPanel>
+                    <Label
+                        Name="lbBaudRate"
+                        Width="140"
+                        Content="Baud Rate"
+                        VerticalAlignment="Center" />
+                    <telerik:RadComboBox
+                        Width="auto"
+                        Name="cboBaudRate"
+                        SelectionChanged="cboBaudRate_SelectionChanged" />
+                </DockPanel>
+
+                <DockPanel>
+                    <Label
+                        Name="lbDataBits"
+                        Width="140"
+                        Content="Data Bits"
+                        VerticalAlignment="Center" />
+                    <telerik:RadComboBox
+                        Width="auto"
+                        Name="cboDataBits"
+                        SelectionChanged="cboDataBits_SelectionChanged" />
+                </DockPanel>
+
+                <DockPanel>
+                    <Label
+                        Name="lbStopBits"
+                        Width="140"
+                        Content="Stop Bits"
+                        VerticalAlignment="Center" />
+                    <telerik:RadComboBox
+                        Width="auto"
+                        Name="cboStopBits"
+                        SelectionChanged="cboStopBits_SelectionChanged" />
+                </DockPanel>
+
+                <DockPanel>
+                    <Label
+                        Name="lbParity"
+                        Width="140"
+                        Content="Data Parity"
+                        VerticalAlignment="Center" />
+                    <telerik:RadComboBox
+                        Width="auto"
+                        Name="cboParity"
+                        SelectionChanged="cboDataParity_SelectionChanged" />
+                </DockPanel>
+
+                <DockPanel>
+                    <Label
+                        Name="lbHandShake"
+                        Width="140"
+                        Content="Hand Shake"
+                        VerticalAlignment="Center" />
+                    <telerik:RadComboBox
+                        Width="auto"
+                        Name="cboHandShake"
+                        SelectionChanged="cboHandShake_SelectionChanged" />
+                </DockPanel>
+
+                <DockPanel>
+                    <Label
+                        Name="lbSlaveID"
+                        Width="140"
+                        Content="Slave ID"
+                        VerticalAlignment="Center" />
+                    <TextBox
+                        Name="tbSlaveID"
+                        LostFocus="tbSlaveID_LostFocus"
+                        KeyDown="tbSlaveID_KeyDown" />
+                </DockPanel>
+
+                <DockPanel>
+                    <Label
+                        Name="lbOutputAddress1"
+                        Width="140"
+                        Content="Output Address 1"
+                        VerticalAlignment="Center" />
+                    <TextBox
+                        Name="tbOutputAddress1"
+                        Text="{Binding Path=outputAddress1}"
+                        LostFocus="tbOutputAddress1_LostFocus"
+                        KeyDown="tbOutputAddress1_KeyDown" />
+                </DockPanel>
+
+                <DockPanel>
+                    <Label
+                        Name="lbOutputAddress2"
+                        Width="140"
+                        Content="Output Address 2"
+                        VerticalAlignment="Center" />
+                    <TextBox
+                        Name="tbOutputAddress2"
+                        Text="{Binding Path=outputAddress2}"
+                        LostFocus="tbOutputAddress2_LostFocus"
+                        KeyDown="tbOutputAddress2_KeyDown" />
+                </DockPanel>
+
+                <DockPanel>
+                    <Label
+                        Name="lbOutputAddress3"
+                        Width="140"
+                        Content="Output Address 3"
+                        VerticalAlignment="Center" />
+                    <TextBox
+                        Name="tbOutputAddress3"
+                        Text="{Binding Path=outputAddress3}"
+                        LostFocus="tbOutputAddress3_LostFocus"
+                        KeyDown="tbOutputAddress3_KeyDown" />
+                </DockPanel>
+
+            </StackPanel>
+            
+        </telerik:GroupBox>
+
+        <!--Test Mode-->
+        <telerik:GroupBox
+            Grid.Column="1"
+            Grid.Row="0"
+            Header="Test Mode"
+            Margin="8">
+
+            <StackPanel>
+
+                <!--Test: Enable Test Mode-->
+                <DockPanel>
+                    <telerik:Label
+                        Name="lbTestMode"
+                        Content="Enable Test Mode"
+                        VerticalAlignment="Center" />
+                    <CheckBox
+                        Name="chkTestMode"
+                        IsChecked="{Binding Path=testMode, Mode=TwoWay}"
+                        VerticalAlignment="Center"
+                        HorizontalAlignment="Right" />
+                </DockPanel>
+
+                <!--Test: Helideck Status-->
+                <DockPanel>
+                    <telerik:Label
+                        Name="lbTestHelideckStatus"
+                        Width="200"
+                        Content="Helideck Status"
+                        VerticalAlignment="Center" />
+                    <telerik:RadComboBox
+                        
+                        Width="auto"
+                        Name="cboTestHelideckStatus"
+                        SelectionChanged="cboTestHelideckStatus_SelectionChanged"/>
+                </DockPanel>
+
+                <!--Test: Landing/Takeoff Mode-->
+                <DockPanel>
+                    <telerik:Label
+                        Name="lbTestDisplayMode"
+                        Width="200"
+                        Content="Landing/Takeoff Mode"
+                        VerticalAlignment="Center" />
+                    <telerik:RadComboBox
+                        Width="auto"
+                        Name="cboTestDisplayMode"
+                        SelectionChanged="cboTestDisplayMode_SelectionChanged"/>
+                </DockPanel>
+
+            </StackPanel>
+
+        </telerik:GroupBox>
+
+        <!--Output-->
+        <telerik:GroupBox
+            Grid.Column="2"
+            Grid.Row="0"
+            Header="Output"
+            Margin="8">
+
+            <DockPanel
+                HorizontalAlignment="Center">
+
+                <Grid>
+
+                    <Grid.RowDefinitions>
+                        <RowDefinition
+                            Height="*" />
+                        <RowDefinition
+                            Height="*" />
+                        <RowDefinition
+                            Height="*" />
+                    </Grid.RowDefinitions>
+
+                    <Viewbox
+                        Grid.Row="0"
+                        StretchDirection="Both"
+                        Stretch="Uniform">
+
+                        <Ellipse
+                            Margin="8"
+                            Width="{StaticResource circleSizeLarge_CAP}"
+                            Height="{StaticResource circleSizeLarge_CAP}"
+                            Style="{StaticResource TrafficLightRed_CAP}" />
+
+                    </Viewbox>
+
+                    <Viewbox
+                        Grid.Row="1"
+                        StretchDirection="Both"
+                        Stretch="Uniform">
+
+                        <Ellipse
+                            Margin="8"
+                            Width="{StaticResource circleSizeLarge_CAP}"
+                            Height="{StaticResource circleSizeLarge_CAP}"
+                            Style="{StaticResource TrafficLightAmber}" />
+
+                    </Viewbox>
+
+                    <Viewbox
+                        Grid.Row="2"
+                        StretchDirection="Both"
+                        Stretch="Uniform">
+
+                        <Ellipse
+                            Margin="8"
+                            Width="{StaticResource circleSizeLarge_CAP}"
+                            Height="{StaticResource circleSizeLarge_CAP}"
+                            Style="{StaticResource TrafficLightBlue}" />
+
+                    </Viewbox>
+
+                </Grid>
+
+            </DockPanel>
+
+        </telerik:GroupBox>
+
+    </Grid>
+
+</UserControl>

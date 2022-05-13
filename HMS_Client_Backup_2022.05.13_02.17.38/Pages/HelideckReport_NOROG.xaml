@@ -1,0 +1,3094 @@
+﻿<UserControl
+    x:Class="HMS_Client.HelideckReport_NOROG"
+    xmlns="http://schemas.microsoft.com/winfx/2006/xaml/presentation"
+    xmlns:x="http://schemas.microsoft.com/winfx/2006/xaml"
+    xmlns:mc="http://schemas.openxmlformats.org/markup-compatibility/2006"
+    xmlns:d="http://schemas.microsoft.com/expression/blend/2008"
+    xmlns:telerik="http://schemas.telerik.com/2008/xaml/presentation"
+    mc:Ignorable="d"
+    d:DesignHeight="1080"
+    d:DesignWidth="1920">
+
+    <!--Advarsel! Rapporten i denne filen er designet for utskift til PDF.
+    Enkelte tagger er ikke tilgjengelig i koden som skriver ut til PDF.
+    Alle endringer i rapporten må sjekkes i utskrevet PDF.-->
+   
+    <Grid>
+
+        <Grid.ColumnDefinitions>
+            <ColumnDefinition
+                Width="4*" />
+            <ColumnDefinition
+                Width="4*" />
+            <ColumnDefinition
+                Width="1*" />
+        </Grid.ColumnDefinitions>
+
+        <Grid
+            Grid.Column="0">
+
+            <Grid.ColumnDefinitions>
+                <ColumnDefinition
+                    Width="*" />
+                <ColumnDefinition
+                    Width="*" />
+            </Grid.ColumnDefinitions>
+
+            <Grid.RowDefinitions>
+                <RowDefinition
+                    Height="*" />
+                <RowDefinition
+                    Height="*" />
+                <RowDefinition
+                    Height="*" />
+            </Grid.RowDefinitions>
+
+            <!--HELIDECK REPORT-->
+            <telerik:GroupBox
+                Header="HELIDECK REPORT"
+                Grid.Row="0"
+                Margin="8">
+
+                <DockPanel>
+
+                    <telerik:RadButton
+                        DockPanel.Dock="Bottom"
+                        Name="btnClearHelideckReport"
+                        Content="Clear"
+                        HorizontalAlignment="Right"
+                        Width="110"
+                        Click="btnClearHelideckReport_Click" />
+
+                    <StackPanel
+                        DockPanel.Dock="Top"
+                        Margin="8">
+
+                        <!--Name of HLO-->
+                        <DockPanel>
+
+                            <telerik:Label
+                                Width="130"
+                                Content="Name of HLO"
+                                VerticalAlignment="Center" />
+
+                            <TextBox
+                                Name="tbNameOfHLO"
+                                Text="{Binding Path=nameOfHLO}"
+                                LostFocus="tbNameOfHLO_LostFocus"
+                                KeyDown="tbNameOfHLO_KeyDown"/>
+
+                        </DockPanel>
+
+                        <!--Telephone-->
+                        <DockPanel>
+
+                            <telerik:Label
+                                Width="130"
+                                Content="Telephone"
+                                VerticalAlignment="Center" />
+
+                            <TextBox
+                                Name="tbTelephone"
+                                Text="{Binding Path=telephone}"
+                                LostFocus="tbTelephone_LostFocus"
+                                KeyDown="tbTelephone_KeyDown" />
+
+                        </DockPanel>
+
+                        <!--Dynamic Positioning-->
+                        <DockPanel>
+
+                            <telerik:Label
+                                Name="lbDynamicPositioning"
+                                Content="Dynamic Positioning"
+                                VerticalAlignment="Center" />
+
+                            <CheckBox
+                                Name="cbDynamicPositioning"
+                                IsChecked="{Binding Path=dynamicPositioning, Mode=TwoWay}"
+                                VerticalAlignment="Center"
+                                HorizontalAlignment="Right" />
+
+                        </DockPanel>
+
+                        <!--Accurate Monitoring Equipment-->
+                        <DockPanel>
+
+                            <telerik:Label
+                                Name="lbAccurateMonitoringEquipment"
+                                Content="Accurate Monitoring Equipment"
+                                VerticalAlignment="Center" />
+
+                            <CheckBox
+                                Name="cbAccurateMonitoringEquipment"
+                                IsChecked="{Binding Path=accurateMonitoringEquipment, Mode=TwoWay}"
+                                VerticalAlignment="Center"
+                                HorizontalAlignment="Right" />
+
+                        </DockPanel>
+
+                    </StackPanel>
+
+                </DockPanel>
+
+            </telerik:GroupBox>
+
+            <!--LOG INFO-->
+            <telerik:GroupBox
+                Header="LOG INFO"
+                Grid.Column="1"
+                Grid.Row="0"
+                Grid.RowSpan="3"
+                Margin="8">
+
+                <DockPanel>
+
+                    <telerik:RadButton
+                        DockPanel.Dock="Bottom"
+                        Name="btnClearLogInfo"
+                        Content="Clear"
+                        HorizontalAlignment="Right"
+                        Width="110" 
+                        Click="btnClearLogInfo_Click"/>
+
+                    <StackPanel
+                        Margin="8"
+                        DockPanel.Dock="Top">
+
+                        <!--Flight Number-->
+                        <DockPanel>
+
+                            <telerik:Label
+                                Width="200"
+                                Content="Flight Number"
+                                VerticalAlignment="Center" />
+
+                            <TextBox
+                                Name="tbFlightNumber"
+                                Text="{Binding Path=flightNumber}"
+                                LostFocus="tbFlightNumber_LostFocus"
+                                KeyDown="tbFlightNumber_KeyDown" />
+
+                        </DockPanel>
+
+                        <!--Return Load-->
+                        <DockPanel>
+
+                            <telerik:Label
+                                Width="200"
+                                Content="Return Load (passengers)"
+                                VerticalAlignment="Center" />
+
+                            <TextBox
+                                Name="tbReturnLoad"
+                                Text="{Binding Path=returnLoad}"
+                                LostFocus="tbReturnLoad_LostFocus"
+                                KeyDown="tbReturnLoad_KeyDown" />
+
+                        </DockPanel>
+
+                        <!--Total Load-->
+                        <DockPanel>
+
+                            <telerik:Label
+                                Width="200"
+                                Content="Total Load"
+                                VerticalAlignment="Center" />
+
+                            <TextBox
+                                Name="tbTotalLoad"
+                                Text="{Binding Path=totalLoad}"
+                                LostFocus="tbTotalLoad_LostFocus"
+                                KeyDown="tbTotalLoad_KeyDown" />
+
+                        </DockPanel>
+
+                        <!--Luggage-->
+                        <DockPanel>
+
+                            <telerik:Label
+                                Width="200"
+                                Content="Luggage"
+                                VerticalAlignment="Center" />
+
+                            <TextBox
+                                Name="tbLuggage"
+                                Text="{Binding Path=luggage}"
+                                LostFocus="tbLuggage_LostFocus"
+                                KeyDown="tbLuggage_KeyDown" />
+
+                        </DockPanel>
+
+                        <!--Cargo-->
+                        <DockPanel>
+
+                            <telerik:Label
+                                Width="200"
+                                Content="Cargo"
+                                VerticalAlignment="Center" />
+
+                            <TextBox
+                                Name="tbCargo"
+                                Text="{Binding Path=cargo}"
+                                LostFocus="tbCargo_LostFocus"
+                                KeyDown="tbCargo_KeyDown" />
+
+                        </DockPanel>
+
+                        <!--Helifuel Available-->
+                        <DockPanel>
+
+                            <telerik:Label
+                                Content="Helifuel Available"
+                                VerticalAlignment="Center" />
+
+                            <CheckBox
+                                IsChecked="{Binding Path=helifuelAvailable, Mode=TwoWay}"
+                                VerticalAlignment="Center"
+                                HorizontalAlignment="Right" />
+
+                        </DockPanel>
+
+                        <!--Fuel Quantity-->
+                        <DockPanel>
+
+                            <telerik:Label
+                                Width="200"
+                                Content="Fuel Quantity"
+                                VerticalAlignment="Center" />
+
+                            <TextBox
+                                Name="tbFuelQuantity"
+                                Text="{Binding Path=fuelQuantity}"
+                                LostFocus="tbFuelQuantity_LostFocus"
+                                KeyDown="tbFuelQuantity_KeyDown" />
+
+                        </DockPanel>
+
+                        <!--Routing 1-->
+                        <DockPanel>
+
+                            <telerik:Label
+                                Width="200"
+                                Content="Routing 1"
+                                VerticalAlignment="Center" />
+
+                            <TextBox
+                                Name="tbRouting1"
+                                Text="{Binding Path=routing1}"
+                                LostFocus="tbRouting1_LostFocus"
+                                KeyDown="tbRouting1_KeyDown" />
+
+                        </DockPanel>
+
+                        <!--Routing 2-->
+                        <DockPanel>
+
+                            <telerik:Label
+                                Width="200"
+                                Content="Routing 2"
+                                VerticalAlignment="Center" />
+
+                            <TextBox
+                                Name="tbRouting2"
+                                Text="{Binding Path=routing2}"
+                                LostFocus="tbRouting2_LostFocus"
+                                KeyDown="tbRouting2_KeyDown" />
+
+                        </DockPanel>
+
+                        <!--Routing 3-->
+                        <DockPanel>
+
+                            <telerik:Label
+                                Width="200"
+                                Content="Routing 3"
+                                VerticalAlignment="Center" />
+
+                            <TextBox
+                                Name="tbRouting3"
+                                Text="{Binding Path=routing3}"
+                                LostFocus="tbRouting3_LostFocus"
+                                KeyDown="tbRouting3_KeyDown" />
+
+                        </DockPanel>
+
+                        <!--Routing 4-->
+                        <DockPanel>
+
+                            <telerik:Label
+                                Width="200"
+                                Content="Routing 4"
+                                VerticalAlignment="Center" />
+
+                            <TextBox
+                                Name="tbRouting4"
+                                Text="{Binding Path=routing4}"
+                                LostFocus="tbRouting4_LostFocus"
+                                KeyDown="tbRouting4_KeyDown" />
+
+                        </DockPanel>
+
+                        <telerik:Label
+                            Content="Special Remarks"
+                            HorizontalAlignment="Left" />
+
+                        <TextBlock
+                            DockPanel.Dock="Top"
+                            Margin="16,0,16,0"
+                            Text="E.g., ships within the 500m sone, non-conformities of helideck equipment, objects close the obstruction free zone, deviation from helideck procedures, flaring of gas, or other information the pilots may find useful."
+                            FontSize="{StaticResource reportFontSizeComment}"
+                            TextWrapping="Wrap"
+                            VerticalAlignment="Center" />
+
+                        <!--<Grid
+                            Height="100">
+
+                            <TextBox
+                                Name="tbLogInfoRemarks"
+                                Margin="8"
+                                Text="{Binding Path=logInfoRemarks}"
+                                TextWrapping="Wrap"
+                                VerticalAlignment="Bottom"
+                                LostFocus="tbLogInfoRemarks_LostFocus"
+                                KeyDown="tbLogInfoRemarks_KeyDown"/>
+                        </Grid>-->
+
+
+                        <Grid
+                            Margin="8"
+                            Height="150">
+
+                            <TextBox
+                                x:Name="SpecialRemarksBox"
+                                Margin="8"
+                                Text="{Binding Path=logInfoRemarks}"
+                                TextWrapping="Wrap"
+                                VerticalAlignment="Bottom"
+                                LostFocus="tbLogInfoRemarks_LostFocus"
+                                KeyDown="tbLogInfoRemarks_KeyDown" />
+
+                            <TextBlock
+                                IsHitTestVisible="False"
+                                Text="Enter special remarks here"
+                                VerticalAlignment="Bottom"
+                                HorizontalAlignment="Left"
+                                Margin="18,0,0,18"
+                                Foreground="DarkGray">
+
+                                <TextBlock.Style>
+                                    <Style
+                                        TargetType="{x:Type TextBlock}">
+                                        <Setter
+                                            Property="Visibility"
+                                            Value="Collapsed" />
+                                        <Style.Triggers>
+                                            <DataTrigger
+                                                Binding="{Binding Text, ElementName=SpecialRemarksBox}"
+                                                Value="">
+                                                <Setter
+                                                    Property="Visibility"
+                                                    Value="Visible" />
+                                            </DataTrigger>
+                                        </Style.Triggers>
+                                    </Style>
+                                </TextBlock.Style>
+                            </TextBlock>
+                        </Grid>
+
+                    </StackPanel>
+
+                </DockPanel>
+
+            </telerik:GroupBox>
+
+            <!--WEATHER OBSERVATION-->
+            <telerik:GroupBox
+                Header="WEATHER OBSERVATION"
+                Grid.Column="0"
+                Grid.Row="1"
+                Margin="8">
+
+                <DockPanel>
+
+                    <telerik:RadButton
+                        DockPanel.Dock="Bottom"
+                        Name="btnClearOtherWeatherInfo"
+                        Content="Clear"
+                        HorizontalAlignment="Right"
+                        Width="110"
+                        Click="btnClearOtherWeatherInfo_Click"/>
+
+                    <StackPanel
+                        DockPanel.Dock="Top"
+                        Margin="8">
+
+                        <!--Sea spray observed over helideck-->
+                        <DockPanel>
+
+                            <telerik:Label
+                                Content="Sea spray observed over helideck"
+                                VerticalAlignment="Center" />
+
+                            <CheckBox
+                                IsChecked="{Binding Path=seaSprayObserved, Mode=TwoWay}"
+                                VerticalAlignment="Center"
+                                HorizontalAlignment="Right" />
+
+                        </DockPanel>
+
+                        <telerik:Label
+                            Content="Other relevant weather info"
+                            HorizontalAlignment="Left" />
+
+                        <TextBlock
+                            Margin="16,0,16,0"
+                            Text=" E.g. fog banks, rapid changes, etc."
+                            FontSize="{StaticResource reportFontSizeComment}"
+                            TextWrapping="Wrap"
+                            VerticalAlignment="Center" />
+
+                    </StackPanel>
+
+                    <Grid
+                        Margin="8">
+
+                        <TextBox
+                            Name="tbOtherWeatherInfo"
+                            Margin="8"
+                            Text="{Binding Path=otherWeatherInfo}"
+                            TextWrapping="Wrap"
+                            VerticalAlignment="Bottom"
+                            LostFocus="tbOtherWeatherInfo_LostFocus"
+                            KeyDown="tbOtherWeatherInfo_KeyDown" />
+
+                        <TextBlock
+                            IsHitTestVisible="False"
+                            Text="Enter weather info here"
+                            VerticalAlignment="Bottom"
+                            HorizontalAlignment="Left"
+                            Margin="18,0,0,18"
+                            Foreground="DarkGray">
+
+                            <TextBlock.Style>
+                                <Style
+                                    TargetType="{x:Type TextBlock}">
+                                    <Setter
+                                        Property="Visibility"
+                                        Value="Collapsed" />
+                                    <Style.Triggers>
+                                        <DataTrigger
+                                            Binding="{Binding Text, ElementName=tbOtherWeatherInfo}"
+                                            Value="">
+                                            <Setter
+                                                Property="Visibility"
+                                                Value="Visible" />
+                                        </DataTrigger>
+                                    </Style.Triggers>
+                                </Style>
+                            </TextBlock.Style>
+                        </TextBlock>
+                    </Grid>
+
+                </DockPanel>
+
+            </telerik:GroupBox>
+
+            <!--EMAIL-->
+            <telerik:GroupBox
+                Header="EMAIL"
+                Grid.Column="0"
+                Grid.Row="2"
+                Margin="8">
+
+                <DockPanel>
+
+                    <telerik:RadButton
+                        DockPanel.Dock="Bottom"
+                        Name="btnClearEmail"
+                        Content="Clear"
+                        HorizontalAlignment="Right"
+                        Width="110"
+                        Click="btnClearEmail_Click"/>
+
+                    <StackPanel
+                        DockPanel.Dock="Top"
+                        Margin="8">
+
+                        <!--Email: From-->
+                        <DockPanel>
+
+                            <telerik:Label
+                                Width="130"
+                                Content="Email: From"
+                                VerticalAlignment="Center" />
+
+                            <TextBox
+                                Name="tbEmail"
+                                Text="{Binding Path=emailFrom}"
+                                LostFocus="tbEmail_LostFocus"
+                                KeyDown="tbEmail_KeyDown" />
+
+                        </DockPanel>
+
+                        <!--Helicopter Operator-->
+                        <DockPanel>
+                            <telerik:Label
+                                Content="Helicopter Operator"
+                                Width="150"
+                                VerticalAlignment="Center" />
+                            <telerik:RadComboBox
+                                Name="cboHelicopterOperator"
+                                SelectionChanged="cboHelicopterOperator_SelectionChanged">
+                            </telerik:RadComboBox>
+                        </DockPanel>
+
+                        <!--Send To-->
+                        <DockPanel>
+
+                            <telerik:Label
+                                Width="150"
+                                Content="Email: To"
+                                VerticalAlignment="Center" />
+
+                            <TextBox
+                                Name="tbSendTo"
+                                Text="{Binding Path=emailTo}"
+                                LostFocus="tbSendTo_LostFocus"
+                                KeyDown="tbSendTo_KeyDown"/>
+
+                        </DockPanel>
+
+                        <!--CC To-->
+                        <DockPanel>
+
+                            <telerik:Label
+                                Width="150"
+                                Content="Email: CC"
+                                VerticalAlignment="Center" />
+
+                            <TextBox
+                                Name="tbCCTo"
+                                Text="{Binding Path=emailCC}"
+                                LostFocus="tbCCTo_LostFocus"
+                                KeyDown="tbCCTo_KeyDown"/>
+
+                        </DockPanel>
+
+                        <!--Include HMS screenshot-->
+                        <DockPanel>
+
+                            <telerik:Label
+                                Content="Include HMS screen capture"
+                                VerticalAlignment="Center" />
+
+                            <CheckBox
+                                IsChecked="{Binding Path=sendHMSScreenCapture, Mode=TwoWay}"
+                                VerticalAlignment="Center"
+                                HorizontalAlignment="Right" />
+
+                        </DockPanel>
+
+                    </StackPanel>
+
+                </DockPanel>
+
+            </telerik:GroupBox>
+
+        </Grid>
+
+        <!--REPORT PREVIEW-->
+        <telerik:GroupBox
+            Header="PREVIEW"
+            Grid.Column="1"
+            Margin="8">
+
+            <Grid>
+
+                <Viewbox
+                    Grid.Column="1"
+                    Margin="8"
+                    StretchDirection="Both"
+                    Stretch="Uniform">
+
+                    <Border
+                        x:Name="helideckReportPreviewContainer"
+                        Height="3508"
+                        Width="2480">
+
+                        <Grid
+                            Margin="40">
+
+                            <Grid.RowDefinitions>
+                                <RowDefinition
+                                    Height="3*" />
+                                <RowDefinition
+                                    Height="48" />
+                                <RowDefinition
+                                    Height="2*" />
+                                <RowDefinition
+                                    Height="48" />
+                                <RowDefinition
+                                    Height="1*" />
+                            </Grid.RowDefinitions>
+
+                            <!--General Information-->
+                            <Grid
+                                Grid.Row="0">
+
+                                <Grid.RowDefinitions>
+                                    <RowDefinition
+                                        Height="3*" />
+                                    <RowDefinition
+                                        Height="*" />
+                                    <RowDefinition
+                                        Height="*" />
+                                    <RowDefinition
+                                        Height="*" />
+                                    <RowDefinition
+                                        Height="*" />
+                                    <RowDefinition
+                                        Height="*" />
+                                    <RowDefinition
+                                        Height="*" />
+                                    <RowDefinition
+                                        Height="*" />
+                                    <RowDefinition
+                                        Height="*" />
+                                    <RowDefinition
+                                        Height="2*" />
+                                    <RowDefinition
+                                        Height="*" />
+                                </Grid.RowDefinitions>
+
+                                <Grid
+                                    Grid.Row="0">
+
+                                    <Grid.ColumnDefinitions>
+                                        <ColumnDefinition
+                                            Width="*" />
+                                        <ColumnDefinition
+                                            Width="*" />
+                                    </Grid.ColumnDefinitions>
+
+                                    <Rectangle
+                                        Grid.Column="0"
+                                        Fill="{StaticResource ColorReportLines}"
+                                        Width="{StaticResource reportStrokeThickness}"
+                                        HorizontalAlignment="Right"
+                                        VerticalAlignment="Stretch" />
+
+                                    <Rectangle
+                                        Grid.Column="0"
+                                        Grid.ColumnSpan="2"
+                                        Fill="{StaticResource ColorReportLines}"
+                                        Height="{StaticResource reportStrokeThickness}"
+                                        VerticalAlignment="Bottom"
+                                        HorizontalAlignment="Stretch" />
+
+                                    <!--General Information: Title-->
+                                    <TextBlock
+                                        Text="HELIDECK REPORT"
+                                        VerticalAlignment="Center"
+                                        HorizontalAlignment="Center"
+                                        FontSize="{StaticResource reportFontSizeTitle1}" />
+
+                                    <!--General Information: Installation, Email, Telephone-->
+                                    <Grid
+                                        Grid.Column="1">
+
+                                        <Grid.RowDefinitions>
+                                            <RowDefinition
+                                                Height="*" />
+                                            <RowDefinition
+                                                Height="*" />
+                                            <RowDefinition
+                                                Height="*" />
+                                        </Grid.RowDefinitions>
+
+                                        <!--General Information: Installation-->
+                                        <Rectangle
+                                            Grid.Row="0"
+                                            Fill="{StaticResource ColorReportLines}"
+                                            Height="{StaticResource reportStrokeThickness}"
+                                            VerticalAlignment="Bottom"
+                                            HorizontalAlignment="Stretch" />
+
+                                        <StackPanel
+                                            Grid.Row="0"
+                                            Orientation="Horizontal">
+
+                                            <TextBlock
+                                                Text="Installation:"
+                                                VerticalAlignment="Bottom"
+                                                HorizontalAlignment="Left"
+                                                Margin="{StaticResource reportLabelMargin}"
+                                                FontSize="{StaticResource reportFontSizeLabel}" />
+
+                                            <TextBlock
+                                                Text="{Binding Path=vesselNameString}"
+                                                VerticalAlignment="Bottom"
+                                                HorizontalAlignment="Left"
+                                                FontSize="{StaticResource reportFontSizeContent}"
+                                                Margin="{StaticResource reportContentMargin}" />
+
+                                        </StackPanel>
+
+                                        <!--General Information: Email-->
+                                        <Rectangle
+                                            Grid.Row="1"
+                                            Fill="{StaticResource ColorReportLines}"
+                                            Height="{StaticResource reportStrokeThickness}"
+                                            VerticalAlignment="Bottom"
+                                            HorizontalAlignment="Stretch" />
+
+                                        <StackPanel
+                                            Grid.Row="1"
+                                            Orientation="Horizontal">
+
+                                            <TextBlock
+                                                Text="Email:"
+                                                VerticalAlignment="Bottom"
+                                                HorizontalAlignment="Left"
+                                                Margin="{StaticResource reportLabelMargin}"
+                                                FontSize="{StaticResource reportFontSizeLabel}" />
+
+                                            <TextBlock
+                                                Text="{Binding Path=emailFrom}"
+                                                VerticalAlignment="Bottom"
+                                                HorizontalAlignment="Left"
+                                                FontSize="{StaticResource reportFontSizeContent}"
+                                                Margin="{StaticResource reportContentMargin}" />
+
+                                        </StackPanel>
+
+                                        <!--General Information: Telephone-->
+                                        <StackPanel
+                                            Grid.Row="2"
+                                            Orientation="Horizontal">
+
+                                            <TextBlock
+                                                Text="Tel:"
+                                                VerticalAlignment="Bottom"
+                                                HorizontalAlignment="Left"
+                                                Margin="{StaticResource reportLabelMargin}"
+                                                FontSize="{StaticResource reportFontSizeLabel}" />
+
+                                            <TextBlock
+                                                Text="{Binding Path=telephone}"
+                                                VerticalAlignment="Bottom"
+                                                HorizontalAlignment="Left"
+                                                FontSize="{StaticResource reportFontSizeContent}"
+                                                Margin="{StaticResource reportContentMargin}" />
+
+                                        </StackPanel>
+
+                                    </Grid>
+
+                                </Grid>
+
+                                <!--General Information: Date, Time, Position-->
+                                <Grid
+                                    Grid.Row="1">
+
+                                    <Grid.ColumnDefinitions>
+                                        <ColumnDefinition
+                                            Width="3*" />
+                                        <ColumnDefinition
+                                            Width="3*" />
+                                        <ColumnDefinition
+                                            Width="6*" />
+                                    </Grid.ColumnDefinitions>
+
+                                    <Rectangle
+                                        Grid.Column="0"
+                                        Grid.ColumnSpan="3"
+                                        Fill="{StaticResource ColorReportLines}"
+                                        Height="{StaticResource reportStrokeThickness}"
+                                        VerticalAlignment="Bottom"
+                                        HorizontalAlignment="Stretch" />
+
+                                    <Rectangle
+                                        Grid.Column="0"
+                                        Fill="{StaticResource ColorReportLines}"
+                                        Width="{StaticResource reportStrokeThickness}"
+                                        HorizontalAlignment="Right"
+                                        VerticalAlignment="Stretch" />
+
+                                    <Rectangle
+                                        Grid.Column="1"
+                                        Fill="{StaticResource ColorReportLines}"
+                                        Width="{StaticResource reportStrokeThickness}"
+                                        HorizontalAlignment="Right"
+                                        VerticalAlignment="Stretch" />
+
+                                    <!--General Information: Date-->
+                                    <StackPanel
+                                        Grid.Column="0"
+                                        Orientation="Horizontal">
+
+                                        <TextBlock
+                                            Text="Date:"
+                                            VerticalAlignment="Bottom"
+                                            HorizontalAlignment="Left"
+                                            Margin="{StaticResource reportLabelMargin}"
+                                            FontSize="{StaticResource reportFontSizeLabel}" />
+
+                                        <TextBlock
+                                            Text="{Binding Path=dateString_NOROG}"
+                                            VerticalAlignment="Bottom"
+                                            HorizontalAlignment="Left"
+                                            FontSize="{StaticResource reportFontSizeContent}"
+                                            Margin="{StaticResource reportContentMargin}" />
+
+                                    </StackPanel>
+
+                                    <!--General Information: Time-->
+                                    <StackPanel
+                                        Grid.Column="1"
+                                        Orientation="Horizontal">
+
+                                        <TextBlock
+                                            Text="Time (UTC):"
+                                            VerticalAlignment="Bottom"
+                                            HorizontalAlignment="Left"
+                                            Margin="{StaticResource reportLabelMargin}"
+                                            FontSize="{StaticResource reportFontSizeLabel}" />
+
+                                        <TextBlock
+                                            Text="{Binding Path=clockString_NOROG}"
+                                            VerticalAlignment="Bottom"
+                                            HorizontalAlignment="Left"
+                                            FontSize="{StaticResource reportFontSizeContent}"
+                                            Margin="{StaticResource reportContentMargin}" />
+
+                                    </StackPanel>
+
+                                    <!--General Information: Position-->
+                                    <StackPanel
+                                        Grid.Column="2"
+                                        Orientation="Horizontal">
+
+                                        <TextBlock
+                                            Text="Position:"
+                                            VerticalAlignment="Bottom"
+                                            HorizontalAlignment="Left"
+                                            Margin="{StaticResource reportLabelMargin}"
+                                            FontSize="{StaticResource reportFontSizeLabel}" />
+
+                                        <TextBlock
+                                            Text="{Binding Path=positionString_NOROG}"
+                                            VerticalAlignment="Bottom"
+                                            HorizontalAlignment="Left"
+                                            FontSize="{StaticResource reportFontSizeContent}"
+                                            Margin="{StaticResource reportContentMargin}" />
+
+                                    </StackPanel>
+
+                                </Grid>
+
+                                <!--General Information: Dynamic Positioning, NDB-->
+                                <Grid
+                                    Grid.Row="2">
+
+                                    <Grid.ColumnDefinitions>
+                                        <ColumnDefinition
+                                            Width="3.5*" />
+                                        <ColumnDefinition
+                                            Width="2.5*" />
+                                        <ColumnDefinition
+                                            Width="6*" />
+                                    </Grid.ColumnDefinitions>
+
+                                    <Rectangle
+                                        Grid.Column="0"
+                                        Grid.ColumnSpan="3"
+                                        Fill="{StaticResource ColorReportLines}"
+                                        Height="{StaticResource reportStrokeThickness}"
+                                        VerticalAlignment="Bottom"
+                                        HorizontalAlignment="Stretch" />
+
+                                    <Rectangle
+                                        Grid.Column="1"
+                                        Fill="{StaticResource ColorReportLines}"
+                                        Width="{StaticResource reportStrokeThickness}"
+                                        HorizontalAlignment="Right"
+                                        VerticalAlignment="Stretch" />
+
+                                    <!--General Information: Dynamic Positioning-->
+                                    <TextBlock
+                                        Grid.Column="0"
+                                        Text="Dynamic positioning:"
+                                        VerticalAlignment="Bottom"
+                                        HorizontalAlignment="Left"
+                                        Margin="{StaticResource reportLabelMargin}"
+                                        FontSize="{StaticResource reportFontSizeLabel}" />
+
+                                    <StackPanel
+                                        Grid.Column="1"
+                                        Orientation="Horizontal">
+
+                                        <!--YES-->
+                                        <Grid
+                                            VerticalAlignment="Center"
+                                            Margin="{StaticResource reportRadioButtonMargin}">
+
+                                            <Ellipse
+                                                VerticalAlignment="Center"
+                                                HorizontalAlignment="Center"
+                                                Width="{StaticResource reportRadioButtonSizeOuter}"
+                                                Height="{StaticResource reportRadioButtonSizeOuter}"
+                                                StrokeThickness="{StaticResource reportRadioButtonStroke}"
+                                                Stroke="{StaticResource ColorReportLines}" />
+
+                                            <Ellipse
+                                                Visibility="{Binding Path=dynamicPositioningYes}"
+                                                VerticalAlignment="Center"
+                                                HorizontalAlignment="Center"
+                                                Width="{StaticResource reportRadioButtonSizeInner}"
+                                                Height="{StaticResource reportRadioButtonSizeInner}"
+                                                Fill="{StaticResource ColorReportLines}" />
+
+                                        </Grid>
+
+                                        <TextBlock
+                                            Text="Yes"
+                                            VerticalAlignment="Bottom"
+                                            HorizontalAlignment="Left"
+                                            Margin="{StaticResource reportLabelMargin}"
+                                            FontSize="{StaticResource reportFontSizeLabel}" />
+
+                                        <!--NO-->
+                                        <Grid
+                                            VerticalAlignment="Center"
+                                            Margin="{StaticResource reportRadioButtonMargin}">
+
+                                            <Ellipse
+                                                VerticalAlignment="Center"
+                                                HorizontalAlignment="Center"
+                                                Width="{StaticResource reportRadioButtonSizeOuter}"
+                                                Height="{StaticResource reportRadioButtonSizeOuter}"
+                                                StrokeThickness="{StaticResource reportRadioButtonStroke}"
+                                                Stroke="{StaticResource ColorReportLines}" />
+
+                                            <Ellipse
+                                                Visibility="{Binding Path=dynamicPositioningNo}"
+                                                VerticalAlignment="Center"
+                                                HorizontalAlignment="Center"
+                                                Width="{StaticResource reportRadioButtonSizeInner}"
+                                                Height="{StaticResource reportRadioButtonSizeInner}"
+                                                Fill="{StaticResource ColorReportLines}" />
+
+                                        </Grid>
+
+                                        <TextBlock
+                                            Text="No"
+                                            VerticalAlignment="Bottom"
+                                            HorizontalAlignment="Left"
+                                            Margin="{StaticResource reportLabelMargin}"
+                                            FontSize="{StaticResource reportFontSizeLabel}" />
+
+                                    </StackPanel>
+
+                                    <!--General Information: NDB-->
+                                    <StackPanel
+                                        Grid.Column="2"
+                                        Orientation="Horizontal">
+
+                                        <TextBlock
+                                            Text="NDB:"
+                                            VerticalAlignment="Bottom"
+                                            HorizontalAlignment="Left"
+                                            Margin="{StaticResource reportLabelMargin}"
+                                            FontSize="{StaticResource reportFontSizeLabel}" />
+
+                                        <TextBlock
+                                            Text="{Binding Path=ndbFreqString_NOROG}"
+                                            VerticalAlignment="Bottom"
+                                            HorizontalAlignment="Left"
+                                            FontSize="{StaticResource reportFontSizeContent}"
+                                            Margin="{StaticResource reportContentMargin}" />
+
+                                    </StackPanel>
+
+                                    <!--kHz-->
+                                    <TextBlock
+                                        Grid.Column="2"
+                                        Text="kHz"
+                                        VerticalAlignment="Bottom"
+                                        HorizontalAlignment="Right"
+                                        Margin="{StaticResource reportLabelMargin}"
+                                        Width="{StaticResource reportUnitWidth}"
+                                        FontSize="{StaticResource reportFontSizeLabel}" />
+
+                                </Grid>
+
+                                <!--General Information: Accurate Monitoring Equipment, VHF-->
+                                <Grid
+                                    Grid.Row="3">
+
+                                    <Grid.ColumnDefinitions>
+                                        <ColumnDefinition
+                                            Width="3.5*" />
+                                        <ColumnDefinition
+                                            Width="2.5*" />
+                                        <ColumnDefinition
+                                            Width="6*" />
+                                    </Grid.ColumnDefinitions>
+
+                                    <Rectangle
+                                        Grid.Column="0"
+                                        Grid.ColumnSpan="4"
+                                        Fill="{StaticResource ColorReportLines}"
+                                        Height="{StaticResource reportStrokeThickness}"
+                                        VerticalAlignment="Bottom" />
+
+                                    <Rectangle
+                                        Grid.Column="1"
+                                        Fill="{StaticResource ColorReportLines}"
+                                        Width="{StaticResource reportStrokeThickness}"
+                                        HorizontalAlignment="Right"
+                                        VerticalAlignment="Stretch" />
+
+                                    <!--General Information: Accurate Monitoring Equipment-->
+                                    <TextBlock
+                                        Grid.Column="0"
+                                        Text="Accurate monitoring equipment:"
+                                        VerticalAlignment="Bottom"
+                                        HorizontalAlignment="Left"
+                                        Margin="{StaticResource reportLabelMargin}"
+                                        FontSize="{StaticResource reportFontSizeLabel}" />
+
+                                    <StackPanel
+                                        Grid.Column="1"
+                                        Orientation="Horizontal"
+                                        Grid.ColumnSpan="2">
+
+                                        <!--YES-->
+                                        <Grid
+                                            VerticalAlignment="Center"
+                                            Margin="{StaticResource reportRadioButtonMargin}">
+
+                                            <Ellipse
+                                                VerticalAlignment="Center"
+                                                HorizontalAlignment="Center"
+                                                Width="{StaticResource reportRadioButtonSizeOuter}"
+                                                Height="{StaticResource reportRadioButtonSizeOuter}"
+                                                StrokeThickness="{StaticResource reportRadioButtonStroke}"
+                                                Stroke="{StaticResource ColorReportLines}" />
+
+                                            <Ellipse
+                                                Visibility="{Binding Path=accurateMonitoringEquipmentYes}"
+                                                VerticalAlignment="Center"
+                                                HorizontalAlignment="Center"
+                                                Width="{StaticResource reportRadioButtonSizeInner}"
+                                                Height="{StaticResource reportRadioButtonSizeInner}"
+                                                Fill="{StaticResource ColorReportLines}" />
+
+                                        </Grid>
+
+                                        <TextBlock
+                                            Text="Yes"
+                                            VerticalAlignment="Bottom"
+                                            HorizontalAlignment="Left"
+                                            Margin="{StaticResource reportLabelMargin}"
+                                            FontSize="{StaticResource reportFontSizeLabel}" />
+
+                                        <!--NO-->
+                                        <Grid
+                                            VerticalAlignment="Center"
+                                            Margin="{StaticResource reportRadioButtonMargin}">
+
+                                            <Ellipse
+                                                VerticalAlignment="Center"
+                                                HorizontalAlignment="Center"
+                                                Width="{StaticResource reportRadioButtonSizeOuter}"
+                                                Height="{StaticResource reportRadioButtonSizeOuter}"
+                                                StrokeThickness="{StaticResource reportRadioButtonStroke}"
+                                                Stroke="{StaticResource ColorReportLines}" />
+
+                                            <Ellipse
+                                                Visibility="{Binding Path=accurateMonitoringEquipmentNo}"
+                                                VerticalAlignment="Center"
+                                                HorizontalAlignment="Center"
+                                                Width="{StaticResource reportRadioButtonSizeInner}"
+                                                Height="{StaticResource reportRadioButtonSizeInner}"
+                                                Fill="{StaticResource ColorReportLines}" />
+
+                                        </Grid>
+
+                                        <TextBlock
+                                            Text="No"
+                                            VerticalAlignment="Bottom"
+                                            HorizontalAlignment="Left"
+                                            Margin="{StaticResource reportLabelMargin}"
+                                            FontSize="{StaticResource reportFontSizeLabel}" />
+
+                                    </StackPanel>
+
+                                    <!--General Information: VHF-->
+                                    <StackPanel
+                                        Grid.Column="3"
+                                        Orientation="Horizontal">
+
+                                        <TextBlock
+                                            Text="VHF:"
+                                            VerticalAlignment="Bottom"
+                                            HorizontalAlignment="Left"
+                                            Margin="{StaticResource reportLabelMargin}"
+                                            FontSize="{StaticResource reportFontSizeLabel}" />
+
+                                        <TextBlock
+                                            Text="{Binding Path=vhfFreqString}"
+                                            VerticalAlignment="Bottom"
+                                            HorizontalAlignment="Left"
+                                            FontSize="{StaticResource reportFontSizeContent}"
+                                            Margin="{StaticResource reportContentMargin}" />
+
+                                    </StackPanel>
+
+                                    <!--mHz-->
+                                    <TextBlock
+                                        Grid.Column="3"
+                                        Text="mHz"
+                                        VerticalAlignment="Bottom"
+                                        HorizontalAlignment="Right"
+                                        Margin="{StaticResource reportLabelMargin}"
+                                        Width="{StaticResource reportUnitWidth}"
+                                        FontSize="{StaticResource reportFontSizeLabel}" />
+
+                                </Grid>
+
+                                <!--General Information: Log Info-->
+                                <Rectangle
+                                    Grid.Row="4"
+                                    Fill="{StaticResource ColorReportLines}"
+                                    Height="{StaticResource reportStrokeThickness}"
+                                    VerticalAlignment="Bottom"
+                                    HorizontalAlignment="Stretch" />
+
+                                <TextBlock
+                                    Grid.Row="4"
+                                    Text="LOG INFO"
+                                    VerticalAlignment="Bottom"
+                                    HorizontalAlignment="Center"
+                                    FontSize="{StaticResource reportFontSizeTitle2}" />
+
+                                <!--General Information: Flight Number, Helifuel Available, Fuel Quantity-->
+                                <Grid
+                                    Grid.Row="5">
+
+                                    <Grid.ColumnDefinitions>
+                                        <ColumnDefinition
+                                            Width="*" />
+                                        <ColumnDefinition
+                                            Width="*" />
+                                        <ColumnDefinition
+                                            Width="*" />
+                                    </Grid.ColumnDefinitions>
+
+                                    <Rectangle
+                                        Grid.Column="0"
+                                        Grid.ColumnSpan="3"
+                                        Fill="{StaticResource ColorReportBackground}"
+                                        VerticalAlignment="Stretch"
+                                        HorizontalAlignment="Stretch" />
+
+                                    <Rectangle
+                                        Grid.Column="0"
+                                        Grid.ColumnSpan="3"
+                                        Fill="{StaticResource ColorReportLines}"
+                                        Height="{StaticResource reportStrokeThickness}"
+                                        VerticalAlignment="Bottom"
+                                        HorizontalAlignment="Stretch" />
+
+                                    <Rectangle
+                                        Grid.Column="0"
+                                        Fill="{StaticResource ColorReportLines}"
+                                        Width="{StaticResource reportStrokeThickness}"
+                                        HorizontalAlignment="Right"
+                                        VerticalAlignment="Stretch" />
+
+                                    <Rectangle
+                                        Grid.Column="1"
+                                        Fill="{StaticResource ColorReportLines}"
+                                        Width="{StaticResource reportStrokeThickness}"
+                                        HorizontalAlignment="Right"
+                                        VerticalAlignment="Stretch" />
+
+                                    <!--General Information: Flight Number-->
+                                    <StackPanel
+                                        Grid.Column="0"
+                                        Orientation="Horizontal">
+
+                                        <TextBlock
+                                            Text="Flight number:"
+                                            VerticalAlignment="Bottom"
+                                            HorizontalAlignment="Left"
+                                            Margin="{StaticResource reportLabelMargin}"
+                                            FontSize="{StaticResource reportFontSizeLabel}" />
+
+                                        <TextBlock
+                                            Text="{Binding Path=flightNumber}"
+                                            VerticalAlignment="Bottom"
+                                            HorizontalAlignment="Left"
+                                            FontSize="{StaticResource reportFontSizeContent}"
+                                            Margin="{StaticResource reportContentMargin}" />
+
+                                    </StackPanel>
+
+                                    <!--General Information: Helifuel Available-->
+                                    <StackPanel
+                                        Grid.Column="1"
+                                        Orientation="Horizontal">
+
+                                        <TextBlock
+                                            Grid.Column="1"
+                                            Text="Helifuel available:"
+                                            VerticalAlignment="Bottom"
+                                            HorizontalAlignment="Left"
+                                            Margin="{StaticResource reportLabelMargin}"
+                                            FontSize="{StaticResource reportFontSizeLabel}" />
+
+                                        <!--YES-->
+                                        <Grid
+                                            VerticalAlignment="Center"
+                                            Margin="{StaticResource reportRadioButtonMargin}">
+
+                                            <Ellipse
+                                                VerticalAlignment="Center"
+                                                HorizontalAlignment="Center"
+                                                Width="{StaticResource reportRadioButtonSizeOuter}"
+                                                Height="{StaticResource reportRadioButtonSizeOuter}"
+                                                StrokeThickness="{StaticResource reportRadioButtonStroke}"
+                                                Stroke="{StaticResource ColorReportLines}" />
+
+                                            <Ellipse
+                                                Visibility="{Binding Path=helifuelAvailableYes}"
+                                                VerticalAlignment="Center"
+                                                HorizontalAlignment="Center"
+                                                Width="{StaticResource reportRadioButtonSizeInner}"
+                                                Height="{StaticResource reportRadioButtonSizeInner}"
+                                                Fill="{StaticResource ColorReportLines}" />
+
+                                        </Grid>
+
+                                        <TextBlock
+                                            Text="Yes"
+                                            VerticalAlignment="Bottom"
+                                            HorizontalAlignment="Left"
+                                            Margin="{StaticResource reportLabelMargin}"
+                                            FontSize="{StaticResource reportFontSizeLabel}" />
+
+                                        <!--NO-->
+                                        <Grid
+                                            VerticalAlignment="Center"
+                                            Margin="{StaticResource reportRadioButtonMargin}">
+
+                                            <Ellipse
+                                                VerticalAlignment="Center"
+                                                HorizontalAlignment="Center"
+                                                Width="{StaticResource reportRadioButtonSizeOuter}"
+                                                Height="{StaticResource reportRadioButtonSizeOuter}"
+                                                StrokeThickness="{StaticResource reportRadioButtonStroke}"
+                                                Stroke="{StaticResource ColorReportLines}" />
+
+                                            <Ellipse
+                                                Visibility="{Binding Path=helifuelAvailableNo}"
+                                                VerticalAlignment="Center"
+                                                HorizontalAlignment="Center"
+                                                Width="{StaticResource reportRadioButtonSizeInner}"
+                                                Height="{StaticResource reportRadioButtonSizeInner}"
+                                                Fill="{StaticResource ColorReportLines}" />
+
+                                        </Grid>
+
+                                        <TextBlock
+                                            Text="No"
+                                            VerticalAlignment="Bottom"
+                                            HorizontalAlignment="Left"
+                                            Margin="{StaticResource reportLabelMargin}"
+                                            FontSize="{StaticResource reportFontSizeLabel}" />
+
+                                    </StackPanel>
+
+                                    <!--General Information: Fuel Quantity-->
+                                    <StackPanel
+                                        Grid.Column="2"
+                                        Orientation="Horizontal">
+
+                                        <TextBlock
+                                            Text="Fuel quantity:"
+                                            VerticalAlignment="Bottom"
+                                            HorizontalAlignment="Left"
+                                            Margin="{StaticResource reportLabelMargin}"
+                                            FontSize="{StaticResource reportFontSizeLabel}" />
+
+                                        <TextBlock
+                                            Text="{Binding Path=fuelQuantityString}"
+                                            VerticalAlignment="Bottom"
+                                            HorizontalAlignment="Left"
+                                            FontSize="{StaticResource reportFontSizeContent}"
+                                            Margin="{StaticResource reportContentMargin}" />
+
+                                    </StackPanel>
+
+                                    <!--Litres-->
+                                    <TextBlock
+                                        Grid.Column="3"
+                                        Text="Litres"
+                                        VerticalAlignment="Bottom"
+                                        HorizontalAlignment="Right"
+                                        Margin="{StaticResource reportLabelMargin}"
+                                        Width="{StaticResource reportUnitWidth}"
+                                        FontSize="{StaticResource reportFontSizeLabel}" />
+
+                                </Grid>
+
+                                <!--General Information: Return load, Luggage-->
+                                <Grid
+                                    Grid.Row="6">
+
+                                    <Grid.ColumnDefinitions>
+                                        <ColumnDefinition
+                                            Width="3*" />
+                                        <ColumnDefinition
+                                            Width="*" />
+                                        <ColumnDefinition
+                                            Width="3*" />
+                                    </Grid.ColumnDefinitions>
+
+                                    <Rectangle
+                                        Grid.Column="0"
+                                        Fill="{StaticResource ColorReportBackground}"
+                                        VerticalAlignment="Stretch"
+                                        HorizontalAlignment="Stretch" />
+
+                                    <Rectangle
+                                        Grid.Column="2"
+                                        Fill="{StaticResource ColorReportBackground}"
+                                        VerticalAlignment="Stretch"
+                                        HorizontalAlignment="Stretch" />
+
+                                    <Rectangle
+                                        Grid.Column="0"
+                                        Fill="{StaticResource ColorReportLines}"
+                                        Height="{StaticResource reportStrokeThickness}"
+                                        VerticalAlignment="Bottom"
+                                        HorizontalAlignment="Stretch" />
+
+                                    <Rectangle
+                                        Grid.Column="2"
+                                        Fill="{StaticResource ColorReportLines}"
+                                        Height="{StaticResource reportStrokeThickness}"
+                                        VerticalAlignment="Bottom"
+                                        HorizontalAlignment="Stretch" />
+
+                                    <Rectangle
+                                        Grid.Column="0"
+                                        Fill="{StaticResource ColorReportLines}"
+                                        Width="{StaticResource reportStrokeThickness}"
+                                        HorizontalAlignment="Right"
+                                        VerticalAlignment="Stretch" />
+
+                                    <Rectangle
+                                        Grid.Column="1"
+                                        Fill="{StaticResource ColorReportLines}"
+                                        Width="{StaticResource reportStrokeThickness}"
+                                        HorizontalAlignment="Right"
+                                        VerticalAlignment="Stretch" />
+
+                                    <!--General Information: Return load-->
+                                    <StackPanel
+                                        Grid.Column="0"
+                                        Orientation="Horizontal">
+
+                                        <TextBlock
+                                            Text="Return load:"
+                                            VerticalAlignment="Bottom"
+                                            HorizontalAlignment="Left"
+                                            Margin="{StaticResource reportLabelMargin}"
+                                            FontSize="{StaticResource reportFontSizeLabel}" />
+
+                                        <TextBlock
+                                            Text="{Binding Path=returnLoad}"
+                                            VerticalAlignment="Bottom"
+                                            HorizontalAlignment="Left"
+                                            FontSize="{StaticResource reportFontSizeContent}"
+                                            Margin="{StaticResource reportContentMargin}" />
+
+                                    </StackPanel>
+
+                                    <!--Passengers-->
+                                    <TextBlock
+                                        Grid.Column="0"
+                                        Text="Passengers"
+                                        VerticalAlignment="Bottom"
+                                        HorizontalAlignment="Right"
+                                        Margin="{StaticResource reportLabelMargin}"
+                                        Width="{StaticResource reportUnitWidth}"
+                                        FontSize="{StaticResource reportFontSizeLabel}" />
+
+                                    <!--General Information: Luggage-->
+                                    <StackPanel
+                                        Grid.Column="2"
+                                        Orientation="Horizontal">
+
+                                        <TextBlock
+                                            Text="Luggage (incl. in total):"
+                                            VerticalAlignment="Bottom"
+                                            HorizontalAlignment="Left"
+                                            Margin="{StaticResource reportLabelMargin}"
+                                            FontSize="{StaticResource reportFontSizeLabel}" />
+
+                                        <TextBlock
+                                            Text="{Binding Path=luggage}"
+                                            VerticalAlignment="Bottom"
+                                            HorizontalAlignment="Left"
+                                            FontSize="{StaticResource reportFontSizeContent}"
+                                            Margin="{StaticResource reportContentMargin}" />
+
+                                    </StackPanel>
+
+                                    <!--Kg-->
+                                    <TextBlock
+                                        Grid.Column="3"
+                                        Text="kg"
+                                        VerticalAlignment="Bottom"
+                                        HorizontalAlignment="Right"
+                                        Margin="{StaticResource reportLabelMargin}"
+                                        Width="{StaticResource reportUnitWidth}"
+                                        FontSize="{StaticResource reportFontSizeLabel}" />
+
+                                </Grid>
+
+                                <!--General Information: Total load, Cargo-->
+                                <Grid
+                                    Grid.Row="7">
+
+                                    <Grid.ColumnDefinitions>
+                                        <ColumnDefinition
+                                            Width="3*" />
+                                        <ColumnDefinition
+                                            Width="*" />
+                                        <ColumnDefinition
+                                            Width="3*" />
+                                    </Grid.ColumnDefinitions>
+
+                                    <Rectangle
+                                        Grid.Column="0"
+                                        Fill="{StaticResource ColorReportBackground}"
+                                        VerticalAlignment="Stretch"
+                                        HorizontalAlignment="Stretch" />
+
+                                    <Rectangle
+                                        Grid.Column="2"
+                                        Fill="{StaticResource ColorReportBackground}"
+                                        VerticalAlignment="Stretch"
+                                        HorizontalAlignment="Stretch" />
+
+                                    <Rectangle
+                                        Grid.Column="0"
+                                        Grid.ColumnSpan="3"
+                                        Fill="{StaticResource ColorReportLines}"
+                                        Height="{StaticResource reportStrokeThickness}"
+                                        VerticalAlignment="Bottom"
+                                        HorizontalAlignment="Stretch" />
+
+                                    <Rectangle
+                                        Grid.Column="0"
+                                        Fill="{StaticResource ColorReportLines}"
+                                        Width="{StaticResource reportStrokeThickness}"
+                                        HorizontalAlignment="Right"
+                                        VerticalAlignment="Stretch" />
+
+                                    <Rectangle
+                                        Grid.Column="1"
+                                        Fill="{StaticResource ColorReportLines}"
+                                        Width="{StaticResource reportStrokeThickness}"
+                                        HorizontalAlignment="Right"
+                                        VerticalAlignment="Stretch" />
+
+                                    <!--General Information: Total Load-->
+                                    <StackPanel
+                                        Grid.Column="0"
+                                        Orientation="Horizontal">
+
+                                        <TextBlock
+                                            Text="Total load:"
+                                            VerticalAlignment="Bottom"
+                                            HorizontalAlignment="Left"
+                                            Margin="{StaticResource reportLabelMargin}"
+                                            FontSize="{StaticResource reportFontSizeLabel}" />
+
+                                        <TextBlock
+                                            Text="{Binding Path=totalLoad}"
+                                            VerticalAlignment="Bottom"
+                                            HorizontalAlignment="Left"
+                                            FontSize="{StaticResource reportFontSizeContent}"
+                                            Margin="{StaticResource reportContentMargin}" />
+
+                                    </StackPanel>
+
+                                    <!--kg-->
+                                    <TextBlock
+                                        Grid.Column="0"
+                                        Text="kg"
+                                        VerticalAlignment="Bottom"
+                                        HorizontalAlignment="Right"
+                                        Margin="{StaticResource reportLabelMargin}"
+                                        Width="{StaticResource reportUnitWidth}"
+                                        FontSize="{StaticResource reportFontSizeLabel}" />
+
+                                    <!--General Information: Cargo-->
+                                    <StackPanel
+                                        Grid.Column="2"
+                                        Orientation="Horizontal">
+
+                                        <TextBlock
+                                            Text="Cargo (incl. in total):"
+                                            VerticalAlignment="Bottom"
+                                            HorizontalAlignment="Left"
+                                            Margin="{StaticResource reportLabelMargin}"
+                                            FontSize="{StaticResource reportFontSizeLabel}" />
+
+                                        <TextBlock
+                                            Text="{Binding Path=cargo}"
+                                            VerticalAlignment="Bottom"
+                                            HorizontalAlignment="Left"
+                                            FontSize="{StaticResource reportFontSizeContent}"
+                                            Margin="{StaticResource reportContentMargin}" />
+
+                                    </StackPanel>
+
+                                    <!--Kg-->
+                                    <TextBlock
+                                        Grid.Column="3"
+                                        Text="kg"
+                                        VerticalAlignment="Bottom"
+                                        HorizontalAlignment="Right"
+                                        Margin="{StaticResource reportLabelMargin}"
+                                        Width="{StaticResource reportUnitWidth}"
+                                        FontSize="{StaticResource reportFontSizeLabel}" />
+
+                                </Grid>
+
+
+                                <!--General Information: Routing-->
+                                <Grid
+                                    Grid.Row="8">
+
+                                    <Grid.ColumnDefinitions>
+                                        <ColumnDefinition
+                                            Width="2*" />
+                                        <ColumnDefinition
+                                            Width="3*" />
+                                        <ColumnDefinition
+                                            Width="3*" />
+                                        <ColumnDefinition
+                                            Width="3*" />
+                                        <ColumnDefinition
+                                            Width="3*" />
+                                    </Grid.ColumnDefinitions>
+
+                                    <Rectangle
+                                        Grid.Column="0"
+                                        Grid.ColumnSpan="5"
+                                        Fill="{StaticResource ColorReportBackground}"
+                                        VerticalAlignment="Stretch"
+                                        HorizontalAlignment="Stretch" />
+
+                                    <Rectangle
+                                        Grid.Column="0"
+                                        Grid.ColumnSpan="5"
+                                        Fill="{StaticResource ColorReportLines}"
+                                        Height="{StaticResource reportStrokeThickness}"
+                                        VerticalAlignment="Bottom"
+                                        HorizontalAlignment="Stretch" />
+
+                                    <Rectangle
+                                        Grid.Column="0"
+                                        Fill="{StaticResource ColorReportLines}"
+                                        Width="{StaticResource reportStrokeThickness}"
+                                        HorizontalAlignment="Right"
+                                        VerticalAlignment="Stretch" />
+
+                                    <Rectangle
+                                        Grid.Column="1"
+                                        Fill="{StaticResource ColorReportLines}"
+                                        Width="{StaticResource reportStrokeThickness}"
+                                        HorizontalAlignment="Right"
+                                        VerticalAlignment="Stretch" />
+
+                                    <Rectangle
+                                        Grid.Column="2"
+                                        Fill="{StaticResource ColorReportLines}"
+                                        Width="{StaticResource reportStrokeThickness}"
+                                        HorizontalAlignment="Right"
+                                        VerticalAlignment="Stretch" />
+
+                                    <Rectangle
+                                        Grid.Column="3"
+                                        Fill="{StaticResource ColorReportLines}"
+                                        Width="{StaticResource reportStrokeThickness}"
+                                        HorizontalAlignment="Right"
+                                        VerticalAlignment="Stretch" />
+
+                                    <!--General Information: Routing-->
+                                    <TextBlock
+                                        Grid.Column="0"
+                                        Text="Routing:"
+                                        VerticalAlignment="Bottom"
+                                        HorizontalAlignment="Left"
+                                        Margin="{StaticResource reportLabelMargin}"
+                                        FontSize="{StaticResource reportFontSizeLabel}" />
+
+                                    <!--General Information: Routing: 1-->
+                                    <TextBlock
+                                        Grid.Column="1"
+                                        Text="1"
+                                        VerticalAlignment="Bottom"
+                                        HorizontalAlignment="Left"
+                                        Margin="{StaticResource reportLabelMargin}"
+                                        FontSize="{StaticResource reportFontSizeLabel}" />
+
+                                    <TextBlock
+                                        Grid.Column="1"
+                                        Text="{Binding Path=routing1}"
+                                        VerticalAlignment="Bottom"
+                                        HorizontalAlignment="Center"
+                                        FontSize="{StaticResource reportFontSizeContent}"
+                                        Margin="{StaticResource reportContentMargin}" />
+                                    
+                                    <!--General Information: Routing: 2-->
+                                    <TextBlock
+                                        Grid.Column="2"
+                                        Text="2"
+                                        VerticalAlignment="Bottom"
+                                        HorizontalAlignment="Left"
+                                        Margin="{StaticResource reportLabelMargin}"
+                                        FontSize="{StaticResource reportFontSizeLabel}" />
+
+                                    <TextBlock
+                                        Grid.Column="2"
+                                        Text="{Binding Path=routing2}"
+                                        VerticalAlignment="Bottom"
+                                        HorizontalAlignment="Center"
+                                        FontSize="{StaticResource reportFontSizeContent}"
+                                        Margin="{StaticResource reportContentMargin}" />
+
+                                    <!--General Information: Routing: 3-->
+                                    <TextBlock
+                                        Grid.Column="3"
+                                        Text="3"
+                                        VerticalAlignment="Bottom"
+                                        HorizontalAlignment="Left"
+                                        Margin="{StaticResource reportLabelMargin}"
+                                        FontSize="{StaticResource reportFontSizeLabel}" />
+
+                                    <TextBlock
+                                        Grid.Column="3"
+                                        Text="{Binding Path=routing3}"
+                                        VerticalAlignment="Bottom"
+                                        HorizontalAlignment="Center"
+                                        FontSize="{StaticResource reportFontSizeContent}"
+                                        Margin="{StaticResource reportContentMargin}" />
+
+                                    <!--General Information: Routing: 4-->
+                                    <TextBlock
+                                        Grid.Column="4"
+                                        Text="4"
+                                        VerticalAlignment="Bottom"
+                                        HorizontalAlignment="Left"
+                                        Margin="{StaticResource reportLabelMargin}"
+                                        FontSize="{StaticResource reportFontSizeLabel}" />
+
+                                    <TextBlock
+                                        Grid.Column="4"
+                                        Text="{Binding Path=routing4}"
+                                        VerticalAlignment="Bottom"
+                                        HorizontalAlignment="Center"
+                                        FontSize="{StaticResource reportFontSizeContent}"
+                                        Margin="{StaticResource reportContentMargin}" />
+
+                                </Grid>
+
+                                <!--General Information: Remarks-->
+                                <Rectangle
+                                    Grid.Row="9"
+                                    Fill="{StaticResource ColorReportLines}"
+                                    Height="{StaticResource reportStrokeThickness}"
+                                    VerticalAlignment="Bottom"
+                                    HorizontalAlignment="Stretch" />
+
+                                <TextBlock
+                                    Grid.Row="9"
+                                    Text="The helideck is inspected according to OLF helideck manual. Non-conformities will appear under Remarks."
+                                    VerticalAlignment="Top"
+                                    HorizontalAlignment="Left"
+                                    Margin="{StaticResource reportLabelMargin}"
+                                    FontSize="{StaticResource reportFontSizeLabel}" />
+
+                                <DockPanel
+                                    Grid.Row="9">
+
+                                    <TextBlock
+                                        Text="Remarks:"
+                                        VerticalAlignment="Bottom"
+                                        Margin="{StaticResource reportLabelMargin}"
+                                        FontSize="{StaticResource reportFontSizeLabel}" />
+
+                                    <Border
+                                        Height="150"
+                                        VerticalAlignment="Bottom">
+
+                                        <TextBlock
+                                            Text="{Binding Path=logInfoRemarks}"
+                                            TextWrapping="Wrap"
+                                            VerticalAlignment="Bottom"
+                                            FontSize="{StaticResource reportFontSizeContent}"
+                                            Margin="{StaticResource reportContentMargin}" />
+
+                                    </Border>
+
+                                </DockPanel>
+
+                                <!--General Information: Name of HLO-->
+                                <Grid
+                                    Grid.Row="10">
+
+                                    <Rectangle
+                                        Grid.ColumnSpan="2"
+                                        Fill="{StaticResource ColorReportLines}"
+                                        Height="{StaticResource reportStrokeThickness}"
+                                        VerticalAlignment="Bottom"
+                                        HorizontalAlignment="Stretch" />
+
+                                    <StackPanel
+                                        Grid.Column="1"
+                                        Orientation="Horizontal"
+                                        VerticalAlignment="Bottom"
+                                        HorizontalAlignment="Left">
+
+                                        <TextBlock
+                                            Text="Name of HLO:"
+                                            VerticalAlignment="Bottom"
+                                            HorizontalAlignment="Center"
+                                            Margin="{StaticResource reportLabelMargin}"
+                                            FontSize="{StaticResource reportFontSizeLabel}" />
+
+                                        <TextBlock
+                                            Text="{Binding Path=nameOfHLO}"
+                                            VerticalAlignment="Bottom"
+                                            HorizontalAlignment="Center"
+                                            FontSize="{StaticResource reportFontSizeContent}"
+                                            Margin="{StaticResource reportContentMargin}" />
+
+                                    </StackPanel>
+
+                                </Grid>
+
+                            </Grid>
+
+                            <!--Weather Observation-->
+                            <Grid
+                                Grid.Row="2">
+
+                                <Grid.RowDefinitions>
+                                    <RowDefinition
+                                        Height="*" />
+                                    <RowDefinition
+                                        Height="*" />
+                                    <RowDefinition
+                                        Height="*" />
+                                    <RowDefinition
+                                        Height="*" />
+                                    <RowDefinition
+                                        Height="*" />
+                                    <RowDefinition
+                                        Height="*" />
+                                    <RowDefinition
+                                        Height="*" />
+                                    <RowDefinition
+                                        Height="*" />
+                                    <RowDefinition
+                                        Height="*" />
+                                </Grid.RowDefinitions>
+
+
+                                <!--Weather Observation-->
+                                <Rectangle
+                                    Grid.Row="0"
+                                    Fill="{StaticResource ColorReportLines}"
+                                    Height="{StaticResource reportStrokeThickness}"
+                                    VerticalAlignment="Bottom"
+                                    HorizontalAlignment="Stretch" />
+
+                                <TextBlock
+                                    Grid.Row="0"
+                                    Text="WEATHER OBSERVATION"
+                                    VerticalAlignment="Bottom"
+                                    HorizontalAlignment="Center"
+                                    FontSize="{StaticResource reportFontSizeTitle2}" />
+
+                                <!--Weather Observation: Headers-->
+                                <Grid
+                                    Grid.Row="1">
+
+                                    <Grid.ColumnDefinitions>
+                                        <ColumnDefinition
+                                            Width="2*" />
+                                        <ColumnDefinition
+                                            Width="3*" />
+                                        <ColumnDefinition
+                                            Width="3*" />
+                                        <ColumnDefinition
+                                            Width="3*" />
+                                        <ColumnDefinition
+                                            Width="3*" />
+                                        <ColumnDefinition
+                                            Width="3*" />
+                                    </Grid.ColumnDefinitions>
+
+                                    <Rectangle
+                                        Grid.Column="0"
+                                        Grid.ColumnSpan="6"
+                                        Fill="{StaticResource ColorReportLines}"
+                                        Height="{StaticResource reportStrokeThickness}"
+                                        VerticalAlignment="Bottom"
+                                        HorizontalAlignment="Stretch" />
+
+                                    <Rectangle
+                                        Grid.Column="0"
+                                        Fill="{StaticResource ColorReportLines}"
+                                        Width="{StaticResource reportStrokeThickness}"
+                                        HorizontalAlignment="Right"
+                                        VerticalAlignment="Stretch" />
+
+                                    <Rectangle
+                                        Grid.Column="1"
+                                        Fill="{StaticResource ColorReportLines}"
+                                        Width="{StaticResource reportStrokeThickness}"
+                                        HorizontalAlignment="Right"
+                                        VerticalAlignment="Stretch" />
+
+                                    <Rectangle
+                                        Grid.Column="2"
+                                        Fill="{StaticResource ColorReportLines}"
+                                        Width="{StaticResource reportStrokeThickness}"
+                                        HorizontalAlignment="Right"
+                                        VerticalAlignment="Stretch" />
+
+                                    <Rectangle
+                                        Grid.Column="3"
+                                        Fill="{StaticResource ColorReportLines}"
+                                        Width="{StaticResource reportStrokeThickness}"
+                                        HorizontalAlignment="Right"
+                                        VerticalAlignment="Stretch" />
+
+                                    <Rectangle
+                                        Grid.Column="4"
+                                        Fill="{StaticResource ColorReportLines}"
+                                        Width="{StaticResource reportStrokeThickness}"
+                                        HorizontalAlignment="Right"
+                                        VerticalAlignment="Stretch" />
+
+                                    <!--Weather Observation: Headers: Wind-->
+                                    <TextBlock
+                                        Grid.Column="0"
+                                        Text="WIND"
+                                        VerticalAlignment="Center"
+                                        HorizontalAlignment="Center"
+                                        Margin="{StaticResource reportLabelMargin}"
+                                        FontSize="{StaticResource reportFontSizeLabel}"
+                                        FontWeight="Bold" />
+
+                                    <!--Weather Observation: Headers: Height-->
+                                    <TextBlock
+                                        Grid.Column="1"
+                                        Text="Height"
+                                        VerticalAlignment="Center"
+                                        HorizontalAlignment="Center"
+                                        Margin="{StaticResource reportLabelMargin}"
+                                        FontSize="{StaticResource reportFontSizeLabel}" />
+
+                                    <!--Weather Observation: Headers: Distance-->
+                                    <TextBlock
+                                        Grid.Column="2"
+                                        Text="Distance"
+                                        VerticalAlignment="Center"
+                                        HorizontalAlignment="Center"
+                                        Margin="{StaticResource reportLabelMargin}"
+                                        FontSize="{StaticResource reportFontSizeLabel}" />
+
+                                    <!--Weather Observation: Headers: Direction-->
+                                    <TextBlock
+                                        Grid.Column="3"
+                                        Text="Direction"
+                                        VerticalAlignment="Center"
+                                        HorizontalAlignment="Center"
+                                        Margin="{StaticResource reportLabelMargin}"
+                                        FontSize="{StaticResource reportFontSizeLabel}" />
+
+                                    <!--Weather Observation: Headers: Velocity-->
+                                    <TextBlock
+                                        Grid.Column="4"
+                                        Text="Velocity"
+                                        VerticalAlignment="Center"
+                                        HorizontalAlignment="Center"
+                                        Margin="{StaticResource reportLabelMargin}"
+                                        FontSize="{StaticResource reportFontSizeLabel}" />
+
+                                    <!--Weather Observation: Headers: Gust (2 min)-->
+                                    <TextBlock
+                                        Grid.Column="5"
+                                        Text="Gust (2 min)"
+                                        VerticalAlignment="Center"
+                                        HorizontalAlignment="Center"
+                                        Margin="{StaticResource reportLabelMargin}"
+                                        FontSize="{StaticResource reportFontSizeLabel}" />
+
+                                </Grid>
+
+                                <!--Weather Observation: Helideck-->
+                                <Grid
+                                    Grid.Row="2">
+
+                                    <Grid.ColumnDefinitions>
+                                        <ColumnDefinition
+                                            Width="2*" />
+                                        <ColumnDefinition
+                                            Width="3*" />
+                                        <ColumnDefinition
+                                            Width="3*" />
+                                        <ColumnDefinition
+                                            Width="3*" />
+                                        <ColumnDefinition
+                                            Width="3*" />
+                                        <ColumnDefinition
+                                            Width="3*" />
+                                    </Grid.ColumnDefinitions>
+
+                                    <Rectangle
+                                        Grid.Column="0"
+                                        Grid.ColumnSpan="6"
+                                        Fill="{StaticResource ColorReportLines}"
+                                        Height="{StaticResource reportStrokeThickness}"
+                                        VerticalAlignment="Bottom"
+                                        HorizontalAlignment="Stretch" />
+
+                                    <Rectangle
+                                        Grid.Column="0"
+                                        Fill="{StaticResource ColorReportLines}"
+                                        Width="{StaticResource reportStrokeThickness}"
+                                        HorizontalAlignment="Right"
+                                        VerticalAlignment="Stretch" />
+
+                                    <Rectangle
+                                        Grid.Column="1"
+                                        Fill="{StaticResource ColorReportLines}"
+                                        Width="{StaticResource reportStrokeThickness}"
+                                        HorizontalAlignment="Right"
+                                        VerticalAlignment="Stretch" />
+
+                                    <Rectangle
+                                        Grid.Column="2"
+                                        Fill="{StaticResource ColorReportLines}"
+                                        Width="{StaticResource reportStrokeThickness}"
+                                        HorizontalAlignment="Right"
+                                        VerticalAlignment="Stretch" />
+
+                                    <Rectangle
+                                        Grid.Column="3"
+                                        Fill="{StaticResource ColorReportLines}"
+                                        Width="{StaticResource reportStrokeThickness}"
+                                        HorizontalAlignment="Right"
+                                        VerticalAlignment="Stretch" />
+
+                                    <Rectangle
+                                        Grid.Column="4"
+                                        Fill="{StaticResource ColorReportLines}"
+                                        Width="{StaticResource reportStrokeThickness}"
+                                        HorizontalAlignment="Right"
+                                        VerticalAlignment="Stretch" />
+
+                                    <!--Weather Observation: Helideck-->
+                                    <TextBlock
+                                        Grid.Column="0"
+                                        Text="Helideck:"
+                                        VerticalAlignment="Bottom"
+                                        HorizontalAlignment="Left"
+                                        Margin="{StaticResource reportLabelMargin}"
+                                        FontSize="{StaticResource reportFontSizeLabel}" />
+
+                                    <!--Weather Observation: Helideck: Height-->
+                                    <TextBlock
+                                        Grid.Column="1"
+                                        Text="{Binding Path=helideckWindSensorHeightString}"
+                                        VerticalAlignment="Center"
+                                        HorizontalAlignment="Center"
+                                        Margin="{StaticResource reportLabelMargin}"
+                                        FontSize="{StaticResource reportFontSizeContent}" />
+
+                                    <!--M-->
+                                    <TextBlock
+                                        Grid.Column="1"
+                                        Text="M"
+                                        VerticalAlignment="Bottom"
+                                        HorizontalAlignment="Right"
+                                        Margin="{StaticResource reportLabelMargin}"
+                                        FontSize="{StaticResource reportFontSizeLabel}" />
+
+                                    <!--Weather Observation: Helideck: Distance-->
+                                    <TextBlock
+                                        Grid.Column="2"
+                                        Text="{Binding Path=helideckWindSensorDistanceString}"
+                                        VerticalAlignment="Center"
+                                        HorizontalAlignment="Center"
+                                        Margin="{StaticResource reportLabelMargin}"
+                                        FontSize="{StaticResource reportFontSizeContent}" />
+
+                                    <!--M-->
+                                    <TextBlock
+                                        Grid.Column="2"
+                                        Text="M"
+                                        VerticalAlignment="Bottom"
+                                        HorizontalAlignment="Right"
+                                        Margin="{StaticResource reportLabelMargin}"
+                                        FontSize="{StaticResource reportFontSizeLabel}" />
+
+                                    <!--Weather Observation: Helideck: Direction-->
+                                    <TextBlock
+                                        Grid.Column="3"
+                                        Text="{Binding Path=helideckWindDirectionString_NOROG}"
+                                        VerticalAlignment="Center"
+                                        HorizontalAlignment="Center"
+                                        Margin="{StaticResource reportLabelMargin}"
+                                        FontSize="{StaticResource reportFontSizeContent}" />
+
+                                    <!--Weather Observation: Helideck: Velocity-->
+                                    <TextBlock
+                                        Grid.Column="4"
+                                        Text="{Binding Path=helideckWindVelocityString}"
+                                        VerticalAlignment="Center"
+                                        HorizontalAlignment="Center"
+                                        Margin="{StaticResource reportLabelMargin}"
+                                        FontSize="{StaticResource reportFontSizeContent}" />
+
+                                    <!--kn-->
+                                    <TextBlock
+                                        Grid.Column="4"
+                                        Text="kn"
+                                        VerticalAlignment="Bottom"
+                                        HorizontalAlignment="Right"
+                                        Margin="{StaticResource reportLabelMargin}"
+                                        FontSize="{StaticResource reportFontSizeLabel}" />
+
+                                    <!--Weather Observation: Helideck: Gust-->
+                                    <TextBlock
+                                        Grid.Column="5"
+                                        Text="{Binding Path=helideckWindGustString}"
+                                        VerticalAlignment="Center"
+                                        HorizontalAlignment="Center"
+                                        Margin="{StaticResource reportLabelMargin}"
+                                        FontSize="{StaticResource reportFontSizeContent}" />
+
+                                    <!--kn-->
+                                    <TextBlock
+                                        Grid.Column="5"
+                                        Text="kn"
+                                        VerticalAlignment="Bottom"
+                                        HorizontalAlignment="Right"
+                                        Margin="{StaticResource reportLabelMargin}"
+                                        FontSize="{StaticResource reportFontSizeLabel}" />
+
+
+                                </Grid>
+
+                                <!--Weather Observation: Area-->
+                                <Grid
+                                    Grid.Row="3">
+
+                                    <Grid.ColumnDefinitions>
+                                        <ColumnDefinition
+                                            Width="2*" />
+                                        <ColumnDefinition
+                                            Width="3*" />
+                                        <ColumnDefinition
+                                            Width="3*" />
+                                        <ColumnDefinition
+                                            Width="3*" />
+                                        <ColumnDefinition
+                                            Width="3*" />
+                                        <ColumnDefinition
+                                            Width="3*" />
+                                    </Grid.ColumnDefinitions>
+
+                                    <Rectangle
+                                        Grid.Column="0"
+                                        Grid.ColumnSpan="7"
+                                        Fill="{StaticResource ColorReportLines}"
+                                        Height="{StaticResource reportStrokeThickness}"
+                                        VerticalAlignment="Bottom" />
+
+                                    <Rectangle
+                                        Grid.Column="0"
+                                        Fill="{StaticResource ColorReportLines}"
+                                        Width="{StaticResource reportStrokeThickness}"
+                                        HorizontalAlignment="Right"
+                                        VerticalAlignment="Stretch" />
+
+                                    <Rectangle
+                                        Grid.Column="1"
+                                        Fill="{StaticResource ColorReportLines}"
+                                        Width="{StaticResource reportStrokeThickness}"
+                                        HorizontalAlignment="Right"
+                                        VerticalAlignment="Stretch" />
+
+                                    <Rectangle
+                                        Grid.Column="2"
+                                        Fill="{StaticResource ColorReportLines}"
+                                        Width="{StaticResource reportStrokeThickness}"
+                                        HorizontalAlignment="Right"
+                                        VerticalAlignment="Stretch" />
+
+                                    <Rectangle
+                                        Grid.Column="3"
+                                        Fill="{StaticResource ColorReportLines}"
+                                        Width="{StaticResource reportStrokeThickness}"
+                                        HorizontalAlignment="Right"
+                                        VerticalAlignment="Stretch" />
+
+                                    <Rectangle
+                                        Grid.Column="4"
+                                        Fill="{StaticResource ColorReportLines}"
+                                        Width="{StaticResource reportStrokeThickness}"
+                                        HorizontalAlignment="Right"
+                                        VerticalAlignment="Stretch" />
+
+                                    <!--Weather Observation: Area-->
+                                    <TextBlock
+                                        Grid.Column="0"
+                                        Text="Area&#x0a;(derrick):"
+                                        VerticalAlignment="Bottom"
+                                        HorizontalAlignment="Left"
+                                        Margin="{StaticResource reportLabelMargin}"
+                                        FontSize="{StaticResource reportFontSizeLabel}" />
+
+                                    <!--Weather Observation: Area (derrick): Height-->
+                                    <TextBlock
+                                        Grid.Column="1"
+                                        Text="{Binding Path=areaWindSensorHeightString}"
+                                        VerticalAlignment="Center"
+                                        HorizontalAlignment="Center"
+                                        FontSize="{StaticResource reportFontSizeContent}" />
+
+                                    <!--M-->
+                                    <TextBlock
+                                        Grid.Column="1"
+                                        Text="M"
+                                        VerticalAlignment="Bottom"
+                                        HorizontalAlignment="Right"
+                                        Margin="{StaticResource reportLabelMargin}"
+                                        FontSize="{StaticResource reportFontSizeLabel}" />
+
+                                    <!--Weather Observation: Area (derrick): Distance-->
+                                    <TextBlock
+                                        Grid.Column="2"
+                                        Text="{Binding Path=areaWindSensorDistanceString}"
+                                        VerticalAlignment="Center"
+                                        HorizontalAlignment="Center"
+                                        FontSize="{StaticResource reportFontSizeContent}" />
+
+                                    <!--M-->
+                                    <TextBlock
+                                        Grid.Column="2"
+                                        Text="M"
+                                        VerticalAlignment="Bottom"
+                                        HorizontalAlignment="Right"
+                                        Margin="{StaticResource reportLabelMargin}"
+                                        FontSize="{StaticResource reportFontSizeLabel}" />
+
+                                    <!--Weather Observation: Area (derrick): Direction-->
+                                    <TextBlock
+                                        Grid.Column="3"
+                                        Text="{Binding Path=areaWindDirectionString}"
+                                        VerticalAlignment="Center"
+                                        HorizontalAlignment="Center"
+                                        FontSize="{StaticResource reportFontSizeContent}" />
+
+                                    <!--Weather Observation: Area (derrick): Velocity-->
+                                    <TextBlock
+                                        Grid.Column="4"
+                                        Text="{Binding Path=areaWindVelocityString}"
+                                        VerticalAlignment="Center"
+                                        HorizontalAlignment="Center"
+                                        FontSize="{StaticResource reportFontSizeContent}" />
+
+                                    <!--kn-->
+                                    <TextBlock
+                                        Grid.Column="4"
+                                        Text="kn"
+                                        VerticalAlignment="Bottom"
+                                        HorizontalAlignment="Right"
+                                        Margin="{StaticResource reportLabelMargin}"
+                                        FontSize="{StaticResource reportFontSizeLabel}" />
+
+                                    <!--Weather Observation: Area (derrick): Gust-->
+                                    <TextBlock
+                                        Grid.Column="5"
+                                        Text="{Binding Path=areaWindGustString}"
+                                        VerticalAlignment="Center"
+                                        HorizontalAlignment="Center"
+                                        FontSize="{StaticResource reportFontSizeContent}" />
+
+                                    <!--kn-->
+                                    <TextBlock
+                                        Grid.Column="5"
+                                        Text="kn"
+                                        VerticalAlignment="Bottom"
+                                        HorizontalAlignment="Right"
+                                        Margin="{StaticResource reportLabelMargin}"
+                                        FontSize="{StaticResource reportFontSizeLabel}" />
+
+                                </Grid>
+
+                                <!--Weather Observation: Visibility, QNH, Helideck Heading, Vessel Heading-->
+                                <Grid
+                                    Grid.Row="4">
+
+                                    <Grid.ColumnDefinitions>
+                                        <ColumnDefinition
+                                            Width="8*" />
+                                        <ColumnDefinition
+                                            Width="3*" />
+                                        <ColumnDefinition
+                                            Width="3*" />
+                                        <ColumnDefinition
+                                            Width="3*" />
+                                    </Grid.ColumnDefinitions>
+
+                                    <Rectangle
+                                        Grid.Column="1"
+                                        Grid.ColumnSpan="3"
+                                        Fill="{StaticResource ColorReportBackground}"
+                                        VerticalAlignment="Stretch"
+                                        HorizontalAlignment="Stretch" />
+
+                                    <Rectangle
+                                        Grid.Column="0"
+                                        Grid.ColumnSpan="6"
+                                        Fill="{StaticResource ColorReportLines}"
+                                        Height="{StaticResource reportStrokeThickness}"
+                                        VerticalAlignment="Bottom"
+                                        HorizontalAlignment="Stretch" />
+
+                                    <Rectangle
+                                        Grid.Column="0"
+                                        Fill="{StaticResource ColorReportLines}"
+                                        Width="{StaticResource reportStrokeThickness}"
+                                        HorizontalAlignment="Right"
+                                        VerticalAlignment="Stretch" />
+
+                                    <Rectangle
+                                        Grid.Column="1"
+                                        Fill="{StaticResource ColorReportLines}"
+                                        Width="{StaticResource reportStrokeThickness}"
+                                        HorizontalAlignment="Right"
+                                        VerticalAlignment="Stretch" />
+
+                                    <Rectangle
+                                        Grid.Column="2"
+                                        Fill="{StaticResource ColorReportLines}"
+                                        Width="{StaticResource reportStrokeThickness}"
+                                        HorizontalAlignment="Right"
+                                        VerticalAlignment="Stretch" />
+
+                                    <!--Weather Observation: Visibility-->
+                                    <StackPanel
+                                        Grid.Row="2"
+                                        Orientation="Horizontal">
+
+                                        <TextBlock
+                                            Text="Visibility:"
+                                            VerticalAlignment="Bottom"
+                                            HorizontalAlignment="Left"
+                                            Margin="{StaticResource reportLabelMargin}"
+                                            FontSize="{StaticResource reportFontSizeLabel}" />
+
+                                        <TextBlock
+                                            Text="{Binding Path=visibilityString}"
+                                            VerticalAlignment="Bottom"
+                                            HorizontalAlignment="Left"
+                                            FontSize="{StaticResource reportFontSizeContent}"
+                                            Margin="{StaticResource reportContentMargin}" />
+
+                                    </StackPanel>
+
+                                    <!--M-->
+                                    <TextBlock
+                                        Grid.Column="0"
+                                        Text="M"
+                                        VerticalAlignment="Bottom"
+                                        HorizontalAlignment="Right"
+                                        Margin="{StaticResource reportLabelMargin}"
+                                        FontSize="{StaticResource reportFontSizeLabel}" />
+
+                                    <!--Weather Observation: QNH-->
+                                    <TextBlock
+                                        Grid.Column="1"
+                                        Text="QNH:"
+                                        VerticalAlignment="Bottom"
+                                        HorizontalAlignment="Left"
+                                        Margin="{StaticResource reportLabelMargin}"
+                                        FontSize="{StaticResource reportFontSizeLabel}" />
+
+                                    <TextBlock
+                                        Grid.Column="1"
+                                        Text="{Binding Path=qnhString}"
+                                        VerticalAlignment="Bottom"
+                                        HorizontalAlignment="Center"
+                                        FontSize="{StaticResource reportFontSizeContent}"
+                                        Margin="{StaticResource reportContentMargin}" />
+
+                                    <!--hPa-->
+                                    <TextBlock
+                                        Grid.Column="1"
+                                        Text="hPa"
+                                        VerticalAlignment="Bottom"
+                                        HorizontalAlignment="Right"
+                                        Margin="{StaticResource reportLabelMargin}"
+                                        FontSize="{StaticResource reportFontSizeLabel}" />
+
+                                    <!--Weather Observation: Helideck Heading-->
+                                    <StackPanel
+                                        Grid.Column="2"
+                                        Orientation="Horizontal">
+
+                                        <TextBlock
+                                            Text="Helideck&#x0a;Heading:"
+                                            VerticalAlignment="Bottom"
+                                            HorizontalAlignment="Left"
+                                            Margin="{StaticResource reportLabelMargin}"
+                                            FontSize="{StaticResource reportFontSizeLabel}" />
+
+                                        <TextBlock
+                                            Text="{Binding Path=helideckHeadingString}"
+                                            VerticalAlignment="Bottom"
+                                            HorizontalAlignment="Left"
+                                            FontSize="{StaticResource reportFontSizeContent}"
+                                            Margin="{StaticResource reportContentMargin}" />
+
+                                    </StackPanel>
+
+
+                                    <!--Weather Observation: Vessel Heading-->
+                                    <StackPanel
+                                        Grid.Column="3"
+                                        Orientation="Horizontal">
+
+                                        <TextBlock
+                                            Text="Vessel&#x0a;Heading:"
+                                            VerticalAlignment="Bottom"
+                                            HorizontalAlignment="Left"
+                                            Margin="{StaticResource reportLabelMargin}"
+                                            FontSize="{StaticResource reportFontSizeLabel}" />
+
+                                        <TextBlock
+                                            Text="{Binding Path=vesselHeadingString_NOROG}"
+                                            VerticalAlignment="Bottom"
+                                            HorizontalAlignment="Left"
+                                            FontSize="{StaticResource reportFontSizeContent}"
+                                            Margin="{StaticResource reportContentMargin}" />
+
+                                    </StackPanel>
+
+                                </Grid>
+
+                                <!--Weather Observation: Temperature, Dewpoint, Clouds-->
+                                <Grid
+                                    Grid.Row="5">
+
+                                    <Grid.ColumnDefinitions>
+                                        <ColumnDefinition
+                                            Width="5*" />
+                                        <ColumnDefinition
+                                            Width="3*" />
+                                        <ColumnDefinition
+                                            Width="9*" />
+                                    </Grid.ColumnDefinitions>
+
+                                    <Rectangle
+                                        Grid.Column="0"
+                                        Grid.ColumnSpan="6"
+                                        Fill="{StaticResource ColorReportLines}"
+                                        Height="{StaticResource reportStrokeThickness}"
+                                        VerticalAlignment="Bottom"
+                                        HorizontalAlignment="Stretch" />
+
+                                    <Rectangle
+                                        Grid.Column="0"
+                                        Fill="{StaticResource ColorReportLines}"
+                                        Width="{StaticResource reportStrokeThickness}"
+                                        HorizontalAlignment="Right"
+                                        VerticalAlignment="Stretch" />
+
+                                    <Rectangle
+                                        Grid.Column="1"
+                                        Fill="{StaticResource ColorReportLines}"
+                                        Width="{StaticResource reportStrokeThickness}"
+                                        HorizontalAlignment="Right"
+                                        VerticalAlignment="Stretch" />
+
+                                    <!--Weather Observation: Temperature-->
+                                    <StackPanel
+                                        Grid.Column="0"
+                                        Orientation="Horizontal">
+
+                                        <TextBlock
+                                            Text="Temperature:"
+                                            VerticalAlignment="Bottom"
+                                            HorizontalAlignment="Left"
+                                            Margin="{StaticResource reportLabelMargin}"
+                                            FontSize="{StaticResource reportFontSizeLabel}" />
+
+                                        <TextBlock
+                                            Text="{Binding Path=temperatureString}"
+                                            VerticalAlignment="Bottom"
+                                            HorizontalAlignment="Left"
+                                            FontSize="{StaticResource reportFontSizeContent}"
+                                            Margin="{StaticResource reportContentMargin}" />
+
+                                    </StackPanel>
+
+                                    <!--°C-->
+                                    <TextBlock
+                                        Grid.Column="0"
+                                        Text="°C"
+                                        VerticalAlignment="Bottom"
+                                        HorizontalAlignment="Right"
+                                        Margin="{StaticResource reportLabelMargin}"
+                                        FontSize="{StaticResource reportFontSizeLabel}" />
+
+                                    <!--Weather Observation: Dewpoint-->
+                                    <StackPanel
+                                        Grid.Column="1"
+                                        Orientation="Horizontal">
+
+                                        <TextBlock
+                                            Text="Dew point:"
+                                            VerticalAlignment="Bottom"
+                                            HorizontalAlignment="Left"
+                                            Margin="{StaticResource reportLabelMargin}"
+                                            FontSize="{StaticResource reportFontSizeLabel}" />
+
+                                        <TextBlock
+                                            Text="{Binding Path=dewpointString}"
+                                            VerticalAlignment="Bottom"
+                                            HorizontalAlignment="Left"
+                                            FontSize="{StaticResource reportFontSizeContent}"
+                                            Margin="{StaticResource reportContentMargin}" />
+
+                                    </StackPanel>
+
+                                    <!--°C-->
+                                    <TextBlock
+                                        Grid.Column="1"
+                                        Text="°C"
+                                        VerticalAlignment="Bottom"
+                                        HorizontalAlignment="Right"
+                                        Margin="{StaticResource reportLabelMargin}"
+                                        FontSize="{StaticResource reportFontSizeLabel}" />
+
+                                    <!--Weather Observation: Cloud Height-->
+                                    <StackPanel
+                                        Grid.Column="2"
+                                        Orientation="Horizontal">
+
+                                        <TextBlock
+                                            Text="Clouds (few/sct/bcn/ovc in feet):"
+                                            VerticalAlignment="Bottom"
+                                            HorizontalAlignment="Left"
+                                            Margin="{StaticResource reportLabelMargin}"
+                                            FontSize="{StaticResource reportFontSizeLabel}" />
+
+                                        <TextBlock
+                                            Text="{Binding Path=cloudLayerString_NOROG}"
+                                            VerticalAlignment="Bottom"
+                                            HorizontalAlignment="Left"
+                                            FontSize="{StaticResource reportFontSizeContent}"
+                                            Margin="{StaticResource reportContentMargin}" />
+
+                                    </StackPanel>
+
+                                    <!--ft-->
+                                    <TextBlock
+                                        Grid.Column="2"
+                                        Text="ft"
+                                        VerticalAlignment="Bottom"
+                                        HorizontalAlignment="Right"
+                                        Margin="{StaticResource reportLabelMargin}"
+                                        FontSize="{StaticResource reportFontSizeLabel}" />
+
+                                </Grid>
+
+                                <!--Weather Observation: Other Relevant Weather Info-->
+                                <DockPanel
+                                    Grid.Row="6"
+                                    Grid.RowSpan="2">
+
+                                    <TextBlock
+                                        DockPanel.Dock="Left"
+                                        Text="Other relevant&#x0a;weather info (fog&#x0a;banks, rapid&#x0a;changes, etc):"
+                                        VerticalAlignment="Bottom"
+                                        HorizontalAlignment="Left"
+                                        Margin="{StaticResource reportLabelMargin}"
+                                        FontSize="{StaticResource reportFontSizeLabel}" />
+
+                                    <Grid
+                                        DockPanel.Dock="Right"
+                                        VerticalAlignment="Bottom">
+
+                                        <TextBlock
+                                            Text="{Binding Path=otherWeatherInfo}"
+                                            TextWrapping="Wrap"
+                                            VerticalAlignment="Bottom"
+                                            FontSize="{StaticResource reportFontSizeContent}"
+                                            Margin="{StaticResource reportContentMargin}" />
+
+                                    </Grid>
+
+                                </DockPanel>
+
+                                <Rectangle
+                                    Grid.Row="7"
+                                    Fill="{StaticResource ColorReportLines}"
+                                    Height="{StaticResource reportStrokeThickness}"
+                                    VerticalAlignment="Bottom"
+                                    HorizontalAlignment="Stretch" />
+
+                                <!--Weather Observation: Sea Spray Observed-->
+                                <StackPanel
+                                    Grid.Row="8"
+                                    Orientation="Horizontal"
+                                    Background="{StaticResource ColorReportBackground}">
+
+                                    <TextBlock
+                                        Grid.Column="1"
+                                        Text="Sea spray observed over helideck:"
+                                        VerticalAlignment="Bottom"
+                                        HorizontalAlignment="Left"
+                                        Margin="{StaticResource reportLabelMargin}"
+                                        FontSize="{StaticResource reportFontSizeLabel}" />
+
+                                    <!--YES-->
+                                    <Grid
+                                        VerticalAlignment="Center"
+                                        Margin="{StaticResource reportRadioButtonMargin}">
+
+                                        <Ellipse
+                                            VerticalAlignment="Center"
+                                            HorizontalAlignment="Center"
+                                            Width="{StaticResource reportRadioButtonSizeOuter}"
+                                            Height="{StaticResource reportRadioButtonSizeOuter}"
+                                            StrokeThickness="{StaticResource reportRadioButtonStroke}"
+                                            Stroke="{StaticResource ColorReportLines}" />
+
+                                        <Ellipse
+                                            Visibility="{Binding Path=seaSprayObservedYes}"
+                                            VerticalAlignment="Center"
+                                            HorizontalAlignment="Center"
+                                            Width="{StaticResource reportRadioButtonSizeInner}"
+                                            Height="{StaticResource reportRadioButtonSizeInner}"
+                                            Fill="{StaticResource ColorReportLines}" />
+
+                                    </Grid>
+
+                                    <TextBlock
+                                        Text="Yes"
+                                        VerticalAlignment="Bottom"
+                                        HorizontalAlignment="Left"
+                                        Margin="{StaticResource reportLabelMargin}"
+                                        FontSize="{StaticResource reportFontSizeLabel}" />
+
+                                    <!--NO-->
+                                    <Grid
+                                        VerticalAlignment="Center"
+                                        Margin="{StaticResource reportRadioButtonMargin}">
+
+                                        <Ellipse
+                                            VerticalAlignment="Center"
+                                            HorizontalAlignment="Center"
+                                            Width="{StaticResource reportRadioButtonSizeOuter}"
+                                            Height="{StaticResource reportRadioButtonSizeOuter}"
+                                            StrokeThickness="{StaticResource reportRadioButtonStroke}"
+                                            Stroke="{StaticResource ColorReportLines}" />
+
+                                        <Ellipse
+                                            Visibility="{Binding Path=seaSprayObservedNo}"
+                                            VerticalAlignment="Center"
+                                            HorizontalAlignment="Center"
+                                            Width="{StaticResource reportRadioButtonSizeInner}"
+                                            Height="{StaticResource reportRadioButtonSizeInner}"
+                                            Fill="{StaticResource ColorReportLines}" />
+
+                                    </Grid>
+
+                                    <TextBlock
+                                        Text="No"
+                                        VerticalAlignment="Bottom"
+                                        HorizontalAlignment="Left"
+                                        Margin="{StaticResource reportLabelMargin}"
+                                        FontSize="{StaticResource reportFontSizeLabel}" />
+
+                                </StackPanel>
+
+                            </Grid>
+
+                            <!--Helideck Movement-->
+                            <Grid
+                                Grid.Row="4"
+                                Background="{StaticResource ColorReportBackground}">
+
+                                <Grid.RowDefinitions>
+                                    <RowDefinition
+                                        Height="*" />
+                                    <RowDefinition
+                                        Height="*" />
+                                    <RowDefinition
+                                        Height="*" />
+                                    <RowDefinition
+                                        Height="*" />
+                                </Grid.RowDefinitions>
+
+                                <!--Helideck Movement: Title, installation category-->
+                                <Grid
+                                    Grid.Row="0">
+
+                                    <Grid.ColumnDefinitions>
+                                        <ColumnDefinition
+                                            Width="3*" />
+                                        <ColumnDefinition
+                                            Width="*" />
+                                    </Grid.ColumnDefinitions>
+
+                                    <Rectangle
+                                        Grid.Column="0"
+                                        Grid.ColumnSpan="6"
+                                        Fill="{StaticResource ColorReportLines}"
+                                        Height="{StaticResource reportStrokeThickness}"
+                                        VerticalAlignment="Bottom"
+                                        HorizontalAlignment="Stretch" />
+
+                                    <Rectangle
+                                        Grid.Column="0"
+                                        Fill="{StaticResource ColorReportLines}"
+                                        Width="{StaticResource reportStrokeThickness}"
+                                        HorizontalAlignment="Right"
+                                        VerticalAlignment="Stretch" />
+
+                                    <!--Helideck Movement: Title-->
+                                    <TextBlock
+                                        Grid.Column="0"
+                                        Text="HELIDECK MOVEMENT 20 MIN. INTERVAL"
+                                        VerticalAlignment="Bottom"
+                                        HorizontalAlignment="Center"
+                                        FontSize="{StaticResource reportFontSizeTitle2}" />
+
+                                    <!--Helideck Movement: Installation Category-->
+                                    <StackPanel
+                                        Grid.Column="1"
+                                        Orientation="Horizontal">
+
+                                        <TextBlock
+                                            Text="Installation&#x0a;category:"
+                                            VerticalAlignment="Bottom"
+                                            HorizontalAlignment="Left"
+                                            Margin="{StaticResource reportLabelMargin}"
+                                            FontSize="{StaticResource reportFontSizeLabel}" />
+
+                                        <TextBlock
+                                            Text="{Binding Path=installationCategoryString}"
+                                            VerticalAlignment="Bottom"
+                                            HorizontalAlignment="Left"
+                                            FontSize="{StaticResource reportFontSizeContent}"
+                                            Margin="{StaticResource reportContentMargin}" />
+
+                                    </StackPanel>
+
+                                </Grid>
+
+                                <!--Helideck Movement: Pitch & Roll title, max heave-->
+                                <Grid
+                                    Grid.Row="1">
+
+                                    <Grid.ColumnDefinitions>
+                                        <ColumnDefinition
+                                            Width="4*" />
+                                        <ColumnDefinition
+                                            Width="3*" />
+                                    </Grid.ColumnDefinitions>
+
+                                    <Rectangle
+                                        Grid.Column="0"
+                                        Grid.ColumnSpan="6"
+                                        Fill="{StaticResource ColorReportLines}"
+                                        Height="{StaticResource reportStrokeThickness}"
+                                        VerticalAlignment="Bottom"
+                                        HorizontalAlignment="Stretch" />
+
+                                    <Rectangle
+                                        Grid.Column="0"
+                                        Fill="{StaticResource ColorReportLines}"
+                                        Width="{StaticResource reportStrokeThickness}"
+                                        HorizontalAlignment="Right"
+                                        VerticalAlignment="Stretch" />
+
+                                    <!--Helideck Movement: Pitch & Roll Title-->
+                                    <TextBlock
+                                        Grid.Column="0"
+                                        Text="MAX PITCH AND ROLL IN DEG. WITH REF. TO HORIZON"
+                                        VerticalAlignment="Bottom"
+                                        HorizontalAlignment="Center"
+                                        FontSize="{StaticResource reportFontSizeLabel}" />
+
+                                    <!--Helideck Movement: Max heave-->
+                                    <StackPanel
+                                        Grid.Column="1"
+                                        Orientation="Horizontal">
+
+                                        <TextBlock
+                                            Text="Max heave (top to bottom):"
+                                            VerticalAlignment="Bottom"
+                                            HorizontalAlignment="Left"
+                                            Margin="{StaticResource reportLabelMargin}"
+                                            FontSize="{StaticResource reportFontSizeLabel}" />
+
+                                        <TextBlock
+                                            Text="{Binding Path=maxHeaveString}"
+                                            VerticalAlignment="Bottom"
+                                            HorizontalAlignment="Left"
+                                            FontSize="{StaticResource reportFontSizeContent}"
+                                            Margin="{StaticResource reportContentMargin}" />
+
+                                    </StackPanel>
+
+                                    <!--M-->
+                                    <TextBlock
+                                        Grid.Column="2"
+                                        Text="M"
+                                        VerticalAlignment="Bottom"
+                                        HorizontalAlignment="Right"
+                                        Margin="{StaticResource reportLabelMargin}"
+                                        Width="{StaticResource reportUnitWidth}"
+                                        FontSize="{StaticResource reportFontSizeLabel}" />
+
+                                </Grid>
+
+                                <!--Helideck Movement: Pitch & Roll, heave period-->
+                                <Grid
+                                    Grid.Row="2">
+
+                                    <Grid.ColumnDefinitions>
+                                        <ColumnDefinition
+                                            Width="*" />
+                                        <ColumnDefinition
+                                            Width="*" />
+                                        <ColumnDefinition
+                                            Width="*" />
+                                        <ColumnDefinition
+                                            Width="*" />
+                                        <ColumnDefinition
+                                            Width="3*" />
+                                    </Grid.ColumnDefinitions>
+
+                                    <Rectangle
+                                        Grid.Column="0"
+                                        Grid.ColumnSpan="6"
+                                        Fill="{StaticResource ColorReportLines}"
+                                        Height="{StaticResource reportStrokeThickness}"
+                                        VerticalAlignment="Bottom"
+                                        HorizontalAlignment="Stretch" />
+
+                                    <Rectangle
+                                        Grid.Column="0"
+                                        Fill="{StaticResource ColorReportLines}"
+                                        Width="{StaticResource reportStrokeThickness}"
+                                        HorizontalAlignment="Right"
+                                        VerticalAlignment="Stretch" />
+
+                                    <Rectangle
+                                        Grid.Column="1"
+                                        Fill="{StaticResource ColorReportLines}"
+                                        Width="{StaticResource reportStrokeThickness}"
+                                        HorizontalAlignment="Right"
+                                        VerticalAlignment="Stretch" />
+
+                                    <Rectangle
+                                        Grid.Column="2"
+                                        Fill="{StaticResource ColorReportLines}"
+                                        Width="{StaticResource reportStrokeThickness}"
+                                        HorizontalAlignment="Right"
+                                        VerticalAlignment="Stretch" />
+
+                                    <Rectangle
+                                        Grid.Column="3"
+                                        Fill="{StaticResource ColorReportLines}"
+                                        Width="{StaticResource reportStrokeThickness}"
+                                        HorizontalAlignment="Right"
+                                        VerticalAlignment="Stretch" />
+
+                                    <!--Helideck Movement: Pitch Up-->
+                                    <StackPanel
+                                        Grid.Column="0"
+                                        Orientation="Horizontal">
+
+                                        <TextBlock
+                                            Text="Pitch&#x0a;up:"
+                                            VerticalAlignment="Bottom"
+                                            HorizontalAlignment="Left"
+                                            Margin="{StaticResource reportLabelMargin}"
+                                            FontSize="{StaticResource reportFontSizeLabel}" />
+
+                                        <TextBlock
+                                            Text="{Binding Path=pitchUpString}"
+                                            VerticalAlignment="Bottom"
+                                            HorizontalAlignment="Left"
+                                            FontSize="{StaticResource reportFontSizeContent}"
+                                            Margin="{StaticResource reportContentMargin}" />
+
+                                    </StackPanel>
+
+                                    <!--Helideck Movement: Pitch Down-->
+                                    <StackPanel
+                                        Grid.Column="1"
+                                        Orientation="Horizontal">
+
+                                        <TextBlock
+                                            Text="Pitch&#x0a;down:"
+                                            VerticalAlignment="Bottom"
+                                            HorizontalAlignment="Left"
+                                            Margin="{StaticResource reportLabelMargin}"
+                                            FontSize="{StaticResource reportFontSizeLabel}" />
+
+                                        <TextBlock
+                                            Text="{Binding Path=pitchDownString}"
+                                            VerticalAlignment="Bottom"
+                                            HorizontalAlignment="Left"
+                                            FontSize="{StaticResource reportFontSizeContent}"
+                                            Margin="{StaticResource reportContentMargin}" />
+
+                                    </StackPanel>
+
+                                    <!--Helideck Movement: Roll Left-->
+                                    <StackPanel
+                                        Grid.Column="2"
+                                        Orientation="Horizontal">
+
+                                        <TextBlock
+                                            Text="Roll&#x0a;left:"
+                                            VerticalAlignment="Bottom"
+                                            HorizontalAlignment="Left"
+                                            Margin="{StaticResource reportLabelMargin}"
+                                            FontSize="{StaticResource reportFontSizeLabel}" />
+
+                                        <TextBlock
+                                            Text="{Binding Path=rollLeftString}"
+                                            VerticalAlignment="Bottom"
+                                            HorizontalAlignment="Left"
+                                            FontSize="{StaticResource reportFontSizeContent}"
+                                            Margin="{StaticResource reportContentMargin}" />
+
+                                    </StackPanel>
+
+                                    <!--Helideck Movement: Roll Right-->
+                                    <StackPanel
+                                        Grid.Column="3"
+                                        Orientation="Horizontal">
+
+                                        <TextBlock
+                                            Text="Roll&#x0a;right:"
+                                            VerticalAlignment="Bottom"
+                                            HorizontalAlignment="Left"
+                                            Margin="{StaticResource reportLabelMargin}"
+                                            FontSize="{StaticResource reportFontSizeLabel}" />
+
+                                        <TextBlock
+                                            Text="{Binding Path=rollRightString}"
+                                            VerticalAlignment="Bottom"
+                                            HorizontalAlignment="Left"
+                                            FontSize="{StaticResource reportFontSizeContent}"
+                                            Margin="{StaticResource reportContentMargin}" />
+
+                                    </StackPanel>
+
+                                    <!--Helideck Movement: Heave Period-->
+                                    <StackPanel
+                                        Grid.Column="4"
+                                        Orientation="Horizontal">
+
+                                        <TextBlock
+                                            Text="Heave period (if available):"
+                                            VerticalAlignment="Bottom"
+                                            HorizontalAlignment="Left"
+                                            Margin="{StaticResource reportLabelMargin}"
+                                            FontSize="{StaticResource reportFontSizeLabel}" />
+
+                                        <TextBlock
+                                            Text="{Binding Path=heavePeriodString}"
+                                            VerticalAlignment="Bottom"
+                                            HorizontalAlignment="Left"
+                                            FontSize="{StaticResource reportFontSizeContent}"
+                                            Margin="{StaticResource reportContentMargin}" />
+
+                                    </StackPanel>
+
+                                    <!--Sec.-->
+                                    <TextBlock
+                                        Grid.Column="4"
+                                        Text="Sec."
+                                        VerticalAlignment="Bottom"
+                                        HorizontalAlignment="Right"
+                                        Margin="{StaticResource reportLabelMargin}"
+                                        Width="{StaticResource reportUnitWidth}"
+                                        FontSize="{StaticResource reportFontSizeLabel}" />
+
+                                </Grid>
+
+                                <!--Helideck Movement: Inclination, max heave rate-->
+                                <Grid
+                                    Grid.Row="3">
+
+                                    <Grid.ColumnDefinitions>
+                                        <ColumnDefinition
+                                            Width="4*" />
+                                        <ColumnDefinition
+                                            Width="3*" />
+                                    </Grid.ColumnDefinitions>
+
+                                    <Rectangle
+                                        Grid.Column="0"
+                                        Fill="{StaticResource ColorReportLines}"
+                                        Width="{StaticResource reportStrokeThickness}"
+                                        HorizontalAlignment="Right"
+                                        VerticalAlignment="Stretch" />
+
+                                    <!--Helideck Movement: Max inclination-->
+                                    <StackPanel
+                                        Grid.Column="0"
+                                        Orientation="Horizontal">
+
+                                        <TextBlock
+                                            Text="Max helideck inclination:"
+                                            VerticalAlignment="Bottom"
+                                            HorizontalAlignment="Left"
+                                            Margin="{StaticResource reportLabelMargin}"
+                                            FontSize="{StaticResource reportFontSizeLabel}" />
+
+                                        <TextBlock
+                                            Text="{Binding Path=inclinationString}"
+                                            VerticalAlignment="Bottom"
+                                            HorizontalAlignment="Left"
+                                            FontSize="{StaticResource reportFontSizeContent}"
+                                            Margin="{StaticResource reportContentMargin}" />
+
+                                    </StackPanel>
+
+
+                                    <!--Helideck Movement: Max heave rate-->
+                                    <StackPanel
+                                        Grid.Column="1"
+                                        Orientation="Horizontal">
+
+                                        <TextBlock
+                                            Text="Max heave rate (if available):"
+                                            VerticalAlignment="Bottom"
+                                            HorizontalAlignment="Left"
+                                            Margin="{StaticResource reportLabelMargin}"
+                                            FontSize="{StaticResource reportFontSizeLabel}" />
+
+                                        <TextBlock
+                                            Text="{Binding Path=maximumHeaveRateString}"
+                                            VerticalAlignment="Bottom"
+                                            HorizontalAlignment="Left"
+                                            FontSize="{StaticResource reportFontSizeContent}"
+                                            Margin="{StaticResource reportContentMargin}" />
+
+                                    </StackPanel>
+
+                                    <!--m/s-->
+                                    <TextBlock
+                                        Grid.Column="2"
+                                        Text="m/s"
+                                        VerticalAlignment="Bottom"
+                                        HorizontalAlignment="Right"
+                                        Margin="{StaticResource reportLabelMargin}"
+                                        Width="{StaticResource reportUnitWidth}"
+                                        FontSize="{StaticResource reportFontSizeLabel}" />
+
+                                </Grid>
+
+                            </Grid>
+
+                        <!--Bokser rundt hovedseksjonenen-->
+                        <Rectangle
+                            Grid.Row="0"
+                            Stroke="{StaticResource ColorReportLines}"
+                            StrokeThickness="{StaticResource reportStrokeThickness}" />
+
+                        <Rectangle
+                            Grid.Row="2"
+                            Stroke="{StaticResource ColorReportLines}"
+                            StrokeThickness="{StaticResource reportStrokeThickness}" />
+
+                        <Rectangle
+                            Grid.Row="5"
+                            Stroke="{StaticResource ColorReportLines}"
+                            StrokeThickness="{StaticResource reportStrokeThickness}" />
+
+                        </Grid>
+
+                    </Border>
+
+                </Viewbox>
+
+            </Grid>
+
+        </telerik:GroupBox>
+
+        <!--COMMANDS-->
+        <telerik:GroupBox
+            Header="COMMANDS"
+            Grid.Column="2"
+            Margin="8">
+
+            <StackPanel>
+
+                <telerik:RadButton
+                    Name="btnSendReport"
+                    Content="Send Report"
+                    Margin="8"
+                    HorizontalAlignment="Stretch"
+                    Click="btnSendReport_Click"/>
+
+                <telerik:RadButton
+                    Name="btnSavePDF"
+                    Content="Save PDF File"
+                    Margin="8"
+                    HorizontalAlignment="Stretch"
+                    Click="btnSavePDF_Click" />
+
+                <telerik:RadButton
+                    Name="btnOpenFileLocation"
+                    Content="Open File Location"
+                    Margin="8"
+                    HorizontalAlignment="Stretch"
+                    Click="btnOpenFileLocation_Click" />
+
+            </StackPanel>
+
+        </telerik:GroupBox>
+
+    </Grid>
+
+</UserControl>
