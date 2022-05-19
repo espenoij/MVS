@@ -123,13 +123,13 @@ class Constants
     public const int MODBUSSlaveIDDefault = 1;
 
     // Database
+    public const string DefaultDatabaseName = "ses_hms";
     public const string DefaultDatabaseAddress = "127.0.0.1";
     public const int DefaultDatabasePort = 3306;
     public const int DatabaseStorageTimeMin = 0;
     public const int DatabaseStorageTimeMax = 365;
     public const int DatabaseStorageTimeDefault = 183;
     public const int DatabaseMessagesStorageTimeDefault = 90; 
-    public const int DatabaseStatusID = 31; // Må match Database Status item under HMSDataItems
 
     // Program Save Frequency (default save to database frequency)
     public const int DatabaseSaveFreqDefault = 1000;

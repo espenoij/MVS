@@ -61,7 +61,7 @@ namespace HMS_Server
             databasePort = config.ReadWithDefault(ConfigKey.DatabasePort, Constants.DefaultDatabasePort);
 
             // Database Name
-            databaseName = config.Read(ConfigKey.DatabaseName);
+            databaseName = config.ReadWithDefault(ConfigKey.DatabaseName, Constants.DefaultDatabaseName);
 
             // Database Data Storage Time
             databaseDataStorageTime = config.ReadWithDefault(ConfigKey.DataStorageTime, Constants.DatabaseStorageTimeDefault);

@@ -100,15 +100,31 @@ namespace HMS_Client
                 // Pitch
                 sensorStatus.TimeoutCheck(pitchData);
                 if (sensorStatus.TimeoutCheck(pitchMax20mData)) OnPropertyChanged(nameof(pitchMax20mString));
-                if (sensorStatus.TimeoutCheck(pitchMaxUp20mData)) OnPropertyChanged(nameof(pitchMaxUp20mString));
-                if (sensorStatus.TimeoutCheck(pitchMaxDown20mData)) OnPropertyChanged(nameof(pitchMaxDown20mString));
+                if (sensorStatus.TimeoutCheck(pitchMaxUp20mData))
+                {
+                    OnPropertyChanged(nameof(pitchMaxUp20mString));
+                    OnPropertyChanged(nameof(pitchMaxUp20mString2));
+                }
+                if (sensorStatus.TimeoutCheck(pitchMaxDown20mData))
+                {
+                    OnPropertyChanged(nameof(pitchMaxDown20mString));
+                    OnPropertyChanged(nameof(pitchMaxDown20mString2));
+                }
                 sensorStatus.TimeoutCheck(pitchMax3hData);
 
                 // Roll
                 sensorStatus.TimeoutCheck(rollData);
                 if (sensorStatus.TimeoutCheck(rollMax20mData)) OnPropertyChanged(nameof(rollMax20mString));
-                if (sensorStatus.TimeoutCheck(rollMaxLeft20mData)) OnPropertyChanged(nameof(rollMaxLeft20mString));
-                if (sensorStatus.TimeoutCheck(rollMaxRight20mData)) OnPropertyChanged(nameof(rollMaxRight20mString));
+                if (sensorStatus.TimeoutCheck(rollMaxLeft20mData))
+                {
+                    OnPropertyChanged(nameof(rollMaxLeft20mString));
+                    OnPropertyChanged(nameof(rollMaxLeft20mString2));
+                }
+                if (sensorStatus.TimeoutCheck(rollMaxRight20mData))
+                {
+                    OnPropertyChanged(nameof(rollMaxRight20mString));
+                    OnPropertyChanged(nameof(rollMaxRight20mString2));
+                }
                 sensorStatus.TimeoutCheck(rollMax3hData);
 
                 // Inclination
@@ -516,6 +532,7 @@ namespace HMS_Client
                     _pitchMaxUp20mData.Set(value);
 
                     OnPropertyChanged(nameof(pitchMaxUp20mString));
+                    OnPropertyChanged(nameof(pitchMaxUp20mString2));
                 }
             }
         }
@@ -530,6 +547,36 @@ namespace HMS_Client
                     {
                         double pitch = Math.Abs(pitchMaxUp20mData.data);
                         return string.Format("{0} °", pitch.ToString("0.0"));
+                    }
+                    else
+                    {
+                        return Constants.NotAvailable;
+                    }
+                }
+                else
+                {
+                    return Constants.NotAvailable;
+                }
+            }
+        }
+        public string pitchMaxUp20mString2
+        {
+            get
+            {
+                if (pitchMaxUp20mData != null)
+                {
+                    // Sjekke om data er gyldig
+                    if (pitchMaxUp20mData.status == DataStatus.OK)
+                    {
+                        double pitch = Math.Abs(pitchMaxUp20mData.data);
+
+                        string dir;
+                        if (pitchMaxUp20mData.data > 0)
+                            dir = "U";
+                        else
+                            dir = "D";
+
+                        return string.Format("{0} ° {1}", pitch.ToString("0.0"), dir);
                     }
                     else
                     {
@@ -557,6 +604,7 @@ namespace HMS_Client
                     _pitchMaxDown20mData.Set(value);
 
                     OnPropertyChanged(nameof(pitchMaxDown20mString));
+                    OnPropertyChanged(nameof(pitchMaxDown20mString2));
                 }
             }
         }
@@ -571,6 +619,36 @@ namespace HMS_Client
                     {
                         double pitch = Math.Abs(pitchMaxDown20mData.data);
                         return string.Format("{0} °", pitch.ToString("0.0"));
+                    }
+                    else
+                    {
+                        return Constants.NotAvailable;
+                    }
+                }
+                else
+                {
+                    return Constants.NotAvailable;
+                }
+            }
+        }
+        public string pitchMaxDown20mString2
+        {
+            get
+            {
+                if (pitchMaxDown20mData != null)
+                {
+                    // Sjekke om data er gyldig
+                    if (pitchMaxDown20mData.status == DataStatus.OK)
+                    {
+                        double pitch = Math.Abs(pitchMaxDown20mData.data);
+
+                        string dir;
+                        if (pitchMaxDown20mData.data > 0)
+                            dir = "U";
+                        else
+                            dir = "D";
+
+                        return string.Format("{0} ° {1}", pitch.ToString("0.0"), dir);
                     }
                     else
                     {
@@ -721,6 +799,7 @@ namespace HMS_Client
                     _rollMaxLeft20mData.Set(value);
 
                     OnPropertyChanged(nameof(rollMaxLeft20mString));
+                    OnPropertyChanged(nameof(rollMaxLeft20mString2));
                 }
             }
         }
@@ -735,6 +814,36 @@ namespace HMS_Client
                     {
                         double roll = Math.Abs(rollMaxLeft20mData.data);
                         return string.Format("{0} °", roll.ToString("0.0"));
+                    }
+                    else
+                    {
+                        return Constants.NotAvailable;
+                    }
+                }
+                else
+                {
+                    return Constants.NotAvailable;
+                }
+            }
+        }
+        public string rollMaxLeft20mString2
+        {
+            get
+            {
+                if (rollMaxLeft20mData != null)
+                {
+                    // Sjekke om data er gyldig
+                    if (rollMaxLeft20mData.status == DataStatus.OK)
+                    {
+                        double roll = Math.Abs(rollMaxLeft20mData.data);
+
+                        string dir;
+                        if (rollMaxLeft20mData.data > 0)
+                            dir = "R";
+                        else
+                            dir = "L";
+
+                        return string.Format("{0} ° {1}", roll.ToString("0.0"), dir);
                     }
                     else
                     {
@@ -762,6 +871,7 @@ namespace HMS_Client
                     _rollMaxRight20mData.Set(value);
 
                     OnPropertyChanged(nameof(rollMaxRight20mString));
+                    OnPropertyChanged(nameof(rollMaxRight20mString2));
                 }
             }
         }
@@ -776,6 +886,36 @@ namespace HMS_Client
                     {
                         double roll = Math.Abs(rollMaxRight20mData.data);
                         return string.Format("{0} °", roll.ToString("0.0"));
+                    }
+                    else
+                    {
+                        return Constants.NotAvailable;
+                    }
+                }
+                else
+                {
+                    return Constants.NotAvailable;
+                }
+            }
+        }
+        public string rollMaxRight20mString2
+        {
+            get
+            {
+                if (rollMaxRight20mData != null)
+                {
+                    // Sjekke om data er gyldig
+                    if (rollMaxRight20mData.status == DataStatus.OK)
+                    {
+                        double roll = Math.Abs(rollMaxRight20mData.data);
+
+                        string dir;
+                        if (rollMaxRight20mData.data > 0)
+                            dir = "R";
+                        else
+                            dir = "L";
+
+                        return string.Format("{0} ° {1}", roll.ToString("0.0"), dir);
                     }
                     else
                     {

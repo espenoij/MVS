@@ -610,19 +610,20 @@
 	<SensorGroupID>
 		<SensorGroupIDHeaders>
 			<sensorGroup id="0" name="GPS" dbColumn="gps" active="True" />
-			<sensorGroup id="1" name="MOTION 1" dbColumn="motion_1" active="True" />
-			<sensorGroup id="2" name="MOTION 2" dbColumn="motion_2" active="True" />
-			<sensorGroup id="3" name="AIR DATA" dbColumn="air_data" active="True" />
-			<sensorGroup id="4" name="VISIBILITY" dbColumn="visibility" active="True" />
-			<sensorGroup id="5" name="WEATHER" dbColumn="weather" active="True" />
-			<sensorGroup id="6" name="CLOUDS" dbColumn="clouds" active="True" />
-			<sensorGroup id="7" name="WIND" dbColumn="wind" active="True" />
-			<sensorGroup id="8" name="HEADING" dbColumn="heading" active="True" />
-			<sensorGroup id="9" name="DATABASE" dbColumn="" active="True" />
+			<sensorGroup id="1" name="MOTION" dbColumn="motion" active="True" />
+			<sensorGroup id="2" name="AIR DATA" dbColumn="airdata" active="True" />
+			<sensorGroup id="3" name="VISIBILITY" dbColumn="visibility" active="True" />
+			<sensorGroup id="4" name="WEATHER" dbColumn="weather" active="True" />
+			<sensorGroup id="5" name="CLOUDS" dbColumn="clouds" active="True" />
+			<sensorGroup id="6" name="WIND" dbColumn="wind" active="True" />
+			<sensorGroup id="7" name="HEADING" dbColumn="heading" active="True" />
+			<sensorGroup id="8" name="DATABASE" dbColumn="db" active="True" />
+			<sensorGroup id="9" name="" dbColumn="" active="False" />
 			<sensorGroup id="10" name="" dbColumn="" active="False" />
 			<sensorGroup id="11" name="" dbColumn="" active="False" />
 		</SensorGroupIDHeaders>
 	</SensorGroupID>
+
 
 	<HMSData>
 		<HMSDataItems>

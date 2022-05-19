@@ -61,6 +61,12 @@ namespace HMS_Server
         private DateTime timeMeanPeriodLastWaveTop = DateTime.MinValue;
         private List<TimeData> timeMeanPeriodDataList = new List<TimeData>();
 
+        // Wave Radar
+        private double waveRadarLastTop = double.NaN;
+        private double waveRadarLastBottom = double.NaN;
+        private double waveRadarLast = double.NaN;
+        private WavePhase waveRadarWavePhase = WavePhase.Init;
+
         public DataCalculations()
         {
             type = CalculationType.None;
@@ -579,12 +585,14 @@ namespace HMS_Server
                                 {
                                     // Init
                                     case WavePhase.Init:
-                                        if (value > swhLast)
-                                            swhWavePhase = WavePhase.Ascending;
-                                        else
-                                        if (value < swhLast)
-                                            swhWavePhase = WavePhase.Descending;
-
+                                        if (!double.IsNaN(swhLast))
+                                        {
+                                            if (value > swhLast)
+                                                swhWavePhase = WavePhase.Ascending;
+                                            else
+                                            if (value < swhLast)
+                                                swhWavePhase = WavePhase.Descending;
+                                        }
                                         break;
                                     // På vei mot topp av bølge
                                     case WavePhase.Ascending:
@@ -767,11 +775,14 @@ namespace HMS_Server
                                 {
                                     // Init
                                     case WavePhase.Init:
-                                        if (value > timeMaxAmplitudeLast)
-                                            timeMaxAmplitudeWavePhase = WavePhase.Ascending;
-                                        else
-                                        if (value < timeMaxAmplitudeLast)
-                                            timeMaxAmplitudeWavePhase = WavePhase.Descending;
+                                        if (!double.IsNaN(timeMaxAmplitudeLast))
+                                        {
+                                            if (value > timeMaxAmplitudeLast)
+                                                timeMaxAmplitudeWavePhase = WavePhase.Ascending;
+                                            else
+                                            if (value < timeMaxAmplitudeLast)
+                                                timeMaxAmplitudeWavePhase = WavePhase.Descending;
+                                        }
                                         break;
 
                                     // På vei mot topp av bølge
@@ -900,11 +911,14 @@ namespace HMS_Server
                                 {
                                     // Init
                                     case WavePhase.Init:
-                                        if (value > amplitudeLast)
-                                            amplitudeWavePhase = WavePhase.Ascending;
-                                        else
-                                        if (value < amplitudeLast)
-                                            amplitudeWavePhase = WavePhase.Descending;
+                                        if (!double.IsNaN(amplitudeLast))
+                                        {
+                                            if (value > amplitudeLast)
+                                                amplitudeWavePhase = WavePhase.Ascending;
+                                            else
+                                            if (value < amplitudeLast)
+                                                amplitudeWavePhase = WavePhase.Descending;
+                                        }
                                         break;
 
                                     // På vei mot topp av bølge
@@ -969,11 +983,14 @@ namespace HMS_Server
                                 {
                                     // Init
                                     case WavePhase.Init:
-                                        if (value > timeMeanPeriodLast)
-                                            timeMeanPeriodWavePhase = WavePhase.Ascending;
-                                        else
-                                        if (value < timeMeanPeriodLast)
-                                            timeMeanPeriodWavePhase = WavePhase.Descending;
+                                        if (!double.IsNaN(timeMeanPeriodLast))
+                                        {
+                                            if (value > timeMeanPeriodLast)
+                                                timeMeanPeriodWavePhase = WavePhase.Ascending;
+                                            else
+                                            if (value < timeMeanPeriodLast)
+                                                timeMeanPeriodWavePhase = WavePhase.Descending;
+                                        }
                                         break;
 
                                     // På vei mot topp av bølge
@@ -1035,7 +1052,7 @@ namespace HMS_Server
 
                                 // Finne gjennomsnitt verdi
                                 if (timeMeanPeriodDataList.Count > 0)
-                                    result = timeMeanPeriodTotal / timeMeanPeriodDataList.Count;
+                                    result = timeMeanPeriodTotal / (double)timeMeanPeriodDataList.Count;
                                 else
                                     return 0;
                             }
@@ -1262,6 +1279,82 @@ namespace HMS_Server
                             break;
 
                         ////////////////////////////////////////////////////////////////////////////////////////////////
+                        /// Wave Radar
+                        ////////////////////////////////////////////////////////////////////////////////////////////////
+                        /// Beskrivelse:
+                        /// Konverterer høyde data fra en bølge radar til oscillerende data rundt et nullpunkt
+                        /// 
+                        /// Input:
+                        /// Bølgehøyde data
+                        /// 
+                        /// Brukes til:
+                        /// Bølge data
+                        /// 
+                        case CalculationType.WaveRadar:
+
+                            // Sjekke om string er numerisk
+                            if (double.TryParse(newData, Constants.numberStyle, Constants.cultureInfo, out value))
+                            {
+                                switch (waveRadarWavePhase)
+                                {
+                                    // Init
+                                    case WavePhase.Init:
+                                        if (!double.IsNaN(waveRadarLast))
+                                        {
+                                            if (value > waveRadarLast)
+                                                waveRadarWavePhase = WavePhase.Ascending;
+                                            else
+                                            if (value < waveRadarLast)
+                                                waveRadarWavePhase = WavePhase.Descending;
+                                        }
+                                        break;
+
+                                    // På vei mot topp av bølge
+                                    case WavePhase.Ascending:
+
+                                        // Dersom neste verdi er mindre enn forrige -> passert toppen av bølgen
+                                        if (value < waveRadarLast)
+                                        {
+                                            // Lagre ny bølge topp
+                                            waveRadarLastTop = value;
+
+                                            // På vei ned
+                                            waveRadarWavePhase = WavePhase.Descending;
+                                        }
+                                        break;
+
+                                    // På vei mot bunn av bølge
+                                    case WavePhase.Descending:
+
+                                        // Dersom neste verdi er større enn forrige -> passert bunnen av bølgen
+                                        if (value > waveRadarLast)
+                                        {
+                                            // Lagre ny bølge bunn
+                                            waveRadarLastBottom = value;
+
+                                            // På vei opp igjen
+                                            waveRadarWavePhase = WavePhase.Ascending;
+                                        }
+                                        break;
+                                }
+
+                                // Oppdatere siste verdi
+                                waveRadarLast = value;
+
+                                // Kan kun utføre beregninger når vi har funnet en topp og en bunn
+                                if (!double.IsNaN(waveRadarLastTop) &&
+                                    !double.IsNaN(waveRadarLastBottom))
+                                {
+                                    // Finne 0-nivå for bølgedata
+                                    double centerWaveHeight = waveRadarLastTop + ((waveRadarLastBottom - waveRadarLastTop) / 2);
+
+                                    // Resultat: bølgehøyde i forhold til 0-nivå
+                                    result = value - centerWaveHeight;
+                                }
+                            }
+                            break;
+
+                        ////////////////////////////////////////////////////////////////////////////////////////////////
                         /// Ingen kalkulasjoner
                         ////////////////////////////////////////////////////////////////////////////////////////////////
                         default:
@@ -1427,6 +1520,8 @@ namespace HMS_Server
         [Description("Knots to m/s")]
         KnotsToMS,
         [Description("m/s to knots")]
-        MSToKnots
+        MSToKnots,
+        [Description("Wave Radar")]
+        WaveRadar
     }
 }

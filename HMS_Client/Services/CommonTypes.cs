@@ -143,6 +143,9 @@ public enum ValueType
     SensorGyro = 31,
     SensorWind = 32,
 
+    // Database
+    Database = 33,
+
     // Ikke lagret i config fil
     // Dette er data som beregnes fra variablene over, dvs. fra sensor data
     PitchMax20m,

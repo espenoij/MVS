@@ -552,16 +552,16 @@ namespace HMS_Server
         private void SetDatabaseStatus(HMSDataCollection hmsInputData)
         {
             // Finne match i mottaker data listen
-            var dbStatus = hmsInputData.GetDataList().Where(x => x?.id == Constants.DatabaseStatusID);
+            var dbStatus = hmsInputData.GetData(ValueType.Database);
 
-            if (dbStatus.Count() > 0)
+            if (dbStatus != null)
             {
                 if (errorHandler.IsDatabaseError())
-                    dbStatus.First().status = DataStatus.TIMEOUT_ERROR;
+                    dbStatus.status = DataStatus.TIMEOUT_ERROR;
                 else
-                    dbStatus.First().status = DataStatus.OK;
+                    dbStatus.status = DataStatus.OK;
 
-                dbStatus.First().timestamp = DateTime.UtcNow;
+                dbStatus.timestamp = DateTime.UtcNow;
             }
         }
 

@@ -64,7 +64,7 @@
 
                         <Grid.RowDefinitions>
                             <RowDefinition
-                                Height="2*" />
+                                Height="3*" />
                             <RowDefinition
                                 Height="30" />
                             <RowDefinition
@@ -95,10 +95,12 @@
                                     Height="*" />
                                 <RowDefinition
                                     Height="*" />
+                                <RowDefinition
+                                    Height="*" />
                             </Grid.RowDefinitions>
 
                             <Viewbox
-                                Grid.Row="0"
+                                Grid.Row="1"
                                 StretchDirection="Both"
                                 Stretch="Uniform"
                                 HorizontalAlignment="Center">
@@ -109,7 +111,7 @@
                             </Viewbox>
 
                             <Viewbox
-                                Grid.Row="1"
+                                Grid.Row="2"
                                 StretchDirection="Both"
                                 Stretch="Uniform"
                                 HorizontalAlignment="Center">
@@ -355,7 +357,13 @@
                                     Axis="{Binding ElementName=chartPitchVerticalAxis20m}"
                                     Value="{Binding pitchChartAnnotationRedTopMin20m}"
                                     Stroke="{StaticResource ColorRed}"
-                                    StrokeThickness="3" />
+                                    StrokeThickness="2" />
+
+                                <telerik:CartesianGridLineAnnotation
+                                    Axis="{Binding ElementName=chartPitchVerticalAxis20m}"
+                                    Value="{Binding pitchChartAnnotationRedBottomMin20m}"
+                                    Stroke="{StaticResource ColorRed}"
+                                    StrokeThickness="2" />
 
                             </telerik:RadCartesianChart.Annotations>
 
@@ -401,7 +409,7 @@
                                     HorizontalAlignment="Left">
 
                                     <TextBlock
-                                        Text="Max Pitch U" />
+                                        Text="Max Pitch" />
 
                                 </Viewbox>
 
@@ -412,7 +420,7 @@
                                     HorizontalAlignment="Right">
 
                                     <TextBlock
-                                        Text="{Binding Path=pitchMaxUp20mString}"
+                                        Text="{Binding Path=pitchMaxUp20mString2}"
                                         FontSize="{StaticResource fontSizeData}" />
 
                                 </Viewbox>
@@ -431,24 +439,13 @@
                                 </Grid.ColumnDefinitions>
 
                                 <Viewbox
-                                    Grid.Column="0"
-                                    StretchDirection="Both"
-                                    Stretch="Uniform"
-                                    HorizontalAlignment="Left">
-
-                                    <TextBlock
-                                        Text="Max Pitch D" />
-
-                                </Viewbox>
-
-                                <Viewbox
                                     Grid.Column="1"
                                     StretchDirection="Both"
                                     Stretch="Uniform"
                                     HorizontalAlignment="Right">
 
                                     <TextBlock
-                                        Text="{Binding Path=pitchMaxDown20mString}"
+                                        Text="{Binding Path=pitchMaxDown20mString2}"
                                         FontSize="{StaticResource fontSizeData}" />
 
                                 </Viewbox>
@@ -673,7 +670,13 @@
                                     Axis="{Binding ElementName=chartRollVerticalAxis20m}"
                                     Value="{Binding rollChartAnnotationRedTopMin20m}"
                                     Stroke="{StaticResource ColorRed}"
-                                    StrokeThickness="3" />
+                                    StrokeThickness="2" />
+
+                                <telerik:CartesianGridLineAnnotation
+                                    Axis="{Binding ElementName=chartRollVerticalAxis20m}"
+                                    Value="{Binding rollChartAnnotationRedBottomMin20m}"
+                                    Stroke="{StaticResource ColorRed}"
+                                    StrokeThickness="2" />
 
                             </telerik:RadCartesianChart.Annotations>
 
@@ -719,7 +722,7 @@
                                     HorizontalAlignment="Left">
 
                                     <TextBlock
-                                        Text="Max Roll R" />
+                                        Text="Max Roll" />
 
                                 </Viewbox>
 
@@ -730,7 +733,7 @@
                                     HorizontalAlignment="Right">
 
                                     <TextBlock
-                                        Text="{Binding Path=rollMaxRight20mString}"
+                                        Text="{Binding Path=rollMaxRight20mString2}"
                                         FontSize="{StaticResource fontSizeData}" />
 
                                 </Viewbox>
@@ -749,25 +752,13 @@
                                 </Grid.ColumnDefinitions>
 
                                 <Viewbox
-                                    Grid.Column="0"
-                                    StretchDirection="Both"
-                                    Stretch="Uniform"
-                                    HorizontalAlignment="Left">
-
-                                    <TextBlock
-                                        Text="Max Roll L"
-                                        VerticalAlignment="Center" />
-
-                                </Viewbox>
-
-                                <Viewbox
                                     Grid.Column="1"
                                     StretchDirection="Both"
                                     Stretch="Uniform"
                                     HorizontalAlignment="Right">
 
                                     <TextBlock
-                                        Text="{Binding Path=rollMaxLeft20mString}"
+                                        Text="{Binding Path=rollMaxLeft20mString2}"
                                         FontSize="{StaticResource fontSizeData}" />
 
                                 </Viewbox>
@@ -979,7 +970,7 @@
                                     Axis="{Binding ElementName=chartInclinationVerticalAxis20m}"
                                     Value="{Binding inclinationChartAnnotationRedMin20m}"
                                     Stroke="{StaticResource ColorRed}"
-                                    StrokeThickness="3" />
+                                    StrokeThickness="2" />
 
                             </telerik:RadCartesianChart.Annotations>
 
@@ -1270,7 +1261,7 @@
                                     Axis="{Binding ElementName=chartSignificantHeaveRateVerticalAxis20m}"
                                     Value="{Binding significantHeaveRateChartAnnotationRedMin20m}"
                                     Stroke="{StaticResource ColorRed}"
-                                    StrokeThickness="3" />
+                                    StrokeThickness="2" />
 
                             </telerik:RadCartesianChart.Annotations>
 
@@ -1491,7 +1482,7 @@
 
                         <Grid.RowDefinitions>
                             <RowDefinition
-                                Height="2*" />
+                                Height="3*" />
                             <RowDefinition
                                 Height="30" />
                             <RowDefinition
@@ -1522,10 +1513,12 @@
                                     Height="*" />
                                 <RowDefinition
                                     Height="*" />
+                                <RowDefinition
+                                    Height="*" />
                             </Grid.RowDefinitions>
 
                             <Viewbox
-                                Grid.Row="0"
+                                Grid.Row="1"
                                 StretchDirection="Both"
                                 Stretch="Uniform"
                                 HorizontalAlignment="Center">
@@ -1536,7 +1529,7 @@
                             </Viewbox>
 
                             <Viewbox
-                                Grid.Row="1"
+                                Grid.Row="2"
                                 StretchDirection="Both"
                                 Stretch="Uniform"
                                 HorizontalAlignment="Center">
@@ -1771,7 +1764,13 @@
                                     Axis="{Binding ElementName=chartPitchVerticalAxis3h}"
                                     Value="{Binding pitchChartAnnotationRedTopMin3h}"
                                     Stroke="{StaticResource ColorRed}"
-                                    StrokeThickness="3" />
+                                    StrokeThickness="2" />
+
+                                <telerik:CartesianGridLineAnnotation
+                                    Axis="{Binding ElementName=chartPitchVerticalAxis3h}"
+                                    Value="{Binding pitchChartAnnotationRedBottomMin3h}"
+                                    Stroke="{StaticResource ColorRed}"
+                                    StrokeThickness="2" />
 
                             </telerik:RadCartesianChart.Annotations>
 
@@ -1817,7 +1816,7 @@
                                     HorizontalAlignment="Left">
 
                                     <TextBlock
-                                        Text="Max Pitch U" />
+                                        Text="Max Pitch" />
 
                                 </Viewbox>
 
@@ -1828,7 +1827,7 @@
                                     HorizontalAlignment="Right">
 
                                     <TextBlock
-                                        Text="{Binding Path=pitchMaxUp20mString}"
+                                        Text="{Binding Path=pitchMaxUp20mString2}"
                                         FontSize="{StaticResource fontSizeData}" />
 
                                 </Viewbox>
@@ -1847,24 +1846,13 @@
                                 </Grid.ColumnDefinitions>
 
                                 <Viewbox
-                                    Grid.Column="0"
-                                    StretchDirection="Both"
-                                    Stretch="Uniform"
-                                    HorizontalAlignment="Left">
-
-                                    <TextBlock
-                                        Text="Max Pitch D" />
-
-                                </Viewbox>
-
-                                <Viewbox
                                     Grid.Column="1"
                                     StretchDirection="Both"
                                     Stretch="Uniform"
                                     HorizontalAlignment="Right">
 
                                     <TextBlock
-                                        Text="{Binding Path=pitchMaxDown20mString}"
+                                        Text="{Binding Path=pitchMaxDown20mString2}"
                                         FontSize="{StaticResource fontSizeData}" />
 
                                 </Viewbox>
@@ -2082,7 +2070,13 @@
                                     Axis="{Binding ElementName=chartRollVerticalAxis3h}"
                                     Value="{Binding rollChartAnnotationRedTopMin3h}"
                                     Stroke="{StaticResource ColorRed}"
-                                    StrokeThickness="3" />
+                                    StrokeThickness="2" />
+
+                                <telerik:CartesianGridLineAnnotation
+                                    Axis="{Binding ElementName=chartRollVerticalAxis3h}"
+                                    Value="{Binding rollChartAnnotationRedBottomMin3h}"
+                                    Stroke="{StaticResource ColorRed}"
+                                    StrokeThickness="2" />
 
                             </telerik:RadCartesianChart.Annotations>
 
@@ -2128,7 +2122,7 @@
                                     HorizontalAlignment="Left">
 
                                     <TextBlock
-                                        Text="Max Roll R" />
+                                        Text="Max Roll" />
 
                                 </Viewbox>
 
@@ -2139,7 +2133,7 @@
                                     HorizontalAlignment="Right">
 
                                     <TextBlock
-                                        Text="{Binding Path=rollMaxRight20mString}"
+                                        Text="{Binding Path=rollMaxRight20mString2}"
                                         FontSize="{StaticResource fontSizeData}" />
 
                                 </Viewbox>
@@ -2158,25 +2152,13 @@
                                 </Grid.ColumnDefinitions>
 
                                 <Viewbox
-                                    Grid.Column="0"
-                                    StretchDirection="Both"
-                                    Stretch="Uniform"
-                                    HorizontalAlignment="Left">
-
-                                    <TextBlock
-                                        Text="Max Roll L"
-                                        VerticalAlignment="Center" />
-
-                                </Viewbox>
-
-                                <Viewbox
                                     Grid.Column="1"
                                     StretchDirection="Both"
                                     Stretch="Uniform"
                                     HorizontalAlignment="Right">
 
                                     <TextBlock
-                                        Text="{Binding Path=rollMaxLeft20mString}"
+                                        Text="{Binding Path=rollMaxLeft20mString2}"
                                         FontSize="{StaticResource fontSizeData}" />
 
                                 </Viewbox>
@@ -2380,7 +2362,7 @@
                                     Axis="{Binding ElementName=chartInclinationVerticalAxis3h}"
                                     Value="{Binding inclinationChartAnnotationRedMin3h}"
                                     Stroke="{StaticResource ColorRed}"
-                                    StrokeThickness="3" />
+                                    StrokeThickness="2" />
 
                             </telerik:RadCartesianChart.Annotations>
 
@@ -2663,7 +2645,7 @@
                                     Axis="{Binding ElementName=chartSignificantHeaveRateVerticalAxis3h}"
                                     Value="{Binding significantHeaveRateChartAnnotationRedMin3h}"
                                     Stroke="{StaticResource ColorRed}"
-                                    StrokeThickness="3" />
+                                    StrokeThickness="2" />
 
                             </telerik:RadCartesianChart.Annotations>
 
