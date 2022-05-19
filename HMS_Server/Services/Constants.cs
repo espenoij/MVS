@@ -201,10 +201,10 @@ class Constants
     public const double MSICorrectionRMin = 1;
     public const double WindCorrectionRMax = 2;
 
-    // Wind Samples per Transmission
+    // Wind Sensor Data Rate
     public const double WindSamplesPerTransmissionMin = 1;
-    public const double WindSamplesPerTransmissionMax = 240;
-    public const double WindSamplesPerTransmissionDefault = 4;
+    public const double WindSamplesPerTransmissionMax = 60;
+    public const double WindSamplesPerTransmissionDefault = 1;
 
     // Helicopter WSI Limits
     public const double HelicopterWSIMin = 1;

@@ -798,7 +798,7 @@ namespace HMS_Server
                 Constants.WindSamplesPerTransmissionDefault,
                 out double validatedInput);
 
-            adminSettingsVM.windSamplesPerTransmission = validatedInput;
+            adminSettingsVM.windSensorSampleRate = validatedInput;
         }
 
         private void tbRestrictedSectorFrom_LostFocus(object sender, RoutedEventArgs e)
