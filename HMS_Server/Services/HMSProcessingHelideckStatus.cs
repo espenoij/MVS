@@ -211,7 +211,7 @@ namespace HMS_Server
             // Sjekke først at vi har gyldige data
             if (hmsOutputData.GetData(ValueType.PitchMax20m)?.status != DataStatus.TIMEOUT_ERROR &&
                 hmsOutputData.GetData(ValueType.RollMax20m)?.status != DataStatus.TIMEOUT_ERROR &&
-                hmsOutputData.GetData(ValueType.HeaveAmplitudeMax20m)?.status != DataStatus.TIMEOUT_ERROR &&
+                hmsOutputData.GetData(ValueType.HeaveHeightMax20m)?.status != DataStatus.TIMEOUT_ERROR &&
                 hmsOutputData.GetData(ValueType.SignificantHeaveRateMax20m)?.status != DataStatus.TIMEOUT_ERROR)
             {
                 switch (status)
@@ -221,7 +221,7 @@ namespace HMS_Server
                         if (IsWithinLimits(ValueType.PitchMax20m) &&
                             IsWithinLimits(ValueType.RollMax20m) &&
                             IsWithinLimits(ValueType.InclinationMax20m) &&
-                            IsWithinLimits(ValueType.HeaveAmplitudeMax20m) &&
+                            IsWithinLimits(ValueType.HeaveHeightMax20m) &&
                             IsWithinLimits(ValueType.SignificantHeaveRate))
                         {
                             return HelideckStatusType.GREEN;
@@ -236,7 +236,7 @@ namespace HMS_Server
                         if (!IsWithinLimits(ValueType.PitchMax20m) ||
                             !IsWithinLimits(ValueType.RollMax20m) ||
                             !IsWithinLimits(ValueType.InclinationMax20m) ||
-                            !IsWithinLimits(ValueType.HeaveAmplitudeMax20m) ||
+                            !IsWithinLimits(ValueType.HeaveHeightMax20m) ||
                             (!IsWithinLimits(ValueType.SignificantHeaveRate) && hmsProcessingMotion.IsSHR2mMinAboveLimit()))
                         {
                             return HelideckStatusType.RED;
@@ -251,7 +251,7 @@ namespace HMS_Server
                         if (IsWithinLimits(ValueType.PitchMax20m) &&
                             IsWithinLimits(ValueType.RollMax20m) &&
                             IsWithinLimits(ValueType.InclinationMax20m) &&
-                            IsWithinLimits(ValueType.HeaveAmplitudeMax20m) &&
+                            IsWithinLimits(ValueType.HeaveHeightMax20m) &&
                             IsWithinLimits(ValueType.SignificantHeaveRate) && hmsProcessingMotion.IsSHR10mMeanBelowLimit())
                         {
                             return HelideckStatusType.GREEN;
@@ -313,8 +313,8 @@ namespace HMS_Server
                 case ValueType.InclinationMax20m:
                     return hmsOutputData.GetData(value)?.data <= motionLimits.GetLimit(LimitType.Inclination);
 
-                case ValueType.HeaveAmplitudeMax20m:
-                    return hmsOutputData.GetData(value)?.data <= motionLimits.GetLimit(LimitType.HeaveAmplitude);
+                case ValueType.HeaveHeightMax20m:
+                    return hmsOutputData.GetData(value)?.data <= motionLimits.GetLimit(LimitType.HeaveHeight);
 
                 case ValueType.SignificantHeaveRate:
                     // SHR skal gå i rød dersom den er PÅ ELLER OVER grensen

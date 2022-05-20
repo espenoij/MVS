@@ -19,14 +19,14 @@ namespace HMS_Client
         private RadObservableCollectionEx<HMSData> pitchBuffer20m = new RadObservableCollectionEx<HMSData>();
         private RadObservableCollectionEx<HMSData> rollBuffer20m = new RadObservableCollectionEx<HMSData>();      
         private RadObservableCollectionEx<HMSData> inclinationBuffer20m = new RadObservableCollectionEx<HMSData>();
-        private RadObservableCollectionEx<HMSData> heaveAmplitudeBuffer20m = new RadObservableCollectionEx<HMSData>();
+        private RadObservableCollectionEx<HMSData> heaveHeightBuffer20m = new RadObservableCollectionEx<HMSData>();
         private RadObservableCollectionEx<HMSData> significantHeaveRateBuffer20m = new RadObservableCollectionEx<HMSData>();
 
         // 3 timers buffer
         private RadObservableCollectionEx<HMSData> pitchBuffer3h = new RadObservableCollectionEx<HMSData>();
         private RadObservableCollectionEx<HMSData> rollBuffer3h = new RadObservableCollectionEx<HMSData>();
         private RadObservableCollectionEx<HMSData> inclinationBuffer3h = new RadObservableCollectionEx<HMSData>();
-        private RadObservableCollectionEx<HMSData> heaveAmplitudeBuffer3h = new RadObservableCollectionEx<HMSData>();
+        private RadObservableCollectionEx<HMSData> heaveHeightBuffer3h = new RadObservableCollectionEx<HMSData>();
         private RadObservableCollectionEx<HMSData> significantHeaveRateBuffer3h = new RadObservableCollectionEx<HMSData>();
 
         // 20 minutters grafer
@@ -39,7 +39,7 @@ namespace HMS_Client
         public RadObservableCollectionEx<HMSData> rollMaxRight20mList = new RadObservableCollectionEx<HMSData>();
 
         public RadObservableCollectionEx<HMSData> inclinationData20mList = new RadObservableCollectionEx<HMSData>();
-        public RadObservableCollectionEx<HMSData> heaveAmplitudeData20mList = new RadObservableCollectionEx<HMSData>();
+        public RadObservableCollectionEx<HMSData> heaveHeightData20mList = new RadObservableCollectionEx<HMSData>();
         public RadObservableCollectionEx<HMSData> significantHeaveRateData20mList = new RadObservableCollectionEx<HMSData>();
 
         // 3 timers grafer
@@ -52,14 +52,14 @@ namespace HMS_Client
         public RadObservableCollectionEx<HMSData> rollMaxRight3hList = new RadObservableCollectionEx<HMSData>();
 
         public RadObservableCollectionEx<HMSData> inclinationData3hList = new RadObservableCollectionEx<HMSData>();
-        public RadObservableCollectionEx<HMSData> heaveAmplitudeData3hList = new RadObservableCollectionEx<HMSData>();
+        public RadObservableCollectionEx<HMSData> heaveHeightData3hList = new RadObservableCollectionEx<HMSData>();
         public RadObservableCollectionEx<HMSData> significantHeaveRateData3hList = new RadObservableCollectionEx<HMSData>();
 
         // Motion Limits
         /////////////////////////////////////////////////////////////////////////////
         private HMSData motionLimitPitchRoll = new HMSData();
         private HMSData motionLimitInclination = new HMSData();
-        private HMSData motionLimitHeaveAmplitude = new HMSData();
+        private HMSData motionLimitHeaveHeight = new HMSData();
         private HMSData motionLimitSignificantHeaveRate = new HMSData();
 
         // Helideck Motion History
@@ -78,7 +78,7 @@ namespace HMS_Client
             InitPitchData();
             InitRollData();
             InitInclinationData();
-            InitHeaveAmplitudeData();
+            InitHeaveHeightData();
             InitSignificantHeaveData();
 
             // Init UI
@@ -132,10 +132,10 @@ namespace HMS_Client
                 if (sensorStatus.TimeoutCheck(inclinationMax20mData)) OnPropertyChanged(nameof(inclinationMax20mString));
                 sensorStatus.TimeoutCheck(inclinationMax3hData);
 
-                // Heave Amplitude
-                sensorStatus.TimeoutCheck(heaveAmplitudeData);
-                if (sensorStatus.TimeoutCheck(heaveAmplitudeMax20mData)) OnPropertyChanged(nameof(heaveAmplitudeMax20mString));
-                sensorStatus.TimeoutCheck(heaveAmplitudeMax3hData);
+                // Heave Height
+                sensorStatus.TimeoutCheck(heaveHeightData);
+                if (sensorStatus.TimeoutCheck(heaveHeightMax20mData)) OnPropertyChanged(nameof(heaveHeightMax20mString));
+                sensorStatus.TimeoutCheck(heaveHeightMax3hData);
 
                 // Significant Heave Rate
                 if (sensorStatus.TimeoutCheck(significantHeaveRateData)) OnPropertyChanged(nameof(significantHeaveRateString));
@@ -145,7 +145,7 @@ namespace HMS_Client
                 // Limits
                 sensorStatus.TimeoutCheck(motionLimitPitchRoll);
                 sensorStatus.TimeoutCheck(motionLimitInclination);
-                sensorStatus.TimeoutCheck(motionLimitHeaveAmplitude);
+                sensorStatus.TimeoutCheck(motionLimitHeaveHeight);
                 sensorStatus.TimeoutCheck(motionLimitSignificantHeaveRate);
 
                 if (adminSettingsVM.regulationStandard == RegulationStandard.NOROG)
@@ -154,13 +154,13 @@ namespace HMS_Client
                     GraphBuffer.Update(pitchData, pitchBuffer20m);
                     GraphBuffer.Update(rollData, rollBuffer20m);
                     GraphBuffer.Update(inclinationData, inclinationBuffer20m);
-                    GraphBuffer.Update(heaveAmplitudeData, heaveAmplitudeBuffer20m);
+                    GraphBuffer.Update(heaveHeightData, heaveHeightBuffer20m);
                     GraphBuffer.Update(significantHeaveRateData, significantHeaveRateBuffer20m);
 
                     GraphBuffer.Update(pitchData, pitchBuffer3h);
                     GraphBuffer.Update(rollData, rollBuffer3h);
                     GraphBuffer.Update(inclinationData, inclinationBuffer3h);
-                    GraphBuffer.Update(heaveAmplitudeData, heaveAmplitudeBuffer3h);
+                    GraphBuffer.Update(heaveHeightData, heaveHeightBuffer3h);
                     GraphBuffer.Update(significantHeaveRateData, significantHeaveRateBuffer3h);
                 }
                 else
@@ -226,14 +226,14 @@ namespace HMS_Client
                     GraphBuffer.Transfer(pitchBuffer20m, pitch20mList);
                     GraphBuffer.Transfer(rollBuffer20m, roll20mList);
                     GraphBuffer.Transfer(inclinationBuffer20m, inclinationData20mList);
-                    GraphBuffer.Transfer(heaveAmplitudeBuffer20m, heaveAmplitudeData20mList);
+                    GraphBuffer.Transfer(heaveHeightBuffer20m, heaveHeightData20mList);
                     GraphBuffer.Transfer(significantHeaveRateBuffer20m, significantHeaveRateData20mList);
 
                     // Fjerne gamle data fra chart data
                     GraphBuffer.RemoveOldData(pitch20mList, Constants.Minutes20 + Constants.ChartTimeCorrMin);
                     GraphBuffer.RemoveOldData(roll20mList, Constants.Minutes20 + Constants.ChartTimeCorrMin);
                     GraphBuffer.RemoveOldData(inclinationData20mList, Constants.Minutes20 + Constants.ChartTimeCorrMin);
-                    GraphBuffer.RemoveOldData(heaveAmplitudeData20mList, Constants.Minutes20 + Constants.ChartTimeCorrMin);
+                    GraphBuffer.RemoveOldData(heaveHeightData20mList, Constants.Minutes20 + Constants.ChartTimeCorrMin);
                     GraphBuffer.RemoveOldData(significantHeaveRateData20mList, Constants.Minutes20 + Constants.ChartTimeCorrMin);
 
                     // Oppdatere alignment datetime (nåtid) til alle chart (20m og 3h)
@@ -264,10 +264,10 @@ namespace HMS_Client
                 OnPropertyChanged(nameof(inclinationChartAnnotationRedMax20m));
                 OnPropertyChanged(nameof(inclinationChartAnnotationRedMin20m));
 
-                OnPropertyChanged(nameof(heaveAmplitudeChartAxisMax20m));
-                OnPropertyChanged(nameof(heaveAmplitudeChartAnnotationGreenMax20m));
-                OnPropertyChanged(nameof(heaveAmplitudeChartAnnotationRedMax20m));
-                OnPropertyChanged(nameof(heaveAmplitudeChartAnnotationRedMin20m));
+                OnPropertyChanged(nameof(heaveHeightChartAxisMax20m));
+                OnPropertyChanged(nameof(heaveHeightChartAnnotationGreenMax20m));
+                OnPropertyChanged(nameof(heaveHeightChartAnnotationRedMax20m));
+                OnPropertyChanged(nameof(heaveHeightChartAnnotationRedMin20m));
 
                 OnPropertyChanged(nameof(significantHeaveRateChartAxisMax20m));
                 OnPropertyChanged(nameof(significantHeaveRateChartAnnotationGreenMax20m));
@@ -292,14 +292,14 @@ namespace HMS_Client
                     GraphBuffer.Transfer(pitchBuffer3h, pitch3hList);
                     GraphBuffer.Transfer(rollBuffer3h, rollData3hList);
                     GraphBuffer.Transfer(inclinationBuffer3h, inclinationData3hList);
-                    GraphBuffer.Transfer(heaveAmplitudeBuffer3h, heaveAmplitudeData3hList);
+                    GraphBuffer.Transfer(heaveHeightBuffer3h, heaveHeightData3hList);
                     GraphBuffer.Transfer(significantHeaveRateBuffer3h, significantHeaveRateData3hList);
 
                     // Fjerne gamle data fra chart data
                     GraphBuffer.RemoveOldData(pitch3hList, Constants.Hours3 + Constants.ChartTimeCorrMin);
                     GraphBuffer.RemoveOldData(rollData3hList, Constants.Hours3 + Constants.ChartTimeCorrMin);
                     GraphBuffer.RemoveOldData(inclinationData3hList, Constants.Hours3 + Constants.ChartTimeCorrMin);
-                    GraphBuffer.RemoveOldData(heaveAmplitudeData3hList, Constants.Hours3 + Constants.ChartTimeCorrMin);
+                    GraphBuffer.RemoveOldData(heaveHeightData3hList, Constants.Hours3 + Constants.ChartTimeCorrMin);
                     GraphBuffer.RemoveOldData(significantHeaveRateData3hList, Constants.Hours3 + Constants.ChartTimeCorrMin);
 
                     // Oppdatere alignment datetime (nåtid) til alle chart (20m og 3h)
@@ -330,10 +330,10 @@ namespace HMS_Client
                 OnPropertyChanged(nameof(inclinationChartAnnotationRedMax3h));
                 OnPropertyChanged(nameof(inclinationChartAnnotationRedMin3h));
 
-                OnPropertyChanged(nameof(heaveAmplitudeChartAxisMax3h));
-                OnPropertyChanged(nameof(heaveAmplitudeChartAnnotationGreenMax3h));
-                OnPropertyChanged(nameof(heaveAmplitudeChartAnnotationRedMax3h));
-                OnPropertyChanged(nameof(heaveAmplitudeChartAnnotationRedMin3h));
+                OnPropertyChanged(nameof(heaveHeightChartAxisMax3h));
+                OnPropertyChanged(nameof(heaveHeightChartAnnotationGreenMax3h));
+                OnPropertyChanged(nameof(heaveHeightChartAnnotationRedMax3h));
+                OnPropertyChanged(nameof(heaveHeightChartAnnotationRedMin3h));
 
                 OnPropertyChanged(nameof(significantHeaveRateChartAxisMax3h));
                 OnPropertyChanged(nameof(significantHeaveRateChartAnnotationGreenMax3h));
@@ -364,9 +364,9 @@ namespace HMS_Client
             inclinationMax3hData = hmsDataCollection.GetData(ValueType.InclinationMax3h);
 
             // Heave
-            heaveAmplitudeData = hmsDataCollection.GetData(ValueType.HeaveAmplitude);
-            heaveAmplitudeMax20mData = hmsDataCollection.GetData(ValueType.HeaveAmplitudeMax20m);
-            heaveAmplitudeMax3hData = hmsDataCollection.GetData(ValueType.HeaveAmplitudeMax3h);
+            heaveHeightData = hmsDataCollection.GetData(ValueType.HeaveHeight);
+            heaveHeightMax20mData = hmsDataCollection.GetData(ValueType.HeaveHeightMax20m);
+            heaveHeightMax3hData = hmsDataCollection.GetData(ValueType.HeaveHeightMax3h);
             significantHeaveRateData = hmsDataCollection.GetData(ValueType.SignificantHeaveRate);
             significantHeaveRateMax20mData = hmsDataCollection.GetData(ValueType.SignificantHeaveRateMax20m);
             significantHeaveRateMax3hData = hmsDataCollection.GetData(ValueType.SignificantHeaveRateMax3h);
@@ -374,7 +374,7 @@ namespace HMS_Client
             // Motion Limits
             motionLimitPitchRoll = hmsDataCollection.GetData(ValueType.MotionLimitPitchRoll);
             motionLimitInclination = hmsDataCollection.GetData(ValueType.MotionLimitInclination);
-            motionLimitHeaveAmplitude = hmsDataCollection.GetData(ValueType.MotionLimitHeaveAmplitude);
+            motionLimitHeaveHeight = hmsDataCollection.GetData(ValueType.MotionLimitHeaveHeight);
             motionLimitSignificantHeaveRate = hmsDataCollection.GetData(ValueType.MotionLimitSignificantHeaveRate);
         }
 
@@ -394,11 +394,11 @@ namespace HMS_Client
                     else
                         return Constants.MotionLimitDefaultInclination;
 
-                case ValueType.MotionLimitHeaveAmplitude:
-                    if (motionLimitHeaveAmplitude != null)
-                        return motionLimitHeaveAmplitude.data;
+                case ValueType.MotionLimitHeaveHeight:
+                    if (motionLimitHeaveHeight != null)
+                        return motionLimitHeaveHeight.data;
                     else
-                        return Constants.MotionLimitDefaultHeaveAmplitude;
+                        return Constants.MotionLimitDefaultHeaveHeight;
 
                 case ValueType.MotionLimitSignificantHeaveRate:
                     if (motionLimitSignificantHeaveRate != null)
@@ -1068,20 +1068,20 @@ namespace HMS_Client
         }
 
         /////////////////////////////////////////////////////////////////////////////
-        // Heave Amplitude
+        // Heave Height
         /////////////////////////////////////////////////////////////////////////////
-        public void InitHeaveAmplitudeData()
+        public void InitHeaveHeightData()
         {
-            _heaveAmplitudeData = new HMSData();
-            _heaveAmplitudeMax20mData = new HMSData();
-            _heaveAmplitudeMax3hData = new HMSData();
+            _heaveHeightData = new HMSData();
+            _heaveHeightMax20mData = new HMSData();
+            _heaveHeightMax3hData = new HMSData();
 
             // Init av chart data
             if (adminSettingsVM.regulationStandard == RegulationStandard.CAP)
             {
                 for (double i = Constants.Minutes20 * -1000; i <= 0; i += Constants.GraphCullFrequency20m + 250)
                 {
-                    heaveAmplitudeData20mList.Add(new HMSData()
+                    heaveHeightData20mList.Add(new HMSData()
                     {
                         data = 0,
                         timestamp = DateTime.UtcNow.AddMilliseconds(i)
@@ -1090,7 +1090,7 @@ namespace HMS_Client
 
                 for (double i = Constants.Hours3 * -1000; i <= 0; i += Constants.GraphCullFrequency3h + 250)
                 {
-                    heaveAmplitudeData3hList.Add(new HMSData()
+                    heaveHeightData3hList.Add(new HMSData()
                     {
                         data = 0,
                         timestamp = DateTime.UtcNow.AddMilliseconds(i)
@@ -1101,7 +1101,7 @@ namespace HMS_Client
             {
                 for (int i = -Constants.Minutes20; i <= 0; i++)
                 {
-                    heaveAmplitudeData20mList.Add(new HMSData()
+                    heaveHeightData20mList.Add(new HMSData()
                     {
                         data = 0,
                         timestamp = DateTime.UtcNow.AddSeconds(i)
@@ -1110,7 +1110,7 @@ namespace HMS_Client
 
                 for (int i = -Constants.Hours3; i <= 0; i++)
                 {
-                    heaveAmplitudeData3hList.Add(new HMSData()
+                    heaveHeightData3hList.Add(new HMSData()
                     {
                         data = 0,
                         timestamp = DateTime.UtcNow.AddSeconds(i)
@@ -1119,50 +1119,50 @@ namespace HMS_Client
             }
         }
 
-        private HMSData _heaveAmplitudeData { get; set; }
-        public HMSData heaveAmplitudeData
+        private HMSData _heaveHeightData { get; set; }
+        public HMSData heaveHeightData
         {
             get
             {
-                return _heaveAmplitudeData;
+                return _heaveHeightData;
             }
             set
             {
                 if (value != null)
                 {
-                    _heaveAmplitudeData.Set(value);
+                    _heaveHeightData.Set(value);
                 }
             }
         }
 
-        private HMSData _heaveAmplitudeMax20mData { get; set; }
-        public HMSData heaveAmplitudeMax20mData
+        private HMSData _heaveHeightMax20mData { get; set; }
+        public HMSData heaveHeightMax20mData
         {
             get
             {
-                return _heaveAmplitudeMax20mData;
+                return _heaveHeightMax20mData;
             }
             set
             {
                 if (value != null)
                 {
-                    OnPropertyChanged(nameof(heaveAmplitudeMax20mString));
+                    OnPropertyChanged(nameof(heaveHeightMax20mString));
 
-                    _heaveAmplitudeMax20mData.Set(value);
+                    _heaveHeightMax20mData.Set(value);
                 }
             }
         }
 
-        public string heaveAmplitudeMax20mString
+        public string heaveHeightMax20mString
         {
             get
             {
-                if (heaveAmplitudeMax20mData != null)
+                if (heaveHeightMax20mData != null)
                 {
                     // Sjekke om data er gyldig
-                    if (heaveAmplitudeMax20mData.status == DataStatus.OK)
+                    if (heaveHeightMax20mData.status == DataStatus.OK)
                     {
-                        return string.Format("{0} m", heaveAmplitudeMax20mData.data.ToString("0.0"));
+                        return string.Format("{0} m", heaveHeightMax20mData.data.ToString("0.0"));
                     }
                     else
                     {
@@ -1176,18 +1176,18 @@ namespace HMS_Client
             }
         }
 
-        private HMSData _heaveAmplitudeMax3hData { get; set; }
-        public HMSData heaveAmplitudeMax3hData
+        private HMSData _heaveHeightMax3hData { get; set; }
+        public HMSData heaveHeightMax3hData
         {
             get
             {
-                return _heaveAmplitudeMax3hData;
+                return _heaveHeightMax3hData;
             }
             set
             {
                 if (value != null)
                 {
-                    _heaveAmplitudeMax3hData.Set(value);
+                    _heaveHeightMax3hData.Set(value);
                 }
             }
         }
@@ -1525,25 +1525,25 @@ namespace HMS_Client
             }
         }
 
-        public double heaveAmplitudeChartAxisMax20m
+        public double heaveHeightChartAxisMax20m
         {
             get
             {
-                if (heaveAmplitudeMax20mData?.data > GetMotionLimit(ValueType.MotionLimitHeaveAmplitude) + Constants.HeaveAmplitudeAxisMargin)
-                    return (double)((int)heaveAmplitudeMax20mData.data + Constants.HeaveAmplitudeAxisMargin);
+                if (heaveHeightMax20mData?.data > GetMotionLimit(ValueType.MotionLimitHeaveHeight) + Constants.HeaveHeightAxisMargin)
+                    return (double)((int)heaveHeightMax20mData.data + Constants.HeaveHeightAxisMargin);
                 else
-                    return GetMotionLimit(ValueType.MotionLimitHeaveAmplitude) + Constants.HeaveAmplitudeAxisMargin;
+                    return GetMotionLimit(ValueType.MotionLimitHeaveHeight) + Constants.HeaveHeightAxisMargin;
             }
         }
 
-        public double heaveAmplitudeChartAxisMax3h
+        public double heaveHeightChartAxisMax3h
         {
             get
             {
-                if (heaveAmplitudeMax3hData?.data > GetMotionLimit(ValueType.MotionLimitHeaveAmplitude) + Constants.HeaveAmplitudeAxisMargin)
-                    return (double)((int)heaveAmplitudeMax3hData.data + Constants.HeaveAmplitudeAxisMargin);
+                if (heaveHeightMax3hData?.data > GetMotionLimit(ValueType.MotionLimitHeaveHeight) + Constants.HeaveHeightAxisMargin)
+                    return (double)((int)heaveHeightMax3hData.data + Constants.HeaveHeightAxisMargin);
                 else
-                    return GetMotionLimit(ValueType.MotionLimitHeaveAmplitude) + Constants.HeaveAmplitudeAxisMargin;
+                    return GetMotionLimit(ValueType.MotionLimitHeaveHeight) + Constants.HeaveHeightAxisMargin;
             }
         }
 
@@ -1819,53 +1819,53 @@ namespace HMS_Client
             }
         }
 
-        // Heave Amplitude
+        // Heave Height
         /////////////////////////////////////////////////////////////////////////////
-        public double heaveAmplitudeChartAnnotationGreenMax20m
+        public double heaveHeightChartAnnotationGreenMax20m
         {
             get
             {
-                return GetMotionLimit(ValueType.MotionLimitHeaveAmplitude);
+                return GetMotionLimit(ValueType.MotionLimitHeaveHeight);
             }
         }
 
-        public double heaveAmplitudeChartAnnotationRedMax20m
+        public double heaveHeightChartAnnotationRedMax20m
         {
             get
             {
-                return heaveAmplitudeChartAxisMax20m;
+                return heaveHeightChartAxisMax20m;
             }
         }
 
-        public double heaveAmplitudeChartAnnotationRedMin20m
+        public double heaveHeightChartAnnotationRedMin20m
         {
             get
             {
-                return GetMotionLimit(ValueType.MotionLimitHeaveAmplitude);
+                return GetMotionLimit(ValueType.MotionLimitHeaveHeight);
             }
         }
 
-        public double heaveAmplitudeChartAnnotationGreenMax3h
+        public double heaveHeightChartAnnotationGreenMax3h
         {
             get
             {
-                return GetMotionLimit(ValueType.MotionLimitHeaveAmplitude);
+                return GetMotionLimit(ValueType.MotionLimitHeaveHeight);
             }
         }
 
-        public double heaveAmplitudeChartAnnotationRedMax3h
+        public double heaveHeightChartAnnotationRedMax3h
         {
             get
             {
-                return heaveAmplitudeChartAxisMax3h;
+                return heaveHeightChartAxisMax3h;
             }
         }
 
-        public double heaveAmplitudeChartAnnotationRedMin3h
+        public double heaveHeightChartAnnotationRedMin3h
         {
             get
             {
-                return GetMotionLimit(ValueType.MotionLimitHeaveAmplitude);
+                return GetMotionLimit(ValueType.MotionLimitHeaveHeight);
             }
         }
 

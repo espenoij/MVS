@@ -45,14 +45,14 @@ namespace HMS_Client
 
                 if (sensorStatus.TimeoutCheck(inclinationMax20mData)) OnPropertyChanged(nameof(inclinationMax20mString));
 
-                if (sensorStatus.TimeoutCheck(heaveAmplitudeMax20mData)) OnPropertyChanged(nameof(heaveAmplitudeMax20mString));
+                if (sensorStatus.TimeoutCheck(heaveHeightMax20mData)) OnPropertyChanged(nameof(heaveHeightMax20mString));
                 if (sensorStatus.TimeoutCheck(heavePeriodData)) OnPropertyChanged(nameof(heavePeriodString));
 
                 if (sensorStatus.TimeoutCheck(significantHeaveRateData)) OnPropertyChanged(nameof(significantHeaveRateString));
 
                 if (sensorStatus.TimeoutCheck(pitchRollLimit)) OnPropertyChanged(nameof(pitchRollLimitString));
                 if (sensorStatus.TimeoutCheck(inclinationLimit)) OnPropertyChanged(nameof(inclinationLimitString));
-                if (sensorStatus.TimeoutCheck(heaveAmplitudeLimit)) OnPropertyChanged(nameof(heaveAmplitudeLimitString));
+                if (sensorStatus.TimeoutCheck(heaveHeightLimit)) OnPropertyChanged(nameof(heaveHeightLimitString));
                 if (sensorStatus.TimeoutCheck(significantHeaveRateLimit)) OnPropertyChanged(nameof(significantHeaveRateLimitString));
             }
         }
@@ -75,7 +75,7 @@ namespace HMS_Client
             inclinationMax20mData = hmsDataList.GetData(ValueType.InclinationMax20m);
 
             // Heave
-            heaveAmplitudeMax20mData = hmsDataList.GetData(ValueType.HeaveAmplitudeMax20m);
+            heaveHeightMax20mData = hmsDataList.GetData(ValueType.HeaveHeightMax20m);
             heavePeriodData = hmsDataList.GetData(ValueType.HeavePeriodMean);
 
             // SHR
@@ -84,7 +84,7 @@ namespace HMS_Client
             // Limits
             pitchRollLimit = hmsDataList.GetData(ValueType.MotionLimitPitchRoll);
             inclinationLimit = hmsDataList.GetData(ValueType.MotionLimitInclination);
-            heaveAmplitudeLimit = hmsDataList.GetData(ValueType.MotionLimitHeaveAmplitude);
+            heaveHeightLimit = hmsDataList.GetData(ValueType.MotionLimitHeaveHeight);
             significantHeaveRateLimit = hmsDataList.GetData(ValueType.MotionLimitSignificantHeaveRate);
         }
 
@@ -95,7 +95,7 @@ namespace HMS_Client
         {
             _pitchRollLimit = new HMSData();
             _inclinationLimit = new HMSData();
-            _heaveAmplitudeLimit = new HMSData();
+            _heaveHeightLimit = new HMSData();
             _significantHeaveRateLimit = new HMSData();
         }
 
@@ -171,32 +171,32 @@ namespace HMS_Client
             }
         }
 
-        // Heave Amplitude Limit
-        private HMSData _heaveAmplitudeLimit { get; set; }
-        public HMSData heaveAmplitudeLimit
+        // Heave Height Limit
+        private HMSData _heaveHeightLimit { get; set; }
+        public HMSData heaveHeightLimit
         {
             get
             {
-                return _heaveAmplitudeLimit;
+                return _heaveHeightLimit;
             }
             set
             {
                 if (value != null)
                 {
-                    _heaveAmplitudeLimit.Set(value);
+                    _heaveHeightLimit.Set(value);
 
-                    OnPropertyChanged(nameof(heaveAmplitudeLimitString));
+                    OnPropertyChanged(nameof(heaveHeightLimitString));
                 }
             }
         }
-        public string heaveAmplitudeLimitString
+        public string heaveHeightLimitString
         {
             get
             {
-                if (_heaveAmplitudeLimit != null)
+                if (_heaveHeightLimit != null)
                 {
-                    if (_heaveAmplitudeLimit.status == DataStatus.OK)
-                        return string.Format("{0} m", _heaveAmplitudeLimit.data.ToString("0.0"));
+                    if (_heaveHeightLimit.status == DataStatus.OK)
+                        return string.Format("{0} m", _heaveHeightLimit.data.ToString("0.0"));
                     else
                         return Constants.NotAvailable;
                 }
@@ -585,41 +585,41 @@ namespace HMS_Client
         }
 
         /////////////////////////////////////////////////////////////////////////////
-        // Heave Amplitude
+        // Heave Height
         /////////////////////////////////////////////////////////////////////////////
         public void InitHeaveData()
         {
-            _heaveAmplitudeMax20mData = new HMSData();
+            _heaveHeightMax20mData = new HMSData();
         }
 
-        private HMSData _heaveAmplitudeMax20mData { get; set; }
-        public HMSData heaveAmplitudeMax20mData
+        private HMSData _heaveHeightMax20mData { get; set; }
+        public HMSData heaveHeightMax20mData
         {
             get
             {
-                return _heaveAmplitudeMax20mData;
+                return _heaveHeightMax20mData;
             }
             set
             {
                 if (value != null)
                 {
-                    _heaveAmplitudeMax20mData.Set(value);
+                    _heaveHeightMax20mData.Set(value);
 
-                    OnPropertyChanged(nameof(heaveAmplitudeMax20mString));
+                    OnPropertyChanged(nameof(heaveHeightMax20mString));
                 }
             }
         }
 
-        public string heaveAmplitudeMax20mString
+        public string heaveHeightMax20mString
         {
             get
             {
-                if (heaveAmplitudeMax20mData != null)
+                if (heaveHeightMax20mData != null)
                 {
                     // Sjekke om data er gyldig
-                    if (heaveAmplitudeMax20mData.status == DataStatus.OK)
+                    if (heaveHeightMax20mData.status == DataStatus.OK)
                     {
-                        return string.Format("{0} m", heaveAmplitudeMax20mData.data.ToString("0.0"));
+                        return string.Format("{0} m", heaveHeightMax20mData.data.ToString("0.0"));
                     }
                     else
                     {

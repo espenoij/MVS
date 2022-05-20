@@ -84,7 +84,7 @@ public enum LimitType
     PitchRoll,
     Inclination,
     SignificantHeaveRate,
-    HeaveAmplitude
+    HeaveHeight
 }
 
 public enum DataStatus
@@ -136,7 +136,7 @@ public enum ValueType
     AccelerationX = 26,
     AccelerationY = 27,
     AccelerationZ = 28,
-    WaveHeight = 29,
+    Wave = 29,
 
     // Database
     Database = 30,
@@ -157,9 +157,9 @@ public enum ValueType
     RollMax3h,
     RollMaxLeft20m,
     RollMaxRight20m,
-    HeaveAmplitude,
-    HeaveAmplitudeMax20m,
-    HeaveAmplitudeMax3h,
+    HeaveHeight,
+    HeaveHeightMax20m,
+    HeaveHeightMax3h,
     HeavePeriodMean,
     SignificantHeaveRate,
     SignificantHeaveRateMax20m,
@@ -202,13 +202,16 @@ public enum ValueType
     WindDirectionDelta,
     VesselHeadingDelta,
     HelicopterHeading,
+    WaveMax20m,
+    WaveMax3h,
+    WaveHeight,
     WaveHeightMax20m,
     WaveHeightMax3h,
 
     // Motion Limits
     MotionLimitPitchRoll,
     MotionLimitInclination,
-    MotionLimitHeaveAmplitude,
+    MotionLimitHeaveHeight,
     MotionLimitSignificantHeaveRate,
 
     // Diverse andre data

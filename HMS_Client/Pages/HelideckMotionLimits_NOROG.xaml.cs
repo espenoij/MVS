@@ -104,21 +104,21 @@ namespace HMS_Client
                     }
 
                     ///////////////////////////////////////////////////////////////////////////////////////////
-                    // Helideck Motion: Max Heave Amplitude
+                    // Helideck Motion: Max Heave Height
                     ///////////////////////////////////////////////////////////////////////////////////////////
-                    if (viewModel.heaveAmplitudeMax20mData?.status == DataStatus.OK)
+                    if (viewModel.heaveHeightMax20mData?.status == DataStatus.OK)
                     {
-                        if (viewModel.heaveAmplitudeMax20mData.limitStatus == LimitStatus.OK)
+                        if (viewModel.heaveHeightMax20mData.limitStatus == LimitStatus.OK)
                             // Blank bakgrunn
-                            gridHeaveAmplitude.ClearValue(Grid.BackgroundProperty);
+                            gridHeaveHeight.ClearValue(Grid.BackgroundProperty);
                         else
                             // Rød bakgrunn
-                            gridHeaveAmplitude.Background = (Brush)FindResource("ColorRed");
+                            gridHeaveHeight.Background = (Brush)FindResource("ColorRed");
                     }
                     else
                     {
                         // Blank bakgrunn
-                        gridHeaveAmplitude.ClearValue(Grid.BackgroundProperty);
+                        gridHeaveHeight.ClearValue(Grid.BackgroundProperty);
                     }
 
                     ///////////////////////////////////////////////////////////////////////////////////////////

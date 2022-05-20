@@ -39,20 +39,20 @@ namespace HMS_Server
         private double swhWaveBottom = double.NaN;
         private List<TimeData> swhDataList = new List<TimeData>();
 
-        // Time Max Amplitude
-        private double timeMaxAmplitudeMaxValue = 0;
-        private double timeMaxAmplitudeLast = double.NaN;
-        private WavePhase timeMaxAmplitudeWavePhase = WavePhase.Init;
-        private double timeMaxAmplitudeWaveTop = double.NaN;
-        private double timeMaxAmplitudeWaveBottom = double.NaN;
-        private List<TimeData> timeMaxAmplitudeDataList = new List<TimeData>();
+        // Time Max Wave Height
+        private double timeMaxWaveHeightMaxValue = 0;
+        private double timeMaxWaveHeightLast = double.NaN;
+        private WavePhase timeMaxWaveHeightWavePhase = WavePhase.Init;
+        private double timeMaxWaveHeightWaveTop = double.NaN;
+        private double timeMaxWaveHeightWaveBottom = double.NaN;
+        private List<TimeData> timeMaxWaveHeightDataList = new List<TimeData>();
 
-        // Amplitude
-        private double amplitudeLast = double.NaN;
-        private WavePhase amplitudeWavePhase = WavePhase.Init;
-        private double amplitudeWaveTop = double.NaN;
-        private double amplitudeWaveBottom = double.NaN;
-        private double amplitudeValue = 0;
+        // Wave Height
+        private double waveHeightLast = double.NaN;
+        private WavePhase waveHeightWavePhase = WavePhase.Init;
+        private double waveHeightWaveTop = double.NaN;
+        private double waveHeightWaveBottom = double.NaN;
+        private double waveHeightValue = 0;
 
         // Time Mean Period
         private double timeMeanPeriodTotal = 0;
@@ -604,7 +604,7 @@ namespace HMS_Server
 
                                             if (!double.IsNaN(swhWaveBottom))
                                             {
-                                                double amplitude = Math.Abs(swhWaveTop) + Math.Abs(swhWaveBottom);
+                                                double height = Math.Abs(swhWaveTop) + Math.Abs(swhWaveBottom);
 
                                                 // Legge inn bølgehøyde i data listen
                                                 int i = 0;
@@ -613,7 +613,7 @@ namespace HMS_Server
                                                 // Løpe gjennom listen med bølgehøyde data
                                                 while (!found && i < swhDataList.Count)
                                                 {
-                                                    if (amplitude < swhDataList[i].data)
+                                                    if (height < swhDataList[i].data)
                                                         found = true;
 
                                                     i++;
@@ -625,7 +625,7 @@ namespace HMS_Server
                                                     swhDataList.Insert(i,
                                                         new TimeData()
                                                         {
-                                                            data = amplitude,
+                                                            data = height,
                                                             timestamp = newTimeStamp
                                                         });
                                                 }
@@ -634,7 +634,7 @@ namespace HMS_Server
                                                 {
                                                     swhDataList.Add(new TimeData()
                                                         {
-                                                            data = amplitude,
+                                                            data = height,
                                                             timestamp = newTimeStamp
                                                         });
                                                 }
@@ -659,7 +659,7 @@ namespace HMS_Server
 
                                             if (!double.IsNaN(swhWaveTop))
                                             {
-                                                double amplitude = Math.Abs(swhWaveTop) + Math.Abs(swhWaveBottom);
+                                                double height = Math.Abs(swhWaveTop) + Math.Abs(swhWaveBottom);
 
                                                 // Legge inn bølgehøyde i data listen
                                                 int i = 0;
@@ -669,7 +669,7 @@ namespace HMS_Server
                                                 while (!found && i < swhDataList.Count)
                                                 {
                                                     // Finne neste hvor vi skal legge inn bølgen
-                                                    if (amplitude < swhDataList[i].data)
+                                                    if (height < swhDataList[i].data)
                                                         found = true;
 
                                                     i++;
@@ -681,7 +681,7 @@ namespace HMS_Server
                                                     swhDataList.Insert(i,
                                                         new TimeData()
                                                         {
-                                                            data = amplitude,
+                                                            data = height,
                                                             timestamp = newTimeStamp
                                                         });
                                                 }
@@ -690,7 +690,7 @@ namespace HMS_Server
                                                 {
                                                     swhDataList.Add(new TimeData()
                                                         {
-                                                            data = amplitude,
+                                                            data = height,
                                                             timestamp = newTimeStamp
                                                         });
                                                 }
@@ -755,33 +755,33 @@ namespace HMS_Server
                             break;
 
                         ////////////////////////////////////////////////////////////////////////////////////////////////
-                        /// Time Max Amplitude
+                        /// Time Max Height
                         ////////////////////////////////////////////////////////////////////////////////////////////////
                         /// Beskrivelse:
-                        /// Returnerer høyeste amplitude målt i et datasett innsamlet over en angitt tid.
+                        /// Returnerer høyeste height målt i et datasett innsamlet over en angitt tid.
                         /// 
                         /// Input:
                         /// Bølgehøyde data
                         /// 
                         /// Brukes til:
-                        /// Heave Amplitude Max
+                        /// Heave Height Max
                         /// 
-                        case CalculationType.TimeMaxAmplitude:
+                        case CalculationType.TimeMaxWaveHeight:
 
                             // Sjekke om string er numerisk
                             if (double.TryParse(newData, Constants.numberStyle, Constants.cultureInfo, out value))
                             {
-                                switch (timeMaxAmplitudeWavePhase)
+                                switch (timeMaxWaveHeightWavePhase)
                                 {
                                     // Init
                                     case WavePhase.Init:
-                                        if (!double.IsNaN(timeMaxAmplitudeLast))
+                                        if (!double.IsNaN(timeMaxWaveHeightLast))
                                         {
-                                            if (value > timeMaxAmplitudeLast)
-                                                timeMaxAmplitudeWavePhase = WavePhase.Ascending;
+                                            if (value > timeMaxWaveHeightLast)
+                                                timeMaxWaveHeightWavePhase = WavePhase.Ascending;
                                             else
-                                            if (value < timeMaxAmplitudeLast)
-                                                timeMaxAmplitudeWavePhase = WavePhase.Descending;
+                                            if (value < timeMaxWaveHeightLast)
+                                                timeMaxWaveHeightWavePhase = WavePhase.Descending;
                                         }
                                         break;
 
@@ -789,28 +789,28 @@ namespace HMS_Server
                                     case WavePhase.Ascending:
 
                                         // Dersom neste verdi er mindre enn forrige -> passert toppen av bølgen
-                                        if (value < timeMaxAmplitudeLast && value > 0)
+                                        if (value < timeMaxWaveHeightLast && value > 0)
                                         {
-                                            timeMaxAmplitudeWaveTop = timeMaxAmplitudeLast;
+                                            timeMaxWaveHeightWaveTop = timeMaxWaveHeightLast;
 
-                                            if (!double.IsNaN(timeMaxAmplitudeWaveBottom))
+                                            if (!double.IsNaN(timeMaxWaveHeightWaveBottom))
                                             {
-                                                double amplitude = Math.Abs(timeMaxAmplitudeWaveTop) + Math.Abs(timeMaxAmplitudeWaveBottom);
+                                                double height = Math.Abs(timeMaxWaveHeightWaveTop) + Math.Abs(timeMaxWaveHeightWaveBottom);
 
-                                                // Legge inn amplitude i data listen
-                                                timeMaxAmplitudeDataList.Add(new TimeData()
+                                                // Legge inn height i data listen
+                                                timeMaxWaveHeightDataList.Add(new TimeData()
                                                     {
-                                                        data = amplitude,
+                                                        data = height,
                                                         timestamp = newTimeStamp
                                                     });
 
-                                                // Ny max amplitude?
-                                                if (amplitude > timeMaxAmplitudeMaxValue)
-                                                    timeMaxAmplitudeMaxValue = amplitude;
+                                                // Ny max height?
+                                                if (height > timeMaxWaveHeightMaxValue)
+                                                    timeMaxWaveHeightMaxValue = height;
                                             }
 
                                             // På vei ned
-                                            timeMaxAmplitudeWavePhase = WavePhase.Descending;
+                                            timeMaxWaveHeightWavePhase = WavePhase.Descending;
                                         }
                                         break;
 
@@ -818,106 +818,106 @@ namespace HMS_Server
                                     case WavePhase.Descending:
 
                                         // Dersom neste verdi er større enn forrige -> passert bunnen av bølgen
-                                        if (value > timeMaxAmplitudeLast && value < 0)
+                                        if (value > timeMaxWaveHeightLast && value < 0)
                                         {
-                                            timeMaxAmplitudeWaveBottom = timeMaxAmplitudeLast;
+                                            timeMaxWaveHeightWaveBottom = timeMaxWaveHeightLast;
 
-                                            if (!double.IsNaN(timeMaxAmplitudeWaveTop))
+                                            if (!double.IsNaN(timeMaxWaveHeightWaveTop))
                                             {
-                                                double amplitude = Math.Abs(timeMaxAmplitudeWaveTop) + Math.Abs(timeMaxAmplitudeWaveBottom);
+                                                double height = Math.Abs(timeMaxWaveHeightWaveTop) + Math.Abs(timeMaxWaveHeightWaveBottom);
 
-                                                // Legge inn amplitude i data listen
-                                                timeMaxAmplitudeDataList.Add(new TimeData()
+                                                // Legge inn height i data listen
+                                                timeMaxWaveHeightDataList.Add(new TimeData()
                                                     {
-                                                        data = amplitude,
+                                                        data = height,
                                                         timestamp = newTimeStamp
                                                     });
 
-                                                // Ny max amplitude?
-                                                if (amplitude > timeMaxAmplitudeMaxValue)
-                                                    timeMaxAmplitudeMaxValue = amplitude;
+                                                // Ny max height?
+                                                if (height > timeMaxWaveHeightMaxValue)
+                                                    timeMaxWaveHeightMaxValue = height;
                                             }
 
                                             // På vei opp igjen
-                                            timeMaxAmplitudeWavePhase = WavePhase.Ascending;
+                                            timeMaxWaveHeightWavePhase = WavePhase.Ascending;
                                         }
                                         break;
                                 }
 
                                 // Oppdatere siste verdi
-                                timeMaxAmplitudeLast = value;
+                                timeMaxWaveHeightLast = value;
 
                                 // Sjekke om vi skal ta ut gamle verdier
                                 bool findNewMaxValue = false;
-                                while (timeMaxAmplitudeDataList.Count > 0 && timeMaxAmplitudeDataList[0]?.timestamp.AddSeconds(parameter) < newTimeStamp)
+                                while (timeMaxWaveHeightDataList.Count > 0 && timeMaxWaveHeightDataList[0]?.timestamp.AddSeconds(parameter) < newTimeStamp)
                                 {
                                     // Var dette gammel max verdi?
-                                    if (timeMaxAmplitudeDataList[0].data == timeMaxAmplitudeMaxValue)
+                                    if (timeMaxWaveHeightDataList[0].data == timeMaxWaveHeightMaxValue)
                                     {
                                         // Finne ny høyeste verdi
                                         findNewMaxValue = true;
                                     }
 
                                     // Fjerne fra verdiliste
-                                    timeMaxAmplitudeDataList.RemoveAt(0);
+                                    timeMaxWaveHeightDataList.RemoveAt(0);
                                 }
-                                //timeMaxAmplitudeDataList.TrimExcess();
+                                //timeMaxHeightDataList.TrimExcess();
 
                                 // Finne ny høyeste verdi
                                 if (findNewMaxValue)
                                 {
-                                    double oldMaxValue = timeMaxAmplitudeMaxValue;
-                                    timeMaxAmplitudeMaxValue = 0;
+                                    double oldMaxValue = timeMaxWaveHeightMaxValue;
+                                    timeMaxWaveHeightMaxValue = 0;
                                     bool foundNewMax = false;
 
-                                    for (int i = 0; i < timeMaxAmplitudeDataList.Count && !foundNewMax; i++)
+                                    for (int i = 0; i < timeMaxWaveHeightDataList.Count && !foundNewMax; i++)
                                     {
                                         // Kan avslutte søket dersom vi finner en verdi like den gamle max verdien (ingen er høyere)
-                                        if (timeMaxAmplitudeDataList[i]?.data == oldMaxValue)
+                                        if (timeMaxWaveHeightDataList[i]?.data == oldMaxValue)
                                         {
-                                            timeMaxAmplitudeMaxValue = oldMaxValue;
+                                            timeMaxWaveHeightMaxValue = oldMaxValue;
                                             foundNewMax = true;
                                         }
                                         else
                                         {
-                                            if (timeMaxAmplitudeDataList[i]?.data > timeMaxAmplitudeMaxValue)
-                                                timeMaxAmplitudeMaxValue = timeMaxAmplitudeDataList[i].data;
+                                            if (timeMaxWaveHeightDataList[i]?.data > timeMaxWaveHeightMaxValue)
+                                                timeMaxWaveHeightMaxValue = timeMaxWaveHeightDataList[i].data;
                                         }
                                     }
                                 }
 
-                                result = timeMaxAmplitudeMaxValue;
+                                result = timeMaxWaveHeightMaxValue;
                             }
                             break;
 
                         ////////////////////////////////////////////////////////////////////////////////////////////////
-                        /// Amplitude
+                        /// Height
                         ////////////////////////////////////////////////////////////////////////////////////////////////
                         /// Beskrivelse:
-                        /// Returnerer amplitude i oscilerende data
+                        /// Returnerer height i oscilerende data
                         /// 
                         /// Input:
                         /// Bølgehøyde data
                         /// 
                         /// Brukes til:
-                        /// Heave Amplitude
+                        /// Heave Height
                         /// 
-                        case CalculationType.Amplitude:
+                        case CalculationType.WaveHeight:
 
                             // Sjekke om string er numerisk
                             if (double.TryParse(newData, Constants.numberStyle, Constants.cultureInfo, out value))
                             {
-                                switch (amplitudeWavePhase)
+                                switch (waveHeightWavePhase)
                                 {
                                     // Init
                                     case WavePhase.Init:
-                                        if (!double.IsNaN(amplitudeLast))
+                                        if (!double.IsNaN(waveHeightLast))
                                         {
-                                            if (value > amplitudeLast)
-                                                amplitudeWavePhase = WavePhase.Ascending;
+                                            if (value > waveHeightLast)
+                                                waveHeightWavePhase = WavePhase.Ascending;
                                             else
-                                            if (value < amplitudeLast)
-                                                amplitudeWavePhase = WavePhase.Descending;
+                                            if (value < waveHeightLast)
+                                                waveHeightWavePhase = WavePhase.Descending;
                                         }
                                         break;
 
@@ -925,17 +925,17 @@ namespace HMS_Server
                                     case WavePhase.Ascending:
 
                                         // Dersom neste verdi er mindre enn forrige -> passert toppen av bølgen
-                                        if (value < amplitudeLast && value > 0)
+                                        if (value < waveHeightLast && value > 0)
                                         {
-                                            amplitudeWaveTop = amplitudeLast;
+                                            waveHeightWaveTop = waveHeightLast;
 
-                                            if (!double.IsNaN(amplitudeWaveBottom))
+                                            if (!double.IsNaN(waveHeightWaveBottom))
                                             {
-                                                amplitudeValue = Math.Abs(amplitudeWaveTop) + Math.Abs(amplitudeWaveBottom);
+                                                waveHeightValue = Math.Abs(waveHeightWaveTop) + Math.Abs(waveHeightWaveBottom);
                                             }
 
                                             // På vei ned
-                                            amplitudeWavePhase = WavePhase.Descending;
+                                            waveHeightWavePhase = WavePhase.Descending;
                                         }
                                         break;
 
@@ -943,25 +943,25 @@ namespace HMS_Server
                                     case WavePhase.Descending:
 
                                         // Dersom neste verdi er større enn forrige -> passert bunnen av bølgen
-                                        if (value > amplitudeLast && value < 0)
+                                        if (value > waveHeightLast && value < 0)
                                         {
-                                            amplitudeWaveBottom = amplitudeLast;
+                                            waveHeightWaveBottom = waveHeightLast;
 
-                                            if (!double.IsNaN(amplitudeWaveTop))
+                                            if (!double.IsNaN(waveHeightWaveTop))
                                             {
-                                                amplitudeValue = Math.Abs(amplitudeWaveTop) + Math.Abs(amplitudeWaveBottom);
+                                                waveHeightValue = Math.Abs(waveHeightWaveTop) + Math.Abs(waveHeightWaveBottom);
                                             }
 
                                             // På vei opp igjen
-                                            amplitudeWavePhase = WavePhase.Ascending;
+                                            waveHeightWavePhase = WavePhase.Ascending;
                                         }
                                         break;
                                 }
 
                                 // Oppdatere siste verdi
-                                amplitudeLast = value;
+                                waveHeightLast = value;
 
-                                result = amplitudeValue;
+                                result = waveHeightValue;
                             }
                             break;
 
@@ -1412,20 +1412,20 @@ namespace HMS_Server
             swhWaveBottom = double.NaN;
             swhDataList.Clear();
 
-            // Time Max Amplitude
-            timeMaxAmplitudeMaxValue = 0;
-            timeMaxAmplitudeLast = double.NaN;
-            timeMaxAmplitudeWavePhase = WavePhase.Init;
-            timeMaxAmplitudeWaveTop = double.NaN;
-            timeMaxAmplitudeWaveBottom = double.NaN;
-            timeMaxAmplitudeDataList.Clear();
+            // Time Max Height
+            timeMaxWaveHeightMaxValue = 0;
+            timeMaxWaveHeightLast = double.NaN;
+            timeMaxWaveHeightWavePhase = WavePhase.Init;
+            timeMaxWaveHeightWaveTop = double.NaN;
+            timeMaxWaveHeightWaveBottom = double.NaN;
+            timeMaxWaveHeightDataList.Clear();
 
-            // Amplitude
-            amplitudeLast = double.NaN;
-            amplitudeWavePhase = WavePhase.Init;
-            amplitudeWaveTop = double.NaN;
-            amplitudeWaveBottom = double.NaN;
-            amplitudeValue = 0;
+            // Height
+            waveHeightLast = double.NaN;
+            waveHeightWavePhase = WavePhase.Init;
+            waveHeightWaveTop = double.NaN;
+            waveHeightWaveBottom = double.NaN;
+            waveHeightValue = 0;
 
             // Time Mean Period
             timeMeanPeriodTotal = 0;
@@ -1499,16 +1499,16 @@ namespace HMS_Server
         TimeLowest,
         [Description("Time Max Absolute")]
         TimeMaxAbsolute,
-        [Description("Time Max Amplitude")]
-        TimeMaxAmplitude,
+        [Description("Time Max Height")]
+        TimeMaxWaveHeight,
         [Description("Time Mean Period")]
         TimeMeanPeriod,
         [Description("Rounding Decimals")]
         RoundingDecimals,
         [Description("Significant Heave Rate")]
         SignificantHeaveRate,
-        [Description("Amplitude")]
-        Amplitude,
+        [Description("Height")]
+        WaveHeight,
         //[Description("NWS Codes")]
         //NWSCodes,
         [Description("METAR Codes")]

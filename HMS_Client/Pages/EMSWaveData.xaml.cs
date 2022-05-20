@@ -32,6 +32,7 @@ namespace HMS_Client
         private void InitUI()
         {
             // Koble chart til data
+            waveChart.Series[0].ItemsSource = viewModel.wave20mList;
             waveHeightChart.Series[0].ItemsSource = viewModel.waveHeight20mList;
         }
     }

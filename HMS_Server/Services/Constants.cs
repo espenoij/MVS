@@ -231,7 +231,7 @@ class Constants
     public const double PitchAxisMargin = 1;
     public const double RollAxisMargin = 1;
     public const double InclinationAxisMargin = 0.5;
-    public const double HeaveAmplitudeAxisMargin = 1;
+    public const double HeaveHeightAxisMargin = 1;
     public const double SignificantHeaveRateAxisMargin = 0.3;
 
     // Heading
@@ -243,7 +243,7 @@ class Constants
     // Motion Limit Defaults
     public const double MotionLimitDefaultPitchRoll = 4;
     public const double MotionLimitDefaultInclination = 4.5;
-    public const double MotionLimitDefaultHeaveAmplitude = 5;
+    public const double MotionLimitDefaultHeaveHeight = 5;
     public const double MotionLimitDefaultSignificantHeaveRate = 1.3;
 
     // PDF A4

@@ -659,7 +659,7 @@
                             Grid.ColumnSpan="3"
                             VerticalAlignment="Bottom" />
 
-                        <!--HEAVE AMPLITUDE-->
+                        <!--HEAVE HEIGHT-->
                         <Grid
                             Grid.Column="0"
                             Grid.Row="3">
@@ -693,7 +693,7 @@
                                 HorizontalAlignment="Center">
 
                                 <TextBlock
-                                    Text="Amplitude" />
+                                    Text="Height" />
 
                             </Viewbox>
 
@@ -702,7 +702,7 @@
                         <telerik:RadCartesianChart
                             Grid.Column="1"
                             Grid.Row="3"
-                            Name="chartHeaveAmplitude20m">
+                            Name="chartHeaveHeight20m">
 
                             <telerik:LineSeries
                                 ZIndex="200"
@@ -730,8 +730,8 @@
 
                             <telerik:RadCartesianChart.VerticalAxis>
                                 <telerik:LinearAxis
-                                    x:Name="chartHeaveAmplitudeVerticalAxis20m"
-                                    Maximum="{Binding heaveAmplitudeChartAxisMax20m}"
+                                    x:Name="chartHeaveHeightVerticalAxis20m"
+                                    Maximum="{Binding heaveHeightChartAxisMax20m}"
                                     Minimum="0"
                                     FontSize="12"
                                     LabelInterval="2" />
@@ -744,16 +744,16 @@
 
                             <telerik:RadCartesianChart.Annotations>
                                 <telerik:CartesianPlotBandAnnotation
-                                    Axis="{Binding ElementName=chartHeaveAmplitudeVerticalAxis20m}"
-                                    From="{Binding heaveAmplitudeChartAnnotationGreenMax20m}"
+                                    Axis="{Binding ElementName=chartHeaveHeightVerticalAxis20m}"
+                                    From="{Binding heaveHeightChartAnnotationGreenMax20m}"
                                     To="0"
                                     StrokeThickness="1"
                                     Fill="{StaticResource ColorGreenTranslucent}" />
 
                                 <telerik:CartesianPlotBandAnnotation
-                                    Axis="{Binding ElementName=chartHeaveAmplitudeVerticalAxis20m}"
-                                    From="{Binding heaveAmplitudeChartAnnotationRedMax20m}"
-                                    To="{Binding heaveAmplitudeChartAnnotationRedMin20m}"
+                                    Axis="{Binding ElementName=chartHeaveHeightVerticalAxis20m}"
+                                    From="{Binding heaveHeightChartAnnotationRedMax20m}"
+                                    To="{Binding heaveHeightChartAnnotationRedMin20m}"
                                     StrokeThickness="1"
                                     Fill="{StaticResource ColorRedTranslucent}" />
                             </telerik:RadCartesianChart.Annotations>
@@ -788,7 +788,7 @@
                                     HorizontalAlignment="Left">
 
                                     <TextBlock
-                                        Text="Max Amplitude" />
+                                        Text="Max Height" />
 
                                 </Viewbox>
 
@@ -799,7 +799,7 @@
                                     HorizontalAlignment="Right">
 
                                     <TextBlock
-                                        Text="{Binding Path=heaveAmplitudeMax20mString}"
+                                        Text="{Binding Path=heaveHeightMax20mString}"
                                         FontSize="{StaticResource fontSizeData}" />
 
                                 </Viewbox>
@@ -1326,7 +1326,7 @@
                             Grid.ColumnSpan="3"
                             VerticalAlignment="Bottom" />
 
-                        <!--HEAVE AMPLITUDE-->
+                        <!--HEAVE HEIGHT-->
                         <Grid
                             Grid.Column="0"
                             Grid.Row="3">
@@ -1360,7 +1360,7 @@
                                 HorizontalAlignment="Center">
 
                                 <TextBlock
-                                    Text="Amplitude" />
+                                    Text="Height" />
 
                             </Viewbox>
 
@@ -1369,7 +1369,7 @@
                         <telerik:RadCartesianChart
                             Grid.Column="1"
                             Grid.Row="3"
-                            Name="chartHeaveAmplitude3h">
+                            Name="chartHeaveHeight3h">
 
                             <telerik:LineSeries
                                 ZIndex="200"
@@ -1397,8 +1397,8 @@
 
                             <telerik:RadCartesianChart.VerticalAxis>
                                 <telerik:LinearAxis
-                                    x:Name="chartHeaveAmplitudeVerticalAxis3h"
-                                    Maximum="{Binding heaveAmplitudeChartAxisMax3h}"
+                                    x:Name="chartHeaveHeightVerticalAxis3h"
+                                    Maximum="{Binding heaveHeightChartAxisMax3h}"
                                     Minimum="0"
                                     FontSize="12"
                                     LabelInterval="2" />
@@ -1411,16 +1411,16 @@
 
                             <telerik:RadCartesianChart.Annotations>
                                 <telerik:CartesianPlotBandAnnotation
-                                    Axis="{Binding ElementName=chartHeaveAmplitudeVerticalAxis3h}"
-                                    From="{Binding heaveAmplitudeChartAnnotationGreenMax3h}"
+                                    Axis="{Binding ElementName=chartHeaveHeightVerticalAxis3h}"
+                                    From="{Binding heaveHeightChartAnnotationGreenMax3h}"
                                     To="0"
                                     StrokeThickness="1"
                                     Fill="{StaticResource ColorGreenTranslucent}" />
 
                                 <telerik:CartesianPlotBandAnnotation
-                                    Axis="{Binding ElementName=chartHeaveAmplitudeVerticalAxis3h}"
-                                    From="{Binding heaveAmplitudeChartAnnotationRedMax3h}"
-                                    To="{Binding heaveAmplitudeChartAnnotationRedMin3h}"
+                                    Axis="{Binding ElementName=chartHeaveHeightVerticalAxis3h}"
+                                    From="{Binding heaveHeightChartAnnotationRedMax3h}"
+                                    To="{Binding heaveHeightChartAnnotationRedMin3h}"
                                     StrokeThickness="1"
                                     Fill="{StaticResource ColorRedTranslucent}" />
                             </telerik:RadCartesianChart.Annotations>
@@ -1435,11 +1435,11 @@
                             <DockPanel>
 
                                 <TextBlock
-                                    Text="Max Amplitude"
+                                    Text="Max Height"
                                     VerticalAlignment="Center" />
 
                                 <TextBlock
-                                    Text="{Binding heaveAmplitudeMax20mString}"
+                                    Text="{Binding heaveHeightMax20mString}"
                                     FontSize="{StaticResource fontSizeData}"
                                     VerticalAlignment="Center"
                                     HorizontalAlignment="Right" />
