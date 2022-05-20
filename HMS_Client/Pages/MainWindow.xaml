@@ -366,7 +366,17 @@
                         </Grid.ColumnDefinitions>
 
                         <Grid
-                            Grid.Column="2">
+                            Grid.Column="0">
+
+                            <!--Wave Data-->
+                            <uc:EMSWaveData
+                                Grid.Row="0"
+                                x:Name="ucEMSWaveData" />
+
+                        </Grid>
+
+                        <Grid
+                            Grid.Column="1">
 
                             <Grid.RowDefinitions>
                                 <RowDefinition

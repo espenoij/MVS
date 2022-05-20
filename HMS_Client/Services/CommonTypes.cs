@@ -136,15 +136,16 @@ public enum ValueType
     AccelerationX = 26,
     AccelerationY = 27,
     AccelerationZ = 28,
-
-    // Data Verification
-    TimeID = 29,
-    SensorMRU = 30,
-    SensorGyro = 31,
-    SensorWind = 32,
+    WaveHeight = 29,
 
     // Database
-    Database = 33,
+    Database = 30,
+
+    // Data Verification
+    TimeID = 31,
+    SensorMRU = 32,
+    SensorGyro = 33,
+    SensorWind = 34,
 
     // Ikke lagret i config fil
     // Dette er data som beregnes fra variablene over, dvs. fra sensor data
@@ -201,6 +202,8 @@ public enum ValueType
     WindDirectionDelta,
     VesselHeadingDelta,
     HelicopterHeading,
+    WaveHeightMax20m,
+    WaveHeightMax3h,
 
     // Motion Limits
     MotionLimitPitchRoll,

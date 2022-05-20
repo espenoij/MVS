@@ -6,6 +6,7 @@
     xmlns:d="http://schemas.microsoft.com/expression/blend/2008"
     xmlns:telerik="http://schemas.telerik.com/2008/xaml/presentation"
     xmlns:sys="clr-namespace:System;assembly=mscorlib"
+    xmlns:local="clr-namespace:HMS_Client"
     mc:Ignorable="d"
     d:DesignHeight="1280"
     d:DesignWidth="1920">
@@ -17,6 +18,9 @@
 
         <sys:Double
             x:Key="ChartHeight">200</sys:Double>
+
+        <local:LabelAbsConverter
+            x:Key="LabelAbsConverter" />
 
     </UserControl.Resources>
 
@@ -64,7 +68,7 @@
 
                         <Grid.RowDefinitions>
                             <RowDefinition
-                                Height="3*" />
+                                Height="2.5*" />
                             <RowDefinition
                                 Height="30" />
                             <RowDefinition
@@ -299,7 +303,7 @@
                             Grid.Column="1"
                             Grid.Row="2"
                             Name="chartPitch20m"
-                            Margin="0,32,0,0">
+                            Margin="-10,32,0,0">
 
                             <telerik:LineSeries
                                 ZIndex="200"
@@ -343,7 +347,49 @@
                                 <telerik:LinearAxis
                                     x:Name="chartPitchVerticalAxis20m"
                                     Maximum="{Binding pitchChartAxisMax20m}"
-                                    Minimum="{Binding pitchChartAxisMin20m}" />
+                                    Minimum="{Binding pitchChartAxisMin20m}" >
+
+                                    <telerik:LinearAxis.LabelTemplate>
+                                        <DataTemplate>
+                                            <TextBlock Text="{Binding Converter={StaticResource LabelAbsConverter}}" />
+                                        </DataTemplate>
+                                    </telerik:LinearAxis.LabelTemplate>
+
+                                    <telerik:LinearAxis.TitleTemplate>
+                                        <DataTemplate>
+                                            <DockPanel>
+                                                <Label
+                                                Content="U"
+                                                DockPanel.Dock="Right"
+                                                Margin="150,0,0,0">
+                                                    <Label.LayoutTransform>
+                                                        <TransformGroup>
+                                                            <RotateTransform
+                                                            Angle="-90" />
+                                                            <ScaleTransform
+                                                            ScaleX="-1"
+                                                            ScaleY="-1" />
+                                                        </TransformGroup>
+                                                    </Label.LayoutTransform>
+                                                </Label>
+                                                <Label
+                                                Content="D"
+                                                DockPanel.Dock="Left">
+                                                    <Label.LayoutTransform>
+                                                        <TransformGroup>
+                                                            <RotateTransform
+                                                            Angle="-90" />
+                                                            <ScaleTransform
+                                                            ScaleX="-1"
+                                                            ScaleY="-1" />
+                                                        </TransformGroup>
+                                                    </Label.LayoutTransform>
+                                                </Label>
+                                            </DockPanel>
+                                        </DataTemplate>
+                                    </telerik:LinearAxis.TitleTemplate>
+
+                                </telerik:LinearAxis>
                             </telerik:RadCartesianChart.VerticalAxis>
 
                             <telerik:RadCartesianChart.Grid>
@@ -613,7 +659,7 @@
                             Grid.Column="1"
                             Grid.Row="4"
                             Name="chartRoll20m"
-                            Margin="0,32,0,0">
+                            Margin="-10,32,0,0">
 
                             <telerik:LineSeries
                                 ZIndex="200"
@@ -656,7 +702,50 @@
                                 <telerik:LinearAxis
                                     x:Name="chartRollVerticalAxis20m"
                                     Maximum="{Binding rollChartAxisMax20m}"
-                                    Minimum="{Binding rollChartAxisMin20m}" />
+                                    Minimum="{Binding rollChartAxisMin20m}" >
+
+                                    <telerik:LinearAxis.LabelTemplate>
+                                        <DataTemplate>
+                                            <TextBlock Text="{Binding Converter={StaticResource LabelAbsConverter}}" />
+                                        </DataTemplate>
+                                    </telerik:LinearAxis.LabelTemplate>
+
+                                    <telerik:LinearAxis.TitleTemplate>
+                                        <DataTemplate>
+                                            <DockPanel>
+                                                <Label
+                                                Content="L"
+                                                DockPanel.Dock="Right"
+                                                Margin="150,0,0,0">
+                                                    <Label.LayoutTransform>
+                                                        <TransformGroup>
+                                                            <RotateTransform
+                                                            Angle="-90" />
+                                                            <ScaleTransform
+                                                            ScaleX="-1"
+                                                            ScaleY="-1" />
+                                                        </TransformGroup>
+                                                    </Label.LayoutTransform>
+                                                </Label>
+                                                <Label
+                                                Content="R"
+                                                DockPanel.Dock="Left">
+                                                    <Label.LayoutTransform>
+                                                        <TransformGroup>
+                                                            <RotateTransform
+                                                            Angle="-90" />
+                                                            <ScaleTransform
+                                                            ScaleX="-1"
+                                                            ScaleY="-1" />
+                                                        </TransformGroup>
+                                                    </Label.LayoutTransform>
+                                                </Label>
+                                            </DockPanel>
+                                        </DataTemplate>
+                                    </telerik:LinearAxis.TitleTemplate>
+
+                                </telerik:LinearAxis>
+
                             </telerik:RadCartesianChart.VerticalAxis>
 
                             <telerik:RadCartesianChart.Grid>
@@ -733,7 +822,7 @@
                                     HorizontalAlignment="Right">
 
                                     <TextBlock
-                                        Text="{Binding Path=rollMaxRight20mString2}"
+                                        Text="{Binding Path=rollMaxLeft20mString2}"
                                         FontSize="{StaticResource fontSizeData}" />
 
                                 </Viewbox>
@@ -758,7 +847,7 @@
                                     HorizontalAlignment="Right">
 
                                     <TextBlock
-                                        Text="{Binding Path=rollMaxLeft20mString2}"
+                                        Text="{Binding Path=rollMaxRight20mString2}"
                                         FontSize="{StaticResource fontSizeData}" />
 
                                 </Viewbox>
@@ -1482,7 +1571,7 @@
 
                         <Grid.RowDefinitions>
                             <RowDefinition
-                                Height="3*" />
+                                Height="2.5*" />
                             <RowDefinition
                                 Height="30" />
                             <RowDefinition
@@ -1707,7 +1796,7 @@
                             Grid.Column="1"
                             Grid.Row="2"
                             Name="chartPitch3h"
-                            Margin="0,32,0,0">
+                            Margin="-10,32,0,0">
 
                             <telerik:LineSeries
                                 ZIndex="200"
@@ -1750,7 +1839,50 @@
                                 <telerik:LinearAxis
                                     x:Name="chartPitchVerticalAxis3h"
                                     Maximum="{Binding pitchChartAxisMax3h}"
-                                    Minimum="{Binding pitchChartAxisMin3h}" />
+                                    Minimum="{Binding pitchChartAxisMin3h}" >
+
+                                    <telerik:LinearAxis.LabelTemplate>
+                                        <DataTemplate>
+                                            <TextBlock Text="{Binding Converter={StaticResource LabelAbsConverter}}" />
+                                        </DataTemplate>
+                                    </telerik:LinearAxis.LabelTemplate>
+
+                                    <telerik:LinearAxis.TitleTemplate>
+                                        <DataTemplate>
+                                            <DockPanel>
+                                                <Label
+                                                Content="U"
+                                                DockPanel.Dock="Right"
+                                                Margin="150,0,0,0">
+                                                    <Label.LayoutTransform>
+                                                        <TransformGroup>
+                                                            <RotateTransform
+                                                            Angle="-90" />
+                                                            <ScaleTransform
+                                                            ScaleX="-1"
+                                                            ScaleY="-1" />
+                                                        </TransformGroup>
+                                                    </Label.LayoutTransform>
+                                                </Label>
+                                                <Label
+                                                Content="D"
+                                                DockPanel.Dock="Left">
+                                                    <Label.LayoutTransform>
+                                                        <TransformGroup>
+                                                            <RotateTransform
+                                                            Angle="-90" />
+                                                            <ScaleTransform
+                                                            ScaleX="-1"
+                                                            ScaleY="-1" />
+                                                        </TransformGroup>
+                                                    </Label.LayoutTransform>
+                                                </Label>
+                                            </DockPanel>
+                                        </DataTemplate>
+                                    </telerik:LinearAxis.TitleTemplate>
+
+                                </telerik:LinearAxis>
+
                             </telerik:RadCartesianChart.VerticalAxis>
 
                             <telerik:RadCartesianChart.Grid>
@@ -2013,7 +2145,7 @@
                             Grid.Column="1"
                             Grid.Row="4"
                             Name="chartRoll3h"
-                            Margin="0,32,0,0">
+                            Margin="-10,32,0,0">
 
                             <telerik:LineSeries
                                 ZIndex="200"
@@ -2056,7 +2188,50 @@
                                 <telerik:LinearAxis
                                     x:Name="chartRollVerticalAxis3h"
                                     Maximum="{Binding rollChartAxisMax3h}"
-                                    Minimum="{Binding rollChartAxisMin3h}" />
+                                    Minimum="{Binding rollChartAxisMin3h}" >
+
+                                    <telerik:LinearAxis.LabelTemplate>
+                                        <DataTemplate>
+                                            <TextBlock Text="{Binding Converter={StaticResource LabelAbsConverter}}" />
+                                        </DataTemplate>
+                                    </telerik:LinearAxis.LabelTemplate>
+
+                                    <telerik:LinearAxis.TitleTemplate>
+                                        <DataTemplate>
+                                            <DockPanel>
+                                                <Label
+                                                Content="L"
+                                                DockPanel.Dock="Right"
+                                                Margin="150,0,0,0">
+                                                    <Label.LayoutTransform>
+                                                        <TransformGroup>
+                                                            <RotateTransform
+                                                            Angle="-90" />
+                                                            <ScaleTransform
+                                                            ScaleX="-1"
+                                                            ScaleY="-1" />
+                                                        </TransformGroup>
+                                                    </Label.LayoutTransform>
+                                                </Label>
+                                                <Label
+                                                Content="R"
+                                                DockPanel.Dock="Left">
+                                                    <Label.LayoutTransform>
+                                                        <TransformGroup>
+                                                            <RotateTransform
+                                                            Angle="-90" />
+                                                            <ScaleTransform
+                                                            ScaleX="-1"
+                                                            ScaleY="-1" />
+                                                        </TransformGroup>
+                                                    </Label.LayoutTransform>
+                                                </Label>
+                                            </DockPanel>
+                                        </DataTemplate>
+                                    </telerik:LinearAxis.TitleTemplate>
+
+                                </telerik:LinearAxis>
+
                             </telerik:RadCartesianChart.VerticalAxis>
 
                             <telerik:RadCartesianChart.Grid>
@@ -2133,7 +2308,7 @@
                                     HorizontalAlignment="Right">
 
                                     <TextBlock
-                                        Text="{Binding Path=rollMaxRight20mString2}"
+                                        Text="{Binding Path=rollMaxLeft20mString2}"
                                         FontSize="{StaticResource fontSizeData}" />
 
                                 </Viewbox>
@@ -2158,7 +2333,7 @@
                                     HorizontalAlignment="Right">
 
                                     <TextBlock
-                                        Text="{Binding Path=rollMaxLeft20mString2}"
+                                        Text="{Binding Path=rollMaxRight20mString2}"
                                         FontSize="{StaticResource fontSizeData}" />
 
                                 </Viewbox>

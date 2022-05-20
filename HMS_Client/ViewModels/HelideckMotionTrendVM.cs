@@ -1996,7 +1996,7 @@ namespace HMS_Client
         // Dersom navn ikke er satt brukes kallende medlem sitt navn
         protected void OnPropertyChanged([CallerMemberName] string name = null)
         {
-            PropertyChanged.Invoke(this, new PropertyChangedEventArgs(name));
+            PropertyChanged?.Invoke(this, new PropertyChangedEventArgs(name));
         }
 
     }

@@ -45,8 +45,8 @@ namespace HMS_Server
                 overrideMotionBuffer = false;
 
             // CAP: Restricted Sector
-            restrictedSectorFrom = config.Read(ConfigKey.RestrictedSectorFrom);
-            restrictedSectorTo = config.Read(ConfigKey.RestrictedSectorTo);
+            restrictedSectorFrom = config.ReadWithDefault(ConfigKey.RestrictedSectorFrom, Constants.HeadingDefault).ToString();
+            restrictedSectorTo = config.ReadWithDefault(ConfigKey.RestrictedSectorTo, Constants.HeadingDefault).ToString();
 
             // Helideck Category
             helideckCategory = (HelideckCategory)Enum.Parse(typeof(HelideckCategory), config.ReadWithDefault(ConfigKey.HelideckCategory, HelideckCategory.Category1.ToString()));

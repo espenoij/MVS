@@ -11,8 +11,12 @@
     d:DesignWidth="600">
     
     <UserControl.Resources>
+        
         <BooleanToVisibilityConverter
             x:Key="BoolToVisConverter" />
+
+        <local:LabelAbsConverter
+            x:Key="LabelAbsConverter" />
 
         <Style
             x:Key="VesselHeadingBackground"
@@ -325,6 +329,13 @@
                                 Minimum="-10"
                                 SmartLabelsMode="SmartStepAndRange"
                                 LabelInterval="2">
+
+                                <telerik:LinearAxis.LabelTemplate>
+                                    <DataTemplate>
+                                        <TextBlock Text="{Binding Converter={StaticResource LabelAbsConverter}}" />
+                                    </DataTemplate>
+                                </telerik:LinearAxis.LabelTemplate>
+                                
                                 <telerik:LinearAxis.TitleTemplate>
                                     <DataTemplate>
                                         <DockPanel
@@ -501,6 +512,13 @@
                                 Minimum="-30"
                                 SmartLabelsMode="SmartStepAndRange"
                                 LabelInterval="2">
+
+                                <telerik:LinearAxis.LabelTemplate>
+                                    <DataTemplate>
+                                        <TextBlock Text="{Binding Converter={StaticResource LabelAbsConverter}}" />
+                                    </DataTemplate>
+                                </telerik:LinearAxis.LabelTemplate>
+
                                 <telerik:LinearAxis.TitleTemplate>
                                     <DataTemplate>
                                         <DockPanel

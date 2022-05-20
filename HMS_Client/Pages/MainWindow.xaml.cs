@@ -59,6 +59,7 @@ namespace HMS_Client
         private WindHeadingVM windHeadingVM = new WindHeadingVM();
         private AdminSettingsVM adminSettingsVM = new AdminSettingsVM();
         private HelideckReportVM helideckReportVM = new HelideckReportVM();
+        private EMSWaveDataVM emsWaveDataVM = new EMSWaveDataVM();
 
         public MainWindow()
         {
@@ -113,6 +114,8 @@ namespace HMS_Client
             meteorologicalVM.Init(config, sensorStatus);
             sensorStatusVM.Init(sensorStatus, config, adminSettingsVM);
             windHeadingVM.Init(helideckStatusVM, config, sensorStatus, userInputsVM, adminSettingsVM);
+
+            emsWaveDataVM.Init(adminSettingsVM, config, sensorStatus);
 
             // XAML
             InitializeComponent();
@@ -283,6 +286,9 @@ namespace HMS_Client
             // EMS Page
             if (adminSettingsVM.enableEMS)
             {
+                // EMS Wave Data
+                ucEMSWaveData.Init(emsWaveDataVM, config);
+
                 // EMS Wind & Heading
                 ucEMSWindHeading.Init(windHeadingVM, userInputsVM, adminSettingsVM);
 
@@ -461,6 +467,10 @@ namespace HMS_Client
 
             // Helideck Report
             helideckReportVM.UpdateData(hmsDataCollection);
+
+            // EMS
+            if (adminSettingsVM.enableEMS)
+                emsWaveDataVM.UpdateData(hmsDataCollection);
         }
 
         private void btnScreenCapture_Click(object sender, RoutedEventArgs e)

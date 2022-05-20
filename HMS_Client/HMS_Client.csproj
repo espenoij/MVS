@@ -243,11 +243,15 @@
     <Compile Include="Dialogs\DialogClientDenied.xaml.cs">
       <DependentUpon>DialogClientDenied.xaml</DependentUpon>
     </Compile>
+    <Compile Include="Helpers\LabelAbsConverter.cs" />
     <Compile Include="Helpers\GraphBuffer.cs" />
     <Compile Include="Helpers\HMSCalc.cs" />
     <Compile Include="Helpers\TrendLine.cs" />
     <Compile Include="Pages\HelideckMotionHistory_NOROG.xaml.cs">
       <DependentUpon>HelideckMotionHistory_NOROG.xaml</DependentUpon>
+    </Compile>
+    <Compile Include="Pages\EMSWaveData.xaml.cs">
+      <DependentUpon>EMSWaveData.xaml</DependentUpon>
     </Compile>
     <Compile Include="Pages\Information_CAP.xaml.cs">
       <DependentUpon>Information_CAP.xaml</DependentUpon>
@@ -298,6 +302,7 @@
     <Compile Include="Pages\HelideckReport_NOROG.xaml.cs">
       <DependentUpon>HelideckReport_NOROG.xaml</DependentUpon>
     </Compile>
+    <Compile Include="ViewModels\EMSWaveDataVM.cs" />
     <Compile Include="ViewModels\HelideckReportVM.cs" />
     <Compile Include="Services\PdfExport\ConcreteRenderers\BorderRenderer.cs" />
     <Compile Include="Services\PdfExport\ConcreteRenderers\EllipseRenderer.cs" />
@@ -458,6 +463,10 @@
       <Generator>MSBuild:Compile</Generator>
     </Page>
     <Page Include="Pages\HelideckMotionHistory_NOROG.xaml">
+      <Generator>MSBuild:Compile</Generator>
+      <SubType>Designer</SubType>
+    </Page>
+    <Page Include="Pages\EMSWaveData.xaml">
       <Generator>MSBuild:Compile</Generator>
       <SubType>Designer</SubType>
     </Page>

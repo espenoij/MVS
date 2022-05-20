@@ -10,6 +10,7 @@
         private HMSProcessingWindHeading hmsProcessingWindHeading;
         private HMSProcessingMeteorological hmsProcessingMeteorological;
         private HMSProcessingHelideckStatus hmsProcessingHelideckStatus;
+        private HMSProcessingEMS hmsProcessingEMS;
         private HMSProcessingVerificationData hmsProcessingVerificationData;
 
         // Init data prosessering
@@ -28,6 +29,7 @@
             hmsProcessingWindHeading = new HMSProcessingWindHeading(hmsOutputData, adminSettingsVM, userInputs, errorHandler);
             hmsProcessingMeteorological = new HMSProcessingMeteorological(hmsOutputData, adminSettingsVM);
             hmsProcessingHelideckStatus = new HMSProcessingHelideckStatus(hmsOutputData, motionLimits, adminSettingsVM, userInputs, hmsProcessingMotion, hmsProcessingWindHeading);
+            hmsProcessingEMS = new HMSProcessingEMS(hmsOutputData, errorHandler);
 
             // Data Verification Module
             if (dataVerificationIsActive)
@@ -44,6 +46,7 @@
             hmsProcessingWindHeading.Update(hmsInputDataList);
             hmsProcessingMeteorological.Update(hmsInputDataList);
             hmsProcessingHelideckStatus.UpdateHelideckLight();
+            hmsProcessingEMS.Update(hmsInputDataList);
 
             // Data Verification Module
             if (dataVerificationIsActive)
