@@ -318,4 +318,7 @@ class Constants
 
     // Binary data delimiter
     public const string BinaryDataDelimiter = "-";
+
+    // EMS Page: Wave Chart max
+    public const int WaveChartIncrements = 10;
 }

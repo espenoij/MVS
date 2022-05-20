@@ -510,7 +510,7 @@
                             <telerik:LinearAxis
                                 Maximum="30"
                                 Minimum="-30"
-                                SmartLabelsMode="SmartStepAndRange"
+                                MajorStep="15"
                                 LabelInterval="2">
 
                                 <telerik:LinearAxis.LabelTemplate>

@@ -47,12 +47,14 @@ namespace HMS_Server
         private double timeMaxWaveHeightWaveBottom = double.NaN;
         private List<TimeData> timeMaxWaveHeightDataList = new List<TimeData>();
 
-        // Wave Height
-        private double waveHeightLast = double.NaN;
-        private WavePhase waveHeightWavePhase = WavePhase.Init;
-        private double waveHeightWaveTop = double.NaN;
-        private double waveHeightWaveBottom = double.NaN;
-        private double waveHeightValue = 0;
+        // Wave Mean Height
+        private double waveMeanHeightLast = double.NaN;
+        private WavePhase waveMeanHeightWavePhase = WavePhase.Init;
+        private double waveMeanHeightWaveTop = double.NaN;
+        private double waveMeanHeightWaveBottom = double.NaN;
+        private double waveMeanHeightValue = 0;
+        private double waveMeanHeightTotal = 0;
+        private List<TimeData> waveMeanHeightDataList = new List<TimeData>();
 
         // Time Mean Period
         private double timeMeanPeriodTotal = 0;
@@ -902,22 +904,24 @@ namespace HMS_Server
                         /// Brukes til:
                         /// Heave Height
                         /// 
-                        case CalculationType.WaveHeight:
+                        case CalculationType.MeanWaveHeight:
 
                             // Sjekke om string er numerisk
                             if (double.TryParse(newData, Constants.numberStyle, Constants.cultureInfo, out value))
                             {
-                                switch (waveHeightWavePhase)
+                                bool newWaveHeightValue = false;
+
+                                switch (waveMeanHeightWavePhase)
                                 {
                                     // Init
                                     case WavePhase.Init:
-                                        if (!double.IsNaN(waveHeightLast))
+                                        if (!double.IsNaN(waveMeanHeightLast))
                                         {
-                                            if (value > waveHeightLast)
-                                                waveHeightWavePhase = WavePhase.Ascending;
+                                            if (value > waveMeanHeightLast)
+                                                waveMeanHeightWavePhase = WavePhase.Ascending;
                                             else
-                                            if (value < waveHeightLast)
-                                                waveHeightWavePhase = WavePhase.Descending;
+                                            if (value < waveMeanHeightLast)
+                                                waveMeanHeightWavePhase = WavePhase.Descending;
                                         }
                                         break;
 
@@ -925,17 +929,18 @@ namespace HMS_Server
                                     case WavePhase.Ascending:
 
                                         // Dersom neste verdi er mindre enn forrige -> passert toppen av bølgen
-                                        if (value < waveHeightLast && value > 0)
+                                        if (value < waveMeanHeightLast && value > 0)
                                         {
-                                            waveHeightWaveTop = waveHeightLast;
+                                            waveMeanHeightWaveTop = waveMeanHeightLast;
 
-                                            if (!double.IsNaN(waveHeightWaveBottom))
+                                            if (!double.IsNaN(waveMeanHeightWaveBottom))
                                             {
-                                                waveHeightValue = Math.Abs(waveHeightWaveTop) + Math.Abs(waveHeightWaveBottom);
+                                                waveMeanHeightValue = Math.Abs(waveMeanHeightWaveTop) + Math.Abs(waveMeanHeightWaveBottom);
+                                                newWaveHeightValue = true;
                                             }
 
                                             // På vei ned
-                                            waveHeightWavePhase = WavePhase.Descending;
+                                            waveMeanHeightWavePhase = WavePhase.Descending;
                                         }
                                         break;
 
@@ -943,25 +948,53 @@ namespace HMS_Server
                                     case WavePhase.Descending:
 
                                         // Dersom neste verdi er større enn forrige -> passert bunnen av bølgen
-                                        if (value > waveHeightLast && value < 0)
+                                        if (value > waveMeanHeightLast && value < 0)
                                         {
-                                            waveHeightWaveBottom = waveHeightLast;
+                                            waveMeanHeightWaveBottom = waveMeanHeightLast;
 
-                                            if (!double.IsNaN(waveHeightWaveTop))
+                                            if (!double.IsNaN(waveMeanHeightWaveTop))
                                             {
-                                                waveHeightValue = Math.Abs(waveHeightWaveTop) + Math.Abs(waveHeightWaveBottom);
+                                                waveMeanHeightValue = Math.Abs(waveMeanHeightWaveTop) + Math.Abs(waveMeanHeightWaveBottom);
+                                                newWaveHeightValue = true;
                                             }
 
                                             // På vei opp igjen
-                                            waveHeightWavePhase = WavePhase.Ascending;
+                                            waveMeanHeightWavePhase = WavePhase.Ascending;
                                         }
                                         break;
                                 }
 
                                 // Oppdatere siste verdi
-                                waveHeightLast = value;
+                                waveMeanHeightLast = value;
 
-                                result = waveHeightValue;
+                                // Ny bølgehøyde funnet?
+                                if (newWaveHeightValue)
+                                {
+                                    // Legge inn periode i data listen
+                                    waveMeanHeightDataList.Add(new TimeData()
+                                    {
+                                        data = waveMeanHeightValue,
+                                        timestamp = newTimeStamp
+                                    });
+
+                                    waveMeanHeightTotal += waveMeanHeightValue;
+                                }
+
+                                // Sjekke om vi skal ta ut gamle verdier
+                                while (waveMeanHeightDataList.Count > 0 && waveMeanHeightDataList[0]?.timestamp.AddSeconds(parameter) < newTimeStamp)
+                                {
+                                    // Trekke fra data fra gammel periode
+                                    waveMeanHeightTotal -= waveMeanHeightDataList[0].data;
+
+                                    // Fjerne fra verdiliste
+                                    waveMeanHeightDataList.RemoveAt(0);
+                                }
+
+                                // Finne gjennomsnitt verdi
+                                if (waveMeanHeightDataList.Count > 0)
+                                    result = waveMeanHeightTotal / (double)waveMeanHeightDataList.Count;
+                                else
+                                    return 0;
                             }
                             break;
 
@@ -1421,11 +1454,11 @@ namespace HMS_Server
             timeMaxWaveHeightDataList.Clear();
 
             // Height
-            waveHeightLast = double.NaN;
-            waveHeightWavePhase = WavePhase.Init;
-            waveHeightWaveTop = double.NaN;
-            waveHeightWaveBottom = double.NaN;
-            waveHeightValue = 0;
+            waveMeanHeightLast = double.NaN;
+            waveMeanHeightWavePhase = WavePhase.Init;
+            waveMeanHeightWaveTop = double.NaN;
+            waveMeanHeightWaveBottom = double.NaN;
+            waveMeanHeightValue = 0;
 
             // Time Mean Period
             timeMeanPeriodTotal = 0;
@@ -1508,7 +1541,7 @@ namespace HMS_Server
         [Description("Significant Heave Rate")]
         SignificantHeaveRate,
         [Description("Height")]
-        WaveHeight,
+        MeanWaveHeight,
         //[Description("NWS Codes")]
         //NWSCodes,
         [Description("METAR Codes")]

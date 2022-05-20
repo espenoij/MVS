@@ -207,6 +207,9 @@ public enum ValueType
     WaveHeight,
     WaveHeightMax20m,
     WaveHeightMax3h,
+    WavePeriod,
+    WavePeriodMax20m,
+    WavePeriodMax3h,
 
     // Motion Limits
     MotionLimitPitchRoll,

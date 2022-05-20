@@ -6,489 +6,462 @@
     xmlns:d="http://schemas.microsoft.com/expression/blend/2008"
     xmlns:telerik="http://schemas.telerik.com/2008/xaml/presentation"
     mc:Ignorable="d"
-    d:DesignHeight="600"
-    d:DesignWidth="710">
+    d:DesignHeight="1200"
+    d:DesignWidth="1600">
 
-    <Grid>
+    <!--SEA STATE-->
+    <telerik:GroupBox
+        Header="SEA STATE"
+        Margin="8">
 
-        <!--SEA STATE-->
-        <telerik:GroupBox
-            Header="SEA STATE"
-            Margin="8">
+        <telerik:RadTabControl
+            Margin="8"
+            HeaderBackground="{StaticResource ColorHorizontalBarBackground}">
 
-            <telerik:RadTabControl
-                Margin="8"
-                HeaderBackground="{StaticResource ColorHorizontalBarBackground}">
+            <telerik:RadTabItem
+                MaxHeight="{StaticResource tabBarHeight}">
+                
+                <telerik:RadTabItem.Header>
+                    <StackPanel
+                        Orientation="Horizontal">
+                        <Image
+                            Width="24"
+                            Source="..\Icons\outline_schedule_white_48dp.png" />
+                        <TextBlock
+                            Foreground="White"
+                            FontSize="{StaticResource fontSizeTab}"
+                            Text="20-minutes"
+                            Margin="8,4,0,0" />
+                    </StackPanel>
+                </telerik:RadTabItem.Header>
 
-                <telerik:RadTabItem
-                    MaxHeight="{StaticResource tabBarHeight}">
-                    <telerik:RadTabItem.Header>
-                        <StackPanel
-                            Orientation="Horizontal">
-                            <Image
-                                Width="24"
-                                Source="..\Icons\outline_schedule_white_48dp.png" />
-                            <TextBlock
-                                Foreground="White"
-                                FontSize="{StaticResource fontSizeTab}"
-                                Text="20-minutes"
-                                Margin="8,4,0,0" />
-                        </StackPanel>
-                    </telerik:RadTabItem.Header>
+                <Grid
+                    Margin="8">
 
+                    <Grid.ColumnDefinitions>
+                        <ColumnDefinition
+                            Width="4*" />
+                        <ColumnDefinition
+                            Width="30*" />
+                        <ColumnDefinition
+                            Width="7*" />
+                    </Grid.ColumnDefinitions>
+
+                    <Grid.RowDefinitions>
+                        <RowDefinition
+                            Height="*" />
+                        <RowDefinition
+                            Height="*" />
+                        <RowDefinition
+                            Height="*" />
+                        <RowDefinition
+                            Height="*" />
+                        <RowDefinition
+                            Height="*" />
+                    </Grid.RowDefinitions>
+
+                    <!--WAVES-->
                     <Grid
-                        Margin="8">
-
-                        <Grid.ColumnDefinitions>
-                            <ColumnDefinition
-                                Width="4*" />
-                            <ColumnDefinition
-                                Width="30*" />
-                            <ColumnDefinition
-                                Width="7*" />
-                        </Grid.ColumnDefinitions>
+                        Grid.Column="0"
+                        Grid.Row="0">
 
                         <Grid.RowDefinitions>
                             <RowDefinition
-                                Height="*" />
+                                Height="3*" />
                             <RowDefinition
                                 Height="*" />
                             <RowDefinition
-                                Height="*" />
-                            <RowDefinition
-                                Height="*" />
-                            <RowDefinition
-                                Height="*" />
+                                Height="3*" />
                         </Grid.RowDefinitions>
 
-                        <!--WAVES-->
-                        <Grid
-                            Grid.Column="0"
-                            Grid.Row="0">
 
-                            <Grid.RowDefinitions>
-                                <RowDefinition
-                                    Height="3*" />
-                                <RowDefinition
-                                    Height="*" />
-                                <RowDefinition
-                                    Height="3*" />
-                            </Grid.RowDefinitions>
+                        <Viewbox
+                            Grid.Row="1"
+                            StretchDirection="Both"
+                            Stretch="Uniform"
+                            HorizontalAlignment="Center">
 
+                            <TextBlock
+                                Text="Waves" />
 
-                            <Viewbox
-                                Grid.Row="1"
-                                StretchDirection="Both"
-                                Stretch="Uniform"
-                                HorizontalAlignment="Center">
+                        </Viewbox>
 
-                                <TextBlock
-                                    Text="Waves" />
-
-                            </Viewbox>
-
-                        </Grid>
+                    </Grid>
                         
-                        <!--20m: WAVES-->
-                        <telerik:RadCartesianChart
-                        Grid.Column="1"
-                        Grid.Row="0"
-                        Name="waveChart">
+                    <!--20m: WAVES-->
+                    <telerik:RadCartesianChart
+                    Grid.Column="1"
+                    Grid.Row="0"
+                    Name="waveChart"
+                        Margin="0,16">
 
-                            <telerik:LineSeries
-                            ZIndex="200"
-                            Stroke="{StaticResource ColorGraphLine}"
-                            CategoryBinding="timestamp"
-                            ValueBinding="graphData">
+                        <telerik:LineSeries
+                        ZIndex="200"
+                        Stroke="{StaticResource ColorWaveLine}"
+                        CategoryBinding="timestamp"
+                        ValueBinding="graphData">
 
-                                <telerik:LineSeries.RenderOptions>
-                                    <telerik:XamlRenderOptions
-                                    DefaultVisualsRenderMode="Batch" />
-                                </telerik:LineSeries.RenderOptions>
+                            <telerik:LineSeries.RenderOptions>
+                                <telerik:XamlRenderOptions
+                                DefaultVisualsRenderMode="Batch" />
+                            </telerik:LineSeries.RenderOptions>
 
-                            </telerik:LineSeries>
+                        </telerik:LineSeries>
 
-                            <telerik:RadCartesianChart.HorizontalAxis>
-                                <telerik:DateTimeContinuousAxis
-                                MajorStepUnit="Minute"
-                                MajorStep="5"
-                                ShowLabels="False"
-                                PlotMode="OnTicks"     
-                                TickOrigin="{Binding alignmentTime}"
-                                Minimum="{Binding alignmentTimeMin}"
-                                Maximum="{Binding alignmentTimeMax}" />
-                            </telerik:RadCartesianChart.HorizontalAxis>
+                        <telerik:RadCartesianChart.HorizontalAxis>
+                            <telerik:DateTimeContinuousAxis
+                            MajorStepUnit="Minute"
+                            MajorStep="5"
+                            ShowLabels="False"
+                            PlotMode="OnTicks"     
+                            TickOrigin="{Binding alignmentTime}"
+                            Minimum="{Binding alignmentTimeMin}"
+                            Maximum="{Binding alignmentTimeMax}" />
+                        </telerik:RadCartesianChart.HorizontalAxis>
 
-                            <telerik:RadCartesianChart.VerticalAxis>
-                                <telerik:LinearAxis
-                                Maximum="5"
-                                Minimum="-5"
-                                SmartLabelsMode="SmartStepAndRange"
-                                LabelInterval="2"/>
-                            </telerik:RadCartesianChart.VerticalAxis>
+                        <telerik:RadCartesianChart.VerticalAxis>
+                            <telerik:LinearAxis
+                                Maximum="{Binding waveChartAxisMax20m}"
+                                Minimum="{Binding waveChartAxisMin20m}"
+                                MajorStep="2"
+                                LabelInterval="1"/>
+                        </telerik:RadCartesianChart.VerticalAxis>
 
-                            <telerik:RadCartesianChart.Grid>
-                                <telerik:CartesianChartGrid
-                                MajorLinesVisibility="XY"
-                                ZIndex="250"/>
-                            </telerik:RadCartesianChart.Grid>
+                        <telerik:RadCartesianChart.Grid>
+                            <telerik:CartesianChartGrid
+                            MajorLinesVisibility="XY"
+                            ZIndex="250"/>
+                        </telerik:RadCartesianChart.Grid>
 
-                        </telerik:RadCartesianChart>
+                    </telerik:RadCartesianChart>
 
-                        <Separator
-                            Grid.Column="0"
+                    <Separator
+                        Grid.Column="0"
+                        Grid.Row="2"
+                        Grid.ColumnSpan="3"
+                        VerticalAlignment="Bottom" />
+
+                    <!--20m: WAVE HEIGHT-->
+                    <Grid
+                        Grid.Column="0"
+                        Grid.Row="1">
+
+                        <Grid.RowDefinitions>
+                            <RowDefinition
+                                Height="2*" />
+                            <RowDefinition
+                                Height="*" />
+                            <RowDefinition
+                                Height="*" />
+                            <RowDefinition
+                                Height="*" />
+                            <RowDefinition
+                                Height="2*" />
+                        </Grid.RowDefinitions>
+
+                        <Viewbox
+                            Grid.Row="1"
+                            StretchDirection="Both"
+                            Stretch="Uniform"
+                            HorizontalAlignment="Center">
+
+                            <TextBlock
+                                Text="Mean"/>
+
+                        </Viewbox>
+
+                        <Viewbox
                             Grid.Row="2"
-                            Grid.ColumnSpan="3"
-                            VerticalAlignment="Bottom" />
+                            StretchDirection="Both"
+                            Stretch="Uniform"
+                            HorizontalAlignment="Center">
 
-                        <!--20m: WAVE HEIGHT-->
-                        <Grid
-                            Grid.Column="0"
-                            Grid.Row="1">
+                            <TextBlock
+                                Text="Wave"/>
 
-                            <Grid.RowDefinitions>
-                                <RowDefinition
-                                    Height="2*" />
-                                <RowDefinition
-                                    Height="*" />
-                                <RowDefinition
-                                    Height="*" />
-                                <RowDefinition
-                                    Height="2*" />
-                            </Grid.RowDefinitions>
+                        </Viewbox>
 
-                            <Viewbox
-                                Grid.Row="1"
-                                StretchDirection="Both"
-                                Stretch="Uniform"
-                                HorizontalAlignment="Center">
-
-                                <TextBlock
-                                    Text="Wave Height"/>
-
-                            </Viewbox>
-
-                        </Grid>
-
-                        <!--20m: WAVE HEIGHT-->
-                        <telerik:RadCartesianChart
-                        Grid.Column="1"
-                        Grid.Row="1"
-                        Name="waveHeightChart">
-
-                            <telerik:LineSeries
-                            ZIndex="200"
-                            Stroke="{StaticResource ColorGraphLine}"
-                            CategoryBinding="timestamp"
-                            ValueBinding="graphData">
-
-                                <telerik:LineSeries.RenderOptions>
-                                    <telerik:XamlRenderOptions
-                                    DefaultVisualsRenderMode="Batch" />
-                                </telerik:LineSeries.RenderOptions>
-
-                            </telerik:LineSeries>
-
-                            <telerik:RadCartesianChart.HorizontalAxis>
-                                <telerik:DateTimeContinuousAxis
-                                MajorStepUnit="Minute"
-                                MajorStep="5"
-                                ShowLabels="False"
-                                PlotMode="OnTicks"     
-                                TickOrigin="{Binding alignmentTime}"
-                                Minimum="{Binding alignmentTimeMin}"
-                                Maximum="{Binding alignmentTimeMax}" />
-                            </telerik:RadCartesianChart.HorizontalAxis>
-
-                            <telerik:RadCartesianChart.VerticalAxis>
-                                <telerik:LinearAxis
-                                Maximum="5"
-                                Minimum="-5"
-                                SmartLabelsMode="SmartStepAndRange"
-                                LabelInterval="2"/>
-                            </telerik:RadCartesianChart.VerticalAxis>
-
-                            <telerik:RadCartesianChart.Grid>
-                                <telerik:CartesianChartGrid
-                                MajorLinesVisibility="XY"
-                                ZIndex="250"/>
-                            </telerik:RadCartesianChart.Grid>
-
-                        </telerik:RadCartesianChart>
-
-                        <Grid
-                            Grid.Column="2"
-                            Grid.Row="3">
-
-                            <Grid.RowDefinitions>
-                                <RowDefinition
-                                    Height="*" />
-                                <RowDefinition
-                                    Height="5*" />
-                            </Grid.RowDefinitions>
-
-                            <Grid
-                                Grid.Row="0">
-
-                                <Grid.ColumnDefinitions>
-                                    <ColumnDefinition
-                                        Width="4*" />
-                                    <ColumnDefinition
-                                        Width="2*" />
-                                </Grid.ColumnDefinitions>
-
-                                <Viewbox
-                                    Grid.Column="0"
-                                    StretchDirection="Both"
-                                    Stretch="Uniform"
-                                    HorizontalAlignment="Left">
-
-                                    <TextBlock
-                                        Text="Max Wave Height" />
-
-                                </Viewbox>
-
-                                <Viewbox
-                                    Grid.Column="1"
-                                    StretchDirection="Both"
-                                    Stretch="Uniform"
-                                    HorizontalAlignment="Right">
-
-                                    <TextBlock
-                                        Text="{Binding Path=waveHeightMax20mString}"
-                                        FontSize="{StaticResource fontSizeData}" />
-
-                                </Viewbox>
-
-                            </Grid>
-
-                        </Grid>
-
-                        <Separator
-                            Grid.Column="0"
+                        <Viewbox
                             Grid.Row="3"
-                            Grid.ColumnSpan="3"
-                            VerticalAlignment="Bottom" />
+                            StretchDirection="Both"
+                            Stretch="Uniform"
+                            HorizontalAlignment="Center">
 
-                        <!--SIGNIFICANT HEAVE RATE-->
-                        <Grid
-                            Grid.Column="0"
-                            Grid.Row="2">
+                            <TextBlock
+                                Text="Height"/>
 
-                            <Grid.RowDefinitions>
-                                <RowDefinition
-                                    Height="*" />
-                                <RowDefinition
-                                    Height="*" />
-                                <RowDefinition
-                                    Height="*" />
-                                <RowDefinition
-                                    Height="*" />
-                                <RowDefinition
-                                    Height="2*" />
-                            </Grid.RowDefinitions>
-
-                            <Viewbox
-                                Grid.Row="1"
-                                StretchDirection="Both"
-                                Stretch="Uniform"
-                                HorizontalAlignment="Center">
-
-                                <TextBlock
-                                    Text="Significant" />
-
-                            </Viewbox>
-
-                            <Viewbox
-                                Grid.Row="2"
-                                StretchDirection="Both"
-                                Stretch="Uniform"
-                                HorizontalAlignment="Center">
-
-                                <TextBlock
-                                    Text="Heave" />
-
-                            </Viewbox>
-
-                            <Viewbox
-                                Grid.Row="3"
-                                StretchDirection="Both"
-                                Stretch="Uniform"
-                                HorizontalAlignment="Center">
-
-                                <TextBlock
-                                    Text="Rate" />
-
-                            </Viewbox>
-
-                        </Grid>
-
-                        <telerik:RadCartesianChart
-                            Grid.Column="1"
-                            Grid.Row="4"
-                            Name="chartSignificantHeaveRate20m">
-
-                            <telerik:LineSeries
-                                ZIndex="200"
-                                Stroke="{StaticResource ColorGraphLine}"
-                                CategoryBinding="timestamp"
-                                ValueBinding="graphData">
-
-                                <telerik:LineSeries.RenderOptions>
-                                    <telerik:XamlRenderOptions
-                                        DefaultVisualsRenderMode="Batch" />
-                                </telerik:LineSeries.RenderOptions>
-
-                            </telerik:LineSeries>
-
-                            <telerik:RadCartesianChart.HorizontalAxis>
-                                <telerik:DateTimeContinuousAxis
-                                    FontSize="10"
-                                    MajorStepUnit="Minute"
-                                    MajorStep="1"
-                                    LabelInterval="5"
-                                    LabelFormat="HH:mm"
-                                    PlotMode="OnTicks"
-                                    TickOrigin="{Binding alignmentTime}" />
-                            </telerik:RadCartesianChart.HorizontalAxis>
-
-                            <telerik:RadCartesianChart.VerticalAxis>
-                                <telerik:LinearAxis
-                                    x:Name="chartSignificantHeaveRateVerticalAxis20m"
-                                    Maximum="{Binding significantHeaveRateChartAxisMax20m}"
-                                    Minimum="0"
-                                    FontSize="12"
-                                    LabelInterval="2" />
-                            </telerik:RadCartesianChart.VerticalAxis>
-
-                            <telerik:RadCartesianChart.Grid>
-                                <telerik:CartesianChartGrid
-                                    MajorLinesVisibility="XY" />
-                            </telerik:RadCartesianChart.Grid>
-
-                            <telerik:RadCartesianChart.Annotations>
-                                <telerik:CartesianPlotBandAnnotation
-                                    Axis="{Binding ElementName=chartSignificantHeaveRateVerticalAxis20m}"
-                                    From="{Binding significantHeaveRateChartAnnotationGreenMax20m}"
-                                    To="0"
-                                    StrokeThickness="1"
-                                    Fill="{StaticResource ColorGreenTranslucent}" />
-
-                                <telerik:CartesianPlotBandAnnotation
-                                    Axis="{Binding ElementName=chartSignificantHeaveRateVerticalAxis20m}"
-                                    From="{Binding significantHeaveRateChartAnnotationRedMax20m}"
-                                    To="{Binding significantHeaveRateChartAnnotationRedMin20m}"
-                                    StrokeThickness="1"
-                                    Fill="{StaticResource ColorRedTranslucent}" />
-                            </telerik:RadCartesianChart.Annotations>
-
-                        </telerik:RadCartesianChart>
-
-                        <Grid
-                            Grid.Column="2"
-                            Grid.Row="4">
-
-                            <Grid.RowDefinitions>
-                                <RowDefinition
-                                    Height="*" />
-                                <RowDefinition
-                                    Height="5*" />
-                            </Grid.RowDefinitions>
-
-                            <Grid
-                                Grid.Row="0">
-
-                                <Grid.ColumnDefinitions>
-                                    <ColumnDefinition
-                                        Width="3*" />
-                                    <ColumnDefinition
-                                        Width="2*" />
-                                </Grid.ColumnDefinitions>
-
-                                <Viewbox
-                                    Grid.Column="0"
-                                    StretchDirection="Both"
-                                    Stretch="Uniform"
-                                    HorizontalAlignment="Left">
-
-                                    <TextBlock
-                                        Text="SHR" />
-
-                                </Viewbox>
-
-                                <Viewbox
-                                    Grid.Column="1"
-                                    StretchDirection="Both"
-                                    Stretch="Uniform"
-                                    HorizontalAlignment="Right">
-
-                                    <TextBlock
-                                        Text="{Binding Path=significantHeaveRateString}"
-                                        FontSize="{StaticResource fontSizeData}" />
-
-                                </Viewbox>
-
-                            </Grid>
-                        
-                        </Grid>
-                            
-                        <Separator
-                            Grid.Column="0"
-                            Grid.Row="4"
-                            Grid.ColumnSpan="3"
-                            VerticalAlignment="Bottom" />
+                        </Viewbox>
 
                     </Grid>
 
-                </telerik:RadTabItem>
+                    <Separator
+                        Grid.Column="0"
+                        Grid.Row="0"
+                        Grid.ColumnSpan="3"
+                        VerticalAlignment="Bottom" />
 
-                <!--3-timers--><!--
-                <telerik:RadTabItem>
-                    <telerik:RadTabItem.Header>
-                        <StackPanel
-                            Orientation="Horizontal">
-                            <Image
-                                Width="24"
-                                Source="..\Icons\outline_schedule_white_48dp.png" />
-                            <TextBlock
-                                Foreground="White"
-                                FontSize="{StaticResource fontSizeTab}"
-                                Text="3-hours"
-                                Margin="8,4,0,0" />
-                        </StackPanel>
-                    </telerik:RadTabItem.Header>
+                    <!--20m: WAVE HEIGHT-->
+                    <telerik:RadCartesianChart
+                    Grid.Column="1"
+                    Grid.Row="1"
+                    Name="waveHeightChart"
+                        Margin="0,16">
+
+                        <telerik:LineSeries
+                        ZIndex="200"
+                        Stroke="{StaticResource ColorWaveLine}"
+                        CategoryBinding="timestamp"
+                        ValueBinding="graphData">
+
+                            <telerik:LineSeries.RenderOptions>
+                                <telerik:XamlRenderOptions
+                                DefaultVisualsRenderMode="Batch" />
+                            </telerik:LineSeries.RenderOptions>
+
+                        </telerik:LineSeries>
+
+                        <telerik:RadCartesianChart.HorizontalAxis>
+                            <telerik:DateTimeContinuousAxis
+                            MajorStepUnit="Minute"
+                            MajorStep="5"
+                            ShowLabels="False"
+                            PlotMode="OnTicks"     
+                            TickOrigin="{Binding alignmentTime}"
+                            Minimum="{Binding alignmentTimeMin}"
+                            Maximum="{Binding alignmentTimeMax}" />
+                        </telerik:RadCartesianChart.HorizontalAxis>
+
+                        <telerik:RadCartesianChart.VerticalAxis>
+                            <telerik:LinearAxis
+                            Maximum="{Binding waveHeightChartAxisMax20m}"
+                            Minimum="0"
+                            SmartLabelsMode="SmartStepAndRange"
+                            LabelInterval="2"/>
+                        </telerik:RadCartesianChart.VerticalAxis>
+
+                        <telerik:RadCartesianChart.Grid>
+                            <telerik:CartesianChartGrid
+                            MajorLinesVisibility="XY"
+                            ZIndex="250"/>
+                        </telerik:RadCartesianChart.Grid>
+
+                    </telerik:RadCartesianChart>
 
                     <Grid
-                        Margin="8">
-
-                        <Grid.ColumnDefinitions>
-                            <ColumnDefinition
-                                Width="4*" />
-                            <ColumnDefinition
-                                Width="27*" />
-                        </Grid.ColumnDefinitions>
+                        Grid.Column="2"
+                        Grid.Row="1">
 
                         <Grid.RowDefinitions>
                             <RowDefinition
                                 Height="*" />
                             <RowDefinition
-                                Height="*" />
-                            <RowDefinition
-                                Height="*" />
-                            <RowDefinition
-                                Height="*" />
-                            <RowDefinition
-                                Height="*" />
+                                Height="5*" />
                         </Grid.RowDefinitions>
+
+                        <Viewbox
+                            StretchDirection="Both"
+                            Stretch="Uniform"
+                            HorizontalAlignment="Right">
+
+                            <TextBlock
+                                Text="{Binding Path=waveHeightMax20mString}"
+                                FontSize="{StaticResource fontSizeData}" />
+
+                        </Viewbox>
 
                     </Grid>
 
-                </telerik:RadTabItem>-->
+                    <Separator
+                        Grid.Column="0"
+                        Grid.Row="1"
+                        Grid.ColumnSpan="3"
+                        VerticalAlignment="Bottom" />
 
-            </telerik:RadTabControl>
+                    <!--20m: WAVE HEIGHT-->
+                    <Grid
+                        Grid.Column="0"
+                        Grid.Row="1">
 
-        </telerik:GroupBox>
+                        <Grid.RowDefinitions>
+                            <RowDefinition
+                                Height="2*" />
+                            <RowDefinition
+                                Height="*" />
+                            <RowDefinition
+                                Height="*" />
+                            <RowDefinition
+                                Height="*" />
+                            <RowDefinition
+                                Height="2*" />
+                        </Grid.RowDefinitions>
 
-    </Grid>
+                        <Viewbox
+                            Grid.Row="1"
+                            StretchDirection="Both"
+                            Stretch="Uniform"
+                            HorizontalAlignment="Center">
+
+                            <TextBlock
+                                Text="Mean"/>
+
+                        </Viewbox>
+
+                        <Viewbox
+                            Grid.Row="2"
+                            StretchDirection="Both"
+                            Stretch="Uniform"
+                            HorizontalAlignment="Center">
+
+                            <TextBlock
+                                Text="Wave"/>
+
+                        </Viewbox>
+
+                        <Viewbox
+                            Grid.Row="3"
+                            StretchDirection="Both"
+                            Stretch="Uniform"
+                            HorizontalAlignment="Center">
+
+                            <TextBlock
+                                Text="Height"/>
+
+                        </Viewbox>
+
+                    </Grid>
+
+                    <Separator
+                        Grid.Column="0"
+                        Grid.Row="0"
+                        Grid.ColumnSpan="3"
+                        VerticalAlignment="Bottom" />
+
+                    <!--20m: WAVE HEIGHT-->
+                    <telerik:RadCartesianChart
+                    Grid.Column="1"
+                    Grid.Row="2"
+                    Name="waveMeanPeriodChart"
+                        Margin="0,16">
+
+                        <telerik:LineSeries
+                        ZIndex="200"
+                        Stroke="{StaticResource ColorWaveLine}"
+                        CategoryBinding="timestamp"
+                        ValueBinding="graphData">
+
+                            <telerik:LineSeries.RenderOptions>
+                                <telerik:XamlRenderOptions
+                                DefaultVisualsRenderMode="Batch" />
+                            </telerik:LineSeries.RenderOptions>
+
+                        </telerik:LineSeries>
+
+                        <telerik:RadCartesianChart.HorizontalAxis>
+                            <telerik:DateTimeContinuousAxis
+                            MajorStepUnit="Minute"
+                            MajorStep="5"
+                            ShowLabels="False"
+                            PlotMode="OnTicks"     
+                            TickOrigin="{Binding alignmentTime}"
+                            Minimum="{Binding alignmentTimeMin}"
+                            Maximum="{Binding alignmentTimeMax}" />
+                        </telerik:RadCartesianChart.HorizontalAxis>
+
+                        <telerik:RadCartesianChart.VerticalAxis>
+                            <telerik:LinearAxis
+                            Maximum="{Binding waveMeanPeriodChartAxisMax20m}"
+                            Minimum="0"
+                            SmartLabelsMode="SmartStepAndRange"
+                            LabelInterval="2"/>
+                        </telerik:RadCartesianChart.VerticalAxis>
+
+                        <telerik:RadCartesianChart.Grid>
+                            <telerik:CartesianChartGrid
+                            MajorLinesVisibility="XY"
+                            ZIndex="250"/>
+                        </telerik:RadCartesianChart.Grid>
+
+                    </telerik:RadCartesianChart>
+
+                    <Grid
+                        Grid.Column="2"
+                        Grid.Row="1">
+
+                        <Grid.RowDefinitions>
+                            <RowDefinition
+                                Height="*" />
+                            <RowDefinition
+                                Height="5*" />
+                        </Grid.RowDefinitions>
+
+                        <Viewbox
+                            StretchDirection="Both"
+                            Stretch="Uniform"
+                            HorizontalAlignment="Right">
+
+                            <TextBlock
+                                Text="{Binding Path=waveMeanPeriodMax20mString}"
+                                FontSize="{StaticResource fontSizeData}" />
+
+                        </Viewbox>
+
+                    </Grid>
+
+                    <Separator
+                        Grid.Column="0"
+                        Grid.Row="1"
+                        Grid.ColumnSpan="3"
+                        VerticalAlignment="Bottom" />
+
+                </Grid>
+
+            </telerik:RadTabItem>
+
+            <!--3-timers--><!--
+            <telerik:RadTabItem>
+                <telerik:RadTabItem.Header>
+                    <StackPanel
+                        Orientation="Horizontal">
+                        <Image
+                            Width="24"
+                            Source="..\Icons\outline_schedule_white_48dp.png" />
+                        <TextBlock
+                            Foreground="White"
+                            FontSize="{StaticResource fontSizeTab}"
+                            Text="3-hours"
+                            Margin="8,4,0,0" />
+                    </StackPanel>
+                </telerik:RadTabItem.Header>
+
+                <Grid
+                    Margin="8">
+
+                    <Grid.ColumnDefinitions>
+                        <ColumnDefinition
+                            Width="4*" />
+                        <ColumnDefinition
+                            Width="27*" />
+                    </Grid.ColumnDefinitions>
+
+                    <Grid.RowDefinitions>
+                        <RowDefinition
+                            Height="*" />
+                        <RowDefinition
+                            Height="*" />
+                        <RowDefinition
+                            Height="*" />
+                        <RowDefinition
+                            Height="*" />
+                        <RowDefinition
+                            Height="*" />
+                    </Grid.RowDefinitions>
+
+                </Grid>
+
+            </telerik:RadTabItem>-->
+
+        </telerik:RadTabControl>
+
+    </telerik:GroupBox>
 
 </UserControl>
