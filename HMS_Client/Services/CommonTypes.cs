@@ -166,7 +166,6 @@ public enum ValueType
     SignificantHeaveRateMax3h,
     SignificantHeaveRate95pct,
     MaxHeaveRate,
-    SignificantWaveHeight,
     Inclination,
     InclinationMax20m,
     InclinationMax3h,
@@ -204,12 +203,12 @@ public enum ValueType
     HelicopterHeading,
     WaveMax20m,
     WaveMax3h,
-    WaveHeight,
-    WaveHeightMax20m,
-    WaveHeightMax3h,
     WavePeriod,
     WavePeriodMax20m,
     WavePeriodMax3h,
+    SignificantWaveHeight,
+    SignificantWaveHeightMax20m,
+    SignificantWaveHeightMax3h,
 
     // Motion Limits
     MotionLimitPitchRoll,

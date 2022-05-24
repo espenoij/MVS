@@ -33,8 +33,10 @@ namespace HMS_Client
         {
             // Koble chart til data
             waveChart.Series[0].ItemsSource = viewModel.wave20mList;
-            waveHeightChart.Series[0].ItemsSource = viewModel.waveHeight20mList;
-            waveMeanPeriodChart.Series[0].ItemsSource = viewModel.waveMeanPeriod20mList;
+            waveSWHChart.Series[0].ItemsSource = viewModel.waveSWH20mList;
+            waveSWHMaxChart.Series[0].ItemsSource = viewModel.waveSWHMax20mList;
+            wavePeriodChart.Series[0].ItemsSource = viewModel.wavePeriod20mList;
+            wavePeriodMaxChart.Series[0].ItemsSource = viewModel.wavePeriodMax20mList;
         }
     }
 }

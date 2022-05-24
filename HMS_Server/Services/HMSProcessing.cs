@@ -57,6 +57,7 @@
         {
             hmsProcessingMotion.ResetDataCalculations();
             hmsProcessingWindHeading.ResetDataCalculations();
+            hmsProcessingEMS.ResetDataCalculations();
         }
     }
 }

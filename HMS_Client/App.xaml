@@ -69,7 +69,7 @@
             <SolidColorBrush
                 x:Key="ColorGraphLine">#FF333333</SolidColorBrush>
             <SolidColorBrush
-                x:Key="ColorWaveLine">MediumBlue</SolidColorBrush>
+                x:Key="ColorWaveLine">RoyalBlue</SolidColorBrush>
 
             <!--Helicopter-->
             <SolidColorBrush

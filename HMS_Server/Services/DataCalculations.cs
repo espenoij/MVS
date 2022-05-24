@@ -56,6 +56,12 @@ namespace HMS_Server
         private double waveMeanHeightTotal = 0;
         private List<TimeData> waveMeanHeightDataList = new List<TimeData>();
 
+        // Period
+        private double periodLast = double.NaN;
+        private double periodCurrent = double.NaN;
+        private WavePhase periodWavePhase = WavePhase.Init;
+        private DateTime periodLastWaveTop = DateTime.MinValue;
+
         // Time Mean Period
         private double timeMeanPeriodTotal = 0;
         private double timeMeanPeriodLast = double.NaN;
@@ -896,7 +902,7 @@ namespace HMS_Server
                         /// Height
                         ////////////////////////////////////////////////////////////////////////////////////////////////
                         /// Beskrivelse:
-                        /// Returnerer height i oscilerende data
+                        /// Returnerer høyde i oscilerende data
                         /// 
                         /// Input:
                         /// Bølgehøyde data
@@ -995,6 +1001,77 @@ namespace HMS_Server
                                     result = waveMeanHeightTotal / (double)waveMeanHeightDataList.Count;
                                 else
                                     return 0;
+                            }
+                            break;
+
+
+                        ////////////////////////////////////////////////////////////////////////////////////////////////
+                        /// Period
+                        ////////////////////////////////////////////////////////////////////////////////////////////////
+                        /// Beskrivelse:
+                        /// Returnerer målt bølge periode.
+                        /// 
+                        /// Brukes til:
+                        /// Wave Period (TS)
+                        /// 
+                        case CalculationType.Period:
+
+                            // Sjekke om string er numerisk
+                            if (double.TryParse(newData, Constants.numberStyle, Constants.cultureInfo, out value))
+                            {
+                                switch (periodWavePhase)
+                                {
+                                    // Init
+                                    case WavePhase.Init:
+                                        if (!double.IsNaN(periodLast))
+                                        {
+                                            if (value > periodLast)
+                                                periodWavePhase = WavePhase.Ascending;
+                                            else
+                                            if (value < periodLast)
+                                                periodWavePhase = WavePhase.Descending;
+                                        }
+                                        break;
+
+                                    // På vei mot topp av bølge
+                                    case WavePhase.Ascending:
+
+                                        // Dersom neste verdi er mindre enn forrige -> passert toppen av bølgen
+                                        if (value < periodLast && value > 0)
+                                        {
+                                            if (periodLastWaveTop != DateTime.MinValue)
+                                            {
+                                                periodCurrent = newTimeStamp.Subtract(periodLastWaveTop).TotalSeconds;
+
+                                                periodLastWaveTop = newTimeStamp;
+                                            }
+                                            else
+                                            {
+                                                periodLastWaveTop = newTimeStamp;
+                                            }
+
+                                            // På vei ned
+                                            periodWavePhase = WavePhase.Descending;
+                                        }
+                                        break;
+
+                                    // På vei mot bunn av bølge
+                                    case WavePhase.Descending:
+
+                                        // Dersom neste verdi er større enn forrige -> passert bunnen av bølgen
+                                        if (value > periodLast && value < 0)
+                                        {
+                                            // På vei opp igjen
+                                            periodWavePhase = WavePhase.Ascending;
+                                        }
+                                        break;
+                                }
+
+                                // Oppdatere siste verdi
+                                periodLast = value;
+
+                                // Retur
+                                return periodCurrent;
                             }
                             break;
 
@@ -1555,6 +1632,8 @@ namespace HMS_Server
         [Description("m/s to knots")]
         MSToKnots,
         [Description("Wave Radar")]
-        WaveRadar
+        WaveRadar,
+        [Description("Period")]
+        Period,
     }
 }

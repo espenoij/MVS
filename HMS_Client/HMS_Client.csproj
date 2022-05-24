@@ -247,6 +247,9 @@
     <Compile Include="Helpers\GraphBuffer.cs" />
     <Compile Include="Helpers\HMSCalc.cs" />
     <Compile Include="Helpers\TrendLine.cs" />
+    <Compile Include="Pages\EMSSeaTemperature.xaml.cs">
+      <DependentUpon>EMSSeaTemperature.xaml</DependentUpon>
+    </Compile>
     <Compile Include="Pages\HelideckMotionHistory_NOROG.xaml.cs">
       <DependentUpon>HelideckMotionHistory_NOROG.xaml</DependentUpon>
     </Compile>
@@ -457,6 +460,10 @@
     <Page Include="Pages\AdminSettings.xaml">
       <SubType>Designer</SubType>
       <Generator>MSBuild:Compile</Generator>
+    </Page>
+    <Page Include="Pages\EMSSeaTemperature.xaml">
+      <Generator>MSBuild:Compile</Generator>
+      <SubType>Designer</SubType>
     </Page>
     <Page Include="Pages\GeneralInformation_CAP.xaml">
       <SubType>Designer</SubType>

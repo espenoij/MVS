@@ -17,23 +17,31 @@ namespace HMS_Client
 
         // 20 minutters buffer
         private RadObservableCollectionEx<HMSData> waveBuffer20m = new RadObservableCollectionEx<HMSData>();
-        private RadObservableCollectionEx<HMSData> waveHeightBuffer20m = new RadObservableCollectionEx<HMSData>();
-        private RadObservableCollectionEx<HMSData> waveMeanPeriodBuffer20m = new RadObservableCollectionEx<HMSData>();
+        private RadObservableCollectionEx<HMSData> waveSWHBuffer20m = new RadObservableCollectionEx<HMSData>();
+        private RadObservableCollectionEx<HMSData> waveSWHMaxBuffer20m = new RadObservableCollectionEx<HMSData>();
+        private RadObservableCollectionEx<HMSData> wavePeriodBuffer20m = new RadObservableCollectionEx<HMSData>();
+        private RadObservableCollectionEx<HMSData> wavePeriodMaxBuffer20m = new RadObservableCollectionEx<HMSData>();
 
         // 3 timers buffer
         private RadObservableCollectionEx<HMSData> waveBuffer3h = new RadObservableCollectionEx<HMSData>();
-        private RadObservableCollectionEx<HMSData> waveHeightBuffer3h = new RadObservableCollectionEx<HMSData>();
-        private RadObservableCollectionEx<HMSData> waveMeanPeriodBuffer3h = new RadObservableCollectionEx<HMSData>();
+        private RadObservableCollectionEx<HMSData> waveSWHBuffer3h = new RadObservableCollectionEx<HMSData>();
+        private RadObservableCollectionEx<HMSData> waveSWHMaxBuffer3h = new RadObservableCollectionEx<HMSData>();
+        private RadObservableCollectionEx<HMSData> wavePeriodBuffer3h = new RadObservableCollectionEx<HMSData>();
+        private RadObservableCollectionEx<HMSData> wavePeriodMaxBuffer3h = new RadObservableCollectionEx<HMSData>();
 
         // 20 minutters grafer
         public RadObservableCollectionEx<HMSData> wave20mList = new RadObservableCollectionEx<HMSData>();
-        public RadObservableCollectionEx<HMSData> waveHeight20mList = new RadObservableCollectionEx<HMSData>();
-        public RadObservableCollectionEx<HMSData> waveMeanPeriod20mList = new RadObservableCollectionEx<HMSData>();
+        public RadObservableCollectionEx<HMSData> waveSWH20mList = new RadObservableCollectionEx<HMSData>();
+        public RadObservableCollectionEx<HMSData> waveSWHMax20mList = new RadObservableCollectionEx<HMSData>();
+        public RadObservableCollectionEx<HMSData> wavePeriod20mList = new RadObservableCollectionEx<HMSData>();
+        public RadObservableCollectionEx<HMSData> wavePeriodMax20mList = new RadObservableCollectionEx<HMSData>();
 
         // 3 timers grafer
         public RadObservableCollectionEx<HMSData> wave3hList = new RadObservableCollectionEx<HMSData>();
-        public RadObservableCollectionEx<HMSData> waveHeight3hList = new RadObservableCollectionEx<HMSData>();
-        public RadObservableCollectionEx<HMSData> waveMeanPeriod3hList = new RadObservableCollectionEx<HMSData>();
+        public RadObservableCollectionEx<HMSData> waveSWH3hList = new RadObservableCollectionEx<HMSData>();
+        public RadObservableCollectionEx<HMSData> waveSWHMax3hList = new RadObservableCollectionEx<HMSData>();
+        public RadObservableCollectionEx<HMSData> wavePeriod3hList = new RadObservableCollectionEx<HMSData>();
+        public RadObservableCollectionEx<HMSData> wavePeriodMax3hList = new RadObservableCollectionEx<HMSData>();
 
         public void Init(AdminSettingsVM adminSettingsVM, Config config, SensorGroupStatus sensorStatus)
         {
@@ -55,26 +63,29 @@ namespace HMS_Client
                     sensorStatus.TimeoutCheck(waveMax20mData);
                     sensorStatus.TimeoutCheck(waveMax3hData);
 
-                    sensorStatus.TimeoutCheck(waveHeightData);
-                    if (sensorStatus.TimeoutCheck(waveHeightMax20mData)) OnPropertyChanged(nameof(waveHeightMax20mString));
-                    if (sensorStatus.TimeoutCheck(waveHeightMax3hData)) OnPropertyChanged(nameof(waveHeightMax3hString));
+                    if (sensorStatus.TimeoutCheck(waveSWHData)) OnPropertyChanged(nameof(waveSWHString));
+                    if (sensorStatus.TimeoutCheck(waveSWHMax20mData)) OnPropertyChanged(nameof(waveSWHMax20mString));
+                    if (sensorStatus.TimeoutCheck(waveSWHMax3hData)) OnPropertyChanged(nameof(waveSWHMax3hString));
 
-                    sensorStatus.TimeoutCheck(waveMeanPeriodData);
-                    if (sensorStatus.TimeoutCheck(waveMeanPeriodMax20mData)) OnPropertyChanged(nameof(waveMeanPeriodMax20mString));
-                    if (sensorStatus.TimeoutCheck(waveMeanPeriodMax3hData)) OnPropertyChanged(nameof(waveMeanPeriodMax3hString));
+                    if (sensorStatus.TimeoutCheck(wavePeriodData)) OnPropertyChanged(nameof(wavePeriodString));
+                    if (sensorStatus.TimeoutCheck(wavePeriodMax20mData)) OnPropertyChanged(nameof(wavePeriodMax20mString));
+                    if (sensorStatus.TimeoutCheck(wavePeriodMax3hData)) OnPropertyChanged(nameof(wavePeriodMax3hString));
 
                     // Oppdatere data som skal ut i grafer
                     GraphBuffer.Update(waveData, waveBuffer20m);
                     GraphBuffer.Update(waveData, waveBuffer3h);
 
-                    GraphBuffer.Update(waveHeightData, waveHeightBuffer20m);
-                    GraphBuffer.Update(waveHeightData, waveHeightBuffer3h);
+                    GraphBuffer.Update(waveSWHData, waveSWHBuffer20m);
+                    GraphBuffer.Update(waveSWHData, waveSWHBuffer3h);
 
-                    GraphBuffer.Update(waveMeanPeriodData, waveMeanPeriodBuffer20m);
-                    GraphBuffer.Update(waveMeanPeriodData, waveMeanPeriodBuffer3h);
+                    GraphBuffer.Update(waveSWHMax20mData, waveSWHMaxBuffer20m);
+                    GraphBuffer.Update(waveSWHMax3hData, waveSWHMaxBuffer3h);
 
-                    // Oppdatere alignment datetime (nåtid) til alle chart (20m og 3h)
-                    //alignmentTime = DateTime.UtcNow;
+                    GraphBuffer.Update(wavePeriodData, wavePeriodBuffer20m);
+                    GraphBuffer.Update(wavePeriodData, wavePeriodBuffer3h);
+
+                    GraphBuffer.Update(wavePeriodMax20mData, wavePeriodMaxBuffer20m);
+                    GraphBuffer.Update(wavePeriodMax3hData, wavePeriodMaxBuffer3h);
                 }
 
                 // Oppdatere trend data i UI: 20 minutter
@@ -86,13 +97,17 @@ namespace HMS_Client
                 {
                     // Overføre data fra buffer til chart data: 20m
                     GraphBuffer.Transfer(waveBuffer20m, wave20mList);
-                    GraphBuffer.Transfer(waveHeightBuffer20m, waveHeight20mList);
-                    GraphBuffer.Transfer(waveMeanPeriodBuffer20m, waveMeanPeriod20mList);
+                    GraphBuffer.Transfer(waveSWHBuffer20m, waveSWH20mList);
+                    GraphBuffer.Transfer(waveSWHMaxBuffer20m, waveSWHMax20mList);
+                    GraphBuffer.Transfer(wavePeriodBuffer20m, wavePeriod20mList);
+                    GraphBuffer.Transfer(wavePeriodMaxBuffer20m, wavePeriodMax20mList);
 
                     // Fjerne gamle data fra chart data
                     GraphBuffer.RemoveOldData(wave20mList, Constants.Minutes20 + Constants.ChartTimeCorrMin);
-                    GraphBuffer.RemoveOldData(waveHeight20mList, Constants.Minutes20 + Constants.ChartTimeCorrMin);
-                    GraphBuffer.RemoveOldData(waveMeanPeriod20mList, Constants.Minutes20 + Constants.ChartTimeCorrMin);
+                    GraphBuffer.RemoveOldData(waveSWH20mList, Constants.Minutes20 + Constants.ChartTimeCorrMin);
+                    GraphBuffer.RemoveOldData(waveSWHMax20mList, Constants.Minutes20 + Constants.ChartTimeCorrMin);
+                    GraphBuffer.RemoveOldData(wavePeriod20mList, Constants.Minutes20 + Constants.ChartTimeCorrMin);
+                    GraphBuffer.RemoveOldData(wavePeriodMax20mList, Constants.Minutes20 + Constants.ChartTimeCorrMin);
 
                     // Oppdatere alignment datetime (nåtid) til alle chart (20m og 3h)
                     alignmentTime = DateTime.UtcNow.AddSeconds(Constants.ChartTimeCorrMax);
@@ -100,8 +115,8 @@ namespace HMS_Client
                     // Oppdatere aksene og farget område på graf
                     OnPropertyChanged(nameof(waveChartAxisMax20m));
                     OnPropertyChanged(nameof(waveChartAxisMin20m));
-                    OnPropertyChanged(nameof(waveHeightChartAxisMax20m));
-                    OnPropertyChanged(nameof(waveMeanPeriodChartAxisMax20m));
+                    OnPropertyChanged(nameof(waveSWHChartAxisMax20m));
+                    OnPropertyChanged(nameof(wavePeriodChartAxisMax20m));
                 }
 
                 // Oppdatere trend data i UI: 3 hours
@@ -113,19 +128,26 @@ namespace HMS_Client
                 {
                     // Overføre data fra buffer til chart data: 20m
                     GraphBuffer.Transfer(waveBuffer3h, wave3hList);
-                    GraphBuffer.Transfer(waveHeightBuffer3h, waveHeight3hList);
+                    GraphBuffer.Transfer(waveSWHBuffer3h, waveSWH3hList);
+                    GraphBuffer.Transfer(waveSWHMaxBuffer3h, waveSWHMax3hList);
+                    GraphBuffer.Transfer(wavePeriodBuffer3h, wavePeriod3hList);
+                    GraphBuffer.Transfer(wavePeriodMaxBuffer3h, wavePeriodMax3hList);
 
                     // Fjerne gamle data fra chart data
                     GraphBuffer.RemoveOldData(wave3hList, Constants.Hours3 + Constants.ChartTimeCorrMin);
-                    GraphBuffer.RemoveOldData(waveHeight3hList, Constants.Hours3 + Constants.ChartTimeCorrMin);
+                    GraphBuffer.RemoveOldData(waveSWH3hList, Constants.Hours3 + Constants.ChartTimeCorrMin);
+                    GraphBuffer.RemoveOldData(waveSWHMax3hList, Constants.Hours3 + Constants.ChartTimeCorrMin);
+                    GraphBuffer.RemoveOldData(wavePeriod3hList, Constants.Hours3 + Constants.ChartTimeCorrMin);
+                    GraphBuffer.RemoveOldData(wavePeriodMax3hList, Constants.Hours3 + Constants.ChartTimeCorrMin);
 
                     // Oppdatere alignment datetime (nåtid) til alle chart (20m og 3h)
-                    //alignmentTime = DateTime.UtcNow.AddSeconds(Constants.ChartTimeCorrMax);
+                    alignmentTime = DateTime.UtcNow.AddSeconds(Constants.ChartTimeCorrMax);
 
                     // Oppdatere aksene og farget område på graf
                     OnPropertyChanged(nameof(waveChartAxisMax3h));
                     OnPropertyChanged(nameof(waveChartAxisMin3h));
-                    OnPropertyChanged(nameof(waveHeightChartAxisMax3h));
+                    OnPropertyChanged(nameof(wavePeriodChartAxisMax3h));
+                    OnPropertyChanged(nameof(waveSWHChartAxisMax3h));
                 }
             }
         }
@@ -137,13 +159,15 @@ namespace HMS_Client
             waveMax20mData = hmsDataCollection.GetData(ValueType.WaveMax20m);
             waveMax3hData = hmsDataCollection.GetData(ValueType.WaveMax3h);
 
-            waveHeightData = hmsDataCollection.GetData(ValueType.WaveHeight);
-            waveHeightMax20mData = hmsDataCollection.GetData(ValueType.WaveHeightMax20m);
-            waveHeightMax3hData = hmsDataCollection.GetData(ValueType.WaveHeightMax3h);
+            // Significant Wave Height
+            waveSWHData = hmsDataCollection.GetData(ValueType.SignificantWaveHeight);
+            waveSWHMax20mData = hmsDataCollection.GetData(ValueType.SignificantWaveHeightMax20m);
+            waveSWHMax3hData = hmsDataCollection.GetData(ValueType.SignificantWaveHeightMax3h);
 
-            waveMeanPeriodData = hmsDataCollection.GetData(ValueType.WaveHeight);
-            waveMeanPeriodMax20mData = hmsDataCollection.GetData(ValueType.WaveHeightMax20m);
-            waveMeanPeriodMax3hData = hmsDataCollection.GetData(ValueType.WaveHeightMax3h);
+            // Wave Period
+            wavePeriodData = hmsDataCollection.GetData(ValueType.WavePeriod);
+            wavePeriodMax20mData = hmsDataCollection.GetData(ValueType.WavePeriodMax20m);
+            wavePeriodMax3hData = hmsDataCollection.GetData(ValueType.WavePeriodMax3h);
         }
 
         public void InitWaveHeightData()
@@ -152,13 +176,13 @@ namespace HMS_Client
             _waveMax20mData = new HMSData();
             _waveMax3hData = new HMSData();
 
-            _waveHeightData = new HMSData();
-            _waveHeightMax20mData = new HMSData();
-            _waveHeightMax3hData = new HMSData();
+            _wavePeriodData = new HMSData();
+            _wavePeriodMax20mData = new HMSData();
+            _wavePeriodMax3hData = new HMSData();
 
-            _waveMeanPeriodData = new HMSData();
-            _waveMeanPeriodMax20mData = new HMSData();
-            _waveMeanPeriodMax3hData = new HMSData();
+            _waveSWHData = new HMSData();
+            _waveSWHMax20mData = new HMSData();
+            _waveSWHMax3hData = new HMSData();
 
             // Init av chart data
             for (int i = -Constants.Minutes20; i <= 0; i++)
@@ -169,13 +193,25 @@ namespace HMS_Client
                     timestamp = DateTime.UtcNow.AddSeconds(i)
                 });
 
-                waveHeight20mList.Add(new HMSData()
+                waveSWH20mList.Add(new HMSData()
                 {
                     data = 0,
                     timestamp = DateTime.UtcNow.AddSeconds(i)
                 });
 
-                waveMeanPeriod20mList.Add(new HMSData()
+                waveSWHMax20mList.Add(new HMSData()
+                {
+                    data = 0,
+                    timestamp = DateTime.UtcNow.AddSeconds(i)
+                });
+
+                wavePeriod20mList.Add(new HMSData()
+                {
+                    data = 0,
+                    timestamp = DateTime.UtcNow.AddSeconds(i)
+                });
+
+                wavePeriodMax20mList.Add(new HMSData()
                 {
                     data = 0,
                     timestamp = DateTime.UtcNow.AddSeconds(i)
@@ -190,13 +226,25 @@ namespace HMS_Client
                     timestamp = DateTime.UtcNow.AddSeconds(i)
                 });
 
-                waveHeight3hList.Add(new HMSData()
+                waveSWH3hList.Add(new HMSData()
                 {
                     data = 0,
                     timestamp = DateTime.UtcNow.AddSeconds(i)
                 });
 
-                waveMeanPeriod3hList.Add(new HMSData()
+                waveSWHMax3hList.Add(new HMSData()
+                {
+                    data = 0,
+                    timestamp = DateTime.UtcNow.AddSeconds(i)
+                });
+
+                wavePeriod3hList.Add(new HMSData()
+                {
+                    data = 0,
+                    timestamp = DateTime.UtcNow.AddSeconds(i)
+                });
+
+                wavePeriodMax3hList.Add(new HMSData()
                 {
                     data = 0,
                     timestamp = DateTime.UtcNow.AddSeconds(i)
@@ -205,6 +253,9 @@ namespace HMS_Client
         }
 
 
+        /////////////////////////////////////////////////////////////////////////////
+        // Wave Data
+        /////////////////////////////////////////////////////////////////////////////
         private HMSData _waveData { get; set; }
         public HMSData waveData
         {
@@ -253,49 +304,35 @@ namespace HMS_Client
             }
         }
 
-        private HMSData _waveHeightData { get; set; }
-        public HMSData waveHeightData
+        /////////////////////////////////////////////////////////////////////////////
+        // Wave Period
+        /////////////////////////////////////////////////////////////////////////////
+        private HMSData _wavePeriodData { get; set; }
+        public HMSData wavePeriodData
         {
             get
             {
-                return _waveHeightData;
+                return _wavePeriodData;
             }
             set
             {
                 if (value != null)
                 {
-                    _waveHeightData.Set(value);
+                    OnPropertyChanged(nameof(wavePeriodString));
+                    _wavePeriodData.Set(value);
                 }
             }
         }
-
-        private HMSData _waveHeightMax20mData { get; set; }
-        public HMSData waveHeightMax20mData
+        public string wavePeriodString
         {
             get
             {
-                return _waveHeightMax20mData;
-            }
-            set
-            {
-                if (value != null)
-                {
-                    OnPropertyChanged(nameof(waveHeightMax20mString));
-
-                    _waveHeightMax20mData.Set(value);
-                }
-            }
-        }
-        public string waveHeightMax20mString
-        {
-            get
-            {
-                if (waveHeightMax20mData != null)
+                if (wavePeriodData != null)
                 {
                     // Sjekke om data er gyldig
-                    if (waveHeightMax20mData.status == DataStatus.OK)
+                    if (wavePeriodData.status == DataStatus.OK)
                     {
-                        return string.Format("{0} °", waveHeightMax20mData.data.ToString("0.0"));
+                        return string.Format("{0} s", wavePeriodData.data.ToString("0.0"));
                     }
                     else
                     {
@@ -309,33 +346,32 @@ namespace HMS_Client
             }
         }
 
-        private HMSData _waveHeightMax3hData { get; set; }
-        public HMSData waveHeightMax3hData
+        private HMSData _wavePeriodMax20mData { get; set; }
+        public HMSData wavePeriodMax20mData
         {
             get
             {
-                return _waveHeightMax3hData;
+                return _wavePeriodMax20mData;
             }
             set
             {
                 if (value != null)
                 {
-                    OnPropertyChanged(nameof(waveHeightMax3hString));
-
-                    _waveHeightMax3hData.Set(value);
+                    OnPropertyChanged(nameof(wavePeriodMax20mString));
+                    _wavePeriodMax20mData.Set(value);
                 }
             }
         }
-        public string waveHeightMax3hString
+        public string wavePeriodMax20mString
         {
             get
             {
-                if (waveHeightMax3hData != null)
+                if (wavePeriodMax20mData != null)
                 {
                     // Sjekke om data er gyldig
-                    if (waveHeightMax3hData.status == DataStatus.OK)
+                    if (wavePeriodMax20mData.status == DataStatus.OK)
                     {
-                        return string.Format("{0} °", waveHeightMax3hData.data.ToString("0.0"));
+                        return string.Format("{0} s", wavePeriodMax20mData.data.ToString("0.0"));
                     }
                     else
                     {
@@ -349,49 +385,33 @@ namespace HMS_Client
             }
         }
 
-        private HMSData _waveMeanPeriodData { get; set; }
-        public HMSData waveMeanPeriodData
+        private HMSData _wavePeriodMax3hData { get; set; }
+        public HMSData wavePeriodMax3hData
         {
             get
             {
-                return _waveMeanPeriodData;
+                return _wavePeriodMax3hData;
             }
             set
             {
                 if (value != null)
                 {
-                    _waveMeanPeriodData.Set(value);
+                    OnPropertyChanged(nameof(wavePeriodMax3hString));
+
+                    _wavePeriodMax3hData.Set(value);
                 }
             }
         }
-
-        private HMSData _waveMeanPeriodMax20mData { get; set; }
-        public HMSData waveMeanPeriodMax20mData
+        public string wavePeriodMax3hString
         {
             get
             {
-                return _waveMeanPeriodMax20mData;
-            }
-            set
-            {
-                if (value != null)
-                {
-                    OnPropertyChanged(nameof(waveMeanPeriodMax20mString));
-
-                    _waveMeanPeriodMax20mData.Set(value);
-                }
-            }
-        }
-        public string waveMeanPeriodMax20mString
-        {
-            get
-            {
-                if (waveMeanPeriodMax20mData != null)
+                if (wavePeriodMax3hData != null)
                 {
                     // Sjekke om data er gyldig
-                    if (waveMeanPeriodMax20mData.status == DataStatus.OK)
+                    if (wavePeriodMax3hData.status == DataStatus.OK)
                     {
-                        return string.Format("{0} °", waveMeanPeriodMax20mData.data.ToString("0.0"));
+                        return string.Format("{0} °", wavePeriodMax3hData.data.ToString("0.0"));
                     }
                     else
                     {
@@ -405,33 +425,116 @@ namespace HMS_Client
             }
         }
 
-        private HMSData _waveMeanPeriodMax3hData { get; set; }
-        public HMSData waveMeanPeriodMax3hData
+        /////////////////////////////////////////////////////////////////////////////
+        // Significant Wave Height
+        /////////////////////////////////////////////////////////////////////////////
+        private HMSData _waveSWHData { get; set; }
+        public HMSData waveSWHData
         {
             get
             {
-                return _waveMeanPeriodMax3hData;
+                return _waveSWHData;
             }
             set
             {
                 if (value != null)
                 {
-                    OnPropertyChanged(nameof(waveMeanPeriodMax3hString));
+                    OnPropertyChanged(nameof(waveSWHString));
 
-                    _waveMeanPeriodMax3hData.Set(value);
+                    _waveSWHData.Set(value);
                 }
             }
         }
-        public string waveMeanPeriodMax3hString
+        public string waveSWHString
         {
             get
             {
-                if (waveMeanPeriodMax3hData != null)
+                if (waveSWHData != null)
                 {
                     // Sjekke om data er gyldig
-                    if (waveMeanPeriodMax3hData.status == DataStatus.OK)
+                    if (waveSWHData.status == DataStatus.OK)
                     {
-                        return string.Format("{0} °", waveMeanPeriodMax3hData.data.ToString("0.0"));
+                        return string.Format("{0} m", waveSWHData.data.ToString("0.0"));
+                    }
+                    else
+                    {
+                        return Constants.NotAvailable;
+                    }
+                }
+                else
+                {
+                    return Constants.NotAvailable;
+                }
+            }
+        }
+
+        private HMSData _waveSWHMax20mData { get; set; }
+        public HMSData waveSWHMax20mData
+        {
+            get
+            {
+                return _waveSWHMax20mData;
+            }
+            set
+            {
+                if (value != null)
+                {
+                    OnPropertyChanged(nameof(waveSWHMax20mString));
+
+                    _waveSWHMax20mData.Set(value);
+                }
+            }
+        }
+        public string waveSWHMax20mString
+        {
+            get
+            {
+                if (waveSWHMax20mData != null)
+                {
+                    // Sjekke om data er gyldig
+                    if (waveSWHMax20mData.status == DataStatus.OK)
+                    {
+                        return string.Format("{0} m", waveSWHMax20mData.data.ToString("0.0"));
+                    }
+                    else
+                    {
+                        return Constants.NotAvailable;
+                    }
+                }
+                else
+                {
+                    return Constants.NotAvailable;
+                }
+            }
+        }
+
+        private HMSData _waveSWHMax3hData { get; set; }
+        public HMSData waveSWHMax3hData
+        {
+            get
+            {
+                return _waveSWHMax3hData;
+            }
+            set
+            {
+                if (value != null)
+                {
+                    OnPropertyChanged(nameof(waveSWHMax3hString));
+
+                    _waveSWHMax3hData.Set(value);
+                }
+            }
+        }
+        public string waveSWHMax3hString
+        {
+            get
+            {
+                if (waveSWHMax3hData != null)
+                {
+                    // Sjekke om data er gyldig
+                    if (waveSWHMax3hData.status == DataStatus.OK)
+                    {
+                        return string.Format("{0} °", waveSWHMax3hData.data.ToString("0.0"));
                     }
                     else
                     {
@@ -527,35 +630,35 @@ namespace HMS_Client
             }
         }
 
-        public double waveHeightChartAxisMax20m
+        public double wavePeriodChartAxisMax20m
         {
             get
             {
-                return (int)waveHeightMax20mData.data / Constants.WaveChartIncrements * Constants.WaveChartIncrements + Constants.WaveChartIncrements;
+                return (int)wavePeriodMax20mData.data / Constants.WaveChartIncrements * Constants.WaveChartIncrements + Constants.WaveChartIncrements;
             }
         }
 
-        public double waveHeightChartAxisMax3h
+        public double wavePeriodChartAxisMax3h
         {
             get
             {
-                return (int)waveHeightMax3hData.data / Constants.WaveChartIncrements * Constants.WaveChartIncrements + Constants.WaveChartIncrements;
+                return (int)wavePeriodMax3hData.data / Constants.WaveChartIncrements * Constants.WaveChartIncrements + Constants.WaveChartIncrements;
             }
         }
 
-        public double waveMeanPeriodChartAxisMax20m
+        public double waveSWHChartAxisMax20m
         {
             get
             {
-                return (int)waveMeanPeriodMax20mData.data / Constants.WaveChartIncrements * Constants.WaveChartIncrements + Constants.WaveChartIncrements;
+                return (int)waveSWHMax20mData.data / Constants.WaveChartIncrements * Constants.WaveChartIncrements + Constants.WaveChartIncrements;
             }
         }
 
-        public double waveMeanPeriodChartAxisMax3h
+        public double waveSWHChartAxisMax3h
         {
             get
             {
-                return (int)waveMeanPeriodMax3hData.data / Constants.WaveChartIncrements * Constants.WaveChartIncrements + Constants.WaveChartIncrements;
+                return (int)waveSWHMax3hData.data / Constants.WaveChartIncrements * Constants.WaveChartIncrements + Constants.WaveChartIncrements;
             }
         }
 

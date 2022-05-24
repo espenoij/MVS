@@ -60,7 +60,7 @@ namespace HMS_Server
         private HMSData maxHeaveRateData = new HMSData();
 
         // Significant Wave Height
-        private HMSData significantWaveHeightData = new HMSData();
+        //private HMSData significantWaveHeightData = new HMSData();
 
         // Limits
         private HMSData motionLimitPitchRoll = new HMSData();
@@ -126,7 +126,7 @@ namespace HMS_Server
 
             hmsOutputDataList.Add(maxHeaveRateData);
 
-            hmsOutputDataList.Add(significantWaveHeightData);
+            //hmsOutputDataList.Add(significantWaveHeightData);
 
             hmsOutputDataList.Add(heaveHeightData);
             hmsOutputDataList.Add(heaveHeightMax20mData);
@@ -274,12 +274,12 @@ namespace HMS_Server
             maxHeaveRateData.AddProcessing(CalculationType.RoundingDecimals, 1);
             maxHeaveRateData.AddProcessing(CalculationType.TimeMaxAbsolute, Constants.Minutes20);
 
-            significantWaveHeightData.id = (int)ValueType.SignificantWaveHeight;
-            significantWaveHeightData.name = "Significant Wave Height";
-            significantWaveHeightData.dbColumn = "significant_wave_height";
-            significantWaveHeightData.InitProcessing(errorHandler, ErrorMessageCategory.AdminUser);
-            significantWaveHeightData.AddProcessing(CalculationType.SignificantWaveHeight, Constants.Minutes20);
-            significantWaveHeightData.AddProcessing(CalculationType.RoundingDecimals, 1);
+            //significantWaveHeightData.id = (int)ValueType.SignificantWaveHeight;
+            //significantWaveHeightData.name = "Significant Wave Height";
+            //significantWaveHeightData.dbColumn = "significant_wave_height";
+            //significantWaveHeightData.InitProcessing(errorHandler, ErrorMessageCategory.AdminUser);
+            //significantWaveHeightData.AddProcessing(CalculationType.SignificantWaveHeight, Constants.Minutes20);
+            //significantWaveHeightData.AddProcessing(CalculationType.RoundingDecimals, 1);
 
             motionLimitPitchRoll.id = (int)ValueType.MotionLimitPitchRoll;
             motionLimitPitchRoll.name = "Motion Limit Pitch and Roll";
@@ -399,7 +399,7 @@ namespace HMS_Server
                     maxHeaveRateData.BufferFillCheck(Constants.MotionBufferFill99Pct);
 
                 // Significant Wave Height
-                significantWaveHeightData.DoProcessing(inputHeaveData);
+                //significantWaveHeightData.DoProcessing(inputHeaveData);
 
                 // Motion Limits
                 motionLimitPitchRoll.data = motionLimits.GetLimit(LimitType.PitchRoll);
@@ -499,7 +499,7 @@ namespace HMS_Server
             significantHeaveRateMax20mData.ResetDataCalculations();
             significantHeaveRateMax3hData.ResetDataCalculations();
             maxHeaveRateData.ResetDataCalculations();
-            significantWaveHeightData.ResetDataCalculations();
+            //significantWaveHeightData.ResetDataCalculations();
 
             // Inclination
             inclination20mMaxList.Clear();

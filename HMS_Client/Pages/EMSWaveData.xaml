@@ -5,13 +5,15 @@
     xmlns:mc="http://schemas.openxmlformats.org/markup-compatibility/2006"
     xmlns:d="http://schemas.microsoft.com/expression/blend/2008"
     xmlns:telerik="http://schemas.telerik.com/2008/xaml/presentation"
+    xmlns:hms_client="clr-namespace:HMS_Client" 
+    d:DataContext="{d:DesignInstance Type=hms_client:EMSWaveDataVM}"
     mc:Ignorable="d"
     d:DesignHeight="1200"
     d:DesignWidth="1600">
 
-    <!--SEA STATE-->
+    <!--SEA WAVES-->
     <telerik:GroupBox
-        Header="SEA STATE"
+        Header="SEA WAVES"
         Margin="8">
 
         <telerik:RadTabControl
@@ -44,7 +46,7 @@
                         <ColumnDefinition
                             Width="30*" />
                         <ColumnDefinition
-                            Width="7*" />
+                            Width="5*" />
                     </Grid.ColumnDefinitions>
 
                     <Grid.RowDefinitions>
@@ -67,11 +69,11 @@
 
                         <Grid.RowDefinitions>
                             <RowDefinition
-                                Height="3*" />
+                                Height="4*" />
                             <RowDefinition
                                 Height="*" />
                             <RowDefinition
-                                Height="3*" />
+                                Height="4*" />
                         </Grid.RowDefinitions>
 
 
@@ -137,41 +139,346 @@
 
                     <Separator
                         Grid.Column="0"
+                        Grid.Row="0"
+                        Grid.ColumnSpan="3"
+                        VerticalAlignment="Bottom" />
+
+                    <!--20m: SIGNIFICANT WAVE HEIGHT: TITLE-->
+                    <Grid
+                        Grid.Column="0"
+                        Grid.Row="1">
+
+                        <Grid.RowDefinitions>
+                            <RowDefinition
+                                Height="3*" />
+                            <RowDefinition
+                                Height="*" />
+                            <RowDefinition
+                                Height="*" />
+                            <RowDefinition
+                                Height="*" />
+                            <RowDefinition
+                                Height="3*" />
+                        </Grid.RowDefinitions>
+
+                        <Viewbox
+                            Grid.Row="1"
+                            StretchDirection="Both"
+                            Stretch="Uniform"
+                            HorizontalAlignment="Center">
+
+                            <TextBlock
+                                Text="Significant" />
+
+                        </Viewbox>
+
+                        <Viewbox
+                            Grid.Row="2"
+                            StretchDirection="Both"
+                            Stretch="Uniform"
+                            HorizontalAlignment="Center">
+
+                            <TextBlock
+                                Text="Wave" />
+
+                        </Viewbox>
+
+                        <Viewbox
+                            Grid.Row="3"
+                            StretchDirection="Both"
+                            Stretch="Uniform"
+                            HorizontalAlignment="Center">
+
+                            <TextBlock
+                                Text="Height" />
+
+                        </Viewbox>
+
+                    </Grid>
+
+                    <!--20m: SIGNIFICANT WAVE HEIGHT: GRAPH-->
+                    <telerik:RadCartesianChart
+                        Grid.Column="1"
+                        Grid.Row="1"
+                        Name="waveSWHChart"
+                        Margin="0,16">
+
+                        <telerik:LineSeries
+                            ZIndex="200"
+                            Stroke="{StaticResource ColorWaveLine}"
+                            CategoryBinding="timestamp"
+                            ValueBinding="graphData">
+
+                            <telerik:LineSeries.RenderOptions>
+                                <telerik:XamlRenderOptions
+                                    DefaultVisualsRenderMode="Batch" />
+                            </telerik:LineSeries.RenderOptions>
+
+                        </telerik:LineSeries>
+
+                        <telerik:RadCartesianChart.HorizontalAxis>
+                            <telerik:DateTimeContinuousAxis
+                                MajorStepUnit="Minute"
+                                MajorStep="5"
+                                ShowLabels="False"
+                                PlotMode="OnTicks"
+                                TickOrigin="{Binding alignmentTime}"
+                                Minimum="{Binding alignmentTimeMin}"
+                                Maximum="{Binding alignmentTimeMax}" />
+                        </telerik:RadCartesianChart.HorizontalAxis>
+
+                        <telerik:RadCartesianChart.VerticalAxis>
+                            <telerik:LinearAxis
+                                Maximum="{Binding wavePeriodChartAxisMax20m}"
+                                Minimum="0"
+                                SmartLabelsMode="SmartStepAndRange"
+                                LabelInterval="2" />
+                        </telerik:RadCartesianChart.VerticalAxis>
+
+                        <telerik:RadCartesianChart.Grid>
+                            <telerik:CartesianChartGrid
+                                MajorLinesVisibility="XY"
+                                ZIndex="250" />
+                        </telerik:RadCartesianChart.Grid>
+
+                    </telerik:RadCartesianChart>
+
+                    <!--20m: SIGNIFICANT WAVE HEIGHT: READOUT-->
+                    <Grid
+                        Grid.Column="2"
+                        Grid.Row="1"
+                        Margin="24,0,0,0">
+
+                        <Grid.RowDefinitions>
+                            <RowDefinition
+                                Height="2*" />
+                            <RowDefinition
+                                Height="3*" />
+                            <RowDefinition
+                                Height="4*" />
+                            <RowDefinition
+                                Height="2*" />
+                        </Grid.RowDefinitions>
+
+                        <Viewbox
+                            Grid.Row="1"
+                            StretchDirection="Both"
+                            Stretch="Uniform"
+                            HorizontalAlignment="Center">
+
+                            <telerik:Label
+                                Content="HS" />
+
+                        </Viewbox>
+
+                        <Separator
+                            Grid.Row="1"
+                            Height="1"
+                            VerticalAlignment="Bottom" />
+
+                        <Viewbox
+                            Grid.Row="2"
+                            StretchDirection="Both"
+                            Stretch="Uniform"
+                            HorizontalAlignment="Center">
+
+                            <telerik:Label
+                                Content="{Binding Path=waveSWHString, FallbackValue=0.0 m}" />
+
+                        </Viewbox>
+
+                    </Grid>
+
+                    <Separator
+                        Grid.Column="0"
+                        Grid.Row="1"
+                        Grid.ColumnSpan="3"
+                        VerticalAlignment="Bottom" />
+
+
+                    <!--20m: SIGNIFICANT WAVE HEIGHT MAX: TITLE-->
+                    <Grid
+                        Grid.Column="0"
+                        Grid.Row="2">
+
+                        <Grid.RowDefinitions>
+                            <RowDefinition
+                                Height="2*" />
+                            <RowDefinition
+                                Height="*" />
+                            <RowDefinition
+                                Height="*" />
+                            <RowDefinition
+                                Height="*" />
+                            <RowDefinition
+                                Height="*" />
+                            <RowDefinition
+                                Height="3*" />
+                        </Grid.RowDefinitions>
+
+                        <Viewbox
+                            Grid.Row="1"
+                            StretchDirection="Both"
+                            Stretch="Uniform"
+                            HorizontalAlignment="Center">
+
+                            <TextBlock
+                                Text="Max" />
+
+                        </Viewbox>
+
+                        <Viewbox
+                            Grid.Row="2"
+                            StretchDirection="Both"
+                            Stretch="Uniform"
+                            HorizontalAlignment="Center">
+
+                            <TextBlock
+                                Text="Significant" />
+
+                        </Viewbox>
+
+                        <Viewbox
+                            Grid.Row="3"
+                            StretchDirection="Both"
+                            Stretch="Uniform"
+                            HorizontalAlignment="Center">
+
+                            <TextBlock
+                                Text="Wave" />
+
+                        </Viewbox>
+
+                        <Viewbox
+                            Grid.Row="4"
+                            StretchDirection="Both"
+                            Stretch="Uniform"
+                            HorizontalAlignment="Center">
+
+                            <TextBlock
+                                Text="Height" />
+
+                        </Viewbox>
+
+                    </Grid>
+
+                    <!--20m: SIGNIFICANT WAVE HEIGHT MAX: GRAPH-->
+                    <telerik:RadCartesianChart
+                        Grid.Column="1"
+                        Grid.Row="2"
+                        Name="waveSWHMaxChart"
+                        Margin="0,16">
+
+                        <telerik:LineSeries
+                            ZIndex="200"
+                            Stroke="{StaticResource ColorWaveLine}"
+                            CategoryBinding="timestamp"
+                            ValueBinding="graphData">
+
+                            <telerik:LineSeries.RenderOptions>
+                                <telerik:XamlRenderOptions
+                                    DefaultVisualsRenderMode="Batch" />
+                            </telerik:LineSeries.RenderOptions>
+
+                        </telerik:LineSeries>
+
+                        <telerik:RadCartesianChart.HorizontalAxis>
+                            <telerik:DateTimeContinuousAxis
+                                MajorStepUnit="Minute"
+                                MajorStep="5"
+                                ShowLabels="False"
+                                PlotMode="OnTicks"
+                                TickOrigin="{Binding alignmentTime}"
+                                Minimum="{Binding alignmentTimeMin}"
+                                Maximum="{Binding alignmentTimeMax}" />
+                        </telerik:RadCartesianChart.HorizontalAxis>
+
+                        <telerik:RadCartesianChart.VerticalAxis>
+                            <telerik:LinearAxis
+                                Maximum="{Binding wavePeriodChartAxisMax20m}"
+                                Minimum="0"
+                                SmartLabelsMode="SmartStepAndRange"
+                                LabelInterval="2" />
+                        </telerik:RadCartesianChart.VerticalAxis>
+
+                        <telerik:RadCartesianChart.Grid>
+                            <telerik:CartesianChartGrid
+                                MajorLinesVisibility="XY"
+                                ZIndex="250" />
+                        </telerik:RadCartesianChart.Grid>
+
+                    </telerik:RadCartesianChart>
+
+                    <!--20m: SIGNIFICANT WAVE HEIGHT MAX: READOUT-->
+                    <Grid
+                        Grid.Column="2"
+                        Grid.Row="2"
+                        Margin="24,0,0,0">
+
+                        <Grid.RowDefinitions>
+                            <RowDefinition
+                                Height="2*" />
+                            <RowDefinition
+                                Height="3*" />
+                            <RowDefinition
+                                Height="4*" />
+                            <RowDefinition
+                                Height="2*" />
+                        </Grid.RowDefinitions>
+
+                        <Viewbox
+                            Grid.Row="1"
+                            StretchDirection="Both"
+                            Stretch="Uniform"
+                            HorizontalAlignment="Center">
+
+                            <telerik:Label
+                                Content="HMax" />
+
+                        </Viewbox>
+
+                        <Separator
+                            Grid.Row="1"
+                            Height="1"
+                            VerticalAlignment="Bottom" />
+
+                        <Viewbox
+                            Grid.Row="2"
+                            StretchDirection="Both"
+                            Stretch="Uniform"
+                            HorizontalAlignment="Center">
+
+                            <telerik:Label
+                                Content="{Binding Path=waveSWHMax20mString, FallbackValue=0.0 m}" />
+
+                        </Viewbox>
+
+                    </Grid>
+
+                    <Separator
+                        Grid.Column="0"
                         Grid.Row="2"
                         Grid.ColumnSpan="3"
                         VerticalAlignment="Bottom" />
 
-                    <!--20m: WAVE HEIGHT-->
+                    <!--20m: WAVE PERIOD: TITLE-->
                     <Grid
                         Grid.Column="0"
-                        Grid.Row="1">
+                        Grid.Row="3">
 
                         <Grid.RowDefinitions>
                             <RowDefinition
-                                Height="2*" />
+                                Height="3*" />
                             <RowDefinition
                                 Height="*" />
                             <RowDefinition
                                 Height="*" />
                             <RowDefinition
-                                Height="*" />
-                            <RowDefinition
-                                Height="2*" />
+                                Height="4*" />
                         </Grid.RowDefinitions>
 
                         <Viewbox
                             Grid.Row="1"
-                            StretchDirection="Both"
-                            Stretch="Uniform"
-                            HorizontalAlignment="Center">
-
-                            <TextBlock
-                                Text="Mean"/>
-
-                        </Viewbox>
-
-                        <Viewbox
-                            Grid.Row="2"
                             StretchDirection="Both"
                             Stretch="Uniform"
                             HorizontalAlignment="Center">
@@ -182,29 +489,23 @@
                         </Viewbox>
 
                         <Viewbox
-                            Grid.Row="3"
+                            Grid.Row="2"
                             StretchDirection="Both"
                             Stretch="Uniform"
                             HorizontalAlignment="Center">
 
                             <TextBlock
-                                Text="Height"/>
+                                Text="Period"/>
 
                         </Viewbox>
 
                     </Grid>
 
-                    <Separator
-                        Grid.Column="0"
-                        Grid.Row="0"
-                        Grid.ColumnSpan="3"
-                        VerticalAlignment="Bottom" />
-
-                    <!--20m: WAVE HEIGHT-->
+                    <!--20m: WAVE PERIOD: CHART-->
                     <telerik:RadCartesianChart
                     Grid.Column="1"
-                    Grid.Row="1"
-                    Name="waveHeightChart"
+                    Grid.Row="3"
+                    Name="wavePeriodChart"
                         Margin="0,16">
 
                         <telerik:LineSeries
@@ -233,7 +534,7 @@
 
                         <telerik:RadCartesianChart.VerticalAxis>
                             <telerik:LinearAxis
-                            Maximum="{Binding waveHeightChartAxisMax20m}"
+                            Maximum="{Binding wavePeriodChartAxisMax20m}"
                             Minimum="0"
                             SmartLabelsMode="SmartStepAndRange"
                             LabelInterval="2"/>
@@ -247,50 +548,19 @@
 
                     </telerik:RadCartesianChart>
 
+                    <!--20m: WAVE PERIOD: READOUT-->
                     <Grid
                         Grid.Column="2"
-                        Grid.Row="1">
-
-                        <Grid.RowDefinitions>
-                            <RowDefinition
-                                Height="*" />
-                            <RowDefinition
-                                Height="5*" />
-                        </Grid.RowDefinitions>
-
-                        <Viewbox
-                            StretchDirection="Both"
-                            Stretch="Uniform"
-                            HorizontalAlignment="Right">
-
-                            <TextBlock
-                                Text="{Binding Path=waveHeightMax20mString}"
-                                FontSize="{StaticResource fontSizeData}" />
-
-                        </Viewbox>
-
-                    </Grid>
-
-                    <Separator
-                        Grid.Column="0"
-                        Grid.Row="1"
-                        Grid.ColumnSpan="3"
-                        VerticalAlignment="Bottom" />
-
-                    <!--20m: WAVE HEIGHT-->
-                    <Grid
-                        Grid.Column="0"
-                        Grid.Row="1">
+                        Grid.Row="3"
+                        Margin="24,0,0,0">
 
                         <Grid.RowDefinitions>
                             <RowDefinition
                                 Height="2*" />
                             <RowDefinition
-                                Height="*" />
+                                Height="3*" />
                             <RowDefinition
-                                Height="*" />
-                            <RowDefinition
-                                Height="*" />
+                                Height="4*" />
                             <RowDefinition
                                 Height="2*" />
                         </Grid.RowDefinitions>
@@ -301,8 +571,61 @@
                             Stretch="Uniform"
                             HorizontalAlignment="Center">
 
+                            <telerik:Label
+                                Content="TS" />
+
+                        </Viewbox>
+
+                        <Separator
+                            Grid.Row="1"
+                            Height="1"
+                            VerticalAlignment="Bottom" />
+
+                        <Viewbox
+                            Grid.Row="2"
+                            StretchDirection="Both"
+                            Stretch="Uniform"
+                            HorizontalAlignment="Center">
+
+                            <telerik:Label
+                                Content="{Binding Path=wavePeriodString, FallbackValue=0.0 m}" />
+
+                        </Viewbox>
+
+                    </Grid>
+
+                    <Separator
+                        Grid.Column="0"
+                        Grid.Row="3"
+                        Grid.ColumnSpan="3"
+                        VerticalAlignment="Bottom" />
+
+                    <!--20m: WAVE PERIOD MAX: TITLE-->
+                    <Grid
+                        Grid.Column="0"
+                        Grid.Row="4">
+
+                        <Grid.RowDefinitions>
+                            <RowDefinition
+                                Height="3*" />
+                            <RowDefinition
+                                Height="*" />
+                            <RowDefinition
+                                Height="*" />
+                            <RowDefinition
+                                Height="*" />
+                            <RowDefinition
+                                Height="3*" />
+                        </Grid.RowDefinitions>
+
+                        <Viewbox
+                            Grid.Row="1"
+                            StretchDirection="Both"
+                            Stretch="Uniform"
+                            HorizontalAlignment="Center">
+
                             <TextBlock
-                                Text="Mean"/>
+                                Text="Max"/>
 
                         </Viewbox>
 
@@ -324,7 +647,7 @@
                             HorizontalAlignment="Center">
 
                             <TextBlock
-                                Text="Height"/>
+                                Text="Period"/>
 
                         </Viewbox>
 
@@ -332,15 +655,15 @@
 
                     <Separator
                         Grid.Column="0"
-                        Grid.Row="0"
+                        Grid.Row="3"
                         Grid.ColumnSpan="3"
                         VerticalAlignment="Bottom" />
 
-                    <!--20m: WAVE HEIGHT-->
+                    <!--20m: WAVE PERIOD MAX: CHART-->
                     <telerik:RadCartesianChart
                     Grid.Column="1"
-                    Grid.Row="2"
-                    Name="waveMeanPeriodChart"
+                    Grid.Row="4"
+                    Name="wavePeriodMaxChart"
                         Margin="0,16">
 
                         <telerik:LineSeries
@@ -369,7 +692,7 @@
 
                         <telerik:RadCartesianChart.VerticalAxis>
                             <telerik:LinearAxis
-                            Maximum="{Binding waveMeanPeriodChartAxisMax20m}"
+                            Maximum="{Binding wavePeriodChartAxisMax20m}"
                             Minimum="0"
                             SmartLabelsMode="SmartStepAndRange"
                             LabelInterval="2"/>
@@ -383,35 +706,51 @@
 
                     </telerik:RadCartesianChart>
 
+                    <!--20m: WAVE PERIOD MAX: READOUT-->
                     <Grid
                         Grid.Column="2"
-                        Grid.Row="1">
+                        Grid.Row="4"
+                        Margin="24,0,0,0">
 
                         <Grid.RowDefinitions>
                             <RowDefinition
-                                Height="*" />
+                                Height="2*" />
                             <RowDefinition
-                                Height="5*" />
+                                Height="3*" />
+                            <RowDefinition
+                                Height="4*" />
+                            <RowDefinition
+                                Height="2*" />
                         </Grid.RowDefinitions>
 
                         <Viewbox
+                            Grid.Row="1"
                             StretchDirection="Both"
                             Stretch="Uniform"
-                            HorizontalAlignment="Right">
+                            HorizontalAlignment="Center">
 
-                            <TextBlock
-                                Text="{Binding Path=waveMeanPeriodMax20mString}"
-                                FontSize="{StaticResource fontSizeData}" />
+                            <telerik:Label
+                                Content="TMax" />
+
+                        </Viewbox>
+
+                        <Separator
+                            Grid.Row="1"
+                            Height="1"
+                            VerticalAlignment="Bottom" />
+
+                        <Viewbox
+                            Grid.Row="2"
+                            StretchDirection="Both"
+                            Stretch="Uniform"
+                            HorizontalAlignment="Center">
+
+                            <telerik:Label
+                                Content="{Binding Path=wavePeriodMax20mString, FallbackValue=0.0 m}" />
 
                         </Viewbox>
 
                     </Grid>
-
-                    <Separator
-                        Grid.Column="0"
-                        Grid.Row="1"
-                        Grid.ColumnSpan="3"
-                        VerticalAlignment="Bottom" />
 
                 </Grid>
 
