@@ -35,10 +35,28 @@ namespace HMS_Client
             void UIUpdate(object sender, EventArgs e)
             {
                 // Sjekke om vi har data timeout
-                if (sensorStatus.TimeoutCheck(airTemperature)) OnPropertyChanged(nameof(airTemperatureString));
-                if (sensorStatus.TimeoutCheck(airHumidity)) OnPropertyChanged(nameof(airHumidityString));
+                if (sensorStatus.TimeoutCheck(seaTemperature))
+                {
+                    OnPropertyChanged(nameof(seaTemperatureData));
+                    OnPropertyChanged(nameof(seaTemperatureString));
+                }
+
+                if (sensorStatus.TimeoutCheck(airTemperature))
+                {
+                    OnPropertyChanged(nameof(airTemperatureData));
+                    OnPropertyChanged(nameof(airTemperatureString));
+                }
+                if (sensorStatus.TimeoutCheck(airHumidity))
+                {
+                    OnPropertyChanged(nameof(airHumidityData));
+                    OnPropertyChanged(nameof(airHumidityString));
+                }
                 if (sensorStatus.TimeoutCheck(airDewPoint)) OnPropertyChanged(nameof(airDewPointString));
-                if (sensorStatus.TimeoutCheck(airPressureQNH)) OnPropertyChanged(nameof(airPressureQNHString));
+                if (sensorStatus.TimeoutCheck(airPressureQNH))
+                {
+                    OnPropertyChanged(nameof(airPressureQNHData));
+                    OnPropertyChanged(nameof(airPressureQNHString));
+                }
                 if (sensorStatus.TimeoutCheck(airPressureQFE)) OnPropertyChanged(nameof(airPressureQFEString));
                 if (sensorStatus.TimeoutCheck(visibility)) OnPropertyChanged(nameof(visibilityString));
                 if (sensorStatus.TimeoutCheck(weather))
@@ -60,6 +78,8 @@ namespace HMS_Client
 
         public void UpdateData(HMSDataCollection clientSensorList)
         {
+            seaTemperature = clientSensorList.GetData(ValueType.SeaTemperature);
+
             airTemperature = clientSensorList.GetData(ValueType.AirTemperature);
             airHumidity = clientSensorList.GetData(ValueType.AirHumidity);
             airDewPoint = clientSensorList.GetData(ValueType.AirDewPoint);
@@ -72,6 +92,76 @@ namespace HMS_Client
             SetCloudData(1, clientSensorList.GetData(ValueType.CloudLayer2Base), clientSensorList.GetData(ValueType.CloudLayer2Coverage));
             SetCloudData(2, clientSensorList.GetData(ValueType.CloudLayer3Base), clientSensorList.GetData(ValueType.CloudLayer3Coverage));
             SetCloudData(3, clientSensorList.GetData(ValueType.CloudLayer4Base), clientSensorList.GetData(ValueType.CloudLayer4Coverage));
+        }
+
+        /////////////////////////////////////////////////////////////////////////////
+        // Meteorological: Sea Temperature
+        /////////////////////////////////////////////////////////////////////////////
+        private HMSData _seaTemperature { get; set; } = new HMSData();
+        public HMSData seaTemperature
+        {
+            get
+            {
+                return _seaTemperature;
+            }
+            set
+            {
+                if (value != null)
+                {
+                    if (value.data != _seaTemperature.data ||
+                        value.timestamp != _seaTemperature.timestamp)
+                    {
+                        _seaTemperature.Set(value);
+
+                        OnPropertyChanged(nameof(seaTemperatureData));
+                        OnPropertyChanged(nameof(seaTemperatureString));
+                    }
+                }
+            }
+        }
+        public double seaTemperatureData
+        {
+            get
+            {
+                if (seaTemperature != null)
+                {
+                    // Sjekke om data er gyldig
+                    if (seaTemperature.status == DataStatus.OK)
+                    {
+                        return seaTemperature.data;
+                    }
+                    else
+                    {
+                        return 0;
+                    }
+                }
+                else
+                {
+                    return 0;
+                }
+            }
+        }
+        public string seaTemperatureString
+        {
+            get
+            {
+                if (seaTemperature != null)
+                {
+                    // Sjekke om data er gyldig
+                    if (seaTemperature.status == DataStatus.OK)
+                    {
+                        return string.Format("{0} °C", seaTemperature.data.ToString("0.0"));
+                    }
+                    else
+                    {
+                        return Constants.NotAvailable;
+                    }
+                }
+                else
+                {
+                    return Constants.NotAvailable;
+                }
+            }
         }
 
         /////////////////////////////////////////////////////////////////////////////
@@ -93,12 +183,34 @@ namespace HMS_Client
                     {
                         _airTemperature.Set(value);
 
+                        OnPropertyChanged(nameof(airTemperatureData));
                         OnPropertyChanged(nameof(airTemperatureString));
                     }
                 }
             }
         }
-
+        public double airTemperatureData
+        {
+            get
+            {
+                if (airTemperature != null)
+                {
+                    // Sjekke om data er gyldig
+                    if (airTemperature.status == DataStatus.OK)
+                    {
+                        return airTemperature.data;
+                    }
+                    else
+                    {
+                        return 0;
+                    }
+                }
+                else
+                {
+                    return 0;
+                }
+            }
+        }
         public string airTemperatureString
         {
             get
@@ -141,8 +253,32 @@ namespace HMS_Client
                     {
                         _airHumidity.Set(value);
 
+                        OnPropertyChanged(nameof(airHumidityData));
                         OnPropertyChanged(nameof(airHumidityString));
                     }
+                }
+            }
+        }
+
+        public double airHumidityData
+        {
+            get
+            {
+                if (airHumidity != null)
+                {
+                    // Sjekke om data er gyldig
+                    if (airHumidity.status == DataStatus.OK)
+                    {
+                        return airHumidity.data;
+                    }
+                    else
+                    {
+                        return 0;
+                    }
+                }
+                else
+                {
+                    return 0;
                 }
             }
         }
@@ -237,8 +373,32 @@ namespace HMS_Client
                     {
                         _airPressureQNH.Set(value);
 
+                        OnPropertyChanged(nameof(airPressureQNHData));
                         OnPropertyChanged(nameof(airPressureQNHString));
                     }
+                }
+            }
+        }
+
+        public double airPressureQNHData
+        {
+            get
+            {
+                if (airPressureQNH != null)
+                {
+                    // Sjekke om data er gyldig
+                    if (airPressureQNH.status == DataStatus.OK)
+                    {
+                        return airPressureQNH.data;
+                    }
+                    else
+                    {
+                        return 0;
+                    }
+                }
+                else
+                {
+                    return 0;
                 }
             }
         }

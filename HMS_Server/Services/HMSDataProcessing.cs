@@ -7,23 +7,22 @@ namespace HMS_Server
         private ErrorHandler errorHandler;
         private ErrorMessageCategory errorMessageCat;
 
+        private AdminSettingsVM adminSettingsVM;
+
         // Liste med data kalkulasjoner som skal utføres på HMS data
         private List<DataCalculations> dataCalculations = new List<DataCalculations>();
 
-        public void Init(ErrorHandler errorHandler, ErrorMessageCategory errorMessageCat)
+        public void Init(ErrorHandler errorHandler, ErrorMessageCategory errorMessageCat, AdminSettingsVM adminSettingsVM)
         {
             this.errorHandler = errorHandler;
             this.errorMessageCat = errorMessageCat;
+            this.adminSettingsVM = adminSettingsVM;
         }
 
         // Legg inn en ny type kalkulasjon
         public void AddProcessing(CalculationType type, double parameter)
         {
-            dataCalculations.Add(new DataCalculations()
-            {
-                type = type,
-                parameter = parameter
-            });
+            dataCalculations.Add(new DataCalculations(type, parameter));
         }
 
         // Utfør de innlagte kalkulasjonene
@@ -44,7 +43,7 @@ namespace HMS_Server
                 foreach (var item in dataCalculations)
                 {
                     // Tar output fra forrige iterasjon og kjører ny kalkulasjon
-                    processedData = item.DoCalculations(processedData, newData.timestamp, errorHandler, errorMessageCat).ToString();
+                    processedData = item.DoCalculations(processedData, newData.timestamp, errorHandler, errorMessageCat, adminSettingsVM).ToString();
                 }
             }
 

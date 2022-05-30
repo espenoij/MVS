@@ -287,13 +287,16 @@ namespace HMS_Client
             if (adminSettingsVM.enableEMS)
             {
                 // EMS Wave Data
-                ucEMSWaveData.Init(emsWaveDataVM, config);
+                ucEMSWaveData.Init(emsWaveDataVM);
 
                 // EMS Wind & Heading
                 ucEMSWindHeading.Init(windHeadingVM, userInputsVM, adminSettingsVM);
 
                 // EMS Meteorological (samme som HMS met)
                 ucEMSMeteorological.Init(meteorologicalVM);
+
+                // EMS Weather
+                ucEMSWeather.Init(meteorologicalVM);
             }
 
             // Admin Settings

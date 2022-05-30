@@ -18,7 +18,7 @@ class Constants
 
     // Admin Mode Password
     public const string AdminModePassword = "swireworld";
-    public const string ActivationPassword = "swireworld";
+    public const string ActivationPassword = "swirefuture";
 
     // Max antall datafelt i en pakke
     public const int PacketDataFields = 60;                     // Korresponderer til felt i XAML fil (lvPacketData)
@@ -159,7 +159,7 @@ class Constants
     public const int GUIDataLinesMax = 100;
 
     // Max sensors
-    public const int MaxSensors = 10;
+    public const int MaxSensors = 11;
 
     // Sensor Gruppe
     public const int NO_SENSOR_GROUP_ID = -1;
@@ -178,6 +178,11 @@ class Constants
     public const double WindSensorDistanceMin = 0;
     public const double WindSensorDistanceMax = 500;
     public const double WindSensorDistanceDefault = 0;
+
+    // Wave Height Cutoff
+    public const double WaveHeightCutoffMin = 0;
+    public const double WaveHeightCutoffMax = 1;
+    public const double WaveHeightCutoffDefault = 0.1;
 
     // Vind justert til X meter over helideck
     public const double WindAdjustmentAboveHelideck = 10;
@@ -320,5 +325,7 @@ class Constants
     public const string BinaryDataDelimiter = "-";
 
     // EMS Page: Wave Chart max
-    public const int WaveChartIncrements = 10;
+    public const int WaveChartSWHInc = 5;
+    public const int WaveChartPeriodInc = 10;
+
 }

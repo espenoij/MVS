@@ -8,12 +8,12 @@
     xmlns:hms_client="clr-namespace:HMS_Client" 
     d:DataContext="{d:DesignInstance Type=hms_client:EMSWaveDataVM}"
     mc:Ignorable="d"
-    d:DesignHeight="1200"
+    d:DesignHeight="1000"
     d:DesignWidth="1600">
 
-    <!--SEA WAVES-->
+    <!--WAVE DATA-->
     <telerik:GroupBox
-        Header="SEA WAVES"
+        Header="WAVE DATA"
         Margin="8">
 
         <telerik:RadTabControl
@@ -58,11 +58,9 @@
                             Height="*" />
                         <RowDefinition
                             Height="*" />
-                        <RowDefinition
-                            Height="*" />
                     </Grid.RowDefinitions>
 
-                    <!--WAVES-->
+                    <!--WAVES--><!--
                     <Grid
                         Grid.Column="0"
                         Grid.Row="0">
@@ -90,7 +88,7 @@
 
                     </Grid>
                         
-                    <!--20m: WAVES-->
+                    --><!--20m: WAVES--><!--
                     <telerik:RadCartesianChart
                     Grid.Column="1"
                     Grid.Row="0"
@@ -99,7 +97,7 @@
 
                         <telerik:LineSeries
                         ZIndex="200"
-                        Stroke="{StaticResource ColorWaveLine}"
+                        Stroke="{StaticResource EMSWaveData}"
                         CategoryBinding="timestamp"
                         ValueBinding="graphData">
 
@@ -126,7 +124,7 @@
                                 Maximum="{Binding waveChartAxisMax20m}"
                                 Minimum="{Binding waveChartAxisMin20m}"
                                 MajorStep="2"
-                                LabelInterval="1"/>
+                                LabelInterval="2"/>
                         </telerik:RadCartesianChart.VerticalAxis>
 
                         <telerik:RadCartesianChart.Grid>
@@ -141,12 +139,12 @@
                         Grid.Column="0"
                         Grid.Row="0"
                         Grid.ColumnSpan="3"
-                        VerticalAlignment="Bottom" />
+                        VerticalAlignment="Bottom" />-->
 
                     <!--20m: SIGNIFICANT WAVE HEIGHT: TITLE-->
                     <Grid
                         Grid.Column="0"
-                        Grid.Row="1">
+                        Grid.Row="0">
 
                         <Grid.RowDefinitions>
                             <RowDefinition
@@ -199,13 +197,13 @@
                     <!--20m: SIGNIFICANT WAVE HEIGHT: GRAPH-->
                     <telerik:RadCartesianChart
                         Grid.Column="1"
-                        Grid.Row="1"
+                        Grid.Row="0"
                         Name="waveSWHChart"
                         Margin="0,16">
 
                         <telerik:LineSeries
                             ZIndex="200"
-                            Stroke="{StaticResource ColorWaveLine}"
+                            Stroke="{StaticResource EMSWaveData}"
                             CategoryBinding="timestamp"
                             ValueBinding="graphData">
 
@@ -229,7 +227,7 @@
 
                         <telerik:RadCartesianChart.VerticalAxis>
                             <telerik:LinearAxis
-                                Maximum="{Binding wavePeriodChartAxisMax20m}"
+                                Maximum="{Binding waveSWHChartAxisMax20m}"
                                 Minimum="0"
                                 SmartLabelsMode="SmartStepAndRange"
                                 LabelInterval="2" />
@@ -246,7 +244,7 @@
                     <!--20m: SIGNIFICANT WAVE HEIGHT: READOUT-->
                     <Grid
                         Grid.Column="2"
-                        Grid.Row="1"
+                        Grid.Row="0"
                         Margin="24,0,0,0">
 
                         <Grid.RowDefinitions>
@@ -291,7 +289,7 @@
 
                     <Separator
                         Grid.Column="0"
-                        Grid.Row="1"
+                        Grid.Row="0"
                         Grid.ColumnSpan="3"
                         VerticalAlignment="Bottom" />
 
@@ -299,7 +297,7 @@
                     <!--20m: SIGNIFICANT WAVE HEIGHT MAX: TITLE-->
                     <Grid
                         Grid.Column="0"
-                        Grid.Row="2">
+                        Grid.Row="1">
 
                         <Grid.RowDefinitions>
                             <RowDefinition
@@ -365,13 +363,13 @@
                     <!--20m: SIGNIFICANT WAVE HEIGHT MAX: GRAPH-->
                     <telerik:RadCartesianChart
                         Grid.Column="1"
-                        Grid.Row="2"
+                        Grid.Row="1"
                         Name="waveSWHMaxChart"
                         Margin="0,16">
 
                         <telerik:LineSeries
                             ZIndex="200"
-                            Stroke="{StaticResource ColorWaveLine}"
+                            Stroke="{StaticResource EMSWaveData}"
                             CategoryBinding="timestamp"
                             ValueBinding="graphData">
 
@@ -395,7 +393,7 @@
 
                         <telerik:RadCartesianChart.VerticalAxis>
                             <telerik:LinearAxis
-                                Maximum="{Binding wavePeriodChartAxisMax20m}"
+                                Maximum="{Binding waveSWHChartAxisMax20m}"
                                 Minimum="0"
                                 SmartLabelsMode="SmartStepAndRange"
                                 LabelInterval="2" />
@@ -412,7 +410,7 @@
                     <!--20m: SIGNIFICANT WAVE HEIGHT MAX: READOUT-->
                     <Grid
                         Grid.Column="2"
-                        Grid.Row="2"
+                        Grid.Row="1"
                         Margin="24,0,0,0">
 
                         <Grid.RowDefinitions>
@@ -433,7 +431,7 @@
                             HorizontalAlignment="Center">
 
                             <telerik:Label
-                                Content="HMax" />
+                                Content="HSmax" />
 
                         </Viewbox>
 
@@ -457,14 +455,14 @@
 
                     <Separator
                         Grid.Column="0"
-                        Grid.Row="2"
+                        Grid.Row="1"
                         Grid.ColumnSpan="3"
                         VerticalAlignment="Bottom" />
 
                     <!--20m: WAVE PERIOD: TITLE-->
                     <Grid
                         Grid.Column="0"
-                        Grid.Row="3">
+                        Grid.Row="2">
 
                         <Grid.RowDefinitions>
                             <RowDefinition
@@ -474,11 +472,24 @@
                             <RowDefinition
                                 Height="*" />
                             <RowDefinition
-                                Height="4*" />
+                                Height="*" />
+                            <RowDefinition
+                                Height="3*" />
                         </Grid.RowDefinitions>
 
                         <Viewbox
                             Grid.Row="1"
+                            StretchDirection="Both"
+                            Stretch="Uniform"
+                            HorizontalAlignment="Center">
+
+                            <TextBlock
+                                Text="Mean" />
+
+                        </Viewbox>
+
+                        <Viewbox
+                            Grid.Row="2"
                             StretchDirection="Both"
                             Stretch="Uniform"
                             HorizontalAlignment="Center">
@@ -489,7 +500,7 @@
                         </Viewbox>
 
                         <Viewbox
-                            Grid.Row="2"
+                            Grid.Row="3"
                             StretchDirection="Both"
                             Stretch="Uniform"
                             HorizontalAlignment="Center">
@@ -504,13 +515,13 @@
                     <!--20m: WAVE PERIOD: CHART-->
                     <telerik:RadCartesianChart
                     Grid.Column="1"
-                    Grid.Row="3"
+                    Grid.Row="2"
                     Name="wavePeriodChart"
                         Margin="0,16">
 
                         <telerik:LineSeries
                         ZIndex="200"
-                        Stroke="{StaticResource ColorWaveLine}"
+                        Stroke="{StaticResource EMSWaveData}"
                         CategoryBinding="timestamp"
                         ValueBinding="graphData">
 
@@ -551,7 +562,7 @@
                     <!--20m: WAVE PERIOD: READOUT-->
                     <Grid
                         Grid.Column="2"
-                        Grid.Row="3"
+                        Grid.Row="2"
                         Margin="24,0,0,0">
 
                         <Grid.RowDefinitions>
@@ -572,7 +583,7 @@
                             HorizontalAlignment="Center">
 
                             <telerik:Label
-                                Content="TS" />
+                                Content="TZ" />
 
                         </Viewbox>
 
@@ -596,18 +607,20 @@
 
                     <Separator
                         Grid.Column="0"
-                        Grid.Row="3"
+                        Grid.Row="2"
                         Grid.ColumnSpan="3"
                         VerticalAlignment="Bottom" />
 
                     <!--20m: WAVE PERIOD MAX: TITLE-->
                     <Grid
                         Grid.Column="0"
-                        Grid.Row="4">
+                        Grid.Row="3">
 
                         <Grid.RowDefinitions>
                             <RowDefinition
-                                Height="3*" />
+                                Height="2*" />
+                            <RowDefinition
+                                Height="*" />
                             <RowDefinition
                                 Height="*" />
                             <RowDefinition
@@ -636,12 +649,23 @@
                             HorizontalAlignment="Center">
 
                             <TextBlock
-                                Text="Wave"/>
+                                Text="Mean" />
 
                         </Viewbox>
 
                         <Viewbox
                             Grid.Row="3"
+                            StretchDirection="Both"
+                            Stretch="Uniform"
+                            HorizontalAlignment="Center">
+
+                            <TextBlock
+                                Text="Wave"/>
+
+                        </Viewbox>
+
+                        <Viewbox
+                            Grid.Row="4"
                             StretchDirection="Both"
                             Stretch="Uniform"
                             HorizontalAlignment="Center">
@@ -655,20 +679,20 @@
 
                     <Separator
                         Grid.Column="0"
-                        Grid.Row="3"
+                        Grid.Row="2"
                         Grid.ColumnSpan="3"
                         VerticalAlignment="Bottom" />
 
                     <!--20m: WAVE PERIOD MAX: CHART-->
                     <telerik:RadCartesianChart
                     Grid.Column="1"
-                    Grid.Row="4"
+                    Grid.Row="3"
                     Name="wavePeriodMaxChart"
                         Margin="0,16">
 
                         <telerik:LineSeries
                         ZIndex="200"
-                        Stroke="{StaticResource ColorWaveLine}"
+                        Stroke="{StaticResource EMSWaveData}"
                         CategoryBinding="timestamp"
                         ValueBinding="graphData">
 
@@ -709,7 +733,7 @@
                     <!--20m: WAVE PERIOD MAX: READOUT-->
                     <Grid
                         Grid.Column="2"
-                        Grid.Row="4"
+                        Grid.Row="3"
                         Margin="24,0,0,0">
 
                         <Grid.RowDefinitions>
@@ -730,7 +754,7 @@
                             HorizontalAlignment="Center">
 
                             <telerik:Label
-                                Content="TMax" />
+                                Content="TZmax" />
 
                         </Viewbox>
 

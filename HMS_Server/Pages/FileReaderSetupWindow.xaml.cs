@@ -19,6 +19,9 @@ namespace HMS_Server
         // Error Handler
         private ErrorHandler errorHandler;
 
+        // Admin Settings
+        private AdminSettingsVM adminSettingsVM;
+
         // Valgt sensor data
         private SensorData sensorData;
 
@@ -40,7 +43,7 @@ namespace HMS_Server
         // View Model
         private FileReaderWindowVM fileReaderWindowVM;
 
-        public FileReaderSetupWindow(SensorData sensorData, Config config, ErrorHandler errorHandler)
+        public FileReaderSetupWindow(SensorData sensorData, Config config, ErrorHandler errorHandler, AdminSettingsVM adminSettingsVM)
         {
             InitializeComponent();
 
@@ -52,6 +55,9 @@ namespace HMS_Server
 
             // Error Handler
             this.errorHandler = errorHandler;
+
+            // Admin Settings
+            this.adminSettingsVM = adminSettingsVM;
 
             // Initialisere application settings
             InitializeApplicationSettings();
@@ -106,7 +112,7 @@ namespace HMS_Server
 
                         // Trinn 4: Utføre kalkulasjoner på utvalgt data
                         //////////////////////////////////////////////////////////////////////////////
-                        CalculatedData calculatedData = process.ApplyCalculationsToSelectedData(selectedData, dataCalculations, DateTime.UtcNow, errorHandler, ErrorMessageCategory.Admin);
+                        CalculatedData calculatedData = process.ApplyCalculationsToSelectedData(selectedData, dataCalculations, DateTime.UtcNow, errorHandler, ErrorMessageCategory.Admin, adminSettingsVM);
 
                         // Vise de prosesserte dataene
                         DisplayProcessedData(calculatedData);

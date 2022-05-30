@@ -23,7 +23,10 @@ namespace HMS_Server
         private Config config;
 
         // Error Handler
-        ErrorHandler errorHandler;
+        private ErrorHandler errorHandler;
+
+        // Admin settings
+        private AdminSettingsVM adminSettingsVM;
 
         // Sensor Data List
         private RadObservableCollectionEx<SensorData> sensorDataList = new RadObservableCollectionEx<SensorData>();
@@ -54,7 +57,7 @@ namespace HMS_Server
         // View Model
         private ModbusSetupWindowVM modbusSetupWindowVM;
 
-        public ModbusSetupWindow(SensorData sensorData, RadObservableCollectionEx<SensorData> sensorDataList, Config config, ErrorHandler errorHandler)
+        public ModbusSetupWindow(SensorData sensorData, RadObservableCollectionEx<SensorData> sensorDataList, Config config, ErrorHandler errorHandler, AdminSettingsVM adminSettingsVM)
         {
             InitializeComponent();
 
@@ -72,6 +75,9 @@ namespace HMS_Server
 
             // Error Handler
             this.errorHandler = errorHandler;
+
+            // Admin Settings
+            this.adminSettingsVM = adminSettingsVM;
 
             // Initialisere application settings
             InitializeApplicationSettings();
@@ -497,7 +503,7 @@ namespace HMS_Server
                     DisplaySelectedData(modbusData);
 
                     // Utføre kalkulasjoner på data
-                    process.ApplyCalculationsToSelectedData(sensorData, DateTime.UtcNow, modbusData, errorHandler, ErrorMessageCategory.AdminUser);
+                    process.ApplyCalculationsToSelectedData(sensorData, DateTime.UtcNow, modbusData, errorHandler, ErrorMessageCategory.AdminUser, adminSettingsVM);
 
                     // Vise processed data
                     DisplayProcessedData(modbusData);

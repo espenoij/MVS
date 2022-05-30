@@ -107,7 +107,7 @@ namespace HMS_Server
             config = new Config();
 
             // Init
-            sensorDataRetrieval = new SensorDataRetrieval(config, database, errorHandler);
+            sensorDataRetrieval = new SensorDataRetrieval(config, database, errorHandler, adminSettingsVM);
 
             // HMS Output data
             hmsOutputData = new HMSDataCollection();
@@ -128,7 +128,7 @@ namespace HMS_Server
 
             // Sensor Input Edit
             StopServerCallback stopServerCallback = new StopServerCallback(StopServer);
-            ucSensorSetupPage.Init(config, errorHandler, stopServerCallback);
+            ucSensorSetupPage.Init(config, errorHandler, adminSettingsVM, stopServerCallback);
 
             // Error Message
             ucErrorMessagesPage.Init(config, errorHandler);

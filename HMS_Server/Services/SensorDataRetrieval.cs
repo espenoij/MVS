@@ -37,7 +37,7 @@ namespace HMS_Server
         // Retrieval Status
         private bool dataRetrievalStarted = false;
 
-        public SensorDataRetrieval(Config config, DatabaseHandler database, ErrorHandler errorHandler)
+        public SensorDataRetrieval(Config config, DatabaseHandler database, ErrorHandler errorHandler, AdminSettingsVM adminSettingsVM)
         {
             this.config = config;
             this.database = database;
@@ -47,13 +47,13 @@ namespace HMS_Server
             BindingOperations.EnableCollectionSynchronization(sensorDataList, sensorDataListLock);
 
             // Serial Port data innhenting
-            serialPortDataRetrieval = new SerialPortDataRetrieval(config, sensorDataList, database, errorHandler);
+            serialPortDataRetrieval = new SerialPortDataRetrieval(config, sensorDataList, database, errorHandler, adminSettingsVM);
 
             // Modbus data innhenting
-            modbusDataRetrieval = new ModbusDataRetrieval(config, database, errorHandler);
+            modbusDataRetrieval = new ModbusDataRetrieval(config, database, errorHandler, adminSettingsVM);
 
             // File Reader data innhenting
-            fileReaderDataRetrieval = new FileReaderDataRetrieval(database, errorHandler);
+            fileReaderDataRetrieval = new FileReaderDataRetrieval(database, errorHandler, adminSettingsVM);
         }
 
         public void LoadSensors()

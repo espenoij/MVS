@@ -29,7 +29,7 @@
             hmsProcessingWindHeading = new HMSProcessingWindHeading(hmsOutputData, adminSettingsVM, userInputs, errorHandler);
             hmsProcessingMeteorological = new HMSProcessingMeteorological(hmsOutputData, adminSettingsVM);
             hmsProcessingHelideckStatus = new HMSProcessingHelideckStatus(hmsOutputData, motionLimits, adminSettingsVM, userInputs, hmsProcessingMotion, hmsProcessingWindHeading);
-            hmsProcessingEMS = new HMSProcessingEMS(hmsOutputData, errorHandler);
+            hmsProcessingEMS = new HMSProcessingEMS(hmsOutputData, errorHandler, adminSettingsVM);
 
             // Data Verification Module
             if (dataVerificationIsActive)

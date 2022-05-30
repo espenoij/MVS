@@ -257,9 +257,9 @@ namespace HMS_Server
         private HMSDataProcessing dataProcess = new HMSDataProcessing();
 
         // Init av prosessering med error handler og error type
-        public void InitProcessing(ErrorHandler errorHandler, ErrorMessageCategory errorMessageCat)
+        public void InitProcessing(ErrorHandler errorHandler, ErrorMessageCategory errorMessageCat, AdminSettingsVM adminSettingsVM)
         {
-            dataProcess.Init(errorHandler, errorMessageCat);
+            dataProcess.Init(errorHandler, errorMessageCat, adminSettingsVM);
         }
 
         // Legger til en prosessering med type og parameter

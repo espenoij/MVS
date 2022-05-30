@@ -139,6 +139,7 @@ namespace HMS_Server
             windSensorHeight = config.ReadWithDefault(ConfigKey.WindSensorHeight, Constants.WindSensorHeightDefault);
             windSensorDistance = config.ReadWithDefault(ConfigKey.WindSensorDistance, Constants.WindSensorDistanceDefault);
             airPressureSensorHeight = config.ReadWithDefault(ConfigKey.AirPressureSensorHeight, Constants.WindSensorHeightDefault);
+            waveHeightCutoff = config.ReadWithDefault(ConfigKey.WaveHeightCutoff, Constants.WaveHeightCutoffDefault);
         }
 
         public void ApplicationRestartRequired(bool showMessage = true)
@@ -581,6 +582,24 @@ namespace HMS_Server
             {
                 _airPressureSensorHeight = value;
                 config.Write(ConfigKey.AirPressureSensorHeight, _airPressureSensorHeight.ToString());
+                OnPropertyChanged();
+            }
+        }
+
+        /////////////////////////////////////////////////////////////////////////////
+        // Wave Height Cut-Off (Period)
+        /////////////////////////////////////////////////////////////////////////////
+        private double _waveHeightCutoff { get; set; }
+        public double waveHeightCutoff
+        {
+            get
+            {
+                return _waveHeightCutoff;
+            }
+            set
+            {
+                _waveHeightCutoff = value;
+                config.Write(ConfigKey.WaveHeightCutoff, _waveHeightCutoff.ToString());
                 OnPropertyChanged();
             }
         }

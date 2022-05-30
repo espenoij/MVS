@@ -15,15 +15,18 @@ namespace HMS_Server
         // Error Handler
         private ErrorHandler errorHandler;
 
+        // Admin Settings
+        private AdminSettingsVM adminSettingsVM;
+
         // File Reader callback
         public delegate void FileReaderCallback(FileReaderSetup fileReaderData);
         private FileReaderCallback fileReaderCallback;
 
-        public FileReaderDataRetrieval(DatabaseHandler database, ErrorHandler errorHandler)
+        public FileReaderDataRetrieval(DatabaseHandler database, ErrorHandler errorHandler, AdminSettingsVM adminSettingsVM)
         {
             this.database = database;
-
             this.errorHandler = errorHandler;
+            this.adminSettingsVM = adminSettingsVM;
 
             // Callback funksjon som kalles når file reader har lest en linje fra fil
             fileReaderCallback = new FileReaderCallback(DataProcessing);
@@ -98,7 +101,7 @@ namespace HMS_Server
 
                             // Utføre kalkulasjoner på utvalgt data
                             //////////////////////////////////////////////////////////////////////////////
-                            CalculatedData calculatedData = process.ApplyCalculationsToSelectedData(selectedData, sensorData.dataCalculations, DateTime.UtcNow, errorHandler, ErrorMessageCategory.Admin);
+                            CalculatedData calculatedData = process.ApplyCalculationsToSelectedData(selectedData, sensorData.dataCalculations, DateTime.UtcNow, errorHandler, ErrorMessageCategory.Admin, adminSettingsVM);
 
                             // Lagre resultat
                             sensorData.timestamp = fileReaderData.timestamp;

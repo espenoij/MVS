@@ -137,15 +137,16 @@ public enum ValueType
     AccelerationY = 27,
     AccelerationZ = 28,
     Wave = 29,
+    SeaTemperature = 30,
 
     // Database
-    Database = 30,
+    Database = 31,
 
     // Data Verification
-    TimeID = 31,
-    SensorMRU = 32,
-    SensorGyro = 33,
-    SensorWind = 34,
+    TimeID = 32,
+    SensorMRU = 33,
+    SensorGyro = 34,
+    SensorWind = 35,
 
     // Ikke lagret i config fil
     // Dette er data som beregnes fra variablene over, dvs. fra sensor data

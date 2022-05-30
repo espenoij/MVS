@@ -458,8 +458,7 @@
                         <DockPanel>
                             <telerik:Label
                                 Name="lbWindDirRef"
-                                Content="Wind Direction Reference"
-                                VerticalAlignment="Center" />
+                                Content="Wind Direction Reference" />
                             <telerik:RadComboBox
                                 Name="cboWindDirRef"
                                 Width="160"
@@ -471,8 +470,7 @@
                         <!--Helideck Height (above MSL)-->
                         <DockPanel>
                             <telerik:Label
-                                Content="Helideck Height (above MSL)"
-                                VerticalAlignment="Center" />
+                                Content="Helideck Height (above MSL)" />
                             <TextBox
                                 Name="tbHelideckHeight"
                                 Width="110"
@@ -485,8 +483,7 @@
                         <!--Wind Sensor Height-->
                         <DockPanel>
                             <telerik:Label
-                                Content="Wind Sensor Height (above MSL)"
-                                VerticalAlignment="Center" />
+                                Content="Wind Sensor Height (above MSL)" />
                             <TextBox
                                 Name="tbWindSensorHeight"
                                 Width="110"
@@ -499,8 +496,7 @@
                         <!--Wind Sensor Distance-->
                         <DockPanel>
                             <telerik:Label
-                                Content="Wind Sensor Distance (from helideck)"
-                                VerticalAlignment="Center" />
+                                Content="Wind Sensor Distance (from helideck)"/>
                             <TextBox
                                 Name="tbWindSensorDistance"
                                 Width="110"
@@ -513,8 +509,7 @@
                         <!--Air Pressure Sensor Height-->
                         <DockPanel>
                             <telerik:Label
-                                Content="Air Pressure Sensor Height (above MSL)"
-                                VerticalAlignment="Center" />
+                                Content="Air Pressure Sensor Height (above MSL)" />
                             <TextBox
                                 Name="tbAirPressureSensorHeight"
                                 Width="110"
@@ -522,6 +517,19 @@
                                 Text="{Binding Path=airPressureSensorHeight}"
                                 LostFocus="tbAirPressureSensorHeight_LostFocus"
                                 KeyDown="tbAirPressureSensorHeight_KeyDown" />
+                        </DockPanel>
+
+                        <!--Wave Height Cut-Off (Period)-->
+                        <DockPanel>
+                            <telerik:Label
+                                Content="Wave Height Cut-Off (Period)" />
+                            <TextBox
+                                Name="tbWaveHeightCutoff"
+                                Width="110"
+                                HorizontalAlignment="Right"
+                                Text="{Binding Path=waveHeightCutoff}"
+                                LostFocus="tbWaveHeightCutoff_LostFocus"
+                                KeyDown="tbWaveHeightCutoff_KeyDown" />
                         </DockPanel>
 
                     </StackPanel>

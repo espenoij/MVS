@@ -149,21 +149,21 @@ namespace HMS_Server
             pitchMax20mData.id = (int)ValueType.PitchMax20m;
             pitchMax20mData.name = "Pitch Max (20m)";
             pitchMax20mData.dbColumn = "pitch_max_20m";
-            pitchMax20mData.InitProcessing(errorHandler, ErrorMessageCategory.AdminUser);
+            pitchMax20mData.InitProcessing(errorHandler, ErrorMessageCategory.AdminUser, adminSettingsVM);
             pitchMax20mData.AddProcessing(CalculationType.RoundingDecimals, 1);
             pitchMax20mData.AddProcessing(CalculationType.TimeMaxAbsolute, Constants.Minutes20);
 
             pitchMax3hData.id = (int)ValueType.PitchMax3h;
             pitchMax3hData.name = "Pitch Max (3h)";
             pitchMax3hData.dbColumn = "pitch_max_3h";
-            pitchMax3hData.InitProcessing(errorHandler, ErrorMessageCategory.AdminUser);
+            pitchMax3hData.InitProcessing(errorHandler, ErrorMessageCategory.AdminUser, adminSettingsVM);
             pitchMax3hData.AddProcessing(CalculationType.RoundingDecimals, 1);
             pitchMax3hData.AddProcessing(CalculationType.TimeMaxAbsolute, Constants.Hours3);
 
             pitchMaxUp20mData.id = (int)ValueType.PitchMaxUp20m;
             pitchMaxUp20mData.name = "Pitch Max Up (20m)";
             pitchMaxUp20mData.dbColumn = "pitch_max_up_20m";
-            pitchMaxUp20mData.InitProcessing(errorHandler, ErrorMessageCategory.AdminUser);
+            pitchMaxUp20mData.InitProcessing(errorHandler, ErrorMessageCategory.AdminUser, adminSettingsVM);
             pitchMaxUp20mData.AddProcessing(CalculationType.RoundingDecimals, 1);
             pitchMaxUp20mData.AddProcessing(CalculationType.TimeHeighest, Constants.Minutes20);
             //pitchMaxUp20mData.AddProcessing(CalculationType.Absolute, 0);
@@ -171,7 +171,7 @@ namespace HMS_Server
             pitchMaxDown20mData.id = (int)ValueType.PitchMaxDown20m;
             pitchMaxDown20mData.name = "Pitch Max Down (20m)";
             pitchMaxDown20mData.dbColumn = "pitch_max_down_20m";
-            pitchMaxDown20mData.InitProcessing(errorHandler, ErrorMessageCategory.AdminUser);
+            pitchMaxDown20mData.InitProcessing(errorHandler, ErrorMessageCategory.AdminUser, adminSettingsVM);
             pitchMaxDown20mData.AddProcessing(CalculationType.RoundingDecimals, 1);
             pitchMaxDown20mData.AddProcessing(CalculationType.TimeLowest, Constants.Minutes20);
             //pitchMaxDown20mData.AddProcessing(CalculationType.Absolute, 0);
@@ -179,21 +179,21 @@ namespace HMS_Server
             rollMax20mData.id = (int)ValueType.RollMax20m;
             rollMax20mData.name = "Roll Max (20m)";
             rollMax20mData.dbColumn = "roll_max_20m";
-            rollMax20mData.InitProcessing(errorHandler, ErrorMessageCategory.AdminUser);
+            rollMax20mData.InitProcessing(errorHandler, ErrorMessageCategory.AdminUser, adminSettingsVM);
             rollMax20mData.AddProcessing(CalculationType.RoundingDecimals, 1);
             rollMax20mData.AddProcessing(CalculationType.TimeMaxAbsolute, Constants.Minutes20);
 
             rollMax3hData.id = (int)ValueType.RollMax3h;
             rollMax3hData.name = "Roll Max (3h)";
             rollMax3hData.dbColumn = "roll_max_3h";
-            rollMax3hData.InitProcessing(errorHandler, ErrorMessageCategory.AdminUser);
+            rollMax3hData.InitProcessing(errorHandler, ErrorMessageCategory.AdminUser, adminSettingsVM);
             rollMax3hData.AddProcessing(CalculationType.RoundingDecimals, 1);
             rollMax3hData.AddProcessing(CalculationType.TimeMaxAbsolute, Constants.Hours3);
 
             rollMaxLeft20mData.id = (int)ValueType.RollMaxLeft20m;
             rollMaxLeft20mData.name = "Roll Max Left (20m)";
             rollMaxLeft20mData.dbColumn = "roll_max_left_20m";
-            rollMaxLeft20mData.InitProcessing(errorHandler, ErrorMessageCategory.AdminUser);
+            rollMaxLeft20mData.InitProcessing(errorHandler, ErrorMessageCategory.AdminUser, adminSettingsVM);
             rollMaxLeft20mData.AddProcessing(CalculationType.RoundingDecimals, 1);
             rollMaxLeft20mData.AddProcessing(CalculationType.TimeLowest, Constants.Minutes20);
             //rollMaxLeft20mData.AddProcessing(CalculationType.Absolute, 0);
@@ -201,7 +201,7 @@ namespace HMS_Server
             rollMaxRight20mData.id = (int)ValueType.RollMaxRight20m;
             rollMaxRight20mData.name = "Roll Max Right (20m)";
             rollMaxRight20mData.dbColumn = "roll_max_right_20m";
-            rollMaxRight20mData.InitProcessing(errorHandler, ErrorMessageCategory.AdminUser);
+            rollMaxRight20mData.InitProcessing(errorHandler, ErrorMessageCategory.AdminUser, adminSettingsVM);
             rollMaxRight20mData.AddProcessing(CalculationType.RoundingDecimals, 1);
             rollMaxRight20mData.AddProcessing(CalculationType.TimeHeighest, Constants.Minutes20);
             //rollMaxRight20mData.AddProcessing(CalculationType.Absolute, 0);
@@ -221,56 +221,56 @@ namespace HMS_Server
             heaveHeightData.id = (int)ValueType.HeaveHeight;
             heaveHeightData.name = "Heave Height";
             heaveHeightData.dbColumn = "heave_height";
-            heaveHeightData.InitProcessing(errorHandler, ErrorMessageCategory.AdminUser);
+            heaveHeightData.InitProcessing(errorHandler, ErrorMessageCategory.AdminUser, adminSettingsVM);
             heaveHeightData.AddProcessing(CalculationType.MeanWaveHeight, 0);
             heaveHeightData.AddProcessing(CalculationType.RoundingDecimals, 1);
 
             heaveHeightMax20mData.id = (int)ValueType.HeaveHeightMax20m;
             heaveHeightMax20mData.name = "Heave Height Max (20m)";
             heaveHeightMax20mData.dbColumn = "heave_height_max_20m";
-            heaveHeightMax20mData.InitProcessing(errorHandler, ErrorMessageCategory.AdminUser);
+            heaveHeightMax20mData.InitProcessing(errorHandler, ErrorMessageCategory.AdminUser, adminSettingsVM);
             heaveHeightMax20mData.AddProcessing(CalculationType.RoundingDecimals, 1);
             heaveHeightMax20mData.AddProcessing(CalculationType.TimeMaxWaveHeight, Constants.Minutes20);
 
             heaveHeightMax3hData.id = (int)ValueType.HeaveHeightMax3h;
             heaveHeightMax3hData.name = "Heave Height Max (3h)";
             heaveHeightMax3hData.dbColumn = "heave_height_max_3h";
-            heaveHeightMax3hData.InitProcessing(errorHandler, ErrorMessageCategory.AdminUser);
+            heaveHeightMax3hData.InitProcessing(errorHandler, ErrorMessageCategory.AdminUser, adminSettingsVM);
             heaveHeightMax3hData.AddProcessing(CalculationType.RoundingDecimals, 1);
             heaveHeightMax3hData.AddProcessing(CalculationType.TimeMaxWaveHeight, Constants.Hours3);
 
             heavePeriodMeanData.id = (int)ValueType.HeavePeriodMean;
             heavePeriodMeanData.name = "Heave Period";
             heavePeriodMeanData.dbColumn = "heave_period";
-            heavePeriodMeanData.InitProcessing(errorHandler, ErrorMessageCategory.AdminUser);
+            heavePeriodMeanData.InitProcessing(errorHandler, ErrorMessageCategory.AdminUser, adminSettingsVM);
             heavePeriodMeanData.AddProcessing(CalculationType.TimeMeanPeriod, Constants.Minutes20);
             heavePeriodMeanData.AddProcessing(CalculationType.RoundingDecimals, 1);
 
             significantHeaveRateData.id = (int)ValueType.SignificantHeaveRate;
             significantHeaveRateData.name = "Significant Heave Rate";
             significantHeaveRateData.dbColumn = "significant_heave_rate";
-            significantHeaveRateData.InitProcessing(errorHandler, ErrorMessageCategory.AdminUser);
+            significantHeaveRateData.InitProcessing(errorHandler, ErrorMessageCategory.AdminUser, adminSettingsVM);
             significantHeaveRateData.AddProcessing(CalculationType.SignificantHeaveRate, Constants.Minutes20);
             significantHeaveRateData.AddProcessing(CalculationType.RoundingDecimals, 1);
 
             significantHeaveRateMax20mData.id = (int)ValueType.SignificantHeaveRateMax20m; // Brukes til å justere akse på graf
             significantHeaveRateMax20mData.name = "Significant Heave Rate Max (20m)";
             significantHeaveRateMax20mData.dbColumn = "shr_max_20m";
-            significantHeaveRateMax20mData.InitProcessing(errorHandler, ErrorMessageCategory.AdminUser);
+            significantHeaveRateMax20mData.InitProcessing(errorHandler, ErrorMessageCategory.AdminUser, adminSettingsVM);
             significantHeaveRateMax20mData.AddProcessing(CalculationType.RoundingDecimals, 1);
             significantHeaveRateMax20mData.AddProcessing(CalculationType.TimeHeighest, Constants.Minutes20);
 
             significantHeaveRateMax3hData.id = (int)ValueType.SignificantHeaveRateMax3h; // Brukes til å justere akse på graf
             significantHeaveRateMax3hData.name = "Significant Heave Rate Max (3h)";
             significantHeaveRateMax3hData.dbColumn = "shr_max_3h";
-            significantHeaveRateMax3hData.InitProcessing(errorHandler, ErrorMessageCategory.AdminUser);
+            significantHeaveRateMax3hData.InitProcessing(errorHandler, ErrorMessageCategory.AdminUser, adminSettingsVM);
             significantHeaveRateMax3hData.AddProcessing(CalculationType.RoundingDecimals, 1);
             significantHeaveRateMax3hData.AddProcessing(CalculationType.TimeHeighest, Constants.Hours3);
 
             maxHeaveRateData.id = (int)ValueType.MaxHeaveRate;
             maxHeaveRateData.name = "Max Heave Rate";
             maxHeaveRateData.dbColumn = "max_heave_rate";
-            maxHeaveRateData.InitProcessing(errorHandler, ErrorMessageCategory.AdminUser);
+            maxHeaveRateData.InitProcessing(errorHandler, ErrorMessageCategory.AdminUser, adminSettingsVM);
             maxHeaveRateData.AddProcessing(CalculationType.RoundingDecimals, 1);
             maxHeaveRateData.AddProcessing(CalculationType.TimeMaxAbsolute, Constants.Minutes20);
 

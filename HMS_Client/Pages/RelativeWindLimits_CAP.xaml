@@ -124,7 +124,7 @@
                             ZIndex="200">
 
                             <!--Kun til visualisering i editor-->
-                            <telerik:ScatterAreaSeries.DataPoints>
+                            <!--<telerik:ScatterAreaSeries.DataPoints>
                                 <telerik:ScatterDataPoint
                                     XValue="0"
                                     YValue="60" />
@@ -140,7 +140,7 @@
                                 <telerik:ScatterDataPoint
                                     XValue="60"
                                     YValue="30" />
-                            </telerik:ScatterAreaSeries.DataPoints>
+                            </telerik:ScatterAreaSeries.DataPoints>-->
                         </telerik:ScatterAreaSeries>
 
                         <telerik:ScatterAreaSeries
@@ -148,7 +148,7 @@
                             ZIndex="200">
 
                             <!--Kun til visualisering i editor-->
-                            <telerik:ScatterAreaSeries.DataPoints>
+                            <!--<telerik:ScatterAreaSeries.DataPoints>
                                 <telerik:ScatterDataPoint
                                     XValue="0"
                                     YValue="60" />
@@ -164,7 +164,7 @@
                                 <telerik:ScatterDataPoint
                                     XValue="60"
                                     YValue="25" />
-                            </telerik:ScatterAreaSeries.DataPoints>
+                            </telerik:ScatterAreaSeries.DataPoints>-->
                         </telerik:ScatterAreaSeries>
 
                     </telerik:RadCartesianChart.Series>

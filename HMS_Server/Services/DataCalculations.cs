@@ -57,16 +57,20 @@ namespace HMS_Server
         private List<TimeData> waveMeanHeightDataList = new List<TimeData>();
 
         // Period
+        private double periodHeightTop = double.NaN;
+        private double periodHeightBottom = double.NaN;
         private double periodLast = double.NaN;
         private double periodCurrent = double.NaN;
         private WavePhase periodWavePhase = WavePhase.Init;
-        private DateTime periodLastWaveTop = DateTime.MinValue;
+        private DateTime periodLastWaveTopTime = DateTime.MinValue;
 
         // Time Mean Period
+        private double timeMeanPeriodWaveHeightTop = double.NaN;
+        private double timeMeanPeriodWaveHeightBottom = double.NaN;
         private double timeMeanPeriodTotal = 0;
         private double timeMeanPeriodLast = double.NaN;
         private WavePhase timeMeanPeriodWavePhase = WavePhase.Init;
-        private DateTime timeMeanPeriodLastWaveTop = DateTime.MinValue;
+        private DateTime timeMeanPeriodLastWaveTopTime = DateTime.MinValue;
         private List<TimeData> timeMeanPeriodDataList = new List<TimeData>();
 
         // Wave Radar
@@ -81,19 +85,13 @@ namespace HMS_Server
             parameter = 0.0;
         }
 
-        public DataCalculations(DataCalculations dataCalculations)
-        {
-            type = dataCalculations.type;
-            parameter = dataCalculations.parameter;
-        }
-
         public DataCalculations(CalculationType type, double parameter)
         {
             this.type = type;
             this.parameter = parameter;
         }
 
-        public double DoCalculations(string newData, DateTime newTimeStamp, ErrorHandler errorHandler, ErrorMessageCategory errorMessageCat)
+        public double DoCalculations(string newData, DateTime newTimeStamp, ErrorHandler errorHandler, ErrorMessageCategory errorMessageCat, AdminSettingsVM adminSettingsVM)
         {
             // Hvorfor inndata som string? Fordi vi prosesserer ikke-numerisk data også, f.eks. vær-koder.
 
@@ -899,16 +897,16 @@ namespace HMS_Server
                             break;
 
                         ////////////////////////////////////////////////////////////////////////////////////////////////
-                        /// Height
+                        /// Mean Wave Height
                         ////////////////////////////////////////////////////////////////////////////////////////////////
                         /// Beskrivelse:
-                        /// Returnerer høyde i oscilerende data
+                        /// Returnerer snitt-høyde i oscilerende data over en gitt tid
                         /// 
                         /// Input:
                         /// Bølgehøyde data
                         /// 
                         /// Brukes til:
-                        /// Heave Height
+                        /// Mean Heave Height
                         /// 
                         case CalculationType.MeanWaveHeight:
 
@@ -1000,7 +998,7 @@ namespace HMS_Server
                                 if (waveMeanHeightDataList.Count > 0)
                                     result = waveMeanHeightTotal / (double)waveMeanHeightDataList.Count;
                                 else
-                                    return 0;
+                                    return double.NaN;
                             }
                             break;
 
@@ -1039,15 +1037,32 @@ namespace HMS_Server
                                         // Dersom neste verdi er mindre enn forrige -> passert toppen av bølgen
                                         if (value < periodLast && value > 0)
                                         {
-                                            if (periodLastWaveTop != DateTime.MinValue)
-                                            {
-                                                periodCurrent = newTimeStamp.Subtract(periodLastWaveTop).TotalSeconds;
+                                            // Bølgehøyde topp
+                                            periodHeightTop = periodLast;
 
-                                                periodLastWaveTop = newTimeStamp;
+                                            if (periodLastWaveTopTime != DateTime.MinValue)
+                                            {
+                                                // Sjekke cut-off
+                                                if (!double.IsNaN(periodHeightTop) &&
+                                                    !double.IsNaN(periodHeightBottom))
+                                                {
+                                                    // Beregner ikke periode dersom bølgehøyden er mindre enn X m
+                                                    double waveHeight = Math.Abs(periodHeightTop) + Math.Abs(periodHeightBottom);
+                                                    if (waveHeight > adminSettingsVM.waveHeightCutoff)
+                                                    {
+                                                        periodCurrent = newTimeStamp.Subtract(periodLastWaveTopTime).TotalSeconds;
+                                                    }
+                                                    else
+                                                    {
+                                                        periodCurrent = double.NaN;
+                                                    }
+                                                }
+
+                                                periodLastWaveTopTime = newTimeStamp;
                                             }
                                             else
                                             {
-                                                periodLastWaveTop = newTimeStamp;
+                                                periodLastWaveTopTime = newTimeStamp;
                                             }
 
                                             // På vei ned
@@ -1061,6 +1076,9 @@ namespace HMS_Server
                                         // Dersom neste verdi er større enn forrige -> passert bunnen av bølgen
                                         if (value > periodLast && value < 0)
                                         {
+                                            // Bølgehøyde bunn
+                                            periodHeightBottom = periodLast;
+
                                             // På vei opp igjen
                                             periodWavePhase = WavePhase.Ascending;
                                         }
@@ -1083,6 +1101,7 @@ namespace HMS_Server
                         /// 
                         /// Brukes til:
                         /// Heave Period Mean
+                        /// Mean wave period
                         /// 
                         case CalculationType.TimeMeanPeriod:
 
@@ -1109,24 +1128,46 @@ namespace HMS_Server
                                         // Dersom neste verdi er mindre enn forrige -> passert toppen av bølgen
                                         if (value < timeMeanPeriodLast && value > 0)
                                         {
-                                            if (timeMeanPeriodLastWaveTop != DateTime.MinValue)
+                                            // Bølgehøyde topp
+                                            timeMeanPeriodWaveHeightTop = timeMeanPeriodLast;
+
+                                            if (timeMeanPeriodLastWaveTopTime != DateTime.MinValue)
                                             {
-                                                TimeSpan period = newTimeStamp.Subtract(timeMeanPeriodLastWaveTop);
-
-                                                // Legge inn periode i data listen
-                                                timeMeanPeriodDataList.Add(new TimeData()
+                                                // Sjekke cut-off
+                                                if (!double.IsNaN(timeMeanPeriodWaveHeightTop) &&
+                                                    !double.IsNaN(timeMeanPeriodWaveHeightBottom))
+                                                {
+                                                    // Beregner ikke periode dersom bølgehøyden er mindre enn X m
+                                                    double waveHeight = Math.Abs(timeMeanPeriodWaveHeightTop) + Math.Abs(timeMeanPeriodWaveHeightBottom);
+                                                    if (waveHeight > adminSettingsVM.waveHeightCutoff)
                                                     {
-                                                        data = period.TotalSeconds,
-                                                        timestamp = newTimeStamp
-                                                    });
+                                                        TimeSpan period = newTimeStamp.Subtract(timeMeanPeriodLastWaveTopTime);
 
-                                                timeMeanPeriodTotal += period.TotalSeconds;
+                                                        // Legge inn periode i data listen
+                                                        timeMeanPeriodDataList.Add(new TimeData()
+                                                        {
+                                                            data = period.TotalSeconds,
+                                                            timestamp = newTimeStamp
+                                                        });
 
-                                                timeMeanPeriodLastWaveTop = newTimeStamp;
+                                                        timeMeanPeriodTotal += period.TotalSeconds;
+                                                    }
+                                                    else
+                                                    {
+                                                        // Legge inn 0 periode i data listen
+                                                        timeMeanPeriodDataList.Add(new TimeData()
+                                                        {
+                                                            data = 0,
+                                                            timestamp = newTimeStamp
+                                                        });
+                                                    }
+                                                }
+
+                                                timeMeanPeriodLastWaveTopTime = newTimeStamp;
                                             }
                                             else
                                             {
-                                                timeMeanPeriodLastWaveTop = newTimeStamp;
+                                                timeMeanPeriodLastWaveTopTime = newTimeStamp;
                                             }
 
                                             // På vei ned
@@ -1140,6 +1181,9 @@ namespace HMS_Server
                                         // Dersom neste verdi er større enn forrige -> passert bunnen av bølgen
                                         if (value > timeMeanPeriodLast && value < 0)
                                         {
+                                            // Bølgehøyde bunn
+                                            timeMeanPeriodWaveHeightBottom = timeMeanPeriodLast;
+
                                             // På vei opp igjen
                                             timeMeanPeriodWavePhase = WavePhase.Ascending;
                                         }
@@ -1158,13 +1202,12 @@ namespace HMS_Server
                                     // Fjerne fra verdiliste
                                     timeMeanPeriodDataList.RemoveAt(0);
                                 }
-                                //timeMeanPeriodDataList.TrimExcess();
 
                                 // Finne gjennomsnitt verdi
                                 if (timeMeanPeriodDataList.Count > 0)
                                     result = timeMeanPeriodTotal / (double)timeMeanPeriodDataList.Count;
                                 else
-                                    return 0;
+                                    return double.NaN;
                             }
                             break;
 
@@ -1541,7 +1584,7 @@ namespace HMS_Server
             timeMeanPeriodTotal = 0;
             timeMeanPeriodLast = double.NaN;
             timeMeanPeriodWavePhase = WavePhase.Init;
-            timeMeanPeriodLastWaveTop = DateTime.MinValue;
+            timeMeanPeriodLastWaveTopTime = DateTime.MinValue;
             timeMeanPeriodDataList.Clear();
         }
 

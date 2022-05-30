@@ -335,7 +335,13 @@ namespace HMS_Server
             return selectedData;
         }
 
-        public CalculatedData ApplyCalculationsToSelectedData(SelectedDataField selectedData, List<DataCalculations> dataCalculations, DateTime timestamp, ErrorHandler errorHandler, ErrorMessageCategory errorMessageCat)
+        public CalculatedData ApplyCalculationsToSelectedData(
+            SelectedDataField selectedData, 
+            List<DataCalculations> dataCalculations, 
+            DateTime timestamp, 
+            ErrorHandler errorHandler, 
+            ErrorMessageCategory errorMessageCat,
+            AdminSettingsVM adminSettingsVM)
         {
             CalculatedData calculatedData = new CalculatedData();
 
@@ -382,11 +388,11 @@ namespace HMS_Server
                             case CalculationType.GPSPosition:
                             //case CalculationType.NWSCodes:
                             case CalculationType.METARCodes:
-                                calculatedData.data = dataCalculations[i].DoCalculations(selectedData.selectedDataFieldString, timestamp, errorHandler, errorMessageCat);
+                                calculatedData.data = dataCalculations[i].DoCalculations(selectedData.selectedDataFieldString, timestamp, errorHandler, errorMessageCat, adminSettingsVM);
                                 break;
 
                             default:
-                                calculatedData.data = dataCalculations[i].DoCalculations(calculatedData.data.ToString(Constants.cultureInfo), timestamp, errorHandler, errorMessageCat);
+                                calculatedData.data = dataCalculations[i].DoCalculations(calculatedData.data.ToString(Constants.cultureInfo), timestamp, errorHandler, errorMessageCat, adminSettingsVM);
                                 break;
                         }
                     }

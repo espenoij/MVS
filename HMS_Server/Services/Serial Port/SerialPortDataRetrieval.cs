@@ -22,15 +22,19 @@ namespace HMS_Server
         private List<SerialPortData> serialPortDataReceivedList = new List<SerialPortData>();
 
         // Error Handler
-        ErrorHandler errorHandler;
+        private ErrorHandler errorHandler;
 
-        public SerialPortDataRetrieval(Config config, RadObservableCollectionEx<SensorData> sensorDataList, DatabaseHandler database, ErrorHandler errorHandler)
+        // Admin Settings
+        private AdminSettingsVM adminSettingsVM;
+
+        public SerialPortDataRetrieval(Config config, RadObservableCollectionEx<SensorData> sensorDataList, DatabaseHandler database, ErrorHandler errorHandler, AdminSettingsVM adminSettingsVM)
         {
             this.config = config;
             this.database = database;
             this.sensorDataList = sensorDataList;
 
             this.errorHandler = errorHandler;
+            this.adminSettingsVM = adminSettingsVM;
         }
 
         public void Load(SensorData sensorData)
@@ -219,7 +223,7 @@ namespace HMS_Server
                                     SelectedDataField selectedData = process.FindSelectedDataInPacket(packetDataFields);
 
                                     // Trinn 5: Utføre kalkulasjoner på utvalgt datafelt
-                                    CalculatedData calculatedData = process.ApplyCalculationsToSelectedData(selectedData, sensorData.dataCalculations, serialPortData.timestamp, errorHandler, ErrorMessageCategory.None);
+                                    CalculatedData calculatedData = process.ApplyCalculationsToSelectedData(selectedData, sensorData.dataCalculations, serialPortData.timestamp, errorHandler, ErrorMessageCategory.None, adminSettingsVM);
 
                                     // Lagre resultat
                                     sensorData.timestamp = serialPortData.timestamp;

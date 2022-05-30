@@ -1114,6 +1114,33 @@ namespace HMS_Server
             adminSettingsVM.airPressureSensorHeight = validatedInput;
         }
 
+        private void tbWaveHeightCutoff_LostFocus(object sender, RoutedEventArgs e)
+        {
+            tbWaveHeightCutoff_Update(sender);
+        }
+
+        private void tbWaveHeightCutoff_KeyDown(object sender, KeyEventArgs e)
+        {
+            if (e.Key == Key.Return)
+            {
+                tbWaveHeightCutoff_Update(sender);
+                Keyboard.ClearFocus();
+            }
+        }
+
+        private void tbWaveHeightCutoff_Update(object sender)
+        {
+            // Sjekk av input
+            DataValidation.Double(
+                (sender as TextBox).Text,
+                Constants.WaveHeightCutoffMin,
+                Constants.WaveHeightCutoffMax,
+                Constants.WaveHeightCutoffDefault,
+                out double validatedInput);
+
+            adminSettingsVM.waveHeightCutoff = validatedInput;
+        }
+
         private void tbEmailServer_LostFocus(object sender, RoutedEventArgs e)
         {
             tbEmailServer_Update(sender);

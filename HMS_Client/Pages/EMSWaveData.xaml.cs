@@ -7,9 +7,6 @@ namespace HMS_Client
     /// </summary>
     public partial class EMSWaveData : UserControl
     {
-        // Configuration settings
-        private Config config;
-
         // View Model
         public EMSWaveDataVM viewModel;
 
@@ -18,10 +15,9 @@ namespace HMS_Client
             InitializeComponent();
         }
 
-        public void Init(EMSWaveDataVM emsWaveDataVM, Config config)
+        public void Init(EMSWaveDataVM emsWaveDataVM)
         {
             this.viewModel = emsWaveDataVM;
-            this.config = config;
 
             DataContext = emsWaveDataVM;
 
@@ -32,7 +28,7 @@ namespace HMS_Client
         private void InitUI()
         {
             // Koble chart til data
-            waveChart.Series[0].ItemsSource = viewModel.wave20mList;
+            //waveChart.Series[0].ItemsSource = viewModel.wave20mList;
             waveSWHChart.Series[0].ItemsSource = viewModel.waveSWH20mList;
             waveSWHMaxChart.Series[0].ItemsSource = viewModel.waveSWHMax20mList;
             wavePeriodChart.Series[0].ItemsSource = viewModel.wavePeriod20mList;

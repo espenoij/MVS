@@ -20,6 +20,9 @@ namespace HMS_Server
         // Error Handler
         private ErrorHandler errorHandler;
 
+        // Admin Settings
+        private AdminSettingsVM adminSettingsVM;
+
         // Read timer
         private System.Timers.Timer modbusReader;
 
@@ -32,11 +35,12 @@ namespace HMS_Server
         // MODBUS Liste
         private List<SensorData> modbusSensorList = new List<SensorData>();
 
-        public ModbusDataRetrieval(Config config, DatabaseHandler database, ErrorHandler errorHandler)
+        public ModbusDataRetrieval(Config config, DatabaseHandler database, ErrorHandler errorHandler, AdminSettingsVM adminSettingsVM)
         {
             this.config = config;
             this.database = database;
             this.errorHandler = errorHandler;
+            this.adminSettingsVM = adminSettingsVM;
         }
 
         public void Load(SensorData sensorData)
@@ -451,7 +455,7 @@ namespace HMS_Server
                                 DateTime dateTime = DateTime.UtcNow;
 
                                 // Utføre kalkulasjoner på data
-                                process.ApplyCalculationsToSelectedData(sensorData, dateTime, modbusData, errorHandler, ErrorMessageCategory.AdminUser);
+                                process.ApplyCalculationsToSelectedData(sensorData, dateTime, modbusData, errorHandler, ErrorMessageCategory.AdminUser, adminSettingsVM);
 
                                 // Lagre resultat
                                 sensorData.timestamp = dateTime;

@@ -27,6 +27,9 @@ namespace HMS_Server
         // Error Handler
         private ErrorHandler errorHandler;
 
+        // Admin Settings
+        private AdminSettingsVM adminSettingsVM;
+
         // Sensor Data List
         private RadObservableCollectionEx<SensorData> sensorDataList = new RadObservableCollectionEx<SensorData>();
 
@@ -64,7 +67,7 @@ namespace HMS_Server
         // View Model
         private SerialPortSetupWindowVM serialPortSetupWindowVM;
 
-        public SerialPortSetupWindow(SensorData sensorDataItem, RadObservableCollectionEx<SensorData> sensorDataList, Config config, ErrorHandler errorHandler)
+        public SerialPortSetupWindow(SensorData sensorDataItem, RadObservableCollectionEx<SensorData> sensorDataList, Config config, ErrorHandler errorHandler, AdminSettingsVM adminSettingsVM)
         {
             InitializeComponent();
 
@@ -82,6 +85,9 @@ namespace HMS_Server
 
             // Error Handler
             this.errorHandler = errorHandler;
+
+            // Admin Settings
+            this.adminSettingsVM = adminSettingsVM;
 
             // Initialisere application settings
             InitializeApplicationSettings();
@@ -644,7 +650,7 @@ namespace HMS_Server
 
                             // Trinn 5: Utføre kalkulasjoner på utvalgt datafelt
                             //////////////////////////////////////////////////////////////////////////////
-                            CalculatedData calculatedData = process.ApplyCalculationsToSelectedData(selectedData, dataCalculations, dataTimeStamp, errorHandler, ErrorMessageCategory.Admin);
+                            CalculatedData calculatedData = process.ApplyCalculationsToSelectedData(selectedData, dataCalculations, dataTimeStamp, errorHandler, ErrorMessageCategory.Admin, adminSettingsVM);
 
                             // Vise de prosesserte dataene
                             DisplayProcessedData(calculatedData);

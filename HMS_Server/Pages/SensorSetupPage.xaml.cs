@@ -17,6 +17,9 @@ namespace HMS_Server
         // Error Handler
         private ErrorHandler errorHandler;
 
+        // Admin Settings
+        private AdminSettingsVM adminSettingsVM;
+
         // Sensor Data List
         private RadObservableCollectionEx<SensorData> sensorDataList = new RadObservableCollectionEx<SensorData>();
         private SensorData sensorDataSelected = new SensorData();
@@ -29,13 +32,16 @@ namespace HMS_Server
             InitializeComponent();
         }
 
-        public void Init(Config config, ErrorHandler errorHandler, MainWindow.StopServerCallback stopServerCallback)
+        public void Init(Config config, ErrorHandler errorHandler, AdminSettingsVM adminSettingsVM, MainWindow.StopServerCallback stopServerCallback)
         {
             // Config
             this.config = config;
 
             // Error Handler
             this.errorHandler = errorHandler;
+
+            // Admin Settings
+            this.adminSettingsVM = adminSettingsVM;
 
             // Stop server callback
             this.stopServerCallback = stopServerCallback;
@@ -428,7 +434,7 @@ namespace HMS_Server
         private void btnSerialPortSetup_Click(object sender, RoutedEventArgs e)
         {
             // Open new modal window 
-            SerialPortSetupWindow newWindow = new SerialPortSetupWindow(sensorDataSelected, sensorDataList, config, errorHandler);
+            SerialPortSetupWindow newWindow = new SerialPortSetupWindow(sensorDataSelected, sensorDataList, config, errorHandler, adminSettingsVM);
             newWindow.Owner = App.Current.MainWindow;
             newWindow.Closed += SerialPortSetupWindow_Closed;
             newWindow.ShowDialog();
@@ -443,7 +449,7 @@ namespace HMS_Server
         private void btnModbusSetup_Click(object sender, RoutedEventArgs e)
         {
             // Open new modal window 
-            ModbusSetupWindow newWindow = new ModbusSetupWindow(sensorDataSelected, sensorDataList, config, errorHandler);
+            ModbusSetupWindow newWindow = new ModbusSetupWindow(sensorDataSelected, sensorDataList, config, errorHandler, adminSettingsVM);
             newWindow.Owner = App.Current.MainWindow;
             newWindow.Closed += ModbusSetupWindow_Closed;
             newWindow.ShowDialog();
@@ -460,7 +466,7 @@ namespace HMS_Server
             try
             {
                 // Open new modal window 
-                FileReaderSetupWindow newWindow = new FileReaderSetupWindow(sensorDataSelected, config, errorHandler);
+                FileReaderSetupWindow newWindow = new FileReaderSetupWindow(sensorDataSelected, config, errorHandler, adminSettingsVM);
                 newWindow.Owner = App.Current.MainWindow;
                 newWindow.Closed += FileReaderSetupWindow_Closed;
                 newWindow.ShowDialog();

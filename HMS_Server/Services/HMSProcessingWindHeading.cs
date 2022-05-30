@@ -140,14 +140,14 @@ namespace HMS_Server
             areaWindDirection2m.name = "Area Wind Direction (2m)";
             areaWindDirection2m.sensorGroupId = Constants.NO_SENSOR_GROUP_ID;
             areaWindDirection2m.dbColumn = "area_wind_direction_2m";
-            areaWindDirection2m.InitProcessing(errorHandler, ErrorMessageCategory.AdminUser);
+            areaWindDirection2m.InitProcessing(errorHandler, ErrorMessageCategory.AdminUser, adminSettingsVM);
             areaWindDirection2m.AddProcessing(CalculationType.TimeAverage, 120); // 2 minutter
 
             areaWindSpeed2m.id = (int)ValueType.AreaWindSpeed2m;
             areaWindSpeed2m.name = "Area Wind Speed (2m)";
             areaWindSpeed2m.sensorGroupId = Constants.NO_SENSOR_GROUP_ID;
             areaWindSpeed2m.dbColumn = "area_wind_speed_2m";
-            areaWindSpeed2m.InitProcessing(errorHandler, ErrorMessageCategory.AdminUser);
+            areaWindSpeed2m.InitProcessing(errorHandler, ErrorMessageCategory.AdminUser, adminSettingsVM);
             areaWindSpeed2m.AddProcessing(CalculationType.TimeAverage, 120); // 2 minutter
 
             areaWindGust2m.id = (int)ValueType.AreaWindGust2m;
@@ -164,7 +164,7 @@ namespace HMS_Server
             helideckWindDirection2m.name = "Helideck Wind Direction (2m)";
             helideckWindDirection2m.sensorGroupId = Constants.NO_SENSOR_GROUP_ID;
             helideckWindDirection2m.dbColumn = "helideck_wind_direction_2m";
-            helideckWindDirection2m.InitProcessing(errorHandler, ErrorMessageCategory.AdminUser);
+            helideckWindDirection2m.InitProcessing(errorHandler, ErrorMessageCategory.AdminUser, adminSettingsVM);
             helideckWindDirection2m.AddProcessing(CalculationType.TimeAverage, 120); // 2 minutter
             helideckWindDirection2m.AddProcessing(CalculationType.RoundingDecimals, 0);
 
@@ -172,7 +172,7 @@ namespace HMS_Server
             helideckWindDirection10m.name = "Helideck Wind Direction (10m)";
             helideckWindDirection10m.sensorGroupId = Constants.NO_SENSOR_GROUP_ID;
             helideckWindDirection10m.dbColumn = "helideck_wind_direction_10m";
-            helideckWindDirection10m.InitProcessing(errorHandler, ErrorMessageCategory.AdminUser);
+            helideckWindDirection10m.InitProcessing(errorHandler, ErrorMessageCategory.AdminUser, adminSettingsVM);
             helideckWindDirection10m.AddProcessing(CalculationType.TimeAverage, 600); // 10 minutter
             helideckWindDirection10m.AddProcessing(CalculationType.RoundingDecimals, 0);
 
@@ -185,14 +185,14 @@ namespace HMS_Server
             helideckWindSpeed2m.name = "Helideck Wind Speed (2m)";
             helideckWindSpeed2m.sensorGroupId = Constants.NO_SENSOR_GROUP_ID;
             helideckWindSpeed2m.dbColumn = "helideck_wind_speed_2m";
-            helideckWindSpeed2m.InitProcessing(errorHandler, ErrorMessageCategory.AdminUser);
+            helideckWindSpeed2m.InitProcessing(errorHandler, ErrorMessageCategory.AdminUser, adminSettingsVM);
             helideckWindSpeed2m.AddProcessing(CalculationType.TimeAverage, 120); // 2 minutter
 
             helideckWindSpeed10m.id = (int)ValueType.HelideckWindSpeed10m;
             helideckWindSpeed10m.name = "Helideck Wind Speed (10m)";
             helideckWindSpeed10m.sensorGroupId = Constants.NO_SENSOR_GROUP_ID;
             helideckWindSpeed10m.dbColumn = "helideck_wind_speed_10m";
-            helideckWindSpeed10m.InitProcessing(errorHandler, ErrorMessageCategory.AdminUser);
+            helideckWindSpeed10m.InitProcessing(errorHandler, ErrorMessageCategory.AdminUser, adminSettingsVM);
             helideckWindSpeed10m.AddProcessing(CalculationType.TimeAverage, 600); // 10 minutter
 
             helideckWindGust2m.id = (int)ValueType.HelideckWindGust2m;
@@ -213,14 +213,14 @@ namespace HMS_Server
             emsWindDirection2m.id = (int)ValueType.EMSWindDirection2m;
             emsWindDirection2m.name = "EMS Wind Direction (2m)";
             emsWindDirection2m.sensorGroupId = Constants.NO_SENSOR_GROUP_ID;
-            emsWindDirection2m.InitProcessing(errorHandler, ErrorMessageCategory.AdminUser);
+            emsWindDirection2m.InitProcessing(errorHandler, ErrorMessageCategory.AdminUser, adminSettingsVM);
             emsWindDirection2m.AddProcessing(CalculationType.TimeAverage, 120); // 2 minutter
             emsWindDirection2m.AddProcessing(CalculationType.RoundingDecimals, 0);
 
             emsWindDirection10m.id = (int)ValueType.EMSWindDirection10m;
             emsWindDirection10m.name = "EMS Wind Direction (10m)";
             emsWindDirection10m.sensorGroupId = Constants.NO_SENSOR_GROUP_ID;
-            emsWindDirection10m.InitProcessing(errorHandler, ErrorMessageCategory.AdminUser);
+            emsWindDirection10m.InitProcessing(errorHandler, ErrorMessageCategory.AdminUser, adminSettingsVM);
             emsWindDirection10m.AddProcessing(CalculationType.TimeAverage, 600); // 10 minutter
             emsWindDirection10m.AddProcessing(CalculationType.RoundingDecimals, 0);
 
@@ -231,13 +231,13 @@ namespace HMS_Server
             emsWindSpeed2m.id = (int)ValueType.EMSWindSpeed2m;
             emsWindSpeed2m.name = "EMS Wind Speed (2m)";
             emsWindSpeed2m.sensorGroupId = Constants.NO_SENSOR_GROUP_ID;
-            emsWindSpeed2m.InitProcessing(errorHandler, ErrorMessageCategory.AdminUser);
+            emsWindSpeed2m.InitProcessing(errorHandler, ErrorMessageCategory.AdminUser, adminSettingsVM);
             emsWindSpeed2m.AddProcessing(CalculationType.TimeAverage, 120); // 2 minutter
 
             emsWindSpeed10m.id = (int)ValueType.EMSWindSpeed10m;
             emsWindSpeed10m.name = "EMS Wind Speed (10m)";
             emsWindSpeed10m.sensorGroupId = Constants.NO_SENSOR_GROUP_ID;
-            emsWindSpeed10m.InitProcessing(errorHandler, ErrorMessageCategory.AdminUser);
+            emsWindSpeed10m.InitProcessing(errorHandler, ErrorMessageCategory.AdminUser, adminSettingsVM);
             emsWindSpeed10m.AddProcessing(CalculationType.TimeAverage, 600); // 10 minutter
 
             emsWindGust2m.id = (int)ValueType.EMSWindGust2m;

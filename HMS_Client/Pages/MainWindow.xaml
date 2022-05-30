@@ -368,9 +368,21 @@
                         <Grid
                             Grid.Column="0">
 
+                            <Grid.RowDefinitions>
+                                <RowDefinition
+                                    Height="2*" />
+                                <RowDefinition
+                                    Height="5*" />
+                            </Grid.RowDefinitions>
+
+                            <!--Sea Temperature-->
+                            <uc:EMSWeather
+                                Grid.Row="0"
+                                x:Name="ucEMSWeather" />
+
                             <!--Wave Data-->
                             <uc:EMSWaveData
-                                Grid.Row="0"
+                                Grid.Row="1"
                                 x:Name="ucEMSWaveData" />
 
                         </Grid>
