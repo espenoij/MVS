@@ -223,7 +223,13 @@ namespace HMS_Server
                 lvCalculatedData.ItemsSource = calculatedDataList;
 
                 for (int i = 0; i < Constants.DataCalculationSteps; i++)
-                    dataCalculations.Add(new DataCalculations());
+                {
+                    dataCalculations.Add(new DataCalculations()
+                    {
+                        type = sensorData.fileReader.calculationSetup[i].type,
+                        parameter = sensorData.fileReader.calculationSetup[i].parameter,
+                    });
+                }
 
                 // Data Calculations 1
                 // Prosesseringstyper

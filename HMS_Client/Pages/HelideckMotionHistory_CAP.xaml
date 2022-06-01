@@ -1826,8 +1826,8 @@
 
                             <telerik:RadCartesianChart.HorizontalAxis>
                                 <telerik:DateTimeContinuousAxis
-                                    MajorStepUnit="Hour"
-                                    MajorStep="1"
+                                    MajorStepUnit="Minute"
+                                    MajorStep="15"
                                     ShowLabels="False"
                                     PlotMode="OnTicks"
                                     TickOrigin="{Binding alignmentTime}"
@@ -2175,8 +2175,8 @@
 
                             <telerik:RadCartesianChart.HorizontalAxis>
                                 <telerik:DateTimeContinuousAxis
-                                    MajorStepUnit="Hour"
-                                    MajorStep="1"
+                                    MajorStepUnit="Minute"
+                                    MajorStep="15"
                                     ShowLabels="False"
                                     PlotMode="OnTicks"
                                     TickOrigin="{Binding alignmentTime}"
@@ -2510,8 +2510,8 @@
 
                             <telerik:RadCartesianChart.HorizontalAxis>
                                 <telerik:DateTimeContinuousAxis
-                                    MajorStepUnit="Hour"
-                                    MajorStep="1"
+                                    MajorStepUnit="Minute"
+                                    MajorStep="15"
                                     ShowLabels="False"
                                     PlotMode="OnTicks"
                                     TickOrigin="{Binding alignmentTime}"
@@ -2793,8 +2793,8 @@
 
                             <telerik:RadCartesianChart.HorizontalAxis>
                                 <telerik:DateTimeContinuousAxis
-                                    MajorStepUnit="Hour"
-                                    MajorStep="1"
+                                    MajorStepUnit="Minute"
+                                    MajorStep="15"
                                     ShowLabels="False"
                                     PlotMode="OnTicks"
                                     TickOrigin="{Binding alignmentTime}"

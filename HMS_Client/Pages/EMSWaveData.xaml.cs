@@ -28,11 +28,15 @@ namespace HMS_Client
         private void InitUI()
         {
             // Koble chart til data
-            //waveChart.Series[0].ItemsSource = viewModel.wave20mList;
-            waveSWHChart.Series[0].ItemsSource = viewModel.waveSWH20mList;
-            waveSWHMaxChart.Series[0].ItemsSource = viewModel.waveSWHMax20mList;
-            wavePeriodChart.Series[0].ItemsSource = viewModel.wavePeriod20mList;
-            wavePeriodMaxChart.Series[0].ItemsSource = viewModel.wavePeriodMax20mList;
+            waveSWH20mChart.Series[0].ItemsSource = viewModel.waveSWH20mList;
+            waveSWHMax20mChart.Series[0].ItemsSource = viewModel.waveSWHMax20mList;
+            wavePeriod20mChart.Series[0].ItemsSource = viewModel.wavePeriod20mList;
+            wavePeriodMax20mChart.Series[0].ItemsSource = viewModel.wavePeriodMax20mList;
+
+            waveSWH3hChart.Series[0].ItemsSource = viewModel.waveSWH3hList;
+            waveSWHMax3hChart.Series[0].ItemsSource = viewModel.waveSWHMax3hList;
+            wavePeriod3hChart.Series[0].ItemsSource = viewModel.wavePeriod3hList;
+            wavePeriodMax3hChart.Series[0].ItemsSource = viewModel.wavePeriodMax3hList;
         }
     }
 }

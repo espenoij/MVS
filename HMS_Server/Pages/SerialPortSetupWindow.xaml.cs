@@ -415,7 +415,13 @@ namespace HMS_Server
             try
             {
                 for (int i = 0; i < Constants.DataCalculationSteps; i++)
-                    dataCalculations.Add(new DataCalculations());
+                {
+                    dataCalculations.Add(new DataCalculations()
+                    {
+                        type = sensorData.fileReader.calculationSetup[i].type,
+                        parameter = sensorData.serialPort.calculationSetup[i].parameter,
+                    });
+                }
 
                 // Binding for listviews
                 lvCalculatedData.ItemsSource = calculatedDataItems;

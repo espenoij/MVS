@@ -18,7 +18,7 @@ class Constants
 
     // Admin Mode Password
     public const string AdminModePassword = "swireworld";
-    public const string ActivationPassword = "swirefuture";
+    public const string ActivationPassword = "swireexplorer";
 
     // Max antall datafelt i en pakke
     public const int PacketDataFields = 60;                     // Korresponderer til felt i XAML fil (lvPacketData)
