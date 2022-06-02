@@ -230,14 +230,14 @@ namespace HMS_Server
             heaveHeightMax20mData.dbColumn = "heave_height_max_20m";
             heaveHeightMax20mData.InitProcessing(errorHandler, ErrorMessageCategory.AdminUser, adminSettingsVM);
             heaveHeightMax20mData.AddProcessing(CalculationType.RoundingDecimals, 1);
-            heaveHeightMax20mData.AddProcessing(CalculationType.TimeMaxWaveHeight, Constants.Minutes20);
+            heaveHeightMax20mData.AddProcessing(CalculationType.TimeMaxHeight, Constants.Minutes20);
 
             heaveHeightMax3hData.id = (int)ValueType.HeaveHeightMax3h;
             heaveHeightMax3hData.name = "Heave Height Max (3h)";
             heaveHeightMax3hData.dbColumn = "heave_height_max_3h";
             heaveHeightMax3hData.InitProcessing(errorHandler, ErrorMessageCategory.AdminUser, adminSettingsVM);
             heaveHeightMax3hData.AddProcessing(CalculationType.RoundingDecimals, 1);
-            heaveHeightMax3hData.AddProcessing(CalculationType.TimeMaxWaveHeight, Constants.Hours3);
+            heaveHeightMax3hData.AddProcessing(CalculationType.TimeMaxHeight, Constants.Hours3);
 
             heavePeriodMeanData.id = (int)ValueType.HeavePeriodMean;
             heavePeriodMeanData.name = "Heave Period";

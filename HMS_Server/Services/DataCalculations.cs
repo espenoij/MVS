@@ -772,7 +772,7 @@ namespace HMS_Server
                         /// Brukes til:
                         /// Heave Height Max
                         /// 
-                        case CalculationType.TimeMaxWaveHeight:
+                        case CalculationType.TimeMaxHeight:
 
                             // Sjekke om string er numerisk
                             if (double.TryParse(newData, Constants.numberStyle, Constants.cultureInfo, out value))
@@ -1653,7 +1653,7 @@ namespace HMS_Server
         [Description("Time Max Absolute")]
         TimeMaxAbsolute,
         [Description("Time Max Height")]
-        TimeMaxWaveHeight,
+        TimeMaxHeight,
         [Description("Time Mean Period")]
         TimeMeanPeriod,
         [Description("Rounding Decimals")]
@@ -1662,13 +1662,11 @@ namespace HMS_Server
         SignificantHeaveRate,
         [Description("Height")]
         MeanWaveHeight,
-        //[Description("NWS Codes")]
-        //NWSCodes,
         [Description("METAR Codes")]
         METARCodes,
         [Description("Significant Wave Height")]
         SignificantWaveHeight,
-         [Description("Absolute Value")]
+        [Description("Absolute Value")]
         Absolute,
         [Description("Knots to m/s")]
         KnotsToMS,
@@ -1678,5 +1676,8 @@ namespace HMS_Server
         WaveRadar,
         [Description("Period")]
         Period,
+
+        //[Description("NWS Codes")]
+        //NWSCodes,
     }
 }
