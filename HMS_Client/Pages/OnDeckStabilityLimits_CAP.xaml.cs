@@ -9,8 +9,6 @@ namespace HMS_Client
     /// </summary>
     public partial class OnDeckStabilityLimits_CAP : UserControl
     {
-        public RadObservableCollectionEx<Point> blueArea = new RadObservableCollectionEx<Point>();
-
         private OnDeckStabilityLimitsVM viewModel;
         private LandingStatusTrendVM landingStatusTrendVM;
 
@@ -30,7 +28,8 @@ namespace HMS_Client
             chartMSIWSI3h.Series[0].ItemsSource = viewModel.msiwsi3hDataList;
 
             // Blå bakgrunn på graf
-            // Har laget til denne koden i tilfelle vi trenger å dynamisk endre det blå området
+            RadObservableCollectionEx<Point> blueArea = new RadObservableCollectionEx<Point>();
+
             blueArea.Add(new Point() { X = 0, Y = Constants.MSIMax });
             blueArea.Add(new Point() { X = Constants.WSIMax, Y = 0 });
 

@@ -5,6 +5,7 @@
     xmlns:mc="http://schemas.openxmlformats.org/markup-compatibility/2006"
     xmlns:d="http://schemas.microsoft.com/expression/blend/2008"
     xmlns:telerik="http://schemas.telerik.com/2008/xaml/presentation"
+    xmlns:chart="clr-namespace:Telerik.Windows.Controls;assembly=Telerik.Windows.Controls.Chart"
     mc:Ignorable="d"
     d:DesignHeight="600"
     d:DesignWidth="900">
@@ -32,7 +33,7 @@
                 </Grid.ColumnDefinitions>
 
                 <!--Relative Wind Chart-->
-                <telerik:RadCartesianChart
+                <chart:RadCartesianChart
                     Name="chartRelativeWindLimits"
                     Margin="0,8,0,0">
 
@@ -60,6 +61,7 @@
 
                     <telerik:RadCartesianChart.Annotations>
 
+                        <!--Rødt felt på chart-->
                         <telerik:CartesianMarkedZoneAnnotation
                             Fill="{StaticResource ColorRed}"
                             HorizontalFrom="0"
@@ -119,58 +121,58 @@
 
                         </telerik:ScatterLineSeries>
 
+                        <!--Gult felt på chart-->
                         <telerik:ScatterAreaSeries
                             Fill="{StaticResource ColorAmber}"
                             ZIndex="200">
 
-                            <!--Kun til visualisering i editor-->
-                            <!--<telerik:ScatterAreaSeries.DataPoints>
-                                <telerik:ScatterDataPoint
+                            <telerik:ScatterAreaSeries.DataPoints>
+                                <telerik:ScatterBubbleDataPoint
                                     XValue="0"
                                     YValue="60" />
-                                <telerik:ScatterDataPoint
+                                <telerik:ScatterBubbleDataPoint
                                     XValue="20"
                                     YValue="60" />
-                                <telerik:ScatterDataPoint
+                                <telerik:ScatterBubbleDataPoint
                                     XValue="20"
                                     YValue="45" />
-                                <telerik:ScatterDataPoint
+                                <telerik:ScatterBubbleDataPoint
                                     XValue="35"
                                     YValue="30" />
-                                <telerik:ScatterDataPoint
+                                <telerik:ScatterBubbleDataPoint
                                     XValue="60"
                                     YValue="30" />
-                            </telerik:ScatterAreaSeries.DataPoints>-->
+                            </telerik:ScatterAreaSeries.DataPoints>
                         </telerik:ScatterAreaSeries>
 
+                        <!--Blått felt på chart-->
                         <telerik:ScatterAreaSeries
                             Fill="{StaticResource ColorBlue}"
                             ZIndex="200">
 
-                            <!--Kun til visualisering i editor-->
-                            <!--<telerik:ScatterAreaSeries.DataPoints>
-                                <telerik:ScatterDataPoint
+                            <telerik:ScatterAreaSeries.DataPoints>
+                                <telerik:ScatterBubbleDataPoint
                                     XValue="0"
                                     YValue="60" />
-                                <telerik:ScatterDataPoint
+                                <telerik:ScatterBubbleDataPoint
                                     XValue="15"
                                     YValue="60" />
-                                <telerik:ScatterDataPoint
+                                <telerik:ScatterBubbleDataPoint
                                     XValue="15"
                                     YValue="45" />
-                                <telerik:ScatterDataPoint
+                                <telerik:ScatterBubbleDataPoint
                                     XValue="35"
                                     YValue="25" />
-                                <telerik:ScatterDataPoint
+                                <telerik:ScatterBubbleDataPoint
                                     XValue="60"
                                     YValue="25" />
-                            </telerik:ScatterAreaSeries.DataPoints>-->
+                            </telerik:ScatterAreaSeries.DataPoints>
                         </telerik:ScatterAreaSeries>
 
                     </telerik:RadCartesianChart.Series>
 
-                </telerik:RadCartesianChart>
-
+                </chart:RadCartesianChart>
+                
                 <Grid
                     Grid.Column="1">
 

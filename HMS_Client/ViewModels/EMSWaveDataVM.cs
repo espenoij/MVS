@@ -317,7 +317,7 @@ namespace HMS_Client
                     // Sjekke om data er gyldig
                     if (wavePeriodMax3hData.status == DataStatus.OK)
                     {
-                        return string.Format("{0} °", wavePeriodMax3hData.data.ToString("0.0"));
+                        return string.Format("{0} s", wavePeriodMax3hData.data.ToString("0.0"));
                     }
                     else
                     {
@@ -440,7 +440,7 @@ namespace HMS_Client
                     // Sjekke om data er gyldig
                     if (waveSWHMax3hData.status == DataStatus.OK)
                     {
-                        return string.Format("{0} °", waveSWHMax3hData.data.ToString("0.0"));
+                        return string.Format("{0} m", waveSWHMax3hData.data.ToString("0.0"));
                     }
                     else
                     {

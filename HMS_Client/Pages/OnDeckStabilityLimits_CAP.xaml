@@ -189,8 +189,7 @@
                                 <telerik:ScatterAreaSeries
                                     Fill="{StaticResource ColorBlue}"
                                     ZIndex="200">
-
-                                    <!--Kun til visualisering i editor-->
+                                    
                                     <!--<telerik:ScatterAreaSeries.DataPoints>
                                         <telerik:ScatterDataPoint
                                             XValue="0"
@@ -395,6 +394,7 @@
 
                             <telerik:RadCartesianChart.Annotations>
 
+                                <!--Gult område på chart-->
                                 <telerik:CartesianMarkedZoneAnnotation
                                     Fill="{StaticResource ColorAmber}"
                                     HorizontalFrom="0"
@@ -467,11 +467,13 @@
 
                                 </telerik:ScatterLineSeries>
 
+                                <!--Blått område på chart-->
                                 <telerik:ScatterAreaSeries
                                     Fill="{StaticResource ColorBlue}"
                                     ZIndex="200">
+                                    
+                                    <!--Blått område blir satt i kode-->
 
-                                    <!--Kun til visualisering i editor-->
                                     <!--<telerik:ScatterAreaSeries.DataPoints>
                                         <telerik:ScatterDataPoint
                                             XValue="0"

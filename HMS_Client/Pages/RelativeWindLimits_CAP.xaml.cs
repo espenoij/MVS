@@ -1,4 +1,6 @@
-﻿using System.Windows.Controls;
+﻿using System.Drawing;
+using System.Windows.Controls;
+using Telerik.Windows.Data;
 
 namespace HMS_Client
 {
@@ -7,8 +9,6 @@ namespace HMS_Client
     /// </summary>
     public partial class RelativeWindLimits_CAP : UserControl
     {
-        //public RadObservableCollectionEx<Point> blueArea = new RadObservableCollectionEx<Point>();
-
         public RelativeWindLimits_CAP()
         {
             InitializeComponent();

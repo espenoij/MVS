@@ -32,8 +32,7 @@
             <SolidColorBrush x:Key="ColorAmberTranslucent">#50ebba47</SolidColorBrush>
             <SolidColorBrush x:Key="ColorGraphLine">#FF333333</SolidColorBrush>
             <SolidColorBrush x:Key="EMSWaveData">RoyalBlue</SolidColorBrush>
-            <SolidColorBrush
-                x:Key="ColorEMSAirData">LightSkyBlue</SolidColorBrush>
+            <SolidColorBrush x:Key="ColorEMSAirData">LightSkyBlue</SolidColorBrush>
             <!--Helicopter-->
             <SolidColorBrush x:Key="ColorHelicopterFill">#ff666666</SolidColorBrush>
             <SolidColorBrush x:Key="ColorHelicopterStroke">#FF000000</SolidColorBrush>
