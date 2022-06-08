@@ -42,6 +42,13 @@ namespace HMS_Server
             // Liste med HMS input data
             gvHMSInputData.ItemsSource = hmsInputDisplayList;
 
+            // Overføre fra data lister til display lister
+            DisplayList.Transfer(serverSensorDataList, sensorDisplayList);
+            DisplayList.Transfer(hmsInputDataList.GetDataList(), hmsInputDisplayList);
+
+            ClearSensorStatus(sensorDisplayList);
+            ClearSensorStatus(hmsInputDisplayList);
+
             // Dispatcher som oppdatere UI
             uiTimer.Interval = TimeSpan.FromMilliseconds(config.ReadWithDefault(ConfigKey.ServerUIUpdateFrequency, Constants.ServerUIUpdateFrequencyDefault));
             uiTimer.Tick += runUIInputUpdate;
@@ -65,6 +72,21 @@ namespace HMS_Server
         public void Stop()
         {
             uiTimer.Stop();
+
+            ClearSensorStatus(sensorDisplayList);
+            ClearSensorStatus(hmsInputDisplayList);
+        }
+
+        private void ClearSensorStatus(RadObservableCollection<SensorData> sensorDisplayList)
+        {
+            foreach (var item in sensorDisplayList)
+                item.portStatus = PortStatus.Closed;
+        }
+
+        private void ClearSensorStatus(RadObservableCollection<HMSData> hmsInputDisplayList)
+        {
+            foreach (var item in hmsInputDisplayList)
+                item.status = DataStatus.NONE;
         }
 
         private void gvClientData_BeginningEdit(object sender, GridViewBeginningEditRoutedEventArgs e)

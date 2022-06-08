@@ -40,6 +40,14 @@
                         Value="{StaticResource ColorGreen}" />
                 </DataTrigger>
 
+                <DataTrigger
+                    Binding="{Binding Path=statusString}"
+                    Value="NONE">
+                    <Setter
+                        Property="Background"
+                        Value="Transparent" />
+                </DataTrigger>
+
             </Style.Triggers>
         </Style>
     </UserControl.Resources>

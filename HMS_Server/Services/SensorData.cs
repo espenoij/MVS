@@ -59,7 +59,6 @@ namespace HMS_Server
 
             saveToDatabase = sensorData.saveToDatabase;
             saveFreq = sensorData.saveFreq;
-            //inputType = sensorData.inputType;
             data = sensorData.data;
             timestamp = sensorData.timestamp;
             portStatus = sensorData.portStatus;
@@ -82,7 +81,6 @@ namespace HMS_Server
                     description = sensorConfig.description;
                     saveToDatabase = bool.Parse(sensorConfig.saveToDatabase);
                     saveFreq = (DatabaseSaveFrequency)Enum.Parse(typeof(DatabaseSaveFrequency), sensorConfig.saveFreq);
-                    //inputType = (InputDataType)Enum.Parse(typeof(InputDataType), sensorConfig.inputType);
 
                     switch (type)
                     {
@@ -366,20 +364,6 @@ namespace HMS_Server
         // Database lagringsfrekvens
         public DatabaseSaveFrequency saveFreq { get; set; }
 
-        //// Input Data Type
-        //private InputDataType _inputType { get; set; }
-        //public InputDataType inputType
-        //{
-        //    get
-        //    {
-        //        return _inputType;
-        //    }
-        //    set
-        //    {
-        //        _inputType = value;
-        //    }
-        //}
-
         // Resultat data
         public double data { get; set; }
 
@@ -435,10 +419,24 @@ namespace HMS_Server
         {
             get
             {
-                if (portStatus == PortStatus.Reading)
-                    return DataStatus.OK.ToString();
-                else
-                    return DataStatus.TIMEOUT_ERROR.ToString();
+                switch (portStatus)
+                {
+                    case PortStatus.Closed:
+                    case PortStatus.Open:
+                        return DataStatus.NONE.ToString();
+
+                    case PortStatus.Reading:
+                        return DataStatus.OK.ToString();
+
+                    case PortStatus.NoData:
+                    case PortStatus.Warning:
+                    case PortStatus.OpenError:
+                    case PortStatus.EndOfFile:
+                        return DataStatus.TIMEOUT_ERROR.ToString();
+
+                    default:
+                        return DataStatus.NONE.ToString();
+                }
             }
         }
 

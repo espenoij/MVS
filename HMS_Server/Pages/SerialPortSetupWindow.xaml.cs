@@ -1406,6 +1406,8 @@ namespace HMS_Server
                     sensorData.serialPort.packetDelimiter = Constants.BinaryDataDelimiter;
                     tbPacketDataDelimiter.Text = Constants.BinaryDataDelimiter;
                 }
+                
+                process.inputType = sensorData.serialPort.inputType;
 
                 SetDataFieldSplitDisplay();
                 SetDataSelectionDisplay();

@@ -114,6 +114,15 @@ namespace HMS_Server
                 lbMSICorrectionR.IsEnabled = false;
                 tbMSICorrectionR.IsEnabled = false;
 
+                lbWindSamplesPerTransmission.IsEnabled = false;
+                tbWindSamplesPerTransmission.IsEnabled = false;
+
+                lbOverrideWindBuffer.IsEnabled = false;
+                chkOverrideWindBuffer.IsEnabled = false;
+
+                lbOverrideMotionBuffer.IsEnabled = false;
+                chkOverrideMotionBuffer.IsEnabled = false;
+
                 lbHelicopterWSILimitType.IsEnabled = false;
                 cboHelicopterWSILimitType.IsEnabled = false;
 
