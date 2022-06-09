@@ -47,7 +47,6 @@
                     Header="HMS"
                     Grid.Row="0"
                     Grid.Column="0"
-                    Grid.RowSpan="2"
                     Margin="8">
 
                     <StackPanel
@@ -80,48 +79,6 @@
                                 Text="{Binding Path=vesselName}"
                                 LostFocus="tbVesselName_LostFocus"
                                 KeyDown="tbVesselName_KeyDown" />
-                        </DockPanel>
-
-                        <!--Helideck Heading Offset-->
-                        <DockPanel>
-                            <telerik:Label
-                                Content="Helideck Heading Offset"
-                                VerticalAlignment="Center" />
-                            <TextBox
-                                Name="tbHelideckHeadingOffset"
-                                Width="200"
-                                HorizontalAlignment="Right"
-                                Text="{Binding Path=helideckHeadingOffset}"
-                                LostFocus="tbHelideckHeadingOffset_LostFocus"
-                                KeyDown="tbHelideckHeadingOffset_KeyDown" />
-                        </DockPanel>
-
-                        <!--Vessel Heading Reference-->
-                        <DockPanel>
-                            <telerik:Label
-                                Name="lbVesselHdgRef"
-                                Content="Vessel Heading Reference"
-                                VerticalAlignment="Center" />
-                            <telerik:RadComboBox
-                                Name="cboVesselHdgRef"
-                                Width="200"
-                                HorizontalAlignment="Right"
-                                SelectionChanged="cboVesselHdgRef_SelectionChanged">
-                            </telerik:RadComboBox>
-                        </DockPanel>
-
-                        <!--Magnetic Declination-->
-                        <DockPanel>
-                            <telerik:Label
-                                Content="Magnetic Declination"
-                                VerticalAlignment="Center" />
-                            <TextBox
-                                Name="tbMagneticDeclination"
-                                Width="200"
-                                HorizontalAlignment="Right"
-                                Text="{Binding Path=magneticDeclination}"
-                                LostFocus="tbMagneticDeclination_LostFocus"
-                                KeyDown="tbMagneticDeclination_KeyDown" />
                         </DockPanel>
 
                         <!--Helideck Lights Output-->
@@ -184,7 +141,90 @@
                     </StackPanel>
 
                 </telerik:GroupBox>
-                
+
+
+                <telerik:GroupBox
+                    Header="HEADING"
+                    Grid.Row="1"
+                    Grid.Column="0"
+                    Margin="8">
+
+                    <StackPanel
+                        Margin="8">
+
+                        <!--Fixed Installation-->
+                        <DockPanel>
+                            <telerik:Label
+                                Content="Fixed Installation"
+                                VerticalAlignment="Center" />
+                            <CheckBox                               
+                                IsChecked="{Binding Path=fixedInstallation, Mode=TwoWay}"
+                                Click="cbFixedHeadingEnable_Click"
+                                VerticalAlignment="Center"
+                                HorizontalAlignment="Right"/>
+                        </DockPanel>
+
+                        <!--Fixed Heading-->
+                        <DockPanel>
+                            <telerik:Label
+                                Name="lbFixedHeading"
+                                Content="Fixed Heading"
+                                VerticalAlignment="Center" />
+                            <TextBox
+                                Name="tbFixedHeading"
+                                Width="200"
+                                HorizontalAlignment="Right"
+                                Text="{Binding Path=fixedHeading}"
+                                LostFocus="tbFixedHeading_LostFocus"
+                                KeyDown="tbFixedHeading_KeyDown" />
+                        </DockPanel>
+
+                        <!--Vessel Heading Reference-->
+                        <DockPanel>
+                            <telerik:Label
+                                Name="lbVesselHdgRef"
+                                Content="Heading Reference"
+                                VerticalAlignment="Center" />
+                            <telerik:RadComboBox
+                                Name="cboVesselHdgRef"
+                                Width="200"
+                                HorizontalAlignment="Right"
+                                SelectionChanged="cboVesselHdgRef_SelectionChanged">
+                            </telerik:RadComboBox>
+                        </DockPanel>
+
+                        <!--Magnetic Declination-->
+                        <DockPanel>
+                            <telerik:Label
+                                Content="Magnetic Declination"
+                                VerticalAlignment="Center" />
+                            <TextBox
+                                Name="tbMagneticDeclination"
+                                Width="200"
+                                HorizontalAlignment="Right"
+                                Text="{Binding Path=magneticDeclination}"
+                                LostFocus="tbMagneticDeclination_LostFocus"
+                                KeyDown="tbMagneticDeclination_KeyDown" />
+                        </DockPanel>
+
+                        <!--Helideck Heading Offset-->
+                        <DockPanel>
+                            <telerik:Label
+                                Content="Helideck Heading Offset"
+                                VerticalAlignment="Center" />
+                            <TextBox
+                                Name="tbHelideckHeadingOffset"
+                                Width="200"
+                                HorizontalAlignment="Right"
+                                Text="{Binding Path=helideckHeadingOffset}"
+                                LostFocus="tbHelideckHeadingOffset_LostFocus"
+                                KeyDown="tbHelideckHeadingOffset_KeyDown" />
+                        </DockPanel>
+
+                    </StackPanel>
+
+                </telerik:GroupBox>
+
                 <telerik:GroupBox
                     Grid.Row="0"
                     Grid.Column="1"

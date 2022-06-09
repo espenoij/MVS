@@ -25,9 +25,6 @@ namespace HMS_Server
             // Vessel Name
             vesselName = config.Read(ConfigKey.VesselName);
 
-            // Helideck Heading Offset
-            helideckHeadingOffset = config.ReadWithDefault(ConfigKey.HelideckHeadingOffset, Constants.HeadingDefault);
-
             // CAP
             msiCorrectionR = config.ReadWithDefault(ConfigKey.MSICorrectionR, Constants.MSICorrectionRMin);
             windSensorSampleRate = config.ReadWithDefault(ConfigKey.WindSamplesPerTransmission, Constants.WindSamplesPerTransmissionDefault);
@@ -111,8 +108,15 @@ namespace HMS_Server
             else
                 dataVerificationEnabled = false;
 
-            // Magnetic Declination
+            // Heading
+            if (config.ReadWithDefault(ConfigKey.FixedInstallation, "0") == "1")
+                fixedInstallation = true;
+            else
+                fixedInstallation = false;
+            fixedHeading = config.ReadWithDefault(ConfigKey.FixedHeading, Constants.HeadingDefault);
             magneticDeclination = config.ReadWithDefault(ConfigKey.MagneticDeclination, Constants.MagneticDeclinationDefault);
+            helideckHeadingOffset = config.ReadWithDefault(ConfigKey.HelideckHeadingOffset, Constants.HeadingDefault);
+            vesselHdgRef = (DirectionReference)Enum.Parse(typeof(DirectionReference), config.ReadWithDefault(ConfigKey.VesselHeadingReference, DirectionReference.MagneticNorth.ToString()));
 
             // Helideck Lights Output
             if (config.ReadWithDefault(ConfigKey.HelideckLightsOutput, "0") == "1")
@@ -134,7 +138,6 @@ namespace HMS_Server
 
             // Sensor
             windDirRef = (DirectionReference)Enum.Parse(typeof(DirectionReference), config.ReadWithDefault(ConfigKey.WindDirectionReference, DirectionReference.VesselHeading.ToString()));
-            vesselHdgRef = (DirectionReference)Enum.Parse(typeof(DirectionReference), config.ReadWithDefault(ConfigKey.VesselHeadingReference, DirectionReference.MagneticNorth.ToString()));
             helideckHeight = config.ReadWithDefault(ConfigKey.HelideckHeight, Constants.HelideckHeightDefault);
             windSensorHeight = config.ReadWithDefault(ConfigKey.WindSensorHeight, Constants.WindSensorHeightDefault);
             windSensorDistance = config.ReadWithDefault(ConfigKey.WindSensorDistance, Constants.WindSensorDistanceDefault);
@@ -433,6 +436,47 @@ namespace HMS_Server
             {
                 _magneticDeclination = value;
                 config.Write(ConfigKey.MagneticDeclination, _magneticDeclination.ToString());
+                OnPropertyChanged();
+            }
+        }
+
+        /////////////////////////////////////////////////////////////////////////////
+        // Fixed Heading
+        /////////////////////////////////////////////////////////////////////////////
+        private bool _fixedInstallation { get; set; }
+        public bool fixedInstallation
+        {
+            get
+            {
+                return _fixedInstallation;
+            }
+            set
+            {
+                _fixedInstallation = value;
+
+                if (_fixedInstallation)
+                    config.Write(ConfigKey.FixedInstallation, "1");
+                else
+                    config.Write(ConfigKey.FixedInstallation, "0");
+
+                OnPropertyChanged();
+            }
+        }
+
+        /////////////////////////////////////////////////////////////////////////////
+        // Fixed Heading Value
+        /////////////////////////////////////////////////////////////////////////////
+        private double _fixedHeading { get; set; }
+        public double fixedHeading
+        {
+            get
+            {
+                return _fixedHeading;
+            }
+            set
+            {
+                _fixedHeading = value;
+                config.Write(ConfigKey.FixedHeading, _fixedHeading.ToString());
                 OnPropertyChanged();
             }
         }

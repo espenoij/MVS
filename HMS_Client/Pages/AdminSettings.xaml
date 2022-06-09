@@ -71,6 +71,21 @@
 
                 </DockPanel>
 
+                <DockPanel>
+
+                    <telerik:Label
+                        Content="Enable EMS Page"
+                        VerticalAlignment="Center" />
+
+                    <CheckBox
+                        Name="chkEnableEMS"
+                        IsChecked="{Binding Path=enableEMS, Mode=TwoWay}"
+                        VerticalAlignment="Center"
+                        HorizontalAlignment="Right"
+                        Click="chkEnableEMS_Click" />
+
+                </DockPanel>
+
             </StackPanel>
 
         </telerik:GroupBox>
@@ -305,34 +320,6 @@
                         Text="{Binding Path=chartDataUpdateFrequency3h}"
                         LostFocus="tbChartDataUpdateFrequency3h_LostFocus"
                         KeyDown="tbChartDataUpdateFrequency3h_KeyDown" />
-                </DockPanel>
-
-            </StackPanel>
-
-        </telerik:GroupBox>
-
-        <telerik:GroupBox
-            Header="EMS"
-            Grid.Column="1"
-            Grid.Row="1"
-            Margin="8">
-
-            <StackPanel
-                Margin="8">
-
-                <DockPanel>
-
-                    <telerik:Label
-                        Content="Enable EMS Page"
-                        VerticalAlignment="Center" />
-
-                    <CheckBox
-                        Name="chkEnableEMS"
-                        IsChecked="{Binding Path=enableEMS, Mode=TwoWay}"
-                        VerticalAlignment="Center"
-                        HorizontalAlignment="Right"
-                        Click="chkEnableEMS_Click" />
-
                 </DockPanel>
 
             </StackPanel>

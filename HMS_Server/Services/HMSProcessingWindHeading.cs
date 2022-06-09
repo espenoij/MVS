@@ -135,6 +135,12 @@ namespace HMS_Server
             helideckWindAverageData2m.minutes = 2;
             helideckWindAverageData10m.minutes = 10;
 
+            // Vessel Heading
+            vesselHeading.id = (int)ValueType.VesselHeading;
+            areaWindGust2m.name = "Area Wind Gust (2m)";
+            areaWindGust2m.sensorGroupId = Constants.NO_SENSOR_GROUP_ID;
+            areaWindGust2m.dbColumn = "area_wind_gust_2m";
+
             // Wind
             areaWindDirection2m.id = (int)ValueType.AreaWindDirection2m;
             areaWindDirection2m.name = "Area Wind Direction (2m)";
@@ -284,10 +290,38 @@ namespace HMS_Server
         public void Update(HMSDataCollection hmsInputDataList)
         {
             // Overføre input data vi skal bruke
+            if (adminSettingsVM.fixedInstallation)
+            {
+                // Vessel Heading
+                hmsInputDataList.GetData(ValueType.VesselHeading).data = adminSettingsVM.fixedHeading;
+                hmsInputDataList.GetData(ValueType.VesselHeading).status = DataStatus.OK;
+                hmsInputDataList.GetData(ValueType.VesselHeading).timestamp = DateTime.UtcNow;
+
+                hmsInputDataList.GetData(ValueType.VesselSpeed).data = adminSettingsVM.fixedHeading;
+                hmsInputDataList.GetData(ValueType.VesselSpeed).status = DataStatus.OK;
+                hmsInputDataList.GetData(ValueType.VesselSpeed).timestamp = DateTime.UtcNow;
+
+                // Vessel Speed
+                hmsInputDataList.GetData(ValueType.VesselSpeed).data = 0;
+                hmsInputDataList.GetData(ValueType.VesselSpeed).status = DataStatus.OK;
+                hmsInputDataList.GetData(ValueType.VesselSpeed).timestamp = DateTime.UtcNow;
+
+                // Vessel COG
+                hmsInputDataList.GetData(ValueType.VesselCOG).data = adminSettingsVM.fixedHeading;
+                hmsInputDataList.GetData(ValueType.VesselCOG).status = DataStatus.OK;
+                hmsInputDataList.GetData(ValueType.VesselCOG).timestamp = DateTime.UtcNow;
+
+                // Vessel SOG
+                hmsInputDataList.GetData(ValueType.VesselSOG).data = 0;
+                hmsInputDataList.GetData(ValueType.VesselSOG).status = DataStatus.OK;
+                hmsInputDataList.GetData(ValueType.VesselSOG).timestamp = DateTime.UtcNow;
+            }
+
             inputVesselHeading.Set(hmsInputDataList.GetData(ValueType.VesselHeading));
             inputVesselSpeed.Set(hmsInputDataList.GetData(ValueType.VesselSpeed));
             inputVesselCOG.Set(hmsInputDataList.GetData(ValueType.VesselCOG));
             inputVesselSOG.Set(hmsInputDataList.GetData(ValueType.VesselSOG));
+
             inputSensorWindDirection.Set(hmsInputDataList.GetData(ValueType.SensorWindDirection));
             inputSensorWindSpeed.Set(hmsInputDataList.GetData(ValueType.SensorWindSpeed));
 
