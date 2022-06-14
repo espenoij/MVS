@@ -1361,16 +1361,23 @@ namespace HMS_Server
         private void cboVesselHdgRef_SelectionChanged(object sender, SelectionChangedEventArgs e)
         {
             adminSettingsVM.vesselHdgRef = EnumExtension.GetEnumValueFromDescription<DirectionReference>(cboVesselHdgRef.Text);
+
+            if (adminSettingsVM.vesselHdgRef == DirectionReference.TrueNorth)
+            {
+                lbMagneticDeclination.IsEnabled = true;
+                tbMagneticDeclination.IsEnabled = true;
+            }
+            else
+            {
+                lbMagneticDeclination.IsEnabled = false;
+                tbMagneticDeclination.IsEnabled = false;
+            }
         }
 
         private void cbHelideckLightsOutput_Click(object sender, RoutedEventArgs e)
         {
             adminSettingsVM.ApplicationRestartRequired();
         }
-
-        //private void cboDecimalSeparator_SelectionChanged(object sender, SelectionChangedEventArgs e)
-        //{
-        //}
 
         private void chkEnableEMS_Click(object sender, RoutedEventArgs e)
         {

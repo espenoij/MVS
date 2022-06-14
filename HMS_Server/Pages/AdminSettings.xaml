@@ -196,6 +196,7 @@
                         <!--Magnetic Declination-->
                         <DockPanel>
                             <telerik:Label
+                                Name="lbMagneticDeclination"
                                 Content="Magnetic Declination"
                                 VerticalAlignment="Center" />
                             <TextBox

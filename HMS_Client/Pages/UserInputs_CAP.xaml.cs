@@ -39,7 +39,6 @@ namespace HMS_Client
             cboHelicopterType.SelectedIndex = (int)userInputsVM.helicopterType;
 
             // Helideck Category
-            //adminSettingsVM.helideckCategory = (HelideckCategory)Enum.Parse(typeof(HelideckCategory), config.ReadWithDefault(ConfigKey.HelideckCategorySetting, HelideckCategory.Category1.ToString()));
             switch (adminSettingsVM.helideckCategory)
             {
                 case HelideckCategory.Category1:

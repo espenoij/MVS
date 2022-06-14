@@ -263,10 +263,13 @@ namespace HMS_Client
                     // Sjekke om data er gyldig
                     if (vesselHeadingDelta.status == DataStatus.OK)
                     {
-                        if (vesselHeadingDelta.data >= 0)
+                        if (vesselHeadingDelta.data >= 1)
                             return string.Format("{0}° R", vesselHeadingDelta.data.ToString(" 0"));
                         else
+                        if (vesselHeadingDelta.data <= -1)
                             return string.Format("{0}° L", Math.Abs(vesselHeadingDelta.data).ToString(" 0"));
+                        else
+                            return "0°";
                     }
                     else
                     {
@@ -310,10 +313,13 @@ namespace HMS_Client
                     // Sjekke om data er gyldig
                     if (_windDirectionDelta.status == DataStatus.OK)
                     {
-                        if (windDirectionDelta.data >= 0)
+                        if (windDirectionDelta.data >= 1)
                             return string.Format("{0}° R", windDirectionDelta.data.ToString("0"));
                         else
+                        if (windDirectionDelta.data <= -1)
                             return string.Format("{0}° L", Math.Abs(windDirectionDelta.data).ToString("0"));
+                        else
+                            return "0°";
                     }
                     else
                     {

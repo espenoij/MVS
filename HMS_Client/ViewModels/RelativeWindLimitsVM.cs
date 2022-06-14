@@ -224,10 +224,13 @@ namespace HMS_Client
                     // Sjekke om data er gyldig
                     if (relativeWindDir.status == DataStatus.OK)
                     {
-                        if (relativeWindDir.data >= 0)
+                        if (relativeWindDir.data >= 1)
                             return string.Format("{0}° R", relativeWindDir.data.ToString("0"));
                         else
+                        if (relativeWindDir.data <= -1)
                             return string.Format("{0}° L", Math.Abs(relativeWindDir.data).ToString("0"));
+                        else
+                            return "0°";
                     }
                     else
                     {
