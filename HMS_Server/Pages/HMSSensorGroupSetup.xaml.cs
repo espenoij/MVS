@@ -109,7 +109,7 @@ namespace HMS_Server
                 SensorGroup sensor = (sender as RadGridView).SelectedItem as SensorGroup;
 
                 // Lagre til sensor group
-                sensorStatus.SetSensorGroupName(sensor);
+                sensorStatus.UpdateSensorGroup(sensor);
 
                 // Lagre til fil
                 config.SetSensorGroupIDData(sensor);

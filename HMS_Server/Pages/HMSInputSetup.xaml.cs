@@ -23,6 +23,8 @@ namespace HMS_Server
 
         private HMSDataCollection hmsInputDataList;
 
+        private RadObservableCollection<SensorData> serverSensorDataList;
+
         public HMSInputSetup()
         {
             InitializeComponent();
@@ -33,6 +35,7 @@ namespace HMS_Server
             HMSDataCollection hmsInputDataList,
             Config config)
         {
+            this.serverSensorDataList = serverSensorDataList;
             this.hmsInputDataList = hmsInputDataList;
             this.config = config;
 
@@ -41,13 +44,6 @@ namespace HMS_Server
 
             // Liste med HMS input data
             gvHMSInputData.ItemsSource = hmsInputDisplayList;
-
-            // Overføre fra data lister til display lister
-            DisplayList.Transfer(serverSensorDataList, sensorDisplayList);
-            DisplayList.Transfer(hmsInputDataList.GetDataList(), hmsInputDisplayList);
-
-            ClearSensorStatus(sensorDisplayList);
-            ClearSensorStatus(hmsInputDisplayList);
 
             // Dispatcher som oppdatere UI
             uiTimer.Interval = TimeSpan.FromMilliseconds(config.ReadWithDefault(ConfigKey.ServerUIUpdateFrequency, Constants.ServerUIUpdateFrequencyDefault));
@@ -72,6 +68,16 @@ namespace HMS_Server
         public void Stop()
         {
             uiTimer.Stop();
+
+            ClearSensorStatus(sensorDisplayList);
+            ClearSensorStatus(hmsInputDisplayList);
+        }
+
+        public void UpdateSensorDataList()
+        {
+            // Overføre fra data lister til display lister
+            DisplayList.Transfer(serverSensorDataList, sensorDisplayList);
+            DisplayList.Transfer(hmsInputDataList.GetDataList(), hmsInputDisplayList);
 
             ClearSensorStatus(sensorDisplayList);
             ClearSensorStatus(hmsInputDisplayList);

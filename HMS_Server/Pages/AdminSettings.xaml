@@ -563,7 +563,7 @@
                         <!--Wave Height Cut-Off (Period)-->
                         <DockPanel>
                             <telerik:Label
-                                Content="Wave Height Cut-Off (Period)" />
+                                Content="Wave Height Cut-Off" />
                             <TextBox
                                 Name="tbWaveHeightCutoff"
                                 Width="110"

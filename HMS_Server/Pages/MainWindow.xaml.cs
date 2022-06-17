@@ -948,6 +948,7 @@ namespace HMS_Server
                 fileReaderDataDisplayList.Clear();
             }
 
+            // Sensor Input Edit Tab
             if (tabInputEdit.IsSelected)
             {
                 ucSensorSetupPage.ServerStartedCheck(serverStarted);
@@ -956,6 +957,12 @@ namespace HMS_Server
             else
             {
                 sensorInputEdited = false;
+            }
+
+            // HMS Tab
+            if (tabHMS.IsSelected)
+            {
+                ucHMSInputSetup.UpdateSensorDataList();
             }
         }
 

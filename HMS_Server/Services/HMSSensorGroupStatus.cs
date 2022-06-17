@@ -76,11 +76,12 @@ namespace HMS_Server
             return hmsSensorGroupList;
         }
 
-        public void SetSensorGroupName(SensorGroup sensor)
+        public void UpdateSensorGroup(SensorGroup sensor)
         {
             if (sensor.id < hmsSensorGroupList.Count)
             {
                 hmsSensorGroupList[sensor.id].name = sensor.name;
+                hmsSensorGroupList[sensor.id].active = sensor.active;
 
                 // Lagre til fil
                 config.SetSensorGroupIDData(sensor);

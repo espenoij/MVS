@@ -431,7 +431,7 @@
                 </telerik:RadTabItem>
 
                 <!--==============================================================-->
-                <!--Side Menu: Sensopr Input Edit-->
+                <!--Side Menu: Sensor Input Edit-->
                 <!--==============================================================-->
                 <telerik:RadTabItem
                     Name="tabInputEdit"
