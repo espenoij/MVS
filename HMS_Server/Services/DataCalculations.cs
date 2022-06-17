@@ -1054,7 +1054,7 @@ namespace HMS_Server
                                                     }
                                                     else
                                                     {
-                                                        periodCurrent = double.NaN;
+                                                        periodCurrent = 0;
                                                     }
                                                 }
 

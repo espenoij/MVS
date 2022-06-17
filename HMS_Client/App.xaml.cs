@@ -42,7 +42,7 @@ namespace HMS_Client
 
             void App_DispatcherUnhandledException(object sender, DispatcherUnhandledExceptionEventArgs ex)
             {
-                RadWindow.Alert(string.Format("(HMS Client) An unhandled general exception occurred:\n{0}", TextHelper.Wrap(ex.Exception.Message)));
+                //RadWindow.Alert(string.Format("(HMS Client) An unhandled general exception occurred:\n{0}", TextHelper.Wrap(ex.Exception.Message)));
                 ex.Handled = true;
             }
 

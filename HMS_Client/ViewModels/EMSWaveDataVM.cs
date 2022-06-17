@@ -472,6 +472,7 @@ namespace HMS_Client
 
                     OnPropertyChanged();
                     OnPropertyChanged(nameof(alignmentTimeMin20m));
+                    OnPropertyChanged(nameof(alignmentTimeMin3h));
                     OnPropertyChanged(nameof(alignmentTimeMax));
                 }
             }

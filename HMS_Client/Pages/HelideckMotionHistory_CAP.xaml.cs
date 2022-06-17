@@ -63,7 +63,7 @@ namespace HMS_Client
                     RadObservableCollectionEx<HelideckStatus> statusList;
                     string timeString;
 
-                    // Overføre til display data liste og overføre trend data fra data liste til display liste
+                    // Sette status string: Finne data: Overføre til display data liste og overføre trend data fra data liste til display liste
                     if (tab20Minutes.IsSelected)
                     {
                         GraphBuffer.TransferDisplayData(landingStatusTrendVM.statusTrend20mList, helideckMotionTrendVM.landingTrend20mDispList);
@@ -81,7 +81,7 @@ namespace HMS_Client
                         timeString = "3-hour";
                     }
 
-                    // Status string
+                    // Sette Status string: Sette tid
                     if (statusList.Count > 0)
                     {
                         helideckMotionTrendVM.landingStatusTimeString = string.Format("{0} Trend ({1} - {2} UTC)",

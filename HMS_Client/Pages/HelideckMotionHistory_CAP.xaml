@@ -305,6 +305,7 @@
                             Name="chartPitch20m"
                             Margin="-10,32,0,0">
 
+                            <!--Pitch 1-->
                             <telerik:LineSeries
                                 ZIndex="200"
                                 Stroke="{StaticResource ColorGraphLine}"
@@ -318,6 +319,7 @@
 
                             </telerik:LineSeries>
 
+                            <!--Pitch 2-->
                             <telerik:LineSeries
                                 ZIndex="200"
                                 Stroke="{StaticResource ColorGraphLine}"
@@ -661,6 +663,7 @@
                             Name="chartRoll20m"
                             Margin="-10,32,0,0">
 
+                            <!--Roll 1-->
                             <telerik:LineSeries
                                 ZIndex="200"
                                 Stroke="{StaticResource ColorGraphLine}"
@@ -674,6 +677,7 @@
 
                             </telerik:LineSeries>
 
+                            <!--Roll 2-->
                             <telerik:LineSeries
                                 ZIndex="200"
                                 Stroke="{StaticResource ColorGraphLine}"
@@ -1798,6 +1802,7 @@
                             Name="chartPitch3h"
                             Margin="-10,32,0,0">
 
+                            <!--Pitch 1-->
                             <telerik:LineSeries
                                 ZIndex="200"
                                 Stroke="{StaticResource ColorGraphLine}"
@@ -1811,6 +1816,7 @@
 
                             </telerik:LineSeries>
 
+                            <!--Pitch 2-->
                             <telerik:LineSeries
                                 ZIndex="200"
                                 Stroke="{StaticResource ColorGraphLine}"
@@ -2147,6 +2153,7 @@
                             Name="chartRoll3h"
                             Margin="-10,32,0,0">
 
+                            <!--Roll 1-->
                             <telerik:LineSeries
                                 ZIndex="200"
                                 Stroke="{StaticResource ColorGraphLine}"
@@ -2160,6 +2167,7 @@
 
                             </telerik:LineSeries>
 
+                            <!--Roll 2-->
                             <telerik:LineSeries
                                 ZIndex="200"
                                 Stroke="{StaticResource ColorGraphLine}"

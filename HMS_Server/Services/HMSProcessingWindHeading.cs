@@ -137,9 +137,9 @@ namespace HMS_Server
 
             // Vessel Heading
             vesselHeading.id = (int)ValueType.VesselHeading;
-            areaWindGust2m.name = "Area Wind Gust (2m)";
-            areaWindGust2m.sensorGroupId = Constants.NO_SENSOR_GROUP_ID;
-            areaWindGust2m.dbColumn = "area_wind_gust_2m";
+            vesselHeading.name = "Vessel Heading";
+            vesselHeading.sensorGroupId = Constants.NO_SENSOR_GROUP_ID;
+            vesselHeading.dbColumn = "vessel_heading";
 
             // Wind
             areaWindDirection2m.id = (int)ValueType.AreaWindDirection2m;
@@ -646,7 +646,7 @@ namespace HMS_Server
                 else
                 {
                     wsiData.status = DataStatus.TIMEOUT_ERROR;
-                    wsiData.timestamp = DateTime.UtcNow;
+                    wsiData.timestamp = DateTime.MinValue;
                     wsiData.data = 0;
                 }
 
