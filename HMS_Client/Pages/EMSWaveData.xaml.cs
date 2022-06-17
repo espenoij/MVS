@@ -26,9 +26,6 @@ namespace HMS_Client
             waveSWHMax3hChart.Series[0].ItemsSource = emsWaveDataVM.waveSWHMax3hList;
             wavePeriod3hChart.Series[0].ItemsSource = emsWaveDataVM.wavePeriod3hList;
             wavePeriodMax3hChart.Series[0].ItemsSource = emsWaveDataVM.wavePeriodMax3hList;
-
-            // Sette tab
-            //tcEMSWaveData.SelectedIndex = 0;
         }
     }
 }

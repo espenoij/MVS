@@ -136,7 +136,7 @@
 
                                 <telerik:LineSeries.RenderOptions>
                                     <telerik:XamlRenderOptions
-                                    DefaultVisualsRenderMode="Batch" />
+                                        DefaultVisualsRenderMode="Batch" />
                                 </telerik:LineSeries.RenderOptions>
 
                             </telerik:LineSeries>
@@ -162,8 +162,7 @@
 
                             <telerik:RadCartesianChart.Grid>
                                 <telerik:CartesianChartGrid
-                                MajorLinesVisibility="XY"
-                                ZIndex="250" />
+                                MajorLinesVisibility="XY" />
                             </telerik:RadCartesianChart.Grid>
 
                         </telerik:RadCartesianChart>
@@ -374,7 +373,7 @@
                         </Grid>
 
                         <!--20m: SIGNIFICANT WAVE HEIGHT MAX: GRAPH-->
-                        <!--<telerik:RadCartesianChart
+                        <telerik:RadCartesianChart
                         Grid.Column="1"
                         Grid.Row="2"
                         Name="waveSWHMax20mChart">
@@ -413,59 +412,10 @@
 
                             <telerik:RadCartesianChart.Grid>
                                 <telerik:CartesianChartGrid
-                                MajorLinesVisibility="XY"
-                                ZIndex="250" />
-                            </telerik:RadCartesianChart.Grid>
-
-                        </telerik:RadCartesianChart>-->
-
-
-                        <telerik:RadCartesianChart
-                            Grid.Column="1"
-                            Grid.Row="4"
-                            Name="waveSWHMax20mChart">
-
-                            <telerik:LineSeries
-                                ZIndex="200"
-                                Stroke="{StaticResource ColorGraphLine}"
-                                CategoryBinding="timestamp"
-                                ValueBinding="graphData">
-
-                                <telerik:LineSeries.RenderOptions>
-                                    <telerik:XamlRenderOptions
-                                        DefaultVisualsRenderMode="Batch" />
-                                </telerik:LineSeries.RenderOptions>
-
-                            </telerik:LineSeries>
-
-                            <telerik:RadCartesianChart.HorizontalAxis>
-                                <telerik:DateTimeContinuousAxis
-                                    MajorStepUnit="Minute"
-                                    MajorStep="5"
-                                    ShowLabels="False"
-                                    PlotMode="OnTicks"
-                                    TickOrigin="{Binding alignmentTime}"
-                                    Minimum="{Binding alignmentTimeMin20m}"
-                                    Maximum="{Binding alignmentTimeMax}" />
-                            </telerik:RadCartesianChart.HorizontalAxis>
-
-                            <telerik:RadCartesianChart.VerticalAxis>
-                                <telerik:LinearAxis
-                                    x:Name="chartRollVerticalAxis20m"
-                                    Maximum="{Binding waveSWHChartAxisMax20m}"
-                                    Minimum="0" >
-
-                                </telerik:LinearAxis>
-
-                            </telerik:RadCartesianChart.VerticalAxis>
-
-                            <telerik:RadCartesianChart.Grid>
-                                <telerik:CartesianChartGrid
-                                    MajorLinesVisibility="XY" />
+                                MajorLinesVisibility="XY" />
                             </telerik:RadCartesianChart.Grid>
 
                         </telerik:RadCartesianChart>
-                        
 
                         <!--20m: SIGNIFICANT WAVE HEIGHT MAX: TIME SCALE-->
                         <Grid
@@ -698,8 +648,7 @@
 
                             <telerik:RadCartesianChart.Grid>
                                 <telerik:CartesianChartGrid
-                            MajorLinesVisibility="XY"
-                            ZIndex="250"/>
+                                    MajorLinesVisibility="XY"/>
                             </telerik:RadCartesianChart.Grid>
 
                         </telerik:RadCartesianChart>
@@ -948,8 +897,7 @@
 
                             <telerik:RadCartesianChart.Grid>
                                 <telerik:CartesianChartGrid
-                            MajorLinesVisibility="XY"
-                            ZIndex="250"/>
+                                    MajorLinesVisibility="XY"/>
                             </telerik:RadCartesianChart.Grid>
 
                         </telerik:RadCartesianChart>
@@ -1231,8 +1179,7 @@
 
                             <telerik:RadCartesianChart.Grid>
                                 <telerik:CartesianChartGrid
-                                MajorLinesVisibility="XY"
-                                ZIndex="250" />
+                                    MajorLinesVisibility="XY" />
                             </telerik:RadCartesianChart.Grid>
 
                         </telerik:RadCartesianChart>
@@ -1474,8 +1421,7 @@
 
                             <telerik:RadCartesianChart.Grid>
                                 <telerik:CartesianChartGrid
-                                MajorLinesVisibility="XY"
-                                ZIndex="250" />
+                                    MajorLinesVisibility="XY" />
                             </telerik:RadCartesianChart.Grid>
 
                         </telerik:RadCartesianChart>
@@ -1703,8 +1649,7 @@
 
                             <telerik:RadCartesianChart.Grid>
                                 <telerik:CartesianChartGrid
-                                MajorLinesVisibility="XY"
-                                ZIndex="250" />
+                                    MajorLinesVisibility="XY" />
                             </telerik:RadCartesianChart.Grid>
 
                         </telerik:RadCartesianChart>
@@ -1945,8 +1890,7 @@
 
                             <telerik:RadCartesianChart.Grid>
                                 <telerik:CartesianChartGrid
-                                MajorLinesVisibility="XY"
-                                ZIndex="250" />
+                                    MajorLinesVisibility="XY" />
                             </telerik:RadCartesianChart.Grid>
 
                         </telerik:RadCartesianChart>
@@ -2047,26 +1991,26 @@
                             </Grid.RowDefinitions>
 
                             <Viewbox
-                            Grid.Row="1"
-                            StretchDirection="Both"
-                            Stretch="Uniform"
-                            HorizontalAlignment="Center">
+                                Grid.Row="1"
+                                StretchDirection="Both"
+                                Stretch="Uniform"
+                                HorizontalAlignment="Center">
 
                                 <telerik:Label
-                                Content="TZmax" />
+                                    Content="TZmax" />
 
                             </Viewbox>
 
                             <Separator
-                            Grid.Row="1"
-                            Height="1"
-                            VerticalAlignment="Bottom" />
+                                Grid.Row="1"
+                                Height="1"
+                                VerticalAlignment="Bottom" />
 
                             <Viewbox
-                            Grid.Row="2"
-                            StretchDirection="Both"
-                            Stretch="Uniform"
-                            HorizontalAlignment="Center">
+                                Grid.Row="2"
+                                StretchDirection="Both"
+                                Stretch="Uniform"
+                                HorizontalAlignment="Center">
 
                                 <telerik:Label
                                 Content="{Binding Path=wavePeriodMax3hString, FallbackValue=0.0 m}" />

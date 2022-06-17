@@ -458,12 +458,12 @@ namespace HMS_Server
                 areaWindDirection2m.DoProcessing(sensorWindDirectionCorrected);
 
                 if (adminSettingsVM.regulationStandard == RegulationStandard.CAP && !adminSettingsVM.overrideWindBuffer)
-                    areaWindDirection2m.BufferFillCheck(Constants.WindBufferFill95Pct2m / adminSettingsVM.windSensorSampleRate);
+                    areaWindDirection2m.BufferFillCheck(Constants.WindBufferFill95Pct2m / adminSettingsVM.windSamplesPerTransmission);
 
                 areaWindSpeed2m.DoProcessing(inputSensorWindSpeed);
 
                 if (adminSettingsVM.regulationStandard == RegulationStandard.CAP && !adminSettingsVM.overrideWindBuffer)
-                    areaWindSpeed2m.BufferFillCheck(Constants.WindBufferFill95Pct2m / adminSettingsVM.windSensorSampleRate);
+                    areaWindSpeed2m.BufferFillCheck(Constants.WindBufferFill95Pct2m / adminSettingsVM.windSamplesPerTransmission);
 
                 UpdateGustData(
                     inputSensorWindSpeed,
@@ -478,8 +478,8 @@ namespace HMS_Server
 
                 if (adminSettingsVM.regulationStandard == RegulationStandard.CAP && !adminSettingsVM.overrideWindBuffer)
                 {
-                    helideckWindDirection2m.BufferFillCheck(Constants.WindBufferFill95Pct2m / adminSettingsVM.windSensorSampleRate);
-                    emsWindDirection2m.BufferFillCheck(Constants.WindBufferFill95Pct2m / adminSettingsVM.windSensorSampleRate);
+                    helideckWindDirection2m.BufferFillCheck(Constants.WindBufferFill95Pct2m / adminSettingsVM.windSamplesPerTransmission);
+                    emsWindDirection2m.BufferFillCheck(Constants.WindBufferFill95Pct2m / adminSettingsVM.windSamplesPerTransmission);
                 }
 
                 helideckWindSpeed2m.DoProcessing(windSpeedCorrectedToHelideck);
@@ -487,8 +487,8 @@ namespace HMS_Server
 
                 if (adminSettingsVM.regulationStandard == RegulationStandard.CAP && !adminSettingsVM.overrideWindBuffer)
                 {
-                    helideckWindSpeed2m.BufferFillCheck(Constants.WindBufferFill95Pct2m / adminSettingsVM.windSensorSampleRate);
-                    emsWindSpeed2m.BufferFillCheck(Constants.WindBufferFill95Pct2m / adminSettingsVM.windSensorSampleRate);
+                    helideckWindSpeed2m.BufferFillCheck(Constants.WindBufferFill95Pct2m / adminSettingsVM.windSamplesPerTransmission);
+                    emsWindSpeed2m.BufferFillCheck(Constants.WindBufferFill95Pct2m / adminSettingsVM.windSamplesPerTransmission);
                 }
 
                 UpdateGustData(
@@ -510,8 +510,8 @@ namespace HMS_Server
 
                 if (adminSettingsVM.regulationStandard == RegulationStandard.CAP && !adminSettingsVM.overrideWindBuffer)
                 {
-                    helideckWindDirection10m.BufferFillCheck(Constants.WindBufferFill95Pct10m / adminSettingsVM.windSensorSampleRate);
-                    emsWindDirection10m.BufferFillCheck(Constants.WindBufferFill95Pct10m / adminSettingsVM.windSensorSampleRate);
+                    helideckWindDirection10m.BufferFillCheck(Constants.WindBufferFill95Pct10m / adminSettingsVM.windSamplesPerTransmission);
+                    emsWindDirection10m.BufferFillCheck(Constants.WindBufferFill95Pct10m / adminSettingsVM.windSamplesPerTransmission);
                 }
 
                 helideckWindSpeed10m.DoProcessing(windSpeedCorrectedToHelideck);
@@ -519,8 +519,8 @@ namespace HMS_Server
 
                 if (adminSettingsVM.regulationStandard == RegulationStandard.CAP && !adminSettingsVM.overrideWindBuffer)
                 {
-                    helideckWindSpeed10m.BufferFillCheck(Constants.WindBufferFill95Pct10m / adminSettingsVM.windSensorSampleRate);
-                    emsWindSpeed10m.BufferFillCheck(Constants.WindBufferFill95Pct10m / adminSettingsVM.windSensorSampleRate);
+                    helideckWindSpeed10m.BufferFillCheck(Constants.WindBufferFill95Pct10m / adminSettingsVM.windSamplesPerTransmission);
+                    emsWindSpeed10m.BufferFillCheck(Constants.WindBufferFill95Pct10m / adminSettingsVM.windSamplesPerTransmission);
                 }
 
                 UpdateGustData(
