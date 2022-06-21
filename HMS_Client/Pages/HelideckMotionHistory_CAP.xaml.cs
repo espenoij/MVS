@@ -13,8 +13,6 @@ namespace HMS_Client
     /// </summary>
     public partial class HelideckMotionHistory_CAP : UserControl
     {
-        private HelideckMotionTrendVM helideckMotionTrendVM;
-
         public HelideckMotionHistory_CAP()
         {
             InitializeComponent();
@@ -24,8 +22,6 @@ namespace HMS_Client
         {
             // Context
             DataContext = helideckMotionTrendVM;
-
-            this.helideckMotionTrendVM = helideckMotionTrendVM;
 
             // Koble chart til data
             chartPitch20m.Series[0].ItemsSource = helideckMotionTrendVM.pitchMaxUp20mList;

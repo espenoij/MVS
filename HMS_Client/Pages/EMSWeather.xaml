@@ -76,7 +76,7 @@
                             <telerik:BarIndicator
                                 Value="{Binding seaTemperatureData}"
                                 EmptyFill="{StaticResource ColorBackgroundSeparator}"
-                                Background="{StaticResource EMSWaveData}"/>
+                                Background="{StaticResource ColorEMSWaveData}"/>
 
                         </telerik:VerticalLinearScale.Indicators>
 

@@ -1,4 +1,7 @@
-﻿using System.Windows.Controls;
+﻿using System;
+using System.Windows.Controls;
+using System.Windows.Threading;
+using Telerik.Windows.Controls;
 
 namespace HMS_Client
 {

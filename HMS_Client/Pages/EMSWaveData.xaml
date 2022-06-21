@@ -17,11 +17,11 @@
             Margin="8">
 
             <telerik:RadTabControl
-                Name="tcEMSWaveData"
                 Margin="8"
                 HeaderBackground="{StaticResource ColorHorizontalBarBackground}">
 
                 <telerik:RadTabItem
+                    Name="tab20Minutes"
                     MaxHeight="{StaticResource tabBarHeight}">
 
                     <telerik:RadTabItem.Header>
@@ -39,7 +39,7 @@
                     </telerik:RadTabItem.Header>
 
                     <Grid
-                    Margin="8">
+                        Margin="8">
 
                         <Grid.ColumnDefinitions>
                             <ColumnDefinition
@@ -71,8 +71,8 @@
 
                         <!--20m: SIGNIFICANT WAVE HEIGHT: TITLE-->
                         <Grid
-                        Grid.Column="0"
-                        Grid.Row="0">
+                            Grid.Column="0"
+                            Grid.Row="0">
 
                             <Grid.RowDefinitions>
                                 <RowDefinition
@@ -130,7 +130,7 @@
 
                             <telerik:LineSeries
                                 ZIndex="200"
-                                Stroke="{StaticResource EMSWaveData}"
+                                Stroke="{StaticResource ColorEMSWaveData}"
                                 CategoryBinding="timestamp"
                                 ValueBinding="graphData">
 
@@ -154,15 +154,15 @@
 
                             <telerik:RadCartesianChart.VerticalAxis>
                                 <telerik:LinearAxis
-                                Maximum="{Binding waveSWHChartAxisMax20m}"
-                                Minimum="0"
-                                SmartLabelsMode="SmartStepAndRange"
-                                LabelInterval="2" />
+                                    Maximum="{Binding waveSWHChartAxisMax20m}"
+                                    Minimum="0"
+                                    SmartLabelsMode="SmartStepAndRange"
+                                    LabelInterval="2" />
                             </telerik:RadCartesianChart.VerticalAxis>
 
                             <telerik:RadCartesianChart.Grid>
                                 <telerik:CartesianChartGrid
-                                MajorLinesVisibility="XY" />
+                                    MajorLinesVisibility="XY" />
                             </telerik:RadCartesianChart.Grid>
 
                         </telerik:RadCartesianChart>
@@ -380,7 +380,7 @@
 
                             <telerik:LineSeries
                             ZIndex="200"
-                            Stroke="{StaticResource EMSWaveData}"
+                            Stroke="{StaticResource ColorEMSWaveData}"
                             CategoryBinding="timestamp"
                             ValueBinding="graphData">
 
@@ -616,7 +616,7 @@
 
                             <telerik:LineSeries
                         ZIndex="200"
-                        Stroke="{StaticResource EMSWaveData}"
+                        Stroke="{StaticResource ColorEMSWaveData}"
                         CategoryBinding="timestamp"
                         ValueBinding="graphData">
 
@@ -865,7 +865,7 @@
 
                             <telerik:LineSeries
                         ZIndex="200"
-                        Stroke="{StaticResource EMSWaveData}"
+                        Stroke="{StaticResource ColorEMSWaveData}"
                         CategoryBinding="timestamp"
                         ValueBinding="graphData">
 
@@ -1039,7 +1039,8 @@
                 </telerik:RadTabItem>
 
                 <!--3-timers-->
-                <telerik:RadTabItem>
+                <telerik:RadTabItem
+                    Name="tab3Hours">
                     <telerik:RadTabItem.Header>
                         <StackPanel
                         Orientation="Horizontal">
@@ -1147,7 +1148,7 @@
 
                             <telerik:LineSeries
                             ZIndex="200"
-                            Stroke="{StaticResource EMSWaveData}"
+                            Stroke="{StaticResource ColorEMSWaveData}"
                             CategoryBinding="timestamp"
                             ValueBinding="graphData">
 
@@ -1389,7 +1390,7 @@
 
                             <telerik:LineSeries
                             ZIndex="200"
-                            Stroke="{StaticResource EMSWaveData}"
+                            Stroke="{StaticResource ColorEMSWaveData}"
                             CategoryBinding="timestamp"
                             ValueBinding="graphData">
 
@@ -1617,7 +1618,7 @@
 
                             <telerik:LineSeries
                             ZIndex="200"
-                            Stroke="{StaticResource EMSWaveData}"
+                            Stroke="{StaticResource ColorEMSWaveData}"
                             CategoryBinding="timestamp"
                             ValueBinding="graphData">
 
@@ -1858,7 +1859,7 @@
 
                             <telerik:LineSeries
                             ZIndex="200"
-                            Stroke="{StaticResource EMSWaveData}"
+                            Stroke="{StaticResource ColorEMSWaveData}"
                             CategoryBinding="timestamp"
                             ValueBinding="graphData">
 

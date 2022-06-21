@@ -30,16 +30,8 @@
 
             <Grid>
 
-                <Grid.ColumnDefinitions>
-                    <ColumnDefinition
-                        Width="7*" />
-                    <ColumnDefinition
-                        Width="2*" />
-                </Grid.ColumnDefinitions>
-
                 <!--Magnetic North-->
-                <DockPanel
-                    Grid.Column="0">
+                <DockPanel>
 
                     <DockPanel
                         DockPanel.Dock="Top"
@@ -155,7 +147,6 @@
 
                 <!--READOUTS-->
                 <uc:WindHeadingReadouts
-                    Grid.Column="1"
                     x:Name="ucWindHeadingReadouts"/>
 
             </Grid>

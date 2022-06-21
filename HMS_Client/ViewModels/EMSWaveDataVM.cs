@@ -62,17 +62,17 @@ namespace HMS_Client
                     if (sensorStatus.TimeoutCheck(wavePeriodMax3hData)) OnPropertyChanged(nameof(wavePeriodMax3hString));
 
                     // Oppdatere data som skal ut i grafer
-                    GraphBuffer.Update(waveSWHData, waveSWHBuffer20m);
-                    GraphBuffer.Update(waveSWHData, waveSWHBuffer3h);
+                    GraphBuffer.UpdateWithCull(waveSWHData, waveSWHBuffer20m, Constants.GraphCullFrequency20m);
+                    GraphBuffer.UpdateWithCull(waveSWHData, waveSWHBuffer3h, Constants.GraphCullFrequency3h);
 
-                    GraphBuffer.Update(waveSWHMax20mData, waveSWHMaxBuffer20m);
-                    GraphBuffer.Update(waveSWHMax3hData, waveSWHMaxBuffer3h);
+                    GraphBuffer.UpdateWithCull(waveSWHMax20mData, waveSWHMaxBuffer20m, Constants.GraphCullFrequency20m);
+                    GraphBuffer.UpdateWithCull(waveSWHMax3hData, waveSWHMaxBuffer3h, Constants.GraphCullFrequency3h);
 
-                    GraphBuffer.Update(wavePeriodData, wavePeriodBuffer20m);
-                    GraphBuffer.Update(wavePeriodData, wavePeriodBuffer3h);
+                    GraphBuffer.UpdateWithCull(wavePeriodData, wavePeriodBuffer20m, Constants.GraphCullFrequency20m);
+                    GraphBuffer.UpdateWithCull(wavePeriodData, wavePeriodBuffer3h, Constants.GraphCullFrequency3h);
 
-                    GraphBuffer.Update(wavePeriodMax20mData, wavePeriodMaxBuffer20m);
-                    GraphBuffer.Update(wavePeriodMax3hData, wavePeriodMaxBuffer3h);
+                    GraphBuffer.UpdateWithCull(wavePeriodMax20mData, wavePeriodMaxBuffer20m, Constants.GraphCullFrequency20m);
+                    GraphBuffer.UpdateWithCull(wavePeriodMax3hData, wavePeriodMaxBuffer3h, Constants.GraphCullFrequency3h);
                 }
 
                 // Oppdatere trend data i UI: 20 minutter

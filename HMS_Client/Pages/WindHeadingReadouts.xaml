@@ -7,29 +7,106 @@
     xmlns:d="http://schemas.microsoft.com/expression/blend/2008"
     xmlns:local="clr-namespace:HMS_Client"
     mc:Ignorable="d"
-    d:DesignWidth="200"
-    d:DesignHeight="800">
+    d:DesignHeight="650"
+    d:DesignWidth="800">
 
     <Grid>
+
+        <Grid.ColumnDefinitions>
+            <ColumnDefinition
+                Width="1*"/>
+            <ColumnDefinition
+                Width="4*"/>
+            <ColumnDefinition
+                Width="1*"/>
+        </Grid.ColumnDefinitions>
 
         <Grid.RowDefinitions>
             <RowDefinition
                 Height="*" />
             <RowDefinition
-                Height="*" />
-            <RowDefinition
-                Height="*" />
-            <RowDefinition
-                Height="*" />
-            <RowDefinition
-                Height="*" />
+                Height="4*" />
             <RowDefinition
                 Height="*" />
         </Grid.RowDefinitions>
 
-        <!--VESSEL HEADING-->
+        <!--WIND SPEED-->
         <Grid
-            Grid.Row="0"
+            Grid.Column="0"
+            Grid.Row="0">
+
+            <Grid.RowDefinitions>
+                <RowDefinition
+                    Height="3*" />
+                <RowDefinition
+                    Height="4*" />
+            </Grid.RowDefinitions>
+
+            <Grid.ColumnDefinitions>
+                <ColumnDefinition
+                    Width="9*" />
+                <ColumnDefinition
+                    Width="7*" />
+            </Grid.ColumnDefinitions>
+
+            <!--<Rectangle
+                Grid.ColumnSpan="3"
+                Grid.RowSpan="2"
+                Margin="8"
+                Fill="{StaticResource ColorBackgroundSeparator}" />-->
+
+            <Viewbox
+                Grid.Row="0"
+                Grid.Column="0"
+                Grid.ColumnSpan="2"
+                StretchDirection="Both"
+                Stretch="Uniform"
+                HorizontalAlignment="Center">
+
+                <telerik:Label
+                    Content="Wind Speed"
+                    FontSize="{StaticResource fontSizeLabelSmall}" />
+
+            </Viewbox>
+
+            <Separator
+                Grid.Row="0"
+                Grid.Column="0"
+                Grid.ColumnSpan="2"
+                Margin="8,0,8,0"
+                Height="1"
+                VerticalAlignment="Bottom" />
+
+            <Viewbox
+                Grid.Row="1"
+                Grid.Column="0"
+                StretchDirection="Both"
+                Stretch="Uniform">
+
+                <telerik:Label
+                    Content="{Binding Path=windSpeedString}"
+                    FontSize="{StaticResource fontSizeDataLarge}" />
+
+            </Viewbox>
+
+            <Viewbox
+                Grid.Row="1"
+                Grid.Column="1"
+                StretchDirection="Both"
+                Stretch="Uniform">
+
+                <telerik:Label
+                    Content="KTS"
+                    FontSize="{StaticResource fontSizeUnits}" />
+
+            </Viewbox>
+
+        </Grid>
+
+
+        <!--WIND DIRECTION-->
+        <Grid
+            Grid.Row="2"
             MinWidth="140">
 
             <Grid.RowDefinitions>
@@ -46,11 +123,160 @@
                     Width="7*" />
             </Grid.ColumnDefinitions>
 
-            <Rectangle
+            <!--<Rectangle
                 Grid.ColumnSpan="3"
                 Grid.RowSpan="2"
                 Margin="8"
-                Fill="{StaticResource ColorBackgroundSeparator}" />
+                Fill="{StaticResource ColorBackgroundSeparator}" />-->
+
+            <Viewbox
+                Grid.Row="0"
+                Grid.Column="0"
+                Grid.ColumnSpan="2"
+                StretchDirection="Both"
+                Stretch="Uniform"
+                HorizontalAlignment="Center">
+
+                <telerik:Label
+                    Content="Wind Direction"
+                    FontSize="{StaticResource fontSizeLabelSmall}" />
+
+            </Viewbox>
+
+            <Separator
+                Grid.Row="0"
+                Grid.Column="0"
+                Grid.ColumnSpan="2"
+                Margin="8,0,8,0"
+                Height="1"
+                VerticalAlignment="Bottom" />
+
+            <Viewbox
+                Grid.Row="1"
+                Grid.Column="0"
+                StretchDirection="Both"
+                Stretch="Uniform">
+
+                <telerik:Label
+                    Content="{Binding Path=windDirectionString}"
+                    FontSize="{StaticResource fontSizeDataLarge}" />
+
+            </Viewbox>
+
+            <Viewbox
+                Grid.Row="1"
+                Grid.Column="1"
+                StretchDirection="Both"
+                Stretch="Uniform">
+
+                <telerik:Label
+                    Content="M"
+                    FontSize="{StaticResource fontSizeUnits}" />
+
+            </Viewbox>
+
+        </Grid>
+
+
+        <!--WIND GUST-->
+        <Grid
+            Grid.Column="2"
+            Grid.Row="0"
+            MinWidth="140">
+
+            <Grid.RowDefinitions>
+                <RowDefinition
+                    Height="3*" />
+                <RowDefinition
+                    Height="4*" />
+            </Grid.RowDefinitions>
+
+            <Grid.ColumnDefinitions>
+                <ColumnDefinition
+                    Width="9*" />
+                <ColumnDefinition
+                    Width="7*" />
+            </Grid.ColumnDefinitions>
+
+            <!--<Rectangle
+                Grid.ColumnSpan="3"
+                Grid.RowSpan="2"
+                Margin="8"
+                Fill="{StaticResource ColorBackgroundSeparator}" />-->
+
+            <Viewbox
+                Grid.Row="0"
+                Grid.Column="0"
+                Grid.ColumnSpan="2"
+                StretchDirection="Both"
+                Stretch="Uniform"
+                HorizontalAlignment="Center">
+
+                <telerik:Label
+                    Content="Wind Gust"
+                    FontSize="{StaticResource fontSizeLabelSmall}" />
+
+            </Viewbox>
+
+            <Separator
+                Grid.Row="0"
+                Grid.Column="0"
+                Grid.ColumnSpan="2"
+                Margin="8,0,8,0"
+                Height="1"
+                VerticalAlignment="Bottom" />
+
+            <Viewbox
+                Grid.Row="1"
+                Grid.Column="0"
+                StretchDirection="Both"
+                Stretch="Uniform">
+
+                <telerik:Label
+                    Content="{Binding Path=windGustString}"
+                    FontSize="{StaticResource fontSizeDataLarge}" />
+
+            </Viewbox>
+
+            <Viewbox
+                Grid.Row="1"
+                Grid.Column="1"
+                StretchDirection="Both"
+                Stretch="Uniform">
+
+                <telerik:Label
+                    Content="KTS"
+                    FontSize="{StaticResource fontSizeUnits}" />
+
+            </Viewbox>
+
+        </Grid>
+
+        <!--VESSEL HEADING-->
+        <Grid
+            Grid.Column="2"
+            Grid.Row="2"
+            MinWidth="140">
+
+            <Grid.RowDefinitions>
+                <RowDefinition
+                    Height="3*" />
+                <RowDefinition
+                    Height="4*" />
+            </Grid.RowDefinitions>
+
+            <Grid.ColumnDefinitions>
+                <ColumnDefinition
+                    Width="12*" />
+                <ColumnDefinition
+                    Width="7*" />
+            </Grid.ColumnDefinitions>
+
+            <!--<Rectangle
+                Grid.ColumnSpan="3"
+                Grid.RowSpan="2"
+                Margin="8"
+                Fill="{StaticResource ColorBackgroundSeparator}" />-->
 
             <Viewbox
                 Grid.Row="0"
@@ -101,8 +327,82 @@
 
         </Grid>
 
+
+        <!--VESSEL SPEED-->
+        <!--<Grid
+            Grid.Row="2"
+            MinWidth="140">
+
+            <Grid.RowDefinitions>
+                <RowDefinition
+                    Height="3*" />
+                <RowDefinition
+                    Height="4*" />
+            </Grid.RowDefinitions>
+
+            <Grid.ColumnDefinitions>
+                <ColumnDefinition
+                    Width="9*" />
+                <ColumnDefinition
+                    Width="7*" />
+            </Grid.ColumnDefinitions>
+
+            <Rectangle
+                Grid.ColumnSpan="3"
+                Grid.RowSpan="2"
+                Margin="8"
+                Fill="{StaticResource ColorBackgroundSeparator}" />
+
+            <Viewbox
+                Grid.Row="0"
+                Grid.Column="0"
+                Grid.ColumnSpan="2"
+                StretchDirection="Both"
+                Stretch="Uniform"
+                HorizontalAlignment="Center">
+
+                <telerik:Label
+                    Content="Vessel Speed"
+                    FontSize="{StaticResource fontSizeLabelSmall}" />
+
+            </Viewbox>
+
+            <Separator
+                Grid.Row="0"
+                Grid.Column="0"
+                Grid.ColumnSpan="2"
+                Margin="8,0,8,0"
+                Height="1"
+                VerticalAlignment="Bottom" />
+
+            <Viewbox
+                Grid.Row="1"
+                Grid.Column="0"
+                StretchDirection="Both"
+                Stretch="Uniform">
+
+                <telerik:Label
+                    Content="{Binding Path=vesselSpeedString}"
+                    FontSize="{StaticResource fontSizeDataLarge}" />
+
+            </Viewbox>
+
+            <Viewbox
+                Grid.Row="1"
+                Grid.Column="1"
+                StretchDirection="Both"
+                Stretch="Uniform">
+
+                <telerik:Label
+                    Content="KTS"
+                    FontSize="{StaticResource fontSizeUnits}" />
+
+            </Viewbox>
+
+        </Grid>-->
+
         <!--VESSEL COG-->
-        <Grid
+        <!--<Grid
             Grid.Row="1"
             MinWidth="140">
 
@@ -173,299 +473,7 @@
 
             </Viewbox>
 
-        </Grid>
-        
-        <!--VESSEL SPEED-->
-        <Grid
-            Grid.Row="2"
-            MinWidth="140">
-
-            <Grid.RowDefinitions>
-                <RowDefinition
-                    Height="3*" />
-                <RowDefinition
-                    Height="4*" />
-            </Grid.RowDefinitions>
-
-            <Grid.ColumnDefinitions>
-                <ColumnDefinition
-                    Width="9*" />
-                <ColumnDefinition
-                    Width="7*" />
-            </Grid.ColumnDefinitions>
-
-            <Rectangle
-                Grid.ColumnSpan="3"
-                Grid.RowSpan="2"
-                Margin="8"
-                Fill="{StaticResource ColorBackgroundSeparator}" />
-
-            <Viewbox
-                Grid.Row="0"
-                Grid.Column="0"
-                Grid.ColumnSpan="2"
-                StretchDirection="Both"
-                Stretch="Uniform"
-                HorizontalAlignment="Center">
-
-                <telerik:Label
-                    Content="Vessel Speed"
-                    FontSize="{StaticResource fontSizeLabelSmall}" />
-
-            </Viewbox>
-
-            <Separator
-                Grid.Row="0"
-                Grid.Column="0"
-                Grid.ColumnSpan="2"
-                Margin="8,0,8,0"
-                Height="1"
-                VerticalAlignment="Bottom" />
-
-            <Viewbox
-                Grid.Row="1"
-                Grid.Column="0"
-                StretchDirection="Both"
-                Stretch="Uniform">
-
-                <telerik:Label
-                    Content="{Binding Path=vesselSpeedString}"
-                    FontSize="{StaticResource fontSizeDataLarge}" />
-
-            </Viewbox>
-
-            <Viewbox
-                Grid.Row="1"
-                Grid.Column="1"
-                StretchDirection="Both"
-                Stretch="Uniform">
-
-                <telerik:Label
-                    Content="KTS"
-                    FontSize="{StaticResource fontSizeUnits}" />
-
-            </Viewbox>
-
-        </Grid>
-
-        <!--WIND DIRECTION-->
-        <Grid
-            Grid.Row="3"
-            MinWidth="140">
-
-            <Grid.RowDefinitions>
-                <RowDefinition
-                    Height="3*" />
-                <RowDefinition
-                    Height="4*" />
-            </Grid.RowDefinitions>
-
-            <Grid.ColumnDefinitions>
-                <ColumnDefinition
-                    Width="12*" />
-                <ColumnDefinition
-                    Width="7*" />
-            </Grid.ColumnDefinitions>
-
-            <Rectangle
-                Grid.ColumnSpan="3"
-                Grid.RowSpan="2"
-                Margin="8"
-                Fill="{StaticResource ColorBackgroundSeparator}" />
-
-            <Viewbox
-                Grid.Row="0"
-                Grid.Column="0"
-                Grid.ColumnSpan="2"
-                StretchDirection="Both"
-                Stretch="Uniform"
-                HorizontalAlignment="Center">
-
-                <telerik:Label
-                    Content="Wind Direction"
-                    FontSize="{StaticResource fontSizeLabelSmall}" />
-
-            </Viewbox>
-
-            <Separator
-                Grid.Row="0"
-                Grid.Column="0"
-                Grid.ColumnSpan="2"
-                Margin="8,0,8,0"
-                Height="1"
-                VerticalAlignment="Bottom" />
-
-            <Viewbox
-                Grid.Row="1"
-                Grid.Column="0"
-                StretchDirection="Both"
-                Stretch="Uniform">
-
-                <telerik:Label
-                    Content="{Binding Path=windDirectionString}"
-                    FontSize="{StaticResource fontSizeDataLarge}" />
-
-            </Viewbox>
-
-            <Viewbox
-                Grid.Row="1"
-                Grid.Column="1"
-                StretchDirection="Both"
-                Stretch="Uniform">
-
-                <telerik:Label
-                    Content="M"
-                    FontSize="{StaticResource fontSizeUnits}" />
-
-            </Viewbox>
-
-        </Grid>
-
-        <!--WIND SPEED-->
-        <Grid
-            Grid.Row="4">
-
-            <Grid.RowDefinitions>
-                <RowDefinition
-                    Height="3*" />
-                <RowDefinition
-                    Height="4*" />
-            </Grid.RowDefinitions>
-
-            <Grid.ColumnDefinitions>
-                <ColumnDefinition
-                    Width="9*" />
-                <ColumnDefinition
-                    Width="7*" />
-            </Grid.ColumnDefinitions>
-
-            <Rectangle
-                Grid.ColumnSpan="3"
-                Grid.RowSpan="2"
-                Margin="8"
-                Fill="{StaticResource ColorBackgroundSeparator}" />
-
-            <Viewbox
-                Grid.Row="0"
-                Grid.Column="0"
-                Grid.ColumnSpan="2"
-                StretchDirection="Both"
-                Stretch="Uniform"
-                HorizontalAlignment="Center">
-
-                <telerik:Label
-                    Content="Wind Speed"
-                    FontSize="{StaticResource fontSizeLabelSmall}" />
-
-            </Viewbox>
-
-            <Separator
-                Grid.Row="0"
-                Grid.Column="0"
-                Grid.ColumnSpan="2"
-                Margin="8,0,8,0"
-                Height="1"
-                VerticalAlignment="Bottom" />
-
-            <Viewbox
-                Grid.Row="1"
-                Grid.Column="0"
-                StretchDirection="Both"
-                Stretch="Uniform">
-
-                <telerik:Label
-                    Content="{Binding Path=windSpeedString}"
-                    FontSize="{StaticResource fontSizeDataLarge}" />
-
-            </Viewbox>
-
-            <Viewbox
-                Grid.Row="1"
-                Grid.Column="1"
-                StretchDirection="Both"
-                Stretch="Uniform">
-
-                <telerik:Label
-                    Content="KTS"
-                    FontSize="{StaticResource fontSizeUnits}" />
-
-            </Viewbox>
-
-        </Grid>
-
-
-        <!--WIND GUST-->
-        <Grid
-            Grid.Row="5"
-            MinWidth="140">
-
-            <Grid.RowDefinitions>
-                <RowDefinition
-                    Height="3*" />
-                <RowDefinition
-                    Height="4*" />
-            </Grid.RowDefinitions>
-
-            <Grid.ColumnDefinitions>
-                <ColumnDefinition
-                    Width="9*" />
-                <ColumnDefinition
-                    Width="7*" />
-            </Grid.ColumnDefinitions>
-
-            <Rectangle
-                Grid.ColumnSpan="3"
-                Grid.RowSpan="2"
-                Margin="8"
-                Fill="{StaticResource ColorBackgroundSeparator}" />
-
-            <Viewbox
-                Grid.Row="0"
-                Grid.Column="0"
-                Grid.ColumnSpan="2"
-                StretchDirection="Both"
-                Stretch="Uniform"
-                HorizontalAlignment="Center">
-
-                <telerik:Label
-                    Content="Wind Gust"
-                    FontSize="{StaticResource fontSizeLabelSmall}" />
-
-            </Viewbox>
-
-            <Separator
-                Grid.Row="0"
-                Grid.Column="0"
-                Grid.ColumnSpan="2"
-                Margin="8,0,8,0"
-                Height="1"
-                VerticalAlignment="Bottom" />
-
-            <Viewbox
-                Grid.Row="1"
-                Grid.Column="0"
-                StretchDirection="Both"
-                Stretch="Uniform">
-
-                <telerik:Label
-                    Content="{Binding Path=windGustString}"
-                    FontSize="{StaticResource fontSizeDataLarge}" />
-
-            </Viewbox>
-
-            <Viewbox
-                Grid.Row="1"
-                Grid.Column="1"
-                StretchDirection="Both"
-                Stretch="Uniform">
-
-                <telerik:Label
-                    Content="KTS"
-                    FontSize="{StaticResource fontSizeUnits}" />
-
-            </Viewbox>
-
-        </Grid>
+        </Grid>-->
 
     </Grid>
 
