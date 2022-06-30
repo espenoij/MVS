@@ -220,7 +220,8 @@ namespace HMS_Client
             // Legge inn rekalkulerte RWD data
             foreach (var item in rwdTrend30mList)
             {
-                if (item.status != HelideckStatusType.OFF)
+                if (item.status != HelideckStatusType.NO_DATA &&
+                    item.status != HelideckStatusType.OFF)
                 {
                     item.rwd += correction;
                     item.status = GetRWDLimitState(item.wind, item.rwd);

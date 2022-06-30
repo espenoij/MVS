@@ -170,7 +170,7 @@ namespace HMS_Client
                     onDeckWindDirection = hmsDataList.GetData(ValueType.SettingsOnDeckWindDirection).data;
             }
 
-            if (displayMode != DisplayMode.PreLanding)
+            if (displayMode == DisplayMode.OnDeck)
             {
                 // Er helikopter heading korrigert?
                 if (onDeckHelicopterHeadingIsCorrected)
