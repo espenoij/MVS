@@ -40,7 +40,7 @@
                 <!--==========================================================================-->
                 <telerik:RadTabItem
                     Name="tab20Minutes">
-                    
+
                     <telerik:RadTabItem.Header>
                         <StackPanel
                             Orientation="Horizontal">
@@ -277,6 +277,13 @@
                             Grid.Column="0"
                             Grid.Row="2">
 
+                            <Grid.ColumnDefinitions>
+                                <ColumnDefinition
+                                    Width="4*"/>
+                                <ColumnDefinition
+                                    Width="1*"/>
+                            </Grid.ColumnDefinitions>
+
                             <Grid.RowDefinitions>
                                 <RowDefinition
                                     Height="4*" />
@@ -286,9 +293,10 @@
                                     Height="4*" />
                             </Grid.RowDefinitions>
 
-
                             <Viewbox
                                 Grid.Row="1"
+                                Grid.Column="0"
+                                Grid.ColumnSpan="2"
                                 StretchDirection="Both"
                                 Stretch="Uniform"
                                 HorizontalAlignment="Center">
@@ -298,13 +306,54 @@
 
                             </Viewbox>
 
+                            <Grid
+                                Grid.Column="1"
+                                Grid.RowSpan="3">
+
+                                <Grid.RowDefinitions>
+                                    <RowDefinition
+                                        Height="2*"/>
+                                    <RowDefinition
+                                        Height="1*"/>
+                                    <RowDefinition
+                                        Height="5*"/>
+                                    <RowDefinition
+                                        Height="1*"/>
+                                    <RowDefinition
+                                        Height="1*"/>
+                                </Grid.RowDefinitions>
+
+                                <Viewbox
+                                    Grid.Row="1"
+                                    StretchDirection="Both"
+                                    Stretch="Uniform"
+                                    VerticalAlignment="Center">
+
+                                    <TextBlock
+                                        Text="U" />
+
+                                </Viewbox>
+
+                                <Viewbox
+                                    Grid.Row="3"
+                                    StretchDirection="Both"
+                                    Stretch="Uniform"
+                                    VerticalAlignment="Center">
+
+                                    <TextBlock
+                                        Text="D" />
+
+                                </Viewbox>
+
+                            </Grid>
+
                         </Grid>
 
                         <telerik:RadCartesianChart
                             Grid.Column="1"
                             Grid.Row="2"
                             Name="chartPitch20m"
-                            Margin="-10,32,0,0">
+                            Margin="10,32,0,0">
 
                             <!--Pitch 1-->
                             <telerik:LineSeries
@@ -358,39 +407,43 @@
                                         </DataTemplate>
                                     </telerik:LinearAxis.LabelTemplate>
 
-                                    <telerik:LinearAxis.TitleTemplate>
+                                    <!--<telerik:LinearAxis.TitleTemplate>
                                         <DataTemplate>
-                                            <DockPanel>
-                                                <Label
-                                                Content="U"
-                                                DockPanel.Dock="Right"
-                                                Margin="150,0,0,0">
-                                                    <Label.LayoutTransform>
-                                                        <TransformGroup>
-                                                            <RotateTransform
+                                            <Viewbox
+                                                StretchDirection="Both"
+                                                Stretch="Uniform">
+                                                <DockPanel>
+                                                    <Label
+                                                    Content="U"
+                                                    DockPanel.Dock="Right"
+                                                    Margin="150,0,0,0">
+                                                        <Label.LayoutTransform>
+                                                            <TransformGroup>
+                                                                <RotateTransform
                                                             Angle="-90" />
-                                                            <ScaleTransform
+                                                                <ScaleTransform
                                                             ScaleX="-1"
                                                             ScaleY="-1" />
-                                                        </TransformGroup>
-                                                    </Label.LayoutTransform>
-                                                </Label>
-                                                <Label
-                                                Content="D"
-                                                DockPanel.Dock="Left">
-                                                    <Label.LayoutTransform>
-                                                        <TransformGroup>
-                                                            <RotateTransform
+                                                            </TransformGroup>
+                                                        </Label.LayoutTransform>
+                                                    </Label>
+                                                    <Label
+                                                    Content="D"
+                                                    DockPanel.Dock="Left">
+                                                        <Label.LayoutTransform>
+                                                            <TransformGroup>
+                                                                <RotateTransform
                                                             Angle="-90" />
-                                                            <ScaleTransform
+                                                                <ScaleTransform
                                                             ScaleX="-1"
                                                             ScaleY="-1" />
-                                                        </TransformGroup>
-                                                    </Label.LayoutTransform>
-                                                </Label>
-                                            </DockPanel>
+                                                            </TransformGroup>
+                                                        </Label.LayoutTransform>
+                                                    </Label>
+                                                </DockPanel>
+                                            </Viewbox>
                                         </DataTemplate>
-                                    </telerik:LinearAxis.TitleTemplate>
+                                    </telerik:LinearAxis.TitleTemplate>-->
 
                                 </telerik:LinearAxis>
                             </telerik:RadCartesianChart.VerticalAxis>
@@ -635,6 +688,13 @@
                             Grid.Column="0"
                             Grid.Row="4">
 
+                            <Grid.ColumnDefinitions>
+                                <ColumnDefinition
+                                    Width="4*"/>
+                                <ColumnDefinition
+                                    Width="1*"/>
+                            </Grid.ColumnDefinitions>
+
                             <Grid.RowDefinitions>
                                 <RowDefinition
                                     Height="4*" />
@@ -647,6 +707,8 @@
 
                             <Viewbox
                                 Grid.Row="1"
+                                Grid.Column="0"
+                                Grid.ColumnSpan="2"
                                 StretchDirection="Both"
                                 Stretch="Uniform"
                                 HorizontalAlignment="Center">
@@ -656,13 +718,54 @@
 
                             </Viewbox>
 
+                            <Grid
+                                Grid.Column="1"
+                                Grid.RowSpan="3">
+
+                                <Grid.RowDefinitions>
+                                    <RowDefinition
+                                        Height="2*"/>
+                                    <RowDefinition
+                                        Height="1*"/>
+                                    <RowDefinition
+                                        Height="5*"/>
+                                    <RowDefinition
+                                        Height="1*"/>
+                                    <RowDefinition
+                                        Height="1*"/>
+                                </Grid.RowDefinitions>
+
+                                <Viewbox
+                                    Grid.Row="1"
+                                    StretchDirection="Both"
+                                    Stretch="Uniform"
+                                    VerticalAlignment="Center">
+
+                                    <TextBlock
+                                        Text="L" />
+
+                                </Viewbox>
+
+                                <Viewbox
+                                    Grid.Row="3"
+                                    StretchDirection="Both"
+                                    Stretch="Uniform"
+                                    VerticalAlignment="Center">
+
+                                    <TextBlock
+                                        Text="R" />
+
+                                </Viewbox>
+
+                            </Grid>
+
                         </Grid>
 
                         <telerik:RadCartesianChart
                             Grid.Column="1"
                             Grid.Row="4"
                             Name="chartRoll20m"
-                            Margin="-10,32,0,0">
+                            Margin="10,32,0,0">
 
                             <!--Roll 1-->
                             <telerik:LineSeries
@@ -715,7 +818,7 @@
                                         </DataTemplate>
                                     </telerik:LinearAxis.LabelTemplate>
 
-                                    <telerik:LinearAxis.TitleTemplate>
+                                    <!--<telerik:LinearAxis.TitleTemplate>
                                         <DataTemplate>
                                             <DockPanel>
                                                 <Label
@@ -747,7 +850,7 @@
                                                 </Label>
                                             </DockPanel>
                                         </DataTemplate>
-                                    </telerik:LinearAxis.TitleTemplate>
+                                    </telerik:LinearAxis.TitleTemplate>-->
 
                                 </telerik:LinearAxis>
 
@@ -1774,6 +1877,13 @@
                             Grid.Column="0"
                             Grid.Row="2">
 
+                            <Grid.ColumnDefinitions>
+                                <ColumnDefinition
+                                    Width="4*"/>
+                                <ColumnDefinition
+                                    Width="1*"/>
+                            </Grid.ColumnDefinitions>
+
                             <Grid.RowDefinitions>
                                 <RowDefinition
                                     Height="4*" />
@@ -1786,6 +1896,8 @@
 
                             <Viewbox
                                 Grid.Row="1"
+                                Grid.Column="0"
+                                Grid.ColumnSpan="2"
                                 StretchDirection="Both"
                                 Stretch="Uniform"
                                 HorizontalAlignment="Center">
@@ -1794,6 +1906,47 @@
                                     Text="Pitch" />
 
                             </Viewbox>
+                            
+                            <Grid
+                                Grid.Column="1"
+                                Grid.RowSpan="3">
+
+                                <Grid.RowDefinitions>
+                                    <RowDefinition
+                                        Height="2*"/>
+                                    <RowDefinition
+                                        Height="1*"/>
+                                    <RowDefinition
+                                        Height="5*"/>
+                                    <RowDefinition
+                                        Height="1*"/>
+                                    <RowDefinition
+                                        Height="1*"/>
+                                </Grid.RowDefinitions>
+
+                                <Viewbox
+                                    Grid.Row="1"
+                                    StretchDirection="Both"
+                                    Stretch="Uniform"
+                                    VerticalAlignment="Center">
+
+                                    <TextBlock
+                                        Text="U" />
+
+                                </Viewbox>
+
+                                <Viewbox
+                                    Grid.Row="3"
+                                    StretchDirection="Both"
+                                    Stretch="Uniform"
+                                    VerticalAlignment="Center">
+
+                                    <TextBlock
+                                        Text="D" />
+
+                                </Viewbox>
+
+                            </Grid>
 
                         </Grid>
 
@@ -1801,7 +1954,7 @@
                             Grid.Column="1"
                             Grid.Row="2"
                             Name="chartPitch3h"
-                            Margin="-10,32,0,0">
+                            Margin="10,32,0,0">
 
                             <!--Pitch 1-->
                             <telerik:LineSeries
@@ -1854,7 +2007,7 @@
                                         </DataTemplate>
                                     </telerik:LinearAxis.LabelTemplate>
 
-                                    <telerik:LinearAxis.TitleTemplate>
+                                    <!--<telerik:LinearAxis.TitleTemplate>
                                         <DataTemplate>
                                             <DockPanel>
                                                 <Label
@@ -1886,7 +2039,7 @@
                                                 </Label>
                                             </DockPanel>
                                         </DataTemplate>
-                                    </telerik:LinearAxis.TitleTemplate>
+                                    </telerik:LinearAxis.TitleTemplate>-->
 
                                 </telerik:LinearAxis>
 
@@ -2124,6 +2277,13 @@
                             Grid.Column="0"
                             Grid.Row="4">
 
+                            <Grid.ColumnDefinitions>
+                                <ColumnDefinition
+                                    Width="4*"/>
+                                <ColumnDefinition
+                                    Width="1*"/>
+                            </Grid.ColumnDefinitions>
+
                             <Grid.RowDefinitions>
                                 <RowDefinition
                                     Height="4*" />
@@ -2133,9 +2293,10 @@
                                     Height="4*" />
                             </Grid.RowDefinitions>
 
-
                             <Viewbox
                                 Grid.Row="1"
+                                Grid.Column="0"
+                                Grid.ColumnSpan="2"
                                 StretchDirection="Both"
                                 Stretch="Uniform"
                                 HorizontalAlignment="Center">
@@ -2145,14 +2306,54 @@
 
                             </Viewbox>
 
-                        </Grid>
+                            <Grid
+                                Grid.Column="1"
+                                Grid.RowSpan="3">
 
+                                <Grid.RowDefinitions>
+                                    <RowDefinition
+                                        Height="2*"/>
+                                    <RowDefinition
+                                        Height="1*"/>
+                                    <RowDefinition
+                                        Height="5*"/>
+                                    <RowDefinition
+                                        Height="1*"/>
+                                    <RowDefinition
+                                        Height="1*"/>
+                                </Grid.RowDefinitions>
+
+                                <Viewbox
+                                    Grid.Row="1"
+                                    StretchDirection="Both"
+                                    Stretch="Uniform"
+                                    VerticalAlignment="Center">
+
+                                    <TextBlock
+                                        Text="L" />
+
+                                </Viewbox>
+
+                                <Viewbox
+                                    Grid.Row="3"
+                                    StretchDirection="Both"
+                                    Stretch="Uniform"
+                                    VerticalAlignment="Center">
+
+                                    <TextBlock
+                                        Text="R" />
+
+                                </Viewbox>
+
+                            </Grid>
+
+                        </Grid>
 
                         <telerik:RadCartesianChart
                             Grid.Column="1"
                             Grid.Row="4"
                             Name="chartRoll3h"
-                            Margin="-10,32,0,0">
+                            Margin="10,32,0,0">
 
                             <!--Roll 1-->
                             <telerik:LineSeries
@@ -2205,7 +2406,7 @@
                                         </DataTemplate>
                                     </telerik:LinearAxis.LabelTemplate>
 
-                                    <telerik:LinearAxis.TitleTemplate>
+                                    <!--<telerik:LinearAxis.TitleTemplate>
                                         <DataTemplate>
                                             <DockPanel>
                                                 <Label
@@ -2237,7 +2438,7 @@
                                                 </Label>
                                             </DockPanel>
                                         </DataTemplate>
-                                    </telerik:LinearAxis.TitleTemplate>
+                                    </telerik:LinearAxis.TitleTemplate>-->
 
                                 </telerik:LinearAxis>
 
