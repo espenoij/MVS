@@ -166,7 +166,6 @@ namespace HMS_Server
             pitchMaxUp20mData.InitProcessing(errorHandler, ErrorMessageCategory.AdminUser, adminSettingsVM);
             pitchMaxUp20mData.AddProcessing(CalculationType.RoundingDecimals, 1);
             pitchMaxUp20mData.AddProcessing(CalculationType.TimeHeighest, Constants.Minutes20);
-            //pitchMaxUp20mData.AddProcessing(CalculationType.Absolute, 0);
 
             pitchMaxDown20mData.id = (int)ValueType.PitchMaxDown20m;
             pitchMaxDown20mData.name = "Pitch Max Down (20m)";
@@ -174,7 +173,6 @@ namespace HMS_Server
             pitchMaxDown20mData.InitProcessing(errorHandler, ErrorMessageCategory.AdminUser, adminSettingsVM);
             pitchMaxDown20mData.AddProcessing(CalculationType.RoundingDecimals, 1);
             pitchMaxDown20mData.AddProcessing(CalculationType.TimeLowest, Constants.Minutes20);
-            //pitchMaxDown20mData.AddProcessing(CalculationType.Absolute, 0);
 
             rollMax20mData.id = (int)ValueType.RollMax20m;
             rollMax20mData.name = "Roll Max (20m)";
@@ -504,6 +502,8 @@ namespace HMS_Server
             // Inclination
             inclination20mMaxList.Clear();
             inclination3hMaxList.Clear();
+            inclination20mMaxData.data = 0;
+            inclination3hMaxData.data = 0;
 
             // MSI
             msiData.data = 0;

@@ -370,7 +370,7 @@ namespace HMS_Client
                         double pitch = Math.Abs(pitchMaxDown20mData.data);
 
                         string dir;
-                        if (pitchMaxUp20mData.data > 0)
+                        if (pitchMaxDown20mData.data > 0)
                             dir = "U";
                         else
                             dir = "D";

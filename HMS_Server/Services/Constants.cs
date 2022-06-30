@@ -14,7 +14,7 @@ class Constants
     public const string HLLLimitsVersion = "HLL Issue 4 (Nov 2020)";
 
     // Software Version
-    public const string SoftwareVersionPostfix = "(Dev)";
+    public const string SoftwareVersionPostfix = "";
 
     // Admin Mode Password
     public const string AdminModePassword = "swireworld";

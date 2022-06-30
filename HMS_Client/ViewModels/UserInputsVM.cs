@@ -454,6 +454,11 @@ namespace HMS_Client
             }
         }
 
+        public bool onDeckHelicopterHeadingIsCorrected { get; set; }
+
+        public double onDeckVesselHeading { get; set; }
+        public double onDeckWindDirection { get; set; }
+
         private double _onDeckHelicopterHeading { get; set; }
         public double onDeckHelicopterHeading
         {
@@ -465,13 +470,9 @@ namespace HMS_Client
             {
                 if (value >= Constants.HeadingMin && value <= Constants.HeadingMax)
                 {
-                    //// Korrigerer RWD data
-                    //relativeWindLimitsVM.CorrectRWD(value - _onDeckHelicopterHeading); 
-
                     // Setter ny heading
-                    _onDeckHelicopterHeading = value;
-
-                    onDeckHelicopterRelativeHeading = value - windHeadingVM.vesselHeading.data;
+                    // Ved corrected helicopter heading må vi korrigere for endring i vessel heading
+                    _onDeckHelicopterHeading = _displayMode == DisplayMode.PreLanding ? value : value + onDeckVesselHeading - windHeadingVM.vesselHeading.data;
 
                     onDeckHelicopterHeadingIsCorrected = true;
                     OnPropertyChanged(nameof(helicopterHeadingInfoString));
@@ -480,12 +481,6 @@ namespace HMS_Client
                 }
             }
         }
-        public double onDeckHelicopterRelativeHeading { get; set; }
-
-        public bool onDeckHelicopterHeadingIsCorrected { get; set; }
-
-        public double onDeckVesselHeading { get; set; }
-        public double onDeckWindDirection { get; set; }
 
         /////////////////////////////////////////////////////////////////////////////
         // Helicopter Landed Dialog

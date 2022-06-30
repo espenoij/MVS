@@ -371,11 +371,6 @@ public class HelideckStatus
         status = helideckStatus.status;
         timestamp = helideckStatus.timestamp;
     }
-
-    public void CorrectRWD(double correction)
-    {
-        rwd += correction;
-    }
 }
 
 public class RWDData : INotifyPropertyChanged

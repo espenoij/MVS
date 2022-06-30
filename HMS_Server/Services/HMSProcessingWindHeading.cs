@@ -376,7 +376,7 @@ namespace HMS_Server
                         sensorWindDirectionCorrected.data = vesselHeading.data + inputSensorWindDirection.data;
                         if (sensorWindDirectionCorrected.data > 360)
                             sensorWindDirectionCorrected.data -= 360;
-                        if (sensorWindDirectionCorrected.data < 1)
+                        if (sensorWindDirectionCorrected.data <= 0)
                             sensorWindDirectionCorrected.data += 360;
                         break;
 
@@ -387,7 +387,7 @@ namespace HMS_Server
                         sensorWindDirectionCorrected.data = inputSensorWindDirection.data - adminSettingsVM.magneticDeclination;
                         if (sensorWindDirectionCorrected.data > 360)
                             sensorWindDirectionCorrected.data -= 360;
-                        if (sensorWindDirectionCorrected.data < 1)
+                        if (sensorWindDirectionCorrected.data <= 0)
                             sensorWindDirectionCorrected.data += 360;
                         break;
 
@@ -548,10 +548,10 @@ namespace HMS_Server
                         relativeWindDir.data = areaWindDirection2m.data - (inputVesselHeading.data + (userInputs.onDeckHelicopterHeading - userInputs.onDeckVesselHeading));
 
                         if (relativeWindDir.data > 180)
-                            relativeWindDir.data -= 180;
+                            relativeWindDir.data = 360 - relativeWindDir.data;
                         else
                             if (relativeWindDir.data < -180)
-                            relativeWindDir.data += 180;
+                            relativeWindDir.data = relativeWindDir.data + 360;
                     }
                     else
                     {
