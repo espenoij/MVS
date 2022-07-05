@@ -572,7 +572,7 @@ namespace HMS_Server
                         if (userInputs.onDeckVesselHeading == -1)
                             userInputs.onDeckVesselHeading = inputVesselHeading.data;
 
-                        vesselHeadingDelta.data = userInputs.onDeckVesselHeading - inputVesselHeading.data;
+                        vesselHeadingDelta.data = inputVesselHeading.data - userInputs.onDeckVesselHeading;
                     }
                     else
                     {
@@ -592,7 +592,7 @@ namespace HMS_Server
                         if (userInputs.onDeckWindDirection == -1)
                             userInputs.onDeckWindDirection = areaWindDirection2m.data;
 
-                        windDirectionDelta.data = userInputs.onDeckWindDirection - areaWindDirection2m.data;
+                        windDirectionDelta.data = areaWindDirection2m.data - userInputs.onDeckWindDirection;
                     }
                     else
                     {

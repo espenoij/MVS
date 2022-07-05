@@ -41,7 +41,8 @@ namespace HMS_Client
                 lock (relativeWindDir30mDataListLock)
                 {
                     // Oppdatere data som skal ut i grafer
-                    GraphBuffer.UpdateWithCull(rwdGraphData, relativeWindDir30mDataList, Constants.GraphCullFrequency30m);
+                    if (rwdGraphData.status == DataStatus.OK && rwdGraphData.rwd != 0 && rwdGraphData.wind != 0)
+                        GraphBuffer.UpdateWithCull(rwdGraphData, relativeWindDir30mDataList, Constants.GraphCullFrequency30m);
 
                     // Fjerne gamle data fra chart data
                     GraphBuffer.RemoveOldData(relativeWindDir30mDataList, Constants.Minutes30);
