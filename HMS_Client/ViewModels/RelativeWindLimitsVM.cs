@@ -97,16 +97,6 @@ namespace HMS_Client
             }
         }
 
-        public void CorrectRWD()
-        {
-            // Slette Graph buffer/data
-            lock (relativeWindDir30mDataListLock)
-                GraphBuffer.Clear(relativeWindDir30mDataList);
-
-            // Merke graf data som ubrukelig
-            //rwdGraphData.status = DataStatus.TIMEOUT_ERROR;
-        }
-
         /////////////////////////////////////////////////////////////////////////////
         // Helideck Status
         /////////////////////////////////////////////////////////////////////////////

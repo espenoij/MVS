@@ -470,8 +470,6 @@ namespace HMS_Client
                 if (value >= Constants.HeadingMin && value <= Constants.HeadingMax)
                 {
                     // Setter ny heading
-                    // Ved corrected helicopter heading må vi korrigere for endring i vessel heading
-                    //_onDeckHelicopterHeading = _displayMode == DisplayMode.PreLanding ? value : value + onDeckVesselHeading - windHeadingVM.vesselHeading.data;
                     _onDeckHelicopterHeading = value;
 
                     // Sette on-deck variabler
@@ -490,11 +488,13 @@ namespace HMS_Client
                     // Korrigert heading
                     onDeckHelicopterHeadingIsCorrected = true;
 
-                    // Korrigere RWD
-                    relativeWindLimitsVM.CorrectRWD();
+                    // Stopp oppdatering av grafer (Reset)
+                    windHeadingChangeVM.Stop();
+                    relativeWindLimitsVM.Stop();
 
-                    // Oppdatere trend data
-                    windHeadingChangeVM.CorrectRWDTrend();
+                    // Start oppdatering av grafer (Reset)
+                    windHeadingChangeVM.Start();
+                    relativeWindLimitsVM.Start();
 
                     OnPropertyChanged(nameof(helicopterHeadingInfoString));
 
