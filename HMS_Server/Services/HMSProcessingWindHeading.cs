@@ -593,6 +593,12 @@ namespace HMS_Server
                             userInputs.onDeckWindDirection = areaWindDirection2m.data;
 
                         windDirectionDelta.data = areaWindDirection2m.data - userInputs.onDeckWindDirection;
+
+                        if (windDirectionDelta.data > 180.0)
+                            windDirectionDelta.data -= 360.0;
+                        else
+                        if (windDirectionDelta.data < -180.0)
+                            windDirectionDelta.data += 360.0;
                     }
                     else
                     {

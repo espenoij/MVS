@@ -97,7 +97,6 @@ namespace HMS_Client
                 onDeckStabilityLimitsVM,
                 windHeadingChangeVM,
                 relativeWindLimitsVM,
-                landingStatusTrendVM,
                 windHeadingVM,
                 setDefaultWindMeasurementCallback,
                 serverCom);
@@ -105,7 +104,7 @@ namespace HMS_Client
             helideckMotionLimitsVM.Init(config, sensorStatus);
             helideckMotionTrendVM.Init(adminSettingsVM, config, sensorStatus);
             onDeckStabilityLimitsVM.Init(config, sensorStatus);
-            relativeWindLimitsVM.Init(config, sensorStatus, onDeckStabilityLimitsVM, windHeadingChangeVM);
+            relativeWindLimitsVM.Init(config, sensorStatus, onDeckStabilityLimitsVM);
             landingStatusTrendVM.Init(config, onDeckStabilityLimitsVM, helideckStatusVM);
             
             windHeadingChangeVM.Init(config, sensorStatus, relativeWindLimitsVM);

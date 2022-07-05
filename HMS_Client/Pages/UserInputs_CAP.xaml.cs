@@ -163,7 +163,6 @@ namespace HMS_Client
                 (sender as TextBox).Text,
                 Constants.HeadingMin,
                 Constants.HeadingMax,
-                Constants.HeadingDefault,
                 out string validatedInput);
 
             tbHelicopterHeading.Text = validatedInput;
@@ -176,7 +175,7 @@ namespace HMS_Client
 
         private void EnterHeading()
         {
-            if (tbHelicopterHeading.Text.Length > 0)
+            if (!string.IsNullOrEmpty(tbHelicopterHeading.Text))
             {
                 // Åpne dialog vindu
                 DialogHelicopterLanded dialog = new DialogHelicopterLanded(userInputsVM, helideckStabilityLimitsVM, landingStatusTrendVM);
@@ -208,7 +207,6 @@ namespace HMS_Client
                 (sender as TextBox).Text,
                 Constants.HeadingMin,
                 Constants.HeadingMax,
-                Constants.HeadingDefault,
                 out string validatedInput);
 
             tbCorrectedHelicopterHeading.Text = validatedInput;
@@ -221,7 +219,7 @@ namespace HMS_Client
 
         private void EnterCorrectedHeading()
         {
-            if (tbCorrectedHelicopterHeading.Text != string.Empty)
+            if (!string.IsNullOrEmpty(tbCorrectedHelicopterHeading.Text))
             {
                 try
                 {

@@ -52,6 +52,47 @@ public static class DataValidation
         return validInput;
     }
 
+    // Som over, men returnerer blank some default dersom verdi ikke aksepteres
+    public static bool String(string input, double min, double max, out string validatedInput)
+    {
+        bool validInput = false;
+        double inputValue = 0;
+
+        // Sjekke at ikke input er blank eller null
+        if (!string.IsNullOrWhiteSpace(input))
+        {
+
+            // Sjekke om input er numerisk
+            if (double.TryParse(input, out inputValue))
+            {
+                // Range sjekk
+                if (inputValue >= min && inputValue <= max)
+                {
+                    validInput = true;
+                }
+                // Ikke gyldig
+                else
+                {
+                    RadWindow.Alert(string.Format("Input Error\n\nValid input range: {0} - {1}", min, max));
+                }
+            }
+            // Numerisk input
+            else
+            {
+                RadWindow.Alert("Input Error\n\nA numeric input value is required.");
+            }
+        }
+
+        // Gyldig input -> Sett output like parset verdi (kan være ulik input, f.eks. input: 1000w -> parset: 1000)
+        if (validInput)
+            validatedInput = inputValue.ToString();
+        // Ikke gyldig output -> Sett default verdi
+        else
+            validatedInput = string.Empty;
+
+        return validInput;
+    }
+
     public static bool Double(string input, double min, double max, double defaultValue, out double validatedInput)
     {
         // Videresender parametrene til String metoden ovenfor, parser til double og returnerer

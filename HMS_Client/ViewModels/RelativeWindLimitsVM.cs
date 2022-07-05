@@ -19,12 +19,10 @@ namespace HMS_Client
         private object relativeWindDir30mDataListLock = new object();
 
         private OnDeckStabilityLimitsVM onDeckStabilityLimitsVM;
-        private WindHeadingChangeVM windHeadingChangeVM;
 
-        public void Init(Config config, SensorGroupStatus sensorStatus, OnDeckStabilityLimitsVM onDeckStabilityLimitsVM, WindHeadingChangeVM windHeadingChangeVM)
+        public void Init(Config config, SensorGroupStatus sensorStatus, OnDeckStabilityLimitsVM onDeckStabilityLimitsVM)
         {
             this.onDeckStabilityLimitsVM = onDeckStabilityLimitsVM;
-            this.windHeadingChangeVM = windHeadingChangeVM;
 
             BindingOperations.EnableCollectionSynchronization(relativeWindDir30mDataList, relativeWindDir30mDataListLock);
 
@@ -99,24 +97,14 @@ namespace HMS_Client
             }
         }
 
-        public void CorrectRWD(double correction)
+        public void CorrectRWD()
         {
-            // Løper gjennom hele listen og legger til korreksjon på RWD komponenten
+            // Slette Graph buffer/data
             lock (relativeWindDir30mDataListLock)
-            {
-                foreach (var item in relativeWindDir30mDataList)
-                {
-                    if (item.status == DataStatus.OK)
-                        // Lagre korrigert data
-                        item.rwd += correction;
-                }
-            }
+                GraphBuffer.Clear(relativeWindDir30mDataList);
 
             // Merke graf data som ubrukelig
-            rwdGraphData.status = DataStatus.TIMEOUT_ERROR;
-
-            // Oppdatere trend data
-            windHeadingChangeVM.CorrectRWDTrend(correction);
+            //rwdGraphData.status = DataStatus.TIMEOUT_ERROR;
         }
 
         /////////////////////////////////////////////////////////////////////////////

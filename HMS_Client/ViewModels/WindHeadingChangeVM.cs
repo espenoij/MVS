@@ -215,21 +215,16 @@ namespace HMS_Client
             windDirectionDelta = clientSensorList.GetData(ValueType.WindDirectionDelta);
         }
 
-        public void CorrectRWDTrend(double correction)
+        public void CorrectRWDTrend()
         {
-            // Legge inn rekalkulerte RWD data
-            foreach (var item in rwdTrend30mList)
-            {
-                if (item.status != HelideckStatusType.NO_DATA &&
-                    item.status != HelideckStatusType.OFF)
-                {
-                    item.rwd += correction;
-                    item.status = GetRWDLimitState(item.wind, item.rwd);
-                }
-            }
+            // Slette Graph buffer/data
+            GraphBuffer.Clear(rwdTrend30mList);
+            GraphBuffer.Clear(vesselHdg30mDataList);
+            GraphBuffer.Clear(windDir30mDataList);
+            GraphBuffer.Clear(rwdTrend30mDispList);
 
             // Overføre til display data liste
-            GraphBuffer.TransferDisplayData(rwdTrend30mList, rwdTrend30mDispList);
+            //GraphBuffer.TransferDisplayData(rwdTrend30mList, rwdTrend30mDispList);
         }
 
         /////////////////////////////////////////////////////////////////////////////
