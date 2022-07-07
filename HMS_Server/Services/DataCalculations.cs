@@ -1508,6 +1508,15 @@ namespace HMS_Server
                             break;
 
                         ////////////////////////////////////////////////////////////////////////////////////////////////
+                        /// Fixed Value
+                        ////////////////////////////////////////////////////////////////////////////////////////////////
+                        case CalculationType.FixedValue:
+
+                            result = parameter;
+
+                            break;
+
+                        ////////////////////////////////////////////////////////////////////////////////////////////////
                         /// Ingen kalkulasjoner
                         ////////////////////////////////////////////////////////////////////////////////////////////////
                         default:
@@ -1676,6 +1685,8 @@ namespace HMS_Server
         WaveRadar,
         [Description("Period")]
         Period,
+        [Description("Fixed Value")]
+        FixedValue,
 
         //[Description("NWS Codes")]
         //NWSCodes,
