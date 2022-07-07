@@ -376,22 +376,22 @@
     </Compile>
     <Compile Include="Helpers\DisplayList.cs" />
     <Compile Include="Helpers\GraphBuffer.cs" />
-    <Compile Include="Pages\VerificationResult.xaml.cs">
+    <Compile Include="Views\VerificationResult.xaml.cs">
       <DependentUpon>VerificationResult.xaml</DependentUpon>
     </Compile>
-    <Compile Include="Pages\FileReaderSetupWindow.xaml.cs">
+    <Compile Include="Views\FileReaderSetupWindow.xaml.cs">
       <DependentUpon>FileReaderSetupWindow.xaml</DependentUpon>
     </Compile>
-    <Compile Include="Pages\VerificationSetupRefData.xaml.cs">
+    <Compile Include="Views\VerificationSetupRefData.xaml.cs">
       <DependentUpon>VerificationSetupRefData.xaml</DependentUpon>
     </Compile>
-    <Compile Include="Pages\VerificationSetupTestData.xaml.cs">
+    <Compile Include="Views\VerificationSetupTestData.xaml.cs">
       <DependentUpon>VerificationSetupTestData.xaml</DependentUpon>
     </Compile>
-    <Compile Include="Pages\HMSOutput.xaml.cs">
+    <Compile Include="Views\HMSOutput.xaml.cs">
       <DependentUpon>HMSOutput.xaml</DependentUpon>
     </Compile>
-    <Compile Include="Pages\HMSLightsOutput.xaml.cs">
+    <Compile Include="Views\HMSLightsOutput.xaml.cs">
       <DependentUpon>HMSLightsOutput.xaml</DependentUpon>
     </Compile>
     <Compile Include="Services\FileReader\FileDataField.cs" />
@@ -426,10 +426,10 @@
     <Compile Include="Config\HelicopterWSILimitConfig.cs" />
     <Compile Include="Config\HelicopterWSILimitConfigCollection.cs" />
     <Compile Include="Config\HelicopterWSILimitConfigSection.cs" />
-    <Compile Include="Pages\HMSSensorGroupSetup.xaml.cs">
+    <Compile Include="Views\HMSSensorGroupSetup.xaml.cs">
       <DependentUpon>HMSSensorGroupSetup.xaml</DependentUpon>
     </Compile>
-    <Compile Include="Pages\HMSInputSetup.xaml.cs">
+    <Compile Include="Views\HMSInputSetup.xaml.cs">
       <DependentUpon>HMSInputSetup.xaml</DependentUpon>
     </Compile>
     <Compile Include="Services\AdminMode.cs" />
@@ -452,12 +452,12 @@
     <Compile Include="Services\Encryption.cs" />
     <Compile Include="Services\ErrorMessage.cs" />
     <Compile Include="Services\ErrorHandler.cs" />
-    <Compile Include="Pages\ErrorMessagesPage.xaml.cs">
+    <Compile Include="Views\ErrorMessagesPage.xaml.cs">
       <DependentUpon>ErrorMessagesPage.xaml</DependentUpon>
     </Compile>
     <Compile Include="Services\MODBUS\ModbusDataRetrieval.cs" />
     <Compile Include="Services\MODBUS\ModbusRegister.cs" />
-    <Compile Include="Pages\AdminSettings.xaml.cs">
+    <Compile Include="Views\AdminSettings.xaml.cs">
       <DependentUpon>AdminSettings.xaml</DependentUpon>
     </Compile>
     <Compile Include="Services\SensorDataRetrieval.cs" />
@@ -468,18 +468,18 @@
     <Compile Include="Services\Serial Port\SerialPortProcessing.cs" />
     <Compile Include="Services\DataCalculations.cs" />
     <Compile Include="Services\MODBUS\ModbusSetup.cs" />
-    <Compile Include="Pages\ModbusSetupWindow.xaml.cs">
+    <Compile Include="Views\ModbusSetupWindow.xaml.cs">
       <DependentUpon>ModbusSetupWindow.xaml</DependentUpon>
     </Compile>
     <Compile Include="Services\Serial Port\SerialPortDataRetrieval.cs" />
-    <Compile Include="Pages\MainWindow.xaml.cs">
+    <Compile Include="Views\MainWindow.xaml.cs">
       <DependentUpon>MainWindow.xaml</DependentUpon>
     </Compile>
     <Compile Include="Config\SensorConfigCollection.cs" />
     <Compile Include="Config\SensorConfigSection.cs" />
     <Compile Include="Services\SensorData.cs" />
     <Compile Include="Config\SensorConfig.cs" />
-    <Compile Include="Pages\SensorSetupPage.xaml.cs">
+    <Compile Include="Views\SensorSetupPage.xaml.cs">
       <DependentUpon>SensorSetupPage.xaml</DependentUpon>
     </Compile>
     <Compile Include="Services\MODBUS\ModbusConfig.cs" />
@@ -522,31 +522,31 @@
       <Generator>MSBuild:Compile</Generator>
       <SubType>Designer</SubType>
     </Page>
-    <Page Include="Pages\VerificationResult.xaml">
+    <Page Include="Views\VerificationResult.xaml">
       <Generator>MSBuild:Compile</Generator>
       <SubType>Designer</SubType>
     </Page>
-    <Page Include="Pages\VerificationSetupRefData.xaml">
+    <Page Include="Views\VerificationSetupRefData.xaml">
       <Generator>MSBuild:Compile</Generator>
       <SubType>Designer</SubType>
     </Page>
-    <Page Include="Pages\VerificationSetupTestData.xaml">
+    <Page Include="Views\VerificationSetupTestData.xaml">
       <Generator>MSBuild:Compile</Generator>
       <SubType>Designer</SubType>
     </Page>
-    <Page Include="Pages\HMSOutput.xaml">
+    <Page Include="Views\HMSOutput.xaml">
       <Generator>MSBuild:Compile</Generator>
       <SubType>Designer</SubType>
     </Page>
-    <Page Include="Pages\HMSLightsOutput.xaml">
+    <Page Include="Views\HMSLightsOutput.xaml">
       <Generator>MSBuild:Compile</Generator>
       <SubType>Designer</SubType>
     </Page>
-    <Page Include="Pages\HMSSensorGroupSetup.xaml">
+    <Page Include="Views\HMSSensorGroupSetup.xaml">
       <Generator>MSBuild:Compile</Generator>
       <SubType>Designer</SubType>
     </Page>
-    <Page Include="Pages\HMSInputSetup.xaml">
+    <Page Include="Views\HMSInputSetup.xaml">
       <Generator>MSBuild:Compile</Generator>
       <SubType>Designer</SubType>
     </Page>
@@ -554,31 +554,31 @@
       <SubType>Designer</SubType>
       <Generator>MSBuild:Compile</Generator>
     </Page>
-    <Page Include="Pages\ErrorMessagesPage.xaml">
+    <Page Include="Views\ErrorMessagesPage.xaml">
       <SubType>Designer</SubType>
       <Generator>MSBuild:Compile</Generator>
     </Page>
-    <Page Include="Pages\FileReaderSetupWindow.xaml">
+    <Page Include="Views\FileReaderSetupWindow.xaml">
       <Generator>MSBuild:Compile</Generator>
       <SubType>Designer</SubType>
     </Page>
-    <Page Include="Pages\ModbusSetupWindow.xaml">
+    <Page Include="Views\ModbusSetupWindow.xaml">
       <SubType>Designer</SubType>
       <Generator>MSBuild:Compile</Generator>
     </Page>
-    <Page Include="Pages\AdminSettings.xaml">
+    <Page Include="Views\AdminSettings.xaml">
       <SubType>Designer</SubType>
       <Generator>MSBuild:Compile</Generator>
     </Page>
-    <Page Include="Pages\MainWindow.xaml">
+    <Page Include="Views\MainWindow.xaml">
       <SubType>Designer</SubType>
       <Generator>MSBuild:Compile</Generator>
     </Page>
-    <Page Include="Pages\SensorSetupPage.xaml">
+    <Page Include="Views\SensorSetupPage.xaml">
       <SubType>Designer</SubType>
       <Generator>MSBuild:Compile</Generator>
     </Page>
-    <Page Include="Pages\SerialPortSetupWindow.xaml">
+    <Page Include="Views\SerialPortSetupWindow.xaml">
       <Generator>MSBuild:Compile</Generator>
       <SubType>Designer</SubType>
     </Page>
@@ -586,7 +586,7 @@
       <DependentUpon>App.xaml</DependentUpon>
       <SubType>Code</SubType>
     </Compile>
-    <Compile Include="Pages\SerialPortSetupWindow.xaml.cs">
+    <Compile Include="Views\SerialPortSetupWindow.xaml.cs">
       <DependentUpon>SerialPortSetupWindow.xaml</DependentUpon>
       <SubType>Code</SubType>
     </Compile>

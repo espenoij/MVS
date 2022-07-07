@@ -272,25 +272,25 @@
     <Compile Include="Helpers\GraphBuffer.cs" />
     <Compile Include="Helpers\HMSCalc.cs" />
     <Compile Include="Helpers\TrendLine.cs" />
-    <Compile Include="Pages\EMSWeather.xaml.cs">
+    <Compile Include="Views\EMSWeather.xaml.cs">
       <DependentUpon>EMSWeather.xaml</DependentUpon>
     </Compile>
-    <Compile Include="Pages\HelideckMotionHistory_NOROG.xaml.cs">
+    <Compile Include="Views\HelideckMotionHistory_NOROG.xaml.cs">
       <DependentUpon>HelideckMotionHistory_NOROG.xaml</DependentUpon>
     </Compile>
-    <Compile Include="Pages\EMSWaveData.xaml.cs">
+    <Compile Include="Views\EMSWaveData.xaml.cs">
       <DependentUpon>EMSWaveData.xaml</DependentUpon>
     </Compile>
-    <Compile Include="Pages\Information_CAP.xaml.cs">
+    <Compile Include="Views\Information_CAP.xaml.cs">
       <DependentUpon>Information_CAP.xaml</DependentUpon>
     </Compile>
-    <Compile Include="Pages\SensorStatusDisplay_CAP.xaml.cs">
+    <Compile Include="Views\SensorStatusDisplay_CAP.xaml.cs">
       <DependentUpon>SensorStatusDisplay_CAP.xaml</DependentUpon>
     </Compile>
-    <Compile Include="Pages\EMSWindHeading.xaml.cs">
+    <Compile Include="Views\EMSWindHeading.xaml.cs">
       <DependentUpon>EMSWindHeading.xaml</DependentUpon>
     </Compile>
-    <Compile Include="Pages\EMSWindHeadingCompassRose.xaml.cs">
+    <Compile Include="Views\EMSWindHeadingCompassRose.xaml.cs">
       <DependentUpon>EMSWindHeadingCompassRose.xaml</DependentUpon>
     </Compile>
     <Compile Include="Services\AdminMode.cs" />
@@ -314,20 +314,20 @@
     <Compile Include="Dialogs\DialogAdminPassword.xaml.cs">
       <DependentUpon>DialogAdminPassword.xaml</DependentUpon>
     </Compile>
-    <Compile Include="Pages\AdminInputData.xaml.cs">
+    <Compile Include="Views\AdminInputData.xaml.cs">
       <DependentUpon>AdminInputData.xaml</DependentUpon>
     </Compile>
-    <Compile Include="Pages\AdminSettings.xaml.cs">
+    <Compile Include="Views\AdminSettings.xaml.cs">
       <DependentUpon>AdminSettings.xaml</DependentUpon>
     </Compile>
     <Compile Include="Services\HMSData.cs" />
     <Compile Include="Services\Socket\SocketPacket.cs" />
     <Compile Include="ViewModels\AdminSettingsVM.cs" />
     <Compile Include="Services\CommonTypes.cs" />
-    <Compile Include="Pages\HelideckReport_CAP.xaml.cs">
+    <Compile Include="Views\HelideckReport_CAP.xaml.cs">
       <DependentUpon>HelideckReport_CAP.xaml</DependentUpon>
     </Compile>
-    <Compile Include="Pages\HelideckReport_NOROG.xaml.cs">
+    <Compile Include="Views\HelideckReport_NOROG.xaml.cs">
       <DependentUpon>HelideckReport_NOROG.xaml</DependentUpon>
     </Compile>
     <Compile Include="ViewModels\EMSWaveDataVM.cs" />
@@ -358,32 +358,32 @@
     <Compile Include="Config\HelicopterOperatorConfigCollection.cs" />
     <Compile Include="Config\HelicopterOperatorConfigSection.cs" />
     <Compile Include="Services\ScreenCapture.cs" />
-    <Compile Include="Pages\WindHeadingReadouts.xaml.cs">
+    <Compile Include="Views\WindHeadingReadouts.xaml.cs">
       <DependentUpon>WindHeadingReadouts.xaml</DependentUpon>
     </Compile>
-    <Compile Include="Pages\WindHeadingChange_CAP.xaml.cs">
+    <Compile Include="Views\WindHeadingChange_CAP.xaml.cs">
       <DependentUpon>WindHeadingChange_CAP.xaml</DependentUpon>
     </Compile>
     <Compile Include="ViewModels\LandingStatusTrendVM.cs" />
     <Compile Include="ViewModels\WindHeadingChangeVM.cs" />
-    <Compile Include="Pages\RelativeWindLimits_CAP.xaml.cs">
+    <Compile Include="Views\RelativeWindLimits_CAP.xaml.cs">
       <DependentUpon>RelativeWindLimits_CAP.xaml</DependentUpon>
     </Compile>
     <Compile Include="ViewModels\RelativeWindLimitsVM.cs" />
-    <Compile Include="Pages\GeneralInformation_CAP.xaml.cs">
+    <Compile Include="Views\GeneralInformation_CAP.xaml.cs">
       <DependentUpon>GeneralInformation_CAP.xaml</DependentUpon>
     </Compile>
     <Compile Include="ViewModels\OnDeckStabilityLimitsVM.cs" />
-    <Compile Include="Pages\TouchdownLimits_CAP.xaml.cs">
+    <Compile Include="Views\TouchdownLimits_CAP.xaml.cs">
       <DependentUpon>TouchdownLimits_CAP.xaml</DependentUpon>
     </Compile>
-    <Compile Include="Pages\OnDeckStabilityLimits_CAP.xaml.cs">
+    <Compile Include="Views\OnDeckStabilityLimits_CAP.xaml.cs">
       <DependentUpon>OnDeckStabilityLimits_CAP.xaml</DependentUpon>
     </Compile>
-    <Compile Include="Pages\HelideckStatus_CAP.xaml.cs">
+    <Compile Include="Views\HelideckStatus_CAP.xaml.cs">
       <DependentUpon>HelideckStatus_CAP.xaml</DependentUpon>
     </Compile>
-    <Compile Include="Pages\LandingStatusTrend_CAP.xaml.cs">
+    <Compile Include="Views\LandingStatusTrend_CAP.xaml.cs">
       <DependentUpon>LandingStatusTrend_CAP.xaml</DependentUpon>
     </Compile>
     <Compile Include="Config\HelicopterWSILimitConfig.cs" />
@@ -392,60 +392,60 @@
     <Compile Include="ViewModels\MainWindowVM.cs" />
     <Compile Include="Services\SensorGroup.cs" />
     <Compile Include="Services\UserInputs.cs" />
-    <Compile Include="Pages\UserInputs_CAP.xaml.cs">
+    <Compile Include="Views\UserInputs_CAP.xaml.cs">
       <DependentUpon>UserInputs_CAP.xaml</DependentUpon>
     </Compile>
     <Compile Include="Services\HMSDataCollection.cs" />
     <Compile Include="Services\ServerCom.cs" />
     <Compile Include="Helpers\EnumExtension.cs" />
     <Compile Include="ViewModels\GeneralInformationVM.cs" />
-    <Compile Include="Pages\HelideckMotionHistory_CAP.xaml.cs">
+    <Compile Include="Views\HelideckMotionHistory_CAP.xaml.cs">
       <DependentUpon>HelideckMotionHistory_CAP.xaml</DependentUpon>
     </Compile>
     <Compile Include="ViewModels\HelideckMotionTrendVM.cs" />
     <Compile Include="ViewModels\HelideckMotionLimitsVM.cs" />
-    <Compile Include="Pages\HelideckStatusPrediction.xaml.cs">
+    <Compile Include="Views\HelideckStatusPrediction.xaml.cs">
       <DependentUpon>HelideckStatusPrediction.xaml</DependentUpon>
     </Compile>
     <Compile Include="Config\HMSDataConfig.cs" />
     <Compile Include="Config\HMSDataConfigCollection.cs" />
     <Compile Include="Config\HMSDataConfigSection.cs" />
     <Compile Include="ViewModels\HelideckStatusVM.cs" />
-    <Compile Include="Pages\MainWindow.xaml.cs">
+    <Compile Include="Views\MainWindow.xaml.cs">
       <DependentUpon>MainWindow.xaml</DependentUpon>
     </Compile>
     <Compile Include="Config\Config.cs" />
-    <Compile Include="Pages\GeneralInformation_NOROG.xaml.cs">
+    <Compile Include="Views\GeneralInformation_NOROG.xaml.cs">
       <DependentUpon>GeneralInformation_NOROG.xaml</DependentUpon>
     </Compile>
-    <Compile Include="Pages\HelideckMotionLimits_NOROG.xaml.cs">
+    <Compile Include="Views\HelideckMotionLimits_NOROG.xaml.cs">
       <DependentUpon>HelideckMotionLimits_NOROG.xaml</DependentUpon>
     </Compile>
-    <Compile Include="Pages\HelideckStatus_NOROG.xaml.cs">
+    <Compile Include="Views\HelideckStatus_NOROG.xaml.cs">
       <DependentUpon>HelideckStatus_NOROG.xaml</DependentUpon>
     </Compile>
-    <Compile Include="Pages\Meteorological.xaml.cs">
+    <Compile Include="Views\Meteorological.xaml.cs">
       <DependentUpon>Meteorological.xaml</DependentUpon>
     </Compile>
     <Compile Include="ViewModels\MeteorologicalVM.cs" />
-    <Compile Include="Pages\SensorStatusDisplay_NOROG.xaml.cs">
+    <Compile Include="Views\SensorStatusDisplay_NOROG.xaml.cs">
       <DependentUpon>SensorStatusDisplay_NOROG.xaml</DependentUpon>
     </Compile>
     <Compile Include="ViewModels\SensorStatusDisplayVM.cs" />
-    <Compile Include="Pages\UserInputs_NOROG.xaml.cs">
+    <Compile Include="Views\UserInputs_NOROG.xaml.cs">
       <DependentUpon>UserInputs_NOROG.xaml</DependentUpon>
     </Compile>
-    <Compile Include="Pages\HelideckMotionTrend_NOROG.xaml.cs">
+    <Compile Include="Views\HelideckMotionTrend_NOROG.xaml.cs">
       <DependentUpon>HelideckMotionTrend_NOROG.xaml</DependentUpon>
     </Compile>
     <Compile Include="ViewModels\UserInputsVM.cs" />
     <Compile Include="ViewModels\WindHeadingVM.cs" />
     <Compile Include="Services\SensorGroupStatus.cs" />
     <Compile Include="Services\Socket\SocketClient.cs" />
-    <Compile Include="Pages\WindHeadingCompassRose.xaml.cs">
+    <Compile Include="Views\WindHeadingCompassRose.xaml.cs">
       <DependentUpon>WindHeadingCompassRose.xaml</DependentUpon>
     </Compile>
-    <Compile Include="Pages\WindHeading.xaml.cs">
+    <Compile Include="Views\WindHeading.xaml.cs">
       <DependentUpon>WindHeading.xaml</DependentUpon>
     </Compile>
     <Compile Include="Services\Socket\SocketConsole.cs" />
@@ -478,95 +478,95 @@
       <SubType>Designer</SubType>
       <Generator>MSBuild:Compile</Generator>
     </Page>
-    <Page Include="Pages\AdminInputData.xaml">
+    <Page Include="Views\AdminInputData.xaml">
       <Generator>MSBuild:Compile</Generator>
       <SubType>Designer</SubType>
     </Page>
-    <Page Include="Pages\AdminSettings.xaml">
+    <Page Include="Views\AdminSettings.xaml">
       <SubType>Designer</SubType>
       <Generator>MSBuild:Compile</Generator>
     </Page>
-    <Page Include="Pages\EMSWeather.xaml">
+    <Page Include="Views\EMSWeather.xaml">
       <Generator>MSBuild:Compile</Generator>
       <SubType>Designer</SubType>
     </Page>
-    <Page Include="Pages\GeneralInformation_CAP.xaml">
+    <Page Include="Views\GeneralInformation_CAP.xaml">
       <SubType>Designer</SubType>
       <Generator>MSBuild:Compile</Generator>
     </Page>
-    <Page Include="Pages\HelideckMotionHistory_NOROG.xaml">
+    <Page Include="Views\HelideckMotionHistory_NOROG.xaml">
       <Generator>MSBuild:Compile</Generator>
       <SubType>Designer</SubType>
     </Page>
-    <Page Include="Pages\EMSWaveData.xaml">
+    <Page Include="Views\EMSWaveData.xaml">
       <Generator>MSBuild:Compile</Generator>
       <SubType>Designer</SubType>
     </Page>
-    <Page Include="Pages\Information_CAP.xaml">
+    <Page Include="Views\Information_CAP.xaml">
       <SubType>Designer</SubType>
       <Generator>MSBuild:Compile</Generator>
     </Page>
-    <Page Include="Pages\TouchdownLimits_CAP.xaml">
+    <Page Include="Views\TouchdownLimits_CAP.xaml">
       <SubType>Designer</SubType>
       <Generator>MSBuild:Compile</Generator>
     </Page>
-    <Page Include="Pages\HelideckReport_CAP.xaml">
+    <Page Include="Views\HelideckReport_CAP.xaml">
       <Generator>MSBuild:Compile</Generator>
       <SubType>Designer</SubType>
     </Page>
-    <Page Include="Pages\HelideckReport_NOROG.xaml">
+    <Page Include="Views\HelideckReport_NOROG.xaml">
       <SubType>Designer</SubType>
       <Generator>MSBuild:Compile</Generator>
     </Page>
-    <Page Include="Pages\SensorStatusDisplay_CAP.xaml">
+    <Page Include="Views\SensorStatusDisplay_CAP.xaml">
       <Generator>MSBuild:Compile</Generator>
       <SubType>Designer</SubType>
     </Page>
-    <Page Include="Pages\EMSWindHeading.xaml">
+    <Page Include="Views\EMSWindHeading.xaml">
       <Generator>MSBuild:Compile</Generator>
       <SubType>Designer</SubType>
     </Page>
-    <Page Include="Pages\EMSWindHeadingCompassRose.xaml">
+    <Page Include="Views\EMSWindHeadingCompassRose.xaml">
       <Generator>MSBuild:Compile</Generator>
       <SubType>Designer</SubType>
     </Page>
-    <Page Include="Pages\WindHeadingReadouts.xaml">
+    <Page Include="Views\WindHeadingReadouts.xaml">
       <SubType>Designer</SubType>
       <Generator>MSBuild:Compile</Generator>
     </Page>
-    <Page Include="Pages\WindHeadingChange_CAP.xaml">
+    <Page Include="Views\WindHeadingChange_CAP.xaml">
       <Generator>MSBuild:Compile</Generator>
       <SubType>Designer</SubType>
     </Page>
-    <Page Include="Pages\RelativeWindLimits_CAP.xaml">
+    <Page Include="Views\RelativeWindLimits_CAP.xaml">
       <SubType>Designer</SubType>
       <Generator>XamlIntelliSenseFileGenerator</Generator>
     </Page>
-    <Page Include="Pages\OnDeckStabilityLimits_CAP.xaml">
+    <Page Include="Views\OnDeckStabilityLimits_CAP.xaml">
       <Generator>MSBuild:Compile</Generator>
       <SubType>Designer</SubType>
     </Page>
-    <Page Include="Pages\HelideckStatus_CAP.xaml">
+    <Page Include="Views\HelideckStatus_CAP.xaml">
       <Generator>MSBuild:Compile</Generator>
       <SubType>Designer</SubType>
     </Page>
-    <Page Include="Pages\LandingStatusTrend_CAP.xaml">
+    <Page Include="Views\LandingStatusTrend_CAP.xaml">
       <Generator>MSBuild:Compile</Generator>
       <SubType>Designer</SubType>
     </Page>
-    <Page Include="Pages\UserInputs_CAP.xaml">
+    <Page Include="Views\UserInputs_CAP.xaml">
       <SubType>Designer</SubType>
       <Generator>MSBuild:Compile</Generator>
     </Page>
-    <Page Include="Pages\HelideckMotionHistory_CAP.xaml">
+    <Page Include="Views\HelideckMotionHistory_CAP.xaml">
       <Generator>MSBuild:Compile</Generator>
       <SubType>Designer</SubType>
     </Page>
-    <Page Include="Pages\HelideckStatusPrediction.xaml">
+    <Page Include="Views\HelideckStatusPrediction.xaml">
       <SubType>Designer</SubType>
       <Generator>MSBuild:Compile</Generator>
     </Page>
-    <Page Include="Pages\SocketConsoleWindow.xaml">
+    <Page Include="Views\SocketConsoleWindow.xaml">
       <Generator>MSBuild:Compile</Generator>
       <SubType>Designer</SubType>
     </Page>
@@ -574,47 +574,47 @@
       <DependentUpon>App.xaml</DependentUpon>
       <SubType>Code</SubType>
     </Compile>
-    <Compile Include="Pages\SocketConsoleWindow.xaml.cs">
+    <Compile Include="Views\SocketConsoleWindow.xaml.cs">
       <DependentUpon>SocketConsoleWindow.xaml</DependentUpon>
       <SubType>Code</SubType>
     </Compile>
-    <Page Include="Pages\MainWindow.xaml">
+    <Page Include="Views\MainWindow.xaml">
       <SubType>Designer</SubType>
       <Generator>MSBuild:Compile</Generator>
     </Page>
-    <Page Include="Pages\WindHeadingCompassRose.xaml">
+    <Page Include="Views\WindHeadingCompassRose.xaml">
       <SubType>Designer</SubType>
       <Generator>MSBuild:Compile</Generator>
     </Page>
-    <Page Include="Pages\GeneralInformation_NOROG.xaml">
+    <Page Include="Views\GeneralInformation_NOROG.xaml">
       <SubType>Designer</SubType>
       <Generator>MSBuild:Compile</Generator>
     </Page>
-    <Page Include="Pages\HelideckMotionLimits_NOROG.xaml">
+    <Page Include="Views\HelideckMotionLimits_NOROG.xaml">
       <SubType>Designer</SubType>
       <Generator>MSBuild:Compile</Generator>
     </Page>
-    <Page Include="Pages\HelideckStatus_NOROG.xaml">
+    <Page Include="Views\HelideckStatus_NOROG.xaml">
       <SubType>Designer</SubType>
       <Generator>MSBuild:Compile</Generator>
     </Page>
-    <Page Include="Pages\Meteorological.xaml">
+    <Page Include="Views\Meteorological.xaml">
       <SubType>Designer</SubType>
       <Generator>MSBuild:Compile</Generator>
     </Page>
-    <Page Include="Pages\SensorStatusDisplay_NOROG.xaml">
+    <Page Include="Views\SensorStatusDisplay_NOROG.xaml">
       <SubType>Designer</SubType>
       <Generator>MSBuild:Compile</Generator>
     </Page>
-    <Page Include="Pages\UserInputs_NOROG.xaml">
+    <Page Include="Views\UserInputs_NOROG.xaml">
       <SubType>Designer</SubType>
       <Generator>MSBuild:Compile</Generator>
     </Page>
-    <Page Include="Pages\HelideckMotionTrend_NOROG.xaml">
+    <Page Include="Views\HelideckMotionTrend_NOROG.xaml">
       <SubType>Designer</SubType>
       <Generator>MSBuild:Compile</Generator>
     </Page>
-    <Page Include="Pages\WindHeading.xaml">
+    <Page Include="Views\WindHeading.xaml">
       <SubType>Designer</SubType>
       <Generator>MSBuild:Compile</Generator>
     </Page>
