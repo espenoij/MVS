@@ -114,8 +114,8 @@ namespace HMS_Server
                 lbMSICorrectionR.IsEnabled = false;
                 tbMSICorrectionR.IsEnabled = false;
 
-                lbWindSamplesPerTransmission.IsEnabled = false;
-                tbWindSamplesPerTransmission.IsEnabled = false;
+                //lbWindSamplesPerTransmission.IsEnabled = false;
+                //tbWindSamplesPerTransmission.IsEnabled = false;
 
                 lbOverrideWindBuffer.IsEnabled = false;
                 chkOverrideWindBuffer.IsEnabled = false;
@@ -795,32 +795,32 @@ namespace HMS_Server
             adminSettingsVM.msiCorrectionR = validatedInput;
         }
 
-        private void tbWindSamplesPerTransmission_LostFocus(object sender, RoutedEventArgs e)
-        {
-            tbWindSamplesPerTransmission_Update(sender);
-        }
+        //private void tbWindSamplesPerTransmission_LostFocus(object sender, RoutedEventArgs e)
+        //{
+        //    tbWindSamplesPerTransmission_Update(sender);
+        //}
 
-        private void tbWindSamplesPerTransmission_KeyDown(object sender, KeyEventArgs e)
-        {
-            if (e.Key == Key.Return)
-            {
-                tbWindSamplesPerTransmission_Update(sender);
-                Keyboard.ClearFocus();
-            }
-        }
+        //private void tbWindSamplesPerTransmission_KeyDown(object sender, KeyEventArgs e)
+        //{
+        //    if (e.Key == Key.Return)
+        //    {
+        //        tbWindSamplesPerTransmission_Update(sender);
+        //        Keyboard.ClearFocus();
+        //    }
+        //}
 
-        private void tbWindSamplesPerTransmission_Update(object sender)
-        {
-            // Sjekk av input
-            DataValidation.Double(
-                (sender as TextBox).Text,
-                Constants.WindSamplesPerTransmissionMin,
-                Constants.WindSamplesPerTransmissionMax,
-                Constants.WindSamplesPerTransmissionDefault,
-                out double validatedInput);
+        //private void tbWindSamplesPerTransmission_Update(object sender)
+        //{
+        //    // Sjekk av input
+        //    DataValidation.Double(
+        //        (sender as TextBox).Text,
+        //        Constants.WindSamplesPerTransmissionMin,
+        //        Constants.WindSamplesPerTransmissionMax,
+        //        Constants.WindSamplesPerTransmissionDefault,
+        //        out double validatedInput);
 
-            adminSettingsVM.windSamplesPerTransmission = validatedInput;
-        }
+        //    adminSettingsVM.windSamplesPerTransmission = validatedInput;
+        //}
 
         private void tbRestrictedSectorFrom_LostFocus(object sender, RoutedEventArgs e)
         {

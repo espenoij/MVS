@@ -557,11 +557,15 @@ namespace HMS_Server
             if (dbStatus != null)
             {
                 if (errorHandler.IsDatabaseError())
+                {
                     dbStatus.status = DataStatus.TIMEOUT_ERROR;
+                    dbStatus.timestamp = DateTime.MinValue;
+                }
                 else
+                {
                     dbStatus.status = DataStatus.OK;
-
-                dbStatus.timestamp = DateTime.UtcNow;
+                    dbStatus.timestamp = DateTime.UtcNow;
+                }
             }
         }
 

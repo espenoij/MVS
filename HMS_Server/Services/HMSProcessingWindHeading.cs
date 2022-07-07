@@ -437,11 +437,11 @@ namespace HMS_Server
                 {
                     windSpeedCorrectedToHelideck.data = 0;
                     windSpeedCorrectedToHelideck.status = DataStatus.TIMEOUT_ERROR;
-                    windSpeedCorrectedToHelideck.timestamp = DateTime.UtcNow;
+                    windSpeedCorrectedToHelideck.timestamp = DateTime.MinValue;
 
                     windSpeedCorrectedTo10m.data = 0;
                     windSpeedCorrectedTo10m.status = DataStatus.TIMEOUT_ERROR;
-                    windSpeedCorrectedTo10m.timestamp = DateTime.UtcNow;
+                    windSpeedCorrectedTo10m.timestamp = DateTime.MinValue;
                 }
 
                 // Vind hastighet
@@ -453,17 +453,24 @@ namespace HMS_Server
                 emsWindSpeedRT.status = windSpeedCorrectedToHelideck.status;
                 emsWindSpeedRT.timestamp = windSpeedCorrectedToHelideck.timestamp;
 
+                // Wind Samples in buffer
+                ///////////////////////////////////////////////////////////
+                double windSamplesInBuffer2m = Constants.WindBufferFill95Pct2m;
+                double windSamplesInBuffer10m = Constants.WindBufferFill95Pct10m;
+                //double windSamplesInBuffer2m = Constants.WindBufferFill95Pct2m / adminSettingsVM.windSamplesPerTransmission;
+                //double windSamplesInBuffer10m = Constants.WindBufferFill95Pct10m / adminSettingsVM.windSamplesPerTransmission;
+
                 // Area Wind: 2-minute data
                 ///////////////////////////////////////////////////////////
                 areaWindDirection2m.DoProcessing(sensorWindDirectionCorrected);
 
                 if (adminSettingsVM.regulationStandard == RegulationStandard.CAP && !adminSettingsVM.overrideWindBuffer)
-                    areaWindDirection2m.BufferFillCheck(Constants.WindBufferFill95Pct2m / adminSettingsVM.windSamplesPerTransmission);
+                    areaWindDirection2m.BufferFillCheck(windSamplesInBuffer2m);
 
                 areaWindSpeed2m.DoProcessing(inputSensorWindSpeed);
 
                 if (adminSettingsVM.regulationStandard == RegulationStandard.CAP && !adminSettingsVM.overrideWindBuffer)
-                    areaWindSpeed2m.BufferFillCheck(Constants.WindBufferFill95Pct2m / adminSettingsVM.windSamplesPerTransmission);
+                    areaWindSpeed2m.BufferFillCheck(windSamplesInBuffer2m);
 
                 UpdateGustData(
                     inputSensorWindSpeed,
@@ -478,8 +485,8 @@ namespace HMS_Server
 
                 if (adminSettingsVM.regulationStandard == RegulationStandard.CAP && !adminSettingsVM.overrideWindBuffer)
                 {
-                    helideckWindDirection2m.BufferFillCheck(Constants.WindBufferFill95Pct2m / adminSettingsVM.windSamplesPerTransmission);
-                    emsWindDirection2m.BufferFillCheck(Constants.WindBufferFill95Pct2m / adminSettingsVM.windSamplesPerTransmission);
+                    helideckWindDirection2m.BufferFillCheck(windSamplesInBuffer2m);
+                    emsWindDirection2m.BufferFillCheck(windSamplesInBuffer2m);
                 }
 
                 helideckWindSpeed2m.DoProcessing(windSpeedCorrectedToHelideck);
@@ -487,8 +494,8 @@ namespace HMS_Server
 
                 if (adminSettingsVM.regulationStandard == RegulationStandard.CAP && !adminSettingsVM.overrideWindBuffer)
                 {
-                    helideckWindSpeed2m.BufferFillCheck(Constants.WindBufferFill95Pct2m / adminSettingsVM.windSamplesPerTransmission);
-                    emsWindSpeed2m.BufferFillCheck(Constants.WindBufferFill95Pct2m / adminSettingsVM.windSamplesPerTransmission);
+                    helideckWindSpeed2m.BufferFillCheck(windSamplesInBuffer2m);
+                    emsWindSpeed2m.BufferFillCheck(windSamplesInBuffer2m);
                 }
 
                 UpdateGustData(
@@ -510,8 +517,8 @@ namespace HMS_Server
 
                 if (adminSettingsVM.regulationStandard == RegulationStandard.CAP && !adminSettingsVM.overrideWindBuffer)
                 {
-                    helideckWindDirection10m.BufferFillCheck(Constants.WindBufferFill95Pct10m / adminSettingsVM.windSamplesPerTransmission);
-                    emsWindDirection10m.BufferFillCheck(Constants.WindBufferFill95Pct10m / adminSettingsVM.windSamplesPerTransmission);
+                    helideckWindDirection10m.BufferFillCheck(windSamplesInBuffer10m);
+                    emsWindDirection10m.BufferFillCheck(windSamplesInBuffer10m);
                 }
 
                 helideckWindSpeed10m.DoProcessing(windSpeedCorrectedToHelideck);
@@ -519,8 +526,8 @@ namespace HMS_Server
 
                 if (adminSettingsVM.regulationStandard == RegulationStandard.CAP && !adminSettingsVM.overrideWindBuffer)
                 {
-                    helideckWindSpeed10m.BufferFillCheck(Constants.WindBufferFill95Pct10m / adminSettingsVM.windSamplesPerTransmission);
-                    emsWindSpeed10m.BufferFillCheck(Constants.WindBufferFill95Pct10m / adminSettingsVM.windSamplesPerTransmission);
+                    helideckWindSpeed10m.BufferFillCheck(windSamplesInBuffer10m);
+                    emsWindSpeed10m.BufferFillCheck(windSamplesInBuffer10m);
                 }
 
                 UpdateGustData(
@@ -552,14 +559,16 @@ namespace HMS_Server
                         else
                             if (relativeWindDir.data < -180)
                             relativeWindDir.data = relativeWindDir.data + 360;
+
+                        relativeWindDir.status = areaWindDirection2m.status;
+                        relativeWindDir.timestamp = areaWindDirection2m.timestamp;
                     }
                     else
                     {
                         relativeWindDir.data = 0;
+                        relativeWindDir.status = DataStatus.TIMEOUT_ERROR;
+                        relativeWindDir.timestamp = DateTime.MinValue;
                     }
-
-                    relativeWindDir.status = areaWindDirection2m.status;
-                    relativeWindDir.timestamp = areaWindDirection2m.timestamp;
 
                     // Vessel Heading Delta
                     /////////////////////////////////////////////////////////////////////////////////////////

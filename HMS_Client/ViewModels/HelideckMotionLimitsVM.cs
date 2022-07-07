@@ -764,10 +764,4 @@ namespace HMS_Client
             PropertyChanged?.Invoke(this, new PropertyChangedEventArgs(name));
         }
     }
-
-    class TimeData
-    {
-        public double data { get; set; }
-        public DateTime timestamp { get; set; }
-    }
 }

@@ -87,10 +87,15 @@ namespace HMS_Client
                 rwdGraphData.rwd = 0;
                 rwdGraphData.wind = 0;
                 if (windSpd.status == DataStatus.OK_NA || relativeWindDir.status == DataStatus.OK_NA)
+                {
                     rwdGraphData.status = DataStatus.OK_NA;
+                    rwdGraphData.timestamp = DateTime.UtcNow;
+                }
                 else
+                {
                     rwdGraphData.status = DataStatus.TIMEOUT_ERROR;
-                rwdGraphData.timestamp = DateTime.UtcNow;
+                    rwdGraphData.timestamp = DateTime.MinValue;
+                }
 
                 OnPropertyChanged(nameof(rwdGraphDataX));
                 OnPropertyChanged(nameof(rwdGraphDataY));

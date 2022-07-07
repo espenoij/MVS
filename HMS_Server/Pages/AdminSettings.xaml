@@ -823,7 +823,7 @@
                         </DockPanel>
 
                         <!--Wind Samples Received-->
-                        <DockPanel>
+                        <!--<DockPanel>
                             <telerik:Label
                                 Name="lbWindSamplesPerTransmission"
                                 Content="Wind Samples per Transmission"
@@ -835,7 +835,7 @@
                                 Text="{Binding Path=windSamplesPerTransmission}"
                                 LostFocus="tbWindSamplesPerTransmission_LostFocus"
                                 KeyDown="tbWindSamplesPerTransmission_KeyDown" />
-                        </DockPanel>
+                        </DockPanel>-->
 
                         <!--Override Wind Buffer-->
                         <DockPanel>
