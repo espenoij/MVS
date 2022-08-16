@@ -880,23 +880,17 @@
                                     Checked="cboSelectedDataAutoExtract_Checked"
                                     Unchecked="cboSelectedDataAutoExtract_Unchecked">Auto Extract Value</CheckBox>
 
-                                <!--Binary/Hex: Total Bytes-->
+                                <!--Binary/Hex: Binary Type-->
                                 <DockPanel>
                                     <Label
                                         Name="lbSelectedDataBytesInValue"
                                         Width="160"
-                                        Content="Total Bytes"
+                                        Content="Binary Type"
                                         VerticalAlignment="Center" />
                                     <telerik:RadComboBox
                                         Name="cboSelectedDataBytesInValue"
                                         SelectionChanged="cboSelectedDataBytesInValue_SelectionChanged" />
                                 </DockPanel>
-
-                                <!--Binary/Hex: Signed Value-->
-                                <CheckBox
-                                    Name="cboSelectedDataDataIsSigned"
-                                    Checked="cboSelectedDataDataIsSigned_Checked"
-                                    Unchecked="cboSelectedDataDataIsSigned_Unchecked">Signed Value</CheckBox>
 
                             </StackPanel>
 

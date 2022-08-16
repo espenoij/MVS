@@ -196,11 +196,13 @@ namespace HMS_Server
                             int decimalPointIndex = newData.IndexOf('.');
 
                             // Sjekker om vi har N/S/E/W i inndata
-                            if (decimalPointIndex != -1 ||
-                                newData.Contains('N') ||
-                                newData.Contains('S') ||
-                                newData.Contains('E') ||
-                                newData.Contains('W'))
+                            if ((newData.Length == 8 ||
+                                 newData.Length == 9) &&
+                                (decimalPointIndex != -1 ||
+                                    newData.Contains('N') ||
+                                    newData.Contains('S') ||
+                                    newData.Contains('E') ||
+                                    newData.Contains('W')))
                             {
                                 double degrees;
                                 double minutes;

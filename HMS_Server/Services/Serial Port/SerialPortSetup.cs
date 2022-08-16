@@ -16,8 +16,7 @@ namespace HMS_Server
             handshake = Handshake.None;
 
             inputType = InputDataType.Text;
-            totalBytes = 1;
-            binarySigned = false;
+            binaryType = BinaryType.Byte;
             
             packetHeader = string.Empty;
             packetEnd = "\\r\\n";
@@ -48,8 +47,7 @@ namespace HMS_Server
             handshake = sps.handshake;
 
             inputType = sps.inputType;
-            totalBytes = sps.totalBytes;
-            binarySigned = sps.binarySigned;
+            binaryType = sps.binaryType;
 
             packetHeader = sps.packetHeader;
             packetEnd = sps.packetEnd;
@@ -79,8 +77,7 @@ namespace HMS_Server
 
         // Data Extraction Setup
         public InputDataType inputType { get; set; }
-        public int totalBytes { get; set; }
-        public bool binarySigned { get; set; }
+        public BinaryType binaryType { get; set; }
 
         public string packetHeader { get; set; }
         public string packetEnd { get; set; }

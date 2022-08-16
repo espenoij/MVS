@@ -8,8 +8,7 @@ namespace HMS_Server
     class SerialPortProcessing
     {
         public InputDataType inputType { get; set; }
-        public int totalBytes { get; set; }
-        public bool binarySigned { get; set; }
+        public BinaryType binaryType { get; set; }
 
         public string packetHeader { get; set; }
         public string packetEnd { get; set; }
@@ -292,36 +291,83 @@ namespace HMS_Server
                 {
                     // Generere en hex string
                     string hexValue = "0x";
-                    for (int i = 0; i < totalBytes; i++)
-                        hexValue += packetDataFields.dataField[dataField + i];
+                    switch (binaryType)
+                    {
+                        case BinaryType.Byte:
+                            // 1 byte
+                            hexValue += packetDataFields.dataField[dataField];
+                            break;
+                        case BinaryType.Int16:
+                        case BinaryType.Uint16:
+                            // 2 byte
+                            for (int i = 0; i < 2; i++)
+                                hexValue += packetDataFields.dataField[dataField + i];
+                            break;
+
+                        case BinaryType.Int32:
+                        case BinaryType.Uint32:
+                        case BinaryType.Float:
+                            // 4 byte
+                            for (int i = 0; i < 4; i++)
+                                hexValue += packetDataFields.dataField[dataField + i];
+                            break;
+
+                        case BinaryType.Long:
+                        case BinaryType.Ulong:
+                        case BinaryType.Int64:
+                        case BinaryType.Uint64:
+                        case BinaryType.Double:
+                            // 8 byte
+                            for (int i = 0; i < 4; i++)
+                                hexValue += packetDataFields.dataField[dataField + i];
+                            break;
+                    }
 
                     // Konvertere hex string til desimal verdi, og lagre som string igjen
-                    switch (totalBytes)
+                    switch (binaryType)
                     {
-                        case 1:
-                            // Kun 1 byte -> ikke signed
+                        case BinaryType.Byte:
                             selectedData.selectedDataFieldString = Convert.ToByte(hexValue, 16).ToString();
                             break;
 
-                        case 2:
-                            if (binarySigned)
-                                selectedData.selectedDataFieldString = Convert.ToInt16(hexValue, 16).ToString();
-                            else
-                                selectedData.selectedDataFieldString = Convert.ToUInt16(hexValue, 16).ToString();
+                        case BinaryType.Int16:
+                            selectedData.selectedDataFieldString = Convert.ToInt16(hexValue, 16).ToString();
                             break;
 
-                        case 4:
-                            if (binarySigned)
-                                selectedData.selectedDataFieldString = Convert.ToInt32(hexValue, 16).ToString();
-                            else
-                                selectedData.selectedDataFieldString = Convert.ToUInt32(hexValue, 16).ToString();
+                        case BinaryType.Uint16:
+                            selectedData.selectedDataFieldString = Convert.ToUInt16(hexValue, 16).ToString();
                             break;
 
-                        case 8:
-                            if (binarySigned)
-                                selectedData.selectedDataFieldString = Convert.ToInt64(hexValue, 16).ToString();
-                            else
-                                selectedData.selectedDataFieldString = Convert.ToUInt64(hexValue, 16).ToString();
+                        case BinaryType.Int32:
+                            selectedData.selectedDataFieldString = Convert.ToInt32(hexValue, 16).ToString();
+                            break;
+
+                        case BinaryType.Uint32:
+                            selectedData.selectedDataFieldString = Convert.ToUInt32(hexValue, 16).ToString();
+                            break;
+
+                        case BinaryType.Float:
+                            selectedData.selectedDataFieldString = BitConverter.ToSingle(BitConverter.GetBytes(Convert.ToInt32(hexValue, 16)), 0).ToString();
+                            break;
+
+                        case BinaryType.Long:
+                            selectedData.selectedDataFieldString = Convert.ToInt64(hexValue, 16).ToString();
+                            break;
+
+                        case BinaryType.Ulong:
+                            selectedData.selectedDataFieldString = Convert.ToUInt64(hexValue, 16).ToString();
+                            break;
+
+                        case BinaryType.Int64:
+                            selectedData.selectedDataFieldString = Convert.ToInt64(hexValue, 16).ToString();
+                            break;
+
+                        case BinaryType.Uint64:
+                            selectedData.selectedDataFieldString = Convert.ToUInt64(hexValue, 16).ToString();
+                            break;
+
+                        case BinaryType.Double:
+                            selectedData.selectedDataFieldString = BitConverter.Int64BitsToDouble(Convert.ToInt64(hexValue, 16)).ToString();
                             break;
                     }
                 }

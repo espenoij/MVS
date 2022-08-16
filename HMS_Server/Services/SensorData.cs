@@ -100,8 +100,7 @@ namespace HMS_Server
 
                             // Serial Port Data Extraction Parameters
                             serialPort.inputType = (InputDataType)Enum.Parse(typeof(InputDataType), sensorConfig.serialPort.inputType);
-                            serialPort.totalBytes = Convert.ToInt32(sensorConfig.serialPort.totalBytes);
-                            serialPort.binarySigned = bool.Parse(sensorConfig.serialPort.binarySigned);
+                            serialPort.binaryType = (BinaryType)Enum.Parse(typeof(BinaryType), sensorConfig.serialPort.binaryType);
 
                             serialPort.packetHeader = TextHelper.UnescapeSpace(sensorConfig.serialPort.packetHeader);
                             serialPort.packetEnd = sensorConfig.serialPort.packetEnd;

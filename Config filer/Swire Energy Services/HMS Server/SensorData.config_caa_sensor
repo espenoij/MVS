@@ -25,7 +25,7 @@
     saveToDatabase="False" saveFreq="Sensor">
     <serialPort portName="COM14" baudRate="9600" dataBits="8" stopBits="One"
      parity="None" handshake="None" packetHeader="$GPGGA" inputType="Text"
-     totalBytes="1" binarySigned="False" packetEnd="\r\n" packetDelimiter=","
+     binaryType="0" packetEnd="\r\n" packetDelimiter=","
      packetCombineFields="Odd" fixedPosData="False" fixedPosStart="0"
      fixedPosTotal="0" dataField="1" decimalSeparator="Point" autoExtractValue="False"
      calculationType1="GPSPosition" calculationParameter1="0" calculationType2="None"
@@ -36,7 +36,7 @@
     saveToDatabase="False" saveFreq="Sensor">
     <serialPort portName="COM14" baudRate="9600" dataBits="8" stopBits="One"
      parity="None" handshake="None" packetHeader="$GPGGA" inputType="Text"
-     totalBytes="1" binarySigned="False" packetEnd="\r\n" packetDelimiter=","
+     binaryType="0" packetEnd="\r\n" packetDelimiter=","
      packetCombineFields="Odd" fixedPosData="False" fixedPosStart="0"
      fixedPosTotal="0" dataField="2" decimalSeparator="Point" autoExtractValue="False"
      calculationType1="GPSPosition" calculationParameter1="0" calculationType2="None"
@@ -57,7 +57,7 @@
     saveToDatabase="False" saveFreq="Sensor">
     <serialPort portName="COM20" baudRate="9600" dataBits="8" stopBits="One"
      parity="None" handshake="None" packetHeader="$PSMCC" inputType="Text"
-     totalBytes="1" binarySigned="False" packetEnd="\r\n" packetDelimiter=","
+     binaryType="0" packetEnd="\r\n" packetDelimiter=","
      packetCombineFields="None" fixedPosData="False" fixedPosStart="0"
      fixedPosTotal="0" dataField="0" decimalSeparator="Point" autoExtractValue="False"
      calculationType1="Division" calculationParameter1="30000" calculationType2="RoundingDecimals"
@@ -78,7 +78,7 @@
     saveToDatabase="False" saveFreq="Sensor">
     <serialPort portName="COM20" baudRate="9600" dataBits="8" stopBits="One"
      parity="None" handshake="None" packetHeader="$PSMCC" inputType="Text"
-     totalBytes="1" binarySigned="False" packetEnd="\r\n" packetDelimiter=","
+     binaryType="0" packetEnd="\r\n" packetDelimiter=","
      packetCombineFields="None" fixedPosData="False" fixedPosStart="0"
      fixedPosTotal="0" dataField="1" decimalSeparator="Point" autoExtractValue="False"
      calculationType1="Division" calculationParameter1="30000" calculationType2="RoundingDecimals"
@@ -99,7 +99,7 @@
     saveToDatabase="True" saveFreq="Sensor">
     <serialPort portName="COM4" baudRate="9600" dataBits="8" stopBits="One"
      parity="None" handshake="None" packetHeader=":" inputType="Text"
-     totalBytes="1" binarySigned="False" packetEnd="\r\n" packetDelimiter="-"
+     binaryType="0" packetEnd="\r\n" packetDelimiter="-"
      packetCombineFields="None" fixedPosData="True" fixedPosStart="7"
      fixedPosTotal="6" dataField="0" decimalSeparator="Point" autoExtractValue="True"
      calculationType1="Division" calculationParameter1="500" calculationType2="None"
@@ -120,7 +120,7 @@
     description="(description)" saveToDatabase="False" saveFreq="Sensor">
     <serialPort portName="COM12" baudRate="9600" dataBits="8" stopBits="One"
      parity="None" handshake="None" packetHeader="\u0001PW" inputType="Text"
-     totalBytes="1" binarySigned="False" packetEnd="\u0003\r\n" packetDelimiter="\u0020"
+     binaryType="0" packetEnd="\u0003\r\n" packetDelimiter="\u0020"
      packetCombineFields="None" fixedPosData="False" fixedPosStart="20"
      fixedPosTotal="6" dataField="5" decimalSeparator="Point" autoExtractValue="True"
      calculationType1="Multiplication" calculationParameter1="10"
@@ -141,7 +141,7 @@
     description="(description)" saveToDatabase="False" saveFreq="Sensor">
     <serialPort portName="COM10" baudRate="9600" dataBits="8" stopBits="One"
      parity="None" handshake="None" packetHeader="0R2" inputType="Text"
-     totalBytes="1" binarySigned="False" packetEnd="\r\n" packetDelimiter="="
+     binaryType="0" packetEnd="\r\n" packetDelimiter="="
      packetCombineFields="None" fixedPosData="False" fixedPosStart="0"
      fixedPosTotal="0" dataField="4" decimalSeparator="Point" autoExtractValue="True"
      calculationType1="Division" calculationParameter1="5" calculationType2="RoundingDecimals"
@@ -162,7 +162,7 @@
     description="(description)" saveToDatabase="False" saveFreq="Sensor">
     <serialPort portName="COM10" baudRate="9600" dataBits="8" stopBits="One"
      parity="None" handshake="None" packetHeader="0R2" inputType="Text"
-     totalBytes="1" binarySigned="False" packetEnd="\r\n" packetDelimiter="="
+     binaryType="0" packetEnd="\r\n" packetDelimiter="="
      packetCombineFields="None" fixedPosData="False" fixedPosStart="0"
      fixedPosTotal="0" dataField="1" decimalSeparator="Point" autoExtractValue="True"
      calculationType1="Division" calculationParameter1="100" calculationType2="None"
@@ -184,7 +184,7 @@
     saveFreq="Sensor">
     <serialPort portName="COM16" baudRate="9600" dataBits="8" stopBits="One"
      parity="None" handshake="None" packetHeader="\u0001FD A\u0002"
-     inputType="Text" totalBytes="1" binarySigned="False" packetEnd=""
+     inputType="Text" binaryType="0" packetEnd=""
      packetDelimiter="" packetCombineFields="None" fixedPosData="True"
      fixedPosStart="78" fixedPosTotal="5" dataField="0" decimalSeparator="Point"
      autoExtractValue="False" calculationType1="METARCodes" calculationParameter1="0"
@@ -205,7 +205,7 @@
     description="(description)" saveToDatabase="False" saveFreq="Sensor">
     <serialPort portName="COM18" baudRate="9600" dataBits="8" stopBits="One"
      parity="None" handshake="None" packetHeader="\u0001CLA10025\u0002\r\n"
-     inputType="Text" totalBytes="1" binarySigned="False" packetEnd="\u0004\r\n"
+     inputType="Text" binaryType="0" packetEnd="\u0004\r\n"
      packetDelimiter="\u0020" packetCombineFields="None" fixedPosData="False"
      fixedPosStart="26" fixedPosTotal="5" dataField="1" decimalSeparator="Point"
      autoExtractValue="False" calculationType1="None" calculationParameter1="0"
@@ -226,7 +226,7 @@
     description="(description)" saveToDatabase="False" saveFreq="Sensor">
     <serialPort portName="COM18" baudRate="9600" dataBits="8" stopBits="One"
      parity="None" handshake="None" packetHeader="\u0001CLA10025\u0002\r\n"
-     inputType="Text" totalBytes="1" binarySigned="False" packetEnd="\u0004\r\n"
+     inputType="Text" binaryType="0" packetEnd="\u0004\r\n"
      packetDelimiter="\u0020" packetCombineFields="None" fixedPosData="False"
      fixedPosStart="32" fixedPosTotal="5" dataField="2" decimalSeparator="Point"
      autoExtractValue="False" calculationType1="None" calculationParameter1="0"
@@ -247,7 +247,7 @@
     description="(description)" saveToDatabase="False" saveFreq="Sensor">
     <serialPort portName="COM18" baudRate="9600" dataBits="8" stopBits="One"
      parity="None" handshake="None" packetHeader="\u0001CLA10025\u0002\r\n"
-     inputType="Text" totalBytes="1" binarySigned="False" packetEnd="\u0004\r\n"
+     inputType="Text" binaryType="0" packetEnd="\u0004\r\n"
      packetDelimiter="\u0020" packetCombineFields="None" fixedPosData="False"
      fixedPosStart="38" fixedPosTotal="5" dataField="3" decimalSeparator="Point"
      autoExtractValue="False" calculationType1="None" calculationParameter1="0"
@@ -268,7 +268,7 @@
     saveToDatabase="False" saveFreq="Sensor">
     <serialPort portName="COM22" baudRate="9600" dataBits="8" stopBits="One"
      parity="None" handshake="None" packetHeader="\u0002" inputType="Text"
-     totalBytes="1" binarySigned="False" packetEnd="\r\n" packetDelimiter=","
+     binaryType="0" packetEnd="\r\n" packetDelimiter=","
      packetCombineFields="None" fixedPosData="False" fixedPosStart="0"
      fixedPosTotal="0" dataField="1" decimalSeparator="Point" autoExtractValue="False"
      calculationType1="None" calculationParameter1="0" calculationType2="None"
@@ -289,7 +289,7 @@
     saveToDatabase="False" saveFreq="Sensor">
     <serialPort portName="COM22" baudRate="9600" dataBits="8" stopBits="One"
      parity="None" handshake="None" packetHeader="\u0002" inputType="Text"
-     totalBytes="1" binarySigned="False" packetEnd="\r\n" packetDelimiter=","
+     binaryType="0" packetEnd="\r\n" packetDelimiter=","
      packetCombineFields="None" fixedPosData="False" fixedPosStart="0"
      fixedPosTotal="0" dataField="2" decimalSeparator="Point" autoExtractValue="True"
      calculationType1="Multiplication" calculationParameter1="10"
@@ -310,7 +310,7 @@
     saveToDatabase="False" saveFreq="Sensor">
     <serialPort portName="COM24" baudRate="9600" dataBits="8" stopBits="One"
      parity="None" handshake="None" packetHeader="\n6" inputType="Text"
-     totalBytes="1" binarySigned="False" packetEnd="\r\n" packetDelimiter="\u0020"
+     binaryType="0" packetEnd="\r\n" packetDelimiter="\u0020"
      packetCombineFields="None" fixedPosData="False" fixedPosStart="0"
      fixedPosTotal="0" dataField="17" decimalSeparator="Point" autoExtractValue="False"
      calculationType1="Division" calculationParameter1="100" calculationType2="None"
@@ -331,7 +331,7 @@
     description="(description)" saveToDatabase="False" saveFreq="Sensor">
     <serialPort portName="COM18" baudRate="9600" dataBits="8" stopBits="One"
      parity="None" handshake="None" packetHeader="\u0001CLA10025\u0002\r\n"
-     inputType="Text" totalBytes="1" binarySigned="False" packetEnd="\u0004\r\n"
+     inputType="Text" binaryType="0" packetEnd="\u0004\r\n"
      packetDelimiter="\u0020" packetCombineFields="None" fixedPosData="True"
      fixedPosStart="63" fixedPosTotal="1" dataField="0" decimalSeparator="Point"
      autoExtractValue="False" calculationType1="None" calculationParameter1="0"
@@ -352,7 +352,7 @@
     description="(description)" saveToDatabase="False" saveFreq="Sensor">
     <serialPort portName="COM18" baudRate="9600" dataBits="8" stopBits="One"
      parity="None" handshake="None" packetHeader="\u0001CLA10025\u0002\r\n"
-     inputType="Text" totalBytes="1" binarySigned="False" packetEnd="\u0004\r\n"
+     inputType="Text" binaryType="0" packetEnd="\u0004\r\n"
      packetDelimiter="\u0020" packetCombineFields="None" fixedPosData="True"
      fixedPosStart="70" fixedPosTotal="1" dataField="0" decimalSeparator="Point"
      autoExtractValue="False" calculationType1="None" calculationParameter1="0"
@@ -373,7 +373,7 @@
     description="(description)" saveToDatabase="False" saveFreq="Sensor">
     <serialPort portName="COM18" baudRate="9600" dataBits="8" stopBits="One"
      parity="None" handshake="None" packetHeader="\u0001CLA10025\u0002\r\n"
-     inputType="Text" totalBytes="1" binarySigned="False" packetEnd="\u0004\r\n"
+     inputType="Text" binaryType="0" packetEnd="\u0004\r\n"
      packetDelimiter="\u0020" packetCombineFields="None" fixedPosData="True"
      fixedPosStart="77" fixedPosTotal="1" dataField="0" decimalSeparator="Point"
      autoExtractValue="False" calculationType1="None" calculationParameter1="0"
@@ -395,7 +395,7 @@
     saveFreq="Sensor">
     <serialPort portName="COM20" baudRate="9600" dataBits="8" stopBits="One"
      parity="None" handshake="None" packetHeader="$PSMCC" inputType="Text"
-     totalBytes="1" binarySigned="False" packetEnd="\r\n" packetDelimiter=","
+     binaryType="0" packetEnd="\r\n" packetDelimiter=","
      packetCombineFields="None" fixedPosData="False" fixedPosStart="0"
      fixedPosTotal="0" dataField="0" decimalSeparator="Point" autoExtractValue="False"
      calculationType1="Division" calculationParameter1="100000" calculationType2="None"
@@ -417,7 +417,7 @@
     saveFreq="Sensor">
     <serialPort portName="COM20" baudRate="9600" dataBits="8" stopBits="One"
      parity="None" handshake="None" packetHeader="$PSMCC" inputType="Text"
-     totalBytes="1" binarySigned="False" packetEnd="\r\n" packetDelimiter=","
+     binaryType="0" packetEnd="\r\n" packetDelimiter=","
      packetCombineFields="None" fixedPosData="False" fixedPosStart="0"
      fixedPosTotal="0" dataField="1" decimalSeparator="Point" autoExtractValue="False"
      calculationType1="Division" calculationParameter1="100000" calculationType2="None"
@@ -439,7 +439,7 @@
     saveFreq="Sensor">
     <serialPort portName="COM20" baudRate="9600" dataBits="8" stopBits="One"
      parity="None" handshake="None" packetHeader="$PSMCC" inputType="Text"
-     totalBytes="1" binarySigned="False" packetEnd="\r\n" packetDelimiter=","
+     binaryType="0" packetEnd="\r\n" packetDelimiter=","
      packetCombineFields="None" fixedPosData="False" fixedPosStart="0"
      fixedPosTotal="0" dataField="5" decimalSeparator="Point" autoExtractValue="False"
      calculationType1="Division" calculationParameter1="1000" calculationType2="None"
@@ -460,7 +460,7 @@
     saveToDatabase="False" saveFreq="Sensor">
     <serialPort portName="COM24" baudRate="9600" dataBits="8" stopBits="One"
      parity="None" handshake="None" packetHeader="\u0002" inputType="Text"
-     totalBytes="1" binarySigned="False" packetEnd="\n6" packetDelimiter="\u0020"
+     binaryType="0" packetEnd="\n6" packetDelimiter="\u0020"
      packetCombineFields="None" fixedPosData="False" fixedPosStart="0"
      fixedPosTotal="0" dataField="31" decimalSeparator="Point" autoExtractValue="False"
      calculationType1="Division" calculationParameter1="1000" calculationType2="None"
@@ -481,7 +481,7 @@
     description="(description)" saveToDatabase="False" saveFreq="Sensor">
     <serialPort portName="COM10" baudRate="9600" dataBits="8" stopBits="One"
      parity="None" handshake="None" packetHeader="0R2" inputType="Text"
-     totalBytes="1" binarySigned="False" packetEnd="\r\n" packetDelimiter="="
+     binaryType="0" packetEnd="\r\n" packetDelimiter="="
      packetCombineFields="None" fixedPosData="False" fixedPosStart="0"
      fixedPosTotal="0" dataField="3" decimalSeparator="Point" autoExtractValue="True"
      calculationType1="Division" calculationParameter1="100" calculationType2="None"
@@ -502,7 +502,7 @@
     description="(description)" saveToDatabase="False" saveFreq="Sensor">
     <serialPort portName="COM18" baudRate="9600" dataBits="8" stopBits="One"
      parity="None" handshake="None" packetHeader="\u0001CLA10025\u0002\r\n"
-     inputType="Text" totalBytes="1" binarySigned="False" packetEnd="\u0004\r\n"
+     inputType="Text" binaryType="0" packetEnd="\u0004\r\n"
      packetDelimiter="\u0020" packetCombineFields="None" fixedPosData="False"
      fixedPosStart="38" fixedPosTotal="5" dataField="3" decimalSeparator="Point"
      autoExtractValue="False" calculationType1="None" calculationParameter1="0"
@@ -523,7 +523,7 @@
     saveToDatabase="False" saveFreq="Sensor">
     <serialPort portName="COM4" baudRate="9600" dataBits="8" stopBits="One"
      parity="None" handshake="None" packetHeader=":" inputType="Text"
-     totalBytes="1" binarySigned="False" packetEnd="\r\n" packetDelimiter="-"
+     binaryType="0" packetEnd="\r\n" packetDelimiter="-"
      packetCombineFields="None" fixedPosData="True" fixedPosStart="14"
      fixedPosTotal="6" dataField="0" decimalSeparator="Point" autoExtractValue="True"
      calculationType1="Division" calculationParameter1="10000" calculationType2="None"
@@ -544,7 +544,7 @@
     description="(description)" saveToDatabase="False" saveFreq="Sensor">
     <serialPort portName="COM18" baudRate="9600" dataBits="8" stopBits="One"
      parity="None" handshake="None" packetHeader="\u0001CLA10025\u0002\r\n"
-     inputType="Text" totalBytes="1" binarySigned="False" packetEnd="\u0004\r\n"
+     inputType="Text" binaryType="0" packetEnd="\u0004\r\n"
      packetDelimiter="\u0020" packetCombineFields="None" fixedPosData="True"
      fixedPosStart="77" fixedPosTotal="1" dataField="0" decimalSeparator="Point"
      autoExtractValue="False" calculationType1="None" calculationParameter1="0"
@@ -565,7 +565,7 @@
     saveToDatabase="False" saveFreq="Sensor">
     <serialPort portName="COM24" baudRate="9600" dataBits="8" stopBits="One"
      parity="None" handshake="None" packetHeader="\u0002" inputType="Text"
-     totalBytes="1" binarySigned="False" packetEnd="\r\n2" packetDelimiter="\u0020"
+     binaryType="0" packetEnd="\r\n2" packetDelimiter="\u0020"
      packetCombineFields="None" fixedPosData="False" fixedPosStart="0"
      fixedPosTotal="0" dataField="31" decimalSeparator="Point" autoExtractValue="False"
      calculationType1="Division" calculationParameter1="1000" calculationType2="RoundingDecimals"
@@ -586,7 +586,7 @@
     saveToDatabase="False" saveFreq="Sensor">
     <serialPort portName="COM24" baudRate="9600" dataBits="8" stopBits="One"
      parity="None" handshake="None" packetHeader="\n6" inputType="Text"
-     totalBytes="1" binarySigned="False" packetEnd="\r\n" packetDelimiter="\u0020"
+     binaryType="0" packetEnd="\r\n" packetDelimiter="\u0020"
      packetCombineFields="None" fixedPosData="False" fixedPosStart="0"
      fixedPosTotal="0" dataField="17" decimalSeparator="Point" autoExtractValue="False"
      calculationType1="Division" calculationParameter1="100" calculationType2="None"

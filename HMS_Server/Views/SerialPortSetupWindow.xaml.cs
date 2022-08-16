@@ -274,24 +274,10 @@ namespace HMS_Server
             process.inputType = sensorData.serialPort.inputType;
 
             // Data Bytes in value
-            cboSelectedDataBytesInValue.Items.Add("1");
-            cboSelectedDataBytesInValue.Items.Add("2");
-            cboSelectedDataBytesInValue.Items.Add("4");
-            cboSelectedDataBytesInValue.Items.Add("8");
-            cboSelectedDataBytesInValue.Text = sensorData.serialPort.totalBytes.ToString();
-            process.totalBytes = sensorData.serialPort.totalBytes;
-
-            // Binary data is signed
-            if (sensorData.serialPort.binarySigned)
-            {
-                cboSelectedDataDataIsSigned.IsChecked = true;
-                process.binarySigned = true;
-            }
-            else
-            {
-                cboSelectedDataDataIsSigned.IsChecked = false;
-                process.binarySigned = false;
-            }
+            foreach (BinaryType value in Enum.GetValues(typeof(BinaryType)))
+                cboSelectedDataBytesInValue.Items.Add(value.GetDescription());
+            cboSelectedDataBytesInValue.Text = sensorData.serialPort.binaryType.GetDescription();
+            process.binaryType = sensorData.serialPort.binaryType;
         }
 
         private void InitDataDisplayOptions()
@@ -829,11 +815,6 @@ namespace HMS_Server
 
                 lbSelectedDataBytesInValue.IsEnabled = true;
                 cboSelectedDataBytesInValue.IsEnabled = true;
-
-                if (sensorData.serialPort.totalBytes == 1)
-                    cboSelectedDataDataIsSigned.IsEnabled = false;
-                else
-                    cboSelectedDataDataIsSigned.IsEnabled = true;
             }
             else
             {
@@ -849,7 +830,6 @@ namespace HMS_Server
 
                 lbSelectedDataBytesInValue.IsEnabled = false;
                 cboSelectedDataBytesInValue.IsEnabled = false;
-                cboSelectedDataDataIsSigned.IsEnabled = false;
             }
         }
 
@@ -1420,28 +1400,12 @@ namespace HMS_Server
 
         private void cboSelectedDataBytesInValue_SelectionChanged(object sender, SelectionChangedEventArgs e)
         {
-            process.totalBytes = Convert.ToInt32(cboSelectedDataBytesInValue.Text.ToString());
+            process.binaryType = EnumExtension.GetEnumValueFromDescription<BinaryType>(cboSelectedDataBytesInValue.Text);
 
             // Lagre ny setting
-            sensorData.serialPort.totalBytes = process.totalBytes;
+            sensorData.serialPort.binaryType = process.binaryType;
 
             SetDataSelectionDisplay();
-        }
-
-        private void cboSelectedDataDataIsSigned_Checked(object sender, RoutedEventArgs e)
-        {
-            process.binarySigned = true;
-
-            // Lagre ny setting
-            sensorData.serialPort.binarySigned = process.binarySigned;
-        }
-
-        private void cboSelectedDataDataIsSigned_Unchecked(object sender, RoutedEventArgs e)
-        {
-            process.binarySigned = false;
-
-            // Lagre ny setting
-            sensorData.serialPort.binarySigned = process.binarySigned;
         }
     }
 

@@ -474,3 +474,29 @@ public enum InputDataType
     Text,
     Binary
 }
+
+public enum BinaryType
+{
+    [Description("Byte (1 Byte)")]
+    Byte,
+    [Description("Int16 (2 Bytes)")]
+    Int16,
+    [Description("Uint16 (2 Bytes)")]
+    Uint16,
+    [Description("Int32 (4 Bytes)")]
+    Int32,
+    [Description("Uint32 (4 Bytes)")]
+    Uint32,
+    [Description("Float (4 Bytes)")]
+    Float,
+    [Description("Long (8 Bytes)")]
+    Long,
+    [Description("Ulong (8 Bytes)")]
+    Ulong,
+    [Description("Int64 (8 Bytes)")]
+    Int64,
+    [Description("Uint64 (8 Bytes)")]
+    Uint64,
+    [Description("Double (8 Byte)")]
+    Double
+}

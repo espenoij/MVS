@@ -27,7 +27,7 @@ namespace HMS_Server
         private HMSData vesselSOG = new HMSData();
 
         // Wind
-        private HMSData sensorWindDirectionCorrected = new HMSData(); // temp
+        private HMSData apparentWindDirection = new HMSData(); // temp
 
         private HMSData areaWindDirection2m = new HMSData();
         private HMSData areaWindSpeed2m = new HMSData();
@@ -368,27 +368,28 @@ namespace HMS_Server
                 helideckHeading.timestamp = vesselHeading.timestamp;
 
                 // Korrigere vind retning ihht referanse retning
-                sensorWindDirectionCorrected.Set(inputSensorWindDirection);
+                apparentWindDirection.Set(inputSensorWindDirection);
 
+                // -> gjøre om til magnetisk retning
                 switch (adminSettingsVM.windDirRef)
                 {
                     case DirectionReference.VesselHeading:
-                        sensorWindDirectionCorrected.data = vesselHeading.data + inputSensorWindDirection.data;
-                        if (sensorWindDirectionCorrected.data > 360)
-                            sensorWindDirectionCorrected.data -= 360;
-                        if (sensorWindDirectionCorrected.data <= 0)
-                            sensorWindDirectionCorrected.data += 360;
+                        apparentWindDirection.data = vesselHeading.data + inputSensorWindDirection.data;
+                        if (apparentWindDirection.data > 360)
+                            apparentWindDirection.data -= 360;
+                        if (apparentWindDirection.data <= 0)
+                            apparentWindDirection.data += 360;
                         break;
 
                     case DirectionReference.MagneticNorth:
                         break;
 
                     case DirectionReference.TrueNorth:
-                        sensorWindDirectionCorrected.data = inputSensorWindDirection.data - adminSettingsVM.magneticDeclination;
-                        if (sensorWindDirectionCorrected.data > 360)
-                            sensorWindDirectionCorrected.data -= 360;
-                        if (sensorWindDirectionCorrected.data <= 0)
-                            sensorWindDirectionCorrected.data += 360;
+                        apparentWindDirection.data = inputSensorWindDirection.data - adminSettingsVM.magneticDeclination;
+                        if (apparentWindDirection.data > 360)
+                            apparentWindDirection.data -= 360;
+                        if (apparentWindDirection.data <= 0)
+                            apparentWindDirection.data += 360;
                         break;
 
                     default:
@@ -398,40 +399,44 @@ namespace HMS_Server
                 // Tar data fra input delen av server og overfører til HMS output delen
 
                 // Vind retning
-                helideckWindDirectionRT.data = sensorWindDirectionCorrected.data;
-                helideckWindDirectionRT.status = sensorWindDirectionCorrected.status;
-                helideckWindDirectionRT.timestamp = sensorWindDirectionCorrected.timestamp;
+                helideckWindDirectionRT.data = apparentWindDirection.data;
+                helideckWindDirectionRT.status = apparentWindDirection.status;
+                helideckWindDirectionRT.timestamp = apparentWindDirection.timestamp;
 
-                emsWindDirectionRT.data = sensorWindDirectionCorrected.data;
-                emsWindDirectionRT.status = sensorWindDirectionCorrected.status;
-                emsWindDirectionRT.timestamp = sensorWindDirectionCorrected.timestamp;
+                emsWindDirectionRT.data = apparentWindDirection.data;
+                emsWindDirectionRT.status = apparentWindDirection.status;
+                emsWindDirectionRT.timestamp = apparentWindDirection.timestamp;
 
                 // Vind hastighet
                 // Korrigerer for høyde
                 // (Midlertidig variabel som brukes i beregninger -> ikke rund av!)
                 HMSData windSpeedCorrectedToHelideck = new HMSData();
-                HMSData windSpeedCorrectedTo10m = new HMSData();
+                HMSData windSpeedCorrectedTo10mAboveMSL = new HMSData();
 
                 if (inputSensorWindSpeed.status == DataStatus.OK &&
                     vesselSOG.status == DataStatus.OK)
                 {
-                    // Korrigert til helidekk
+                    // Korrigert til helidekk (+10m)
                     windSpeedCorrectedToHelideck.data = WindSpeedHeightCorrection(
-                                                            inputSensorWindSpeed.data, 
+                                                            inputSensorWindSpeed.data,
+                                                            apparentWindDirection.data,
                                                             vesselSOG.data, 
+                                                            vesselCOG.data,
                                                             adminSettingsVM.windSensorHeight, 
                                                             adminSettingsVM.helideckHeight + Constants.WindAdjustmentAboveHelideck);
                     windSpeedCorrectedToHelideck.status = inputSensorWindSpeed.status;
                     windSpeedCorrectedToHelideck.timestamp = inputSensorWindSpeed.timestamp;
 
-                    // Korrigert til 10m over havet (EMS)
-                    windSpeedCorrectedTo10m.data = WindSpeedHeightCorrection(
+                    // Korrigert til 10m over havet MSL (for EMS)
+                    windSpeedCorrectedTo10mAboveMSL.data = WindSpeedHeightCorrection(
                                         inputSensorWindSpeed.data,
+                                        apparentWindDirection.data,
                                         vesselSOG.data,
+                                        vesselCOG.data,
                                         adminSettingsVM.windSensorHeight,
                                         10);
-                    windSpeedCorrectedTo10m.status = inputSensorWindSpeed.status;
-                    windSpeedCorrectedTo10m.timestamp = inputSensorWindSpeed.timestamp;
+                    windSpeedCorrectedTo10mAboveMSL.status = inputSensorWindSpeed.status;
+                    windSpeedCorrectedTo10mAboveMSL.timestamp = inputSensorWindSpeed.timestamp;
                 }
                 else
                 {
@@ -439,9 +444,9 @@ namespace HMS_Server
                     windSpeedCorrectedToHelideck.status = DataStatus.TIMEOUT_ERROR;
                     windSpeedCorrectedToHelideck.timestamp = DateTime.MinValue;
 
-                    windSpeedCorrectedTo10m.data = 0;
-                    windSpeedCorrectedTo10m.status = DataStatus.TIMEOUT_ERROR;
-                    windSpeedCorrectedTo10m.timestamp = DateTime.MinValue;
+                    windSpeedCorrectedTo10mAboveMSL.data = 0;
+                    windSpeedCorrectedTo10mAboveMSL.status = DataStatus.TIMEOUT_ERROR;
+                    windSpeedCorrectedTo10mAboveMSL.timestamp = DateTime.MinValue;
                 }
 
                 // Vind hastighet
@@ -462,7 +467,7 @@ namespace HMS_Server
 
                 // Area Wind: 2-minute data
                 ///////////////////////////////////////////////////////////
-                areaWindDirection2m.DoProcessing(sensorWindDirectionCorrected);
+                areaWindDirection2m.DoProcessing(apparentWindDirection);
 
                 if (adminSettingsVM.regulationStandard == RegulationStandard.CAP && !adminSettingsVM.overrideWindBuffer)
                     areaWindDirection2m.BufferFillCheck(windSamplesInBuffer2m);
@@ -480,8 +485,8 @@ namespace HMS_Server
 
                 // Helideck Wind: 2-minute data
                 ///////////////////////////////////////////////////////////
-                helideckWindDirection2m.DoProcessing(sensorWindDirectionCorrected);
-                emsWindDirection2m.DoProcessing(sensorWindDirectionCorrected);
+                helideckWindDirection2m.DoProcessing(apparentWindDirection);
+                emsWindDirection2m.DoProcessing(apparentWindDirection);
 
                 if (adminSettingsVM.regulationStandard == RegulationStandard.CAP && !adminSettingsVM.overrideWindBuffer)
                 {
@@ -490,7 +495,7 @@ namespace HMS_Server
                 }
 
                 helideckWindSpeed2m.DoProcessing(windSpeedCorrectedToHelideck);
-                emsWindSpeed2m.DoProcessing(windSpeedCorrectedTo10m);
+                emsWindSpeed2m.DoProcessing(windSpeedCorrectedTo10mAboveMSL);
 
                 if (adminSettingsVM.regulationStandard == RegulationStandard.CAP && !adminSettingsVM.overrideWindBuffer)
                 {
@@ -505,15 +510,15 @@ namespace HMS_Server
                     helideckWindGust2m);
 
                 UpdateGustData(
-                    windSpeedCorrectedTo10m,
+                    windSpeedCorrectedTo10mAboveMSL,
                     emsWindSpeed2m,
                     emsWindAverageData2m,
                     emsWindGust2m);
 
                 // Helideck Wind: 10-minute data
                 ///////////////////////////////////////////////////////////
-                helideckWindDirection10m.DoProcessing(sensorWindDirectionCorrected);
-                emsWindDirection10m.DoProcessing(sensorWindDirectionCorrected);
+                helideckWindDirection10m.DoProcessing(apparentWindDirection);
+                emsWindDirection10m.DoProcessing(apparentWindDirection);
 
                 if (adminSettingsVM.regulationStandard == RegulationStandard.CAP && !adminSettingsVM.overrideWindBuffer)
                 {
@@ -537,7 +542,7 @@ namespace HMS_Server
                     helideckWindGust10m);
 
                 UpdateGustData(
-                    windSpeedCorrectedTo10m,
+                    windSpeedCorrectedTo10mAboveMSL,
                     emsWindSpeed10m,
                     emsWindAverageData10m,
                     emsWindGust10m);
@@ -1003,23 +1008,23 @@ namespace HMS_Server
                 double wind = helideckWindSpeed2m.data;
                 double rwd = Math.Abs(relativeWindDir.data);
 
-                if (wind <= 15 || rwd <= 25)
+                if (wind < 15 || rwd < 25)
                 {
                     return HelideckStatusType.BLUE;
                 }
                 else
                 {
-                    if (rwd > 45)
+                    if (rwd >= 45)
                     {
-                        if (wind <= 20)
+                        if (wind < 20)
                             return HelideckStatusType.AMBER;
                         else
                             return HelideckStatusType.RED;
                     }
                     else
-                    if (wind > 35)
+                    if (wind >= 35)
                     {
-                        if (rwd <= 30)
+                        if (rwd < 30)
                             return HelideckStatusType.AMBER;
                         else
                             return HelideckStatusType.RED;
@@ -1028,7 +1033,7 @@ namespace HMS_Server
                     {
                         double maxWindRed = 20 + (45 - rwd);
 
-                        if (wind > maxWindRed)
+                        if (wind >= maxWindRed)
                         {
                             return HelideckStatusType.RED;
                         }
@@ -1036,7 +1041,7 @@ namespace HMS_Server
                         {
                             double maxWindAmber = 15 + (45 - rwd);
 
-                            if (wind > maxWindAmber)
+                            if (wind >= maxWindAmber)
                                 return HelideckStatusType.AMBER;
                             else
                                 return HelideckStatusType.BLUE;
@@ -1046,22 +1051,35 @@ namespace HMS_Server
             }
         }
 
-        private double WindSpeedHeightCorrection(double anemometerWindSpeed, double vesselSpeed, double sensorHeight, double adjustedHeight)
+        private double WindSpeedHeightCorrection(double apparentWindSpeed, double apparentWindDir, double sog, double cog, double sensorHeight, double adjustedHeight)
         {
-            double windSpeed;
+            // apparentWindDir og COG i input er magnetisk -> output er magnetisk
 
-            // Trekker av fartøyets hastighet over bakken
-            windSpeed = anemometerWindSpeed - vesselSpeed;
+            double VOG;
+            double WGh;
+            double WGH;
+            double WAH;
+
+            // VOG
+            if (sog < 2)
+                VOGx = 0;
+            else
+                VOGx = Math.Cos(HMSCalc.ToRadians(apparentWindDir - cog)) * sog;
+
+            // WGh (true wind at sensor, trekke fra fartøyets hastighet (komponent) over bakken)
+            WGh = apparentWindSpeed - VOGx;
 
             // Power law approximation of a marine atmospheric boundary layer (0.13 er en konstant i denne formelen)
             // Justert til X m over helideck
             if (adminSettingsVM.windSensorHeight != 0)
-                windSpeed *= Math.Pow(adjustedHeight / sensorHeight, 0.13);
+                WGH = Math.Pow(adjustedHeight / sensorHeight, 0.13) * WGh;
+            else
+                WGH = 0;
 
-            // Legget tilbake fartøyets hastighet over bakken
-            windSpeed += vesselSpeed;
+            // Legge på fartøyets hastighet (komponent) over bakken igjen
+            WAH = WGH + VOGx;
 
-            return windSpeed;
+            return WAH;
         }
     }
 }

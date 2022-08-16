@@ -615,12 +615,10 @@ namespace HMS_Server
                     if (sensorDataSelected.serialPort.inputType == InputDataType.Binary)
                     {
                         dpSerialPortBinaryBytes.Visibility = Visibility.Visible;
-                        dpSerialPortBinarySigned.Visibility = Visibility.Visible;
                     }
                     else
                     {
                         dpSerialPortBinaryBytes.Visibility = Visibility.Collapsed;
-                        dpSerialPortBinarySigned.Visibility = Visibility.Collapsed;
                     }
 
                     // Laste data inn i UI
@@ -752,8 +750,7 @@ namespace HMS_Server
             lbSerialPortParity.Content = sensorDataSelected.serialPort.parity.ToString();
 
             lbSerialPortInputType.Content = sensorDataSelected.serialPort.inputType;
-            lbSerialPortBinaryBytes.Content = sensorDataSelected.serialPort.totalBytes.ToString();
-            lbSerialPortBinarySigned.Content = sensorDataSelected.serialPort.binarySigned.ToString();
+            lbSerialPortBinaryBytes.Content = sensorDataSelected.serialPort.binaryType.ToString();
 
             lbSerialPortPacketHeader.Content = sensorDataSelected.serialPort.packetHeader;
             lbSerialPortPacketEnd.Content = sensorDataSelected.serialPort.packetEnd;

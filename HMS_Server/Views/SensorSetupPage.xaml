@@ -327,20 +327,9 @@
                             Name="dpSerialPortBinaryBytes">
                             <Label
                                 Width="180"
-                                Content="Binary Bytes" />
+                                Content="Binary Type" />
                             <Label
                                 Name="lbSerialPortBinaryBytes"
-                                Width="auto"
-                                Content="" />
-                        </DockPanel>
-
-                        <DockPanel
-                            Name="dpSerialPortBinarySigned">
-                            <Label
-                                Width="180"
-                                Content="Binary Signed" />
-                            <Label
-                                Name="lbSerialPortBinarySigned"
                                 Width="auto"
                                 Content="" />
                         </DockPanel>

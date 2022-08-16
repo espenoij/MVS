@@ -197,8 +197,7 @@ namespace HMS_Server
                             {
                                 // Init processing
                                 process.inputType = sensorData.serialPort.inputType;
-                                process.totalBytes = sensorData.serialPort.totalBytes;
-                                process.binarySigned = sensorData.serialPort.binarySigned;
+                                process.binaryType = sensorData.serialPort.binaryType;
                                 process.packetHeader = sensorData.serialPort.packetHeader;
                                 process.packetEnd = sensorData.serialPort.packetEnd;
                                 process.packetDelimiter = Regex.Unescape(sensorData.serialPort.packetDelimiter);
