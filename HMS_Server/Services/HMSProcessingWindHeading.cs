@@ -1,4 +1,5 @@
-﻿using System;
+﻿using HMS_Server.Services;
+using System;
 using Telerik.Windows.Data;
 
 namespace HMS_Server
@@ -417,24 +418,28 @@ namespace HMS_Server
                     vesselSOG.status == DataStatus.OK)
                 {
                     // Korrigert til helidekk (+10m)
-                    windSpeedCorrectedToHelideck.data = WindSpeedHeightCorrection(
-                                                            inputSensorWindSpeed.data,
-                                                            apparentWindDirection.data,
-                                                            vesselSOG.data, 
-                                                            vesselCOG.data,
-                                                            adminSettingsVM.windSensorHeight, 
-                                                            adminSettingsVM.helideckHeight + Constants.WindAdjustmentAboveHelideck);
+                    WindVector windHelideck = WindSpeedHeightCorrection(
+                                        inputSensorWindSpeed.data,
+                                        apparentWindDirection.data + adminSettingsVM.magneticDeclination,
+                                        vesselSOG.data, 
+                                        vesselCOG.data,
+                                        adminSettingsVM.windSensorHeight, 
+                                        adminSettingsVM.helideckHeight + Constants.WindAdjustmentAboveHelideck);
+
+                    windSpeedCorrectedToHelideck.data = windHelideck.spd;
                     windSpeedCorrectedToHelideck.status = inputSensorWindSpeed.status;
                     windSpeedCorrectedToHelideck.timestamp = inputSensorWindSpeed.timestamp;
 
                     // Korrigert til 10m over havet MSL (for EMS)
-                    windSpeedCorrectedTo10mAboveMSL.data = WindSpeedHeightCorrection(
+                    WindVector wind10mAboveMSL = WindSpeedHeightCorrection(
                                         inputSensorWindSpeed.data,
-                                        apparentWindDirection.data,
+                                        apparentWindDirection.data + adminSettingsVM.magneticDeclination,
                                         vesselSOG.data,
                                         vesselCOG.data,
                                         adminSettingsVM.windSensorHeight,
                                         10);
+
+                    windSpeedCorrectedTo10mAboveMSL.data = wind10mAboveMSL.spd;
                     windSpeedCorrectedTo10mAboveMSL.status = inputSensorWindSpeed.status;
                     windSpeedCorrectedTo10mAboveMSL.timestamp = inputSensorWindSpeed.timestamp;
                 }
@@ -1051,33 +1056,60 @@ namespace HMS_Server
             }
         }
 
-        private double WindSpeedHeightCorrection(double apparentWindSpeed, double apparentWindDir, double sog, double cog, double sensorHeight, double adjustedHeight)
+        private WindVector WindSpeedHeightCorrection(double apparentWindSpeed, double apparentWindDirTrue, double sog, double cog, double sensorHeight, double adjustedHeight)
         {
             // apparentWindDir og COG i input er magnetisk -> output er magnetisk
+            // TODO: Nope, må fikses
 
-            double VOG;
-            double WGh;
-            double WGH;
-            double WAH;
+            WindVector VOG = new WindVector();
+            WindVector WAh = new WindVector();
+            WindVector WGh = new WindVector();
+            WindVector WGH = new WindVector();
+            WindVector WAH = new WindVector();
 
             // VOG
             if (sog < 2)
-                VOGx = 0;
+            {
+                VOG.x = 0;
+                VOG.y = 0;
+            }
             else
-                VOGx = Math.Cos(HMSCalc.ToRadians(apparentWindDir - cog)) * sog;
+            {
+                // Legger på 180 for å få samme retning som vind (from vs to)
+                VOG.x = Math.Cos(HMSCalc.ToRadians(cog + 180)) * sog;
+                VOG.y = Math.Sin(HMSCalc.ToRadians(cog + 180)) * sog;
+            }
 
-            // WGh (true wind at sensor, trekke fra fartøyets hastighet (komponent) over bakken)
-            WGh = apparentWindSpeed - VOGx;
+            // WAh (apparent wind at sensor)
+            WAh.x = Math.Cos(HMSCalc.ToRadians(apparentWindDirTrue)) * apparentWindSpeed;
+            WAh.y = Math.Sin(HMSCalc.ToRadians(apparentWindDirTrue)) * apparentWindSpeed;
+
+            // WGh (true wind at sensor, målt sensor vind komponent + vind som følge av fartøyets hastighet (komponent) over bakken)
+            WGh.x = WAh.x + VOG.x;
+            WGh.y = WAh.y + VOG.y;
+
+            WGh.spd = Math.Sqrt(Math.Pow(WGh.x, 2) + Math.Pow(WGh.y, 2));
+            WGh.dir = HMSCalc.ToDegrees(Math.Atan2(WGh.x, WGh.y));
 
             // Power law approximation of a marine atmospheric boundary layer (0.13 er en konstant i denne formelen)
             // Justert til X m over helideck
-            if (adminSettingsVM.windSensorHeight != 0)
-                WGH = Math.Pow(adjustedHeight / sensorHeight, 0.13) * WGh;
+            if (sensorHeight != 0)
+                WGH.spd = Math.Pow(adjustedHeight / sensorHeight, 0.13) * WGh.spd;
             else
-                WGH = 0;
+                WGH.spd = WGh.spd;
+
+            WGH.dir = WGh.dir;
+
+            WGH.x = Math.Cos(HMSCalc.ToRadians(WGH.dir)) * WGH.spd;
+            WGH.y = Math.Sin(HMSCalc.ToRadians(WGH.dir)) * WGH.spd;
 
             // Legge på fartøyets hastighet (komponent) over bakken igjen
-            WAH = WGH + VOGx;
+            WAH.x = WGH.x - VOG.x;
+            WAH.y = WGH.y - VOG.y;
+
+            // Kalkulere true wind at helideck height / adjustedHeight
+            WAH.spd = Math.Sqrt(Math.Pow(WAH.x, 2) + Math.Pow(WAH.y, 2));
+            WAH.dir = HMSCalc.ToDegrees(Math.Atan2(WAH.x, WAH.y));
 
             return WAH;
         }

@@ -442,6 +442,9 @@ namespace HMS_Server
             // Lagre til disk når vi går ut av vinduet
             config.SetData(sensorDataSelected);
 
+            // Egen update ettersom dette er eneste verdi som ikke oppdateres automatisk gjenom OnPropertyChanged
+            sensorDataSelected.SourceUpdate();
+
             // Serial Port settings sync
             SyncSerialPortSettings(sensorDataSelected);
         }
@@ -456,6 +459,9 @@ namespace HMS_Server
 
             // Lagre til disk når vi går ut av vinduet
             config.SetData(sensorDataSelected);
+
+            // Egen update ettersom dette er eneste verdi som ikke oppdateres automatisk gjenom OnPropertyChanged
+            sensorDataSelected.SourceUpdate();
 
             // Serial Port settings sync
             SyncSerialPortSettings(sensorDataSelected);
@@ -473,6 +479,9 @@ namespace HMS_Server
 
                 // Lagre til disk når vi går ut av vinduet
                 config.SetData(sensorDataSelected);
+
+                // Egen update ettersom dette er eneste verdi som ikke oppdateres automatisk gjenom OnPropertyChanged
+                sensorDataSelected.SourceUpdate();
 
                 // Sync settings
                 SyncFileReaderSettings(sensorDataSelected);

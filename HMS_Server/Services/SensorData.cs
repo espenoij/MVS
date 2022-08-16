@@ -502,6 +502,11 @@ namespace HMS_Server
             }
         }
 
+        public void SourceUpdate()
+        {
+            OnPropertyChanged(nameof(source));
+        }
+
         public double GetSaveFrequency(Config config)
         {
             // Returnerer frekvens i millisekund

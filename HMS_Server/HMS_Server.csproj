@@ -376,6 +376,7 @@
     </Compile>
     <Compile Include="Helpers\DisplayList.cs" />
     <Compile Include="Helpers\GraphBuffer.cs" />
+    <Compile Include="Services\WindVector.cs" />
     <Compile Include="Views\VerificationResult.xaml.cs">
       <DependentUpon>VerificationResult.xaml</DependentUpon>
     </Compile>
