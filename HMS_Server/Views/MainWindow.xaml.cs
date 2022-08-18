@@ -232,18 +232,28 @@ namespace HMS_Server
 
             InitLicense();
 
-            // TODO: DEBUG DEBUG DEBUG !!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!! Fjerne det under før release
+#if DEBUG
             // Vise admin grensesnittet
-            //AdminMode.IsActive = true;
-            //btnSetup.Visibility = Visibility.Visible;
-            //tabInput_SensorData.Visibility = Visibility.Visible;
-            //tabInput_SerialData.Visibility = Visibility.Visible;
-            //tabInput_FileReader.Visibility = Visibility.Visible;
-            //tabInput_SocketConsole.Visibility = Visibility.Visible;
+            AdminMode.IsActive = true;
 
+            tabInputEdit.Visibility = Visibility.Visible;
+            tabOutput.Visibility = Visibility.Visible;
+            tabHMS.Visibility = Visibility.Visible;
+            tabSettings.Visibility = Visibility.Visible;
+            tabErrorMessages.Visibility = Visibility.Visible;
+
+            if (adminSettingsVM.dataVerificationEnabled)
+                tabDataVerification.Visibility = Visibility.Visible;
+
+            tabInput_SensorData.Visibility = Visibility.Visible;
+            tabInput_SerialData.Visibility = Visibility.Visible;
+            tabInput_FileReader.Visibility = Visibility.Visible;
+            tabInput_SocketConsole.Visibility = Visibility.Visible;
+#else
             // Starte server automatisk ved oppstart
             if (adminSettingsVM.autoStartHMS && activationVM.isActivated)
                 StartServer();
+#endif
         }
 
         private void InitViewModel()

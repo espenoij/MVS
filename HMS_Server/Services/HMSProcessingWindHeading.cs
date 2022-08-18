@@ -351,7 +351,6 @@ namespace HMS_Server
 
                     case DirectionReference.TrueNorth:
                         vesselHeading.data = inputVesselHeading.data - adminSettingsVM.magneticDeclination;
-                        vesselCOG.data = inputVesselCOG.data - adminSettingsVM.magneticDeclination;
                         break;
 
                     default:
@@ -399,23 +398,16 @@ namespace HMS_Server
 
                 // Tar data fra input delen av server og overfører til HMS output delen
 
-                // Vind retning
-                helideckWindDirectionRT.data = apparentWindDirection.data;
-                helideckWindDirectionRT.status = apparentWindDirection.status;
-                helideckWindDirectionRT.timestamp = apparentWindDirection.timestamp;
-
-                emsWindDirectionRT.data = apparentWindDirection.data;
-                emsWindDirectionRT.status = apparentWindDirection.status;
-                emsWindDirectionRT.timestamp = apparentWindDirection.timestamp;
-
-                // Vind hastighet
                 // Korrigerer for høyde
                 // (Midlertidig variabel som brukes i beregninger -> ikke rund av!)
                 HMSData windSpeedCorrectedToHelideck = new HMSData();
                 HMSData windSpeedCorrectedTo10mAboveMSL = new HMSData();
+                HMSData windDirectionCorrectedToHelideck = new HMSData();
+                HMSData windDirectionCorrectedTo10mAboveMSL = new HMSData();
 
                 if (inputSensorWindSpeed.status == DataStatus.OK &&
-                    vesselSOG.status == DataStatus.OK)
+                    vesselSOG.status == DataStatus.OK &&
+                    vesselCOG.status == DataStatus.OK)
                 {
                     // Korrigert til helidekk (+10m)
                     WindVector windHelideck = WindSpeedHeightCorrection(
@@ -426,10 +418,6 @@ namespace HMS_Server
                                         adminSettingsVM.windSensorHeight, 
                                         adminSettingsVM.helideckHeight + Constants.WindAdjustmentAboveHelideck);
 
-                    windSpeedCorrectedToHelideck.data = windHelideck.spd;
-                    windSpeedCorrectedToHelideck.status = inputSensorWindSpeed.status;
-                    windSpeedCorrectedToHelideck.timestamp = inputSensorWindSpeed.timestamp;
-
                     // Korrigert til 10m over havet MSL (for EMS)
                     WindVector wind10mAboveMSL = WindSpeedHeightCorrection(
                                         inputSensorWindSpeed.data,
@@ -439,12 +427,36 @@ namespace HMS_Server
                                         adminSettingsVM.windSensorHeight,
                                         10);
 
+                    // Vind retning
+                    windDirectionCorrectedToHelideck.data = windHelideck.dir - adminSettingsVM.magneticDeclination;
+                    windDirectionCorrectedToHelideck.status = apparentWindDirection.status;
+                    windDirectionCorrectedToHelideck.timestamp = apparentWindDirection.timestamp;
+
+                    windDirectionCorrectedTo10mAboveMSL.data = windHelideck.dir - adminSettingsVM.magneticDeclination; ;
+                    windDirectionCorrectedTo10mAboveMSL.status = apparentWindDirection.status;
+                    windDirectionCorrectedTo10mAboveMSL.timestamp = apparentWindDirection.timestamp;
+
+                    // Vind hastighet
+                    windSpeedCorrectedToHelideck.data = windHelideck.spd;
+                    windSpeedCorrectedToHelideck.status = inputSensorWindSpeed.status;
+                    windSpeedCorrectedToHelideck.timestamp = inputSensorWindSpeed.timestamp;
+
                     windSpeedCorrectedTo10mAboveMSL.data = wind10mAboveMSL.spd;
                     windSpeedCorrectedTo10mAboveMSL.status = inputSensorWindSpeed.status;
                     windSpeedCorrectedTo10mAboveMSL.timestamp = inputSensorWindSpeed.timestamp;
                 }
                 else
                 {
+                    // Vind retning
+                    windDirectionCorrectedToHelideck.data = apparentWindDirection.data;
+                    windDirectionCorrectedToHelideck.status = apparentWindDirection.status;
+                    windDirectionCorrectedToHelideck.timestamp = apparentWindDirection.timestamp;
+
+                    windDirectionCorrectedTo10mAboveMSL.data = apparentWindDirection.data;
+                    windDirectionCorrectedTo10mAboveMSL.status = apparentWindDirection.status;
+                    windDirectionCorrectedTo10mAboveMSL.timestamp = apparentWindDirection.timestamp;
+
+                    // Vind hastighet
                     windSpeedCorrectedToHelideck.data = 0;
                     windSpeedCorrectedToHelideck.status = DataStatus.TIMEOUT_ERROR;
                     windSpeedCorrectedToHelideck.timestamp = DateTime.MinValue;
@@ -462,6 +474,15 @@ namespace HMS_Server
                 emsWindSpeedRT.data = windSpeedCorrectedToHelideck.data;
                 emsWindSpeedRT.status = windSpeedCorrectedToHelideck.status;
                 emsWindSpeedRT.timestamp = windSpeedCorrectedToHelideck.timestamp;
+
+                // Vind retning
+                helideckWindDirectionRT.data = windDirectionCorrectedToHelideck.data;
+                helideckWindDirectionRT.status = windDirectionCorrectedToHelideck.status;
+                helideckWindDirectionRT.timestamp = windDirectionCorrectedToHelideck.timestamp;
+
+                emsWindDirectionRT.data = windDirectionCorrectedTo10mAboveMSL.data;
+                emsWindDirectionRT.status = windDirectionCorrectedTo10mAboveMSL.status;
+                emsWindDirectionRT.timestamp = windDirectionCorrectedTo10mAboveMSL.timestamp;
 
                 // Wind Samples in buffer
                 ///////////////////////////////////////////////////////////
@@ -1058,9 +1079,6 @@ namespace HMS_Server
 
         private WindVector WindSpeedHeightCorrection(double apparentWindSpeed, double apparentWindDirTrue, double sog, double cog, double sensorHeight, double adjustedHeight)
         {
-            // apparentWindDir og COG i input er magnetisk -> output er magnetisk
-            // TODO: Nope, må fikses
-
             WindVector VOG = new WindVector();
             WindVector WAh = new WindVector();
             WindVector WGh = new WindVector();
@@ -1068,7 +1086,9 @@ namespace HMS_Server
             WindVector WAH = new WindVector();
 
             // VOG
-            if (sog < 2)
+            if (double.IsNaN(sog) ||
+                double.IsNaN(cog) || 
+                sog < 2)
             {
                 VOG.x = 0;
                 VOG.y = 0;
@@ -1089,7 +1109,7 @@ namespace HMS_Server
             WGh.y = WAh.y + VOG.y;
 
             WGh.spd = Math.Sqrt(Math.Pow(WGh.x, 2) + Math.Pow(WGh.y, 2));
-            WGh.dir = HMSCalc.ToDegrees(Math.Atan2(WGh.x, WGh.y));
+            WGh.dir = HMSCalc.ToDegrees(Math.Atan2(WGh.y, WGh.x));
 
             // Power law approximation of a marine atmospheric boundary layer (0.13 er en konstant i denne formelen)
             // Justert til X m over helideck
@@ -1109,7 +1129,12 @@ namespace HMS_Server
 
             // Kalkulere true wind at helideck height / adjustedHeight
             WAH.spd = Math.Sqrt(Math.Pow(WAH.x, 2) + Math.Pow(WAH.y, 2));
-            WAH.dir = HMSCalc.ToDegrees(Math.Atan2(WAH.x, WAH.y));
+            WAH.dir = HMSCalc.ToDegrees(Math.Atan2(WAH.y, WAH.x));
+
+            while (WAH.dir <= 0)
+                WAH.dir += 360;
+            while (WAH.dir > 360)
+                WAH.dir -= 360;
 
             return WAH;
         }

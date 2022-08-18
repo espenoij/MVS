@@ -134,7 +134,7 @@
                             
                             <Label
                                 Content="Read Frequency"
-                                Width="200"                                
+                                Width="180"                                
                                 VerticalAlignment="Center" />
                             
                             <TextBox

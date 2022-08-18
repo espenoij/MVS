@@ -745,9 +745,9 @@
                         <DockPanel
                             Name="dbFileReaderFrequency">
                             <Label
+                                Width="180"
                                 Content="Read Frequency" />
                             <Label
-                                Width="100"
                                 Name="lbFileReaderFrequency"
                                 Content="" />
                         </DockPanel>
