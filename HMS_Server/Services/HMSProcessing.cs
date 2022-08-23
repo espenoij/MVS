@@ -24,7 +24,7 @@
         {
             hmsProcessingSettings = new HMSProcessingSettings(hmsOutputData, adminSettingsVM);
             hmsProcessingUserInputs = new HMSProcessingUserInputs(hmsOutputData, userInputs, adminSettingsVM);
-            hmsProcessingGeneralInfo = new HMSProcessingGeneralInfo(hmsOutputData);
+            hmsProcessingGeneralInfo = new HMSProcessingGeneralInfo(hmsOutputData, adminSettingsVM);
             hmsProcessingMotion = new HMSProcessingMotion(hmsOutputData, motionLimits, adminSettingsVM, errorHandler);
             hmsProcessingWindHeading = new HMSProcessingWindHeading(hmsOutputData, adminSettingsVM, userInputs, errorHandler);
             hmsProcessingMeteorological = new HMSProcessingMeteorological(hmsOutputData, adminSettingsVM);

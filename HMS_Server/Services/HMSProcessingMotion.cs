@@ -9,19 +9,12 @@ namespace HMS_Server
     {
         // Input data
         private HMSData inputPitchData = new HMSData();
-        private HMSData inputPitchDataPrev = new HMSData();
         private HMSData inputRollData = new HMSData();
-        private HMSData inputRollDataPrev = new HMSData();
         private HMSData inputHeaveData = new HMSData();
-        private HMSData inputHeaveDataPrev = new HMSData();
         private HMSData inputHeaveRateData = new HMSData();
-        private HMSData inputHeaveRateDataPrev = new HMSData();
         private HMSData inputAccelerationXData = new HMSData();
-        private HMSData inputAccelerationXDataPrev = new HMSData();
         private HMSData inputAccelerationYData = new HMSData();
-        private HMSData inputAccelerationYDataPrev = new HMSData();
         private HMSData inputAccelerationZData = new HMSData();
-        private HMSData inputAccelerationZDataPrev = new HMSData();
 
         // Pitch
         private HMSData pitchData = new HMSData();
@@ -89,9 +82,6 @@ namespace HMS_Server
         private RadObservableCollectionEx<TimeData> significantHeaveRate2mMinData = new RadObservableCollectionEx<TimeData>();
         private RadObservableCollectionEx<TimeData> significantHeaveRate10mMeanData = new RadObservableCollectionEx<TimeData>();
         private RadObservableCollectionEx<TimeData> significantHeaveRate20mMaxData = new RadObservableCollectionEx<TimeData>();
-
-        // Må ha en gjennomkjøring av data første gang for lagre grunnleggende data i HMS output data strukturen
-        private bool firstRun = true;
 
         public HMSProcessingMotion(HMSDataCollection hmsOutputData, HelideckMotionLimits motionLimits, AdminSettingsVM adminSettingsVM, ErrorHandler errorHandler)
         {
@@ -316,165 +306,165 @@ namespace HMS_Server
             inputAccelerationYData.Set(hmsInputDataList.GetData(ValueType.AccelerationY));
             inputAccelerationZData.Set(hmsInputDataList.GetData(ValueType.AccelerationZ));
 
-            // Sjekke om det er endring i input data
-            // Dersom det ikke er endring, trenger vi ikke utføre kalkulasjoner
-            if (inputPitchData.timestamp != inputPitchDataPrev.timestamp ||
-                inputRollData.timestamp != inputRollDataPrev.timestamp ||
-                inputHeaveData.timestamp != inputHeaveDataPrev.timestamp ||
-                inputHeaveRateData.timestamp != inputHeaveRateDataPrev.timestamp ||
-                inputAccelerationXData.timestamp != inputAccelerationXDataPrev.timestamp ||
-                inputAccelerationYData.timestamp != inputAccelerationYDataPrev.timestamp ||
-                inputAccelerationZData.timestamp != inputAccelerationZDataPrev.timestamp ||
-                firstRun)
+            // Sjekke data timeout
+            if (inputPitchData.timestamp.AddMilliseconds(adminSettingsVM.dataTimeout) < DateTime.UtcNow)
+                inputPitchData.status = DataStatus.TIMEOUT_ERROR;
+
+            if (inputRollData.timestamp.AddMilliseconds(adminSettingsVM.dataTimeout) < DateTime.UtcNow)
+                inputRollData.status = DataStatus.TIMEOUT_ERROR;
+
+            if (inputHeaveData.timestamp.AddMilliseconds(adminSettingsVM.dataTimeout) < DateTime.UtcNow)
+                inputHeaveData.status = DataStatus.TIMEOUT_ERROR;
+
+            if (inputHeaveRateData.timestamp.AddMilliseconds(adminSettingsVM.dataTimeout) < DateTime.UtcNow)
+                inputHeaveRateData.status = DataStatus.TIMEOUT_ERROR;
+
+            if (inputAccelerationXData.timestamp.AddMilliseconds(adminSettingsVM.dataTimeout) < DateTime.UtcNow)
+                inputAccelerationXData.status = DataStatus.TIMEOUT_ERROR;
+
+            if (inputAccelerationYData.timestamp.AddMilliseconds(adminSettingsVM.dataTimeout) < DateTime.UtcNow)
+                inputAccelerationYData.status = DataStatus.TIMEOUT_ERROR;
+
+            if (inputAccelerationZData.timestamp.AddMilliseconds(adminSettingsVM.dataTimeout) < DateTime.UtcNow)
+                inputAccelerationZData.status = DataStatus.TIMEOUT_ERROR;
+
+
+            // Tar data fra input delen av server og overfører til HMS output delen
+            // og prosesserer input for overføring til HMS output også.
+
+            // Pitch
+            pitchData.Set(inputPitchData);
+            pitchMax20mData.DoProcessing(pitchData);
+            pitchMax3hData.DoProcessing(pitchData);
+            pitchMaxUp20mData.DoProcessing(pitchData);
+            pitchMaxDown20mData.DoProcessing(pitchData);
+
+            if (adminSettingsVM.regulationStandard == RegulationStandard.CAP && !adminSettingsVM.overrideMotionBuffer)
             {
-                firstRun = false; // Første gjennomkjøring unnagjort
-
-                // Tar data fra input delen av server og overfører til HMS output delen
-                // og prosesserer input for overføring til HMS output også.
-
-                // Pitch
-                pitchData.Set(inputPitchData);
-                pitchMax20mData.DoProcessing(pitchData);
-                pitchMax3hData.DoProcessing(pitchData);
-                pitchMaxUp20mData.DoProcessing(pitchData);
-                pitchMaxDown20mData.DoProcessing(pitchData);
-
-                if (adminSettingsVM.regulationStandard == RegulationStandard.CAP && !adminSettingsVM.overrideMotionBuffer)
-                {
-                    pitchMax20mData.BufferFillCheck(Constants.MotionBufferFill99Pct);
-                    pitchMaxUp20mData.BufferFillCheck(Constants.MotionBufferFill99Pct);
-                    pitchMaxDown20mData.BufferFillCheck(Constants.MotionBufferFill99Pct);
-                }
-
-                // Roll
-                rollData.Set(inputRollData);
-                rollMax20mData.DoProcessing(rollData);
-                rollMax3hData.DoProcessing(rollData);
-                rollMaxLeft20mData.DoProcessing(rollData);
-                rollMaxRight20mData.DoProcessing(rollData);
-
-                if (adminSettingsVM.regulationStandard == RegulationStandard.CAP && !adminSettingsVM.overrideMotionBuffer)
-                {
-                    rollMax20mData.BufferFillCheck(Constants.MotionBufferFill99Pct);
-                    rollMaxLeft20mData.BufferFillCheck(Constants.MotionBufferFill99Pct);
-                    rollMaxRight20mData.BufferFillCheck(Constants.MotionBufferFill99Pct);
-                }
-
-                // Inclination
-                UpdateInclinationData(pitchData, rollData, inclination20mMaxData, Constants.Minutes20);
-                UpdateInclinationData(pitchData, rollData, inclination3hMaxData, Constants.Hours3);
-
-                if (adminSettingsVM.regulationStandard == RegulationStandard.CAP)
-                {
-                    inclination20mMaxData.status = pitchMax20mData.status;
-                    inclination3hMaxData.status = pitchMax3hData.status;
-                }
-
-                // Heave Height
-                heaveHeightData.DoProcessing(inputHeaveData);
-                heaveHeightMax20mData.DoProcessing(inputHeaveData);
-                heaveHeightMax3hData.DoProcessing(inputHeaveData);
-
-                // Heave Period
-                heavePeriodMeanData.DoProcessing(inputHeaveData);
-
-                // Significant Heave Rate
-                significantHeaveRateData.DoProcessing(inputHeaveRateData);
-                significantHeaveRateMax20mData.DoProcessing(significantHeaveRateData);
-                significantHeaveRateMax3hData.DoProcessing(significantHeaveRateData);
-
-                if (adminSettingsVM.regulationStandard == RegulationStandard.CAP && !adminSettingsVM.overrideMotionBuffer)
-                {
-                    significantHeaveRateData.BufferFillCheck(Constants.MotionBufferFill99Pct);
-                    significantHeaveRateMax20mData.BufferFillCheck(Constants.MotionBufferFill99Pct);
-                    //significantHeaveRateMax3hData.BufferFillCheck(Constants.MotionBufferFill99Pct);
-                }
-
-                // Maximum Heave Rate
-                maxHeaveRateData.DoProcessing(inputHeaveRateData);
-
-                if (adminSettingsVM.regulationStandard == RegulationStandard.CAP && !adminSettingsVM.overrideMotionBuffer)
-                    maxHeaveRateData.BufferFillCheck(Constants.MotionBufferFill99Pct);
-
-                // Significant Wave Height
-                //significantWaveHeightData.DoProcessing(inputHeaveData);
-
-                // Motion Limits
-                motionLimitPitchRoll.data = motionLimits.GetLimit(LimitType.PitchRoll);
-                motionLimitPitchRoll.timestamp = DateTime.UtcNow;
-                motionLimitPitchRoll.status = DataStatus.OK;
-
-                motionLimitInclination.data = motionLimits.GetLimit(LimitType.Inclination);
-                motionLimitInclination.timestamp = DateTime.UtcNow;
-                motionLimitInclination.status = DataStatus.OK;
-
-                motionLimitHeaveHeight.data = motionLimits.GetLimit(LimitType.HeaveHeight);
-                motionLimitHeaveHeight.timestamp = DateTime.UtcNow;
-                motionLimitHeaveHeight.status = DataStatus.OK;
-
-                motionLimitSignificantHeaveRate.data = motionLimits.GetLimit(LimitType.SignificantHeaveRate);
-                motionLimitSignificantHeaveRate.timestamp = DateTime.UtcNow;
-                motionLimitSignificantHeaveRate.status = DataStatus.OK;
-
-                // SHR Limit
-                UpdateSHRLimitConditions(significantHeaveRateData);
-
-                // CAP spesifikke variabler / kalkulasjoner
-                if (adminSettingsVM.regulationStandard == RegulationStandard.CAP)
-                {
-                    // MSI
-                    /////////////////////////////////////////////////////////////////////////////////////////
-                    ///
-                    HMSData mms_msi = new HMSData();
-
-                    HMSData accelerationX = new HMSData(inputAccelerationXData);
-                    HMSData accelerationY = new HMSData(inputAccelerationYData);
-                    HMSData accelerationZ = new HMSData(inputAccelerationZData);
-
-                    if (accelerationX.status == DataStatus.OK &&
-                        accelerationY.status == DataStatus.OK &&
-                        accelerationZ.status == DataStatus.OK)
-                    {
-                        double mms;
-
-                        // Kalkulere MMS (CAP formel)
-                        if (accelerationZ.data != 0)
-                            mms = Math.Sqrt(Math.Pow(accelerationX.data, 2.0) + Math.Pow(accelerationY.data, 2.0)) / Math.Abs(accelerationZ.data);
-                        else
-                            mms = 0.0;
-
-                        // Kalkulere MMS_MSI (CAP formel)
-                        mms_msi.data = 10.0 * HMSCalc.ToDegrees(Math.Atan(mms));
-                        mms_msi.status = DataStatus.OK;
-                        mms_msi.timestamp = accelerationX.timestamp;
-                    }
-                    else
-                    {
-                        mms_msi.data = 0;
-                        mms_msi.status = accelerationX.status;
-                        mms_msi.timestamp = accelerationX.timestamp;
-                    }
-
-                    // Find max value
-                    CalculateMSIMax(mms_msi, mms_msi_list, msiData, Constants.Minutes20);
-
-                    // Sjekke buffer fyllingsgrad
-                    if (!adminSettingsVM.overrideMotionBuffer)
-                        MSIBufferFillCheck(mms_msi_list, Constants.MotionBufferFill99Pct, msiData);
-                }
-
-                // Sjekker motion limits
-                CheckLimits();
+                pitchMax20mData.BufferFillCheck(Constants.MotionBufferFill99Pct);
+                pitchMaxUp20mData.BufferFillCheck(Constants.MotionBufferFill99Pct);
+                pitchMaxDown20mData.BufferFillCheck(Constants.MotionBufferFill99Pct);
             }
 
-            // Oppdatere "forrige" verdiene
-            inputPitchDataPrev.Set(inputPitchData);
-            inputRollDataPrev.Set(inputRollData);
-            inputHeaveDataPrev.Set(inputHeaveData);
-            inputHeaveRateDataPrev.Set(inputHeaveRateData);
-            inputAccelerationXDataPrev.Set(inputAccelerationXData);
-            inputAccelerationYDataPrev.Set(inputAccelerationYData);
-            inputAccelerationZDataPrev.Set(inputAccelerationZData);
+            // Roll
+            rollData.Set(inputRollData);
+            rollMax20mData.DoProcessing(rollData);
+            rollMax3hData.DoProcessing(rollData);
+            rollMaxLeft20mData.DoProcessing(rollData);
+            rollMaxRight20mData.DoProcessing(rollData);
+
+            if (adminSettingsVM.regulationStandard == RegulationStandard.CAP && !adminSettingsVM.overrideMotionBuffer)
+            {
+                rollMax20mData.BufferFillCheck(Constants.MotionBufferFill99Pct);
+                rollMaxLeft20mData.BufferFillCheck(Constants.MotionBufferFill99Pct);
+                rollMaxRight20mData.BufferFillCheck(Constants.MotionBufferFill99Pct);
+            }
+
+            // Inclination
+            UpdateInclinationData(pitchData, rollData, inclination20mMaxData, Constants.Minutes20);
+            UpdateInclinationData(pitchData, rollData, inclination3hMaxData, Constants.Hours3);
+
+            if (adminSettingsVM.regulationStandard == RegulationStandard.CAP)
+            {
+                inclination20mMaxData.status = pitchMax20mData.status;
+                inclination3hMaxData.status = pitchMax3hData.status;
+            }
+
+            // Heave Height
+            heaveHeightData.DoProcessing(inputHeaveData);
+            heaveHeightMax20mData.DoProcessing(inputHeaveData);
+            heaveHeightMax3hData.DoProcessing(inputHeaveData);
+
+            // Heave Period
+            heavePeriodMeanData.DoProcessing(inputHeaveData);
+
+            // Significant Heave Rate
+            significantHeaveRateData.DoProcessing(inputHeaveRateData);
+            significantHeaveRateMax20mData.DoProcessing(significantHeaveRateData);
+            significantHeaveRateMax3hData.DoProcessing(significantHeaveRateData);
+
+            if (adminSettingsVM.regulationStandard == RegulationStandard.CAP && !adminSettingsVM.overrideMotionBuffer)
+            {
+                significantHeaveRateData.BufferFillCheck(Constants.MotionBufferFill99Pct);
+                significantHeaveRateMax20mData.BufferFillCheck(Constants.MotionBufferFill99Pct);
+                //significantHeaveRateMax3hData.BufferFillCheck(Constants.MotionBufferFill99Pct);
+            }
+
+            // Maximum Heave Rate
+            maxHeaveRateData.DoProcessing(inputHeaveRateData);
+
+            if (adminSettingsVM.regulationStandard == RegulationStandard.CAP && !adminSettingsVM.overrideMotionBuffer)
+                maxHeaveRateData.BufferFillCheck(Constants.MotionBufferFill99Pct);
+
+            // Significant Wave Height
+            //significantWaveHeightData.DoProcessing(inputHeaveData);
+
+            // Motion Limits
+            motionLimitPitchRoll.data = motionLimits.GetLimit(LimitType.PitchRoll);
+            motionLimitPitchRoll.timestamp = DateTime.UtcNow;
+            motionLimitPitchRoll.status = DataStatus.OK;
+
+            motionLimitInclination.data = motionLimits.GetLimit(LimitType.Inclination);
+            motionLimitInclination.timestamp = DateTime.UtcNow;
+            motionLimitInclination.status = DataStatus.OK;
+
+            motionLimitHeaveHeight.data = motionLimits.GetLimit(LimitType.HeaveHeight);
+            motionLimitHeaveHeight.timestamp = DateTime.UtcNow;
+            motionLimitHeaveHeight.status = DataStatus.OK;
+
+            motionLimitSignificantHeaveRate.data = motionLimits.GetLimit(LimitType.SignificantHeaveRate);
+            motionLimitSignificantHeaveRate.timestamp = DateTime.UtcNow;
+            motionLimitSignificantHeaveRate.status = DataStatus.OK;
+
+            // SHR Limit
+            UpdateSHRLimitConditions(significantHeaveRateData);
+
+            // CAP spesifikke variabler / kalkulasjoner
+            if (adminSettingsVM.regulationStandard == RegulationStandard.CAP)
+            {
+                // MSI
+                /////////////////////////////////////////////////////////////////////////////////////////
+                ///
+                HMSData mms_msi = new HMSData();
+
+                HMSData accelerationX = new HMSData(inputAccelerationXData);
+                HMSData accelerationY = new HMSData(inputAccelerationYData);
+                HMSData accelerationZ = new HMSData(inputAccelerationZData);
+
+                if (accelerationX.status == DataStatus.OK &&
+                    accelerationY.status == DataStatus.OK &&
+                    accelerationZ.status == DataStatus.OK)
+                {
+                    double mms;
+
+                    // Kalkulere MMS (CAP formel)
+                    if (accelerationZ.data != 0)
+                        mms = Math.Sqrt(Math.Pow(accelerationX.data, 2.0) + Math.Pow(accelerationY.data, 2.0)) / Math.Abs(accelerationZ.data);
+                    else
+                        mms = 0.0;
+
+                    // Kalkulere MMS_MSI (CAP formel)
+                    mms_msi.data = 10.0 * HMSCalc.ToDegrees(Math.Atan(mms));
+                    mms_msi.status = DataStatus.OK;
+                    mms_msi.timestamp = accelerationX.timestamp;
+                }
+                else
+                {
+                    mms_msi.data = 0;
+                    mms_msi.status = accelerationX.status;
+                    mms_msi.timestamp = accelerationX.timestamp;
+                }
+
+                // Find max value
+                CalculateMSIMax(mms_msi, mms_msi_list, msiData, Constants.Minutes20);
+
+                // Sjekke buffer fyllingsgrad
+                if (!adminSettingsVM.overrideMotionBuffer)
+                    MSIBufferFillCheck(mms_msi_list, Constants.MotionBufferFill99Pct, msiData);
+            }
+
+            // Sjekker motion limits
+            CheckLimits();
         }
 
         // Resette dataCalculations

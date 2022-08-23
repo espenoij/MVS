@@ -106,30 +106,15 @@ namespace HMS_Client
             get
             {
                 RadObservableCollectionEx<HelideckStatus> statusList;
-                string timeString;
 
                 if (_selectedGraphTime == GraphTime.Minutes20)
-                {
                     statusList = statusTrend20mList;
-                    timeString = "20-minute";
-                }
                 else
-                {
                     statusList = statusTrend3hList;
-                    timeString = "3-hour";
-                }
 
-                if (statusList.Count > 0)
-                {
-                    return string.Format("{0} Trend ({1} - {2} UTC)",
-                        timeString,
-                        statusList[0].timestamp.ToShortTimeString(),
-                        statusList[statusList.Count - 1].timestamp.ToShortTimeString());
-                }
-                else
-                {
-                    return string.Format("{0} Trend (--:-- - --:-- UTC)", timeString);
-                }
+                return string.Format("HLL STATUS TREND (FROM {0} TO {1} UTC)",
+                        statusList[0]?.timestamp.ToShortTimeString(),
+                        statusList[statusList.Count - 1]?.timestamp.ToShortTimeString());
             }
         }
 

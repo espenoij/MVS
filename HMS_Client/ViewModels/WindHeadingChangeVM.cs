@@ -23,6 +23,8 @@ namespace HMS_Client
         private RadObservableCollectionEx<HelideckStatus> rwdTrend30mList = new RadObservableCollectionEx<HelideckStatus>();
         public List<HelideckStatusType> rwdTrend30mDispList = new List<HelideckStatusType>();
 
+        private DateTime onDeckTime;
+
         public WindHeadingChangeVM()
         {
         }
@@ -170,8 +172,10 @@ namespace HMS_Client
             }
         }
 
-        public void Start()
+        public void Start(DateTime onDeckTime)
         {
+            this.onDeckTime = onDeckTime;
+
             // Slette Graph buffer/data
             GraphBuffer.Clear(rwdTrend30mList);
             GraphBuffer.Clear(rwdTrend30mDispList);
@@ -411,16 +415,9 @@ namespace HMS_Client
         {
             get
             {
-                if (rwdTrend30mList.Count > 0)
-                {
-                    return string.Format("30-minute RWD Trend ({0} - {1} UTC)",
-                        rwdTrend30mList[0].timestamp.ToShortTimeString(),
-                        rwdTrend30mList[rwdTrend30mList.Count - 1].timestamp.ToShortTimeString());
-                }
-                else
-                {
-                    return string.Format("30-minute RWD Trend (--:-- - --:-- UTC)");
-                }
+                return string.Format("CHANGE SINCE TOUCHDOWN (FROM {0} TO {1} UTC)",
+                    onDeckTime.ToShortTimeString(),
+                    DateTime.UtcNow.ToShortTimeString());
             }
         }
 

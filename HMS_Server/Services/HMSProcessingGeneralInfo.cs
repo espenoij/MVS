@@ -8,8 +8,12 @@ namespace HMS_Server
         private HMSData gpsLatitude = new HMSData();
         private HMSData gpsLongitude = new HMSData();
 
-        public HMSProcessingGeneralInfo(HMSDataCollection hmsOutputData)
+        private AdminSettingsVM adminSettingsVM;
+
+        public HMSProcessingGeneralInfo(HMSDataCollection hmsOutputData, AdminSettingsVM adminSettingsVM)
         {
+            this.adminSettingsVM = adminSettingsVM;
+
             // Fyller output listen med HMS Output data
             // NB! Variablene som legges inn i listen her fungerer som pekere: Oppdateres variabelen -> oppdateres listen
             // NB! Dersom nye variabler legges til i hmsOutputDataList må databasen opprettes på nytt
@@ -26,6 +30,13 @@ namespace HMS_Server
 
             gpsLatitude.Set(hmsInputDataList.GetData(ValueType.Latitude));
             gpsLongitude.Set(hmsInputDataList.GetData(ValueType.Longitude));
+
+            // Sjekke data timeout
+            if (gpsLatitude.timestamp.AddMilliseconds(adminSettingsVM.dataTimeout) < DateTime.UtcNow)
+                gpsLatitude.status = DataStatus.TIMEOUT_ERROR;
+
+            if (gpsLongitude.timestamp.AddMilliseconds(adminSettingsVM.dataTimeout) < DateTime.UtcNow)
+                gpsLongitude.status = DataStatus.TIMEOUT_ERROR;
         }
     }
 }

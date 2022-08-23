@@ -393,7 +393,7 @@ namespace HMS_Client
                         onDeckHelicopterHeadingIsCorrected = false;
 
                         // Start oppdatering av grafer
-                        windHeadingChangeVM.Start();
+                        windHeadingChangeVM.Start(onDeckTime);
                         relativeWindLimitsVM.Start();
                     }
                     else
@@ -493,7 +493,7 @@ namespace HMS_Client
                     relativeWindLimitsVM.Stop();
 
                     // Start oppdatering av grafer (Reset)
-                    windHeadingChangeVM.Start();
+                    windHeadingChangeVM.Start(onDeckTime);
                     relativeWindLimitsVM.Start();
 
                     OnPropertyChanged(nameof(helicopterHeadingInfoString));

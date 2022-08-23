@@ -237,7 +237,7 @@ namespace HMS_Server
             AdminMode.IsActive = true;
 
             tabInputEdit.Visibility = Visibility.Visible;
-            tabOutput.Visibility = Visibility.Visible;
+            //tabOutput.Visibility = Visibility.Visible;
             tabHMS.Visibility = Visibility.Visible;
             tabSettings.Visibility = Visibility.Visible;
             tabErrorMessages.Visibility = Visibility.Visible;
@@ -876,7 +876,7 @@ namespace HMS_Server
                         {
                             // Vise admin grensesnittet
                             tabInputEdit.Visibility = Visibility.Visible;
-                            tabOutput.Visibility = Visibility.Visible;
+                            //tabOutput.Visibility = Visibility.Visible;
                             tabHMS.Visibility = Visibility.Visible;
                             tabSettings.Visibility = Visibility.Visible;
                             tabErrorMessages.Visibility = Visibility.Visible;
@@ -898,7 +898,7 @@ namespace HMS_Server
                         tabInput.IsSelected = true;
 
                         tabInputEdit.Visibility = Visibility.Collapsed;
-                        tabOutput.Visibility = Visibility.Collapsed;
+                        //tabOutput.Visibility = Visibility.Collapsed;
                         tabHMS.Visibility = Visibility.Collapsed;
                         tabDataVerification.Visibility = Visibility.Collapsed;
                         tabSettings.Visibility = Visibility.Collapsed;

@@ -6,7 +6,7 @@
     xmlns:d="http://schemas.microsoft.com/expression/blend/2008"
     xmlns:telerik="http://schemas.telerik.com/2008/xaml/presentation"
     mc:Ignorable="d"
-    d:DesignHeight="150"
+    d:DesignHeight="120"
     d:DesignWidth="700">
 
     <UserControl.Resources>
@@ -19,22 +19,20 @@
         Visibility="{Binding Path=displayModeVisibilityPreLanding, Converter={StaticResource BoolToVisConverter} }">
 
         <telerik:GroupBox
-            Header="LANDING STATUS TREND"
+            Header="{Binding Path=landingStatusTimeString}"
             Margin="8">
 
             <Grid
-                Margin="8,0,8,0">
+                Margin="8,8,8,0">
 
                 <Grid.RowDefinitions>
-                    <RowDefinition
-                        Height="*" />
                     <RowDefinition
                         Height="28" />
                     <RowDefinition
                         Height="*" />
                 </Grid.RowDefinitions>
 
-                <Viewbox
+                <!--<Viewbox
                     Grid.Row="0"
                     StretchDirection="Both"
                     Stretch="Uniform"
@@ -44,10 +42,10 @@
                         HorizontalAlignment="Center"
                         Content="{Binding Path=landingStatusTimeString}" />
 
-                </Viewbox>
+                </Viewbox>-->
 
                 <Viewbox
-                    Grid.Row="1"
+                    Grid.Row="0"
                     StretchDirection="Both"
                     Stretch="Uniform"
                     VerticalAlignment="Stretch"
@@ -78,7 +76,7 @@
                 </Viewbox>
 
                 <Grid
-                    Grid.Row="2"
+                    Grid.Row="1"
                     Margin="-8,0,-8,0"
                     Visibility="{Binding Path=visibilityItems20m, Converter={StaticResource BoolToVisConverter} }">
 

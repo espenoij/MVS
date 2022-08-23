@@ -104,6 +104,52 @@ namespace HMS_Server
             cloudLayer3Coverage.Set(hmsInputDataList.GetData(ValueType.CloudLayer3Coverage));
             cloudLayer4Base.Set(hmsInputDataList.GetData(ValueType.CloudLayer4Base));
             cloudLayer4Coverage.Set(hmsInputDataList.GetData(ValueType.CloudLayer4Coverage));
+
+            // Sjekke data timeout
+            if (seaTemperature.timestamp.AddMilliseconds(adminSettingsVM.dataTimeout) < DateTime.UtcNow)
+                seaTemperature.status = DataStatus.TIMEOUT_ERROR;
+
+            if (airTemperature.timestamp.AddMilliseconds(adminSettingsVM.dataTimeout) < DateTime.UtcNow)
+                airTemperature.status = DataStatus.TIMEOUT_ERROR;
+
+            if (airHumidity.timestamp.AddMilliseconds(adminSettingsVM.dataTimeout) < DateTime.UtcNow)
+                airHumidity.status = DataStatus.TIMEOUT_ERROR;
+
+            if (airPressureQFE.timestamp.AddMilliseconds(adminSettingsVM.dataTimeout) < DateTime.UtcNow)
+                airPressureQFE.status = DataStatus.TIMEOUT_ERROR;
+
+            if (airPressureQNH.timestamp.AddMilliseconds(adminSettingsVM.dataTimeout) < DateTime.UtcNow)
+                airPressureQNH.status = DataStatus.TIMEOUT_ERROR;
+
+            if (Visibility.timestamp.AddMilliseconds(adminSettingsVM.dataTimeout) < DateTime.UtcNow)
+                Visibility.status = DataStatus.TIMEOUT_ERROR;
+
+            if (weatherPhenomena.timestamp.AddMilliseconds(adminSettingsVM.dataTimeout) < DateTime.UtcNow)
+                weatherPhenomena.status = DataStatus.TIMEOUT_ERROR;
+
+            if (cloudLayer1Base.timestamp.AddMilliseconds(adminSettingsVM.dataTimeout) < DateTime.UtcNow)
+                cloudLayer1Base.status = DataStatus.TIMEOUT_ERROR;
+
+            if (cloudLayer1Coverage.timestamp.AddMilliseconds(adminSettingsVM.dataTimeout) < DateTime.UtcNow)
+                cloudLayer1Coverage.status = DataStatus.TIMEOUT_ERROR;
+
+            if (cloudLayer2Base.timestamp.AddMilliseconds(adminSettingsVM.dataTimeout) < DateTime.UtcNow)
+                cloudLayer2Base.status = DataStatus.TIMEOUT_ERROR;
+
+            if (cloudLayer2Coverage.timestamp.AddMilliseconds(adminSettingsVM.dataTimeout) < DateTime.UtcNow)
+                cloudLayer2Coverage.status = DataStatus.TIMEOUT_ERROR;
+
+            if (cloudLayer3Base.timestamp.AddMilliseconds(adminSettingsVM.dataTimeout) < DateTime.UtcNow)
+                cloudLayer3Base.status = DataStatus.TIMEOUT_ERROR;
+
+            if (cloudLayer3Coverage.timestamp.AddMilliseconds(adminSettingsVM.dataTimeout) < DateTime.UtcNow)
+                cloudLayer3Coverage.status = DataStatus.TIMEOUT_ERROR;
+
+            if (cloudLayer4Base.timestamp.AddMilliseconds(adminSettingsVM.dataTimeout) < DateTime.UtcNow)
+                cloudLayer4Base.status = DataStatus.TIMEOUT_ERROR;
+
+            if (cloudLayer4Coverage.timestamp.AddMilliseconds(adminSettingsVM.dataTimeout) < DateTime.UtcNow)
+                cloudLayer4Coverage.status = DataStatus.TIMEOUT_ERROR;
         }
 
         public void CalculateDewPoint()

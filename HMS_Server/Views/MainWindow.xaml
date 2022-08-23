@@ -451,7 +451,7 @@
                 <!--==============================================================-->
                 <!--Side Menu: Output-->
                 <!--==============================================================-->
-                <telerik:RadTabItem
+                <!--<telerik:RadTabItem
                     Name="tabOutput"
                     Visibility="Collapsed">
 
@@ -461,7 +461,7 @@
                             Source="../Icons/output_white_36dp.png" />
                     </telerik:RadTabItem.Header>
 
-                </telerik:RadTabItem>
+                </telerik:RadTabItem>-->
 
                 <!--==============================================================-->
                 <!--Side Menu: HMS-->

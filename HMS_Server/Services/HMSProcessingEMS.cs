@@ -17,8 +17,12 @@ namespace HMS_Server
         private HMSData waveSWHMax20mData = new HMSData();
         private HMSData waveSWHMax3hData = new HMSData();
 
+        private AdminSettingsVM adminSettingsVM;
+
         public HMSProcessingEMS(HMSDataCollection hmsOutputData, ErrorHandler errorHandler, AdminSettingsVM adminSettingsVM)
         {
+            this.adminSettingsVM = adminSettingsVM;
+
             // Fyller output listen med HMS Output data
             // NB! Variablene som legges inn i listen her fungerer som pekere: Oppdateres variabelen -> oppdateres listen
             // NB! Dersom nye variabler (m/ny dbColumn) legges til i hmsOutputDataList må databasen opprettes på nytt
@@ -110,6 +114,35 @@ namespace HMS_Server
             waveSWHData.DoProcessing(waveData);
             waveSWHMax20mData.DoProcessing(waveSWHData);
             waveSWHMax3hData.DoProcessing(waveSWHData);
+
+
+            // Sjekke data timeout
+            if (waveData.timestamp.AddMilliseconds(adminSettingsVM.dataTimeout) < DateTime.UtcNow)
+                waveData.status = DataStatus.TIMEOUT_ERROR;
+
+            if (waveMax20mData.timestamp.AddMilliseconds(adminSettingsVM.dataTimeout) < DateTime.UtcNow)
+                waveMax20mData.status = DataStatus.TIMEOUT_ERROR;
+
+            if (waveMax3hData.timestamp.AddMilliseconds(adminSettingsVM.dataTimeout) < DateTime.UtcNow)
+                waveMax3hData.status = DataStatus.TIMEOUT_ERROR;
+
+            if (wavePeriodData.timestamp.AddMilliseconds(adminSettingsVM.dataTimeout) < DateTime.UtcNow)
+                wavePeriodData.status = DataStatus.TIMEOUT_ERROR;
+
+            if (wavePeriodMax20mData.timestamp.AddMilliseconds(adminSettingsVM.dataTimeout) < DateTime.UtcNow)
+                wavePeriodMax20mData.status = DataStatus.TIMEOUT_ERROR;
+
+            if (wavePeriodMax3hData.timestamp.AddMilliseconds(adminSettingsVM.dataTimeout) < DateTime.UtcNow)
+                wavePeriodMax3hData.status = DataStatus.TIMEOUT_ERROR;
+
+            if (waveSWHData.timestamp.AddMilliseconds(adminSettingsVM.dataTimeout) < DateTime.UtcNow)
+                waveSWHData.status = DataStatus.TIMEOUT_ERROR;
+
+            if (waveSWHMax20mData.timestamp.AddMilliseconds(adminSettingsVM.dataTimeout) < DateTime.UtcNow)
+                waveSWHMax20mData.status = DataStatus.TIMEOUT_ERROR;
+
+            if (waveSWHMax3hData.timestamp.AddMilliseconds(adminSettingsVM.dataTimeout) < DateTime.UtcNow)
+                waveSWHMax3hData.status = DataStatus.TIMEOUT_ERROR;
         }
 
         // Resette dataCalculations

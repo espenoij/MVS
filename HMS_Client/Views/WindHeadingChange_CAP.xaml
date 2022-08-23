@@ -75,17 +75,18 @@
         <!--Wind & Heading Change-->
         <telerik:GroupBox
             x:Name="gbWindHeadingChange"
-            Header="WIND &amp; HEADING CHANGE SINCE TOUCHDOWN"
+            Header="{Binding Path=rwdStatusTimeString}"
             Visibility="{Binding Path=displayModeVisibilityOnDeck, Converter={StaticResource BoolToVisConverter} }"
             Margin="8">
 
-            <Grid>
+            <Grid
+                Margin="0,8,0,0">
 
                 <Grid.RowDefinitions>
                     <RowDefinition
-                        Height="3*" />
+                        Height="2*" />
                     <RowDefinition
-                        Height="12*" />
+                        Height="13*" />
                     <RowDefinition
                         Height="1*" />
                 </Grid.RowDefinitions>
@@ -107,11 +108,9 @@
                             Height="*" />
                         <RowDefinition
                             Height="*" />
-                        <RowDefinition
-                            Height="*" />
                     </Grid.RowDefinitions>
 
-                    <Viewbox
+                    <!--<Viewbox
                         Grid.Column="1"
                         StretchDirection="Both"
                         Stretch="Uniform"
@@ -121,10 +120,10 @@
                             HorizontalAlignment="Center"
                             Content="{Binding Path=rwdStatusTimeString}" />
 
-                    </Viewbox>
+                    </Viewbox>-->
 
                     <Viewbox
-                        Grid.Row="1"
+                        Grid.Row="0"
                         Grid.Column="1"
                         Margin="0,0,28,0"
                         StretchDirection="Both"
@@ -147,15 +146,9 @@
 
                     </Viewbox>
 
-                    <!--<Grid
-                        x:Name="statusTrendGrid"
-                        Margin="0,0,28,0"
-                        Grid.Row="1"
-                        Grid.Column="1" />-->
-
                     <Grid
                         Grid.Column="1"
-                        Grid.Row="2"
+                        Grid.Row="1"
                         Margin="0,0,28,0">
 
                         <Grid.ColumnDefinitions>
