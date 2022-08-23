@@ -11,7 +11,7 @@ namespace HMS_Client
     {
         public static void GenerateGridColumnDefinitions(Canvas canvas, double listMaxLength)
         {
-            int width = (int)(canvas.Width / listMaxLength);
+            double width = (int)(canvas.Width / listMaxLength);
 
             for (int i = 0; i < listMaxLength; i++)
             {

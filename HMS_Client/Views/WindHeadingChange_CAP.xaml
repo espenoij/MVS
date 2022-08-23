@@ -110,18 +110,7 @@
                             Height="*" />
                     </Grid.RowDefinitions>
 
-                    <!--<Viewbox
-                        Grid.Column="1"
-                        StretchDirection="Both"
-                        Stretch="Uniform"
-                        HorizontalAlignment="Center">
-
-                        <Label
-                            HorizontalAlignment="Center"
-                            Content="{Binding Path=rwdStatusTimeString}" />
-
-                    </Viewbox>-->
-
+                    <!--TREND LINJE-->
                     <Viewbox
                         Grid.Row="0"
                         Grid.Column="1"
@@ -133,19 +122,20 @@
 
                             <Canvas
                                 x:Name="statusTrendCanvas"
-                                Width="300"
+                                Width="340"
                                 Height="12" />
 
                             <Rectangle
                                 Stroke="Silver"
                                 StrokeThickness="0.5"
-                                Width="300"
+                                Width="340"
                                 Height="12" />
 
                         </Grid>
 
                     </Viewbox>
 
+                    <!--TREND LINJE TEKST-->
                     <Grid
                         Grid.Column="1"
                         Grid.Row="1"

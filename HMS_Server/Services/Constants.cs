@@ -301,7 +301,7 @@ class Constants
     public const int landingTrendHistoryDisplayListMax = 1000;
 
     // RWD Trend
-    public const int rwdTrendDisplayListMax = 300;              // Hvor mange segmenter trend linjen skal deles opp i / oppløsning på trend linjen
+    public const int rwdTrendDisplayListMax = 340;              // Hvor mange segmenter trend linjen skal deles opp i / oppløsning på trend linjen
                                                                 // På skjerm med 3840 pixel bredde er linjen ca 1000 pixler bred
                                                                 // På 1920 skjerm vil den være ca 500 pixler bred
                                                                 // Opplever "flicker" på trend linjen med for høy oppløsning, satt ned til 300

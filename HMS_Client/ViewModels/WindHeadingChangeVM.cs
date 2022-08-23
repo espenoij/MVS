@@ -58,13 +58,19 @@ namespace HMS_Client
                 HelideckStatus newStatus = new HelideckStatus();
 
                 if (relativeWindLimitsVM.rwdGraphData.status == DataStatus.OK)
+                {
                     newStatus.status = GetRWDLimitState(relativeWindLimitsVM.rwdGraphData.wind, relativeWindLimitsVM.rwdGraphData.rwd);
+                    newStatus.timestamp = relativeWindLimitsVM.rwdGraphData.timestamp;
+                    newStatus.wind = relativeWindLimitsVM.rwdGraphData.wind;
+                    newStatus.rwd = relativeWindLimitsVM.rwdGraphData.rwd;
+                }
                 else
+                {
                     newStatus.status = HelideckStatusType.OFF;
-
-                newStatus.timestamp = relativeWindLimitsVM.rwdGraphData.timestamp;
-                newStatus.wind = relativeWindLimitsVM.rwdGraphData.wind;
-                newStatus.rwd = relativeWindLimitsVM.rwdGraphData.rwd;
+                    newStatus.timestamp = DateTime.UtcNow;
+                    newStatus.wind = 0;
+                    newStatus.rwd = 0;
+                }
 
                 // Legge inn ny trend status i data liste
                 rwdTrend30mList.Add(newStatus);

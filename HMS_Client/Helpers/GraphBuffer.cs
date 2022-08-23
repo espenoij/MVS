@@ -207,6 +207,9 @@ namespace HMS_Client
 
                             // Exit denne loopen
                             nextSubset = true;
+
+                            // Trekke fra en så vi ikke går videre til neste
+                            dataCounter--;
                         }
 
                         // Finne høyeste status nivå
@@ -228,7 +231,7 @@ namespace HMS_Client
                                 break;
 
                             case HelideckStatusType.OFF:
-                                if (status != HelideckStatusType.RED &&
+                                if (status != HelideckStatusType.RED &&  
                                     status != HelideckStatusType.AMBER &&
                                     status != HelideckStatusType.BLUE)
                                     status = HelideckStatusType.OFF;
