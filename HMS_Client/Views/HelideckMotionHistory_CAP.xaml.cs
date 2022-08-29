@@ -82,8 +82,8 @@ namespace HMS_Client
                     {
                         helideckMotionTrendVM.landingStatusTimeString = string.Format("{0} Trend ({1} - {2} UTC)",
                             timeString,
-                            statusList[0].timestamp.ToShortTimeString(),
-                            statusList[statusList.Count - 1].timestamp.ToShortTimeString());
+                            statusList[0].timestamp.ToString("HH:mm"),
+                            statusList[statusList.Count - 1].timestamp.ToString("HH:mm"));
                     }
                     else
                     {

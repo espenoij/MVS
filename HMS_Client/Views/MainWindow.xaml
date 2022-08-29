@@ -219,16 +219,16 @@
                                     <RowDefinition
                                         Height="9*" />
                                     <RowDefinition
-                                        Height="2*" />
+                                        Height="2.5*" />
                                     <RowDefinition
-                                        Height="6.3*" />
+                                        Height="6*" />
                                 </Grid.RowDefinitions>
 
                                 <Grid.ColumnDefinitions>
                                     <ColumnDefinition
                                         Width="7*" />
                                     <ColumnDefinition
-                                        Width="2*" />
+                                        Width="3*" />
                                 </Grid.ColumnDefinitions>
 
                                 <!--User Inputs CAP-->

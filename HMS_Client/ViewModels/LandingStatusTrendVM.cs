@@ -113,8 +113,8 @@ namespace HMS_Client
                     statusList = statusTrend3hList;
 
                 return string.Format("HLL STATUS TREND (FROM {0} TO {1} UTC)",
-                        statusList[0]?.timestamp.ToShortTimeString(),
-                        statusList[statusList.Count - 1]?.timestamp.ToShortTimeString());
+                        statusList[0]?.timestamp.ToString("HH:mm"),
+                        statusList[statusList.Count - 1]?.timestamp.ToString("HH:mm"));
             }
         }
 

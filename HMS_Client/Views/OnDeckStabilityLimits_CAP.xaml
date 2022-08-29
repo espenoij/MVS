@@ -91,7 +91,8 @@
                         <!--MSI / WSI Chart-->
                         <telerik:RadCartesianChart
                             Name="chartMSIWSI20m"
-                            Margin="0,16,0,0">
+                            Margin="0,16,0,0"
+                            Focusable="False">
 
                             <telerik:RadCartesianChart.Grid>
                                 <telerik:CartesianChartGrid

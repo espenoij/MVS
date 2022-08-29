@@ -83,7 +83,8 @@
 
             <ItemsControl
                 x:Name="lbSensorStatus"
-                Margin="8">
+                Margin="8"
+                Focusable="False">
 
                 <ItemsControl.ItemTemplate>
                     

@@ -103,11 +103,11 @@
 
             <Grid.ColumnDefinitions>
                 <ColumnDefinition
-                    Width="5*" />
+                    Width="10*" />
                 <ColumnDefinition
-                    Width="2*" />
+                    Width="6*" />
                 <ColumnDefinition
-                    Width="3*" />
+                    Width="7*" />
             </Grid.ColumnDefinitions>
 
             <StackPanel
@@ -200,7 +200,7 @@
 
                         <DockPanel>
                             <Label
-                                Width="150"
+                                Width="140"
                                 Content="Save Frequency"
                                 VerticalAlignment="Center" />
                             <telerik:RadComboBox
@@ -939,11 +939,11 @@
                         Header="Type"
                         DataMemberBinding="{Binding type}" />
                     <telerik:GridViewDataColumn
-                        Width="150"
+                        Width="140"
                         Header="Source"
                         DataMemberBinding="{Binding source}" />
                     <telerik:GridViewDataColumn
-                        Width="*"
+                        Width="400"
                         Header="Name"
                         DataMemberBinding="{Binding name}" />
                 </telerik:RadGridView.Columns>

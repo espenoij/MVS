@@ -5,8 +5,6 @@ namespace HMS_Server
 {
     class HMSProcessingMeteorological
     {
-        private HMSData seaTemperature = new HMSData();
-
         private HMSData airTemperature = new HMSData();
         private HMSData airHumidity = new HMSData();
         private HMSData airDewPoint = new HMSData();
@@ -37,8 +35,6 @@ namespace HMS_Server
             // NB! Dersom nye variabler legges til i hmsOutputDataList må databasen opprettes på nytt
 
             RadObservableCollection<HMSData> hmsOutputDataList = hmsOutputData.GetDataList();
-
-            hmsOutputDataList.Add(seaTemperature);
 
             hmsOutputDataList.Add(airTemperature);
             hmsOutputDataList.Add(airHumidity);
@@ -78,8 +74,6 @@ namespace HMS_Server
         public void Update(HMSDataCollection hmsInputDataList)
         {
             // Tar data fra input delen av server og overfører til HMS output delen
-            seaTemperature.Set(hmsInputDataList.GetData(ValueType.SeaTemperature));
-
             airTemperature.Set(hmsInputDataList.GetData(ValueType.AirTemperature));
             airHumidity.Set(hmsInputDataList.GetData(ValueType.AirHumidity));
             CalculateDewPoint();
@@ -106,9 +100,6 @@ namespace HMS_Server
             cloudLayer4Coverage.Set(hmsInputDataList.GetData(ValueType.CloudLayer4Coverage));
 
             // Sjekke data timeout
-            if (seaTemperature.timestamp.AddMilliseconds(adminSettingsVM.dataTimeout) < DateTime.UtcNow)
-                seaTemperature.status = DataStatus.TIMEOUT_ERROR;
-
             if (airTemperature.timestamp.AddMilliseconds(adminSettingsVM.dataTimeout) < DateTime.UtcNow)
                 airTemperature.status = DataStatus.TIMEOUT_ERROR;
 

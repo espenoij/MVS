@@ -85,11 +85,11 @@
                 <telerik:RadGridView.Columns>
 
                     <telerik:GridViewDataColumn
-                        Width="120"
+                        Width="110"
                         Header="Data ID"
                         DataMemberBinding="{Binding id}" />
                     <telerik:GridViewDataColumn
-                        Width="*"
+                        Width="300"
                         Header="Name"
                         DataMemberBinding="{Binding name}" />
                     <telerik:GridViewDataColumn
@@ -128,7 +128,7 @@
                 <telerik:RadGridView.Columns>
 
                     <telerik:GridViewDataColumn
-                        Width="*"
+                        Width="300"
                         Header="Name"
                         IsReadOnly="True"
                         DataMemberBinding="{Binding name}" />

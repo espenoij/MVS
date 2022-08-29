@@ -509,7 +509,7 @@ namespace HMS_Client
                             sensorData.First().Set(item);
 
                             if (AdminMode.IsActive)
-                                socketConsole?.Add(string.Format("ProcessReceivedData: id:{0}, data:{1}, timestamp:{2}", item.id, item.data, item.timestamp.ToString()));
+                                socketConsole?.Add(string.Format("ProcessReceivedData: id:{0}, data:{1}, timestamp:{2}", item.id, item.data, item.timestamp.ToString(Constants.TimestampFormat, Constants.cultureInfo)));
                         }
                         else
                         {
@@ -536,7 +536,7 @@ namespace HMS_Client
                         hmsDataList?.Add(new HMSData(item));
 
                         if (AdminMode.IsActive)
-                            socketConsole?.Add(string.Format("ProcessReceivedData: id:{0}, data:{1}, timestamp:{2}", item.id, item.data, item.timestamp.ToString()));
+                            socketConsole?.Add(string.Format("ProcessReceivedData: id:{0}, data:{1}, timestamp:{2}", item.id, item.data, item.timestamp.ToString(Constants.TimestampFormat, Constants.cultureInfo)));
                     }
                 }
             }

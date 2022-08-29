@@ -44,224 +44,549 @@
                 </Grid.RowDefinitions>
 
                 <telerik:GroupBox
-                    Header="HMS"
                     Grid.Row="0"
                     Grid.Column="0"
+                    Header="HMS"
                     Margin="8">
 
-                    <StackPanel
+                    <Grid
                         Margin="8">
 
-                        <DockPanel>
+                        <Grid.RowDefinitions>
+                            <RowDefinition
+                                Height="*" />
+                            <RowDefinition
+                                Height="*" />
+                            <RowDefinition
+                                Height="*" />
+                            <RowDefinition
+                                Height="*" />
+                            <RowDefinition
+                                Height="*" />
+                            <RowDefinition
+                                Height="*" />
+                            <RowDefinition
+                                Height="*" />
+                        </Grid.RowDefinitions>
 
-                            <telerik:Label
-                                Content="Regulation Standard"
-                                VerticalAlignment="Center" />
+                        <!--Regulation Standard-->
+                        <Grid
+                            Grid.Row="0">
 
-                            <telerik:RadComboBox
-                                Name="cboRegulationStandard"
-                                Width="200"
-                                HorizontalAlignment="Right"
-                                SelectionChanged="cboRegulationStandard_SelectionChanged">
+                            <Grid.ColumnDefinitions>
+                                <ColumnDefinition
+                                    Width="*" />
+                                <ColumnDefinition
+                                    Width="*" />
+                            </Grid.ColumnDefinitions>
 
-                            </telerik:RadComboBox>
+                            <Viewbox
+                                Grid.Column="0"
+                                StretchDirection="Both"
+                                Stretch="Uniform"
+                                HorizontalAlignment="Left">
 
-                        </DockPanel>
+                                <telerik:Label
+                                    Content="Regulation Standard"
+                                    VerticalAlignment="Center" />
+                            </Viewbox>
 
-                        <DockPanel>
-                            <telerik:Label
-                                Content="Vessel Name"
-                                VerticalAlignment="Center" />
-                            <TextBox
-                                Name="tbVesselName"
-                                Width="200"
-                                HorizontalAlignment="Right"
-                                Text="{Binding Path=vesselName}"
-                                LostFocus="tbVesselName_LostFocus"
-                                KeyDown="tbVesselName_KeyDown" />
-                        </DockPanel>
+                            <Viewbox
+                                Grid.Column="1"
+                                StretchDirection="Both"
+                                Stretch="Uniform"
+                                HorizontalAlignment="Right">
+
+                                <telerik:RadComboBox
+                                    Name="cboRegulationStandard"
+                                    Width="200"
+                                    SelectionChanged="cboRegulationStandard_SelectionChanged">
+                                </telerik:RadComboBox>
+                            </Viewbox>
+
+                        </Grid>
+
+                        <!--Vessel Name-->
+                        <Grid
+                            Grid.Row="1">
+
+                            <Grid.ColumnDefinitions>
+                                <ColumnDefinition
+                                    Width="*" />
+                                <ColumnDefinition
+                                    Width="*" />
+                            </Grid.ColumnDefinitions>
+
+                            <Viewbox
+                                Grid.Column="0"
+                                StretchDirection="Both"
+                                Stretch="Uniform"
+                                HorizontalAlignment="Left">
+
+                                <telerik:Label
+                                    Content="Vessel Name"
+                                    VerticalAlignment="Center" />
+                            </Viewbox>
+
+                            <Viewbox
+                                Grid.Column="1"
+                                StretchDirection="Both"
+                                Stretch="Uniform"
+                                HorizontalAlignment="Right">
+
+                                <TextBox
+                                    Name="tbVesselName"
+                                    HorizontalAlignment="Right"
+                                    Width="200"
+                                    Text="{Binding Path=vesselName}"
+                                    LostFocus="tbVesselName_LostFocus"
+                                    KeyDown="tbVesselName_KeyDown" />
+                            </Viewbox>
+                        </Grid>
 
                         <!--Helideck Lights Output-->
-                        <DockPanel>
-                            <telerik:Label
-                                Content="Helideck Lights Output"
-                                VerticalAlignment="Center" />
-                            <CheckBox
-                                IsChecked="{Binding Path=helideckLightsOutput, Mode=TwoWay}"
-                                Click="cbHelideckLightsOutput_Click"
-                                VerticalAlignment="Center"
-                                HorizontalAlignment="Right"/>
-                        </DockPanel>
+                        <Grid
+                            Grid.Row="2">
+
+                            <Grid.ColumnDefinitions>
+                                <ColumnDefinition
+                                    Width="*" />
+                                <ColumnDefinition
+                                    Width="*" />
+                            </Grid.ColumnDefinitions>
+
+                            <Viewbox
+                                Grid.Column="0"
+                                StretchDirection="Both"
+                                Stretch="Uniform"
+                                HorizontalAlignment="Left">
+
+                                <telerik:Label
+                                    Content="Helideck Lights Output"
+                                    VerticalAlignment="Center" />
+                            </Viewbox>
+
+
+                            <Viewbox
+                                Grid.Column="1"
+                                StretchDirection="Both"
+                                Stretch="Uniform"
+                                HorizontalAlignment="Right">
+
+                                <CheckBox
+                                    IsChecked="{Binding Path=helideckLightsOutput, Mode=TwoWay}"
+                                    Click="cbHelideckLightsOutput_Click"
+                                    VerticalAlignment="Center"
+                                    HorizontalAlignment="Right" />
+                            </Viewbox>
+                        </Grid>
 
                         <!--Enable EMS Page-->
-                        <DockPanel>
+                        <Grid
+                            Grid.Row="3">
 
-                            <telerik:Label
-                                Content="Enable EMS Module"
-                                VerticalAlignment="Center" />
+                            <Grid.ColumnDefinitions>
+                                <ColumnDefinition
+                                    Width="*" />
+                                <ColumnDefinition
+                                    Width="*" />
+                            </Grid.ColumnDefinitions>
 
-                            <CheckBox
-                                Name="chkEnableEMS"
-                                IsChecked="{Binding Path=enableEMS, Mode=TwoWay}"
-                                VerticalAlignment="Center"
-                                HorizontalAlignment="Right"
-                                Click="chkEnableEMS_Click" />
+                            <Viewbox
+                                Grid.Column="0"
+                                StretchDirection="Both"
+                                Stretch="Uniform"
+                                HorizontalAlignment="Left">
 
-                        </DockPanel>
+                                <telerik:Label
+                                    Content="Enable EMS Module"
+                                    VerticalAlignment="Center" />
+                            </Viewbox>
+
+                            <Viewbox
+                                Grid.Column="1"
+                                StretchDirection="Both"
+                                Stretch="Uniform"
+                                HorizontalAlignment="Right">
+
+                                <CheckBox
+                                    Name="chkEnableEMS"
+                                    IsChecked="{Binding Path=enableEMS, Mode=TwoWay}"
+                                    VerticalAlignment="Center"
+                                    HorizontalAlignment="Right"
+                                    Click="chkEnableEMS_Click" />
+                            </Viewbox>
+
+                        </Grid>
 
                         <!--Auto Start HMS Processing-->
-                        <DockPanel>
+                        <Grid
+                            Grid.Row="4">
 
-                            <telerik:Label
-                                Content="Auto Start HMS Processing"
-                                VerticalAlignment="Center" />
+                            <Grid.ColumnDefinitions>
+                                <ColumnDefinition
+                                    Width="*" />
+                                <ColumnDefinition
+                                    Width="*" />
+                            </Grid.ColumnDefinitions>
 
-                            <CheckBox
-                                Name="chkAutoStartHMS"
-                                IsChecked="{Binding Path=autoStartHMS, Mode=TwoWay}"
-                                VerticalAlignment="Center"
-                                HorizontalAlignment="Right" />
+                            <Viewbox
+                                Grid.Column="0"
+                                StretchDirection="Both"
+                                Stretch="Uniform"
+                                HorizontalAlignment="Left">
 
-                        </DockPanel>
+                                <telerik:Label
+                                    Content="Auto Start HMS Processing"
+                                    VerticalAlignment="Center" />
+                            </Viewbox>
 
-                        <!--Decimal Separator-->
-                        <!--<DockPanel>
-                            <telerik:Label
-                                Name="lbDecimalSeparator"
-                                Content="Decimal Separator"
-                                VerticalAlignment="Center" />
-                            <telerik:RadComboBox
-                                Name="cboDecimalSeparator"
-                                Width="200"
-                                HorizontalAlignment="Right"
-                                SelectionChanged="cboDecimalSeparator_SelectionChanged">
-                            </telerik:RadComboBox>
-                        </DockPanel>-->
+                            <Viewbox
+                                Grid.Column="1"
+                                StretchDirection="Both"
+                                Stretch="Uniform"
+                                HorizontalAlignment="Right">
 
-                    </StackPanel>
+                                <CheckBox
+                                    Name="chkAutoStartHMS"
+                                    IsChecked="{Binding Path=autoStartHMS, Mode=TwoWay}"
+                                    VerticalAlignment="Center"
+                                    HorizontalAlignment="Right" />
+                            </Viewbox>
+
+                        </Grid>
+
+                    </Grid>
 
                 </telerik:GroupBox>
 
-
+                <!--HEADING-->
                 <telerik:GroupBox
-                    Header="HEADING"
-                    Grid.Row="1"
                     Grid.Column="0"
+                    Grid.Row="1"
+                    Header="HEADING"
                     Margin="8">
 
-                    <StackPanel
+                    <Grid
                         Margin="8">
 
+                        <Grid.RowDefinitions>
+                            <RowDefinition
+                                Height="*" />
+                            <RowDefinition
+                                Height="*" />
+                            <RowDefinition
+                                Height="*" />
+                            <RowDefinition
+                                Height="*" />
+                            <RowDefinition
+                                Height="*" />
+                            <RowDefinition
+                                Height="*" />
+                            <RowDefinition
+                                Height="*" />
+                        </Grid.RowDefinitions>
+
                         <!--Fixed Installation-->
-                        <DockPanel>
-                            <telerik:Label
-                                Content="Fixed Installation"
-                                VerticalAlignment="Center" />
-                            <CheckBox                               
-                                IsChecked="{Binding Path=fixedInstallation, Mode=TwoWay}"
-                                Click="cbFixedHeadingEnable_Click"
-                                VerticalAlignment="Center"
-                                HorizontalAlignment="Right"/>
-                        </DockPanel>
+                        <Grid
+                            Grid.Row="0">
+
+                            <Grid.ColumnDefinitions>
+                                <ColumnDefinition
+                                    Width="*" />
+                                <ColumnDefinition
+                                    Width="*" />
+                            </Grid.ColumnDefinitions>
+
+                            <Viewbox
+                                Grid.Column="0"
+                                StretchDirection="Both"
+                                Stretch="Uniform"
+                                HorizontalAlignment="Left">
+
+                                <telerik:Label
+                                    Content="Fixed Installation"
+                                    VerticalAlignment="Center" />
+                            </Viewbox>
+
+                            <Viewbox
+                                Grid.Column="1"
+                                StretchDirection="Both"
+                                Stretch="Uniform"
+                                HorizontalAlignment="Right">
+
+                                <CheckBox
+                                    IsChecked="{Binding Path=fixedInstallation, Mode=TwoWay}"
+                                    Click="cbFixedHeadingEnable_Click"
+                                    VerticalAlignment="Center"
+                                    HorizontalAlignment="Right" />
+                            </Viewbox>
+
+                        </Grid>
 
                         <!--Fixed Heading-->
-                        <DockPanel>
-                            <telerik:Label
-                                Name="lbFixedHeading"
-                                Content="Fixed Heading"
-                                VerticalAlignment="Center" />
-                            <TextBox
-                                Name="tbFixedHeading"
-                                Width="200"
-                                HorizontalAlignment="Right"
-                                Text="{Binding Path=fixedHeading}"
-                                LostFocus="tbFixedHeading_LostFocus"
-                                KeyDown="tbFixedHeading_KeyDown" />
-                        </DockPanel>
+                        <Grid
+                            Grid.Row="1">
+
+                            <Grid.ColumnDefinitions>
+                                <ColumnDefinition
+                                    Width="*" />
+                                <ColumnDefinition
+                                    Width="*" />
+                            </Grid.ColumnDefinitions>
+
+                            <Viewbox
+                                Grid.Column="0"
+                                StretchDirection="Both"
+                                Stretch="Uniform"
+                                HorizontalAlignment="Left">
+
+                                <telerik:Label
+                                    Name="lbFixedHeading"
+                                    Content="Fixed Heading"
+                                    VerticalAlignment="Center" />
+                            </Viewbox>
+
+                            <Viewbox
+                                Grid.Column="1"
+                                StretchDirection="Both"
+                                Stretch="Uniform"
+                                HorizontalAlignment="Right">
+
+                                <TextBox
+                                    Name="tbFixedHeading"
+                                    Width="200"
+                                    HorizontalAlignment="Right"
+                                    Text="{Binding Path=fixedHeading}"
+                                    LostFocus="tbFixedHeading_LostFocus"
+                                    KeyDown="tbFixedHeading_KeyDown" />
+                            </Viewbox>
+                        </Grid>
 
                         <!--Vessel Heading Reference-->
-                        <DockPanel>
-                            <telerik:Label
-                                Name="lbVesselHdgRef"
-                                Content="Heading Reference"
-                                VerticalAlignment="Center" />
-                            <telerik:RadComboBox
-                                Name="cboVesselHdgRef"
-                                Width="200"
-                                HorizontalAlignment="Right"
-                                SelectionChanged="cboVesselHdgRef_SelectionChanged">
-                            </telerik:RadComboBox>
-                        </DockPanel>
+                        <Grid
+                            Grid.Row="2">
+
+                            <Grid.ColumnDefinitions>
+                                <ColumnDefinition
+                                    Width="*" />
+                                <ColumnDefinition
+                                    Width="*" />
+                            </Grid.ColumnDefinitions>
+
+                            <Viewbox
+                                Grid.Column="0"
+                                StretchDirection="Both"
+                                Stretch="Uniform"
+                                HorizontalAlignment="Left">
+
+                                <telerik:Label
+                                    Name="lbVesselHdgRef"
+                                    Content="Heading Reference"
+                                    VerticalAlignment="Center" />
+                            </Viewbox>
+
+                            <Viewbox
+                                Grid.Column="1"
+                                StretchDirection="Both"
+                                Stretch="Uniform"
+                                HorizontalAlignment="Right">
+
+                                <telerik:RadComboBox
+                                    Name="cboVesselHdgRef"
+                                    Width="200"
+                                    HorizontalAlignment="Right"
+                                    SelectionChanged="cboVesselHdgRef_SelectionChanged">
+                                </telerik:RadComboBox>
+                            </Viewbox>
+                        </Grid>
 
                         <!--Magnetic Declination-->
-                        <DockPanel>
-                            <telerik:Label
-                                Name="lbMagneticDeclination"
-                                Content="Magnetic Declination"
-                                VerticalAlignment="Center" />
-                            <TextBox
-                                Name="tbMagneticDeclination"
-                                Width="200"
-                                HorizontalAlignment="Right"
-                                Text="{Binding Path=magneticDeclination}"
-                                LostFocus="tbMagneticDeclination_LostFocus"
-                                KeyDown="tbMagneticDeclination_KeyDown" />
-                        </DockPanel>
+                        <Grid
+                            Grid.Row="3">
+
+                            <Grid.ColumnDefinitions>
+                                <ColumnDefinition
+                                    Width="*" />
+                                <ColumnDefinition
+                                    Width="*" />
+                            </Grid.ColumnDefinitions>
+
+                            <Viewbox
+                                Grid.Column="0"
+                                StretchDirection="Both"
+                                Stretch="Uniform"
+                                HorizontalAlignment="Left">
+
+                                <telerik:Label
+                                    Name="lbMagneticDeclination"
+                                    Content="Magnetic Declination"
+                                    VerticalAlignment="Center" />
+                            </Viewbox>
+
+                            <Viewbox
+                                Grid.Column="1"
+                                StretchDirection="Both"
+                                Stretch="Uniform"
+                                HorizontalAlignment="Right">
+
+                                <TextBox
+                                    Name="tbMagneticDeclination"
+                                    Width="200"
+                                    HorizontalAlignment="Right"
+                                    Text="{Binding Path=magneticDeclination}"
+                                    LostFocus="tbMagneticDeclination_LostFocus"
+                                    KeyDown="tbMagneticDeclination_KeyDown" />
+                            </Viewbox>
+                        </Grid>
 
                         <!--Helideck Heading Offset-->
-                        <DockPanel>
-                            <telerik:Label
-                                Content="Helideck Heading Offset"
-                                VerticalAlignment="Center" />
-                            <TextBox
-                                Name="tbHelideckHeadingOffset"
-                                Width="200"
-                                HorizontalAlignment="Right"
-                                Text="{Binding Path=helideckHeadingOffset}"
-                                LostFocus="tbHelideckHeadingOffset_LostFocus"
-                                KeyDown="tbHelideckHeadingOffset_KeyDown" />
-                        </DockPanel>
+                        <Grid
+                            Grid.Row="4">
 
-                    </StackPanel>
+                            <Grid.ColumnDefinitions>
+                                <ColumnDefinition
+                                    Width="*" />
+                                <ColumnDefinition
+                                    Width="*" />
+                            </Grid.ColumnDefinitions>
+
+                            <Viewbox
+                                Grid.Column="0"
+                                StretchDirection="Both"
+                                Stretch="Uniform"
+                                HorizontalAlignment="Left">
+
+                                <telerik:Label
+                                    Content="Helideck Heading Offset"
+                                    VerticalAlignment="Center" />
+                            </Viewbox>
+
+                            <Viewbox
+                                Grid.Column="1"
+                                StretchDirection="Both"
+                                Stretch="Uniform"
+                                HorizontalAlignment="Right">
+
+                                <TextBox
+                                    Name="tbHelideckHeadingOffset"
+                                    Width="200"
+                                    HorizontalAlignment="Right"
+                                    Text="{Binding Path=helideckHeadingOffset}"
+                                    LostFocus="tbHelideckHeadingOffset_LostFocus"
+                                    KeyDown="tbHelideckHeadingOffset_KeyDown" />
+                            </Viewbox>
+                        </Grid>
+
+                    </Grid>
 
                 </telerik:GroupBox>
 
+                <!--SERVER-->
                 <telerik:GroupBox
                     Grid.Row="0"
                     Grid.Column="1"
                     Header="SERVER"
                     Margin="8">
 
-                    <StackPanel
+                    <Grid
                         Margin="8">
 
-                        <DockPanel>
-                            <Label
-                                Content="Address"
-                                VerticalAlignment="Center" />
-                            <Label
-                                Name="lbSettingsServerAddress"
-                                Width="110"
-                                HorizontalAlignment="Right" />
-                        </DockPanel>
+                        <Grid.RowDefinitions>
+                            <RowDefinition
+                                Height="*" />
+                            <RowDefinition
+                                Height="*" />
+                            <RowDefinition
+                                Height="*" />
+                            <RowDefinition
+                                Height="*" />
+                            <RowDefinition
+                                Height="*" />
+                            <RowDefinition
+                                Height="*" />
+                            <RowDefinition
+                                Height="*" />
+                        </Grid.RowDefinitions>
 
-                        <DockPanel>
-                            <Label
-                                Content="Port"
-                                VerticalAlignment="Center" />
-                            <TextBox
-                                Name="tbSettingsServerPort"
-                                Width="110"
-                                HorizontalAlignment="Right"
-                                Text="{Binding Path=serverPort}"
-                                LostFocus="tbSettingsServerPort_LostFocus"
-                                KeyDown="tbSettingsServerPort_KeyDown" />
-                        </DockPanel>
+                        <!--Address-->
+                        <Grid
+                            Grid.Row="0">
 
-                    </StackPanel>
+                            <Grid.ColumnDefinitions>
+                                <ColumnDefinition
+                                    Width="*" />
+                                <ColumnDefinition
+                                    Width="*" />
+                            </Grid.ColumnDefinitions>
+
+                            <Viewbox
+                                Grid.Column="0"
+                                StretchDirection="Both"
+                                Stretch="Uniform"
+                                HorizontalAlignment="Left">
+
+                                <telerik:Label
+                                    Content="Address"
+                                    VerticalAlignment="Center" />
+                            </Viewbox>
+
+                            <Viewbox
+                                Grid.Column="1"
+                                StretchDirection="Both"
+                                Stretch="Uniform"
+                                HorizontalAlignment="Right">
+
+                                <telerik:Label
+                                    Name="lbSettingsServerAddress"
+                                    Width="110"
+                                    HorizontalAlignment="Right" />
+                            </Viewbox>
+                        </Grid>
+
+                        <!--Port-->
+                        <Grid
+                            Grid.Row="1">
+
+                            <Grid.ColumnDefinitions>
+                                <ColumnDefinition
+                                    Width="*" />
+                                <ColumnDefinition
+                                    Width="*" />
+                            </Grid.ColumnDefinitions>
+
+                            <Viewbox
+                                Grid.Column="0"
+                                StretchDirection="Both"
+                                Stretch="Uniform"
+                                HorizontalAlignment="Left">
+
+                                <telerik:Label
+                                    Content="Port"
+                                    VerticalAlignment="Center" />
+                            </Viewbox>
+
+                            <Viewbox
+                                Grid.Column="1"
+                                StretchDirection="Both"
+                                Stretch="Uniform"
+                                HorizontalAlignment="Right">
+
+                                <TextBox
+                                    Name="tbSettingsServerPort"
+                                    Width="110"
+                                    HorizontalAlignment="Right"
+                                    Text="{Binding Path=serverPort}"
+                                    LostFocus="tbSettingsServerPort_LostFocus"
+                                    KeyDown="tbSettingsServerPort_KeyDown" />
+                            </Viewbox>
+                        </Grid>
+
+                    </Grid>
 
                 </telerik:GroupBox>
 
+                <!--DATABASE-->
                 <telerik:GroupBox
                     Grid.Row="0"
                     Grid.Column="2"
@@ -269,219 +594,647 @@
                     Header="DATABASE"
                     Margin="8">
 
-                    <StackPanel
+                    <Grid
                         Margin="8">
 
-                        <DockPanel>
-                            <Label
-                                Content="Address"
-                                VerticalAlignment="Center" />
-                            <TextBox
-                                Name="tbSettingsDatabaseAddress"
-                                Width="110"
-                                HorizontalContentAlignment="Left"
-                                HorizontalAlignment="Right"
-                                Text="{Binding Path=databaseAddress}"
-                                LostFocus="tbSettingsDatabaseAddress_LostFocus"
-                                KeyDown="tbSettingsDatabaseAddress_KeyDown" />
-                        </DockPanel>
+                        <Grid.RowDefinitions>
+                            <RowDefinition
+                                Height="*" />
+                            <RowDefinition
+                                Height="*" />
+                            <RowDefinition
+                                Height="*" />
+                            <RowDefinition
+                                Height="*" />
+                            <RowDefinition
+                                Height="*" />
+                            <RowDefinition
+                                Height="*" />
+                            <RowDefinition
+                                Height="*" />
+                            <RowDefinition
+                                Height="*" />
+                            <RowDefinition
+                                Height="*" />
+                            <RowDefinition
+                                Height="*" />
+                            <RowDefinition
+                                Height="*" />
+                            <RowDefinition
+                                Height="*" />
+                            <RowDefinition
+                                Height="*" />
+                            <RowDefinition
+                                Height="*" />
+                            <RowDefinition
+                                Height="*" />
+                            <RowDefinition
+                                Height="*" />
+                        </Grid.RowDefinitions>
 
-                        <DockPanel>
-                            <Label
-                                Content="Port"
-                                VerticalAlignment="Center" />
-                            <TextBox
-                                Name="tbSettingsDatabasePort"
-                                Width="110"
-                                HorizontalAlignment="Right"
-                                HorizontalContentAlignment="Left"
-                                Text="{Binding Path=databasePort}"
-                                LostFocus="tbSettingsDatabasePort_LostFocus"
-                                KeyDown="tbSettingsDatabasePort_KeyDown" />
-                        </DockPanel>
+                        <!--Address-->
+                        <Grid
+                            Grid.Row="0">
 
-                        <DockPanel>
-                            <Label
-                                Content="Name"
-                                VerticalAlignment="Center" />
-                            <TextBox
-                                Name="tbSettingsDatabaseName"
-                                Width="110"
-                                HorizontalAlignment="Right"
-                                Text="{Binding Path=databaseName}"
-                                LostFocus="tbSettingsDatabaseName_LostFocus"
-                                KeyDown="tbSettingsDatabaseName_KeyDown" />
-                        </DockPanel>
+                            <Grid.ColumnDefinitions>
+                                <ColumnDefinition
+                                    Width="*" />
+                                <ColumnDefinition
+                                    Width="*" />
+                            </Grid.ColumnDefinitions>
 
-                        <DockPanel>
-                            <Label
-                                Content="User ID"
-                                VerticalAlignment="Center" />
-                            <TextBox
-                                Name="tbSettingsDatabaseUserID"
-                                Width="110"
-                                HorizontalAlignment="Right"
-                                LostFocus="tbSettingsDatabaseUserID_LostFocus"
-                                KeyDown="tbSettingsDatabaseUserID_KeyDown" />
-                        </DockPanel>
+                            <Viewbox
+                                Grid.Column="0"
+                                StretchDirection="Both"
+                                Stretch="Uniform"
+                                HorizontalAlignment="Left">
 
-                        <DockPanel>
-                            <Label
-                                Content="Password"
-                                VerticalAlignment="Center" />
-                            <TextBox
-                                Name="tbSettingsDatabasePassword"
-                                Width="110"
-                                HorizontalAlignment="Right"
-                                LostFocus="tbSettingsDatabasePassword_LostFocus"
-                                KeyDown="tbSettingsDatabasePassword_KeyDown" />
-                        </DockPanel>
+                                <telerik:Label
+                                    Content="Address"
+                                    VerticalAlignment="Center" />
+                            </Viewbox>
 
-                        <DockPanel>
-                            <Label
-                                Content="Data Storage Time"
-                                VerticalAlignment="Center" />
-                            <TextBox
-                                Name="tbSettingsDatabaseDataStorageTime"
-                                Width="110"
-                                HorizontalAlignment="Right"
-                                Text="{Binding Path=databaseDataStorageTime}"
-                                LostFocus="tbSettingsDatabaseDataStorageTime_LostFocus"
-                                KeyDown="tbSettingsDatabaseDataStorageTime_KeyDown" />
-                        </DockPanel>
+                            <Viewbox
+                                Grid.Column="1"
+                                StretchDirection="Both"
+                                Stretch="Uniform"
+                                HorizontalAlignment="Right">
 
-                        <DockPanel>
-                            <Label
-                                Content="Messages Storage Time"
-                                VerticalAlignment="Center" />
-                            <TextBox
-                                Name="tbSettingsDatabaseErrorMessagesStorageTime"
-                                Width="110"
-                                HorizontalAlignment="Right"
-                                Text="{Binding Path=databaseErrorMessageStorageTime}"
-                                LostFocus="tbSettingsDatabaseErrorMessagesStorageTime_LostFocus"
-                                KeyDown="tbSettingsDatabaseErrorMessagesStorageTime_KeyDown" />
-                        </DockPanel>
+                                <TextBox
+                                    Name="tbSettingsDatabaseAddress"
+                                    Width="110"
+                                    HorizontalContentAlignment="Left"
+                                    HorizontalAlignment="Right"
+                                    Text="{Binding Path=databaseAddress}"
+                                    LostFocus="tbSettingsDatabaseAddress_LostFocus"
+                                    KeyDown="tbSettingsDatabaseAddress_KeyDown" />
+                            </Viewbox>
+                        </Grid>
 
-                        <DockPanel
-                            Margin="0,8,0,0">
-                            <Label
-                                Width="240"
-                                Content="Remove Unused Database Tables"
-                                VerticalAlignment="Center" />
-                            <Button
-                                Name="btnRemoveUnusedDatabaseTables"
-                                Click="btnRemoveUnusedDatabaseTables_Click"
-                                HorizontalAlignment="Right"
-                                Width="110">Cleanup</Button>
-                        </DockPanel>
+                        <!--Port-->
+                        <Grid
+                            Grid.Row="1">
 
-                        <DockPanel
-                            Margin="0,8,0,0">
-                            <Label
-                                Width="240"
-                                Content="Empty All Database Tables"
-                                VerticalAlignment="Center" />
-                            <Button
-                                Name="btnEmptyDatabaseTables"
-                                Click="btnEmptyDatabaseTables_Click"
-                                HorizontalAlignment="Right"
-                                Width="110">Delete Data</Button>
-                        </DockPanel>
+                            <Grid.ColumnDefinitions>
+                                <ColumnDefinition
+                                    Width="*" />
+                                <ColumnDefinition
+                                    Width="*" />
+                            </Grid.ColumnDefinitions>
 
-                    </StackPanel>
+                            <Viewbox
+                                Grid.Column="0"
+                                StretchDirection="Both"
+                                Stretch="Uniform"
+                                HorizontalAlignment="Left">
+
+                                <telerik:Label
+                                    Content="Port"
+                                    VerticalAlignment="Center" />
+                            </Viewbox>
+
+                            <Viewbox
+                                Grid.Column="1"
+                                StretchDirection="Both"
+                                Stretch="Uniform"
+                                HorizontalAlignment="Right">
+
+                                <TextBox
+                                    Name="tbSettingsDatabasePort"
+                                    Width="110"
+                                    HorizontalAlignment="Right"
+                                    HorizontalContentAlignment="Left"
+                                    Text="{Binding Path=databasePort}"
+                                    LostFocus="tbSettingsDatabasePort_LostFocus"
+                                    KeyDown="tbSettingsDatabasePort_KeyDown" />
+                            </Viewbox>
+                        </Grid>
+
+                        <!--Name-->
+                        <Grid
+                            Grid.Row="2">
+
+                            <Grid.ColumnDefinitions>
+                                <ColumnDefinition
+                                    Width="*" />
+                                <ColumnDefinition
+                                    Width="*" />
+                            </Grid.ColumnDefinitions>
+
+                            <Viewbox
+                                Grid.Column="0"
+                                StretchDirection="Both"
+                                Stretch="Uniform"
+                                HorizontalAlignment="Left">
+
+                                <telerik:Label
+                                    Content="Name"
+                                    VerticalAlignment="Center" />
+                            </Viewbox>
+
+                            <Viewbox
+                                Grid.Column="1"
+                                StretchDirection="Both"
+                                Stretch="Uniform"
+                                HorizontalAlignment="Right">
+
+                                <TextBox
+                                    Name="tbSettingsDatabaseName"
+                                    Width="110"
+                                    HorizontalAlignment="Right"
+                                    Text="{Binding Path=databaseName}"
+                                    LostFocus="tbSettingsDatabaseName_LostFocus"
+                                    KeyDown="tbSettingsDatabaseName_KeyDown" />
+                            </Viewbox>
+                        </Grid>
+
+                        <!--User ID-->
+                        <Grid
+                            Grid.Row="3">
+
+                            <Grid.ColumnDefinitions>
+                                <ColumnDefinition
+                                    Width="*" />
+                                <ColumnDefinition
+                                    Width="*" />
+                            </Grid.ColumnDefinitions>
+
+                            <Viewbox
+                                Grid.Column="0"
+                                StretchDirection="Both"
+                                Stretch="Uniform"
+                                HorizontalAlignment="Left">
+
+                                <telerik:Label
+                                    Content="User ID"
+                                    VerticalAlignment="Center" />
+                            </Viewbox>
+
+                            <Viewbox
+                                Grid.Column="1"
+                                StretchDirection="Both"
+                                Stretch="Uniform"
+                                HorizontalAlignment="Right">
+
+                                <TextBox
+                                    Name="tbSettingsDatabaseUserID"
+                                    Width="110"
+                                    HorizontalAlignment="Right"
+                                    LostFocus="tbSettingsDatabaseUserID_LostFocus"
+                                    KeyDown="tbSettingsDatabaseUserID_KeyDown" />
+                            </Viewbox>
+                        </Grid>
+
+                        <!--Password-->
+                        <Grid
+                            Grid.Row="4">
+
+                            <Grid.ColumnDefinitions>
+                                <ColumnDefinition
+                                    Width="*" />
+                                <ColumnDefinition
+                                    Width="*" />
+                            </Grid.ColumnDefinitions>
+
+                            <Viewbox
+                                Grid.Column="0"
+                                StretchDirection="Both"
+                                Stretch="Uniform"
+                                HorizontalAlignment="Left">
+
+                                <telerik:Label
+                                    Content="Password"
+                                    VerticalAlignment="Center" />
+                            </Viewbox>
+
+                            <Viewbox
+                                Grid.Column="1"
+                                StretchDirection="Both"
+                                Stretch="Uniform"
+                                HorizontalAlignment="Right">
+
+                                <TextBox
+                                    Name="tbSettingsDatabasePassword"
+                                    Width="110"
+                                    HorizontalAlignment="Right"
+                                    LostFocus="tbSettingsDatabasePassword_LostFocus"
+                                    KeyDown="tbSettingsDatabasePassword_KeyDown" />
+                            </Viewbox>
+                        </Grid>
+
+                        <!--Data Storage Time-->
+                        <Grid
+                            Grid.Row="5">
+
+                            <Grid.ColumnDefinitions>
+                                <ColumnDefinition
+                                    Width="*" />
+                                <ColumnDefinition
+                                    Width="*" />
+                            </Grid.ColumnDefinitions>
+
+                            <Viewbox
+                                Grid.Column="0"
+                                StretchDirection="Both"
+                                Stretch="Uniform"
+                                HorizontalAlignment="Left">
+
+                                <telerik:Label
+                                    Content="Data Storage Time"
+                                    VerticalAlignment="Center" />
+                            </Viewbox>
+
+                            <Viewbox
+                                Grid.Column="1"
+                                StretchDirection="Both"
+                                Stretch="Uniform"
+                                HorizontalAlignment="Right">
+
+                                <TextBox
+                                    Name="tbSettingsDatabaseDataStorageTime"
+                                    Width="110"
+                                    HorizontalAlignment="Right"
+                                    Text="{Binding Path=databaseDataStorageTime}"
+                                    LostFocus="tbSettingsDatabaseDataStorageTime_LostFocus"
+                                    KeyDown="tbSettingsDatabaseDataStorageTime_KeyDown" />
+                            </Viewbox>
+                        </Grid>
+
+                        <!--Messages Storage Time-->
+                        <Grid
+                            Grid.Row="6">
+
+                            <Grid.ColumnDefinitions>
+                                <ColumnDefinition
+                                    Width="*" />
+                                <ColumnDefinition
+                                    Width="*" />
+                            </Grid.ColumnDefinitions>
+
+                            <Viewbox
+                                Grid.Column="0"
+                                StretchDirection="Both"
+                                Stretch="Uniform"
+                                HorizontalAlignment="Left">
+
+                                <telerik:Label
+                                    Content="Messages Storage Time"
+                                    VerticalAlignment="Center" />
+                            </Viewbox>
+
+                            <Viewbox
+                                Grid.Column="1"
+                                StretchDirection="Both"
+                                Stretch="Uniform"
+                                HorizontalAlignment="Right">
+
+                                <TextBox
+                                    Name="tbSettingsDatabaseErrorMessagesStorageTime"
+                                    Width="110"
+                                    HorizontalAlignment="Right"
+                                    Text="{Binding Path=databaseErrorMessageStorageTime}"
+                                    LostFocus="tbSettingsDatabaseErrorMessagesStorageTime_LostFocus"
+                                    KeyDown="tbSettingsDatabaseErrorMessagesStorageTime_KeyDown" />
+                            </Viewbox>
+                        </Grid>
+
+                        <!--Remove Unused Database Tables-->
+                        <Grid
+                            Grid.Row="7">
+
+                            <Grid.ColumnDefinitions>
+                                <ColumnDefinition
+                                    Width="3*" />
+                                <ColumnDefinition
+                                    Width="2*" />
+                            </Grid.ColumnDefinitions>
+
+                            <Viewbox
+                                Grid.Column="0"
+                                StretchDirection="Both"
+                                Stretch="Uniform"
+                                HorizontalAlignment="Left">
+
+                                <telerik:Label
+                                    Width="240"
+                                    Content="Remove Unused Database Tables"
+                                    VerticalAlignment="Center" />
+                            </Viewbox>
+
+                            <Viewbox
+                                Grid.Column="1"
+                                Margin="4"
+                                StretchDirection="Both"
+                                Stretch="Uniform"
+                                HorizontalAlignment="Right">
+
+                                <Button
+                                    Name="btnRemoveUnusedDatabaseTables"
+                                    Click="btnRemoveUnusedDatabaseTables_Click"
+                                    HorizontalAlignment="Right"
+                                    Width="110">Cleanup</Button>
+                            </Viewbox>
+                        </Grid>
+
+                        <!--Empty All Database Tables-->
+                        <Grid
+                            Grid.Row="8">
+
+                            <Grid.ColumnDefinitions>
+                                <ColumnDefinition
+                                    Width="3*" />
+                                <ColumnDefinition
+                                    Width="2*" />
+                            </Grid.ColumnDefinitions>
+
+                            <Viewbox
+                                Grid.Column="0"
+                                StretchDirection="Both"
+                                Stretch="Uniform"
+                                HorizontalAlignment="Left">
+
+                                <telerik:Label
+                                    Width="240"
+                                    Content="Empty All Database Tables"
+                                    VerticalAlignment="Center" />
+                            </Viewbox>
+
+                            <Viewbox
+                                Grid.Column="1"
+                                Margin="4"
+                                StretchDirection="Both"
+                                Stretch="Uniform"
+                                HorizontalAlignment="Right">
+
+                                <Button
+                                    Name="btnEmptyDatabaseTables"
+                                    Click="btnEmptyDatabaseTables_Click"
+                                    HorizontalAlignment="Right"
+                                    Width="110">Delete Data</Button>
+                            </Viewbox>
+                        </Grid>
+
+                    </Grid>
 
                 </telerik:GroupBox>
 
+                <!--TIMING-->
                 <telerik:GroupBox
                     Grid.Row="2"
                     Grid.Column="1"
                     Margin="8"
                     Header="TIMING">
 
-                    <StackPanel
+                    <Grid
                         Margin="8">
 
-                        <DockPanel>
-                            <Label
-                                Content="Setup UI Data Limit (ms)"
-                                VerticalAlignment="Center" />
-                            <TextBox
-                                Name="tbSettingsGUIDataLimit"
-                                Width="110"
-                                HorizontalAlignment="Right"
-                                Text="{Binding Path=setupGUIDataLimit}"
-                                LostFocus="tbSettingsGUIDataLimit_LostFocus"
-                                KeyDown="tbSettingsGUIDataLimit_KeyDown" />
-                        </DockPanel>
+                        <Grid.RowDefinitions>
+                            <RowDefinition
+                                Height="*" />
+                            <RowDefinition
+                                Height="*" />
+                            <RowDefinition
+                                Height="*" />
+                            <RowDefinition
+                                Height="*" />
+                            <RowDefinition
+                                Height="*" />
+                            <RowDefinition
+                                Height="*" />
+                            <RowDefinition
+                                Height="*" />
+                        </Grid.RowDefinitions>
 
-                        <DockPanel>
-                            <Label
-                                Content="Server UI Update Frequency"
-                                VerticalAlignment="Center" />
-                            <TextBox
-                                Name="tbSettingsServerUIFrequency"
-                                Width="110"
-                                HorizontalAlignment="Right"
-                                Text="{Binding Path=serverUIUpdateFrequency}"
-                                LostFocus="tbSettingsServerUIFrequency_LostFocus"
-                                KeyDown="tbSettingsServerUIFrequency_KeyDown" />
-                        </DockPanel>
+                        <!--Setup UI Data Limit-->
+                        <Grid
+                            Grid.Row="0">
 
-                        <DockPanel>
-                            <Label
-                                Content="Database Save Frequency"
-                                VerticalAlignment="Center" />
-                            <TextBox
-                                Name="tbSettingsDatabaseSaveFrequency"
-                                Width="110"
-                                HorizontalAlignment="Right"
-                                Text="{Binding Path=databaseSaveFrequency}"
-                                LostFocus="tbSettingsDatabaseSaveFrequency_LostFocus"
-                                KeyDown="tbSettingsDatabaseSaveFrequency_KeyDown" />
-                        </DockPanel>
+                            <Grid.ColumnDefinitions>
+                                <ColumnDefinition
+                                    Width="*" />
+                                <ColumnDefinition
+                                    Width="*" />
+                            </Grid.ColumnDefinitions>
 
-                        <DockPanel>
-                            <Label
-                                Content="Sensor Data Timeout"
-                                VerticalAlignment="Center" />
-                            <TextBox
-                                Name="tbSettingsDataTimeOut"
-                                Width="110"
-                                HorizontalAlignment="Right"
-                                Text="{Binding Path=dataTimeout}"
-                                LostFocus="tbSettingsDataTimeOut_LostFocus"
-                                KeyDown="tbSettingsDataTimeOut_KeyDown" />
-                        </DockPanel>
+                            <Viewbox
+                                Grid.Column="0"
+                                StretchDirection="Both"
+                                Stretch="Uniform"
+                                HorizontalAlignment="Left">
 
-                        <DockPanel>
-                            <Label
-                                Content="HMS Processing Frequency"
-                                VerticalAlignment="Center" />
-                            <TextBox
-                                Name="tbSettingsHMSProcessingFrequency"
-                                Width="110"
-                                HorizontalAlignment="Right"
-                                Text="{Binding Path=hmsProcessingFrequency}"
-                                LostFocus="tbSettingsHMSProcessingFrequency_LostFocus"
-                                KeyDown="tbSettingsHMSProcessingFrequency_KeyDown" />
-                        </DockPanel>
+                                <telerik:Label
+                                    Content="Setup UI Data Limit (ms)"
+                                    VerticalAlignment="Center" />
+                            </Viewbox>
 
-                        <DockPanel>
-                            <Label
-                                Name="lbSettingsLightsOutputFrequency"
-                                Content="Lights Output Frequency (CAP)"
-                                VerticalAlignment="Center" />
-                            <TextBox
-                                Name="tbSettingsLightsOutputFrequency"
-                                Width="110"
-                                HorizontalAlignment="Right"
-                                Text="{Binding Path=lightsOutputFrequency}"
-                                LostFocus="tbSettingsLightsOutputFrequency_LostFocus"
-                                KeyDown="tbSettingsLightsOutputFrequency_KeyDown" />
-                        </DockPanel>
+                            <Viewbox
+                                Grid.Column="1"
+                                StretchDirection="Both"
+                                Stretch="Uniform"
+                                HorizontalAlignment="Right">
 
-                    </StackPanel>
+                                <TextBox
+                                    Name="tbSettingsGUIDataLimit"
+                                    Width="110"
+                                    HorizontalAlignment="Right"
+                                    Text="{Binding Path=setupGUIDataLimit}"
+                                    LostFocus="tbSettingsGUIDataLimit_LostFocus"
+                                    KeyDown="tbSettingsGUIDataLimit_KeyDown" />
+                            </Viewbox>
+                        </Grid>
+
+                        <!--Server UI Update Frequency-->
+                        <Grid
+                            Grid.Row="1">
+
+                            <Grid.ColumnDefinitions>
+                                <ColumnDefinition
+                                    Width="*" />
+                                <ColumnDefinition
+                                    Width="*" />
+                            </Grid.ColumnDefinitions>
+
+                            <Viewbox
+                                Grid.Column="0"
+                                StretchDirection="Both"
+                                Stretch="Uniform"
+                                HorizontalAlignment="Left">
+
+                                <telerik:Label
+                                    Content="Server UI Update Frequency"
+                                    VerticalAlignment="Center" />
+                            </Viewbox>
+
+                            <Viewbox
+                                Grid.Column="1"
+                                StretchDirection="Both"
+                                Stretch="Uniform"
+                                HorizontalAlignment="Right">
+
+                                <TextBox
+                                    Name="tbSettingsServerUIFrequency"
+                                    Width="110"
+                                    HorizontalAlignment="Right"
+                                    Text="{Binding Path=serverUIUpdateFrequency}"
+                                    LostFocus="tbSettingsServerUIFrequency_LostFocus"
+                                    KeyDown="tbSettingsServerUIFrequency_KeyDown" />
+                            </Viewbox>
+                        </Grid>
+
+                        <!--Database Save Frequency-->
+                        <Grid
+                            Grid.Row="2">
+
+                            <Grid.ColumnDefinitions>
+                                <ColumnDefinition
+                                    Width="*" />
+                                <ColumnDefinition
+                                    Width="*" />
+                            </Grid.ColumnDefinitions>
+
+                            <Viewbox
+                                Grid.Column="0"
+                                StretchDirection="Both"
+                                Stretch="Uniform"
+                                HorizontalAlignment="Left">
+
+                                <telerik:Label
+                                    Content="Database Save Frequency"
+                                    VerticalAlignment="Center" />
+                            </Viewbox>
+
+                            <Viewbox
+                                Grid.Column="1"
+                                StretchDirection="Both"
+                                Stretch="Uniform"
+                                HorizontalAlignment="Right">
+
+                                <TextBox
+                                    Name="tbSettingsDatabaseSaveFrequency"
+                                    Width="110"
+                                    HorizontalAlignment="Right"
+                                    Text="{Binding Path=databaseSaveFrequency}"
+                                    LostFocus="tbSettingsDatabaseSaveFrequency_LostFocus"
+                                    KeyDown="tbSettingsDatabaseSaveFrequency_KeyDown" />
+                            </Viewbox>
+                        </Grid>
+
+                        <!--Sensor Data Timeout-->
+                        <Grid
+                            Grid.Row="3">
+
+                            <Grid.ColumnDefinitions>
+                                <ColumnDefinition
+                                    Width="*" />
+                                <ColumnDefinition
+                                    Width="*" />
+                            </Grid.ColumnDefinitions>
+
+                            <Viewbox
+                                Grid.Column="0"
+                                StretchDirection="Both"
+                                Stretch="Uniform"
+                                HorizontalAlignment="Left">
+
+                                <telerik:Label
+                                    Content="Sensor Data Timeout"
+                                    VerticalAlignment="Center" />
+                            </Viewbox>
+
+                            <Viewbox
+                                Grid.Column="1"
+                                StretchDirection="Both"
+                                Stretch="Uniform"
+                                HorizontalAlignment="Right">
+
+                                <TextBox
+                                    Name="tbSettingsDataTimeOut"
+                                    Width="110"
+                                    HorizontalAlignment="Right"
+                                    Text="{Binding Path=dataTimeout}"
+                                    LostFocus="tbSettingsDataTimeOut_LostFocus"
+                                    KeyDown="tbSettingsDataTimeOut_KeyDown" />
+                            </Viewbox>
+                        </Grid>
+
+                        <!--HMS Processing Frequency-->
+                        <Grid
+                            Grid.Row="4">
+
+                            <Grid.ColumnDefinitions>
+                                <ColumnDefinition
+                                    Width="*" />
+                                <ColumnDefinition
+                                    Width="*" />
+                            </Grid.ColumnDefinitions>
+
+                            <Viewbox
+                                Grid.Column="0"
+                                StretchDirection="Both"
+                                Stretch="Uniform"
+                                HorizontalAlignment="Left">
+
+                                <telerik:Label
+                                    Content="HMS Processing Frequency"
+                                    VerticalAlignment="Center" />
+                            </Viewbox>
+
+                            <Viewbox
+                                Grid.Column="1"
+                                StretchDirection="Both"
+                                Stretch="Uniform"
+                                HorizontalAlignment="Right">
+
+                                <TextBox
+                                    Name="tbSettingsHMSProcessingFrequency"
+                                    Width="110"
+                                    HorizontalAlignment="Right"
+                                    Text="{Binding Path=hmsProcessingFrequency}"
+                                    LostFocus="tbSettingsHMSProcessingFrequency_LostFocus"
+                                    KeyDown="tbSettingsHMSProcessingFrequency_KeyDown" />
+                            </Viewbox>
+                        </Grid>
+
+                        <!--Lights Output Frequency (CAP)-->
+                        <Grid
+                            Grid.Row="5">
+
+                            <Grid.ColumnDefinitions>
+                                <ColumnDefinition
+                                    Width="*" />
+                                <ColumnDefinition
+                                    Width="*" />
+                            </Grid.ColumnDefinitions>
+
+                            <Viewbox
+                                Grid.Column="0"
+                                StretchDirection="Both"
+                                Stretch="Uniform"
+                                HorizontalAlignment="Left">
+
+                                <telerik:Label
+                                    Name="lbSettingsLightsOutputFrequency"
+                                    Content="Lights Output Frequency (CAP)"
+                                    VerticalAlignment="Center" />
+                            </Viewbox>
+
+                            <Viewbox
+                                Grid.Column="1"
+                                StretchDirection="Both"
+                                Stretch="Uniform"
+                                HorizontalAlignment="Right">
+
+                                <TextBox
+                                    Name="tbSettingsLightsOutputFrequency"
+                                    Width="110"
+                                    HorizontalAlignment="Right"
+                                    Text="{Binding Path=lightsOutputFrequency}"
+                                    LostFocus="tbSettingsLightsOutputFrequency_LostFocus"
+                                    KeyDown="tbSettingsLightsOutputFrequency_KeyDown" />
+                            </Viewbox>
+                        </Grid>
+
+                    </Grid>
 
                 </telerik:GroupBox>
 
@@ -492,88 +1245,249 @@
                     Margin="8"
                     Header="SENSOR">
 
-                    <StackPanel
+                    <Grid
                         Margin="8">
 
+                        <Grid.RowDefinitions>
+                            <RowDefinition
+                                Height="*" />
+                            <RowDefinition
+                                Height="*" />
+                            <RowDefinition
+                                Height="*" />
+                            <RowDefinition
+                                Height="*" />
+                            <RowDefinition
+                                Height="*" />
+                            <RowDefinition
+                                Height="*" />
+                            <RowDefinition
+                                Height="*" />
+                        </Grid.RowDefinitions>
+
                         <!--Wind Direction Reference-->
-                        <DockPanel>
-                            <telerik:Label
-                                Name="lbWindDirRef"
-                                Content="Wind Direction Reference" />
-                            <telerik:RadComboBox
-                                Name="cboWindDirRef"
-                                Width="160"
-                                HorizontalAlignment="Right"
-                                SelectionChanged="cboWindDirRef_SelectionChanged">
-                            </telerik:RadComboBox>
-                        </DockPanel>
+                        <Grid
+                            Grid.Row="0">
+
+                            <Grid.ColumnDefinitions>
+                                <ColumnDefinition
+                                    Width="*" />
+                                <ColumnDefinition
+                                    Width="*" />
+                            </Grid.ColumnDefinitions>
+
+                            <Viewbox
+                                Grid.Column="0"
+                                StretchDirection="Both"
+                                Stretch="Uniform"
+                                HorizontalAlignment="Left">
+
+                                <telerik:Label
+                                    Name="lbWindDirRef"
+                                    Content="Wind Direction Reference" />
+                            </Viewbox>
+
+                            <Viewbox
+                                Grid.Column="1"
+                                StretchDirection="Both"
+                                Stretch="Uniform"
+                                HorizontalAlignment="Right">
+
+                                <telerik:RadComboBox
+                                    Name="cboWindDirRef"
+                                    Width="160"
+                                    HorizontalAlignment="Right"
+                                    SelectionChanged="cboWindDirRef_SelectionChanged">
+                                </telerik:RadComboBox>
+                            </Viewbox>
+                        </Grid>
 
                         <!--Helideck Height (above MSL)-->
-                        <DockPanel>
-                            <telerik:Label
-                                Content="Helideck Height (above MSL)" />
-                            <TextBox
-                                Name="tbHelideckHeight"
-                                Width="110"
-                                HorizontalAlignment="Right"
-                                Text="{Binding Path=helideckHeight}"
-                                LostFocus="tbHelideckHeight_LostFocus"
-                                KeyDown="tbHelideckHeight_KeyDown" />
-                        </DockPanel>
+                        <Grid
+                            Grid.Row="1">
+
+                            <Grid.ColumnDefinitions>
+                                <ColumnDefinition
+                                    Width="*" />
+                                <ColumnDefinition
+                                    Width="*" />
+                            </Grid.ColumnDefinitions>
+
+                            <Viewbox
+                                Grid.Column="0"
+                                StretchDirection="Both"
+                                Stretch="Uniform"
+                                HorizontalAlignment="Left">
+
+                                <telerik:Label
+                                    Content="Helideck Height (above MSL)" />
+                            </Viewbox>
+
+                            <Viewbox
+                                Grid.Column="1"
+                                StretchDirection="Both"
+                                Stretch="Uniform"
+                                HorizontalAlignment="Right">
+
+                                <TextBox
+                                    Name="tbHelideckHeight"
+                                    Width="110"
+                                    HorizontalAlignment="Right"
+                                    Text="{Binding Path=helideckHeight}"
+                                    LostFocus="tbHelideckHeight_LostFocus"
+                                    KeyDown="tbHelideckHeight_KeyDown" />
+                            </Viewbox>
+                        </Grid>
 
                         <!--Wind Sensor Height-->
-                        <DockPanel>
-                            <telerik:Label
-                                Content="Wind Sensor Height (above MSL)" />
-                            <TextBox
-                                Name="tbWindSensorHeight"
-                                Width="110"
-                                HorizontalAlignment="Right"
-                                Text="{Binding Path=windSensorHeight}"
-                                LostFocus="tbWindSensorHeight_LostFocus"
-                                KeyDown="tbWindSensorHeight_KeyDown" />
-                        </DockPanel>
+                        <Grid
+                            Grid.Row="2">
+
+                            <Grid.ColumnDefinitions>
+                                <ColumnDefinition
+                                    Width="*" />
+                                <ColumnDefinition
+                                    Width="*" />
+                            </Grid.ColumnDefinitions>
+
+                            <Viewbox
+                                Grid.Column="0"
+                                StretchDirection="Both"
+                                Stretch="Uniform"
+                                HorizontalAlignment="Left">
+
+                                <telerik:Label
+                                    Content="Wind Sensor Height (above MSL)" />
+                            </Viewbox>
+
+                            <Viewbox
+                                Grid.Column="1"
+                                StretchDirection="Both"
+                                Stretch="Uniform"
+                                HorizontalAlignment="Right">
+
+                                <TextBox
+                                    Name="tbWindSensorHeight"
+                                    Width="110"
+                                    HorizontalAlignment="Right"
+                                    Text="{Binding Path=windSensorHeight}"
+                                    LostFocus="tbWindSensorHeight_LostFocus"
+                                    KeyDown="tbWindSensorHeight_KeyDown" />
+                            </Viewbox>
+                        </Grid>
 
                         <!--Wind Sensor Distance-->
-                        <DockPanel>
-                            <telerik:Label
-                                Content="Wind Sensor Distance (from helideck)"/>
-                            <TextBox
-                                Name="tbWindSensorDistance"
-                                Width="110"
-                                HorizontalAlignment="Right"
-                                Text="{Binding Path=windSensorDistance}"
-                                LostFocus="tbWindSensorDistance_LostFocus"
-                                KeyDown="tbWindSensorDistance_KeyDown" />
-                        </DockPanel>
+                        <Grid
+                            Grid.Row="3">
+
+                            <Grid.ColumnDefinitions>
+                                <ColumnDefinition
+                                    Width="3*" />
+                                <ColumnDefinition
+                                    Width="2*" />
+                            </Grid.ColumnDefinitions>
+
+                            <Viewbox
+                                Grid.Column="0"
+                                StretchDirection="Both"
+                                Stretch="Uniform"
+                                HorizontalAlignment="Left">
+
+                                <telerik:Label
+                                    Content="Wind Sensor Distance (from helideck)" />
+                            </Viewbox>
+
+                            <Viewbox
+                                Grid.Column="1"
+                                StretchDirection="Both"
+                                Stretch="Uniform"
+                                HorizontalAlignment="Right">
+
+                                <TextBox
+                                    Name="tbWindSensorDistance"
+                                    Width="110"
+                                    HorizontalAlignment="Right"
+                                    Text="{Binding Path=windSensorDistance}"
+                                    LostFocus="tbWindSensorDistance_LostFocus"
+                                    KeyDown="tbWindSensorDistance_KeyDown" />
+                            </Viewbox>
+                        </Grid>
 
                         <!--Air Pressure Sensor Height-->
-                        <DockPanel>
-                            <telerik:Label
-                                Content="Air Pressure Sensor Height (above MSL)" />
-                            <TextBox
-                                Name="tbAirPressureSensorHeight"
-                                Width="110"
-                                HorizontalAlignment="Right"
-                                Text="{Binding Path=airPressureSensorHeight}"
-                                LostFocus="tbAirPressureSensorHeight_LostFocus"
-                                KeyDown="tbAirPressureSensorHeight_KeyDown" />
-                        </DockPanel>
+                        <Grid
+                            Grid.Row="4">
+
+                            <Grid.ColumnDefinitions>
+                                <ColumnDefinition
+                                    Width="3*" />
+                                <ColumnDefinition
+                                    Width="2*" />
+                            </Grid.ColumnDefinitions>
+
+                            <Viewbox
+                                Grid.Column="0"
+                                StretchDirection="Both"
+                                Stretch="Uniform"
+                                HorizontalAlignment="Left">
+
+                                <telerik:Label
+                                    Content="Air Pressure Sensor Height (above MSL)" />
+                            </Viewbox>
+
+                            <Viewbox
+                                Grid.Column="1"
+                                StretchDirection="Both"
+                                Stretch="Uniform"
+                                HorizontalAlignment="Right">
+
+                                <TextBox
+                                    Name="tbAirPressureSensorHeight"
+                                    Width="110"
+                                    HorizontalAlignment="Right"
+                                    Text="{Binding Path=airPressureSensorHeight}"
+                                    LostFocus="tbAirPressureSensorHeight_LostFocus"
+                                    KeyDown="tbAirPressureSensorHeight_KeyDown" />
+                            </Viewbox>
+                        </Grid>
 
                         <!--Wave Height Cut-Off (Period)-->
-                        <DockPanel>
-                            <telerik:Label
-                                Content="Wave Height Cut-Off" />
-                            <TextBox
-                                Name="tbWaveHeightCutoff"
-                                Width="110"
-                                HorizontalAlignment="Right"
-                                Text="{Binding Path=waveHeightCutoff}"
-                                LostFocus="tbWaveHeightCutoff_LostFocus"
-                                KeyDown="tbWaveHeightCutoff_KeyDown" />
-                        </DockPanel>
+                        <Grid
+                            Grid.Row="5">
 
-                    </StackPanel>
+                            <Grid.ColumnDefinitions>
+                                <ColumnDefinition
+                                    Width="3*" />
+                                <ColumnDefinition
+                                    Width="2*" />
+                            </Grid.ColumnDefinitions>
+
+                            <Viewbox
+                                Grid.Column="0"
+                                StretchDirection="Both"
+                                Stretch="Uniform"
+                                HorizontalAlignment="Left">
+
+                                <telerik:Label
+                                    Content="Wave Height Cut-Off" />
+                            </Viewbox>
+
+                            <Viewbox
+                                Grid.Column="1"
+                                StretchDirection="Both"
+                                Stretch="Uniform"
+                                HorizontalAlignment="Right">
+
+                                <TextBox
+                                    Name="tbWaveHeightCutoff"
+                                    Width="110"
+                                    HorizontalAlignment="Right"
+                                    Text="{Binding Path=waveHeightCutoff}"
+                                    LostFocus="tbWaveHeightCutoff_LostFocus"
+                                    KeyDown="tbWaveHeightCutoff_KeyDown" />
+                            </Viewbox>
+                        </Grid>
+
+                    </Grid>
 
                 </telerik:GroupBox>
 
@@ -584,76 +1498,213 @@
                     Margin="8"
                     Header="EMAIL SERVER">
 
-                    <StackPanel
+                    <Grid
                         Margin="8">
 
+                        <Grid.RowDefinitions>
+                            <RowDefinition
+                                Height="*" />
+                            <RowDefinition
+                                Height="*" />
+                            <RowDefinition
+                                Height="*" />
+                            <RowDefinition
+                                Height="*" />
+                            <RowDefinition
+                                Height="*" />
+                            <RowDefinition
+                                Height="*" />
+                            <RowDefinition
+                                Height="*" />
+                        </Grid.RowDefinitions>
+
                         <!--SMTP Server-->
-                        <DockPanel>
-                            <telerik:Label
-                                Content="SMTP Server"
-                                Width="180"
-                                VerticalAlignment="Center" />
-                            <TextBox
-                                Name="tbEmailServer"
-                                Text="{Binding Path=emailServer}"
-                                LostFocus="tbEmailServer_LostFocus"
-                                KeyDown="tbEmailServer_KeyDown" />
-                        </DockPanel>
+                        <Grid
+                            Grid.Row="0">
+
+                            <Grid.ColumnDefinitions>
+                                <ColumnDefinition
+                                    Width="3*" />
+                                <ColumnDefinition
+                                    Width="2*" />
+                            </Grid.ColumnDefinitions>
+
+                            <Viewbox
+                                Grid.Column="0"
+                                StretchDirection="Both"
+                                Stretch="Uniform"
+                                HorizontalAlignment="Left">
+
+                                <telerik:Label
+                                    Content="SMTP Server"
+                                    VerticalAlignment="Center" />
+                            </Viewbox>
+
+                            <Viewbox
+                                Grid.Column="1"
+                                StretchDirection="Both"
+                                Stretch="Uniform"
+                                HorizontalAlignment="Right">
+
+                                <TextBox
+                                    Name="tbEmailServer"
+                                    Width="200"
+                                    Text="{Binding Path=emailServer}"
+                                    LostFocus="tbEmailServer_LostFocus"
+                                    KeyDown="tbEmailServer_KeyDown" />
+                            </Viewbox>
+                        </Grid>
 
                         <!--Port-->
-                        <DockPanel>
-                            <telerik:Label
-                                Content="Port"
-                                VerticalAlignment="Center" />
-                            <TextBox
-                                Name="tbPort"
-                                Width="200"
-                                HorizontalAlignment="Right"
-                                Text="{Binding Path=emailPort}"
-                                LostFocus="tbPort_LostFocus"
-                                KeyDown="tbPort_KeyDown" />
-                        </DockPanel>
+                        <Grid
+                            Grid.Row="1">
+
+                            <Grid.ColumnDefinitions>
+                                <ColumnDefinition
+                                    Width="*" />
+                                <ColumnDefinition
+                                    Width="*" />
+                            </Grid.ColumnDefinitions>
+
+                            <Viewbox
+                                Grid.Column="0"
+                                StretchDirection="Both"
+                                Stretch="Uniform"
+                                HorizontalAlignment="Left">
+
+                                <telerik:Label
+                                    Content="Port"
+                                    VerticalAlignment="Center" />
+                            </Viewbox>
+
+                            <Viewbox
+                                Grid.Column="1"
+                                StretchDirection="Both"
+                                Stretch="Uniform"
+                                HorizontalAlignment="Right">
+
+                                <TextBox
+                                    Name="tbPort"
+                                    Width="200"
+                                    HorizontalAlignment="Right"
+                                    Text="{Binding Path=emailPort}"
+                                    LostFocus="tbPort_LostFocus"
+                                    KeyDown="tbPort_KeyDown" />
+                            </Viewbox>
+                        </Grid>
 
                         <!--Username-->
-                        <DockPanel>
-                            <telerik:Label
-                                Content="Username"
-                                VerticalAlignment="Center" />
-                            <TextBox
-                                Name="tbUsername"
-                                Width="200"
-                                HorizontalAlignment="Right"
-                                Text="{Binding Path=emailUsername}"
-                                LostFocus="tbUsername_LostFocus"
-                                KeyDown="tbUsername_KeyDown" />
-                        </DockPanel>
+                        <Grid
+                            Grid.Row="2">
+
+                            <Grid.ColumnDefinitions>
+                                <ColumnDefinition
+                                    Width="*" />
+                                <ColumnDefinition
+                                    Width="*" />
+                            </Grid.ColumnDefinitions>
+
+                            <Viewbox
+                                Grid.Column="0"
+                                StretchDirection="Both"
+                                Stretch="Uniform"
+                                HorizontalAlignment="Left">
+
+                                <telerik:Label
+                                    Content="Username"
+                                    VerticalAlignment="Center" />
+                            </Viewbox>
+
+                            <Viewbox
+                                Grid.Column="1"
+                                StretchDirection="Both"
+                                Stretch="Uniform"
+                                HorizontalAlignment="Right">
+
+                                <TextBox
+                                    Name="tbUsername"
+                                    Width="200"
+                                    HorizontalAlignment="Right"
+                                    Text="{Binding Path=emailUsername}"
+                                    LostFocus="tbUsername_LostFocus"
+                                    KeyDown="tbUsername_KeyDown" />
+                            </Viewbox>
+                        </Grid>
 
                         <!--Password-->
-                        <DockPanel>
-                            <telerik:Label
-                                Content="Password"
-                                VerticalAlignment="Center" />
-                            <TextBox
-                                Name="tbPassword"
-                                Width="200"
-                                HorizontalAlignment="Right"
-                                Text="{Binding Path=emailPassword}"
-                                LostFocus="tbPassword_LostFocus"
-                                KeyDown="tbPassword_KeyDown" />
-                        </DockPanel>
+                        <Grid
+                            Grid.Row="3">
+
+                            <Grid.ColumnDefinitions>
+                                <ColumnDefinition
+                                    Width="*" />
+                                <ColumnDefinition
+                                    Width="*" />
+                            </Grid.ColumnDefinitions>
+
+                            <Viewbox
+                                Grid.Column="0"
+                                StretchDirection="Both"
+                                Stretch="Uniform"
+                                HorizontalAlignment="Left">
+
+                                <telerik:Label
+                                    Content="Password"
+                                    VerticalAlignment="Center" />
+                            </Viewbox>
+
+                            <Viewbox
+                                Grid.Column="1"
+                                StretchDirection="Both"
+                                Stretch="Uniform"
+                                HorizontalAlignment="Right">
+
+                                <TextBox
+                                    Name="tbPassword"
+                                    Width="200"
+                                    HorizontalAlignment="Right"
+                                    Text="{Binding Path=emailPassword}"
+                                    LostFocus="tbPassword_LostFocus"
+                                    KeyDown="tbPassword_KeyDown" />
+                            </Viewbox>
+                        </Grid>
 
                         <!--Secure Connection-->
-                        <DockPanel>
-                            <telerik:Label
-                                Content="Secure Connection SSL"
-                                VerticalAlignment="Center" />
-                            <CheckBox
-                                IsChecked="{Binding Path=emailSecureConnection, Mode=TwoWay}"
-                                VerticalAlignment="Center"
-                                HorizontalAlignment="Right" />
-                        </DockPanel>
+                        <Grid
+                            Grid.Row="4">
 
-                    </StackPanel>
+                            <Grid.ColumnDefinitions>
+                                <ColumnDefinition
+                                    Width="*" />
+                                <ColumnDefinition
+                                    Width="*" />
+                            </Grid.ColumnDefinitions>
+
+                            <Viewbox
+                                Grid.Column="0"
+                                StretchDirection="Both"
+                                Stretch="Uniform"
+                                HorizontalAlignment="Left">
+
+                                <telerik:Label
+                                    Content="Secure Connection SSL"
+                                    VerticalAlignment="Center" />
+                            </Viewbox>
+
+                            <Viewbox
+                                Grid.Column="1"
+                                StretchDirection="Both"
+                                Stretch="Uniform"
+                                HorizontalAlignment="Right">
+
+                                <CheckBox
+                                    IsChecked="{Binding Path=emailSecureConnection, Mode=TwoWay}"
+                                    VerticalAlignment="Center"
+                                    HorizontalAlignment="Right" />
+                            </Viewbox>
+                        </Grid>
+
+                    </Grid>
 
                 </telerik:GroupBox>
 
@@ -690,24 +1741,56 @@
                     Grid.Column="0"
                     Margin="8">
 
-                    <StackPanel
+                    <Grid
                         Margin="8">
 
-                        <!--Helideck Category-->
-                        <DockPanel>
-                            <telerik:Label
-                                Name="lbHelideckCategory_NOROG"
-                                Content="Helideck Category"
-                                VerticalAlignment="Center" />
-                            <telerik:RadComboBox
-                                Name="cboHelideckCategory_NOROG"
-                                Width="160"
-                                HorizontalAlignment="Right"
-                                SelectionChanged="cboHelideckCategory_NOROG_SelectionChanged">
-                            </telerik:RadComboBox>
-                        </DockPanel>
+                        <Grid.RowDefinitions>
+                            <RowDefinition
+                                Height="*" />
+                            <RowDefinition
+                                Height="5*" />
+                        </Grid.RowDefinitions>
 
-                    </StackPanel>
+                        <!--Helideck Category-->
+                        <Grid>
+
+                            <Grid.ColumnDefinitions>
+                                <ColumnDefinition
+                                    Width="*" />
+                                <ColumnDefinition
+                                    Width="*" />
+                            </Grid.ColumnDefinitions>
+
+                            <Viewbox
+                                Grid.Column="0"
+                                StretchDirection="Both"
+                                Stretch="Uniform"
+                                HorizontalAlignment="Left">
+
+                                <telerik:Label
+                                    Name="lbHelideckCategory_NOROG"
+                                    Content="Helideck Category"
+                                    VerticalAlignment="Center" />
+
+                            </Viewbox>
+
+                            <Viewbox
+                                Grid.Column="1"
+                                StretchDirection="Both"
+                                Stretch="Uniform"
+                                HorizontalAlignment="Right">
+
+                                <telerik:RadComboBox
+                                    Name="cboHelideckCategory_NOROG"
+                                    Width="160"
+                                    HorizontalAlignment="Right"
+                                    SelectionChanged="cboHelideckCategory_NOROG_SelectionChanged">
+                                </telerik:RadComboBox>
+
+                            </Viewbox>
+                        </Grid>
+
+                    </Grid>
 
                 </telerik:GroupBox>
 
@@ -717,62 +1800,148 @@
                     Grid.Column="1"
                     Margin="8">
 
-                    <StackPanel
+                    <Grid
                         Margin="8">
 
+                        <Grid.RowDefinitions>
+                            <RowDefinition
+                                Height="*" />
+                            <RowDefinition
+                                Height="*" />
+                            <RowDefinition
+                                Height="*" />
+                            <RowDefinition
+                                Height="*" />
+                            <RowDefinition
+                                Height="*" />
+                            <RowDefinition
+                                Height="*" />
+                        </Grid.RowDefinitions>
+
                         <!--NDB Installed-->
-                        <DockPanel>
+                        <Grid
+                            Grid.Row="0">
 
-                            <telerik:Label
-                                Name="lbNDBInstalled_NOROG"
-                                Content="NDB Installed"
-                                VerticalAlignment="Center" />
+                            <Grid.ColumnDefinitions>
+                                <ColumnDefinition
+                                    Width="*" />
+                                <ColumnDefinition
+                                    Width="*" />
+                            </Grid.ColumnDefinitions>
 
-                            <CheckBox
-                                Name="cbNDBInstalled_NOROG"
-                                IsChecked="{Binding Path=ndbInstalled_NOROG, Mode=TwoWay}"
-                                VerticalAlignment="Center"
-                                HorizontalAlignment="Right"
-                                Click="chNDBInstalled_NOROG_Click" />
+                            <Viewbox
+                                Grid.Column="0"
+                                StretchDirection="Both"
+                                Stretch="Uniform"
+                                HorizontalAlignment="Left">
 
-                        </DockPanel>
+                                <telerik:Label
+                                    Name="lbNDBInstalled_NOROG"
+                                    Content="NDB Installed"
+                                    VerticalAlignment="Center" />
+
+                            </Viewbox>
+
+                            <Viewbox
+                                Grid.Column="1"
+                                StretchDirection="Both"
+                                Stretch="Uniform"
+                                HorizontalAlignment="Right">
+
+                                <CheckBox
+                                    Name="cbNDBInstalled_NOROG"
+                                    IsChecked="{Binding Path=ndbInstalled_NOROG, Mode=TwoWay}"
+                                    VerticalAlignment="Center"
+                                    HorizontalAlignment="Right"
+                                    Click="chNDBInstalled_NOROG_Click" />
+                            </Viewbox>
+
+                        </Grid>
 
                         <!--NDB Frequency-->
-                        <DockPanel>
-                            <telerik:Label
-                                Name="lbNDBFreq_NOROG"
-                                Content="NDB Frequency"
-                                VerticalAlignment="Center" />
-                            <TextBox
-                                Name="tbNDBFreq_NOROG"
-                                Width="110"
-                                HorizontalAlignment="Right"
-                                Text="{Binding Path=ndbFreq_NOROG}"
-                                LostFocus="tbNDBFreq_NOROG_LostFocus"
-                                KeyDown="tbNDBFreq_NOROG_KeyDown" />
-                        </DockPanel>
+                        <Grid
+                            Grid.Row="1">
+
+                            <Grid.ColumnDefinitions>
+                                <ColumnDefinition
+                                    Width="*" />
+                                <ColumnDefinition
+                                    Width="*" />
+                            </Grid.ColumnDefinitions>
+
+                            <Viewbox
+                                Grid.Column="0"
+                                StretchDirection="Both"
+                                Stretch="Uniform"
+                                HorizontalAlignment="Left">
+
+                                <telerik:Label
+                                    Name="lbNDBFreq_NOROG"
+                                    Content="NDB Frequency"
+                                    VerticalAlignment="Center" />
+                            </Viewbox>
+
+                            <Viewbox
+                                Grid.Column="1"
+                                StretchDirection="Both"
+                                Stretch="Uniform"
+                                HorizontalAlignment="Right">
+
+                                <TextBox
+                                    Name="tbNDBFreq_NOROG"
+                                    Width="110"
+                                    HorizontalAlignment="Right"
+                                    Text="{Binding Path=ndbFreq_NOROG}"
+                                    LostFocus="tbNDBFreq_NOROG_LostFocus"
+                                    KeyDown="tbNDBFreq_NOROG_KeyDown" />
+                            </Viewbox>
+                        </Grid>
 
                         <!--VHF Frequency-->
-                        <DockPanel>
-                            <telerik:Label
-                                Name="lbVHFFreq_NOROG"
-                                Content="VHF Frequency"
-                                VerticalAlignment="Center" />
-                            <TextBox
-                                Name="tbVHFFreq_NOROG"
-                                Width="110"
-                                HorizontalAlignment="Right"
-                                Text="{Binding Path=vhfFreq}"
-                                LostFocus="tbVHF_LostFocus"
-                                KeyDown="tbVHF_KeyDown" />
-                        </DockPanel>
+                        <Grid
+                            Grid.Row="2">
 
-                    </StackPanel>
+                            <Grid.ColumnDefinitions>
+                                <ColumnDefinition
+                                    Width="*" />
+                                <ColumnDefinition
+                                    Width="*" />
+                            </Grid.ColumnDefinitions>
+
+                            <Viewbox
+                                Grid.Column="0"
+                                StretchDirection="Both"
+                                Stretch="Uniform"
+                                HorizontalAlignment="Left">
+
+                                <telerik:Label
+                                    Name="lbVHFFreq_NOROG"
+                                    Content="VHF Frequency"
+                                    VerticalAlignment="Center" />
+                            </Viewbox>
+
+                            <Viewbox
+                                Grid.Column="1"
+                                StretchDirection="Both"
+                                Stretch="Uniform"
+                                HorizontalAlignment="Right">
+
+                                <TextBox
+                                    Name="tbVHFFreq_NOROG"
+                                    Width="110"
+                                    HorizontalAlignment="Right"
+                                    Text="{Binding Path=vhfFreq}"
+                                    LostFocus="tbVHF_LostFocus"
+                                    KeyDown="tbVHF_KeyDown" />
+                            </Viewbox>
+                        </Grid>
+
+                    </Grid>
 
                 </telerik:GroupBox>
 
             </Grid>
-            
+
         </telerik:RadTabItem>
 
         <telerik:RadTabItem
@@ -804,23 +1973,64 @@
                     Grid.Row="0"
                     Margin="8">
 
-                    <StackPanel
+                    <Grid
                         Margin="8">
 
+                        <Grid.RowDefinitions>
+                            <RowDefinition
+                                Height="*" />
+                            <RowDefinition
+                                Height="*" />
+                            <RowDefinition
+                                Height="*" />
+                            <RowDefinition
+                                Height="*" />
+                            <RowDefinition
+                                Height="*" />
+                            <RowDefinition
+                                Height="*" />
+                            <RowDefinition
+                                Height="*" />
+                        </Grid.RowDefinitions>
+
                         <!--MSI Correction-->
-                        <DockPanel>
-                            <telerik:Label
-                                Name="lbMSICorrectionR"
-                                Content="MSI Correction R"
-                                VerticalAlignment="Center" />
-                            <TextBox
-                                Name="tbMSICorrectionR"
-                                Width="110"
-                                HorizontalAlignment="Right"
-                                Text="{Binding Path=msiCorrectionR}"
-                                LostFocus="tbMSICorrectionR_LostFocus"
-                                KeyDown="tbMSICorrectionR_KeyDown" />
-                        </DockPanel>
+                        <Grid
+                            Grid.Row="0">
+
+                            <Grid.ColumnDefinitions>
+                                <ColumnDefinition
+                                    Width="*" />
+                                <ColumnDefinition
+                                    Width="*" />
+                            </Grid.ColumnDefinitions>
+
+                            <Viewbox
+                                Grid.Column="0"
+                                StretchDirection="Both"
+                                Stretch="Uniform"
+                                HorizontalAlignment="Left">
+
+                                <telerik:Label
+                                    Name="lbMSICorrectionR"
+                                    Content="MSI Correction R"
+                                    VerticalAlignment="Center" />
+                            </Viewbox>
+
+                            <Viewbox
+                                Grid.Column="1"
+                                StretchDirection="Both"
+                                Stretch="Uniform"
+                                HorizontalAlignment="Right">
+
+                                <TextBox
+                                    Name="tbMSICorrectionR"
+                                    Width="110"
+                                    HorizontalAlignment="Right"
+                                    Text="{Binding Path=msiCorrectionR}"
+                                    LostFocus="tbMSICorrectionR_LostFocus"
+                                    KeyDown="tbMSICorrectionR_KeyDown" />
+                            </Viewbox>
+                        </Grid>
 
                         <!--Wind Samples Received-->
                         <!--<DockPanel>
@@ -838,46 +2048,109 @@
                         </DockPanel>-->
 
                         <!--Override Wind Buffer-->
-                        <DockPanel>
-                            <telerik:Label
-                                Name="lbOverrideWindBuffer"
-                                Content="Override CAP 9c Wind Buffer"
-                                VerticalAlignment="Center" />
-                            <CheckBox
-                                Name="chkOverrideWindBuffer"
-                                IsChecked="{Binding Path=overrideWindBuffer, Mode=TwoWay}"
-                                VerticalAlignment="Center"
-                                HorizontalAlignment="Right" />
-                        </DockPanel>
+                        <Grid
+                            Grid.Row="1">
+
+                            <Grid.ColumnDefinitions>
+                                <ColumnDefinition
+                                    Width="*" />
+                                <ColumnDefinition
+                                    Width="*" />
+                            </Grid.ColumnDefinitions>
+
+                            <Viewbox
+                                Grid.Column="0"
+                                StretchDirection="Both"
+                                Stretch="Uniform"
+                                HorizontalAlignment="Left">
+
+                                <telerik:Label
+                                    Name="lbOverrideWindBuffer"
+                                    Content="Override CAP 9c Wind Buffer"
+                                    VerticalAlignment="Center" />
+                            </Viewbox>
+
+                            <Viewbox
+                                Grid.Column="1"
+                                StretchDirection="Both"
+                                Stretch="Uniform"
+                                HorizontalAlignment="Right">
+
+                                <CheckBox
+                                    Name="chkOverrideWindBuffer"
+                                    IsChecked="{Binding Path=overrideWindBuffer, Mode=TwoWay}"
+                                    VerticalAlignment="Center"
+                                    HorizontalAlignment="Right" />
+                            </Viewbox>
+                        </Grid>
 
                         <!--Override Motion Buffer-->
-                        <DockPanel>
-                            <telerik:Label
-                                Name="lbOverrideMotionBuffer"
-                                Content="Override CAP 9c Motion Buffer"
-                                VerticalAlignment="Center" />
-                            <CheckBox
-                                Name="chkOverrideMotionBuffer"
-                                IsChecked="{Binding Path=overrideMotionBuffer, Mode=TwoWay}"
-                                VerticalAlignment="Center"
-                                HorizontalAlignment="Right" />
-                        </DockPanel>
+                        <Grid
+                            Grid.Row="2">
 
-                    </StackPanel>
+                            <Grid.ColumnDefinitions>
+                                <ColumnDefinition
+                                    Width="*" />
+                                <ColumnDefinition
+                                    Width="*" />
+                            </Grid.ColumnDefinitions>
+
+                            <Viewbox
+                                Grid.Column="0"
+                                StretchDirection="Both"
+                                Stretch="Uniform"
+                                HorizontalAlignment="Left">
+
+                                <telerik:Label
+                                    Name="lbOverrideMotionBuffer"
+                                    Content="Override CAP 9c Motion Buffer"
+                                    VerticalAlignment="Center" />
+                            </Viewbox>
+
+                            <Viewbox
+                                Grid.Column="1"
+                                StretchDirection="Both"
+                                Stretch="Uniform"
+                                HorizontalAlignment="Right">
+
+                                <CheckBox
+                                    Name="chkOverrideMotionBuffer"
+                                    IsChecked="{Binding Path=overrideMotionBuffer, Mode=TwoWay}"
+                                    VerticalAlignment="Center"
+                                    HorizontalAlignment="Right" />
+                            </Viewbox>
+                        </Grid>
+
+                    </Grid>
 
                 </telerik:GroupBox>
 
+                <!--Helicopter-->
                 <telerik:GroupBox
                     Header="Helicopter"
                     Grid.Column="1"
                     Grid.Row="0"
                     Margin="8">
 
-                    <StackPanel
+                    <Grid
                         Margin="8">
 
-                        <Grid
-                            Margin="8">
+                        <Grid.RowDefinitions>
+                            <RowDefinition
+                                Height="2*" />
+                            <RowDefinition
+                                Height="*" />
+                            <RowDefinition
+                                Height="*" />
+                            <RowDefinition
+                                Height="*" />
+                            <RowDefinition
+                                Height="*" />
+                            <RowDefinition
+                                Height="*" />
+                        </Grid.RowDefinitions>
+
+                        <Grid>
 
                             <Grid.ColumnDefinitions>
                                 <ColumnDefinition
@@ -887,45 +2160,84 @@
                             </Grid.ColumnDefinitions>
 
                             <!--Helikopter type-->
-                            <StackPanel
-                                Grid.Column="0"
-                                Orientation="Vertical">
+                            <Grid
+                                Grid.Column="0">
 
-                                <telerik:Label
-                                    Name="lbHelicopterWSILimitType"
-                                    Content="Helicopter Type:" />
+                                <Grid.RowDefinitions>
+                                    <RowDefinition
+                                        Height="*" />
+                                    <RowDefinition
+                                        Height="*" />
+                                </Grid.RowDefinitions>
 
-                                <telerik:RadComboBox
-                                    Name="cboHelicopterWSILimitType"
-                                    HorizontalAlignment="Left"
-                                    Width="180"
-                                    SelectionChanged="cboHelicopterWSILimitType_SelectionChanged" />
+                                <Viewbox
+                                    Grid.Row="0"
+                                    StretchDirection="Both"
+                                    Stretch="Uniform"
+                                    HorizontalAlignment="Left">
 
+                                    <telerik:Label
+                                        Name="lbHelicopterWSILimitType"
+                                        Content="Helicopter Type:" />
+                                </Viewbox>
 
-                            </StackPanel>
+                                <Viewbox
+                                    Grid.Row="1"
+                                    StretchDirection="Both"
+                                    Stretch="Uniform"
+                                    HorizontalAlignment="Left">
 
-                            <StackPanel
-                                Grid.Column="1"
-                                Orientation="Vertical">
+                                    <telerik:RadComboBox
+                                        Name="cboHelicopterWSILimitType"
+                                        HorizontalAlignment="Left"
+                                        Width="180"
+                                        SelectionChanged="cboHelicopterWSILimitType_SelectionChanged" />
+                                </Viewbox>
+                            </Grid>
 
-                                <telerik:Label
-                                    Name="lbHelicopterWSILimit"
-                                    Content="WSI Limit:" />
-                                <TextBox
-                                    Width="180"
-                                    HorizontalAlignment="Left"
-                                    Name="tbHelicopterWSILimit"
-                                    LostFocus="tbHelicopterWSILimit_LostFocus"
-                                    KeyDown="tbHelicopterWSILimit_KeyDown" />
+                            <Grid
+                                Grid.Column="1">
 
-                            </StackPanel>
+                                <Grid.RowDefinitions>
+                                    <RowDefinition
+                                        Height="*" />
+                                    <RowDefinition
+                                        Height="*" />
+                                </Grid.RowDefinitions>
+
+                                <Viewbox
+                                    Grid.Row="0"
+                                    StretchDirection="Both"
+                                    Stretch="Uniform"
+                                    HorizontalAlignment="Left">
+
+                                    <telerik:Label
+                                        Name="lbHelicopterWSILimit"
+                                        Content="WSI Limit:" />
+                                </Viewbox>
+
+                                <Viewbox
+                                    Grid.Row="10"
+                                    StretchDirection="Both"
+                                    Stretch="Uniform"
+                                    HorizontalAlignment="Left">
+
+                                    <TextBox
+                                        Width="180"
+                                        HorizontalAlignment="Left"
+                                        Name="tbHelicopterWSILimit"
+                                        LostFocus="tbHelicopterWSILimit_LostFocus"
+                                        KeyDown="tbHelicopterWSILimit_KeyDown" />
+                                </Viewbox>
+                            </Grid>
 
                         </Grid>
 
-                    </StackPanel>
+                    </Grid>
 
                 </telerik:GroupBox>
 
+                <!--Offshore Weather Report-->
                 <telerik:GroupBox
                     Header="Offshore Weather Report"
                     Grid.Column="2"
@@ -933,136 +2245,356 @@
                     Grid.RowSpan="2"
                     Margin="8">
 
-                    <StackPanel
+                    <Grid
                         Margin="8">
 
+                        <Grid.RowDefinitions>
+                            <RowDefinition
+                                Height="*" />
+                            <RowDefinition
+                                Height="*" />
+                            <RowDefinition
+                                Height="*" />
+                            <RowDefinition
+                                Height="*" />
+                            <RowDefinition
+                                Height="*" />
+                            <RowDefinition
+                                Height="*" />
+                            <RowDefinition
+                                Height="*" />
+                            <RowDefinition
+                                Height="*" />
+                            <RowDefinition
+                                Height="*" />
+                            <RowDefinition
+                                Height="*" />
+                            <RowDefinition
+                                Height="*" />
+                            <RowDefinition
+                                Height="*" />
+                            <RowDefinition
+                                Height="*" />
+                            <RowDefinition
+                                Height="*" />
+                            <RowDefinition
+                                Height="*" />
+                            <RowDefinition
+                                Height="*" />
+                        </Grid.RowDefinitions>
+
                         <!--NDB Installed-->
-                        <DockPanel>
+                        <Grid
+                            Grid.Row="0">
 
-                            <telerik:Label
-                                Name="lbNDBInstalled_CAP"
-                                Content="NDB Installed"
-                                VerticalAlignment="Center" />
+                            <Grid.ColumnDefinitions>
+                                <ColumnDefinition
+                                    Width="*" />
+                                <ColumnDefinition
+                                    Width="*" />
+                            </Grid.ColumnDefinitions>
 
-                            <CheckBox
-                                Name="cbNDBInstalled_CAP"
-                                IsChecked="{Binding Path=ndbInstalled_CAP, Mode=TwoWay}"
-                                VerticalAlignment="Center"
-                                HorizontalAlignment="Right"
-                                Click="chNDBInstalled_CAP_Click" />
+                            <Viewbox
+                                Grid.Column="0"
+                                StretchDirection="Both"
+                                Stretch="Uniform"
+                                HorizontalAlignment="Left">
 
-                        </DockPanel>
+                                <telerik:Label
+                                    Name="lbNDBInstalled_CAP"
+                                    Content="NDB Installed"
+                                    VerticalAlignment="Center" />
+                            </Viewbox>
+
+                            <Viewbox
+                                Grid.Column="1"
+                                StretchDirection="Both"
+                                Stretch="Uniform"
+                                HorizontalAlignment="Right">
+
+                                <CheckBox
+                                    Name="cbNDBInstalled_CAP"
+                                    IsChecked="{Binding Path=ndbInstalled_CAP, Mode=TwoWay}"
+                                    VerticalAlignment="Center"
+                                    HorizontalAlignment="Right"
+                                    Click="chNDBInstalled_CAP_Click" />
+                            </Viewbox>
+                        </Grid>
 
                         <!--NDB Frequency-->
-                        <DockPanel>
-                            <telerik:Label
-                                Name="lbNDBFreq_CAP"
-                                Content="NDB Frequency"
-                                VerticalAlignment="Center" />
-                            <TextBox
-                                Name="tbNDBFreq_CAP"
-                                Width="110"
-                                HorizontalAlignment="Right"
-                                Text="{Binding Path=ndbFreq_CAP}"
-                                LostFocus="tbNDBFreq_CAP_LostFocus"
-                                KeyDown="tbNDBFreq_CAP_KeyDown" />
-                        </DockPanel>
+                        <Grid
+                            Grid.Row="1">
+
+                            <Grid.ColumnDefinitions>
+                                <ColumnDefinition
+                                    Width="*" />
+                                <ColumnDefinition
+                                    Width="*" />
+                            </Grid.ColumnDefinitions>
+
+                            <Viewbox
+                                Grid.Column="0"
+                                StretchDirection="Both"
+                                Stretch="Uniform"
+                                HorizontalAlignment="Left">
+
+                                <telerik:Label
+                                    Name="lbNDBFreq_CAP"
+                                    Content="NDB Frequency"
+                                    VerticalAlignment="Center" />
+                            </Viewbox>
+
+                            <Viewbox
+                                Grid.Column="1"
+                                StretchDirection="Both"
+                                Stretch="Uniform"
+                                HorizontalAlignment="Right">
+
+                                <TextBox
+                                    Name="tbNDBFreq_CAP"
+                                    Width="110"
+                                    HorizontalAlignment="Right"
+                                    Text="{Binding Path=ndbFreq_CAP}"
+                                    LostFocus="tbNDBFreq_CAP_LostFocus"
+                                    KeyDown="tbNDBFreq_CAP_KeyDown" />
+                            </Viewbox>
+                        </Grid>
 
                         <!--NDB Ident-->
-                        <DockPanel>
-                            <telerik:Label
-                                Name="lbNDBIdent_CAP"
-                                Content="NDB Ident"
-                                VerticalAlignment="Center" />
-                            <TextBox
-                                Name="tbNDBIdent_CAP"
-                                Width="110"
-                                HorizontalAlignment="Right"
-                                Text="{Binding Path=ndbIdent}"
-                                LostFocus="tbNDBIdent_LostFocus"
-                                KeyDown="tbNDBIdent_KeyDown" />
-                        </DockPanel>
+                        <Grid
+                            Grid.Row="2">
+
+                            <Grid.ColumnDefinitions>
+                                <ColumnDefinition
+                                    Width="*" />
+                                <ColumnDefinition
+                                    Width="*" />
+                            </Grid.ColumnDefinitions>
+
+                            <Viewbox
+                                Grid.Column="0"
+                                StretchDirection="Both"
+                                Stretch="Uniform"
+                                HorizontalAlignment="Left">
+
+                                <telerik:Label
+                                    Name="lbNDBIdent_CAP"
+                                    Content="NDB Ident"
+                                    VerticalAlignment="Center" />
+                            </Viewbox>
+
+                            <Viewbox
+                                Grid.Column="1"
+                                StretchDirection="Both"
+                                Stretch="Uniform"
+                                HorizontalAlignment="Right">
+
+                                <TextBox
+                                    Name="tbNDBIdent_CAP"
+                                    Width="110"
+                                    HorizontalAlignment="Right"
+                                    Text="{Binding Path=ndbIdent}"
+                                    LostFocus="tbNDBIdent_LostFocus"
+                                    KeyDown="tbNDBIdent_KeyDown" />
+                            </Viewbox>
+                        </Grid>
 
                         <!--Traffic Frequency-->
-                        <DockPanel>
-                            <telerik:Label
-                                Name="lbTrafficFreq_CAP"
-                                Content="Traffic Frequency"
-                                VerticalAlignment="Center" />
-                            <TextBox
-                                Name="tbTrafficFreq_CAP"
-                                Width="110"
-                                HorizontalAlignment="Right"
-                                Text="{Binding Path=vhfFreq}"
-                                LostFocus="tbVHF_LostFocus"
-                                KeyDown="tbVHF_KeyDown" />
-                        </DockPanel>
+                        <Grid
+                            Grid.Row="3">
+
+                            <Grid.ColumnDefinitions>
+                                <ColumnDefinition
+                                    Width="*" />
+                                <ColumnDefinition
+                                    Width="*" />
+                            </Grid.ColumnDefinitions>
+
+                            <Viewbox
+                                Grid.Column="0"
+                                StretchDirection="Both"
+                                Stretch="Uniform"
+                                HorizontalAlignment="Left">
+
+                                <telerik:Label
+                                    Name="lbTrafficFreq_CAP"
+                                    Content="Traffic Frequency"
+                                    VerticalAlignment="Center" />
+                            </Viewbox>
+
+                            <Viewbox
+                                Grid.Column="1"
+                                StretchDirection="Both"
+                                Stretch="Uniform"
+                                HorizontalAlignment="Right">
+
+                                <TextBox
+                                    Name="tbTrafficFreq_CAP"
+                                    Width="110"
+                                    HorizontalAlignment="Right"
+                                    Text="{Binding Path=vhfFreq}"
+                                    LostFocus="tbVHF_LostFocus"
+                                    KeyDown="tbVHF_KeyDown" />
+                            </Viewbox>
+                        </Grid>
 
                         <!--Log Frequency-->
-                        <DockPanel>
-                            <telerik:Label
-                                Name="lbLogFreq_CAP"
-                                Content="Log. Frequency"
-                                VerticalAlignment="Center" />
-                            <TextBox
-                                Name="tbLogFreq_CAP"
-                                Width="110"
-                                HorizontalAlignment="Right"
-                                Text="{Binding Path=logFreq}"
-                                LostFocus="tbLogFreq_CAP_LostFocus"
-                                KeyDown="tbLogFreq_CAP_KeyDown" />
-                        </DockPanel>
+                        <Grid
+                            Grid.Row="4">
+
+                            <Grid.ColumnDefinitions>
+                                <ColumnDefinition
+                                    Width="*" />
+                                <ColumnDefinition
+                                    Width="*" />
+                            </Grid.ColumnDefinitions>
+
+                            <Viewbox
+                                Grid.Column="0"
+                                StretchDirection="Both"
+                                Stretch="Uniform"
+                                HorizontalAlignment="Left">
+
+                                <telerik:Label
+                                    Name="lbLogFreq_CAP"
+                                    Content="Log. Frequency"
+                                    VerticalAlignment="Center" />
+                            </Viewbox>
+
+                            <Viewbox
+                                Grid.Column="1"
+                                StretchDirection="Both"
+                                Stretch="Uniform"
+                                HorizontalAlignment="Right">
+
+                                <TextBox
+                                    Name="tbLogFreq_CAP"
+                                    Width="110"
+                                    HorizontalAlignment="Right"
+                                    Text="{Binding Path=logFreq}"
+                                    LostFocus="tbLogFreq_CAP_LostFocus"
+                                    KeyDown="tbLogFreq_CAP_KeyDown" />
+                            </Viewbox>
+                        </Grid>
 
                         <!--Marine Channel-->
-                        <DockPanel>
-                            <telerik:Label
-                                Name="lbMarineChannel"
-                                Content="Marine Channel"
-                                VerticalAlignment="Center" />
-                            <TextBox
-                                Name="tbMarineChannel"
-                                Width="110"
-                                HorizontalAlignment="Right"
-                                Text="{Binding Path=marineChannel}"
-                                LostFocus="tbMarineChannel_LostFocus"
-                                KeyDown="tbMarineChannel_KeyDown" />
-                        </DockPanel>
+                        <Grid
+                            Grid.Row="5">
 
-                        <!--Restricted Sector-->
-                        <DockPanel>
+                            <Grid.ColumnDefinitions>
+                                <ColumnDefinition
+                                    Width="*" />
+                                <ColumnDefinition
+                                    Width="*" />
+                            </Grid.ColumnDefinitions>
 
-                            <telerik:Label
-                                Name="lbRestrictedSectorFrom"
-                                Content="Restricted Sector: From"
-                                VerticalAlignment="Center" />
+                            <Viewbox
+                                Grid.Column="0"
+                                StretchDirection="Both"
+                                Stretch="Uniform"
+                                HorizontalAlignment="Left">
 
-                            <TextBox
-                                Name="tbRestrictedSectorFrom"
-                                Width="110"
-                                HorizontalAlignment="Right"
-                                Text="{Binding Path=restrictedSectorFrom}"
-                                LostFocus="tbRestrictedSectorFrom_LostFocus"
-                                KeyDown="tbRestrictedSectorFrom_KeyDown" />
+                                <telerik:Label
+                                    Name="lbMarineChannel"
+                                    Content="Marine Channel"
+                                    VerticalAlignment="Center" />
+                            </Viewbox>
 
-                        </DockPanel>
+                            <Viewbox
+                                Grid.Column="1"
+                                StretchDirection="Both"
+                                Stretch="Uniform"
+                                HorizontalAlignment="Right">
 
-                        <DockPanel>
-                            <telerik:Label
-                                Name="lbRestrictedSectorTo"
-                                Content="Restricted Sector: To"
-                                VerticalAlignment="Center" />
+                                <TextBox
+                                    Name="tbMarineChannel"
+                                    Width="110"
+                                    HorizontalAlignment="Right"
+                                    Text="{Binding Path=marineChannel}"
+                                    LostFocus="tbMarineChannel_LostFocus"
+                                    KeyDown="tbMarineChannel_KeyDown" />
+                            </Viewbox>
+                        </Grid>
 
-                            <TextBox
-                                Name="tbRestrictedSectorTo"
-                                Width="110"
-                                HorizontalAlignment="Right"
-                                Text="{Binding Path=restrictedSectorTo}"
-                                LostFocus="tbRestrictedSectorTo_LostFocus"
-                                KeyDown="tbRestrictedSectorTo_KeyDown" />
+                        <!--Restricted Sector: From-->
+                        <Grid
+                            Grid.Row="6">
 
-                        </DockPanel>
+                            <Grid.ColumnDefinitions>
+                                <ColumnDefinition
+                                    Width="*" />
+                                <ColumnDefinition
+                                    Width="*" />
+                            </Grid.ColumnDefinitions>
 
-                    </StackPanel>
+                            <Viewbox
+                                Grid.Column="0"
+                                StretchDirection="Both"
+                                Stretch="Uniform"
+                                HorizontalAlignment="Left">
+
+                                <telerik:Label
+                                    Name="lbRestrictedSectorFrom"
+                                    Content="Restricted Sector: From"
+                                    VerticalAlignment="Center" />
+                            </Viewbox>
+
+                            <Viewbox
+                                Grid.Column="1"
+                                StretchDirection="Both"
+                                Stretch="Uniform"
+                                HorizontalAlignment="Right">
+
+                                <TextBox
+                                    Name="tbRestrictedSectorFrom"
+                                    Width="110"
+                                    HorizontalAlignment="Right"
+                                    Text="{Binding Path=restrictedSectorFrom}"
+                                    LostFocus="tbRestrictedSectorFrom_LostFocus"
+                                    KeyDown="tbRestrictedSectorFrom_KeyDown" />
+                            </Viewbox>
+                        </Grid>
+
+                        <!--Restricted Sector: To-->
+                        <Grid
+                            Grid.Row="7">
+
+                            <Grid.ColumnDefinitions>
+                                <ColumnDefinition
+                                    Width="*" />
+                                <ColumnDefinition
+                                    Width="*" />
+                            </Grid.ColumnDefinitions>
+
+                            <Viewbox
+                                Grid.Column="0"
+                                StretchDirection="Both"
+                                Stretch="Uniform"
+                                HorizontalAlignment="Left">
+
+                                <telerik:Label
+                                    Name="lbRestrictedSectorTo"
+                                    Content="Restricted Sector: To"
+                                    VerticalAlignment="Center" />
+                            </Viewbox>
+
+                            <Viewbox
+                                Grid.Column="1"
+                                StretchDirection="Both"
+                                Stretch="Uniform"
+                                HorizontalAlignment="Right">
+
+                                <TextBox
+                                    Name="tbRestrictedSectorTo"
+                                    Width="110"
+                                    HorizontalAlignment="Right"
+                                    Text="{Binding Path=restrictedSectorTo}"
+                                    LostFocus="tbRestrictedSectorTo_LostFocus"
+                                    KeyDown="tbRestrictedSectorTo_KeyDown" />
+                            </Viewbox>
+                        </Grid>
+
+                    </Grid>
 
                 </telerik:GroupBox>
 
@@ -1073,31 +2605,71 @@
                     Margin="8"
                     Header="DATA VERIFICATION">
 
-                    <StackPanel
+                    <Grid
                         Margin="8">
 
-                        <!--Secure Connection-->
-                        <DockPanel>
-                            <telerik:Label
-                                Name="lbEnableDataVerification"
-                                Content="Enable Data Verification Module"
-                                VerticalAlignment="Center" />
-                            <CheckBox
-                                Name="chkEnableDataVerification"
-                                IsChecked="{Binding Path=dataVerificationEnabled, Mode=TwoWay}"
-                                VerticalAlignment="Center"
-                                HorizontalAlignment="Right"
-                                Click="chkEnableDataVerification_Click" />
-                        </DockPanel>
+                        <Grid.RowDefinitions>
+                            <RowDefinition
+                                Height="*" />
+                            <RowDefinition
+                                Height="*" />
+                            <RowDefinition
+                                Height="*" />
+                            <RowDefinition
+                                Height="*" />
+                            <RowDefinition
+                                Height="*" />
+                            <RowDefinition
+                                Height="*" />
+                            <RowDefinition
+                                Height="*" />
+                        </Grid.RowDefinitions>
 
-                    </StackPanel>
+                        <!--Secure Connection-->
+                        <Grid
+                            Grid.Row="0">
+
+                            <Grid.ColumnDefinitions>
+                                <ColumnDefinition
+                                    Width="*" />
+                                <ColumnDefinition
+                                    Width="*" />
+                            </Grid.ColumnDefinitions>
+
+                            <Viewbox
+                                Grid.Column="0"
+                                StretchDirection="Both"
+                                Stretch="Uniform"
+                                HorizontalAlignment="Left">
+
+                                <telerik:Label
+                                    Name="lbEnableDataVerification"
+                                    Content="Enable Data Verification Module"
+                                    VerticalAlignment="Center" />
+                            </Viewbox>
+
+                            <Viewbox
+                                Grid.Column="1"
+                                StretchDirection="Both"
+                                Stretch="Uniform"
+                                HorizontalAlignment="Right">
+
+                                <CheckBox
+                                    Name="chkEnableDataVerification"
+                                    IsChecked="{Binding Path=dataVerificationEnabled, Mode=TwoWay}"
+                                    VerticalAlignment="Center"
+                                    HorizontalAlignment="Right"
+                                    Click="chkEnableDataVerification_Click" />
+                            </Viewbox>
+                        </Grid>
+
+                    </Grid>
 
                 </telerik:GroupBox>
 
             </Grid>
 
         </telerik:RadTabItem>
-        
-    </telerik:RadTabControl>
 
+    </telerik:RadTabControl>
 </UserControl>

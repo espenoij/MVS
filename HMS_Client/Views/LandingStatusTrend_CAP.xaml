@@ -27,9 +27,9 @@
 
                 <Grid.RowDefinitions>
                     <RowDefinition
-                        Height="28" />
+                        Height="3*" />
                     <RowDefinition
-                        Height="*" />
+                        Height="2*" />
                 </Grid.RowDefinitions>
 
                 <!--<Viewbox

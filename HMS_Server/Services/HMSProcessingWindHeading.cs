@@ -101,14 +101,17 @@ namespace HMS_Server
             hmsOutputDataList.Add(helideckWindGust2m);
             hmsOutputDataList.Add(helideckWindGust10m);
 
-            hmsOutputDataList.Add(emsWindDirectionRT);
-            hmsOutputDataList.Add(emsWindDirection2m);
-            hmsOutputDataList.Add(emsWindDirection10m);
-            hmsOutputDataList.Add(emsWindSpeedRT);
-            hmsOutputDataList.Add(emsWindSpeed2m);
-            hmsOutputDataList.Add(emsWindSpeed10m);
-            hmsOutputDataList.Add(emsWindGust2m);
-            hmsOutputDataList.Add(emsWindGust10m);
+            if (adminSettingsVM.enableEMS)
+            {
+                hmsOutputDataList.Add(emsWindDirectionRT);
+                hmsOutputDataList.Add(emsWindDirection2m);
+                hmsOutputDataList.Add(emsWindDirection10m);
+                hmsOutputDataList.Add(emsWindSpeedRT);
+                hmsOutputDataList.Add(emsWindSpeed2m);
+                hmsOutputDataList.Add(emsWindSpeed10m);
+                hmsOutputDataList.Add(emsWindGust2m);
+                hmsOutputDataList.Add(emsWindGust10m);
+            }
 
             hmsOutputDataList.Add(relativeWindDir);
             hmsOutputDataList.Add(vesselHeadingDelta);
@@ -203,47 +206,50 @@ namespace HMS_Server
             helideckWindGust10m.dbColumn = "helideck_wind_gust_10m";
 
             // EMS Wind
-            emsWindDirectionRT.id = (int)ValueType.EMSWindDirectionRT;
-            emsWindDirectionRT.name = "EMS Wind Direction (RT)";
-            emsWindDirectionRT.sensorGroupId = Constants.NO_SENSOR_GROUP_ID;
+            if (adminSettingsVM.enableEMS)
+            {
+                emsWindDirectionRT.id = (int)ValueType.EMSWindDirectionRT;
+                emsWindDirectionRT.name = "EMS Wind Direction (RT)";
+                emsWindDirectionRT.sensorGroupId = Constants.NO_SENSOR_GROUP_ID;
 
-            emsWindDirection2m.id = (int)ValueType.EMSWindDirection2m;
-            emsWindDirection2m.name = "EMS Wind Direction (2m)";
-            emsWindDirection2m.sensorGroupId = Constants.NO_SENSOR_GROUP_ID;
-            emsWindDirection2m.InitProcessing(errorHandler, ErrorMessageCategory.AdminUser, adminSettingsVM);
-            emsWindDirection2m.AddProcessing(CalculationType.TimeAverage, 120); // 2 minutter
-            emsWindDirection2m.AddProcessing(CalculationType.RoundingDecimals, 0);
+                emsWindDirection2m.id = (int)ValueType.EMSWindDirection2m;
+                emsWindDirection2m.name = "EMS Wind Direction (2m)";
+                emsWindDirection2m.sensorGroupId = Constants.NO_SENSOR_GROUP_ID;
+                emsWindDirection2m.InitProcessing(errorHandler, ErrorMessageCategory.AdminUser, adminSettingsVM);
+                emsWindDirection2m.AddProcessing(CalculationType.TimeAverage, 120); // 2 minutter
+                emsWindDirection2m.AddProcessing(CalculationType.RoundingDecimals, 0);
 
-            emsWindDirection10m.id = (int)ValueType.EMSWindDirection10m;
-            emsWindDirection10m.name = "EMS Wind Direction (10m)";
-            emsWindDirection10m.sensorGroupId = Constants.NO_SENSOR_GROUP_ID;
-            emsWindDirection10m.InitProcessing(errorHandler, ErrorMessageCategory.AdminUser, adminSettingsVM);
-            emsWindDirection10m.AddProcessing(CalculationType.TimeAverage, 600); // 10 minutter
-            emsWindDirection10m.AddProcessing(CalculationType.RoundingDecimals, 0);
+                emsWindDirection10m.id = (int)ValueType.EMSWindDirection10m;
+                emsWindDirection10m.name = "EMS Wind Direction (10m)";
+                emsWindDirection10m.sensorGroupId = Constants.NO_SENSOR_GROUP_ID;
+                emsWindDirection10m.InitProcessing(errorHandler, ErrorMessageCategory.AdminUser, adminSettingsVM);
+                emsWindDirection10m.AddProcessing(CalculationType.TimeAverage, 600); // 10 minutter
+                emsWindDirection10m.AddProcessing(CalculationType.RoundingDecimals, 0);
 
-            emsWindSpeedRT.id = (int)ValueType.EMSWindSpeedRT;
-            emsWindSpeedRT.name = "EMS Wind Speed (RT)";
-            emsWindSpeedRT.sensorGroupId = Constants.NO_SENSOR_GROUP_ID;
+                emsWindSpeedRT.id = (int)ValueType.EMSWindSpeedRT;
+                emsWindSpeedRT.name = "EMS Wind Speed (RT)";
+                emsWindSpeedRT.sensorGroupId = Constants.NO_SENSOR_GROUP_ID;
 
-            emsWindSpeed2m.id = (int)ValueType.EMSWindSpeed2m;
-            emsWindSpeed2m.name = "EMS Wind Speed (2m)";
-            emsWindSpeed2m.sensorGroupId = Constants.NO_SENSOR_GROUP_ID;
-            emsWindSpeed2m.InitProcessing(errorHandler, ErrorMessageCategory.AdminUser, adminSettingsVM);
-            emsWindSpeed2m.AddProcessing(CalculationType.TimeAverage, 120); // 2 minutter
+                emsWindSpeed2m.id = (int)ValueType.EMSWindSpeed2m;
+                emsWindSpeed2m.name = "EMS Wind Speed (2m)";
+                emsWindSpeed2m.sensorGroupId = Constants.NO_SENSOR_GROUP_ID;
+                emsWindSpeed2m.InitProcessing(errorHandler, ErrorMessageCategory.AdminUser, adminSettingsVM);
+                emsWindSpeed2m.AddProcessing(CalculationType.TimeAverage, 120); // 2 minutter
 
-            emsWindSpeed10m.id = (int)ValueType.EMSWindSpeed10m;
-            emsWindSpeed10m.name = "EMS Wind Speed (10m)";
-            emsWindSpeed10m.sensorGroupId = Constants.NO_SENSOR_GROUP_ID;
-            emsWindSpeed10m.InitProcessing(errorHandler, ErrorMessageCategory.AdminUser, adminSettingsVM);
-            emsWindSpeed10m.AddProcessing(CalculationType.TimeAverage, 600); // 10 minutter
+                emsWindSpeed10m.id = (int)ValueType.EMSWindSpeed10m;
+                emsWindSpeed10m.name = "EMS Wind Speed (10m)";
+                emsWindSpeed10m.sensorGroupId = Constants.NO_SENSOR_GROUP_ID;
+                emsWindSpeed10m.InitProcessing(errorHandler, ErrorMessageCategory.AdminUser, adminSettingsVM);
+                emsWindSpeed10m.AddProcessing(CalculationType.TimeAverage, 600); // 10 minutter
 
-            emsWindGust2m.id = (int)ValueType.EMSWindGust2m;
-            emsWindGust2m.name = "EMS Wind Gust (2m)";
-            emsWindGust2m.sensorGroupId = Constants.NO_SENSOR_GROUP_ID;
+                emsWindGust2m.id = (int)ValueType.EMSWindGust2m;
+                emsWindGust2m.name = "EMS Wind Gust (2m)";
+                emsWindGust2m.sensorGroupId = Constants.NO_SENSOR_GROUP_ID;
 
-            emsWindGust10m.id = (int)ValueType.EMSWindGust10m;
-            emsWindGust10m.name = "EMS Wind Gust (10m)";
-            emsWindGust10m.sensorGroupId = Constants.NO_SENSOR_GROUP_ID;
+                emsWindGust10m.id = (int)ValueType.EMSWindGust10m;
+                emsWindGust10m.name = "EMS Wind Gust (10m)";
+                emsWindGust10m.sensorGroupId = Constants.NO_SENSOR_GROUP_ID;
+            }
 
             // RWD & delta change
             relativeWindDir.id = (int)ValueType.RelativeWindDir;
@@ -491,9 +497,12 @@ namespace HMS_Server
             helideckWindDirectionRT.status = windDirectionCorrectedToHelideck.status;
             helideckWindDirectionRT.timestamp = windDirectionCorrectedToHelideck.timestamp;
 
-            emsWindDirectionRT.data = windDirectionCorrectedTo10mAboveMSL.data;
-            emsWindDirectionRT.status = windDirectionCorrectedTo10mAboveMSL.status;
-            emsWindDirectionRT.timestamp = windDirectionCorrectedTo10mAboveMSL.timestamp;
+            if (adminSettingsVM.enableEMS)
+            {
+                emsWindDirectionRT.data = windDirectionCorrectedTo10mAboveMSL.data;
+                emsWindDirectionRT.status = windDirectionCorrectedTo10mAboveMSL.status;
+                emsWindDirectionRT.timestamp = windDirectionCorrectedTo10mAboveMSL.timestamp;
+            }
 
             // Wind Samples in buffer
             ///////////////////////////////////////////////////////////
@@ -523,21 +532,27 @@ namespace HMS_Server
             // Helideck Wind: 2-minute data
             ///////////////////////////////////////////////////////////
             helideckWindDirection2m.DoProcessing(helideckWindDirectionRT);
-            emsWindDirection2m.DoProcessing(emsWindDirectionRT);
+            
+            if (adminSettingsVM.enableEMS)
+                emsWindDirection2m.DoProcessing(emsWindDirectionRT);
 
             if (adminSettingsVM.regulationStandard == RegulationStandard.CAP && !adminSettingsVM.overrideWindBuffer)
             {
                 helideckWindDirection2m.BufferFillCheck(windSamplesInBuffer2m);
-                emsWindDirection2m.BufferFillCheck(windSamplesInBuffer2m);
+                if (adminSettingsVM.enableEMS)
+                    emsWindDirection2m.BufferFillCheck(windSamplesInBuffer2m);
             }
 
             helideckWindSpeed2m.DoProcessing(windSpeedCorrectedToHelideck);
-            emsWindSpeed2m.DoProcessing(windSpeedCorrectedTo10mAboveMSL);
+
+            if (adminSettingsVM.enableEMS)
+                emsWindSpeed2m.DoProcessing(windSpeedCorrectedTo10mAboveMSL);
 
             if (adminSettingsVM.regulationStandard == RegulationStandard.CAP && !adminSettingsVM.overrideWindBuffer)
             {
                 helideckWindSpeed2m.BufferFillCheck(windSamplesInBuffer2m);
-                emsWindSpeed2m.BufferFillCheck(windSamplesInBuffer2m);
+                if (adminSettingsVM.enableEMS)
+                    emsWindSpeed2m.BufferFillCheck(windSamplesInBuffer2m);
             }
 
             UpdateGustData(
@@ -546,30 +561,39 @@ namespace HMS_Server
                 helideckWindAverageData2m,
                 helideckWindGust2m);
 
-            UpdateGustData(
-                windSpeedCorrectedTo10mAboveMSL,
-                emsWindSpeed2m,
-                emsWindAverageData2m,
-                emsWindGust2m);
+            if (adminSettingsVM.enableEMS)
+            {
+                UpdateGustData(
+                    windSpeedCorrectedTo10mAboveMSL,
+                    emsWindSpeed2m,
+                    emsWindAverageData2m,
+                    emsWindGust2m);
+            }
 
             // Helideck Wind: 10-minute data
             ///////////////////////////////////////////////////////////
             helideckWindDirection10m.DoProcessing(helideckWindDirectionRT);
-            emsWindDirection10m.DoProcessing(emsWindDirectionRT);
+
+            if (adminSettingsVM.enableEMS)
+                emsWindDirection10m.DoProcessing(emsWindDirectionRT);
 
             if (adminSettingsVM.regulationStandard == RegulationStandard.CAP && !adminSettingsVM.overrideWindBuffer)
             {
                 helideckWindDirection10m.BufferFillCheck(windSamplesInBuffer10m);
-                emsWindDirection10m.BufferFillCheck(windSamplesInBuffer10m);
+                if (adminSettingsVM.enableEMS)
+                    emsWindDirection10m.BufferFillCheck(windSamplesInBuffer10m);
             }
 
             helideckWindSpeed10m.DoProcessing(windSpeedCorrectedToHelideck);
-            emsWindSpeed10m.DoProcessing(windSpeedCorrectedToHelideck);
+
+            if (adminSettingsVM.enableEMS)
+                emsWindSpeed10m.DoProcessing(windSpeedCorrectedToHelideck);
 
             if (adminSettingsVM.regulationStandard == RegulationStandard.CAP && !adminSettingsVM.overrideWindBuffer)
             {
                 helideckWindSpeed10m.BufferFillCheck(windSamplesInBuffer10m);
-                emsWindSpeed10m.BufferFillCheck(windSamplesInBuffer10m);
+                if (adminSettingsVM.enableEMS)
+                    emsWindSpeed10m.BufferFillCheck(windSamplesInBuffer10m);
             }
 
             UpdateGustData(
@@ -578,11 +602,14 @@ namespace HMS_Server
                 helideckWindAverageData10m,
                 helideckWindGust10m);
 
-            UpdateGustData(
-                windSpeedCorrectedTo10mAboveMSL,
-                emsWindSpeed10m,
-                emsWindAverageData10m,
-                emsWindGust10m);
+            if (adminSettingsVM.enableEMS)
+            {
+                UpdateGustData(
+                    windSpeedCorrectedTo10mAboveMSL,
+                    emsWindSpeed10m,
+                    emsWindAverageData10m,
+                    emsWindGust10m);
+            }
 
             // RWD, Delta heading/Wind
             /////////////////////////////////////////////////////////////////////////////////////////
@@ -729,16 +756,19 @@ namespace HMS_Server
             helideckWindGust2m.data = Math.Round(helideckWindGust2m.data, 1, MidpointRounding.AwayFromZero);
             helideckWindGust10m.data = Math.Round(helideckWindGust10m.data, 1, MidpointRounding.AwayFromZero);
 
-            emsWindDirectionRT.data = Math.Round(emsWindDirectionRT.data, 0, MidpointRounding.AwayFromZero);
-            emsWindDirection2m.data = Math.Round(emsWindDirection2m.data, 0, MidpointRounding.AwayFromZero);
-            emsWindDirection10m.data = Math.Round(emsWindDirection10m.data, 0, MidpointRounding.AwayFromZero);
+            if (adminSettingsVM.enableEMS)
+            {
+                emsWindDirectionRT.data = Math.Round(emsWindDirectionRT.data, 0, MidpointRounding.AwayFromZero);
+                emsWindDirection2m.data = Math.Round(emsWindDirection2m.data, 0, MidpointRounding.AwayFromZero);
+                emsWindDirection10m.data = Math.Round(emsWindDirection10m.data, 0, MidpointRounding.AwayFromZero);
 
-            emsWindSpeedRT.data = Math.Round(emsWindSpeedRT.data, 1, MidpointRounding.AwayFromZero);
-            emsWindSpeed2m.data = Math.Round(emsWindSpeed2m.data, 1, MidpointRounding.AwayFromZero);
-            emsWindSpeed10m.data = Math.Round(emsWindSpeed10m.data, 1, MidpointRounding.AwayFromZero);
+                emsWindSpeedRT.data = Math.Round(emsWindSpeedRT.data, 1, MidpointRounding.AwayFromZero);
+                emsWindSpeed2m.data = Math.Round(emsWindSpeed2m.data, 1, MidpointRounding.AwayFromZero);
+                emsWindSpeed10m.data = Math.Round(emsWindSpeed10m.data, 1, MidpointRounding.AwayFromZero);
 
-            emsWindGust2m.data = Math.Round(emsWindGust2m.data, 1, MidpointRounding.AwayFromZero);
-            emsWindGust10m.data = Math.Round(emsWindGust10m.data, 1, MidpointRounding.AwayFromZero);
+                emsWindGust2m.data = Math.Round(emsWindGust2m.data, 1, MidpointRounding.AwayFromZero);
+                emsWindGust10m.data = Math.Round(emsWindGust10m.data, 1, MidpointRounding.AwayFromZero);
+            }
 
             relativeWindDir.data = Math.Round(relativeWindDir.data, 1, MidpointRounding.AwayFromZero);
             vesselHeadingDelta.data = Math.Round(vesselHeadingDelta.data, 1, MidpointRounding.AwayFromZero);

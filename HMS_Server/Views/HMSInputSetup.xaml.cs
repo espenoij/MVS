@@ -53,6 +53,13 @@ namespace HMS_Server
             {
                 if (AdminMode.IsActive)
                 {
+                    // Slette display liste dersom lengde er ulik input
+                    if (serverSensorDataList.Count != sensorDisplayList.Count)
+                        sensorDisplayList.Clear();
+
+                    if (hmsInputDataList.GetDataList().Count != hmsInputDisplayList.Count)
+                        hmsInputDisplayList.Clear();
+
                     // Overføre fra data lister til display lister
                     DisplayList.Transfer(serverSensorDataList, sensorDisplayList);
                     DisplayList.Transfer(hmsInputDataList.GetDataList(), hmsInputDisplayList);

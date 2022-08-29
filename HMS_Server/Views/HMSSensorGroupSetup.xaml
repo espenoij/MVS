@@ -71,7 +71,7 @@
                 <telerik:RadGridView.Columns>
 
                     <telerik:GridViewDataColumn
-                        Width="*"
+                        Width="300"
                         Header="Name"
                         IsReadOnly="True"
                         DataMemberBinding="{Binding name}" />
@@ -124,7 +124,7 @@
                         IsReadOnly="True"
                         DataMemberBinding="{Binding id}" />
                     <telerik:GridViewDataColumn
-                        Width="*"
+                        Width="300"
                         Header="Name"
                         DataMemberBinding="{Binding name}" />
                     <telerik:GridViewDataColumn

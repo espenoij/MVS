@@ -151,7 +151,7 @@
                     Stretch="Uniform">
 
                     <Ellipse
-                        Margin="0,8,0,2"
+                        Margin="0,8,0,0"
                         Width="{StaticResource circleSizeLarge}"
                         Height="{StaticResource circleSizeLarge}"
                         Style="{StaticResource TrafficLightRed}" />
@@ -177,7 +177,7 @@
                     Stretch="Uniform">
 
                     <Ellipse
-                        Margin="0,2,0,8"
+                        Margin="0,0,0,8"
                         Width="{StaticResource circleSizeLarge}"
                         Height="{StaticResource circleSizeLarge}"
                         Style="{StaticResource TrafficLightBlue}" />

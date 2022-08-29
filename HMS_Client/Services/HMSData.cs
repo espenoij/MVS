@@ -135,7 +135,7 @@ namespace HMS_Client
         {
             get
             {
-                return timestamp.ToString();
+                return timestamp.ToString(Constants.TimestampFormat, Constants.cultureInfo);
             }
         }
 

@@ -422,8 +422,8 @@ namespace HMS_Client
             get
             {
                 return string.Format("CHANGE SINCE TOUCHDOWN (FROM {0} TO {1} UTC)",
-                    onDeckTime.ToShortTimeString(),
-                    DateTime.UtcNow.ToShortTimeString());
+                    onDeckTime.ToString("HH:mm"),
+                    DateTime.UtcNow.ToString("HH:mm"));
             }
         }
 

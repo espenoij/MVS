@@ -44,162 +44,164 @@
             DockPanel.Dock="Top">
             <Grid.ColumnDefinitions>
                 <ColumnDefinition
-                    Width="400" />
+                    Width="2*" />
                 <ColumnDefinition
-                    Width="*" />
+                    Width="5*" />
             </Grid.ColumnDefinitions>
 
-            <StackPanel
+            <ScrollViewer>
+
+                <StackPanel
                 Grid.Row="0"
                 Grid.Column="0"
                 Margin="8">
 
-                <telerik:GroupBox
+                    <telerik:GroupBox
                     Header="Basic Information"
                     Margin="8">
 
-                    <StackPanel>
+                        <StackPanel>
 
-                        <DockPanel>
-                            <Label
-                                Width="110"
+                            <DockPanel>
+                                <Label
+                                Width="80"
                                 Content="ID" />
-                            <Label
+                                <Label
                                 Name="lbSensorID" />
-                        </DockPanel>
+                            </DockPanel>
 
-                        <DockPanel>
-                            <Label
-                                Width="110"
+                            <DockPanel>
+                                <Label
+                                Width="80"
                                 Content="Name"
                                 VerticalAlignment="Center" />
-                            <Label
+                                <Label
                                 Name="lbSensorName" />
-                        </DockPanel>
+                            </DockPanel>
 
-                        <DockPanel>
-                            <Label
-                                Width="110"
+                            <DockPanel>
+                                <Label
+                                Width="80"
                                 Content="Type"
                                 VerticalAlignment="Center" />
-                            <Label
+                                <Label
                                 Name="lbSensorType" />
-                        </DockPanel>
-                        
-                    </StackPanel>
+                            </DockPanel>
 
-                </telerik:GroupBox>
+                        </StackPanel>
 
-                <!--Serial Port Configuration-->
-                <telerik:GroupBox
+                    </telerik:GroupBox>
+
+                    <!--Serial Port Configuration-->
+                    <telerik:GroupBox
                     Header="Connection"
                     Margin="8">
-                    <StackPanel>
+                        <StackPanel>
 
-                        <DockPanel>
-                            <Label
-                                Width="100"
+                            <DockPanel>
+                                <Label
+                                Width="90"
                                 Content="Port Name"
                                 VerticalAlignment="Center" />
-                            <telerik:RadComboBox
+                                <telerik:RadComboBox
                                 Width="auto"
                                 Name="cboPortName"
                                 SelectionChanged="cboCOMPort_SelectionChanged" />
-                        </DockPanel>
+                            </DockPanel>
 
-                        <DockPanel>
-                            <Label
-                                Width="100"
+                            <DockPanel>
+                                <Label
+                                Width="90"
                                 Content="Baud Rate"
                                 VerticalAlignment="Center" />
-                            <telerik:RadComboBox
+                                <telerik:RadComboBox
                                 Width="auto"
                                 Name="cboBaudRate"
                                 SelectionChanged="cboBaudRate_SelectionChanged" />
-                        </DockPanel>
+                            </DockPanel>
 
-                        <DockPanel>
-                            <Label
-                                Width="100"
+                            <DockPanel>
+                                <Label
+                                Width="90"
                                 Content="Data Bits"
                                 VerticalAlignment="Center" />
-                            <telerik:RadComboBox
+                                <telerik:RadComboBox
                                 Width="auto"
                                 Name="cboDataBits"
                                 SelectionChanged="cboDataBits_SelectionChanged" />
-                        </DockPanel>
+                            </DockPanel>
 
-                        <DockPanel>
-                            <Label
-                                Width="100"
+                            <DockPanel>
+                                <Label
+                                Width="90"
                                 Content="Stop Bits"
                                 VerticalAlignment="Center" />
-                            <telerik:RadComboBox
+                                <telerik:RadComboBox
                                 Width="auto"
                                 Name="cboStopBits"
                                 SelectionChanged="cboStopBits_SelectionChanged" />
-                        </DockPanel>
+                            </DockPanel>
 
-                        <DockPanel>
-                            <Label
-                                Width="100"
+                            <DockPanel>
+                                <Label
+                                Width="90"
                                 Content="Data Parity"
                                 VerticalAlignment="Center" />
-                            <telerik:RadComboBox
+                                <telerik:RadComboBox
                                 Width="auto"
                                 Name="cboParity"
                                 SelectionChanged="cboDataParity_SelectionChanged" />
-                        </DockPanel>
+                            </DockPanel>
 
-                        <DockPanel>
-                            <Label
-                                Width="100"
+                            <DockPanel>
+                                <Label
+                                Width="90"
                                 Content="Hand Shake"
                                 VerticalAlignment="Center" />
-                            <telerik:RadComboBox
+                                <telerik:RadComboBox
                                 Width="auto"
                                 Name="cboHandShake"
                                 SelectionChanged="cboHandShake_SelectionChanged" />
-                        </DockPanel>
+                            </DockPanel>
 
-                    </StackPanel>
-                </telerik:GroupBox>
+                        </StackPanel>
+                    </telerik:GroupBox>
 
-                <!--Serial Port Controls-->
-                <telerik:GroupBox
+                    <!--Serial Port Controls-->
+                    <telerik:GroupBox
                     Header="Connection Controls"
                     Margin="8">
 
-                    <StackPanel>
-                        <StackPanel
+                        <StackPanel>
+                            <StackPanel
                             Orientation="Horizontal"
                             HorizontalAlignment="Center">
 
-                            <Button
+                                <Button
                                 x:Name="btnSerialPortReaderStart"
                                 Click="btnSerialPortReaderOpen_Click"
-                                Width="110"
+                                Width="100"
                                 Margin="8"
                                 Content="Open" />
-                            <Button
+                                <Button
                                 x:Name="btnSerialPortReaderStop"
                                 Click="btnSerialPortReaderClose_Click"
-                                Width="110"
+                                Width="100"
                                 Margin="8"
                                 IsEnabled="False"
                                 Content="Close" />
 
-                        </StackPanel>
+                            </StackPanel>
 
-                        <Rectangle
+                            <Rectangle
                             Width="auto"
                             Height="7"
                             Margin="8">
-                            <Rectangle.Fill>
-                                <VisualBrush
+                                <Rectangle.Fill>
+                                    <VisualBrush
                                     Stretch="None">
-                                    <VisualBrush.Visual>
-                                        <Border
+                                        <VisualBrush.Visual>
+                                            <Border
                                             x:Name="bSerialPortStatus"
                                             CornerRadius="3,3,3,3"
                                             Width="120"
@@ -207,75 +209,77 @@
                                             Background="{StaticResource ColorRed}"
                                             BorderThickness="1"
                                             BorderBrush="Gray" />
-                                    </VisualBrush.Visual>
-                                </VisualBrush>
-                            </Rectangle.Fill>
-                        </Rectangle>
+                                        </VisualBrush.Visual>
+                                    </VisualBrush>
+                                </Rectangle.Fill>
+                            </Rectangle>
 
-                    </StackPanel>
+                        </StackPanel>
 
-                </telerik:GroupBox>
+                    </telerik:GroupBox>
 
-                <!--Data Display-->
-                <telerik:GroupBox
+                    <!--Data Display-->
+                    <telerik:GroupBox
                     Header="Sensor Output"
                     Margin="8">
 
-                    <StackPanel>
+                        <StackPanel>
 
-                        <DockPanel>
-                            <Label
-                                Width="160"
+                            <DockPanel>
+                                <Label
+                                Width="90"
                                 Content="Data Type"
                                 VerticalAlignment="Center" />
-                            <telerik:RadComboBox
+                                <telerik:RadComboBox
                                 Name="cboSensorDataType"
                                 SelectionChanged="cboSensorDataType_SelectionChanged" />
-                        </DockPanel>
+                            </DockPanel>
 
-                    </StackPanel>
+                        </StackPanel>
 
-                </telerik:GroupBox>
+                    </telerik:GroupBox>
 
-                <!--Data Display-->
-                <telerik:GroupBox
+                    <!--Data Display-->
+                    <telerik:GroupBox
                     Header="Data Display"
                     Margin="8">
 
-                    <StackPanel>
+                        <StackPanel>
 
-                        <DockPanel>
-                            
-                            <Label
-                                Width="160"
+                            <DockPanel>
+
+                                <Label
+                                Width="90"
                                 Content="Data Lines"
                                 VerticalAlignment="Center" />
 
-                            <TextBox
+                                <TextBox
                                 Name="tbDataLines"
                                 Text="{Binding totalDataLinesString}"
                                 LostFocus="tbDataLines_LostFocus"
                                 KeyDown="tbDataLines_KeyDown" />
 
-                        </DockPanel>
+                            </DockPanel>
 
-                        <CheckBox
+                            <CheckBox
                             x:Name="chkShowControlChars"
                             Checked="chkShowControlChars_Checked"
                             Unchecked="chkShowControlChars_Unchecked"
                             Content="Show Control Chars" />
 
-                        <Button
+                            <Button
                             x:Name="chkRawDataAllClear"
                             Click="chkRawDataAllClear_Click"
                             HorizontalAlignment="Left"
                             Content="Clear All" />
 
-                    </StackPanel>
+                        </StackPanel>
 
-                </telerik:GroupBox>
+                    </telerik:GroupBox>
 
-            </StackPanel>
+                </StackPanel>
+
+            </ScrollViewer>
 
             <telerik:RadTabControl
                 Grid.Row="0"
@@ -292,9 +296,9 @@
 
                         <Grid.ColumnDefinitions>
                             <ColumnDefinition
-                                Width="*" />
+                                Width="10*" />
                             <ColumnDefinition
-                                Width="400" />
+                                Width="8*" />
                         </Grid.ColumnDefinitions>
 
                         <Grid.RowDefinitions>
@@ -374,7 +378,7 @@
 
                                 <DockPanel>
                                     <Label
-                                        Width="160"
+                                        Width="140"
                                         Content="Packet Header"
                                         VerticalAlignment="Center" />
                                     <TextBox
@@ -385,7 +389,7 @@
 
                                 <DockPanel>
                                     <Label
-                                        Width="160"
+                                        Width="140"
                                         Content="Packet End"
                                         VerticalAlignment="Center" />
                                     <TextBox
@@ -411,11 +415,9 @@
 
                         <Grid.ColumnDefinitions>
                             <ColumnDefinition
-                                Width="407*" />
+                                Width="10*" />
                             <ColumnDefinition
-                                Width="567*" />
-                            <ColumnDefinition
-                                Width="360" />
+                                Width="8*" />
                         </Grid.ColumnDefinitions>
 
                         <Grid.RowDefinitions>
@@ -432,8 +434,7 @@
                             Header="Selected Packets"
                             Grid.Column="0"
                             Grid.Row="0"
-                            Margin="8"
-                            Grid.ColumnSpan="2">
+                            Margin="8">
 
                             <DockPanel>
 
@@ -467,8 +468,7 @@
                             Header="Data Fields"
                             Grid.Column="0"
                             Grid.Row="1"
-                            Margin="8"
-                            Grid.ColumnSpan="2">
+                            Margin="8">
 
                             <DockPanel>
 
@@ -742,8 +742,7 @@
                             Grid.Column="0"
                             Grid.Row="2"
                             Header="Selected Data"
-                            Margin="8"
-                            Grid.ColumnSpan="2">
+                            Margin="8">
 
                             <DockPanel>
 
@@ -773,7 +772,7 @@
                         </telerik:GroupBox>
 
                         <telerik:GroupBox
-                            Grid.Column="2"
+                            Grid.Column="1"
                             Grid.Row="0"
                             Header="Data Field Split"
                             Margin="8">
@@ -844,7 +843,7 @@
                         <!--Data Selection-->
                         <telerik:GroupBox
                             Header="Data Selection"
-                            Grid.Column="2"
+                            Grid.Column="1"
                             Grid.Row="1"
                             Margin="8">
 
@@ -909,9 +908,9 @@
 
                         <Grid.ColumnDefinitions>
                             <ColumnDefinition
-                                Width="*" />
+                                Width="10*" />
                             <ColumnDefinition
-                                Width="360" />
+                                Width="8*" />
                         </Grid.ColumnDefinitions>
 
                         <Grid.RowDefinitions>

@@ -5,6 +5,8 @@ namespace HMS_Server
 {
     class HMSProcessingEMS
     {
+        private HMSData seaTemperature = new HMSData();
+
         private HMSData waveData = new HMSData();
         private HMSData waveMax20mData = new HMSData();
         private HMSData waveMax3hData = new HMSData();
@@ -28,6 +30,8 @@ namespace HMS_Server
             // NB! Dersom nye variabler (m/ny dbColumn) legges til i hmsOutputDataList må databasen opprettes på nytt
 
             RadObservableCollection<HMSData> hmsOutputDataList = hmsOutputData.GetDataList();
+
+            hmsOutputDataList.Add(seaTemperature);
 
             hmsOutputDataList.Add(waveData);
             hmsOutputDataList.Add(waveMax20mData);
@@ -103,6 +107,8 @@ namespace HMS_Server
         public void Update(HMSDataCollection hmsInputDataList)
         {
             // Tar data fra input delen av server og overfører til HMS output delen
+            seaTemperature.Set(hmsInputDataList.GetData(ValueType.SeaTemperature));
+
             waveData.Set(hmsInputDataList.GetData(ValueType.Wave));
             waveMax20mData.DoProcessing(waveData);
             waveMax3hData.DoProcessing(waveData);
@@ -117,6 +123,9 @@ namespace HMS_Server
 
 
             // Sjekke data timeout
+            if (seaTemperature.timestamp.AddMilliseconds(adminSettingsVM.dataTimeout) < DateTime.UtcNow)
+                seaTemperature.status = DataStatus.TIMEOUT_ERROR;
+
             if (waveData.timestamp.AddMilliseconds(adminSettingsVM.dataTimeout) < DateTime.UtcNow)
                 waveData.status = DataStatus.TIMEOUT_ERROR;
 

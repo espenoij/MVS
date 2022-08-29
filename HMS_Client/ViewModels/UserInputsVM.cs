@@ -539,11 +539,11 @@ namespace HMS_Client
                 if (!onDeckHelicopterHeadingIsCorrected)
                     return string.Format("On-Deck Helicopter Heading {0}° M at {1} UTC",
                                 onDeckHelicopterHeading.ToString("000"),
-                                onDeckTime.ToShortTimeString());
+                                onDeckTime.ToString("HH:mm"));
                 else
                 return string.Format("Corrected Helicopter Heading {0}° M at {1} UTC",
                             onDeckHelicopterHeading.ToString("000"),
-                            onDeckTime.ToShortTimeString());
+                            onDeckTime.ToString("HH:mm"));
             }
         }
 

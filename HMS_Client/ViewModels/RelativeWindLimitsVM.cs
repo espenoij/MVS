@@ -133,8 +133,8 @@ namespace HMS_Client
                     if (relativeWindDir30mDataList.Count > 0)
                     {
                         return string.Format("30-minute Trend ({1} - {2} UTC)",
-                            relativeWindDir30mDataList[0].timestamp.ToShortTimeString(),
-                            relativeWindDir30mDataList[relativeWindDir30mDataList.Count - 1].timestamp.ToShortTimeString());
+                            relativeWindDir30mDataList[0].timestamp.ToString("HH:mm"),
+                            relativeWindDir30mDataList[relativeWindDir30mDataList.Count - 1].timestamp.ToString("HH:mm"));
                     }
                     else
                     {
