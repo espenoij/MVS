@@ -4,6 +4,7 @@ using System.ComponentModel;
 using System.Runtime.CompilerServices;
 using System.Windows.Data;
 using System.Windows.Threading;
+using Telerik.Windows.Data;
 
 namespace HMS_Client
 {
@@ -15,7 +16,7 @@ namespace HMS_Client
         private DispatcherTimer UIUpdateTimer = new DispatcherTimer();
 
         // Relative Wind graph buffer/data
-        public RadObservableCollectionEx<RWDData> relativeWindDir30mDataList = new RadObservableCollectionEx<RWDData>();
+        public RadObservableCollection<RWDData> relativeWindDir30mDataList = new RadObservableCollection<RWDData>();
         private object relativeWindDir30mDataListLock = new object();
 
         private OnDeckStabilityLimitsVM onDeckStabilityLimitsVM;

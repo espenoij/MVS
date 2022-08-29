@@ -12,28 +12,28 @@ namespace HMS_Client
         // - Hente individuelle data basert på ID
 
         // Liste med HMS data
-        public RadObservableCollectionEx<HMSData> hmsDataList;
+        public RadObservableCollection<HMSData> hmsDataList;
         private object hmsDataListLock = new object();
 
         // Init
         public HMSDataCollection()
         {
-            hmsDataList = new RadObservableCollectionEx<HMSData>();
+            hmsDataList = new RadObservableCollection<HMSData>();
             BindingOperations.EnableCollectionSynchronization(hmsDataList, hmsDataListLock);
         }
 
-        public RadObservableCollectionEx<HMSData> GetDataList()
+        public RadObservableCollection<HMSData> GetDataList()
         {
             return hmsDataList;
         }
 
-        public RadObservableCollectionEx<HMSData> GetDataList(int sensorGroupId)
+        public RadObservableCollection<HMSData> GetDataList(int sensorGroupId)
         {
             lock (hmsDataListLock)
             {
                 var sensorData = hmsDataList?.Where(x => x?.sensorGroupId == sensorGroupId);
                 if (sensorData.Count() > 0)
-                    return sensorData as RadObservableCollectionEx<HMSData>;
+                    return sensorData as RadObservableCollection<HMSData>;
                 else
                     return null;
             }

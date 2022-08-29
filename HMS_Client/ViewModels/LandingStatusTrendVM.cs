@@ -3,6 +3,7 @@ using System.Collections.Generic;
 using System.ComponentModel;
 using System.Runtime.CompilerServices;
 using System.Windows.Threading;
+using Telerik.Windows.Data;
 
 namespace HMS_Client
 {
@@ -14,10 +15,10 @@ namespace HMS_Client
         private DispatcherTimer UIUpdateTimer = new DispatcherTimer();
 
         // 20 minutters data liste
-        public RadObservableCollectionEx<HelideckStatus> statusTrend20mList = new RadObservableCollectionEx<HelideckStatus>();
+        public RadObservableCollection<HelideckStatus> statusTrend20mList = new RadObservableCollection<HelideckStatus>();
 
         // 3 timers data liste
-        public RadObservableCollectionEx<HelideckStatus> statusTrend3hList = new RadObservableCollectionEx<HelideckStatus>();
+        public RadObservableCollection<HelideckStatus> statusTrend3hList = new RadObservableCollection<HelideckStatus>();
 
         private OnDeckStabilityLimitsVM onDeckStabilityLimitsVM;
 
@@ -105,7 +106,7 @@ namespace HMS_Client
         {
             get
             {
-                RadObservableCollectionEx<HelideckStatus> statusList;
+                RadObservableCollection<HelideckStatus> statusList;
 
                 if (_selectedGraphTime == GraphTime.Minutes20)
                     statusList = statusTrend20mList;

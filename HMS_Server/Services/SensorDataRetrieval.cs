@@ -4,6 +4,7 @@ using System.IO.Ports;
 using System.Linq;
 using System.Windows.Data;
 using System.Windows.Threading;
+using Telerik.Windows.Data;
 
 namespace HMS_Server
 {
@@ -19,7 +20,7 @@ namespace HMS_Server
         private ErrorHandler errorHandler;
 
         // Sensor Data List
-        private RadObservableCollectionEx<SensorData> sensorDataList;
+        private RadObservableCollection<SensorData> sensorDataList;
         private object sensorDataListLock = new object();
 
         // Database Save Frequency dispatcher
@@ -43,7 +44,7 @@ namespace HMS_Server
             this.database = database;
             this.errorHandler = errorHandler;
 
-            sensorDataList = new RadObservableCollectionEx<SensorData>();
+            sensorDataList = new RadObservableCollection<SensorData>();
             BindingOperations.EnableCollectionSynchronization(sensorDataList, sensorDataListLock);
 
             // Serial Port data innhenting
@@ -116,7 +117,7 @@ namespace HMS_Server
             return serialPortDataRetrieval.GetSerialPortDataReceivedList();
         }
 
-        public RadObservableCollectionEx<SensorData> GetSensorDataList()
+        public RadObservableCollection<SensorData> GetSensorDataList()
         {
             return sensorDataList;
         }

@@ -35,8 +35,8 @@ namespace HMS_Server
         private HMSData inclination20mMaxData = new HMSData();
         private HMSData inclination3hMaxData = new HMSData();
 
-        private RadObservableCollectionEx<TimeData> inclination20mMaxList = new RadObservableCollectionEx<TimeData>();
-        private RadObservableCollectionEx<TimeData> inclination3hMaxList = new RadObservableCollectionEx<TimeData>();
+        private RadObservableCollection<TimeData> inclination20mMaxList = new RadObservableCollection<TimeData>();
+        private RadObservableCollection<TimeData> inclination3hMaxList = new RadObservableCollection<TimeData>();
 
         // Heave Height
         private HMSData heaveHeightData = new HMSData();
@@ -79,9 +79,9 @@ namespace HMS_Server
         private double significantHeaveRate10mMean = 0;
         private double significantHeaveRate20mMax = 0;
 
-        private RadObservableCollectionEx<TimeData> significantHeaveRate2mMinData = new RadObservableCollectionEx<TimeData>();
-        private RadObservableCollectionEx<TimeData> significantHeaveRate10mMeanData = new RadObservableCollectionEx<TimeData>();
-        private RadObservableCollectionEx<TimeData> significantHeaveRate20mMaxData = new RadObservableCollectionEx<TimeData>();
+        private RadObservableCollection<TimeData> significantHeaveRate2mMinData = new RadObservableCollection<TimeData>();
+        private RadObservableCollection<TimeData> significantHeaveRate10mMeanData = new RadObservableCollection<TimeData>();
+        private RadObservableCollection<TimeData> significantHeaveRate20mMaxData = new RadObservableCollection<TimeData>();
 
         public HMSProcessingMotion(HMSDataCollection hmsOutputData, HelideckMotionLimits motionLimits, AdminSettingsVM adminSettingsVM, ErrorHandler errorHandler)
         {

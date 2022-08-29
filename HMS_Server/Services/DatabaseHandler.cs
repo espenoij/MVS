@@ -179,7 +179,7 @@ namespace HMS_Server
             }
         }
 
-        //public void CreateTables(RadObservableCollectionEx<HMSData> hmsInputDataList)
+        //public void CreateTables(RadObservableCollection<HMSData> hmsInputDataList)
         //{
         //    try
         //    {
@@ -712,7 +712,7 @@ namespace HMS_Server
             }
         }
 
-        public void Insert(RadObservableCollectionEx<VerificationData> verificationData)
+        public void Insert(RadObservableCollection<VerificationData> verificationData)
         {
             try
             {

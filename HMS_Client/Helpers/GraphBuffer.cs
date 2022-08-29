@@ -1,5 +1,6 @@
 ﻿using System;
 using System.Collections.Generic;
+using Telerik.Windows.Data;
 
 namespace HMS_Client
 {
@@ -7,7 +8,7 @@ namespace HMS_Client
     // Ellers identisk.
     static class GraphBuffer
     {
-        public static void Update(HMSData data, RadObservableCollectionEx<HMSData> buffer)
+        public static void Update(HMSData data, RadObservableCollection<HMSData> buffer)
         {
             // NB! Når vi har data tilgjengelig fores dette inn i grafene.
             // Når vi ikke har data tilgjengelig legges 0 data inn i grafene for å holde de gående.
@@ -27,7 +28,7 @@ namespace HMS_Client
             }
         }
 
-        public static void UpdateWithCull(HMSData data, RadObservableCollectionEx<HMSData> dataList, double cullFrequency)
+        public static void UpdateWithCull(HMSData data, RadObservableCollection<HMSData> dataList, double cullFrequency)
         {
             // Ny løsning ifht det over: Begrenser (cull) graf data ved å ikke ta inn alt, men f.eks. bare hvert 5. sekund.
             // Dropper bruken av buffer.
@@ -52,7 +53,7 @@ namespace HMS_Client
                 dataList.Add(new HMSData() { data = 0, timestamp = DateTime.UtcNow });
         }
 
-        public static void UpdateWithCull(RWDData data, RadObservableCollectionEx<RWDData> dataList, double cullFrequency)
+        public static void UpdateWithCull(RWDData data, RadObservableCollection<RWDData> dataList, double cullFrequency)
         {
             // Ny løsning ifht det over: Begrenser (cull) graf data ved å ikke ta inn alt, men f.eks. bare hvert 5. sekund.
             // Dropper bruken av buffer.
@@ -83,7 +84,7 @@ namespace HMS_Client
             // Legger ikke inn data dersom status er ulik OK
         }
 
-        public static void Transfer(RadObservableCollectionEx<HMSData> buffer, RadObservableCollectionEx<HMSData> dataList)
+        public static void Transfer(RadObservableCollection<HMSData> buffer, RadObservableCollection<HMSData> dataList)
         {
             // Overfører alle data fra buffer til dataList
             if (buffer != null &&
@@ -94,7 +95,7 @@ namespace HMS_Client
             }
         }
 
-        public static void Transfer(RadObservableCollectionEx<HelideckStatus> buffer, RadObservableCollectionEx<HelideckStatus> dataList)
+        public static void Transfer(RadObservableCollection<HelideckStatus> buffer, RadObservableCollection<HelideckStatus> dataList)
         {
             // Overfører alle data fra buffer til dataList
             if (buffer != null &&
@@ -105,7 +106,7 @@ namespace HMS_Client
             }
         }
 
-        public static void RemoveOldData(RadObservableCollectionEx<HMSData> dataList, double timeInterval)
+        public static void RemoveOldData(RadObservableCollection<HMSData> dataList, double timeInterval)
         {
             if (dataList != null)
             {
@@ -117,7 +118,7 @@ namespace HMS_Client
             }
         }
 
-        public static void RemoveOldData(RadObservableCollectionEx<RWDData> dataList, double timeInterval)
+        public static void RemoveOldData(RadObservableCollection<RWDData> dataList, double timeInterval)
         {
             if (dataList != null)
             {
@@ -129,7 +130,7 @@ namespace HMS_Client
             }
         }
 
-        public static void RemoveOldData(RadObservableCollectionEx<HelideckStatus> dataList, double timeInterval)
+        public static void RemoveOldData(RadObservableCollection<HelideckStatus> dataList, double timeInterval)
         {
             if (dataList != null)
             {
@@ -141,21 +142,21 @@ namespace HMS_Client
             }
         }
 
-        public static void Clear(RadObservableCollectionEx<HMSData> buffer)
+        public static void Clear(RadObservableCollection<HMSData> buffer)
         {
             // Sletter alle data i buffer
             if (buffer != null)
                 buffer.Clear();
         }
 
-        public static void Clear(RadObservableCollectionEx<RWDData> buffer)
+        public static void Clear(RadObservableCollection<RWDData> buffer)
         {
             // Sletter alle data i buffer
             if (buffer != null)
                 buffer.Clear();
         }
 
-        public static void Clear(RadObservableCollectionEx<HelideckStatus> buffer)
+        public static void Clear(RadObservableCollection<HelideckStatus> buffer)
         {
             // Sletter alle data i buffer
             if (buffer != null)
@@ -172,7 +173,7 @@ namespace HMS_Client
             }
         }
 
-        public static void TransferDisplayData(RadObservableCollectionEx<HelideckStatus> list, List<HelideckStatusType> dispList)
+        public static void TransferDisplayData(RadObservableCollection<HelideckStatus> list, List<HelideckStatusType> dispList)
         {
             // Denne funksjonen mapper et visst antall statuser til en status indikator posisjon på tidslinjen på skjermen.
             // Viser høyeste nivå fra sub-settet med statuser.

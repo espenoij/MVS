@@ -3,6 +3,7 @@ using System.Windows;
 using System.Windows.Controls;
 using System.Windows.Input;
 using Telerik.Windows.Controls;
+using Telerik.Windows.Data;
 
 namespace HMS_Server
 {
@@ -21,7 +22,7 @@ namespace HMS_Server
         private AdminSettingsVM adminSettingsVM;
 
         // Sensor Data List
-        private RadObservableCollectionEx<SensorData> sensorDataList = new RadObservableCollectionEx<SensorData>();
+        private RadObservableCollection<SensorData> sensorDataList = new RadObservableCollection<SensorData>();
         private SensorData sensorDataSelected = new SensorData();
 
         private bool serverStarted = false;

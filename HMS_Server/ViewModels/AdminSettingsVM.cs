@@ -1,6 +1,7 @@
 ﻿using System;
 using System.ComponentModel;
 using System.Runtime.CompilerServices;
+using Telerik.Windows.Data;
 
 namespace HMS_Server
 {
@@ -844,7 +845,7 @@ namespace HMS_Server
         /////////////////////////////////////////////////////////////////////////////
         // Helicopter WSI limit
         /////////////////////////////////////////////////////////////////////////////
-        public RadObservableCollectionEx<HelicopterWSILimit> helicopterWSILimitList = new RadObservableCollectionEx<HelicopterWSILimit>();
+        public RadObservableCollection<HelicopterWSILimit> helicopterWSILimitList = new RadObservableCollection<HelicopterWSILimit>();
 
         public double GetWSILimit(HelicopterType type)
         {

@@ -5,6 +5,7 @@ using System.Runtime.CompilerServices;
 using System.Windows.Threading;
 using System.Windows.Media;
 using System.Collections.ObjectModel;
+using Telerik.Windows.Data;
 
 namespace HMS_Client
 {
@@ -16,11 +17,11 @@ namespace HMS_Client
         private DispatcherTimer UIUpdateTimer = new DispatcherTimer();
 
         // Graph buffer/data
-        public RadObservableCollectionEx<HMSData> vesselHdg30mDataList = new RadObservableCollectionEx<HMSData>();
-        public RadObservableCollectionEx<HMSData> windDir30mDataList = new RadObservableCollectionEx<HMSData>();
+        public RadObservableCollection<HMSData> vesselHdg30mDataList = new RadObservableCollection<HMSData>();
+        public RadObservableCollection<HMSData> windDir30mDataList = new RadObservableCollection<HMSData>();
 
         // 30 minutters RWD data liste
-        private RadObservableCollectionEx<HelideckStatus> rwdTrend30mList = new RadObservableCollectionEx<HelideckStatus>();
+        private RadObservableCollection<HelideckStatus> rwdTrend30mList = new RadObservableCollection<HelideckStatus>();
         public List<HelideckStatusType> rwdTrend30mDispList = new List<HelideckStatusType>();
 
         private DateTime onDeckTime;

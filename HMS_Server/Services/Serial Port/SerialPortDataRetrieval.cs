@@ -2,6 +2,7 @@
 using System.Collections.Generic;
 using System.IO.Ports;
 using System.Text.RegularExpressions;
+using Telerik.Windows.Data;
 
 namespace HMS_Server
 {
@@ -13,7 +14,7 @@ namespace HMS_Server
         // Database
         DatabaseHandler database;
 
-        RadObservableCollectionEx<SensorData> sensorDataList;
+        RadObservableCollection<SensorData> sensorDataList;
 
         // Serial Port: List
         private List<SerialPort> serialPortList = new List<SerialPort>();
@@ -27,7 +28,7 @@ namespace HMS_Server
         // Admin Settings
         private AdminSettingsVM adminSettingsVM;
 
-        public SerialPortDataRetrieval(Config config, RadObservableCollectionEx<SensorData> sensorDataList, DatabaseHandler database, ErrorHandler errorHandler, AdminSettingsVM adminSettingsVM)
+        public SerialPortDataRetrieval(Config config, RadObservableCollection<SensorData> sensorDataList, DatabaseHandler database, ErrorHandler errorHandler, AdminSettingsVM adminSettingsVM)
         {
             this.config = config;
             this.database = database;

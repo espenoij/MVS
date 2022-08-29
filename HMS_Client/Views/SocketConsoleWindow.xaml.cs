@@ -17,7 +17,7 @@ namespace HMS_Client
         private RadObservableCollection<SocketConsoleMessage> socketConsoleDisplayList = new RadObservableCollection<SocketConsoleMessage>();
         private DispatcherTimer socketConsoleUpdater;
 
-        private RadObservableCollectionEx<HMSData> hmsDataList = new RadObservableCollectionEx<HMSData>();
+        private RadObservableCollection<HMSData> hmsDataList = new RadObservableCollection<HMSData>();
 
         public SocketConsoleWindow(SocketConsole socketConsole, Config config)
         {

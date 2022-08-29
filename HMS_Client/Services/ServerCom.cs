@@ -21,12 +21,12 @@ namespace HMS_Client
 
         // Liste med HMS data
         private HMSDataCollection hmsDataCollection;
-        private RadObservableCollectionEx<HMSData> socketHMSDataList = new RadObservableCollectionEx<HMSData>();
+        private RadObservableCollection<HMSData> socketHMSDataList = new RadObservableCollection<HMSData>();
 
         // Liste med sensor status
-        private RadObservableCollectionEx<SensorGroup> sensorStatusList;
+        private RadObservableCollection<SensorGroup> sensorStatusList;
         private object sensorStatusListLock;
-        private RadObservableCollectionEx<SensorGroup> socketSensorStatusList = new RadObservableCollectionEx<SensorGroup>();
+        private RadObservableCollection<SensorGroup> socketSensorStatusList = new RadObservableCollection<SensorGroup>();
 
         // Socket client callback
         public delegate void SocketCallback();
@@ -154,7 +154,7 @@ namespace HMS_Client
             lastDataReceivedTime = DateTime.UtcNow;
         }
 
-        private void ProcessSocketHMSData(RadObservableCollectionEx<HMSData> socketHMSDataList)
+        private void ProcessSocketHMSData(RadObservableCollection<HMSData> socketHMSDataList)
         {
             try
             {
@@ -163,7 +163,7 @@ namespace HMS_Client
 
                 lock (hmsDataCollection.GetDataListLock())
                 {
-                    RadObservableCollectionEx<HMSData> hmsDataList = hmsDataCollection.GetDataList();
+                    RadObservableCollection<HMSData> hmsDataList = hmsDataCollection.GetDataList();
 
                     //// Sjekke om listen vi har er like lang som listen som kommer inn
                     //if (socketHMSDataList.Count() != hmsDataList.Count())
@@ -218,7 +218,7 @@ namespace HMS_Client
             }
         }
 
-        private void ProcessSocketSensorStatus(RadObservableCollectionEx<SensorGroup> socketSensorStatusList)
+        private void ProcessSocketSensorStatus(RadObservableCollection<SensorGroup> socketSensorStatusList)
         {
             // Lese data timeout fra config
             double dataTimeout = config.ReadWithDefault(ConfigKey.DataTimeout, Constants.DataTimeoutDefault);

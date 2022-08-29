@@ -14,7 +14,7 @@ namespace HMS_Server
 
         private HMSDataCollection testData;
         private HMSDataCollection referenceData;
-        private RadObservableCollectionEx<VerificationData> verificationData;
+        private RadObservableCollection<VerificationData> verificationData;
         private List<double> refTimeIDList = new List<double>();
 
         private double prevID = 0;
@@ -38,7 +38,7 @@ namespace HMS_Server
             referenceData.LoadReferenceData(config);
 
             // Verification data
-            verificationData = new RadObservableCollectionEx<VerificationData>();
+            verificationData = new RadObservableCollection<VerificationData>();
 
             // Referanse time ID list (disse skal lagres til DB)
             for (int i = 52200; i <= 57600; i += 60)
@@ -61,7 +61,7 @@ namespace HMS_Server
             return referenceData;
         }
 
-        public RadObservableCollectionEx<VerificationData> GetVerificationData()
+        public RadObservableCollection<VerificationData> GetVerificationData()
         {
             return verificationData;
         }

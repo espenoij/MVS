@@ -8,6 +8,7 @@ using System.Windows.Input;
 using System.Windows.Media;
 using System.Windows.Threading;
 using Telerik.Windows.Controls;
+using Telerik.Windows.Data;
 
 namespace HMS_Server
 {
@@ -32,10 +33,10 @@ namespace HMS_Server
         private List<DataCalculations> dataCalculations = new List<DataCalculations>();
 
         // Lister for visning
-        private RadObservableCollectionEx<FileDataLine> fileDataLines = new RadObservableCollectionEx<FileDataLine>();
-        private RadObservableCollectionEx<FileDataFields> fileDataFields = new RadObservableCollectionEx<FileDataFields>();
-        private RadObservableCollectionEx<SelectedDataField> selectedDataList = new RadObservableCollectionEx<SelectedDataField>();
-        private RadObservableCollectionEx<CalculatedData> calculatedDataList = new RadObservableCollectionEx<CalculatedData>();
+        private RadObservableCollection<FileDataLine> fileDataLines = new RadObservableCollection<FileDataLine>();
+        private RadObservableCollection<FileDataFields> fileDataFields = new RadObservableCollection<FileDataFields>();
+        private RadObservableCollection<SelectedDataField> selectedDataList = new RadObservableCollection<SelectedDataField>();
+        private RadObservableCollection<CalculatedData> calculatedDataList = new RadObservableCollection<CalculatedData>();
 
         // File stream reader
         private StreamReader fsReader;

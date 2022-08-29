@@ -2,12 +2,13 @@
 using System.Linq;
 using System.Windows.Data;
 using System.Windows.Threading;
+using Telerik.Windows.Data;
 
 namespace HMS_Client
 {
     public class SensorGroupStatus
     {
-        private RadObservableCollectionEx<SensorGroup> sensorGroupList;
+        private RadObservableCollection<SensorGroup> sensorGroupList;
         private object sensorGroupListLock = new object();
         private HMSDataCollection clientSensorDataCollection;
 
@@ -17,7 +18,7 @@ namespace HMS_Client
         {
             this.clientSensorDataCollection = clientSensorDataCollection;
 
-            sensorGroupList = new RadObservableCollectionEx<SensorGroup>();
+            sensorGroupList = new RadObservableCollection<SensorGroup>();
             BindingOperations.EnableCollectionSynchronization(sensorGroupList, sensorGroupListLock);
 
             // Lese data timeout fra config
@@ -121,7 +122,7 @@ namespace HMS_Client
             return ret;
         }
 
-        public RadObservableCollectionEx<SensorGroup> GetSensorGroupList()
+        public RadObservableCollection<SensorGroup> GetSensorGroupList()
         {
             return sensorGroupList;
         }

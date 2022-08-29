@@ -31,7 +31,7 @@ namespace HMS_Server
         private AdminSettingsVM adminSettingsVM;
 
         // Sensor Data List
-        private RadObservableCollectionEx<SensorData> sensorDataList = new RadObservableCollectionEx<SensorData>();
+        private RadObservableCollection<SensorData> sensorDataList = new RadObservableCollection<SensorData>();
 
         // Valgt sensor data
         private SensorData sensorData;
@@ -58,16 +58,16 @@ namespace HMS_Server
         private bool showControlChars;
 
         // Lister for visning
-        private RadObservableCollectionEx<Packet> rawDataItems = new RadObservableCollectionEx<Packet>();
-        private RadObservableCollectionEx<Packet> selectedPacketsItems = new RadObservableCollectionEx<Packet>();
-        private RadObservableCollectionEx<PacketDataFields> packetDataFieldsItems = new RadObservableCollectionEx<PacketDataFields>();
-        private RadObservableCollectionEx<SelectedDataField> selectedDataFieldItems = new RadObservableCollectionEx<SelectedDataField>();
-        private RadObservableCollectionEx<CalculatedData> calculatedDataItems = new RadObservableCollectionEx<CalculatedData>();
+        private RadObservableCollection<Packet> rawDataItems = new RadObservableCollection<Packet>();
+        private RadObservableCollection<Packet> selectedPacketsItems = new RadObservableCollection<Packet>();
+        private RadObservableCollection<PacketDataFields> packetDataFieldsItems = new RadObservableCollection<PacketDataFields>();
+        private RadObservableCollection<SelectedDataField> selectedDataFieldItems = new RadObservableCollection<SelectedDataField>();
+        private RadObservableCollection<CalculatedData> calculatedDataItems = new RadObservableCollection<CalculatedData>();
 
         // View Model
         private SerialPortSetupWindowVM serialPortSetupWindowVM;
 
-        public SerialPortSetupWindow(SensorData sensorDataItem, RadObservableCollectionEx<SensorData> sensorDataList, Config config, ErrorHandler errorHandler, AdminSettingsVM adminSettingsVM)
+        public SerialPortSetupWindow(SensorData sensorDataItem, RadObservableCollection<SensorData> sensorDataList, Config config, ErrorHandler errorHandler, AdminSettingsVM adminSettingsVM)
         {
             InitializeComponent();
 

@@ -29,7 +29,7 @@ namespace HMS_Server
         private AdminSettingsVM adminSettingsVM;
 
         // Sensor Data List
-        private RadObservableCollectionEx<SensorData> sensorDataList = new RadObservableCollectionEx<SensorData>();
+        private RadObservableCollection<SensorData> sensorDataList = new RadObservableCollection<SensorData>();
 
         // Valgt sensor data
         private SensorData sensorData;
@@ -50,14 +50,14 @@ namespace HMS_Server
         private ModbusCalculations process = new ModbusCalculations();
 
         // Lister for visning
-        private RadObservableCollectionEx<ModbusData> rawDataItems = new RadObservableCollectionEx<ModbusData>();
-        private RadObservableCollectionEx<ModbusData> selectedDataItems = new RadObservableCollectionEx<ModbusData>();
-        private RadObservableCollectionEx<ModbusData> calculatedDataItems = new RadObservableCollectionEx<ModbusData>();
+        private RadObservableCollection<ModbusData> rawDataItems = new RadObservableCollection<ModbusData>();
+        private RadObservableCollection<ModbusData> selectedDataItems = new RadObservableCollection<ModbusData>();
+        private RadObservableCollection<ModbusData> calculatedDataItems = new RadObservableCollection<ModbusData>();
 
         // View Model
         private ModbusSetupWindowVM modbusSetupWindowVM;
 
-        public ModbusSetupWindow(SensorData sensorData, RadObservableCollectionEx<SensorData> sensorDataList, Config config, ErrorHandler errorHandler, AdminSettingsVM adminSettingsVM)
+        public ModbusSetupWindow(SensorData sensorData, RadObservableCollection<SensorData> sensorDataList, Config config, ErrorHandler errorHandler, AdminSettingsVM adminSettingsVM)
         {
             InitializeComponent();
 

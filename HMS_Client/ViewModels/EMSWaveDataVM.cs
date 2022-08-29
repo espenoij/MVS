@@ -3,6 +3,7 @@ using System.Collections.Generic;
 using System.ComponentModel;
 using System.Runtime.CompilerServices;
 using System.Windows.Threading;
+using Telerik.Windows.Data;
 
 namespace HMS_Client
 {
@@ -16,28 +17,28 @@ namespace HMS_Client
         private DispatcherTimer ChartDataUpdateTimer3h = new DispatcherTimer();
 
         // 20 minutters buffer
-        private RadObservableCollectionEx<HMSData> waveSWHBuffer20m = new RadObservableCollectionEx<HMSData>();
-        private RadObservableCollectionEx<HMSData> waveSWHMaxBuffer20m = new RadObservableCollectionEx<HMSData>();
-        private RadObservableCollectionEx<HMSData> wavePeriodBuffer20m = new RadObservableCollectionEx<HMSData>();
-        private RadObservableCollectionEx<HMSData> wavePeriodMaxBuffer20m = new RadObservableCollectionEx<HMSData>();
+        private RadObservableCollection<HMSData> waveSWHBuffer20m = new RadObservableCollection<HMSData>();
+        private RadObservableCollection<HMSData> waveSWHMaxBuffer20m = new RadObservableCollection<HMSData>();
+        private RadObservableCollection<HMSData> wavePeriodBuffer20m = new RadObservableCollection<HMSData>();
+        private RadObservableCollection<HMSData> wavePeriodMaxBuffer20m = new RadObservableCollection<HMSData>();
 
         // 3 timers buffer
-        private RadObservableCollectionEx<HMSData> waveSWHBuffer3h = new RadObservableCollectionEx<HMSData>();
-        private RadObservableCollectionEx<HMSData> waveSWHMaxBuffer3h = new RadObservableCollectionEx<HMSData>();
-        private RadObservableCollectionEx<HMSData> wavePeriodBuffer3h = new RadObservableCollectionEx<HMSData>();
-        private RadObservableCollectionEx<HMSData> wavePeriodMaxBuffer3h = new RadObservableCollectionEx<HMSData>();
+        private RadObservableCollection<HMSData> waveSWHBuffer3h = new RadObservableCollection<HMSData>();
+        private RadObservableCollection<HMSData> waveSWHMaxBuffer3h = new RadObservableCollection<HMSData>();
+        private RadObservableCollection<HMSData> wavePeriodBuffer3h = new RadObservableCollection<HMSData>();
+        private RadObservableCollection<HMSData> wavePeriodMaxBuffer3h = new RadObservableCollection<HMSData>();
 
         // 20 minutters grafer
-        public RadObservableCollectionEx<HMSData> waveSWH20mList = new RadObservableCollectionEx<HMSData>();
-        public RadObservableCollectionEx<HMSData> waveSWHMax20mList = new RadObservableCollectionEx<HMSData>();
-        public RadObservableCollectionEx<HMSData> wavePeriod20mList = new RadObservableCollectionEx<HMSData>();
-        public RadObservableCollectionEx<HMSData> wavePeriodMax20mList = new RadObservableCollectionEx<HMSData>();
+        public RadObservableCollection<HMSData> waveSWH20mList = new RadObservableCollection<HMSData>();
+        public RadObservableCollection<HMSData> waveSWHMax20mList = new RadObservableCollection<HMSData>();
+        public RadObservableCollection<HMSData> wavePeriod20mList = new RadObservableCollection<HMSData>();
+        public RadObservableCollection<HMSData> wavePeriodMax20mList = new RadObservableCollection<HMSData>();
 
         // 3 timers grafer
-        public RadObservableCollectionEx<HMSData> waveSWH3hList = new RadObservableCollectionEx<HMSData>();
-        public RadObservableCollectionEx<HMSData> waveSWHMax3hList = new RadObservableCollectionEx<HMSData>();
-        public RadObservableCollectionEx<HMSData> wavePeriod3hList = new RadObservableCollectionEx<HMSData>();
-        public RadObservableCollectionEx<HMSData> wavePeriodMax3hList = new RadObservableCollectionEx<HMSData>();
+        public RadObservableCollection<HMSData> waveSWH3hList = new RadObservableCollection<HMSData>();
+        public RadObservableCollection<HMSData> waveSWHMax3hList = new RadObservableCollection<HMSData>();
+        public RadObservableCollection<HMSData> wavePeriod3hList = new RadObservableCollection<HMSData>();
+        public RadObservableCollection<HMSData> wavePeriodMax3hList = new RadObservableCollection<HMSData>();
 
         public void Init(AdminSettingsVM adminSettingsVM, Config config, SensorGroupStatus sensorStatus)
         {

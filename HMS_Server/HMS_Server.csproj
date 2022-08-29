@@ -440,7 +440,6 @@
     <Compile Include="Services\CalculationSetup.cs" />
     <Compile Include="Helpers\EnumExtension.cs" />
     <Compile Include="Services\DataValidation.cs" />
-    <Compile Include="Helpers\RadObservableCollectionEx.cs" />
     <Compile Include="Services\SensorGroup.cs" />
     <Compile Include="Config\SensorGroupIDConfig.cs" />
     <Compile Include="Config\SensorGroupIDConfigCollection.cs" />

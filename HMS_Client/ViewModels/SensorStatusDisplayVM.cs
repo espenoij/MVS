@@ -3,6 +3,7 @@ using System.ComponentModel;
 using System.Runtime.CompilerServices;
 using System.Windows;
 using System.Windows.Threading;
+using Telerik.Windows.Data;
 
 namespace HMS_Client
 {
@@ -11,7 +12,7 @@ namespace HMS_Client
         // Sensor Status
         private SensorGroupStatus sensorStatus;
 
-        public RadObservableCollectionEx<SensorStatusDisplay> sensorStatusDisplayList = new RadObservableCollectionEx<SensorStatusDisplay>();
+        public RadObservableCollection<SensorStatusDisplay> sensorStatusDisplayList = new RadObservableCollection<SensorStatusDisplay>();
 
         public AdminSettingsVM adminSettingsVM;
 
@@ -59,7 +60,7 @@ namespace HMS_Client
             // Oppdatere sensor group status
             void UpdateStatus(object sender, EventArgs e)
             {
-                RadObservableCollectionEx<SensorGroup> sensorStatusList = sensorStatus.GetSensorGroupList();
+                RadObservableCollection<SensorGroup> sensorStatusList = sensorStatus.GetSensorGroupList();
 
                 // Oppdatere liste med sensor navn/status
                 for (int i = 0; i < Constants.MaxSensors; i++)

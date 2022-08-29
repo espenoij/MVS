@@ -1,4 +1,5 @@
 ﻿using System;
+using Telerik.Windows.Data;
 
 namespace HMS_Server
 {
@@ -6,7 +7,7 @@ namespace HMS_Server
     // Ellers identisk.
     static class GraphBuffer
     {
-        public static void Update(HMSData data, RadObservableCollectionEx<HMSData> buffer)
+        public static void Update(HMSData data, RadObservableCollection<HMSData> buffer)
         {
             // NB! Når vi har data tilgjengelig fores dette inn i grafene.
             // Når vi ikke har data tilgjengelig legges 0 data inn i grafene for å holde de gående.
@@ -27,7 +28,7 @@ namespace HMS_Server
         }
 
         // Overfører alle data fra buffer til dataList
-        public static void Transfer(RadObservableCollectionEx<HMSData> buffer, RadObservableCollectionEx<HMSData> dataList)
+        public static void Transfer(RadObservableCollection<HMSData> buffer, RadObservableCollection<HMSData> dataList)
         {
             if (buffer != null &&
                 dataList != null)
@@ -38,7 +39,7 @@ namespace HMS_Server
         }
 
         // Fjerne data som har gått ut på tid
-        public static void RemoveOldData(RadObservableCollectionEx<HMSData> dataList, double timeInterval)
+        public static void RemoveOldData(RadObservableCollection<HMSData> dataList, double timeInterval)
         {
             if (dataList != null)
             {
@@ -51,7 +52,7 @@ namespace HMS_Server
         }
 
         // Sletter alle data i buffer
-        public static void Clear(RadObservableCollectionEx<HMSData> buffer)
+        public static void Clear(RadObservableCollection<HMSData> buffer)
         {
             if (buffer != null)
                 buffer.Clear();

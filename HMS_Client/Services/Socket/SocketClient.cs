@@ -22,8 +22,8 @@ namespace HMS_Client
         // The response from the remote device.  
         private static string response = string.Empty;
 
-        private RadObservableCollectionEx<HMSData> hmsDataList;
-        private RadObservableCollectionEx<SensorGroup> sensorStatusList;
+        private RadObservableCollection<HMSData> hmsDataList;
+        private RadObservableCollection<SensorGroup> sensorStatusList;
         private UserInputs userInputs;
 
         // Socker Client worker
@@ -71,7 +71,7 @@ namespace HMS_Client
             socketWorker.DoWork += DoSocketWork;
         }
 
-        public void SetParams(PacketCommand command, RadObservableCollectionEx<HMSData> hmsDataList = null, RadObservableCollectionEx<SensorGroup> sensorStatusList = null, UserInputs userInputs = null, string payload = "")
+        public void SetParams(PacketCommand command, RadObservableCollection<HMSData> hmsDataList = null, RadObservableCollection<SensorGroup> sensorStatusList = null, UserInputs userInputs = null, string payload = "")
         {
             this.command = command;
             this.hmsDataList = hmsDataList;

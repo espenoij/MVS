@@ -2,6 +2,7 @@
 using System.ComponentModel;
 using System.Runtime.CompilerServices;
 using System.Windows.Threading;
+using Telerik.Windows.Data;
 
 namespace HMS_Client
 {
@@ -13,8 +14,8 @@ namespace HMS_Client
         private DispatcherTimer UIUpdateTimer = new DispatcherTimer();
 
         // MSI / WSI Graph buffer / data
-        public RadObservableCollectionEx<HMSData> msiwsi20mDataList = new RadObservableCollectionEx<HMSData>();
-        public RadObservableCollectionEx<HMSData> msiwsi3hDataList = new RadObservableCollectionEx<HMSData>();
+        public RadObservableCollection<HMSData> msiwsi20mDataList = new RadObservableCollection<HMSData>();
+        public RadObservableCollection<HMSData> msiwsi3hDataList = new RadObservableCollection<HMSData>();
 
         private bool initDone = false;
 

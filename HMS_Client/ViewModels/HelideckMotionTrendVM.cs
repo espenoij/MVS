@@ -3,6 +3,7 @@ using System.Collections.Generic;
 using System.ComponentModel;
 using System.Runtime.CompilerServices;
 using System.Windows.Threading;
+using Telerik.Windows.Data;
 
 namespace HMS_Client
 {
@@ -16,44 +17,44 @@ namespace HMS_Client
         private DispatcherTimer ChartDataUpdateTimer3h = new DispatcherTimer();
 
         // 20 minutters buffer
-        private RadObservableCollectionEx<HMSData> pitchBuffer20m = new RadObservableCollectionEx<HMSData>();
-        private RadObservableCollectionEx<HMSData> rollBuffer20m = new RadObservableCollectionEx<HMSData>();      
-        private RadObservableCollectionEx<HMSData> inclinationBuffer20m = new RadObservableCollectionEx<HMSData>();
-        private RadObservableCollectionEx<HMSData> heaveHeightBuffer20m = new RadObservableCollectionEx<HMSData>();
-        private RadObservableCollectionEx<HMSData> significantHeaveRateBuffer20m = new RadObservableCollectionEx<HMSData>();
+        private RadObservableCollection<HMSData> pitchBuffer20m = new RadObservableCollection<HMSData>();
+        private RadObservableCollection<HMSData> rollBuffer20m = new RadObservableCollection<HMSData>();      
+        private RadObservableCollection<HMSData> inclinationBuffer20m = new RadObservableCollection<HMSData>();
+        private RadObservableCollection<HMSData> heaveHeightBuffer20m = new RadObservableCollection<HMSData>();
+        private RadObservableCollection<HMSData> significantHeaveRateBuffer20m = new RadObservableCollection<HMSData>();
 
         // 3 timers buffer
-        private RadObservableCollectionEx<HMSData> pitchBuffer3h = new RadObservableCollectionEx<HMSData>();
-        private RadObservableCollectionEx<HMSData> rollBuffer3h = new RadObservableCollectionEx<HMSData>();
-        private RadObservableCollectionEx<HMSData> inclinationBuffer3h = new RadObservableCollectionEx<HMSData>();
-        private RadObservableCollectionEx<HMSData> heaveHeightBuffer3h = new RadObservableCollectionEx<HMSData>();
-        private RadObservableCollectionEx<HMSData> significantHeaveRateBuffer3h = new RadObservableCollectionEx<HMSData>();
+        private RadObservableCollection<HMSData> pitchBuffer3h = new RadObservableCollection<HMSData>();
+        private RadObservableCollection<HMSData> rollBuffer3h = new RadObservableCollection<HMSData>();
+        private RadObservableCollection<HMSData> inclinationBuffer3h = new RadObservableCollection<HMSData>();
+        private RadObservableCollection<HMSData> heaveHeightBuffer3h = new RadObservableCollection<HMSData>();
+        private RadObservableCollection<HMSData> significantHeaveRateBuffer3h = new RadObservableCollection<HMSData>();
 
         // 20 minutters grafer
-        public RadObservableCollectionEx<HMSData> pitch20mList = new RadObservableCollectionEx<HMSData>();
-        public RadObservableCollectionEx<HMSData> pitchMaxUp20mList = new RadObservableCollectionEx<HMSData>();
-        public RadObservableCollectionEx<HMSData> pitchMaxDown20mList = new RadObservableCollectionEx<HMSData>();
+        public RadObservableCollection<HMSData> pitch20mList = new RadObservableCollection<HMSData>();
+        public RadObservableCollection<HMSData> pitchMaxUp20mList = new RadObservableCollection<HMSData>();
+        public RadObservableCollection<HMSData> pitchMaxDown20mList = new RadObservableCollection<HMSData>();
 
-        public RadObservableCollectionEx<HMSData> roll20mList = new RadObservableCollectionEx<HMSData>();
-        public RadObservableCollectionEx<HMSData> rollMaxLeft20mList = new RadObservableCollectionEx<HMSData>();
-        public RadObservableCollectionEx<HMSData> rollMaxRight20mList = new RadObservableCollectionEx<HMSData>();
+        public RadObservableCollection<HMSData> roll20mList = new RadObservableCollection<HMSData>();
+        public RadObservableCollection<HMSData> rollMaxLeft20mList = new RadObservableCollection<HMSData>();
+        public RadObservableCollection<HMSData> rollMaxRight20mList = new RadObservableCollection<HMSData>();
 
-        public RadObservableCollectionEx<HMSData> inclinationData20mList = new RadObservableCollectionEx<HMSData>();
-        public RadObservableCollectionEx<HMSData> heaveHeightData20mList = new RadObservableCollectionEx<HMSData>();
-        public RadObservableCollectionEx<HMSData> significantHeaveRateData20mList = new RadObservableCollectionEx<HMSData>();
+        public RadObservableCollection<HMSData> inclinationData20mList = new RadObservableCollection<HMSData>();
+        public RadObservableCollection<HMSData> heaveHeightData20mList = new RadObservableCollection<HMSData>();
+        public RadObservableCollection<HMSData> significantHeaveRateData20mList = new RadObservableCollection<HMSData>();
 
         // 3 timers grafer
-        public RadObservableCollectionEx<HMSData> pitch3hList = new RadObservableCollectionEx<HMSData>();
-        public RadObservableCollectionEx<HMSData> pitchMaxUp3hList = new RadObservableCollectionEx<HMSData>();
-        public RadObservableCollectionEx<HMSData> pitchMaxDown3hList = new RadObservableCollectionEx<HMSData>();
+        public RadObservableCollection<HMSData> pitch3hList = new RadObservableCollection<HMSData>();
+        public RadObservableCollection<HMSData> pitchMaxUp3hList = new RadObservableCollection<HMSData>();
+        public RadObservableCollection<HMSData> pitchMaxDown3hList = new RadObservableCollection<HMSData>();
 
-        public RadObservableCollectionEx<HMSData> rollData3hList = new RadObservableCollectionEx<HMSData>();
-        public RadObservableCollectionEx<HMSData> rollMaxLeft3hList = new RadObservableCollectionEx<HMSData>();
-        public RadObservableCollectionEx<HMSData> rollMaxRight3hList = new RadObservableCollectionEx<HMSData>();
+        public RadObservableCollection<HMSData> rollData3hList = new RadObservableCollection<HMSData>();
+        public RadObservableCollection<HMSData> rollMaxLeft3hList = new RadObservableCollection<HMSData>();
+        public RadObservableCollection<HMSData> rollMaxRight3hList = new RadObservableCollection<HMSData>();
 
-        public RadObservableCollectionEx<HMSData> inclinationData3hList = new RadObservableCollectionEx<HMSData>();
-        public RadObservableCollectionEx<HMSData> heaveHeightData3hList = new RadObservableCollectionEx<HMSData>();
-        public RadObservableCollectionEx<HMSData> significantHeaveRateData3hList = new RadObservableCollectionEx<HMSData>();
+        public RadObservableCollection<HMSData> inclinationData3hList = new RadObservableCollection<HMSData>();
+        public RadObservableCollection<HMSData> heaveHeightData3hList = new RadObservableCollection<HMSData>();
+        public RadObservableCollection<HMSData> significantHeaveRateData3hList = new RadObservableCollection<HMSData>();
 
         // Motion Limits
         /////////////////////////////////////////////////////////////////////////////

@@ -5,6 +5,7 @@ using System.Windows.Controls;
 using System.Windows.Media;
 using System.Windows.Threading;
 using Telerik.Windows.Controls;
+using Telerik.Windows.Data;
 
 namespace HMS_Client
 {
@@ -56,7 +57,7 @@ namespace HMS_Client
                 if (tabHelideckMotionHistory.IsSelected)
                 {
                     // Status string variabler
-                    RadObservableCollectionEx<HelideckStatus> statusList;
+                    RadObservableCollection<HelideckStatus> statusList;
                     string timeString;
 
                     // Sette status string: Finne data: Overføre til display data liste og overføre trend data fra data liste til display liste

@@ -1,6 +1,7 @@
 ﻿using System.Windows;
 using System.Windows.Controls;
 using Telerik.Windows.Controls;
+using Telerik.Windows.Data;
 
 namespace HMS_Client
 {
@@ -28,7 +29,7 @@ namespace HMS_Client
             chartMSIWSI3h.Series[0].ItemsSource = viewModel.msiwsi3hDataList;
 
             // Blå bakgrunn på graf
-            RadObservableCollectionEx<Point> blueArea = new RadObservableCollectionEx<Point>();
+            RadObservableCollection<Point> blueArea = new RadObservableCollection<Point>();
 
             blueArea.Add(new Point() { X = 0, Y = Constants.MSIMax });
             blueArea.Add(new Point() { X = Constants.WSIMax, Y = 0 });
