@@ -76,7 +76,7 @@
 
                             <Grid.RowDefinitions>
                                 <RowDefinition
-                                Height="3*" />
+                                Height="2*" />
                                 <RowDefinition
                                 Height="*" />
                                 <RowDefinition
@@ -84,7 +84,7 @@
                                 <RowDefinition
                                 Height="*" />
                                 <RowDefinition
-                                Height="3*" />
+                                Height="2*" />
                             </Grid.RowDefinitions>
 
                             <Viewbox
@@ -313,17 +313,17 @@
 
                             <Grid.RowDefinitions>
                                 <RowDefinition
+                                Height="1*" />
+                                <RowDefinition
+                                Height="*" />
+                                <RowDefinition
+                                Height="*" />
+                                <RowDefinition
+                                Height="*" />
+                                <RowDefinition
+                                Height="*" />
+                                <RowDefinition
                                 Height="2*" />
-                                <RowDefinition
-                                Height="*" />
-                                <RowDefinition
-                                Height="*" />
-                                <RowDefinition
-                                Height="*" />
-                                <RowDefinition
-                                Height="*" />
-                                <RowDefinition
-                                Height="3*" />
                             </Grid.RowDefinitions>
 
                             <Viewbox
@@ -562,7 +562,7 @@
 
                             <Grid.RowDefinitions>
                                 <RowDefinition
-                                Height="3*" />
+                                Height="2*" />
                                 <RowDefinition
                                 Height="*" />
                                 <RowDefinition
@@ -570,7 +570,7 @@
                                 <RowDefinition
                                 Height="*" />
                                 <RowDefinition
-                                Height="3*" />
+                                Height="2*" />
                             </Grid.RowDefinitions>
 
                             <Viewbox
@@ -798,17 +798,17 @@
 
                             <Grid.RowDefinitions>
                                 <RowDefinition
+                                Height="1*" />
+                                <RowDefinition
+                                Height="*" />
+                                <RowDefinition
+                                Height="*" />
+                                <RowDefinition
+                                Height="*" />
+                                <RowDefinition
+                                Height="*" />
+                                <RowDefinition
                                 Height="2*" />
-                                <RowDefinition
-                                Height="*" />
-                                <RowDefinition
-                                Height="*" />
-                                <RowDefinition
-                                Height="*" />
-                                <RowDefinition
-                                Height="*" />
-                                <RowDefinition
-                                Height="3*" />
                             </Grid.RowDefinitions>
 
                             <Viewbox
@@ -1094,7 +1094,7 @@
 
                             <Grid.RowDefinitions>
                                 <RowDefinition
-                                Height="3*" />
+                                Height="2*" />
                                 <RowDefinition
                                 Height="*" />
                                 <RowDefinition
@@ -1102,7 +1102,7 @@
                                 <RowDefinition
                                 Height="*" />
                                 <RowDefinition
-                                Height="3*" />
+                                Height="2*" />
                             </Grid.RowDefinitions>
 
                             <Viewbox
@@ -1323,17 +1323,17 @@
 
                             <Grid.RowDefinitions>
                                 <RowDefinition
+                                Height="1*" />
+                                <RowDefinition
+                                Height="*" />
+                                <RowDefinition
+                                Height="*" />
+                                <RowDefinition
+                                Height="*" />
+                                <RowDefinition
+                                Height="*" />
+                                <RowDefinition
                                 Height="2*" />
-                                <RowDefinition
-                                Height="*" />
-                                <RowDefinition
-                                Height="*" />
-                                <RowDefinition
-                                Height="*" />
-                                <RowDefinition
-                                Height="*" />
-                                <RowDefinition
-                                Height="3*" />
                             </Grid.RowDefinitions>
 
                             <Viewbox
@@ -1564,7 +1564,7 @@
 
                             <Grid.RowDefinitions>
                                 <RowDefinition
-                                Height="3*" />
+                                Height="2*" />
                                 <RowDefinition
                                 Height="*" />
                                 <RowDefinition
@@ -1572,7 +1572,7 @@
                                 <RowDefinition
                                 Height="*" />
                                 <RowDefinition
-                                Height="3*" />
+                                Height="2*" />
                             </Grid.RowDefinitions>
 
                             <Viewbox
@@ -1792,17 +1792,17 @@
 
                             <Grid.RowDefinitions>
                                 <RowDefinition
+                                Height="1*" />
+                                <RowDefinition
+                                Height="*" />
+                                <RowDefinition
+                                Height="*" />
+                                <RowDefinition
+                                Height="*" />
+                                <RowDefinition
+                                Height="*" />
+                                <RowDefinition
                                 Height="2*" />
-                                <RowDefinition
-                                Height="*" />
-                                <RowDefinition
-                                Height="*" />
-                                <RowDefinition
-                                Height="*" />
-                                <RowDefinition
-                                Height="*" />
-                                <RowDefinition
-                                Height="3*" />
                             </Grid.RowDefinitions>
 
                             <Viewbox

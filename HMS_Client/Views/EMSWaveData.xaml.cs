@@ -29,6 +29,13 @@ namespace HMS_Client
             waveSWHMax3hChart.Series[0].ItemsSource = emsWaveDataVM.waveSWHMax3hList;
             wavePeriod3hChart.Series[0].ItemsSource = emsWaveDataVM.wavePeriod3hList;
             wavePeriodMax3hChart.Series[0].ItemsSource = emsWaveDataVM.wavePeriodMax3hList;
+
+            // NB! Bruker ikke disse funksjonene andre steder, men må være her
+            // for å få chart til å vises korrekt ved første visning.
+            waveSWH20mChart.Series[0].UpdateLayout();
+            waveSWHMax20mChart.Series[0].UpdateLayout();
+            wavePeriod20mChart.Series[0].UpdateLayout();
+            wavePeriodMax20mChart.Series[0].UpdateLayout();
         }
     }
 }

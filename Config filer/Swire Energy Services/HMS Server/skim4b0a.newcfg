@@ -23,8 +23,8 @@
         <add key="LogFrequency" value="030.000" />
         <add key="MarineChannel" value="16" />
         <add key="EmailPort" value="25" />
-        <add key="EmailUsername" value="AQAAANCMnd8BFdERjHoAwE/Cl+sBAAAAVMlIqORkVE2/OV4zrY8elgAAAAACAAAAAAAQZgAAAAEAACAAAACgPuqT66w2WjucO3N/SuxFhdfZmqObu2r7y4qQkeqgsAAAAAAOgAAAAAIAACAAAAD2ICvxkEIYmfCS9Jfz8PvMzsKy2hxrHIjKXoSJtEUywBAAAADK4ewp5dsk8RUwaJXxccDJQAAAALga8UW9+fsL6vPdPDkqbwfpPhB1VP1Le556QmwA+QP7DIwMm2+MWh/1ikbr1qF00eLhwieE55+umA/BGPTrffE=" />
-        <add key="EmailPassword" value="AQAAANCMnd8BFdERjHoAwE/Cl+sBAAAAVMlIqORkVE2/OV4zrY8elgAAAAACAAAAAAAQZgAAAAEAACAAAAA//DkqXwE3kVr6vI2d3pQ0iOEA1bE69wefn7/JylTlrQAAAAAOgAAAAAIAACAAAACKZ/RoJjYnBU3/GgNOQiVX4+plRTqWM1dd3V9b8SIswhAAAADOc7vY2z5JO3Lhk2t9119QQAAAAOH70lPlEQS3pwy7HvIQOFTmZStMI0GdOHvSQUb0V1BVLRpGwdKxg18rThB8OYy7u4rwbwP0DXfEWQmcUlVGCGA=" />
+        <add key="EmailUsername" value="AQAAANCMnd8BFdERjHoAwE/Cl+sBAAAAVMlIqORkVE2/OV4zrY8elgAAAAACAAAAAAAQZgAAAAEAACAAAACEj3A6jdpvWHGpWOJuNeRCBs0UVByAoFlWg4Fjtf6KRwAAAAAOgAAAAAIAACAAAAAZLU5znWB+2v6dSZNBj390re/WhcBdM5ANRcEb8tvc/xAAAADTcpwMgxawI2WqdQERxf5rQAAAANmJjAk5Y6YtFtESJrv/PlgHeUcf5sOkaSB3TjhG5friRoYLv0sN/TVzQFVtCV4pRis07iIAZdKf+8j+/GW3F/g=" />
+        <add key="EmailPassword" value="AQAAANCMnd8BFdERjHoAwE/Cl+sBAAAAVMlIqORkVE2/OV4zrY8elgAAAAACAAAAAAAQZgAAAAEAACAAAADHez7KbrxC2oJ9iSjeqQYMoDKnDu/ZRPiN/Zw5WFlkmAAAAAAOgAAAAAIAACAAAABu2T701Qe7f72ENetrkTJkGPEicogEFpZHYd6zs6EScBAAAABaTnq7zA33RLs4++whkfLpQAAAAII06LB828BBDnp2M1IgwFMTCoz8MaxrI9TkNGzDlRHcwouZC1L9X31TKHH+7IzUa8Sr9xJemyly+NLL+ciDyLU=" />
         <add key="EmailSecureConnection" value="0" />
         <add key="MagneticDeclination" value="-5" />
         <add key="HelideckLightsOutput" value="0" />
@@ -39,10 +39,10 @@
         <add key="LightsOutputAddress1" value="1" />
         <add key="LightsOutputAddress2" value="1" />
         <add key="LightsOutputAddress3" value="1" />
-        <add key="LicenseOwner" value="AQAAANCMnd8BFdERjHoAwE/Cl+sBAAAAVMlIqORkVE2/OV4zrY8elgAAAAACAAAAAAAQZgAAAAEAACAAAABKDi0PTuTRxke5jbQWowwDxX7uVVTokZijAu6Z1KAy8wAAAAAOgAAAAAIAACAAAABAwuluHnRC7VFghP2IZQ7K6j/SEFj47bnALyvEpgUoJhAAAADbYDSm6FelD8l/oH1e/7dBQAAAAKmlYBiImBnavKjHe2CU2UHlMSrm/pQEHqYDidcTLCVNDuleuHtCplePb2FP9IGJym1q3BnYXhTBWlj9t7M/vEQ=" />
-        <add key="LicenseLocation" value="AQAAANCMnd8BFdERjHoAwE/Cl+sBAAAAVMlIqORkVE2/OV4zrY8elgAAAAACAAAAAAAQZgAAAAEAACAAAACGxTid5DtvHBqreL22mzpITLGWTrBV1q44A+SoNlDWCwAAAAAOgAAAAAIAACAAAADni/1jsoVKJF5si2KXhyQEnF22HGArsBTE0qmLXqRyMxAAAAA8LOJQq5Cg1yUiNA0Oh5Z0QAAAANilXymcJCxa1bkn+fne1eqOOMIam7A3VfYEX6ptKekAHzB0kosxgyFIUgVSKINrWusM/TCdLnFMdXvR/61SmCc=" />
-        <add key="LicenseMaxClients" value="AQAAANCMnd8BFdERjHoAwE/Cl+sBAAAAVMlIqORkVE2/OV4zrY8elgAAAAACAAAAAAAQZgAAAAEAACAAAABDvZHJHrDEqGJaRbMoaJAKoWTtzWB5DTNiW3UNKPJ28AAAAAAOgAAAAAIAACAAAACUU+xnWxv7B3M3JDYB/FUKvZqvAUiXyfBsqSwHpVAltxAAAABUqKlizEPzrQBC2oB4zq+yQAAAACgwrWOovpjCMw+ot7/FfGOvV9LpTK93WeQI5kjxTyyhoS/22QCwaZPeULkese5CaNMmbeeWqz/4amViNO++cPo=" />
-        <add key="DeviceID" value="AQAAANCMnd8BFdERjHoAwE/Cl+sBAAAAVMlIqORkVE2/OV4zrY8elgAAAAACAAAAAAAQZgAAAAEAACAAAABNDOEBZ4UDdNaCJyb0k6cRrXdcL2UgS1Js/+buMd0CNAAAAAAOgAAAAAIAACAAAABTnj90ioZaTVfiejRzHqVRwSxtYO7x+UZHwKnRXTqYa3AAAAAalVpbBAFoNEoDcerBbPLx38+bWPALxFpPWqjBgWGSjbz/mIQZvQtamk3KbfyzU/hOsTn3Ysz212R/C4xCJmnkNHP+ah0BT89cgvCTySqAdxFyhyZZAttpqoX41bXrUKGe59JQg8I7jq7hHSeQI9dfQAAAAJtoFUEECuOzVY9QPmhlIM5RneEMXGpgALMTh52c9VCSqBrRXmE25JR0wLrLDb3TMlxBa83B49IeIrM9+VdaQAY=" />
+        <add key="LicenseOwner" value="AQAAANCMnd8BFdERjHoAwE/Cl+sBAAAAVMlIqORkVE2/OV4zrY8elgAAAAACAAAAAAAQZgAAAAEAACAAAABrXZq/rk9FWIAUPo+MpcnHAW1MIIhfg/SIBR6NAAa9RgAAAAAOgAAAAAIAACAAAAD9cC82bsya5vO0Fuo2+IfslHzlSjylnMDfCN5rg3kGuxAAAADgqJ1TAESqmcdcY0PqqwCZQAAAAO0fW8lsaYfBHtRNm90d7r1K0uf/eMEr3+jQQXLzaSzDwUGNOzOYuzrrlkhSfVOPZcWaJe+xz+p6LCtCN284WpQ=" />
+        <add key="LicenseLocation" value="AQAAANCMnd8BFdERjHoAwE/Cl+sBAAAAVMlIqORkVE2/OV4zrY8elgAAAAACAAAAAAAQZgAAAAEAACAAAABqt4/dRbyaZZFbS3qCqbz8gefO8ZTSImpfWJzu70rlfAAAAAAOgAAAAAIAACAAAAArqJYGav1IFvbAAq/vRRE92x7OJ2jh8RiYW9uhPT3TwxAAAACmRyDxcgdEovPIUrov3BVQQAAAAKvHpIB7dFtc9uDT8XBd/TTUQ1887dJ+I3UXiFERP0iP/DEnVwLCSucnOZe88KobVUJBEPSWElTrIyHo4tGAyh0=" />
+        <add key="LicenseMaxClients" value="AQAAANCMnd8BFdERjHoAwE/Cl+sBAAAAVMlIqORkVE2/OV4zrY8elgAAAAACAAAAAAAQZgAAAAEAACAAAAA8huavWtbG33zT0EZ4F8C01jv6xYBNRXou1VYFobx0ywAAAAAOgAAAAAIAACAAAADTYtFN3Wc+eDg2YLTH/iKwW702dXrbr2bGqM/SLTXgLRAAAAClNkPc8Hw+OmiD53Uk7EaqQAAAAJZw/8J/u5QjGli89pEhLlESfofujoI848di2hmiugFMyzXB0ZmA4DsqxtGkEdKgc8H3UF1GBgHJboztQlDSBJc=" />
+        <add key="DeviceID" value="AQAAANCMnd8BFdERjHoAwE/Cl+sBAAAAVMlIqORkVE2/OV4zrY8elgAAAAACAAAAAAAQZgAAAAEAACAAAADx69+aDVoBvIJfzK6c6jd4YyTSK8X+QUHgZjC3AUc7OwAAAAAOgAAAAAIAACAAAAAvwMBgjfE54SUwLzChbJO/T5ti47DD5wVzVKid/TxOiXAAAABsXy73gulLrAZhbLfOCzq/jysx++fdFvYO9YcKLjVftYufwHn0Y0St2pPVqXDnYiYwMovtNxaqrJOYHpOvYRA9Jrk4H5hF8x1L+UiYQYjTYLmuloAxhcRghaymn/Wba0EuU//qBB03hPhPPZz/diXpQAAAABXoGUhT/t9BJtQHyrTYUWO+XuOSFNMTYAReNipVpc/ysXy2uw7kdXh+ETefmpqghqaMOo4fBOnsYPp6rBzzHts=" />
         <add key="RegulationStandard" value="CAP" />
         <add key="VesselName" value="Swire Explorer" />
         <add key="DatabaseName" value="ses_hms" />
@@ -51,11 +51,11 @@
         <add key="HelicopterType" value="Default" />
         <add key="HelideckCategory" value="Category1" />
         <add key="DayNight" value="Day" />
-        <add key="DisplayMode" value="PreLanding" />
-        <add key="OnDeckTime" value="01/01/0001 00:00:00" />
-        <add key="OnDeckHelicopterHeading" value="0" />
-        <add key="OnDeckVesselHeading" value="0" />
-        <add key="OnDeckWindDirection" value="0" />
+        <add key="DisplayMode" value="OnDeck" />
+        <add key="OnDeckTime" value="22/08/2022 12:52:13" />
+        <add key="OnDeckHelicopterHeading" value="100" />
+        <add key="OnDeckVesselHeading" value="95" />
+        <add key="OnDeckWindDirection" value="67" />
         <add key="RestrictedSectorFrom" value="360" />
         <add key="RestrictedSectorTo" value="360" />
         <add key="WaveHeightCutoff" value="0.1" />
