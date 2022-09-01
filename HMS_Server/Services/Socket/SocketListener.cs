@@ -344,7 +344,7 @@ namespace HMS_Server
 
                     // Avslutte socket
                     handler.Shutdown(SocketShutdown.Both);
-                    handler.Disconnect(false);
+                    //handler.Disconnect(false);
                 }
             }
             catch (ObjectDisposedException)

@@ -1,4 +1,5 @@
-﻿using System;
+﻿using Microsoft.Xaml.Behaviors.Core;
+using System;
 using System.ComponentModel;
 using System.Runtime.CompilerServices;
 
@@ -288,12 +289,14 @@ namespace HMS_Server
             }
         }
 
-        public void BufferFillCheck(double targetCount)
+        public void BufferFillCheck(int dataCalcPos, double targetCount)
         {
-            // Er bufferet fyllt opp
-            if (dataProcess.BufferCount() < targetCount)
-                // Hvis ikke, sjekk status, dersom OK
-                if (status == DataStatus.OK)
+            // NB! dataCalcPos refererer til posisjonen i dataCalculations[] listen hvor bufferet befinner seg
+
+            // Sjekk status, dersom OK
+            if (status == DataStatus.OK)
+                // Er bufferet fyllt opp
+                if (dataProcess.BufferCount(dataCalcPos) < targetCount)
                     // Set OK, men ikke tilgjengelig
                     status = DataStatus.OK_NA;
         }

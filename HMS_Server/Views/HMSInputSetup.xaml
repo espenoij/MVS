@@ -139,6 +139,7 @@
                     <telerik:GridViewDataColumn
                         Width="160"
                         Header="Data"
+                        IsReadOnly="True"
                         DataMemberBinding="{Binding data}" />
 
                 </telerik:RadGridView.Columns>

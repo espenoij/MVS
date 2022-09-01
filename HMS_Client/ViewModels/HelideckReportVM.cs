@@ -1563,7 +1563,10 @@ namespace HMS_Client
                 // Sjekke om data er gyldig
                 if (helideckWindDirection.status == DataStatus.OK)
                 {
-                    return string.Format("{0}°", helideckWindDirection.data.ToString("000"));
+                    int dir = (int)Math.Round(helideckWindDirection.data, 0, MidpointRounding.AwayFromZero);
+                    if (dir == 0)
+                        dir = 360;
+                    return string.Format("{0}°", dir.ToString("000"));
                 }
                 else
                 {
@@ -1579,7 +1582,12 @@ namespace HMS_Client
                 // Sjekke om data er gyldig
                 if (helideckWindDirection.status == DataStatus.OK)
                 {
-                    return helideckWindDirection.data.ToString("000");
+                    int dir = (int)Math.Round(helideckWindDirection.data, 0, MidpointRounding.AwayFromZero);
+
+                    if (dir == 0)
+                        dir = 360;
+
+                    return dir.ToString("000");
                 }
                 else
                 {
@@ -1774,7 +1782,10 @@ namespace HMS_Client
                 // Sjekke om data er gyldig
                 if (areaWindDirection.status == DataStatus.OK)
                 {
-                    return string.Format("{0}°", areaWindDirection.data.ToString("000"));
+                    int dir = (int)Math.Round(areaWindDirection.data, 0, MidpointRounding.AwayFromZero);
+                    if (dir == 0)
+                        dir = 360;
+                    return string.Format("{0}°", dir.ToString("000"));
                 }
                 else
                 {

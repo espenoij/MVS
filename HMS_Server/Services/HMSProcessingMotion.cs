@@ -341,9 +341,9 @@ namespace HMS_Server
 
             if (adminSettingsVM.regulationStandard == RegulationStandard.CAP && !adminSettingsVM.overrideMotionBuffer)
             {
-                pitchMax20mData.BufferFillCheck(Constants.MotionBufferFill99Pct);
-                pitchMaxUp20mData.BufferFillCheck(Constants.MotionBufferFill99Pct);
-                pitchMaxDown20mData.BufferFillCheck(Constants.MotionBufferFill99Pct);
+                pitchMax20mData.BufferFillCheck(1, Constants.MotionBufferFill99Pct);
+                pitchMaxUp20mData.BufferFillCheck(1, Constants.MotionBufferFill99Pct);
+                pitchMaxDown20mData.BufferFillCheck(1, Constants.MotionBufferFill99Pct);
             }
 
             // Roll
@@ -355,9 +355,9 @@ namespace HMS_Server
 
             if (adminSettingsVM.regulationStandard == RegulationStandard.CAP && !adminSettingsVM.overrideMotionBuffer)
             {
-                rollMax20mData.BufferFillCheck(Constants.MotionBufferFill99Pct);
-                rollMaxLeft20mData.BufferFillCheck(Constants.MotionBufferFill99Pct);
-                rollMaxRight20mData.BufferFillCheck(Constants.MotionBufferFill99Pct);
+                rollMax20mData.BufferFillCheck(1, Constants.MotionBufferFill99Pct);
+                rollMaxLeft20mData.BufferFillCheck(1, Constants.MotionBufferFill99Pct);
+                rollMaxRight20mData.BufferFillCheck(1, Constants.MotionBufferFill99Pct);
             }
 
             // Inclination
@@ -385,8 +385,8 @@ namespace HMS_Server
 
             if (adminSettingsVM.regulationStandard == RegulationStandard.CAP && !adminSettingsVM.overrideMotionBuffer)
             {
-                significantHeaveRateData.BufferFillCheck(Constants.MotionBufferFill99Pct);
-                significantHeaveRateMax20mData.BufferFillCheck(Constants.MotionBufferFill99Pct);
+                significantHeaveRateData.BufferFillCheck(0, Constants.MotionBufferFill99Pct);
+                significantHeaveRateMax20mData.BufferFillCheck(1, Constants.MotionBufferFill99Pct);
                 //significantHeaveRateMax3hData.BufferFillCheck(Constants.MotionBufferFill99Pct);
             }
 
@@ -394,7 +394,7 @@ namespace HMS_Server
             maxHeaveRateData.DoProcessing(inputHeaveRateData);
 
             if (adminSettingsVM.regulationStandard == RegulationStandard.CAP && !adminSettingsVM.overrideMotionBuffer)
-                maxHeaveRateData.BufferFillCheck(Constants.MotionBufferFill99Pct);
+                maxHeaveRateData.BufferFillCheck(1, Constants.MotionBufferFill99Pct);
 
             // Significant Wave Height
             //significantWaveHeightData.DoProcessing(inputHeaveData);

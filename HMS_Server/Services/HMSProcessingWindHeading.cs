@@ -141,7 +141,7 @@ namespace HMS_Server
             areaWindDirection2m.sensorGroupId = Constants.NO_SENSOR_GROUP_ID;
             areaWindDirection2m.dbColumn = "area_wind_direction_2m";
             areaWindDirection2m.InitProcessing(errorHandler, ErrorMessageCategory.AdminUser, adminSettingsVM);
-            areaWindDirection2m.AddProcessing(CalculationType.TimeAverage, 120); // 2 minutter
+            areaWindDirection2m.AddProcessing(CalculationType.WindDirTimeAverage, 120); // 2 minutter
 
             areaWindSpeed2m.id = (int)ValueType.AreaWindSpeed2m;
             areaWindSpeed2m.name = "Area Wind Speed (2m)";
@@ -165,7 +165,7 @@ namespace HMS_Server
             helideckWindDirection2m.sensorGroupId = Constants.NO_SENSOR_GROUP_ID;
             helideckWindDirection2m.dbColumn = "helideck_wind_direction_2m";
             helideckWindDirection2m.InitProcessing(errorHandler, ErrorMessageCategory.AdminUser, adminSettingsVM);
-            helideckWindDirection2m.AddProcessing(CalculationType.TimeAverage, 120); // 2 minutter
+            helideckWindDirection2m.AddProcessing(CalculationType.WindDirTimeAverage, 120); // 2 minutter
             helideckWindDirection2m.AddProcessing(CalculationType.RoundingDecimals, 0);
 
             helideckWindDirection10m.id = (int)ValueType.HelideckWindDirection10m;
@@ -173,7 +173,7 @@ namespace HMS_Server
             helideckWindDirection10m.sensorGroupId = Constants.NO_SENSOR_GROUP_ID;
             helideckWindDirection10m.dbColumn = "helideck_wind_direction_10m";
             helideckWindDirection10m.InitProcessing(errorHandler, ErrorMessageCategory.AdminUser, adminSettingsVM);
-            helideckWindDirection10m.AddProcessing(CalculationType.TimeAverage, 600); // 10 minutter
+            helideckWindDirection10m.AddProcessing(CalculationType.WindDirTimeAverage, 600); // 10 minutter
             helideckWindDirection10m.AddProcessing(CalculationType.RoundingDecimals, 0);
 
             helideckWindSpeedRT.id = (int)ValueType.HelideckWindSpeedRT;
@@ -216,14 +216,14 @@ namespace HMS_Server
                 emsWindDirection2m.name = "EMS Wind Direction (2m)";
                 emsWindDirection2m.sensorGroupId = Constants.NO_SENSOR_GROUP_ID;
                 emsWindDirection2m.InitProcessing(errorHandler, ErrorMessageCategory.AdminUser, adminSettingsVM);
-                emsWindDirection2m.AddProcessing(CalculationType.TimeAverage, 120); // 2 minutter
+                emsWindDirection2m.AddProcessing(CalculationType.WindDirTimeAverage, 120); // 2 minutter
                 emsWindDirection2m.AddProcessing(CalculationType.RoundingDecimals, 0);
 
                 emsWindDirection10m.id = (int)ValueType.EMSWindDirection10m;
                 emsWindDirection10m.name = "EMS Wind Direction (10m)";
                 emsWindDirection10m.sensorGroupId = Constants.NO_SENSOR_GROUP_ID;
                 emsWindDirection10m.InitProcessing(errorHandler, ErrorMessageCategory.AdminUser, adminSettingsVM);
-                emsWindDirection10m.AddProcessing(CalculationType.TimeAverage, 600); // 10 minutter
+                emsWindDirection10m.AddProcessing(CalculationType.WindDirTimeAverage, 600); // 10 minutter
                 emsWindDirection10m.AddProcessing(CalculationType.RoundingDecimals, 0);
 
                 emsWindSpeedRT.id = (int)ValueType.EMSWindSpeedRT;
@@ -380,10 +380,10 @@ namespace HMS_Server
             {
                 case DirectionReference.VesselHeading:
                     apparentWindDirection.data = vesselHeading.data + inputSensorWindDirection.data;
-                    if (apparentWindDirection.data > 360)
-                        apparentWindDirection.data -= 360;
-                    if (apparentWindDirection.data <= 0)
+                    if (apparentWindDirection.data < 0)
                         apparentWindDirection.data += 360;
+                    if (apparentWindDirection.data >= 360)
+                        apparentWindDirection.data -= 360;
                     break;
 
                 case DirectionReference.MagneticNorth:
@@ -391,10 +391,10 @@ namespace HMS_Server
 
                 case DirectionReference.TrueNorth:
                     apparentWindDirection.data = inputSensorWindDirection.data - adminSettingsVM.magneticDeclination;
-                    if (apparentWindDirection.data > 360)
-                        apparentWindDirection.data -= 360;
-                    if (apparentWindDirection.data <= 0)
+                    if (apparentWindDirection.data < 0)
                         apparentWindDirection.data += 360;
+                    if (apparentWindDirection.data >= 360)
+                        apparentWindDirection.data -= 360;
                     break;
 
                 default:
@@ -434,9 +434,9 @@ namespace HMS_Server
 
                 // Vind retning
                 double dir = windHelideck.dir - adminSettingsVM.magneticDeclination;
-                while (dir <= 0)
+                while (dir < 0)
                     dir += 360;
-                while (dir > 360)
+                while (dir >= 360)
                     dir -= 360;
 
                 windDirectionCorrectedToHelideck.data = dir;
@@ -444,9 +444,9 @@ namespace HMS_Server
                 windDirectionCorrectedToHelideck.timestamp = apparentWindDirection.timestamp;
 
                 dir = wind10mAboveMSL.dir - adminSettingsVM.magneticDeclination;
-                while (dir <= 0)
+                while (dir < 0)
                     dir += 360;
-                while (dir > 360)
+                while (dir >= 360)
                     dir -= 360;
 
                 windDirectionCorrectedTo10mAboveMSL.data = dir;
@@ -516,12 +516,12 @@ namespace HMS_Server
             areaWindDirection2m.DoProcessing(apparentWindDirection);
 
             if (adminSettingsVM.regulationStandard == RegulationStandard.CAP && !adminSettingsVM.overrideWindBuffer)
-                areaWindDirection2m.BufferFillCheck(windSamplesInBuffer2m);
+                areaWindDirection2m.BufferFillCheck(0, windSamplesInBuffer2m);
 
             areaWindSpeed2m.DoProcessing(inputSensorWindSpeed);
 
             if (adminSettingsVM.regulationStandard == RegulationStandard.CAP && !adminSettingsVM.overrideWindBuffer)
-                areaWindSpeed2m.BufferFillCheck(windSamplesInBuffer2m);
+                areaWindSpeed2m.BufferFillCheck(0, windSamplesInBuffer2m);
 
             UpdateGustData(
                 inputSensorWindSpeed,
@@ -538,9 +538,10 @@ namespace HMS_Server
 
             if (adminSettingsVM.regulationStandard == RegulationStandard.CAP && !adminSettingsVM.overrideWindBuffer)
             {
-                helideckWindDirection2m.BufferFillCheck(windSamplesInBuffer2m);
+                helideckWindDirection2m.BufferFillCheck(0, windSamplesInBuffer2m);
+
                 if (adminSettingsVM.enableEMS)
-                    emsWindDirection2m.BufferFillCheck(windSamplesInBuffer2m);
+                    emsWindDirection2m.BufferFillCheck(0, windSamplesInBuffer2m);
             }
 
             helideckWindSpeed2m.DoProcessing(windSpeedCorrectedToHelideck);
@@ -550,9 +551,10 @@ namespace HMS_Server
 
             if (adminSettingsVM.regulationStandard == RegulationStandard.CAP && !adminSettingsVM.overrideWindBuffer)
             {
-                helideckWindSpeed2m.BufferFillCheck(windSamplesInBuffer2m);
+                helideckWindSpeed2m.BufferFillCheck(0, windSamplesInBuffer2m);
+
                 if (adminSettingsVM.enableEMS)
-                    emsWindSpeed2m.BufferFillCheck(windSamplesInBuffer2m);
+                    emsWindSpeed2m.BufferFillCheck(0, windSamplesInBuffer2m);
             }
 
             UpdateGustData(
@@ -579,9 +581,9 @@ namespace HMS_Server
 
             if (adminSettingsVM.regulationStandard == RegulationStandard.CAP && !adminSettingsVM.overrideWindBuffer)
             {
-                helideckWindDirection10m.BufferFillCheck(windSamplesInBuffer10m);
+                helideckWindDirection10m.BufferFillCheck(0, windSamplesInBuffer10m);
                 if (adminSettingsVM.enableEMS)
-                    emsWindDirection10m.BufferFillCheck(windSamplesInBuffer10m);
+                    emsWindDirection10m.BufferFillCheck(0, windSamplesInBuffer10m);
             }
 
             helideckWindSpeed10m.DoProcessing(windSpeedCorrectedToHelideck);
@@ -591,9 +593,9 @@ namespace HMS_Server
 
             if (adminSettingsVM.regulationStandard == RegulationStandard.CAP && !adminSettingsVM.overrideWindBuffer)
             {
-                helideckWindSpeed10m.BufferFillCheck(windSamplesInBuffer10m);
+                helideckWindSpeed10m.BufferFillCheck(0, windSamplesInBuffer10m);
                 if (adminSettingsVM.enableEMS)
-                    emsWindSpeed10m.BufferFillCheck(windSamplesInBuffer10m);
+                    emsWindSpeed10m.BufferFillCheck(0, windSamplesInBuffer10m);
             }
 
             UpdateGustData(
@@ -1163,9 +1165,9 @@ namespace HMS_Server
             WAH.spd = Math.Sqrt(Math.Pow(WAH.x, 2) + Math.Pow(WAH.y, 2));
             WAH.dir = HMSCalc.ToDegrees(Math.Atan2(WAH.y, WAH.x));
 
-            while (WAH.dir <= 0)
+            while (WAH.dir < 0)
                 WAH.dir += 360;
-            while (WAH.dir > 360)
+            while (WAH.dir >= 360)
                 WAH.dir -= 360;
 
             return WAH;

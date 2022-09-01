@@ -3,6 +3,7 @@ using System.Collections.Generic;
 using System.ComponentModel;
 using System.Globalization;
 using System.Linq;
+using System.Windows.Markup;
 
 namespace HMS_Server
 {
@@ -14,6 +15,11 @@ namespace HMS_Server
         // Time Average
         private double timeAverageTotal = 0;
         private List<TimeData> timeAverageDataList = new List<TimeData>();
+
+        // Time Average
+        private double windDirTimeAverageTotalX = 0;
+        private double windDirTimeAverageTotalY = 0;
+        private List<TimeData> windDirTimeAverageDataList = new List<TimeData>();
 
         // Time Max Absolute
         private double timeMaxAbsoluteMaxValue = 0;
@@ -272,6 +278,66 @@ namespace HMS_Server
                                     result = timeAverageTotal / timeAverageDataList.Count;
                                 else
                                     result = 0;
+                            }
+                            break;
+
+                        ////////////////////////////////////////////////////////////////////////////////////////////////
+                        /// Wind Direction Time Average
+                        ////////////////////////////////////////////////////////////////////////////////////////////////
+                        // Beskrivelse:
+                        // Returnerer snitt vind-retning verdien av et data sett innsamlet over en gitt tid
+
+                        // Brukes til:
+                        // Finne snitt vind retning (2-minute mean og 10-minute mean)
+
+                        case CalculationType.WindDirTimeAverage:
+
+                            // Sjekke om string er numerisk
+                            if (double.TryParse(newData, Constants.numberStyle, Constants.cultureInfo, out value))
+                            {
+                                // Sjekke at ny verdi ikke er lik den forrige som ble lagt inn i datasettet -> unngå duplikater
+                                if (!double.IsNaN(value) &&
+                                    windDirTimeAverageDataList.LastOrDefault()?.timestamp != newTimeStamp)
+                                {
+                                    double x = Math.Cos(HMSCalc.ToRadians(value));
+                                    double y = Math.Sin(HMSCalc.ToRadians(value));
+
+                                    // Legge inn den nye verdien i data settet
+                                    windDirTimeAverageDataList.Add(new TimeData() {
+                                        data = x,
+                                        data2 = y,
+                                        timestamp = newTimeStamp });
+
+                                    // Legge til i total summene
+                                    windDirTimeAverageTotalX += x;
+                                    windDirTimeAverageTotalY += y;
+
+                                    // Sjekke om vi skal ta ut gamle verdier
+                                    while (windDirTimeAverageDataList.Count > 0 && windDirTimeAverageDataList[0]?.timestamp.AddSeconds(parameter) < newTimeStamp)
+                                    {
+                                        // Trekke fra i total summene
+                                        windDirTimeAverageTotalX -= windDirTimeAverageDataList[0].data;
+                                        windDirTimeAverageTotalY -= windDirTimeAverageDataList[0].data2;
+
+                                        // Fjerne fra verdi listen
+                                        windDirTimeAverageDataList.RemoveAt(0);
+                                    }
+                                }
+
+                                // Beregne gjennomsnitt av de verdiene som ligger i datasettet
+                                if (windDirTimeAverageDataList.Count > 0)
+                                {
+                                    // NB! For å få en snitt verdi må X og Y delest på totalt antall verdier (windDirTimeAverageDataList.Count)
+                                    // Men dette er matematisk unødvendig siden X og Y deles på samme verdi.
+                                    result = HMSCalc.ToDegrees(Math.Atan(windDirTimeAverageTotalY / windDirTimeAverageTotalX));
+
+                                    if (result < 0)
+                                        result += 360;
+                                }
+                                else
+                                {
+                                    result = 360;
+                                }
                             }
                             break;
 
@@ -1552,6 +1618,11 @@ namespace HMS_Server
             timeAverageTotal = 0;
             timeAverageDataList.Clear();
 
+            // Wind Dir Time Average
+            windDirTimeAverageTotalX = 0;
+            windDirTimeAverageTotalY = 0;
+            windDirTimeAverageDataList.Clear();
+
             // Time Max Absolute
             timeMaxAbsoluteMaxValue = 0;
             timeMaxAbsoluteDataList.Clear();
@@ -1606,6 +1677,9 @@ namespace HMS_Server
                 case CalculationType.TimeAverage:
                     return timeAverageDataList.Count;
 
+                case CalculationType.WindDirTimeAverage:
+                    return windDirTimeAverageDataList.Count;
+
                 case CalculationType.TimeMaxAbsolute:
                     return timeMaxAbsoluteDataList.Count;
 
@@ -1634,6 +1708,7 @@ namespace HMS_Server
     class TimeData
     {
         public double data { get; set; }
+        public double data2 { get; set; }
         public DateTime timestamp { get; set; }
     }
 
@@ -1657,6 +1732,8 @@ namespace HMS_Server
         GPSPosition,
         [Description("Time Average")]
         TimeAverage,
+        [Description("Wind Dir Time Average")]
+        WindDirTimeAverage,
         [Description("Time Highest")]
         TimeHeighest,
         [Description("Time Lowest")]

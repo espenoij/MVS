@@ -26,15 +26,15 @@
 
                     <telerik:RadTabItem.Header>
                         <StackPanel
-                        Orientation="Horizontal">
+                            Orientation="Horizontal">
                             <Image
-                            Width="24"
-                            Source="..\Icons\outline_schedule_white_48dp.png" />
+                                Width="24"
+                                Source="..\Icons\outline_schedule_white_48dp.png" />
                             <TextBlock
-                            Foreground="White"
-                            FontSize="{StaticResource fontSizeTab}"
-                            Text="20-minutes"
-                            Margin="8,4,0,0" />
+                                Foreground="White"
+                                FontSize="{StaticResource fontSizeTab}"
+                                Text="20-minutes"
+                                Margin="8,4,0,0" />
                         </StackPanel>
                     </telerik:RadTabItem.Header>
 
@@ -43,30 +43,30 @@
 
                         <Grid.ColumnDefinitions>
                             <ColumnDefinition
-                            Width="4*" />
+                                Width="4*" />
                             <ColumnDefinition
-                            Width="30*" />
+                                Width="30*" />
                             <ColumnDefinition
-                            Width="5*" />
+                                Width="5*" />
                         </Grid.ColumnDefinitions>
 
                         <Grid.RowDefinitions>
                             <RowDefinition
-                            Height="30*" />
+                                Height="30*" />
                             <RowDefinition
-                            Height="5*" />
+                                Height="5*" />
                             <RowDefinition
-                            Height="30*" />
+                                Height="30*" />
                             <RowDefinition
-                            Height="5*" />
+                                Height="5*" />
                             <RowDefinition
-                            Height="30*" />
+                                Height="30*" />
                             <RowDefinition
-                            Height="5*" />
+                                Height="5*" />
                             <RowDefinition
-                            Height="30*" />
+                                Height="30*" />
                             <RowDefinition
-                            Height="5*" />
+                                Height="5*" />
                         </Grid.RowDefinitions>
 
                         <!--20m: SIGNIFICANT WAVE HEIGHT: TITLE-->
@@ -76,15 +76,15 @@
 
                             <Grid.RowDefinitions>
                                 <RowDefinition
-                                Height="2*" />
+                                    Height="2*" />
                                 <RowDefinition
-                                Height="*" />
+                                    Height="*" />
                                 <RowDefinition
-                                Height="*" />
+                                    Height="*" />
                                 <RowDefinition
-                                Height="*" />
+                                    Height="*" />
                                 <RowDefinition
-                                Height="2*" />
+                                    Height="2*" />
                             </Grid.RowDefinitions>
 
                             <Viewbox
@@ -94,29 +94,29 @@
                                 HorizontalAlignment="Center">
 
                                 <TextBlock
-                                Text="Significant" />
+                                    Text="Significant" />
 
                             </Viewbox>
 
                             <Viewbox
-                            Grid.Row="2"
-                            StretchDirection="Both"
-                            Stretch="Uniform"
-                            HorizontalAlignment="Center">
+                                Grid.Row="2"
+                                StretchDirection="Both"
+                                Stretch="Uniform"
+                                HorizontalAlignment="Center">
 
                                 <TextBlock
-                                Text="Wave" />
+                                    Text="Wave" />
 
                             </Viewbox>
 
                             <Viewbox
-                            Grid.Row="3"
-                            StretchDirection="Both"
-                            Stretch="Uniform"
-                            HorizontalAlignment="Center">
+                                Grid.Row="3"
+                                StretchDirection="Both"
+                                Stretch="Uniform"
+                                HorizontalAlignment="Center">
 
                                 <TextBlock
-                                Text="Height" />
+                                    Text="Height" />
 
                             </Viewbox>
 
@@ -169,85 +169,85 @@
 
                         <!--20m: SIGNIFICANT WAVE HEIGHT: TIME SCALE-->
                         <Grid
-                        Grid.Column="1"
-                        Grid.Row="1"
-                        Margin="16,0,-6,0">
+                            Grid.Column="1"
+                            Grid.Row="1"
+                            Margin="16,0,-6,0">
 
                             <Grid.ColumnDefinitions>
                                 <ColumnDefinition
-                                Width="*" />
+                                    Width="*" />
                                 <ColumnDefinition
-                                Width="*" />
+                                    Width="*" />
                                 <ColumnDefinition
-                                Width="*" />
+                                    Width="*" />
                                 <ColumnDefinition
-                                Width="*" />
+                                    Width="*" />
                                 <ColumnDefinition
-                                Width="*" />
+                                    Width="*" />
                                 <ColumnDefinition
-                                Width="*" />
+                                    Width="*" />
                                 <ColumnDefinition
-                                Width="*" />
+                                    Width="*" />
                                 <ColumnDefinition
-                                Width="*" />
+                                    Width="*" />
                             </Grid.ColumnDefinitions>
 
                             <Viewbox
-                            Grid.Column="0"
-                            Grid.ColumnSpan="2"
-                            StretchDirection="Both"
-                            Stretch="Uniform"
-                            HorizontalAlignment="Left">
+                                Grid.Column="0"
+                                Grid.ColumnSpan="2"
+                                StretchDirection="Both"
+                                Stretch="Uniform"
+                                HorizontalAlignment="Left">
 
                                 <Label
-                                Content="-20 mins" />
+                                    Content="-20 mins" />
 
                             </Viewbox>
 
                             <Viewbox
-                            Grid.Column="1"
-                            Grid.ColumnSpan="2"
-                            StretchDirection="Both"
-                            Stretch="Uniform"
-                            HorizontalAlignment="Center">
+                                Grid.Column="1"
+                                Grid.ColumnSpan="2"
+                                StretchDirection="Both"
+                                Stretch="Uniform"
+                                HorizontalAlignment="Center">
 
                                 <Label
-                                Content="-15" />
+                                    Content="-15" />
 
                             </Viewbox>
 
                             <Viewbox
-                            Grid.Column="3"
-                            Grid.ColumnSpan="2"
-                            StretchDirection="Both"
-                            Stretch="Uniform"
-                            HorizontalAlignment="Center">
+                                Grid.Column="3"
+                                Grid.ColumnSpan="2"
+                                StretchDirection="Both"
+                                Stretch="Uniform"
+                                HorizontalAlignment="Center">
 
                                 <Label
-                                Content="-10" />
+                                    Content="-10" />
 
                             </Viewbox>
 
                             <Viewbox
-                            Grid.Column="5"
-                            Grid.ColumnSpan="2"
-                            StretchDirection="Both"
-                            Stretch="Uniform"
-                            HorizontalAlignment="Center">
+                                Grid.Column="5"
+                                Grid.ColumnSpan="2"
+                                StretchDirection="Both"
+                                Stretch="Uniform"
+                                HorizontalAlignment="Center">
 
                                 <Label
-                                Content="-5" />
+                                    Content="-5" />
 
                             </Viewbox>
 
                             <Viewbox
-                            Grid.Column="10"
-                            StretchDirection="Both"
-                            Stretch="Uniform"
-                            HorizontalAlignment="Right">
+                                Grid.Column="10"
+                                StretchDirection="Both"
+                                Stretch="Uniform"
+                                HorizontalAlignment="Right">
 
                                 <Label
-                                Content="0" />
+                                    Content="0" />
 
                             </Viewbox>
 
@@ -255,118 +255,118 @@
 
                         <!--20m: SIGNIFICANT WAVE HEIGHT: READOUT-->
                         <Grid
-                        Grid.Column="2"
-                        Grid.Row="0"
-                        Margin="24,0,0,0">
+                            Grid.Column="2"
+                            Grid.Row="0"
+                            Margin="24,0,0,0">
 
                             <Grid.RowDefinitions>
                                 <RowDefinition
-                                Height="2*" />
+                                    Height="2*" />
                                 <RowDefinition
-                                Height="3*" />
+                                    Height="3*" />
                                 <RowDefinition
-                                Height="4*" />
+                                    Height="4*" />
                                 <RowDefinition
-                                Height="2*" />
+                                    Height="2*" />
                             </Grid.RowDefinitions>
 
                             <Viewbox
-                            Grid.Row="1"
-                            StretchDirection="Both"
-                            Stretch="Uniform"
-                            HorizontalAlignment="Center">
+                                Grid.Row="1"
+                                StretchDirection="Both"
+                                Stretch="Uniform"
+                                HorizontalAlignment="Center">
 
                                 <telerik:Label
-                                Content="HS" />
+                                    Content="HS" />
 
                             </Viewbox>
 
                             <Separator
-                            Grid.Row="1"
-                            Height="1"
-                            VerticalAlignment="Bottom" />
+                                Grid.Row="1"
+                                Height="1"
+                                VerticalAlignment="Bottom" />
 
                             <Viewbox
-                            Grid.Row="2"
-                            StretchDirection="Both"
-                            Stretch="Uniform"
-                            HorizontalAlignment="Center">
+                                Grid.Row="2"
+                                StretchDirection="Both"
+                                Stretch="Uniform"
+                                HorizontalAlignment="Center">
 
                                 <telerik:Label
-                                Content="{Binding Path=waveSWHString, FallbackValue=0.0 m}" />
+                                    Content="{Binding Path=waveSWHString, FallbackValue=0.0 m}" />
 
                             </Viewbox>
 
                         </Grid>
 
                         <Separator
-                        Grid.Column="0"
-                        Grid.Row="1"
-                        Grid.ColumnSpan="3"
-                        VerticalAlignment="Bottom" />
+                            Grid.Column="0"
+                            Grid.Row="1"
+                            Grid.ColumnSpan="3"
+                            VerticalAlignment="Bottom" />
 
 
                         <!--20m: SIGNIFICANT WAVE HEIGHT MAX: TITLE-->
                         <Grid
-                        Grid.Column="0"
-                        Grid.Row="2">
+                            Grid.Column="0"
+                            Grid.Row="2">
 
                             <Grid.RowDefinitions>
                                 <RowDefinition
-                                Height="1*" />
+                                    Height="1*" />
                                 <RowDefinition
-                                Height="*" />
+                                    Height="*" />
                                 <RowDefinition
-                                Height="*" />
+                                    Height="*" />
                                 <RowDefinition
-                                Height="*" />
+                                    Height="*" />
                                 <RowDefinition
-                                Height="*" />
+                                    Height="*" />
                                 <RowDefinition
-                                Height="2*" />
+                                    Height="2*" />
                             </Grid.RowDefinitions>
 
                             <Viewbox
-                            Grid.Row="1"
-                            StretchDirection="Both"
-                            Stretch="Uniform"
-                            HorizontalAlignment="Center">
+                                Grid.Row="1"
+                                StretchDirection="Both"
+                                Stretch="Uniform"
+                                HorizontalAlignment="Center">
 
                                 <TextBlock
-                                Text="Max" />
+                                    Text="Max" />
 
                             </Viewbox>
 
                             <Viewbox
-                            Grid.Row="2"
-                            StretchDirection="Both"
-                            Stretch="Uniform"
-                            HorizontalAlignment="Center">
+                                Grid.Row="2"
+                                StretchDirection="Both"
+                                Stretch="Uniform"
+                                HorizontalAlignment="Center">
 
                                 <TextBlock
-                                Text="Significant" />
+                                    Text="Significant" />
 
                             </Viewbox>
 
                             <Viewbox
-                            Grid.Row="3"
-                            StretchDirection="Both"
-                            Stretch="Uniform"
-                            HorizontalAlignment="Center">
+                                Grid.Row="3"
+                                StretchDirection="Both"
+                                Stretch="Uniform"
+                                HorizontalAlignment="Center">
 
                                 <TextBlock
-                                Text="Wave" />
+                                    Text="Wave" />
 
                             </Viewbox>
 
                             <Viewbox
-                            Grid.Row="4"
-                            StretchDirection="Both"
-                            Stretch="Uniform"
-                            HorizontalAlignment="Center">
+                                Grid.Row="4"
+                                StretchDirection="Both"
+                                Stretch="Uniform"
+                                HorizontalAlignment="Center">
 
                                 <TextBlock
-                                Text="Height" />
+                                    Text="Height" />
 
                             </Viewbox>
 
@@ -374,130 +374,130 @@
 
                         <!--20m: SIGNIFICANT WAVE HEIGHT MAX: GRAPH-->
                         <telerik:RadCartesianChart
-                        Grid.Column="1"
-                        Grid.Row="2"
-                        Name="waveSWHMax20mChart">
+                            Grid.Column="1"
+                            Grid.Row="2"
+                            Name="waveSWHMax20mChart">
 
                             <telerik:LineSeries
-                            ZIndex="200"
-                            Stroke="{StaticResource ColorEMSWaveData}"
-                            CategoryBinding="timestamp"
-                            ValueBinding="graphData">
+                                ZIndex="200"
+                                Stroke="{StaticResource ColorEMSWaveData}"
+                                CategoryBinding="timestamp"
+                                ValueBinding="graphData">
 
                                 <telerik:LineSeries.RenderOptions>
                                     <telerik:XamlRenderOptions
-                                    DefaultVisualsRenderMode="Batch" />
+                                        DefaultVisualsRenderMode="Batch" />
                                 </telerik:LineSeries.RenderOptions>
 
                             </telerik:LineSeries>
 
                             <telerik:RadCartesianChart.HorizontalAxis>
                                 <telerik:DateTimeContinuousAxis
-                                MajorStepUnit="Minute"
-                                MajorStep="5"
-                                ShowLabels="False"
-                                PlotMode="OnTicks"
-                                TickOrigin="{Binding alignmentTime}"
-                                Minimum="{Binding alignmentTimeMin20m}"
-                                Maximum="{Binding alignmentTimeMax}" />
+                                    MajorStepUnit="Minute"
+                                    MajorStep="5"
+                                    ShowLabels="False"
+                                    PlotMode="OnTicks"
+                                    TickOrigin="{Binding alignmentTime}"
+                                    Minimum="{Binding alignmentTimeMin20m}"
+                                    Maximum="{Binding alignmentTimeMax}" />
                             </telerik:RadCartesianChart.HorizontalAxis>
 
                             <telerik:RadCartesianChart.VerticalAxis>
                                 <telerik:LinearAxis
-                                Maximum="{Binding waveSWHChartAxisMax20m}"
-                                Minimum="0"
-                                SmartLabelsMode="SmartStepAndRange"
-                                LabelInterval="2" />
+                                    Maximum="{Binding waveSWHChartAxisMax20m}"
+                                    Minimum="0"
+                                    SmartLabelsMode="SmartStepAndRange"
+                                    LabelInterval="2" />
                             </telerik:RadCartesianChart.VerticalAxis>
 
                             <telerik:RadCartesianChart.Grid>
                                 <telerik:CartesianChartGrid
-                                MajorLinesVisibility="XY" />
+                                    MajorLinesVisibility="XY" />
                             </telerik:RadCartesianChart.Grid>
 
                         </telerik:RadCartesianChart>
 
                         <!--20m: SIGNIFICANT WAVE HEIGHT MAX: TIME SCALE-->
                         <Grid
-                        Grid.Column="1"
-                        Grid.Row="3"
-                        Margin="16,0,-6,0">
+                            Grid.Column="1"
+                            Grid.Row="3"
+                            Margin="16,0,-6,0">
 
                             <Grid.ColumnDefinitions>
                                 <ColumnDefinition
-                                Width="*" />
+                                    Width="*" />
                                 <ColumnDefinition
-                                Width="*" />
+                                    Width="*" />
                                 <ColumnDefinition
-                                Width="*" />
+                                    Width="*" />
                                 <ColumnDefinition
-                                Width="*" />
+                                    Width="*" />
                                 <ColumnDefinition
-                                Width="*" />
+                                    Width="*" />
                                 <ColumnDefinition
-                                Width="*" />
+                                    Width="*" />
                                 <ColumnDefinition
-                                Width="*" />
+                                    Width="*" />
                                 <ColumnDefinition
-                                Width="*" />
+                                    Width="*" />
                             </Grid.ColumnDefinitions>
 
                             <Viewbox
-                            Grid.Column="0"
-                            Grid.ColumnSpan="2"
-                            StretchDirection="Both"
-                            Stretch="Uniform"
-                            HorizontalAlignment="Left">
+                                Grid.Column="0"
+                                Grid.ColumnSpan="2"
+                                StretchDirection="Both"
+                                Stretch="Uniform"
+                                HorizontalAlignment="Left">
 
                                 <Label
-                                Content="-20 mins" />
+                                    Content="-20 mins" />
 
                             </Viewbox>
 
                             <Viewbox
-                            Grid.Column="1"
-                            Grid.ColumnSpan="2"
-                            StretchDirection="Both"
-                            Stretch="Uniform"
-                            HorizontalAlignment="Center">
+                                Grid.Column="1"
+                                Grid.ColumnSpan="2"
+                                StretchDirection="Both"
+                                Stretch="Uniform"
+                                HorizontalAlignment="Center">
 
                                 <Label
-                                Content="-15" />
+                                    Content="-15" />
 
                             </Viewbox>
 
                             <Viewbox
-                            Grid.Column="3"
-                            Grid.ColumnSpan="2"
-                            StretchDirection="Both"
-                            Stretch="Uniform"
-                            HorizontalAlignment="Center">
+                                Grid.Column="3"
+                                Grid.ColumnSpan="2"
+                                StretchDirection="Both"
+                                Stretch="Uniform"
+                                HorizontalAlignment="Center">
 
                                 <Label
-                                Content="-10" />
+                                    Content="-10" />
 
                             </Viewbox>
 
                             <Viewbox
-                            Grid.Column="5"
-                            Grid.ColumnSpan="2"
-                            StretchDirection="Both"
-                            Stretch="Uniform"
-                            HorizontalAlignment="Center">
+                                Grid.Column="5"
+                                Grid.ColumnSpan="2"
+                                StretchDirection="Both"
+                                Stretch="Uniform"
+                                HorizontalAlignment="Center">
 
                                 <Label
-                                Content="-5" />
+                                    Content="-5" />
 
                             </Viewbox>
 
                             <Viewbox
-                            Grid.Column="10"
-                            StretchDirection="Both"
-                            Stretch="Uniform"
-                            HorizontalAlignment="Right">
+                                Grid.Column="10"
+                                StretchDirection="Both"
+                                Stretch="Uniform"
+                                HorizontalAlignment="Right">
 
                                 <Label
-                                Content="0" />
+                                    Content="0" />
 
                             </Viewbox>
 
@@ -505,104 +505,104 @@
 
                         <!--20m: SIGNIFICANT WAVE HEIGHT MAX: READOUT-->
                         <Grid
-                        Grid.Column="2"
-                        Grid.Row="2"
-                        Margin="24,0,0,0">
+                            Grid.Column="2"
+                            Grid.Row="2"
+                            Margin="24,0,0,0">
 
                             <Grid.RowDefinitions>
                                 <RowDefinition
-                                Height="2*" />
+                                    Height="2*" />
                                 <RowDefinition
-                                Height="3*" />
+                                    Height="3*" />
                                 <RowDefinition
-                                Height="4*" />
+                                    Height="4*" />
                                 <RowDefinition
-                                Height="2*" />
+                                    Height="2*" />
                             </Grid.RowDefinitions>
 
                             <Viewbox
-                            Grid.Row="1"
-                            StretchDirection="Both"
-                            Stretch="Uniform"
-                            HorizontalAlignment="Center">
+                                Grid.Row="1"
+                                StretchDirection="Both"
+                                Stretch="Uniform"
+                                HorizontalAlignment="Center">
 
                                 <telerik:Label
-                                Content="HSmax" />
+                                    Content="HSmax" />
 
                             </Viewbox>
 
                             <Separator
-                            Grid.Row="1"
-                            Height="1"
-                            VerticalAlignment="Bottom" />
+                                Grid.Row="1"
+                                Height="1"
+                                VerticalAlignment="Bottom" />
 
                             <Viewbox
-                            Grid.Row="2"
-                            StretchDirection="Both"
-                            Stretch="Uniform"
-                            HorizontalAlignment="Center">
+                                Grid.Row="2"
+                                StretchDirection="Both"
+                                Stretch="Uniform"
+                                HorizontalAlignment="Center">
 
                                 <telerik:Label
-                                Content="{Binding Path=waveSWHMax20mString, FallbackValue=0.0 m}" />
+                                    Content="{Binding Path=waveSWHMax20mString, FallbackValue=0.0 m}" />
 
                             </Viewbox>
 
                         </Grid>
 
                         <Separator
-                        Grid.Column="0"
-                        Grid.Row="3"
-                        Grid.ColumnSpan="3"
-                        VerticalAlignment="Bottom" />
+                            Grid.Column="0"
+                            Grid.Row="3"
+                            Grid.ColumnSpan="3"
+                            VerticalAlignment="Bottom" />
 
                         <!--20m: WAVE PERIOD: TITLE-->
                         <Grid
-                        Grid.Column="0"
-                        Grid.Row="4">
+                            Grid.Column="0"
+                            Grid.Row="4">
 
                             <Grid.RowDefinitions>
                                 <RowDefinition
-                                Height="2*" />
+                                    Height="2*" />
                                 <RowDefinition
-                                Height="*" />
+                                    Height="*" />
                                 <RowDefinition
-                                Height="*" />
+                                    Height="*" />
                                 <RowDefinition
-                                Height="*" />
+                                    Height="*" />
                                 <RowDefinition
-                                Height="2*" />
+                                    Height="2*" />
                             </Grid.RowDefinitions>
 
                             <Viewbox
-                            Grid.Row="1"
-                            StretchDirection="Both"
-                            Stretch="Uniform"
-                            HorizontalAlignment="Center">
+                                Grid.Row="1"
+                                StretchDirection="Both"
+                                Stretch="Uniform"
+                                HorizontalAlignment="Center">
 
                                 <TextBlock
-                                Text="Mean" />
+                                    Text="Mean" />
 
                             </Viewbox>
 
                             <Viewbox
-                            Grid.Row="2"
-                            StretchDirection="Both"
-                            Stretch="Uniform"
-                            HorizontalAlignment="Center">
+                                Grid.Row="2"
+                                StretchDirection="Both"
+                                Stretch="Uniform"
+                                HorizontalAlignment="Center">
 
                                 <TextBlock
-                                Text="Wave"/>
+                                    Text="Wave" />
 
                             </Viewbox>
 
                             <Viewbox
-                            Grid.Row="3"
-                            StretchDirection="Both"
-                            Stretch="Uniform"
-                            HorizontalAlignment="Center">
+                                Grid.Row="3"
+                                StretchDirection="Both"
+                                Stretch="Uniform"
+                                HorizontalAlignment="Center">
 
                                 <TextBlock
-                                Text="Period"/>
+                                    Text="Period" />
 
                             </Viewbox>
 
@@ -610,130 +610,130 @@
 
                         <!--20m: WAVE PERIOD: CHART-->
                         <telerik:RadCartesianChart
-                        Grid.Column="1"
-                        Grid.Row="4"
-                        Name="wavePeriod20mChart">
+                            Grid.Column="1"
+                            Grid.Row="4"
+                            Name="wavePeriod20mChart">
 
                             <telerik:LineSeries
-                        ZIndex="200"
-                        Stroke="{StaticResource ColorEMSWaveData}"
-                        CategoryBinding="timestamp"
-                        ValueBinding="graphData">
+                                ZIndex="200"
+                                Stroke="{StaticResource ColorEMSWaveData}"
+                                CategoryBinding="timestamp"
+                                ValueBinding="graphData">
 
                                 <telerik:LineSeries.RenderOptions>
                                     <telerik:XamlRenderOptions
-                                DefaultVisualsRenderMode="Batch" />
+                                        DefaultVisualsRenderMode="Batch" />
                                 </telerik:LineSeries.RenderOptions>
 
                             </telerik:LineSeries>
 
                             <telerik:RadCartesianChart.HorizontalAxis>
                                 <telerik:DateTimeContinuousAxis
-                            MajorStepUnit="Minute"
-                            MajorStep="5"
-                            ShowLabels="False"
-                            PlotMode="OnTicks"     
-                            TickOrigin="{Binding alignmentTime}"
-                            Minimum="{Binding alignmentTimeMin20m}"
-                            Maximum="{Binding alignmentTimeMax}" />
+                                    MajorStepUnit="Minute"
+                                    MajorStep="5"
+                                    ShowLabels="False"
+                                    PlotMode="OnTicks"
+                                    TickOrigin="{Binding alignmentTime}"
+                                    Minimum="{Binding alignmentTimeMin20m}"
+                                    Maximum="{Binding alignmentTimeMax}" />
                             </telerik:RadCartesianChart.HorizontalAxis>
 
                             <telerik:RadCartesianChart.VerticalAxis>
                                 <telerik:LinearAxis
-                            Maximum="{Binding wavePeriodChartAxisMax20m}"
-                            Minimum="0"
-                            SmartLabelsMode="SmartStepAndRange"
-                            LabelInterval="2"/>
+                                    Maximum="{Binding wavePeriodChartAxisMax20m}"
+                                    Minimum="0"
+                                    SmartLabelsMode="SmartStepAndRange"
+                                    LabelInterval="2" />
                             </telerik:RadCartesianChart.VerticalAxis>
 
                             <telerik:RadCartesianChart.Grid>
                                 <telerik:CartesianChartGrid
-                                    MajorLinesVisibility="XY"/>
+                                    MajorLinesVisibility="XY" />
                             </telerik:RadCartesianChart.Grid>
 
                         </telerik:RadCartesianChart>
 
                         <!--20m: WAVE PERIOD: TIME SCALE-->
                         <Grid
-                        Grid.Column="1"
-                        Grid.Row="5"
-                        Margin="16,0,-6,0">
+                            Grid.Column="1"
+                            Grid.Row="5"
+                            Margin="16,0,-6,0">
 
                             <Grid.ColumnDefinitions>
                                 <ColumnDefinition
-                                Width="*" />
+                                    Width="*" />
                                 <ColumnDefinition
-                                Width="*" />
+                                    Width="*" />
                                 <ColumnDefinition
-                                Width="*" />
+                                    Width="*" />
                                 <ColumnDefinition
-                                Width="*" />
+                                    Width="*" />
                                 <ColumnDefinition
-                                Width="*" />
+                                    Width="*" />
                                 <ColumnDefinition
-                                Width="*" />
+                                    Width="*" />
                                 <ColumnDefinition
-                                Width="*" />
+                                    Width="*" />
                                 <ColumnDefinition
-                                Width="*" />
+                                    Width="*" />
                             </Grid.ColumnDefinitions>
 
                             <Viewbox
-                            Grid.Column="0"
-                            Grid.ColumnSpan="2"
-                            StretchDirection="Both"
-                            Stretch="Uniform"
-                            HorizontalAlignment="Left">
+                                Grid.Column="0"
+                                Grid.ColumnSpan="2"
+                                StretchDirection="Both"
+                                Stretch="Uniform"
+                                HorizontalAlignment="Left">
 
                                 <Label
-                                Content="-20 mins" />
+                                    Content="-20 mins" />
 
                             </Viewbox>
 
                             <Viewbox
-                            Grid.Column="1"
-                            Grid.ColumnSpan="2"
-                            StretchDirection="Both"
-                            Stretch="Uniform"
-                            HorizontalAlignment="Center">
+                                Grid.Column="1"
+                                Grid.ColumnSpan="2"
+                                StretchDirection="Both"
+                                Stretch="Uniform"
+                                HorizontalAlignment="Center">
 
                                 <Label
-                                Content="-15" />
+                                    Content="-15" />
 
                             </Viewbox>
 
                             <Viewbox
-                            Grid.Column="3"
-                            Grid.ColumnSpan="2"
-                            StretchDirection="Both"
-                            Stretch="Uniform"
-                            HorizontalAlignment="Center">
+                                Grid.Column="3"
+                                Grid.ColumnSpan="2"
+                                StretchDirection="Both"
+                                Stretch="Uniform"
+                                HorizontalAlignment="Center">
 
                                 <Label
-                                Content="-10" />
+                                    Content="-10" />
 
                             </Viewbox>
 
                             <Viewbox
-                            Grid.Column="5"
-                            Grid.ColumnSpan="2"
-                            StretchDirection="Both"
-                            Stretch="Uniform"
-                            HorizontalAlignment="Center">
+                                Grid.Column="5"
+                                Grid.ColumnSpan="2"
+                                StretchDirection="Both"
+                                Stretch="Uniform"
+                                HorizontalAlignment="Center">
 
                                 <Label
-                                Content="-5" />
+                                    Content="-5" />
 
                             </Viewbox>
 
                             <Viewbox
-                            Grid.Column="10"
-                            StretchDirection="Both"
-                            Stretch="Uniform"
-                            HorizontalAlignment="Right">
+                                Grid.Column="10"
+                                StretchDirection="Both"
+                                Stretch="Uniform"
+                                HorizontalAlignment="Right">
 
                                 <Label
-                                Content="0" />
+                                    Content="0" />
 
                             </Viewbox>
 
@@ -741,117 +741,117 @@
 
                         <!--20m: WAVE PERIOD: READOUT-->
                         <Grid
-                        Grid.Column="2"
-                        Grid.Row="4"
-                        Margin="24,0,0,0">
+                            Grid.Column="2"
+                            Grid.Row="4"
+                            Margin="24,0,0,0">
 
                             <Grid.RowDefinitions>
                                 <RowDefinition
-                                Height="2*" />
+                                    Height="2*" />
                                 <RowDefinition
-                                Height="3*" />
+                                    Height="3*" />
                                 <RowDefinition
-                                Height="4*" />
+                                    Height="4*" />
                                 <RowDefinition
-                                Height="2*" />
+                                    Height="2*" />
                             </Grid.RowDefinitions>
 
                             <Viewbox
-                            Grid.Row="1"
-                            StretchDirection="Both"
-                            Stretch="Uniform"
-                            HorizontalAlignment="Center">
+                                Grid.Row="1"
+                                StretchDirection="Both"
+                                Stretch="Uniform"
+                                HorizontalAlignment="Center">
 
                                 <telerik:Label
-                                Content="TZ" />
+                                    Content="TZ" />
 
                             </Viewbox>
 
                             <Separator
-                            Grid.Row="1"
-                            Height="1"
-                            VerticalAlignment="Bottom" />
+                                Grid.Row="1"
+                                Height="1"
+                                VerticalAlignment="Bottom" />
 
                             <Viewbox
-                            Grid.Row="2"
-                            StretchDirection="Both"
-                            Stretch="Uniform"
-                            HorizontalAlignment="Center">
+                                Grid.Row="2"
+                                StretchDirection="Both"
+                                Stretch="Uniform"
+                                HorizontalAlignment="Center">
 
                                 <telerik:Label
-                                Content="{Binding Path=wavePeriodString, FallbackValue=0.0 m}" />
+                                    Content="{Binding Path=wavePeriodString, FallbackValue=0.0 m}" />
 
                             </Viewbox>
 
                         </Grid>
 
                         <Separator
-                        Grid.Column="0"
-                        Grid.Row="5"
-                        Grid.ColumnSpan="3"
-                        VerticalAlignment="Bottom" />
+                            Grid.Column="0"
+                            Grid.Row="5"
+                            Grid.ColumnSpan="3"
+                            VerticalAlignment="Bottom" />
 
                         <!--20m: WAVE PERIOD MAX: TITLE-->
                         <Grid
-                        Grid.Column="0"
-                        Grid.Row="6">
+                            Grid.Column="0"
+                            Grid.Row="6">
 
                             <Grid.RowDefinitions>
                                 <RowDefinition
-                                Height="1*" />
+                                    Height="1*" />
                                 <RowDefinition
-                                Height="*" />
+                                    Height="*" />
                                 <RowDefinition
-                                Height="*" />
+                                    Height="*" />
                                 <RowDefinition
-                                Height="*" />
+                                    Height="*" />
                                 <RowDefinition
-                                Height="*" />
+                                    Height="*" />
                                 <RowDefinition
-                                Height="2*" />
+                                    Height="2*" />
                             </Grid.RowDefinitions>
 
                             <Viewbox
-                            Grid.Row="1"
-                            StretchDirection="Both"
-                            Stretch="Uniform"
-                            HorizontalAlignment="Center">
+                                Grid.Row="1"
+                                StretchDirection="Both"
+                                Stretch="Uniform"
+                                HorizontalAlignment="Center">
 
                                 <TextBlock
-                                Text="Max"/>
+                                    Text="Max" />
 
                             </Viewbox>
 
                             <Viewbox
-                            Grid.Row="2"
-                            StretchDirection="Both"
-                            Stretch="Uniform"
-                            HorizontalAlignment="Center">
+                                Grid.Row="2"
+                                StretchDirection="Both"
+                                Stretch="Uniform"
+                                HorizontalAlignment="Center">
 
                                 <TextBlock
-                                Text="Mean" />
+                                    Text="Mean" />
 
                             </Viewbox>
 
                             <Viewbox
-                            Grid.Row="3"
-                            StretchDirection="Both"
-                            Stretch="Uniform"
-                            HorizontalAlignment="Center">
+                                Grid.Row="3"
+                                StretchDirection="Both"
+                                Stretch="Uniform"
+                                HorizontalAlignment="Center">
 
                                 <TextBlock
-                                Text="Wave"/>
+                                    Text="Wave" />
 
                             </Viewbox>
 
                             <Viewbox
-                            Grid.Row="4"
-                            StretchDirection="Both"
-                            Stretch="Uniform"
-                            HorizontalAlignment="Center">
+                                Grid.Row="4"
+                                StretchDirection="Both"
+                                Stretch="Uniform"
+                                HorizontalAlignment="Center">
 
                                 <TextBlock
-                                Text="Period"/>
+                                    Text="Period" />
 
                             </Viewbox>
 
@@ -859,130 +859,130 @@
 
                         <!--20m: WAVE PERIOD MAX: CHART-->
                         <telerik:RadCartesianChart
-                    Grid.Column="1"
-                    Grid.Row="6"
-                    Name="wavePeriodMax20mChart">
+                            Grid.Column="1"
+                            Grid.Row="6"
+                            Name="wavePeriodMax20mChart">
 
                             <telerik:LineSeries
-                        ZIndex="200"
-                        Stroke="{StaticResource ColorEMSWaveData}"
-                        CategoryBinding="timestamp"
-                        ValueBinding="graphData">
+                                ZIndex="200"
+                                Stroke="{StaticResource ColorEMSWaveData}"
+                                CategoryBinding="timestamp"
+                                ValueBinding="graphData">
 
                                 <telerik:LineSeries.RenderOptions>
                                     <telerik:XamlRenderOptions
-                                DefaultVisualsRenderMode="Batch" />
+                                        DefaultVisualsRenderMode="Batch" />
                                 </telerik:LineSeries.RenderOptions>
 
                             </telerik:LineSeries>
 
                             <telerik:RadCartesianChart.HorizontalAxis>
                                 <telerik:DateTimeContinuousAxis
-                            MajorStepUnit="Minute"
-                            MajorStep="5"
-                            ShowLabels="False"
-                            PlotMode="OnTicks"     
-                            TickOrigin="{Binding alignmentTime}"
-                            Minimum="{Binding alignmentTimeMin20m}"
-                            Maximum="{Binding alignmentTimeMax}" />
+                                    MajorStepUnit="Minute"
+                                    MajorStep="5"
+                                    ShowLabels="False"
+                                    PlotMode="OnTicks"
+                                    TickOrigin="{Binding alignmentTime}"
+                                    Minimum="{Binding alignmentTimeMin20m}"
+                                    Maximum="{Binding alignmentTimeMax}" />
                             </telerik:RadCartesianChart.HorizontalAxis>
 
                             <telerik:RadCartesianChart.VerticalAxis>
                                 <telerik:LinearAxis
-                            Maximum="{Binding wavePeriodChartAxisMax20m}"
-                            Minimum="0"
-                            SmartLabelsMode="SmartStepAndRange"
-                            LabelInterval="2"/>
+                                    Maximum="{Binding wavePeriodChartAxisMax20m}"
+                                    Minimum="0"
+                                    SmartLabelsMode="SmartStepAndRange"
+                                    LabelInterval="2" />
                             </telerik:RadCartesianChart.VerticalAxis>
 
                             <telerik:RadCartesianChart.Grid>
                                 <telerik:CartesianChartGrid
-                                    MajorLinesVisibility="XY"/>
+                                    MajorLinesVisibility="XY" />
                             </telerik:RadCartesianChart.Grid>
 
                         </telerik:RadCartesianChart>
 
                         <!--20m: WAVE PERIOD MAX: TIME SCALE-->
                         <Grid
-                        Grid.Column="1"
-                        Grid.Row="7"
-                        Margin="16,0,-6,0">
+                            Grid.Column="1"
+                            Grid.Row="7"
+                            Margin="16,0,-6,0">
 
                             <Grid.ColumnDefinitions>
                                 <ColumnDefinition
-                                Width="*" />
+                                    Width="*" />
                                 <ColumnDefinition
-                                Width="*" />
+                                    Width="*" />
                                 <ColumnDefinition
-                                Width="*" />
+                                    Width="*" />
                                 <ColumnDefinition
-                                Width="*" />
+                                    Width="*" />
                                 <ColumnDefinition
-                                Width="*" />
+                                    Width="*" />
                                 <ColumnDefinition
-                                Width="*" />
+                                    Width="*" />
                                 <ColumnDefinition
-                                Width="*" />
+                                    Width="*" />
                                 <ColumnDefinition
-                                Width="*" />
+                                    Width="*" />
                             </Grid.ColumnDefinitions>
 
                             <Viewbox
-                            Grid.Column="0"
-                            Grid.ColumnSpan="2"
-                            StretchDirection="Both"
-                            Stretch="Uniform"
-                            HorizontalAlignment="Left">
+                                Grid.Column="0"
+                                Grid.ColumnSpan="2"
+                                StretchDirection="Both"
+                                Stretch="Uniform"
+                                HorizontalAlignment="Left">
 
                                 <Label
-                                Content="-20 mins" />
+                                    Content="-20 mins" />
 
                             </Viewbox>
 
                             <Viewbox
-                            Grid.Column="1"
-                            Grid.ColumnSpan="2"
-                            StretchDirection="Both"
-                            Stretch="Uniform"
-                            HorizontalAlignment="Center">
+                                Grid.Column="1"
+                                Grid.ColumnSpan="2"
+                                StretchDirection="Both"
+                                Stretch="Uniform"
+                                HorizontalAlignment="Center">
 
                                 <Label
-                                Content="-15" />
+                                    Content="-15" />
 
                             </Viewbox>
 
                             <Viewbox
-                            Grid.Column="3"
-                            Grid.ColumnSpan="2"
-                            StretchDirection="Both"
-                            Stretch="Uniform"
-                            HorizontalAlignment="Center">
+                                Grid.Column="3"
+                                Grid.ColumnSpan="2"
+                                StretchDirection="Both"
+                                Stretch="Uniform"
+                                HorizontalAlignment="Center">
 
                                 <Label
-                                Content="-10" />
+                                    Content="-10" />
 
                             </Viewbox>
 
                             <Viewbox
-                            Grid.Column="5"
-                            Grid.ColumnSpan="2"
-                            StretchDirection="Both"
-                            Stretch="Uniform"
-                            HorizontalAlignment="Center">
+                                Grid.Column="5"
+                                Grid.ColumnSpan="2"
+                                StretchDirection="Both"
+                                Stretch="Uniform"
+                                HorizontalAlignment="Center">
 
                                 <Label
-                                Content="-5" />
+                                    Content="-5" />
 
                             </Viewbox>
 
                             <Viewbox
-                            Grid.Column="10"
-                            StretchDirection="Both"
-                            Stretch="Uniform"
-                            HorizontalAlignment="Right">
+                                Grid.Column="10"
+                                StretchDirection="Both"
+                                Stretch="Uniform"
+                                HorizontalAlignment="Right">
 
                                 <Label
-                                Content="0" />
+                                    Content="0" />
 
                             </Viewbox>
 
@@ -990,1005 +990,19 @@
 
                         <!--20m: WAVE PERIOD MAX: READOUT-->
                         <Grid
-                        Grid.Column="2"
-                        Grid.Row="6"
-                        Margin="24,0,0,0">
+                            Grid.Column="2"
+                            Grid.Row="6"
+                            Margin="24,0,0,0">
 
                             <Grid.RowDefinitions>
                                 <RowDefinition
-                                Height="2*" />
+                                    Height="2*" />
                                 <RowDefinition
-                                Height="3*" />
+                                    Height="3*" />
                                 <RowDefinition
-                                Height="4*" />
+                                    Height="4*" />
                                 <RowDefinition
-                                Height="2*" />
-                            </Grid.RowDefinitions>
-
-                            <Viewbox
-                            Grid.Row="1"
-                            StretchDirection="Both"
-                            Stretch="Uniform"
-                            HorizontalAlignment="Center">
-
-                                <telerik:Label
-                                Content="TZmax" />
-
-                            </Viewbox>
-
-                            <Separator
-                            Grid.Row="1"
-                            Height="1"
-                            VerticalAlignment="Bottom" />
-
-                            <Viewbox
-                            Grid.Row="2"
-                            StretchDirection="Both"
-                            Stretch="Uniform"
-                            HorizontalAlignment="Center">
-
-                                <telerik:Label
-                                Content="{Binding Path=wavePeriodMax20mString, FallbackValue=0.0 m}" />
-
-                            </Viewbox>
-
-                        </Grid>
-
-                    </Grid>
-
-                </telerik:RadTabItem>
-
-                <!--3-timers-->
-                <telerik:RadTabItem
-                    Name="tab3Hours">
-                    <telerik:RadTabItem.Header>
-                        <StackPanel
-                        Orientation="Horizontal">
-                            <Image
-                            Width="24"
-                            Source="..\Icons\outline_schedule_white_48dp.png" />
-                            <TextBlock
-                            Foreground="White"
-                            FontSize="{StaticResource fontSizeTab}"
-                            Text="3-hours"
-                            Margin="8,4,0,0" />
-                        </StackPanel>
-                    </telerik:RadTabItem.Header>
-
-                    <Grid
-                    Margin="8">
-
-                        <Grid.ColumnDefinitions>
-                            <ColumnDefinition
-                            Width="4*" />
-                            <ColumnDefinition
-                            Width="30*" />
-                            <ColumnDefinition
-                            Width="5*" />
-                        </Grid.ColumnDefinitions>
-
-                        <Grid.RowDefinitions>
-                            <RowDefinition
-                            Height="30*" />
-                            <RowDefinition
-                            Height="5*" />
-                            <RowDefinition
-                            Height="30*" />
-                            <RowDefinition
-                            Height="5*" />
-                            <RowDefinition
-                            Height="30*" />
-                            <RowDefinition
-                            Height="5*" />
-                            <RowDefinition
-                            Height="30*" />
-                            <RowDefinition
-                            Height="5*" />
-                        </Grid.RowDefinitions>
-
-
-                        <!--3h: SIGNIFICANT WAVE HEIGHT: TITLE-->
-                        <Grid
-                        Grid.Column="0"
-                        Grid.Row="0">
-
-                            <Grid.RowDefinitions>
-                                <RowDefinition
-                                Height="2*" />
-                                <RowDefinition
-                                Height="*" />
-                                <RowDefinition
-                                Height="*" />
-                                <RowDefinition
-                                Height="*" />
-                                <RowDefinition
-                                Height="2*" />
-                            </Grid.RowDefinitions>
-
-                            <Viewbox
-                            Grid.Row="1"
-                            StretchDirection="Both"
-                            Stretch="Uniform"
-                            HorizontalAlignment="Center">
-
-                                <TextBlock
-                                Text="Significant" />
-
-                            </Viewbox>
-
-                            <Viewbox
-                            Grid.Row="2"
-                            StretchDirection="Both"
-                            Stretch="Uniform"
-                            HorizontalAlignment="Center">
-
-                                <TextBlock
-                                Text="Wave" />
-
-                            </Viewbox>
-
-                            <Viewbox
-                            Grid.Row="3"
-                            StretchDirection="Both"
-                            Stretch="Uniform"
-                            HorizontalAlignment="Center">
-
-                                <TextBlock
-                                Text="Height" />
-
-                            </Viewbox>
-
-                        </Grid>
-
-                        <!--3h: SIGNIFICANT WAVE HEIGHT: GRAPH-->
-                        <telerik:RadCartesianChart
-                        Grid.Column="1"
-                        Grid.Row="0"
-                        Name="waveSWH3hChart">
-
-                            <telerik:LineSeries
-                            ZIndex="200"
-                            Stroke="{StaticResource ColorEMSWaveData}"
-                            CategoryBinding="timestamp"
-                            ValueBinding="graphData">
-
-                                <telerik:LineSeries.RenderOptions>
-                                    <telerik:XamlRenderOptions
-                                    DefaultVisualsRenderMode="Batch" />
-                                </telerik:LineSeries.RenderOptions>
-
-                            </telerik:LineSeries>
-
-                            <telerik:RadCartesianChart.HorizontalAxis>
-                                <telerik:DateTimeContinuousAxis
-                                MajorStepUnit="Minute"
-                                MajorStep="15"
-                                ShowLabels="False"
-                                PlotMode="OnTicks"
-                                TickOrigin="{Binding alignmentTime}"
-                                Minimum="{Binding alignmentTimeMin3h}"
-                                Maximum="{Binding alignmentTimeMax}" />
-                            </telerik:RadCartesianChart.HorizontalAxis>
-
-                            <telerik:RadCartesianChart.VerticalAxis>
-                                <telerik:LinearAxis
-                                Maximum="{Binding waveSWHChartAxisMax3h}"
-                                Minimum="0"
-                                SmartLabelsMode="SmartStepAndRange"
-                                LabelInterval="2" />
-                            </telerik:RadCartesianChart.VerticalAxis>
-
-                            <telerik:RadCartesianChart.Grid>
-                                <telerik:CartesianChartGrid
-                                    MajorLinesVisibility="XY" />
-                            </telerik:RadCartesianChart.Grid>
-
-                        </telerik:RadCartesianChart>
-
-                        <!--3h: SIGNIFICANT WAVE HEIGHT: TIME SCALE-->
-                        <Grid
-                        Grid.Column="1"
-                        Grid.Row="1"
-                        Margin="16,0,-6,0">
-
-                            <Grid.ColumnDefinitions>
-                                <ColumnDefinition
-                                Width="*" />
-                                <ColumnDefinition
-                                Width="*" />
-                                <ColumnDefinition
-                                Width="*" />
-                                <ColumnDefinition
-                                Width="*" />
-                                <ColumnDefinition
-                                Width="*" />
-                                <ColumnDefinition
-                                Width="*" />
-                                <ColumnDefinition
-                                Width="*" />
-                                <ColumnDefinition
-                                Width="*" />
-                                <ColumnDefinition
-                                Width="*" />
-                                <ColumnDefinition
-                                Width="*" />
-                                <ColumnDefinition
-                                Width="*" />
-                                <ColumnDefinition
-                                Width="*" />
-                            </Grid.ColumnDefinitions>
-
-                            <Viewbox
-                            Grid.Column="0"
-                            Grid.ColumnSpan="2"
-                            StretchDirection="Both"
-                            Stretch="Uniform"
-                            HorizontalAlignment="Left">
-
-                                <Label
-                                Content="-3 hours" />
-                            </Viewbox>
-
-                            <Viewbox
-                            Grid.Column="3"
-                            Grid.ColumnSpan="2"
-                            StretchDirection="Both"
-                            Stretch="Uniform"
-                            HorizontalAlignment="Center">
-
-                                <Label
-                                Content="-2" />
-                            </Viewbox>
-
-                            <Viewbox
-                            Grid.Column="7"
-                            Grid.ColumnSpan="2"
-                            StretchDirection="Both"
-                            Stretch="Uniform"
-                            HorizontalAlignment="Center">
-
-                                <Label
-                                Content="-1" />
-                            </Viewbox>
-
-                            <Viewbox
-                            Grid.Column="11"
-                            StretchDirection="Both"
-                            Stretch="Uniform"
-                            HorizontalAlignment="Right">
-
-                                <Label
-                                Content="0" />
-                            </Viewbox>
-
-                        </Grid>
-
-                        <!--3h: SIGNIFICANT WAVE HEIGHT: READOUT-->
-                        <Grid
-                        Grid.Column="2"
-                        Grid.Row="0"
-                        Margin="24,0,0,0">
-
-                            <Grid.RowDefinitions>
-                                <RowDefinition
-                                Height="2*" />
-                                <RowDefinition
-                                Height="3*" />
-                                <RowDefinition
-                                Height="4*" />
-                                <RowDefinition
-                                Height="2*" />
-                            </Grid.RowDefinitions>
-
-                            <Viewbox
-                            Grid.Row="1"
-                            StretchDirection="Both"
-                            Stretch="Uniform"
-                            HorizontalAlignment="Center">
-
-                                <telerik:Label
-                                Content="HS" />
-
-                            </Viewbox>
-
-                            <Separator
-                            Grid.Row="1"
-                            Height="1"
-                            VerticalAlignment="Bottom" />
-
-                            <Viewbox
-                            Grid.Row="2"
-                            StretchDirection="Both"
-                            Stretch="Uniform"
-                            HorizontalAlignment="Center">
-
-                                <telerik:Label
-                                Content="{Binding Path=waveSWHString, FallbackValue=0.0 m}" />
-
-                            </Viewbox>
-
-                        </Grid>
-
-                        <Separator
-                        Grid.Column="0"
-                        Grid.Row="1"
-                        Grid.ColumnSpan="3"
-                        VerticalAlignment="Bottom" />
-
-
-                        <!--3h: SIGNIFICANT WAVE HEIGHT MAX: TITLE-->
-                        <Grid
-                        Grid.Column="0"
-                        Grid.Row="2">
-
-                            <Grid.RowDefinitions>
-                                <RowDefinition
-                                Height="1*" />
-                                <RowDefinition
-                                Height="*" />
-                                <RowDefinition
-                                Height="*" />
-                                <RowDefinition
-                                Height="*" />
-                                <RowDefinition
-                                Height="*" />
-                                <RowDefinition
-                                Height="2*" />
-                            </Grid.RowDefinitions>
-
-                            <Viewbox
-                            Grid.Row="1"
-                            StretchDirection="Both"
-                            Stretch="Uniform"
-                            HorizontalAlignment="Center">
-
-                                <TextBlock
-                                Text="Max" />
-
-                            </Viewbox>
-
-                            <Viewbox
-                            Grid.Row="2"
-                            StretchDirection="Both"
-                            Stretch="Uniform"
-                            HorizontalAlignment="Center">
-
-                                <TextBlock
-                                Text="Significant" />
-
-                            </Viewbox>
-
-                            <Viewbox
-                            Grid.Row="3"
-                            StretchDirection="Both"
-                            Stretch="Uniform"
-                            HorizontalAlignment="Center">
-
-                                <TextBlock
-                                Text="Wave" />
-
-                            </Viewbox>
-
-                            <Viewbox
-                            Grid.Row="4"
-                            StretchDirection="Both"
-                            Stretch="Uniform"
-                            HorizontalAlignment="Center">
-
-                                <TextBlock
-                                Text="Height" />
-
-                            </Viewbox>
-
-                        </Grid>
-
-                        <!--3h: SIGNIFICANT WAVE HEIGHT MAX: GRAPH-->
-                        <telerik:RadCartesianChart
-                        Grid.Column="1"
-                        Grid.Row="2"
-                        Name="waveSWHMax3hChart">
-
-                            <telerik:LineSeries
-                            ZIndex="200"
-                            Stroke="{StaticResource ColorEMSWaveData}"
-                            CategoryBinding="timestamp"
-                            ValueBinding="graphData">
-
-                                <telerik:LineSeries.RenderOptions>
-                                    <telerik:XamlRenderOptions
-                                    DefaultVisualsRenderMode="Batch" />
-                                </telerik:LineSeries.RenderOptions>
-
-                            </telerik:LineSeries>
-
-                            <telerik:RadCartesianChart.HorizontalAxis>
-                                <telerik:DateTimeContinuousAxis
-                                MajorStepUnit="Minute"
-                                MajorStep="15"
-                                ShowLabels="False"
-                                PlotMode="OnTicks"
-                                TickOrigin="{Binding alignmentTime}"
-                                Minimum="{Binding alignmentTimeMin3h}"
-                                Maximum="{Binding alignmentTimeMax}" />
-                            </telerik:RadCartesianChart.HorizontalAxis>
-
-                            <telerik:RadCartesianChart.VerticalAxis>
-                                <telerik:LinearAxis
-                                Maximum="{Binding waveSWHChartAxisMax3h}"
-                                Minimum="0"
-                                SmartLabelsMode="SmartStepAndRange"
-                                LabelInterval="2" />
-                            </telerik:RadCartesianChart.VerticalAxis>
-
-                            <telerik:RadCartesianChart.Grid>
-                                <telerik:CartesianChartGrid
-                                    MajorLinesVisibility="XY" />
-                            </telerik:RadCartesianChart.Grid>
-
-                        </telerik:RadCartesianChart>
-
-                        <!--3h: SIGNIFICANT WAVE HEIGHT MAX: TIME SCALE-->
-                        <Grid
-                        Grid.Column="1"
-                        Grid.Row="3"
-                        Margin="16,0,-6,0">
-
-                            <Grid.ColumnDefinitions>
-                                <ColumnDefinition
-                                Width="*" />
-                                <ColumnDefinition
-                                Width="*" />
-                                <ColumnDefinition
-                                Width="*" />
-                                <ColumnDefinition
-                                Width="*" />
-                                <ColumnDefinition
-                                Width="*" />
-                                <ColumnDefinition
-                                Width="*" />
-                                <ColumnDefinition
-                                Width="*" />
-                                <ColumnDefinition
-                                Width="*" />
-                                <ColumnDefinition
-                                Width="*" />
-                                <ColumnDefinition
-                                Width="*" />
-                                <ColumnDefinition
-                                Width="*" />
-                                <ColumnDefinition
-                                Width="*" />
-                            </Grid.ColumnDefinitions>
-
-                            <Viewbox
-                            Grid.Column="0"
-                            Grid.ColumnSpan="2"
-                            StretchDirection="Both"
-                            Stretch="Uniform"
-                            HorizontalAlignment="Left">
-
-                                <Label
-                                Content="-3 hours" />
-                            </Viewbox>
-
-                            <Viewbox
-                            Grid.Column="3"
-                            Grid.ColumnSpan="2"
-                            StretchDirection="Both"
-                            Stretch="Uniform"
-                            HorizontalAlignment="Center">
-
-                                <Label
-                                Content="-2" />
-                            </Viewbox>
-
-                            <Viewbox
-                            Grid.Column="7"
-                            Grid.ColumnSpan="2"
-                            StretchDirection="Both"
-                            Stretch="Uniform"
-                            HorizontalAlignment="Center">
-
-                                <Label
-                                Content="-1" />
-                            </Viewbox>
-
-                            <Viewbox
-                            Grid.Column="11"
-                            StretchDirection="Both"
-                            Stretch="Uniform"
-                            HorizontalAlignment="Right">
-
-                                <Label
-                                Content="0" />
-                            </Viewbox>
-
-                        </Grid>
-
-                        <!--3h: SIGNIFICANT WAVE HEIGHT MAX: READOUT-->
-                        <Grid
-                        Grid.Column="2"
-                        Grid.Row="2"
-                        Margin="24,0,0,0">
-
-                            <Grid.RowDefinitions>
-                                <RowDefinition
-                                Height="2*" />
-                                <RowDefinition
-                                Height="3*" />
-                                <RowDefinition
-                                Height="4*" />
-                                <RowDefinition
-                                Height="2*" />
-                            </Grid.RowDefinitions>
-
-                            <Viewbox
-                            Grid.Row="1"
-                            StretchDirection="Both"
-                            Stretch="Uniform"
-                            HorizontalAlignment="Center">
-
-                                <telerik:Label
-                                Content="HSmax" />
-
-                            </Viewbox>
-
-                            <Separator
-                            Grid.Row="1"
-                            Height="1"
-                            VerticalAlignment="Bottom" />
-
-                            <Viewbox
-                            Grid.Row="2"
-                            StretchDirection="Both"
-                            Stretch="Uniform"
-                            HorizontalAlignment="Center">
-
-                                <telerik:Label
-                                Content="{Binding Path=waveSWHMax3hString, FallbackValue=0.0 m}" />
-
-                            </Viewbox>
-
-                        </Grid>
-
-                        <Separator
-                        Grid.Column="0"
-                        Grid.Row="3"
-                        Grid.ColumnSpan="3"
-                        VerticalAlignment="Bottom" />
-
-                        <!--3h: WAVE PERIOD: TITLE-->
-                        <Grid
-                        Grid.Column="0"
-                        Grid.Row="4">
-
-                            <Grid.RowDefinitions>
-                                <RowDefinition
-                                Height="2*" />
-                                <RowDefinition
-                                Height="*" />
-                                <RowDefinition
-                                Height="*" />
-                                <RowDefinition
-                                Height="*" />
-                                <RowDefinition
-                                Height="2*" />
-                            </Grid.RowDefinitions>
-
-                            <Viewbox
-                            Grid.Row="1"
-                            StretchDirection="Both"
-                            Stretch="Uniform"
-                            HorizontalAlignment="Center">
-
-                                <TextBlock
-                                Text="Mean" />
-
-                            </Viewbox>
-
-                            <Viewbox
-                            Grid.Row="2"
-                            StretchDirection="Both"
-                            Stretch="Uniform"
-                            HorizontalAlignment="Center">
-
-                                <TextBlock
-                                Text="Wave" />
-
-                            </Viewbox>
-
-                            <Viewbox
-                            Grid.Row="3"
-                            StretchDirection="Both"
-                            Stretch="Uniform"
-                            HorizontalAlignment="Center">
-
-                                <TextBlock
-                                Text="Period" />
-
-                            </Viewbox>
-
-                        </Grid>
-
-                        <!--3h: WAVE PERIOD: CHART-->
-                        <telerik:RadCartesianChart
-                        Grid.Column="1"
-                        Grid.Row="4"
-                        Name="wavePeriod3hChart">
-
-                            <telerik:LineSeries
-                            ZIndex="200"
-                            Stroke="{StaticResource ColorEMSWaveData}"
-                            CategoryBinding="timestamp"
-                            ValueBinding="graphData">
-
-                                <telerik:LineSeries.RenderOptions>
-                                    <telerik:XamlRenderOptions
-                                    DefaultVisualsRenderMode="Batch" />
-                                </telerik:LineSeries.RenderOptions>
-
-                            </telerik:LineSeries>
-
-                            <telerik:RadCartesianChart.HorizontalAxis>
-                                <telerik:DateTimeContinuousAxis
-                                MajorStepUnit="Minute"
-                                MajorStep="15"
-                                ShowLabels="False"
-                                PlotMode="OnTicks"
-                                TickOrigin="{Binding alignmentTime}"
-                                Minimum="{Binding alignmentTimeMin3h}"
-                                Maximum="{Binding alignmentTimeMax}" />
-                            </telerik:RadCartesianChart.HorizontalAxis>
-
-                            <telerik:RadCartesianChart.VerticalAxis>
-                                <telerik:LinearAxis
-                                Maximum="{Binding wavePeriodChartAxisMax3h}"
-                                Minimum="0"
-                                SmartLabelsMode="SmartStepAndRange"
-                                LabelInterval="2" />
-                            </telerik:RadCartesianChart.VerticalAxis>
-
-                            <telerik:RadCartesianChart.Grid>
-                                <telerik:CartesianChartGrid
-                                    MajorLinesVisibility="XY" />
-                            </telerik:RadCartesianChart.Grid>
-
-                        </telerik:RadCartesianChart>
-
-                        <!--3h: WAVE PERIOD: TIME SCALE-->
-                        <Grid
-                        Grid.Column="1"
-                        Grid.Row="5"
-                        Margin="16,0,-6,0">
-
-                            <Grid.ColumnDefinitions>
-                                <ColumnDefinition
-                                Width="*" />
-                                <ColumnDefinition
-                                Width="*" />
-                                <ColumnDefinition
-                                Width="*" />
-                                <ColumnDefinition
-                                Width="*" />
-                                <ColumnDefinition
-                                Width="*" />
-                                <ColumnDefinition
-                                Width="*" />
-                                <ColumnDefinition
-                                Width="*" />
-                                <ColumnDefinition
-                                Width="*" />
-                                <ColumnDefinition
-                                Width="*" />
-                                <ColumnDefinition
-                                Width="*" />
-                                <ColumnDefinition
-                                Width="*" />
-                                <ColumnDefinition
-                                Width="*" />
-                            </Grid.ColumnDefinitions>
-
-                            <Viewbox
-                            Grid.Column="0"
-                            Grid.ColumnSpan="2"
-                            StretchDirection="Both"
-                            Stretch="Uniform"
-                            HorizontalAlignment="Left">
-
-                                <Label
-                                Content="-3 hours" />
-                            </Viewbox>
-
-                            <Viewbox
-                            Grid.Column="3"
-                            Grid.ColumnSpan="2"
-                            StretchDirection="Both"
-                            Stretch="Uniform"
-                            HorizontalAlignment="Center">
-
-                                <Label
-                                Content="-2" />
-                            </Viewbox>
-
-                            <Viewbox
-                            Grid.Column="7"
-                            Grid.ColumnSpan="2"
-                            StretchDirection="Both"
-                            Stretch="Uniform"
-                            HorizontalAlignment="Center">
-
-                                <Label
-                                Content="-1" />
-                            </Viewbox>
-
-                            <Viewbox
-                            Grid.Column="11"
-                            StretchDirection="Both"
-                            Stretch="Uniform"
-                            HorizontalAlignment="Right">
-
-                                <Label
-                                Content="0" />
-                            </Viewbox>
-
-                        </Grid>
-
-                        <!--3h: WAVE PERIOD: READOUT-->
-                        <Grid
-                        Grid.Column="2"
-                        Grid.Row="4"
-                        Margin="24,0,0,0">
-
-                            <Grid.RowDefinitions>
-                                <RowDefinition
-                                Height="2*" />
-                                <RowDefinition
-                                Height="3*" />
-                                <RowDefinition
-                                Height="4*" />
-                                <RowDefinition
-                                Height="2*" />
-                            </Grid.RowDefinitions>
-
-                            <Viewbox
-                            Grid.Row="1"
-                            StretchDirection="Both"
-                            Stretch="Uniform"
-                            HorizontalAlignment="Center">
-
-                                <telerik:Label
-                                Content="TZ" />
-
-                            </Viewbox>
-
-                            <Separator
-                            Grid.Row="1"
-                            Height="1"
-                            VerticalAlignment="Bottom" />
-
-                            <Viewbox
-                            Grid.Row="2"
-                            StretchDirection="Both"
-                            Stretch="Uniform"
-                            HorizontalAlignment="Center">
-
-                                <telerik:Label
-                                Content="{Binding Path=wavePeriodString, FallbackValue=0.0 m}" />
-
-                            </Viewbox>
-
-                        </Grid>
-
-                        <Separator
-                        Grid.Column="0"
-                        Grid.Row="5"
-                        Grid.ColumnSpan="3"
-                        VerticalAlignment="Bottom" />
-
-                        <!--3h: WAVE PERIOD MAX: TITLE-->
-                        <Grid
-                        Grid.Column="0"
-                        Grid.Row="6">
-
-                            <Grid.RowDefinitions>
-                                <RowDefinition
-                                Height="1*" />
-                                <RowDefinition
-                                Height="*" />
-                                <RowDefinition
-                                Height="*" />
-                                <RowDefinition
-                                Height="*" />
-                                <RowDefinition
-                                Height="*" />
-                                <RowDefinition
-                                Height="2*" />
-                            </Grid.RowDefinitions>
-
-                            <Viewbox
-                            Grid.Row="1"
-                            StretchDirection="Both"
-                            Stretch="Uniform"
-                            HorizontalAlignment="Center">
-
-                                <TextBlock
-                                Text="Max" />
-
-                            </Viewbox>
-
-                            <Viewbox
-                            Grid.Row="2"
-                            StretchDirection="Both"
-                            Stretch="Uniform"
-                            HorizontalAlignment="Center">
-
-                                <TextBlock
-                                Text="Mean" />
-
-                            </Viewbox>
-
-                            <Viewbox
-                            Grid.Row="3"
-                            StretchDirection="Both"
-                            Stretch="Uniform"
-                            HorizontalAlignment="Center">
-
-                                <TextBlock
-                                Text="Wave" />
-
-                            </Viewbox>
-
-                            <Viewbox
-                            Grid.Row="4"
-                            StretchDirection="Both"
-                            Stretch="Uniform"
-                            HorizontalAlignment="Center">
-
-                                <TextBlock
-                                Text="Period" />
-
-                            </Viewbox>
-
-                        </Grid>
-
-                        <!--3h: WAVE PERIOD MAX: CHART-->
-                        <telerik:RadCartesianChart
-                        Grid.Column="1"
-                        Grid.Row="6"
-                        Name="wavePeriodMax3hChart">
-
-                            <telerik:LineSeries
-                            ZIndex="200"
-                            Stroke="{StaticResource ColorEMSWaveData}"
-                            CategoryBinding="timestamp"
-                            ValueBinding="graphData">
-
-                                <telerik:LineSeries.RenderOptions>
-                                    <telerik:XamlRenderOptions
-                                    DefaultVisualsRenderMode="Batch" />
-                                </telerik:LineSeries.RenderOptions>
-
-                            </telerik:LineSeries>
-
-                            <telerik:RadCartesianChart.HorizontalAxis>
-                                <telerik:DateTimeContinuousAxis
-                                MajorStepUnit="Minute"
-                                MajorStep="30"
-                                ShowLabels="False"
-                                PlotMode="OnTicks"
-                                TickOrigin="{Binding alignmentTime}"
-                                Minimum="{Binding alignmentTimeMin3h}"
-                                Maximum="{Binding alignmentTimeMax}" />
-                            </telerik:RadCartesianChart.HorizontalAxis>
-
-                            <telerik:RadCartesianChart.VerticalAxis>
-                                <telerik:LinearAxis
-                                Maximum="{Binding wavePeriodChartAxisMax3h}"
-                                Minimum="0"
-                                SmartLabelsMode="SmartStepAndRange"
-                                LabelInterval="2" />
-                            </telerik:RadCartesianChart.VerticalAxis>
-
-                            <telerik:RadCartesianChart.Grid>
-                                <telerik:CartesianChartGrid
-                                    MajorLinesVisibility="XY" />
-                            </telerik:RadCartesianChart.Grid>
-
-                        </telerik:RadCartesianChart>
-
-                        <!--3h: WAVE PERIOD MAX: TIME SCALE-->
-                        <Grid
-                        Grid.Column="1"
-                        Grid.Row="7"
-                        Margin="16,0,-6,0">
-
-                            <Grid.ColumnDefinitions>
-                                <ColumnDefinition
-                                Width="*" />
-                                <ColumnDefinition
-                                Width="*" />
-                                <ColumnDefinition
-                                Width="*" />
-                                <ColumnDefinition
-                                Width="*" />
-                                <ColumnDefinition
-                                Width="*" />
-                                <ColumnDefinition
-                                Width="*" />
-                                <ColumnDefinition
-                                Width="*" />
-                                <ColumnDefinition
-                                Width="*" />
-                                <ColumnDefinition
-                                Width="*" />
-                                <ColumnDefinition
-                                Width="*" />
-                                <ColumnDefinition
-                                Width="*" />
-                                <ColumnDefinition
-                                Width="*" />
-                            </Grid.ColumnDefinitions>
-
-                            <Viewbox
-                            Grid.Column="0"
-                            Grid.ColumnSpan="2"
-                            StretchDirection="Both"
-                            Stretch="Uniform"
-                            HorizontalAlignment="Left">
-
-                                <Label
-                                Content="-3 hours" />
-                            </Viewbox>
-
-                            <Viewbox
-                            Grid.Column="3"
-                            Grid.ColumnSpan="2"
-                            StretchDirection="Both"
-                            Stretch="Uniform"
-                            HorizontalAlignment="Center">
-
-                                <Label
-                                Content="-2" />
-                            </Viewbox>
-
-                            <Viewbox
-                            Grid.Column="7"
-                            Grid.ColumnSpan="2"
-                            StretchDirection="Both"
-                            Stretch="Uniform"
-                            HorizontalAlignment="Center">
-
-                                <Label
-                                Content="-1" />
-                            </Viewbox>
-
-                            <Viewbox
-                            Grid.Column="11"
-                            StretchDirection="Both"
-                            Stretch="Uniform"
-                            HorizontalAlignment="Right">
-
-                                <Label
-                                Content="0" />
-                            </Viewbox>
-
-                        </Grid>
-
-                        <!--3h: WAVE PERIOD MAX: READOUT-->
-                        <Grid
-                        Grid.Column="2"
-                        Grid.Row="6"
-                        Margin="24,0,0,0">
-
-                            <Grid.RowDefinitions>
-                                <RowDefinition
-                                Height="2*" />
-                                <RowDefinition
-                                Height="3*" />
-                                <RowDefinition
-                                Height="4*" />
-                                <RowDefinition
-                                Height="2*" />
+                                    Height="2*" />
                             </Grid.RowDefinitions>
 
                             <Viewbox
@@ -2014,7 +1028,993 @@
                                 HorizontalAlignment="Center">
 
                                 <telerik:Label
-                                Content="{Binding Path=wavePeriodMax3hString, FallbackValue=0.0 m}" />
+                                    Content="{Binding Path=wavePeriodMax20mString, FallbackValue=0.0 m}" />
+
+                            </Viewbox>
+
+                        </Grid>
+
+                    </Grid>
+
+                </telerik:RadTabItem>
+
+                <!--3-timers-->
+                <telerik:RadTabItem
+                    Name="tab3Hours">
+                    <telerik:RadTabItem.Header>
+                        <StackPanel
+                            Orientation="Horizontal">
+                            <Image
+                                Width="24"
+                                Source="..\Icons\outline_schedule_white_48dp.png" />
+                            <TextBlock
+                                Foreground="White"
+                                FontSize="{StaticResource fontSizeTab}"
+                                Text="3-hours"
+                                Margin="8,4,0,0" />
+                        </StackPanel>
+                    </telerik:RadTabItem.Header>
+
+                    <Grid
+                        Margin="8">
+
+                        <Grid.ColumnDefinitions>
+                            <ColumnDefinition
+                                Width="4*" />
+                            <ColumnDefinition
+                                Width="30*" />
+                            <ColumnDefinition
+                                Width="5*" />
+                        </Grid.ColumnDefinitions>
+
+                        <Grid.RowDefinitions>
+                            <RowDefinition
+                                Height="30*" />
+                            <RowDefinition
+                                Height="5*" />
+                            <RowDefinition
+                                Height="30*" />
+                            <RowDefinition
+                                Height="5*" />
+                            <RowDefinition
+                                Height="30*" />
+                            <RowDefinition
+                                Height="5*" />
+                            <RowDefinition
+                                Height="30*" />
+                            <RowDefinition
+                                Height="5*" />
+                        </Grid.RowDefinitions>
+
+
+                        <!--3h: SIGNIFICANT WAVE HEIGHT: TITLE-->
+                        <Grid
+                            Grid.Column="0"
+                            Grid.Row="0">
+
+                            <Grid.RowDefinitions>
+                                <RowDefinition
+                                    Height="2*" />
+                                <RowDefinition
+                                    Height="*" />
+                                <RowDefinition
+                                    Height="*" />
+                                <RowDefinition
+                                    Height="*" />
+                                <RowDefinition
+                                    Height="2*" />
+                            </Grid.RowDefinitions>
+
+                            <Viewbox
+                                Grid.Row="1"
+                                StretchDirection="Both"
+                                Stretch="Uniform"
+                                HorizontalAlignment="Center">
+
+                                <TextBlock
+                                    Text="Significant" />
+
+                            </Viewbox>
+
+                            <Viewbox
+                                Grid.Row="2"
+                                StretchDirection="Both"
+                                Stretch="Uniform"
+                                HorizontalAlignment="Center">
+
+                                <TextBlock
+                                    Text="Wave" />
+
+                            </Viewbox>
+
+                            <Viewbox
+                                Grid.Row="3"
+                                StretchDirection="Both"
+                                Stretch="Uniform"
+                                HorizontalAlignment="Center">
+
+                                <TextBlock
+                                    Text="Height" />
+
+                            </Viewbox>
+
+                        </Grid>
+
+                        <!--3h: SIGNIFICANT WAVE HEIGHT: GRAPH-->
+                        <telerik:RadCartesianChart
+                            Grid.Column="1"
+                            Grid.Row="0"
+                            Name="waveSWH3hChart">
+
+                            <telerik:LineSeries
+                                ZIndex="200"
+                                Stroke="{StaticResource ColorEMSWaveData}"
+                                CategoryBinding="timestamp"
+                                ValueBinding="graphData">
+
+                                <telerik:LineSeries.RenderOptions>
+                                    <telerik:XamlRenderOptions
+                                        DefaultVisualsRenderMode="Batch" />
+                                </telerik:LineSeries.RenderOptions>
+
+                            </telerik:LineSeries>
+
+                            <telerik:RadCartesianChart.HorizontalAxis>
+                                <telerik:DateTimeContinuousAxis
+                                    MajorStepUnit="Minute"
+                                    MajorStep="15"
+                                    ShowLabels="False"
+                                    PlotMode="OnTicks"
+                                    TickOrigin="{Binding alignmentTime}"
+                                    Minimum="{Binding alignmentTimeMin3h}"
+                                    Maximum="{Binding alignmentTimeMax}" />
+                            </telerik:RadCartesianChart.HorizontalAxis>
+
+                            <telerik:RadCartesianChart.VerticalAxis>
+                                <telerik:LinearAxis
+                                    Maximum="{Binding waveSWHChartAxisMax3h}"
+                                    Minimum="0"
+                                    SmartLabelsMode="SmartStepAndRange"
+                                    LabelInterval="2" />
+                            </telerik:RadCartesianChart.VerticalAxis>
+
+                            <telerik:RadCartesianChart.Grid>
+                                <telerik:CartesianChartGrid
+                                    MajorLinesVisibility="XY" />
+                            </telerik:RadCartesianChart.Grid>
+
+                        </telerik:RadCartesianChart>
+
+                        <!--3h: SIGNIFICANT WAVE HEIGHT: TIME SCALE-->
+                        <Grid
+                            Grid.Column="1"
+                            Grid.Row="1"
+                            Margin="16,0,-6,0">
+
+                            <Grid.ColumnDefinitions>
+                                <ColumnDefinition
+                                    Width="*" />
+                                <ColumnDefinition
+                                    Width="*" />
+                                <ColumnDefinition
+                                    Width="*" />
+                                <ColumnDefinition
+                                    Width="*" />
+                                <ColumnDefinition
+                                    Width="*" />
+                                <ColumnDefinition
+                                    Width="*" />
+                                <ColumnDefinition
+                                    Width="*" />
+                                <ColumnDefinition
+                                    Width="*" />
+                                <ColumnDefinition
+                                    Width="*" />
+                                <ColumnDefinition
+                                    Width="*" />
+                                <ColumnDefinition
+                                    Width="*" />
+                                <ColumnDefinition
+                                    Width="*" />
+                            </Grid.ColumnDefinitions>
+
+                            <Viewbox
+                                Grid.Column="0"
+                                Grid.ColumnSpan="2"
+                                StretchDirection="Both"
+                                Stretch="Uniform"
+                                HorizontalAlignment="Left">
+
+                                <Label
+                                    Content="-3 hours" />
+                            </Viewbox>
+
+                            <Viewbox
+                                Grid.Column="3"
+                                Grid.ColumnSpan="2"
+                                StretchDirection="Both"
+                                Stretch="Uniform"
+                                HorizontalAlignment="Center">
+
+                                <Label
+                                    Content="-2" />
+                            </Viewbox>
+
+                            <Viewbox
+                                Grid.Column="7"
+                                Grid.ColumnSpan="2"
+                                StretchDirection="Both"
+                                Stretch="Uniform"
+                                HorizontalAlignment="Center">
+
+                                <Label
+                                    Content="-1" />
+                            </Viewbox>
+
+                            <Viewbox
+                                Grid.Column="11"
+                                StretchDirection="Both"
+                                Stretch="Uniform"
+                                HorizontalAlignment="Right">
+
+                                <Label
+                                    Content="0" />
+                            </Viewbox>
+
+                        </Grid>
+
+                        <!--3h: SIGNIFICANT WAVE HEIGHT: READOUT-->
+                        <Grid
+                            Grid.Column="2"
+                            Grid.Row="0"
+                            Margin="24,0,0,0">
+
+                            <Grid.RowDefinitions>
+                                <RowDefinition
+                                    Height="2*" />
+                                <RowDefinition
+                                    Height="3*" />
+                                <RowDefinition
+                                    Height="4*" />
+                                <RowDefinition
+                                    Height="2*" />
+                            </Grid.RowDefinitions>
+
+                            <Viewbox
+                                Grid.Row="1"
+                                StretchDirection="Both"
+                                Stretch="Uniform"
+                                HorizontalAlignment="Center">
+
+                                <telerik:Label
+                                    Content="HS" />
+
+                            </Viewbox>
+
+                            <Separator
+                                Grid.Row="1"
+                                Height="1"
+                                VerticalAlignment="Bottom" />
+
+                            <Viewbox
+                                Grid.Row="2"
+                                StretchDirection="Both"
+                                Stretch="Uniform"
+                                HorizontalAlignment="Center">
+
+                                <telerik:Label
+                                    Content="{Binding Path=waveSWHString, FallbackValue=0.0 m}" />
+
+                            </Viewbox>
+
+                        </Grid>
+
+                        <Separator
+                            Grid.Column="0"
+                            Grid.Row="1"
+                            Grid.ColumnSpan="3"
+                            VerticalAlignment="Bottom" />
+
+
+                        <!--3h: SIGNIFICANT WAVE HEIGHT MAX: TITLE-->
+                        <Grid
+                            Grid.Column="0"
+                            Grid.Row="2">
+
+                            <Grid.RowDefinitions>
+                                <RowDefinition
+                                    Height="1*" />
+                                <RowDefinition
+                                    Height="*" />
+                                <RowDefinition
+                                    Height="*" />
+                                <RowDefinition
+                                    Height="*" />
+                                <RowDefinition
+                                    Height="*" />
+                                <RowDefinition
+                                    Height="2*" />
+                            </Grid.RowDefinitions>
+
+                            <Viewbox
+                                Grid.Row="1"
+                                StretchDirection="Both"
+                                Stretch="Uniform"
+                                HorizontalAlignment="Center">
+
+                                <TextBlock
+                                    Text="Max" />
+
+                            </Viewbox>
+
+                            <Viewbox
+                                Grid.Row="2"
+                                StretchDirection="Both"
+                                Stretch="Uniform"
+                                HorizontalAlignment="Center">
+
+                                <TextBlock
+                                    Text="Significant" />
+
+                            </Viewbox>
+
+                            <Viewbox
+                                Grid.Row="3"
+                                StretchDirection="Both"
+                                Stretch="Uniform"
+                                HorizontalAlignment="Center">
+
+                                <TextBlock
+                                    Text="Wave" />
+
+                            </Viewbox>
+
+                            <Viewbox
+                                Grid.Row="4"
+                                StretchDirection="Both"
+                                Stretch="Uniform"
+                                HorizontalAlignment="Center">
+
+                                <TextBlock
+                                    Text="Height" />
+
+                            </Viewbox>
+
+                        </Grid>
+
+                        <!--3h: SIGNIFICANT WAVE HEIGHT MAX: GRAPH-->
+                        <telerik:RadCartesianChart
+                            Grid.Column="1"
+                            Grid.Row="2"
+                            Name="waveSWHMax3hChart">
+
+                            <telerik:LineSeries
+                                ZIndex="200"
+                                Stroke="{StaticResource ColorEMSWaveData}"
+                                CategoryBinding="timestamp"
+                                ValueBinding="graphData">
+
+                                <telerik:LineSeries.RenderOptions>
+                                    <telerik:XamlRenderOptions
+                                        DefaultVisualsRenderMode="Batch" />
+                                </telerik:LineSeries.RenderOptions>
+
+                            </telerik:LineSeries>
+
+                            <telerik:RadCartesianChart.HorizontalAxis>
+                                <telerik:DateTimeContinuousAxis
+                                    MajorStepUnit="Minute"
+                                    MajorStep="15"
+                                    ShowLabels="False"
+                                    PlotMode="OnTicks"
+                                    TickOrigin="{Binding alignmentTime}"
+                                    Minimum="{Binding alignmentTimeMin3h}"
+                                    Maximum="{Binding alignmentTimeMax}" />
+                            </telerik:RadCartesianChart.HorizontalAxis>
+
+                            <telerik:RadCartesianChart.VerticalAxis>
+                                <telerik:LinearAxis
+                                    Maximum="{Binding waveSWHChartAxisMax3h}"
+                                    Minimum="0"
+                                    SmartLabelsMode="SmartStepAndRange"
+                                    LabelInterval="2" />
+                            </telerik:RadCartesianChart.VerticalAxis>
+
+                            <telerik:RadCartesianChart.Grid>
+                                <telerik:CartesianChartGrid
+                                    MajorLinesVisibility="XY" />
+                            </telerik:RadCartesianChart.Grid>
+
+                        </telerik:RadCartesianChart>
+
+                        <!--3h: SIGNIFICANT WAVE HEIGHT MAX: TIME SCALE-->
+                        <Grid
+                            Grid.Column="1"
+                            Grid.Row="3"
+                            Margin="16,0,-6,0">
+
+                            <Grid.ColumnDefinitions>
+                                <ColumnDefinition
+                                    Width="*" />
+                                <ColumnDefinition
+                                    Width="*" />
+                                <ColumnDefinition
+                                    Width="*" />
+                                <ColumnDefinition
+                                    Width="*" />
+                                <ColumnDefinition
+                                    Width="*" />
+                                <ColumnDefinition
+                                    Width="*" />
+                                <ColumnDefinition
+                                    Width="*" />
+                                <ColumnDefinition
+                                    Width="*" />
+                                <ColumnDefinition
+                                    Width="*" />
+                                <ColumnDefinition
+                                    Width="*" />
+                                <ColumnDefinition
+                                    Width="*" />
+                                <ColumnDefinition
+                                    Width="*" />
+                            </Grid.ColumnDefinitions>
+
+                            <Viewbox
+                                Grid.Column="0"
+                                Grid.ColumnSpan="2"
+                                StretchDirection="Both"
+                                Stretch="Uniform"
+                                HorizontalAlignment="Left">
+
+                                <Label
+                                    Content="-3 hours" />
+                            </Viewbox>
+
+                            <Viewbox
+                                Grid.Column="3"
+                                Grid.ColumnSpan="2"
+                                StretchDirection="Both"
+                                Stretch="Uniform"
+                                HorizontalAlignment="Center">
+
+                                <Label
+                                    Content="-2" />
+                            </Viewbox>
+
+                            <Viewbox
+                                Grid.Column="7"
+                                Grid.ColumnSpan="2"
+                                StretchDirection="Both"
+                                Stretch="Uniform"
+                                HorizontalAlignment="Center">
+
+                                <Label
+                                    Content="-1" />
+                            </Viewbox>
+
+                            <Viewbox
+                                Grid.Column="11"
+                                StretchDirection="Both"
+                                Stretch="Uniform"
+                                HorizontalAlignment="Right">
+
+                                <Label
+                                    Content="0" />
+                            </Viewbox>
+
+                        </Grid>
+
+                        <!--3h: SIGNIFICANT WAVE HEIGHT MAX: READOUT-->
+                        <Grid
+                            Grid.Column="2"
+                            Grid.Row="2"
+                            Margin="24,0,0,0">
+
+                            <Grid.RowDefinitions>
+                                <RowDefinition
+                                    Height="2*" />
+                                <RowDefinition
+                                    Height="3*" />
+                                <RowDefinition
+                                    Height="4*" />
+                                <RowDefinition
+                                    Height="2*" />
+                            </Grid.RowDefinitions>
+
+                            <Viewbox
+                                Grid.Row="1"
+                                StretchDirection="Both"
+                                Stretch="Uniform"
+                                HorizontalAlignment="Center">
+
+                                <telerik:Label
+                                    Content="HSmax" />
+
+                            </Viewbox>
+
+                            <Separator
+                                Grid.Row="1"
+                                Height="1"
+                                VerticalAlignment="Bottom" />
+
+                            <Viewbox
+                                Grid.Row="2"
+                                StretchDirection="Both"
+                                Stretch="Uniform"
+                                HorizontalAlignment="Center">
+
+                                <telerik:Label
+                                    Content="{Binding Path=waveSWHMax3hString, FallbackValue=0.0 m}" />
+
+                            </Viewbox>
+
+                        </Grid>
+
+                        <Separator
+                            Grid.Column="0"
+                            Grid.Row="3"
+                            Grid.ColumnSpan="3"
+                            VerticalAlignment="Bottom" />
+
+                        <!--3h: WAVE PERIOD: TITLE-->
+                        <Grid
+                            Grid.Column="0"
+                            Grid.Row="4">
+
+                            <Grid.RowDefinitions>
+                                <RowDefinition
+                                    Height="2*" />
+                                <RowDefinition
+                                    Height="*" />
+                                <RowDefinition
+                                    Height="*" />
+                                <RowDefinition
+                                    Height="*" />
+                                <RowDefinition
+                                    Height="2*" />
+                            </Grid.RowDefinitions>
+
+                            <Viewbox
+                                Grid.Row="1"
+                                StretchDirection="Both"
+                                Stretch="Uniform"
+                                HorizontalAlignment="Center">
+
+                                <TextBlock
+                                    Text="Mean" />
+
+                            </Viewbox>
+
+                            <Viewbox
+                                Grid.Row="2"
+                                StretchDirection="Both"
+                                Stretch="Uniform"
+                                HorizontalAlignment="Center">
+
+                                <TextBlock
+                                    Text="Wave" />
+
+                            </Viewbox>
+
+                            <Viewbox
+                                Grid.Row="3"
+                                StretchDirection="Both"
+                                Stretch="Uniform"
+                                HorizontalAlignment="Center">
+
+                                <TextBlock
+                                    Text="Period" />
+
+                            </Viewbox>
+
+                        </Grid>
+
+                        <!--3h: WAVE PERIOD: CHART-->
+                        <telerik:RadCartesianChart
+                            Grid.Column="1"
+                            Grid.Row="4"
+                            Name="wavePeriod3hChart">
+
+                            <telerik:LineSeries
+                                ZIndex="200"
+                                Stroke="{StaticResource ColorEMSWaveData}"
+                                CategoryBinding="timestamp"
+                                ValueBinding="graphData">
+
+                                <telerik:LineSeries.RenderOptions>
+                                    <telerik:XamlRenderOptions
+                                        DefaultVisualsRenderMode="Batch" />
+                                </telerik:LineSeries.RenderOptions>
+
+                            </telerik:LineSeries>
+
+                            <telerik:RadCartesianChart.HorizontalAxis>
+                                <telerik:DateTimeContinuousAxis
+                                    MajorStepUnit="Minute"
+                                    MajorStep="15"
+                                    ShowLabels="False"
+                                    PlotMode="OnTicks"
+                                    TickOrigin="{Binding alignmentTime}"
+                                    Minimum="{Binding alignmentTimeMin3h}"
+                                    Maximum="{Binding alignmentTimeMax}" />
+                            </telerik:RadCartesianChart.HorizontalAxis>
+
+                            <telerik:RadCartesianChart.VerticalAxis>
+                                <telerik:LinearAxis
+                                    Maximum="{Binding wavePeriodChartAxisMax3h}"
+                                    Minimum="0"
+                                    SmartLabelsMode="SmartStepAndRange"
+                                    LabelInterval="2" />
+                            </telerik:RadCartesianChart.VerticalAxis>
+
+                            <telerik:RadCartesianChart.Grid>
+                                <telerik:CartesianChartGrid
+                                    MajorLinesVisibility="XY" />
+                            </telerik:RadCartesianChart.Grid>
+
+                        </telerik:RadCartesianChart>
+
+                        <!--3h: WAVE PERIOD: TIME SCALE-->
+                        <Grid
+                            Grid.Column="1"
+                            Grid.Row="5"
+                            Margin="16,0,-6,0">
+
+                            <Grid.ColumnDefinitions>
+                                <ColumnDefinition
+                                    Width="*" />
+                                <ColumnDefinition
+                                    Width="*" />
+                                <ColumnDefinition
+                                    Width="*" />
+                                <ColumnDefinition
+                                    Width="*" />
+                                <ColumnDefinition
+                                    Width="*" />
+                                <ColumnDefinition
+                                    Width="*" />
+                                <ColumnDefinition
+                                    Width="*" />
+                                <ColumnDefinition
+                                    Width="*" />
+                                <ColumnDefinition
+                                    Width="*" />
+                                <ColumnDefinition
+                                    Width="*" />
+                                <ColumnDefinition
+                                    Width="*" />
+                                <ColumnDefinition
+                                    Width="*" />
+                            </Grid.ColumnDefinitions>
+
+                            <Viewbox
+                                Grid.Column="0"
+                                Grid.ColumnSpan="2"
+                                StretchDirection="Both"
+                                Stretch="Uniform"
+                                HorizontalAlignment="Left">
+
+                                <Label
+                                    Content="-3 hours" />
+                            </Viewbox>
+
+                            <Viewbox
+                                Grid.Column="3"
+                                Grid.ColumnSpan="2"
+                                StretchDirection="Both"
+                                Stretch="Uniform"
+                                HorizontalAlignment="Center">
+
+                                <Label
+                                    Content="-2" />
+                            </Viewbox>
+
+                            <Viewbox
+                                Grid.Column="7"
+                                Grid.ColumnSpan="2"
+                                StretchDirection="Both"
+                                Stretch="Uniform"
+                                HorizontalAlignment="Center">
+
+                                <Label
+                                    Content="-1" />
+                            </Viewbox>
+
+                            <Viewbox
+                                Grid.Column="11"
+                                StretchDirection="Both"
+                                Stretch="Uniform"
+                                HorizontalAlignment="Right">
+
+                                <Label
+                                    Content="0" />
+                            </Viewbox>
+
+                        </Grid>
+
+                        <!--3h: WAVE PERIOD: READOUT-->
+                        <Grid
+                            Grid.Column="2"
+                            Grid.Row="4"
+                            Margin="24,0,0,0">
+
+                            <Grid.RowDefinitions>
+                                <RowDefinition
+                                    Height="2*" />
+                                <RowDefinition
+                                    Height="3*" />
+                                <RowDefinition
+                                    Height="4*" />
+                                <RowDefinition
+                                    Height="2*" />
+                            </Grid.RowDefinitions>
+
+                            <Viewbox
+                                Grid.Row="1"
+                                StretchDirection="Both"
+                                Stretch="Uniform"
+                                HorizontalAlignment="Center">
+
+                                <telerik:Label
+                                    Content="TZ" />
+
+                            </Viewbox>
+
+                            <Separator
+                                Grid.Row="1"
+                                Height="1"
+                                VerticalAlignment="Bottom" />
+
+                            <Viewbox
+                                Grid.Row="2"
+                                StretchDirection="Both"
+                                Stretch="Uniform"
+                                HorizontalAlignment="Center">
+
+                                <telerik:Label
+                                    Content="{Binding Path=wavePeriodString, FallbackValue=0.0 m}" />
+
+                            </Viewbox>
+
+                        </Grid>
+
+                        <Separator
+                            Grid.Column="0"
+                            Grid.Row="5"
+                            Grid.ColumnSpan="3"
+                            VerticalAlignment="Bottom" />
+
+                        <!--3h: WAVE PERIOD MAX: TITLE-->
+                        <Grid
+                            Grid.Column="0"
+                            Grid.Row="6">
+
+                            <Grid.RowDefinitions>
+                                <RowDefinition
+                                    Height="1*" />
+                                <RowDefinition
+                                    Height="*" />
+                                <RowDefinition
+                                    Height="*" />
+                                <RowDefinition
+                                    Height="*" />
+                                <RowDefinition
+                                    Height="*" />
+                                <RowDefinition
+                                    Height="2*" />
+                            </Grid.RowDefinitions>
+
+                            <Viewbox
+                                Grid.Row="1"
+                                StretchDirection="Both"
+                                Stretch="Uniform"
+                                HorizontalAlignment="Center">
+
+                                <TextBlock
+                                    Text="Max" />
+
+                            </Viewbox>
+
+                            <Viewbox
+                                Grid.Row="2"
+                                StretchDirection="Both"
+                                Stretch="Uniform"
+                                HorizontalAlignment="Center">
+
+                                <TextBlock
+                                    Text="Mean" />
+
+                            </Viewbox>
+
+                            <Viewbox
+                                Grid.Row="3"
+                                StretchDirection="Both"
+                                Stretch="Uniform"
+                                HorizontalAlignment="Center">
+
+                                <TextBlock
+                                    Text="Wave" />
+
+                            </Viewbox>
+
+                            <Viewbox
+                                Grid.Row="4"
+                                StretchDirection="Both"
+                                Stretch="Uniform"
+                                HorizontalAlignment="Center">
+
+                                <TextBlock
+                                    Text="Period" />
+
+                            </Viewbox>
+
+                        </Grid>
+
+                        <!--3h: WAVE PERIOD MAX: CHART-->
+                        <telerik:RadCartesianChart
+                            Grid.Column="1"
+                            Grid.Row="6"
+                            Name="wavePeriodMax3hChart">
+
+                            <telerik:LineSeries
+                                ZIndex="200"
+                                Stroke="{StaticResource ColorEMSWaveData}"
+                                CategoryBinding="timestamp"
+                                ValueBinding="graphData">
+
+                                <telerik:LineSeries.RenderOptions>
+                                    <telerik:XamlRenderOptions
+                                        DefaultVisualsRenderMode="Batch" />
+                                </telerik:LineSeries.RenderOptions>
+
+                            </telerik:LineSeries>
+
+                            <telerik:RadCartesianChart.HorizontalAxis>
+                                <telerik:DateTimeContinuousAxis
+                                    MajorStepUnit="Minute"
+                                    MajorStep="30"
+                                    ShowLabels="False"
+                                    PlotMode="OnTicks"
+                                    TickOrigin="{Binding alignmentTime}"
+                                    Minimum="{Binding alignmentTimeMin3h}"
+                                    Maximum="{Binding alignmentTimeMax}" />
+                            </telerik:RadCartesianChart.HorizontalAxis>
+
+                            <telerik:RadCartesianChart.VerticalAxis>
+                                <telerik:LinearAxis
+                                    Maximum="{Binding wavePeriodChartAxisMax3h}"
+                                    Minimum="0"
+                                    SmartLabelsMode="SmartStepAndRange"
+                                    LabelInterval="2" />
+                            </telerik:RadCartesianChart.VerticalAxis>
+
+                            <telerik:RadCartesianChart.Grid>
+                                <telerik:CartesianChartGrid
+                                    MajorLinesVisibility="XY" />
+                            </telerik:RadCartesianChart.Grid>
+
+                        </telerik:RadCartesianChart>
+
+                        <!--3h: WAVE PERIOD MAX: TIME SCALE-->
+                        <Grid
+                            Grid.Column="1"
+                            Grid.Row="7"
+                            Margin="16,0,-6,0">
+
+                            <Grid.ColumnDefinitions>
+                                <ColumnDefinition
+                                    Width="*" />
+                                <ColumnDefinition
+                                    Width="*" />
+                                <ColumnDefinition
+                                    Width="*" />
+                                <ColumnDefinition
+                                    Width="*" />
+                                <ColumnDefinition
+                                    Width="*" />
+                                <ColumnDefinition
+                                    Width="*" />
+                                <ColumnDefinition
+                                    Width="*" />
+                                <ColumnDefinition
+                                    Width="*" />
+                                <ColumnDefinition
+                                    Width="*" />
+                                <ColumnDefinition
+                                    Width="*" />
+                                <ColumnDefinition
+                                    Width="*" />
+                                <ColumnDefinition
+                                    Width="*" />
+                            </Grid.ColumnDefinitions>
+
+                            <Viewbox
+                                Grid.Column="0"
+                                Grid.ColumnSpan="2"
+                                StretchDirection="Both"
+                                Stretch="Uniform"
+                                HorizontalAlignment="Left">
+
+                                <Label
+                                    Content="-3 hours" />
+                            </Viewbox>
+
+                            <Viewbox
+                                Grid.Column="3"
+                                Grid.ColumnSpan="2"
+                                StretchDirection="Both"
+                                Stretch="Uniform"
+                                HorizontalAlignment="Center">
+
+                                <Label
+                                    Content="-2" />
+                            </Viewbox>
+
+                            <Viewbox
+                                Grid.Column="7"
+                                Grid.ColumnSpan="2"
+                                StretchDirection="Both"
+                                Stretch="Uniform"
+                                HorizontalAlignment="Center">
+
+                                <Label
+                                    Content="-1" />
+                            </Viewbox>
+
+                            <Viewbox
+                                Grid.Column="11"
+                                StretchDirection="Both"
+                                Stretch="Uniform"
+                                HorizontalAlignment="Right">
+
+                                <Label
+                                    Content="0" />
+                            </Viewbox>
+
+                        </Grid>
+
+                        <!--3h: WAVE PERIOD MAX: READOUT-->
+                        <Grid
+                            Grid.Column="2"
+                            Grid.Row="6"
+                            Margin="24,0,0,0">
+
+                            <Grid.RowDefinitions>
+                                <RowDefinition
+                                    Height="2*" />
+                                <RowDefinition
+                                    Height="3*" />
+                                <RowDefinition
+                                    Height="4*" />
+                                <RowDefinition
+                                    Height="2*" />
+                            </Grid.RowDefinitions>
+
+                            <Viewbox
+                                Grid.Row="1"
+                                StretchDirection="Both"
+                                Stretch="Uniform"
+                                HorizontalAlignment="Center">
+
+                                <telerik:Label
+                                    Content="TZmax" />
+
+                            </Viewbox>
+
+                            <Separator
+                                Grid.Row="1"
+                                Height="1"
+                                VerticalAlignment="Bottom" />
+
+                            <Viewbox
+                                Grid.Row="2"
+                                StretchDirection="Both"
+                                Stretch="Uniform"
+                                HorizontalAlignment="Center">
+
+                                <telerik:Label
+                                    Content="{Binding Path=wavePeriodMax3hString, FallbackValue=0.0 m}" />
 
                             </Viewbox>
 

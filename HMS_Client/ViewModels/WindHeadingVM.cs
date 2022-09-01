@@ -233,44 +233,54 @@ namespace HMS_Client
         {
             get
             {
+                int dir;
+
                 switch (windMeasurement)
                 {
                     case WindMeasurement.RealTime:
                         // Sjekke om data er gyldig
                         if (windDirectionRT.status == DataStatus.OK)
                         {
-                            return string.Format("{0}°", windDirectionRT.data.ToString("000"));
+                            dir = (int)Math.Round(windDirectionRT.data, 0, MidpointRounding.AwayFromZero);
                         }
                         else
                         {
                             return Constants.NotAvailable;
                         }
+                        break;
 
                     case WindMeasurement.TwoMinuteMean:
                         // Sjekke om data er gyldig
                         if (windDirection2m.status == DataStatus.OK)
                         {
-                            return string.Format("{0}°", windDirection2m.data.ToString("000"));
+                            dir = (int)Math.Round(windDirection2m.data, 0, MidpointRounding.AwayFromZero);
                         }
                         else
                         {
                             return Constants.NotAvailable;
                         }
+                        break;
 
                     case WindMeasurement.TenMinuteMean:
                         // Sjekke om data er gyldig
                         if (windDirection10m.status == DataStatus.OK)
                         {
-                            return string.Format("{0}°", windDirection10m.data.ToString("000"));
+                            dir = (int)Math.Round(windDirection10m.data, 0, MidpointRounding.AwayFromZero);
                         }
                         else
                         {
                             return Constants.NotAvailable;
                         }
+                        break;
 
                     default:
                         return Constants.NotAvailable;
                 }
+
+                if (dir == 0)
+                    dir = 360;
+
+                return string.Format("{0}°", dir.ToString("000"));
             }
         }
 

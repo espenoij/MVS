@@ -91,7 +91,7 @@ public enum DataStatus
 {
     TIMEOUT_ERROR, // Timeout / error
     OK,
-    OK_NA,
+    OK_NA,          // Brukes til wind og motion data som må buffres til en gitt prosent før de kan vises
     NONE
 }
 
