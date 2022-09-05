@@ -327,12 +327,12 @@ namespace HMS_Server
                                 // Beregne gjennomsnitt av de verdiene som ligger i datasettet
                                 if (windDirTimeAverageDataList.Count > 0)
                                 {
-                                    // NB! For å få en snitt verdi må X og Y delest på totalt antall verdier (windDirTimeAverageDataList.Count)
-                                    // Men dette er matematisk unødvendig siden X og Y deles på samme verdi.
-                                    result = HMSCalc.ToDegrees(Math.Atan(windDirTimeAverageTotalY / windDirTimeAverageTotalX));
+                                    result = HMSCalc.ToDegrees(Math.Atan2(windDirTimeAverageTotalY, windDirTimeAverageTotalX));
 
                                     if (result < 0)
                                         result += 360;
+                                    if (result >= 360)
+                                        result -= 360;
                                 }
                                 else
                                 {
