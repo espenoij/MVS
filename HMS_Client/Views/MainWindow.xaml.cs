@@ -149,10 +149,12 @@ namespace HMS_Client
             else
                 tabEMS.Visibility = Visibility.Collapsed;
 
-            //// TODO: DEBUG DEBUG DEBUG !!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!! Fjerne det under før release
-            //AdminMode.IsActive = true;
-            //tabAdminSettings.Visibility = Visibility.Visible;
-            //tabAdminDataFlow.Visibility = Visibility.Visible;
+#if DEBUG
+            // Vise admin grensesnittet
+            AdminMode.IsActive = true;
+            tabAdminSettings.Visibility = Visibility.Visible;
+            tabAdminDataFlow.Visibility = Visibility.Visible;
+#endif
         }
 
         private void InitUI()

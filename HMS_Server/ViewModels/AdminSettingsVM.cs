@@ -104,10 +104,31 @@ namespace HMS_Server
                 emailSecureConnection = false;
 
             // Data Verification
-            if (config.Read(ConfigKey.DataVerificationEnabled) == "1")
+            if (config.ReadWithDefault(ConfigKey.DataVerificationEnabled, "0") == "1")
                 dataVerificationEnabled = true;
             else
                 dataVerificationEnabled = false;
+
+            // Sensor Status Input
+            if (config.ReadWithDefault(ConfigKey.SensorStatusInputMRU, "1") == "1")
+                statusMRUEnabled = true;
+            else
+                statusMRUEnabled = false;
+
+            if (config.ReadWithDefault(ConfigKey.SensorStatusInputGyro, "1") == "1")
+                statusGyroEnabled = true;
+            else
+                statusGyroEnabled = false;
+
+            if (config.ReadWithDefault(ConfigKey.SensorStatusInputWind, "1") == "1")
+                statusWindEnabled = true;
+            else
+                statusWindEnabled = false;
+
+            if (config.ReadWithDefault(ConfigKey.SensorStatusInputSOGCOG, "1") == "1")
+                statusSOGCOGEnabled = true;
+            else
+                statusSOGCOGEnabled = false;
 
             // Heading
             if (config.ReadWithDefault(ConfigKey.FixedInstallation, "0") == "1")
@@ -1199,6 +1220,89 @@ namespace HMS_Server
                     config.Write(ConfigKey.DataVerificationEnabled, "1");
                 else
                     config.Write(ConfigKey.DataVerificationEnabled, "0");
+
+                OnPropertyChanged();
+            }
+        }
+
+        /////////////////////////////////////////////////////////////////////////////
+        // Sensor Status Input: MRU
+        /////////////////////////////////////////////////////////////////////////////
+        private bool _statusMRUEnabled { get; set; }
+        public bool statusMRUEnabled
+        {
+            get
+            {
+                return _statusMRUEnabled;
+            }
+            set
+            {
+                _statusMRUEnabled = value;
+
+                if (_statusMRUEnabled)
+                    config.Write(ConfigKey.SensorStatusInputMRU, "1");
+                else
+                    config.Write(ConfigKey.SensorStatusInputMRU, "0");
+
+                OnPropertyChanged();
+            }
+        }
+
+        private bool _statusGyroEnabled { get; set; }
+        public bool statusGyroEnabled
+        {
+            get
+            {
+                return _statusGyroEnabled;
+            }
+            set
+            {
+                _statusGyroEnabled = value;
+
+                if (_statusGyroEnabled)
+                    config.Write(ConfigKey.SensorStatusInputGyro, "1");
+                else
+                    config.Write(ConfigKey.SensorStatusInputGyro, "0");
+
+                OnPropertyChanged();
+            }
+        }
+
+        private bool _statusWindEnabled { get; set; }
+        public bool statusWindEnabled
+        {
+            get
+            {
+                return _statusWindEnabled;
+            }
+            set
+            {
+                _statusWindEnabled = value;
+
+                if (_statusWindEnabled)
+                    config.Write(ConfigKey.SensorStatusInputWind, "1");
+                else
+                    config.Write(ConfigKey.SensorStatusInputWind, "0");
+
+                OnPropertyChanged();
+            }
+        }
+
+        private bool _statusSOGCOGEnabled { get; set; }
+        public bool statusSOGCOGEnabled
+        {
+            get
+            {
+                return _statusSOGCOGEnabled;
+            }
+            set
+            {
+                _statusSOGCOGEnabled = value;
+
+                if (_statusSOGCOGEnabled)
+                    config.Write(ConfigKey.SensorStatusInputSOGCOG, "1");
+                else
+                    config.Write(ConfigKey.SensorStatusInputSOGCOG, "0");
 
                 OnPropertyChanged();
             }

@@ -2667,9 +2667,183 @@
 
                 </telerik:GroupBox>
 
+
+                <!--SENSOR STATUS-->
+                <telerik:GroupBox
+                    Grid.Row="1"
+                    Grid.Column="1"
+                    Margin="8"
+                    Header="SENSOR STATUS">
+
+                    <Grid
+                        Margin="8">
+
+                        <Grid.RowDefinitions>
+                            <RowDefinition
+                                Height="*" />
+                            <RowDefinition
+                                Height="*" />
+                            <RowDefinition
+                                Height="*" />
+                            <RowDefinition
+                                Height="*" />
+                            <RowDefinition
+                                Height="*" />
+                            <RowDefinition
+                                Height="*" />
+                            <RowDefinition
+                                Height="*" />
+                        </Grid.RowDefinitions>
+
+                        <!--Enable MRU Status Input-->
+                        <Grid
+                            Grid.Row="0">
+
+                            <Grid.ColumnDefinitions>
+                                <ColumnDefinition
+                                    Width="*" />
+                                <ColumnDefinition
+                                    Width="*" />
+                            </Grid.ColumnDefinitions>
+
+                            <Viewbox
+                                Grid.Column="0"
+                                StretchDirection="Both"
+                                Stretch="Uniform"
+                                HorizontalAlignment="Left">
+
+                                <telerik:Label
+                                    Content="Enable MRU Status Input"
+                                    VerticalAlignment="Center" />
+                            </Viewbox>
+
+                            <Viewbox
+                                Grid.Column="1"
+                                StretchDirection="Both"
+                                Stretch="Uniform"
+                                HorizontalAlignment="Right">
+
+                                <CheckBox
+                                    IsChecked="{Binding Path=statusMRUEnabled, Mode=TwoWay}"
+                                    VerticalAlignment="Center"
+                                    HorizontalAlignment="Right" />
+                            </Viewbox>
+                        </Grid>
+
+                        <!--Enable Gyro Status Input-->
+                        <Grid
+                            Grid.Row="1">
+
+                            <Grid.ColumnDefinitions>
+                                <ColumnDefinition
+                                    Width="*" />
+                                <ColumnDefinition
+                                    Width="*" />
+                            </Grid.ColumnDefinitions>
+
+                            <Viewbox
+                                Grid.Column="0"
+                                StretchDirection="Both"
+                                Stretch="Uniform"
+                                HorizontalAlignment="Left">
+
+                                <telerik:Label
+                                    Content="Enable Gyro Status Input"
+                                    VerticalAlignment="Center" />
+                            </Viewbox>
+
+                            <Viewbox
+                                Grid.Column="1"
+                                StretchDirection="Both"
+                                Stretch="Uniform"
+                                HorizontalAlignment="Right">
+
+                                <CheckBox
+                                    IsChecked="{Binding Path=statusGyroEnabled, Mode=TwoWay}"
+                                    VerticalAlignment="Center"
+                                    HorizontalAlignment="Right" />
+                            </Viewbox>
+                        </Grid>
+
+                        <!--Enable Wind Status Input-->
+                        <Grid
+                            Grid.Row="2">
+
+                            <Grid.ColumnDefinitions>
+                                <ColumnDefinition
+                                    Width="*" />
+                                <ColumnDefinition
+                                    Width="*" />
+                            </Grid.ColumnDefinitions>
+
+                            <Viewbox
+                                Grid.Column="0"
+                                StretchDirection="Both"
+                                Stretch="Uniform"
+                                HorizontalAlignment="Left">
+
+                                <telerik:Label
+                                    Content="Enable Wind Status Input"
+                                    VerticalAlignment="Center" />
+                            </Viewbox>
+
+                            <Viewbox
+                                Grid.Column="1"
+                                StretchDirection="Both"
+                                Stretch="Uniform"
+                                HorizontalAlignment="Right">
+
+                                <CheckBox
+                                    IsChecked="{Binding Path=statusWindEnabled, Mode=TwoWay}"
+                                    VerticalAlignment="Center"
+                                    HorizontalAlignment="Right" />
+                            </Viewbox>
+                        </Grid>
+
+                        <!--Enable SOG/COG Status Input-->
+                        <Grid
+                            Grid.Row="3">
+
+                            <Grid.ColumnDefinitions>
+                                <ColumnDefinition
+                                    Width="*" />
+                                <ColumnDefinition
+                                    Width="*" />
+                            </Grid.ColumnDefinitions>
+
+                            <Viewbox
+                                Grid.Column="0"
+                                StretchDirection="Both"
+                                Stretch="Uniform"
+                                HorizontalAlignment="Left">
+
+                                <telerik:Label
+                                    Content="Enable SOG/COG Status Input"
+                                    VerticalAlignment="Center" />
+                            </Viewbox>
+
+                            <Viewbox
+                                Grid.Column="1"
+                                StretchDirection="Both"
+                                Stretch="Uniform"
+                                HorizontalAlignment="Right">
+
+                                <CheckBox
+                                    IsChecked="{Binding Path=statusSOGCOGEnabled, Mode=TwoWay}"
+                                    VerticalAlignment="Center"
+                                    HorizontalAlignment="Right" />
+                            </Viewbox>
+                            
+                        </Grid>
+
+                    </Grid>
+
+                </telerik:GroupBox>
+
             </Grid>
 
         </telerik:RadTabItem>
 
     </telerik:RadTabControl>
+    
 </UserControl>

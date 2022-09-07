@@ -7,15 +7,6 @@ namespace HMS_Server
 {
     public class HMSProcessingMotion
     {
-        // Input data
-        private HMSData inputPitchData = new HMSData();
-        private HMSData inputRollData = new HMSData();
-        private HMSData inputHeaveData = new HMSData();
-        private HMSData inputHeaveRateData = new HMSData();
-        private HMSData inputAccelerationXData = new HMSData();
-        private HMSData inputAccelerationYData = new HMSData();
-        private HMSData inputAccelerationZData = new HMSData();
-
         // Pitch
         private HMSData pitchData = new HMSData();
         private HMSData pitchMax20mData = new HMSData();
@@ -297,6 +288,15 @@ namespace HMS_Server
 
         public void Update(HMSDataCollection hmsInputDataList)
         {
+                    // Input data
+            HMSData inputPitchData = new HMSData();
+            HMSData inputRollData = new HMSData();
+            HMSData inputHeaveData = new HMSData();
+            HMSData inputHeaveRateData = new HMSData();
+            HMSData inputAccelerationXData = new HMSData();
+            HMSData inputAccelerationYData = new HMSData();
+            HMSData inputAccelerationZData = new HMSData();
+
             // Hente input data vi skal bruke
             inputPitchData.Set(hmsInputDataList.GetData(ValueType.Pitch));
             inputRollData.Set(hmsInputDataList.GetData(ValueType.Roll));
@@ -306,28 +306,41 @@ namespace HMS_Server
             inputAccelerationYData.Set(hmsInputDataList.GetData(ValueType.AccelerationY));
             inputAccelerationZData.Set(hmsInputDataList.GetData(ValueType.AccelerationZ));
 
-            // Sjekke data timeout
-            if (inputPitchData.timestamp.AddMilliseconds(adminSettingsVM.dataTimeout) < DateTime.UtcNow)
+            // Sjekke status
+            if (adminSettingsVM.statusMRUEnabled && hmsInputDataList.GetData(ValueType.SensorMRU).data != 1)
+            {
                 inputPitchData.status = DataStatus.TIMEOUT_ERROR;
-
-            if (inputRollData.timestamp.AddMilliseconds(adminSettingsVM.dataTimeout) < DateTime.UtcNow)
                 inputRollData.status = DataStatus.TIMEOUT_ERROR;
-
-            if (inputHeaveData.timestamp.AddMilliseconds(adminSettingsVM.dataTimeout) < DateTime.UtcNow)
                 inputHeaveData.status = DataStatus.TIMEOUT_ERROR;
-
-            if (inputHeaveRateData.timestamp.AddMilliseconds(adminSettingsVM.dataTimeout) < DateTime.UtcNow)
                 inputHeaveRateData.status = DataStatus.TIMEOUT_ERROR;
-
-            if (inputAccelerationXData.timestamp.AddMilliseconds(adminSettingsVM.dataTimeout) < DateTime.UtcNow)
                 inputAccelerationXData.status = DataStatus.TIMEOUT_ERROR;
-
-            if (inputAccelerationYData.timestamp.AddMilliseconds(adminSettingsVM.dataTimeout) < DateTime.UtcNow)
                 inputAccelerationYData.status = DataStatus.TIMEOUT_ERROR;
-
-            if (inputAccelerationZData.timestamp.AddMilliseconds(adminSettingsVM.dataTimeout) < DateTime.UtcNow)
                 inputAccelerationZData.status = DataStatus.TIMEOUT_ERROR;
+            }
+            else
+            {
+                // Sjekke data timeout
+                if (inputPitchData.timestamp.AddMilliseconds(adminSettingsVM.dataTimeout) < DateTime.UtcNow)
+                    inputPitchData.status = DataStatus.TIMEOUT_ERROR;
 
+                if (inputRollData.timestamp.AddMilliseconds(adminSettingsVM.dataTimeout) < DateTime.UtcNow)
+                    inputRollData.status = DataStatus.TIMEOUT_ERROR;
+
+                if (inputHeaveData.timestamp.AddMilliseconds(adminSettingsVM.dataTimeout) < DateTime.UtcNow)
+                    inputHeaveData.status = DataStatus.TIMEOUT_ERROR;
+
+                if (inputHeaveRateData.timestamp.AddMilliseconds(adminSettingsVM.dataTimeout) < DateTime.UtcNow)
+                    inputHeaveRateData.status = DataStatus.TIMEOUT_ERROR;
+
+                if (inputAccelerationXData.timestamp.AddMilliseconds(adminSettingsVM.dataTimeout) < DateTime.UtcNow)
+                    inputAccelerationXData.status = DataStatus.TIMEOUT_ERROR;
+
+                if (inputAccelerationYData.timestamp.AddMilliseconds(adminSettingsVM.dataTimeout) < DateTime.UtcNow)
+                    inputAccelerationYData.status = DataStatus.TIMEOUT_ERROR;
+
+                if (inputAccelerationZData.timestamp.AddMilliseconds(adminSettingsVM.dataTimeout) < DateTime.UtcNow)
+                    inputAccelerationZData.status = DataStatus.TIMEOUT_ERROR;
+            }
 
             // Tar data fra input delen av server og overfører til HMS output delen
             // og prosesserer input for overføring til HMS output også.

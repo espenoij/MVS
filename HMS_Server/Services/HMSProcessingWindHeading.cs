@@ -323,24 +323,52 @@ namespace HMS_Server
             inputSensorWindSpeed.Set(hmsInputDataList.GetData(ValueType.SensorWindSpeed));
 
 
-            // Sjekke data timeout
-            if (inputVesselHeading.timestamp.AddMilliseconds(adminSettingsVM.dataTimeout) < DateTime.UtcNow)
+            // Sjekke status: Heading (Gyro)
+            if (adminSettingsVM.statusGyroEnabled && hmsInputDataList.GetData(ValueType.SensorGyro).data != 1)
+            {
                 inputVesselHeading.status = DataStatus.TIMEOUT_ERROR;
+            }
+            else
+            {
+                // Sjekke data timeout
+                if (inputVesselHeading.timestamp.AddMilliseconds(adminSettingsVM.dataTimeout) < DateTime.UtcNow)
+                    inputVesselHeading.status = DataStatus.TIMEOUT_ERROR;
+            }
 
+
+            // Sjekke status: Wind
+            if (adminSettingsVM.statusWindEnabled && hmsInputDataList.GetData(ValueType.SensorWind).data != 1)
+            {
+                inputSensorWindDirection.status = DataStatus.TIMEOUT_ERROR;
+                inputSensorWindSpeed.status = DataStatus.TIMEOUT_ERROR;
+            }
+            else
+            {
+                if (inputSensorWindDirection.timestamp.AddMilliseconds(adminSettingsVM.dataTimeout) < DateTime.UtcNow)
+                    inputSensorWindDirection.status = DataStatus.TIMEOUT_ERROR;
+
+                if (inputSensorWindSpeed.timestamp.AddMilliseconds(adminSettingsVM.dataTimeout) < DateTime.UtcNow)
+                    inputSensorWindSpeed.status = DataStatus.TIMEOUT_ERROR;
+            }
+
+            // Sjekke status: SOG/COG
+            if (adminSettingsVM.statusSOGCOGEnabled && hmsInputDataList.GetData(ValueType.SensorSOGCOG).data != 1)
+            {
+                inputVesselCOG.status = DataStatus.TIMEOUT_ERROR;
+                inputVesselSOG.status = DataStatus.TIMEOUT_ERROR;
+            }
+            else
+            {
+                if (inputVesselCOG.timestamp.AddMilliseconds(adminSettingsVM.dataTimeout) < DateTime.UtcNow)
+                    inputVesselCOG.status = DataStatus.TIMEOUT_ERROR;
+
+                if (inputVesselSOG.timestamp.AddMilliseconds(adminSettingsVM.dataTimeout) < DateTime.UtcNow)
+                    inputVesselSOG.status = DataStatus.TIMEOUT_ERROR;
+            }
+
+            // Sjekke data timeout: Vessel Speed
             if (inputVesselSpeed.timestamp.AddMilliseconds(adminSettingsVM.dataTimeout) < DateTime.UtcNow)
                 inputVesselSpeed.status = DataStatus.TIMEOUT_ERROR;
-
-            if (inputVesselCOG.timestamp.AddMilliseconds(adminSettingsVM.dataTimeout) < DateTime.UtcNow)
-                inputVesselCOG.status = DataStatus.TIMEOUT_ERROR;
-
-            if (inputVesselSOG.timestamp.AddMilliseconds(adminSettingsVM.dataTimeout) < DateTime.UtcNow)
-                inputVesselSOG.status = DataStatus.TIMEOUT_ERROR;
-
-            if (inputSensorWindDirection.timestamp.AddMilliseconds(adminSettingsVM.dataTimeout) < DateTime.UtcNow)
-                inputSensorWindDirection.status = DataStatus.TIMEOUT_ERROR;
-
-            if (inputSensorWindSpeed.timestamp.AddMilliseconds(adminSettingsVM.dataTimeout) < DateTime.UtcNow)
-                inputSensorWindSpeed.status = DataStatus.TIMEOUT_ERROR;
 
 
             // Vessel Heading & Speed

@@ -108,6 +108,10 @@
     public const string EmailPassword = "EmailPassword";
     public const string EmailSecureConnection = "EmailSecureConnection";
     public const string DataVerificationEnabled = "DataVerificationEnabled";
+    public const string SensorStatusInputMRU = "SensorStatusInputMRU";
+    public const string SensorStatusInputGyro = "SensorStatusInputGyro";
+    public const string SensorStatusInputWind = "SensorStatusInputWind";
+    public const string SensorStatusInputSOGCOG = "SensorStatusInputSOGCOG";
     public const string LicenseOwner = "LicenseOwner";
     public const string LicenseLocation = "LicenseLocation";
     public const string LicenseMaxClients = "LicenseMaxClients";

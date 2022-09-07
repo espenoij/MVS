@@ -8,7 +8,7 @@ namespace HMS_Server
     public class HMSSensorGroupStatus
     {
         private RadObservableCollection<SensorGroup> hmsSensorGroupList = new RadObservableCollection<SensorGroup>();
-        private HMSDataCollection hmsInputDataList;
+        private HMSDataCollection hmsOutputDataList;
 
         // Config
         private Config config;
@@ -59,9 +59,9 @@ namespace HMS_Server
             }
         }
 
-        public void Start(HMSDataCollection hmsInputDataList)
+        public void Start(HMSDataCollection hmsOutputDataList)
         {
-            this.hmsInputDataList = hmsInputDataList;
+            this.hmsOutputDataList = hmsOutputDataList;
 
             timer.Start();
         }
@@ -90,14 +90,14 @@ namespace HMS_Server
 
         private void UpdateStatus(int id)
         {
-            if (hmsInputDataList != null)
+            if (hmsOutputDataList != null)
             {
                 // Finne frem sensoren vi skal oppdatere status for
                 var sensorGroup = hmsSensorGroupList.Where(x => x.id == id);
                 if (sensorGroup.Count() == 1)
                 {
                     // Finne sensor verdier knyttet til valgt sensor gruppe ID
-                    var hmsDataList = hmsInputDataList.GetDataList().ToList();
+                    var hmsDataList = hmsOutputDataList.GetDataList().ToList();
 
                     var clientData = hmsDataList.Where(x => x.sensorGroupId == id).ToList();
 

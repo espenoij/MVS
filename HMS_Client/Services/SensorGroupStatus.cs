@@ -99,14 +99,14 @@ namespace HMS_Client
                         ret = true;
                     }
                 }
-                else
-                {
-                    if (sensorData.status == DataStatus.TIMEOUT_ERROR)
-                    {
-                        sensorData.status = DataStatus.OK;
-                        ret = true;
-                    }
-                }
+                //else
+                //{
+                //    if (sensorData.status == DataStatus.TIMEOUT_ERROR)
+                //    {
+                //        sensorData.status = DataStatus.OK;
+                //        ret = true;
+                //    }
+                //}
 
                 // Oppdatere data i klient sensor data listen også
                 var clientSensorDataList = clientSensorDataCollection.GetDataList().ToList();

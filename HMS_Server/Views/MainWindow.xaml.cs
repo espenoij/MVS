@@ -707,7 +707,7 @@ namespace HMS_Server
                 socketListener.Start();
 
                 // Sensor Status
-                sensorStatus.Start(hmsInputData);
+                sensorStatus.Start(hmsOutputData);
 
                 // HMS
                 ucHMSInputSetup.Start();

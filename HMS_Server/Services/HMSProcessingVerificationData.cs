@@ -27,7 +27,6 @@ namespace HMS_Server
         public void Update(HMSDataCollection hmsInputDataList)
         {
             // Tar data fra input delen av server og overfører til HMS output delen
-            timeId.Set(hmsInputDataList.GetData(ValueType.TimeID));
             sensorMRU.Set(hmsInputDataList.GetData(ValueType.SensorMRU));
             sensorGyro.Set(hmsInputDataList.GetData(ValueType.SensorGyro));
             sensorWind.Set(hmsInputDataList.GetData(ValueType.SensorWind));
