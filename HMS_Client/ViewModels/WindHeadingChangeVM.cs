@@ -464,23 +464,23 @@ namespace HMS_Client
             double rwd = Math.Abs(rwdInput);
 
             // NB! Samme kode som i server (GetRWDLimitState)
-            if (wind <= 15 || rwd <= 25)
+            if (wind < 15 || rwd < 25)
             {
                 return HelideckStatusType.BLUE;
             }
             else
             {
-                if (rwd > 45)
+                if (rwd >= 45)
                 {
-                    if (wind <= 20)
+                    if (wind < 20)
                         return HelideckStatusType.AMBER;
                     else
                         return HelideckStatusType.RED;
                 }
                 else
-                if (wind > 35)
+                if (wind >= 35)
                 {
-                    if (rwd <= 30)
+                    if (rwd < 30)
                         return HelideckStatusType.AMBER;
                     else
                         return HelideckStatusType.RED;
@@ -489,7 +489,7 @@ namespace HMS_Client
                 {
                     double maxWindRed = 20 + (45 - rwd);
 
-                    if (wind > maxWindRed)
+                    if (wind >= maxWindRed)
                     {
                         return HelideckStatusType.RED;
                     }
@@ -497,7 +497,7 @@ namespace HMS_Client
                     {
                         double maxWindAmber = 15 + (45 - rwd);
 
-                        if (wind > maxWindAmber)
+                        if (wind >= maxWindAmber)
                             return HelideckStatusType.AMBER;
                         else
                             return HelideckStatusType.BLUE;

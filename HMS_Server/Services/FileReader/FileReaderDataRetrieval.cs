@@ -59,7 +59,7 @@ namespace HMS_Server
 
         public void Stop()
         {
-            // Starter lesing for hvert fil
+            // Stoppe lesing for hvert fil
             foreach (var fileReader in fileReaderList)
             {
                 fileReader?.StopReader();

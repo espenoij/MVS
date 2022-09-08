@@ -352,7 +352,7 @@ namespace HMS_Server
             }
 
             // Sjekke status: SOG/COG
-            if (adminSettingsVM.statusSOGCOGEnabled && hmsInputDataList.GetData(ValueType.SensorSOGCOG).data != 1)
+            if (adminSettingsVM.statusSOGCOGEnabled && hmsInputDataList.GetData(ValueType.SensorSOGCOG)?.data != 1)
             {
                 inputVesselCOG.status = DataStatus.TIMEOUT_ERROR;
                 inputVesselSOG.status = DataStatus.TIMEOUT_ERROR;
