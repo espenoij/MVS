@@ -28,7 +28,6 @@ namespace HMS_Server
 
             // CAP
             msiCorrectionR = config.ReadWithDefault(ConfigKey.MSICorrectionR, Constants.MSICorrectionRMin);
-            //windSamplesPerTransmission = config.ReadWithDefault(ConfigKey.WindSamplesPerTransmission, Constants.WindSamplesPerTransmissionDefault);
 
             // CAP: Override Wind Buffer
             if (config.ReadWithDefault(ConfigKey.OverrideWindBuffer, "0") == "1")
@@ -304,26 +303,6 @@ namespace HMS_Server
                 OnPropertyChanged();
             }
         }
-
-        /////////////////////////////////////////////////////////////////////////////
-        // CAP: Wind Samples Received per Transmission
-        /////////////////////////////////////////////////////////////////////////////
-        //private double _windSamplesPerTransmission { get; set; }
-        //public double windSamplesPerTransmission
-        //{
-        //    get
-        //    {
-        //        return _windSamplesPerTransmission;
-        //    }
-        //    set
-        //    {
-        //        _windSamplesPerTransmission = value;
-
-        //        config.Write(ConfigKey.WindSamplesPerTransmission, _windSamplesPerTransmission.ToString());
-
-        //        OnPropertyChanged();
-        //    }
-        //}
 
         /////////////////////////////////////////////////////////////////////////////
         // CAP: Override CAP 9c Wind Buffer

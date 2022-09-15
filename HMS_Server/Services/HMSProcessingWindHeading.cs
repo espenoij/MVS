@@ -337,7 +337,8 @@ namespace HMS_Server
 
 
             // Sjekke status: Wind
-            if (adminSettingsVM.statusWindEnabled && hmsInputDataList.GetData(ValueType.SensorWind).data != 1)
+            if ((adminSettingsVM.statusWindEnabled && hmsInputDataList.GetData(ValueType.SensorWind).data != 1) ||
+                (adminSettingsVM.statusGyroEnabled && hmsInputDataList.GetData(ValueType.SensorGyro).data != 1 && adminSettingsVM.windDirRef == DirectionReference.VesselHeading))
             {
                 inputSensorWindDirection.status = DataStatus.TIMEOUT_ERROR;
                 inputSensorWindSpeed.status = DataStatus.TIMEOUT_ERROR;
@@ -536,8 +537,6 @@ namespace HMS_Server
             ///////////////////////////////////////////////////////////
             double windSamplesInBuffer2m = Constants.WindBufferFill95Pct2m;
             double windSamplesInBuffer10m = Constants.WindBufferFill95Pct10m;
-            //double windSamplesInBuffer2m = Constants.WindBufferFill95Pct2m / adminSettingsVM.windSamplesPerTransmission;
-            //double windSamplesInBuffer10m = Constants.WindBufferFill95Pct10m / adminSettingsVM.windSamplesPerTransmission;
 
             // Area Wind: 2-minute data
             ///////////////////////////////////////////////////////////

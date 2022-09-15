@@ -2032,21 +2032,6 @@
                             </Viewbox>
                         </Grid>
 
-                        <!--Wind Samples Received-->
-                        <!--<DockPanel>
-                            <telerik:Label
-                                Name="lbWindSamplesPerTransmission"
-                                Content="Wind Samples per Transmission"
-                                VerticalAlignment="Center" />
-                            <TextBox
-                                Name="tbWindSamplesPerTransmission"
-                                Width="110"
-                                HorizontalAlignment="Right"
-                                Text="{Binding Path=windSamplesPerTransmission}"
-                                LostFocus="tbWindSamplesPerTransmission_LostFocus"
-                                KeyDown="tbWindSamplesPerTransmission_KeyDown" />
-                        </DockPanel>-->
-
                         <!--Override Wind Buffer-->
                         <Grid
                             Grid.Row="1">

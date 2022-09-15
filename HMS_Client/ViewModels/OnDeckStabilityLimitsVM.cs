@@ -167,7 +167,8 @@ namespace HMS_Client
                 if (value != null)
                 {
                     if (value.data != _msi.data ||
-                        value.timestamp != _msi.timestamp)
+                        value.timestamp != _msi.timestamp ||
+                        value.status != _msi.status)
                     {
                         _msi.Set(value);
                         OnPropertyChanged(nameof(msiString));
@@ -353,7 +354,8 @@ namespace HMS_Client
                 if (value != null)
                 {
                     if (value.data != _wsi.data ||
-                        value.timestamp != _wsi.timestamp)
+                        value.timestamp != _wsi.timestamp ||
+                        value.status != _wsi.status)
                     {
                         _wsi.Set(value);
                         OnPropertyChanged(nameof(wsiString));

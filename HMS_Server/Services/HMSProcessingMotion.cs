@@ -607,10 +607,10 @@ namespace HMS_Server
 
         private void MSIBufferFillCheck(List<TimeData> dataList, double targetCount, HMSData msi)
         {
-            // Er bufferet fyllt opp
-            if (dataList.Count < targetCount)
-                // Hvis ikke, sjekk status, dersom OK
-                if (msi.status == DataStatus.OK)
+            // Hvis ikke, sjekk status, dersom OK
+            if (msi.status == DataStatus.OK)
+                // Er bufferet fyllt opp
+                if (dataList.Count < targetCount)
                     // Set OK, men ikke tilgjengelig
                     msi.status = DataStatus.OK_NA;
         }
@@ -865,6 +865,9 @@ namespace HMS_Server
         {
             // Første regne nå-verdi for inclination
             CalcInclination(pitchData, rollData, inclinationData);
+
+            // Avrunding
+            inclinationData.data = Math.Round(inclinationData.data, 1, MidpointRounding.AwayFromZero);
 
             // 20-minute max
             ///////////////////////////////////////////////////////////

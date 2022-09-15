@@ -93,7 +93,8 @@ namespace HMS_Client
                 // Sjekker data timeout
                 if (sensorData.timestamp.AddMilliseconds(dataTimeout) < DateTime.UtcNow)
                 {
-                    if (sensorData.status == DataStatus.OK)
+                    if (sensorData.status == DataStatus.OK ||
+                        sensorData.status == DataStatus.OK_NA)
                     {
                         sensorData.status = DataStatus.TIMEOUT_ERROR;
                         ret = true;
