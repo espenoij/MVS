@@ -6,12 +6,12 @@ public static class HMSCalc
 
     public static double ToRadians(this double val)
     {
-        return (Math.PI / 180) * val;
+        return (Math.PI / 180.0) * val;
     }
 
     public static double ToDegrees(this double val)
     {
-        return (180 / Math.PI) * val;
+        return (180.0 / Math.PI) * val;
     }
 
     public static double Inclination(double pitch, double roll)

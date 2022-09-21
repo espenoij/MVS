@@ -23,26 +23,26 @@
         <add key="LogFrequency" value="030.000" />
         <add key="MarineChannel" value="16" />
         <add key="EmailPort" value="25" />
-        <add key="EmailUsername" value="AQAAANCMnd8BFdERjHoAwE/Cl+sBAAAAVMlIqORkVE2/OV4zrY8elgAAAAACAAAAAAAQZgAAAAEAACAAAAApqSRodmr9s9KzgoEXbpz8iLS4LMRjupRcVoC7XgFLGwAAAAAOgAAAAAIAACAAAAATH8YcuT++7wzYnCu34gVlJuHCeKi9Yf6oeaDfW9IMNBAAAAD2MsVC/SRaC7FMkQDOia8fQAAAACLwTYV9MkpyGs8CIwNCGCmbrxbz8dGxh31v94RWx3Ya7vnZvUSON5DVWLMf1UJQnBCUdfgicZGsa5yrpnU99G4=" />
-        <add key="EmailPassword" value="AQAAANCMnd8BFdERjHoAwE/Cl+sBAAAAVMlIqORkVE2/OV4zrY8elgAAAAACAAAAAAAQZgAAAAEAACAAAABjKG283aXaXIgp9VykYFqiMtgXMF85yze+FhX5cVsW9QAAAAAOgAAAAAIAACAAAACQkWN+eGsB8Q+ikWBVaIY6uLDlqQqDVWgfj/YtqpfUSBAAAAB/XY3/Ohc4Q/pCU8LIh/akQAAAAGmTZ88YTKig0dK26YkRCBS292o5TuDRm5vl4lboZS1Sgx8jaT56WynvYCCtRJldf0QzNVF8EMLfl5NdZ0XOZmw=" />
+        <add key="EmailUsername" value="AQAAANCMnd8BFdERjHoAwE/Cl+sBAAAAVMlIqORkVE2/OV4zrY8elgAAAAACAAAAAAAQZgAAAAEAACAAAADZsdooHdSr4tLQnZthQhN+DJIDGXKRhr3xFVItd6ociQAAAAAOgAAAAAIAACAAAAC90buUPfoiniLsK4jPOBNmKIVCytpaGbI/jacwYXEZvRAAAACpeNhnfdde/VTq4Tey6nfaQAAAAJ+r7RPe/dG2jrnkcJwNo04h6Y2XwuiWguoRbeCyQxiAfc2SiygG+T6U7bEU0N7i3QUK27Ya9OXVm3JnaSfNQoQ=" />
+        <add key="EmailPassword" value="AQAAANCMnd8BFdERjHoAwE/Cl+sBAAAAVMlIqORkVE2/OV4zrY8elgAAAAACAAAAAAAQZgAAAAEAACAAAACE0D/BDiGmN1tLbL7pbOQLHhBusIuxnE3hjuAZvzY1zwAAAAAOgAAAAAIAACAAAACoDa0KmcudpDXm602isY5DPEC9Yyz6azbLJevYxuh16RAAAAC+zcAYICv7LNhIZTJ4+HXOQAAAAI/58odEUWeXkXLpsJrKPx1s/+rl3nMI8ok5NHD478KmO38F3LX38grPwhRQlZXX4QxGM7+ulFT/ZJgYEwoCtiA=" />
         <add key="EmailSecureConnection" value="0" />
-        <add key="MagneticDeclination" value="0" />
+        <add key="MagneticDeclination" value="-5" />
         <add key="HelideckLightsOutput" value="0" />
         <add key="EnableEMS" value="0" />
         <add key="AutoStartHMS" value="1" />
         <add key="WindDirectionReference" value="VesselHeading" />
         <add key="VesselHeadingReference" value="TrueNorth" />
-        <add key="HelideckHeight" value="10" />
-        <add key="WindSensorHeight" value="20" />
+        <add key="HelideckHeight" value="80" />
+        <add key="WindSensorHeight" value="90" />
         <add key="WindSensorDistance" value="0" />
         <add key="AirPressureSensorHeight" value="15" />
         <add key="LightsOutputAddress1" value="1" />
         <add key="LightsOutputAddress2" value="1" />
         <add key="LightsOutputAddress3" value="1" />
-        <add key="LicenseOwner" value="AQAAANCMnd8BFdERjHoAwE/Cl+sBAAAAVMlIqORkVE2/OV4zrY8elgAAAAACAAAAAAAQZgAAAAEAACAAAAAeT+9BVrOe6s7sQm1d7Gn2cy9G0UNdEU/Y6+rJAkfVzwAAAAAOgAAAAAIAACAAAABDqTSWqrCahdAu84ei7g77nArEOd1gFdXrbjtncettKRAAAAAYDQbWc7ijSSDzbvIUvgArQAAAADfAyTaqC1qYXTYhVSZiuTajzOwmZeUbbGrceaZWpEeTKI1Ad0SEG30/PD51wceKuc+iQQp7ZPyhD9RJa6H84sw=" />
-        <add key="LicenseLocation" value="AQAAANCMnd8BFdERjHoAwE/Cl+sBAAAAVMlIqORkVE2/OV4zrY8elgAAAAACAAAAAAAQZgAAAAEAACAAAACNaZ6whx7RRTVt5GlcjO4xc13qYT+UUrHJZnHQqqAbUwAAAAAOgAAAAAIAACAAAAB9CrLCpj/V8YrtQXLQ5XkDrYHQHn3G/84hE0V5zC/62xAAAADvT4JFa/d/sXceI5dCY4lQQAAAAP6ez2kPoUQhAvQC9MlZpWziyiJ4gi3LsHgE0lZNV8zcl79GyO0A3u52WRGDoqqluTRRDwinaFPI1o0CILztQ58=" />
-        <add key="LicenseMaxClients" value="AQAAANCMnd8BFdERjHoAwE/Cl+sBAAAAVMlIqORkVE2/OV4zrY8elgAAAAACAAAAAAAQZgAAAAEAACAAAAC3e0of2Omqg68Pd99HdQSQbssS1aGWv+qP/NJqwJZ3vQAAAAAOgAAAAAIAACAAAAAYXo2Z2W3OlQsQkDBtk8RQtE3i9ZigccS3KB6bWubYuRAAAAA7R9p9Hob4i0uVjaqMQYGrQAAAALz+JEdujZzX+4Q02Yi3KgGm70s/U7xbLKkcLgq6UNzlT282Pq0GhYFjGgsej36qFdXn+LWBWdcLFIZcQIZ5wAU=" />
-        <add key="DeviceID" value="AQAAANCMnd8BFdERjHoAwE/Cl+sBAAAAVMlIqORkVE2/OV4zrY8elgAAAAACAAAAAAAQZgAAAAEAACAAAAApLGXRBJP77CEiIPorkwCcrbKT1RdpAk6+Rsi/jS6IgwAAAAAOgAAAAAIAACAAAAD+WXYG2Do53url9KZp4+PjaaLfqbhWeH+2Se0zMd1F/HAAAACaAMCYHLHIVmhhkJqK6kuD6Z8UnBONm//SHkpZbGTyrqBDl8lpGdPwxFLVss56vh1cagV1LbXK7Ga/cFYPWxvI4n4gcy9LPwet9+nqSMhIoNW8ab2iLY5JKveEiYAAgPJYvUCQfEh2qY3QrhWpjXyaQAAAACk8NNWiVcShZuCg82WF+/6zxh8jr7rbrcT0Q/8XuZZ8xoFrRTMp5hdnnnh5GNT9GsQk27L4xBNepBukIq0p7vw=" />
+        <add key="LicenseOwner" value="AQAAANCMnd8BFdERjHoAwE/Cl+sBAAAAVMlIqORkVE2/OV4zrY8elgAAAAACAAAAAAAQZgAAAAEAACAAAAABJ1vDKJc2wRW7KTtr+2MrIh/qdRpbab6440C3bvj/QQAAAAAOgAAAAAIAACAAAABKKHFJLkxeykLWHkwAxjzy+lr2FFA/g6q3djYXOth6XxAAAACf5Nq4fYZg6Z5ONdiZ1FYLQAAAAD4l6HHmNtZhjQb8lWGxjUhzBGOBUPG0Fj2Tjd7d4jTd27oaYrYI3LRloLwQOUSv454arbdTRM2npr1hfbcFlCo=" />
+        <add key="LicenseLocation" value="AQAAANCMnd8BFdERjHoAwE/Cl+sBAAAAVMlIqORkVE2/OV4zrY8elgAAAAACAAAAAAAQZgAAAAEAACAAAAAUcILYLAeBk+gZQ+zL/ieF38sff7UU4YPrb7H7xXWlWQAAAAAOgAAAAAIAACAAAAAM9w2Sf+fKH3Zd7WXskdn8weHIetTODTA5eJSs+Y6LmBAAAAD51Lnq/OIhTE2c9Uoc13M+QAAAAOeAHdbwSrVxbekit41vN0MNSfujHRyKViQ7JnUVc47YNyeafedM5H6/b743tXOup51UDj+RHe5WfuSWSFrGKdI=" />
+        <add key="LicenseMaxClients" value="AQAAANCMnd8BFdERjHoAwE/Cl+sBAAAAVMlIqORkVE2/OV4zrY8elgAAAAACAAAAAAAQZgAAAAEAACAAAADhC3hkuOmRfQHpkFd474tNiqjuUkvkNqr6KHEvyxc/KgAAAAAOgAAAAAIAACAAAABfI2/myGpXxoMJ2Eil97HgoGljOGVFR1S4wqVGLi/XLRAAAAChWWMdcpoAX2eJjXYER9RjQAAAACu01bl9QY/+wLFs58LKQHgbkwR/6cXa/Y2xc56T+TvyFS9BAN3d5ahFMbXxAJGkBYu2EpaJigwqsSGQ2g9ugGI=" />
+        <add key="DeviceID" value="AQAAANCMnd8BFdERjHoAwE/Cl+sBAAAAVMlIqORkVE2/OV4zrY8elgAAAAACAAAAAAAQZgAAAAEAACAAAAC8yeWZ6f9LWUYOyAuEgDY7s0fXP3pKFhNAgTMRtgsINAAAAAAOgAAAAAIAACAAAACbUannQI9SPbZQLw0LOvX64js4oIOnxdbzl1RmPgwGSXAAAADc6c3Zvp14OymlYfDQlJ9bgvD6b7LPTAm7ZBbFWRP57YDghjBycOlgUq6OhYMU1Qm2qVubcjE5I3vV/75w7OYCGFHtjxT4G4M5pc9m/BbSl97qwQ4a+JgbbXSkdv34OBHcTsEEPAIoKela43fECDGFQAAAANioniGCwFz9gpVPYEOYQ8wh6A87pCnJj99LQ1zIfIfMVrYPeYFT2cfIJX5iSA0Wm5YTA97/LtoL5zKZsMqcGAY=" />
         <add key="RegulationStandard" value="CAP" />
         <add key="VesselName" value="Swire Explorer" />
         <add key="DatabaseName" value="ses_hms" />
@@ -71,6 +71,5 @@
         <add key="SensorStatusInputGyro" value="1" />
         <add key="SensorStatusInputWind" value="1" />
         <add key="SensorStatusInputSOGCOG" value="1" />
-        <add key="NDBInstalled_CAP" value="0" />
     </appSettings>
 </configuration>

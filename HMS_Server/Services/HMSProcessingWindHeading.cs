@@ -1073,14 +1073,9 @@ namespace HMS_Server
 
                 // Return data
                 outputGust.data = Math.Round(gustData.windGust, 1, MidpointRounding.AwayFromZero);
-
-                if (newWindSpd.status == DataStatus.OK && windSpdMean.status == DataStatus.OK_NA)
-                    outputGust.status = DataStatus.OK_NA;
-                else
-                    outputGust.status = newWindSpd.status;
-
-                outputGust.timestamp = newWindSpd.timestamp;
-                outputGust.sensorGroupId = newWindSpd.sensorGroupId;                
+                outputGust.status = windSpdMean.status;
+                outputGust.timestamp = windSpdMean.timestamp;
+                outputGust.sensorGroupId = windSpdMean.sensorGroupId;                
             }
         }
 

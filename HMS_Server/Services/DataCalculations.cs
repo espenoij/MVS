@@ -612,7 +612,6 @@ namespace HMS_Server
                                         // Fjerne fra verdiliste
                                         significantHeaveRateDataList.RemoveAt(0);
                                     }
-                                    //significantHeaveRateDataList.TrimExcess();
                                 }
 
                                 // Regne 2 x RMS

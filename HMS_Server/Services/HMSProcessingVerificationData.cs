@@ -5,7 +5,6 @@ namespace HMS_Server
 {
     class HMSProcessingVerificationData
     {
-        private HMSData timeId = new HMSData();
         private HMSData sensorMRU = new HMSData();
         private HMSData sensorGyro = new HMSData();
         private HMSData sensorWind = new HMSData();
@@ -18,7 +17,6 @@ namespace HMS_Server
 
             RadObservableCollection<HMSData> hmsOutputDataList = hmsOutputData.GetDataList();
 
-            hmsOutputDataList.Add(timeId);
             hmsOutputDataList.Add(sensorMRU);
             hmsOutputDataList.Add(sensorGyro);
             hmsOutputDataList.Add(sensorWind);

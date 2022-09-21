@@ -278,8 +278,12 @@ namespace HMS_Server
                 // Sjekke at input innholder reell verdi
                 if (!double.IsNaN(newData.data))
                 {
-                    // Kalkulere nye data
-                    data = dataProcess.DoProcessing(newData);
+                    if (newData.status == DataStatus.OK ||
+                        newData.status == DataStatus.OK_NA)
+                    {
+                        // Kalkulere nye data
+                        data = dataProcess.DoProcessing(newData);
+                    }
 
                     // Setter timestamp og sensorGroup lik inndata
                     timestamp = newData.timestamp;

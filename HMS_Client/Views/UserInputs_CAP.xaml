@@ -309,49 +309,49 @@
                             Height="*" />
                     </Grid.RowDefinitions>
 
-                    <DockPanel
+                    <Grid
                         Grid.Row="0">
 
-                        <Grid
-                            Grid.Row="0">
+                        <!--Helikopter heading korreksjon-->
+                        <Grid.ColumnDefinitions>
+                            <ColumnDefinition
+                                Width="*" />
+                            <ColumnDefinition
+                                Width="16*" />
+                        </Grid.ColumnDefinitions>
 
-                            <!--Helikopter heading korreksjon-->
-                            <Grid.ColumnDefinitions>
-                                <ColumnDefinition
-                                    Width="*" />
-                                <ColumnDefinition
-                                    Width="16*" />
-                            </Grid.ColumnDefinitions>
+                        <Viewbox
+                            Grid.Column="0"
+                            StretchDirection="Both"
+                            Stretch="Uniform">
 
-                            <Viewbox
-                                Grid.Column="0"
-                                StretchDirection="Both"
-                                Stretch="Uniform">
+                            <Image
+                                Source="..\Icons\outline_explore_black_48dp.png" />
 
-                                <Image
-                                    Source="..\Icons\outline_explore_black_48dp.png" />
+                        </Viewbox>
 
-                            </Viewbox>
+                        <Viewbox
+                            Grid.Column="1"
+                            StretchDirection="Both"
+                            Stretch="Uniform"
+                            HorizontalAlignment="Left">
 
-                            <Viewbox
-                                Grid.Column="1"
-                                StretchDirection="Both"
-                                Stretch="Uniform"
-                                HorizontalAlignment="Left">
+                            <telerik:Label
+                                FontSize="{StaticResource fontSizeLabel}"
+                                Content="Correct Helicopter Heading (°M)" />
 
-                                <telerik:Label
-                                    FontSize="{StaticResource fontSizeLabel}"
-                                    Content="Correct Helicopter Heading (°M)" />
+                        </Viewbox>
 
-                            </Viewbox>
+                    </Grid>
 
-                        </Grid>
+                    <Grid
+                        Grid.Row="1">
 
                         <!--Helikopter heading korreksjon-->
                         <StackPanel
                             Orientation="Horizontal"
                             HorizontalAlignment="Right">
-                            
+
                             <Viewbox
                                 HorizontalAlignment="Right"
                                 StretchDirection="Both"
@@ -381,8 +381,8 @@
                             </Viewbox>
 
                         </StackPanel>
-
-                    </DockPanel>
+                    
+                    </Grid>
 
                     <!--Helikopter heading korreksjon tekst-->
                     <Grid
