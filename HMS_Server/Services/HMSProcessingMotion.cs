@@ -374,8 +374,12 @@ namespace HMS_Server
             }
 
             // Inclination
-            UpdateInclinationData(pitchData, rollData, inclination20mMaxData, Constants.Minutes20);
-            UpdateInclinationData(pitchData, rollData, inclination3hMaxData, Constants.Hours3);
+            if (rollMax20mData.status == DataStatus.OK &&
+                pitchMax20mData.status == DataStatus.OK)
+            {
+                UpdateInclinationData(pitchData, rollData, inclination20mMaxData, Constants.Minutes20);
+                UpdateInclinationData(pitchData, rollData, inclination3hMaxData, Constants.Hours3);
+            }
 
             if (adminSettingsVM.regulationStandard == RegulationStandard.CAP)
             {
@@ -469,7 +473,7 @@ namespace HMS_Server
                 }
 
                 // Find max value
-                CalculateMSIMax(mms_msi, mms_msi_list, msiData, Constants.Minutes20);
+                CalculateMSIMax(mms_msi, mms_msi_list, msiData);
 
                 // Sjekke buffer fyllingsgrad
                 if (!adminSettingsVM.overrideMotionBuffer)
@@ -523,7 +527,7 @@ namespace HMS_Server
             significantHeaveRate20mMaxData.Clear();
         }
 
-        private void CalculateMSIMax(HMSData value, List<TimeData> dataList, HMSData maxValue, double time)
+        private void CalculateMSIMax(HMSData value, List<TimeData> dataList, HMSData maxValue)
         {
             // Først sjekke om vi har en ny verdi
             if (value.timestamp != dataList.LastOrDefault()?.timestamp)
@@ -543,15 +547,13 @@ namespace HMS_Server
                         // Sett ny max verdi
                         maxValue.data = newValueCorrR;
                     }
+                }
 
-                    // Timestamp og status
-                    maxValue.timestamp = value.timestamp;
-                    maxValue.status = value.status;
-                }
-                else
-                {
-                    maxValue.status = value.status;
-                }
+                // Timestamp
+                maxValue.timestamp = value.timestamp;
+
+                // Status
+                maxValue.status = value.status;
             }
 
             // Sjekke om vi skal ta ut gamle verdier
@@ -560,7 +562,7 @@ namespace HMS_Server
             for (int i = 0; i < dataList.Count && dataList.Count > 0; i++)
             {
                 // Time stamp eldre enn satt grense?
-                if (dataList[i]?.timestamp.AddSeconds(time) < DateTime.UtcNow)
+                if (dataList[i]?.timestamp.AddSeconds(Constants.Minutes20) < DateTime.UtcNow)
                 {
                     // Sjekke om dette var høyeste verdi
                     if (dataList[i].data == maxValue.data)
@@ -583,12 +585,12 @@ namespace HMS_Server
 
                 for (int i = 0; i < dataList.Count && !foundNewMax; i++)
                 {
-                    // Kan avslutte søket dersom vi finner en verdi like den gamle max verdien (ingen er høyere)
+                    // Kan avslutte søket dersom vi finner en verdi lik den gamle max verdien (ingen er høyere)
                     if (dataList[i]?.data == oldMaxValue)
                     {
                         maxValue.data = Math.Round(dataList[i].data * adminSettingsVM.msiCorrectionR, 1, MidpointRounding.AwayFromZero);
-                        maxValue.timestamp = dataList[i].timestamp;
-                        maxValue.status = DataStatus.OK;
+                        maxValue.timestamp = value.timestamp;
+                        maxValue.status = value.status;
 
                         foundNewMax = true;
                     }
@@ -597,22 +599,22 @@ namespace HMS_Server
                         if (dataList[i]?.data > maxValue.data)
                         {
                             maxValue.data = Math.Round(dataList[i].data * adminSettingsVM.msiCorrectionR, 1, MidpointRounding.AwayFromZero);
-                            maxValue.timestamp = dataList[i].timestamp;
-                            maxValue.status = DataStatus.OK;
+                            maxValue.timestamp = value.timestamp;
+                            maxValue.status = value.status;
                         }
                     }
                 }
             }
         }
 
-        private void MSIBufferFillCheck(List<TimeData> dataList, double targetCount, HMSData msi)
+        private void MSIBufferFillCheck(List<TimeData> dataList, double targetCount, HMSData data)
         {
-            // Hvis ikke, sjekk status, dersom OK
-            if (msi.status == DataStatus.OK)
+            // Sjekk status først, dersom OK sjekk count
+            if (data.status == DataStatus.OK)
                 // Er bufferet fyllt opp
                 if (dataList.Count < targetCount)
                     // Set OK, men ikke tilgjengelig
-                    msi.status = DataStatus.OK_NA;
+                    data.status = DataStatus.OK_NA;
         }
 
         private void CheckLimits()

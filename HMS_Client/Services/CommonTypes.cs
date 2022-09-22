@@ -130,23 +130,22 @@ public enum ValueType
     SensorWindDirection = 20,
     SensorWindSpeed = 21,
     VesselHeading = 22,
-    VesselSpeed = 23,
-    VesselCOG = 24,
-    VesselSOG = 25,
-    AccelerationX = 26,
-    AccelerationY = 27,
-    AccelerationZ = 28,
-    Wave = 29,
-    SeaTemperature = 30,
+    VesselCOG = 23,
+    VesselSOG = 24,
+    AccelerationX = 25,
+    AccelerationY = 26,
+    AccelerationZ = 27,
+    Wave = 28,
+    SeaTemperature = 29,
 
     // Database
-    Database = 31,
+    Database = 30,
 
     // Sensor Status
-    SensorMRU = 32,
-    SensorGyro = 33,
-    SensorWind = 34,
-    SensorSOGCOG = 35,
+    SensorMRU = 31,
+    SensorGyro = 32,
+    SensorWind = 33,
+    SensorSOGCOG = 34,
 
     // Ikke lagret i config fil
     // Dette er data som beregnes fra variablene over, dvs. fra sensor data

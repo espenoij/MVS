@@ -23,7 +23,7 @@ namespace HMS_Client
 
         // Helideck Status
         private HelideckStatusVM helideckStatusVM;
-        
+
         public void Init(HelideckStatusVM helideckStatusVM, Config config, SensorGroupStatus sensorStatus, UserInputsVM userInputsVM, AdminSettingsVM adminSettingsVM)
         {
             this.config = config;
@@ -79,11 +79,6 @@ namespace HMS_Client
                     OnPropertyChanged(nameof(vesselCOGString));
                 }
 
-                if (sensorStatus.TimeoutCheck(vesselSpeed))
-                {
-                    OnPropertyChanged(nameof(vesselSpeedString));
-                }
-
                 if (sensorStatus.TimeoutCheck(vesselSOG))
                 {
                     OnPropertyChanged(nameof(vesselSOGString));
@@ -97,7 +92,6 @@ namespace HMS_Client
 
                 if (sensorStatus.TimeoutCheck(helicopterHeading))
                 {
-                    OnPropertyChanged(nameof(helicopterHeadingString));
                     OnPropertyChanged(nameof(helicopterRotation));
                 }
 
@@ -135,7 +129,6 @@ namespace HMS_Client
 
             vesselHeading = clientSensorList.GetData(ValueType.VesselHeading);
             vesselCOG = clientSensorList.GetData(ValueType.VesselCOG);
-            vesselSpeed = clientSensorList.GetData(ValueType.VesselSpeed);
             vesselSOG = clientSensorList.GetData(ValueType.VesselSOG);
 
             helideckHeading = clientSensorList.GetData(ValueType.HelideckHeading);
@@ -677,55 +670,6 @@ namespace HMS_Client
         }
 
         /////////////////////////////////////////////////////////////////////////////
-        // Vessel Speed
-        /////////////////////////////////////////////////////////////////////////////
-        private HMSData _vesselSpeed { get; set; } = new HMSData();
-        public HMSData vesselSpeed
-        {
-            get
-            {
-                return _vesselSpeed;
-            }
-            set
-            {
-                if (value != null &&
-                    _vesselSpeed != null)
-                {
-                    if (value.data != _vesselSpeed.data ||
-                        value.timestamp != _vesselSpeed.timestamp)
-                    {
-                        _vesselSpeed.Set(value);
-
-                        OnPropertyChanged(nameof(vesselSpeedString));
-                    }
-                }
-            }
-        }
-
-        public string vesselSpeedString
-        {
-            get
-            {
-                if (vesselSpeed != null)
-                {
-                    // Sjekke om data er gyldig
-                    if (vesselSpeed.status == DataStatus.OK)
-                    {
-                        return vesselSpeed.data.ToString("0.0");
-                    }
-                    else
-                    {
-                        return Constants.NotAvailable;
-                    }
-                }
-                else
-                {
-                    return Constants.NotAvailable;
-                }
-            }
-        }
-
-        /////////////////////////////////////////////////////////////////////////////
         // Vessel SOG
         /////////////////////////////////////////////////////////////////////////////
         private HMSData _vesselSOG { get; set; } = new HMSData();
@@ -1063,7 +1007,6 @@ namespace HMS_Client
                     {
                         _helicopterHeading.Set(value);
 
-                        OnPropertyChanged(nameof(helicopterHeadingString));
                         OnPropertyChanged(nameof(helicopterRotation));
                     }
                 }
@@ -1071,24 +1014,8 @@ namespace HMS_Client
         }
 
         /////////////////////////////////////////////////////////////////////////////
-        // Helicopter Heading / Rotasjon
+        // Helicopter Rotasjon
         /////////////////////////////////////////////////////////////////////////////
-        public string helicopterHeadingString
-        {
-            get
-            {
-                if (userInputsVM.displayMode == DisplayMode.OnDeck &&
-                    helicopterHeading.status == DataStatus.OK)
-                {
-                    return string.Format("{0}°", helicopterHeading.data.ToString("000"));
-                }
-                else
-                {
-                    return Constants.NotAvailable;
-                }
-            }
-        }
-
         public double helicopterRotation
         {
             get
