@@ -325,6 +325,7 @@ namespace HMS_Server
 
             // Sjekke status: Wind
             if ((adminSettingsVM.statusWindEnabled && hmsInputDataList.GetData(ValueType.SensorWind).data != 1) ||
+                (adminSettingsVM.statusSOGCOGEnabled && hmsInputDataList.GetData(ValueType.SensorSOGCOG)?.data != 1) ||
                 (adminSettingsVM.statusGyroEnabled && hmsInputDataList.GetData(ValueType.SensorGyro).data != 1 && adminSettingsVM.windDirRef == DirectionReference.VesselHeading))
             {
                 inputSensorWindDirection.status = DataStatus.TIMEOUT_ERROR;

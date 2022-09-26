@@ -188,14 +188,16 @@ namespace HMS_Client
                 int dataCounter = 0;
                 int subsetCounter = 0;
 
-                for (; subsetCounter < dispList.Count && dataCounter < list.Count; subsetCounter++)               
+                for (; subsetCounter < dispList.Count; subsetCounter++)               
                 {
                     bool nextSubset = false;
 
                     for (; !nextSubset && dataCounter < list.Count; dataCounter++)
                     {
                         // Har vi kommet til nytt subSet?
-                        if (list[dataCounter].timestamp >= subsetStartTime.AddMilliseconds(subsetTime))
+                        // Eller siste data i status listen
+                        if (list[dataCounter].timestamp >= subsetStartTime.AddMilliseconds(subsetTime) ||
+                            dataCounter == list.Count - 1)
                         {
                             // Sette status i display listen
                             dispList[subsetCounter] = status;
