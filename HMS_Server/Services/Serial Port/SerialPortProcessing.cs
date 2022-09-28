@@ -99,7 +99,7 @@ namespace HMS_Server
                                         break;
 
                                     case InputDataType.Binary:
-                                        // Sendere hele pakken videre
+                                        // Sender hele pakken videre
                                         packetString.Add(dataString);
                                         break;
                                 }

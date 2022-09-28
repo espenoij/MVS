@@ -1584,6 +1584,19 @@ namespace HMS_Server
                             break;
 
                         ////////////////////////////////////////////////////////////////////////////////////////////////
+                        /// Status from Bit
+                        ////////////////////////////////////////////////////////////////////////////////////////////////
+                        case CalculationType.StatusBit:
+
+                            // Sjekke om string er numerisk
+                            if (double.TryParse(newData, Constants.numberStyle, Constants.cultureInfo, out value))
+                            {
+                                result = ((int)value >> (int)parameter) & 1;
+                            }
+
+                            break;
+
+                        ////////////////////////////////////////////////////////////////////////////////////////////////
                         /// Ingen kalkulasjoner
                         ////////////////////////////////////////////////////////////////////////////////////////////////
                         default:
@@ -1765,6 +1778,8 @@ namespace HMS_Server
         Period,
         [Description("Fixed Value")]
         FixedValue,
+        [Description("Status from Bit")]
+        StatusBit,
 
         //[Description("NWS Codes")]
         //NWSCodes,

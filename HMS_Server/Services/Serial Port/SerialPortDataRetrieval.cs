@@ -1,6 +1,7 @@
 ﻿using System;
 using System.Collections.Generic;
 using System.IO.Ports;
+using System.Linq;
 using System.Text.RegularExpressions;
 using Telerik.Windows.Data;
 
@@ -27,6 +28,9 @@ namespace HMS_Server
 
         // Admin Settings
         private AdminSettingsVM adminSettingsVM;
+
+        // Inn-data buffer
+        private string inputData;
 
         public SerialPortDataRetrieval(Config config, RadObservableCollection<SensorData> sensorDataList, DatabaseHandler database, ErrorHandler errorHandler, AdminSettingsVM adminSettingsVM)
         {
@@ -75,7 +79,7 @@ namespace HMS_Server
             SerialPort serialPort = sender as SerialPort;
 
             // Lese fra port
-            string inputData = serialPort?.ReadExisting();
+            inputData += serialPort?.ReadExisting();
 
             // Finne frem hvor vi skal lagre lest data fra serie port
             SerialPortData serialPortData = serialPortDataReceivedList.Find(x => x.portName == serialPort.PortName);
@@ -213,9 +217,30 @@ namespace HMS_Server
                                 // Trinn 2: Prosessere raw data, finne pakker
                                 List<string> incomingPackets = process.FindSelectedPackets(serialPortData.data);
 
+                                // Dersom vi fant pakker -> slette input buffer
+                                if (incomingPackets.Count > 0)
+                                {
+                                    inputData = String.Empty;
+                                }
+                                // Må også begrense hvor my data som skal leses i input buffer når vi ikke finner packets
+                                // slik at den ikke fylles i det uendelige.
+                                else
+                                {
+                                    if (inputData.Count() > 2048) // 2KB limit per packet
+                                        inputData = String.Empty;
+                                }
+
                                 // Prosessere pakkene som ble funnet
                                 foreach (var packet in incomingPackets)
                                 {
+                                    // Test
+                                    errorHandler.Insert(
+                                        new ErrorMessage(
+                                            DateTime.UtcNow,
+                                            ErrorMessageType.SerialPort,
+                                            ErrorMessageCategory.None,
+                                            string.Format("DataProcessing packet: {0}", packet)));
+
                                     // Trinn 3: Finne datafeltene i pakke
                                     PacketDataFields packetDataFields = process.FindPacketDataFields(packet);
 

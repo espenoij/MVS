@@ -74,11 +74,11 @@
 
                             <Grid.ColumnDefinitions>
                                 <ColumnDefinition
-                                    Width="3*" />
+                                    Width="7*" />
                                 <ColumnDefinition
-                                    Width="2*" />
+                                    Width="4*" />
                                 <ColumnDefinition
-                                    Width="3*" />
+                                    Width="7*" />
                             </Grid.ColumnDefinitions>
 
                             <Viewbox
@@ -107,11 +107,11 @@
 
                             <Grid.ColumnDefinitions>
                                 <ColumnDefinition
-                                    Width="2*" />
+                                    Width="4*" />
                                 <ColumnDefinition
-                                    Width="3*" />
+                                    Width="4*" />
                                 <ColumnDefinition
-                                    Width="2*" />
+                                    Width="4*" />
                             </Grid.ColumnDefinitions>
 
                             <Viewbox

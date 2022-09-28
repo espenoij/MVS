@@ -67,6 +67,9 @@ namespace HMS_Server
         // View Model
         private SerialPortSetupWindowVM serialPortSetupWindowVM;
 
+        // Input data
+        private string inputData = string.Empty;
+
         public SerialPortSetupWindow(SensorData sensorDataItem, RadObservableCollection<SensorData> sensorDataList, Config config, ErrorHandler errorHandler, AdminSettingsVM adminSettingsVM)
         {
             InitializeComponent();
@@ -547,13 +550,11 @@ namespace HMS_Server
         {
             // Trinn 1: Lese fra port
             //////////////////////////////////////////////////////////////////////////////
-            string inputData = string.Empty;
-
             switch (sensorData.serialPort.inputType)
             {
                 case InputDataType.Text:
                     {
-                        inputData = serialPort.ReadExisting();
+                        inputData += serialPort.ReadExisting();
 
                         //// Alternativ metode
                         //int bytes = serialPort.BytesToRead;
@@ -620,6 +621,19 @@ namespace HMS_Server
                         // Trinn 2: Prosessere raw data, finne pakker
                         //////////////////////////////////////////////////////////////////////////////
                         List<string> incomingPackets = process.FindSelectedPackets(inputData);
+
+                        // Dersom vi fant pakker -> slette input buffer
+                        if (incomingPackets.Count > 0)
+                        {
+                            inputData = String.Empty;
+                        }
+                        // Må også begrense hvor my data som skal leses i input buffer når vi ikke finner packets
+                        // slik at den ikke fylles i det uendelige.
+                        else
+                        {
+                            if (inputData.Count() > 2048) // 2KB limit per packet
+                                inputData = String.Empty;
+                        }
 
                         // Prosessere pakkene som ble funnet
                         foreach (var packet in incomingPackets)
