@@ -1,6 +1,0 @@
-<?xml version="1.0" encoding="utf-8"?>
-<configuration>
-    <appSettings>
-        <add key="HelideckHeadingOffset" value="360" />
-        <add key="MSICorrectionR" value="1" />
-        <add key="WindSamplesPerTransmission" value="1" />

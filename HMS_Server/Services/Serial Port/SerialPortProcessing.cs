@@ -135,13 +135,13 @@ namespace HMS_Server
                 {
                     string trimmedDataString = dataString;
 
-                    // Trimme bort start
-                    if (packetHeader != string.Empty && inputType == InputDataType.Text)
-                        trimmedDataString = trimmedDataString.Substring(packetHeader.Length);
+                    //// Trimme bort start
+                    //if (packetHeader != string.Empty && inputType == InputDataType.Text)
+                    //    trimmedDataString = trimmedDataString.Substring(packetHeader.Length);
 
-                    // Trimme bort evt delimiter etter start
-                    if (trimmedDataString.StartsWith(delimiter[0].ToString(), StringComparison.Ordinal) && inputType == InputDataType.Text)
-                        trimmedDataString = trimmedDataString.Substring(delimiter[0].ToString().Length);
+                    //// Trimme bort evt delimiter etter start
+                    //if (trimmedDataString.StartsWith(delimiter[0].ToString(), StringComparison.Ordinal) && inputType == InputDataType.Text)
+                    //    trimmedDataString = trimmedDataString.Substring(delimiter[0].ToString().Length);
 
                     // Trimme bort end
                     if (!string.IsNullOrEmpty(packetEnd) && !string.IsNullOrEmpty(trimmedDataString) && inputType == InputDataType.Text)
