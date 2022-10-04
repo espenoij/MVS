@@ -55,7 +55,7 @@ namespace HMS_Client
         private WindHeadingChangeVM windHeadingChangeVM = new WindHeadingChangeVM();
         private HelideckStatusVM helideckStatusVM = new HelideckStatusVM();
         private MeteorologicalVM meteorologicalVM = new MeteorologicalVM();
-        private SensorStatusDisplayVM sensorStatusVM = new SensorStatusDisplayVM();
+        private SensorStatusVM sensorStatusVM = new SensorStatusVM();
         private WindHeadingVM windHeadingVM = new WindHeadingVM();
         private AdminSettingsVM adminSettingsVM = new AdminSettingsVM();
         private HelideckReportVM helideckReportVM = new HelideckReportVM();
@@ -217,7 +217,8 @@ namespace HMS_Client
                 ucHelideckReport_NOROG.Init(helideckReportVM, config, adminSettingsVM);
 
                 // Sensor Status Display
-                ucSensorStatus_NOROG.Init(sensorStatusVM);
+                ucSensorStatusDisplay_NOROG.Init(sensorStatusVM);
+                ucSensorStatusDisplay_CAP.Visibility = Visibility.Collapsed;
             }
             else
             if (adminSettingsVM.regulationStandard == RegulationStandard.CAP)
@@ -275,7 +276,8 @@ namespace HMS_Client
                 ucHelideckReport_CAP.Init(helideckReportVM, config, adminSettingsVM);
 
                 // Sensor Status Display
-                ucSensorStatus_CAP.Init(sensorStatusVM);
+                ucSensorStatusDisplay_CAP.Init(sensorStatusVM);
+                ucSensorStatusDisplay_NOROG.Visibility = Visibility.Collapsed;
             }
 
             // Wind & Heading

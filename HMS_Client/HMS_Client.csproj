@@ -281,8 +281,8 @@
     <Compile Include="Views\Information_CAP.xaml.cs">
       <DependentUpon>Information_CAP.xaml</DependentUpon>
     </Compile>
-    <Compile Include="Views\SensorStatusDisplay_CAP.xaml.cs">
-      <DependentUpon>SensorStatusDisplay_CAP.xaml</DependentUpon>
+    <Compile Include="Views\SensorStatusDisplay.xaml.cs">
+      <DependentUpon>SensorStatusDisplay.xaml</DependentUpon>
     </Compile>
     <Compile Include="Views\EMSWindHeading.xaml.cs">
       <DependentUpon>EMSWindHeading.xaml</DependentUpon>
@@ -425,9 +425,6 @@
       <DependentUpon>Meteorological.xaml</DependentUpon>
     </Compile>
     <Compile Include="ViewModels\MeteorologicalVM.cs" />
-    <Compile Include="Views\SensorStatusDisplay_NOROG.xaml.cs">
-      <DependentUpon>SensorStatusDisplay_NOROG.xaml</DependentUpon>
-    </Compile>
     <Compile Include="ViewModels\SensorStatusDisplayVM.cs" />
     <Compile Include="Views\UserInputs_NOROG.xaml.cs">
       <DependentUpon>UserInputs_NOROG.xaml</DependentUpon>
@@ -515,7 +512,7 @@
       <SubType>Designer</SubType>
       <Generator>MSBuild:Compile</Generator>
     </Page>
-    <Page Include="Views\SensorStatusDisplay_CAP.xaml">
+    <Page Include="Views\SensorStatusDisplay.xaml">
       <Generator>MSBuild:Compile</Generator>
       <SubType>Designer</SubType>
     </Page>
@@ -596,10 +593,6 @@
       <Generator>MSBuild:Compile</Generator>
     </Page>
     <Page Include="Views\Meteorological.xaml">
-      <SubType>Designer</SubType>
-      <Generator>MSBuild:Compile</Generator>
-    </Page>
-    <Page Include="Views\SensorStatusDisplay_NOROG.xaml">
       <SubType>Designer</SubType>
       <Generator>MSBuild:Compile</Generator>
     </Page>

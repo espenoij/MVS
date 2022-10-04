@@ -5,14 +5,14 @@ namespace HMS_Client
     /// <summary>
     /// Interaction logic for SensorStatusDisplay_CAP.xaml
     /// </summary>
-    public partial class SensorStatusDisplay_CAP : UserControl
+    public partial class SensorStatusDisplay : UserControl
     {
-        public SensorStatusDisplay_CAP()
+        public SensorStatusDisplay()
         {
             InitializeComponent();
         }
 
-        public void Init(SensorStatusDisplayVM sensorStatusVM)
+        public void Init(SensorStatusVM sensorStatusVM)
         {
             DataContext = sensorStatusVM;
 

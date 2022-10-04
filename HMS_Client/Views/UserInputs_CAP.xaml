@@ -83,7 +83,6 @@
                                 HorizontalAlignment="Right">
 
                                 <telerik:RadComboBox
-                                    Grid.Column="1"
                                     Name="cboHelicopterType"
                                     Text="{Binding Path=helicopterTypeString}"
                                     FontSize="{StaticResource fontSizeData}"

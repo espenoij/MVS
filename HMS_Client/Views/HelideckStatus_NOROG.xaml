@@ -13,7 +13,7 @@
     <UserControl.Resources>
 
         <sys:Double
-            x:Key="circleSizeLarge">30</sys:Double>
+            x:Key="circleSizeLarge">40</sys:Double>
         <sys:Double
             x:Key="circleSizeSmall">25</sys:Double>
 
@@ -22,21 +22,21 @@
             TargetType="Ellipse">
             <Style.Triggers>
                 <DataTrigger
-                    Binding="{Binding Path=helideckStatus}"
+                    Binding="{Binding Path=helideckLightStatus}"
                     Value="GREEN">
                     <Setter
                         Property="Fill"
                         Value="{StaticResource ColorGreen}" />
                 </DataTrigger>
                 <DataTrigger
-                    Binding="{Binding Path=helideckStatus}"
+                    Binding="{Binding Path=helideckLightStatus}"
                     Value="RED">
                     <Setter
                         Property="Fill"
                         Value="{StaticResource ColorBackgroundSeparator}" />
                 </DataTrigger>
                 <DataTrigger
-                    Binding="{Binding Path=helideckStatus}"
+                    Binding="{Binding Path=helideckLightStatus}"
                     Value="OFF">
                     <Setter
                         Property="Fill"
@@ -50,21 +50,21 @@
             TargetType="Ellipse">
             <Style.Triggers>
                 <DataTrigger
-                    Binding="{Binding Path=helideckStatus}"
+                    Binding="{Binding Path=helideckLightStatus}"
                     Value="RED">
                     <Setter
                         Property="Fill"
                         Value="{StaticResource ColorRed}" />
                 </DataTrigger>
                 <DataTrigger
-                    Binding="{Binding Path=helideckStatus}"
+                    Binding="{Binding Path=helideckLightStatus}"
                     Value="GREEN">
                     <Setter
                         Property="Fill"
                         Value="{StaticResource ColorBackgroundSeparator}" />
                 </DataTrigger>
                 <DataTrigger
-                    Binding="{Binding Path=helideckStatus}"
+                    Binding="{Binding Path=helideckLightStatus}"
                     Value="OFF">
                     <Setter
                         Property="Fill"
@@ -92,7 +92,7 @@
                     <RowDefinition
                         Height="*" />
                 </Grid.RowDefinitions>
-
+              
                 <Viewbox
                     Grid.Row="0"
                     StretchDirection="Both"
@@ -118,74 +118,6 @@
                         Style="{StaticResource TrafficLightGreen}" />
 
                 </Viewbox>
-
-                <!--<Separator
-                    Grid.Row="1"
-                    Grid.Column="0"
-                    VerticalAlignment="Bottom" />-->
-
-                <!--Prediction-->
-                <!--<Grid
-                    Grid.Row="2">
-
-                    <Grid.RowDefinitions>
-                        <RowDefinition
-                            Height="*" />
-                        <RowDefinition
-                            Height="*" />
-                    </Grid.RowDefinitions>
-
-                    <telerik:Label
-                        Content="15 minutes"
-                        VerticalAlignment="Center"
-                        HorizontalAlignment="Center" />
-
-                    <Grid
-                        Grid.Row="1">
-
-                        <Grid.ColumnDefinitions>
-                            <ColumnDefinition
-                                Width="*" />
-                            <ColumnDefinition
-                                Width="*" />
-                            <ColumnDefinition
-                                Width="*" />
-                        </Grid.ColumnDefinitions>
-
-                        <Ellipse
-                            Grid.Column="0"
-                            Height="{StaticResource circleSizeSmall}"
-                            Width="{StaticResource circleSizeSmall}"
-                            Margin="8"
-                            Stretch="Uniform"
-                            Fill="{StaticResource ColorGreen}"
-                            StrokeThickness="0"
-                            Stroke="Gray"
-                            HorizontalAlignment="Center"
-                            VerticalAlignment="Center" />
-
-                        <Image
-                            Grid.Column="1"
-                            Width="24"
-                            Source="..\Icons\outline_east_black_48dp.png"
-                            HorizontalAlignment="Center"
-                            VerticalAlignment="Center" />
-
-                        <Ellipse
-                            Grid.Column="2"
-                            Height="{StaticResource circleSizeSmall}"
-                            Width="{StaticResource circleSizeSmall}"
-                            Stretch="Uniform"
-                            Fill="{StaticResource ColorRed}"
-                            StrokeThickness="0"
-                            Stroke="Gray"
-                            HorizontalAlignment="Center"
-                            VerticalAlignment="Center" />
-
-                    </Grid>
-
-                </Grid>-->
-
 
             </Grid>
 

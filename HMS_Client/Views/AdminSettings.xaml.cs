@@ -61,6 +61,9 @@ namespace HMS_Client
             {
                 lbEnableReportEmail.IsEnabled = false;
                 chkEnableReportEmail.IsEnabled = false;
+
+                lbHelideckCategory_CAP.IsEnabled = false;
+                cboHelideckCategory_CAP.IsEnabled = false;
             }
 
             // General Settings: Regulation Standard

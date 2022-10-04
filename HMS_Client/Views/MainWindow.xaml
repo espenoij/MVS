@@ -97,11 +97,11 @@
 
                                 <Grid.RowDefinitions>
                                     <RowDefinition
-                                        Height="15*" />
+                                        Height="10*" />
                                     <RowDefinition
-                                        Height="12*" />
+                                        Height="6*" />
                                     <RowDefinition
-                                        Height="9*" />
+                                        Height="13*" />
                                 </Grid.RowDefinitions>
 
                                 <!--Basic Information NOROG-->
@@ -116,9 +116,9 @@
                                     x:Name="ucUserInputs_NOROG" />
 
                                 <!--Sensor Status-->
-                                <uc:SensorStatusDisplay_NOROG
+                                <uc:SensorStatusDisplay
                                     Grid.Row="2"
-                                    x:Name="ucSensorStatus_NOROG" />
+                                    x:Name="ucSensorStatusDisplay_NOROG" />
 
                             </Grid>
 
@@ -156,9 +156,9 @@
                                     Visibility="Visible" />
 
                                 <!--Sensor Status-->
-                                <uc:SensorStatusDisplay_CAP
+                                <uc:SensorStatusDisplay
                                     Grid.Row="2"
-                                    x:Name="ucSensorStatus_CAP" />
+                                    x:Name="ucSensorStatusDisplay_CAP" />
 
                             </Grid>
 
@@ -179,7 +179,7 @@
                                     <ColumnDefinition
                                         Width="7*" />
                                     <ColumnDefinition
-                                        Width="2*" />
+                                        Width="3*" />
                                 </Grid.ColumnDefinitions>
 
                                 <!--Helideck Motion Limits NOROG-->

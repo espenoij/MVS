@@ -16,7 +16,7 @@
 		<add key="OutgoingEmailServer" value="smtp.helifuel.no" />
 	</appSettings>
 	<Header>
-  <add key="nextID" value="61" />
+  <add key="nextID" value="66" />
  </Header>
 
 	<SensorData>
@@ -25,12 +25,12 @@
     saveToDatabase="False" saveFreq="Sensor">
     <serialPort portName="COM14" baudRate="9600" dataBits="8" stopBits="One"
      parity="None" handshake="None" packetHeader="$GPGGA" inputType="Text"
-     totalBytes="1" binarySigned="False" packetEnd="\r\n" packetDelimiter=","
-     packetCombineFields="Odd" fixedPosData="False" fixedPosStart="0"
-     fixedPosTotal="0" dataField="1" decimalSeparator="Point" autoExtractValue="False"
-     calculationType1="GPSPosition" calculationParameter1="0" calculationType2="None"
-     calculationParameter2="0" calculationType3="None" calculationParameter3="0"
-     calculationType4="None" calculationParameter4="0" />
+     binaryType="Byte" packetEnd="\r\n" packetDelimiter="," packetCombineFields="Even"
+     fixedPosData="False" fixedPosStart="0" fixedPosTotal="0" dataField="1"
+     decimalSeparator="Point" autoExtractValue="False" calculationType1="GPSPosition"
+     calculationParameter1="0" calculationType2="None" calculationParameter2="0"
+     calculationType3="None" calculationParameter3="0" calculationType4="None"
+     calculationParameter4="0" />
     <modbus portName="" baudRate="" dataBits="" stopBits="" parity=""
      handshake="" tcpAddress="" tcpPort="" slaveID="" startAddress=""
      totalAddresses="" dataAddress="" calculationType1="" calculationParameter1=""
@@ -46,12 +46,12 @@
     saveToDatabase="False" saveFreq="Sensor">
     <serialPort portName="COM14" baudRate="9600" dataBits="8" stopBits="One"
      parity="None" handshake="None" packetHeader="$GPGGA" inputType="Text"
-     totalBytes="1" binarySigned="False" packetEnd="\r\n" packetDelimiter=","
-     packetCombineFields="Odd" fixedPosData="False" fixedPosStart="0"
-     fixedPosTotal="0" dataField="2" decimalSeparator="Point" autoExtractValue="False"
-     calculationType1="GPSPosition" calculationParameter1="0" calculationType2="None"
-     calculationParameter2="0" calculationType3="None" calculationParameter3="0"
-     calculationType4="None" calculationParameter4="0" />
+     binaryType="Byte" packetEnd="\r\n" packetDelimiter="," packetCombineFields="Even"
+     fixedPosData="False" fixedPosStart="0" fixedPosTotal="0" dataField="2"
+     decimalSeparator="Point" autoExtractValue="False" calculationType1="GPSPosition"
+     calculationParameter1="0" calculationType2="None" calculationParameter2="0"
+     calculationType3="None" calculationParameter3="0" calculationType4="None"
+     calculationParameter4="0" />
     <modbus portName="" baudRate="" dataBits="" stopBits="" parity=""
      handshake="" tcpAddress="" tcpPort="" slaveID="" startAddress=""
      totalAddresses="" dataAddress="" calculationType1="" calculationParameter1=""
@@ -67,10 +67,10 @@
     saveToDatabase="False" saveFreq="Sensor">
     <serialPort portName="COM20" baudRate="9600" dataBits="8" stopBits="One"
      parity="None" handshake="None" packetHeader="$PSMCC" inputType="Text"
-     totalBytes="1" binarySigned="False" packetEnd="\r\n" packetDelimiter=","
-     packetCombineFields="None" fixedPosData="False" fixedPosStart="0"
-     fixedPosTotal="0" dataField="0" decimalSeparator="Point" autoExtractValue="False"
-     calculationType1="Division" calculationParameter1="30000" calculationType2="RoundingDecimals"
+     binaryType="Byte" packetEnd="\r\n" packetDelimiter="," packetCombineFields="None"
+     fixedPosData="False" fixedPosStart="0" fixedPosTotal="0" dataField="1"
+     decimalSeparator="Point" autoExtractValue="False" calculationType1="Division"
+     calculationParameter1="30000" calculationType2="RoundingDecimals"
      calculationParameter2="1" calculationType3="None" calculationParameter3="0"
      calculationType4="None" calculationParameter4="0" />
    </sensor>
@@ -78,10 +78,10 @@
     saveToDatabase="False" saveFreq="Sensor">
     <serialPort portName="COM20" baudRate="9600" dataBits="8" stopBits="One"
      parity="None" handshake="None" packetHeader="$PSMCC" inputType="Text"
-     totalBytes="1" binarySigned="False" packetEnd="\r\n" packetDelimiter=","
-     packetCombineFields="None" fixedPosData="False" fixedPosStart="0"
-     fixedPosTotal="0" dataField="1" decimalSeparator="Point" autoExtractValue="False"
-     calculationType1="Division" calculationParameter1="30000" calculationType2="RoundingDecimals"
+     binaryType="Byte" packetEnd="\r\n" packetDelimiter="," packetCombineFields="None"
+     fixedPosData="False" fixedPosStart="0" fixedPosTotal="0" dataField="2"
+     decimalSeparator="Point" autoExtractValue="False" calculationType1="Division"
+     calculationParameter1="30000" calculationType2="RoundingDecimals"
      calculationParameter2="1" calculationType3="None" calculationParameter3="0"
      calculationType4="None" calculationParameter4="0" />
    </sensor>
@@ -89,367 +89,258 @@
     saveToDatabase="True" saveFreq="Sensor">
     <serialPort portName="COM4" baudRate="9600" dataBits="8" stopBits="One"
      parity="None" handshake="None" packetHeader=":" inputType="Text"
-     totalBytes="1" binarySigned="False" packetEnd="\r\n" packetDelimiter="-"
-     packetCombineFields="None" fixedPosData="True" fixedPosStart="7"
-     fixedPosTotal="6" dataField="0" decimalSeparator="Point" autoExtractValue="True"
-     calculationType1="Division" calculationParameter1="500" calculationType2="None"
-     calculationParameter2="1" calculationType3="None" calculationParameter3="0"
-     calculationType4="None" calculationParameter4="0" />
+     binaryType="Byte" packetEnd="\r\n" packetDelimiter="-" packetCombineFields="None"
+     fixedPosData="True" fixedPosStart="15" fixedPosTotal="6" dataField="0"
+     decimalSeparator="Point" autoExtractValue="True" calculationType1="Division"
+     calculationParameter1="500" calculationType2="None" calculationParameter2="1"
+     calculationType3="None" calculationParameter3="0" calculationType4="None"
+     calculationParameter4="0" />
    </sensor>
    <sensor id="23" type="SerialPort" name="Visibility: Distance"
     description="(description)" saveToDatabase="False" saveFreq="Sensor">
     <serialPort portName="COM12" baudRate="9600" dataBits="8" stopBits="One"
      parity="None" handshake="None" packetHeader="\u0001PW" inputType="Text"
-     totalBytes="1" binarySigned="False" packetEnd="\u0003\r\n" packetDelimiter="\u0020"
+     binaryType="Byte" packetEnd="\u0003\r\n" packetDelimiter="\u0020"
      packetCombineFields="None" fixedPosData="False" fixedPosStart="20"
-     fixedPosTotal="6" dataField="5" decimalSeparator="Point" autoExtractValue="True"
+     fixedPosTotal="6" dataField="6" decimalSeparator="Point" autoExtractValue="True"
      calculationType1="Multiplication" calculationParameter1="10"
      calculationType2="None" calculationParameter2="0" calculationType3="None"
      calculationParameter3="0" calculationType4="None" calculationParameter4="0" />
-    <modbus portName="" baudRate="" dataBits="" stopBits="" parity=""
-     handshake="" tcpAddress="" tcpPort="" slaveID="" startAddress=""
-     totalAddresses="" dataAddress="" calculationType1="" calculationParameter1=""
-     calculationType2="" calculationParameter2="" calculationType3=""
-     calculationParameter3="" calculationType4="" calculationParameter4="" />
-    <fileReader fileFolder="" fileName="" readFrequency="" delimiter=""
-     fixedPosData="" fixedPosStart="" fixedPosTotal="" dataField=""
-     decimalSeparator="" autoExtractValue="" calculationType1="" calculationParameter1=""
-     calculationType2="" calculationParameter2="" calculationType3=""
-     calculationParameter3="" calculationType4="" calculationParameter4="" />
    </sensor>
    <sensor id="24" type="SerialPort" name="Air Data: Air Pressure"
     description="(description)" saveToDatabase="False" saveFreq="Sensor">
     <serialPort portName="COM10" baudRate="9600" dataBits="8" stopBits="One"
      parity="None" handshake="None" packetHeader="0R2" inputType="Text"
-     totalBytes="1" binarySigned="False" packetEnd="\r\n" packetDelimiter="="
-     packetCombineFields="None" fixedPosData="False" fixedPosStart="0"
-     fixedPosTotal="0" dataField="4" decimalSeparator="Point" autoExtractValue="True"
-     calculationType1="Division" calculationParameter1="5" calculationType2="RoundingDecimals"
+     binaryType="Byte" packetEnd="\r\n" packetDelimiter="," packetCombineFields="None"
+     fixedPosData="False" fixedPosStart="0" fixedPosTotal="0" dataField="4"
+     decimalSeparator="Point" autoExtractValue="True" calculationType1="Division"
+     calculationParameter1="5" calculationType2="RoundingDecimals"
      calculationParameter2="1" calculationType3="None" calculationParameter3="0"
      calculationType4="None" calculationParameter4="0" />
-    <modbus portName="" baudRate="" dataBits="" stopBits="" parity=""
-     handshake="" tcpAddress="" tcpPort="" slaveID="" startAddress=""
-     totalAddresses="" dataAddress="" calculationType1="" calculationParameter1=""
-     calculationType2="" calculationParameter2="" calculationType3=""
-     calculationParameter3="" calculationType4="" calculationParameter4="" />
-    <fileReader fileFolder="" fileName="" readFrequency="" delimiter=""
-     fixedPosData="" fixedPosStart="" fixedPosTotal="" dataField=""
-     decimalSeparator="" autoExtractValue="" calculationType1="" calculationParameter1=""
-     calculationType2="" calculationParameter2="" calculationType3=""
-     calculationParameter3="" calculationType4="" calculationParameter4="" />
    </sensor>
    <sensor id="25" type="SerialPort" name="Air Data: Air Temperature"
     description="(description)" saveToDatabase="False" saveFreq="Sensor">
     <serialPort portName="COM10" baudRate="9600" dataBits="8" stopBits="One"
      parity="None" handshake="None" packetHeader="0R2" inputType="Text"
-     totalBytes="1" binarySigned="False" packetEnd="\r\n" packetDelimiter="="
-     packetCombineFields="None" fixedPosData="False" fixedPosStart="0"
-     fixedPosTotal="0" dataField="1" decimalSeparator="Point" autoExtractValue="True"
-     calculationType1="Division" calculationParameter1="100" calculationType2="None"
-     calculationParameter2="0" calculationType3="None" calculationParameter3="0"
-     calculationType4="None" calculationParameter4="0" />
-    <modbus portName="" baudRate="" dataBits="" stopBits="" parity=""
-     handshake="" tcpAddress="" tcpPort="" slaveID="" startAddress=""
-     totalAddresses="" dataAddress="" calculationType1="" calculationParameter1=""
-     calculationType2="" calculationParameter2="" calculationType3=""
-     calculationParameter3="" calculationType4="" calculationParameter4="" />
-    <fileReader fileFolder="" fileName="" readFrequency="" delimiter=""
-     fixedPosData="" fixedPosStart="" fixedPosTotal="" dataField=""
-     decimalSeparator="" autoExtractValue="" calculationType1="" calculationParameter1=""
-     calculationType2="" calculationParameter2="" calculationType3=""
-     calculationParameter3="" calculationType4="" calculationParameter4="" />
+     binaryType="Byte" packetEnd="\r\n" packetDelimiter="," packetCombineFields="None"
+     fixedPosData="False" fixedPosStart="0" fixedPosTotal="0" dataField="1"
+     decimalSeparator="Point" autoExtractValue="True" calculationType1="Division"
+     calculationParameter1="100" calculationType2="None" calculationParameter2="0"
+     calculationType3="None" calculationParameter3="0" calculationType4="None"
+     calculationParameter4="0" />
    </sensor>
    <sensor id="27" type="SerialPort" name="Weather Information"
     description="METAR weather condition code string" saveToDatabase="False"
     saveFreq="Sensor">
     <serialPort portName="COM16" baudRate="9600" dataBits="8" stopBits="One"
      parity="None" handshake="None" packetHeader="\u0001FD A\u0002"
-     inputType="Text" totalBytes="1" binarySigned="False" packetEnd=""
-     packetDelimiter="" packetCombineFields="None" fixedPosData="True"
-     fixedPosStart="78" fixedPosTotal="5" dataField="0" decimalSeparator="Point"
-     autoExtractValue="False" calculationType1="METARCodes" calculationParameter1="0"
-     calculationType2="None" calculationParameter2="0" calculationType3="None"
-     calculationParameter3="0" calculationType4="None" calculationParameter4="0" />
-    <modbus portName="" baudRate="" dataBits="" stopBits="" parity=""
-     handshake="" tcpAddress="" tcpPort="" slaveID="" startAddress=""
-     totalAddresses="" dataAddress="" calculationType1="" calculationParameter1=""
-     calculationType2="" calculationParameter2="" calculationType3=""
-     calculationParameter3="" calculationType4="" calculationParameter4="" />
-    <fileReader fileFolder="" fileName="" readFrequency="" delimiter=""
-     fixedPosData="" fixedPosStart="" fixedPosTotal="" dataField=""
-     decimalSeparator="" autoExtractValue="" calculationType1="" calculationParameter1=""
-     calculationType2="" calculationParameter2="" calculationType3=""
-     calculationParameter3="" calculationType4="" calculationParameter4="" />
+     inputType="Text" binaryType="Byte" packetEnd="" packetDelimiter=""
+     packetCombineFields="None" fixedPosData="True" fixedPosStart="78"
+     fixedPosTotal="5" dataField="0" decimalSeparator="Point" autoExtractValue="False"
+     calculationType1="METARCodes" calculationParameter1="0" calculationType2="None"
+     calculationParameter2="0" calculationType3="None" calculationParameter3="0"
+     calculationType4="None" calculationParameter4="0" />
    </sensor>
    <sensor id="29" type="SerialPort" name="Cloud Data: Cloud Height - Layer 1"
     description="(description)" saveToDatabase="False" saveFreq="Sensor">
     <serialPort portName="COM18" baudRate="9600" dataBits="8" stopBits="One"
      parity="None" handshake="None" packetHeader="\u0001CLA10025\u0002\r\n"
-     inputType="Text" totalBytes="1" binarySigned="False" packetEnd="\u0004\r\n"
-     packetDelimiter="\u0020" packetCombineFields="None" fixedPosData="False"
-     fixedPosStart="26" fixedPosTotal="5" dataField="1" decimalSeparator="Point"
-     autoExtractValue="False" calculationType1="None" calculationParameter1="0"
-     calculationType2="None" calculationParameter2="0" calculationType3="None"
-     calculationParameter3="0" calculationType4="None" calculationParameter4="0" />
-    <modbus portName="" baudRate="" dataBits="" stopBits="" parity=""
-     handshake="" tcpAddress="" tcpPort="" slaveID="" startAddress=""
-     totalAddresses="" dataAddress="" calculationType1="" calculationParameter1=""
-     calculationType2="" calculationParameter2="" calculationType3=""
-     calculationParameter3="" calculationType4="" calculationParameter4="" />
-    <fileReader fileFolder="" fileName="" readFrequency="" delimiter=""
-     fixedPosData="" fixedPosStart="" fixedPosTotal="" dataField=""
-     decimalSeparator="" autoExtractValue="" calculationType1="" calculationParameter1=""
-     calculationType2="" calculationParameter2="" calculationType3=""
-     calculationParameter3="" calculationType4="" calculationParameter4="" />
+     inputType="Text" binaryType="Byte" packetEnd="\u0004\r\n" packetDelimiter="\u0020"
+     packetCombineFields="None" fixedPosData="False" fixedPosStart="26"
+     fixedPosTotal="5" dataField="1" decimalSeparator="Point" autoExtractValue="False"
+     calculationType1="None" calculationParameter1="0" calculationType2="None"
+     calculationParameter2="0" calculationType3="None" calculationParameter3="0"
+     calculationType4="None" calculationParameter4="0" />
    </sensor>
    <sensor id="30" type="SerialPort" name="Cloud Data: Cloud Height - Layer 2"
     description="(description)" saveToDatabase="False" saveFreq="Sensor">
     <serialPort portName="COM18" baudRate="9600" dataBits="8" stopBits="One"
      parity="None" handshake="None" packetHeader="\u0001CLA10025\u0002\r\n"
-     inputType="Text" totalBytes="1" binarySigned="False" packetEnd="\u0004\r\n"
-     packetDelimiter="\u0020" packetCombineFields="None" fixedPosData="False"
-     fixedPosStart="32" fixedPosTotal="5" dataField="2" decimalSeparator="Point"
-     autoExtractValue="False" calculationType1="None" calculationParameter1="0"
-     calculationType2="None" calculationParameter2="0" calculationType3="None"
-     calculationParameter3="0" calculationType4="None" calculationParameter4="0" />
-    <modbus portName="" baudRate="" dataBits="" stopBits="" parity=""
-     handshake="" tcpAddress="" tcpPort="" slaveID="" startAddress=""
-     totalAddresses="" dataAddress="" calculationType1="" calculationParameter1=""
-     calculationType2="" calculationParameter2="" calculationType3=""
-     calculationParameter3="" calculationType4="" calculationParameter4="" />
-    <fileReader fileFolder="" fileName="" readFrequency="" delimiter=""
-     fixedPosData="" fixedPosStart="" fixedPosTotal="" dataField=""
-     decimalSeparator="" autoExtractValue="" calculationType1="" calculationParameter1=""
-     calculationType2="" calculationParameter2="" calculationType3=""
-     calculationParameter3="" calculationType4="" calculationParameter4="" />
+     inputType="Text" binaryType="Byte" packetEnd="\u0004\r\n" packetDelimiter="\u0020"
+     packetCombineFields="None" fixedPosData="False" fixedPosStart="32"
+     fixedPosTotal="5" dataField="2" decimalSeparator="Point" autoExtractValue="False"
+     calculationType1="None" calculationParameter1="0" calculationType2="None"
+     calculationParameter2="0" calculationType3="None" calculationParameter3="0"
+     calculationType4="None" calculationParameter4="0" />
    </sensor>
    <sensor id="31" type="SerialPort" name="Cloud Data: Cloud Height - Layer 3"
     description="(description)" saveToDatabase="False" saveFreq="Sensor">
     <serialPort portName="COM18" baudRate="9600" dataBits="8" stopBits="One"
      parity="None" handshake="None" packetHeader="\u0001CLA10025\u0002\r\n"
-     inputType="Text" totalBytes="1" binarySigned="False" packetEnd="\u0004\r\n"
-     packetDelimiter="\u0020" packetCombineFields="None" fixedPosData="False"
-     fixedPosStart="38" fixedPosTotal="5" dataField="3" decimalSeparator="Point"
-     autoExtractValue="False" calculationType1="None" calculationParameter1="0"
-     calculationType2="None" calculationParameter2="0" calculationType3="None"
-     calculationParameter3="0" calculationType4="None" calculationParameter4="0" />
-    <modbus portName="" baudRate="" dataBits="" stopBits="" parity=""
-     handshake="" tcpAddress="" tcpPort="" slaveID="" startAddress=""
-     totalAddresses="" dataAddress="" calculationType1="" calculationParameter1=""
-     calculationType2="" calculationParameter2="" calculationType3=""
-     calculationParameter3="" calculationType4="" calculationParameter4="" />
-    <fileReader fileFolder="" fileName="" readFrequency="" delimiter=""
-     fixedPosData="" fixedPosStart="" fixedPosTotal="" dataField=""
-     decimalSeparator="" autoExtractValue="" calculationType1="" calculationParameter1=""
-     calculationType2="" calculationParameter2="" calculationType3=""
-     calculationParameter3="" calculationType4="" calculationParameter4="" />
+     inputType="Text" binaryType="Byte" packetEnd="\u0004\r\n" packetDelimiter="\u0020"
+     packetCombineFields="None" fixedPosData="False" fixedPosStart="38"
+     fixedPosTotal="5" dataField="3" decimalSeparator="Point" autoExtractValue="False"
+     calculationType1="None" calculationParameter1="0" calculationType2="None"
+     calculationParameter2="0" calculationType3="None" calculationParameter3="0"
+     calculationType4="None" calculationParameter4="0" />
    </sensor>
    <sensor id="32" type="SerialPort" name="Wind: Direction" description="CAP 9c: Sensoren må levere 4hz data"
     saveToDatabase="False" saveFreq="Sensor">
     <serialPort portName="COM22" baudRate="9600" dataBits="8" stopBits="One"
      parity="None" handshake="None" packetHeader="\u0002" inputType="Text"
-     totalBytes="1" binarySigned="False" packetEnd="\r\n" packetDelimiter=","
-     packetCombineFields="None" fixedPosData="False" fixedPosStart="0"
-     fixedPosTotal="0" dataField="1" decimalSeparator="Point" autoExtractValue="False"
-     calculationType1="None" calculationParameter1="0" calculationType2="None"
-     calculationParameter2="0" calculationType3="None" calculationParameter3="0"
-     calculationType4="None" calculationParameter4="0" />
+     binaryType="Byte" packetEnd="\r\n" packetDelimiter="," packetCombineFields="None"
+     fixedPosData="False" fixedPosStart="0" fixedPosTotal="0" dataField="1"
+     decimalSeparator="Point" autoExtractValue="False" calculationType1="Multiplication"
+     calculationParameter1="10" calculationType2="None" calculationParameter2="0"
+     calculationType3="None" calculationParameter3="0" calculationType4="None"
+     calculationParameter4="0" />
    </sensor>
    <sensor id="33" type="SerialPort" name="Wind: Speed" description="CAP 9c: Sensoren må levere 4hz data"
     saveToDatabase="False" saveFreq="Sensor">
     <serialPort portName="COM22" baudRate="9600" dataBits="8" stopBits="One"
      parity="None" handshake="None" packetHeader="\u0002" inputType="Text"
-     totalBytes="1" binarySigned="False" packetEnd="\r\n" packetDelimiter=","
-     packetCombineFields="None" fixedPosData="False" fixedPosStart="0"
-     fixedPosTotal="0" dataField="2" decimalSeparator="Point" autoExtractValue="True"
-     calculationType1="Multiplication" calculationParameter1="10"
-     calculationType2="None" calculationParameter2="0" calculationType3="None"
-     calculationParameter3="0" calculationType4="None" calculationParameter4="0" />
+     binaryType="Byte" packetEnd="\r\n" packetDelimiter="," packetCombineFields="None"
+     fixedPosData="False" fixedPosStart="0" fixedPosTotal="0" dataField="2"
+     decimalSeparator="Point" autoExtractValue="True" calculationType1="Multiplication"
+     calculationParameter1="10" calculationType2="None" calculationParameter2="0"
+     calculationType3="None" calculationParameter3="0" calculationType4="None"
+     calculationParameter4="0" />
    </sensor>
    <sensor id="34" type="SerialPort" name="Vessel Heading" description="(description)"
     saveToDatabase="False" saveFreq="Sensor">
     <serialPort portName="COM24" baudRate="9600" dataBits="8" stopBits="One"
      parity="None" handshake="None" packetHeader="\n6" inputType="Text"
-     totalBytes="1" binarySigned="False" packetEnd="\r\n" packetDelimiter="\u0020"
-     packetCombineFields="None" fixedPosData="False" fixedPosStart="0"
-     fixedPosTotal="0" dataField="17" decimalSeparator="Point" autoExtractValue="False"
-     calculationType1="Division" calculationParameter1="100" calculationType2="None"
-     calculationParameter2="0" calculationType3="None" calculationParameter3="0"
-     calculationType4="None" calculationParameter4="0" />
+     binaryType="Byte" packetEnd="\r\n" packetDelimiter="\u0020" packetCombineFields="None"
+     fixedPosData="False" fixedPosStart="0" fixedPosTotal="0" dataField="18"
+     decimalSeparator="Point" autoExtractValue="False" calculationType1="Division"
+     calculationParameter1="100" calculationType2="None" calculationParameter2="0"
+     calculationType3="None" calculationParameter3="0" calculationType4="None"
+     calculationParameter4="0" />
    </sensor>
    <sensor id="35" type="SerialPort" name="Cloud Data: Cloud Octal - Layer 1"
     description="(description)" saveToDatabase="False" saveFreq="Sensor">
     <serialPort portName="COM18" baudRate="9600" dataBits="8" stopBits="One"
      parity="None" handshake="None" packetHeader="\u0001CLA10025\u0002\r\n"
-     inputType="Text" totalBytes="1" binarySigned="False" packetEnd="\u0004\r\n"
-     packetDelimiter="\u0020" packetCombineFields="None" fixedPosData="True"
-     fixedPosStart="63" fixedPosTotal="1" dataField="0" decimalSeparator="Point"
-     autoExtractValue="False" calculationType1="None" calculationParameter1="0"
-     calculationType2="None" calculationParameter2="0" calculationType3="None"
-     calculationParameter3="0" calculationType4="None" calculationParameter4="0" />
-    <modbus portName="" baudRate="" dataBits="" stopBits="" parity=""
-     handshake="" tcpAddress="" tcpPort="" slaveID="" startAddress=""
-     totalAddresses="" dataAddress="" calculationType1="" calculationParameter1=""
-     calculationType2="" calculationParameter2="" calculationType3=""
-     calculationParameter3="" calculationType4="" calculationParameter4="" />
-    <fileReader fileFolder="" fileName="" readFrequency="" delimiter=""
-     fixedPosData="" fixedPosStart="" fixedPosTotal="" dataField=""
-     decimalSeparator="" autoExtractValue="" calculationType1="" calculationParameter1=""
-     calculationType2="" calculationParameter2="" calculationType3=""
-     calculationParameter3="" calculationType4="" calculationParameter4="" />
+     inputType="Text" binaryType="Byte" packetEnd="\u0004\r\n" packetDelimiter="\u0020"
+     packetCombineFields="None" fixedPosData="True" fixedPosStart="63"
+     fixedPosTotal="1" dataField="0" decimalSeparator="Point" autoExtractValue="False"
+     calculationType1="None" calculationParameter1="0" calculationType2="None"
+     calculationParameter2="0" calculationType3="None" calculationParameter3="0"
+     calculationType4="None" calculationParameter4="0" />
    </sensor>
    <sensor id="36" type="SerialPort" name="Cloud Data: Cloud Octal - Layer 2"
     description="(description)" saveToDatabase="False" saveFreq="Sensor">
     <serialPort portName="COM18" baudRate="9600" dataBits="8" stopBits="One"
      parity="None" handshake="None" packetHeader="\u0001CLA10025\u0002\r\n"
-     inputType="Text" totalBytes="1" binarySigned="False" packetEnd="\u0004\r\n"
-     packetDelimiter="\u0020" packetCombineFields="None" fixedPosData="True"
-     fixedPosStart="70" fixedPosTotal="1" dataField="0" decimalSeparator="Point"
-     autoExtractValue="False" calculationType1="None" calculationParameter1="0"
-     calculationType2="None" calculationParameter2="0" calculationType3="None"
-     calculationParameter3="0" calculationType4="None" calculationParameter4="0" />
-    <modbus portName="" baudRate="" dataBits="" stopBits="" parity=""
-     handshake="" tcpAddress="" tcpPort="" slaveID="" startAddress=""
-     totalAddresses="" dataAddress="" calculationType1="" calculationParameter1=""
-     calculationType2="" calculationParameter2="" calculationType3=""
-     calculationParameter3="" calculationType4="" calculationParameter4="" />
-    <fileReader fileFolder="" fileName="" readFrequency="" delimiter=""
-     fixedPosData="" fixedPosStart="" fixedPosTotal="" dataField=""
-     decimalSeparator="" autoExtractValue="" calculationType1="" calculationParameter1=""
-     calculationType2="" calculationParameter2="" calculationType3=""
-     calculationParameter3="" calculationType4="" calculationParameter4="" />
+     inputType="Text" binaryType="Byte" packetEnd="\u0004\r\n" packetDelimiter="\u0020"
+     packetCombineFields="None" fixedPosData="True" fixedPosStart="70"
+     fixedPosTotal="1" dataField="0" decimalSeparator="Point" autoExtractValue="False"
+     calculationType1="None" calculationParameter1="0" calculationType2="None"
+     calculationParameter2="0" calculationType3="None" calculationParameter3="0"
+     calculationType4="None" calculationParameter4="0" />
    </sensor>
    <sensor id="37" type="SerialPort" name="Cloud Data: Cloud Octal - Layer 3"
     description="(description)" saveToDatabase="False" saveFreq="Sensor">
     <serialPort portName="COM18" baudRate="9600" dataBits="8" stopBits="One"
      parity="None" handshake="None" packetHeader="\u0001CLA10025\u0002\r\n"
-     inputType="Text" totalBytes="1" binarySigned="False" packetEnd="\u0004\r\n"
-     packetDelimiter="\u0020" packetCombineFields="None" fixedPosData="True"
-     fixedPosStart="77" fixedPosTotal="1" dataField="0" decimalSeparator="Point"
-     autoExtractValue="False" calculationType1="None" calculationParameter1="0"
-     calculationType2="None" calculationParameter2="0" calculationType3="None"
-     calculationParameter3="0" calculationType4="None" calculationParameter4="0" />
-    <modbus portName="" baudRate="" dataBits="" stopBits="" parity=""
-     handshake="" tcpAddress="" tcpPort="" slaveID="" startAddress=""
-     totalAddresses="" dataAddress="" calculationType1="" calculationParameter1=""
-     calculationType2="" calculationParameter2="" calculationType3=""
-     calculationParameter3="" calculationType4="" calculationParameter4="" />
-    <fileReader fileFolder="" fileName="" readFrequency="" delimiter=""
-     fixedPosData="" fixedPosStart="" fixedPosTotal="" dataField=""
-     decimalSeparator="" autoExtractValue="" calculationType1="" calculationParameter1=""
-     calculationType2="" calculationParameter2="" calculationType3=""
-     calculationParameter3="" calculationType4="" calculationParameter4="" />
+     inputType="Text" binaryType="Byte" packetEnd="\u0004\r\n" packetDelimiter="\u0020"
+     packetCombineFields="None" fixedPosData="True" fixedPosStart="77"
+     fixedPosTotal="1" dataField="0" decimalSeparator="Point" autoExtractValue="False"
+     calculationType1="None" calculationParameter1="0" calculationType2="None"
+     calculationParameter2="0" calculationType3="None" calculationParameter3="0"
+     calculationType4="None" calculationParameter4="0" />
    </sensor>
    <sensor id="38" type="SerialPort" name="Motion: Ax Surge Acceleration"
     description="CAP 9c: Sensoren må levere 2hz data" saveToDatabase="False"
     saveFreq="Sensor">
     <serialPort portName="COM20" baudRate="9600" dataBits="8" stopBits="One"
      parity="None" handshake="None" packetHeader="$PSMCC" inputType="Text"
-     totalBytes="1" binarySigned="False" packetEnd="\r\n" packetDelimiter=","
-     packetCombineFields="None" fixedPosData="False" fixedPosStart="0"
-     fixedPosTotal="0" dataField="0" decimalSeparator="Point" autoExtractValue="False"
-     calculationType1="Division" calculationParameter1="100000" calculationType2="None"
-     calculationParameter2="0" calculationType3="None" calculationParameter3="0"
-     calculationType4="None" calculationParameter4="0" />
+     binaryType="Byte" packetEnd="\r\n" packetDelimiter="," packetCombineFields="None"
+     fixedPosData="False" fixedPosStart="0" fixedPosTotal="0" dataField="1"
+     decimalSeparator="Point" autoExtractValue="False" calculationType1="Division"
+     calculationParameter1="100000" calculationType2="None" calculationParameter2="0"
+     calculationType3="None" calculationParameter3="0" calculationType4="None"
+     calculationParameter4="0" />
    </sensor>
    <sensor id="39" type="SerialPort" name="Motion: Ay Sway Acceleration"
     description="CAP 9c: Sensoren må levere 2hz data" saveToDatabase="False"
     saveFreq="Sensor">
     <serialPort portName="COM20" baudRate="9600" dataBits="8" stopBits="One"
      parity="None" handshake="None" packetHeader="$PSMCC" inputType="Text"
-     totalBytes="1" binarySigned="False" packetEnd="\r\n" packetDelimiter=","
-     packetCombineFields="None" fixedPosData="False" fixedPosStart="0"
-     fixedPosTotal="0" dataField="1" decimalSeparator="Point" autoExtractValue="False"
-     calculationType1="Division" calculationParameter1="100000" calculationType2="None"
-     calculationParameter2="0" calculationType3="None" calculationParameter3="0"
-     calculationType4="None" calculationParameter4="0" />
+     binaryType="Byte" packetEnd="\r\n" packetDelimiter="," packetCombineFields="None"
+     fixedPosData="False" fixedPosStart="0" fixedPosTotal="0" dataField="2"
+     decimalSeparator="Point" autoExtractValue="False" calculationType1="Division"
+     calculationParameter1="100000" calculationType2="None" calculationParameter2="0"
+     calculationType3="None" calculationParameter3="0" calculationType4="None"
+     calculationParameter4="0" />
    </sensor>
    <sensor id="40" type="SerialPort" name="Motion: Az Normal Acceleration"
     description="CAP 9c: Sensoren må levere 2hz data" saveToDatabase="False"
     saveFreq="Sensor">
     <serialPort portName="COM20" baudRate="9600" dataBits="8" stopBits="One"
      parity="None" handshake="None" packetHeader="$PSMCC" inputType="Text"
-     totalBytes="1" binarySigned="False" packetEnd="\r\n" packetDelimiter=","
-     packetCombineFields="None" fixedPosData="False" fixedPosStart="0"
-     fixedPosTotal="0" dataField="5" decimalSeparator="Point" autoExtractValue="False"
-     calculationType1="Division" calculationParameter1="1000" calculationType2="None"
-     calculationParameter2="0" calculationType3="None" calculationParameter3="0"
-     calculationType4="None" calculationParameter4="0" />
+     binaryType="Byte" packetEnd="\r\n" packetDelimiter="," packetCombineFields="None"
+     fixedPosData="False" fixedPosStart="0" fixedPosTotal="0" dataField="6"
+     decimalSeparator="Point" autoExtractValue="False" calculationType1="Division"
+     calculationParameter1="1000" calculationType2="None" calculationParameter2="0"
+     calculationType3="None" calculationParameter3="0" calculationType4="None"
+     calculationParameter4="0" />
    </sensor>
    <sensor id="41" type="SerialPort" name="Vessel Speed" description="(description)"
     saveToDatabase="False" saveFreq="Sensor">
     <serialPort portName="COM24" baudRate="9600" dataBits="8" stopBits="One"
      parity="None" handshake="None" packetHeader="\u0002" inputType="Text"
-     totalBytes="1" binarySigned="False" packetEnd="\n6" packetDelimiter="\u0020"
-     packetCombineFields="None" fixedPosData="False" fixedPosStart="0"
-     fixedPosTotal="0" dataField="31" decimalSeparator="Point" autoExtractValue="False"
-     calculationType1="Division" calculationParameter1="1000" calculationType2="None"
-     calculationParameter2="0" calculationType3="None" calculationParameter3="0"
-     calculationType4="None" calculationParameter4="0" />
+     binaryType="Byte" packetEnd="\n6" packetDelimiter="\u0020" packetCombineFields="None"
+     fixedPosData="False" fixedPosStart="0" fixedPosTotal="0" dataField="32"
+     decimalSeparator="Point" autoExtractValue="False" calculationType1="Division"
+     calculationParameter1="1000" calculationType2="None" calculationParameter2="0"
+     calculationType3="None" calculationParameter3="0" calculationType4="None"
+     calculationParameter4="0" />
    </sensor>
    <sensor id="49" type="SerialPort" name="Air Data: Air Humidity"
     description="(description)" saveToDatabase="False" saveFreq="Sensor">
     <serialPort portName="COM10" baudRate="9600" dataBits="8" stopBits="One"
      parity="None" handshake="None" packetHeader="0R2" inputType="Text"
-     totalBytes="1" binarySigned="False" packetEnd="\r\n" packetDelimiter="="
-     packetCombineFields="None" fixedPosData="False" fixedPosStart="0"
-     fixedPosTotal="0" dataField="3" decimalSeparator="Point" autoExtractValue="True"
-     calculationType1="Division" calculationParameter1="100" calculationType2="None"
-     calculationParameter2="0" calculationType3="None" calculationParameter3="0"
-     calculationType4="None" calculationParameter4="0" />
-    <modbus portName="" baudRate="" dataBits="" stopBits="" parity=""
-     handshake="" tcpAddress="" tcpPort="" slaveID="" startAddress=""
-     totalAddresses="" dataAddress="" calculationType1="" calculationParameter1=""
-     calculationType2="" calculationParameter2="" calculationType3=""
-     calculationParameter3="" calculationType4="" calculationParameter4="" />
-    <fileReader fileFolder="" fileName="" readFrequency="" delimiter=""
-     fixedPosData="" fixedPosStart="" fixedPosTotal="" dataField=""
-     decimalSeparator="" autoExtractValue="" calculationType1="" calculationParameter1=""
-     calculationType2="" calculationParameter2="" calculationType3=""
-     calculationParameter3="" calculationType4="" calculationParameter4="" />
+     binaryType="Byte" packetEnd="\r\n" packetDelimiter="," packetCombineFields="None"
+     fixedPosData="False" fixedPosStart="0" fixedPosTotal="0" dataField="2"
+     decimalSeparator="Point" autoExtractValue="True" calculationType1="Division"
+     calculationParameter1="100" calculationType2="None" calculationParameter2="0"
+     calculationType3="None" calculationParameter3="0" calculationType4="None"
+     calculationParameter4="0" />
    </sensor>
    <sensor id="51" type="SerialPort" name="Cloud Data: Cloud Height - Layer 4"
     description="(description)" saveToDatabase="False" saveFreq="Sensor">
     <serialPort portName="COM18" baudRate="9600" dataBits="8" stopBits="One"
      parity="None" handshake="None" packetHeader="\u0001CLA10025\u0002\r\n"
-     inputType="Text" totalBytes="1" binarySigned="False" packetEnd="\u0004\r\n"
-     packetDelimiter="\u0020" packetCombineFields="None" fixedPosData="False"
-     fixedPosStart="38" fixedPosTotal="5" dataField="3" decimalSeparator="Point"
-     autoExtractValue="False" calculationType1="None" calculationParameter1="0"
-     calculationType2="None" calculationParameter2="0" calculationType3="None"
-     calculationParameter3="0" calculationType4="None" calculationParameter4="0" />
-    <modbus portName="" baudRate="" dataBits="" stopBits="" parity=""
-     handshake="" tcpAddress="" tcpPort="" slaveID="" startAddress=""
-     totalAddresses="" dataAddress="" calculationType1="" calculationParameter1=""
-     calculationType2="" calculationParameter2="" calculationType3=""
-     calculationParameter3="" calculationType4="" calculationParameter4="" />
-    <fileReader fileFolder="" fileName="" readFrequency="" delimiter=""
-     fixedPosData="" fixedPosStart="" fixedPosTotal="" dataField=""
-     decimalSeparator="" autoExtractValue="" calculationType1="" calculationParameter1=""
-     calculationType2="" calculationParameter2="" calculationType3=""
-     calculationParameter3="" calculationType4="" calculationParameter4="" />
+     inputType="Text" binaryType="Byte" packetEnd="\u0004\r\n" packetDelimiter="\u0020"
+     packetCombineFields="None" fixedPosData="False" fixedPosStart="38"
+     fixedPosTotal="5" dataField="3" decimalSeparator="Point" autoExtractValue="False"
+     calculationType1="None" calculationParameter1="0" calculationType2="None"
+     calculationParameter2="0" calculationType3="None" calculationParameter3="0"
+     calculationType4="None" calculationParameter4="0" />
    </sensor>
    <sensor id="52" type="SerialPort" name="Motion: Heave Rate" description="CAP 9c: Sensoren må levere 2hz data. meter/sekund"
     saveToDatabase="False" saveFreq="Sensor">
     <serialPort portName="COM4" baudRate="9600" dataBits="8" stopBits="One"
      parity="None" handshake="None" packetHeader=":" inputType="Text"
-     totalBytes="1" binarySigned="False" packetEnd="\r\n" packetDelimiter="-"
-     packetCombineFields="None" fixedPosData="True" fixedPosStart="14"
-     fixedPosTotal="6" dataField="0" decimalSeparator="Point" autoExtractValue="True"
-     calculationType1="Division" calculationParameter1="10000" calculationType2="None"
-     calculationParameter2="1" calculationType3="None" calculationParameter3="0"
-     calculationType4="None" calculationParameter4="0" />
+     binaryType="Byte" packetEnd="\r\n" packetDelimiter="-" packetCombineFields="None"
+     fixedPosData="True" fixedPosStart="20" fixedPosTotal="6" dataField="0"
+     decimalSeparator="Point" autoExtractValue="True" calculationType1="Division"
+     calculationParameter1="10000" calculationType2="None" calculationParameter2="1"
+     calculationType3="None" calculationParameter3="0" calculationType4="None"
+     calculationParameter4="0" />
    </sensor>
    <sensor id="53" type="SerialPort" name="Cloud Data: Cloud Octal - Layer 4"
     description="(description)" saveToDatabase="False" saveFreq="Sensor">
     <serialPort portName="COM18" baudRate="9600" dataBits="8" stopBits="One"
      parity="None" handshake="None" packetHeader="\u0001CLA10025\u0002\r\n"
-     inputType="Text" totalBytes="1" binarySigned="False" packetEnd="\u0004\r\n"
-     packetDelimiter="\u0020" packetCombineFields="None" fixedPosData="True"
-     fixedPosStart="77" fixedPosTotal="1" dataField="0" decimalSeparator="Point"
-     autoExtractValue="False" calculationType1="None" calculationParameter1="0"
-     calculationType2="None" calculationParameter2="0" calculationType3="None"
-     calculationParameter3="0" calculationType4="None" calculationParameter4="0" />
+     inputType="Text" binaryType="Byte" packetEnd="\u0004\r\n" packetDelimiter="\u0020"
+     packetCombineFields="None" fixedPosData="True" fixedPosStart="77"
+     fixedPosTotal="1" dataField="0" decimalSeparator="Point" autoExtractValue="False"
+     calculationType1="None" calculationParameter1="0" calculationType2="None"
+     calculationParameter2="0" calculationType3="None" calculationParameter3="0"
+     calculationType4="None" calculationParameter4="0" />
+   </sensor>
+   <sensor id="61" type="SerialPort" name="REX Waver Radar" description="test"
+    saveToDatabase="False" saveFreq="Sensor">
+    <serialPort portName="COM26" baudRate="9600" dataBits="8" stopBits="One"
+     parity="None" handshake="None" packetHeader="F6" inputType="Binary"
+     binaryType="Int16" packetEnd="" packetDelimiter="-" packetCombineFields="None"
+     fixedPosData="False" fixedPosStart="0" fixedPosTotal="0" dataField="6"
+     decimalSeparator="Point" autoExtractValue="False" calculationType1="Division"
+     calculationParameter1="100" calculationType2="None" calculationParameter2="0"
+     calculationType3="None" calculationParameter3="0" calculationType4="None"
+     calculationParameter4="0" />
     <modbus portName="" baudRate="" dataBits="" stopBits="" parity=""
      handshake="" tcpAddress="" tcpPort="" slaveID="" startAddress=""
      totalAddresses="" dataAddress="" calculationType1="" calculationParameter1=""
@@ -461,59 +352,60 @@
      calculationType2="" calculationParameter2="" calculationType3=""
      calculationParameter3="" calculationType4="" calculationParameter4="" />
    </sensor>
-   <sensor id="100" type="SerialPort" name="Vessel SOG" description="Speed Over Ground (GPS measurement)"
-    saveToDatabase="False" saveFreq="Sensor">
-    <serialPort portName="COM24" baudRate="9600" dataBits="8" stopBits="One"
-     parity="None" handshake="None" packetHeader="\u0002" inputType="Text"
-     totalBytes="1" binarySigned="False" packetEnd="\r\n2" packetDelimiter="\u0020"
-     packetCombineFields="None" fixedPosData="False" fixedPosStart="0"
-     fixedPosTotal="0" dataField="31" decimalSeparator="Point" autoExtractValue="False"
-     calculationType1="Division" calculationParameter1="1000" calculationType2="RoundingDecimals"
-     calculationParameter2="1" calculationType3="None" calculationParameter3="0"
-     calculationType4="None" calculationParameter4="0" />
-   </sensor>
-   <sensor id="59" type="SerialPort" name="Vessel COG" description="Course Over Ground (GPS measurement)"
-    saveToDatabase="False" saveFreq="Sensor">
-    <serialPort portName="COM24" baudRate="9600" dataBits="8" stopBits="One"
-     parity="None" handshake="None" packetHeader="\n6" inputType="Text"
-     totalBytes="1" binarySigned="False" packetEnd="\r\n" packetDelimiter="\u0020"
-     packetCombineFields="None" fixedPosData="False" fixedPosStart="0"
-     fixedPosTotal="0" dataField="17" decimalSeparator="Point" autoExtractValue="False"
-     calculationType1="Division" calculationParameter1="100" calculationType2="None"
-     calculationParameter2="0" calculationType3="None" calculationParameter3="0"
-     calculationType4="None" calculationParameter4="0" />
-   </sensor>
-   <sensor id="60" type="SerialPort" name="Wave Radar" description="(description)"
+   <sensor id="62" type="SerialPort" name="GPS: COG" description="GPS Speed&#xD;&#xA;"
     saveToDatabase="False" saveFreq="Sensor">
     <serialPort portName="COM2" baudRate="9600" dataBits="8" stopBits="One"
-     parity="None" handshake="None" packetHeader="" inputType="Binary"
-     totalBytes="1" binarySigned="False" packetEnd="" packetDelimiter=""
-     packetCombineFields="None" fixedPosData="False" fixedPosStart="0"
-     fixedPosTotal="0" dataField="0" decimalSeparator="Point" autoExtractValue="False"
-     calculationType1="None" calculationParameter1="0" calculationType2="None"
-     calculationParameter2="0" calculationType3="None" calculationParameter3="0"
-     calculationType4="None" calculationParameter4="0" />
+     parity="None" handshake="None" packetHeader="$GPVTG" inputType="Text"
+     binaryType="Byte" packetEnd="\r\n" packetDelimiter="," packetCombineFields="None"
+     fixedPosData="False" fixedPosStart="0" fixedPosTotal="0" dataField="2"
+     decimalSeparator="Point" autoExtractValue="False" calculationType1="Division"
+     calculationParameter1="10" calculationType2="None" calculationParameter2="0"
+     calculationType3="None" calculationParameter3="0" calculationType4="None"
+     calculationParameter4="0" />
+   </sensor>
+   <sensor id="63" type="SerialPort" name="GPS: SOG" description="GPS Speed&#xD;&#xA;"
+    saveToDatabase="False" saveFreq="Sensor">
+    <serialPort portName="COM2" baudRate="9600" dataBits="8" stopBits="One"
+     parity="None" handshake="None" packetHeader="$GPVTG" inputType="Text"
+     binaryType="Byte" packetEnd="\r\n" packetDelimiter="," packetCombineFields="None"
+     fixedPosData="False" fixedPosStart="0" fixedPosTotal="0" dataField="3"
+     decimalSeparator="Point" autoExtractValue="False" calculationType1="Division"
+     calculationParameter1="100" calculationType2="None" calculationParameter2="0"
+     calculationType3="None" calculationParameter3="0" calculationType4="None"
+     calculationParameter4="0" />
+   </sensor>
+   <sensor id="65" type="SerialPort" name="Sensor Status: MRU, Gyro, SOC &amp; COG"
+    description="(description)" saveToDatabase="False" saveFreq="Sensor">
+    <serialPort portName="COM2" baudRate="9600" dataBits="8" stopBits="One"
+     parity="None" handshake="None" packetHeader="" inputType="Text"
+     binaryType="Byte" packetEnd="\r\n" packetDelimiter="" packetCombineFields="None"
+     fixedPosData="False" fixedPosStart="0" fixedPosTotal="0" dataField="0"
+     decimalSeparator="Point" autoExtractValue="False" calculationType1="FixedValue"
+     calculationParameter1="1" calculationType2="None" calculationParameter2="0"
+     calculationType3="None" calculationParameter3="0" calculationType4="None"
+     calculationParameter4="0" />
    </sensor>
   </SensorHeaders>
  </SensorData>
 
 
 	<SensorGroupID>
-  <SensorGroupIDHeaders>
-   <sensorGroup id="0" name="GPS" dbColumn="gps" active="True" />
-   <sensorGroup id="1" name="MOTION" dbColumn="motion" active="True" />
-   <sensorGroup id="2" name="AIR DATA" dbColumn="airdata" active="True" />
-   <sensorGroup id="3" name="VISIBILITY" dbColumn="visibility" active="True" />
-   <sensorGroup id="4" name="WEATHER" dbColumn="weather" active="True" />
-   <sensorGroup id="5" name="CLOUDS" dbColumn="clouds" active="True" />
-   <sensorGroup id="6" name="WIND" dbColumn="wind" active="True" />
-   <sensorGroup id="7" name="HEADING" dbColumn="heading" active="True" />
-   <sensorGroup id="8" name="DATABASE" dbColumn="db" active="True" />
-   <sensorGroup id="9" name="" dbColumn="" active="False" />
-   <sensorGroup id="10" name="" dbColumn="" active="False" />
-   <sensorGroup id="11" name="" dbColumn="" active="False" />
-  </SensorGroupIDHeaders>
- </SensorGroupID>
+		<SensorGroupIDHeaders>
+			<sensorGroup id="0" name="GPS" dbColumn="gps" active="True" />
+			<sensorGroup id="1" name="MOTION" dbColumn="motion" active="True" />
+			<sensorGroup id="2" name="AIR DATA" dbColumn="airdata" active="True" />
+			<sensorGroup id="3" name="VISIBILITY" dbColumn="visibility" active="True" />
+			<sensorGroup id="4" name="WEATHER" dbColumn="weather" active="True" />
+			<sensorGroup id="5" name="CLOUDS" dbColumn="clouds" active="True" />
+			<sensorGroup id="6" name="WIND" dbColumn="wind" active="True" />
+			<sensorGroup id="7" name="HEADING" dbColumn="heading" active="True" />
+			<sensorGroup id="8" name="WAVE RADAR" dbColumn="waveradar" active="False" />
+			<sensorGroup id="9" name="SEA TEMP" dbColumn="seatemp" active="False" />
+			<sensorGroup id="10" name="" dbColumn="" active="False" />
+			<sensorGroup id="11" name="" dbColumn="" active="False" />
+		</SensorGroupIDHeaders>
+	</SensorGroupID>
+
 
 	<HMSData>
   <HMSDataItems>
@@ -542,9 +434,9 @@
     dbTableName="cloud_layer_3_base" />
    <data id="17" name="Cloud Layer 3 Coverage" dataId="37" sensorId="5"
     dbTableName="cloud_layer_3_coverage" />
-   <data id="18" name="Cloud Layer 4 Base" dataId="31" sensorId="5"
+   <data id="18" name="Cloud Layer 4 Base" dataId="32" sensorId="5"
     dbTableName="cloud_layer_4_base" />
-   <data id="19" name="Cloud Layer 4 Coverage" dataId="53" sensorId="5"
+   <data id="19" name="Cloud Layer 4 Coverage" dataId="38" sensorId="5"
     dbTableName="cloud_layer_4_coverage" />
    <data id="20" name="Area Wind Direction (RT)" dataId="32" sensorId="6"
     dbTableName="area_wind_direction_rt" />
@@ -552,17 +444,86 @@
     dbTableName="area_wind_speed_rt" />
    <data id="22" name="Vessel Heading" dataId="34" sensorId="7"
     dbTableName="vessel_heading" />
-   <data id="23" name="Vessel Speed" dataId="41" sensorId="7" dbTableName="vessel_speed" />
-   <data id="24" name="Vessel COG" dataId="59" sensorId="7" dbTableName="vessel_cog" />
-   <data id="25" name="Vessel SOG" dataId="100" sensorId="7" dbTableName="vessel_sog" />
-   <data id="26" name="Acceleration X" dataId="38" sensorId="1"
+   <data id="23" name="Vessel COG" dataId="62" sensorId="0" dbTableName="vessel_cog" />
+   <data id="24" name="Vessel SOG" dataId="63" sensorId="0" dbTableName="vessel_sog" />
+   <data id="25" name="Acceleration X" dataId="60" sensorId="1"
     dbTableName="acceleration_x" />
-   <data id="27" name="Acceleration Y" dataId="39" sensorId="1"
+   <data id="26" name="Acceleration Y" dataId="61" sensorId="1"
     dbTableName="acceleration_y" />
-   <data id="28" name="Acceleration Z" dataId="40" sensorId="1"
+   <data id="27" name="Acceleration Z" dataId="62" sensorId="1"
     dbTableName="acceleration_z" />
+   <data id="28" name="Wave Height" dataId="107" sensorId="8" dbTableName="" />
+   <data id="29" name="Sea Temperature" dataId="108" sensorId="9"
+    dbTableName="" />
+   <data id="30" name="Database Status" dataId="-1" sensorId="10"
+    dbTableName="" />
+   <data id="31" name="Sensor MRU" dataId="65" sensorId="-1" dbTableName="" />
+   <data id="32" name="Sensor Gyro" dataId="65" sensorId="-1" dbTableName="" />
+   <data id="33" name="Sensor Wind" dataId="65" sensorId="-1" dbTableName="" />
+   <data id="34" name="Sensor SOG/COG" dataId="65" sensorId="-1"
+    dbTableName="" />
   </HMSDataItems>
  </HMSData>
+
+	<TestData>
+		<TestDataItems>
+			<data id="1" name="Time ID" dataId="29" />
+			<data id="2" name="Roll Max R (20m)" dataId="40" />
+			<data id="3" name="Roll Max L (20m)" dataId="39" />
+			<data id="4" name="Pitch Max U (20m)" dataId="35" />
+			<data id="5" name="Pitch Max D (20m)" dataId="36" />
+			<data id="6" name="Inclination Max (20m)" dataId="52" />
+			<data id="7" name="SHR" dataId="45" />
+			<data id="8" name="MSI" dataId="60" />
+			<data id="9" name="WSI %" dataId="61" />
+			<data id="10" name="Vessel Heading" dataId="22" />
+			<data id="11" name="Helideck Heading" dataId="74" />
+			<data id="12" name="Helicopter Heading" dataId="77" />
+			<data id="13" name="Vessel Heading Delta" dataId="76" />
+			<data id="14" name="Wind Direction Delta" dataId="75" />
+			<data id="15" name="Relative Wind Direction" dataId="62" />
+			<data id="16" name="Helideck Status" dataId="57" />
+			<data id="17" name="Helideck Wind Speed (2m)" dataId="70" />
+			<data id="18" name="Helideck Wind Dir (2m)" dataId="68" />
+			<data id="19" name="Helideck Wind Gust (2m)" dataId="72" />
+			<data id="20" name="Helideck Wind Speed (10m)" dataId="71" />
+			<data id="21" name="Helideck Wind Dir (10m)" dataId="69" />
+			<data id="22" name="Helideck Wind Gust (10m)" dataId="73" />
+			<data id="23" name="Sensor MRU" dataId="30" />
+			<data id="24" name="Sensor Gyro" dataId="31" />
+			<data id="25" name="Sensor Wind" dataId="32" />
+		</TestDataItems>
+	</TestData>
+
+	<ReferenceData>
+		<ReferenceDataItems>
+			<data id="1" name="Time ID" dataId="84" />
+			<data id="2" name="Roll Max R (20m)" dataId="68" />
+			<data id="3" name="Roll Max L (20m)" dataId="69" />
+			<data id="4" name="Pitch Max U (20m)" dataId="71" />
+			<data id="5" name="Pitch Max D (20m)" dataId="70" />
+			<data id="6" name="Inclination Max (20m)" dataId="72" />
+			<data id="7" name="SHR" dataId="73" />
+			<data id="8" name="MSI" dataId="74" />
+			<data id="9" name="WSI %" dataId="75" />
+			<data id="10" name="Vessel Heading" dataId="77" />
+			<data id="11" name="Helideck Heading" dataId="94" />
+			<data id="12" name="Helicopter Heading" dataId="93" />
+			<data id="13" name="Delta Vessel Heading" dataId="95" />
+			<data id="14" name="Delta Wind Direction" dataId="96" />
+			<data id="15" name="Relative Wind Direction" dataId="97" />
+			<data id="16" name="Helideck Status" dataId="76" />
+			<data id="17" name="Helideck Wind Speed (2m)" dataId="78" />
+			<data id="18" name="Helideck Wind Dir (2m)" dataId="79" />
+			<data id="19" name="Helideck Wind Gust (2m)" dataId="80" />
+			<data id="20" name="Helideck Wind Speed (10m)" dataId="81" />
+			<data id="21" name="Helideck Wind Dir (10m)" dataId="82" />
+			<data id="22" name="Helideck Wind Gust (10m)" dataId="83" />
+			<data id="23" name="Sensor MRU" dataId="86" />
+			<data id="24" name="Sensor Gyro" dataId="91" />
+			<data id="25" name="Sensor Wind" dataId="92" />
+		</ReferenceDataItems>
+	</ReferenceData>
 
 	<HelicopterWSILimit>
 		<HelicopterWSILimitHeaders>
@@ -590,14 +551,13 @@
   <SensorHeaders>
    <sensor id="1" type="ModbusRTU" name="Lights Output" description="Helideck Light System Output"
     saveToDatabase="False" saveFreq="Sensor">
-    <modbus portName="COM7" baudRate="9600" dataBits="8" stopBits="One"
-     parity="None" handshake="None" tcpAddress="" tcpPort="502" slaveID="1"
-     startAddress="0" totalAddresses="0" dataAddress="0" calculationType1="None"
-     calculationParameter1="0" calculationType2="None" calculationParameter2="0"
-     calculationType3="None" calculationParameter3="0" calculationType4="None"
-     calculationParameter4="0" />
+    <modbus portName="COM10" baudRate="9600" dataBits="8" stopBits="One"
+     parity="None" handshake="None" tcpAddress="127.0.0.1" tcpPort="502"
+     slaveID="1" startAddress="30001" totalAddresses="10" dataAddress="30001"
+     calculationType1="None" calculationParameter1="0" calculationType2="None"
+     calculationParameter2="0" calculationType3="None" calculationParameter3="0"
+     calculationType4="None" calculationParameter4="0" />
    </sensor>
   </SensorHeaders>
  </LightsOutput>
-
 </configuration>

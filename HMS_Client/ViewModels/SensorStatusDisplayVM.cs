@@ -7,7 +7,7 @@ using Telerik.Windows.Data;
 
 namespace HMS_Client
 {
-    public class SensorStatusDisplayVM
+    public class SensorStatusVM
     {
         // Sensor Status
         private SensorGroupStatus sensorStatus;
