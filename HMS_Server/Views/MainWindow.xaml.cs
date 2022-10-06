@@ -329,18 +329,18 @@ namespace HMS_Server
                 errorHandler,
                 adminSettingsVM.dataVerificationEnabled);
 
-            // HMS Input Setup
+            // Main Menu HMS: Input Setup
             ucHMSInputSetup.Init(
                 sensorDataRetrieval.GetSensorDataList(),
                 hmsInputData,
                 config);
 
-            // HMS Output
+            // Main Menu HMS: HMS Output
             ucHMSOutput.Init(
                 hmsOutputData,
                 config);
 
-            // Sensor Groups
+            // Main Menu HMS: Sensor Groups
             ucHMSSensorGroups.Init(
                 hmsInputData,
                 sensorStatus,

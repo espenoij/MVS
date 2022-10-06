@@ -146,14 +146,14 @@ namespace HMS_Server
             pitchMaxUp20mData.dbColumn = "pitch_max_up_20m";
             pitchMaxUp20mData.InitProcessing(errorHandler, ErrorMessageCategory.AdminUser, adminSettingsVM);
             pitchMaxUp20mData.AddProcessing(CalculationType.RoundingDecimals, 1);
-            pitchMaxUp20mData.AddProcessing(CalculationType.TimeHeighest, Constants.Minutes20);
+            pitchMaxUp20mData.AddProcessing(CalculationType.TimeMax, Constants.Minutes20);
 
             pitchMaxDown20mData.id = (int)ValueType.PitchMaxDown20m;
             pitchMaxDown20mData.name = "Pitch Max Down (20m)";
             pitchMaxDown20mData.dbColumn = "pitch_max_down_20m";
             pitchMaxDown20mData.InitProcessing(errorHandler, ErrorMessageCategory.AdminUser, adminSettingsVM);
             pitchMaxDown20mData.AddProcessing(CalculationType.RoundingDecimals, 1);
-            pitchMaxDown20mData.AddProcessing(CalculationType.TimeLowest, Constants.Minutes20);
+            pitchMaxDown20mData.AddProcessing(CalculationType.TimeMin, Constants.Minutes20);
 
             rollMax20mData.id = (int)ValueType.RollMax20m;
             rollMax20mData.name = "Roll Max (20m)";
@@ -174,7 +174,7 @@ namespace HMS_Server
             rollMaxLeft20mData.dbColumn = "roll_max_left_20m";
             rollMaxLeft20mData.InitProcessing(errorHandler, ErrorMessageCategory.AdminUser, adminSettingsVM);
             rollMaxLeft20mData.AddProcessing(CalculationType.RoundingDecimals, 1);
-            rollMaxLeft20mData.AddProcessing(CalculationType.TimeLowest, Constants.Minutes20);
+            rollMaxLeft20mData.AddProcessing(CalculationType.TimeMin, Constants.Minutes20);
             //rollMaxLeft20mData.AddProcessing(CalculationType.Absolute, 0);
 
             rollMaxRight20mData.id = (int)ValueType.RollMaxRight20m;
@@ -182,7 +182,7 @@ namespace HMS_Server
             rollMaxRight20mData.dbColumn = "roll_max_right_20m";
             rollMaxRight20mData.InitProcessing(errorHandler, ErrorMessageCategory.AdminUser, adminSettingsVM);
             rollMaxRight20mData.AddProcessing(CalculationType.RoundingDecimals, 1);
-            rollMaxRight20mData.AddProcessing(CalculationType.TimeHeighest, Constants.Minutes20);
+            rollMaxRight20mData.AddProcessing(CalculationType.TimeMax, Constants.Minutes20);
             //rollMaxRight20mData.AddProcessing(CalculationType.Absolute, 0);
 
             inclinationData.id = (int)ValueType.Inclination;
@@ -237,14 +237,14 @@ namespace HMS_Server
             significantHeaveRateMax20mData.dbColumn = "shr_max_20m";
             significantHeaveRateMax20mData.InitProcessing(errorHandler, ErrorMessageCategory.AdminUser, adminSettingsVM);
             significantHeaveRateMax20mData.AddProcessing(CalculationType.RoundingDecimals, 1);
-            significantHeaveRateMax20mData.AddProcessing(CalculationType.TimeHeighest, Constants.Minutes20);
+            significantHeaveRateMax20mData.AddProcessing(CalculationType.TimeMax, Constants.Minutes20);
 
             significantHeaveRateMax3hData.id = (int)ValueType.SignificantHeaveRateMax3h; // Brukes til å justere akse på graf
             significantHeaveRateMax3hData.name = "Significant Heave Rate Max (3h)";
             significantHeaveRateMax3hData.dbColumn = "shr_max_3h";
             significantHeaveRateMax3hData.InitProcessing(errorHandler, ErrorMessageCategory.AdminUser, adminSettingsVM);
             significantHeaveRateMax3hData.AddProcessing(CalculationType.RoundingDecimals, 1);
-            significantHeaveRateMax3hData.AddProcessing(CalculationType.TimeHeighest, Constants.Hours3);
+            significantHeaveRateMax3hData.AddProcessing(CalculationType.TimeMax, Constants.Hours3);
 
             maxHeaveRateData.id = (int)ValueType.MaxHeaveRate;
             maxHeaveRateData.name = "Max Heave Rate";
@@ -288,7 +288,7 @@ namespace HMS_Server
 
         public void Update(HMSDataCollection hmsInputDataList)
         {
-                    // Input data
+            // Input data
             HMSData inputPitchData = new HMSData();
             HMSData inputRollData = new HMSData();
             HMSData inputHeaveData = new HMSData();
@@ -374,18 +374,65 @@ namespace HMS_Server
             }
 
             // Inclination
-            if (rollMax20mData.status == DataStatus.OK &&
-                pitchMax20mData.status == DataStatus.OK)
+            if ((rollMax20mData.status == DataStatus.OK ||
+                 rollMax20mData.status == DataStatus.OK_NA) &&
+                (pitchMax20mData.status == DataStatus.OK ||
+                 pitchMax20mData.status == DataStatus.OK_NA))
             {
                 UpdateInclinationData(pitchData, rollData, inclination20mMaxData, Constants.Minutes20);
+            }
+
+            if ((rollMax3hData.status == DataStatus.OK ||
+                 rollMax3hData.status == DataStatus.OK_NA) &&
+                (pitchMax3hData.status == DataStatus.OK ||
+                 pitchMax3hData.status == DataStatus.OK_NA))
+            {
                 UpdateInclinationData(pitchData, rollData, inclination3hMaxData, Constants.Hours3);
             }
 
+            // Status settes i UpdateInclinationData, og denne er grei for NOROG, men for CAP
+            // må status også reflektere motion buffer fyllingsgrad.
             if (adminSettingsVM.regulationStandard == RegulationStandard.CAP)
             {
-                inclination20mMaxData.status = pitchMax20mData.status;
-                inclination3hMaxData.status = pitchMax3hData.status;
+                // 20 mins
+                if (pitchMax20mData.status == DataStatus.OK && rollMax20mData.status == DataStatus.OK)
+                {
+                    inclination20mMaxData.status = DataStatus.OK;
+                }
+                else
+                if ((pitchMax20mData.status == DataStatus.OK && rollMax20mData.status == DataStatus.OK_NA) ||
+                    (pitchMax20mData.status == DataStatus.OK_NA && rollMax20mData.status == DataStatus.OK) ||
+                    (pitchMax20mData.status == DataStatus.OK_NA && rollMax20mData.status == DataStatus.OK_NA))
+                {
+                    inclination20mMaxData.status = DataStatus.OK_NA;
+                }
+                else
+                {
+                    inclination20mMaxData.status = DataStatus.TIMEOUT_ERROR;
+                }
+
+                // 3 hours
+                if (pitchMax3hData.status == DataStatus.OK && rollMax3hData.status == DataStatus.OK)
+                {
+                    inclination3hMaxData.status = DataStatus.OK;
+                }
+                else
+                if ((pitchMax3hData.status == DataStatus.OK && rollMax3hData.status == DataStatus.OK_NA) ||
+                    (pitchMax3hData.status == DataStatus.OK_NA && rollMax3hData.status == DataStatus.OK) ||
+                    (pitchMax3hData.status == DataStatus.OK_NA && rollMax3hData.status == DataStatus.OK_NA))
+                {
+                    inclination3hMaxData.status = DataStatus.OK_NA;
+                }
+                else
+                {
+                    inclination3hMaxData.status = DataStatus.TIMEOUT_ERROR;
+                }
             }
+
+            // TEST
+            if (inclination20mMaxData.status == DataStatus.OK)
+                inclination3hMaxData.status = DataStatus.OK;
+
 
             // Heave Height
             heaveHeightData.DoProcessing(inputHeaveData);
@@ -478,6 +525,10 @@ namespace HMS_Server
                 // Sjekke buffer fyllingsgrad
                 if (!adminSettingsVM.overrideMotionBuffer)
                     MSIBufferFillCheck(mms_msi_list, Constants.MotionBufferFill99Pct, msiData);
+
+                //// TEST
+                //if (msiData.status == DataStatus.OK)
+                //    mms_msi_list[0].data = 0.0;
             }
 
             // Sjekker motion limits
@@ -533,7 +584,8 @@ namespace HMS_Server
             if (value.timestamp != dataList.LastOrDefault()?.timestamp)
             {
                 // Sjekke status
-                if (value.status == DataStatus.OK)
+                if (value.status == DataStatus.OK ||
+                    value.status == DataStatus.OK_NA)
                 {
                     // Korreksjon R og avrunding til en desimal
                     double newValueCorrR = Math.Round(value.data * adminSettingsVM.msiCorrectionR, 1, MidpointRounding.AwayFromZero);
@@ -580,7 +632,11 @@ namespace HMS_Server
             if (findNewMaxValue)
             {
                 double oldMaxValue = maxValue.data;
+
                 maxValue.data = 0;
+                maxValue.timestamp = value.timestamp;
+                maxValue.status = value.status;
+                
                 bool foundNewMax = false;
 
                 for (int i = 0; i < dataList.Count && !foundNewMax; i++)
@@ -589,8 +645,6 @@ namespace HMS_Server
                     if (dataList[i]?.data == oldMaxValue)
                     {
                         maxValue.data = Math.Round(dataList[i].data * adminSettingsVM.msiCorrectionR, 1, MidpointRounding.AwayFromZero);
-                        maxValue.timestamp = value.timestamp;
-                        maxValue.status = value.status;
 
                         foundNewMax = true;
                     }
@@ -599,8 +653,6 @@ namespace HMS_Server
                         if (dataList[i]?.data > maxValue.data)
                         {
                             maxValue.data = Math.Round(dataList[i].data * adminSettingsVM.msiCorrectionR, 1, MidpointRounding.AwayFromZero);
-                            maxValue.timestamp = value.timestamp;
-                            maxValue.status = value.status;
                         }
                     }
                 }
@@ -688,7 +740,7 @@ namespace HMS_Server
         /////////////////////////////////////////////////////////////////////////////
         // Inclination Kalkulasjon
         /////////////////////////////////////////////////////////////////////////////
-        private void CalcInclination(HMSData pitch, HMSData roll, HMSData outputData)
+        private void CalcInclination(HMSData pitch, HMSData roll, HMSData outputInclination)
         {
             if (pitch != null &&
                 roll != null)
@@ -696,20 +748,25 @@ namespace HMS_Server
                 // Beregne inclination
                 double inclination = HMSCalc.Inclination(pitch.data, roll.data);
 
-                // Data
-                outputData.data = Math.Round(inclination, 1, MidpointRounding.AwayFromZero);
+                // Output
+                outputInclination.data = Math.Round(inclination, 1, MidpointRounding.AwayFromZero);
 
                 // Timestamp
                 if (pitch.timestamp < roll.timestamp)
-                    outputData.timestamp = pitch.timestamp;
+                    outputInclination.timestamp = pitch.timestamp;
                 else
-                    outputData.timestamp = roll.timestamp;
+                    outputInclination.timestamp = roll.timestamp;
 
                 // Status
                 if (pitch.status == DataStatus.OK && roll.status == DataStatus.OK)
-                    outputData.status = DataStatus.OK;
+                    outputInclination.status = DataStatus.OK;
                 else
-                    outputData.status = DataStatus.TIMEOUT_ERROR;
+                if ((pitch.status == DataStatus.OK && roll.status == DataStatus.OK_NA) ||
+                    (pitch.status == DataStatus.OK_NA && roll.status == DataStatus.OK) ||
+                    (pitch.status == DataStatus.OK_NA && roll.status == DataStatus.OK_NA))
+                    outputInclination.status = DataStatus.OK_NA;
+                else
+                    outputInclination.status = DataStatus.TIMEOUT_ERROR;
             }
         }
 

@@ -41,7 +41,7 @@ namespace HMS_Client
                 }
 
                 // Her skal vi ikke ha 0 data i grafen
-                if (msiwsi.status != DataStatus.TIMEOUT_ERROR)
+                if (msiwsi.status == DataStatus.OK)
                 {
                     // Oppdatere data som skal ut i grafer
                     GraphBuffer.UpdateWithCull(msiwsi, msiwsi20mDataList, Constants.GraphCullFrequency20m);
@@ -79,6 +79,12 @@ namespace HMS_Client
             {
                 msi = clientSensorList.GetData(ValueType.MSI);
                 wsi = clientSensorList.GetData(ValueType.WSI);
+
+                //// TEST
+                //if (clientSensorList.GetData(ValueType.MSI).status == DataStatus.OK)
+                //    OnPropertyChanged(nameof(msiString));
+                //if (msi.status == DataStatus.OK)
+                //    OnPropertyChanged(nameof(msiString));
 
                 // MSI / WSI Graf
                 /////////////////////////////////////////////////

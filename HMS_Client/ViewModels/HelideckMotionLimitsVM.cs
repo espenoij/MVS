@@ -74,6 +74,10 @@ namespace HMS_Client
             // Inclination
             inclinationMax20mData = hmsDataList.GetData(ValueType.InclinationMax20m);
 
+            //// TEST
+            //if (hmsDataList.GetData(ValueType.InclinationMax20m).status == DataStatus.OK)
+            //    OnPropertyChanged(nameof(inclinationMax20mString));
+
             // Heave
             heaveHeightMax20mData = hmsDataList.GetData(ValueType.HeaveHeightMax20m);
             heavePeriodData = hmsDataList.GetData(ValueType.HeavePeriodMean);
@@ -568,7 +572,8 @@ namespace HMS_Client
                 if (inclinationMax20mData != null)
                 {
                     // Sjekke om data er gyldig
-                    if (inclinationMax20mData.status == DataStatus.OK)
+                    if (pitchMax20mData.status == DataStatus.OK &&
+                        rollMax20mData.status == DataStatus.OK)
                     {
                         return string.Format("{0} °", inclinationMax20mData.data.ToString("0.0"));
                     }

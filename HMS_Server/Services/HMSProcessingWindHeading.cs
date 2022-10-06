@@ -619,6 +619,9 @@ namespace HMS_Server
                     emsWindSpeed10m.BufferFillCheck(0, windSamplesInBuffer10m);
             }
 
+            //// TEST
+            //helideckWindSpeed2m.data = helideckWindSpeed10m.BufferSize(0);
+
             UpdateGustData(
                 windSpeedCorrectedToHelideck,
                 helideckWindSpeed10m,

@@ -305,6 +305,11 @@ namespace HMS_Server
                     status = DataStatus.OK_NA;
         }
 
+        public int BufferSize(int dataCalcPos)
+        {
+            return (int)dataProcess.BufferCount(dataCalcPos);
+        }
+
         public void ResetDataCalculations()
         {
             // Resette dataCalculations

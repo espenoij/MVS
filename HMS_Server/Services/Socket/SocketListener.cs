@@ -481,11 +481,19 @@ namespace HMS_Server
                 // Liste med data som skal sendes
                 List<HMSData> sendData = new List<HMSData>();
 
+
                 // Plukke data fra HMS data listen
                 foreach (var hmsOutputData in hmsOutputDataList.ToList())
                 {
+                    //// TEST
+                    //if (hmsOutputData.id == (int)ValueType.InclinationMax20m &&
+                    //    hmsOutputData.status == DataStatus.OK)
+                    //{
+                    //    hmsOutputData.data3 = String.Empty;
+                    //}                        
+
                     //if (AdminMode.IsActive)
-                    //    socketConsole.Add(string.Format("SerializeSensorData: id:{0}, data:{1}, timestamp:{2}", sensorData.id, sensorData.calculatedData, sensorData.timeStampString));
+                        //    socketConsole.Add(string.Format("SerializeSensorData: id:{0}, data:{1}, timestamp:{2}", sensorData.id, sensorData.calculatedData, sensorData.timeStampString));
 
                     HMSData hmsData = new HMSData();
 

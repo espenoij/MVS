@@ -422,7 +422,7 @@ namespace HMS_Server
 
 
                         ////////////////////////////////////////////////////////////////////////////////////////////////
-                        /// Time Heighest
+                        /// Time Max
                         ////////////////////////////////////////////////////////////////////////////////////////////////
                         /// Beskrivelse:
                         /// Returnerer høyeste verdi i et datasett innsamlet over en angitt tid.
@@ -431,7 +431,7 @@ namespace HMS_Server
                         /// Max pitch up
                         /// Max roll left
 
-                        case CalculationType.TimeHeighest:
+                        case CalculationType.TimeMax:
 
                             // Sjekke om string er numerisk
                             if (double.TryParse(newData, Constants.numberStyle, Constants.cultureInfo, out value))
@@ -468,7 +468,6 @@ namespace HMS_Server
                                         // Fjerne gammel verdi fra verdiliste
                                         timeHighestDataList.RemoveAt(0);
                                     }
-                                    //timeMaxPositiveDataList.TrimExcess();
 
                                     // Finne ny høyeste verdi
                                     if (findNewMaxValue)
@@ -499,7 +498,7 @@ namespace HMS_Server
                             break;
 
                         ////////////////////////////////////////////////////////////////////////////////////////////////
-                        /// Time Low
+                        /// Time Min
                         ////////////////////////////////////////////////////////////////////////////////////////////////
                         /// Beskrivelse:
                         /// Returnerer laveste verdi i et datasett innsamlet over en angitt tid.
@@ -508,7 +507,7 @@ namespace HMS_Server
                         /// Max pitch up
                         /// Max roll left
 
-                        case CalculationType.TimeLowest:
+                        case CalculationType.TimeMin:
 
                             // Sjekke om string er numerisk
                             if (double.TryParse(newData, Constants.numberStyle, Constants.cultureInfo, out value))
@@ -545,7 +544,6 @@ namespace HMS_Server
                                         // Fjerne gammel verdi fra verdiliste
                                         timeLowestDataList.RemoveAt(0);
                                     }
-                                    //timeMaxNegativeDataList.TrimExcess();
 
                                     // Finne ny laveste verdi
                                     if (findNewMaxValue)
@@ -1695,10 +1693,10 @@ namespace HMS_Server
                 case CalculationType.TimeMaxAbsolute:
                     return timeMaxAbsoluteDataList.Count;
 
-                case CalculationType.TimeHeighest:
+                case CalculationType.TimeMax:
                     return timeHighestDataList.Count;
 
-                case CalculationType.TimeLowest:
+                case CalculationType.TimeMin:
                     return timeLowestDataList.Count;
 
                 case CalculationType.SignificantHeaveRate:
@@ -1746,10 +1744,10 @@ namespace HMS_Server
         TimeAverage,
         [Description("Wind Dir Time Average")]
         WindDirTimeAverage,
-        [Description("Time Highest")]
-        TimeHeighest,
-        [Description("Time Lowest")]
-        TimeLowest,
+        [Description("Time Max")]
+        TimeMax,
+        [Description("Time Min")]
+        TimeMin,
         [Description("Time Max Absolute")]
         TimeMaxAbsolute,
         [Description("Time Max Height")]

@@ -184,7 +184,7 @@ namespace HMS_Server
                         if (hmsData.timestamp.AddMilliseconds(dataTimeout) < DateTime.UtcNow)
                             hmsData.status = DataStatus.TIMEOUT_ERROR;
                         else
-                            hmsData.status = DataStatus.OK;
+                            hmsData.status = serverData.First().status;
                     }
                     // Ingen verdi i data samlingen knyttet til verdi i mottaker listen
                     else
