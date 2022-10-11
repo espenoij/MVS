@@ -57,13 +57,13 @@ public class UserInputs
                 case HelicopterType.AS365:
                 case HelicopterType.EC135:
                 case HelicopterType.EC155:
-                case HelicopterType.EC175:
+                //case HelicopterType.EC175:
                 case HelicopterType.AW139:
                 case HelicopterType.AW169:
                 case HelicopterType.S76:
                 case HelicopterType.B212:
                 case HelicopterType.B412:
-                case HelicopterType.B525:
+                //case HelicopterType.B525:
                 case HelicopterType.H145:
                 case HelicopterType.H175:
                     return HelicopterCategory.Medium;

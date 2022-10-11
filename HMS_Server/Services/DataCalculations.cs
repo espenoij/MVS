@@ -1638,11 +1638,11 @@ namespace HMS_Server
             timeMaxAbsoluteDataList.Clear();
 
             // Time Max Positive
-            timeHighestMaxValue = 0;
+            timeHighestMaxValue = double.MinValue;
             timeHighestDataList.Clear();
 
-            // Time Max Positive
-            timeLowestMinValue = 0;
+            // Time Max Negative
+            timeLowestMinValue = double.MaxValue;
             timeLowestDataList.Clear();
 
             // Significant Heave Rate

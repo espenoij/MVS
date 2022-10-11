@@ -51,14 +51,14 @@ public enum HelicopterType
     B212,       // Medium
     [Description("B412 - CAT B")]
     B412,       // Medium
-    [Description("B525 - CAT B")]
-    B525,       // Medium
+    //[Description("B525 - CAT B")]
+    //B525,       // Medium
     [Description("EC135 - CAT B")]
     EC135,      // Medium
     [Description("EC155 - CAT B")]
     EC155,      // Medium
-    [Description("EC175 - CAT B")]
-    EC175,      // Medium
+    //[Description("EC175 - CAT B")]
+    //EC175,      // Medium
     [Description("EC225 - CAT A")]
     EC225,      // Heavy
     [Description("H145 - CAT B")]

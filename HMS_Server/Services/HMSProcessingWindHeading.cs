@@ -645,9 +645,9 @@ namespace HMS_Server
                 // Relative Wind Direction
                 /////////////////////////////////////////////////////////////////////////////////////////
                 if (areaWindDirection2m.status == DataStatus.OK &&
-                    inputVesselHeading.status == DataStatus.OK)
+                    vesselHeading.status == DataStatus.OK)
                 {
-                    relativeWindDir.data = areaWindDirection2m.data - (inputVesselHeading.data + (userInputs.onDeckHelicopterHeading - userInputs.onDeckVesselHeading));
+                    relativeWindDir.data = areaWindDirection2m.data - (vesselHeading.data + (userInputs.onDeckHelicopterHeading - userInputs.onDeckVesselHeading));
 
                     if (relativeWindDir.data > 180)
                         relativeWindDir.data = 360 - relativeWindDir.data;
@@ -667,24 +667,24 @@ namespace HMS_Server
 
                 // Vessel Heading Delta
                 /////////////////////////////////////////////////////////////////////////////////////////
-                if (inputVesselHeading.status == DataStatus.OK &&
+                if (vesselHeading.status == DataStatus.OK &&
                     userInputs.onDeckTime != DateTime.MinValue &&
                     userInputs.onDeckVesselHeading != -1)
                 {
                     // Dersom vi gikk til on-deck display før vind data buffer ble fyllt opp, kan vi komme
                     // her uten en utgangs-vind-retning å beregne mot.
                     if (userInputs.onDeckVesselHeading == -1)
-                        userInputs.onDeckVesselHeading = inputVesselHeading.data;
+                        userInputs.onDeckVesselHeading = vesselHeading.data;
 
-                    vesselHeadingDelta.data = inputVesselHeading.data - userInputs.onDeckVesselHeading;
+                    vesselHeadingDelta.data = vesselHeading.data - userInputs.onDeckVesselHeading;
                 }
                 else
                 {
                     vesselHeadingDelta.data = 0;
                 }
 
-                vesselHeadingDelta.status = inputVesselHeading.status;
-                vesselHeadingDelta.timestamp = inputVesselHeading.timestamp;
+                vesselHeadingDelta.status = vesselHeading.status;
+                vesselHeadingDelta.timestamp = vesselHeading.timestamp;
 
                 // Wind Direction Delta
                 /////////////////////////////////////////////////////////////////////////////////////////
@@ -721,8 +721,8 @@ namespace HMS_Server
                     heliHdg += Constants.HeadingMax;
 
                 helicopterHeading.data = heliHdg;
-                helicopterHeading.status = inputVesselHeading.status;
-                helicopterHeading.timestamp = inputVesselHeading.timestamp;
+                helicopterHeading.status = vesselHeading.status;
+                helicopterHeading.timestamp = vesselHeading.timestamp;
             }
             else
             {
@@ -732,16 +732,16 @@ namespace HMS_Server
                 relativeWindDir.timestamp = areaWindDirection2m.timestamp;
 
                 vesselHeadingDelta.data = 0;
-                vesselHeadingDelta.status = inputVesselHeading.status;
-                vesselHeadingDelta.timestamp = inputVesselHeading.timestamp;
+                vesselHeadingDelta.status = vesselHeading.status;
+                vesselHeadingDelta.timestamp = vesselHeading.timestamp;
 
                 windDirectionDelta.data = 0;
                 windDirectionDelta.status = areaWindDirection2m.status;
                 windDirectionDelta.timestamp = areaWindDirection2m.timestamp;
 
                 helicopterHeading.data = 0;
-                helicopterHeading.status = inputVesselHeading.status;
-                helicopterHeading.timestamp = inputVesselHeading.timestamp;
+                helicopterHeading.status = vesselHeading.status;
+                helicopterHeading.timestamp = vesselHeading.timestamp;
             }
 
             // WSI

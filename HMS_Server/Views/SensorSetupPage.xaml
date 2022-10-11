@@ -26,8 +26,6 @@
                     Width="*" />
                 <ColumnDefinition
                     Width="*" />
-                <ColumnDefinition
-                    Width="*" />
             </Grid.ColumnDefinitions>
 
             <Grid.RowDefinitions>
@@ -51,8 +49,7 @@
                 <Button
                     Name="btnNew"
                     Click="btnNew_Click"
-                    Width="110"
-                    Margin="8,0,0,0">New</Button>
+                    Width="110">New</Button>
                 <Button
                     Name="btnCopy"
                     Click="btnCopy_Click"
@@ -70,7 +67,7 @@
             <StackPanel
                 Name="spSensorValueSetupButtons"
                 Grid.Row="0"
-                Grid.Column="2"
+                Grid.Column="1"
                 Orientation="Horizontal"
                 HorizontalAlignment="Right"
                 Margin="8">

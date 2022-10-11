@@ -151,6 +151,10 @@ namespace HMS_Server
             else
                 enableEMS = false;
 
+            // Sette EMS aktivert
+            // Settes kun her, mao server må restartes for å endre denne.
+            _EMSActive = enableEMS;
+
             // Auto Start HMS Processing
             if (config.ReadWithDefault(ConfigKey.AutoStartHMS, "1") == "1")
                 autoStartHMS = true;
@@ -533,8 +537,14 @@ namespace HMS_Server
             }
         }
 
+        private bool _EMSActive { get; set; }
+        public bool EMSActive
+        {
+            get { return _EMSActive; }
+        }
+
         /////////////////////////////////////////////////////////////////////////////
-        // EMS: Enable EMS Page
+        // Autostart HMS Server data collection
         /////////////////////////////////////////////////////////////////////////////
         private bool _autoStartHMS { get; set; }
         public bool autoStartHMS
