@@ -650,7 +650,7 @@ namespace HMS_Server
                     relativeWindDir.data = areaWindDirection2m.data - (vesselHeading.data + (userInputs.onDeckHelicopterHeading - userInputs.onDeckVesselHeading));
 
                     if (relativeWindDir.data > 180)
-                        relativeWindDir.data = 360 - relativeWindDir.data;
+                        relativeWindDir.data = relativeWindDir.data - 360;
                     else
                         if (relativeWindDir.data < -180)
                         relativeWindDir.data = relativeWindDir.data + 360;
