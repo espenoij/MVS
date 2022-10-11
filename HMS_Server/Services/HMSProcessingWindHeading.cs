@@ -440,7 +440,7 @@ namespace HMS_Server
                 // Korrigert til helidekk (+10m)
                 WindVector windHelideck = WindSpeedHeightCorrection(
                                     inputSensorWindSpeed.data,
-                                    apparentWindDirection.data + adminSettingsVM.magneticDeclination,
+                                    apparentWindDirection.data,
                                     sog,
                                     cog,
                                     adminSettingsVM.windSensorHeight,
@@ -449,7 +449,7 @@ namespace HMS_Server
                 // Korrigert til 10m over havet MSL (for EMS)
                 WindVector wind10mAboveMSL = WindSpeedHeightCorrection(
                                     inputSensorWindSpeed.data,
-                                    apparentWindDirection.data + adminSettingsVM.magneticDeclination,
+                                    apparentWindDirection.data,
                                     sog,
                                     cog,
                                     adminSettingsVM.windSensorHeight,
@@ -1139,7 +1139,7 @@ namespace HMS_Server
             }
         }
 
-        private WindVector WindSpeedHeightCorrection(double apparentWindSpeed, double apparentWindDirTrue, double sog, double cog, double sensorHeight, double adjustedHeight)
+        private WindVector WindSpeedHeightCorrection(double apparentWindSpeed, double apparentWindDirMag, double sog, double cog, double sensorHeight, double adjustedHeight)
         {
             WindVector VOG = new WindVector();
             WindVector WAh = new WindVector();
@@ -1163,8 +1163,8 @@ namespace HMS_Server
             }
 
             // WAh (apparent wind at sensor)
-            WAh.x = Math.Cos(HMSCalc.ToRadians(apparentWindDirTrue)) * apparentWindSpeed;
-            WAh.y = Math.Sin(HMSCalc.ToRadians(apparentWindDirTrue)) * apparentWindSpeed;
+            WAh.x = Math.Cos(HMSCalc.ToRadians(apparentWindDirMag + adminSettingsVM.magneticDeclination)) * apparentWindSpeed;
+            WAh.y = Math.Sin(HMSCalc.ToRadians(apparentWindDirMag + adminSettingsVM.magneticDeclination)) * apparentWindSpeed;
 
             // WGh (true wind at sensor, målt sensor vind komponent + vind som følge av fartøyets hastighet (komponent) over bakken)
             WGh.x = WAh.x + VOG.x;
@@ -1192,6 +1192,9 @@ namespace HMS_Server
             // Kalkulere true wind at helideck height / adjustedHeight
             WAH.spd = Math.Sqrt(Math.Pow(WAH.x, 2) + Math.Pow(WAH.y, 2));
             WAH.dir = HMSCalc.ToDegrees(Math.Atan2(WAH.y, WAH.x));
+
+            // Legge på igjen magnetic declination
+            WAH.dir += adminSettingsVM.magneticDeclination;
 
             while (WAH.dir < 0)
                 WAH.dir += 360;
