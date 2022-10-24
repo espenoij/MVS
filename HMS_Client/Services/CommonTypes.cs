@@ -499,3 +499,11 @@ public enum BinaryType
     [Description("Double (8 Byte)")]
     Double
 }
+
+public enum OutputConnectionType
+{
+    [Description("MODBUS RTU")]
+    MODBUS_RTU,
+    [Description("ADAM-4060")]
+    ADAM_4060
+}

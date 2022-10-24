@@ -147,10 +147,22 @@
         <telerik:GroupBox
             Grid.Column="0"
             Grid.Row="0"
-            Header="MODBUS Connection"
+            Header="Connection"
             Margin="8">
 
             <StackPanel>
+
+                <DockPanel>
+                    <Label
+                        Name="lbConnectionType"
+                        Width="140"
+                        Content="Connection Type"
+                        VerticalAlignment="Center" />
+                    <telerik:RadComboBox
+                        Width="auto"
+                        Name="cboConnectionType"
+                        SelectionChanged="cboConnectionType_SelectionChanged" />
+                </DockPanel>
 
                 <DockPanel>
                     <Label
@@ -234,6 +246,18 @@
                         Name="tbSlaveID"
                         LostFocus="tbSlaveID_LostFocus"
                         KeyDown="tbSlaveID_KeyDown" />
+                </DockPanel>
+
+                <DockPanel>
+                    <Label
+                        Name="lbAdamAddress"
+                        Width="140"
+                        Content="Address"
+                        VerticalAlignment="Center" />
+                    <TextBox
+                        Name="tbAdamAddress"
+                        LostFocus="tbAdamAddress_LostFocus"
+                        KeyDown="tbAdamAddress_KeyDown" />
                 </DockPanel>
 
                 <DockPanel>

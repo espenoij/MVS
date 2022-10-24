@@ -876,7 +876,7 @@ namespace HMS_Server
         // Oppdatere eksisterende lights output data i config fil
         public void SetLightsOutputData(SensorData sensorData)
         {
-            // NB! Dersom data med angitt ID allerede finnes vil dette gi feilmelding
+            // NB! Dersom data med angitt ID ikke finnes vil dette gi feilmelding
             SensorConfig sensorConfig = new SensorConfig(sensorData);
 
             try

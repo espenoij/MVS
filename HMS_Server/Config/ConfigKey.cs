@@ -73,13 +73,13 @@
 
     // Lights Output Data
     public const string LightsOutput = "LightsOutput";
+    public const string LightsOutputType = "LightsOutputType";
 
     // Client: Report data
     public const string Report = "Report";
     public const string NameOfHLO = "NameOfHLO";
     public const string Email = "Email";
     public const string Telephone = "Telephone";
-    public const string DynamicPositioning = "DynamicPositioning";
     public const string AccurateMonitoringEquipment = "AccurateMonitoringEquipment";
     public const string AreaWindDirection = "AreaWindDirection";
     public const string AreaWindVelocity = "AreaWindVelocity";

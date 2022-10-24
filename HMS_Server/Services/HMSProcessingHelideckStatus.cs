@@ -137,54 +137,66 @@ namespace HMS_Server
             }
             else
             {
-                switch (status)
+                if (hmsOutputData.GetData(ValueType.PitchMax20m).limitStatus == LimitStatus.OK &&
+                    hmsOutputData.GetData(ValueType.RollMax20m).limitStatus == LimitStatus.OK &&
+                    hmsOutputData.GetData(ValueType.InclinationMax20m).limitStatus == LimitStatus.OK &&
+                    hmsOutputData.GetData(ValueType.SignificantHeaveRate).limitStatus == LimitStatus.OK)
                 {
-                    // Init
-                    case HelideckStatusType.OFF:
-                        if (IsWithinLimits(ValueType.PitchMax20m) &&
-                            IsWithinLimits(ValueType.RollMax20m) &&
-                            IsWithinLimits(ValueType.InclinationMax20m) &&
-                            IsWithinLimits(ValueType.SignificantHeaveRate))
-                        {
-                            return GetMSIWSIState();
-                        }
-                        else
-                        {
-                            return HelideckStatusType.RED;
-                        }
-
-                    // Blue/amber -> Red
-                    case HelideckStatusType.BLUE:
-                    case HelideckStatusType.AMBER:
-                        if (!IsWithinLimits(ValueType.PitchMax20m) ||
-                            !IsWithinLimits(ValueType.RollMax20m) ||
-                            !IsWithinLimits(ValueType.InclinationMax20m) ||
-                            (!IsWithinLimits(ValueType.SignificantHeaveRate) && hmsProcessingMotion.IsSHR2mMinAboveLimit()))
-                        {
-                            return HelideckStatusType.RED;
-                        }
-                        else
-                        {
-                            return GetMSIWSIState();
-                        }
-
-                    // Red -> Blue/amber
-                    case HelideckStatusType.RED:
-                        if (IsWithinLimits(ValueType.PitchMax20m) &&
-                            IsWithinLimits(ValueType.RollMax20m) &&
-                            IsWithinLimits(ValueType.InclinationMax20m) &&
-                            IsWithinLimits(ValueType.SignificantHeaveRate) && hmsProcessingMotion.IsSHR10mMeanBelowLimit()) 
-                        {
-                            return GetMSIWSIState();
-                        }
-                        else
-                        {
-                            return status;
-                        }
-
-                    default:
-                        return status;
+                    return GetMSIWSIState();
                 }
+                else
+                {
+                    return HelideckStatusType.RED;
+                }
+
+                //switch (status)
+                //{
+                //    // Init
+                //    case HelideckStatusType.OFF:
+                //        if (IsWithinLimits(ValueType.PitchMax20m) &&
+                //            IsWithinLimits(ValueType.RollMax20m) &&
+                //            IsWithinLimits(ValueType.InclinationMax20m) &&
+                //            IsWithinLimits(ValueType.SignificantHeaveRate))
+                //        {
+                //            return GetMSIWSIState();
+                //        }
+                //        else
+                //        {
+                //            return HelideckStatusType.RED;
+                //        }
+
+                //    // Blue/amber -> Red
+                //    case HelideckStatusType.BLUE:
+                //    case HelideckStatusType.AMBER:
+                //        if (!IsWithinLimits(ValueType.PitchMax20m) ||
+                //            !IsWithinLimits(ValueType.RollMax20m) ||
+                //            !IsWithinLimits(ValueType.InclinationMax20m) ||
+                //            (!IsWithinLimits(ValueType.SignificantHeaveRate) && hmsProcessingMotion.IsSHR2mMinAboveLimit()))
+                //        {
+                //            return HelideckStatusType.RED;
+                //        }
+                //        else
+                //        {
+                //            return GetMSIWSIState();
+                //        }
+
+                //    // Red -> Blue/amber
+                //    case HelideckStatusType.RED:
+                //        if (IsWithinLimits(ValueType.PitchMax20m) &&
+                //            IsWithinLimits(ValueType.RollMax20m) &&
+                //            IsWithinLimits(ValueType.InclinationMax20m) &&
+                //            IsWithinLimits(ValueType.SignificantHeaveRate) && hmsProcessingMotion.IsSHR10mMeanBelowLimit())
+                //        {
+                //            return GetMSIWSIState();
+                //        }
+                //        else
+                //        {
+                //            return status;
+                //        }
+
+                //    default:
+                //        return status;
+                //}
             }
         }
 
@@ -214,56 +226,69 @@ namespace HMS_Server
                 hmsOutputData.GetData(ValueType.HeaveHeightMax20m)?.status != DataStatus.TIMEOUT_ERROR &&
                 hmsOutputData.GetData(ValueType.SignificantHeaveRateMax20m)?.status != DataStatus.TIMEOUT_ERROR)
             {
-                switch (status)
+                if (hmsOutputData.GetData(ValueType.PitchMax20m).limitStatus == LimitStatus.OK &&
+                    hmsOutputData.GetData(ValueType.RollMax20m).limitStatus == LimitStatus.OK &&
+                    hmsOutputData.GetData(ValueType.InclinationMax20m).limitStatus == LimitStatus.OK &&
+                    hmsOutputData.GetData(ValueType.HeaveHeightMax20m).limitStatus == LimitStatus.OK &&
+                    hmsOutputData.GetData(ValueType.SignificantHeaveRate).limitStatus == LimitStatus.OK)
                 {
-                    // Init
-                    case HelideckStatusType.OFF:
-                        if (IsWithinLimits(ValueType.PitchMax20m) &&
-                            IsWithinLimits(ValueType.RollMax20m) &&
-                            IsWithinLimits(ValueType.InclinationMax20m) &&
-                            IsWithinLimits(ValueType.HeaveHeightMax20m) &&
-                            IsWithinLimits(ValueType.SignificantHeaveRate))
-                        {
-                            return HelideckStatusType.GREEN;
-                        }
-                        else
-                        {
-                            return HelideckStatusType.RED;
-                        }
-
-                    // Green -> Red
-                    case HelideckStatusType.GREEN:
-                        if (!IsWithinLimits(ValueType.PitchMax20m) ||
-                            !IsWithinLimits(ValueType.RollMax20m) ||
-                            !IsWithinLimits(ValueType.InclinationMax20m) ||
-                            !IsWithinLimits(ValueType.HeaveHeightMax20m) ||
-                            (!IsWithinLimits(ValueType.SignificantHeaveRate) && hmsProcessingMotion.IsSHR2mMinAboveLimit()))
-                        {
-                            return HelideckStatusType.RED;
-                        }
-                        else
-                        {
-                            return status;
-                        }
-
-                    // Red -> Green
-                    case HelideckStatusType.RED:
-                        if (IsWithinLimits(ValueType.PitchMax20m) &&
-                            IsWithinLimits(ValueType.RollMax20m) &&
-                            IsWithinLimits(ValueType.InclinationMax20m) &&
-                            IsWithinLimits(ValueType.HeaveHeightMax20m) &&
-                            IsWithinLimits(ValueType.SignificantHeaveRate) && hmsProcessingMotion.IsSHR10mMeanBelowLimit())
-                        {
-                            return HelideckStatusType.GREEN;
-                        }
-                        else
-                        {
-                            return status;
-                        }
-
-                    default:
-                        return status;
+                    return GetMSIWSIState();
                 }
+                else
+                {
+                    return HelideckStatusType.RED;
+                }
+
+                //switch (status)
+                //{
+                //    // Init
+                //    case HelideckStatusType.OFF:
+                //        if (IsWithinLimits(ValueType.PitchMax20m) &&
+                //            IsWithinLimits(ValueType.RollMax20m) &&
+                //            IsWithinLimits(ValueType.InclinationMax20m) &&
+                //            IsWithinLimits(ValueType.HeaveHeightMax20m) &&
+                //            IsWithinLimits(ValueType.SignificantHeaveRate))
+                //        {
+                //            return HelideckStatusType.GREEN;
+                //        }
+                //        else
+                //        {
+                //            return HelideckStatusType.RED;
+                //        }
+
+                //    // Green -> Red
+                //    case HelideckStatusType.GREEN:
+                //        if (!IsWithinLimits(ValueType.PitchMax20m) ||
+                //            !IsWithinLimits(ValueType.RollMax20m) ||
+                //            !IsWithinLimits(ValueType.InclinationMax20m) ||
+                //            !IsWithinLimits(ValueType.HeaveHeightMax20m) ||
+                //            (!IsWithinLimits(ValueType.SignificantHeaveRate) && hmsProcessingMotion.IsSHR2mMinAboveLimit()))
+                //        {
+                //            return HelideckStatusType.RED;
+                //        }
+                //        else
+                //        {
+                //            return status;
+                //        }
+
+                //    // Red -> Green
+                //    case HelideckStatusType.RED:
+                //        if (IsWithinLimits(ValueType.PitchMax20m) &&
+                //            IsWithinLimits(ValueType.RollMax20m) &&
+                //            IsWithinLimits(ValueType.InclinationMax20m) &&
+                //            IsWithinLimits(ValueType.HeaveHeightMax20m) &&
+                //            IsWithinLimits(ValueType.SignificantHeaveRate) && hmsProcessingMotion.IsSHR10mMeanBelowLimit())
+                //        {
+                //            return HelideckStatusType.GREEN;
+                //        }
+                //        else
+                //        {
+                //            return status;
+                //        }
+
+                //    default:
+                //        return status;
+                //}
             }
             // Slår av lysene når vi ikke har ordentlige data
             else

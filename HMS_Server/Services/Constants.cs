@@ -1,4 +1,5 @@
-﻿using System;
+﻿using Org.BouncyCastle.Utilities.Encoders;
+using System;
 using System.Globalization;
 
 class Constants
@@ -121,6 +122,11 @@ class Constants
     public const int MODBUSSlaveIDMin = 0;
     public const int MODBUSSlaveIDMax = byte.MaxValue; // 255
     public const int MODBUSSlaveIDDefault = 1;
+
+    // ADAM Adddress
+    public const int AdamAddressMin = 0;
+    public const int AdamAddressMax = 255;
+    public const int AdamAddressDefault = 0;
 
     // Database
     public const string DefaultDatabaseName = "ses_hms";

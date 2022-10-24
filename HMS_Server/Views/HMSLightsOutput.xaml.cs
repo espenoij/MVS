@@ -1,6 +1,7 @@
 ﻿using NModbus;
 using NModbus.Serial;
 using System;
+using System.Diagnostics;
 using System.IO.Ports;
 using System.Threading;
 using System.Windows;
@@ -19,7 +20,9 @@ namespace HMS_Server
         // Configuration settings
         private Config config;
 
-        private SensorData lightsOutputData;
+        // Connection Type
+        private LightsOutputConnection outputConnection;
+
         private HMSLightsOutputVM hmsLightsOutputVM;
         private AdminSettingsVM adminSettingsVM;
 
@@ -31,18 +34,18 @@ namespace HMS_Server
         private IModbusSerialMaster modbusSerialMaster = null;
         private ModbusHelper modbusHelper = new ModbusHelper();
 
-        private DispatcherTimer modbusWriter = new DispatcherTimer();
+        private DispatcherTimer sendLightsOutput = new DispatcherTimer();
 
         public HMSLightsOutput()
         {
             InitializeComponent();
         }
 
-        public void Init(SensorData lightsOutputData, HMSLightsOutputVM hmsLightsOutputVM, Config config, AdminSettingsVM adminSettingsVM, ErrorHandler errorHandler)
+        public void Init(LightsOutputConnection outputConnection, HMSLightsOutputVM hmsLightsOutputVM, Config config, AdminSettingsVM adminSettingsVM, ErrorHandler errorHandler)
         {
             DataContext = hmsLightsOutputVM;
 
-            this.lightsOutputData = lightsOutputData;
+            this.outputConnection = outputConnection;
             this.hmsLightsOutputVM = hmsLightsOutputVM;
             this.config = config;
             this.adminSettingsVM = adminSettingsVM;
@@ -64,6 +67,13 @@ namespace HMS_Server
 
                 cboTestDisplayMode.SelectedIndex = (int)DisplayMode.PreLanding;
                 cboTestDisplayMode.Text = DisplayMode.PreLanding.ToString();
+
+                // Connection Types
+                ///////////////////////////////////////////////////////////
+                foreach (OutputConnectionType value in Enum.GetValues(typeof(OutputConnectionType)))
+                    cboConnectionType.Items.Add(value.GetDescription());
+
+                cboConnectionType.Text = outputConnection.type.GetDescription();
 
                 // COM Port Names
                 ///////////////////////////////////////////////////////////
@@ -87,8 +97,7 @@ namespace HMS_Server
                 cboBaudRate.Items.Add(256000);
 
                 // Skrive satt baud rate i combobox feltet
-                if (lightsOutputData.modbus != null)
-                    cboBaudRate.Text = lightsOutputData.modbus.baudRate.ToString();
+                cboBaudRate.Text = outputConnection.baudRate.ToString();
 
                 // Data Bits
                 ///////////////////////////////////////////////////////////
@@ -96,8 +105,7 @@ namespace HMS_Server
                 cboDataBits.Items.Add(8);
 
                 // Skrive satt data bit type i combobox feltet
-                if (lightsOutputData.modbus != null)
-                    cboDataBits.Text = lightsOutputData.modbus.dataBits.ToString();
+                cboDataBits.Text = outputConnection.dataBits.ToString();
 
                 // Stop Bits
                 ///////////////////////////////////////////////////////////
@@ -106,8 +114,7 @@ namespace HMS_Server
                 cboStopBits.Items.Add("Two");
 
                 // Skrive satt stop bit i combobox feltet
-                if (lightsOutputData.modbus != null)
-                    cboStopBits.Text = lightsOutputData.modbus.stopBits.ToString();
+                cboStopBits.Text = outputConnection.stopBits.ToString();
 
                 // Parity 
                 ///////////////////////////////////////////////////////////
@@ -118,8 +125,7 @@ namespace HMS_Server
                 cboParity.Items.Add("Space");
 
                 // Skrive satt parity i combobox feltet
-                if (lightsOutputData.modbus != null)
-                    cboParity.Text = lightsOutputData.modbus.parity.ToString();
+                cboParity.Text = outputConnection.parity.ToString();
 
                 // Handshake
                 ///////////////////////////////////////////////////////////
@@ -128,82 +134,146 @@ namespace HMS_Server
                 cboHandShake.Items.Add("RequestToSend");
                 cboHandShake.Items.Add("RequestToSendXOnXOff");
 
+                // Skrive satt hand shake type i combobox feltet
+                cboHandShake.Text = outputConnection.handshake.ToString();
+
                 // Slave ID
                 ///////////////////////////////////////////////////////////
-                if (lightsOutputData.modbus != null)
-                    tbSlaveID.Text = lightsOutputData.modbus.slaveID.ToString();
+                if (outputConnection.type == OutputConnectionType.MODBUS_RTU)
+                {
+                    if (outputConnection.data.modbus != null)
+                        tbSlaveID.Text = outputConnection.data.modbus.slaveID.ToString();
+                }
+
+                // ADAM Address
+                ///////////////////////////////////////////////////////////
+                if (outputConnection.type == OutputConnectionType.ADAM_4060)
+                {
+                    if (outputConnection.data.serialPort != null)
+                        tbAdamAddress.Text = outputConnection.adamAddress;
+                }
 
                 // Sette serie port settings på SerialPort object 
                 ///////////////////////////////////////////////////////////
-                if (lightsOutputData.modbus != null)
-                {
-                    serialPort.PortName = lightsOutputData.modbus.portName;
-                    serialPort.BaudRate = lightsOutputData.modbus.baudRate;
-                    serialPort.DataBits = lightsOutputData.modbus.dataBits;
-                    serialPort.StopBits = lightsOutputData.modbus.stopBits;
-                    serialPort.Parity = lightsOutputData.modbus.parity;
-                    serialPort.Handshake = lightsOutputData.modbus.handshake;
-                }
+                serialPort.PortName = outputConnection.portName;
+                serialPort.BaudRate = outputConnection.baudRate;
+                serialPort.DataBits = outputConnection.dataBits;
+                serialPort.StopBits = outputConnection.stopBits;
+                serialPort.Parity = outputConnection.parity;
+                serialPort.Handshake = outputConnection.handshake;
+
+                // Sette UI elementer
+                UpdateUI();
 
                 // Timeout
                 serialPort.ReadTimeout = Constants.ModbusTimeout;       // NB! Brukes av ReadHoldingRegisters. Uten disse vil programmet fryse dersom ReadHoldingRegisters ikke får svar.
                 serialPort.WriteTimeout = Constants.ModbusTimeout;
 
-                // Skrive satt hand shake type i combobox feltet
-                if (lightsOutputData.modbus != null)
-                    cboHandShake.Text = lightsOutputData.modbus.handshake.ToString();
+                // Sende lys output
+                sendLightsOutput.Interval = TimeSpan.FromMilliseconds(config.ReadWithDefault(ConfigKey.LightsOutputFrequency, Constants.LightsOutputFrequencyDefault));
+                sendLightsOutput.Tick += runLightsOutput;
 
-                // MODBUS RTU Writer
-                modbusWriter.Interval = TimeSpan.FromMilliseconds(config.ReadWithDefault(ConfigKey.LightsOutputFrequency, Constants.LightsOutputFrequencyDefault));
-                modbusWriter.Tick += runModbusWriter;
-
-                void runModbusWriter(object sender, EventArgs e)
+                void runLightsOutput(object sender, EventArgs e)
                 {
-                    Thread thread = new Thread(() => ModbusSendLightsOutputCommand());
+                    Thread thread = new Thread(() => LightsOutputCommand());
                     thread.IsBackground = true;
                     thread.Start();
 
-                    void ModbusSendLightsOutputCommand()
+                    void LightsOutputCommand()
                     {
-                        if (lightsOutputData.modbus != null)
+                        switch (outputConnection.type)
                         {
-                            try
-                            {
-                                // Sjekke om porten er åpen
-                                if (!serialPort.IsOpen)
-                                    serialPort.Open();
-
-                                if (serialPort.IsOpen)
+                            // MODBUS RTU
+                            case OutputConnectionType.MODBUS_RTU:
+                                if (outputConnection.data.modbus != null)
                                 {
-                                    // Starte MODBUS
-                                    if (modbusSerialMaster == null)
-                                        modbusSerialMaster = modbusFactory.CreateRtuMaster(new SerialPortAdapter(serialPort));
-
-                                    // Ok master?
-                                    if (modbusSerialMaster.Transport != null)
+                                    try
                                     {
-                                        // Løpe gjennom adressene det skal sendes på
-                                        for (int i = 0; i < hmsLightsOutputVM.outputAddressList.Count; i++)
+                                        // Sjekke om porten er åpen
+                                        if (!serialPort.IsOpen)
+                                            serialPort.Open();
+
+                                        if (serialPort.IsOpen)
                                         {
-                                            // Sende data (true/false)
-                                            modbusSerialMaster?.WriteSingleCoil(
-                                               lightsOutputData.modbus.slaveID,
-                                               hmsLightsOutputVM.outputAddressList[i],
-                                               LightOutputToWriteValue(hmsLightsOutputVM.HMSLightsOutput, i));
+                                            // Starte MODBUS
+                                            if (modbusSerialMaster == null)
+                                                modbusSerialMaster = modbusFactory.CreateRtuMaster(new SerialPortAdapter(serialPort));
+
+                                            // Løpe gjennom adressene det skal sendes på
+                                            for (int i = 0; i < hmsLightsOutputVM.outputAddressList.Count; i++)
+                                            {
+                                                // Ok master?
+                                                if (modbusSerialMaster?.Transport != null)
+                                                {
+                                                    // Sende data (true/false)
+                                                    modbusSerialMaster?.WriteSingleCoil(
+                                                       outputConnection.data.modbus.slaveID,
+                                                       hmsLightsOutputVM.outputAddressList[i],
+                                                       LightOutputToWriteValue(hmsLightsOutputVM.HMSLightsOutput, i));
+                                                }
+                                            }
                                         }
                                     }
+                                    catch (Exception ex)
+                                    {
+                                        // WinModbus må settes opp med RTU og autocreate datamap må være på, ellers får vi feilmeldinger
+                                        errorHandler.Insert(
+                                            new ErrorMessage(
+                                                DateTime.UtcNow,
+                                                ErrorMessageType.MODBUS,
+                                                ErrorMessageCategory.AdminUser,
+                                                string.Format("Modbus Write (Lights Output): {0}", ex.Message)));
+                                    }
                                 }
-                            }
-                            catch (Exception ex)
-                            {
-                                // WinModbus må settes opp med RTU og autocreate datamap må være på, ellers får vi feilmeldinger
-                                errorHandler.Insert(
-                                    new ErrorMessage(
-                                        DateTime.UtcNow,
-                                        ErrorMessageType.MODBUS,
-                                        ErrorMessageCategory.AdminUser,
-                                        string.Format("Modbus_Write (Lights Output): {0}", ex.Message)));
-                            }
+                                break;
+
+                            // ADAM-4060
+                            case OutputConnectionType.ADAM_4060:
+                                if (outputConnection.data.serialPort != null)
+                                {
+                                    try
+                                    {
+                                        // Sjekke om porten er åpen
+                                        if (!serialPort.IsOpen)
+                                            serialPort.Open();
+
+                                        if (serialPort.IsOpen)
+                                        {
+                                            int channelOutput = 0;
+
+                                            if (LightOutputToWriteValue(hmsLightsOutputVM.HMSLightsOutput, 0))
+                                                channelOutput += 1;
+
+                                            if (LightOutputToWriteValue(hmsLightsOutputVM.HMSLightsOutput, 1))
+                                                channelOutput += 2;
+
+                                            if (LightOutputToWriteValue(hmsLightsOutputVM.HMSLightsOutput, 2))
+                                                channelOutput += 4;
+
+                                            int channelOutputValue;
+                                            Int32.TryParse(outputConnection.adamAddress, out channelOutputValue);
+
+                                            // Generere ADAM-4060 kommando for å sette addresser
+                                            string command = String.Format("#{0}00{1}\n",
+                                                channelOutputValue.ToString("X2"),
+                                                channelOutput.ToString("X2"));
+
+                                            // Skrive commando til serie port
+                                            serialPort.Write(command);
+                                        }
+                                    }
+                                    catch (Exception ex)
+                                    {
+                                        // WinModbus må settes opp med RTU og autocreate datamap må være på, ellers får vi feilmeldinger
+                                        errorHandler.Insert(
+                                            new ErrorMessage(
+                                                DateTime.UtcNow,
+                                                ErrorMessageType.SerialPort,
+                                                ErrorMessageCategory.AdminUser,
+                                                string.Format("Serial Port Write (Lights Output): {0}", ex.Message)));
+                                    }
+                                }
+                                break;
                         }
                     }
                 }
@@ -234,6 +304,8 @@ namespace HMS_Server
 
         private void EnableModbusUI(bool state)
         {
+            lbConnectionType.IsEnabled = state;
+            cboConnectionType.IsEnabled = state;
             lbPortName.IsEnabled = state;
             cboPortName.IsEnabled = state;
             lbBaudRate.IsEnabled = state;
@@ -248,12 +320,56 @@ namespace HMS_Server
             cboHandShake.IsEnabled = state;
             lbSlaveID.IsEnabled = state;
             tbSlaveID.IsEnabled = state;
+            lbAdamAddress.IsEnabled = state;
+            tbAdamAddress.IsEnabled = state;
             lbOutputAddress1.IsEnabled = state;
             tbOutputAddress1.IsEnabled = state;
             lbOutputAddress2.IsEnabled = state;
             tbOutputAddress2.IsEnabled = state;
             lbOutputAddress3.IsEnabled = state;
             tbOutputAddress3.IsEnabled = state;
+        }
+
+        private void UpdateUI()
+        {
+            switch (outputConnection.type)
+            {
+                case OutputConnectionType.MODBUS_RTU:
+                    lbSlaveID.Visibility = Visibility.Visible;
+                    tbSlaveID.Visibility = Visibility.Visible;
+
+                    lbAdamAddress.Visibility = Visibility.Collapsed;
+                    tbAdamAddress.Visibility = Visibility.Collapsed;
+
+                    lbOutputAddress1.Visibility = Visibility.Visible;
+                    tbOutputAddress1.Visibility = Visibility.Visible;
+
+                    lbOutputAddress2.Visibility = Visibility.Visible;
+                    tbOutputAddress2.Visibility = Visibility.Visible;
+
+                    lbOutputAddress3.Visibility = Visibility.Visible;
+                    tbOutputAddress3.Visibility = Visibility.Visible;
+
+                    break;
+
+                case OutputConnectionType.ADAM_4060:
+                    lbSlaveID.Visibility = Visibility.Collapsed;
+                    tbSlaveID.Visibility = Visibility.Collapsed;
+
+                    lbAdamAddress.Visibility = Visibility.Visible;
+                    tbAdamAddress.Visibility = Visibility.Visible;
+
+                    lbOutputAddress1.Visibility = Visibility.Collapsed;
+                    tbOutputAddress1.Visibility = Visibility.Collapsed;
+
+                    lbOutputAddress2.Visibility = Visibility.Collapsed;
+                    tbOutputAddress2.Visibility = Visibility.Collapsed;
+
+                    lbOutputAddress3.Visibility = Visibility.Collapsed;
+                    tbOutputAddress3.Visibility = Visibility.Collapsed;
+
+                    break;
+            }
         }
 
         private void ReadAvailableCOMPorts()
@@ -272,7 +388,7 @@ namespace HMS_Server
                     cboPortName.Items.Add(comPortName);
 
                 // Skrive satt COM port i combobox tekst feltet
-                cboPortName.Text = lightsOutputData.modbus?.portName;
+                cboPortName.Text = outputConnection.portName;
             }
             else
             {
@@ -283,23 +399,32 @@ namespace HMS_Server
 
         private void Modbus_Start()
         {
-            modbusWriter.Start();
+            sendLightsOutput?.Start();
         }
 
         private void Modbus_Stop()
         {
-            modbusWriter.Stop();
+            sendLightsOutput?.Stop();
 
             // Lukke port
             serialPort?.Close();
 
             // Stenge MODBUS grensesnitt
-            modbusSerialMaster?.Dispose();
+            //modbusSerialMaster?.Dispose();
         }
 
         private bool LightOutputToWriteValue(LightsOutputType lightsOutput, int output)
         {
             // Q - Aviation: Q40RI03L HMS Repeater Light System
+            //
+            // Lys output:      Kanal 0:    Kanal 1:    Kanal 2:
+            // Red              1           1           0
+            // Amber            1           0           0
+            // Blue             0           1           0
+            // Red Flash        1           1           1
+            // Amber Flash      1           0           1
+            // Blue Flash       0           1           1
+
             switch (output)
             {
                 case 0:
@@ -342,26 +467,30 @@ namespace HMS_Server
             }
         }
 
+        private void cboConnectionType_SelectionChanged(object sender, SelectionChangedEventArgs e)
+        {
+            if (outputConnection != null)
+            {
+                outputConnection.SetType(EnumExtension.GetEnumValueFromDescription<OutputConnectionType>(cboConnectionType.Text));
+
+                UpdateUI();
+            }
+        }
+
         private void cboCOMPort_SelectionChanged(object sender, SelectionChangedEventArgs e)
         {
             // Lagre ny setting
-            if (lightsOutputData.modbus != null)
-            {
-                lightsOutputData.modbus.portName = cboPortName.SelectedItem.ToString();
-                config.SetLightsOutputData(lightsOutputData);
-            }
+            outputConnection.portName = cboPortName.SelectedItem.ToString();
+            config.SetLightsOutputData(outputConnection.data);
         }
 
         private void cboBaudRate_SelectionChanged(object sender, SelectionChangedEventArgs e)
         {
             try
             {
-                if (lightsOutputData.modbus != null)
-                {
-                    // Lagre ny setting
-                    lightsOutputData.modbus.baudRate = Convert.ToInt32(cboBaudRate.SelectedItem.ToString());
-                    config.SetLightsOutputData(lightsOutputData);
-                }
+                // Lagre ny setting
+                outputConnection.baudRate = Convert.ToInt32(cboBaudRate.SelectedItem.ToString());
+                config.SetLightsOutputData(outputConnection.data);
             }
             catch (Exception ex)
             {
@@ -373,12 +502,9 @@ namespace HMS_Server
         {
             try
             {
-                if (lightsOutputData.modbus != null)
-                {
-                    // Lagre ny setting
-                    lightsOutputData.modbus.dataBits = Convert.ToInt16(cboDataBits.SelectedItem.ToString());
-                    config.SetLightsOutputData(lightsOutputData);
-                }
+                // Lagre ny setting
+                outputConnection.dataBits = Convert.ToInt16(cboDataBits.SelectedItem.ToString());
+                config.SetLightsOutputData(outputConnection.data);
             }
             catch (Exception ex)
             {
@@ -390,12 +516,9 @@ namespace HMS_Server
         {
             try
             {
-                if (lightsOutputData.modbus != null)
-                {
-                    // Lagre ny setting
-                    lightsOutputData.modbus.stopBits = (StopBits)Enum.Parse(typeof(StopBits), cboStopBits.SelectedItem.ToString());
-                    config.SetLightsOutputData(lightsOutputData);
-                }
+                // Lagre ny setting
+                outputConnection.stopBits = (StopBits)Enum.Parse(typeof(StopBits), cboStopBits.SelectedItem.ToString());
+                config.SetLightsOutputData(outputConnection.data);
             }
             catch (Exception ex)
             {
@@ -407,12 +530,9 @@ namespace HMS_Server
         {
             try
             {
-                if (lightsOutputData.modbus != null)
-                {
-                    // Lagre ny setting
-                    lightsOutputData.modbus.parity = (Parity)Enum.Parse(typeof(Parity), cboParity.SelectedItem.ToString());
-                    config.SetLightsOutputData(lightsOutputData);
-                }
+                // Lagre ny setting
+                outputConnection.parity = (Parity)Enum.Parse(typeof(Parity), cboParity.SelectedItem.ToString());
+                config.SetLightsOutputData(outputConnection.data);
             }
             catch (Exception ex)
             {
@@ -424,12 +544,9 @@ namespace HMS_Server
         {
             try
             {
-                if (lightsOutputData.modbus != null)
-                {
-                    // Lagre ny setting
-                    lightsOutputData.modbus.handshake = (Handshake)Enum.Parse(typeof(Handshake), cboHandShake.SelectedItem.ToString());
-                    config.SetLightsOutputData(lightsOutputData);
-                }
+                // Lagre ny setting
+                outputConnection.handshake = (Handshake)Enum.Parse(typeof(Handshake), cboHandShake.SelectedItem.ToString());
+                config.SetLightsOutputData(outputConnection.data);
             }
             catch (Exception ex)
             {
@@ -453,7 +570,7 @@ namespace HMS_Server
 
         private void tbSlaveID_Update(object sender)
         {
-            if (lightsOutputData.modbus != null)
+            if (outputConnection.data.modbus != null)
             {
                 // Sjekk av input
                 DataValidation.Double(
@@ -463,9 +580,41 @@ namespace HMS_Server
                 Constants.MODBUSSlaveIDDefault,
                 out double validatedInput);
 
-                lightsOutputData.modbus.slaveID = (byte)validatedInput;
+                outputConnection.data.modbus.slaveID = (byte)validatedInput;
                 (sender as TextBox).Text = validatedInput.ToString();
+
+                config.SetLightsOutputData(outputConnection.data);
             }
+        }
+
+        private void tbAdamAddress_LostFocus(object sender, RoutedEventArgs e)
+        {
+            tbAdamAddress_Update(sender);
+        }
+
+        private void tbAdamAddress_KeyDown(object sender, KeyEventArgs e)
+        {
+            if (e.Key == Key.Return)
+            {
+                tbAdamAddress_Update(sender);
+                Keyboard.ClearFocus();
+            }
+        }
+
+        private void tbAdamAddress_Update(object sender)
+        {
+            // Sjekk av input
+            DataValidation.Double(
+            (sender as TextBox).Text,
+            Constants.AdamAddressMin,
+            Constants.AdamAddressMax,
+            Constants.AdamAddressDefault,
+            out double validatedInput);
+
+            outputConnection.adamAddress = validatedInput.ToString();
+            (sender as TextBox).Text = validatedInput.ToString();
+
+            config.SetLightsOutputData(outputConnection.data);
         }
 
         private void cboTestHelideckStatus_SelectionChanged(object sender, SelectionChangedEventArgs e)
