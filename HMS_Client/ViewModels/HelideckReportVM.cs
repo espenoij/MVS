@@ -1146,6 +1146,7 @@ namespace HMS_Client
                 _fuelQuantity = value;
                 config.Write(ConfigKey.FuelQuantity, value.ToString(), ConfigType.Data);
                 OnPropertyChanged();
+                OnPropertyChanged(nameof(fuelQuantityString));
             }
         }
 
