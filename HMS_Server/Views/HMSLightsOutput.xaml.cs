@@ -254,11 +254,11 @@ namespace HMS_Server
                                             Int32.TryParse(outputConnection.adamAddress, out channelOutputValue);
 
                                             // Generere ADAM-4060 kommando for å sette addresser
-                                            string command = String.Format("#{0}00{1}\r\n",
+                                            string command = String.Format("#{0}00{1}\r",
                                                 channelOutputValue.ToString("X2"),
                                                 channelOutput.ToString("X2"));
 
-                                            // Skrive commando til serie port
+                                            // Skrive kommando til serie port
                                             serialPort.Write(command);
                                         }
                                     }
