@@ -124,7 +124,7 @@
         </Style>
 
     </UserControl.Resources>
-    
+
     <Grid>
 
         <Grid.ColumnDefinitions>
@@ -150,157 +150,511 @@
             Header="Connection"
             Margin="8">
 
-            <StackPanel>
+            <Grid
+                Grid.Column="0"
+                Grid.Row="0"
+                Margin="8">
 
-                <DockPanel>
-                    <Label
-                        Name="lbConnectionType"
-                        Width="140"
-                        Content="Connection Type"
-                        VerticalAlignment="Center" />
-                    <telerik:RadComboBox
-                        Width="auto"
-                        Name="cboConnectionType"
-                        SelectionChanged="cboConnectionType_SelectionChanged" />
-                </DockPanel>
+                <Grid.RowDefinitions>
+                    <RowDefinition
+                        Height="*" />
+                    <RowDefinition
+                        Height="*" />
+                    <RowDefinition
+                        Height="*" />
+                    <RowDefinition
+                        Height="*" />
+                    <RowDefinition
+                        Height="*" />
+                    <RowDefinition
+                        Height="*" />
+                    <RowDefinition
+                        Height="*" />
+                    <RowDefinition
+                        Height="*" />
+                    <RowDefinition
+                        Height="*" />
+                    <RowDefinition
+                        Height="*" />
+                    <RowDefinition
+                        Height="*" />
+                </Grid.RowDefinitions>
 
-                <DockPanel>
-                    <Label
-                        Name="lbPortName"
-                        Width="140"
-                        Content="Port Name"
-                        VerticalAlignment="Center" />
-                    <telerik:RadComboBox
-                        Width="auto"
-                        Name="cboPortName"
-                        SelectionChanged="cboCOMPort_SelectionChanged" />
-                </DockPanel>
+                <!--Connection type-->
+                <Grid
+                    Grid.Row="0">
 
-                <DockPanel>
-                    <Label
-                        Name="lbBaudRate"
-                        Width="140"
-                        Content="Baud Rate"
-                        VerticalAlignment="Center" />
-                    <telerik:RadComboBox
-                        Width="auto"
-                        Name="cboBaudRate"
-                        SelectionChanged="cboBaudRate_SelectionChanged" />
-                </DockPanel>
+                    <Grid.ColumnDefinitions>
+                        <ColumnDefinition
+                            Width="*" />
+                        <ColumnDefinition
+                            Width="*" />
+                    </Grid.ColumnDefinitions>
 
-                <DockPanel>
-                    <Label
-                        Name="lbDataBits"
-                        Width="140"
-                        Content="Data Bits"
-                        VerticalAlignment="Center" />
-                    <telerik:RadComboBox
-                        Width="auto"
-                        Name="cboDataBits"
-                        SelectionChanged="cboDataBits_SelectionChanged" />
-                </DockPanel>
+                    <Viewbox
+                        Grid.Column="0"
+                        StretchDirection="Both"
+                        Stretch="Uniform"
+                        HorizontalAlignment="Left">
 
-                <DockPanel>
-                    <Label
-                        Name="lbStopBits"
-                        Width="140"
-                        Content="Stop Bits"
-                        VerticalAlignment="Center" />
-                    <telerik:RadComboBox
-                        Width="auto"
-                        Name="cboStopBits"
-                        SelectionChanged="cboStopBits_SelectionChanged" />
-                </DockPanel>
+                        <telerik:Label
+                            Name="lbConnectionType"
+                            Content="Connection Type"
+                            VerticalAlignment="Center" />
+                    </Viewbox>
 
-                <DockPanel>
-                    <Label
-                        Name="lbParity"
-                        Width="140"
-                        Content="Data Parity"
-                        VerticalAlignment="Center" />
-                    <telerik:RadComboBox
-                        Width="auto"
-                        Name="cboParity"
-                        SelectionChanged="cboDataParity_SelectionChanged" />
-                </DockPanel>
+                    <Viewbox
+                        Grid.Column="1"
+                        StretchDirection="Both"
+                        Stretch="Uniform"
+                        HorizontalAlignment="Right">
 
-                <DockPanel>
-                    <Label
-                        Name="lbHandShake"
-                        Width="140"
-                        Content="Hand Shake"
-                        VerticalAlignment="Center" />
-                    <telerik:RadComboBox
-                        Width="auto"
-                        Name="cboHandShake"
-                        SelectionChanged="cboHandShake_SelectionChanged" />
-                </DockPanel>
+                        <telerik:RadComboBox
+                            Width="200"
+                            Name="cboConnectionType"
+                            SelectionChanged="cboConnectionType_SelectionChanged" />
 
-                <DockPanel>
-                    <Label
-                        Name="lbSlaveID"
-                        Width="140"
-                        Content="Slave ID"
-                        VerticalAlignment="Center" />
-                    <TextBox
-                        Name="tbSlaveID"
-                        LostFocus="tbSlaveID_LostFocus"
-                        KeyDown="tbSlaveID_KeyDown" />
-                </DockPanel>
+                    </Viewbox>
 
-                <DockPanel>
-                    <Label
-                        Name="lbAdamAddress"
-                        Width="140"
-                        Content="Address"
-                        VerticalAlignment="Center" />
-                    <TextBox
-                        Name="tbAdamAddress"
-                        LostFocus="tbAdamAddress_LostFocus"
-                        KeyDown="tbAdamAddress_KeyDown" />
-                </DockPanel>
+                </Grid>
 
-                <DockPanel>
-                    <Label
-                        Name="lbOutputAddress1"
-                        Width="140"
-                        Content="Output Address 1"
-                        VerticalAlignment="Center" />
-                    <TextBox
-                        Name="tbOutputAddress1"
-                        Text="{Binding Path=outputAddress1}"
-                        LostFocus="tbOutputAddress1_LostFocus"
-                        KeyDown="tbOutputAddress1_KeyDown" />
-                </DockPanel>
+                <!--Port Name-->
+                <Grid
+                    Grid.Row="1">
 
-                <DockPanel>
-                    <Label
-                        Name="lbOutputAddress2"
-                        Width="140"
-                        Content="Output Address 2"
-                        VerticalAlignment="Center" />
-                    <TextBox
-                        Name="tbOutputAddress2"
-                        Text="{Binding Path=outputAddress2}"
-                        LostFocus="tbOutputAddress2_LostFocus"
-                        KeyDown="tbOutputAddress2_KeyDown" />
-                </DockPanel>
+                    <Grid.ColumnDefinitions>
+                        <ColumnDefinition
+                            Width="*" />
+                        <ColumnDefinition
+                            Width="*" />
+                    </Grid.ColumnDefinitions>
 
-                <DockPanel>
-                    <Label
-                        Name="lbOutputAddress3"
-                        Width="140"
-                        Content="Output Address 3"
-                        VerticalAlignment="Center" />
-                    <TextBox
-                        Name="tbOutputAddress3"
-                        Text="{Binding Path=outputAddress3}"
-                        LostFocus="tbOutputAddress3_LostFocus"
-                        KeyDown="tbOutputAddress3_KeyDown" />
-                </DockPanel>
+                    <Viewbox
+                        Grid.Column="0"
+                        StretchDirection="Both"
+                        Stretch="Uniform"
+                        HorizontalAlignment="Left">
 
-            </StackPanel>
-            
+                        <telerik:Label
+                            Name="lbPortName"
+                            Content="Port Name"
+                            VerticalAlignment="Center" />
+                    </Viewbox>
+
+                    <Viewbox
+                        Grid.Column="1"
+                        StretchDirection="Both"
+                        Stretch="Uniform"
+                        HorizontalAlignment="Right">
+
+                        <telerik:RadComboBox
+                            Width="200"
+                            Name="cboPortName"
+                            SelectionChanged="cboCOMPort_SelectionChanged" />
+
+                    </Viewbox>
+
+                </Grid>
+
+                <!--Baud Rate-->
+                <Grid
+                    Grid.Row="2">
+
+                    <Grid.ColumnDefinitions>
+                        <ColumnDefinition
+                            Width="*" />
+                        <ColumnDefinition
+                            Width="*" />
+                    </Grid.ColumnDefinitions>
+
+                    <Viewbox
+                        Grid.Column="0"
+                        StretchDirection="Both"
+                        Stretch="Uniform"
+                        HorizontalAlignment="Left">
+
+                        <telerik:Label
+                            Name="lbBaudRate"
+                            Content="Baud Rate"
+                            VerticalAlignment="Center" />
+
+                    </Viewbox>
+
+                    <Viewbox
+                        Grid.Column="1"
+                        StretchDirection="Both"
+                        Stretch="Uniform"
+                        HorizontalAlignment="Right">
+
+                        <telerik:RadComboBox
+                            Name="cboBaudRate"
+                            Width="200"
+                            SelectionChanged="cboBaudRate_SelectionChanged" />
+                    </Viewbox>
+
+                </Grid>
+
+                <!--Data Bits-->
+                <Grid
+                    Grid.Row="3">
+
+                    <Grid.ColumnDefinitions>
+                        <ColumnDefinition
+                            Width="*" />
+                        <ColumnDefinition
+                            Width="*" />
+                    </Grid.ColumnDefinitions>
+
+                    <Viewbox
+                        Grid.Column="0"
+                        StretchDirection="Both"
+                        Stretch="Uniform"
+                        HorizontalAlignment="Left">
+
+                        <telerik:Label
+                            Name="lbDataBits"
+                            Content="Data Bits"
+                            VerticalAlignment="Center" />
+
+                    </Viewbox>
+
+                    <Viewbox
+                        Grid.Column="1"
+                        StretchDirection="Both"
+                        Stretch="Uniform"
+                        HorizontalAlignment="Right">
+
+                        <telerik:RadComboBox
+                            Width="200"
+                            Name="cboDataBits"
+                            SelectionChanged="cboDataBits_SelectionChanged" />
+
+                    </Viewbox>
+
+                </Grid>
+
+                <!--Stop Bits-->
+                <Grid
+                    Grid.Row="4">
+
+                    <Grid.ColumnDefinitions>
+                        <ColumnDefinition
+                            Width="*" />
+                        <ColumnDefinition
+                            Width="*" />
+                    </Grid.ColumnDefinitions>
+
+                    <Viewbox
+                        Grid.Column="0"
+                        StretchDirection="Both"
+                        Stretch="Uniform"
+                        HorizontalAlignment="Left">
+
+                        <telerik:Label
+                            Name="lbStopBits"
+                            Content="Stop Bits"
+                            VerticalAlignment="Center" />
+
+                    </Viewbox>
+
+                    <Viewbox
+                        Grid.Column="1"
+                        StretchDirection="Both"
+                        Stretch="Uniform"
+                        HorizontalAlignment="Right">
+
+                        <telerik:RadComboBox
+                            Width="200"
+                            Name="cboStopBits"
+                            SelectionChanged="cboStopBits_SelectionChanged" />
+
+                    </Viewbox>
+
+                </Grid>
+
+                <!--Data Parity-->
+                <Grid
+                    Grid.Row="5">
+
+                    <Grid.ColumnDefinitions>
+                        <ColumnDefinition
+                            Width="*" />
+                        <ColumnDefinition
+                            Width="*" />
+                    </Grid.ColumnDefinitions>
+
+                    <Viewbox
+                        Grid.Column="0"
+                        StretchDirection="Both"
+                        Stretch="Uniform"
+                        HorizontalAlignment="Left">
+
+                        <telerik:Label
+                            Name="lbParity"
+                            Content="Data Parity"
+                            VerticalAlignment="Center" />
+
+                    </Viewbox>
+
+                    <Viewbox
+                        Grid.Column="1"
+                        StretchDirection="Both"
+                        Stretch="Uniform"
+                        HorizontalAlignment="Right">
+
+                        <telerik:RadComboBox
+                            Width="200"
+                            Name="cboParity"
+                            SelectionChanged="cboDataParity_SelectionChanged" />
+
+                    </Viewbox>
+
+                </Grid>
+
+                <!--Hand Shake-->
+                <Grid
+                    Grid.Row="6">
+
+                    <Grid.ColumnDefinitions>
+                        <ColumnDefinition
+                            Width="*" />
+                        <ColumnDefinition
+                            Width="*" />
+                    </Grid.ColumnDefinitions>
+
+                    <Viewbox
+                        Grid.Column="0"
+                        StretchDirection="Both"
+                        Stretch="Uniform"
+                        HorizontalAlignment="Left">
+
+                        <telerik:Label
+                            Name="lbHandShake"
+                            Content="Hand Shake"
+                            VerticalAlignment="Center" />
+
+                    </Viewbox>
+
+                    <Viewbox
+                        Grid.Column="1"
+                        StretchDirection="Both"
+                        Stretch="Uniform"
+                        HorizontalAlignment="Right">
+
+                        <telerik:RadComboBox
+                            Width="200"
+                            Name="cboHandShake"
+                            SelectionChanged="cboHandShake_SelectionChanged" />
+
+                    </Viewbox>
+
+                </Grid>
+
+                <!--Slave ID-->
+                <Grid
+                    Grid.Row="7">
+
+                    <Grid.ColumnDefinitions>
+                        <ColumnDefinition
+                            Width="*" />
+                        <ColumnDefinition
+                            Width="*" />
+                    </Grid.ColumnDefinitions>
+
+                    <Viewbox
+                        Grid.Column="0"
+                        StretchDirection="Both"
+                        Stretch="Uniform"
+                        HorizontalAlignment="Left">
+
+                        <telerik:Label
+                            Name="lbSlaveID"
+                            Content="Slave ID"
+                            VerticalAlignment="Center" />
+
+                    </Viewbox>
+
+                    <Viewbox
+                        Grid.Column="1"
+                        StretchDirection="Both"
+                        Stretch="Uniform"
+                        HorizontalAlignment="Right">
+
+                        <TextBox
+                            Name="tbSlaveID"
+                            Width="200"
+                            LostFocus="tbSlaveID_LostFocus"
+                            KeyDown="tbSlaveID_KeyDown" />
+
+                    </Viewbox>
+
+                </Grid>
+
+                <!--ADAM Address-->
+                <Grid
+                    Grid.Row="7">
+
+                    <Grid.ColumnDefinitions>
+                        <ColumnDefinition
+                            Width="*" />
+                        <ColumnDefinition
+                            Width="*" />
+                    </Grid.ColumnDefinitions>
+
+                    <Viewbox
+                        Grid.Column="0"
+                        StretchDirection="Both"
+                        Stretch="Uniform"
+                        HorizontalAlignment="Left">
+
+                        <telerik:Label
+                            Name="lbAdamAddress"
+                            Content="Address"
+                            VerticalAlignment="Center" />
+
+                    </Viewbox>
+
+                    <Viewbox
+                        Grid.Column="1"
+                        StretchDirection="Both"
+                        Stretch="Uniform"
+                        HorizontalAlignment="Right">
+
+                        <TextBox
+                            Name="tbAdamAddress"
+                            Width="200"
+                            LostFocus="tbAdamAddress_LostFocus"
+                            KeyDown="tbAdamAddress_KeyDown" />
+
+                    </Viewbox>
+
+                </Grid>
+
+                <!--MODBUS Output Address 1-->
+                <Grid
+                    Grid.Row="8">
+
+                    <Grid.ColumnDefinitions>
+                        <ColumnDefinition
+                            Width="*" />
+                        <ColumnDefinition
+                            Width="*" />
+                    </Grid.ColumnDefinitions>
+
+                    <Viewbox
+                        Grid.Column="0"
+                        StretchDirection="Both"
+                        Stretch="Uniform"
+                        HorizontalAlignment="Left">
+
+                        <telerik:Label
+                            Name="lbOutputAddress1"
+                            Content="Output Address 1"
+                            VerticalAlignment="Center" />
+
+                    </Viewbox>
+
+                    <Viewbox
+                        Grid.Column="1"
+                        StretchDirection="Both"
+                        Stretch="Uniform"
+                        HorizontalAlignment="Right">
+
+                        <TextBox
+                            Name="tbOutputAddress1"
+                            Width="200"
+                            Text="{Binding Path=outputAddress1}"
+                            LostFocus="tbOutputAddress1_LostFocus"
+                            KeyDown="tbOutputAddress1_KeyDown" />
+
+                    </Viewbox>
+
+                </Grid>
+
+                <!--MODBUS Output Address 2-->
+                <Grid
+                    Grid.Row="9">
+
+                    <Grid.ColumnDefinitions>
+                        <ColumnDefinition
+                            Width="*" />
+                        <ColumnDefinition
+                            Width="*" />
+                    </Grid.ColumnDefinitions>
+
+                    <Viewbox
+                        Grid.Column="0"
+                        StretchDirection="Both"
+                        Stretch="Uniform"
+                        HorizontalAlignment="Left">
+
+                        <telerik:Label
+                            Name="lbOutputAddress2"
+                            Content="Output Address 2"
+                            VerticalAlignment="Center" />
+
+                    </Viewbox>
+
+                    <Viewbox
+                        Grid.Column="1"
+                        StretchDirection="Both"
+                        Stretch="Uniform"
+                        HorizontalAlignment="Right">
+
+                        <TextBox
+                            Name="tbOutputAddress2"
+                            Width="200"
+                            Text="{Binding Path=outputAddress2}"
+                            LostFocus="tbOutputAddress2_LostFocus"
+                            KeyDown="tbOutputAddress2_KeyDown" />
+
+                    </Viewbox>
+
+                </Grid>
+
+                <!--MODBUS Output Address 3-->
+                <Grid
+                    Grid.Row="10">
+
+                    <Grid.ColumnDefinitions>
+                        <ColumnDefinition
+                            Width="*" />
+                        <ColumnDefinition
+                            Width="*" />
+                    </Grid.ColumnDefinitions>
+
+                    <Viewbox
+                        Grid.Column="0"
+                        StretchDirection="Both"
+                        Stretch="Uniform"
+                        HorizontalAlignment="Left">
+
+                        <telerik:Label
+                            Name="lbOutputAddress3"
+                            Content="Output Address 3"
+                            VerticalAlignment="Center" />
+
+                    </Viewbox>
+
+                    <Viewbox
+                        Grid.Column="1"
+                        StretchDirection="Both"
+                        Stretch="Uniform"
+                        HorizontalAlignment="Right">
+
+                        <TextBox
+                            Name="tbOutputAddress3"
+                            Width="200"
+                            Text="{Binding Path=outputAddress3}"
+                            LostFocus="tbOutputAddress3_LostFocus"
+                            KeyDown="tbOutputAddress3_KeyDown" />
+
+                    </Viewbox>
+
+                </Grid>
+
+            </Grid>
+
         </telerik:GroupBox>
 
         <!--Test Mode-->
@@ -310,49 +664,144 @@
             Header="Test Mode"
             Margin="8">
 
-            <StackPanel>
+            <Grid
+                Margin="8">
+
+                <Grid.RowDefinitions>
+                    <RowDefinition
+                        Height="*" />
+                    <RowDefinition
+                        Height="*" />
+                    <RowDefinition
+                        Height="*" />
+                    <RowDefinition
+                        Height="*" />
+                    <RowDefinition
+                        Height="*" />
+                    <RowDefinition
+                        Height="*" />
+                    <RowDefinition
+                        Height="*" />
+                    <RowDefinition
+                        Height="*" />
+                    <RowDefinition
+                        Height="*" />
+                    <RowDefinition
+                        Height="*" />
+                    <RowDefinition
+                        Height="*" />
+                </Grid.RowDefinitions>
 
                 <!--Test: Enable Test Mode-->
-                <DockPanel>
-                    <telerik:Label
-                        Name="lbTestMode"
-                        Content="Enable Test Mode"
-                        VerticalAlignment="Center" />
-                    <CheckBox
-                        Name="chkTestMode"
-                        IsChecked="{Binding Path=testMode, Mode=TwoWay}"
-                        VerticalAlignment="Center"
-                        HorizontalAlignment="Right" />
-                </DockPanel>
+                <Grid
+                    Grid.Row="0">
+
+                    <Grid.ColumnDefinitions>
+                        <ColumnDefinition
+                            Width="*" />
+                        <ColumnDefinition
+                            Width="*" />
+                    </Grid.ColumnDefinitions>
+
+                    <Viewbox
+                        Grid.Column="0"
+                        StretchDirection="Both"
+                        Stretch="Uniform"
+                        HorizontalAlignment="Left">
+
+                        <telerik:Label
+                            Name="lbTestMode"
+                            Content="Enable Test Mode"
+                            VerticalAlignment="Center" />
+                    </Viewbox>
+
+                    <Viewbox
+                        Grid.Column="1"
+                        StretchDirection="Both"
+                        Stretch="Uniform"
+                        HorizontalAlignment="Right">
+
+                        <CheckBox
+                            Name="chkTestMode"
+                            IsChecked="{Binding Path=testMode, Mode=TwoWay}"
+                            VerticalAlignment="Center"
+                            HorizontalAlignment="Right" />
+                    </Viewbox>
+                </Grid>
 
                 <!--Test: Helideck Status-->
-                <DockPanel>
-                    <telerik:Label
-                        Name="lbTestHelideckStatus"
-                        Width="200"
-                        Content="Helideck Status"
-                        VerticalAlignment="Center" />
-                    <telerik:RadComboBox
-                        
-                        Width="auto"
-                        Name="cboTestHelideckStatus"
-                        SelectionChanged="cboTestHelideckStatus_SelectionChanged"/>
-                </DockPanel>
+                <Grid
+                    Grid.Row="1">
+
+                    <Grid.ColumnDefinitions>
+                        <ColumnDefinition
+                            Width="*" />
+                        <ColumnDefinition
+                            Width="*" />
+                    </Grid.ColumnDefinitions>
+
+                    <Viewbox
+                        Grid.Column="0"
+                        StretchDirection="Both"
+                        Stretch="Uniform"
+                        HorizontalAlignment="Left">
+
+                        <telerik:Label
+                            Name="lbTestHelideckStatus"
+                            Content="Helideck Status"
+                            VerticalAlignment="Center" />
+                    </Viewbox>
+
+                    <Viewbox
+                        Grid.Column="1"
+                        StretchDirection="Both"
+                        Stretch="Uniform"
+                        HorizontalAlignment="Right">
+
+                        <telerik:RadComboBox
+                            Width="auto"
+                            Name="cboTestHelideckStatus"
+                            SelectionChanged="cboTestHelideckStatus_SelectionChanged" />
+                    </Viewbox>
+                </Grid>
 
                 <!--Test: Landing/Takeoff Mode-->
-                <DockPanel>
-                    <telerik:Label
-                        Name="lbTestDisplayMode"
-                        Width="200"
-                        Content="Landing/Takeoff Mode"
-                        VerticalAlignment="Center" />
-                    <telerik:RadComboBox
-                        Width="auto"
-                        Name="cboTestDisplayMode"
-                        SelectionChanged="cboTestDisplayMode_SelectionChanged"/>
-                </DockPanel>
+                <Grid
+                    Grid.Row="2">
 
-            </StackPanel>
+                    <Grid.ColumnDefinitions>
+                        <ColumnDefinition
+                            Width="*" />
+                        <ColumnDefinition
+                            Width="*" />
+                    </Grid.ColumnDefinitions>
+
+                    <Viewbox
+                        Grid.Column="0"
+                        StretchDirection="Both"
+                        Stretch="Uniform"
+                        HorizontalAlignment="Left">
+
+                        <telerik:Label
+                            Name="lbTestDisplayMode"
+                            Content="Landing/Takeoff Mode"
+                            VerticalAlignment="Center" />
+                    </Viewbox>
+
+                    <Viewbox
+                        Grid.Column="1"
+                        StretchDirection="Both"
+                        Stretch="Uniform"
+                        HorizontalAlignment="Right">
+
+                        <telerik:RadComboBox
+                            Width="auto"
+                            Name="cboTestDisplayMode"
+                            SelectionChanged="cboTestDisplayMode_SelectionChanged" />
+                    </Viewbox>
+                </Grid>
+
+            </Grid>
 
         </telerik:GroupBox>
 
