@@ -170,6 +170,15 @@ namespace HMS_Client
 
         private void btnEnterHeading_Click(object sender, RoutedEventArgs e)
         {
+            // Sjekk av input
+            DataValidation.String(
+                (sender as TextBox).Text,
+                Constants.HeadingMin,
+                Constants.HeadingMax,
+                out string validatedInput);
+
+            tbHelicopterHeading.Text = validatedInput;
+            
             EnterHeading();
         }
 

@@ -38,7 +38,7 @@ class Constants
     public const int DataRequestFrequencyMin = 100;
     public const int DataRequestFrequencyMax = 5000;
 
-    public const int SensorStatusRequestFrequencyDefault = 5000;
+    public const int SensorStatusRequestFrequencyDefault = 1000;
     public const int SensorStatusRequestFrequencyMin = 100;
     public const int SensorStatusRequestFrequencyMax = 60000;
 
