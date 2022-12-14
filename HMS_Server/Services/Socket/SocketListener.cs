@@ -1,4 +1,8 @@
-﻿using System;
+﻿using Crc;
+using HMS_Server.Helpers;
+using NModbus.Extensions;
+using Org.BouncyCastle.Bcpg;
+using System;
 using System.Collections.Generic;
 using System.ComponentModel;
 using System.Linq;
@@ -458,6 +462,10 @@ namespace HMS_Server
                         if (AdminMode.IsActive)
                             socketConsole.Add(string.Format("Send: jsonData: {0}", outPacket));
                     }
+
+                    // Generere CRC Hash
+                    Crc32 crc = new Crc32();
+                    outPacket.crcHash = crc.GetHash(outPacket.clientID + outPacket.command + outPacket.payload);
 
                     // Kommando/data som skal sendes
                     // Må ha EOF til slutt

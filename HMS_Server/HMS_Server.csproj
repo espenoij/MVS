@@ -71,6 +71,9 @@
     <Reference Include="BouncyCastle.Crypto, Version=1.8.9.0, Culture=neutral, PublicKeyToken=0e99375e54769942">
       <HintPath>..\packages\BouncyCastle.1.8.9\lib\BouncyCastle.Crypto.dll</HintPath>
     </Reference>
+    <Reference Include="Crc, Version=1.0.3.0, Culture=neutral, processorArchitecture=MSIL">
+      <HintPath>..\packages\CrcDotNET.1.0.3\lib\net35\Crc.dll</HintPath>
+    </Reference>
     <Reference Include="DeviceId, Version=6.2.0.0, Culture=neutral, PublicKeyToken=f755c371b5c59c52, processorArchitecture=MSIL">
       <HintPath>..\packages\DeviceId.6.2.0\lib\net40\DeviceId.dll</HintPath>
     </Reference>
@@ -374,6 +377,7 @@
     <Compile Include="Dialogs\DialogActivation.xaml.cs">
       <DependentUpon>DialogActivation.xaml</DependentUpon>
     </Compile>
+    <Compile Include="Helpers\Crc32.cs" />
     <Compile Include="Helpers\DisplayList.cs" />
     <Compile Include="Helpers\GraphBuffer.cs" />
     <Compile Include="Services\LightsOutputConnection.cs" />

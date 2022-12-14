@@ -1,4 +1,6 @@
-﻿using DeviceId;
+﻿using Crc;
+using DeviceId;
+using HMS_Server.Helpers;
 using System;
 using System.Collections.Generic;
 using System.ComponentModel;
@@ -406,78 +408,83 @@ namespace HMS_Client
                 // De-serialisere packet
                 SocketPacket packet = JsonSerializer.Deserialize<SocketPacket>(receivedData);
 
-                switch (packet.command)
+                // CRC Hash sjekk
+                Crc32 crc = new Crc32();
+                if (packet.crcHash == crc.GetHash(packet.clientID + packet.command + packet.payload))
                 {
-                    // Get Data Update
-                    //////////////////////////
-                    case PacketCommand.GetDataUpdate:
+                    switch (packet.command)
+                    {
+                        // Get Data Update
+                        //////////////////////////
+                        case PacketCommand.GetDataUpdate:
 
-                        // De-serialisere payload
-                        List<HMSData> dataList = JsonSerializer.Deserialize<List<HMSData>>(packet.payload);
+                            // De-serialisere payload
+                            List<HMSData> dataList = JsonSerializer.Deserialize<List<HMSData>>(packet.payload);
 
-                        //// TEST
-                        //foreach (var item in dataList)
-                        //{
-                        //    if (item.id == (int)ValueType.MSI &&
-                        //        item.status == DataStatus.OK)
-                        //    {
-                        //        item.data3 = String.Empty;
-                        //        break;
-                        //    }
-                        //}
+                            // TEST
+                            foreach (var item in dataList)
+                            {
+                                if (item.id == (int)ValueType.MSI &&
+                                    item.status == DataStatus.OK)
+                                {
+                                    item.data3 = packet.payload;
+                                    break;
+                                }
+                            }
 
-                        // Overføre mottatt data til lagringsplass
-                        TransferReceivedData(dataList);
+                            // Overføre mottatt data til lagringsplass
+                            TransferReceivedData(dataList);
 
-                        // Ferdig med å hente data fra socket -> si i fra at vi er ferdig og prosessere data
-                        if (socketCallback != null)
-                            socketCallback();
+                            // Ferdig med å hente data fra socket -> si i fra at vi er ferdig å prosessere data
+                            if (socketCallback != null)
+                                socketCallback();
 
-                        break;
+                            break;
 
-                    // Get Sensor Status
-                    //////////////////////////
-                    case PacketCommand.GetSensorStatus:
+                        // Get Sensor Status
+                        //////////////////////////
+                        case PacketCommand.GetSensorStatus:
 
-                        // De-serialisere payload
-                        List<SensorGroup> sensorStatusListReceived = JsonSerializer.Deserialize<List<SensorGroup>>(packet.payload);
+                            // De-serialisere payload
+                            List<SensorGroup> sensorStatusListReceived = JsonSerializer.Deserialize<List<SensorGroup>>(packet.payload);
 
-                        // Overføre mottatt data til lagringsplass
-                        TransferReceivedSensorStatus(sensorStatusListReceived);
+                            // Overføre mottatt data til lagringsplass
+                            TransferReceivedSensorStatus(sensorStatusListReceived);
 
-                        // Ferdig med å hente data fra socket -> si i fra at vi er ferdig og prosessere data
-                        if (socketCallback != null)
-                            socketCallback();
+                            // Ferdig med å hente data fra socket -> si i fra at vi er ferdig og prosessere data
+                            if (socketCallback != null)
+                                socketCallback();
 
-                        break;
+                            break;
 
-                    // Set User Inputs
-                    //////////////////////////
-                    case PacketCommand.SetUserInputs:
+                        // Set User Inputs
+                        //////////////////////////
+                        case PacketCommand.SetUserInputs:
 
-                        // Når vi mottar denne kommandoen i klienten betyr det at server verifiserer at den har mottatt kommandoen.
-                        // Det kommer ingen data som skal behandles.
-                        // Fungerer som en handshake på mottatt user inputs.
+                            // Når vi mottar denne kommandoen i klienten betyr det at server verifiserer at den har mottatt kommandoen.
+                            // Det kommer ingen data som skal behandles.
+                            // Fungerer som en handshake på mottatt user inputs.
 
-                        if (socketCallback != null)
-                            socketCallback();
+                            if (socketCallback != null)
+                                socketCallback();
 
-                        break;
+                            break;
 
-                    // Client Denied
-                    //////////////////////////
-                    case PacketCommand.ClientDenied:
+                        // Client Denied
+                        //////////////////////////
+                        case PacketCommand.ClientDenied:
 
-                        // Nå vi mottar denne kommando betyr det at for mange klienter forsøker å koble seg på serveren.
-                        // Denne klienten må stanses.
+                            // Nå vi mottar denne kommando betyr det at for mange klienter forsøker å koble seg på serveren.
+                            // Denne klienten må stanses.
 
-                        if (clientDeniedCallback != null)
-                            clientDeniedCallback();
+                            if (clientDeniedCallback != null)
+                                clientDeniedCallback();
 
-                        break;
+                            break;
 
-                    default:
-                        break;
+                        default:
+                            break;
+                    }
                 }
             }
             catch (Exception ex)
