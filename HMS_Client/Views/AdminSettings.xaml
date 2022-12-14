@@ -468,6 +468,7 @@
                         Height="*" />
                 </Grid.RowDefinitions>
 
+                <!--Helideck Category-->
                 <Grid
                     Grid.Row="0">
 
@@ -478,7 +479,6 @@
                             Width="*" />
                     </Grid.ColumnDefinitions>
 
-                    <!--Helideck Category-->
                     <Viewbox
                         Grid.Column="0"
                         StretchDirection="Both"
@@ -506,9 +506,47 @@
                     </Viewbox>
                 </Grid>
 
-                <!--Offshore Weather Report Email-->
+                <!--Default Helideck Category-->
                 <Grid
                     Grid.Row="1">
+
+                    <Grid.ColumnDefinitions>
+                        <ColumnDefinition
+                            Width="*" />
+                        <ColumnDefinition
+                            Width="*" />
+                    </Grid.ColumnDefinitions>
+
+                    <Viewbox
+                        Grid.Column="0"
+                        StretchDirection="Both"
+                        Stretch="Uniform"
+                        HorizontalAlignment="Left">
+
+                        <telerik:Label
+                            Name="lbDefaultHelideckCategory_CAP"
+                            Content="Default Helideck Category"
+                            VerticalAlignment="Center" />
+
+                    </Viewbox>
+
+                    <Viewbox
+                        Grid.Column="1"
+                        StretchDirection="Both"
+                        Stretch="Uniform"
+                        HorizontalAlignment="Right">
+
+                        <telerik:RadComboBox
+                            Name="cboDefaultHelideckCategory_CAP"
+                            HorizontalAlignment="Right"
+                            SelectionChanged="cboDefaultHelideckCategory_CAP_SelectionChanged" />
+
+                    </Viewbox>
+                </Grid>
+
+                <!--Offshore Weather Report Email-->
+                <Grid
+                    Grid.Row="2">
 
                     <Grid.ColumnDefinitions>
                         <ColumnDefinition

@@ -415,6 +415,17 @@ namespace HMS_Client
                         // De-serialisere payload
                         List<HMSData> dataList = JsonSerializer.Deserialize<List<HMSData>>(packet.payload);
 
+                        //// TEST
+                        //foreach (var item in dataList)
+                        //{
+                        //    if (item.id == (int)ValueType.MSI &&
+                        //        item.status == DataStatus.OK)
+                        //    {
+                        //        item.data3 = String.Empty;
+                        //        break;
+                        //    }
+                        //}
+
                         // Overføre mottatt data til lagringsplass
                         TransferReceivedData(dataList);
 

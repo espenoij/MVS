@@ -429,9 +429,9 @@ namespace HMS_Server
                 }
             }
 
-            // TEST
-            if (inclination20mMaxData.status == DataStatus.OK)
-                inclination3hMaxData.status = DataStatus.OK;
+            //// TEST
+            //if (inclination20mMaxData.status == DataStatus.OK)
+            //    inclination3hMaxData.status = DataStatus.OK;
 
 
             // Heave Height
@@ -515,7 +515,7 @@ namespace HMS_Server
                 else
                 {
                     mms_msi.data = 0;
-                    mms_msi.status = accelerationX.status;
+                    mms_msi.status = DataStatus.TIMEOUT_ERROR;
                     mms_msi.timestamp = accelerationX.timestamp;
                 }
 
@@ -526,9 +526,17 @@ namespace HMS_Server
                 if (!adminSettingsVM.overrideMotionBuffer)
                     MSIBufferFillCheck(mms_msi_list, Constants.MotionBufferFill99Pct, msiData);
 
+
                 //// TEST
                 //if (msiData.status == DataStatus.OK)
-                //    mms_msi_list[0].data = 0.0;
+                //{
+                //    errorHandler.Insert(
+                //        new ErrorMessage(
+                //            DateTime.UtcNow,
+                //            ErrorMessageType.MODBUS,
+                //            ErrorMessageCategory.None,
+                //            string.Format("TEST: msiData.status == DataStatus.OK")));
+                //}
             }
 
             // Sjekker motion limits

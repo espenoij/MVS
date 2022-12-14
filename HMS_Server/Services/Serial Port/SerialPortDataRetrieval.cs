@@ -233,13 +233,13 @@ namespace HMS_Server
                                 // Prosessere pakkene som ble funnet
                                 foreach (var packet in incomingPackets)
                                 {
-                                    // Test
-                                    errorHandler.Insert(
-                                        new ErrorMessage(
-                                            DateTime.UtcNow,
-                                            ErrorMessageType.SerialPort,
-                                            ErrorMessageCategory.None,
-                                            string.Format("DataProcessing packet: {0}", packet)));
+                                    //// TEST
+                                    //errorHandler.Insert(
+                                    //    new ErrorMessage(
+                                    //        DateTime.UtcNow,
+                                    //        ErrorMessageType.SerialPort,
+                                    //        ErrorMessageCategory.None,
+                                    //        string.Format("DataProcessing packet: {0}", packet)));
 
                                     // Trinn 3: Finne datafeltene i pakke
                                     PacketDataFields packetDataFields = process.FindPacketDataFields(packet);

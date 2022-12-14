@@ -70,31 +70,34 @@ namespace HMS_Client
             helideckCategory = (HelideckCategory)Enum.Parse(typeof(HelideckCategory), config.ReadWithDefault(ConfigKey.HelideckCategory, HelideckCategory.Category1.ToString()));
 
             // Sjekker helideck category mot tillatte kategorier (kan bli endret i admin settings)
+            // Sette default helideck category
             if (adminSettingsVM.regulationStandard == RegulationStandard.CAP)
             {
-                switch (adminSettingsVM.helideckCategory)
-                {
-                    case HelideckCategory.Category1:
-                        if (helideckCategory != HelideckCategory.Category1)
-                            helideckCategory = HelideckCategory.Category1;
-                        break;
-                    case HelideckCategory.Category1_Semisub:
-                        if (helideckCategory != HelideckCategory.Category1_Semisub)
-                            helideckCategory = HelideckCategory.Category1_Semisub;
-                        break;
-                    case HelideckCategory.Category2:
-                        if (helideckCategory != HelideckCategory.Category2)
-                            helideckCategory = HelideckCategory.Category2;
-                        break;
-                    case HelideckCategory.Category2_or_3:
-                        if (helideckCategory != HelideckCategory.Category2 &&
-                            helideckCategory != HelideckCategory.Category3)
-                            helideckCategory = HelideckCategory.Category2;
-                        break;
-                    default:
-                        helideckCategory = HelideckCategory.Category1;
-                        break;
-                }
+                helideckCategory = adminSettingsVM.defaultHelideckCategory;
+
+                //switch (adminSettingsVM.helideckCategory)
+                //{
+                //    case HelideckCategory.Category1:
+                //        if (helideckCategory != HelideckCategory.Category1)
+                //            helideckCategory = HelideckCategory.Category1;
+                //        break;
+                //    case HelideckCategory.Category1_Semisub:
+                //        if (helideckCategory != HelideckCategory.Category1_Semisub)
+                //            helideckCategory = HelideckCategory.Category1_Semisub;
+                //        break;
+                //    case HelideckCategory.Category2:
+                //        if (helideckCategory != HelideckCategory.Category2)
+                //            helideckCategory = HelideckCategory.Category2;
+                //        break;
+                //    case HelideckCategory.Category2_or_3:
+                //        if (helideckCategory != HelideckCategory.Category2 &&
+                //            helideckCategory != HelideckCategory.Category3)
+                //            helideckCategory = HelideckCategory.Category2;
+                //        break;
+                //    default:
+                //        helideckCategory = HelideckCategory.Category1;
+                //        break;
+                //}
             }
 
             // Day / Night

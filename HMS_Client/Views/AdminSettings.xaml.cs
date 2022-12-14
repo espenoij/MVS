@@ -490,6 +490,58 @@ namespace HMS_Client
                 adminSettingsVM.helideckCategory = EnumExtension.GetEnumValueFromDescription<HelideckCategory>(cboHelideckCategory_CAP.Text);
                 adminSettingsVM.ApplicationRestartRequired();
             }
+
+            UpdateDefaultHelideckCategory();
+        }
+
+        private void UpdateDefaultHelideckCategory()
+        {
+            switch (adminSettingsVM.helideckCategory)
+            {
+                case HelideckCategory.Category1:
+                case HelideckCategory.Category1_Semisub:
+                case HelideckCategory.Category2:
+                case HelideckCategory.Category3:
+                    adminSettingsVM.defaultHelideckCategory = adminSettingsVM.helideckCategory;
+
+                    lbDefaultHelideckCategory_CAP.IsEnabled = false;
+                    cboDefaultHelideckCategory_CAP.IsEnabled = false;
+
+                    // Nye meny valg
+                    cboDefaultHelideckCategory_CAP.Items.Clear();
+                    cboDefaultHelideckCategory_CAP.Items.Add(adminSettingsVM.helideckCategory.GetDescription());
+
+                    cboDefaultHelideckCategory_CAP.SelectedIndex = 0;
+                    break;
+
+                case HelideckCategory.Category2_or_3:
+
+                    lbDefaultHelideckCategory_CAP.IsEnabled = true;
+                    cboDefaultHelideckCategory_CAP.IsEnabled = true;
+
+                    // Nye meny valg
+                    cboDefaultHelideckCategory_CAP.Items.Clear();
+                    cboDefaultHelideckCategory_CAP.Items.Add(HelideckCategory.Category2.GetDescription());
+                    cboDefaultHelideckCategory_CAP.Items.Add(HelideckCategory.Category3.GetDescription());
+
+                    if (adminSettingsVM.defaultHelideckCategory == HelideckCategory.Category2)
+                        cboDefaultHelideckCategory_CAP.SelectedIndex = 0;
+                    else
+                        cboDefaultHelideckCategory_CAP.SelectedIndex = 1;
+                    break;
+
+                default:
+                    break;
+            }
+        }
+
+        private void cboDefaultHelideckCategory_CAP_SelectionChanged(object sender, SelectionChangedEventArgs e)
+        {
+            if (adminSettingsVM.defaultHelideckCategory != EnumExtension.GetEnumValueFromDescription<HelideckCategory>(cboDefaultHelideckCategory_CAP.Text))
+            {
+                adminSettingsVM.defaultHelideckCategory = EnumExtension.GetEnumValueFromDescription<HelideckCategory>(cboDefaultHelideckCategory_CAP.Text);
+                adminSettingsVM.ApplicationRestartRequired();
+            }
         }
 
         private void chkEnableReportEmail_Checked(object sender, RoutedEventArgs e)

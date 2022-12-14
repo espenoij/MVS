@@ -82,9 +82,13 @@ namespace HMS_Client
 
                 //// TEST
                 //if (clientSensorList.GetData(ValueType.MSI).status == DataStatus.OK)
+                //{
                 //    OnPropertyChanged(nameof(msiString));
-                //if (msi.status == DataStatus.OK)
+                //}
+                //if (clientSensorList.GetData(ValueType.MSI).status == DataStatus.OK_NA)
+                //{
                 //    OnPropertyChanged(nameof(msiString));
+                //}
 
                 // MSI / WSI Graf
                 /////////////////////////////////////////////////
@@ -422,7 +426,7 @@ namespace HMS_Client
                 if (_msiwsi?.status == DataStatus.OK)
                     return _msiwsi.data2;
                 else
-                    return 0;
+                    return double.NaN; // Settes til NaN slik at graf ikke viser data
             }
         }
 
@@ -433,7 +437,7 @@ namespace HMS_Client
                 if (msiwsi?.status == DataStatus.OK)
                     return msiwsi.data;
                 else
-                    return 0;
+                    return double.NaN; // Settes til NaN slik at graf ikke viser data
             }
         }
 

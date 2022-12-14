@@ -14,6 +14,7 @@
     public const string HelicopterType = "HelicopterType";
     public const string HelideckCategory = "HelideckCategory";
     public const string HelideckCategorySetting = "HelideckCategorySetting";
+    public const string HelideckCategorySettingDefault = "HelideckCategorySettingDefault";
     public const string DayNight = "DayNight";
     public const string DisplayMode = "DisplayMode";
     public const string OnDeckHelicopterHeading = "OnDeckHelicopterHeading";

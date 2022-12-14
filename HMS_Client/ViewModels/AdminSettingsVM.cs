@@ -51,6 +51,9 @@ namespace HMS_Client
             // CAP: Helideck Category
             helideckCategory = (HelideckCategory)Enum.Parse(typeof(HelideckCategory), config.ReadWithDefault(ConfigKey.HelideckCategorySetting, HelideckCategory.Category1.ToString()));
 
+            // CAP: Default Helideck Category
+            defaultHelideckCategory = (HelideckCategory)Enum.Parse(typeof(HelideckCategory), config.ReadWithDefault(ConfigKey.HelideckCategorySettingDefault, HelideckCategory.Category1.ToString()));
+
             // CAP: Enable Report Email
             if (config.ReadWithDefault(ConfigKey.EnableReportEmail, "0") == "1")
                 enableReportEmail = true;
@@ -318,6 +321,26 @@ namespace HMS_Client
                 {
                     _helideckCategory = value;
                     config.Write(ConfigKey.HelideckCategorySetting, _helideckCategory.ToString());
+                }
+            }
+        }
+
+        /////////////////////////////////////////////////////////////////////////////
+        // CAP: Default Helideck Category
+        /////////////////////////////////////////////////////////////////////////////
+        private HelideckCategory _defaultHelideckCategory { get; set; }
+        public HelideckCategory defaultHelideckCategory
+        {
+            get
+            {
+                return _defaultHelideckCategory;
+            }
+            set
+            {
+                if (value != _defaultHelideckCategory)
+                {
+                    _defaultHelideckCategory = value;
+                    config.Write(ConfigKey.HelideckCategorySettingDefault, _defaultHelideckCategory.ToString());
                 }
             }
         }

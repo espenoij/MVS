@@ -165,10 +165,26 @@ namespace HMS_Client
                 {
                     RadObservableCollection<HMSData> hmsDataList = hmsDataCollection.GetDataList();
 
+                    //// TEST
+                    //HMSData testData1 = new HMSData();
+                    //HMSData testData2 = new HMSData();
+                    //HMSData testData3 = new HMSData();
+                    //HMSData testData4 = new HMSData();
+                    //HMSData testData5 = new HMSData();
+                    //HMSData testData6 = new HMSData();
+                    //HMSData testData7 = new HMSData();
+                    //HMSData testData8 = new HMSData();
+
                     //// Sjekke om listen vi har er like lang som listen som kommer inn
-                    //if (socketHMSDataList.Count() != hmsDataList.Count())
+                    //if (socketHMSDataList.Count() != hmsDataCollection.Count())
                     //    // I så tilfelle sletter vi listen vår og ny blir generert under
                     //    hmsDataList.Clear();
+
+                    //// TEST
+                    //if (hmsDataCollection.GetData(ValueType.MSI).status == DataStatus.OK)
+                    //{
+                    //    testData1.Set(hmsDataCollection.GetData(ValueType.MSI));
+                    //}
 
                     // Løper gjennom HMS data listen fra socket
                     foreach (var socketHMSData in socketHMSDataList.ToList())
@@ -181,12 +197,33 @@ namespace HMS_Client
                             // Fant match?
                             if (hmsData?.Count() > 0 && socketHMSData != null)
                             {
+                                //// TEST
+                                //if (hmsData.First().id == (int)ValueType.MSI)
+                                //{
+                                //    testData2.Set(hmsData.First());
+                                //    testData3.Set(socketHMSData);
+                                //}
+
                                 // Overføre data
-                                hmsData.First().Set(socketHMSData);
+                                hmsData.First().Set(socketHMSData); // <--- ok blip
+
+                                //// TEST
+                                //if (hmsData.First().id == (int)ValueType.MSI)
+                                //{
+                                //    testData4.Set(hmsData.First());
+                                //    testData5.Set(socketHMSData);
+                                //}
 
                                 // Sjekke timestamp for data timeout
                                 if (hmsData.First().timestamp.AddMilliseconds(dataTimeout) < DateTime.UtcNow)
                                     hmsData.First().status = DataStatus.TIMEOUT_ERROR;
+
+                                //// TEST
+                                //if (hmsData.First().id == (int)ValueType.MSI)
+                                //{
+                                //    testData6.Set(hmsData.First());
+                                //    testData7.Set(socketHMSData);
+                                //}
                             }
                             // Ikke match?
                             else
@@ -196,6 +233,12 @@ namespace HMS_Client
                             }
                         }
                     }
+
+                    //// TEST
+                    //if (hmsDataCollection.GetData(ValueType.MSI).status == DataStatus.OK)
+                    //{
+                    //    testData8.Set(hmsDataCollection.GetData(ValueType.MSI));
+                    //}
                 }
             }
             catch (Exception ex)
