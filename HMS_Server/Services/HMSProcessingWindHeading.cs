@@ -67,6 +67,9 @@ namespace HMS_Server
         // WSI
         private HMSData wsiData = new HMSData();
 
+        // Status
+        private HMSData statusWSI = new HMSData();
+
         private AdminSettingsVM adminSettingsVM;
         private UserInputs userInputs;
 
@@ -121,6 +124,8 @@ namespace HMS_Server
             // slik at database-tabell blir lik for CAP/NOROG.
             // Får database-feil ved bytte mellom CAP/NOROG når tabellene ikke er like.
             hmsOutputDataList.Add(wsiData);
+
+            hmsOutputDataList.Add(statusWSI);
 
             areaWindAverageData2m.minutes = 2;
             helideckWindAverageData2m.minutes = 2;
@@ -279,6 +284,12 @@ namespace HMS_Server
             wsiData.name = "WSI";
             wsiData.sensorGroupId = Constants.NO_SENSOR_GROUP_ID;
             wsiData.dbColumn = "wsi";
+
+            // Status
+            statusWSI.id = (int)ValueType.StatusWSI;
+            statusWSI.name = "Status WSI";
+            statusWSI.sensorGroupId = Constants.NO_SENSOR_GROUP_ID;
+            statusWSI.dbColumn = "status_wsi";
         }
 
         public void Update(HMSDataCollection hmsInputDataList)
@@ -759,6 +770,15 @@ namespace HMS_Server
                 wsiData.timestamp = DateTime.MinValue;
                 wsiData.data = 0;
             }
+
+            // Status
+            /////////////////////////////////////////////////////////////////////////////////////////
+            if (wsiData.status == DataStatus.OK)
+                statusWSI.data = 1;
+            else
+                statusWSI.data = 0;
+            statusWSI.timestamp = wsiData.timestamp;
+            statusWSI.status = wsiData.status;
 
             // Avrunding
             /////////////////////////////////////////////////////////////////////////////////////////

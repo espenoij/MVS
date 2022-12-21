@@ -230,7 +230,7 @@ namespace HMS_Server
                                     if (modbusSerialMaster?.Transport != null)
                                     {
                                         // Sende data (true/false)
-                                        modbusSerialMaster?.WriteSingleCoil(
+                                        modbusSerialMaster?.WriteSingleCoilAsync(
                                            connection.data.modbus.slaveID,
                                            hmsLightsOutputVM.outputAddressList[i],
                                            LightOutputToWriteValue(helideckStatus, i));
@@ -308,7 +308,7 @@ namespace HMS_Server
             {
                 EnableModbusUI(false);
 
-                Modbus_Start();
+                LightsOutput_Start();
             }
         }
 
@@ -323,7 +323,7 @@ namespace HMS_Server
             {
                 EnableModbusUI(true);
 
-                Modbus_Stop();
+                LightsOutput_Stop();
             }
         }
 
@@ -422,12 +422,12 @@ namespace HMS_Server
             }
         }
 
-        private void Modbus_Start()
+        private void LightsOutput_Start()
         {
             sendLightsOutput?.Start();
         }
 
-        private void Modbus_Stop()
+        private void LightsOutput_Stop()
         {
             sendLightsOutput?.Stop();
 

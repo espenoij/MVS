@@ -165,7 +165,7 @@ namespace HMS_Client
                 {
                     RadObservableCollection<HMSData> hmsDataList = hmsDataCollection.GetDataList();
 
-                    //// TEST
+                    ////// TEST
                     //HMSData testData1 = new HMSData();
                     //HMSData testData2 = new HMSData();
                     //HMSData testData3 = new HMSData();
@@ -198,17 +198,19 @@ namespace HMS_Client
                             if (hmsData?.Count() > 0 && socketHMSData != null)
                             {
                                 //// TEST
-                                //if (hmsData.First().id == (int)ValueType.MSI)
+                                //if (hmsData.First().id == (int)ValueType.MSI &&
+                                //    hmsData.First().status == DataStatus.OK)
                                 //{
                                 //    testData2.Set(hmsData.First());
                                 //    testData3.Set(socketHMSData);
                                 //}
 
                                 // Overføre data
-                                hmsData.First().Set(socketHMSData); // <--- ok blip
+                                hmsData.First().Set(socketHMSData); // <--- socketHMSData MSI er OK
 
                                 //// TEST
-                                //if (hmsData.First().id == (int)ValueType.MSI)
+                                //if (hmsData.First().id == (int)ValueType.MSI &&
+                                //    hmsData.First().status == DataStatus.OK)
                                 //{
                                 //    testData4.Set(hmsData.First());
                                 //    testData5.Set(socketHMSData);
@@ -219,7 +221,8 @@ namespace HMS_Client
                                     hmsData.First().status = DataStatus.TIMEOUT_ERROR;
 
                                 //// TEST
-                                //if (hmsData.First().id == (int)ValueType.MSI)
+                                //if (hmsData.First().id == (int)ValueType.MSI &&
+                                //    hmsData.First().status == DataStatus.OK)
                                 //{
                                 //    testData6.Set(hmsData.First());
                                 //    testData7.Set(socketHMSData);

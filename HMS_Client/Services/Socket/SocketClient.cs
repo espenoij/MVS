@@ -421,16 +421,16 @@ namespace HMS_Client
                             // De-serialisere payload
                             List<HMSData> dataList = JsonSerializer.Deserialize<List<HMSData>>(packet.payload);
 
-                            // TEST
-                            foreach (var item in dataList)
-                            {
-                                if (item.id == (int)ValueType.MSI &&
-                                    item.status == DataStatus.OK)
-                                {
-                                    item.data3 = packet.payload;
-                                    break;
-                                }
-                            }
+                            //// TEST
+                            //foreach (var item in dataList)
+                            //{
+                            //    if (item.id == (int)ValueType.MSI &&
+                            //        item.status == DataStatus.OK)
+                            //    {
+                            //        item.data3 = packet.payload;
+                            //        break;
+                            //    }
+                            //}
 
                             // Overføre mottatt data til lagringsplass
                             TransferReceivedData(dataList);
@@ -494,7 +494,7 @@ namespace HMS_Client
             }
         }
 
-        private void TransferReceivedData(List<HMSData> dataList)
+        private void TransferReceivedData(List<HMSData> receivedDataList)
         {
             // NB! Samme problem under!
             // Gjør en del sjekker, søk og kopiering av data her. Hvorfor ikke bare slette alle data og så kopiere alt?
@@ -506,28 +506,29 @@ namespace HMS_Client
             // 2021.08.16: Har ikke hatt krasj her siden sist. Suksess!
             // 2022.02.03: Krasj ved startup - kan ha vært ram problem på hjemme pc
             // 2022.04.19: foreach (var item in dataList) , Collection (dataList) was modified. Satte på .ToList()
+            // 2022.12.21: Ikke krasjet her på lenge.
 
             try
             { 
                 bool listResetRequired = false;
 
                 // Sjekker først om lengden på innkommende data liste er like lagret data liste
-                if (dataList.Count() == hmsDataList?.Count())
+                if (receivedDataList.Count() == hmsDataList?.Count())
                 {
                     // Starte overføring av data
 
                     // Legge nye data inn i lagringsliste
-                    foreach (var item in dataList)
+                    foreach (var receivedData in receivedDataList)
                     {
                         // Finne igjen ID i lagringslisten
-                        var sensorData = hmsDataList.Where(x => x.id == item.id);
+                        var sensorData = hmsDataList.Where(x => x.id == receivedData.id);
                         if (sensorData.Count() > 0)
                         {
                             // Lagre data
-                            sensorData.First().Set(item);
+                            sensorData.First().Set(receivedData);
 
                             if (AdminMode.IsActive)
-                                socketConsole?.Add(string.Format("ProcessReceivedData: id:{0}, data:{1}, timestamp:{2}", item.id, item.data, item.timestamp.ToString(Constants.TimestampFormat, Constants.cultureInfo)));
+                                socketConsole?.Add(string.Format("ProcessReceivedData: id:{0}, data:{1}, timestamp:{2}", receivedData.id, receivedData.data, receivedData.timestamp.ToString(Constants.TimestampFormat, Constants.cultureInfo)));
                         }
                         else
                         {
@@ -549,7 +550,7 @@ namespace HMS_Client
                     hmsDataList?.Clear();
 
                     // Legge inn alle data på nytt
-                    foreach (var item in dataList.ToList())
+                    foreach (var item in receivedDataList.ToList())
                     {
                         hmsDataList?.Add(new HMSData(item));
 

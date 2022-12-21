@@ -70,6 +70,18 @@ namespace HMS_Server
         private double significantHeaveRate10mMean = 0;
         private double significantHeaveRate20mMax = 0;
 
+        // Status
+        private HMSData statusRoll = new HMSData();
+        private HMSData statusPitch = new HMSData();
+        private HMSData statusInclination = new HMSData();
+        private HMSData statusSHR = new HMSData();
+        private HMSData statusMSI = new HMSData();
+
+        private HMSData statusMRU = new HMSData();
+        private HMSData statusGyro = new HMSData();
+        private HMSData statusWind = new HMSData();
+        private HMSData statusSOGCOG = new HMSData();
+
         private RadObservableCollection<TimeData> significantHeaveRate2mMinData = new RadObservableCollection<TimeData>();
         private RadObservableCollection<TimeData> significantHeaveRate10mMeanData = new RadObservableCollection<TimeData>();
         private RadObservableCollection<TimeData> significantHeaveRate20mMaxData = new RadObservableCollection<TimeData>();
@@ -118,6 +130,17 @@ namespace HMS_Server
             hmsOutputDataList.Add(motionLimitInclination);
             hmsOutputDataList.Add(motionLimitHeaveHeight);
             hmsOutputDataList.Add(motionLimitSignificantHeaveRate);
+
+            hmsOutputDataList.Add(statusRoll);
+            hmsOutputDataList.Add(statusPitch);
+            hmsOutputDataList.Add(statusInclination);
+            hmsOutputDataList.Add(statusSHR);
+            hmsOutputDataList.Add(statusMSI);
+
+            hmsOutputDataList.Add(statusMRU);
+            hmsOutputDataList.Add(statusGyro);
+            hmsOutputDataList.Add(statusWind);
+            hmsOutputDataList.Add(statusSOGCOG);
 
             // NB! Selv om WSI ikke brukes i NOROG må vi legge den inn her
             // slik at database-tabell blir lik for CAP/NOROG.
@@ -284,6 +307,52 @@ namespace HMS_Server
             msiData.name = "MSI";
             msiData.sensorGroupId = Constants.NO_SENSOR_GROUP_ID;
             msiData.dbColumn = "msi";
+
+            // Status
+            statusRoll.id = (int)ValueType.StatusRoll;
+            statusRoll.name = "Status Roll";
+            statusRoll.sensorGroupId = Constants.NO_SENSOR_GROUP_ID;
+            statusRoll.dbColumn = "status_roll";
+
+            statusPitch.id = (int)ValueType.StatusPitch;
+            statusPitch.name = "Status Pitch";
+            statusPitch.sensorGroupId = Constants.NO_SENSOR_GROUP_ID;
+            statusPitch.dbColumn = "status_pitch";
+
+            statusInclination.id = (int)ValueType.StatusInclination;
+            statusInclination.name = "Status Inclination";
+            statusInclination.sensorGroupId = Constants.NO_SENSOR_GROUP_ID;
+            statusInclination.dbColumn = "status_inclination";
+
+            statusSHR.id = (int)ValueType.StatusSHR;
+            statusSHR.name = "Status SHR";
+            statusSHR.sensorGroupId = Constants.NO_SENSOR_GROUP_ID;
+            statusSHR.dbColumn = "status_shr";
+
+            statusMSI.id = (int)ValueType.StatusMSI;
+            statusMSI.name = "Status MSI";
+            statusMSI.sensorGroupId = Constants.NO_SENSOR_GROUP_ID;
+            statusMSI.dbColumn = "status_msi";
+
+            statusMRU.id = (int)ValueType.StatusMRU;
+            statusMRU.name = "Status MRU";
+            statusMRU.sensorGroupId = Constants.NO_SENSOR_GROUP_ID;
+            statusMRU.dbColumn = "status_mru";
+
+            statusGyro.id = (int)ValueType.StatusGyro;
+            statusGyro.name = "Status Gyro";
+            statusGyro.sensorGroupId = Constants.NO_SENSOR_GROUP_ID;
+            statusGyro.dbColumn = "status_gyro";
+
+            statusWind.id = (int)ValueType.StatusWind;
+            statusWind.name = "Status Wind";
+            statusWind.sensorGroupId = Constants.NO_SENSOR_GROUP_ID;
+            statusWind.dbColumn = "status_wind";
+
+            statusSOGCOG.id = (int)ValueType.StatusSOGCOG;
+            statusSOGCOG.name = "Status SOG-COG";
+            statusSOGCOG.sensorGroupId = Constants.NO_SENSOR_GROUP_ID;
+            statusSOGCOG.dbColumn = "status_sog_cog";
         }
 
         public void Update(HMSDataCollection hmsInputDataList)
@@ -306,8 +375,25 @@ namespace HMS_Server
             inputAccelerationYData.Set(hmsInputDataList.GetData(ValueType.AccelerationY));
             inputAccelerationZData.Set(hmsInputDataList.GetData(ValueType.AccelerationZ));
 
+            // Status data
+            statusMRU.data = hmsInputDataList.GetData(ValueType.SensorMRU).data;
+            statusMRU.timestamp = hmsInputDataList.GetData(ValueType.SensorMRU).timestamp;
+            statusMRU.status = hmsInputDataList.GetData(ValueType.SensorMRU).status;
+
+            statusGyro.data = hmsInputDataList.GetData(ValueType.SensorGyro).data;
+            statusGyro.timestamp = hmsInputDataList.GetData(ValueType.SensorGyro).timestamp;
+            statusGyro.status = hmsInputDataList.GetData(ValueType.SensorGyro).status;
+
+            statusWind.data = hmsInputDataList.GetData(ValueType.SensorWind).data;
+            statusWind.timestamp = hmsInputDataList.GetData(ValueType.SensorWind).timestamp;
+            statusWind.status = hmsInputDataList.GetData(ValueType.SensorWind).status;
+
+            statusSOGCOG.data = hmsInputDataList.GetData(ValueType.SensorSOGCOG).data;
+            statusSOGCOG.timestamp = hmsInputDataList.GetData(ValueType.SensorSOGCOG).timestamp;
+            statusSOGCOG.status = hmsInputDataList.GetData(ValueType.SensorSOGCOG).status;
+
             // Sjekke status
-            if (adminSettingsVM.statusMRUEnabled && hmsInputDataList.GetData(ValueType.SensorMRU).data != 1)
+            if (adminSettingsVM.statusMRUEnabled && statusMRU.data != 1)
             {
                 inputPitchData.status = DataStatus.TIMEOUT_ERROR;
                 inputRollData.status = DataStatus.TIMEOUT_ERROR;
@@ -720,6 +806,42 @@ namespace HMS_Server
                     significantHeaveRateData.limitStatus = LimitStatus.OVER_LIMIT;
                 }
             }
+
+            // Lagre status til database
+            if (rollMax20mData.limitStatus == LimitStatus.OVER_LIMIT)
+                statusRoll.data = 1;
+            else
+                statusRoll.data = 0;
+            statusRoll.timestamp = rollMax20mData.timestamp;
+            statusRoll.status = rollMax20mData.status;
+
+            if (pitchMax20mData.limitStatus == LimitStatus.OVER_LIMIT)
+                statusPitch.data = 1;
+            else
+                statusPitch.data = 0;
+            statusPitch.timestamp = pitchMax20mData.timestamp;
+            statusPitch.status = pitchMax20mData.status;
+
+            if (inclination20mMaxData.limitStatus == LimitStatus.OVER_LIMIT)
+                statusInclination.data = 1;
+            else
+                statusInclination.data = 0;
+            statusInclination.timestamp = inclination20mMaxData.timestamp;
+            statusInclination.status = inclination20mMaxData.status;
+
+            if (significantHeaveRateData.limitStatus == LimitStatus.OVER_LIMIT)
+                statusSHR.data = 1;
+            else
+                statusSHR.data = 0;
+            statusSHR.timestamp = significantHeaveRateData.timestamp;
+            statusSHR.status = significantHeaveRateData.status;
+
+            if (msiData.limitStatus == LimitStatus.OK)
+                statusMSI.data = 1;
+            else
+                statusMSI.data = 0;
+            statusMSI.timestamp = msiData.timestamp;
+            statusMSI.status = msiData.status;
         }
 
         private void CheckLimit(HMSData hmsData, LimitType limitType)

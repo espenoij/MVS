@@ -245,6 +245,18 @@ public enum ValueType
     SettingsEmailSecureConnection,
     SettingsRestrictedSector,
     SettingsDataVerification,
+
+    // CAP: Lagring av status data i databasen
+    StatusRoll,
+    StatusPitch,
+    StatusInclination,
+    StatusSHR,
+    StatusMSI,
+    StatusWSI,
+    StatusMRU,
+    StatusGyro,
+    StatusWind,
+    StatusSOGCOG
 }
 
 public enum HelideckStatusType
