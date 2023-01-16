@@ -146,6 +146,13 @@ namespace HMS_Server
                             hmsData.status = DataStatus.TIMEOUT_ERROR;
                         else
                             hmsData.status = DataStatus.OK;
+
+                        //// TEST BLIP
+                        //if (hmsData.id == (int)ValueType.MSI &&
+                        //    hmsData.status == DataStatus.OK)
+                        //{
+                        //    hmsData.data3 = String.Empty;
+                        //}
                     }
                     // Ingen verdi i data samlingen knyttet til verdi i mottaker listen
                     else
@@ -185,6 +192,13 @@ namespace HMS_Server
                             hmsData.status = DataStatus.TIMEOUT_ERROR;
                         else
                             hmsData.status = serverData.First().status;
+
+                        //// TEST BLIP
+                        //if (hmsData.id == (int)ValueType.MSI &&
+                        //    hmsData.status == DataStatus.OK)
+                        //{
+                        //    hmsData.data3 = String.Empty;
+                        //}
                     }
                     // Ingen verdi i data samlingen knyttet til verdi i mottaker listen
                     else

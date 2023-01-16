@@ -1,4 +1,6 @@
-﻿namespace HMS_Server
+﻿using System;
+
+namespace HMS_Server
 {
     // Klasse for prosessering av data fra sensor til HMS output
     public class HMSProcessing

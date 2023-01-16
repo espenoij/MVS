@@ -165,7 +165,7 @@ namespace HMS_Client
                 {
                     RadObservableCollection<HMSData> hmsDataList = hmsDataCollection.GetDataList();
 
-                    ////// TEST
+                    //// TEST
                     //HMSData testData1 = new HMSData();
                     //HMSData testData2 = new HMSData();
                     //HMSData testData3 = new HMSData();
@@ -198,8 +198,8 @@ namespace HMS_Client
                             if (hmsData?.Count() > 0 && socketHMSData != null)
                             {
                                 //// TEST
-                                //if (hmsData.First().id == (int)ValueType.MSI &&
-                                //    hmsData.First().status == DataStatus.OK)
+                                //if (socketHMSData.id == (int)ValueType.MSI &&
+                                //    socketHMSData.status == DataStatus.OK)
                                 //{
                                 //    testData2.Set(hmsData.First());
                                 //    testData3.Set(socketHMSData);

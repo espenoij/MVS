@@ -172,7 +172,7 @@ namespace HMS_Client
         {
             // Sjekk av input
             DataValidation.String(
-                (sender as TextBox).Text,
+                tbHelicopterHeading.Text,
                 Constants.HeadingMin,
                 Constants.HeadingMax,
                 out string validatedInput);

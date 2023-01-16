@@ -68,7 +68,7 @@ namespace HMS_Server
         private HMSData wsiData = new HMSData();
 
         // Status
-        private HMSData statusWSI = new HMSData();
+        //private HMSData statusWSI = new HMSData(); // Ble lagt til ifm. ICP test, men er unødvendig
 
         private AdminSettingsVM adminSettingsVM;
         private UserInputs userInputs;
@@ -125,7 +125,7 @@ namespace HMS_Server
             // Får database-feil ved bytte mellom CAP/NOROG når tabellene ikke er like.
             hmsOutputDataList.Add(wsiData);
 
-            hmsOutputDataList.Add(statusWSI);
+            //hmsOutputDataList.Add(statusWSI);
 
             areaWindAverageData2m.minutes = 2;
             helideckWindAverageData2m.minutes = 2;
@@ -285,11 +285,11 @@ namespace HMS_Server
             wsiData.sensorGroupId = Constants.NO_SENSOR_GROUP_ID;
             wsiData.dbColumn = "wsi";
 
-            // Status
-            statusWSI.id = (int)ValueType.StatusWSI;
-            statusWSI.name = "Status WSI";
-            statusWSI.sensorGroupId = Constants.NO_SENSOR_GROUP_ID;
-            statusWSI.dbColumn = "status_wsi";
+            //// Status
+            //statusWSI.id = (int)ValueType.StatusWSI;
+            //statusWSI.name = "Status WSI";
+            //statusWSI.sensorGroupId = Constants.NO_SENSOR_GROUP_ID;
+            //statusWSI.dbColumn = "status_wsi";
         }
 
         public void Update(HMSDataCollection hmsInputDataList)
@@ -322,7 +322,7 @@ namespace HMS_Server
 
 
             // Sjekke status: Heading (Gyro)
-            if (adminSettingsVM.statusGyroEnabled && hmsInputDataList.GetData(ValueType.SensorGyro).data != 1)
+            if (adminSettingsVM.statusGyroEnabled && hmsInputDataList.GetData(ValueType.SensorGyro)?.data != 1)
             {
                 inputVesselHeading.status = DataStatus.TIMEOUT_ERROR;
             }
@@ -335,9 +335,9 @@ namespace HMS_Server
 
 
             // Sjekke status: Wind
-            if ((adminSettingsVM.statusWindEnabled && hmsInputDataList.GetData(ValueType.SensorWind).data != 1) ||
+            if ((adminSettingsVM.statusWindEnabled && hmsInputDataList.GetData(ValueType.SensorWind)?.data != 1) ||
                 (adminSettingsVM.statusSOGCOGEnabled && hmsInputDataList.GetData(ValueType.SensorSOGCOG)?.data != 1) ||
-                (adminSettingsVM.statusGyroEnabled && hmsInputDataList.GetData(ValueType.SensorGyro).data != 1 && adminSettingsVM.windDirRef == DirectionReference.VesselHeading))
+                (adminSettingsVM.statusGyroEnabled && hmsInputDataList.GetData(ValueType.SensorGyro)?.data != 1 && adminSettingsVM.windDirRef == DirectionReference.VesselHeading))
             {
                 inputSensorWindDirection.status = DataStatus.TIMEOUT_ERROR;
                 inputSensorWindSpeed.status = DataStatus.TIMEOUT_ERROR;
@@ -771,14 +771,14 @@ namespace HMS_Server
                 wsiData.data = 0;
             }
 
-            // Status
-            /////////////////////////////////////////////////////////////////////////////////////////
-            if (wsiData.status == DataStatus.OK)
-                statusWSI.data = 1;
-            else
-                statusWSI.data = 0;
-            statusWSI.timestamp = wsiData.timestamp;
-            statusWSI.status = wsiData.status;
+            //// Status
+            ///////////////////////////////////////////////////////////////////////////////////////////
+            //if (wsiData.status == DataStatus.OK)
+            //    statusWSI.data = 1;
+            //else
+            //    statusWSI.data = 0;
+            //statusWSI.timestamp = wsiData.timestamp;
+            //statusWSI.status = wsiData.status;
 
             // Avrunding
             /////////////////////////////////////////////////////////////////////////////////////////

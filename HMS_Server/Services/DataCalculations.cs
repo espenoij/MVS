@@ -3,6 +3,7 @@ using System.Collections.Generic;
 using System.ComponentModel;
 using System.Globalization;
 using System.Linq;
+using System.Text.RegularExpressions;
 using System.Windows.Markup;
 
 namespace HMS_Server
@@ -16,7 +17,7 @@ namespace HMS_Server
         private double timeAverageTotal = 0;
         private List<TimeData> timeAverageDataList = new List<TimeData>();
 
-        // Time Average
+        // Wind Dir Time Average
         private double windDirTimeAverageTotalX = 0;
         private double windDirTimeAverageTotalY = 0;
         private List<TimeData> windDirTimeAverageDataList = new List<TimeData>();
@@ -84,6 +85,11 @@ namespace HMS_Server
         private double waveRadarLastBottom = double.NaN;
         private double waveRadarLast = double.NaN;
         private WavePhase waveRadarWavePhase = WavePhase.Init;
+
+        // Wind Data Spike
+        private double dataSpikeAverageTotal = 0;
+        private List<TimeData> dataSpikeAverageDataList = new List<TimeData>();
+        private double dataSpikeAverage = 0;
 
         public DataCalculations()
         {
@@ -196,16 +202,14 @@ namespace HMS_Server
                         // Longitude
                         case CalculationType.GPSPosition:
 
-                            // Input format: dddmm.mmx, ddmm.mmx, (d=degrees, m=minutes, x=N/S/E/W)
+                            // Input format: dddmm.mm...x, ddmm.mm...x, (d=degrees, m...=minutes, x=N/S/E/W)
 
                             // Posisjon til desimal separator
                             int decimalPointIndex = newData.IndexOf('.');
 
                             // Sjekker om vi har N/S/E/W i inndata
-                            if ((newData.Length == 8 ||
-                                 newData.Length == 9) &&
-                                (decimalPointIndex != -1 ||
-                                    newData.Contains('N') ||
+                            if (decimalPointIndex != -1 &&
+                                   (newData.Contains('N') ||
                                     newData.Contains('S') ||
                                     newData.Contains('E') ||
                                     newData.Contains('W')))
@@ -213,17 +217,17 @@ namespace HMS_Server
                                 double degrees;
                                 double minutes;
 
-                                // ddmm.mmx
+                                // ddmm.mm...x
                                 if (decimalPointIndex == 4)
                                 {
                                     double.TryParse(newData.Substring(0, 2), Constants.numberStyle, new CultureInfo("en-US"), out degrees);
-                                    double.TryParse(newData.Substring(2, 5), Constants.numberStyle, new CultureInfo("en-US"), out minutes);
+                                    double.TryParse(newData.Substring(2, newData.Length - 3), Constants.numberStyle, new CultureInfo("en-US"), out minutes);
                                 }
-                                // dddmm.mmx
+                                // dddmm.mm...x
                                 else
                                 {
                                     double.TryParse(newData.Substring(0, 3), Constants.numberStyle, new CultureInfo("en-US"), out degrees);
-                                    double.TryParse(newData.Substring(3, 5), Constants.numberStyle, new CultureInfo("en-US"), out minutes);
+                                    double.TryParse(newData.Substring(3, newData.Length - 4), Constants.numberStyle, new CultureInfo("en-US"), out minutes);
                                 }
 
                                 result = degrees + (minutes / 60.0);
@@ -236,6 +240,73 @@ namespace HMS_Server
                                 }
                             }
                             break;
+
+                        ////////////////////////////////////////////////////////////////////////////////////////////////
+                        /// GPS Position 2
+                        ////////////////////////////////////////////////////////////////////////////////////////////////
+                        // Brukes til:
+                        // Latitude
+                        // Longitude
+                        //case CalculationType.GPSPosition2:
+                        //    // Input format: dddmm.mmx, ddmm.mmx, (d=degrees, m=minutes, x=N/S/E/W)
+
+                        //    // Posisjon til desimal separator
+                        //    int decimalPointIndex1 = newData.IndexOf('.');
+
+                        //    // Sjekker om vi har N/S/E/W i inndata
+                        //    if ((newData.Length == 8 ||
+                        //         newData.Length == 9) &&
+                        //        (decimalPointIndex1 != -1 ||
+                        //            newData.Contains('N') ||
+                        //            newData.Contains('S') ||
+                        //            newData.Contains('E') ||
+                        //            newData.Contains('W')))
+                        //    {
+                        //        double degrees;
+                        //        double minutes;
+
+                        //        double doubleValue;
+                        //        string valueStr;
+                        //        bool valueFound = false;
+
+                        //        valueStr = Regex.Match(newData, @"-?\d*\.\d*").ToString();
+
+                        //        // Fant vi substring med tall?
+                        //        if (!string.IsNullOrEmpty(valueStr))
+                        //        {
+                        //            // Konvertere substring til double for å verifisere gyldig double
+                        //            valueFound = double.TryParse(valueStr, NumberStyles.Any, Constants.cultureInfo, out doubleValue);
+
+                        //            // Fant desimal tall
+                        //            if (valueFound)
+                        //            {
+                        //                selectedData.selectedDataFieldString = doubleValue.ToString(Constants.cultureInfo);
+
+                        //                result = degrees + (minutes / 60.0);
+
+                        //                // Sør og vest har negative verdier
+                        //                if (newData.Contains('S') ||
+                        //                    newData.Contains('W'))
+                        //                {
+                        //                    result *= -1.0;
+                        //                }
+                        //            }
+                        //        }
+
+                        //        //// ddmm.mmx
+                        //        //if (decimalPointIndex == 4)
+                        //        //{
+                        //        //    double.TryParse(newData.Substring(0, 2), Constants.numberStyle, new CultureInfo("en-US"), out degrees);
+                        //        //    double.TryParse(newData.Substring(2, 5), Constants.numberStyle, new CultureInfo("en-US"), out minutes);
+                        //        //}
+                        //        //// dddmm.mmx
+                        //        //else
+                        //        //{
+                        //        //    double.TryParse(newData.Substring(0, 3), Constants.numberStyle, new CultureInfo("en-US"), out degrees);
+                        //        //    double.TryParse(newData.Substring(3, 5), Constants.numberStyle, new CultureInfo("en-US"), out minutes);
+                        //        //}
+                        //    }
+                        //    break;
 
                         ////////////////////////////////////////////////////////////////////////////////////////////////
                         /// Time Average
@@ -1595,6 +1666,61 @@ namespace HMS_Server
                             break;
 
                         ////////////////////////////////////////////////////////////////////////////////////////////////
+                        /// Filter Wind Spike
+                        ////////////////////////////////////////////////////////////////////////////////////////////////
+                        // Beskrivelse:
+                        // Filtrerer ut høye spike verdier fra en vind input
+                        // Beregner 2 min snitt
+
+                        case CalculationType.WindSpike:
+
+                            result = double.NaN;
+
+                            // Sjekke om string er numerisk
+                            if (double.TryParse(newData, Constants.numberStyle, Constants.cultureInfo, out value))
+                            {
+                                // Sjekke at ny verdi ikke er lik den forrige som ble lagt inn i datasettet -> unngå duplikater
+                                if (!double.IsNaN(value) &&
+                                    dataSpikeAverageDataList.LastOrDefault()?.timestamp != newTimeStamp)
+                                {
+                                    //// TEST
+                                    //if (value > 1000)
+                                    //{
+                                    //    result = 0;
+                                    //}
+
+                                    if (value <= 100 || (value > 100 && value <= dataSpikeAverage * 2))
+                                    {
+                                        // Legge inn den nye verdien i data settet
+                                        dataSpikeAverageDataList.Add(new TimeData() { data = value, timestamp = newTimeStamp });
+
+                                        // Legge til i total summen
+                                        dataSpikeAverageTotal += value;
+
+                                        // Sjekke om vi skal ta ut gamle verdier
+                                        while (dataSpikeAverageDataList.Count > 0 && dataSpikeAverageDataList[0]?.timestamp.AddSeconds(120) < newTimeStamp)
+                                        {
+                                            // Trekke fra i total summen
+                                            dataSpikeAverageTotal -= dataSpikeAverageDataList[0].data;
+
+                                            // Fjerne fra verdi listen
+                                            dataSpikeAverageDataList.RemoveAt(0);
+                                        }
+
+                                        // Beregne gjennomsnitt av de verdiene som ligger i datasettet
+                                        if (dataSpikeAverageDataList.Count > 0)
+                                            dataSpikeAverage = dataSpikeAverageTotal / dataSpikeAverageDataList.Count;
+                                        else
+                                            dataSpikeAverage = 0;
+
+                                        // Sende verdien videre
+                                        result = value;
+                                    }
+                                }
+                            }
+                            break;
+
+                        ////////////////////////////////////////////////////////////////////////////////////////////////
                         /// Ingen kalkulasjoner
                         ////////////////////////////////////////////////////////////////////////////////////////////////
                         default:
@@ -1740,6 +1866,8 @@ namespace HMS_Server
         RadToDeg,
         [Description("GPS Position")]
         GPSPosition,
+        //[Description("GPS Position 2")]
+        //GPSPosition2,
         [Description("Time Average")]
         TimeAverage,
         [Description("Wind Dir Time Average")]
@@ -1778,6 +1906,8 @@ namespace HMS_Server
         FixedValue,
         [Description("Status from Bit")]
         StatusBit,
+        [Description("Filter Wind Spike")]
+        WindSpike,
 
         //[Description("NWS Codes")]
         //NWSCodes,

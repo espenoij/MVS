@@ -291,7 +291,7 @@ namespace HMS_Server
                             socketConsole.Add(string.Format("Read {0} bytes from socket. Data : {1}", data.Length, data));
 
                         // Hvilken forespørsel har vi mottatt?
-                        CommandRequestHandler(handler, data);
+                        CommandRequestHandler(handler, data, hmsOutputDataList);
                     }
                     else
                     {
@@ -362,7 +362,7 @@ namespace HMS_Server
             }
         }
 
-        private void CommandRequestHandler(Socket handler, string inPacket)
+        private void CommandRequestHandler(Socket handler, string inPacket, RadObservableCollection<HMSData> outputDataList)
         {
             try
             {
@@ -411,7 +411,7 @@ namespace HMS_Server
                                 {
                                     // Serialisere HMS data og lage data pakke
                                     outPacket.command = packet.command;
-                                    outPacket.payload = SerializeHMSData();
+                                    outPacket.payload = SerializeHMSData(outputDataList);
 
                                     if (AdminMode.IsActive)
                                         socketConsole.Add(string.Format("Send: jsonData: {0}", outPacket));
@@ -482,18 +482,17 @@ namespace HMS_Server
             }
         }
 
-        private string SerializeHMSData()
+        private string SerializeHMSData(RadObservableCollection<HMSData> outputDataList)
         {
             try
             {
                 // Liste med data som skal sendes
                 List<HMSData> sendData = new List<HMSData>();
 
-
                 // Plukke data fra HMS data listen
-                foreach (var hmsOutputData in hmsOutputDataList.ToList())
+                foreach (var hmsOutputData in outputDataList.ToList())
                 {
-                    //// TEST
+                    //// TEST BLIP
                     //if (hmsOutputData.id == (int)ValueType.MSI &&
                     //    hmsOutputData.status == DataStatus.OK)
                     //{
@@ -527,14 +526,13 @@ namespace HMS_Server
                     sendData.Add(hmsData);
                 }
 
-                //// TEST
-                //foreach (var item in hmsOutputDataList)
+                //// TEST BLIP
+                //foreach (var item in sendData)
                 //{
                 //    if (item.id == (int)ValueType.MSI &&
                 //        item.status == DataStatus.OK)
                 //    {
                 //        item.data3 = String.Empty;
-                //        break;
                 //    }
                 //}
 

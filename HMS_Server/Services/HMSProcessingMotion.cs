@@ -75,7 +75,7 @@ namespace HMS_Server
         private HMSData statusPitch = new HMSData();
         private HMSData statusInclination = new HMSData();
         private HMSData statusSHR = new HMSData();
-        private HMSData statusMSI = new HMSData();
+        //private HMSData statusMSI = new HMSData(); // Ble lagt til ifm. ICP test, men er unødvendig
 
         private HMSData statusMRU = new HMSData();
         private HMSData statusGyro = new HMSData();
@@ -135,7 +135,7 @@ namespace HMS_Server
             hmsOutputDataList.Add(statusPitch);
             hmsOutputDataList.Add(statusInclination);
             hmsOutputDataList.Add(statusSHR);
-            hmsOutputDataList.Add(statusMSI);
+            //hmsOutputDataList.Add(statusMSI);
 
             hmsOutputDataList.Add(statusMRU);
             hmsOutputDataList.Add(statusGyro);
@@ -329,10 +329,10 @@ namespace HMS_Server
             statusSHR.sensorGroupId = Constants.NO_SENSOR_GROUP_ID;
             statusSHR.dbColumn = "status_shr";
 
-            statusMSI.id = (int)ValueType.StatusMSI;
-            statusMSI.name = "Status MSI";
-            statusMSI.sensorGroupId = Constants.NO_SENSOR_GROUP_ID;
-            statusMSI.dbColumn = "status_msi";
+            //statusMSI.id = (int)ValueType.StatusMSI;
+            //statusMSI.name = "Status MSI";
+            //statusMSI.sensorGroupId = Constants.NO_SENSOR_GROUP_ID;
+            //statusMSI.dbColumn = "status_msi";
 
             statusMRU.id = (int)ValueType.StatusMRU;
             statusMRU.name = "Status MRU";
@@ -376,21 +376,93 @@ namespace HMS_Server
             inputAccelerationZData.Set(hmsInputDataList.GetData(ValueType.AccelerationZ));
 
             // Status data
-            statusMRU.data = hmsInputDataList.GetData(ValueType.SensorMRU).data;
-            statusMRU.timestamp = hmsInputDataList.GetData(ValueType.SensorMRU).timestamp;
-            statusMRU.status = hmsInputDataList.GetData(ValueType.SensorMRU).status;
+            if (adminSettingsVM.statusMRUEnabled)
+            {
+                if (hmsInputDataList.GetData(ValueType.SensorMRU) != null)
+                {
+                    statusMRU.data = hmsInputDataList.GetData(ValueType.SensorMRU).data;
+                    statusMRU.timestamp = hmsInputDataList.GetData(ValueType.SensorMRU).timestamp;
+                    statusMRU.status = hmsInputDataList.GetData(ValueType.SensorMRU).status;
+                }
+                else
+                {
+                    statusMRU.data = 0;
+                    statusMRU.timestamp = DateTime.UtcNow;
+                    statusMRU.status = DataStatus.TIMEOUT_ERROR;
+                }
+            }
+            else
+            {
+                statusMRU.data = 1;
+                statusMRU.timestamp = DateTime.UtcNow;
+                statusMRU.status = DataStatus.OK;
+            }
 
-            statusGyro.data = hmsInputDataList.GetData(ValueType.SensorGyro).data;
-            statusGyro.timestamp = hmsInputDataList.GetData(ValueType.SensorGyro).timestamp;
-            statusGyro.status = hmsInputDataList.GetData(ValueType.SensorGyro).status;
+            if (adminSettingsVM.statusGyroEnabled)
+            {
+                if (hmsInputDataList.GetData(ValueType.SensorGyro) != null)
+                {
+                    statusGyro.data = hmsInputDataList.GetData(ValueType.SensorGyro).data;
+                    statusGyro.timestamp = hmsInputDataList.GetData(ValueType.SensorGyro).timestamp;
+                    statusGyro.status = hmsInputDataList.GetData(ValueType.SensorGyro).status;
+                }
+                else
+                {
+                    statusGyro.data = 0;
+                    statusGyro.timestamp = DateTime.UtcNow;
+                    statusGyro.status = DataStatus.TIMEOUT_ERROR;
+                }
+            }
+            else
+            {
+                statusGyro.data = 1;
+                statusGyro.timestamp = DateTime.UtcNow;
+                statusGyro.status = DataStatus.OK;
+            }
 
-            statusWind.data = hmsInputDataList.GetData(ValueType.SensorWind).data;
-            statusWind.timestamp = hmsInputDataList.GetData(ValueType.SensorWind).timestamp;
-            statusWind.status = hmsInputDataList.GetData(ValueType.SensorWind).status;
+            if (adminSettingsVM.statusWindEnabled)
+            {
+                if (hmsInputDataList.GetData(ValueType.SensorWind) != null)
+                {
+                    statusWind.data = hmsInputDataList.GetData(ValueType.SensorWind).data;
+                    statusWind.timestamp = hmsInputDataList.GetData(ValueType.SensorWind).timestamp;
+                    statusWind.status = hmsInputDataList.GetData(ValueType.SensorWind).status;
+                }
+                else
+                {
+                    statusWind.data = 0;
+                    statusWind.timestamp = DateTime.UtcNow;
+                    statusWind.status = DataStatus.TIMEOUT_ERROR;
+                }
+            }
+            else
+            {
+                statusWind.data = 1;
+                statusWind.timestamp = DateTime.UtcNow;
+                statusWind.status = DataStatus.OK;
+            }
 
-            statusSOGCOG.data = hmsInputDataList.GetData(ValueType.SensorSOGCOG).data;
-            statusSOGCOG.timestamp = hmsInputDataList.GetData(ValueType.SensorSOGCOG).timestamp;
-            statusSOGCOG.status = hmsInputDataList.GetData(ValueType.SensorSOGCOG).status;
+            if (adminSettingsVM.statusSOGCOGEnabled)
+            {
+                if (hmsInputDataList.GetData(ValueType.SensorSOGCOG) != null)
+                {
+                    statusSOGCOG.data = hmsInputDataList.GetData(ValueType.SensorSOGCOG).data;
+                    statusSOGCOG.timestamp = hmsInputDataList.GetData(ValueType.SensorSOGCOG).timestamp;
+                    statusSOGCOG.status = hmsInputDataList.GetData(ValueType.SensorSOGCOG).status;
+                }
+                else
+                {
+                    statusSOGCOG.data = 0;
+                    statusSOGCOG.timestamp = DateTime.UtcNow;
+                    statusSOGCOG.status = DataStatus.TIMEOUT_ERROR;
+                }
+            }
+            else
+            {
+                statusSOGCOG.data = 1;
+                statusSOGCOG.timestamp = DateTime.UtcNow;
+                statusSOGCOG.status = DataStatus.OK;
+            }
 
             // Sjekke status
             if (adminSettingsVM.statusMRUEnabled && statusMRU.data != 1)
@@ -612,16 +684,10 @@ namespace HMS_Server
                 if (!adminSettingsVM.overrideMotionBuffer)
                     MSIBufferFillCheck(mms_msi_list, Constants.MotionBufferFill99Pct, msiData);
 
-
                 //// TEST
                 //if (msiData.status == DataStatus.OK)
                 //{
-                //    errorHandler.Insert(
-                //        new ErrorMessage(
-                //            DateTime.UtcNow,
-                //            ErrorMessageType.MODBUS,
-                //            ErrorMessageCategory.None,
-                //            string.Format("TEST: msiData.status == DataStatus.OK")));
+                //    msiData.data3 = String.Empty;
                 //}
             }
 
@@ -836,12 +902,12 @@ namespace HMS_Server
             statusSHR.timestamp = significantHeaveRateData.timestamp;
             statusSHR.status = significantHeaveRateData.status;
 
-            if (msiData.limitStatus == LimitStatus.OK)
-                statusMSI.data = 1;
-            else
-                statusMSI.data = 0;
-            statusMSI.timestamp = msiData.timestamp;
-            statusMSI.status = msiData.status;
+            //if (msiData.limitStatus == LimitStatus.OK)
+            //    statusMSI.data = 1;
+            //else
+            //    statusMSI.data = 0;
+            //statusMSI.timestamp = msiData.timestamp;
+            //statusMSI.status = msiData.status;
         }
 
         private void CheckLimit(HMSData hmsData, LimitType limitType)

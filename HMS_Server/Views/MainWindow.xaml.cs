@@ -490,6 +490,16 @@ namespace HMS_Server
                         // Prosesserer sensor data om til data som kan sendes til HMS klient
                         hmsProcessing.Update(hmsInputData, adminSettingsVM.dataVerificationEnabled);
 
+                        //// TEST BLIP
+                        //foreach (var item in hmsOutputData.GetDataList().ToList())
+                        //{
+                        //    if (item.id == (int)ValueType.MSI &&
+                        //        item.status == DataStatus.OK)
+                        //    {
+                        //        item.data3 = String.Empty;
+                        //    }
+                        //}
+
                         // Sette database status
                         SetDatabaseStatus(hmsInputData);
 
@@ -512,6 +522,16 @@ namespace HMS_Server
                             DoDatabaseMaintenance(DatabaseMaintenanceType.HMS);
                             DoDatabaseMaintenance(DatabaseMaintenanceType.STATUS);
                         }
+
+                        //// TEST BLIP
+                        //foreach (var item in hmsOutputData.GetDataList().ToList())
+                        //{
+                        //    if (item.id == (int)ValueType.MSI &&
+                        //        item.status == DataStatus.OK)
+                        //    {
+                        //        item.data3 = String.Empty;
+                        //    }
+                        //}
                     }
                 }
                 catch (Exception ex)
@@ -543,6 +563,16 @@ namespace HMS_Server
                     {
                         // Lagre data i databasen
                         hmsDatabase.InsertData(hmsOutputData);
+
+                        //// TEST BLIP
+                        //foreach (var item in hmsOutputData.GetDataList().ToList())
+                        //{
+                        //    if (item.id == (int)ValueType.MSI &&
+                        //        item.status == DataStatus.OK)
+                        //    {
+                        //        item.data3 = String.Empty;
+                        //    }
+                        //}
                     }
                 }
                 catch (Exception ex)
@@ -615,6 +645,16 @@ namespace HMS_Server
                 void runLightsOutputUpdate(object sender, EventArgs e)
                 {
                     verfication.Update(hmsOutputData, sensorDataRetrieval.GetSensorDataList(), database);
+
+                    //// TEST BLIP
+                    //foreach (var item in hmsOutputData.GetDataList().ToList())
+                    //{
+                    //    if (item.id == (int)ValueType.MSI &&
+                    //        item.status == DataStatus.OK)
+                    //    {
+                    //        item.data3 = String.Empty;
+                    //    }
+                    //}
                 }
             }
         }

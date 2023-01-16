@@ -78,13 +78,27 @@ namespace HMS_Server
             airHumidity.Set(hmsInputDataList.GetData(ValueType.AirHumidity));
             CalculateDewPoint();
 
-            airPressureQFE.data = Math.Round(CalculateQFE(hmsInputDataList.GetData(ValueType.AirPressure).data, airTemperature.data, adminSettingsVM.airPressureSensorHeight - adminSettingsVM.helideckHeight), 1, MidpointRounding.AwayFromZero);
-            airPressureQFE.status = hmsInputDataList.GetData(ValueType.AirPressure).status;
-            airPressureQFE.timestamp = hmsInputDataList.GetData(ValueType.AirPressure).timestamp;
+            if (hmsInputDataList.GetData(ValueType.AirPressure) != null)
+            {
+                airPressureQFE.data = Math.Round(CalculateQFE(hmsInputDataList.GetData(ValueType.AirPressure).data, airTemperature.data, adminSettingsVM.airPressureSensorHeight - adminSettingsVM.helideckHeight), 1, MidpointRounding.AwayFromZero);
+                airPressureQFE.status = hmsInputDataList.GetData(ValueType.AirPressure).status;
+                airPressureQFE.timestamp = hmsInputDataList.GetData(ValueType.AirPressure).timestamp;
 
-            airPressureQNH.data = Math.Round(CalculateQNH(airPressureQFE.data, adminSettingsVM.helideckHeight), 1, MidpointRounding.AwayFromZero);
-            airPressureQNH.status = hmsInputDataList.GetData(ValueType.AirPressure).status;
-            airPressureQNH.timestamp = hmsInputDataList.GetData(ValueType.AirPressure).timestamp;
+                airPressureQNH.data = Math.Round(CalculateQNH(airPressureQFE.data, adminSettingsVM.helideckHeight), 1, MidpointRounding.AwayFromZero);
+                airPressureQNH.status = hmsInputDataList.GetData(ValueType.AirPressure).status;
+                airPressureQNH.timestamp = hmsInputDataList.GetData(ValueType.AirPressure).timestamp;
+            }
+            else
+            {
+                airPressureQFE.data = 0;
+                airPressureQFE.timestamp = DateTime.UtcNow;
+                airPressureQFE.status = DataStatus.TIMEOUT_ERROR;
+
+                airPressureQNH.data = 0;
+                airPressureQNH.timestamp = DateTime.UtcNow;
+                airPressureQNH.status = DataStatus.TIMEOUT_ERROR;
+            }
+
 
             Visibility.Set(hmsInputDataList.GetData(ValueType.Visibility));
 

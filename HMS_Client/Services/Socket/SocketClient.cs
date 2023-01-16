@@ -435,6 +435,17 @@ namespace HMS_Client
                             // Overføre mottatt data til lagringsplass
                             TransferReceivedData(dataList);
 
+                            //// TEST
+                            //foreach (var item in dataList)
+                            //{
+                            //    if (item.id == (int)ValueType.MSI &&
+                            //        item.status == DataStatus.OK)
+                            //    {
+                            //        item.data3 = packet.payload;
+                            //        break;
+                            //    }
+                            //}
+
                             // Ferdig med å hente data fra socket -> si i fra at vi er ferdig å prosessere data
                             if (socketCallback != null)
                                 socketCallback();

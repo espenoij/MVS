@@ -92,20 +92,30 @@ namespace HMS_Server
         {
             if (hmsOutputDataList != null)
             {
+                //// TEST BLIP
+                //foreach (var item in hmsOutputDataList.GetDataList().ToList())
+                //{
+                //    if (item.id == (int)ValueType.MSI &&
+                //        item.status == DataStatus.OK)
+                //    {
+                //        item.data3 = String.Empty;
+                //    }
+                //}
+
                 // Finne frem sensoren vi skal oppdatere status for
                 var sensorGroup = hmsSensorGroupList.Where(x => x.id == id);
                 if (sensorGroup.Count() == 1)
                 {
                     // Finne sensor verdier knyttet til valgt sensor gruppe ID
-                    var hmsDataList = hmsOutputDataList.GetDataList().ToList();
+                    var hmsOutputData = hmsOutputDataList.GetDataList().ToList();
 
-                    var clientData = hmsDataList.Where(x => x.sensorGroupId == id).ToList();
+                    var sensorData = hmsOutputData.Where(x => x.sensorGroupId == id).ToList();
 
                     // Har funnet sensor verdier knyttet til sensor gruppe
-                    if (clientData.Count() > 0)
+                    if (sensorData.Count() > 0)
                     {
                         // Skjekke om noen av sensor verdiene har error status
-                        var errorList = clientData.Where(x => x.status == DataStatus.TIMEOUT_ERROR);
+                        var errorList = sensorData.Where(x => x.status == DataStatus.TIMEOUT_ERROR);
 
                         // En eller flere error statuser funnet
                         if (errorList.Count() > 0)
@@ -124,6 +134,16 @@ namespace HMS_Server
                         sensorGroup.First().status = DataStatus.OK;
                     }
                 }
+
+                //// TEST BLIP
+                //foreach (var item in hmsOutputDataList.GetDataList().ToList())
+                //{
+                //    if (item.id == (int)ValueType.MSI &&
+                //        item.status == DataStatus.OK)
+                //    {
+                //        item.data3 = String.Empty;
+                //    }
+                //}
             }
         }
 

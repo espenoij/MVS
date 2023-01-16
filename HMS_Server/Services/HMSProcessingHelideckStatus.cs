@@ -20,6 +20,8 @@ namespace HMS_Server
         private HMSData landingStatusData = new HMSData();
         private HMSData rwdStatusData = new HMSData();
 
+        private HMSData msiwsiStatus = new HMSData();
+
         public HMSProcessingHelideckStatus(HMSDataCollection hmsOutputData, HelideckMotionLimits motionLimits, AdminSettingsVM adminSettingsVM, UserInputs userInputs, HMSProcessingMotion hmsProcessingMotion, HMSProcessingWindHeading hmsProcessingWindHeading)
         {
             this.hmsOutputData = hmsOutputData;
@@ -43,6 +45,7 @@ namespace HMS_Server
             hmsOutputDataList.Add(helideckLightStatusData);
             hmsOutputDataList.Add(landingStatusData);
             hmsOutputDataList.Add(rwdStatusData);
+            hmsOutputDataList.Add(msiwsiStatus);
 
             // Sette grunnleggende data
             helideckLightStatusData.id = (int)ValueType.HelideckLight;
@@ -59,6 +62,11 @@ namespace HMS_Server
             rwdStatusData.name = "RWD Status";
             rwdStatusData.sensorGroupId = Constants.NO_SENSOR_GROUP_ID;
             rwdStatusData.dbColumn = "rwd_status";
+
+            msiwsiStatus.id = (int)ValueType.StatusMSIWSI;
+            msiwsiStatus.name = "MSI/WSI Exceeded";
+            msiwsiStatus.sensorGroupId = Constants.NO_SENSOR_GROUP_ID;
+            msiwsiStatus.dbColumn = "msi_wsi_exceeded";
         }
 
         public void UpdateHelideckLight()
@@ -118,6 +126,14 @@ namespace HMS_Server
                 rwdStatusData.status = DataStatus.OK_NA;
             else
                 rwdStatusData.status = DataStatus.OK;
+
+            // MSI/WSI Exceeded
+            if (GetMSIWSIState() == HelideckStatusType.BLUE)
+                msiwsiStatus.data = 0;
+            else
+                msiwsiStatus.data = 1;
+            msiwsiStatus.timestamp = DateTime.UtcNow;
+            msiwsiStatus.status = DataStatus.OK;
         }
 
         private HelideckStatusType CheckLandingStatusCAP(HelideckStatusType status)
@@ -148,55 +164,6 @@ namespace HMS_Server
                 {
                     return HelideckStatusType.RED;
                 }
-
-                //switch (status)
-                //{
-                //    // Init
-                //    case HelideckStatusType.OFF:
-                //        if (IsWithinLimits(ValueType.PitchMax20m) &&
-                //            IsWithinLimits(ValueType.RollMax20m) &&
-                //            IsWithinLimits(ValueType.InclinationMax20m) &&
-                //            IsWithinLimits(ValueType.SignificantHeaveRate))
-                //        {
-                //            return GetMSIWSIState();
-                //        }
-                //        else
-                //        {
-                //            return HelideckStatusType.RED;
-                //        }
-
-                //    // Blue/amber -> Red
-                //    case HelideckStatusType.BLUE:
-                //    case HelideckStatusType.AMBER:
-                //        if (!IsWithinLimits(ValueType.PitchMax20m) ||
-                //            !IsWithinLimits(ValueType.RollMax20m) ||
-                //            !IsWithinLimits(ValueType.InclinationMax20m) ||
-                //            (!IsWithinLimits(ValueType.SignificantHeaveRate) && hmsProcessingMotion.IsSHR2mMinAboveLimit()))
-                //        {
-                //            return HelideckStatusType.RED;
-                //        }
-                //        else
-                //        {
-                //            return GetMSIWSIState();
-                //        }
-
-                //    // Red -> Blue/amber
-                //    case HelideckStatusType.RED:
-                //        if (IsWithinLimits(ValueType.PitchMax20m) &&
-                //            IsWithinLimits(ValueType.RollMax20m) &&
-                //            IsWithinLimits(ValueType.InclinationMax20m) &&
-                //            IsWithinLimits(ValueType.SignificantHeaveRate) && hmsProcessingMotion.IsSHR10mMeanBelowLimit())
-                //        {
-                //            return GetMSIWSIState();
-                //        }
-                //        else
-                //        {
-                //            return status;
-                //        }
-
-                //    default:
-                //        return status;
-                //}
             }
         }
 
