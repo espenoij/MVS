@@ -27,7 +27,7 @@ namespace HMS_Server
         {
         }
 
-        public List<string> FindSelectedPackets(string dataString)
+        public List<string> FindSelectedPackets(string inputDataString)
         {
             // Først må vi dele opp rå data i individuelle pakker i tilfelle vi får mer enn en pakke i en sending.
             // Så må disse pakkene behandles individuelt.
