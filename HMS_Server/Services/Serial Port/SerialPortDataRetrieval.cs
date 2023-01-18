@@ -217,18 +217,35 @@ namespace HMS_Server
                                 // Trinn 2: Prosessere raw data, finne pakker
                                 List<string> incomingPackets = process.FindSelectedPackets(serialPortData.data);
 
-                                // Dersom vi fant pakker -> slette input buffer
-                                if (incomingPackets.Count > 0)
-                                {
+                                // Sjekk om vi skal ta vare på noe data eller om buffer skal slettes
+                                int lastHeaderPos = inputData.LastIndexOf(process.packetHeader);
+                                int lastEndPos = inputData.LastIndexOf(process.packetEnd);
+
+                                // Dersom vi har en HEADER etter en END
+                                if (lastHeaderPos > lastEndPos)
+                                    // Lagre fra header (i tilfelle resten av packet kommer i neste sending fra serieport)
+                                    inputData = inputData.Substring(lastHeaderPos);
+                                else
+                                    // Ingen HEADER etter END -> Slette buffer
                                     inputData = String.Empty;
-                                }
+
                                 // Må også begrense hvor my data som skal leses i input buffer når vi ikke finner packets
                                 // slik at den ikke fylles i det uendelige.
-                                else
-                                {
-                                    if (inputData.Count() > 2048) // 2KB limit per packet
-                                        inputData = String.Empty;
-                                }
+                                if (inputData.Count() > 4096) // 4KB limit per packet
+                                    inputData = String.Empty;
+
+                                //// Dersom vi fant pakker -> slette input buffer
+                                //if (incomingPackets.Count > 0)
+                                //{
+                                //    inputData = String.Empty;
+                                //}
+                                //// Må også begrense hvor my data som skal leses i input buffer når vi ikke finner packets
+                                //// slik at den ikke fylles i det uendelige.
+                                //else
+                                //{
+                                //    if (inputData.Count() > 2048) // 2KB limit per packet
+                                //        inputData = String.Empty;
+                                //}
 
                                 // Prosessere pakkene som ble funnet
                                 foreach (var packet in incomingPackets)

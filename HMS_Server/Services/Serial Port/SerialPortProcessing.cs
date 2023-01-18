@@ -27,7 +27,7 @@ namespace HMS_Server
         {
         }
 
-        public List<string> FindSelectedPackets(string inputDataString)
+        public List<string> FindSelectedPackets(string dataString)
         {
             // Først må vi dele opp rå data i individuelle pakker i tilfelle vi får mer enn en pakke i en sending.
             // Så må disse pakkene behandles individuelt.
@@ -72,11 +72,16 @@ namespace HMS_Server
 
                         // Sjekker om packet end er satt
                         if (!string.IsNullOrEmpty(packetEnd))
+                        {
+
                             // Finne end pos
                             packetEndPos = dataString.IndexOf(packetEnd, packetStartPos, totalCount, StringComparison.Ordinal);
+                        }
                         else
+                        {
                             // Ingen end satt -> les til slutten
                             packetEndPos = packetStartPos + totalCount;
+                        }
 
                         // Fant ikke packetEnd -> finnes ikke i dataString -> avslutt
                         if (packetEndPos == -1)
@@ -95,12 +100,30 @@ namespace HMS_Server
                                         packetEndPos += packetEnd.Length;
 
                                         // Plukke ut data mellom packetStartPos og packetEndPos for videre prosessering
-                                        packetString.Add(dataString.Substring(packetStartPos, packetEndPos - packetStartPos));
+                                        string extractedPacketString = dataString.Substring(packetStartPos, packetEndPos - packetStartPos);
+
+                                        // Må sjekke at vi ikke har en packet header i resultatet, dvs. starten på en pakke (ufullstendig pakke) + en hel pakke til
+                                        // (2 eller flere HEADER og 1 END)
+                                        int checkPacketHeader = extractedPacketString.LastIndexOf(packetHeader);
+                                        if (checkPacketHeader != 0)
+                                            extractedPacketString = dataString.Substring(checkPacketHeader);
+
+                                        // Sende videre for prosessering
+                                        packetString.Add(extractedPacketString);
+
+                                        //// Fjerne data fra buffer
+                                        //if (packetEndPos < dataString.Length)
+                                        //    dataString = dataString.Substring(packetEndPos);
+                                        //else
+                                        //    dataString = string.Empty;
                                         break;
 
                                     case InputDataType.Binary:
                                         // Sender hele pakken videre
                                         packetString.Add(dataString);
+
+                                        //// Fjerne data fra buffer
+                                        //dataString = string.Empty;
                                         break;
                                 }
 
