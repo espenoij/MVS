@@ -68,7 +68,7 @@ namespace HMS_Server
         private SerialPortSetupWindowVM serialPortSetupWindowVM;
 
         // Input data
-        private string inputData = string.Empty;
+        private string inputDataBuffer = string.Empty;
 
         public SerialPortSetupWindow(SensorData sensorDataItem, RadObservableCollection<SensorData> sensorDataList, Config config, ErrorHandler errorHandler, AdminSettingsVM adminSettingsVM)
         {
@@ -550,56 +550,81 @@ namespace HMS_Server
         {
             // Trinn 1: Lese fra port
             //////////////////////////////////////////////////////////////////////////////
+            //inputDataBuffer += serialPort.ReadExisting();
+
+            int bytes = serialPort.BytesToRead;
+            byte[] array = new byte[bytes];
+            for (int i = 0; serialPort.BytesToRead > 0 && i < bytes; i++)
+            {
+                array[i] = Convert.ToByte(serialPort.ReadByte());
+            }
+
             switch (sensorData.serialPort.inputType)
             {
                 case InputDataType.Text:
-                    {
-                        inputData += serialPort.ReadExisting();
-
-                        //// Alternativ metode
-                        //int bytes = serialPort.BytesToRead;
-                        //byte[] array = new byte[bytes];
-                        //int i = 0;
-                        //while (serialPort.BytesToRead > 0)
-                        //{
-                        //    array[i++] = Convert.ToByte(serialPort.ReadByte());
-                        //}
-                        //inputData = Encoding.UTF8.GetString(array, 0, array.Length);
-                    }
+                    inputDataBuffer += Encoding.UTF8.GetString(array, 0, array.Length);
                     break;
 
                 case InputDataType.Binary:
-                    {
-                        try
-                        {
-                            // Av en eller annen grunn leverer ikke denne koden samme resulat som koden under
-                            //inputData = serialPort.ReadExisting();
-                            //byte[] byteArray = Encoding.Default.GetBytes(inputData);
-                            //inputData = BitConverter.ToString(byteArray);
+                    inputDataBuffer += BitConverter.ToString(array);
+                    break;
 
-                            int bytes = serialPort.BytesToRead;
-                            byte[] array = new byte[bytes];
-                            for (int i = 0; serialPort.BytesToRead > 0 && i < bytes; i++)
-                            {
-                                array[i] = Convert.ToByte(serialPort.ReadByte());
-                            }
-                            inputData = BitConverter.ToString(array);
-                        }
-                        catch (Exception ex)
-                        {
-                            // Sette feilmelding
-                            errorHandler?.Insert(
-                                new ErrorMessage(
-                                    DateTime.UtcNow,
-                                    ErrorMessageType.SerialPort,
-                                    ErrorMessageCategory.AdminUser,
-                                    string.Format("SerialPort_DataReceived (Binary): Binary conversion failed. {0}", ex.Message)));
-
-                            inputData = string.Empty;
-                        }
-                    }
+                default:
                     break;
             }
+
+            //switch (sensorData.serialPort.inputType)
+            //{
+            //    case InputDataType.Text:
+            //        {
+            //            inputData += serialPort.ReadExisting();
+
+            //            //// Alternativ metode
+            //            //int bytes = serialPort.BytesToRead;
+            //            //byte[] array = new byte[bytes];
+            //            //int i = 0;
+            //            //while (serialPort.BytesToRead > 0)
+            //            //{
+            //            //    array[i++] = Convert.ToByte(serialPort.ReadByte());
+            //            //}
+            //            //inputData = Encoding.UTF8.GetString(array, 0, array.Length);
+            //        }
+            //        break;
+
+            //    case InputDataType.Binary:
+            //        {
+            //            try
+            //            {
+            //                // Av en eller annen grunn leverer ikke denne koden samme resulat som koden under
+            //                //inputData = serialPort.ReadExisting();
+            //                //byte[] byteArray = Encoding.Default.GetBytes(inputData);
+            //                //inputData = BitConverter.ToString(byteArray);
+
+            //                //int bytes = serialPort.BytesToRead;
+            //                //byte[] array = new byte[bytes];
+            //                //for (int i = 0; serialPort.BytesToRead > 0 && i < bytes; i++)
+            //                //{
+            //                //    array[i] = Convert.ToByte(serialPort.ReadByte());
+            //                //}
+            //                //inputData = BitConverter.ToString(array);
+
+            //                inputData += serialPort.ReadExisting();
+            //            }
+            //            catch (Exception ex)
+            //            {
+            //                // Sette feilmelding
+            //                errorHandler?.Insert(
+            //                    new ErrorMessage(
+            //                        DateTime.UtcNow,
+            //                        ErrorMessageType.SerialPort,
+            //                        ErrorMessageCategory.AdminUser,
+            //                        string.Format("SerialPort_DataReceived (Binary): Binary conversion failed. {0}", ex.Message)));
+
+            //                inputData = string.Empty;
+            //            }
+            //        }
+            //        break;
+            //}
 
             // Sette time stamp
             dataTimeStamp = DateTime.UtcNow;
@@ -613,8 +638,11 @@ namespace HMS_Server
                 if (dataLimitTimer.ElapsedMilliseconds > config.ReadWithDefault(ConfigKey.SetupGUIDataLimit, Constants.GUIDataLimitDefault))
                 {
                     // Sende leste data til skjermutskrift
-                    if (!string.IsNullOrEmpty(inputData))
+                    if (!string.IsNullOrEmpty(inputDataBuffer))
                     {
+                        // Hente data string fra inputBuffer
+                        string inputData = inputDataBuffer;
+
                         // Vise raw data
                         DisplayRawData(inputData);
 
@@ -623,21 +651,23 @@ namespace HMS_Server
                         List<string> incomingPackets = process.FindSelectedPackets(inputData);
 
                         // Sjekk om vi skal ta vare på noe data eller om buffer skal slettes
-                        int lastHeaderPos = inputData.LastIndexOf(process.packetHeader);
-                        int lastEndPos = inputData.LastIndexOf(process.packetEnd);
+                        int lastHeaderPos = inputDataBuffer.LastIndexOf(process.packetHeader);
+                        int lastEndPos = inputDataBuffer.LastIndexOf(process.packetEnd);
 
                         // Dersom vi har en HEADER etter en END
-                        if (lastHeaderPos > lastEndPos)
+                        if (lastHeaderPos > lastEndPos &&
+                            lastHeaderPos != -1 &&
+                            lastEndPos != -1)
                             // Lagre fra header (i tilfelle resten av packet kommer i neste sending fra serieport)
-                            inputData = inputData.Substring(lastHeaderPos);
+                            inputDataBuffer = inputDataBuffer.Substring(lastHeaderPos);
                         else
                             // Ingen HEADER etter END -> Slette buffer
-                            inputData = String.Empty;
+                            inputDataBuffer = String.Empty;
 
                         // Må også begrense hvor my data som skal leses i input buffer når vi ikke finner packets
                         // slik at den ikke fylles i det uendelige.
-                        if (inputData.Count() > 4096) // 4KB limit per packet
-                            inputData = String.Empty;
+                        if (inputDataBuffer.Count() > 4096) // 4KB limit per packet
+                            inputDataBuffer = String.Empty;
 
                         // Prosessere pakkene som ble funnet
                         foreach (var packet in incomingPackets)

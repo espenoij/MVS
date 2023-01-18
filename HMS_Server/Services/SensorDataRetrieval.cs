@@ -219,7 +219,7 @@ namespace HMS_Server
                                                 serialPortData.portStatus = PortStatus.NoData;
 
                                                 // Fjerne data fra data feltet
-                                                serialPortData.data = string.Empty;
+                                                serialPortData.buffer_text = string.Empty;
 
                                                 // Prøv å restarte porten
                                                 serialPortDataRetrieval.Restart(serialPortData.portName);

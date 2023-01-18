@@ -12,7 +12,7 @@ namespace HMS_Server
         public SerialPortData()
         {
             portName = string.Empty;
-            data = string.Empty;
+            buffer_text = string.Empty;
             firstRead = true;
             portStatus = PortStatus.Closed;
         }
@@ -20,7 +20,7 @@ namespace HMS_Server
         public SerialPortData(SerialPortData serialPortData)
         {
             portName = serialPortData.portName;
-            data = serialPortData.data;
+            buffer_text = serialPortData.buffer_text;
             firstRead = serialPortData.firstRead;
             portStatus = serialPortData.portStatus;
         }
@@ -28,7 +28,7 @@ namespace HMS_Server
         public void Set(SerialPortData serialPortData)
         {
             portName = serialPortData.portName;
-            data = serialPortData.data;
+            buffer_text = serialPortData.buffer_text;
             firstRead = serialPortData.firstRead;
             portStatus = serialPortData.portStatus;
         }
@@ -48,17 +48,32 @@ namespace HMS_Server
             }
         }
 
-        // Data - raw data as read from the port
-        private string _data { get; set; }
-        public string data
+        // Buffer - Binary - raw data as read from the port
+        private string _buffer_binary { get; set; }
+        public string buffer_binary
         {
             get
             {
-                return _data;
+                return _buffer_binary;
             }
             set
             {
-                _data = value;
+                _buffer_binary = value;
+                OnPropertyChanged();
+            }
+        }
+
+        // Buffer - Text - raw data as read from the port
+        private string _buffer_text { get; set; }
+        public string buffer_text
+        {
+            get
+            {
+                return _buffer_text;
+            }
+            set
+            {
+                _buffer_text = value;
                 OnPropertyChanged();
             }
         }
