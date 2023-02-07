@@ -839,10 +839,10 @@ namespace HMS_Client
                         double roll = Math.Abs(rollMaxLeft20mData.data);
 
                         string dir;
-                        if (rollMaxLeft20mData.data > 0)
-                            dir = "R";
-                        else
+                        if (rollMaxLeft20mData.data >= 0)
                             dir = "L";
+                        else
+                            dir = "R";
 
                         return string.Format("{0} ° {1}", roll.ToString("0.0"), dir);
                     }
@@ -911,10 +911,10 @@ namespace HMS_Client
                         double roll = Math.Abs(rollMaxRight20mData.data);
 
                         string dir;
-                        if (rollMaxRight20mData.data > 0)
-                            dir = "R";
-                        else
+                        if (rollMaxRight20mData.data >= 0)
                             dir = "L";
+                        else
+                            dir = "R";
 
                         return string.Format("{0} ° {1}", roll.ToString("0.0"), dir);
                     }

@@ -251,8 +251,6 @@ public enum ValueType
     StatusPitch,
     StatusInclination,
     StatusSHR,
-    //StatusMSI,
-    //StatusWSI,
     StatusMSIWSI,
     StatusMRU,
     StatusGyro,

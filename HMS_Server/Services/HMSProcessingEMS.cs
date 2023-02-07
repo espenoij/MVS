@@ -5,6 +5,9 @@ namespace HMS_Server
 {
     class HMSProcessingEMS
     {
+        private HMSData sensorSeaTemperature = new HMSData();
+        private HMSData sensorWave = new HMSData();
+
         private HMSData seaTemperature = new HMSData();
 
         private HMSData waveData = new HMSData();
@@ -109,54 +112,63 @@ namespace HMS_Server
 
         public void Update(HMSDataCollection hmsInputDataList)
         {
-            if (adminSettingsVM.EMSActive)
+            // Hente sensor data
+            sensorSeaTemperature.Set(hmsInputDataList.GetData(ValueType.SeaTemperature));
+            sensorWave.Set(hmsInputDataList.GetData(ValueType.Wave));
+
+            // Sjekker om vi har nye data før vi starter prosessering
+            if (sensorSeaTemperature.TimeStampCheck ||
+                sensorWave.TimeStampCheck)
             {
-                // Tar data fra input delen av server og overfører til HMS output delen
-                seaTemperature.Set(hmsInputDataList.GetData(ValueType.SeaTemperature));
+                if (adminSettingsVM.EMSActive)
+                {
+                    // Tar data fra input delen av server og overfører til HMS output delen
+                    seaTemperature.Set(sensorSeaTemperature);
 
-                waveData.Set(hmsInputDataList.GetData(ValueType.Wave));
-                waveMax20mData.DoProcessing(waveData);
-                waveMax3hData.DoProcessing(waveData);
+                    waveData.Set(sensorWave);
+                    waveMax20mData.DoProcessing(waveData);
+                    waveMax3hData.DoProcessing(waveData);
 
-                wavePeriodData.DoProcessing(waveData);
-                wavePeriodMax20mData.DoProcessing(wavePeriodData);
-                wavePeriodMax3hData.DoProcessing(wavePeriodData);
+                    wavePeriodData.DoProcessing(waveData);
+                    wavePeriodMax20mData.DoProcessing(wavePeriodData);
+                    wavePeriodMax3hData.DoProcessing(wavePeriodData);
 
-                waveSWHData.DoProcessing(waveData);
-                waveSWHMax20mData.DoProcessing(waveSWHData);
-                waveSWHMax3hData.DoProcessing(waveSWHData);
+                    waveSWHData.DoProcessing(waveData);
+                    waveSWHMax20mData.DoProcessing(waveSWHData);
+                    waveSWHMax3hData.DoProcessing(waveSWHData);
 
 
-                // Sjekke data timeout
-                if (seaTemperature.timestamp.AddMilliseconds(adminSettingsVM.dataTimeout) < DateTime.UtcNow)
-                    seaTemperature.status = DataStatus.TIMEOUT_ERROR;
+                    // Sjekke data timeout
+                    if (seaTemperature.timestamp.AddMilliseconds(adminSettingsVM.dataTimeout) < DateTime.UtcNow)
+                        seaTemperature.status = DataStatus.TIMEOUT_ERROR;
 
-                if (waveData.timestamp.AddMilliseconds(adminSettingsVM.dataTimeout) < DateTime.UtcNow)
-                    waveData.status = DataStatus.TIMEOUT_ERROR;
+                    if (waveData.timestamp.AddMilliseconds(adminSettingsVM.dataTimeout) < DateTime.UtcNow)
+                        waveData.status = DataStatus.TIMEOUT_ERROR;
 
-                if (waveMax20mData.timestamp.AddMilliseconds(adminSettingsVM.dataTimeout) < DateTime.UtcNow)
-                    waveMax20mData.status = DataStatus.TIMEOUT_ERROR;
+                    if (waveMax20mData.timestamp.AddMilliseconds(adminSettingsVM.dataTimeout) < DateTime.UtcNow)
+                        waveMax20mData.status = DataStatus.TIMEOUT_ERROR;
 
-                if (waveMax3hData.timestamp.AddMilliseconds(adminSettingsVM.dataTimeout) < DateTime.UtcNow)
-                    waveMax3hData.status = DataStatus.TIMEOUT_ERROR;
+                    if (waveMax3hData.timestamp.AddMilliseconds(adminSettingsVM.dataTimeout) < DateTime.UtcNow)
+                        waveMax3hData.status = DataStatus.TIMEOUT_ERROR;
 
-                if (wavePeriodData.timestamp.AddMilliseconds(adminSettingsVM.dataTimeout) < DateTime.UtcNow)
-                    wavePeriodData.status = DataStatus.TIMEOUT_ERROR;
+                    if (wavePeriodData.timestamp.AddMilliseconds(adminSettingsVM.dataTimeout) < DateTime.UtcNow)
+                        wavePeriodData.status = DataStatus.TIMEOUT_ERROR;
 
-                if (wavePeriodMax20mData.timestamp.AddMilliseconds(adminSettingsVM.dataTimeout) < DateTime.UtcNow)
-                    wavePeriodMax20mData.status = DataStatus.TIMEOUT_ERROR;
+                    if (wavePeriodMax20mData.timestamp.AddMilliseconds(adminSettingsVM.dataTimeout) < DateTime.UtcNow)
+                        wavePeriodMax20mData.status = DataStatus.TIMEOUT_ERROR;
 
-                if (wavePeriodMax3hData.timestamp.AddMilliseconds(adminSettingsVM.dataTimeout) < DateTime.UtcNow)
-                    wavePeriodMax3hData.status = DataStatus.TIMEOUT_ERROR;
+                    if (wavePeriodMax3hData.timestamp.AddMilliseconds(adminSettingsVM.dataTimeout) < DateTime.UtcNow)
+                        wavePeriodMax3hData.status = DataStatus.TIMEOUT_ERROR;
 
-                if (waveSWHData.timestamp.AddMilliseconds(adminSettingsVM.dataTimeout) < DateTime.UtcNow)
-                    waveSWHData.status = DataStatus.TIMEOUT_ERROR;
+                    if (waveSWHData.timestamp.AddMilliseconds(adminSettingsVM.dataTimeout) < DateTime.UtcNow)
+                        waveSWHData.status = DataStatus.TIMEOUT_ERROR;
 
-                if (waveSWHMax20mData.timestamp.AddMilliseconds(adminSettingsVM.dataTimeout) < DateTime.UtcNow)
-                    waveSWHMax20mData.status = DataStatus.TIMEOUT_ERROR;
+                    if (waveSWHMax20mData.timestamp.AddMilliseconds(adminSettingsVM.dataTimeout) < DateTime.UtcNow)
+                        waveSWHMax20mData.status = DataStatus.TIMEOUT_ERROR;
 
-                if (waveSWHMax3hData.timestamp.AddMilliseconds(adminSettingsVM.dataTimeout) < DateTime.UtcNow)
-                    waveSWHMax3hData.status = DataStatus.TIMEOUT_ERROR;
+                    if (waveSWHMax3hData.timestamp.AddMilliseconds(adminSettingsVM.dataTimeout) < DateTime.UtcNow)
+                        waveSWHMax3hData.status = DataStatus.TIMEOUT_ERROR;
+                }
             }
         }
 

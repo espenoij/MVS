@@ -1,4 +1,5 @@
 ﻿using System;
+using System.Diagnostics.Metrics;
 using System.IO.Ports;
 using System.Linq;
 using System.Threading;
@@ -15,6 +16,10 @@ namespace HMS_Server
     /// </summary>
     public partial class MainWindow : RadWindow
     {
+        //// TEST
+        //int counter1 = 0;
+        //int counter2 = 0;
+
         private RadObservableCollection<SensorData> statusDisplayList = new RadObservableCollection<SensorData>();
         private RadObservableCollection<SensorData> sensorDataDisplayList = new RadObservableCollection<SensorData>();
         private RadObservableCollection<SerialPortData> serialPortDataDisplayList = new RadObservableCollection<SerialPortData>();
@@ -472,6 +477,9 @@ namespace HMS_Server
 
             void runHMSUpdate(object sender, EventArgs e)
             {
+                //// TEST
+                //counter1++;
+
                 try
                 {
                     Thread thread = new Thread(() => UpdateHMS_Thread());
@@ -482,6 +490,9 @@ namespace HMS_Server
                     {
                         // HMS Update
                         /////////////////////////////////////////////////////////////////////////////////////////////////////
+
+                        //// TEST
+                        //counter2++;
 
                         // HMS: HMS Input Data
                         hmsInputData.TransferData(sensorDataRetrieval.GetSensorDataList());

@@ -7,6 +7,10 @@ namespace HMS_Server
 {
     public class HMSDataCollection
     {
+        //// TEST
+        //int counter1 = 0;
+        //int counter2 = 0;
+
         // Configuration settings
         private Config config;
 
@@ -133,26 +137,43 @@ namespace HMS_Server
                     var serverData = sensorDataList.Where(x => x?.id == hmsData?.dataId);
 
                     // Fant match?
-                    if (serverData.Count() > 0 && hmsData != null)
+                    if (hmsData != null &&
+                        serverData.Count() > 0)
                     {
-                        // Overføre data
-                        hmsData.data = serverData.First().data;
-
-                        // Overføre time stamp
-                        hmsData.timestamp = serverData.First().timestamp;
-
-                        // Sjekke timestamp for data timeout
-                        if (hmsData.timestamp.AddMilliseconds(dataTimeout) < DateTime.UtcNow)
-                            hmsData.status = DataStatus.TIMEOUT_ERROR;
-                        else
-                            hmsData.status = DataStatus.OK;
-
-                        //// TEST BLIP
-                        //if (hmsData.id == (int)ValueType.MSI &&
-                        //    hmsData.status == DataStatus.OK)
+                        //// TEST
+                        //if (hmsData.id == (int)ValueType.SensorWindDirection)
                         //{
-                        //    hmsData.data3 = String.Empty;
+                        //    counter1++;
                         //}
+
+                        // ...og nye data?
+                        if (hmsData.timestamp != serverData.First().timestamp)
+                        {
+                            // Overføre data
+                            hmsData.data = serverData.First().data;
+
+                            // Overføre time stamp
+                            hmsData.timestamp = serverData.First().timestamp;
+
+                            // Sjekke timestamp for data timeout
+                            if (hmsData.timestamp.AddMilliseconds(dataTimeout) < DateTime.UtcNow)
+                                hmsData.status = DataStatus.TIMEOUT_ERROR;
+                            else
+                                hmsData.status = DataStatus.OK;
+
+                            //// TEST
+                            //if (hmsData.id == (int)ValueType.SensorWindDirection)
+                            //{
+                            //    counter2++;
+                            //}
+
+                            //// TEST BLIP
+                            //if (hmsData.id == (int)ValueType.MSI &&
+                            //    hmsData.status == DataStatus.OK)
+                            //{
+                            //    hmsData.data3 = String.Empty;
+                            //}
+                        }
                     }
                     // Ingen verdi i data samlingen knyttet til verdi i mottaker listen
                     else

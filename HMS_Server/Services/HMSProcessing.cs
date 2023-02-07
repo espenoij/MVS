@@ -47,7 +47,7 @@ namespace HMS_Server
             hmsProcessingMotion.Update(hmsInputDataList);
             hmsProcessingWindHeading.Update(hmsInputDataList);
             hmsProcessingMeteorological.Update(hmsInputDataList);
-            hmsProcessingHelideckStatus.UpdateHelideckLight();
+            hmsProcessingHelideckStatus.Update();
             hmsProcessingEMS.Update(hmsInputDataList);
 
             // Data Verification Module

@@ -5,11 +5,17 @@ using System.IO;
 using System.Runtime.CompilerServices;
 using System.Threading;
 using System.Timers;
+using System.Windows.Documents;
+using System.Windows.Shapes;
 
 namespace HMS_Server
 {
     public class FileReaderSetup : INotifyPropertyChanged
     {
+        //// TEST
+        //private int counter1 = 0;
+        //private int counter2 = 0;
+
         // Change notification
         public event PropertyChangedEventHandler PropertyChanged;
 
@@ -56,6 +62,12 @@ namespace HMS_Server
 
         // Lese frekvens
         public double readFrequency { get; set; }
+
+        // Start-tidspunkt for lesing
+        private DateTime readStartTime;
+
+        // Totalt antall leste linjer
+        private double linesRead;
 
         // Data Line delimiter
         public string delimiter { get; set; }
@@ -180,21 +192,29 @@ namespace HMS_Server
                 calculationSetup.Add(new CalculationSetup(item));
         }
 
-        public void StartReader(ErrorHandler errorHandler, FileReaderDataRetrieval.FileReaderCallback fileReaderCallback)
+        public void StartReader(Config config, ErrorHandler errorHandler, FileReaderDataRetrieval.FileReaderCallback fileReaderCallback)
         {
             FileReaderSetup fileReaderData = new FileReaderSetup();
+
+            // Tidspunktet vi starter lesing fra fil
+            readStartTime = DateTime.UtcNow;
+
+            // Resette lines read
+            linesRead = 0;
 
             // Overføre fil katalog og navn
             fileReaderData.fileFolder = fileFolder;
             fileReaderData.fileName = fileName;
 
             // Timer
-            timer = new System.Timers.Timer(readFrequency);
+            timer = new System.Timers.Timer(config.ReadWithDefault(ConfigKey.HMSProcessingFrequency, Constants.HMSProcessingFrequencyDefault));
 
             try
             {
-                StreamReader fsReader = new StreamReader(filePath);
-
+                FileStream fs = File.Open(filePath, FileMode.Open, FileAccess.Read, FileShare.ReadWrite);
+                BufferedStream bs = new BufferedStream(fs);
+                StreamReader sr = new StreamReader(bs);
+                
                 // Timer parametre
                 timer.AutoReset = true;
                 timer.Elapsed += runReader;
@@ -204,48 +224,90 @@ namespace HMS_Server
 
                 void runReader(Object source, EventArgs e)
                 {
-                    Thread thread = new Thread(() => runReaderTask());
-                    thread.IsBackground = true;
-                    thread.Start(); // <--- OOM
-
-                    void runReaderTask()
+                    // Finne ut om vi har kommet så langt i tid at vi må lese en ny linje fra fil
+                    double expectedLinesRead = (DateTime.UtcNow - readStartTime).TotalMilliseconds / readFrequency;
+                    if (linesRead < expectedLinesRead)
                     {
-                        if (fsReader != null)
+                        Thread thread = new Thread(() => runReaderTask());
+                        thread.IsBackground = true;
+                        thread.Start(); // <--- OOM (2023.01.23: Ikke hatt OOM her på lenge)
+
+                        void runReaderTask()
                         {
-                            // Sjekke at vi ikke er kommet til end of file
-                            if (!fsReader.EndOfStream)
+                            if (sr != null)
                             {
-                                // Lese en linje fra fil
-                                dataLine = fsReader.ReadLine();
-                                fileReaderData.dataLine = dataLine;
+                                // Sjekke at vi ikke er kommet til end of file
+                                if (!sr.EndOfStream)
+                                {
+                                    // Lese en linje fra fil
+                                    dataLine = sr.ReadLine();
+                                    if (dataLine != null)
+                                    {
+                                        fileReaderData.dataLine = dataLine;
 
-                                // Sette timestamp
-                                timestamp = DateTime.UtcNow;
-                                fileReaderData.timestamp = timestamp;
+                                        // Sette timestamp
+                                        timestamp = readStartTime.AddMilliseconds(linesRead * readFrequency);
+                                        fileReaderData.timestamp = timestamp;
 
-                                // Status
-                                portStatus = PortStatus.Reading;
+                                        // Øke antall leste linjer
+                                        linesRead += 1;
+
+                                        // Status
+                                        portStatus = PortStatus.Reading;
+                                    }
+                                    else
+                                    {
+                                        // Status
+                                        portStatus = PortStatus.NoData;
+                                    }
+                                }
+                                else
+                                {
+                                    // Status
+                                    portStatus = PortStatus.EndOfFile;
+                                }
                             }
                             else
                             {
                                 // Status
-                                portStatus = PortStatus.EndOfFile;
+                                portStatus = PortStatus.OpenError;
                             }
-                        }
-                        else
-                        {
+
                             // Status
-                            portStatus = PortStatus.OpenError;
+                            fileReaderData.portStatus = portStatus;
+
+                            //// TEST
+                            //counter1++;
+
+                            // Callback for å sende lest data linje tilbake for prosessering
+                            if (fileReaderCallback != null)
+                            {
+                                //// TEST
+                                //counter2++;
+
+                                fileReaderCallback(fileReaderData);
+                            }
+
+                            //// TEST
+                            //errorHandler.Insert(
+                            //    new ErrorMessage(
+                            //        DateTime.UtcNow,
+                            //        ErrorMessageType.FileReader,
+                            //        ErrorMessageCategory.AdminUser,
+                            //        string.Format("1 expectedLinesRead: {0}, linesRead : {1} --- Elapsed Time: {2}", expectedLinesRead, linesRead, (DateTime.UtcNow - readStartTime).TotalSeconds)));
                         }
-
-                        // Status
-                        fileReaderData.portStatus = portStatus;
-
-                        // Callback for å sende lest data linje tilbake for prosessering
-                        if (fileReaderCallback != null)
-                            fileReaderCallback(fileReaderData);
                     }
-                }
+                    //else
+                    //{
+                    //    // TEST
+                    //    errorHandler.Insert(
+                    //        new ErrorMessage(
+                    //            DateTime.UtcNow,
+                    //            ErrorMessageType.FileReader,
+                    //            ErrorMessageCategory.AdminUser,
+                    //            string.Format("0 expectedLinesRead: {0}, linesRead : {1} --- Elapsed Time: {2}", expectedLinesRead, linesRead, (DateTime.UtcNow - readStartTime).TotalSeconds)));
+                    //}
+                }                
             }
             catch (Exception ex)
             {

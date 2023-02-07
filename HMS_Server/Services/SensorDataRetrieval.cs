@@ -54,7 +54,7 @@ namespace HMS_Server
             modbusDataRetrieval = new ModbusDataRetrieval(config, database, errorHandler, adminSettingsVM);
 
             // File Reader data innhenting
-            fileReaderDataRetrieval = new FileReaderDataRetrieval(database, errorHandler, adminSettingsVM);
+            fileReaderDataRetrieval = new FileReaderDataRetrieval(config, database, errorHandler, adminSettingsVM);
         }
 
         public void LoadSensors()

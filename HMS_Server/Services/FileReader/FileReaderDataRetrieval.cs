@@ -1,12 +1,19 @@
 ﻿using System;
 using System.Collections.Generic;
+using System.Diagnostics.Metrics;
 
 namespace HMS_Server
 {
     public class FileReaderDataRetrieval
     {
+        //// TEST
+        //int counter = 0;
+
         // Database
         private DatabaseHandler database;
+
+        // Config
+        private Config config;
 
         // File Reader: List
         private List<SensorData> fileReaderSensorList = new List<SensorData>();
@@ -22,8 +29,9 @@ namespace HMS_Server
         public delegate void FileReaderCallback(FileReaderSetup fileReaderData);
         private FileReaderCallback fileReaderCallback;
 
-        public FileReaderDataRetrieval(DatabaseHandler database, ErrorHandler errorHandler, AdminSettingsVM adminSettingsVM)
+        public FileReaderDataRetrieval(Config config, DatabaseHandler database, ErrorHandler errorHandler, AdminSettingsVM adminSettingsVM)
         {
+            this.config = config;
             this.database = database;
             this.errorHandler = errorHandler;
             this.adminSettingsVM = adminSettingsVM;
@@ -53,7 +61,7 @@ namespace HMS_Server
             // Starter lesing for hvert fil
             foreach (var fileReader in fileReaderList)
             {
-                fileReader?.StartReader(errorHandler, fileReaderCallback);
+                fileReader?.StartReader(config, errorHandler, fileReaderCallback);
             }
         }
 
@@ -82,6 +90,10 @@ namespace HMS_Server
 
                         try
                         {
+                            //// TEST
+                            //if (sensorData.id == 66)
+                            //    counter++;
+
                             // Init processing
                             process.delimiter = sensorData.fileReader.delimiter;
                             process.fixedPosData = sensorData.fileReader.fixedPosData;
@@ -101,7 +113,13 @@ namespace HMS_Server
 
                             // Utføre kalkulasjoner på utvalgt data
                             //////////////////////////////////////////////////////////////////////////////
-                            CalculatedData calculatedData = process.ApplyCalculationsToSelectedData(selectedData, sensorData.dataCalculations, DateTime.UtcNow, errorHandler, ErrorMessageCategory.Admin, adminSettingsVM);
+                            CalculatedData calculatedData = process.ApplyCalculationsToSelectedData(
+                                                                        selectedData, 
+                                                                        sensorData.dataCalculations,
+                                                                        fileReaderData.timestamp, 
+                                                                        errorHandler, 
+                                                                        ErrorMessageCategory.Admin,
+                                                                        adminSettingsVM);
 
                             // Lagre resultat
                             sensorData.timestamp = fileReaderData.timestamp;

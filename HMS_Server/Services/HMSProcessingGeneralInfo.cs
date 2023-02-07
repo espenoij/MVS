@@ -5,6 +5,9 @@ namespace HMS_Server
 {
     class HMSProcessingGeneralInfo
     {
+        private HMSData sensorLatitude = new HMSData();
+        private HMSData sensorLongitude = new HMSData();
+
         private HMSData gpsLatitude = new HMSData();
         private HMSData gpsLongitude = new HMSData();
 
@@ -26,17 +29,25 @@ namespace HMS_Server
 
         public void Update(HMSDataCollection hmsInputDataList)
         {
-            // Tar data fra input delen av server og overfører til HMS output delen
+            // Hente sensor data
+            sensorLatitude.Set(hmsInputDataList.GetData(ValueType.Latitude));
+            sensorLongitude.Set(hmsInputDataList.GetData(ValueType.Longitude));
 
-            gpsLatitude.Set(hmsInputDataList.GetData(ValueType.Latitude));
-            gpsLongitude.Set(hmsInputDataList.GetData(ValueType.Longitude));
+            // Sjekker om vi har nye data før vi starter prosessering
+            if (sensorLatitude.TimeStampCheck ||
+                sensorLongitude.TimeStampCheck)
+            {
+                // Tar data fra input delen av server og overfører til HMS output delen
+                gpsLatitude.Set(sensorLatitude);
+                gpsLongitude.Set(sensorLongitude);
 
-            // Sjekke data timeout
-            if (gpsLatitude.timestamp.AddMilliseconds(adminSettingsVM.dataTimeout) < DateTime.UtcNow)
-                gpsLatitude.status = DataStatus.TIMEOUT_ERROR;
+                // Sjekke data timeout
+                if (gpsLatitude.timestamp.AddMilliseconds(adminSettingsVM.dataTimeout) < DateTime.UtcNow)
+                    gpsLatitude.status = DataStatus.TIMEOUT_ERROR;
 
-            if (gpsLongitude.timestamp.AddMilliseconds(adminSettingsVM.dataTimeout) < DateTime.UtcNow)
-                gpsLongitude.status = DataStatus.TIMEOUT_ERROR;
+                if (gpsLongitude.timestamp.AddMilliseconds(adminSettingsVM.dataTimeout) < DateTime.UtcNow)
+                    gpsLongitude.status = DataStatus.TIMEOUT_ERROR;
+            }
         }
     }
 }

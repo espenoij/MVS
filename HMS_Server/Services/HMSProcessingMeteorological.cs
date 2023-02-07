@@ -5,6 +5,21 @@ namespace HMS_Server
 {
     class HMSProcessingMeteorological
     {
+        // Sensor Data
+        private HMSData sensorAirTemperature = new HMSData();
+        private HMSData sensorAirHumidity = new HMSData();
+        private HMSData sensorAirPressure = new HMSData();
+        private HMSData sensorVisibility = new HMSData();
+        private HMSData sensorWeather = new HMSData();
+        private HMSData sensorCloudLayer1Base = new HMSData();
+        private HMSData sensorCloudLayer2Base = new HMSData();
+        private HMSData sensorCloudLayer3Base = new HMSData();
+        private HMSData sensorCloudLayer4Base = new HMSData();
+        private HMSData sensorCloudLayer1Coverage = new HMSData();
+        private HMSData sensorCloudLayer2Coverage = new HMSData();
+        private HMSData sensorCloudLayer3Coverage = new HMSData();
+        private HMSData sensorCloudLayer4Coverage = new HMSData();
+
         private HMSData airTemperature = new HMSData();
         private HMSData airHumidity = new HMSData();
         private HMSData airDewPoint = new HMSData();
@@ -74,87 +89,110 @@ namespace HMS_Server
         public void Update(HMSDataCollection hmsInputDataList)
         {
             // Tar data fra input delen av server og overfører til HMS output delen
-            airTemperature.Set(hmsInputDataList.GetData(ValueType.AirTemperature));
-            airHumidity.Set(hmsInputDataList.GetData(ValueType.AirHumidity));
-            CalculateDewPoint();
 
-            if (hmsInputDataList.GetData(ValueType.AirPressure) != null)
+            // Hente sensor data
+            sensorAirTemperature.Set(hmsInputDataList.GetData(ValueType.AirTemperature));
+            sensorAirHumidity.Set(hmsInputDataList.GetData(ValueType.AirHumidity));
+            sensorAirPressure.Set(hmsInputDataList.GetData(ValueType.AirPressure));
+            sensorVisibility.Set(hmsInputDataList.GetData(ValueType.Visibility));
+            sensorWeather.Set(hmsInputDataList.GetData(ValueType.Weather));
+            sensorCloudLayer1Base.Set(hmsInputDataList.GetData(ValueType.CloudLayer1Base));
+            sensorCloudLayer2Base.Set(hmsInputDataList.GetData(ValueType.CloudLayer2Base));
+            sensorCloudLayer3Base.Set(hmsInputDataList.GetData(ValueType.CloudLayer3Base));
+            sensorCloudLayer4Base.Set(hmsInputDataList.GetData(ValueType.CloudLayer4Base));
+            sensorCloudLayer1Coverage.Set(hmsInputDataList.GetData(ValueType.CloudLayer1Coverage));
+            sensorCloudLayer2Coverage.Set(hmsInputDataList.GetData(ValueType.CloudLayer2Coverage));
+            sensorCloudLayer3Coverage.Set(hmsInputDataList.GetData(ValueType.CloudLayer3Coverage));
+            sensorCloudLayer4Coverage.Set(hmsInputDataList.GetData(ValueType.CloudLayer4Coverage));
+
+            if (sensorAirTemperature.TimeStampCheck ||
+                sensorAirHumidity.TimeStampCheck ||
+                sensorAirPressure.TimeStampCheck ||
+                sensorVisibility.TimeStampCheck ||
+                sensorWeather.TimeStampCheck ||
+                sensorCloudLayer1Base.TimeStampCheck ||
+                sensorCloudLayer2Base.TimeStampCheck ||
+                sensorCloudLayer3Base.TimeStampCheck ||
+                sensorCloudLayer4Base.TimeStampCheck ||
+                sensorCloudLayer1Coverage.TimeStampCheck ||
+                sensorCloudLayer2Coverage.TimeStampCheck ||
+                sensorCloudLayer3Coverage.TimeStampCheck ||
+                sensorCloudLayer4Coverage.TimeStampCheck)
             {
-                airPressureQFE.data = Math.Round(CalculateQFE(hmsInputDataList.GetData(ValueType.AirPressure).data, airTemperature.data, adminSettingsVM.airPressureSensorHeight - adminSettingsVM.helideckHeight), 1, MidpointRounding.AwayFromZero);
-                airPressureQFE.status = hmsInputDataList.GetData(ValueType.AirPressure).status;
-                airPressureQFE.timestamp = hmsInputDataList.GetData(ValueType.AirPressure).timestamp;
+
+                // Temperature & Humidity
+                airTemperature.Set(sensorAirTemperature);
+                airHumidity.Set(sensorAirHumidity);
+                CalculateDewPoint();
+
+                // Air pressure
+                airPressureQFE.data = Math.Round(CalculateQFE(sensorAirPressure.data, airTemperature.data, adminSettingsVM.airPressureSensorHeight - adminSettingsVM.helideckHeight), 1, MidpointRounding.AwayFromZero);
+                airPressureQFE.status = sensorAirPressure.status;
+                airPressureQFE.timestamp = sensorAirPressure.timestamp;
 
                 airPressureQNH.data = Math.Round(CalculateQNH(airPressureQFE.data, adminSettingsVM.helideckHeight), 1, MidpointRounding.AwayFromZero);
-                airPressureQNH.status = hmsInputDataList.GetData(ValueType.AirPressure).status;
-                airPressureQNH.timestamp = hmsInputDataList.GetData(ValueType.AirPressure).timestamp;
+                airPressureQNH.status = sensorAirPressure.status;
+                airPressureQNH.timestamp = sensorAirPressure.timestamp;
+
+                // Visibility
+                Visibility.Set(sensorVisibility);
+
+                // Weather
+                weatherPhenomena.Set(sensorWeather);
+
+                // Clouds
+                cloudLayer1Base.Set(sensorCloudLayer1Base);
+                cloudLayer1Coverage.Set(sensorCloudLayer1Coverage);
+                cloudLayer2Base.Set(sensorCloudLayer2Base);
+                cloudLayer2Coverage.Set(sensorCloudLayer2Coverage);
+                cloudLayer3Base.Set(sensorCloudLayer3Base);
+                cloudLayer3Coverage.Set(sensorCloudLayer3Coverage);
+                cloudLayer4Base.Set(sensorCloudLayer4Base);
+                cloudLayer4Coverage.Set(sensorCloudLayer4Coverage);
+
+                // Sjekke data timeout
+                if (airTemperature.timestamp.AddMilliseconds(adminSettingsVM.dataTimeout) < DateTime.UtcNow)
+                    airTemperature.status = DataStatus.TIMEOUT_ERROR;
+
+                if (airHumidity.timestamp.AddMilliseconds(adminSettingsVM.dataTimeout) < DateTime.UtcNow)
+                    airHumidity.status = DataStatus.TIMEOUT_ERROR;
+
+                if (airPressureQFE.timestamp.AddMilliseconds(adminSettingsVM.dataTimeout) < DateTime.UtcNow)
+                    airPressureQFE.status = DataStatus.TIMEOUT_ERROR;
+
+                if (airPressureQNH.timestamp.AddMilliseconds(adminSettingsVM.dataTimeout) < DateTime.UtcNow)
+                    airPressureQNH.status = DataStatus.TIMEOUT_ERROR;
+
+                if (Visibility.timestamp.AddMilliseconds(adminSettingsVM.dataTimeout) < DateTime.UtcNow)
+                    Visibility.status = DataStatus.TIMEOUT_ERROR;
+
+                if (weatherPhenomena.timestamp.AddMilliseconds(adminSettingsVM.dataTimeout) < DateTime.UtcNow)
+                    weatherPhenomena.status = DataStatus.TIMEOUT_ERROR;
+
+                if (cloudLayer1Base.timestamp.AddMilliseconds(adminSettingsVM.dataTimeout) < DateTime.UtcNow)
+                    cloudLayer1Base.status = DataStatus.TIMEOUT_ERROR;
+
+                if (cloudLayer1Coverage.timestamp.AddMilliseconds(adminSettingsVM.dataTimeout) < DateTime.UtcNow)
+                    cloudLayer1Coverage.status = DataStatus.TIMEOUT_ERROR;
+
+                if (cloudLayer2Base.timestamp.AddMilliseconds(adminSettingsVM.dataTimeout) < DateTime.UtcNow)
+                    cloudLayer2Base.status = DataStatus.TIMEOUT_ERROR;
+
+                if (cloudLayer2Coverage.timestamp.AddMilliseconds(adminSettingsVM.dataTimeout) < DateTime.UtcNow)
+                    cloudLayer2Coverage.status = DataStatus.TIMEOUT_ERROR;
+
+                if (cloudLayer3Base.timestamp.AddMilliseconds(adminSettingsVM.dataTimeout) < DateTime.UtcNow)
+                    cloudLayer3Base.status = DataStatus.TIMEOUT_ERROR;
+
+                if (cloudLayer3Coverage.timestamp.AddMilliseconds(adminSettingsVM.dataTimeout) < DateTime.UtcNow)
+                    cloudLayer3Coverage.status = DataStatus.TIMEOUT_ERROR;
+
+                if (cloudLayer4Base.timestamp.AddMilliseconds(adminSettingsVM.dataTimeout) < DateTime.UtcNow)
+                    cloudLayer4Base.status = DataStatus.TIMEOUT_ERROR;
+
+                if (cloudLayer4Coverage.timestamp.AddMilliseconds(adminSettingsVM.dataTimeout) < DateTime.UtcNow)
+                    cloudLayer4Coverage.status = DataStatus.TIMEOUT_ERROR;
             }
-            else
-            {
-                airPressureQFE.data = 0;
-                airPressureQFE.timestamp = DateTime.UtcNow;
-                airPressureQFE.status = DataStatus.TIMEOUT_ERROR;
-
-                airPressureQNH.data = 0;
-                airPressureQNH.timestamp = DateTime.UtcNow;
-                airPressureQNH.status = DataStatus.TIMEOUT_ERROR;
-            }
-
-
-            Visibility.Set(hmsInputDataList.GetData(ValueType.Visibility));
-
-            weatherPhenomena.Set(hmsInputDataList.GetData(ValueType.Weather));
-
-            cloudLayer1Base.Set(hmsInputDataList.GetData(ValueType.CloudLayer1Base));
-            cloudLayer1Coverage.Set(hmsInputDataList.GetData(ValueType.CloudLayer1Coverage));
-            cloudLayer2Base.Set(hmsInputDataList.GetData(ValueType.CloudLayer2Base));
-            cloudLayer2Coverage.Set(hmsInputDataList.GetData(ValueType.CloudLayer2Coverage));
-            cloudLayer3Base.Set(hmsInputDataList.GetData(ValueType.CloudLayer3Base));
-            cloudLayer3Coverage.Set(hmsInputDataList.GetData(ValueType.CloudLayer3Coverage));
-            cloudLayer4Base.Set(hmsInputDataList.GetData(ValueType.CloudLayer4Base));
-            cloudLayer4Coverage.Set(hmsInputDataList.GetData(ValueType.CloudLayer4Coverage));
-
-            // Sjekke data timeout
-            if (airTemperature.timestamp.AddMilliseconds(adminSettingsVM.dataTimeout) < DateTime.UtcNow)
-                airTemperature.status = DataStatus.TIMEOUT_ERROR;
-
-            if (airHumidity.timestamp.AddMilliseconds(adminSettingsVM.dataTimeout) < DateTime.UtcNow)
-                airHumidity.status = DataStatus.TIMEOUT_ERROR;
-
-            if (airPressureQFE.timestamp.AddMilliseconds(adminSettingsVM.dataTimeout) < DateTime.UtcNow)
-                airPressureQFE.status = DataStatus.TIMEOUT_ERROR;
-
-            if (airPressureQNH.timestamp.AddMilliseconds(adminSettingsVM.dataTimeout) < DateTime.UtcNow)
-                airPressureQNH.status = DataStatus.TIMEOUT_ERROR;
-
-            if (Visibility.timestamp.AddMilliseconds(adminSettingsVM.dataTimeout) < DateTime.UtcNow)
-                Visibility.status = DataStatus.TIMEOUT_ERROR;
-
-            if (weatherPhenomena.timestamp.AddMilliseconds(adminSettingsVM.dataTimeout) < DateTime.UtcNow)
-                weatherPhenomena.status = DataStatus.TIMEOUT_ERROR;
-
-            if (cloudLayer1Base.timestamp.AddMilliseconds(adminSettingsVM.dataTimeout) < DateTime.UtcNow)
-                cloudLayer1Base.status = DataStatus.TIMEOUT_ERROR;
-
-            if (cloudLayer1Coverage.timestamp.AddMilliseconds(adminSettingsVM.dataTimeout) < DateTime.UtcNow)
-                cloudLayer1Coverage.status = DataStatus.TIMEOUT_ERROR;
-
-            if (cloudLayer2Base.timestamp.AddMilliseconds(adminSettingsVM.dataTimeout) < DateTime.UtcNow)
-                cloudLayer2Base.status = DataStatus.TIMEOUT_ERROR;
-
-            if (cloudLayer2Coverage.timestamp.AddMilliseconds(adminSettingsVM.dataTimeout) < DateTime.UtcNow)
-                cloudLayer2Coverage.status = DataStatus.TIMEOUT_ERROR;
-
-            if (cloudLayer3Base.timestamp.AddMilliseconds(adminSettingsVM.dataTimeout) < DateTime.UtcNow)
-                cloudLayer3Base.status = DataStatus.TIMEOUT_ERROR;
-
-            if (cloudLayer3Coverage.timestamp.AddMilliseconds(adminSettingsVM.dataTimeout) < DateTime.UtcNow)
-                cloudLayer3Coverage.status = DataStatus.TIMEOUT_ERROR;
-
-            if (cloudLayer4Base.timestamp.AddMilliseconds(adminSettingsVM.dataTimeout) < DateTime.UtcNow)
-                cloudLayer4Base.status = DataStatus.TIMEOUT_ERROR;
-
-            if (cloudLayer4Coverage.timestamp.AddMilliseconds(adminSettingsVM.dataTimeout) < DateTime.UtcNow)
-                cloudLayer4Coverage.status = DataStatus.TIMEOUT_ERROR;
         }
 
         public void CalculateDewPoint()

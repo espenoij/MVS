@@ -903,7 +903,7 @@
 
                             <Grid
                                 Grid.Row="1"
-                                Name="gridMaxRollRight20m">
+                                Name="gridMaxRollLeft20m">
 
                                 <Grid.ColumnDefinitions>
                                     <ColumnDefinition
@@ -939,7 +939,7 @@
 
                             <Grid
                                 Grid.Row="2"
-                                Name="gridMaxRollLeft20m">
+                                Name="gridMaxRollRight20m">
 
                                 <Grid.ColumnDefinitions>
                                     <ColumnDefinition
@@ -1679,7 +1679,7 @@
 
                         <Grid.RowDefinitions>
                             <RowDefinition
-                                Height="2.5*" />
+                                Height="3*" />
                             <RowDefinition
                                 Height="30" />
                             <RowDefinition
@@ -2491,7 +2491,7 @@
 
                             <Grid
                                 Grid.Row="1"
-                                Name="gridMaxRollRight3h">
+                                Name="gridMaxRollLeft3h">
 
                                 <Grid.ColumnDefinitions>
                                     <ColumnDefinition
@@ -2527,7 +2527,7 @@
 
                             <Grid
                                 Grid.Row="2"
-                                Name="gridMaxRollLeft3h">
+                                Name="gridMaxRollRight3h">
 
                                 <Grid.ColumnDefinitions>
                                     <ColumnDefinition

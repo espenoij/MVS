@@ -10,6 +10,14 @@ namespace HMS_Server
 {
     public class DataCalculations
     {
+        //// TEST
+        //int counter1 = 0;
+        //int counter2 = 0;
+        //int counter21 = 0;
+        //int counter22 = 0;
+        //int counter3 = 0;
+        //int counter4 = 0;
+
         public CalculationType type { get; set; }
         public double parameter { get; set; }
 
@@ -315,7 +323,7 @@ namespace HMS_Server
                         // Returnerer snittverdien av et data sett innsamlet over en gitt tid
 
                         // Brukes til:
-                        // 
+                        // - Wind speed
 
                         case CalculationType.TimeAverage:
 
@@ -341,7 +349,6 @@ namespace HMS_Server
                                         // Fjerne fra verdi listen
                                         timeAverageDataList.RemoveAt(0);
                                     }
-                                    //timeAverageDataList.TrimExcess();
                                 }
 
                                 // Beregne gjennomsnitt av de verdiene som ligger i datasettet
@@ -363,13 +370,29 @@ namespace HMS_Server
 
                         case CalculationType.WindDirTimeAverage:
 
+                            //// TEST
+                            //counter1++;
+
                             // Sjekke om string er numerisk
                             if (double.TryParse(newData, Constants.numberStyle, Constants.cultureInfo, out value))
                             {
-                                // Sjekke at ny verdi ikke er lik den forrige som ble lagt inn i datasettet -> unngå duplikater
+                                //// TEST
+                                //counter2++;
+
+                                //if (double.IsNaN(value))
+                                //    counter21++;
+
+                                //if (windDirTimeAverageDataList.LastOrDefault()?.timestamp == newTimeStamp)
+                                //    counter22++;
+                                //// TEST
+
+                                    // Sjekke at ny verdi ikke er lik den forrige som ble lagt inn i datasettet -> unngå duplikater
                                 if (!double.IsNaN(value) &&
                                     windDirTimeAverageDataList.LastOrDefault()?.timestamp != newTimeStamp)
                                 {
+                                    //// TEST
+                                    //counter3++;
+
                                     double x = Math.Cos(HMSCalc.ToRadians(value));
                                     double y = Math.Sin(HMSCalc.ToRadians(value));
 
@@ -394,6 +417,11 @@ namespace HMS_Server
                                         windDirTimeAverageDataList.RemoveAt(0);
                                     }
                                 }
+                                //// TEST
+                                //else 
+                                //{
+                                //    counter4++;
+                                //}
 
                                 // Beregne gjennomsnitt av de verdiene som ligger i datasettet
                                 if (windDirTimeAverageDataList.Count > 0)

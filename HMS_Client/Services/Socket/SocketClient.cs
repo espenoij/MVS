@@ -428,7 +428,6 @@ namespace HMS_Client
                             //        item.status == DataStatus.OK)
                             //    {
                             //        item.data3 = packet.payload;
-                            //        break;
                             //    }
                             //}
 
@@ -436,13 +435,12 @@ namespace HMS_Client
                             TransferReceivedData(dataList);
 
                             //// TEST
-                            //foreach (var item in dataList)
+                            //foreach (var item in hmsDataList)
                             //{
                             //    if (item.id == (int)ValueType.MSI &&
                             //        item.status == DataStatus.OK)
                             //    {
                             //        item.data3 = packet.payload;
-                            //        break;
                             //    }
                             //}
 
@@ -523,6 +521,26 @@ namespace HMS_Client
             { 
                 bool listResetRequired = false;
 
+                //// TEST
+                //foreach (var item in receivedDataList)
+                //{
+                //    if (item.id == (int)ValueType.MSI &&
+                //        item.status == DataStatus.OK)
+                //    {
+                //        item.data3 = String.Empty;
+                //    }
+                //}
+
+                //// TEST
+                //foreach (var item in hmsDataList)
+                //{
+                //    if (item.id == (int)ValueType.MSI &&
+                //        item.status == DataStatus.OK)
+                //    {
+                //        item.data3 = String.Empty;
+                //    }
+                //}
+
                 // Sjekker først om lengden på innkommende data liste er like lagret data liste
                 if (receivedDataList.Count() == hmsDataList?.Count())
                 {
@@ -569,6 +587,26 @@ namespace HMS_Client
                             socketConsole?.Add(string.Format("ProcessReceivedData: id:{0}, data:{1}, timestamp:{2}", item.id, item.data, item.timestamp.ToString(Constants.TimestampFormat, Constants.cultureInfo)));
                     }
                 }
+
+                //// TEST
+                //foreach (var item in receivedDataList)
+                //{
+                //    if (item.id == (int)ValueType.MSI &&
+                //        item.status == DataStatus.OK)
+                //    {
+                //        item.data3 = String.Empty;
+                //    }
+                //}
+
+                //// TEST
+                //foreach (var item in hmsDataList)
+                //{
+                //    if (item.id == (int)ValueType.MSI &&
+                //        item.status == DataStatus.OK)
+                //    {
+                //        item.data3 = String.Empty;
+                //    }
+                //}
             }
             catch (Exception ex)
             {

@@ -138,6 +138,24 @@ namespace HMS_Server
             }
         }
 
+        // Funksjon for å sjekke om timestamp har endret seg side sist vi sjekket
+        private DateTime _timestampCheck { get; set; }
+        public bool TimeStampCheck
+        {
+            get
+            {
+                bool result = false;
+
+                if (_timestamp != _timestampCheck)
+                {
+                    result = true;
+                    _timestampCheck = _timestamp;
+                }
+
+                return result;
+            }
+        }
+
         private DataStatus _status { get; set; }
         public DataStatus status
         {

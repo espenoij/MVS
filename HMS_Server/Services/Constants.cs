@@ -42,7 +42,7 @@ class Constants
     public const int SensorStatusRequestFrequencyMin = 100;
     public const int SensorStatusRequestFrequencyMax = 60000;
 
-    public const int HMSProcessingFrequencyDefault = 250;
+    public const int HMSProcessingFrequencyDefault = 100;
     public const int HMSProcessingFrequencyMin = 100;
     public const int HMSProcessingFrequencyMax = 5000;
 

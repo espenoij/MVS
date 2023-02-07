@@ -313,7 +313,9 @@ namespace HMS_Server
                         // Dersom vi har en HEADER etter en END
                         if (lastHeaderPos > lastEndPos &&
                             lastHeaderPos != -1 &&
-                            lastEndPos != -1)
+                            lastEndPos != -1 &&
+                            !string.IsNullOrEmpty(process.packetHeader) &&
+                            !string.IsNullOrEmpty(process.packetEnd))
                             // Lagre fra header (i tilfelle resten av packet kommer i neste sending fra serieport)
                             serialPortData.buffer_text = serialPortData.buffer_text.Substring(lastHeaderPos);
                         else
@@ -337,7 +339,9 @@ namespace HMS_Server
                         // Dersom vi har en HEADER etter en END
                         if (lastHeaderPos > lastEndPos &&
                             lastHeaderPos != -1 &&
-                            lastEndPos != -1)
+                            lastEndPos != -1 &&
+                            !string.IsNullOrEmpty(process.packetHeader) &&
+                            !string.IsNullOrEmpty(process.packetEnd))
                             // Lagre fra header (i tilfelle resten av packet kommer i neste sending fra serieport)
                             serialPortData.buffer_binary = serialPortData.buffer_binary.Substring(lastHeaderPos);
                         else

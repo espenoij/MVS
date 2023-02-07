@@ -2337,11 +2337,7 @@ namespace HMS_Client
         /////////////////////////////////////////////////////////////////////////////
         private List<HMSData> cloudBase { get; set; }
         private List<HMSData> cloudCoverage { get; set; }
-        // 0 = SKC, CLR
-        // 1 = FEW
-        // 2 = SCT
-        // 3 = BKN
-        // 4 = OVC
+
         private void SetCloudData(int layer, HMSData cBase, HMSData cCoverage)
         {
             if (layer < Constants.TOTAL_CLOUD_LAYERS && layer >= 0)
@@ -2431,14 +2427,18 @@ namespace HMS_Client
                     switch (cloudCoverage[layer].data)
                     {
                         case 0:
-                            return string.Empty;
+                            return "SKC";
                         case 1:
-                            return "FEW";
                         case 2:
-                            return "SCT";
+                            return "FEW";
                         case 3:
-                            return "BKN";
                         case 4:
+                            return "SCT";
+                        case 5:
+                        case 6:
+                        case 7:
+                            return "BKN";
+                        case 8:
                             return "OVC";
                         default:
                             return string.Empty;

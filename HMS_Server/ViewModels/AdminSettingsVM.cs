@@ -109,22 +109,22 @@ namespace HMS_Server
                 dataVerificationEnabled = false;
 
             // Sensor Status Input
-            if (config.ReadWithDefault(ConfigKey.SensorStatusInputMRU, "1") == "1")
+            if (config.ReadWithDefault(ConfigKey.SensorStatusInputMRU, "0") == "1")
                 statusMRUEnabled = true;
             else
                 statusMRUEnabled = false;
 
-            if (config.ReadWithDefault(ConfigKey.SensorStatusInputGyro, "1") == "1")
+            if (config.ReadWithDefault(ConfigKey.SensorStatusInputGyro, "0") == "1")
                 statusGyroEnabled = true;
             else
                 statusGyroEnabled = false;
 
-            if (config.ReadWithDefault(ConfigKey.SensorStatusInputWind, "1") == "1")
+            if (config.ReadWithDefault(ConfigKey.SensorStatusInputWind, "0") == "1")
                 statusWindEnabled = true;
             else
                 statusWindEnabled = false;
 
-            if (config.ReadWithDefault(ConfigKey.SensorStatusInputSOGCOG, "1") == "1")
+            if (config.ReadWithDefault(ConfigKey.SensorStatusInputSOGCOG, "0") == "1")
                 statusSOGCOGEnabled = true;
             else
                 statusSOGCOGEnabled = false;

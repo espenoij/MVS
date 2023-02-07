@@ -7,6 +7,20 @@ namespace HMS_Server
 {
     public class HMSProcessingMotion
     {
+        // Input data
+        HMSData sensorPitch = new HMSData();
+        HMSData sensorRoll = new HMSData();
+        HMSData sensorHeave = new HMSData();
+        HMSData sensorHeaveRate = new HMSData();
+        HMSData sensorAccelerationX = new HMSData();
+        HMSData sensorAccelerationY = new HMSData();
+        HMSData sensorAccelerationZ = new HMSData();
+
+        HMSData sensorSensorMRU = new HMSData();
+        HMSData sensorSensorGyro = new HMSData();
+        HMSData sensorSensorWind = new HMSData();
+        HMSData sensorSensorSOGCOG = new HMSData();
+
         // Pitch
         private HMSData pitchData = new HMSData();
         private HMSData pitchMax20mData = new HMSData();
@@ -75,7 +89,6 @@ namespace HMS_Server
         private HMSData statusPitch = new HMSData();
         private HMSData statusInclination = new HMSData();
         private HMSData statusSHR = new HMSData();
-        //private HMSData statusMSI = new HMSData(); // Ble lagt til ifm. ICP test, men er unødvendig
 
         private HMSData statusMRU = new HMSData();
         private HMSData statusGyro = new HMSData();
@@ -135,7 +148,6 @@ namespace HMS_Server
             hmsOutputDataList.Add(statusPitch);
             hmsOutputDataList.Add(statusInclination);
             hmsOutputDataList.Add(statusSHR);
-            //hmsOutputDataList.Add(statusMSI);
 
             hmsOutputDataList.Add(statusMRU);
             hmsOutputDataList.Add(statusGyro);
@@ -197,16 +209,14 @@ namespace HMS_Server
             rollMaxLeft20mData.dbColumn = "roll_max_left_20m";
             rollMaxLeft20mData.InitProcessing(errorHandler, ErrorMessageCategory.AdminUser, adminSettingsVM);
             rollMaxLeft20mData.AddProcessing(CalculationType.RoundingDecimals, 1);
-            rollMaxLeft20mData.AddProcessing(CalculationType.TimeMin, Constants.Minutes20);
-            //rollMaxLeft20mData.AddProcessing(CalculationType.Absolute, 0);
+            rollMaxLeft20mData.AddProcessing(CalculationType.TimeMax, Constants.Minutes20);
 
             rollMaxRight20mData.id = (int)ValueType.RollMaxRight20m;
             rollMaxRight20mData.name = "Roll Max Right (20m)";
             rollMaxRight20mData.dbColumn = "roll_max_right_20m";
             rollMaxRight20mData.InitProcessing(errorHandler, ErrorMessageCategory.AdminUser, adminSettingsVM);
             rollMaxRight20mData.AddProcessing(CalculationType.RoundingDecimals, 1);
-            rollMaxRight20mData.AddProcessing(CalculationType.TimeMax, Constants.Minutes20);
-            //rollMaxRight20mData.AddProcessing(CalculationType.Absolute, 0);
+            rollMaxRight20mData.AddProcessing(CalculationType.TimeMin, Constants.Minutes20);
 
             inclinationData.id = (int)ValueType.Inclination;
             inclinationData.name = "Inclination";
@@ -329,11 +339,6 @@ namespace HMS_Server
             statusSHR.sensorGroupId = Constants.NO_SENSOR_GROUP_ID;
             statusSHR.dbColumn = "status_shr";
 
-            //statusMSI.id = (int)ValueType.StatusMSI;
-            //statusMSI.name = "Status MSI";
-            //statusMSI.sensorGroupId = Constants.NO_SENSOR_GROUP_ID;
-            //statusMSI.dbColumn = "status_msi";
-
             statusMRU.id = (int)ValueType.StatusMRU;
             statusMRU.name = "Status MRU";
             statusMRU.sensorGroupId = Constants.NO_SENSOR_GROUP_ID;
@@ -355,344 +360,367 @@ namespace HMS_Server
             statusSOGCOG.dbColumn = "status_sog_cog";
         }
 
-        public void Update(HMSDataCollection hmsInputDataList)
+        public void Update(HMSDataCollection hmsInputDataList, ErrorHandler errorHandler)
         {
-            // Input data
-            HMSData inputPitchData = new HMSData();
-            HMSData inputRollData = new HMSData();
-            HMSData inputHeaveData = new HMSData();
-            HMSData inputHeaveRateData = new HMSData();
-            HMSData inputAccelerationXData = new HMSData();
-            HMSData inputAccelerationYData = new HMSData();
-            HMSData inputAccelerationZData = new HMSData();
-
             // Hente input data vi skal bruke
-            inputPitchData.Set(hmsInputDataList.GetData(ValueType.Pitch));
-            inputRollData.Set(hmsInputDataList.GetData(ValueType.Roll));
-            inputHeaveData.Set(hmsInputDataList.GetData(ValueType.Heave));
-            inputHeaveRateData.Set(hmsInputDataList.GetData(ValueType.HeaveRate));
-            inputAccelerationXData.Set(hmsInputDataList.GetData(ValueType.AccelerationX));
-            inputAccelerationYData.Set(hmsInputDataList.GetData(ValueType.AccelerationY));
-            inputAccelerationZData.Set(hmsInputDataList.GetData(ValueType.AccelerationZ));
+            sensorPitch.Set(hmsInputDataList.GetData(ValueType.Pitch));
+            sensorRoll.Set(hmsInputDataList.GetData(ValueType.Roll));
+            sensorHeave.Set(hmsInputDataList.GetData(ValueType.Heave));
+            sensorHeaveRate.Set(hmsInputDataList.GetData(ValueType.HeaveRate));
+            sensorAccelerationX.Set(hmsInputDataList.GetData(ValueType.AccelerationX));
+            sensorAccelerationY.Set(hmsInputDataList.GetData(ValueType.AccelerationY));
+            sensorAccelerationZ.Set(hmsInputDataList.GetData(ValueType.AccelerationZ));
+            sensorSensorMRU.Set(hmsInputDataList.GetData(ValueType.SensorMRU));
+            sensorSensorGyro.Set(hmsInputDataList.GetData(ValueType.SensorGyro));
+            sensorSensorWind.Set(hmsInputDataList.GetData(ValueType.SensorWind));
+            sensorSensorSOGCOG.Set(hmsInputDataList.GetData(ValueType.SensorSOGCOG));
 
-            // Status data
-            if (adminSettingsVM.statusMRUEnabled)
+            if (sensorPitch.TimeStampCheck ||
+                sensorRoll.TimeStampCheck ||
+                sensorHeave.TimeStampCheck ||
+                sensorHeaveRate.TimeStampCheck ||
+                sensorAccelerationX.TimeStampCheck ||
+                sensorAccelerationY.TimeStampCheck ||
+                sensorAccelerationZ.TimeStampCheck ||
+                sensorSensorMRU.TimeStampCheck ||
+                sensorSensorGyro.TimeStampCheck ||
+                sensorSensorWind.TimeStampCheck ||
+                sensorSensorSOGCOG.TimeStampCheck)
             {
-                if (hmsInputDataList.GetData(ValueType.SensorMRU) != null)
+                // Status data
+                if (adminSettingsVM.statusMRUEnabled)
                 {
-                    statusMRU.data = hmsInputDataList.GetData(ValueType.SensorMRU).data;
-                    statusMRU.timestamp = hmsInputDataList.GetData(ValueType.SensorMRU).timestamp;
-                    statusMRU.status = hmsInputDataList.GetData(ValueType.SensorMRU).status;
-                }
-                else
-                {
-                    statusMRU.data = 0;
-                    statusMRU.timestamp = DateTime.UtcNow;
-                    statusMRU.status = DataStatus.TIMEOUT_ERROR;
-                }
-            }
-            else
-            {
-                statusMRU.data = 1;
-                statusMRU.timestamp = DateTime.UtcNow;
-                statusMRU.status = DataStatus.OK;
-            }
-
-            if (adminSettingsVM.statusGyroEnabled)
-            {
-                if (hmsInputDataList.GetData(ValueType.SensorGyro) != null)
-                {
-                    statusGyro.data = hmsInputDataList.GetData(ValueType.SensorGyro).data;
-                    statusGyro.timestamp = hmsInputDataList.GetData(ValueType.SensorGyro).timestamp;
-                    statusGyro.status = hmsInputDataList.GetData(ValueType.SensorGyro).status;
-                }
-                else
-                {
-                    statusGyro.data = 0;
-                    statusGyro.timestamp = DateTime.UtcNow;
-                    statusGyro.status = DataStatus.TIMEOUT_ERROR;
-                }
-            }
-            else
-            {
-                statusGyro.data = 1;
-                statusGyro.timestamp = DateTime.UtcNow;
-                statusGyro.status = DataStatus.OK;
-            }
-
-            if (adminSettingsVM.statusWindEnabled)
-            {
-                if (hmsInputDataList.GetData(ValueType.SensorWind) != null)
-                {
-                    statusWind.data = hmsInputDataList.GetData(ValueType.SensorWind).data;
-                    statusWind.timestamp = hmsInputDataList.GetData(ValueType.SensorWind).timestamp;
-                    statusWind.status = hmsInputDataList.GetData(ValueType.SensorWind).status;
-                }
-                else
-                {
-                    statusWind.data = 0;
-                    statusWind.timestamp = DateTime.UtcNow;
-                    statusWind.status = DataStatus.TIMEOUT_ERROR;
-                }
-            }
-            else
-            {
-                statusWind.data = 1;
-                statusWind.timestamp = DateTime.UtcNow;
-                statusWind.status = DataStatus.OK;
-            }
-
-            if (adminSettingsVM.statusSOGCOGEnabled)
-            {
-                if (hmsInputDataList.GetData(ValueType.SensorSOGCOG) != null)
-                {
-                    statusSOGCOG.data = hmsInputDataList.GetData(ValueType.SensorSOGCOG).data;
-                    statusSOGCOG.timestamp = hmsInputDataList.GetData(ValueType.SensorSOGCOG).timestamp;
-                    statusSOGCOG.status = hmsInputDataList.GetData(ValueType.SensorSOGCOG).status;
-                }
-                else
-                {
-                    statusSOGCOG.data = 0;
-                    statusSOGCOG.timestamp = DateTime.UtcNow;
-                    statusSOGCOG.status = DataStatus.TIMEOUT_ERROR;
-                }
-            }
-            else
-            {
-                statusSOGCOG.data = 1;
-                statusSOGCOG.timestamp = DateTime.UtcNow;
-                statusSOGCOG.status = DataStatus.OK;
-            }
-
-            // Sjekke status
-            if (adminSettingsVM.statusMRUEnabled && statusMRU.data != 1)
-            {
-                inputPitchData.status = DataStatus.TIMEOUT_ERROR;
-                inputRollData.status = DataStatus.TIMEOUT_ERROR;
-                inputHeaveData.status = DataStatus.TIMEOUT_ERROR;
-                inputHeaveRateData.status = DataStatus.TIMEOUT_ERROR;
-                inputAccelerationXData.status = DataStatus.TIMEOUT_ERROR;
-                inputAccelerationYData.status = DataStatus.TIMEOUT_ERROR;
-                inputAccelerationZData.status = DataStatus.TIMEOUT_ERROR;
-            }
-            else
-            {
-                // Sjekke data timeout
-                if (inputPitchData.timestamp.AddMilliseconds(adminSettingsVM.dataTimeout) < DateTime.UtcNow)
-                    inputPitchData.status = DataStatus.TIMEOUT_ERROR;
-
-                if (inputRollData.timestamp.AddMilliseconds(adminSettingsVM.dataTimeout) < DateTime.UtcNow)
-                    inputRollData.status = DataStatus.TIMEOUT_ERROR;
-
-                if (inputHeaveData.timestamp.AddMilliseconds(adminSettingsVM.dataTimeout) < DateTime.UtcNow)
-                    inputHeaveData.status = DataStatus.TIMEOUT_ERROR;
-
-                if (inputHeaveRateData.timestamp.AddMilliseconds(adminSettingsVM.dataTimeout) < DateTime.UtcNow)
-                    inputHeaveRateData.status = DataStatus.TIMEOUT_ERROR;
-
-                if (inputAccelerationXData.timestamp.AddMilliseconds(adminSettingsVM.dataTimeout) < DateTime.UtcNow)
-                    inputAccelerationXData.status = DataStatus.TIMEOUT_ERROR;
-
-                if (inputAccelerationYData.timestamp.AddMilliseconds(adminSettingsVM.dataTimeout) < DateTime.UtcNow)
-                    inputAccelerationYData.status = DataStatus.TIMEOUT_ERROR;
-
-                if (inputAccelerationZData.timestamp.AddMilliseconds(adminSettingsVM.dataTimeout) < DateTime.UtcNow)
-                    inputAccelerationZData.status = DataStatus.TIMEOUT_ERROR;
-            }
-
-            // Tar data fra input delen av server og overfører til HMS output delen
-            // og prosesserer input for overføring til HMS output også.
-
-            // Pitch
-            pitchData.Set(inputPitchData);
-            pitchMax20mData.DoProcessing(pitchData);
-            pitchMax3hData.DoProcessing(pitchData);
-            pitchMaxUp20mData.DoProcessing(pitchData);
-            pitchMaxDown20mData.DoProcessing(pitchData);
-
-            if (adminSettingsVM.regulationStandard == RegulationStandard.CAP && !adminSettingsVM.overrideMotionBuffer)
-            {
-                pitchMax20mData.BufferFillCheck(1, Constants.MotionBufferFill99Pct);
-                pitchMaxUp20mData.BufferFillCheck(1, Constants.MotionBufferFill99Pct);
-                pitchMaxDown20mData.BufferFillCheck(1, Constants.MotionBufferFill99Pct);
-            }
-
-            // Roll
-            rollData.Set(inputRollData);
-            rollMax20mData.DoProcessing(rollData);
-            rollMax3hData.DoProcessing(rollData);
-            rollMaxLeft20mData.DoProcessing(rollData);
-            rollMaxRight20mData.DoProcessing(rollData);
-
-            if (adminSettingsVM.regulationStandard == RegulationStandard.CAP && !adminSettingsVM.overrideMotionBuffer)
-            {
-                rollMax20mData.BufferFillCheck(1, Constants.MotionBufferFill99Pct);
-                rollMaxLeft20mData.BufferFillCheck(1, Constants.MotionBufferFill99Pct);
-                rollMaxRight20mData.BufferFillCheck(1, Constants.MotionBufferFill99Pct);
-            }
-
-            // Inclination
-            if ((rollMax20mData.status == DataStatus.OK ||
-                 rollMax20mData.status == DataStatus.OK_NA) &&
-                (pitchMax20mData.status == DataStatus.OK ||
-                 pitchMax20mData.status == DataStatus.OK_NA))
-            {
-                UpdateInclinationData(pitchData, rollData, inclination20mMaxData, Constants.Minutes20);
-            }
-
-            if ((rollMax3hData.status == DataStatus.OK ||
-                 rollMax3hData.status == DataStatus.OK_NA) &&
-                (pitchMax3hData.status == DataStatus.OK ||
-                 pitchMax3hData.status == DataStatus.OK_NA))
-            {
-                UpdateInclinationData(pitchData, rollData, inclination3hMaxData, Constants.Hours3);
-            }
-
-            // Status settes i UpdateInclinationData, og denne er grei for NOROG, men for CAP
-            // må status også reflektere motion buffer fyllingsgrad.
-            if (adminSettingsVM.regulationStandard == RegulationStandard.CAP)
-            {
-                // 20 mins
-                if (pitchMax20mData.status == DataStatus.OK && rollMax20mData.status == DataStatus.OK)
-                {
-                    inclination20mMaxData.status = DataStatus.OK;
-                }
-                else
-                if ((pitchMax20mData.status == DataStatus.OK && rollMax20mData.status == DataStatus.OK_NA) ||
-                    (pitchMax20mData.status == DataStatus.OK_NA && rollMax20mData.status == DataStatus.OK) ||
-                    (pitchMax20mData.status == DataStatus.OK_NA && rollMax20mData.status == DataStatus.OK_NA))
-                {
-                    inclination20mMaxData.status = DataStatus.OK_NA;
-                }
-                else
-                {
-                    inclination20mMaxData.status = DataStatus.TIMEOUT_ERROR;
-                }
-
-                // 3 hours
-                if (pitchMax3hData.status == DataStatus.OK && rollMax3hData.status == DataStatus.OK)
-                {
-                    inclination3hMaxData.status = DataStatus.OK;
-                }
-                else
-                if ((pitchMax3hData.status == DataStatus.OK && rollMax3hData.status == DataStatus.OK_NA) ||
-                    (pitchMax3hData.status == DataStatus.OK_NA && rollMax3hData.status == DataStatus.OK) ||
-                    (pitchMax3hData.status == DataStatus.OK_NA && rollMax3hData.status == DataStatus.OK_NA))
-                {
-                    inclination3hMaxData.status = DataStatus.OK_NA;
-                }
-                else
-                {
-                    inclination3hMaxData.status = DataStatus.TIMEOUT_ERROR;
-                }
-            }
-
-            //// TEST
-            //if (inclination20mMaxData.status == DataStatus.OK)
-            //    inclination3hMaxData.status = DataStatus.OK;
-
-
-            // Heave Height
-            heaveHeightData.DoProcessing(inputHeaveData);
-            heaveHeightMax20mData.DoProcessing(inputHeaveData);
-            heaveHeightMax3hData.DoProcessing(inputHeaveData);
-
-            // Heave Period
-            heavePeriodMeanData.DoProcessing(inputHeaveData);
-
-            // Significant Heave Rate
-            significantHeaveRateData.DoProcessing(inputHeaveRateData);
-            significantHeaveRateMax20mData.DoProcessing(significantHeaveRateData);
-            significantHeaveRateMax3hData.DoProcessing(significantHeaveRateData);
-
-            if (adminSettingsVM.regulationStandard == RegulationStandard.CAP && !adminSettingsVM.overrideMotionBuffer)
-            {
-                significantHeaveRateData.BufferFillCheck(0, Constants.MotionBufferFill99Pct);
-                significantHeaveRateMax20mData.BufferFillCheck(1, Constants.MotionBufferFill99Pct);
-                //significantHeaveRateMax3hData.BufferFillCheck(Constants.MotionBufferFill99Pct);
-            }
-
-            // Maximum Heave Rate
-            maxHeaveRateData.DoProcessing(inputHeaveRateData);
-
-            if (adminSettingsVM.regulationStandard == RegulationStandard.CAP && !adminSettingsVM.overrideMotionBuffer)
-                maxHeaveRateData.BufferFillCheck(1, Constants.MotionBufferFill99Pct);
-
-            // Significant Wave Height
-            //significantWaveHeightData.DoProcessing(inputHeaveData);
-
-            // Motion Limits
-            motionLimitPitchRoll.data = motionLimits.GetLimit(LimitType.PitchRoll);
-            motionLimitPitchRoll.timestamp = DateTime.UtcNow;
-            motionLimitPitchRoll.status = DataStatus.OK;
-
-            motionLimitInclination.data = motionLimits.GetLimit(LimitType.Inclination);
-            motionLimitInclination.timestamp = DateTime.UtcNow;
-            motionLimitInclination.status = DataStatus.OK;
-
-            motionLimitHeaveHeight.data = motionLimits.GetLimit(LimitType.HeaveHeight);
-            motionLimitHeaveHeight.timestamp = DateTime.UtcNow;
-            motionLimitHeaveHeight.status = DataStatus.OK;
-
-            motionLimitSignificantHeaveRate.data = motionLimits.GetLimit(LimitType.SignificantHeaveRate);
-            motionLimitSignificantHeaveRate.timestamp = DateTime.UtcNow;
-            motionLimitSignificantHeaveRate.status = DataStatus.OK;
-
-            // SHR Limit
-            UpdateSHRLimitConditions(significantHeaveRateData);
-
-            // CAP spesifikke variabler / kalkulasjoner
-            if (adminSettingsVM.regulationStandard == RegulationStandard.CAP)
-            {
-                // MSI
-                /////////////////////////////////////////////////////////////////////////////////////////
-                ///
-                HMSData mms_msi = new HMSData();
-
-                HMSData accelerationX = new HMSData(inputAccelerationXData);
-                HMSData accelerationY = new HMSData(inputAccelerationYData);
-                HMSData accelerationZ = new HMSData(inputAccelerationZData);
-
-                if (accelerationX.status == DataStatus.OK &&
-                    accelerationY.status == DataStatus.OK &&
-                    accelerationZ.status == DataStatus.OK)
-                {
-                    double mms;
-
-                    // Kalkulere MMS (CAP formel)
-                    if (accelerationZ.data != 0)
-                        mms = Math.Sqrt(Math.Pow(accelerationX.data, 2.0) + Math.Pow(accelerationY.data, 2.0)) / Math.Abs(accelerationZ.data);
+                    if (sensorSensorMRU != null)
+                    {
+                        statusMRU.data = sensorSensorMRU.data;
+                        statusMRU.timestamp = sensorSensorMRU.timestamp;
+                        statusMRU.status = sensorSensorMRU.status;
+                    }
                     else
-                        mms = 0.0;
-
-                    // Kalkulere MMS_MSI (CAP formel)
-                    mms_msi.data = 10.0 * HMSCalc.ToDegrees(Math.Atan(mms));
-                    mms_msi.status = DataStatus.OK;
-                    mms_msi.timestamp = accelerationX.timestamp;
+                    {
+                        statusMRU.data = 0;
+                        statusMRU.timestamp = DateTime.UtcNow;
+                        statusMRU.status = DataStatus.TIMEOUT_ERROR;
+                    }
                 }
                 else
                 {
-                    mms_msi.data = 0;
-                    mms_msi.status = DataStatus.TIMEOUT_ERROR;
-                    mms_msi.timestamp = accelerationX.timestamp;
+                    statusMRU.data = 1;
+                    statusMRU.timestamp = DateTime.UtcNow;
+                    statusMRU.status = DataStatus.OK;
                 }
 
-                // Find max value
-                CalculateMSIMax(mms_msi, mms_msi_list, msiData);
+                if (adminSettingsVM.statusGyroEnabled)
+                {
+                    if (sensorSensorGyro != null)
+                    {
+                        statusGyro.data = sensorSensorGyro.data;
+                        statusGyro.timestamp = sensorSensorGyro.timestamp;
+                        statusGyro.status = sensorSensorGyro.status;
+                    }
+                    else
+                    {
+                        statusGyro.data = 0;
+                        statusGyro.timestamp = DateTime.UtcNow;
+                        statusGyro.status = DataStatus.TIMEOUT_ERROR;
+                    }
+                }
+                else
+                {
+                    statusGyro.data = 1;
+                    statusGyro.timestamp = DateTime.UtcNow;
+                    statusGyro.status = DataStatus.OK;
+                }
 
-                // Sjekke buffer fyllingsgrad
-                if (!adminSettingsVM.overrideMotionBuffer)
-                    MSIBufferFillCheck(mms_msi_list, Constants.MotionBufferFill99Pct, msiData);
+                if (adminSettingsVM.statusWindEnabled)
+                {
+                    if (sensorSensorWind != null)
+                    {
+                        statusWind.data = sensorSensorWind.data;
+                        statusWind.timestamp = sensorSensorWind.timestamp;
+                        statusWind.status = sensorSensorWind.status;
+                    }
+                    else
+                    {
+                        statusWind.data = 0;
+                        statusWind.timestamp = DateTime.UtcNow;
+                        statusWind.status = DataStatus.TIMEOUT_ERROR;
+                    }
+                }
+                else
+                {
+                    statusWind.data = 1;
+                    statusWind.timestamp = DateTime.UtcNow;
+                    statusWind.status = DataStatus.OK;
+                }
+
+                if (adminSettingsVM.statusSOGCOGEnabled)
+                {
+                    if (sensorSensorSOGCOG != null)
+                    {
+                        statusSOGCOG.data = sensorSensorSOGCOG.data;
+                        statusSOGCOG.timestamp = sensorSensorSOGCOG.timestamp;
+                        statusSOGCOG.status = sensorSensorSOGCOG.status;
+                    }
+                    else
+                    {
+                        statusSOGCOG.data = 0;
+                        statusSOGCOG.timestamp = DateTime.UtcNow;
+                        statusSOGCOG.status = DataStatus.TIMEOUT_ERROR;
+                    }
+                }
+                else
+                {
+                    statusSOGCOG.data = 1;
+                    statusSOGCOG.timestamp = DateTime.UtcNow;
+                    statusSOGCOG.status = DataStatus.OK;
+                }
+
+                // Sjekke status
+                if (adminSettingsVM.statusMRUEnabled && statusMRU.data != 1)
+                {
+                    sensorPitch.status = DataStatus.TIMEOUT_ERROR;
+                    sensorRoll.status = DataStatus.TIMEOUT_ERROR;
+                    sensorHeave.status = DataStatus.TIMEOUT_ERROR;
+                    sensorHeaveRate.status = DataStatus.TIMEOUT_ERROR;
+                    sensorAccelerationX.status = DataStatus.TIMEOUT_ERROR;
+                    sensorAccelerationY.status = DataStatus.TIMEOUT_ERROR;
+                    sensorAccelerationZ.status = DataStatus.TIMEOUT_ERROR;
+                }
+                else
+                {
+                    // Sjekke data timeout
+                    if (sensorPitch.timestamp.AddMilliseconds(adminSettingsVM.dataTimeout) < DateTime.UtcNow)
+                        sensorPitch.status = DataStatus.TIMEOUT_ERROR;
+
+                    if (sensorRoll.timestamp.AddMilliseconds(adminSettingsVM.dataTimeout) < DateTime.UtcNow)
+                        sensorRoll.status = DataStatus.TIMEOUT_ERROR;
+
+                    if (sensorHeave.timestamp.AddMilliseconds(adminSettingsVM.dataTimeout) < DateTime.UtcNow)
+                        sensorHeave.status = DataStatus.TIMEOUT_ERROR;
+
+                    if (sensorHeaveRate.timestamp.AddMilliseconds(adminSettingsVM.dataTimeout) < DateTime.UtcNow)
+                        sensorHeaveRate.status = DataStatus.TIMEOUT_ERROR;
+
+                    if (sensorAccelerationX.timestamp.AddMilliseconds(adminSettingsVM.dataTimeout) < DateTime.UtcNow)
+                        sensorAccelerationX.status = DataStatus.TIMEOUT_ERROR;
+
+                    if (sensorAccelerationY.timestamp.AddMilliseconds(adminSettingsVM.dataTimeout) < DateTime.UtcNow)
+                        sensorAccelerationY.status = DataStatus.TIMEOUT_ERROR;
+
+                    if (sensorAccelerationZ.timestamp.AddMilliseconds(adminSettingsVM.dataTimeout) < DateTime.UtcNow)
+                        sensorAccelerationZ.status = DataStatus.TIMEOUT_ERROR;
+                }
+
+                // Tar data fra input delen av server og overfører til HMS output delen
+                // og prosesserer input for overføring til HMS output også.
+
+                // Pitch
+                pitchData.Set(sensorPitch);
+                pitchData.data *= -1;
+
+                pitchMax20mData.DoProcessing(pitchData);
+                pitchMax3hData.DoProcessing(pitchData);
+                pitchMaxUp20mData.DoProcessing(pitchData);
+                pitchMaxDown20mData.DoProcessing(pitchData);
+
+                if (adminSettingsVM.regulationStandard == RegulationStandard.CAP && !adminSettingsVM.overrideMotionBuffer)
+                {
+                    pitchMax20mData.BufferFillCheck(1, Constants.MotionBufferFill99Pct);
+                    pitchMaxUp20mData.BufferFillCheck(1, Constants.MotionBufferFill99Pct);
+                    pitchMaxDown20mData.BufferFillCheck(1, Constants.MotionBufferFill99Pct);
+                }
+
+                // TEST
+                errorHandler.Insert(
+                    new ErrorMessage(
+                        DateTime.UtcNow,
+                        ErrorMessageType.SerialPort,
+                        ErrorMessageCategory.None,
+                        string.Format("Motion Buffer: {0}", pitchMax20mData.BufferSize(1))));
+
+                // Roll
+                rollData.Set(sensorRoll);
+
+                // I data fra sensor er positive tall roll til høyre.
+                // Internt er positive tall roll til venstre. Venstre er høyest på grafen. Dette er standard i CAP.
+                rollData.data *= -1;
+
+                rollMax20mData.DoProcessing(rollData);
+                rollMax3hData.DoProcessing(rollData);
+                rollMaxLeft20mData.DoProcessing(rollData);
+                rollMaxRight20mData.DoProcessing(rollData);
+
+                if (adminSettingsVM.regulationStandard == RegulationStandard.CAP && !adminSettingsVM.overrideMotionBuffer)
+                {
+                    rollMax20mData.BufferFillCheck(1, Constants.MotionBufferFill99Pct);
+                    rollMaxLeft20mData.BufferFillCheck(1, Constants.MotionBufferFill99Pct);
+                    rollMaxRight20mData.BufferFillCheck(1, Constants.MotionBufferFill99Pct);
+                }
+
+                // Inclination
+                if ((rollMax20mData.status == DataStatus.OK ||
+                     rollMax20mData.status == DataStatus.OK_NA) &&
+                    (pitchMax20mData.status == DataStatus.OK ||
+                     pitchMax20mData.status == DataStatus.OK_NA))
+                {
+                    UpdateInclinationData(pitchData, rollData, inclination20mMaxData, Constants.Minutes20);
+                }
+
+                if ((rollMax3hData.status == DataStatus.OK ||
+                     rollMax3hData.status == DataStatus.OK_NA) &&
+                    (pitchMax3hData.status == DataStatus.OK ||
+                     pitchMax3hData.status == DataStatus.OK_NA))
+                {
+                    UpdateInclinationData(pitchData, rollData, inclination3hMaxData, Constants.Hours3);
+                }
+
+                // Status settes i UpdateInclinationData, og denne er grei for NOROG, men for CAP
+                // må status også reflektere motion buffer fyllingsgrad.
+                if (adminSettingsVM.regulationStandard == RegulationStandard.CAP)
+                {
+                    // 20 mins
+                    if (pitchMax20mData.status == DataStatus.OK && rollMax20mData.status == DataStatus.OK)
+                    {
+                        inclination20mMaxData.status = DataStatus.OK;
+                    }
+                    else
+                    if ((pitchMax20mData.status == DataStatus.OK && rollMax20mData.status == DataStatus.OK_NA) ||
+                        (pitchMax20mData.status == DataStatus.OK_NA && rollMax20mData.status == DataStatus.OK) ||
+                        (pitchMax20mData.status == DataStatus.OK_NA && rollMax20mData.status == DataStatus.OK_NA))
+                    {
+                        inclination20mMaxData.status = DataStatus.OK_NA;
+                    }
+                    else
+                    {
+                        inclination20mMaxData.status = DataStatus.TIMEOUT_ERROR;
+                    }
+
+                    // 3 hours
+                    if (pitchMax3hData.status == DataStatus.OK && rollMax3hData.status == DataStatus.OK)
+                    {
+                        inclination3hMaxData.status = DataStatus.OK;
+                    }
+                    else
+                    if ((pitchMax3hData.status == DataStatus.OK && rollMax3hData.status == DataStatus.OK_NA) ||
+                        (pitchMax3hData.status == DataStatus.OK_NA && rollMax3hData.status == DataStatus.OK) ||
+                        (pitchMax3hData.status == DataStatus.OK_NA && rollMax3hData.status == DataStatus.OK_NA))
+                    {
+                        inclination3hMaxData.status = DataStatus.OK_NA;
+                    }
+                    else
+                    {
+                        inclination3hMaxData.status = DataStatus.TIMEOUT_ERROR;
+                    }
+                }
 
                 //// TEST
-                //if (msiData.status == DataStatus.OK)
-                //{
-                //    msiData.data3 = String.Empty;
-                //}
-            }
+                //if (inclination20mMaxData.status == DataStatus.OK)
+                //    inclination3hMaxData.status = DataStatus.OK;
 
-            // Sjekker motion limits
-            CheckLimits();
+
+                // Heave Height
+                heaveHeightData.DoProcessing(sensorHeave);
+                heaveHeightMax20mData.DoProcessing(sensorHeave);
+                heaveHeightMax3hData.DoProcessing(sensorHeave);
+
+                // Heave Period
+                heavePeriodMeanData.DoProcessing(sensorHeave);
+
+                // Significant Heave Rate
+                significantHeaveRateData.DoProcessing(sensorHeaveRate);
+                significantHeaveRateMax20mData.DoProcessing(significantHeaveRateData);
+                significantHeaveRateMax3hData.DoProcessing(significantHeaveRateData);
+
+                if (adminSettingsVM.regulationStandard == RegulationStandard.CAP && !adminSettingsVM.overrideMotionBuffer)
+                {
+                    significantHeaveRateData.BufferFillCheck(0, Constants.MotionBufferFill99Pct);
+                    significantHeaveRateMax20mData.BufferFillCheck(1, Constants.MotionBufferFill99Pct);
+                    //significantHeaveRateMax3hData.BufferFillCheck(Constants.MotionBufferFill99Pct);
+                }
+
+                // Maximum Heave Rate
+                maxHeaveRateData.DoProcessing(sensorHeaveRate);
+
+                if (adminSettingsVM.regulationStandard == RegulationStandard.CAP && !adminSettingsVM.overrideMotionBuffer)
+                    maxHeaveRateData.BufferFillCheck(1, Constants.MotionBufferFill99Pct);
+
+                // Significant Wave Height
+                //significantWaveHeightData.DoProcessing(inputHeaveData);
+
+                // Motion Limits
+                motionLimitPitchRoll.data = motionLimits.GetLimit(LimitType.PitchRoll);
+                motionLimitPitchRoll.timestamp = DateTime.UtcNow;
+                motionLimitPitchRoll.status = DataStatus.OK;
+
+                motionLimitInclination.data = motionLimits.GetLimit(LimitType.Inclination);
+                motionLimitInclination.timestamp = DateTime.UtcNow;
+                motionLimitInclination.status = DataStatus.OK;
+
+                motionLimitHeaveHeight.data = motionLimits.GetLimit(LimitType.HeaveHeight);
+                motionLimitHeaveHeight.timestamp = DateTime.UtcNow;
+                motionLimitHeaveHeight.status = DataStatus.OK;
+
+                motionLimitSignificantHeaveRate.data = motionLimits.GetLimit(LimitType.SignificantHeaveRate);
+                motionLimitSignificantHeaveRate.timestamp = DateTime.UtcNow;
+                motionLimitSignificantHeaveRate.status = DataStatus.OK;
+
+                // SHR Limit
+                UpdateSHRLimitConditions(significantHeaveRateData);
+
+                // CAP spesifikke variabler / kalkulasjoner
+                if (adminSettingsVM.regulationStandard == RegulationStandard.CAP)
+                {
+                    // MSI
+                    /////////////////////////////////////////////////////////////////////////////////////////
+                    ///
+                    HMSData mms_msi = new HMSData();
+
+                    HMSData accelerationX = new HMSData(sensorAccelerationX);
+                    HMSData accelerationY = new HMSData(sensorAccelerationY);
+                    HMSData accelerationZ = new HMSData(sensorAccelerationZ);
+
+                    if (accelerationX.status == DataStatus.OK &&
+                        accelerationY.status == DataStatus.OK &&
+                        accelerationZ.status == DataStatus.OK)
+                    {
+                        double mms;
+
+                        // Kalkulere MMS (CAP formel)
+                        if (accelerationZ.data != 0)
+                            mms = Math.Sqrt(Math.Pow(accelerationX.data, 2.0) + Math.Pow(accelerationY.data, 2.0)) / Math.Abs(accelerationZ.data);
+                        else
+                            mms = 0.0;
+
+                        // Kalkulere MMS_MSI (CAP formel)
+                        mms_msi.data = 10.0 * HMSCalc.ToDegrees(Math.Atan(mms));
+                        mms_msi.status = DataStatus.OK;
+                        mms_msi.timestamp = accelerationX.timestamp;
+                    }
+                    else
+                    {
+                        mms_msi.data = 0;
+                        mms_msi.status = DataStatus.TIMEOUT_ERROR;
+                        mms_msi.timestamp = accelerationX.timestamp;
+                    }
+
+                    // Find max value
+                    CalculateMSIMax(mms_msi, mms_msi_list, msiData);
+
+                    // Sjekke buffer fyllingsgrad
+                    if (!adminSettingsVM.overrideMotionBuffer)
+                        MSIBufferFillCheck(mms_msi_list, Constants.MotionBufferFill99Pct, msiData);
+
+                    //// TEST
+                    //if (msiData.status == DataStatus.OK)
+                    //{
+                    //    msiData.data3 = String.Empty;
+                    //}
+                }
+
+                // Sjekker motion limits
+                CheckLimits();
+            }
         }
 
         // Resette dataCalculations
@@ -901,18 +929,11 @@ namespace HMS_Server
                 statusSHR.data = 0;
             statusSHR.timestamp = significantHeaveRateData.timestamp;
             statusSHR.status = significantHeaveRateData.status;
-
-            //if (msiData.limitStatus == LimitStatus.OK)
-            //    statusMSI.data = 1;
-            //else
-            //    statusMSI.data = 0;
-            //statusMSI.timestamp = msiData.timestamp;
-            //statusMSI.status = msiData.status;
         }
 
         private void CheckLimit(HMSData hmsData, LimitType limitType)
         {
-            if (hmsData.data <= motionLimits.GetLimit(limitType))
+            if (Math.Abs(hmsData.data) <= motionLimits.GetLimit(limitType))
                 hmsData.limitStatus = LimitStatus.OK;
             else
                 hmsData.limitStatus = LimitStatus.OVER_LIMIT;
