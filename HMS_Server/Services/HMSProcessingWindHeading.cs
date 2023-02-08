@@ -298,7 +298,7 @@ namespace HMS_Server
             wsiData.dbColumn = "wsi";
         }
 
-        public void Update(HMSDataCollection hmsInputDataList)
+        public void Update(HMSDataCollection hmsInputDataList/*, ErrorHandler errorHandler*/)
         {
             //// TEST
             //counter1++;
@@ -625,6 +625,14 @@ namespace HMS_Server
                         emsWindSpeed2m.BufferFillCheck(0, windSamplesInBuffer2m);
                 }
 
+                //// TEST
+                //errorHandler.Insert(
+                //    new ErrorMessage(
+                //        DateTime.UtcNow,
+                //        ErrorMessageType.SerialPort,
+                //        ErrorMessageCategory.None,
+                //        string.Format("Wind Buffer 2m: {0} / {1} (114)", helideckWindSpeed2m.BufferSize(0), helideckWindDirection2m.BufferSize(0))));
+
                 UpdateGustData(
                     windSpeedCorrectedToHelideck,
                     helideckWindSpeed2m,
@@ -665,6 +673,15 @@ namespace HMS_Server
                     if (adminSettingsVM.enableEMS)
                         emsWindSpeed10m.BufferFillCheck(0, windSamplesInBuffer10m);
                 }
+
+
+                //// TEST
+                //errorHandler.Insert(
+                //    new ErrorMessage(
+                //        DateTime.UtcNow,
+                //        ErrorMessageType.SerialPort,
+                //        ErrorMessageCategory.None,
+                //        string.Format("Wind Buffer 10m: {0} / {1} (570)", helideckWindSpeed10m.BufferSize(0), helideckWindDirection10m.BufferSize(0))));
 
                 //// TEST
                 //helideckWindSpeed2m.data = helideckWindSpeed10m.BufferSize(0);

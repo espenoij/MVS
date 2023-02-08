@@ -39,13 +39,13 @@ namespace HMS_Server
         }
 
         // Kjøre prosessering og oppdatere data
-        public void Update(HMSDataCollection hmsInputDataList, bool dataVerificationIsActive)
+        public void Update(HMSDataCollection hmsInputDataList, bool dataVerificationIsActive/*, ErrorHandler errorHandler*/)
         {
             hmsProcessingSettings.Update();
             hmsProcessingUserInputs.Update();
             hmsProcessingGeneralInfo.Update(hmsInputDataList);
-            hmsProcessingMotion.Update(hmsInputDataList);
-            hmsProcessingWindHeading.Update(hmsInputDataList);
+            hmsProcessingMotion.Update(hmsInputDataList/*, errorHandler*/);
+            hmsProcessingWindHeading.Update(hmsInputDataList/*, errorHandler*/);
             hmsProcessingMeteorological.Update(hmsInputDataList);
             hmsProcessingHelideckStatus.Update();
             hmsProcessingEMS.Update(hmsInputDataList);

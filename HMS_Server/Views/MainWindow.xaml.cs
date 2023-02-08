@@ -67,7 +67,6 @@ namespace HMS_Server
         private DispatcherTimer hmsDatabaseTimer = new DispatcherTimer();
 
         // Lights Output
-        private DispatcherTimer lightsOutputTimer = new DispatcherTimer();
         private LightsOutputConnection lightsOutputConnection;
 
         // Data verification
@@ -499,7 +498,7 @@ namespace HMS_Server
 
                         // HMS: HMS Output Data
                         // Prosesserer sensor data om til data som kan sendes til HMS klient
-                        hmsProcessing.Update(hmsInputData, adminSettingsVM.dataVerificationEnabled);
+                        hmsProcessing.Update(hmsInputData, adminSettingsVM.dataVerificationEnabled/*, errorHandler*/);
 
                         //// TEST BLIP
                         //foreach (var item in hmsOutputData.GetDataList().ToList())
@@ -770,7 +769,6 @@ namespace HMS_Server
                     adminSettingsVM.helideckLightsOutput &&
                     !adminSettingsVM.dataVerificationEnabled)
                 {
-                    lightsOutputTimer.Start();
                     ucHMSLightsOutput.Start();
                 }
 
@@ -818,7 +816,6 @@ namespace HMS_Server
             // Lights Output
             if (adminSettingsVM.regulationStandard == RegulationStandard.CAP)
             {
-                lightsOutputTimer.Stop();
                 ucHMSLightsOutput.Stop();
             }
 

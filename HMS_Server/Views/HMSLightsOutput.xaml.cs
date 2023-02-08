@@ -37,7 +37,7 @@ namespace HMS_Server
         private IModbusSerialMaster modbusSerialMaster = null;
         private ModbusHelper modbusHelper = new ModbusHelper();
 
-        private DispatcherTimer sendLightsOutput = new DispatcherTimer();
+        private DispatcherTimer sendLightsOutputTimer = new DispatcherTimer();
 
         public HMSLightsOutput()
         {
@@ -178,136 +178,140 @@ namespace HMS_Server
                 SendLightsOutput(outputConnection, errorHandler, lightsOff);
 
                 // Sende lys output
-                sendLightsOutput.Interval = TimeSpan.FromMilliseconds(config.ReadWithDefault(ConfigKey.LightsOutputFrequency, Constants.LightsOutputFrequencyDefault));
-                sendLightsOutput.Tick += runLightsOutput;
+                sendLightsOutputTimer.Interval = TimeSpan.FromMilliseconds(config.ReadWithDefault(ConfigKey.LightsOutputFrequency, Constants.LightsOutputFrequencyDefault));
+                sendLightsOutputTimer.Tick += runLightsOutput;
 
                 void runLightsOutput(object sender, EventArgs e)
                 {
-                    Thread thread = new Thread(() => LightsOutputCommand());
-                    thread.IsBackground = true;
-                    thread.Start();
-
-                    void LightsOutputCommand()
-                    {
-                        SendLightsOutput(outputConnection, errorHandler);
-                    }
+                    SendLightsOutput(outputConnection, errorHandler);
                 }
             }
         }
 
         public void SendLightsOutput(LightsOutputConnection connection, ErrorHandler errorHandler, bool statusOFF = false)
         {
-            LightsOutputType helideckStatus;
+            Thread thread = new Thread(() => LightsOutputCommand());
+            thread.IsBackground = true;
+            thread.Start();
 
-            // Egen variabel for å slå av lysene
-            if (statusOFF)
-                helideckStatus = LightsOutputType.Off;
-            else
-                helideckStatus = hmsLightsOutputVM.HMSLightsOutput;
-
-            switch (connection.type)
+            void LightsOutputCommand()
             {
-                // MODBUS RTU
-                case OutputConnectionType.MODBUS_RTU:
-                    if (connection.data.modbus != null)
-                    {
-                        try
+                LightsOutputType helideckStatus;
+
+                // Egen variabel for å slå av lysene
+                if (statusOFF)
+                    helideckStatus = LightsOutputType.Off;
+                else
+                    helideckStatus = hmsLightsOutputVM.HMSLightsOutput;
+
+                switch (connection.type)
+                {
+                    // MODBUS RTU
+                    case OutputConnectionType.MODBUS_RTU:
+                        if (connection.data.modbus != null)
                         {
-                            // Sjekke om porten er åpen
-                            if (!serialPort.IsOpen)
-                                serialPort.Open();
-
-                            if (serialPort.IsOpen)
+                            try
                             {
-                                // Starte MODBUS
-                                if (modbusSerialMaster == null)
-                                    modbusSerialMaster = modbusFactory.CreateRtuMaster(new SerialPortAdapter(serialPort));
+                                // Sjekke om porten er åpen
+                                if (!serialPort.IsOpen)
+                                    serialPort.Open();
 
-                                // Løpe gjennom adressene det skal sendes på
-                                for (int i = 0; i < hmsLightsOutputVM.outputAddressList.Count; i++)
+                                if (serialPort.IsOpen)
                                 {
-                                    // Ok master?
-                                    if (modbusSerialMaster?.Transport != null)
+                                    // Starte MODBUS
+                                    if (modbusSerialMaster == null)
+                                        modbusSerialMaster = modbusFactory.CreateRtuMaster(new SerialPortAdapter(serialPort));
+
+                                    // Løpe gjennom adressene det skal sendes på
+                                    for (int i = 0; i < hmsLightsOutputVM.outputAddressList.Count; i++)
                                     {
-                                        // Sende data (true/false)
-                                        modbusSerialMaster?.WriteSingleCoilAsync(
-                                           connection.data.modbus.slaveID,
-                                           hmsLightsOutputVM.outputAddressList[i],
-                                           LightOutputToWriteValue(helideckStatus, i));
+                                        // Ok master?
+                                        if (modbusSerialMaster?.Transport != null)
+                                        {
+                                            // Sende data (true/false)
+                                            modbusSerialMaster?.WriteSingleCoilAsync(
+                                                connection.data.modbus.slaveID,
+                                                hmsLightsOutputVM.outputAddressList[i],
+                                                LightOutputToWriteValue(helideckStatus, i));
+                                        }
                                     }
                                 }
                             }
-                        }
-                        catch (Exception ex)
-                        {
-                            // WinModbus må settes opp med RTU og autocreate datamap må være på, ellers får vi feilmeldinger
-                            errorHandler.Insert(
-                                new ErrorMessage(
-                                    DateTime.UtcNow,
-                                    ErrorMessageType.MODBUS,
-                                    ErrorMessageCategory.AdminUser,
-                                    string.Format("Modbus Write (Lights Output): {0}", ex.Message)));
-                        }
-                    }
-                    break;
-
-                // ADAM-4060
-                case OutputConnectionType.ADAM_4060:
-                    if (connection.data.serialPort != null)
-                    {
-                        try
-                        {
-                            // Sjekke om porten er åpen
-                            if (!serialPort.IsOpen)
-                                serialPort.Open();
-
-                            if (serialPort.IsOpen)
+                            catch (Exception ex)
                             {
-                                int channelOutput = 0;
-
-                                if (LightOutputToWriteValue(helideckStatus, 0))
-                                    channelOutput += 1;
-
-                                if (LightOutputToWriteValue(helideckStatus, 1))
-                                    channelOutput += 2;
-
-                                if (LightOutputToWriteValue(helideckStatus, 2))
-                                    channelOutput += 4;
-
-                                int channelOutputValue;
-                                Int32.TryParse(connection.adamAddress, out channelOutputValue);
-
-                                // Generere ADAM-4060 kommando for å sette addresser
-                                string command = String.Format("#{0}00{1}\r",
-                                    channelOutputValue.ToString("X2"),
-                                    channelOutput.ToString("X2"));
-
-                                // Skrive kommando til serie port
-                                serialPort.Write(command);
+                                // WinModbus må settes opp med RTU og autocreate datamap må være på, ellers får vi feilmeldinger
+                                errorHandler.Insert(
+                                    new ErrorMessage(
+                                        DateTime.UtcNow,
+                                        ErrorMessageType.MODBUS,
+                                        ErrorMessageCategory.AdminUser,
+                                        string.Format("Modbus Write (Lights Output): {0}", ex.Message)));
                             }
                         }
-                        catch (Exception ex)
+                        break;
+
+                    // ADAM-4060
+                    case OutputConnectionType.ADAM_4060:
+                        if (connection.data.serialPort != null)
                         {
-                            // WinModbus må settes opp med RTU og autocreate datamap må være på, ellers får vi feilmeldinger
-                            errorHandler.Insert(
-                                new ErrorMessage(
-                                    DateTime.UtcNow,
-                                    ErrorMessageType.SerialPort,
-                                    ErrorMessageCategory.AdminUser,
-                                    string.Format("Serial Port Write (Lights Output): {0}", ex.Message)));
+                            try
+                            {
+                                // Sjekke om porten er åpen
+                                if (!serialPort.IsOpen)
+                                    serialPort.Open();
+
+                                if (serialPort.IsOpen)
+                                {
+                                    int channelOutput = 0;
+
+                                    if (LightOutputToWriteValue(helideckStatus, 0))
+                                        channelOutput += 1;
+
+                                    if (LightOutputToWriteValue(helideckStatus, 1))
+                                        channelOutput += 2;
+
+                                    if (LightOutputToWriteValue(helideckStatus, 2))
+                                        channelOutput += 4;
+
+                                    int channelOutputValue;
+                                    Int32.TryParse(connection.adamAddress, out channelOutputValue);
+
+                                    // Generere ADAM-4060 kommando for å sette addresser
+                                    string command = String.Format("#{0}00{1}\r",
+                                        channelOutputValue.ToString("X2"),
+                                        channelOutput.ToString("X2"));
+
+                                    // Skrive kommando til serie port
+                                    serialPort.Write(command);
+                                }
+                            }
+                            catch (Exception ex)
+                            {
+                                // WinModbus må settes opp med RTU og autocreate datamap må være på, ellers får vi feilmeldinger
+                                errorHandler.Insert(
+                                    new ErrorMessage(
+                                        DateTime.UtcNow,
+                                        ErrorMessageType.SerialPort,
+                                        ErrorMessageCategory.AdminUser,
+                                        string.Format("Serial Port Write (Lights Output): {0}", ex.Message)));
+                            }
                         }
-                    }
-                    break;
+                        break;
+
+                    default:
+                        break;
+                }
             }
         }
 
         public void Start()
         {
-            // Stenge tilgang til å konfigurere porten
             if (adminSettingsVM?.regulationStandard == RegulationStandard.CAP)
             {
+                // Stenge tilgang til å konfigurere porten
                 EnableModbusUI(false);
 
+                // Starte sending av lys data signal
                 LightsOutput_Start();
             }
         }
@@ -318,11 +322,12 @@ namespace HMS_Server
             bool lightsOff = true;
             SendLightsOutput(outputConnection, errorHandler, lightsOff);
 
-            // Åpne tilgang til å konfigurere porten
             if (adminSettingsVM?.regulationStandard == RegulationStandard.CAP)
             {
+                // Åpne tilgang til å konfigurere porten
                 EnableModbusUI(true);
 
+                // Stoppe sending av lys data signal
                 LightsOutput_Stop();
             }
         }
@@ -424,12 +429,12 @@ namespace HMS_Server
 
         private void LightsOutput_Start()
         {
-            sendLightsOutput?.Start();
+            sendLightsOutputTimer?.Start();
         }
 
         private void LightsOutput_Stop()
         {
-            sendLightsOutput?.Stop();
+            sendLightsOutputTimer?.Stop();
 
             // Lukke port
             serialPort?.Close();

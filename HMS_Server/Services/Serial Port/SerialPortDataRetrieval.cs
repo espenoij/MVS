@@ -5,6 +5,7 @@ using System.IO.Ports;
 using System.Linq;
 using System.Text;
 using System.Text.RegularExpressions;
+using System.Windows.Data;
 using Telerik.Windows.Data;
 
 namespace HMS_Server
@@ -18,6 +19,7 @@ namespace HMS_Server
         DatabaseHandler database;
 
         RadObservableCollection<SensorData> sensorDataList;
+        private object sensorDataListLock = new object();
 
         // Serial Port: List
         private List<SerialPort> serialPortList = new List<SerialPort>();
@@ -42,6 +44,8 @@ namespace HMS_Server
 
             this.errorHandler = errorHandler;
             this.adminSettingsVM = adminSettingsVM;
+
+            BindingOperations.EnableCollectionSynchronization(sensorDataList, sensorDataListLock);
         }
 
         public void Load(SensorData sensorData)
@@ -79,40 +83,55 @@ namespace HMS_Server
         private void DataReceived(object sender, SerialDataReceivedEventArgs e)
         {
             SerialPort serialPort = sender as SerialPort;
-
-            // Finne frem hvor vi skal lagre lest data fra serie port
-            SerialPortData serialPortData = serialPortDataReceivedList.Find(x => x.portName == serialPort.PortName);
-            if (serialPortData != null)
+            if (serialPort != null)
             {
-                if (serialPortData.firstRead)
+                // Finne frem hvor vi skal lagre lest data fra serie port
+                SerialPortData serialPortData = serialPortDataReceivedList.Find(x => x.portName == serialPort.PortName);
+                if (serialPortData != null)
                 {
-                    // Dump inn buffer ved første lesing - gjør ingenting
-                    serialPort?.ReadExisting();
-                    serialPortData.firstRead = false;
-                }
-                else
-                {
-                    // Lese fra port
-                    int bytes = serialPort.BytesToRead;
-                    byte[] array = new byte[bytes];
-                    for (int i = 0; serialPort.BytesToRead > 0 && i < bytes; i++)
+                    try
                     {
-                        array[i] = Convert.ToByte(serialPort.ReadByte());
+                        if (serialPortData.firstRead)
+                        {
+                            // Dump inn buffer ved første lesing - gjør ingenting
+                            serialPort.ReadExisting();
+                            serialPortData.firstRead = false;
+                        }
+                        else
+                        {
+                            // Lese fra port
+                            int bytes = serialPort.BytesToRead;
+                            byte[] array = new byte[bytes];
+                            for (int i = 0; serialPort.BytesToRead > 0 && i < bytes; i++)
+                            {
+                                array[i] = Convert.ToByte(serialPort.ReadByte());
+                            }
+
+                            // Lagre data
+                            serialPortData.buffer_text += Encoding.UTF8.GetString(array, 0, array.Length);
+                            serialPortData.buffer_binary += BitConverter.ToString(array);
+                            serialPortData.timestamp = DateTime.UtcNow;
+
+                            // Oppdatere status
+                            if (!string.IsNullOrEmpty(serialPortData.buffer_text))
+                            {
+                                serialPortData.portStatus = PortStatus.Reading;
+                            }
+
+                            // Prosessere data
+                            DataProcessing(serialPortData);
+                        }
                     }
-
-                    // Lagre data
-                    serialPortData.buffer_text += Encoding.UTF8.GetString(array, 0, array.Length);
-                    serialPortData.buffer_binary += BitConverter.ToString(array);
-                    serialPortData.timestamp = DateTime.UtcNow;
-
-                    // Oppdatere status
-                    if (!string.IsNullOrEmpty(serialPortData.buffer_text))
+                    catch (Exception ex)
                     {
-                        serialPortData.portStatus = PortStatus.Reading;
+                        // Sette feilmelding
+                        errorHandler.Insert(
+                            new ErrorMessage(
+                                DateTime.UtcNow,
+                                ErrorMessageType.SerialPort,
+                                ErrorMessageCategory.AdminUser,
+                                string.Format("Error reading serial port: {0} (Start), System Message: {1}", serialPort.PortName, ex.Message)));
                     }
-
-                    // Prosessere data
-                    DataProcessing(serialPortData);
                 }
             }
         }
@@ -200,101 +219,104 @@ namespace HMS_Server
                 // Data Processing
                 SerialPortProcessing process = new SerialPortProcessing();
 
-                //  Trinn 1: Finne alle sensorer som er satt opp på den aktuelle serie porten og prosessere
-                foreach (var sensorData in sensorDataList)
+                lock (sensorDataListLock)
                 {
-                    if (sensorData.type == SensorType.SerialPort)
+                    //  Trinn 1: Finne alle sensorer som er satt opp på den aktuelle serie porten og prosessere
+                    foreach (var sensorData in sensorDataList)
                     {
-                        if (sensorData.serialPort.portName == serialPortData.portName)
+                        if (sensorData.type == SensorType.SerialPort)
                         {
-                            try
+                            if (sensorData.serialPort.portName == serialPortData.portName)
                             {
-                                // Init processing
-                                process.inputType = sensorData.serialPort.inputType;
-                                process.binaryType = sensorData.serialPort.binaryType;
-                                process.packetHeader = sensorData.serialPort.packetHeader;
-                                process.packetEnd = sensorData.serialPort.packetEnd;
-                                process.packetDelimiter = Regex.Unescape(sensorData.serialPort.packetDelimiter);
-                                process.packetCombineFields = sensorData.serialPort.packetCombineFields;
-                                process.fixedPosData = sensorData.serialPort.fixedPosData;
-                                process.fixedPosStart = sensorData.serialPort.fixedPosStart;
-                                process.fixedPosTotal = sensorData.serialPort.fixedPosTotal;
-                                process.dataField = Convert.ToInt32(sensorData.serialPort.dataField);
-                                process.decimalSeparator = sensorData.serialPort.decimalSeparator;
-                                process.autoExtractValue = sensorData.serialPort.autoExtractValue;
-
-                                // Hente data string fra serialPort data
-                                string inputData = string.Empty;
-                                switch (process.inputType)
+                                try
                                 {
-                                    // Gjøre tekst litt mer leselig
-                                    case InputDataType.Text:
-                                        inputData = TextHelper.EscapeControlChars(serialPortData.buffer_text);
-                                        break;
+                                    // Init processing
+                                    process.inputType = sensorData.serialPort.inputType;
+                                    process.binaryType = sensorData.serialPort.binaryType;
+                                    process.packetHeader = sensorData.serialPort.packetHeader;
+                                    process.packetEnd = sensorData.serialPort.packetEnd;
+                                    process.packetDelimiter = Regex.Unescape(sensorData.serialPort.packetDelimiter);
+                                    process.packetCombineFields = sensorData.serialPort.packetCombineFields;
+                                    process.fixedPosData = sensorData.serialPort.fixedPosData;
+                                    process.fixedPosStart = sensorData.serialPort.fixedPosStart;
+                                    process.fixedPosTotal = sensorData.serialPort.fixedPosTotal;
+                                    process.dataField = Convert.ToInt32(sensorData.serialPort.dataField);
+                                    process.decimalSeparator = sensorData.serialPort.decimalSeparator;
+                                    process.autoExtractValue = sensorData.serialPort.autoExtractValue;
 
-                                    // Dersom binary input: Konvertere til binary
-                                    case InputDataType.Binary:
-                                        inputData = serialPortData.buffer_binary;
-                                        break;
-                                }
-
-                                // Trinn 2: Prosessere raw data, finne pakker
-                                List<string> incomingPackets = process.FindSelectedPackets(inputData);
-
-                                // Prosessere pakkene som ble funnet
-                                foreach (var packet in incomingPackets)
-                                {
-                                    // Trinn 3: Finne datafeltene i pakke
-                                    PacketDataFields packetDataFields = process.FindPacketDataFields(packet);
-
-                                    // Trinn 4: Prosessere valgt datafelt
-                                    SelectedDataField selectedData = process.FindSelectedDataInPacket(packetDataFields);
-
-                                    // Trinn 5: Utføre kalkulasjoner på utvalgt datafelt
-                                    CalculatedData calculatedData = process.ApplyCalculationsToSelectedData(selectedData, sensorData.dataCalculations, serialPortData.timestamp, errorHandler, ErrorMessageCategory.None, adminSettingsVM);
-
-                                    // Lagre resultat
-                                    sensorData.timestamp = serialPortData.timestamp;
-                                    sensorData.data = calculatedData.data;
-
-                                    // Lagre til databasen
-                                    if (sensorData.saveToDatabase && sensorData.saveFreq == DatabaseSaveFrequency.Sensor)
+                                    // Hente data string fra serialPort data
+                                    string inputData = string.Empty;
+                                    switch (process.inputType)
                                     {
-                                        // Legger ikke inn data dersom data ikke er satt
-                                        if (!double.IsNaN(sensorData.data))
+                                        // Gjøre tekst litt mer leselig
+                                        case InputDataType.Text:
+                                            inputData = TextHelper.EscapeControlChars(serialPortData.buffer_text);
+                                            break;
+
+                                        // Dersom binary input: Konvertere til binary
+                                        case InputDataType.Binary:
+                                            inputData = serialPortData.buffer_binary;
+                                            break;
+                                    }
+
+                                    // Trinn 2: Prosessere raw data, finne pakker
+                                    List<string> incomingPackets = process.FindSelectedPackets(inputData);
+
+                                    // Prosessere pakkene som ble funnet
+                                    foreach (var packet in incomingPackets)
+                                    {
+                                        // Trinn 3: Finne datafeltene i pakke
+                                        PacketDataFields packetDataFields = process.FindPacketDataFields(packet);
+
+                                        // Trinn 4: Prosessere valgt datafelt
+                                        SelectedDataField selectedData = process.FindSelectedDataInPacket(packetDataFields);
+
+                                        // Trinn 5: Utføre kalkulasjoner på utvalgt datafelt
+                                        CalculatedData calculatedData = process.ApplyCalculationsToSelectedData(selectedData, sensorData.dataCalculations, serialPortData.timestamp, errorHandler, ErrorMessageCategory.None, adminSettingsVM);
+
+                                        // Lagre resultat
+                                        sensorData.timestamp = serialPortData.timestamp;
+                                        sensorData.data = calculatedData.data;
+
+                                        // Lagre til databasen
+                                        if (sensorData.saveToDatabase && sensorData.saveFreq == DatabaseSaveFrequency.Sensor)
                                         {
-                                            try
+                                            // Legger ikke inn data dersom data ikke er satt
+                                            if (!double.IsNaN(sensorData.data))
                                             {
-                                                database.Insert(sensorData);
+                                                try
+                                                {
+                                                    database.Insert(sensorData);
 
-                                                errorHandler.ResetDatabaseError(ErrorHandler.DatabaseErrorType.Insert5);
-                                            }
-                                            catch (Exception ex)
-                                            {
-                                                errorHandler.Insert(
-                                                    new ErrorMessage(
-                                                        DateTime.UtcNow,
-                                                        ErrorMessageType.Database,
-                                                        ErrorMessageCategory.None,
-                                                        string.Format("Database Error (Insert 3)\n\nSystem Message:\n{0}", ex.Message),
-                                                        sensorData.id));
+                                                    errorHandler.ResetDatabaseError(ErrorHandler.DatabaseErrorType.Insert5);
+                                                }
+                                                catch (Exception ex)
+                                                {
+                                                    errorHandler.Insert(
+                                                        new ErrorMessage(
+                                                            DateTime.UtcNow,
+                                                            ErrorMessageType.Database,
+                                                            ErrorMessageCategory.None,
+                                                            string.Format("Database Error (Insert 3)\n\nSystem Message:\n{0}", ex.Message),
+                                                            sensorData.id));
 
-                                                errorHandler.SetDatabaseError(ErrorHandler.DatabaseErrorType.Insert5);
+                                                    errorHandler.SetDatabaseError(ErrorHandler.DatabaseErrorType.Insert5);
+                                                }
                                             }
                                         }
                                     }
                                 }
-                            }
-                            catch (Exception ex)
-                            {
-                                // Stte feilmelding
-                                errorHandler.Insert(
-                                    new ErrorMessage(
-                                        DateTime.UtcNow,
-                                        ErrorMessageType.SerialPort,
-                                        ErrorMessageCategory.AdminUser,
-                                        string.Format("DataProcessing error, System Message: {0}", ex.Message),
-                                        sensorData.id));
+                                catch (Exception ex)
+                                {
+                                    // Stte feilmelding
+                                    errorHandler.Insert(
+                                        new ErrorMessage(
+                                            DateTime.UtcNow,
+                                            ErrorMessageType.SerialPort,
+                                            ErrorMessageCategory.AdminUser,
+                                            string.Format("DataProcessing error, System Message: {0}", ex.Message),
+                                            sensorData.id));
+                                }
                             }
                         }
                     }

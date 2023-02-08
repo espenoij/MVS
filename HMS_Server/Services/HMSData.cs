@@ -146,7 +146,8 @@ namespace HMS_Server
             {
                 bool result = false;
 
-                if (_timestamp != _timestampCheck)
+                if (_timestamp != _timestampCheck &&
+                    _timestamp != DateTime.MinValue)
                 {
                     result = true;
                     _timestampCheck = _timestamp;

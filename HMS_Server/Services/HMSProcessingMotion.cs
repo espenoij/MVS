@@ -234,7 +234,6 @@ namespace HMS_Server
             heaveHeightData.name = "Heave Height";
             heaveHeightData.dbColumn = "heave_height";
             heaveHeightData.InitProcessing(errorHandler, ErrorMessageCategory.AdminUser, adminSettingsVM);
-            //heaveHeightData.AddProcessing(CalculationType.MeanWaveHeight, Constants.Minutes20);
             heaveHeightData.AddProcessing(CalculationType.RoundingDecimals, 1);
 
             heaveHeightMax20mData.id = (int)ValueType.HeaveHeightMax20m;
@@ -360,7 +359,7 @@ namespace HMS_Server
             statusSOGCOG.dbColumn = "status_sog_cog";
         }
 
-        public void Update(HMSDataCollection hmsInputDataList, ErrorHandler errorHandler)
+        public void Update(HMSDataCollection hmsInputDataList/*, ErrorHandler errorHandler*/)
         {
             // Hente input data vi skal bruke
             sensorPitch.Set(hmsInputDataList.GetData(ValueType.Pitch));
@@ -531,13 +530,13 @@ namespace HMS_Server
                     pitchMaxDown20mData.BufferFillCheck(1, Constants.MotionBufferFill99Pct);
                 }
 
-                // TEST
-                errorHandler.Insert(
-                    new ErrorMessage(
-                        DateTime.UtcNow,
-                        ErrorMessageType.SerialPort,
-                        ErrorMessageCategory.None,
-                        string.Format("Motion Buffer: {0}", pitchMax20mData.BufferSize(1))));
+                //// TEST
+                //errorHandler.Insert(
+                //    new ErrorMessage(
+                //        DateTime.UtcNow,
+                //        ErrorMessageType.SerialPort,
+                //        ErrorMessageCategory.None,
+                //        string.Format("Motion Buffer: {0} (1188)", pitchMax20mData.BufferSize(1))));
 
                 // Roll
                 rollData.Set(sensorRoll);
