@@ -1,5 +1,4 @@
-﻿using Microsoft.Xaml.Behaviors.Core;
-using System;
+﻿using System;
 using System.ComponentModel;
 using System.Runtime.CompilerServices;
 
@@ -265,7 +264,7 @@ namespace HMS_Server
 
         // Variabel oppdatert
         // Dersom navn ikke settes brukes kallende medlem sitt navn
-        protected void OnPropertyChanged([CallerMemberName] string name = null)
+        protected virtual void OnPropertyChanged([CallerMemberName] string name = null)
         {
             PropertyChanged?.Invoke(this, new PropertyChangedEventArgs(name));
         }

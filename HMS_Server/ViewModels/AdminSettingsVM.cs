@@ -285,6 +285,7 @@ namespace HMS_Server
                 {
                     _helideckCategory = value;
                     config.Write(ConfigKey.HelideckCategory, _helideckCategory.ToString());
+                    OnPropertyChanged();
                 }
             }
         }
@@ -378,6 +379,8 @@ namespace HMS_Server
                 {
                     _restrictedSectorFrom = value;
                     config.Write(ConfigKey.RestrictedSectorFrom, _restrictedSectorFrom.ToString());
+
+                    OnPropertyChanged();
                 }
             }
         }
@@ -398,6 +401,8 @@ namespace HMS_Server
                 {
                     _restrictedSectorTo = value;
                     config.Write(ConfigKey.RestrictedSectorTo, _restrictedSectorTo.ToString());
+
+                    OnPropertyChanged();
                 }
             }
         }
@@ -1299,7 +1304,7 @@ namespace HMS_Server
 
         // Variabel oppdatert
         // Dersom navn ikke settes brukes kallende medlem sitt navn
-        protected void OnPropertyChanged([CallerMemberName] string name = null)
+        protected virtual void OnPropertyChanged([CallerMemberName] string name = null)
         {
             PropertyChanged?.Invoke(this, new PropertyChangedEventArgs(name));
         }

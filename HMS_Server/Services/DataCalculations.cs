@@ -16,7 +16,8 @@ namespace HMS_Server
         //int counter21 = 0;
         //int counter22 = 0;
         //int counter3 = 0;
-        //int counter4 = 0;
+        ////int counter4 = 0;
+        //private DateTime testTimer;
 
         public CalculationType type { get; set; }
         public double parameter { get; set; }
@@ -386,7 +387,7 @@ namespace HMS_Server
                                 //    counter22++;
                                 //// TEST
 
-                                    // Sjekke at ny verdi ikke er lik den forrige som ble lagt inn i datasettet -> unngå duplikater
+                                // Sjekke at ny verdi ikke er lik den forrige som ble lagt inn i datasettet -> unngå duplikater
                                 if (!double.IsNaN(value) &&
                                     windDirTimeAverageDataList.LastOrDefault()?.timestamp != newTimeStamp)
                                 {
@@ -418,10 +419,25 @@ namespace HMS_Server
                                     }
                                 }
                                 //// TEST
-                                //else 
+                                //else
                                 //{
                                 //    counter4++;
                                 //}
+
+
+                                //// TEST
+                                //if (testTimer.AddSeconds(1) < DateTime.UtcNow)
+                                //{
+                                //    testTimer = DateTime.UtcNow;
+
+                                //    errorHandler.Insert(
+                                //        new ErrorMessage(
+                                //            DateTime.UtcNow,
+                                //            ErrorMessageType.MODBUS,
+                                //            ErrorMessageCategory.None,
+                                //            string.Format("WindDirTimeAverage, Tot: {0}, Numeric: {1}, IsNaN: {2}, OldTimeStamp: {3}, Processed: {4}, BufferSize: {5}", counter1, counter2, counter21, counter22, counter3, windDirTimeAverageDataList.Count)));
+                                //}
+
 
                                 // Beregne gjennomsnitt av de verdiene som ligger i datasettet
                                 if (windDirTimeAverageDataList.Count > 0)

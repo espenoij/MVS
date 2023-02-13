@@ -1,4 +1,5 @@
 ﻿using System.ComponentModel;
+using System.Runtime.CompilerServices;
 
 namespace HMS_Server
 {
@@ -16,8 +17,16 @@ namespace HMS_Server
             set
             {
                 _dataField = value;
-                PropertyChanged?.Invoke(this, new PropertyChangedEventArgs(nameof(dataField)));
+                OnPropertyChanged(nameof(dataField));
             }
+        }
+
+        // Variabel oppdatert
+        // Dersom navn ikke settes brukes kallende medlem sitt navn
+        protected virtual void OnPropertyChanged([CallerMemberName] string name = null)
+        {
+            PropertyChanged?.Invoke(this, new PropertyChangedEventArgs(name));
         }
     }
 }
+

@@ -76,6 +76,7 @@ namespace HMS_Server
                 {
                     _helideckLightData.Set(value);
 
+                    OnPropertyChanged();
                     OnPropertyChanged(nameof(helideckStatus));
                     OnPropertyChanged(nameof(HMSLightsOutput));
                     OnPropertyChanged(nameof(HMSLightsOutputToDisplay));
@@ -294,6 +295,7 @@ namespace HMS_Server
             set
             {
                 _testMode = value;
+                OnPropertyChanged();
                 OnPropertyChanged(nameof(HMSLightsOutput));
                 OnPropertyChanged(nameof(HMSLightsOutputToDisplay));
             }
@@ -309,6 +311,7 @@ namespace HMS_Server
             set
             {
                 _testModeStatus = value;
+                OnPropertyChanged();
                 OnPropertyChanged(nameof(HMSLightsOutput));
                 OnPropertyChanged(nameof(HMSLightsOutputToDisplay));
             }
@@ -324,6 +327,7 @@ namespace HMS_Server
             set
             {
                 _testModeDisplayMode = value;
+                OnPropertyChanged();
                 OnPropertyChanged(nameof(HMSLightsOutput));
                 OnPropertyChanged(nameof(HMSLightsOutputToDisplay));
             }
@@ -386,7 +390,7 @@ namespace HMS_Server
 
         // Variabel oppdatert
         // Dersom navn ikke er satt brukes kallende medlem sitt navn
-        protected void OnPropertyChanged([CallerMemberName] string name = null)
+        protected virtual void OnPropertyChanged([CallerMemberName] string name = null)
         {
             PropertyChanged?.Invoke(this, new PropertyChangedEventArgs(name));
         }

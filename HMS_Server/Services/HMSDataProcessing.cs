@@ -57,7 +57,10 @@ namespace HMS_Server
 
         public double BufferCount(int dataCalcPos)
         {
-            return dataCalculations[dataCalcPos].BufferCount();
+            if (dataCalcPos < dataCalculations.Count)
+                return dataCalculations[dataCalcPos].BufferCount();
+            else
+                return 0;
         }
 
         public void ResetDataCalculations()

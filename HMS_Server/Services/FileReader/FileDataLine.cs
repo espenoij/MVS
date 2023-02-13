@@ -1,9 +1,11 @@
 ﻿using System.ComponentModel;
+using System.Runtime.CompilerServices;
 
 namespace HMS_Server
 {
     public class FileDataLine : INotifyPropertyChanged
     {
+        // Change notification
         public event PropertyChangedEventHandler PropertyChanged;
 
         private string _data { get; set; }
@@ -16,8 +18,15 @@ namespace HMS_Server
             set
             {
                 _data = value;
-                PropertyChanged?.Invoke(this, new PropertyChangedEventArgs(nameof(data)));
+                OnPropertyChanged(nameof(data));
             }
+        }
+
+        // Variabel oppdatert
+        // Dersom navn ikke settes brukes kallende medlem sitt navn
+        protected virtual void OnPropertyChanged([CallerMemberName] string name = null)
+        {
+            PropertyChanged?.Invoke(this, new PropertyChangedEventArgs(name));
         }
     }
 }

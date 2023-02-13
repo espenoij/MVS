@@ -467,7 +467,7 @@ public class RWDData : INotifyPropertyChanged
 
     // Variabel oppdatert
     // Dersom navn ikke er satt brukes kallende medlem sitt navn
-    protected void OnPropertyChanged([CallerMemberName] string name = null)
+    protected virtual void OnPropertyChanged([CallerMemberName] string name = null)
     {
         PropertyChanged?.Invoke(this, new PropertyChangedEventArgs(name));
     }

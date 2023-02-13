@@ -90,6 +90,7 @@ namespace HMS_Server
                 // Lagre ny setting til config fil
                 config.Write(ConfigKey.TotalDataLines, totalDataLinesString, ConfigSection.FileReaderConfig);
 
+                OnPropertyChanged();
                 OnPropertyChanged(nameof(totalDataLines));
             }
         }
@@ -124,7 +125,7 @@ namespace HMS_Server
 
         // Variabel oppdatert
         // Dersom navn ikke er satt brukes kallende medlem sitt navn
-        protected void OnPropertyChanged([CallerMemberName] string name = null)
+        protected virtual void OnPropertyChanged([CallerMemberName] string name = null)
         {
             PropertyChanged?.Invoke(this, new PropertyChangedEventArgs(name));
         }

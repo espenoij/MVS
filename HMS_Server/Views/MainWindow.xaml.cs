@@ -996,9 +996,9 @@ namespace HMS_Server
                 (sender as RadTabControl).Focus();
             }), DispatcherPriority.ApplicationIdle);
 
-            // Dersom vi har vært innom input edit, og forlatt siden igjen, må vi anta at sensor input er endret
+            // Dersom vi har vært innom input edit, og forlatt siden igjen, og server ikke kjører, må vi anta at sensor input er endret
             // -> laste display lister på nytt i tilfelle sensor input er redigert
-            if (!tabInputEdit.IsSelected && sensorInputEdited)
+            if (!tabInputEdit.IsSelected && sensorInputEdited && !serverStarted)
             {
                 // Laste sensor data setups fra fil
                 sensorDataRetrieval.LoadSensors();

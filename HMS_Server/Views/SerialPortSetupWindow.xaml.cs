@@ -4,6 +4,7 @@ using System.ComponentModel;
 using System.Diagnostics;
 using System.IO.Ports;
 using System.Linq;
+using System.Runtime.CompilerServices;
 using System.Text;
 using System.Text.RegularExpressions;
 using System.Windows;
@@ -1473,8 +1474,15 @@ namespace HMS_Server
             set
             {
                 _data = value;
-                PropertyChanged?.Invoke(this, new PropertyChangedEventArgs(nameof(data)));
+                OnPropertyChanged(nameof(data));
             }
+        }
+
+        // Variabel oppdatert
+        // Dersom navn ikke settes brukes kallende medlem sitt navn
+        protected virtual void OnPropertyChanged([CallerMemberName] string name = null)
+        {
+            PropertyChanged?.Invoke(this, new PropertyChangedEventArgs(name));
         }
     }
 
@@ -1492,8 +1500,15 @@ namespace HMS_Server
             set
             {
                 _dataField = value;
-                PropertyChanged?.Invoke(this, new PropertyChangedEventArgs(nameof(dataField)));
+                OnPropertyChanged(nameof(dataField));
             }
+        }
+
+        // Variabel oppdatert
+        // Dersom navn ikke settes brukes kallende medlem sitt navn
+        protected virtual void OnPropertyChanged([CallerMemberName] string name = null)
+        {
+            PropertyChanged?.Invoke(this, new PropertyChangedEventArgs(name));
         }
     }
 
@@ -1511,8 +1526,15 @@ namespace HMS_Server
             set
             {
                 _selectedDataFieldString = value;
-                PropertyChanged?.Invoke(this, new PropertyChangedEventArgs(nameof(selectedDataFieldString)));
+                OnPropertyChanged(nameof(selectedDataFieldString));
             }
+        }
+
+        // Variabel oppdatert
+        // Dersom navn ikke settes brukes kallende medlem sitt navn
+        protected virtual void OnPropertyChanged([CallerMemberName] string name = null)
+        {
+            PropertyChanged?.Invoke(this, new PropertyChangedEventArgs(name));
         }
     }
 

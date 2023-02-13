@@ -1,4 +1,5 @@
 ﻿using System.ComponentModel;
+using System.Runtime.CompilerServices;
 using System.Windows.Data;
 using Telerik.Windows.Data;
 
@@ -57,8 +58,15 @@ namespace HMS_Server
             set
             {
                 _text = value;
-                PropertyChanged?.Invoke(this, new PropertyChangedEventArgs(nameof(text)));
+                OnPropertyChanged(nameof(text));
             }
+        }
+
+        // Variabel oppdatert
+        // Dersom navn ikke settes brukes kallende medlem sitt navn
+        protected virtual void OnPropertyChanged([CallerMemberName] string name = null)
+        {
+            PropertyChanged?.Invoke(this, new PropertyChangedEventArgs(name));
         }
     }
 }
