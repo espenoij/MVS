@@ -1,4 +1,5 @@
-﻿using System;
+﻿using Org.BouncyCastle.Bcpg;
+using System;
 using System.Linq;
 using System.Windows.Data;
 using Telerik.Windows.Data;
@@ -134,11 +135,11 @@ namespace HMS_Server
                 foreach (var hmsData in dataList.ToList())
                 {
                     // Finne match i mottaker data listen
-                    var serverData = sensorDataList.Where(x => x?.id == hmsData?.dataId);
+                    var sensorData = sensorDataList.Where(x => x?.id == hmsData?.dataId);
 
                     // Fant match?
                     if (hmsData != null &&
-                        serverData.Count() > 0)
+                        sensorData.Count() > 0)
                     {
                         //// TEST
                         //if (hmsData.id == (int)ValueType.SensorWindDirection)
@@ -146,14 +147,14 @@ namespace HMS_Server
                         //    counter1++;
                         //}
 
-                        // ...og nye data?
-                        if (hmsData.timestamp != serverData.First().timestamp)
+                        // Har vi nye data?
+                        if (hmsData.timestamp != sensorData.First().timestamp)
                         {
                             // Overføre data
-                            hmsData.data = serverData.First().data;
+                            hmsData.data = sensorData.First().data;
 
                             // Overføre time stamp
-                            hmsData.timestamp = serverData.First().timestamp;
+                            hmsData.timestamp = sensorData.First().timestamp;
 
                             // Sjekke timestamp for data timeout
                             if (hmsData.timestamp.AddMilliseconds(dataTimeout) < DateTime.UtcNow)

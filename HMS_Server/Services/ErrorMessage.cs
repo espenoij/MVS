@@ -168,7 +168,8 @@ namespace HMS_Server
         MODBUS,
         Database,
         FileReader,
-        Config
+        Config,
+        Debug
     }
 
     public enum ErrorMessageCategory

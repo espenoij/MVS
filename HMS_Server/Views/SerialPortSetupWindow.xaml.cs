@@ -1,4 +1,5 @@
-﻿using System;
+﻿using Org.BouncyCastle.Bcpg;
+using System;
 using System.Collections.Generic;
 using System.ComponentModel;
 using System.Diagnostics;
@@ -22,6 +23,9 @@ namespace HMS_Server
     /// </summary>
     public partial class SerialPortSetupWindow : RadWindow
     {
+        //// TEST
+        //int totalPacketsRead;
+
         // Configuration settings
         private Config config;
 
@@ -672,9 +676,20 @@ namespace HMS_Server
                         if (inputDataBuffer.Count() > 4096) // 4KB limit per packet
                             inputDataBuffer = String.Empty;
 
+                        //// TEST
+                        //int testCounter = 1;
+
                         // Prosessere pakkene som ble funnet
                         foreach (var packet in incomingPackets)
                         {
+                            //// TEST
+                            //errorHandler.Insert(
+                            //    new ErrorMessage(
+                            //        DateTime.UtcNow,
+                            //        ErrorMessageType.Debug,
+                            //        ErrorMessageCategory.None,
+                            //        string.Format("Packet: {0}, Total: {1}, per packet: {2}", packet, totalPacketsRead++, testCounter++)));
+
                             // Vise de utvalgte pakkene på skjerm
                             DisplaySelectedPackets(packet);
 

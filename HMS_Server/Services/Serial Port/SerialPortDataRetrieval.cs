@@ -1,11 +1,11 @@
 ﻿using System;
 using System.Collections.Generic;
-using System.Diagnostics;
 using System.IO.Ports;
 using System.Linq;
 using System.Text;
 using System.Text.RegularExpressions;
-using System.Windows.Data;
+using System.Threading;
+using System.Windows.Threading;
 using Telerik.Windows.Data;
 
 namespace HMS_Server
@@ -19,7 +19,6 @@ namespace HMS_Server
         DatabaseHandler database;
 
         RadObservableCollection<SensorData> sensorDataList;
-        private object sensorDataListLock = new object();
 
         // Serial Port: List
         private List<SerialPort> serialPortList = new List<SerialPort>();
@@ -36,6 +35,8 @@ namespace HMS_Server
         // Inn-data buffer
         //private string inputDataBuffer;
 
+        private DispatcherTimer sensorProcessingTimer = new DispatcherTimer();
+
         public SerialPortDataRetrieval(Config config, RadObservableCollection<SensorData> sensorDataList, DatabaseHandler database, ErrorHandler errorHandler, AdminSettingsVM adminSettingsVM)
         {
             this.config = config;
@@ -45,7 +46,14 @@ namespace HMS_Server
             this.errorHandler = errorHandler;
             this.adminSettingsVM = adminSettingsVM;
 
-            BindingOperations.EnableCollectionSynchronization(sensorDataList, sensorDataListLock);
+            sensorProcessingTimer.Interval = TimeSpan.FromMilliseconds(config.ReadWithDefault(ConfigKey.HMSProcessingFrequency, Constants.HMSProcessingFrequencyDefault));
+            sensorProcessingTimer.Tick += runSensorProcessing;
+            sensorProcessingTimer.Start();
+
+            void runSensorProcessing(object sender, EventArgs e)
+            {
+                DataProcessing();
+            }
         }
 
         public void Load(SensorData sensorData)
@@ -83,54 +91,37 @@ namespace HMS_Server
         private void DataReceived(object sender, SerialDataReceivedEventArgs e)
         {
             SerialPort serialPort = sender as SerialPort;
-            if (serialPort != null)
+
+            // Finne frem hvor vi skal lagre lest data fra serie port
+            SerialPortData serialPortData = serialPortDataReceivedList.Find(x => x.portName == serialPort.PortName);
+            if (serialPortData != null)
             {
-                // Finne frem hvor vi skal lagre lest data fra serie port
-                SerialPortData serialPortData = serialPortDataReceivedList.Find(x => x.portName == serialPort.PortName);
-                if (serialPortData != null)
+                if (serialPortData.firstRead)
                 {
-                    try
+                    // Dump inn buffer ved første lesing - gjør ingenting
+                    serialPort?.ReadExisting();
+                    serialPortData.firstRead = false;
+                }
+                else
+                {
+                    // Lese fra port
+                    int bytes = serialPort.BytesToRead;
+                    byte[] array = new byte[bytes];
+                    for (int i = 0; serialPort.BytesToRead > 0 && i < bytes; i++)
                     {
-                        if (serialPortData.firstRead)
-                        {
-                            // Dump inn buffer ved første lesing - gjør ingenting
-                            serialPort.ReadExisting();
-                            serialPortData.firstRead = false;
-                        }
-                        else
-                        {
-                            // Lese fra port
-                            int bytes = serialPort.BytesToRead;
-                            byte[] array = new byte[bytes];
-                            for (int i = 0; serialPort.BytesToRead > 0 && i < bytes; i++)
-                            {
-                                array[i] = Convert.ToByte(serialPort.ReadByte());
-                            }
-
-                            // Lagre data
-                            serialPortData.buffer_text += Encoding.UTF8.GetString(array, 0, array.Length);
-                            serialPortData.buffer_binary += BitConverter.ToString(array);
-                            serialPortData.timestamp = DateTime.UtcNow;
-
-                            // Oppdatere status
-                            if (!string.IsNullOrEmpty(serialPortData.buffer_text))
-                            {
-                                serialPortData.portStatus = PortStatus.Reading;
-                            }
-
-                            // Prosessere data
-                            DataProcessing(serialPortData);
-                        }
+                        array[i] = Convert.ToByte(serialPort.ReadByte());
                     }
-                    catch (Exception ex)
+
+                    // Lagre data
+                    serialPortData.buffer_text = Encoding.UTF8.GetString(array, 0, array.Length);
+                    serialPortData.buffer_binary = BitConverter.ToString(array);
+                    serialPortData.timestamp = DateTime.UtcNow;
+
+                    // Oppdatere status
+                    if (!string.IsNullOrEmpty(serialPortData.buffer_text) ||
+                        !string.IsNullOrEmpty(serialPortData.buffer_binary))
                     {
-                        // Sette feilmelding
-                        errorHandler.Insert(
-                            new ErrorMessage(
-                                DateTime.UtcNow,
-                                ErrorMessageType.SerialPort,
-                                ErrorMessageCategory.AdminUser,
-                                string.Format("Error reading serial port: {0} (Start), System Message: {1}", serialPort.PortName, ex.Message)));
+                        serialPortData.portStatus = PortStatus.Reading;
                     }
                 }
             }
@@ -173,6 +164,8 @@ namespace HMS_Server
                     }
                 }
             }
+
+            sensorProcessingTimer.Start();
         }
 
         public void Stop()
@@ -182,6 +175,8 @@ namespace HMS_Server
                 if (serialPort != null)
                     if (serialPort.IsOpen)
                         serialPort.Close();
+
+            sensorProcessingTimer.Stop();
         }
 
         public void Restart(string portName)
@@ -211,16 +206,17 @@ namespace HMS_Server
             }
         }
 
-        private void DataProcessing(SerialPortData serialPortData)
+        private void DataProcessing()
         {
-            // Har vi data?
-            if (!string.IsNullOrEmpty(serialPortData.buffer_text))
+            foreach (var serialPortData in serialPortDataReceivedList)
             {
-                // Data Processing
-                SerialPortProcessing process = new SerialPortProcessing();
-
-                lock (sensorDataListLock)
+                // Har vi data?
+                if (!string.IsNullOrEmpty(serialPortData.buffer_text) ||
+                    !string.IsNullOrEmpty(serialPortData.buffer_binary))
                 {
+                    // Data Processing
+                    SerialPortProcessing process = new SerialPortProcessing();
+
                     //  Trinn 1: Finne alle sensorer som er satt opp på den aktuelle serie porten og prosessere
                     foreach (var sensorData in sensorDataList)
                     {
@@ -233,8 +229,8 @@ namespace HMS_Server
                                     // Init processing
                                     process.inputType = sensorData.serialPort.inputType;
                                     process.binaryType = sensorData.serialPort.binaryType;
-                                    process.packetHeader = sensorData.serialPort.packetHeader;
-                                    process.packetEnd = sensorData.serialPort.packetEnd;
+                                    process.packetHeader = Regex.Unescape(sensorData.serialPort.packetHeader);
+                                    process.packetEnd = Regex.Unescape(sensorData.serialPort.packetEnd);
                                     process.packetDelimiter = Regex.Unescape(sensorData.serialPort.packetDelimiter);
                                     process.packetCombineFields = sensorData.serialPort.packetCombineFields;
                                     process.fixedPosData = sensorData.serialPort.fixedPosData;
@@ -320,67 +316,71 @@ namespace HMS_Server
                             }
                         }
                     }
-                }
 
-                int lastHeaderPos;
-                int lastEndPos;
+                    //int lastHeaderPos;
+                    //int lastEndPos;
 
-                switch (process.inputType)
-                {
-                    case InputDataType.Text:
-                        // Sjekk om vi skal ta vare på noe data eller om buffer skal slettes
-                        lastHeaderPos = serialPortData.buffer_text.LastIndexOf(process.packetHeader);
-                        lastEndPos = serialPortData.buffer_text.LastIndexOf(process.packetEnd);
+                    //switch (process.inputType)
+                    //{
+                    //    case InputDataType.Text:
+                    //        // Sjekk om vi skal ta vare på noe data eller om buffer skal slettes
+                    //        lastHeaderPos = serialPortData.buffer_text.LastIndexOf(process.packetHeader);
+                    //        lastEndPos = serialPortData.buffer_text.LastIndexOf(process.packetEnd);
 
-                        // Dersom vi har en HEADER etter en END
-                        if (lastHeaderPos > lastEndPos &&
-                            lastHeaderPos != -1 &&
-                            lastEndPos != -1 &&
-                            !string.IsNullOrEmpty(process.packetHeader) &&
-                            !string.IsNullOrEmpty(process.packetEnd))
-                            // Lagre fra header (i tilfelle resten av packet kommer i neste sending fra serieport)
-                            serialPortData.buffer_text = serialPortData.buffer_text.Substring(lastHeaderPos);
-                        else
-                            // Ingen HEADER etter END -> Slette buffer
-                            serialPortData.buffer_text = String.Empty;
+                    //        // Dersom vi har en HEADER etter en END
+                    //        if (lastHeaderPos > lastEndPos &&
+                    //            lastHeaderPos != -1 &&
+                    //            lastEndPos != -1 &&
+                    //            !string.IsNullOrEmpty(process.packetHeader) &&
+                    //            !string.IsNullOrEmpty(process.packetEnd))
+                    //            // Lagre fra header (i tilfelle resten av packet kommer i neste sending fra serieport)
+                    //            serialPortData.buffer_text = serialPortData.buffer_text.Substring(lastHeaderPos);
+                    //        else
+                    //            // Ingen HEADER etter END -> Slette buffer
+                    //            serialPortData.buffer_text = String.Empty;
 
-                        // Må også begrense hvor my data som skal leses i input buffer når vi ikke finner packets
-                        // slik at den ikke fylles i det uendelige.
-                        if (serialPortData.buffer_text.Count() > 4096) // 4KB limit per packet
-                            serialPortData.buffer_text = String.Empty;
+                    //        // Må også begrense hvor my data som skal leses i input buffer når vi ikke finner packets
+                    //        // slik at den ikke fylles i det uendelige.
+                    //        if (serialPortData.buffer_text.Count() > 4096) // 4KB limit per packet
+                    //            serialPortData.buffer_text = String.Empty;
 
-                        // Sletter binary buffer
-                        serialPortData.buffer_binary = String.Empty;
-                        break;
+                    //        // Sletter binary buffer
+                    //        serialPortData.buffer_binary = String.Empty;
+                    //        break;
 
-                    case InputDataType.Binary:
-                        // Sjekk om vi skal ta vare på noe data eller om buffer skal slettes
-                        lastHeaderPos = serialPortData.buffer_binary.LastIndexOf(process.packetHeader);
-                        lastEndPos = serialPortData.buffer_binary.LastIndexOf(process.packetEnd);
+                    //    case InputDataType.Binary:
+                    //        // Sjekk om vi skal ta vare på noe data eller om buffer skal slettes
+                    //        lastHeaderPos = serialPortData.buffer_binary.LastIndexOf(process.packetHeader);
+                    //        lastEndPos = serialPortData.buffer_binary.LastIndexOf(process.packetEnd);
 
-                        // Dersom vi har en HEADER etter en END
-                        if (lastHeaderPos > lastEndPos &&
-                            lastHeaderPos != -1 &&
-                            lastEndPos != -1 &&
-                            !string.IsNullOrEmpty(process.packetHeader) &&
-                            !string.IsNullOrEmpty(process.packetEnd))
-                            // Lagre fra header (i tilfelle resten av packet kommer i neste sending fra serieport)
-                            serialPortData.buffer_binary = serialPortData.buffer_binary.Substring(lastHeaderPos);
-                        else
-                            // Ingen HEADER etter END -> Slette buffer
-                            serialPortData.buffer_binary = String.Empty;
+                    //        // Dersom vi har en HEADER etter en END
+                    //        if (lastHeaderPos > lastEndPos &&
+                    //            lastHeaderPos != -1 &&
+                    //            lastEndPos != -1 &&
+                    //            !string.IsNullOrEmpty(process.packetHeader) &&
+                    //            !string.IsNullOrEmpty(process.packetEnd))
+                    //            // Lagre fra header (i tilfelle resten av packet kommer i neste sending fra serieport)
+                    //            serialPortData.buffer_binary = serialPortData.buffer_binary.Substring(lastHeaderPos);
+                    //        else
+                    //            // Ingen HEADER etter END -> Slette buffer
+                    //            serialPortData.buffer_binary = String.Empty;
 
-                        // Må også begrense hvor my data som skal leses i input buffer når vi ikke finner packets
-                        // slik at den ikke fylles i det uendelige.
-                        if (serialPortData.buffer_binary.Count() > 4096) // 4KB limit per packet
-                            serialPortData.buffer_binary = String.Empty;
+                    //        // Må også begrense hvor my data som skal leses i input buffer når vi ikke finner packets
+                    //        // slik at den ikke fylles i det uendelige.
+                    //        if (serialPortData.buffer_binary.Count() > 4096) // 4KB limit per packet
+                    //            serialPortData.buffer_binary = String.Empty;
 
-                        // Sletter text buffer
-                        serialPortData.buffer_text = String.Empty;
-                        break;
+                    //        // Sletter text buffer
+                    //        serialPortData.buffer_text = String.Empty;
+                    //        break;
 
-                    default:
-                        break;
+                    //    default:
+                    //        break;
+                    //}
+
+                    //// Slette buffer - prosesseres kun 1 gang
+                    //serialPortData.buffer_text = string.Empty;
+                    //serialPortData.buffer_binary = string.Empty;
                 }
             }
         }

@@ -379,10 +379,8 @@ namespace HMS_Server
                             {
                                 //// TEST
                                 //counter2++;
-
                                 //if (double.IsNaN(value))
                                 //    counter21++;
-
                                 //if (windDirTimeAverageDataList.LastOrDefault()?.timestamp == newTimeStamp)
                                 //    counter22++;
                                 //// TEST
@@ -433,7 +431,7 @@ namespace HMS_Server
                                 //    errorHandler.Insert(
                                 //        new ErrorMessage(
                                 //            DateTime.UtcNow,
-                                //            ErrorMessageType.MODBUS,
+                                //            ErrorMessageType.Debug,
                                 //            ErrorMessageCategory.None,
                                 //            string.Format("WindDirTimeAverage, Tot: {0}, Numeric: {1}, IsNaN: {2}, OldTimeStamp: {3}, Processed: {4}, BufferSize: {5}", counter1, counter2, counter21, counter22, counter3, windDirTimeAverageDataList.Count)));
                                 //}
