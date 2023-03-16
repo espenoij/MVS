@@ -13,6 +13,8 @@ namespace HMS_Server
 
         private AdminSettingsVM adminSettingsVM;
 
+        private bool databaseSetupRun = true;
+
         public HMSProcessingGeneralInfo(HMSDataCollection hmsOutputData, AdminSettingsVM adminSettingsVM)
         {
             this.adminSettingsVM = adminSettingsVM;
@@ -35,8 +37,11 @@ namespace HMS_Server
 
             // Sjekker om vi har nye data før vi starter prosessering
             if (sensorLatitude.TimeStampCheck ||
-                sensorLongitude.TimeStampCheck)
+                sensorLongitude.TimeStampCheck ||
+                databaseSetupRun)
             {
+                databaseSetupRun = false;
+
                 // Tar data fra input delen av server og overfører til HMS output delen
                 gpsLatitude.Set(sensorLatitude);
                 gpsLongitude.Set(sensorLongitude);

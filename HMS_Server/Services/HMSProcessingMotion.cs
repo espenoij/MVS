@@ -7,19 +7,19 @@ namespace HMS_Server
 {
     public class HMSProcessingMotion
     {
-        // Input data
-        HMSData sensorPitch = new HMSData();
-        HMSData sensorRoll = new HMSData();
-        HMSData sensorHeave = new HMSData();
-        HMSData sensorHeaveRate = new HMSData();
-        HMSData sensorAccelerationX = new HMSData();
-        HMSData sensorAccelerationY = new HMSData();
-        HMSData sensorAccelerationZ = new HMSData();
+        // TEST
+        private DateTime testTimer;
 
-        HMSData sensorSensorMRU = new HMSData();
-        HMSData sensorSensorGyro = new HMSData();
-        HMSData sensorSensorWind = new HMSData();
-        HMSData sensorSensorSOGCOG = new HMSData();
+        // Input data
+        private HMSData sensorPitch = new HMSData();
+        private HMSData sensorRoll = new HMSData();
+        private HMSData sensorHeave = new HMSData();
+        private HMSData sensorHeaveRate = new HMSData();
+        private HMSData sensorAccelerationX = new HMSData();
+        private HMSData sensorAccelerationY = new HMSData();
+        private HMSData sensorAccelerationZ = new HMSData();
+
+        private HMSData sensorSensorMRU = new HMSData();
 
         // Pitch
         private HMSData pitchData = new HMSData();
@@ -91,18 +91,20 @@ namespace HMS_Server
         private HMSData statusSHR = new HMSData();
 
         private HMSData statusMRU = new HMSData();
-        private HMSData statusGyro = new HMSData();
-        private HMSData statusWind = new HMSData();
-        private HMSData statusSOGCOG = new HMSData();
 
         private RadObservableCollection<TimeData> significantHeaveRate2mMinData = new RadObservableCollection<TimeData>();
         private RadObservableCollection<TimeData> significantHeaveRate10mMeanData = new RadObservableCollection<TimeData>();
         private RadObservableCollection<TimeData> significantHeaveRate20mMaxData = new RadObservableCollection<TimeData>();
 
+        private ErrorHandler errorHandler;
+
+        private bool databaseSetupRun = true;
+
         public HMSProcessingMotion(HMSDataCollection hmsOutputData, HelideckMotionLimits motionLimits, AdminSettingsVM adminSettingsVM, ErrorHandler errorHandler)
         {
             this.motionLimits = motionLimits;
             this.adminSettingsVM = adminSettingsVM;
+            this.errorHandler = errorHandler;
 
             // Fyller output listen med HMS Output data
             // NB! Variablene som legges inn i listen her fungerer som pekere: Oppdateres variabelen -> oppdateres listen
@@ -150,9 +152,6 @@ namespace HMS_Server
             hmsOutputDataList.Add(statusSHR);
 
             hmsOutputDataList.Add(statusMRU);
-            hmsOutputDataList.Add(statusGyro);
-            hmsOutputDataList.Add(statusWind);
-            hmsOutputDataList.Add(statusSOGCOG);
 
             // NB! Selv om WSI ikke brukes i NOROG må vi legge den inn her
             // slik at database-tabell blir lik for CAP/NOROG.
@@ -342,21 +341,6 @@ namespace HMS_Server
             statusMRU.name = "Status MRU";
             statusMRU.sensorGroupId = Constants.NO_SENSOR_GROUP_ID;
             statusMRU.dbColumn = "status_mru";
-
-            statusGyro.id = (int)ValueType.StatusGyro;
-            statusGyro.name = "Status Gyro";
-            statusGyro.sensorGroupId = Constants.NO_SENSOR_GROUP_ID;
-            statusGyro.dbColumn = "status_gyro";
-
-            statusWind.id = (int)ValueType.StatusWind;
-            statusWind.name = "Status Wind";
-            statusWind.sensorGroupId = Constants.NO_SENSOR_GROUP_ID;
-            statusWind.dbColumn = "status_wind";
-
-            statusSOGCOG.id = (int)ValueType.StatusSOGCOG;
-            statusSOGCOG.name = "Status SOG-COG";
-            statusSOGCOG.sensorGroupId = Constants.NO_SENSOR_GROUP_ID;
-            statusSOGCOG.dbColumn = "status_sog_cog";
         }
 
         public void Update(HMSDataCollection hmsInputDataList/*, ErrorHandler errorHandler*/)
@@ -370,9 +354,6 @@ namespace HMS_Server
             sensorAccelerationY.Set(hmsInputDataList.GetData(ValueType.AccelerationY));
             sensorAccelerationZ.Set(hmsInputDataList.GetData(ValueType.AccelerationZ));
             sensorSensorMRU.Set(hmsInputDataList.GetData(ValueType.SensorMRU));
-            sensorSensorGyro.Set(hmsInputDataList.GetData(ValueType.SensorGyro));
-            sensorSensorWind.Set(hmsInputDataList.GetData(ValueType.SensorWind));
-            sensorSensorSOGCOG.Set(hmsInputDataList.GetData(ValueType.SensorSOGCOG));
 
             if (sensorPitch.TimeStampCheck ||
                 sensorRoll.TimeStampCheck ||
@@ -382,10 +363,10 @@ namespace HMS_Server
                 sensorAccelerationY.TimeStampCheck ||
                 sensorAccelerationZ.TimeStampCheck ||
                 sensorSensorMRU.TimeStampCheck ||
-                sensorSensorGyro.TimeStampCheck ||
-                sensorSensorWind.TimeStampCheck ||
-                sensorSensorSOGCOG.TimeStampCheck)
+                databaseSetupRun)
             {
+                databaseSetupRun = false;
+
                 // Status data
                 if (adminSettingsVM.statusMRUEnabled)
                 {
@@ -407,72 +388,6 @@ namespace HMS_Server
                     statusMRU.data = 1;
                     statusMRU.timestamp = DateTime.UtcNow;
                     statusMRU.status = DataStatus.OK;
-                }
-
-                if (adminSettingsVM.statusGyroEnabled)
-                {
-                    if (sensorSensorGyro != null)
-                    {
-                        statusGyro.data = sensorSensorGyro.data;
-                        statusGyro.timestamp = sensorSensorGyro.timestamp;
-                        statusGyro.status = sensorSensorGyro.status;
-                    }
-                    else
-                    {
-                        statusGyro.data = 0;
-                        statusGyro.timestamp = DateTime.UtcNow;
-                        statusGyro.status = DataStatus.TIMEOUT_ERROR;
-                    }
-                }
-                else
-                {
-                    statusGyro.data = 1;
-                    statusGyro.timestamp = DateTime.UtcNow;
-                    statusGyro.status = DataStatus.OK;
-                }
-
-                if (adminSettingsVM.statusWindEnabled)
-                {
-                    if (sensorSensorWind != null)
-                    {
-                        statusWind.data = sensorSensorWind.data;
-                        statusWind.timestamp = sensorSensorWind.timestamp;
-                        statusWind.status = sensorSensorWind.status;
-                    }
-                    else
-                    {
-                        statusWind.data = 0;
-                        statusWind.timestamp = DateTime.UtcNow;
-                        statusWind.status = DataStatus.TIMEOUT_ERROR;
-                    }
-                }
-                else
-                {
-                    statusWind.data = 1;
-                    statusWind.timestamp = DateTime.UtcNow;
-                    statusWind.status = DataStatus.OK;
-                }
-
-                if (adminSettingsVM.statusSOGCOGEnabled)
-                {
-                    if (sensorSensorSOGCOG != null)
-                    {
-                        statusSOGCOG.data = sensorSensorSOGCOG.data;
-                        statusSOGCOG.timestamp = sensorSensorSOGCOG.timestamp;
-                        statusSOGCOG.status = sensorSensorSOGCOG.status;
-                    }
-                    else
-                    {
-                        statusSOGCOG.data = 0;
-                        statusSOGCOG.timestamp = DateTime.UtcNow;
-                        statusSOGCOG.status = DataStatus.TIMEOUT_ERROR;
-                    }
-                }
-                else
-                {
-                    statusSOGCOG.data = 1;
-                    statusSOGCOG.timestamp = DateTime.UtcNow;
-                    statusSOGCOG.status = DataStatus.OK;
                 }
 
                 // Sjekke status
@@ -516,7 +431,6 @@ namespace HMS_Server
 
                 // Pitch
                 pitchData.Set(sensorPitch);
-                pitchData.data *= -1;
 
                 pitchMax20mData.DoProcessing(pitchData);
                 pitchMax3hData.DoProcessing(pitchData);
@@ -530,13 +444,20 @@ namespace HMS_Server
                     pitchMaxDown20mData.BufferFillCheck(1, Constants.MotionBufferFill99Pct);
                 }
 
-                //// TEST
-                //errorHandler.Insert(
-                //    new ErrorMessage(
-                //        DateTime.UtcNow,
-                //        ErrorMessageType.SerialPort,
-                //        ErrorMessageCategory.None,
-                //        string.Format("Motion Buffer: {0} (1188)", pitchMax20mData.BufferSize(1))));
+                // Debug Output
+                if (AdminMode.IsActive)
+                {
+                    if (DateTime.Now > testTimer)
+                    {
+                        testTimer = DateTime.Now.AddMilliseconds(5000);
+                        errorHandler.Insert(
+                            new ErrorMessage(
+                                DateTime.UtcNow,
+                                ErrorMessageType.Debug,
+                                ErrorMessageCategory.None,
+                                string.Format("Motion Buffer: {0} (1188)", pitchMax20mData.BufferSize(1))));
+                    }
+                }
 
                 // Roll
                 rollData.Set(sensorRoll);

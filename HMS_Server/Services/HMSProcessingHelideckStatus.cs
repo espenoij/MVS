@@ -34,6 +34,8 @@ namespace HMS_Server
 
         private HMSData msiwsiStatus = new HMSData();
 
+        private bool databaseSetupRun = true;
+
         public HMSProcessingHelideckStatus(HMSDataCollection hmsOutputData, HelideckMotionLimits motionLimits, AdminSettingsVM adminSettingsVM, UserInputs userInputs, HMSProcessingMotion hmsProcessingMotion, HMSProcessingWindHeading hmsProcessingWindHeading)
         {
             this.hmsOutputData = hmsOutputData;
@@ -134,8 +136,11 @@ namespace HMS_Server
                     sensorMSI.TimeStampCheck ||
                     sensorWSI.TimeStampCheck ||
                     sensorHelideckWindSpeed2m.TimeStampCheck ||
-                    sensorRelativeWindDir.TimeStampCheck)
+                    sensorRelativeWindDir.TimeStampCheck ||
+                    databaseSetupRun)
                 {
+                    databaseSetupRun = false;
+
                     // Landing Status
                     ///////////////////////////////////////////////////////////////////////////////////////
                     landingStatus = CheckLandingStatusCAP(landingStatus);

@@ -464,6 +464,8 @@ namespace HMS_Server
                     DisplayList.Transfer(sensorDataRetrieval.GetSensorDataList(), sensorDataDisplayList);
                     DisplayList.Transfer(sensorDataRetrieval.GetSerialPortDataReceivedList(), serialPortDataDisplayList);
                     DisplayList.Transfer(sensorDataRetrieval.GetFileReaderList(), fileReaderDataDisplayList);
+
+                    //gvSerialPortDataDisplay.Items.Refresh();
                 }
             }
         }

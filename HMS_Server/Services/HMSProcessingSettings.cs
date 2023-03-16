@@ -23,7 +23,6 @@ namespace HMS_Server
         private HMSData restrictedSector = new HMSData();
         private HMSData dataVerification = new HMSData();
 
-
         private AdminSettingsVM adminSettingsVM;
 
         public HMSProcessingSettings(HMSDataCollection hmsOutputData, AdminSettingsVM adminSettingsVM)

@@ -41,6 +41,8 @@ namespace HMS_Server
 
         private AdminSettingsVM adminSettingsVM;
 
+        private bool databaseSetupRun = true;
+
         public HMSProcessingMeteorological(HMSDataCollection hmsOutputData, AdminSettingsVM adminSettingsVM)
         {
             this.adminSettingsVM = adminSettingsVM;
@@ -117,8 +119,10 @@ namespace HMS_Server
                 sensorCloudLayer1Coverage.TimeStampCheck ||
                 sensorCloudLayer2Coverage.TimeStampCheck ||
                 sensorCloudLayer3Coverage.TimeStampCheck ||
-                sensorCloudLayer4Coverage.TimeStampCheck)
+                sensorCloudLayer4Coverage.TimeStampCheck ||
+                databaseSetupRun)
             {
+                databaseSetupRun = false;
 
                 // Temperature & Humidity
                 airTemperature.Set(sensorAirTemperature);

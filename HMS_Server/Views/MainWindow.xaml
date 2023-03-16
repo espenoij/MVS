@@ -285,9 +285,9 @@
                                     IsManipulationEnabled="False"
                                     ShowGroupPanel="False"
                                     CanUserReorderColumns="False"
+                                    CanUserSelectColumns="False"
                                     RowIndicatorVisibility="Collapsed"
                                     CanUserSelect="False"
-                                    CanUserSelectColumns="False"
                                     AutoGenerateColumns="False"
                                     Margin="-1,0,1,0">
 
@@ -307,7 +307,7 @@
                                         <telerik:GridViewDataColumn
                                             Width="*"
                                             Header="Data"
-                                            DataMemberBinding="{Binding data}" />
+                                            DataMemberBinding="{Binding buffer_text}" />
                                     </telerik:RadGridView.Columns>
 
                                 </telerik:RadGridView>

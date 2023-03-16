@@ -12,7 +12,7 @@ namespace HMS_Server
         //int counter2 = 0;
         //int counter3 = 0;
         //private HMSData windUpdate = new HMSData();
-        //private DateTime testTimer;
+        private DateTime testTimer;
 
         // Sensor Data
         private HMSData sensorVesselHeading = new HMSData();
@@ -85,10 +85,17 @@ namespace HMS_Server
         // WSI
         private HMSData wsiData = new HMSData();
 
+        // Status
+        private HMSData statusGyro = new HMSData();
+        private HMSData statusWind = new HMSData();
+        private HMSData statusSOGCOG = new HMSData();
+
         private AdminSettingsVM adminSettingsVM;
         private UserInputs userInputs;
 
         private ErrorHandler errorHandler;
+
+        private bool databaseSetupRun = true;
 
         public HMSProcessingWindHeading(HMSDataCollection hmsOutputData, AdminSettingsVM adminSettingsVM, UserInputs userInputs, ErrorHandler errorHandler)
         {
@@ -142,6 +149,10 @@ namespace HMS_Server
             // slik at database-tabell blir lik for CAP/NOROG.
             // Får database-feil ved bytte mellom CAP/NOROG når tabellene ikke er like.
             hmsOutputDataList.Add(wsiData);
+
+            hmsOutputDataList.Add(statusGyro);
+            hmsOutputDataList.Add(statusWind);
+            hmsOutputDataList.Add(statusSOGCOG);
 
             areaWindAverageData2m.minutes = 2;
             helideckWindAverageData2m.minutes = 2;
@@ -296,10 +307,27 @@ namespace HMS_Server
             helicopterHeading.sensorGroupId = Constants.NO_SENSOR_GROUP_ID;
             helicopterHeading.dbColumn = "helicopter_heading";
 
+            // WSI
             wsiData.id = (int)ValueType.WSI;
             wsiData.name = "WSI";
             wsiData.sensorGroupId = Constants.NO_SENSOR_GROUP_ID;
             wsiData.dbColumn = "wsi";
+
+            // Status
+            statusGyro.id = (int)ValueType.StatusGyro;
+            statusGyro.name = "Status Gyro";
+            statusGyro.sensorGroupId = Constants.NO_SENSOR_GROUP_ID;
+            statusGyro.dbColumn = "status_gyro";
+
+            statusWind.id = (int)ValueType.StatusWind;
+            statusWind.name = "Status Wind";
+            statusWind.sensorGroupId = Constants.NO_SENSOR_GROUP_ID;
+            statusWind.dbColumn = "status_wind";
+
+            statusSOGCOG.id = (int)ValueType.StatusSOGCOG;
+            statusSOGCOG.name = "Status SOG-COG";
+            statusSOGCOG.sensorGroupId = Constants.NO_SENSOR_GROUP_ID;
+            statusSOGCOG.dbColumn = "status_sog_cog";
         }
 
         public void Update(HMSDataCollection hmsInputDataList)
@@ -329,10 +357,13 @@ namespace HMS_Server
                 sensorSensorWindSpeed.TimeStampCheck ||
                 sensorSensorWind.TimeStampCheck ||
                 sensorSensorSOGCOG.TimeStampCheck ||
-                sensorSensorGyro.TimeStampCheck)
+                sensorSensorGyro.TimeStampCheck ||
+                databaseSetupRun)
             {
                 //// TEST
                 //counter2++;
+
+                databaseSetupRun = false;
 
                 // Overføre input data vi skal bruke
                 if (adminSettingsVM.fixedInstallation)
@@ -361,8 +392,76 @@ namespace HMS_Server
                 inputSensorWindSpeed.Set(sensorSensorWindSpeed);
 
 
+                // Status Data
+                /////////////////////////////////////////////////////////////////////////////////////////
+                if (adminSettingsVM.statusGyroEnabled)
+                {
+                    if (sensorSensorGyro != null)
+                    {
+                        statusGyro.data = sensorSensorGyro.data;
+                        statusGyro.timestamp = sensorSensorGyro.timestamp;
+                        statusGyro.status = sensorSensorGyro.status;
+                    }
+                    else
+                    {
+                        statusGyro.data = 0;
+                        statusGyro.timestamp = DateTime.UtcNow;
+                        statusGyro.status = DataStatus.TIMEOUT_ERROR;
+                    }
+                }
+                else
+                {
+                    statusGyro.data = 1;
+                    statusGyro.timestamp = DateTime.UtcNow;
+                    statusGyro.status = DataStatus.OK;
+                }
+
+                if (adminSettingsVM.statusWindEnabled)
+                {
+                    if (sensorSensorWind != null)
+                    {
+                        statusWind.data = sensorSensorWind.data;
+                        statusWind.timestamp = sensorSensorWind.timestamp;
+                        statusWind.status = sensorSensorWind.status;
+                    }
+                    else
+                    {
+                        statusWind.data = 0;
+                        statusWind.timestamp = DateTime.UtcNow;
+                        statusWind.status = DataStatus.TIMEOUT_ERROR;
+                    }
+                }
+                else
+                {
+                    statusWind.data = 1;
+                    statusWind.timestamp = DateTime.UtcNow;
+                    statusWind.status = DataStatus.OK;
+                }
+
+                if (adminSettingsVM.statusSOGCOGEnabled)
+                {
+                    if (sensorSensorSOGCOG != null)
+                    {
+                        statusSOGCOG.data = sensorSensorSOGCOG.data;
+                        statusSOGCOG.timestamp = sensorSensorSOGCOG.timestamp;
+                        statusSOGCOG.status = sensorSensorSOGCOG.status;
+                    }
+                    else
+                    {
+                        statusSOGCOG.data = 0;
+                        statusSOGCOG.timestamp = DateTime.UtcNow;
+                        statusSOGCOG.status = DataStatus.TIMEOUT_ERROR;
+                    }
+                }
+                else
+                {
+                    statusSOGCOG.data = 1;
+                    statusSOGCOG.timestamp = DateTime.UtcNow;
+                    statusSOGCOG.status = DataStatus.OK;
+                }
+
                 // Sjekke status: Heading (Gyro)
-                if (adminSettingsVM.statusGyroEnabled && sensorSensorGyro?.data != 1)
+                if (adminSettingsVM.statusGyroEnabled && statusGyro?.data != 1)
                 {
                     inputVesselHeading.status = DataStatus.TIMEOUT_ERROR;
                 }
@@ -373,11 +472,10 @@ namespace HMS_Server
                         inputVesselHeading.status = DataStatus.TIMEOUT_ERROR;
                 }
 
-
                 // Sjekke status: Wind
-                if ((adminSettingsVM.statusWindEnabled && sensorSensorWind?.data != 1) ||
-                    (adminSettingsVM.statusSOGCOGEnabled && sensorSensorSOGCOG?.data != 1) ||
-                    (adminSettingsVM.statusGyroEnabled && sensorSensorGyro?.data != 1 && adminSettingsVM.windDirRef == DirectionReference.VesselHeading))
+                if ((adminSettingsVM.statusWindEnabled && statusWind?.data != 1) ||
+                    (adminSettingsVM.statusSOGCOGEnabled && statusSOGCOG?.data != 1) ||
+                    (adminSettingsVM.statusGyroEnabled && statusGyro?.data != 1 && adminSettingsVM.windDirRef == DirectionReference.VesselHeading))
                 {
                     inputSensorWindDirection.status = DataStatus.TIMEOUT_ERROR;
                     inputSensorWindSpeed.status = DataStatus.TIMEOUT_ERROR;
@@ -392,7 +490,7 @@ namespace HMS_Server
                 }
 
                 // Sjekke status: SOG/COG
-                if (adminSettingsVM.statusSOGCOGEnabled && sensorSensorSOGCOG?.data != 1)
+                if (adminSettingsVM.statusSOGCOGEnabled && statusSOGCOG?.data != 1)
                 {
                     inputVesselCOG.status = DataStatus.TIMEOUT_ERROR;
                     inputVesselSOG.status = DataStatus.TIMEOUT_ERROR;
@@ -507,7 +605,7 @@ namespace HMS_Server
                                         10);
 
                     // Vind retning
-                    double dir = windHelideck.dir - adminSettingsVM.magneticDeclination;
+                    double dir = windHelideck.dir;// - adminSettingsVM.magneticDeclination;
                     while (dir < 0)
                         dir += 360;
                     while (dir >= 360)
@@ -517,7 +615,7 @@ namespace HMS_Server
                     windDirectionCorrectedToHelideck.status = apparentWindDirection.status;
                     windDirectionCorrectedToHelideck.timestamp = apparentWindDirection.timestamp;
 
-                    dir = wind10mAboveMSL.dir - adminSettingsVM.magneticDeclination;
+                    dir = wind10mAboveMSL.dir;// - adminSettingsVM.magneticDeclination;
                     while (dir < 0)
                         dir += 360;
                     while (dir >= 360)
@@ -678,18 +776,26 @@ namespace HMS_Server
                         emsWindSpeed10m.BufferFillCheck(0, windSamplesInBuffer10m);
                 }
 
-                //// TEST
-                //if (testTimer.AddSeconds(1) < DateTime.UtcNow)
-                //{
-                //    testTimer = DateTime.UtcNow;
-
-                //    errorHandler.Insert(
-                //        new ErrorMessage(
-                //            DateTime.UtcNow,
-                //            ErrorMessageType.SerialPort,
-                //            ErrorMessageCategory.None,
-                //            string.Format("Wind Buffer 10m: {0} / {1}, Process count: {2} ", helideckWindSpeed2m.BufferSize(0), helideckWindDirection2m.BufferSize(0), counter2)));
-                //}
+                // Debug Output
+                if (AdminMode.IsActive)
+                {
+                    if (DateTime.Now > testTimer)
+                    {
+                        testTimer = DateTime.Now.AddMilliseconds(5000);
+                        errorHandler.Insert(
+                            new ErrorMessage(
+                                DateTime.UtcNow,
+                                ErrorMessageType.Debug,
+                                ErrorMessageCategory.None,
+                                string.Format("Wind Buffer 2m: {0} / {1}  (456)", helideckWindSpeed2m.BufferSize(0), helideckWindDirection2m.BufferSize(0))));
+                        errorHandler.Insert(
+                            new ErrorMessage(
+                                DateTime.UtcNow,
+                                ErrorMessageType.Debug,
+                                ErrorMessageCategory.None,
+                                string.Format("Wind Buffer 10m: {0} / {1}  (2280)", helideckWindSpeed10m.BufferSize(0), helideckWindDirection10m.BufferSize(0))));
+                    }
+                }
 
                 //// TEST
                 //helideckWindSpeed2m.data = helideckWindSpeed10m.BufferSize(0);
@@ -701,10 +807,10 @@ namespace HMS_Server
                 //emsWindDirectionRT.data = helideckWindDirection10m.BufferSize(0);
 
                 UpdateGustData(
-                    windSpeedCorrectedToHelideck,
-                    helideckWindSpeed10m,
-                    helideckWindAverageData10m,
-                    helideckWindGust10m);
+                windSpeedCorrectedToHelideck,
+                helideckWindSpeed10m,
+                helideckWindAverageData10m,
+                helideckWindGust10m);
 
                 if (adminSettingsVM.enableEMS)
                 {
@@ -1273,7 +1379,7 @@ namespace HMS_Server
             WAH.dir = HMSCalc.ToDegrees(Math.Atan2(WAH.y, WAH.x));
 
             // Legge på igjen magnetic declination
-            WAH.dir += adminSettingsVM.magneticDeclination;
+            WAH.dir -= adminSettingsVM.magneticDeclination;
 
             while (WAH.dir < 0)
                 WAH.dir += 360;

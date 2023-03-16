@@ -15,6 +15,7 @@ namespace HMS_Server
             buffer_text = string.Empty;
             firstRead = true;
             portStatus = PortStatus.Closed;
+            processingDone = false;
         }
 
         public SerialPortData(SerialPortData serialPortData)
@@ -23,6 +24,8 @@ namespace HMS_Server
             buffer_text = serialPortData.buffer_text;
             firstRead = serialPortData.firstRead;
             portStatus = serialPortData.portStatus;
+            timestamp = serialPortData.timestamp;
+            processingDone = false;
         }
 
         public void Set(SerialPortData serialPortData)
@@ -31,6 +34,7 @@ namespace HMS_Server
             buffer_text = serialPortData.buffer_text;
             firstRead = serialPortData.firstRead;
             portStatus = serialPortData.portStatus;
+            timestamp = serialPortData.timestamp;
         }
 
         // Port Name
@@ -130,6 +134,9 @@ namespace HMS_Server
                 return portStatus.ToString();
             }
         }
+
+        // Ferdig prosessert
+        public bool processingDone { get; set; }
 
         // Variabel oppdatert
         // Dersom navn ikke settes brukes kallende medlem sitt navn

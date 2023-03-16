@@ -99,6 +99,7 @@ namespace HMS_Server
                 if (serialPortData.firstRead)
                 {
                     // Dump inn buffer ved første lesing - gjør ingenting
+                    // 2023.02.21: Vurder å fjerne denne delen. Har en funksjon i setup delen, men er unødvendig her.
                     serialPort?.ReadExisting();
                     serialPortData.firstRead = false;
                 }
@@ -112,9 +113,18 @@ namespace HMS_Server
                         array[i] = Convert.ToByte(serialPort.ReadByte());
                     }
 
+                    // Data er prosessert -> slette buffer
+                    if (serialPortData.processingDone)
+                    {
+                        serialPortData.buffer_text = string.Empty;
+                        serialPortData.buffer_binary = string.Empty;
+
+                        serialPortData.processingDone = false;
+                    }
+
                     // Lagre data
-                    serialPortData.buffer_text = Encoding.UTF8.GetString(array, 0, array.Length);
-                    serialPortData.buffer_binary = BitConverter.ToString(array);
+                    serialPortData.buffer_text += Encoding.UTF8.GetString(array, 0, array.Length);
+                    serialPortData.buffer_binary += BitConverter.ToString(array);
                     serialPortData.timestamp = DateTime.UtcNow;
 
                     // Oppdatere status
@@ -244,9 +254,9 @@ namespace HMS_Server
                                     string inputData = string.Empty;
                                     switch (process.inputType)
                                     {
-                                        // Gjøre tekst litt mer leselig
+                                        // Tekst input
                                         case InputDataType.Text:
-                                            inputData = TextHelper.EscapeControlChars(serialPortData.buffer_text);
+                                            inputData = serialPortData.buffer_text;
                                             break;
 
                                         // Dersom binary input: Konvertere til binary
@@ -378,9 +388,8 @@ namespace HMS_Server
                     //        break;
                     //}
 
-                    //// Slette buffer - prosesseres kun 1 gang
-                    //serialPortData.buffer_text = string.Empty;
-                    //serialPortData.buffer_binary = string.Empty;
+                    // Ferdig med prosessering
+                    serialPortData.processingDone = true;
                 }
             }
         }

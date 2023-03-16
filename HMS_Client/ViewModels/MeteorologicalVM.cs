@@ -1,4 +1,5 @@
-﻿using System;
+﻿using SharpDX.Direct2D1;
+using System;
 using System.Collections.Generic;
 using System.ComponentModel;
 using System.Runtime.CompilerServices;
@@ -681,7 +682,9 @@ namespace HMS_Client
         {
             if (layer < Constants.TOTAL_CLOUD_LAYERS && layer >= 0)
             {
-                if (cloudCoverage[layer]?.status == DataStatus.OK)
+                if (cloudCoverage[layer]?.status == DataStatus.OK &&    // Coverage status ok
+                    cloudBase[layer]?.status == DataStatus.OK &&        // Base status ok
+                    !double.IsNaN(cloudBase[layer].data))               // Base er satt
                 {
                     switch (cloudCoverage[layer].data)
                     {
