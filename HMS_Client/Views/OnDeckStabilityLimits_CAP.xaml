@@ -125,7 +125,6 @@
                                     ZIndex="20" />
 
                                 <telerik:CartesianCustomAnnotation
-                                    x:Name="msiwsiLastValuePoint20m"
                                     HorizontalValue="{Binding msiwsiX}"
                                     VerticalValue="{Binding msiwsiY}"
                                     HorizontalAlignment="Center"
@@ -371,7 +370,8 @@
                         <!--MSI / WSI Chart-->
                         <telerik:RadCartesianChart
                             Name="chartMSIWSI3h"
-                            Margin="0,16,0,0">
+                            Margin="0,16,0,0"
+                            Focusable="False">
 
                             <telerik:RadCartesianChart.Grid>
                                 <telerik:CartesianChartGrid
@@ -405,7 +405,6 @@
                                     ZIndex="20" />
 
                                 <telerik:CartesianCustomAnnotation
-                                    x:Name="msiwsiLastValuePoint3h"
                                     HorizontalValue="{Binding msiwsiX}"
                                     VerticalValue="{Binding msiwsiY}"
                                     HorizontalAlignment="Center"
@@ -433,8 +432,8 @@
                                 <telerik:ScatterLineSeries
                                     Stroke="Black"
                                     StrokeThickness="3"
-                                    XValueBinding="data2"
-                                    YValueBinding="data"
+                                    XValueBinding="graphData2"
+                                    YValueBinding="graphData"
                                     ZIndex="300">
 
                                     <!--Kun til visualisering i editor-->

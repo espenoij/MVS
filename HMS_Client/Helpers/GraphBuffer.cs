@@ -81,7 +81,17 @@ namespace HMS_Client
                     timestamp = data.timestamp
                 });
             }
-            // Legger ikke inn data dersom status er ulik OK
+            else
+            {
+                // Lagre null-data i listen
+                dataList.Add(new RWDData()
+                {
+                    rwd = double.NaN,
+                    wind = double.NaN,
+                    status = DataStatus.NONE,
+                    timestamp = DateTime.UtcNow
+                });
+            }
         }
 
         public static void Transfer(RadObservableCollection<HMSData> buffer, RadObservableCollection<HMSData> dataList)

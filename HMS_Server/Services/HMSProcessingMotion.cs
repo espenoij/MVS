@@ -370,7 +370,10 @@ namespace HMS_Server
                 // Status data
                 if (adminSettingsVM.statusMRUEnabled)
                 {
-                    if (sensorSensorMRU != null)
+                    if (sensorSensorMRU?.timestamp.AddMilliseconds(adminSettingsVM.dataTimeout) < DateTime.UtcNow)
+                        sensorSensorMRU.status = DataStatus.TIMEOUT_ERROR;
+
+                    if (sensorSensorMRU?.status == DataStatus.OK)
                     {
                         statusMRU.data = sensorSensorMRU.data;
                         statusMRU.timestamp = sensorSensorMRU.timestamp;
@@ -479,58 +482,64 @@ namespace HMS_Server
                 }
 
                 // Inclination
-                if ((rollMax20mData.status == DataStatus.OK ||
-                     rollMax20mData.status == DataStatus.OK_NA) &&
-                    (pitchMax20mData.status == DataStatus.OK ||
-                     pitchMax20mData.status == DataStatus.OK_NA))
+                if ((pitchData.status == DataStatus.OK ||
+                     pitchData.status == DataStatus.OK_NA) &&
+                    (rollData.status == DataStatus.OK ||
+                     rollData.status == DataStatus.OK_NA))
                 {
-                    UpdateInclinationData(pitchData, rollData, inclination20mMaxData, Constants.Minutes20);
-                }
-
-                if ((rollMax3hData.status == DataStatus.OK ||
-                     rollMax3hData.status == DataStatus.OK_NA) &&
-                    (pitchMax3hData.status == DataStatus.OK ||
-                     pitchMax3hData.status == DataStatus.OK_NA))
-                {
-                    UpdateInclinationData(pitchData, rollData, inclination3hMaxData, Constants.Hours3);
-                }
-
-                // Status settes i UpdateInclinationData, og denne er grei for NOROG, men for CAP
-                // må status også reflektere motion buffer fyllingsgrad.
-                if (adminSettingsVM.regulationStandard == RegulationStandard.CAP)
-                {
-                    // 20 mins
-                    if (pitchMax20mData.status == DataStatus.OK && rollMax20mData.status == DataStatus.OK)
+                    if ((rollMax20mData.status == DataStatus.OK ||
+                         rollMax20mData.status == DataStatus.OK_NA) &&
+                        (pitchMax20mData.status == DataStatus.OK ||
+                         pitchMax20mData.status == DataStatus.OK_NA))
                     {
-                        inclination20mMaxData.status = DataStatus.OK;
-                    }
-                    else
-                    if ((pitchMax20mData.status == DataStatus.OK && rollMax20mData.status == DataStatus.OK_NA) ||
-                        (pitchMax20mData.status == DataStatus.OK_NA && rollMax20mData.status == DataStatus.OK) ||
-                        (pitchMax20mData.status == DataStatus.OK_NA && rollMax20mData.status == DataStatus.OK_NA))
-                    {
-                        inclination20mMaxData.status = DataStatus.OK_NA;
-                    }
-                    else
-                    {
-                        inclination20mMaxData.status = DataStatus.TIMEOUT_ERROR;
+                        UpdateInclinationData(pitchData, rollData, inclination20mMaxData, Constants.Minutes20);
                     }
 
-                    // 3 hours
-                    if (pitchMax3hData.status == DataStatus.OK && rollMax3hData.status == DataStatus.OK)
+                    if ((rollMax3hData.status == DataStatus.OK ||
+                         rollMax3hData.status == DataStatus.OK_NA) &&
+                        (pitchMax3hData.status == DataStatus.OK ||
+                         pitchMax3hData.status == DataStatus.OK_NA))
                     {
-                        inclination3hMaxData.status = DataStatus.OK;
+                        UpdateInclinationData(pitchData, rollData, inclination3hMaxData, Constants.Hours3);
                     }
-                    else
-                    if ((pitchMax3hData.status == DataStatus.OK && rollMax3hData.status == DataStatus.OK_NA) ||
-                        (pitchMax3hData.status == DataStatus.OK_NA && rollMax3hData.status == DataStatus.OK) ||
-                        (pitchMax3hData.status == DataStatus.OK_NA && rollMax3hData.status == DataStatus.OK_NA))
+
+                    // Status settes i UpdateInclinationData, og denne er grei for NOROG, men for CAP
+                    // må status også reflektere motion buffer fyllingsgrad.
+                    if (adminSettingsVM.regulationStandard == RegulationStandard.CAP)
                     {
-                        inclination3hMaxData.status = DataStatus.OK_NA;
-                    }
-                    else
-                    {
-                        inclination3hMaxData.status = DataStatus.TIMEOUT_ERROR;
+                        // 20 mins
+                        if (pitchMax20mData.status == DataStatus.OK && rollMax20mData.status == DataStatus.OK)
+                        {
+                            inclination20mMaxData.status = DataStatus.OK;
+                        }
+                        else
+                        if ((pitchMax20mData.status == DataStatus.OK && rollMax20mData.status == DataStatus.OK_NA) ||
+                            (pitchMax20mData.status == DataStatus.OK_NA && rollMax20mData.status == DataStatus.OK) ||
+                            (pitchMax20mData.status == DataStatus.OK_NA && rollMax20mData.status == DataStatus.OK_NA))
+                        {
+                            inclination20mMaxData.status = DataStatus.OK_NA;
+                        }
+                        else
+                        {
+                            inclination20mMaxData.status = DataStatus.TIMEOUT_ERROR;
+                        }
+
+                        // 3 hours
+                        if (pitchMax3hData.status == DataStatus.OK && rollMax3hData.status == DataStatus.OK)
+                        {
+                            inclination3hMaxData.status = DataStatus.OK;
+                        }
+                        else
+                        if ((pitchMax3hData.status == DataStatus.OK && rollMax3hData.status == DataStatus.OK_NA) ||
+                            (pitchMax3hData.status == DataStatus.OK_NA && rollMax3hData.status == DataStatus.OK) ||
+                            (pitchMax3hData.status == DataStatus.OK_NA && rollMax3hData.status == DataStatus.OK_NA))
+                        {
+                            inclination3hMaxData.status = DataStatus.OK_NA;
+                        }
+                        else
+                        {
+                            inclination3hMaxData.status = DataStatus.TIMEOUT_ERROR;
+                        }
                     }
                 }
 
@@ -616,21 +625,21 @@ namespace HMS_Server
                         mms_msi.data = 10.0 * HMSCalc.ToDegrees(Math.Atan(mms));
                         mms_msi.status = DataStatus.OK;
                         mms_msi.timestamp = accelerationX.timestamp;
+
+                        // Find max value
+                        CalculateMSIMax(mms_msi, mms_msi_list, msiData);
+
+                        // Sjekke buffer fyllingsgrad
+                        if (!adminSettingsVM.overrideMotionBuffer)
+                            MSIBufferFillCheck(mms_msi_list, Constants.MotionBufferFill99Pct, msiData);
+
                     }
                     else
                     {
-                        mms_msi.data = 0;
-                        mms_msi.status = DataStatus.TIMEOUT_ERROR;
-                        mms_msi.timestamp = accelerationX.timestamp;
+                        msiData.data = 0;
+                        msiData.status = DataStatus.TIMEOUT_ERROR;
+                        msiData.timestamp = accelerationX.timestamp;
                     }
-
-                    // Find max value
-                    CalculateMSIMax(mms_msi, mms_msi_list, msiData);
-
-                    // Sjekke buffer fyllingsgrad
-                    if (!adminSettingsVM.overrideMotionBuffer)
-                        MSIBufferFillCheck(mms_msi_list, Constants.MotionBufferFill99Pct, msiData);
-
                     //// TEST
                     //if (msiData.status == DataStatus.OK)
                     //{

@@ -404,6 +404,9 @@ namespace HMS_Client
                         // Stopp oppdatering av grafer
                         windHeadingChangeVM.Stop();
                         relativeWindLimitsVM.Stop();
+
+                        // Sette default helicopter type
+                        helicopterType = HelicopterType.Default;
                     }
 
                     // Sette Wind & Heading til å vise default mean vind

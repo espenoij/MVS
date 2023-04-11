@@ -65,8 +65,8 @@ public enum HelicopterType
     H145,       // Medium
     [Description("H175 - CAT B")]
     H175,       // Medium
-    [Description("S61 - CAT A")]
-    S61,        // Heavy
+    //[Description("S61 - CAT A")]
+    //S61,        // Heavy
     [Description("S76 - CAT B")]
     S76,        // Medium
     [Description("S92 - CAT A")]

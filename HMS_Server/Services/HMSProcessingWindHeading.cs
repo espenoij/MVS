@@ -1,6 +1,5 @@
 ﻿using HMS_Server.Services;
 using System;
-using System.Windows.Documents;
 using Telerik.Windows.Data;
 
 namespace HMS_Server
@@ -396,7 +395,10 @@ namespace HMS_Server
                 /////////////////////////////////////////////////////////////////////////////////////////
                 if (adminSettingsVM.statusGyroEnabled)
                 {
-                    if (sensorSensorGyro != null)
+                    if (sensorSensorGyro?.timestamp.AddMilliseconds(adminSettingsVM.dataTimeout) < DateTime.UtcNow)
+                        sensorSensorGyro.status = DataStatus.TIMEOUT_ERROR;
+
+                    if (sensorSensorGyro?.status == DataStatus.OK)
                     {
                         statusGyro.data = sensorSensorGyro.data;
                         statusGyro.timestamp = sensorSensorGyro.timestamp;
@@ -418,7 +420,10 @@ namespace HMS_Server
 
                 if (adminSettingsVM.statusWindEnabled)
                 {
-                    if (sensorSensorWind != null)
+                    if (sensorSensorWind?.timestamp.AddMilliseconds(adminSettingsVM.dataTimeout) < DateTime.UtcNow)
+                        sensorSensorWind.status = DataStatus.TIMEOUT_ERROR;
+
+                    if (sensorSensorWind?.status == DataStatus.OK)
                     {
                         statusWind.data = sensorSensorWind.data;
                         statusWind.timestamp = sensorSensorWind.timestamp;
@@ -440,7 +445,10 @@ namespace HMS_Server
 
                 if (adminSettingsVM.statusSOGCOGEnabled)
                 {
-                    if (sensorSensorSOGCOG != null)
+                    if (sensorSensorSOGCOG?.timestamp.AddMilliseconds(adminSettingsVM.dataTimeout) < DateTime.UtcNow)
+                        sensorSensorSOGCOG.status = DataStatus.TIMEOUT_ERROR;
+
+                    if (sensorSensorSOGCOG?.status == DataStatus.OK)
                     {
                         statusSOGCOG.data = sensorSensorSOGCOG.data;
                         statusSOGCOG.timestamp = sensorSensorSOGCOG.timestamp;
@@ -473,9 +481,9 @@ namespace HMS_Server
                 }
 
                 // Sjekke status: Wind
-                if ((adminSettingsVM.statusWindEnabled && statusWind?.data != 1) ||
-                    (adminSettingsVM.statusSOGCOGEnabled && statusSOGCOG?.data != 1) ||
-                    (adminSettingsVM.statusGyroEnabled && statusGyro?.data != 1 && adminSettingsVM.windDirRef == DirectionReference.VesselHeading))
+                if ((statusWind.data != 1) ||
+                    (statusSOGCOG.data != 1) ||
+                    (statusGyro.data != 1 && adminSettingsVM.windDirRef == DirectionReference.VesselHeading))
                 {
                     inputSensorWindDirection.status = DataStatus.TIMEOUT_ERROR;
                     inputSensorWindSpeed.status = DataStatus.TIMEOUT_ERROR;
@@ -490,7 +498,7 @@ namespace HMS_Server
                 }
 
                 // Sjekke status: SOG/COG
-                if (adminSettingsVM.statusSOGCOGEnabled && statusSOGCOG?.data != 1)
+                if (statusSOGCOG.data != 1)
                 {
                     inputVesselCOG.status = DataStatus.TIMEOUT_ERROR;
                     inputVesselSOG.status = DataStatus.TIMEOUT_ERROR;
@@ -807,10 +815,10 @@ namespace HMS_Server
                 //emsWindDirectionRT.data = helideckWindDirection10m.BufferSize(0);
 
                 UpdateGustData(
-                windSpeedCorrectedToHelideck,
-                helideckWindSpeed10m,
-                helideckWindAverageData10m,
-                helideckWindGust10m);
+                    windSpeedCorrectedToHelideck,
+                    helideckWindSpeed10m,
+                    helideckWindAverageData10m,
+                    helideckWindGust10m);
 
                 if (adminSettingsVM.enableEMS)
                 {

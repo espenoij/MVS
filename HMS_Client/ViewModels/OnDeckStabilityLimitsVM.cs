@@ -41,12 +41,12 @@ namespace HMS_Client
                 }
 
                 // Her skal vi ikke ha 0 data i grafen
-                if (msiwsi.status == DataStatus.OK)
-                {
+                //if (msiwsi.status == DataStatus.OK)
+                //{
                     // Oppdatere data som skal ut i grafer
                     GraphBuffer.UpdateWithCull(msiwsi, msiwsi20mDataList, Constants.GraphCullFrequency20m);
                     GraphBuffer.UpdateWithCull(msiwsi, msiwsi3hDataList, Constants.GraphCullFrequency3h);
-                }
+                //}
 
                 // Fjerne gamle data fra chart data
                 GraphBuffer.RemoveOldData(msiwsi20mDataList, Constants.Minutes20);

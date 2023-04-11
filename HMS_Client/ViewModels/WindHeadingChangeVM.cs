@@ -104,13 +104,13 @@ namespace HMS_Client
                 // Søker etter vessel heading exceedance områder
                 foreach (var item in vesselHdg30mDataList)
                 {
-                    if (Math.Abs(item.data) > 10 && !exceedanceFound)
+                    if (Math.Abs(Math.Round(item.data, 0, MidpointRounding.AwayFromZero)) >= 10 && !exceedanceFound)
                     {
                         exceedanceStart = item.timestamp;
                         exceedanceFound = true;
                     }
                     else
-                    if (Math.Abs(item.data) < 10 && exceedanceFound)
+                    if (Math.Abs(Math.Round(item.data, 0, MidpointRounding.AwayFromZero)) < 10 && exceedanceFound)
                     {
                         exceedanceEnd = item.timestamp;
                         exceedanceFound = false;
@@ -258,11 +258,11 @@ namespace HMS_Client
                     // Sjekke om data er gyldig
                     if (vesselHeadingDelta.status == DataStatus.OK)
                     {
-                        if (vesselHeadingDelta.data >= 1)
-                            return string.Format("{0}° R", vesselHeadingDelta.data.ToString(" 0"));
+                        if (Math.Round(vesselHeadingDelta.data, 0, MidpointRounding.AwayFromZero) >= 1)
+                            return string.Format("{0}° R", Math.Round(vesselHeadingDelta.data, 0, MidpointRounding.AwayFromZero).ToString(" 0"));
                         else
                         if (vesselHeadingDelta.data <= -1)
-                            return string.Format("{0}° L", Math.Abs(vesselHeadingDelta.data).ToString(" 0"));
+                            return string.Format("{0}° L", Math.Abs(Math.Round(vesselHeadingDelta.data, 0, MidpointRounding.AwayFromZero)).ToString(" 0"));
                         else
                             return "0°";
                     }
@@ -435,7 +435,7 @@ namespace HMS_Client
         {
             get
             {
-                if (Math.Abs(vesselHeadingDelta.data) > 10)
+                if (Math.Abs(Math.Round(vesselHeadingDelta.data, 0, MidpointRounding.AwayFromZero)) >= 10)
                     return true;
                 else
                     return false;

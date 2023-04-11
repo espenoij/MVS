@@ -124,8 +124,15 @@ namespace HMS_Client
             windSpeed2m = clientSensorList.GetData(ValueType.HelideckWindSpeed2m);
             windSpeed10m = clientSensorList.GetData(ValueType.HelideckWindSpeed10m);
 
+            windSpeedRT.data = Math.Round(windSpeedRT.data, 0, MidpointRounding.AwayFromZero);
+            windSpeed2m.data = Math.Round(windSpeed2m.data, 0, MidpointRounding.AwayFromZero);
+            windSpeed10m.data = Math.Round(windSpeed10m.data, 0, MidpointRounding.AwayFromZero);
+
             windGust2m = clientSensorList.GetData(ValueType.HelideckWindGust2m);
             windGust10m = clientSensorList.GetData(ValueType.HelideckWindGust10m);
+
+            windGust2m.data = Math.Round(windGust2m.data, 0, MidpointRounding.AwayFromZero);
+            windGust10m.data = Math.Round(windGust10m.data, 0, MidpointRounding.AwayFromZero);
 
             vesselHeading = clientSensorList.GetData(ValueType.VesselHeading);
             vesselCOG = clientSensorList.GetData(ValueType.VesselCOG);
