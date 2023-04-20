@@ -74,6 +74,7 @@ namespace HMS_Server
 
         // View Models
         private AdminSettingsVM adminSettingsVM = new AdminSettingsVM();
+        private UserSettingsVM userSettingsVM = new UserSettingsVM();
         private HMSLightsOutputVM hmsLightsOutputVM = new HMSLightsOutputVM();
 
         // Motion Limits
@@ -129,6 +130,11 @@ namespace HMS_Server
                 database,
                 errorHandler,
                 sensorDataRetrieval.GetSensorDataList());
+
+            // User Settings
+            ucUserSettings.Init(
+                userSettingsVM,
+                config);
 
             // Sensor Input Edit
             StopServerCallback stopServerCallback = new StopServerCallback(StopServer);
@@ -243,7 +249,7 @@ namespace HMS_Server
             tabInputEdit.Visibility = Visibility.Visible;
             //tabOutput.Visibility = Visibility.Visible;
             tabHMS.Visibility = Visibility.Visible;
-            tabSettings.Visibility = Visibility.Visible;
+            tabAdminSettings.Visibility = Visibility.Visible;
             tabErrorMessages.Visibility = Visibility.Visible;
 
             if (adminSettingsVM.dataVerificationEnabled)
@@ -266,6 +272,7 @@ namespace HMS_Server
             RestartRequiredCallback restartRequired = new RestartRequiredCallback(ShowRestartRequiredMessage);
 
             adminSettingsVM.Init(config, restartRequired);
+            userSettingsVM.Init(config);
             hmsLightsOutputVM.Init(hmsOutputData, config, userInputs, adminSettingsVM);
         }
 
@@ -329,6 +336,7 @@ namespace HMS_Server
                 motionLimits,
                 hmsOutputData,
                 adminSettingsVM,
+                userSettingsVM,
                 userInputs,
                 errorHandler,
                 adminSettingsVM.dataVerificationEnabled);
@@ -928,7 +936,7 @@ namespace HMS_Server
                             tabInputEdit.Visibility = Visibility.Visible;
                             //tabOutput.Visibility = Visibility.Visible;
                             tabHMS.Visibility = Visibility.Visible;
-                            tabSettings.Visibility = Visibility.Visible;
+                            tabAdminSettings.Visibility = Visibility.Visible;
                             tabErrorMessages.Visibility = Visibility.Visible;
 
                             if (adminSettingsVM.dataVerificationEnabled)
@@ -951,7 +959,7 @@ namespace HMS_Server
                         //tabOutput.Visibility = Visibility.Collapsed;
                         tabHMS.Visibility = Visibility.Collapsed;
                         tabDataVerification.Visibility = Visibility.Collapsed;
-                        tabSettings.Visibility = Visibility.Collapsed;
+                        tabAdminSettings.Visibility = Visibility.Collapsed;
                         tabErrorMessages.Visibility = Visibility.Collapsed;
 
                         // Sette Status tab som valgt sub tab

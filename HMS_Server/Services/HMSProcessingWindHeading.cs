@@ -90,15 +90,17 @@ namespace HMS_Server
         private HMSData statusSOGCOG = new HMSData();
 
         private AdminSettingsVM adminSettingsVM;
+        private UserSettingsVM userSettingsVM;
         private UserInputs userInputs;
 
         private ErrorHandler errorHandler;
 
         private bool databaseSetupRun = true;
 
-        public HMSProcessingWindHeading(HMSDataCollection hmsOutputData, AdminSettingsVM adminSettingsVM, UserInputs userInputs, ErrorHandler errorHandler)
+        public HMSProcessingWindHeading(HMSDataCollection hmsOutputData, AdminSettingsVM adminSettingsVM, UserSettingsVM userSettingsVM, UserInputs userInputs, ErrorHandler errorHandler)
         {
             this.adminSettingsVM = adminSettingsVM;
+            this.userSettingsVM = userSettingsVM;
             this.userInputs = userInputs;
             this.errorHandler = errorHandler;
 
@@ -365,15 +367,15 @@ namespace HMS_Server
                 databaseSetupRun = false;
 
                 // Overføre input data vi skal bruke
-                if (adminSettingsVM.fixedInstallation)
+                if (userSettingsVM.fixedInstallation)
                 {
                     // Vessel Heading
-                    sensorVesselHeading.data = adminSettingsVM.fixedHeading;
+                    sensorVesselHeading.data = userSettingsVM.fixedHeading;
                     sensorVesselHeading.status = DataStatus.OK;
                     sensorVesselHeading.timestamp = DateTime.UtcNow;
 
                     // Vessel COG
-                    sensorVesselCOG.data = adminSettingsVM.fixedHeading;
+                    sensorVesselCOG.data = userSettingsVM.fixedHeading;
                     sensorVesselCOG.status = DataStatus.OK;
                     sensorVesselCOG.timestamp = DateTime.UtcNow;
 
@@ -601,7 +603,7 @@ namespace HMS_Server
                                         sog,
                                         cog,
                                         adminSettingsVM.windSensorHeight,
-                                        adminSettingsVM.helideckHeight + Constants.WindAdjustmentAboveHelideck);
+                                        adminSettingsVM.helideckHeight + userSettingsVM.jackupHeight + Constants.WindAdjustmentAboveHelideck);
 
                     // Korrigert til 10m over havet MSL (for EMS)
                     WindVector wind10mAboveMSL = WindSpeedHeightCorrection(

@@ -195,18 +195,6 @@ namespace HMS_Server
                     break;
             }
             cboVesselHdgRef.Text = adminSettingsVM.vesselHdgRef.GetDescription();
-
-            // Fixed HeadingS
-            if (adminSettingsVM.fixedInstallation)
-            {
-                lbFixedHeading.IsEnabled = true;
-                tbFixedHeading.IsEnabled = true;
-            }
-            else
-            {
-                lbFixedHeading.IsEnabled = false;
-                tbFixedHeading.IsEnabled = false;
-            }
         }
 
         public static IPAddress GetIPAddress()
@@ -1351,47 +1339,6 @@ namespace HMS_Server
         private void chkEnableEMS_Click(object sender, RoutedEventArgs e)
         {
             adminSettingsVM.ApplicationRestartRequired();
-        }
-
-        private void cbFixedHeadingEnable_Click(object sender, RoutedEventArgs e)
-        {
-            if (adminSettingsVM.fixedInstallation)
-            {
-                lbFixedHeading.IsEnabled = true;
-                tbFixedHeading.IsEnabled = true;
-            }
-            else
-            {
-                lbFixedHeading.IsEnabled = false;
-                tbFixedHeading.IsEnabled = false;
-            }
-        }
-
-        private void tbFixedHeading_LostFocus(object sender, RoutedEventArgs e)
-        {
-            tbFixedHeading_Update(sender);
-        }
-
-        private void tbFixedHeading_KeyDown(object sender, KeyEventArgs e)
-        {
-            if (e.Key == Key.Return)
-            {
-                tbFixedHeading_Update(sender);
-                Keyboard.ClearFocus();
-            }
-        }
-
-        private void tbFixedHeading_Update(object sender)
-        {
-            // Sjekk av input
-            DataValidation.Double(
-                (sender as TextBox).Text,
-                Constants.HeadingMin,
-                Constants.HeadingMax,
-                Constants.HeadingDefault,
-                out double validatedInput);
-
-            adminSettingsVM.fixedHeading = validatedInput;
         }
     }
 }

@@ -431,6 +431,23 @@
                 </telerik:RadTabItem>
 
                 <!--==============================================================-->
+                <!--Side Menu: User Settings-->
+                <!--==============================================================-->
+                <telerik:RadTabItem
+                    Name="tabUserSettings">
+
+                    <telerik:RadTabItem.Header>
+                        <Image
+                            Width="36"
+                            Source="../Icons/outline_settings_white_36dp.png" />
+                    </telerik:RadTabItem.Header>
+
+                    <uc:UserSettings
+                        x:Name="ucUserSettings" />
+
+                </telerik:RadTabItem>
+
+                <!--==============================================================-->
                 <!--Side Menu: Sensor Setup Page-->
                 <!--==============================================================-->
                 <telerik:RadTabItem
@@ -581,16 +598,16 @@
                 </telerik:RadTabItem>
 
                 <!--==============================================================-->
-                <!--Side Menu: Settings-->
+                <!--Side Menu: Admin Settings-->
                 <!--==============================================================-->
                 <telerik:RadTabItem
-                    Name="tabSettings"
+                    Name="tabAdminSettings"
                     Visibility="Collapsed">
 
                     <telerik:RadTabItem.Header>
                         <Image
                             Width="36"
-                            Source="../Icons/outline_settings_white_36dp.png" />
+                            Source="../Icons/outline_admin_panel_settings_white_36dp.png" />
                     </telerik:RadTabItem.Header>
 
                     <uc:AdminSettings

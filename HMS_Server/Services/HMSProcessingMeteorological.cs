@@ -40,12 +40,14 @@ namespace HMS_Server
         private HMSData cloudLayer4Coverage = new HMSData();
 
         private AdminSettingsVM adminSettingsVM;
+        private UserSettingsVM userSettingsVM;
 
         private bool databaseSetupRun = true;
 
-        public HMSProcessingMeteorological(HMSDataCollection hmsOutputData, AdminSettingsVM adminSettingsVM)
+        public HMSProcessingMeteorological(HMSDataCollection hmsOutputData, AdminSettingsVM adminSettingsVM, UserSettingsVM userSettingsVM)
         {
             this.adminSettingsVM = adminSettingsVM;
+            this.userSettingsVM = userSettingsVM;
 
             // Fyller output listen med HMS Output data
             // NB! Variablene som legges inn i listen her fungerer som pekere: Oppdateres variabelen (Update funksjonen under) -> oppdateres listen
@@ -134,7 +136,7 @@ namespace HMS_Server
                 airPressureQFE.status = sensorAirPressure.status;
                 airPressureQFE.timestamp = sensorAirPressure.timestamp;
 
-                airPressureQNH.data = Math.Round(CalculateQNH(airPressureQFE.data, adminSettingsVM.helideckHeight), 1, MidpointRounding.AwayFromZero);
+                airPressureQNH.data = Math.Round(CalculateQNH(airPressureQFE.data, adminSettingsVM.helideckHeight + userSettingsVM.jackupHeight), 1, MidpointRounding.AwayFromZero);
                 airPressureQNH.status = sensorAirPressure.status;
                 airPressureQNH.timestamp = sensorAirPressure.timestamp;
 

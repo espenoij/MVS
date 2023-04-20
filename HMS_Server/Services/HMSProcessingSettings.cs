@@ -24,10 +24,12 @@ namespace HMS_Server
         private HMSData dataVerification = new HMSData();
 
         private AdminSettingsVM adminSettingsVM;
+        private UserSettingsVM userSettingsVM;
 
-        public HMSProcessingSettings(HMSDataCollection hmsOutputData, AdminSettingsVM adminSettingsVM)
+        public HMSProcessingSettings(HMSDataCollection hmsOutputData, AdminSettingsVM adminSettingsVM, UserSettingsVM userSettingsVM)
         {
             this.adminSettingsVM = adminSettingsVM;
+            this.userSettingsVM = userSettingsVM;
 
             // Fyller output listen med HMS Output data
             // NB! Variablene som legges inn i listen her fungerer som pekere: Oppdateres variabelen -> oppdateres listen
@@ -133,7 +135,7 @@ namespace HMS_Server
             // Tar data fra input delen av server og overfører til HMS output delen
 
             // Helideck vind
-            helideckWindSensorHeight.data = (int)adminSettingsVM.helideckHeight;
+            helideckWindSensorHeight.data = (int)adminSettingsVM.helideckHeight + userSettingsVM.jackupHeight;
             helideckWindSensorHeight.timestamp = DateTime.UtcNow;
             helideckWindSensorHeight.status = DataStatus.OK;
 
@@ -142,7 +144,7 @@ namespace HMS_Server
             helideckWindSensorDistance.status = DataStatus.OK;
 
             // Area wind
-            areaWindSensorHeight.data = adminSettingsVM.windSensorHeight;
+            areaWindSensorHeight.data = adminSettingsVM.windSensorHeight + userSettingsVM.jackupHeight;
             areaWindSensorHeight.timestamp = DateTime.UtcNow;
             areaWindSensorHeight.status = DataStatus.OK;
 

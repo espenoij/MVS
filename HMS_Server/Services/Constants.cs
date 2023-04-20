@@ -164,6 +164,11 @@ class Constants
     public const int GUIDataLinesMin = 1;
     public const int GUIDataLinesMax = 100;
 
+    // Jackup Height
+    public const int JackupHeightMin = 0;
+    public const int JackupHeightMax = 100;
+    public const int JackupHeightDefault = 0;
+
     // Max sensors
     public const int MaxSensors = 11;
 

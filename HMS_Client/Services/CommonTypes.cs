@@ -37,6 +37,7 @@ public enum HelicopterType
 {
     [Description("Default - CAT A")]
     Default,    // Heavy
+
     [Description("AS332 - CAT A")]
     AS332,      // Heavy
     [Description("AS365 - CAT B")]
@@ -51,26 +52,25 @@ public enum HelicopterType
     B212,       // Medium
     [Description("B412 - CAT B")]
     B412,       // Medium
-    //[Description("B525 - CAT B")]
-    //B525,       // Medium
     [Description("EC135 - CAT B")]
     EC135,      // Medium
     [Description("EC155 - CAT B")]
+    EC145,       // Medium
+    [Description("EC175 - CAT B")]
     EC155,      // Medium
-    //[Description("EC175 - CAT B")]
-    //EC175,      // Medium
+    [Description("EC145 - CAT B")]
+    EC175,       // Medium
     [Description("EC225 - CAT A")]
     EC225,      // Heavy
-    [Description("H145 - CAT B")]
-    H145,       // Medium
-    [Description("H175 - CAT B")]
-    H175,       // Medium
-    //[Description("S61 - CAT A")]
-    //S61,        // Heavy
     [Description("S76 - CAT B")]
     S76,        // Medium
     [Description("S92 - CAT A")]
-    S92         // Heavy
+    S92,         // Heavy
+
+    //[Description("S61 - CAT A")]
+    //S61,        // Heavy
+    //[Description("B525 - CAT B")]
+    //B525,       // Medium
 }
 
 public enum DisplayMode

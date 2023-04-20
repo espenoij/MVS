@@ -49,7 +49,7 @@ public class UserInputs
                 case HelicopterType.AS332:
                 case HelicopterType.EC225:
                 case HelicopterType.AW189:
-                case HelicopterType.S61:
+                //case HelicopterType.S61:
                 case HelicopterType.S92:
                     return HelicopterCategory.Heavy;
 
@@ -64,8 +64,8 @@ public class UserInputs
                 case HelicopterType.B212:
                 case HelicopterType.B412:
                 //case HelicopterType.B525:
-                case HelicopterType.H145:
-                case HelicopterType.H175:
+                case HelicopterType.EC145:
+                case HelicopterType.EC175:
                     return HelicopterCategory.Medium;
 
                 default:

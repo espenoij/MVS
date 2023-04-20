@@ -262,7 +262,7 @@ namespace HMS_Client
                 if (_rwdGraphData?.status == DataStatus.OK)
                     return _rwdGraphData.wind;
                 else
-                    return 0;
+                    return double.NaN;
             }
         }
 
@@ -278,7 +278,7 @@ namespace HMS_Client
                     return val;
                 }
                 else
-                    return 0;
+                    return double.NaN;
             }
         }
 

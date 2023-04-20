@@ -130,11 +130,6 @@ namespace HMS_Server
                 statusSOGCOGEnabled = false;
 
             // Heading
-            if (config.ReadWithDefault(ConfigKey.FixedInstallation, "0") == "1")
-                fixedInstallation = true;
-            else
-                fixedInstallation = false;
-            fixedHeading = config.ReadWithDefault(ConfigKey.FixedHeading, Constants.HeadingDefault);
             magneticDeclination = config.ReadWithDefault(ConfigKey.MagneticDeclination, Constants.MagneticDeclinationDefault);
             helideckHeadingOffset = config.ReadWithDefault(ConfigKey.HelideckHeadingOffset, Constants.HeadingDefault);
             vesselHdgRef = (DirectionReference)Enum.Parse(typeof(DirectionReference), config.ReadWithDefault(ConfigKey.VesselHeadingReference, DirectionReference.MagneticNorth.ToString()));
@@ -447,47 +442,6 @@ namespace HMS_Server
             {
                 _magneticDeclination = value;
                 config.Write(ConfigKey.MagneticDeclination, _magneticDeclination.ToString());
-                OnPropertyChanged();
-            }
-        }
-
-        /////////////////////////////////////////////////////////////////////////////
-        // Fixed Heading
-        /////////////////////////////////////////////////////////////////////////////
-        private bool _fixedInstallation { get; set; }
-        public bool fixedInstallation
-        {
-            get
-            {
-                return _fixedInstallation;
-            }
-            set
-            {
-                _fixedInstallation = value;
-
-                if (_fixedInstallation)
-                    config.Write(ConfigKey.FixedInstallation, "1");
-                else
-                    config.Write(ConfigKey.FixedInstallation, "0");
-
-                OnPropertyChanged();
-            }
-        }
-
-        /////////////////////////////////////////////////////////////////////////////
-        // Fixed Heading Value
-        /////////////////////////////////////////////////////////////////////////////
-        private double _fixedHeading { get; set; }
-        public double fixedHeading
-        {
-            get
-            {
-                return _fixedHeading;
-            }
-            set
-            {
-                _fixedHeading = value;
-                config.Write(ConfigKey.FixedHeading, _fixedHeading.ToString());
                 OnPropertyChanged();
             }
         }

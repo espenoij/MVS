@@ -20,16 +20,17 @@ namespace HMS_Server
             HelideckMotionLimits motionLimits,
             HMSDataCollection hmsOutputData,
             AdminSettingsVM adminSettingsVM,
+            UserSettingsVM userSettingsVM,
             UserInputs userInputs,
             ErrorHandler errorHandler,
             bool dataVerificationIsActive)
         {
-            hmsProcessingSettings = new HMSProcessingSettings(hmsOutputData, adminSettingsVM);
+            hmsProcessingSettings = new HMSProcessingSettings(hmsOutputData, adminSettingsVM, userSettingsVM);
             hmsProcessingUserInputs = new HMSProcessingUserInputs(hmsOutputData, userInputs, adminSettingsVM);
             hmsProcessingGeneralInfo = new HMSProcessingGeneralInfo(hmsOutputData, adminSettingsVM);
             hmsProcessingMotion = new HMSProcessingMotion(hmsOutputData, motionLimits, adminSettingsVM, errorHandler);
-            hmsProcessingWindHeading = new HMSProcessingWindHeading(hmsOutputData, adminSettingsVM, userInputs, errorHandler);
-            hmsProcessingMeteorological = new HMSProcessingMeteorological(hmsOutputData, adminSettingsVM);
+            hmsProcessingWindHeading = new HMSProcessingWindHeading(hmsOutputData, adminSettingsVM, userSettingsVM, userInputs, errorHandler);
+            hmsProcessingMeteorological = new HMSProcessingMeteorological(hmsOutputData, adminSettingsVM, userSettingsVM);
             hmsProcessingHelideckStatus = new HMSProcessingHelideckStatus(hmsOutputData, motionLimits, adminSettingsVM, userInputs, hmsProcessingMotion, hmsProcessingWindHeading);
             hmsProcessingEMS = new HMSProcessingEMS(hmsOutputData, errorHandler, adminSettingsVM);
 
