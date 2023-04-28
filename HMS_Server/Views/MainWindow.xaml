@@ -356,6 +356,47 @@
                             </telerik:RadTabItem>
 
                             <telerik:RadTabItem
+                                Name="tabInput_FixedValue"
+                                Header="File Reader"
+                                Visibility="Collapsed">
+
+                                <telerik:RadGridView
+                                    Name="gvFixedValueDataDisplay"
+                                    RowStyle="{StaticResource SensorDataColorCode}"
+                                    IsReadOnly="True"
+                                    IsManipulationEnabled="False"
+                                    ShowGroupPanel="False"
+                                    CanUserReorderColumns="False"
+                                    RowIndicatorVisibility="Collapsed"
+                                    CanUserSelect="False"
+                                    CanUserSelectColumns="False"
+                                    AutoGenerateColumns="False"
+                                    Margin="-1,0,1,0">
+
+                                    <telerik:RadGridView.Columns>
+                                        <telerik:GridViewDataColumn
+                                            Width="600"
+                                            Header="Port Name"
+                                            DataMemberBinding="{Binding filePath}" />
+                                        <telerik:GridViewDataColumn
+                                            Width="100"
+                                            Header="Status"
+                                            DataMemberBinding="{Binding portStatus}" />
+                                        <telerik:GridViewDataColumn
+                                            Width="200"
+                                            Header="Time Stamp"
+                                            DataMemberBinding="{Binding timestampString}" />
+                                        <telerik:GridViewDataColumn
+                                            Width="*"
+                                            Header="Data"
+                                            DataMemberBinding="{Binding dataLine}" />
+                                    </telerik:RadGridView.Columns>
+
+                                </telerik:RadGridView>
+
+                            </telerik:RadTabItem>
+
+                            <telerik:RadTabItem
                                 Name="tabInput_SocketConsole"
                                 Header="TCP/IP"
                                 Visibility="Collapsed">

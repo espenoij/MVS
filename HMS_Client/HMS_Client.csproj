@@ -258,8 +258,8 @@
     <Compile Include="..\HMS_Server\Helpers\TextHelper.cs">
       <Link>Helpers\TextHelper.cs</Link>
     </Compile>
-    <Compile Include="..\HMS_Server\Services\Constants.cs">
-      <Link>Services\Constants.cs</Link>
+    <Compile Include="..\HMS_Server\Models\Constants.cs">
+      <Link>Models\Constants.cs</Link>
     </Compile>
     <Compile Include="..\HMS_Server\Services\DataValidation.cs">
       <Link>Services\DataValidation.cs</Link>
@@ -322,10 +322,10 @@
     <Compile Include="Views\AdminSettings.xaml.cs">
       <DependentUpon>AdminSettings.xaml</DependentUpon>
     </Compile>
-    <Compile Include="Services\HMSData.cs" />
+    <Compile Include="Models\HMSData.cs" />
     <Compile Include="Services\Socket\SocketPacket.cs" />
     <Compile Include="ViewModels\AdminSettingsVM.cs" />
-    <Compile Include="Services\CommonTypes.cs" />
+    <Compile Include="Models\CommonTypes.cs" />
     <Compile Include="Views\HelideckReport_CAP.xaml.cs">
       <DependentUpon>HelideckReport_CAP.xaml</DependentUpon>
     </Compile>

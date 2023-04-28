@@ -168,6 +168,7 @@ namespace HMS_Server
         MODBUS,
         Database,
         FileReader,
+        FixedValue,
         Config,
         Debug
     }

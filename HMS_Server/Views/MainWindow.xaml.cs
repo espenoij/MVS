@@ -24,6 +24,7 @@ namespace HMS_Server
         private RadObservableCollection<SensorData> sensorDataDisplayList = new RadObservableCollection<SensorData>();
         private RadObservableCollection<SerialPortData> serialPortDataDisplayList = new RadObservableCollection<SerialPortData>();
         private RadObservableCollection<FileReaderSetup> fileReaderDataDisplayList = new RadObservableCollection<FileReaderSetup>();
+        private RadObservableCollection<FixedValueSetup> fixedValueDataDisplayList = new RadObservableCollection<FixedValueSetup>();
 
         //private SensorData sensorDataSelected = new SensorData();
 
@@ -258,6 +259,7 @@ namespace HMS_Server
             tabInput_SensorData.Visibility = Visibility.Visible;
             tabInput_SerialData.Visibility = Visibility.Visible;
             tabInput_FileReader.Visibility = Visibility.Visible;
+            tabInput_FixedValue.Visibility = Visibility.Visible;
             tabInput_SocketConsole.Visibility = Visibility.Visible;
 #else
             // Starte server automatisk ved oppstart
@@ -295,6 +297,9 @@ namespace HMS_Server
 
             // Liste med file reader verdier
             gvFileReaderDataDisplay.ItemsSource = fileReaderDataDisplayList;
+
+            // Liste med fixed value verdier
+            gvFixedValueDataDisplay.ItemsSource = fixedValueDataDisplayList;
 
             // Div UI init
             SetStartStopButtons(true);
@@ -472,6 +477,7 @@ namespace HMS_Server
                     DisplayList.Transfer(sensorDataRetrieval.GetSensorDataList(), sensorDataDisplayList);
                     DisplayList.Transfer(sensorDataRetrieval.GetSerialPortDataReceivedList(), serialPortDataDisplayList);
                     DisplayList.Transfer(sensorDataRetrieval.GetFileReaderList(), fileReaderDataDisplayList);
+                    DisplayList.Transfer(sensorDataRetrieval.GetFixedValueList(), fixedValueDataDisplayList);
 
                     //gvSerialPortDataDisplay.Items.Refresh();
                 }
@@ -945,6 +951,7 @@ namespace HMS_Server
                             tabInput_SensorData.Visibility = Visibility.Visible;
                             tabInput_SerialData.Visibility = Visibility.Visible;
                             tabInput_FileReader.Visibility = Visibility.Visible;
+                            tabInput_FixedValue.Visibility = Visibility.Visible;
                             tabInput_SocketConsole.Visibility = Visibility.Visible;
                         }
                     }
@@ -966,12 +973,14 @@ namespace HMS_Server
                         tabInput_SensorData.Visibility = Visibility.Collapsed;
                         tabInput_SerialData.Visibility = Visibility.Collapsed;
                         tabInput_FileReader.Visibility = Visibility.Collapsed;
+                        tabInput_FixedValue.Visibility = Visibility.Collapsed;
                         tabInput_SocketConsole.Visibility = Visibility.Collapsed;
 
                         tabInput_Status.IsSelected = true;
                         tabInput_SensorData.IsSelected = false;
                         tabInput_SerialData.IsSelected = false;
                         tabInput_FileReader.IsSelected = false;
+                        tabInput_FixedValue.IsSelected = false;
                         tabInput_SocketConsole.IsSelected = false;
 
                         AdminMode.IsActive = false;
@@ -1018,6 +1027,7 @@ namespace HMS_Server
                 sensorDataDisplayList.Clear();
                 serialPortDataDisplayList.Clear();
                 fileReaderDataDisplayList.Clear();
+                fixedValueDataDisplayList.Clear();
             }
 
             // Sensor Input Edit Tab

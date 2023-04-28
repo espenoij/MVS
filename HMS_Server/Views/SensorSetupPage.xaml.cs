@@ -177,6 +177,10 @@ namespace HMS_Server
                 case SensorType.FileReader:
                     newSensor.fileReader = new FileReaderSetup(sensorDataSelected.fileReader);
                     break;
+
+                case SensorType.FixedValue:
+                    newSensor.fixedValue = new FixedValueSetup(sensorDataSelected.fixedValue);
+                    break;
             }
 
             // Legge i listen
@@ -278,6 +282,7 @@ namespace HMS_Server
                     case SensorType.None:
                     case SensorType.SerialPort:
                     case SensorType.FileReader:
+                    case SensorType.FixedValue:
                         if (newSensorType != sensorDataSelected.type)
                         {
                             ChangeSensorTypeWithWarning(newSensorType);
@@ -326,28 +331,24 @@ namespace HMS_Server
                     // Sette ny sensor type
                     sensorDataSelected.type = newSensorType;
 
+                    // Sensor Data Options
                     switch (newSensorType)
                     {
                         case SensorType.SerialPort:
-                            // Sensor Data Options
                             sensorDataSelected.saveFreq = DatabaseSaveFrequency.Sensor;
                             break;
 
                         case SensorType.ModbusRTU:
                         case SensorType.ModbusASCII:
                         case SensorType.ModbusTCP:
-                            // Sensor Data Options
                             sensorDataSelected.saveFreq = DatabaseSaveFrequency.Program;
-
-                            //// Default settings
-                            //sensorDataSelected.modbus.slaveID = 1;
-                            //sensorDataSelected.modbus.startAddress = Constants.ModbusInputRegisterMin;
-                            //sensorDataSelected.modbus.totalAddresses = 10;
-                            //sensorDataSelected.modbus.dataAddress = Constants.ModbusInputRegisterMin;
                             break;
 
                         case SensorType.FileReader:
-                            // Sensor Data Options
+                            sensorDataSelected.saveFreq = DatabaseSaveFrequency.Program;
+                            break;
+
+                        case SensorType.FixedValue:
                             sensorDataSelected.saveFreq = DatabaseSaveFrequency.Program;
                             break;
                     }
@@ -493,6 +494,31 @@ namespace HMS_Server
             }
         }
 
+        private void btnFixedValueSetup_Click(object sender, RoutedEventArgs e)
+        {
+            try
+            {
+                // Open new modal window 
+                FixedValueSetupWindow newWindow = new FixedValueSetupWindow(sensorDataSelected, config);
+                newWindow.Owner = App.Current.MainWindow;
+                newWindow.Closed += FixedValueSetupWindow_Closed;
+                newWindow.ShowDialog();
+
+                // Lagre til disk når vi går ut av vinduet
+                config.SetData(sensorDataSelected);
+
+                // Egen update ettersom dette er eneste verdi som ikke oppdateres automatisk gjenom OnPropertyChanged
+                sensorDataSelected.SourceUpdate();
+
+                // Sync settings
+                //SyncFileReaderSettings(sensorDataSelected);
+            }
+            catch (Exception ex)
+            {
+                RadWindow.Alert(string.Format("Open Fixed Value Setup (btnFixedValueSetup_Click):\n\n{0}", TextHelper.Wrap(ex.Message)));
+            }
+        }
+
         private void SyncSerialPortSettings(SensorData sensorData)
         {
             // Går igjennom alle sensor data og finne de som er satt på samme COM port -> oppdatere settings slik at alle er samkjørt
@@ -585,6 +611,12 @@ namespace HMS_Server
             UILoadData_FileReader();
         }
 
+        void FixedValueSetupWindow_Closed(object sender, EventArgs e)
+        {
+            // Laste inn sensor setup data på nytt
+            UILoadData_FixedValue();
+        }
+
         private void UISensorSetup_Load(SensorType type)
         {
             switch (type)
@@ -595,6 +627,7 @@ namespace HMS_Server
                     gbSetupSummarySerialPort.Visibility = Visibility.Collapsed;
                     gbSetupSummaryModbus.Visibility = Visibility.Collapsed;
                     gbSetupSummaryFileReader.Visibility = Visibility.Collapsed;
+                    gbSetupSummaryFixedValue.Visibility = Visibility.Collapsed;
 
                     btnSerialPortSetup.Visibility = Visibility.Collapsed;
                     btnModbusSetup.Visibility = Visibility.Collapsed;
@@ -608,18 +641,21 @@ namespace HMS_Server
                     gbSetupSummarySerialPort.Visibility = Visibility.Visible;
                     gbSetupSummaryModbus.Visibility = Visibility.Collapsed;
                     gbSetupSummaryFileReader.Visibility = Visibility.Collapsed;
+                    gbSetupSummaryFixedValue.Visibility = Visibility.Collapsed;
 
                     if (!serverStarted)
                     {
                         btnSerialPortSetup.Visibility = Visibility.Visible;
                         btnModbusSetup.Visibility = Visibility.Collapsed;
                         btnFileReaderSetup.Visibility = Visibility.Collapsed;
+                        btnFixedValueSetup.Visibility = Visibility.Collapsed;
                     }
                     else
                     {
                         btnSerialPortSetup.Visibility = Visibility.Collapsed;
                         btnModbusSetup.Visibility = Visibility.Collapsed;
                         btnFileReaderSetup.Visibility = Visibility.Collapsed;
+                        btnFixedValueSetup.Visibility = Visibility.Collapsed;
                     }
 
                     if (sensorDataSelected.serialPort.inputType == InputDataType.Binary)
@@ -643,18 +679,22 @@ namespace HMS_Server
                     gbSetupSummarySerialPort.Visibility = Visibility.Collapsed;
                     gbSetupSummaryModbus.Visibility = Visibility.Visible;
                     gbSetupSummaryFileReader.Visibility = Visibility.Collapsed;
+                    gbSetupSummaryFixedValue.Visibility = Visibility.Collapsed;
+                    gbSetupSummaryFixedValue.Visibility = Visibility.Collapsed;
 
                     if (!serverStarted)
                     {
                         btnSerialPortSetup.Visibility = Visibility.Collapsed;
                         btnModbusSetup.Visibility = Visibility.Visible;
                         btnFileReaderSetup.Visibility = Visibility.Collapsed;
+                        btnFixedValueSetup.Visibility = Visibility.Collapsed;
                     }
                     else
                     {
                         btnSerialPortSetup.Visibility = Visibility.Collapsed;
                         btnModbusSetup.Visibility = Visibility.Collapsed;
                         btnFileReaderSetup.Visibility = Visibility.Collapsed;
+                        btnFixedValueSetup.Visibility = Visibility.Collapsed;
                     }
 
                     if (type == SensorType.ModbusTCP)
@@ -722,22 +762,52 @@ namespace HMS_Server
                     gbSetupSummarySerialPort.Visibility = Visibility.Collapsed;
                     gbSetupSummaryModbus.Visibility = Visibility.Collapsed;
                     gbSetupSummaryFileReader.Visibility = Visibility.Visible;
+                    gbSetupSummaryFixedValue.Visibility = Visibility.Collapsed;
 
                     if (!serverStarted)
                     {
                         btnSerialPortSetup.Visibility = Visibility.Collapsed;
                         btnModbusSetup.Visibility = Visibility.Collapsed;
                         btnFileReaderSetup.Visibility = Visibility.Visible;
+                        btnFixedValueSetup.Visibility = Visibility.Collapsed;
                     }
                     else
                     {
                         btnSerialPortSetup.Visibility = Visibility.Collapsed;
                         btnModbusSetup.Visibility = Visibility.Collapsed;
                         btnFileReaderSetup.Visibility = Visibility.Collapsed;
+                        btnFixedValueSetup.Visibility = Visibility.Collapsed;
                     }
 
                     // Laste data inn i UI
                     UILoadData_FileReader();
+                    break;
+
+                case SensorType.FixedValue: // TODO
+                    // Vise UI
+                    gbSetupSummaryNone.Visibility = Visibility.Collapsed;
+                    gbSetupSummarySerialPort.Visibility = Visibility.Collapsed;
+                    gbSetupSummaryModbus.Visibility = Visibility.Collapsed;
+                    gbSetupSummaryFileReader.Visibility = Visibility.Collapsed;
+                    gbSetupSummaryFixedValue.Visibility = Visibility.Visible;
+
+                    if (!serverStarted)
+                    {
+                        btnSerialPortSetup.Visibility = Visibility.Collapsed;
+                        btnModbusSetup.Visibility = Visibility.Collapsed;
+                        btnFileReaderSetup.Visibility = Visibility.Collapsed;
+                        btnFixedValueSetup.Visibility = Visibility.Visible;
+                    }
+                    else
+                    {
+                        btnSerialPortSetup.Visibility = Visibility.Collapsed;
+                        btnModbusSetup.Visibility = Visibility.Collapsed;
+                        btnFileReaderSetup.Visibility = Visibility.Collapsed;
+                        btnFixedValueSetup.Visibility = Visibility.Collapsed;
+                    }
+
+                    // Laste data inn i UI
+                    UILoadData_FixedValue();
                     break;
 
                 default:
@@ -881,6 +951,12 @@ namespace HMS_Server
             lbFileReaderCalculationType4.Content = sensorDataSelected.fileReader.calculationSetup[3].type.GetDescription();
             lbFileReaderCalculationParameter4.Content = sensorDataSelected.fileReader.calculationSetup[3].parameter.ToString();
 
+        }
+
+        public void UILoadData_FixedValue()
+        {
+            lbFixedValueValue.Content = sensorDataSelected.fixedValue.value;
+            lbFixedValueFrequency.Content = sensorDataSelected.fixedValue.frequency;
         }
     }
 }

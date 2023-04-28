@@ -147,6 +147,11 @@ class Constants
     public const int FileReadFreqMin = 100;
     public const int FileReadFreqMax = 120000;
 
+    // Fixed Value Frequency
+    public const int FixedValueFreqDefault = 1000;
+    public const int FixedValueFreqMin = 100;
+    public const int FixedValueFreqMax = 120000;
+
     // File Reader
     public const string FileReaderDelimiterDefault = ",";
 

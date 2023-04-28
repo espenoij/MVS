@@ -35,6 +35,9 @@ namespace HMS_Server
         // File Reader: Data innhenting
         private FileReaderDataRetrieval fileReaderDataRetrieval;
 
+        // File Reader: Data innhenting
+        private FixedValueDataRetrieval fixedValueDataRetrieval;
+
         // Retrieval Status
         private bool dataRetrievalStarted = false;
 
@@ -55,6 +58,9 @@ namespace HMS_Server
 
             // File Reader data innhenting
             fileReaderDataRetrieval = new FileReaderDataRetrieval(config, database, errorHandler, adminSettingsVM);
+
+            // Fixed value data innhenting
+            fixedValueDataRetrieval = new FixedValueDataRetrieval(config, database, errorHandler, adminSettingsVM);
         }
 
         public void LoadSensors()
@@ -64,6 +70,7 @@ namespace HMS_Server
             serialPortDataRetrieval.Clear();
             modbusDataRetrieval.Clear();
             fileReaderDataRetrieval.Clear();
+            fixedValueDataRetrieval.Clear();
             databaseSaveTimer.Clear();
 
             // Hente liste med data fra fil
@@ -104,6 +111,10 @@ namespace HMS_Server
                         case SensorType.FileReader:
                             fileReaderDataRetrieval.Load(sensorData);
                             break;
+
+                        case SensorType.FixedValue:
+                            fixedValueDataRetrieval.Load(sensorData);
+                            break;
                     }
                 }
             }
@@ -132,6 +143,11 @@ namespace HMS_Server
             return fileReaderDataRetrieval.GetFileReaderList();
         }
 
+        public List<FixedValueSetup> GetFixedValueList()
+        {
+            return fixedValueDataRetrieval.GetFixedValueList();
+        }
+
         public void SensorDataRetrieval_Start()
         {
             dataRetrievalStarted = true;
@@ -142,8 +158,11 @@ namespace HMS_Server
             // Start MODBUS
             modbusDataRetrieval.Start();
 
-            // Start MODBUS
+            // Start file reader
             fileReaderDataRetrieval.Start();
+
+            // Start fixed value
+            fixedValueDataRetrieval.Start();
 
             // Starte database save timer
             foreach (var timer in databaseSaveTimer)
@@ -157,6 +176,7 @@ namespace HMS_Server
             serialPortDataRetrieval.Stop();
             modbusDataRetrieval.Stop();
             fileReaderDataRetrieval.Stop();
+            fixedValueDataRetrieval.Stop();
 
             // Stoppe database save timer
             foreach (var timer in databaseSaveTimer)
@@ -298,6 +318,23 @@ namespace HMS_Server
                                         fileReaderData.portStatus = sensorData.portStatus;
                                 }
 
+                                break;
+
+                            // Fixed Value
+                            //////////////////////////////////////////////////////////////////////////////////////
+                            case SensorType.FixedValue:
+
+                                if (dataRetrievalStarted)
+                                {
+                                    if (sensorData.portStatus == PortStatus.Closed)
+                                    {
+                                        sensorData.portStatus = PortStatus.Open;
+                                    }
+                                }
+                                else
+                                {
+                                    sensorData.portStatus = PortStatus.Closed;
+                                }
                                 break;
                         }
 

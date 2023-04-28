@@ -344,14 +344,14 @@
       <Generator>MSBuild:Compile</Generator>
       <SubType>Designer</SubType>
     </ApplicationDefinition>
-    <Compile Include="..\HMS_Client\Services\CommonTypes.cs">
-      <Link>Services\CommonTypes.cs</Link>
+    <Compile Include="..\HMS_Client\Models\CommonTypes.cs">
+      <Link>Models\CommonTypes.cs</Link>
     </Compile>
     <Compile Include="..\HMS_Client\Services\Socket\SocketPacket.cs">
       <Link>Services\Socket\SocketPacket.cs</Link>
     </Compile>
     <Compile Include="..\HMS_Client\Services\UserInputs.cs">
-      <Link>Services\UserInputs.cs</Link>
+      <Link>Models\UserInputs.cs</Link>
     </Compile>
     <Compile Include="Config\ReferenceDataConfig.cs" />
     <Compile Include="Config\TestDataConfig.cs" />
@@ -379,9 +379,16 @@
     <Compile Include="Helpers\Crc32.cs" />
     <Compile Include="Helpers\DisplayList.cs" />
     <Compile Include="Helpers\GraphBuffer.cs" />
+    <Compile Include="Services\FixedValue\FixedValueConfig.cs" />
+    <Compile Include="Services\FixedValue\FixedValueDataRetrieval.cs" />
+    <Compile Include="Services\FixedValue\FixedValueSetup.cs" />
     <Compile Include="Services\LightsOutputConnection.cs" />
-    <Compile Include="Services\WindVector.cs" />
+    <Compile Include="Models\WindVector.cs" />
+    <Compile Include="ViewModels\FixedValueWindowVM.cs" />
     <Compile Include="ViewModels\UserSettingsVM.cs" />
+    <Compile Include="Views\FixedValueSetupWindow.xaml.cs">
+      <DependentUpon>FixedValueSetupWindow.xaml</DependentUpon>
+    </Compile>
     <Compile Include="Views\UserSettings.xaml.cs">
       <DependentUpon>UserSettings.xaml</DependentUpon>
     </Compile>
@@ -406,11 +413,11 @@
     <Compile Include="Services\FileReader\FileDataField.cs" />
     <Compile Include="Services\FileReader\FileDataLine.cs" />
     <Compile Include="Services\FileReader\FileReaderSetup.cs" />
-    <Compile Include="Config\FileReaderConfig.cs" />
+    <Compile Include="Services\FileReader\FileReaderConfig.cs" />
     <Compile Include="Services\FileReader\FileReaderDataRetrieval.cs" />
     <Compile Include="Services\FileReader\FileReaderProcessing.cs" />
     <Compile Include="Services\HelideckMotionLimits.cs" />
-    <Compile Include="Services\HMSData.cs" />
+    <Compile Include="Models\HMSData.cs" />
     <Compile Include="Services\HMSDatabase.cs" />
     <Compile Include="Services\HMSDataProcessing.cs" />
     <Compile Include="Services\HMSProcessingEMS.cs" />
@@ -424,7 +431,7 @@
     <Compile Include="Services\HMSProcessingWindHeading.cs" />
     <Compile Include="Services\ObservableCollectionEx.cs" />
     <Compile Include="Services\Verfication.cs" />
-    <Compile Include="Services\VerificationData.cs" />
+    <Compile Include="Models\VerificationData.cs" />
     <Compile Include="ViewModels\AdminSettingsVM.cs" />
     <Compile Include="Config\HMSDataConfig.cs" />
     <Compile Include="Config\HMSDataConfigCollection.cs" />
@@ -448,14 +455,14 @@
     <Compile Include="Services\CalculationSetup.cs" />
     <Compile Include="Helpers\EnumExtension.cs" />
     <Compile Include="Services\DataValidation.cs" />
-    <Compile Include="Services\SensorGroup.cs" />
+    <Compile Include="Models\SensorGroup.cs" />
     <Compile Include="Config\SensorGroupIDConfig.cs" />
     <Compile Include="Config\SensorGroupIDConfigCollection.cs" />
     <Compile Include="Config\SensorGroupIDConfigSection.cs" />
     <Compile Include="Services\HMSSensorGroupStatus.cs" />
     <Compile Include="Config\Config.cs" />
     <Compile Include="Config\ConfigKey.cs" />
-    <Compile Include="Services\Constants.cs" />
+    <Compile Include="Models\Constants.cs" />
     <Compile Include="Services\DatabaseHandler.cs" />
     <Compile Include="Services\Encryption.cs" />
     <Compile Include="Services\ErrorMessage.cs" />
@@ -485,7 +492,7 @@
     </Compile>
     <Compile Include="Config\SensorConfigCollection.cs" />
     <Compile Include="Config\SensorConfigSection.cs" />
-    <Compile Include="Services\SensorData.cs" />
+    <Compile Include="Models\SensorData.cs" />
     <Compile Include="Config\SensorConfig.cs" />
     <Compile Include="Views\SensorSetupPage.xaml.cs">
       <DependentUpon>SensorSetupPage.xaml</DependentUpon>
@@ -527,6 +534,10 @@
       <SubType>Designer</SubType>
     </Page>
     <Page Include="Dialogs\DialogActivation.xaml">
+      <Generator>MSBuild:Compile</Generator>
+      <SubType>Designer</SubType>
+    </Page>
+    <Page Include="Views\FixedValueSetupWindow.xaml">
       <Generator>MSBuild:Compile</Generator>
       <SubType>Designer</SubType>
     </Page>
@@ -675,6 +686,7 @@
   <ItemGroup>
     <Resource Include="Icons\outline_admin_panel_settings_white_36dp.png" />
   </ItemGroup>
+  <ItemGroup />
   <Import Project="$(MSBuildToolsPath)\Microsoft.CSharp.targets" />
   <Import Project="..\packages\NETStandard.Library.2.0.3\build\netstandard2.0\NETStandard.Library.targets" Condition="Exists('..\packages\NETStandard.Library.2.0.3\build\netstandard2.0\NETStandard.Library.targets')" />
   <Target Name="EnsureNuGetPackageBuildImports" BeforeTargets="PrepareForBuild">

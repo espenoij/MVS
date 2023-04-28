@@ -147,7 +147,7 @@ namespace HMS_Server
                                                 DateTime.UtcNow,
                                                 ErrorMessageType.Database,
                                                 ErrorMessageCategory.None,
-                                                string.Format("Database Error (Insert 3)\n\nSystem Message:\n{0}", ex.Message),
+                                                string.Format("Database Error (Insert 4)\n\nSystem Message:\n{0}", ex.Message),
                                                 sensorData.id));
 
                                         errorHandler.SetDatabaseError(ErrorHandler.DatabaseErrorType.Insert2);

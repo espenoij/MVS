@@ -36,6 +36,10 @@ namespace HMS_Server
                 case SensorType.FileReader:
                     fileReader = new FileReaderSetup();
                     break;
+
+                case SensorType.FixedValue:
+                    fixedValue = new FixedValueSetup();
+                    break;
             }
 
             for (int i = 0; i < Constants.DataCalculationSteps; i++)
@@ -247,6 +251,18 @@ namespace HMS_Server
                                 dataCalculations.Add(new DataCalculations(fileReader.calculationSetup[i].type, fileReader.calculationSetup[i].parameter));
 
                             break;
+
+                        case SensorType.FixedValue:
+                            fixedValue = new FixedValueSetup();
+
+                            if (double.TryParse(sensorConfig.fixedValue.frequency, Constants.numberStyle, Constants.cultureInfo, out param))
+                                fixedValue.frequency = param;
+                            else
+                                fixedValue.frequency = 1000;
+
+                            fixedValue.value = sensorConfig.fixedValue.value;
+
+                            break;
                     }
                 }
                 catch (Exception ex)
@@ -319,6 +335,13 @@ namespace HMS_Server
                         serialPort = null;
                         modbus = null;
                         fileReader = new FileReaderSetup();
+                        break;
+
+                    case SensorType.FixedValue:
+                        serialPort = null;
+                        modbus = null;
+                        fileReader = null;
+                        fixedValue = new FixedValueSetup();
                         break;
                 }
 
@@ -474,9 +497,10 @@ namespace HMS_Server
         public SerialPortSetup serialPort { get; set; }
         public ModbusSetup modbus { get; set; }
         public FileReaderSetup fileReader { get; set; }
+        public FixedValueSetup fixedValue { get; set; }
 
 
-        // Brukes i data bidning mot UI
+        // Brukes i data binding mot UI
         public string source
         {
             get
@@ -495,6 +519,9 @@ namespace HMS_Server
 
                     case SensorType.FileReader:
                         return fileReader.fileName;
+
+                    case SensorType.FixedValue:
+                        return fixedValue.value; // TODO skulle vi hatt navn her?
 
                     default:
                         return "-";
@@ -554,7 +581,8 @@ namespace HMS_Server
         ModbusRTU,      // Remote Terminal Unit (serial port)
         ModbusASCII,
         ModbusTCP,
-        FileReader
+        FileReader,
+        FixedValue
     }
 
     public enum DatabaseSaveFrequency

@@ -138,6 +138,24 @@ namespace HMS_Server
             }
         }
 
+        public static void Transfer(List<FixedValueSetup> dataList, RadObservableCollection<FixedValueSetup> displayList)
+        {
+            for (int i = 0; i < dataList.Count; i++)
+            {
+                // Sjekke om display listen har plass
+                if (displayList.Count() > i)    
+                {
+                    // Oppdatere data
+                    displayList[i].Set(dataList[i]);
+                }
+                else
+                {
+                    // Legg den inn i listen
+                    displayList.Add(new FixedValueSetup(dataList[i]));
+                }
+            }
+        }
+
         public static void Transfer(RadObservableCollection<SensorGroup> dataList, RadObservableCollection<SensorGroup> displayList)
         {
             // Løpe gjennom listen med data som skal overføres til skjerm

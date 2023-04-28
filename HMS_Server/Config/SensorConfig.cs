@@ -35,6 +35,10 @@ namespace HMS_Server
                 case SensorType.FileReader:
                     this.fileReader = new FileReaderConfig(sensorData);
                     break;
+
+                case SensorType.FixedValue:
+                    this.fixedValue = new FixedValueConfig(sensorData);
+                    break;
             }
         }
 
@@ -100,6 +104,13 @@ namespace HMS_Server
         {
             get { return (FileReaderConfig)this["fileReader"]; }
             set { this["fileReader"] = value; }
+        }
+
+        [ConfigurationProperty("fixedValue", IsRequired = false)]
+        public FixedValueConfig fixedValue
+        {
+            get { return (FixedValueConfig)this["fixedValue"]; }
+            set { this["fixedValue"] = value; }
         }
     }
 }

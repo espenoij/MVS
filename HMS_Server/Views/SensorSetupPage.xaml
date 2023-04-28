@@ -90,6 +90,12 @@
                     Width="180"
                     Visibility="Collapsed">File Reader Data Setup</Button>
 
+                <Button
+                    Name="btnFixedValueSetup"
+                    Click="btnFixedValueSetup_Click"
+                    Width="180"
+                    Visibility="Collapsed">Fixed Value Data Setup</Button>
+
             </StackPanel>
 
         </Grid>
@@ -904,6 +910,41 @@
                                 Width="auto"
                                 Content="" />
                         </DockPanel>
+                    </StackPanel>
+
+                </telerik:GroupBox>
+
+                <telerik:GroupBox
+                    Name="gbSetupSummaryFixedValue"
+                    Header="Setup Summery - Fixed Value"
+                    Visibility="Collapsed"
+                    Margin="8">
+
+                    <StackPanel
+                        Margin="8">
+
+                        <DockPanel
+                            Name="dbFixedValueFrequency">
+                            <Label
+                                Width="100"
+                                Content="Frequency" />
+                            <Label
+                                Name="lbFixedValueFrequency"
+                                Width="auto"
+                                Content="" />
+                        </DockPanel>
+
+                        <DockPanel
+                            Name="dbFixedValueValue">
+                            <Label
+                                Width="100"
+                                Content="Value" />
+                            <Label
+                                Name="lbFixedValueValue"
+                                Width="auto"
+                                Content="" />
+                        </DockPanel>
+
                     </StackPanel>
 
                 </telerik:GroupBox>
