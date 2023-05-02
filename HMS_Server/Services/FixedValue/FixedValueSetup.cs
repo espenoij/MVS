@@ -1,11 +1,7 @@
-﻿using Google.Protobuf.WellKnownTypes;
-using System;
-using System.Collections.Generic;
+﻿using System;
 using System.ComponentModel;
-using System.IO;
 using System.Runtime.CompilerServices;
 using System.Threading;
-using System.Windows.Documents;
 
 namespace HMS_Server
 {
@@ -21,8 +17,11 @@ namespace HMS_Server
         /////////////////////////////////////////////////////////////////////////////
         public FixedValueSetup()
         {
+            id = 0;
             frequency = 0;
             value = string.Empty;
+            timestamp = DateTime.MinValue;
+            portStatus = PortStatus.Closed;
         }
 
         // Konstruktør
@@ -32,12 +31,45 @@ namespace HMS_Server
             this.Set(fv);
         }
 
+        public FixedValueSetup(SensorData fv)
+        {
+            this.Set(fv);
+        }
+
         // Set
+        /////////////////////////////////////////////////////////////////////////////
         public void Set(FixedValueSetup fv)
         {
+            id = fv.id;
             frequency = fv.frequency;
             value = fv.value;
             timestamp = fv.timestamp;
+            portStatus = fv.portStatus;
+        }
+
+        public void Set(SensorData sensorData)
+        {
+            id = sensorData.id;
+            frequency = sensorData.fixedValue.frequency;
+            value = sensorData.fixedValue.value;
+            timestamp = sensorData.fixedValue.timestamp;
+            portStatus = sensorData.fixedValue.portStatus;
+        }
+
+        // ID
+        /////////////////////////////////////////////////////////////////////////////
+        private int _id { get; set; }
+        public int id
+        {
+            get
+            {
+                return _id;
+            }
+            set
+            {
+                _id = value;
+                OnPropertyChanged();
+            }
         }
 
         // Frequency
@@ -122,12 +154,15 @@ namespace HMS_Server
             }
         }
 
-        public void StartReader(Config config, ErrorHandler errorHandler, FixedValueDataRetrieval.FixedValueReaderCallback fixedValueReaderCallback)
+        public void StartReader(ErrorHandler errorHandler, FixedValueDataRetrieval.FixedValueReaderCallback fixedValueReaderCallback)
         {
             FixedValueSetup fixedValueData = new FixedValueSetup();
 
+            // Overføre ID
+            fixedValueData.id = id;
+
             // Timer
-            timer = new System.Timers.Timer(config.ReadWithDefault(ConfigKey.HMSProcessingFrequency, Constants.HMSProcessingFrequencyDefault));
+            timer = new System.Timers.Timer(frequency);
 
             try
             {
@@ -146,11 +181,16 @@ namespace HMS_Server
 
                     void runReaderTask()
                     {
-                        fixedValueData.value = "0"; // Default verdi. Fixed value settes i prosessering.
-                        fixedValueData.timestamp = DateTime.UtcNow;
+                        // Data & timestamp
+                        // value er satt i init
+                        fixedValueData.value = value;
 
-                        // Status
-                        fixedValueData.portStatus = PortStatus.Reading;
+                        timestamp = DateTime.UtcNow;
+                        fixedValueData.timestamp = timestamp;
+
+                        // Port Status
+                        portStatus = PortStatus.Reading;
+                        fixedValueData.portStatus = portStatus;
 
                         // Callback for å sende lest data linje tilbake for prosessering
                         if (fixedValueReaderCallback != null)
@@ -167,11 +207,7 @@ namespace HMS_Server
                         DateTime.UtcNow,
                         ErrorMessageType.FileReader,
                         ErrorMessageCategory.User,
-                        string.Format("File Reader Error (StartReader):\n\n{0}", ex.Message)));
-
-                // Callback for å sende lest data linje tilbake for prosessering
-                if (fixedValueReaderCallback != null)
-                    fixedValueReaderCallback(fixedValueData);
+                        string.Format("Fixed Value Error (StartReader):\n\n{0}", ex.Message)));
             }
         }
 

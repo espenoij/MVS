@@ -184,6 +184,7 @@ namespace HMS_Server
 
         public void Clear()
         {
+            fileReaderSensorList.Clear();
             fileReaderList.Clear();
         }
     }

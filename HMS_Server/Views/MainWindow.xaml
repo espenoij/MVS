@@ -357,7 +357,7 @@
 
                             <telerik:RadTabItem
                                 Name="tabInput_FixedValue"
-                                Header="File Reader"
+                                Header="Fixed Value"
                                 Visibility="Collapsed">
 
                                 <telerik:RadGridView
@@ -375,9 +375,9 @@
 
                                     <telerik:RadGridView.Columns>
                                         <telerik:GridViewDataColumn
-                                            Width="600"
-                                            Header="Port Name"
-                                            DataMemberBinding="{Binding filePath}" />
+                                            Width="80"
+                                            Header="ID"
+                                            DataMemberBinding="{Binding id}" />
                                         <telerik:GridViewDataColumn
                                             Width="100"
                                             Header="Status"
@@ -389,7 +389,7 @@
                                         <telerik:GridViewDataColumn
                                             Width="*"
                                             Header="Data"
-                                            DataMemberBinding="{Binding dataLine}" />
+                                            DataMemberBinding="{Binding value}" />
                                     </telerik:RadGridView.Columns>
 
                                 </telerik:RadGridView>

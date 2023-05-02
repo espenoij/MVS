@@ -141,12 +141,6 @@ namespace HMS_Server
                     if (hmsData != null &&
                         sensorData.Count() > 0)
                     {
-                        //// TEST
-                        //if (hmsData.id == (int)ValueType.SensorWindDirection)
-                        //{
-                        //    counter1++;
-                        //}
-
                         // Har vi nye data?
                         if (hmsData.timestamp != sensorData.First().timestamp)
                         {
@@ -161,19 +155,6 @@ namespace HMS_Server
                                 hmsData.status = DataStatus.TIMEOUT_ERROR;
                             else
                                 hmsData.status = DataStatus.OK;
-
-                            //// TEST
-                            //if (hmsData.id == (int)ValueType.SensorWindDirection)
-                            //{
-                            //    counter2++;
-                            //}
-
-                            //// TEST BLIP
-                            //if (hmsData.id == (int)ValueType.MSI &&
-                            //    hmsData.status == DataStatus.OK)
-                            //{
-                            //    hmsData.data3 = String.Empty;
-                            //}
                         }
                     }
                     // Ingen verdi i data samlingen knyttet til verdi i mottaker listen
@@ -214,13 +195,6 @@ namespace HMS_Server
                             hmsData.status = DataStatus.TIMEOUT_ERROR;
                         else
                             hmsData.status = serverData.First().status;
-
-                        //// TEST BLIP
-                        //if (hmsData.id == (int)ValueType.MSI &&
-                        //    hmsData.status == DataStatus.OK)
-                        //{
-                        //    hmsData.data3 = String.Empty;
-                        //}
                     }
                     // Ingen verdi i data samlingen knyttet til verdi i mottaker listen
                     else

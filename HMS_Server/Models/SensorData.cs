@@ -71,6 +71,7 @@ namespace HMS_Server
             serialPort = sensorData.serialPort;
             modbus = sensorData.modbus;
             fileReader = sensorData.fileReader;
+            fixedValue = sensorData.fixedValue;
         }
 
         public SensorData(SensorConfig sensorConfig)
@@ -315,12 +316,14 @@ namespace HMS_Server
                         serialPort = null;
                         modbus = null;
                         fileReader = null;
+                        fixedValue = null;
                         break;
 
                     case SensorType.SerialPort:
                         serialPort = new SerialPortSetup();
                         modbus = null;
                         fileReader = null;
+                        fixedValue = null; 
                         break;
 
                     case SensorType.ModbusRTU:
@@ -329,12 +332,14 @@ namespace HMS_Server
                         serialPort = null;
                         modbus = new ModbusSetup();
                         fileReader = null;
+                        fixedValue = null; 
                         break;
 
                     case SensorType.FileReader:
                         serialPort = null;
                         modbus = null;
                         fileReader = new FileReaderSetup();
+                        fixedValue = null;
                         break;
 
                     case SensorType.FixedValue:
@@ -499,7 +504,6 @@ namespace HMS_Server
         public FileReaderSetup fileReader { get; set; }
         public FixedValueSetup fixedValue { get; set; }
 
-
         // Brukes i data binding mot UI
         public string source
         {
@@ -521,7 +525,7 @@ namespace HMS_Server
                         return fileReader.fileName;
 
                     case SensorType.FixedValue:
-                        return fixedValue.value; // TODO skulle vi hatt navn her?
+                        return "HMS Server";
 
                     default:
                         return "-";
@@ -537,7 +541,6 @@ namespace HMS_Server
         public double GetSaveFrequency(Config config)
         {
             // Returnerer frekvens i millisekund
-
             switch (saveFreq)
             {
                 case DatabaseSaveFrequency.Program:

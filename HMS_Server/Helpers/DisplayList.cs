@@ -140,18 +140,21 @@ namespace HMS_Server
 
         public static void Transfer(List<FixedValueSetup> dataList, RadObservableCollection<FixedValueSetup> displayList)
         {
-            for (int i = 0; i < dataList.Count; i++)
+            foreach (var item in dataList.ToList())
             {
-                // Sjekke om display listen har plass
-                if (displayList.Count() > i)    
+                // Finne igjen data i display listen
+                var displayItem = displayList.ToList().Where(x => x.id == item.id);
+
+                // Dersom vi fant data
+                if (displayItem.Count() > 0)
                 {
                     // Oppdatere data
-                    displayList[i].Set(dataList[i]);
+                    displayItem.First().Set(item);
                 }
                 else
                 {
                     // Legg den inn i listen
-                    displayList.Add(new FixedValueSetup(dataList[i]));
+                    displayList.Add(new FixedValueSetup(item));
                 }
             }
         }

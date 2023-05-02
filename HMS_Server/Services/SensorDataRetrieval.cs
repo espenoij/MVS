@@ -60,7 +60,7 @@ namespace HMS_Server
             fileReaderDataRetrieval = new FileReaderDataRetrieval(config, database, errorHandler, adminSettingsVM);
 
             // Fixed value data innhenting
-            fixedValueDataRetrieval = new FixedValueDataRetrieval(config, database, errorHandler, adminSettingsVM);
+            fixedValueDataRetrieval = new FixedValueDataRetrieval(database, errorHandler);
         }
 
         public void LoadSensors()
@@ -317,23 +317,32 @@ namespace HMS_Server
                                     if (fileReaderData != null)
                                         fileReaderData.portStatus = sensorData.portStatus;
                                 }
-
                                 break;
 
                             // Fixed Value
                             //////////////////////////////////////////////////////////////////////////////////////
                             case SensorType.FixedValue:
 
+                                FixedValueSetup fixedValueData = fixedValueDataRetrieval.GetFixedValueList().Find(x => x.id == sensorData.id);
+
                                 if (dataRetrievalStarted)
                                 {
                                     if (sensorData.portStatus == PortStatus.Closed)
                                     {
                                         sensorData.portStatus = PortStatus.Open;
+
+                                        // Oppdatere status
+                                        if (fixedValueData != null)
+                                            fixedValueData.portStatus = sensorData.portStatus;
                                     }
                                 }
                                 else
                                 {
                                     sensorData.portStatus = PortStatus.Closed;
+
+                                    // Oppdatere status
+                                    if (fixedValueData != null)
+                                        fixedValueData.portStatus = sensorData.portStatus;
                                 }
                                 break;
                         }

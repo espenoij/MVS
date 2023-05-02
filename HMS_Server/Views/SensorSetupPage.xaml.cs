@@ -179,7 +179,7 @@ namespace HMS_Server
                     break;
 
                 case SensorType.FixedValue:
-                    newSensor.fixedValue = new FixedValueSetup(sensorDataSelected.fixedValue);
+                    newSensor.fixedValue = new FixedValueSetup(sensorDataSelected);
                     break;
             }
 

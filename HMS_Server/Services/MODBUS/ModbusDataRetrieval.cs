@@ -75,6 +75,7 @@ namespace HMS_Server
 
         public void Clear()
         {
+            modbusSerialPortList.Clear();
             modbusSensorList.Clear();
         }
 
