@@ -157,7 +157,7 @@ namespace HMS_Server
                         }
                         catch (Exception ex)
                         {
-                            // Stte feilmelding
+                            // Sette feilmelding
                             errorHandler.Insert(
                                 new ErrorMessage(
                                     DateTime.UtcNow,
