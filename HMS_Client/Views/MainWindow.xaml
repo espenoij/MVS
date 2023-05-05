@@ -474,7 +474,7 @@
                     <telerik:RadTabItem.Header>
                         <Image
                             Width="36"
-                            Source="../Icons/outline_settings_white_36dp.png" />
+                            Source="../Icons/outline_admin_panel_settings_white_36dp.png" />
                     </telerik:RadTabItem.Header>
 
                     <uc:AdminSettings
