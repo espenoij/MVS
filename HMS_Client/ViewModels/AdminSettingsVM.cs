@@ -1,7 +1,6 @@
 ﻿using System;
 using System.ComponentModel;
 using System.Runtime.CompilerServices;
-using System.Windows;
 
 namespace HMS_Client
 {
@@ -65,15 +64,6 @@ namespace HMS_Client
                 enableEMS = true;
             else
                 enableEMS = false;
-        }
-
-        public void UpdateData(HMSDataCollection clientSensorList)
-        {
-            if (clientIsMaster)
-            {
-                if (clientSensorList.GetData(ValueType.SettingsDataVerification)?.data == 1)                    
-                    warningBarMessage(WarningBarMessageType.DataVerification);
-            }
         }
 
         public void ApplicationRestartRequired()

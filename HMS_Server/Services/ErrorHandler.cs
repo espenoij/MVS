@@ -43,7 +43,6 @@ namespace HMS_Server
             Insert4,
             Insert5,
             Insert6,
-            Insert7_VerificationData,
             DatabaseMaintenance,
             InsertErrorMessage,
             GetLastErrorMessages,

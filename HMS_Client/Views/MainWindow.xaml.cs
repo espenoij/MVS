@@ -4,6 +4,7 @@ using System.Windows;
 using System.Windows.Input;
 using System.Windows.Threading;
 using Telerik.Windows.Controls;
+using Telerik.Windows.Controls.Map;
 
 namespace HMS_Client
 {
@@ -341,15 +342,16 @@ namespace HMS_Client
             new Action(() =>
             {
 
-                if (message == WarningBarMessageType.RestartRequired)
-                    dpApplicationRestartRequired.Visibility = Visibility.Visible;
-                else
-                    dpApplicationRestartRequired.Visibility = Visibility.Collapsed;
+                switch (message)
+                {
+                    case WarningBarMessageType.RestartRequired:
+                        dpApplicationRestartRequired.Visibility = Visibility.Visible;
+                        break;
 
-                if (message == WarningBarMessageType.DataVerification)
-                    dpDataVerificationActiveWarning.Visibility = Visibility.Visible;
-                else
-                    dpDataVerificationActiveWarning.Visibility = Visibility.Collapsed;
+                    default:
+                        dpApplicationRestartRequired.Visibility = Visibility.Collapsed;
+                        break;
+                }                  
             }));
         }
 
@@ -432,7 +434,7 @@ namespace HMS_Client
             // Fordele data videre ut i UI
 
             // Admin Settings
-            adminSettingsVM.UpdateData(hmsDataCollection);
+            //adminSettingsVM.UpdateData(hmsDataCollection);
 
             // General Information
             generalInformationVM.UpdateData(hmsDataCollection);

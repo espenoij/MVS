@@ -131,9 +131,6 @@ namespace HMS_Server
                 lbRestrictedSectorTo.IsEnabled = false;
                 tbRestrictedSectorTo.IsEnabled = false;
 
-                lbEnableDataVerification.IsEnabled = false;
-                chkEnableDataVerification.IsEnabled = false;
-
                 // Offshore Weather Report
                 lbNDBInstalled_CAP.IsEnabled = false;
                 cbNDBInstalled_CAP.IsEnabled = false;
@@ -359,11 +356,6 @@ namespace HMS_Server
                 adminSettingsVM.ApplicationRestartRequired();
 
             adminSettingsVM.serverUIUpdateFrequency = validatedInput;
-        }
-
-        private void chkEnableDataVerification_Click(object sender, RoutedEventArgs e)
-        {
-            adminSettingsVM.ApplicationRestartRequired();
         }
 
         private void tbSettingsHMSProcessingFrequency_LostFocus(object sender, RoutedEventArgs e)
@@ -675,7 +667,6 @@ namespace HMS_Server
                         database.DeleteAllData(sensorDataList);
                         database.DeleteAllDataHMS();
                         database.DeleteAllDataSensorStatus();
-                        database.DeleteAllDataVerification();
 
                         errorHandler.ResetDatabaseError(ErrorHandler.DatabaseErrorType.DeleteAllData);
                     }
@@ -700,10 +691,6 @@ namespace HMS_Server
             {
                 adminSettingsVM.regulationStandard = (RegulationStandard)cboRegulationStandard.SelectedIndex;
                 adminSettingsVM.ApplicationRestartRequired();
-
-                if (adminSettingsVM.regulationStandard == RegulationStandard.NOROG &&
-                    adminSettingsVM.dataVerificationEnabled)
-                    adminSettingsVM.dataVerificationEnabled = false;
             }
         }
 

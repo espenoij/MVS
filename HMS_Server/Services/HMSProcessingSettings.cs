@@ -21,7 +21,6 @@ namespace HMS_Server
         private HMSData emailPassword = new HMSData();
         private HMSData emailSecureConnection = new HMSData();
         private HMSData restrictedSector = new HMSData();
-        private HMSData dataVerification = new HMSData();
 
         private AdminSettingsVM adminSettingsVM;
         private UserSettingsVM userSettingsVM;
@@ -57,8 +56,6 @@ namespace HMS_Server
             hmsOutputDataList.Add(emailSecureConnection);
 
             hmsOutputDataList.Add(restrictedSector);
-
-            hmsOutputDataList.Add(dataVerification);
 
             // Trenger ikke å lagre disse i databasen, derfor ingen database table navn
             helideckWindSensorHeight.id = (int)ValueType.SettingsHelideckWindSensorHeight;
@@ -124,10 +121,6 @@ namespace HMS_Server
             restrictedSector.id = (int)ValueType.SettingsRestrictedSector;
             restrictedSector.name = "Restricted Sector (CAP)";
             restrictedSector.sensorGroupId = Constants.NO_SENSOR_GROUP_ID;
-
-            dataVerification.id = (int)ValueType.SettingsDataVerification;
-            dataVerification.name = "Data Verification Active (CAP)";
-            dataVerification.sensorGroupId = Constants.NO_SENSOR_GROUP_ID;
         }
 
         public void Update()
@@ -249,14 +242,6 @@ namespace HMS_Server
                 restrictedSector.status = DataStatus.OK;
             }
             restrictedSector.timestamp = DateTime.UtcNow;
-
-            // Data Verification
-            if (adminSettingsVM.dataVerificationEnabled)
-                dataVerification.data = 1;
-            else
-                dataVerification.data = 0;
-            dataVerification.status = DataStatus.OK;
-            dataVerification.timestamp = DateTime.UtcNow;
         }
     }
 }

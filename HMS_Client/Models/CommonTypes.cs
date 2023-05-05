@@ -244,7 +244,6 @@ public enum ValueType
     SettingsEmailPassword,
     SettingsEmailSecureConnection,
     SettingsRestrictedSector,
-    SettingsDataVerification,
 
     // CAP: Lagring av status data i databasen
     StatusRoll,
@@ -475,8 +474,7 @@ public class RWDData : INotifyPropertyChanged
 
 public enum WarningBarMessageType
 {
-    RestartRequired,
-    DataVerification,
+    RestartRequired
 }
 
 public enum InputDataType

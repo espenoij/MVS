@@ -392,17 +392,8 @@
     <Compile Include="Views\UserSettings.xaml.cs">
       <DependentUpon>UserSettings.xaml</DependentUpon>
     </Compile>
-    <Compile Include="Views\VerificationResult.xaml.cs">
-      <DependentUpon>VerificationResult.xaml</DependentUpon>
-    </Compile>
     <Compile Include="Views\FileReaderSetupWindow.xaml.cs">
       <DependentUpon>FileReaderSetupWindow.xaml</DependentUpon>
-    </Compile>
-    <Compile Include="Views\VerificationSetupRefData.xaml.cs">
-      <DependentUpon>VerificationSetupRefData.xaml</DependentUpon>
-    </Compile>
-    <Compile Include="Views\VerificationSetupTestData.xaml.cs">
-      <DependentUpon>VerificationSetupTestData.xaml</DependentUpon>
     </Compile>
     <Compile Include="Views\HMSOutput.xaml.cs">
       <DependentUpon>HMSOutput.xaml</DependentUpon>
@@ -427,11 +418,8 @@
     <Compile Include="Services\HMSProcessingMeteorological.cs" />
     <Compile Include="Services\HMSProcessingMotion.cs" />
     <Compile Include="Services\HMSProcessingSettings.cs" />
-    <Compile Include="Services\HMSProcessingVerificationData.cs" />
     <Compile Include="Services\HMSProcessingWindHeading.cs" />
     <Compile Include="Services\ObservableCollectionEx.cs" />
-    <Compile Include="Services\Verfication.cs" />
-    <Compile Include="Models\VerificationData.cs" />
     <Compile Include="ViewModels\AdminSettingsVM.cs" />
     <Compile Include="Config\HMSDataConfig.cs" />
     <Compile Include="Config\HMSDataConfigCollection.cs" />
@@ -542,18 +530,6 @@
       <SubType>Designer</SubType>
     </Page>
     <Page Include="Views\UserSettings.xaml">
-      <Generator>MSBuild:Compile</Generator>
-      <SubType>Designer</SubType>
-    </Page>
-    <Page Include="Views\VerificationResult.xaml">
-      <Generator>MSBuild:Compile</Generator>
-      <SubType>Designer</SubType>
-    </Page>
-    <Page Include="Views\VerificationSetupRefData.xaml">
-      <Generator>MSBuild:Compile</Generator>
-      <SubType>Designer</SubType>
-    </Page>
-    <Page Include="Views\VerificationSetupTestData.xaml">
       <Generator>MSBuild:Compile</Generator>
       <SubType>Designer</SubType>
     </Page>

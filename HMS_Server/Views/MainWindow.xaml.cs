@@ -54,9 +54,6 @@ namespace HMS_Server
         // Liste med HMS sensor data: Data som skal gjennom HMS prosessen og sendes til HMS klient
         private HMSDataCollection hmsInputData;
 
-        // Verification data
-        private Verfication verfication;
-
         // Sensor Status
         private HMSSensorGroupStatus sensorStatus;
 
@@ -69,9 +66,6 @@ namespace HMS_Server
 
         // Lights Output
         private LightsOutputConnection lightsOutputConnection;
-
-        // Data verification
-        private DispatcherTimer verificationTimer = new DispatcherTimer();
 
         // View Models
         private AdminSettingsVM adminSettingsVM = new AdminSettingsVM();
@@ -159,7 +153,6 @@ namespace HMS_Server
             // Init UI
             InitUI();
             InitUIHMS();
-            InitUIDataVerification();
 
             // Socket Init
             InitSocketConsole();
@@ -172,9 +165,6 @@ namespace HMS_Server
 
             // Init HMS Data Flow
             InitHMSUpdate();
-
-            // Init verification data prosessering
-            InitVerificationUpdate();
 
             // Opprette database tabeller
             // Sjekker først om bruker og passord for databasen er satt (ikke satt rett etter installasjon)
@@ -253,9 +243,6 @@ namespace HMS_Server
             tabAdminSettings.Visibility = Visibility.Visible;
             tabErrorMessages.Visibility = Visibility.Visible;
 
-            if (adminSettingsVM.dataVerificationEnabled)
-                tabDataVerification.Visibility = Visibility.Visible;
-
             tabInput_SensorData.Visibility = Visibility.Visible;
             tabInput_SerialData.Visibility = Visibility.Visible;
             tabInput_FileReader.Visibility = Visibility.Visible;
@@ -311,19 +298,19 @@ namespace HMS_Server
             {
                 btnStart1.IsEnabled = state;
                 btnStart2.IsEnabled = state;
-                btnStart3.IsEnabled = state;
+                //btnStart3.IsEnabled = state;
                 btnStop1.IsEnabled = !state;
                 btnStop2.IsEnabled = !state;
-                btnStop3.IsEnabled = !state;
+                //btnStop3.IsEnabled = !state;
             }
             else
             {
                 btnStart1.IsEnabled = false;
                 btnStart2.IsEnabled = false;
-                btnStart3.IsEnabled = false;
+                //btnStart3.IsEnabled = false;
                 btnStop1.IsEnabled = false;
                 btnStop2.IsEnabled = false;
-                btnStop3.IsEnabled = false;
+                //btnStop3.IsEnabled = false;
             }
         }
 
@@ -343,8 +330,7 @@ namespace HMS_Server
                 adminSettingsVM,
                 userSettingsVM,
                 userInputs,
-                errorHandler,
-                adminSettingsVM.dataVerificationEnabled);
+                errorHandler);
 
             // Main Menu HMS: Input Setup
             ucHMSInputSetup.Init(
@@ -361,28 +347,6 @@ namespace HMS_Server
             ucHMSSensorGroups.Init(
                 hmsInputData,
                 sensorStatus,
-                config);
-        }
-
-        private void InitUIDataVerification()
-        {
-            // Data verification
-            verfication = new Verfication(config, userInputs, errorHandler);
-
-            // Setup
-            ucDataVerificationSetupTestData.Init(
-                hmsOutputData,
-                verfication.GetTestData(),
-                config);
-
-            ucDataVerificationSetupRefData.Init(
-                sensorDataRetrieval,
-                verfication.GetRefData(),
-                config);
-
-            // Results
-            ucDataVerificationResult.Init(
-                verfication,
                 config);
         }
 
@@ -492,9 +456,6 @@ namespace HMS_Server
 
             void runHMSUpdate(object sender, EventArgs e)
             {
-                //// TEST
-                //counter1++;
-
                 try
                 {
                     Thread thread = new Thread(() => UpdateHMS_Thread());
@@ -506,29 +467,15 @@ namespace HMS_Server
                         // HMS Update
                         /////////////////////////////////////////////////////////////////////////////////////////////////////
 
-                        //// TEST
-                        //counter2++;
-
                         // HMS: HMS Input Data
                         hmsInputData.TransferData(sensorDataRetrieval.GetSensorDataList());
 
                         // HMS: HMS Output Data
                         // Prosesserer sensor data om til data som kan sendes til HMS klient
-                        hmsProcessing.Update(hmsInputData, adminSettingsVM.dataVerificationEnabled/*, errorHandler*/);
-
-                        //// TEST BLIP
-                        //foreach (var item in hmsOutputData.GetDataList().ToList())
-                        //{
-                        //    if (item.id == (int)ValueType.MSI &&
-                        //        item.status == DataStatus.OK)
-                        //    {
-                        //        item.data3 = String.Empty;
-                        //    }
-                        //}
+                        hmsProcessing.Update(hmsInputData);
 
                         // Sette database status
                         SetDatabaseStatus(hmsInputData);
-
 
                         // HMS: Lagre data i databasen
                         /////////////////////////////////////////////////////////////////////////////////////////////////////
@@ -548,16 +495,6 @@ namespace HMS_Server
                             DoDatabaseMaintenance(DatabaseMaintenanceType.HMS);
                             DoDatabaseMaintenance(DatabaseMaintenanceType.STATUS);
                         }
-
-                        //// TEST BLIP
-                        //foreach (var item in hmsOutputData.GetDataList().ToList())
-                        //{
-                        //    if (item.id == (int)ValueType.MSI &&
-                        //        item.status == DataStatus.OK)
-                        //    {
-                        //        item.data3 = String.Empty;
-                        //    }
-                        //}
                     }
                 }
                 catch (Exception ex)
@@ -660,31 +597,6 @@ namespace HMS_Server
             }
         }
 
-        private void InitVerificationUpdate()
-        {
-            if (adminSettingsVM.dataVerificationEnabled)
-            {
-                // Dispatcher som oppdaterer verification data (test og referanse data)
-                verificationTimer.Interval = TimeSpan.FromMilliseconds(config.ReadWithDefault(ConfigKey.HMSProcessingFrequency, Constants.HMSProcessingFrequencyDefault));
-                verificationTimer.Tick += runLightsOutputUpdate;
-
-                void runLightsOutputUpdate(object sender, EventArgs e)
-                {
-                    verfication.Update(hmsOutputData, sensorDataRetrieval.GetSensorDataList(), database);
-
-                    //// TEST BLIP
-                    //foreach (var item in hmsOutputData.GetDataList().ToList())
-                    //{
-                    //    if (item.id == (int)ValueType.MSI &&
-                    //        item.status == DataStatus.OK)
-                    //    {
-                    //        item.data3 = String.Empty;
-                    //    }
-                    //}
-                }
-            }
-        }
-
         private void InitLicense()
         {
             // Sette start/stop knappene
@@ -695,23 +607,19 @@ namespace HMS_Server
         {
             if (userInputs != null)
             {
-                // Setter ikke user data fra klient dersom vi holder på med data verifikasjon
-                if (!adminSettingsVM.dataVerificationEnabled)
-                {
-                    // Overføre data
-                    this.userInputs.Set(userInputs);
+                // Overføre data
+                this.userInputs.Set(userInputs);
 
-                    // Lagre til fil
-                    config.Write(ConfigKey.HelicopterType, userInputs.helicopterType.ToString());
-                    config.Write(ConfigKey.HelideckCategory, userInputs.helideckCategory.ToString());
-                    config.Write(ConfigKey.DayNight, userInputs.dayNight.ToString());
-                    config.Write(ConfigKey.DisplayMode, userInputs.displayMode.ToString());
+                // Lagre til fil
+                config.Write(ConfigKey.HelicopterType, userInputs.helicopterType.ToString());
+                config.Write(ConfigKey.HelideckCategory, userInputs.helideckCategory.ToString());
+                config.Write(ConfigKey.DayNight, userInputs.dayNight.ToString());
+                config.Write(ConfigKey.DisplayMode, userInputs.displayMode.ToString());
 
-                    config.Write(ConfigKey.OnDeckTime, userInputs.onDeckTime.ToString());
-                    config.Write(ConfigKey.OnDeckHelicopterHeading, userInputs.onDeckHelicopterHeading.ToString());
-                    config.Write(ConfigKey.OnDeckVesselHeading, userInputs.onDeckVesselHeading.ToString());
-                    config.Write(ConfigKey.OnDeckWindDirection, userInputs.onDeckWindDirection.ToString());
-                }
+                config.Write(ConfigKey.OnDeckTime, userInputs.onDeckTime.ToString());
+                config.Write(ConfigKey.OnDeckHelicopterHeading, userInputs.onDeckHelicopterHeading.ToString());
+                config.Write(ConfigKey.OnDeckVesselHeading, userInputs.onDeckVesselHeading.ToString());
+                config.Write(ConfigKey.OnDeckWindDirection, userInputs.onDeckWindDirection.ToString());
             }
         }
 
@@ -749,8 +657,6 @@ namespace HMS_Server
                 }
 
                 // Resette sammenligningsdata
-                if (adminSettingsVM.dataVerificationEnabled)
-                    verfication.Reset();
 
                 // Resetter data listene i dataCalculations
                 hmsProcessing.ResetDataCalculations();
@@ -782,14 +688,10 @@ namespace HMS_Server
 
                 // Lights Output
                 if (adminSettingsVM.regulationStandard == RegulationStandard.CAP &&
-                    adminSettingsVM.helideckLightsOutput &&
-                    !adminSettingsVM.dataVerificationEnabled)
+                    adminSettingsVM.helideckLightsOutput)
                 {
                     ucHMSLightsOutput.Start();
                 }
-
-                // Data verification
-                verificationTimer.Start();
 
                 // Server startet
                 serverStarted = true;
@@ -834,9 +736,6 @@ namespace HMS_Server
             {
                 ucHMSLightsOutput.Stop();
             }
-
-            // Data verification
-            verificationTimer.Stop();
 
             // Server startet
             serverStarted = false;
@@ -945,9 +844,6 @@ namespace HMS_Server
                             tabAdminSettings.Visibility = Visibility.Visible;
                             tabErrorMessages.Visibility = Visibility.Visible;
 
-                            if (adminSettingsVM.dataVerificationEnabled)
-                                tabDataVerification.Visibility = Visibility.Visible;
-
                             tabInput_SensorData.Visibility = Visibility.Visible;
                             tabInput_SerialData.Visibility = Visibility.Visible;
                             tabInput_FileReader.Visibility = Visibility.Visible;
@@ -965,7 +861,6 @@ namespace HMS_Server
                         tabInputEdit.Visibility = Visibility.Collapsed;
                         //tabOutput.Visibility = Visibility.Collapsed;
                         tabHMS.Visibility = Visibility.Collapsed;
-                        tabDataVerification.Visibility = Visibility.Collapsed;
                         tabAdminSettings.Visibility = Visibility.Collapsed;
                         tabErrorMessages.Visibility = Visibility.Collapsed;
 

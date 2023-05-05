@@ -13,7 +13,6 @@ namespace HMS_Server
         private HMSProcessingMeteorological hmsProcessingMeteorological;
         private HMSProcessingHelideckStatus hmsProcessingHelideckStatus;
         private HMSProcessingEMS hmsProcessingEMS;
-        private HMSProcessingVerificationData hmsProcessingVerificationData;
 
         // Init data prosessering
         public HMSProcessing(
@@ -22,8 +21,7 @@ namespace HMS_Server
             AdminSettingsVM adminSettingsVM,
             UserSettingsVM userSettingsVM,
             UserInputs userInputs,
-            ErrorHandler errorHandler,
-            bool dataVerificationIsActive)
+            ErrorHandler errorHandler)
         {
             hmsProcessingSettings = new HMSProcessingSettings(hmsOutputData, adminSettingsVM, userSettingsVM);
             hmsProcessingUserInputs = new HMSProcessingUserInputs(hmsOutputData, userInputs, adminSettingsVM);
@@ -33,27 +31,19 @@ namespace HMS_Server
             hmsProcessingMeteorological = new HMSProcessingMeteorological(hmsOutputData, adminSettingsVM, userSettingsVM);
             hmsProcessingHelideckStatus = new HMSProcessingHelideckStatus(hmsOutputData, motionLimits, adminSettingsVM, userInputs, hmsProcessingMotion, hmsProcessingWindHeading);
             hmsProcessingEMS = new HMSProcessingEMS(hmsOutputData, errorHandler, adminSettingsVM);
-
-            // Data Verification Module
-            if (dataVerificationIsActive)
-                hmsProcessingVerificationData = new HMSProcessingVerificationData(hmsOutputData);
         }
 
         // Kjøre prosessering og oppdatere data
-        public void Update(HMSDataCollection hmsInputDataList, bool dataVerificationIsActive/*, ErrorHandler errorHandler*/)
+        public void Update(HMSDataCollection hmsInputDataList)
         {
             hmsProcessingSettings.Update();
             hmsProcessingUserInputs.Update();
             hmsProcessingGeneralInfo.Update(hmsInputDataList);
-            hmsProcessingMotion.Update(hmsInputDataList/*, errorHandler*/);
-            hmsProcessingWindHeading.Update(hmsInputDataList/*, errorHandler*/);
+            hmsProcessingMotion.Update(hmsInputDataList);
+            hmsProcessingWindHeading.Update(hmsInputDataList);
             hmsProcessingMeteorological.Update(hmsInputDataList);
             hmsProcessingHelideckStatus.Update();
             hmsProcessingEMS.Update(hmsInputDataList);
-
-            // Data Verification Module
-            if (dataVerificationIsActive)
-                hmsProcessingVerificationData?.Update(hmsInputDataList);
         }
 
         public void ResetDataCalculations()

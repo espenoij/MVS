@@ -109,7 +109,6 @@
     public const string EmailUsername = "EmailUsername";
     public const string EmailPassword = "EmailPassword";
     public const string EmailSecureConnection = "EmailSecureConnection";
-    public const string DataVerificationEnabled = "DataVerificationEnabled";
     public const string SensorStatusInputMRU = "SensorStatusInputMRU";
     public const string SensorStatusInputGyro = "SensorStatusInputGyro";
     public const string SensorStatusInputWind = "SensorStatusInputWind";

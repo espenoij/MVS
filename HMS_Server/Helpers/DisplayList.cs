@@ -65,29 +65,6 @@ namespace HMS_Server
             }
         }
 
-        public static void Transfer(RadObservableCollection<VerificationData> dataList, RadObservableCollection<VerificationData> displayList)
-        {
-            // Løpe gjennom listen med data som skal overføres til skjerm
-            foreach (var item in dataList.ToList())
-            {
-                // Finne igjen data i display listen
-                var displayItem = displayList.ToList().Where(x => x.id == item.id);
-
-                // Dersom vi fant data
-                if (displayItem.Count() > 0)
-                {
-                    // Oppdater data
-                    displayItem.First().Set(item);
-                }
-                // ...fant ikke data
-                else
-                {
-                    // Legg den inn i listen
-                    displayList.Add(new VerificationData(item));
-                }
-            }
-        }
-
         public static void Transfer(List<SerialPortData> dataList, RadObservableCollection<SerialPortData> displayList)
         {
             // Løpe gjennom listen med data som skal overføres til skjerm

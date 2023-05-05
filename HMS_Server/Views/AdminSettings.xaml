@@ -2507,80 +2507,10 @@
 
                 </telerik:GroupBox>
 
-                <!--DATA VERIFICATION-->
-                <telerik:GroupBox
-                    Grid.Row="1"
-                    Grid.Column="0"
-                    Margin="8"
-                    Header="DATA VERIFICATION">
-
-                    <Grid
-                        Margin="8">
-
-                        <Grid.RowDefinitions>
-                            <RowDefinition
-                                Height="*" />
-                            <RowDefinition
-                                Height="*" />
-                            <RowDefinition
-                                Height="*" />
-                            <RowDefinition
-                                Height="*" />
-                            <RowDefinition
-                                Height="*" />
-                            <RowDefinition
-                                Height="*" />
-                            <RowDefinition
-                                Height="*" />
-                        </Grid.RowDefinitions>
-
-                        <!--Secure Connection-->
-                        <Grid
-                            Grid.Row="0">
-
-                            <Grid.ColumnDefinitions>
-                                <ColumnDefinition
-                                    Width="*" />
-                                <ColumnDefinition
-                                    Width="*" />
-                            </Grid.ColumnDefinitions>
-
-                            <Viewbox
-                                Grid.Column="0"
-                                StretchDirection="Both"
-                                Stretch="Uniform"
-                                HorizontalAlignment="Left">
-
-                                <telerik:Label
-                                    Name="lbEnableDataVerification"
-                                    Content="Enable Data Verification Module"
-                                    VerticalAlignment="Center" />
-                            </Viewbox>
-
-                            <Viewbox
-                                Grid.Column="1"
-                                StretchDirection="Both"
-                                Stretch="Uniform"
-                                HorizontalAlignment="Right">
-
-                                <CheckBox
-                                    Name="chkEnableDataVerification"
-                                    IsChecked="{Binding Path=dataVerificationEnabled, Mode=TwoWay}"
-                                    VerticalAlignment="Center"
-                                    HorizontalAlignment="Right"
-                                    Click="chkEnableDataVerification_Click" />
-                            </Viewbox>
-                        </Grid>
-
-                    </Grid>
-
-                </telerik:GroupBox>
-
-
                 <!--SENSOR STATUS-->
                 <telerik:GroupBox
                     Grid.Row="1"
-                    Grid.Column="1"
+                    Grid.Column="0"
                     Margin="8"
                     Header="SENSOR STATUS">
 

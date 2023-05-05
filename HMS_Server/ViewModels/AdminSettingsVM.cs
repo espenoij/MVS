@@ -102,12 +102,6 @@ namespace HMS_Server
             else
                 emailSecureConnection = false;
 
-            // Data Verification
-            if (config.ReadWithDefault(ConfigKey.DataVerificationEnabled, "0") == "1")
-                dataVerificationEnabled = true;
-            else
-                dataVerificationEnabled = false;
-
             // Sensor Status Input
             if (config.ReadWithDefault(ConfigKey.SensorStatusInputMRU, "0") == "1")
                 statusMRUEnabled = true;
@@ -1145,29 +1139,6 @@ namespace HMS_Server
                     config.Write(ConfigKey.EmailSecureConnection, "1");
                 else
                     config.Write(ConfigKey.EmailSecureConnection, "0");
-
-                OnPropertyChanged();
-            }
-        }
-
-        /////////////////////////////////////////////////////////////////////////////
-        // Data Verification: Enable
-        /////////////////////////////////////////////////////////////////////////////
-        private bool _dataVerificationEnabled { get; set; }
-        public bool dataVerificationEnabled
-        {
-            get
-            {
-                return _dataVerificationEnabled;
-            }
-            set
-            {
-                _dataVerificationEnabled = value;
-
-                if (_dataVerificationEnabled)
-                    config.Write(ConfigKey.DataVerificationEnabled, "1");
-                else
-                    config.Write(ConfigKey.DataVerificationEnabled, "0");
 
                 OnPropertyChanged();
             }

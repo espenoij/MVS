@@ -23,21 +23,6 @@
 
         <DockPanel>
 
-            <!--Data Verification active warning-->
-            <DockPanel
-                Name="dpDataVerificationActiveWarning"
-                Visibility="Collapsed"
-                DockPanel.Dock="Top"
-                Background="{StaticResource ColorRed}">
-
-                <TextBlock
-                    Margin="8"
-                    Foreground="White"
-                    HorizontalAlignment="Center"
-                    Text="Data Verification is active on the server. The server will not accept user inputs. The client display may be incorrect." />
-
-            </DockPanel>
-
             <!--Application restart warning-->
             <DockPanel
                 Name="dpApplicationRestartRequired"
