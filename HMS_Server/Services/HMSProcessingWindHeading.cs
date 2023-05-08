@@ -11,6 +11,8 @@ namespace HMS_Server
         //int counter2 = 0;
         //int counter3 = 0;
         //private HMSData windUpdate = new HMSData();
+
+        // Brukes til utskrift av motion og vind buffer data i admin error messages console.
         private DateTime testTimer;
 
         // Sensor Data
@@ -19,7 +21,7 @@ namespace HMS_Server
         private HMSData sensorVesselSOG = new HMSData();
         private HMSData sensorSensorWindDirection = new HMSData();
         private HMSData sensorSensorWindSpeed = new HMSData();
-        private HMSData sensorSensorWind = new HMSData();
+        private HMSData sensorSensorWindStatus = new HMSData();
         private HMSData sensorSensorSOGCOG = new HMSData();
         private HMSData sensorSensorGyro = new HMSData();
 
@@ -347,7 +349,7 @@ namespace HMS_Server
             sensorVesselSOG.Set(hmsInputDataList.GetData(ValueType.VesselSOG));
             sensorSensorWindDirection.Set(hmsInputDataList.GetData(ValueType.SensorWindDirection));
             sensorSensorWindSpeed.Set(hmsInputDataList.GetData(ValueType.SensorWindSpeed));
-            sensorSensorWind.Set(hmsInputDataList.GetData(ValueType.SensorWindStatus));
+            sensorSensorWindStatus.Set(hmsInputDataList.GetData(ValueType.SensorWindStatus));
             sensorSensorSOGCOG.Set(hmsInputDataList.GetData(ValueType.SensorSOGCOGStatus));
             sensorSensorGyro.Set(hmsInputDataList.GetData(ValueType.SensorGyroStatus));
 
@@ -356,7 +358,7 @@ namespace HMS_Server
                 sensorVesselSOG.TimeStampCheck ||
                 sensorSensorWindDirection.TimeStampCheck ||
                 sensorSensorWindSpeed.TimeStampCheck ||
-                sensorSensorWind.TimeStampCheck ||
+                sensorSensorWindStatus.TimeStampCheck ||
                 sensorSensorSOGCOG.TimeStampCheck ||
                 sensorSensorGyro.TimeStampCheck ||
                 databaseSetupRun)
@@ -422,14 +424,14 @@ namespace HMS_Server
 
                 if (adminSettingsVM.statusWindEnabled)
                 {
-                    if (sensorSensorWind?.timestamp.AddMilliseconds(adminSettingsVM.dataTimeout) < DateTime.UtcNow)
-                        sensorSensorWind.status = DataStatus.TIMEOUT_ERROR;
+                    if (sensorSensorWindStatus?.timestamp.AddMilliseconds(adminSettingsVM.dataTimeout) < DateTime.UtcNow)
+                        sensorSensorWindStatus.status = DataStatus.TIMEOUT_ERROR;
 
-                    if (sensorSensorWind?.status == DataStatus.OK)
+                    if (sensorSensorWindStatus?.status == DataStatus.OK)
                     {
-                        statusWind.data = sensorSensorWind.data;
-                        statusWind.timestamp = sensorSensorWind.timestamp;
-                        statusWind.status = sensorSensorWind.status;
+                        statusWind.data = sensorSensorWindStatus.data;
+                        statusWind.timestamp = sensorSensorWindStatus.timestamp;
+                        statusWind.status = sensorSensorWindStatus.status;
                     }
                     else
                     {
