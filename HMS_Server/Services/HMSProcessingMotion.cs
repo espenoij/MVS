@@ -353,7 +353,7 @@ namespace HMS_Server
             sensorAccelerationX.Set(hmsInputDataList.GetData(ValueType.AccelerationX));
             sensorAccelerationY.Set(hmsInputDataList.GetData(ValueType.AccelerationY));
             sensorAccelerationZ.Set(hmsInputDataList.GetData(ValueType.AccelerationZ));
-            sensorSensorMRU.Set(hmsInputDataList.GetData(ValueType.SensorMRU));
+            sensorSensorMRU.Set(hmsInputDataList.GetData(ValueType.SensorMRUStatus));
 
             if (sensorPitch.TimeStampCheck ||
                 sensorRoll.TimeStampCheck ||

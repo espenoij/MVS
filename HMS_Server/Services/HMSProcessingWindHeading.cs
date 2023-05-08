@@ -347,9 +347,9 @@ namespace HMS_Server
             sensorVesselSOG.Set(hmsInputDataList.GetData(ValueType.VesselSOG));
             sensorSensorWindDirection.Set(hmsInputDataList.GetData(ValueType.SensorWindDirection));
             sensorSensorWindSpeed.Set(hmsInputDataList.GetData(ValueType.SensorWindSpeed));
-            sensorSensorWind.Set(hmsInputDataList.GetData(ValueType.SensorWind));
-            sensorSensorSOGCOG.Set(hmsInputDataList.GetData(ValueType.SensorSOGCOG));
-            sensorSensorGyro.Set(hmsInputDataList.GetData(ValueType.SensorGyro));
+            sensorSensorWind.Set(hmsInputDataList.GetData(ValueType.SensorWindStatus));
+            sensorSensorSOGCOG.Set(hmsInputDataList.GetData(ValueType.SensorSOGCOGStatus));
+            sensorSensorGyro.Set(hmsInputDataList.GetData(ValueType.SensorGyroStatus));
 
             if (sensorVesselHeading.TimeStampCheck ||
                 sensorVesselCOG.TimeStampCheck ||

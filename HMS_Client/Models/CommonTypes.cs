@@ -142,10 +142,10 @@ public enum ValueType
     Database = 30,
 
     // Sensor Status
-    SensorMRU = 31,
-    SensorGyro = 32,
-    SensorWind = 33,
-    SensorSOGCOG = 34,
+    SensorMRUStatus = 31,
+    SensorGyroStatus = 32,
+    SensorWindStatus = 33,
+    SensorSOGCOGStatus = 34,
 
     // Ikke lagret i config fil
     // Dette er data som beregnes fra variablene over, dvs. fra sensor data
