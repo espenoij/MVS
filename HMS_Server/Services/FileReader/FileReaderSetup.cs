@@ -230,7 +230,7 @@ namespace HMS_Server
                     {
                         Thread thread = new Thread(() => runReaderTask());
                         thread.IsBackground = true;
-                        thread.Start(); // <--- OOM (2023.01.23: Ikke hatt OOM her på lenge)
+                        thread.Start();
 
                         void runReaderTask()
                         {
