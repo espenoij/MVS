@@ -429,21 +429,6 @@
 
                             <DockPanel>
 
-                                <!--<Grid>
-                                    <ListView                                        
-                                        Name="lvSelectedData"
-                                        Foreground="Black">
-                                        
-                                        <ListView.View>
-                                            <GridView>
-                                                <GridViewColumn                                                    
-                                                    DisplayMemberBinding="{Binding dataString}" />
-                                            </GridView>
-                                        </ListView.View>
-
-                                    </ListView>
-                                </Grid>-->
-
                                 <telerik:RadGridView
                                     DockPanel.Dock="Left"
                                     Name="lvSelectedData"

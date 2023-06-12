@@ -90,50 +90,63 @@ namespace HMS_Server
 
         private void DataReceived(object sender, SerialDataReceivedEventArgs e)
         {
-            SerialPort serialPort = sender as SerialPort;
-
-            // Finne frem hvor vi skal lagre lest data fra serie port
-            SerialPortData serialPortData = serialPortDataReceivedList.Find(x => x.portName == serialPort.PortName);
-            if (serialPortData != null)
+            try
             {
-                if (serialPortData.firstRead)
+                SerialPort serialPort = sender as SerialPort;
+
+                // Finne frem hvor vi skal lagre lest data fra serie port
+                SerialPortData serialPortData = serialPortDataReceivedList.Find(x => x.portName == serialPort.PortName);
+                if (serialPortData != null)
                 {
-                    // Dump inn buffer ved første lesing - gjør ingenting
-                    // 2023.02.21: Vurder å fjerne denne delen. Har en funksjon i setup delen, men er unødvendig her.
-                    serialPort?.ReadExisting();
-                    serialPortData.firstRead = false;
+                    if (serialPortData.firstRead)
+                    {
+                        // Dump inn buffer ved første lesing - gjør ingenting
+                        // 2023.02.21: Vurder å fjerne denne delen. Har en funksjon i setup delen, men er unødvendig her.
+                        serialPort?.ReadExisting();
+                        serialPortData.firstRead = false;
+                    }
+                    else
+                    {
+                        // Lese fra port
+                        int bytes = serialPort.BytesToRead;
+                        byte[] array = new byte[bytes];
+                        for (int i = 0; serialPort.BytesToRead > 0 && i < bytes; i++)
+                        {
+                            array[i] = Convert.ToByte(serialPort.ReadByte());
+                        }
+
+                        // Data er prosessert -> slette buffer
+                        if (serialPortData.processingDone)
+                        {
+                            serialPortData.buffer_text = string.Empty;
+                            serialPortData.buffer_binary = string.Empty;
+
+                            serialPortData.processingDone = false;
+                        }
+
+                        // Lagre data
+                        serialPortData.buffer_text += Encoding.UTF8.GetString(array, 0, array.Length);
+                        serialPortData.buffer_binary += BitConverter.ToString(array);
+                        serialPortData.timestamp = DateTime.UtcNow;
+
+                        // Oppdatere status
+                        if (!string.IsNullOrEmpty(serialPortData.buffer_text) ||
+                            !string.IsNullOrEmpty(serialPortData.buffer_binary))
+                        {
+                            serialPortData.portStatus = PortStatus.Reading;
+                        }
+                    }
                 }
-                else
-                {
-                    // Lese fra port
-                    int bytes = serialPort.BytesToRead;
-                    byte[] array = new byte[bytes];
-                    for (int i = 0; serialPort.BytesToRead > 0 && i < bytes; i++)
-                    {
-                        array[i] = Convert.ToByte(serialPort.ReadByte());
-                    }
-
-                    // Data er prosessert -> slette buffer
-                    if (serialPortData.processingDone)
-                    {
-                        serialPortData.buffer_text = string.Empty;
-                        serialPortData.buffer_binary = string.Empty;
-
-                        serialPortData.processingDone = false;
-                    }
-
-                    // Lagre data
-                    serialPortData.buffer_text += Encoding.UTF8.GetString(array, 0, array.Length);
-                    serialPortData.buffer_binary += BitConverter.ToString(array);
-                    serialPortData.timestamp = DateTime.UtcNow;
-
-                    // Oppdatere status
-                    if (!string.IsNullOrEmpty(serialPortData.buffer_text) ||
-                        !string.IsNullOrEmpty(serialPortData.buffer_binary))
-                    {
-                        serialPortData.portStatus = PortStatus.Reading;
-                    }
-                }
+            }
+            catch (Exception ex)
+            {
+                if (AdminMode.IsActive)
+                    errorHandler.Insert(
+                                new ErrorMessage(
+                                DateTime.UtcNow,
+                                ErrorMessageType.SerialPort,
+                                ErrorMessageCategory.AdminUser,
+                                string.Format("DataReceived Error: {0} (Start), System Message: {1}", (sender as SerialPort)?.PortName, ex.Message)));
             }
         }
 
@@ -182,11 +195,26 @@ namespace HMS_Server
         {
             // Stoppe serial ports
             foreach (var serialPort in serialPortList)
-                if (serialPort != null)
-                    if (serialPort.IsOpen)
-                        serialPort.Close();
+            {
+                try
+                {
+                    if (serialPort != null)
+                        if (serialPort.IsOpen)
+                            serialPort.Close();
 
-            sensorProcessingTimer.Stop();
+                    sensorProcessingTimer.Stop();
+                }
+                catch (Exception ex)
+                {
+                    // Sette feilmelding
+                    errorHandler.Insert(
+                        new ErrorMessage(
+                            DateTime.UtcNow,
+                            ErrorMessageType.SerialPort,
+                            ErrorMessageCategory.AdminUser,
+                            string.Format("Error stopping serial port: {0} (Stop), System Message: {1}", serialPort.PortName, ex.Message)));
+                }
+            }
         }
 
         public void Restart(string portName)

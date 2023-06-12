@@ -23,6 +23,7 @@
     public const string MSICorrectionR = "MSICorrectionR";
     public const string OverrideWindBuffer = "OverrideWindBuffer";
     public const string OverrideMotionBuffer = "OverrideMotionBuffer";
+    public const string OutputBufferSize = "OutputBufferSize";
     public const string RestrictedSectorFrom = "RestrictedSectorFrom";
     public const string RestrictedSectorTo = "RestrictedSectorTo";
     public const string HelideckHeight = "HelideckHeight";

@@ -2,6 +2,7 @@
 using System.Collections.Generic;
 using System.IO.Ports;
 using System.Linq;
+using System.Linq.Expressions;
 using System.Windows.Data;
 using System.Windows.Threading;
 using Telerik.Windows.Data;
@@ -208,65 +209,78 @@ namespace HMS_Server
                                 SerialPortData serialPortData = serialPortDataRetrieval.GetSerialPortDataReceivedList().Find(x => x.portName == sensorData.serialPort.portName);
                                 if (serialPortData != null)
                                 {
-                                    // Oppdatere serie port status
-                                    SerialPort serialPort = serialPortDataRetrieval.GetSerialPortList().Find(x => x.PortName == serialPortData.portName);
-                                    if (serialPort != null)
+                                    try
                                     {
-                                        // Porten er ikke åpen
-                                        if (!serialPort.IsOpen)
+                                        // Oppdatere serie port status
+                                        SerialPort serialPort = serialPortDataRetrieval.GetSerialPortList().Find(x => x.PortName == serialPortData.portName);
+                                        if (serialPort != null)
                                         {
-                                            // Data innhenting er startet -> port skal være åpen
-                                            if (dataRetrievalStarted)
+                                            // Porten er ikke åpen
+                                            if (!serialPort.IsOpen)
                                             {
-                                                // Prøv å restarte porten
-                                                serialPortDataRetrieval.Restart(serialPortData.portName);
-                                            }
-                                            else
-                                            {
-                                                serialPortData.portStatus = PortStatus.Closed;
-                                            }
-                                        }
-                                        // Porten er åpen
-                                        else
-                                        {
-                                            // Lese data timeout fra config
-                                            double dataTimeout = config.ReadWithDefault(ConfigKey.DataTimeout, Constants.DataTimeoutDefault);
-
-                                            // Dersom det ikke er satt data på porten innen timeout
-                                            if (serialPortData.timestamp.AddMilliseconds(dataTimeout) < DateTime.UtcNow)
-                                            {
-                                                // Sette status
-                                                serialPortData.portStatus = PortStatus.NoData;
-
-                                                // Fjerne data fra data feltet
-                                                serialPortData.buffer_text = string.Empty;
-
-                                                // Prøv å restarte porten
-                                                serialPortDataRetrieval.Restart(serialPortData.portName);
-
-                                                // Sette feilmelding
-                                                errorHandler.Insert(
-                                                    new ErrorMessage(
-                                                        DateTime.UtcNow,
-                                                        ErrorMessageType.SerialPort,
-                                                        ErrorMessageCategory.AdminUser,
-                                                        string.Format("Serial port data timeout: {0}", sensorData.serialPort.portName),
-                                                        sensorData.id));
-                                            }
-                                            // Det er data på porten
-                                            else
-                                            {
-                                                // Sette status
-                                                if (serialPortData.portStatus == PortStatus.Closed)
+                                                // Data innhenting er startet -> port skal være åpen
+                                                if (dataRetrievalStarted)
                                                 {
-                                                    serialPortData.portStatus = PortStatus.Open;
+                                                    // Prøv å restarte porten
+                                                    serialPortDataRetrieval.Restart(serialPortData.portName);
+                                                }
+                                                else
+                                                {
+                                                    serialPortData.portStatus = PortStatus.Closed;
+                                                }
+                                            }
+                                            // Porten er åpen
+                                            else
+                                            {
+                                                // Lese data timeout fra config
+                                                double dataTimeout = config.ReadWithDefault(ConfigKey.DataTimeout, Constants.DataTimeoutDefault);
+
+                                                // Dersom det ikke er satt data på porten innen timeout
+                                                if (serialPortData.timestamp.AddMilliseconds(dataTimeout) < DateTime.UtcNow)
+                                                {
+                                                    // Sette status
+                                                    serialPortData.portStatus = PortStatus.NoData;
+
+                                                    // Fjerne data fra data feltet
+                                                    serialPortData.buffer_text = string.Empty;
+
+                                                    // Prøv å restarte porten
+                                                    serialPortDataRetrieval.Restart(serialPortData.portName);
+
+                                                    // Sette feilmelding
+                                                    errorHandler.Insert(
+                                                        new ErrorMessage(
+                                                            DateTime.UtcNow,
+                                                            ErrorMessageType.SerialPort,
+                                                            ErrorMessageCategory.AdminUser,
+                                                            string.Format("Serial port data timeout: {0}", serialPortData.portName),
+                                                            sensorData.id));
+                                                }
+                                                // Det er data på porten
+                                                else
+                                                {
+                                                    // Sette status
+                                                    if (serialPortData.portStatus == PortStatus.Closed)
+                                                    {
+                                                        serialPortData.portStatus = PortStatus.Open;
+                                                    }
                                                 }
                                             }
                                         }
-                                    }
 
-                                    // Overføre status til sensor data item
-                                    sensorData.portStatus = serialPortData.portStatus;
+                                        // Overføre status til sensor data item
+                                        sensorData.portStatus = serialPortData.portStatus;
+                                    }
+                                    catch (Exception ex)
+                                    {
+                                        errorHandler.Insert(
+                                            new ErrorMessage(
+                                                DateTime.UtcNow,
+                                                ErrorMessageType.SerialPort,
+                                                ErrorMessageCategory.AdminUser,
+                                                string.Format("runUpdateSensorStatus: {0}, System message: {1}", serialPortData.portName, ex.Message),
+                                                sensorData.id));
+                                    }
                                 }
                                 break;
 

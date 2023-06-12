@@ -789,17 +789,20 @@ namespace HMS_Server
                 }
 
                 // Debug Output
-                if (AdminMode.IsActive)
+                if (AdminMode.IsActive &&
+                    adminSettingsVM.outputBufferSize)
                 {
                     if (DateTime.Now > testTimer)
                     {
                         testTimer = DateTime.Now.AddMilliseconds(5000);
+
                         errorHandler.Insert(
                             new ErrorMessage(
                                 DateTime.UtcNow,
                                 ErrorMessageType.Debug,
                                 ErrorMessageCategory.None,
                                 string.Format("Wind Buffer 2m: {0} / {1}  (456)", helideckWindSpeed2m.BufferSize(0), helideckWindDirection2m.BufferSize(0))));
+
                         errorHandler.Insert(
                             new ErrorMessage(
                                 DateTime.UtcNow,

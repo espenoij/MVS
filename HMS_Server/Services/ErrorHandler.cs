@@ -82,7 +82,7 @@ namespace HMS_Server
                     {
                         errorMessageList.Add(errorMessage);
 
-                        if (errorMessageList.Count > Constants.MaxErrorMessages)
+                        while (errorMessageList.Count > Constants.MaxErrorMessages)
                             errorMessageList.RemoveAt(0);
                     }
                 }
