@@ -2030,6 +2030,43 @@
                             </Viewbox>
                         </Grid>
 
+                        <!--Output Buffer Size to console-->
+                        <Grid
+                            Grid.Row="3">
+
+                            <Grid.ColumnDefinitions>
+                                <ColumnDefinition
+                                    Width="*" />
+                                <ColumnDefinition
+                                    Width="*" />
+                            </Grid.ColumnDefinitions>
+
+                            <Viewbox
+                                Grid.Column="0"
+                                StretchDirection="Both"
+                                Stretch="Uniform"
+                                HorizontalAlignment="Left">
+
+                                <telerik:Label
+                                    Name="lbOutputBufferSize"
+                                    Content="Output Buffer Size to Console"
+                                    VerticalAlignment="Center" />
+                            </Viewbox>
+
+                            <Viewbox
+                                Grid.Column="1"
+                                StretchDirection="Both"
+                                Stretch="Uniform"
+                                HorizontalAlignment="Right">
+
+                                <CheckBox
+                                    Name="chkOutputBufferSize"
+                                    IsChecked="{Binding Path=outputBufferSize, Mode=TwoWay}"
+                                    VerticalAlignment="Center"
+                                    HorizontalAlignment="Right" />
+                            </Viewbox>
+                        </Grid>
+
                     </Grid>
 
                 </telerik:GroupBox>

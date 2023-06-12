@@ -448,7 +448,8 @@ namespace HMS_Server
                 }
 
                 // Debug Output
-                if (AdminMode.IsActive)
+                if (AdminMode.IsActive &&
+                    adminSettingsVM.outputBufferSize)
                 {
                     if (DateTime.Now > testTimer)
                     {

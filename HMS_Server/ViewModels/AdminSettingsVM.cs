@@ -41,6 +41,12 @@ namespace HMS_Server
             else
                 overrideMotionBuffer = false;
 
+            // CAP: Output Buffer Size to error message console
+            if (config.ReadWithDefault(ConfigKey.OutputBufferSize, "0") == "1")
+                outputBufferSize = true;
+            else
+                outputBufferSize = false;
+
             // CAP: Restricted Sector
             restrictedSectorFrom = config.ReadWithDefault(ConfigKey.RestrictedSectorFrom, Constants.HeadingDefault).ToString();
             restrictedSectorTo = config.ReadWithDefault(ConfigKey.RestrictedSectorTo, Constants.HeadingDefault).ToString();
@@ -346,6 +352,33 @@ namespace HMS_Server
                 else
                 {
                     config.Write(ConfigKey.OverrideMotionBuffer, "0");
+                }
+
+                OnPropertyChanged();
+            }
+        }
+
+        /////////////////////////////////////////////////////////////////////////////
+        // CAP: Override CAP 9c Motion Buffer
+        /////////////////////////////////////////////////////////////////////////////
+        private bool _outputBufferSize { get; set; }
+        public bool outputBufferSize
+        {
+            get
+            {
+                return _outputBufferSize;
+            }
+            set
+            {
+                _outputBufferSize = value;
+
+                if (_outputBufferSize)
+                {
+                    config.Write(ConfigKey.OutputBufferSize, "1");
+                }
+                else
+                {
+                    config.Write(ConfigKey.OutputBufferSize, "0");
                 }
 
                 OnPropertyChanged();
