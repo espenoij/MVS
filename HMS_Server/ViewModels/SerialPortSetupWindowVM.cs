@@ -44,7 +44,7 @@ namespace HMS_Server
                 _totalDataLinesString = validatedInput.ToString();
 
                 // Lagre ny setting til config fil
-                config.Write(ConfigKey.TotalDataLines, totalDataLinesString, ConfigSection.SerialPortConfig);
+                config.Write(ConfigKey.TotalDataLines, _totalDataLinesString, ConfigSection.SerialPortConfig);
 
                 OnPropertyChanged();
                 OnPropertyChanged(nameof(totalDataLines));

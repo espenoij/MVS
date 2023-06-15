@@ -255,7 +255,7 @@ namespace HMS_Client
         {
             get
             {
-                return helicopterType.ToString();
+                return _helicopterType.ToString();
             }
         }
 
@@ -264,7 +264,7 @@ namespace HMS_Client
         {
             get
             {
-                switch (helicopterType)
+                switch (_helicopterType)
                 {
                     // Heavy / A
                     case HelicopterType.AS332:
@@ -544,12 +544,12 @@ namespace HMS_Client
             {
                 if (!onDeckHelicopterHeadingIsCorrected)
                     return string.Format("On-Deck Helicopter Heading {0}° M at {1} UTC",
-                                onDeckHelicopterHeading.ToString("000"),
-                                onDeckTime.ToString("HH:mm"));
+                                _onDeckHelicopterHeading.ToString("000"),
+                                _onDeckTime.ToString("HH:mm"));
                 else
                 return string.Format("Corrected Helicopter Heading {0}° M at {1} UTC",
-                            onDeckHelicopterHeading.ToString("000"),
-                            onDeckTime.ToString("HH:mm"));
+                            _onDeckHelicopterHeading.ToString("000"),
+                            _onDeckTime.ToString("HH:mm"));
             }
         }
 

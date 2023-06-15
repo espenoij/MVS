@@ -1576,8 +1576,8 @@ namespace HMS_Server
         {
             get
             {
-                if (!double.IsNaN(data))
-                    return data.ToString();
+                if (!double.IsNaN(_data))
+                    return _data.ToString();
                 else
                     return "<non-numeric value>";
             }

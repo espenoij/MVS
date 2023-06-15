@@ -138,7 +138,7 @@ namespace HMS_Client
             get
             {
                 if (_vesselName.status == DataStatus.OK && !string.IsNullOrEmpty(_vesselName.data3))
-                    return vesselName.data3.ToString();
+                    return _vesselName.data3.ToString();
                 else
                     return Constants.NotAvailable;
             }
@@ -206,13 +206,13 @@ namespace HMS_Client
         {
             get
             {
-                if (latitude != null)
+                if (_latitude != null)
                 {
                     // Sjekke om data er gyldig
-                    if (latitude.status == DataStatus.OK)
+                    if (_latitude.status == DataStatus.OK)
                     {
                         // Hente data
-                        double lat = latitude.data;
+                        double lat = _latitude.data;
 
                         // Sjekke data
                         if (lat <= 90.0 && lat >= -90.0)
@@ -285,13 +285,13 @@ namespace HMS_Client
         {
             get
             {
-                if (longitude != null)
+                if (_longitude != null)
                 {
                     // Sjekke om data er gyldig
-                    if (longitude.status == DataStatus.OK)
+                    if (_longitude.status == DataStatus.OK)
                     {
                         // Hente data
-                        double lon = longitude.data;
+                        double lon = _longitude.data;
 
                         // Sjekke data
                         if (lon <= 180.0 && lon >= -180.0)
@@ -374,7 +374,7 @@ namespace HMS_Client
         /////////////////////////////////////////////////////////////////////////////
         // Client Mode
         /////////////////////////////////////////////////////////////////////////////
-        private string _clientMode { get; set; }
+        //private string _clientMode { get; set; }
         public string clientMode
         {
             get
@@ -389,7 +389,7 @@ namespace HMS_Client
         /////////////////////////////////////////////////////////////////////////////
         // Client Mode Icon
         /////////////////////////////////////////////////////////////////////////////
-        private string _clientModeIcon { get; set; }
+        //private string _clientModeIcon { get; set; }
         public string clientModeIcon
         {
             get

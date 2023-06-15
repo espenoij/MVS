@@ -125,12 +125,12 @@ namespace HMS_Client
             }
 
             // Cloud Init
-            cloudBase = new List<HMSData>();
-            cloudCoverage = new List<HMSData>();
+            _cloudBase = new List<HMSData>();
+            _cloudCoverage = new List<HMSData>();
             for (int i = 0; i < Constants.TOTAL_CLOUD_LAYERS; i++)
             {
-                cloudBase.Add(new HMSData());
-                cloudCoverage.Add(new HMSData());
+                _cloudBase.Add(new HMSData());
+                _cloudCoverage.Add(new HMSData());
             }
 
             // Oppdatere dato og klokke
@@ -496,19 +496,19 @@ namespace HMS_Client
         {
             get
             {
-                if (latitude != null &&
-                    longitude != null)
+                if (_latitude != null &&
+                    _longitude != null)
                 {
                     // Sjekke om data er gyldig
-                    if (latitude.status == DataStatus.OK &&
-                        longitude.status == DataStatus.OK)
+                    if (_latitude.status == DataStatus.OK &&
+                        _longitude.status == DataStatus.OK)
                     {
                         string latString;
                         string lonString;
 
                         // Hente data
-                        double lon = longitude.data;
-                        double lat = latitude.data;
+                        double lon = _longitude.data;
+                        double lat = _latitude.data;
 
                         // Sjekke data
                         if (lat <= 90.0 && lat >= -90.0)
@@ -593,9 +593,9 @@ namespace HMS_Client
             get
             {
                 // Sjekke om data er gyldig
-                if (latitude.status == DataStatus.OK)
+                if (_latitude.status == DataStatus.OK)
                 {
-                    if (latitude.data >= 0)
+                    if (_latitude.data >= 0)
                         return "N";
                     else
                         return "S";
@@ -612,12 +612,12 @@ namespace HMS_Client
             get
             {
                 // Sjekke om data er gyldig
-                if (latitude.status == DataStatus.OK)
+                if (_latitude.status == DataStatus.OK)
                 {
-                    if (latitude.data >= 0)
-                        return ((int)latitude.data).ToString("00");
+                    if (_latitude.data >= 0)
+                        return ((int)_latitude.data).ToString("00");
                     else
-                        return ((int)latitude.data * -1).ToString("00");
+                        return ((int)_latitude.data * -1).ToString("00");
                 }
                 else
                 {
@@ -631,12 +631,12 @@ namespace HMS_Client
             get
             {
                 // Sjekke om data er gyldig
-                if (latitude.status == DataStatus.OK)
+                if (_latitude.status == DataStatus.OK)
                 {
-                    if (latitude.data >= 0)
-                        return ((latitude.data - (double)((int)latitude.data)) * 60).ToString("00.000");
+                    if (_latitude.data >= 0)
+                        return ((_latitude.data - (double)((int)_latitude.data)) * 60).ToString("00.000");
                     else
-                        return ((latitude.data - (double)((int)latitude.data)) * -60).ToString("00.000");
+                        return ((_latitude.data - (double)((int)_latitude.data)) * -60).ToString("00.000");
                 }
                 else
                 {
@@ -650,9 +650,9 @@ namespace HMS_Client
             get
             {
                 // Sjekke om data er gyldig
-                if (longitude.status == DataStatus.OK)
+                if (_longitude.status == DataStatus.OK)
                 {
-                    if (longitude.data >= 0)
+                    if (_longitude.data >= 0)
                         return "E";
                     else
                         return "W";
@@ -669,12 +669,12 @@ namespace HMS_Client
             get
             {
                 // Sjekke om data er gyldig
-                if (longitude.status == DataStatus.OK)
+                if (_longitude.status == DataStatus.OK)
                 {
-                    if (longitude.data >= 0)
-                        return ((int)longitude.data).ToString("000");
+                    if (_longitude.data >= 0)
+                        return ((int)_longitude.data).ToString("000");
                     else
-                        return ((int)longitude.data * -1).ToString("000");
+                        return ((int)_longitude.data * -1).ToString("000");
                 }
                 else
                 {
@@ -688,12 +688,12 @@ namespace HMS_Client
             get
             {
                 // Sjekke om data er gyldig
-                if (longitude.status == DataStatus.OK)
+                if (_longitude.status == DataStatus.OK)
                 {
-                    if (longitude.data >= 0)
-                        return ((longitude.data - (double)((int)longitude.data)) * 60).ToString("00.000");
+                    if (_longitude.data >= 0)
+                        return ((_longitude.data - (double)((int)_longitude.data)) * 60).ToString("00.000");
                     else
-                        return ((longitude.data - (double)((int)longitude.data)) * -60).ToString("00.000");
+                        return ((_longitude.data - (double)((int)_longitude.data)) * -60).ToString("00.000");
                 }
                 else
                 {
@@ -730,7 +730,7 @@ namespace HMS_Client
         {
             get
             {
-                if (dynamicPositioning)
+                if (_dynamicPositioning)
                     return Visibility.Visible;
                 else
                     return Visibility.Collapsed;
@@ -741,7 +741,7 @@ namespace HMS_Client
         {
             get
             {
-                if (!dynamicPositioning)
+                if (!_dynamicPositioning)
                     return Visibility.Visible;
                 else
                     return Visibility.Collapsed;
@@ -776,7 +776,7 @@ namespace HMS_Client
         {
             get
             {
-                if (accurateMonitoringEquipment)
+                if (_accurateMonitoringEquipment)
                     return Visibility.Visible;
                 else
                     return Visibility.Collapsed;
@@ -787,7 +787,7 @@ namespace HMS_Client
         {
             get
             {
-                if (!accurateMonitoringEquipment)
+                if (!_accurateMonitoringEquipment)
                     return Visibility.Visible;
                 else
                     return Visibility.Collapsed;
@@ -823,8 +823,8 @@ namespace HMS_Client
         {
             get
             {
-                if (ndbFreq.status == DataStatus.OK)
-                    return ndbFreq.data.ToString("0.000", Constants.cultureInfo);
+                if (_ndbFreq.status == DataStatus.OK)
+                    return _ndbFreq.data.ToString("0.000", Constants.cultureInfo);
                 else
                     return Constants.HelideckReportNoData;
             }
@@ -834,8 +834,8 @@ namespace HMS_Client
         {
             get
             {
-                if (ndbFreq.status == DataStatus.OK && ndbServiceable)
-                    return ndbFreq.data.ToString("0.000", Constants.cultureInfo);
+                if (_ndbFreq.status == DataStatus.OK && ndbServiceable)
+                    return _ndbFreq.data.ToString("0.000", Constants.cultureInfo);
                 else
                     return Constants.HelideckReportNoData;
             }
@@ -869,8 +869,8 @@ namespace HMS_Client
         {
             get
             {
-                if (ndbIdent.status == DataStatus.OK && ndbServiceable)
-                    return ndbIdent.data3;
+                if (_ndbIdent.status == DataStatus.OK && ndbServiceable)
+                    return _ndbIdent.data3;
                 else
                     return Constants.HelideckReportNoData;
             }
@@ -904,8 +904,8 @@ namespace HMS_Client
         {
             get
             {
-                if (vhfFreq.status == DataStatus.OK)
-                    return vhfFreq.data.ToString("0.000", Constants.cultureInfo);
+                if (_vhfFreq.status == DataStatus.OK)
+                    return _vhfFreq.data.ToString("0.000", Constants.cultureInfo);
                 else
                     return Constants.HelideckReportNoData;
             }
@@ -939,8 +939,8 @@ namespace HMS_Client
         {
             get
             {
-                if (logFreq.status == DataStatus.OK)
-                    return logFreq.data.ToString("0.000", Constants.cultureInfo);
+                if (_logFreq.status == DataStatus.OK)
+                    return _logFreq.data.ToString("0.000", Constants.cultureInfo);
                 else
                     return Constants.HelideckReportNoData;
             }
@@ -974,8 +974,8 @@ namespace HMS_Client
         {
             get
             {
-                if (marineChannel.status == DataStatus.OK)
-                    return marineChannel.data.ToString("0");
+                if (_marineChannel.status == DataStatus.OK)
+                    return _marineChannel.data.ToString("0");
                 else
                     return Constants.HelideckReportNoData;
             }
@@ -1102,7 +1102,7 @@ namespace HMS_Client
         {
             get
             {
-                if (helifuelAvailable)
+                if (_helifuelAvailable)
                     return Visibility.Visible;
                 else
                     return Visibility.Collapsed;
@@ -1113,7 +1113,7 @@ namespace HMS_Client
         {
             get
             {
-                if (!helifuelAvailable)
+                if (!_helifuelAvailable)
                     return Visibility.Visible;
                 else
                     return Visibility.Collapsed;
@@ -1124,7 +1124,7 @@ namespace HMS_Client
         {
             get
             {
-                if (helifuelAvailable)
+                if (_helifuelAvailable)
                     return "Yes";
                 else
                     return "No";
@@ -1362,7 +1362,7 @@ namespace HMS_Client
         {
             get
             {
-                if (anyUnserviceableSensors)
+                if (_anyUnserviceableSensors)
                     return _anyUnserviceableSensorsComments;
                 else
                     return string.Empty;
@@ -1488,8 +1488,8 @@ namespace HMS_Client
             get
             {
                 // Sjekke om data er gyldig
-                if (helideckWindSensorHeight.status == DataStatus.OK)
-                    return helideckWindSensorHeight.data.ToString("0");
+                if (_helideckWindSensorHeight.status == DataStatus.OK)
+                    return _helideckWindSensorHeight.data.ToString("0");
                 else
                     return Constants.HelideckReportNoData;
             }
@@ -1524,8 +1524,8 @@ namespace HMS_Client
             get
             {
                 // Sjekke om data er gyldig
-                if (helideckWindSensorDistance.status == DataStatus.OK)
-                    return helideckWindSensorDistance.data.ToString("0");
+                if (_helideckWindSensorDistance.status == DataStatus.OK)
+                    return _helideckWindSensorDistance.data.ToString("0");
                 else
                     return Constants.HelideckReportNoData;
             }
@@ -1562,9 +1562,9 @@ namespace HMS_Client
             get
             {
                 // Sjekke om data er gyldig
-                if (helideckWindDirection.status == DataStatus.OK)
+                if (_helideckWindDirection.status == DataStatus.OK)
                 {
-                    int dir = (int)Math.Round(helideckWindDirection.data, 0, MidpointRounding.AwayFromZero);
+                    int dir = (int)Math.Round(_helideckWindDirection.data, 0, MidpointRounding.AwayFromZero);
                     if (dir == 0)
                         dir = 360;
                     return string.Format("{0}°", dir.ToString("000"));
@@ -1581,9 +1581,9 @@ namespace HMS_Client
             get
             {
                 // Sjekke om data er gyldig
-                if (helideckWindDirection.status == DataStatus.OK)
+                if (_helideckWindDirection.status == DataStatus.OK)
                 {
-                    int dir = (int)Math.Round(helideckWindDirection.data, 0, MidpointRounding.AwayFromZero);
+                    int dir = (int)Math.Round(_helideckWindDirection.data, 0, MidpointRounding.AwayFromZero);
 
                     if (dir == 0)
                         dir = 360;
@@ -1627,9 +1627,9 @@ namespace HMS_Client
             get
             {
                 // Sjekke om data er gyldig
-                if (helideckWindVelocity.status == DataStatus.OK)
+                if (_helideckWindVelocity.status == DataStatus.OK)
                 {
-                    return helideckWindVelocity.data.ToString("00");
+                    return _helideckWindVelocity.data.ToString("00");
                 }
                 else
                 {
@@ -1668,9 +1668,9 @@ namespace HMS_Client
             get
             {
                 // Sjekke om data er gyldig
-                if (helideckWindGust.status == DataStatus.OK)
+                if (_helideckWindGust.status == DataStatus.OK)
                 {
-                    return helideckWindGust.data.ToString("00");
+                    return _helideckWindGust.data.ToString("00");
                 }
                 else
                 {
@@ -1708,8 +1708,8 @@ namespace HMS_Client
             get
             {
                 // Sjekke om data er gyldig
-                if (areaWindSensorHeight.status == DataStatus.OK)
-                    return areaWindSensorHeight.data.ToString("0");
+                if (_areaWindSensorHeight.status == DataStatus.OK)
+                    return _areaWindSensorHeight.data.ToString("0");
                 else
                     return Constants.HelideckReportNoData;
             }
@@ -1744,8 +1744,8 @@ namespace HMS_Client
             get
             {
                 // Sjekke om data er gyldig
-                if (areaWindSensorDistance.status == DataStatus.OK)
-                    return areaWindSensorDistance.data.ToString("0");
+                if (_areaWindSensorDistance.status == DataStatus.OK)
+                    return _areaWindSensorDistance.data.ToString("0");
                 else
                     return Constants.HelideckReportNoData;
             }
@@ -1781,9 +1781,9 @@ namespace HMS_Client
             get
             {
                 // Sjekke om data er gyldig
-                if (areaWindDirection.status == DataStatus.OK)
+                if (_areaWindDirection.status == DataStatus.OK)
                 {
-                    int dir = (int)Math.Round(areaWindDirection.data, 0, MidpointRounding.AwayFromZero);
+                    int dir = (int)Math.Round(_areaWindDirection.data, 0, MidpointRounding.AwayFromZero);
                     if (dir == 0)
                         dir = 360;
                     return string.Format("{0}°", dir.ToString("000"));
@@ -1825,9 +1825,9 @@ namespace HMS_Client
             get
             {
                 // Sjekke om data er gyldig
-                if (areaWindVelocity.status == DataStatus.OK)
+                if (_areaWindVelocity.status == DataStatus.OK)
                 {
-                    return areaWindVelocity.data.ToString("00");
+                    return _areaWindVelocity.data.ToString("00");
                 }
                 else
                 {
@@ -1866,9 +1866,9 @@ namespace HMS_Client
             get
             {
                 // Sjekke om data er gyldig
-                if (areaWindGust.status == DataStatus.OK)
+                if (_areaWindGust.status == DataStatus.OK)
                 {
-                    return areaWindGust.data.ToString("00");
+                    return _areaWindGust.data.ToString("00");
                 }
                 else
                 {
@@ -1907,7 +1907,7 @@ namespace HMS_Client
         {
             get
             {
-                if (seaSprayObserved)
+                if (_seaSprayObserved)
                     return Visibility.Visible;
                 else
                     return Visibility.Collapsed;
@@ -1918,7 +1918,7 @@ namespace HMS_Client
         {
             get
             {
-                if (!seaSprayObserved)
+                if (!_seaSprayObserved)
                     return Visibility.Visible;
                 else
                     return Visibility.Collapsed;
@@ -1954,8 +1954,8 @@ namespace HMS_Client
             get
             {
                 // Sjekke om data er gyldig
-                if (visibility.status == DataStatus.OK)
-                    return visibility.data.ToString();
+                if (_visibility.status == DataStatus.OK)
+                    return _visibility.data.ToString();
                 else
                     return Constants.HelideckReportNoData;
             }
@@ -1990,8 +1990,8 @@ namespace HMS_Client
             get
             {
                 // Sjekke om data er gyldig
-                if (airPressureQNH.status == DataStatus.OK)
-                    return airPressureQNH.data.ToString("0.0");
+                if (_airPressureQNH.status == DataStatus.OK)
+                    return _airPressureQNH.data.ToString("0.0");
                 else
                     return Constants.HelideckReportNoData;
             }
@@ -2062,8 +2062,8 @@ namespace HMS_Client
             get
             {
                 // Sjekke om data er gyldig
-                if (significantWaveHeight.status == DataStatus.OK)
-                    return significantWaveHeight.data.ToString("0.0");
+                if (_significantWaveHeight.status == DataStatus.OK)
+                    return _significantWaveHeight.data.ToString("0.0");
                 else
                     return Constants.HelideckReportNoData;
             }
@@ -2098,8 +2098,8 @@ namespace HMS_Client
             get
             {
                 // Sjekke om data er gyldig
-                if (helideckHeading.status == DataStatus.OK)
-                    return string.Format("{0}°", helideckHeading.data.ToString("000"));
+                if (_helideckHeading.status == DataStatus.OK)
+                    return string.Format("{0}°", _helideckHeading.data.ToString("000"));
                 else
                     return Constants.HelideckReportNoData;
             }
@@ -2135,8 +2135,8 @@ namespace HMS_Client
             get
             {
                 // Sjekke om data er gyldig
-                if (vesselHeading.status == DataStatus.OK)
-                    return string.Format("{0}°", vesselHeading.data.ToString("000"));
+                if (_vesselHeading.status == DataStatus.OK)
+                    return string.Format("{0}°", _vesselHeading.data.ToString("000"));
                 else
                     return Constants.HelideckReportNoData;
             }
@@ -2147,8 +2147,8 @@ namespace HMS_Client
             get
             {
                 // Sjekke om data er gyldig
-                if (vesselHeading.status == DataStatus.OK)
-                    return vesselHeading.data.ToString("000");
+                if (_vesselHeading.status == DataStatus.OK)
+                    return _vesselHeading.data.ToString("000");
                 else
                     return Constants.HelideckReportNoData;
             }
@@ -2183,16 +2183,16 @@ namespace HMS_Client
         {
             get
             {
-                if (weather != null)
+                if (_weather != null)
                 {
                     // Sjekke om data er gyldig
-                    if (weather.status == DataStatus.OK)
+                    if (_weather.status == DataStatus.OK)
                     {
                         string weatherPhenomenaString = string.Empty;
 
-                        WeatherSeverity severity = Weather.DecodeSeverity((int)weather.data);
-                        WeatherPhenomena weather1 = Weather.DecodePhenomena1((int)weather.data);
-                        WeatherPhenomena weather2 = Weather.DecodePhenomena2((int)weather.data);
+                        WeatherSeverity severity = Weather.DecodeSeverity((int)_weather.data);
+                        WeatherPhenomena weather1 = Weather.DecodePhenomena1((int)_weather.data);
+                        WeatherPhenomena weather2 = Weather.DecodePhenomena2((int)_weather.data);
 
                         if (severity != WeatherSeverity.None)
                         {
@@ -2252,8 +2252,8 @@ namespace HMS_Client
             get
             {
                 // Sjekke om data er gyldig
-                if (airTemperature.status == DataStatus.OK)
-                    return airTemperature.data.ToString("0");
+                if (_airTemperature.status == DataStatus.OK)
+                    return _airTemperature.data.ToString("0");
                 else
                     return Constants.HelideckReportNoData;
             }
@@ -2288,8 +2288,8 @@ namespace HMS_Client
             get
             {
                 // Sjekke om data er gyldig
-                if (airDewPoint.status == DataStatus.OK)
-                    return airDewPoint.data.ToString("0");
+                if (_airDewPoint.status == DataStatus.OK)
+                    return _airDewPoint.data.ToString("0");
                 else
                     return Constants.HelideckReportNoData;
             }
@@ -2324,8 +2324,8 @@ namespace HMS_Client
             get
             {
                 // Sjekke om data er gyldig
-                if (cloudLayer_NOROG.status == DataStatus.OK)
-                    return cloudLayer_NOROG.data.ToString("0");
+                if (_cloudLayer_NOROG.status == DataStatus.OK)
+                    return _cloudLayer_NOROG.data.ToString("0");
                 else
                     return Constants.HelideckReportNoData;
             }
@@ -2335,15 +2335,15 @@ namespace HMS_Client
         /////////////////////////////////////////////////////////////////////////////
         // Meteorological: Cloud Base Layer 1-4
         /////////////////////////////////////////////////////////////////////////////
-        private List<HMSData> cloudBase { get; set; }
-        private List<HMSData> cloudCoverage { get; set; }
+        private List<HMSData> _cloudBase { get; set; }
+        private List<HMSData> _cloudCoverage { get; set; }
 
         private void SetCloudData(int layer, HMSData cBase, HMSData cCoverage)
         {
             if (layer < Constants.TOTAL_CLOUD_LAYERS && layer >= 0)
             {
-                cloudBase[layer]?.Set(cBase);
-                cloudCoverage[layer]?.Set(cCoverage);
+                _cloudBase[layer]?.Set(cBase);
+                _cloudCoverage[layer]?.Set(cCoverage);
             }
 
             switch (layer)
@@ -2374,9 +2374,9 @@ namespace HMS_Client
         {
             if (layer < Constants.TOTAL_CLOUD_LAYERS && layer >= 0)
             {
-                if (cloudBase[layer]?.status == DataStatus.OK &&
-                    !double.IsNaN(cloudBase[layer].data))
-                    return cloudBase[layer]?.data.ToString("0");
+                if (_cloudBase[layer]?.status == DataStatus.OK &&
+                    !double.IsNaN(_cloudBase[layer].data))
+                    return _cloudBase[layer]?.data.ToString("0");
                 else
                     return Constants.NotAvailable;
             }
@@ -2422,9 +2422,9 @@ namespace HMS_Client
         {
             if (layer < Constants.TOTAL_CLOUD_LAYERS && layer >= 0)
             {
-                if (cloudCoverage[layer]?.status == DataStatus.OK)
+                if (_cloudCoverage[layer]?.status == DataStatus.OK)
                 {
-                    switch (cloudCoverage[layer].data)
+                    switch (_cloudCoverage[layer].data)
                     {
                         case 0:
                             return "SKC";
@@ -2516,7 +2516,7 @@ namespace HMS_Client
             get
             {
                 // Sjekke om data er gyldig
-                if (installationCategory.status == DataStatus.OK)
+                if (_installationCategory.status == DataStatus.OK)
                 {
                     switch (_installationCategory.data)
                     {
@@ -2566,8 +2566,8 @@ namespace HMS_Client
             get
             {
                 // Sjekke om data er gyldig
-                if (pitchUp.status == DataStatus.OK)
-                    return Math.Abs(pitchUp.data).ToString("0.0");
+                if (_pitchUp.status == DataStatus.OK)
+                    return Math.Abs(_pitchUp.data).ToString("0.0");
                 else
                     return Constants.HelideckReportNoData;
             }
@@ -2602,8 +2602,8 @@ namespace HMS_Client
             get
             {
                 // Sjekke om data er gyldig
-                if (pitchDown.status == DataStatus.OK)
-                    return Math.Abs(pitchDown.data).ToString("0.0");
+                if (_pitchDown.status == DataStatus.OK)
+                    return Math.Abs(_pitchDown.data).ToString("0.0");
                 else
                     return Constants.HelideckReportNoData;
             }
@@ -2638,8 +2638,8 @@ namespace HMS_Client
             get
             {
                 // Sjekke om data er gyldig
-                if (rollLeft.status == DataStatus.OK)
-                    return Math.Abs(rollLeft.data).ToString("0.0");
+                if (_rollLeft.status == DataStatus.OK)
+                    return Math.Abs(_rollLeft.data).ToString("0.0");
                 else
                     return Constants.HelideckReportNoData;
             }
@@ -2674,8 +2674,8 @@ namespace HMS_Client
             get
             {
                 // Sjekke om data er gyldig
-                if (rollRight.status == DataStatus.OK)
-                    return Math.Abs(rollRight.data).ToString("0.0");
+                if (_rollRight.status == DataStatus.OK)
+                    return Math.Abs(_rollRight.data).ToString("0.0");
                 else
                     return Constants.HelideckReportNoData;
             }
@@ -2710,8 +2710,8 @@ namespace HMS_Client
             get
             {
                 // Sjekke om data er gyldig
-                if (inclination.status == DataStatus.OK)
-                    return inclination.data.ToString("0.0");
+                if (_inclination.status == DataStatus.OK)
+                    return _inclination.data.ToString("0.0");
                 else
                     return Constants.HelideckReportNoData;
             }
@@ -2746,8 +2746,8 @@ namespace HMS_Client
             get
             {
                 // Sjekke om data er gyldig
-                if (maxHeave.status == DataStatus.OK)
-                    return maxHeave.data.ToString("0.0");
+                if (_maxHeave.status == DataStatus.OK)
+                    return _maxHeave.data.ToString("0.0");
                 else
                     return Constants.HelideckReportNoData;
             }
@@ -2782,8 +2782,8 @@ namespace HMS_Client
             get
             {
                 // Sjekke om data er gyldig
-                if (heavePeriod.status == DataStatus.OK)
-                    return heavePeriod.data.ToString("0.0");
+                if (_heavePeriod.status == DataStatus.OK)
+                    return _heavePeriod.data.ToString("0.0");
                 else
                     return Constants.HelideckReportNoData;
             }
@@ -3011,7 +3011,7 @@ namespace HMS_Client
         {
             get
             {
-                return helideckReportFile;
+                return _helideckReportFile;
             }
         }
 
@@ -3022,9 +3022,9 @@ namespace HMS_Client
         {
             get
             {
-                if (sendHMSScreenCapture)
+                if (_sendHMSScreenCapture)
                 {
-                    return screenCaptureFile;
+                    return _screenCaptureFile;
                 }
                 else
                 {
@@ -3212,18 +3212,18 @@ namespace HMS_Client
         /////////////////////////////////////////////////////////////////////////////
         // Email Status
         /////////////////////////////////////////////////////////////////////////////
-        private EmailStatus emailStatus { get; set; }
+        private EmailStatus _emailStatus { get; set; }
         public EmailStatus EmailStatus
         {
             get
             {
-                return emailStatus;
+                return _emailStatus;
             }
             set
             {
-                if (value != emailStatus)
+                if (value != _emailStatus)
                 {
-                    emailStatus = value;
+                    _emailStatus = value;
 
                     OnPropertyChanged(nameof(emailStatusPreview));
                     OnPropertyChanged(nameof(emailStatusSending));
@@ -3237,7 +3237,7 @@ namespace HMS_Client
         {
             get
             {
-                if (emailStatus == EmailStatus.PREVIEW)
+                if (_emailStatus == EmailStatus.PREVIEW)
                     return Visibility.Visible;
                 else
                     return Visibility.Collapsed;
@@ -3248,7 +3248,7 @@ namespace HMS_Client
         {
             get
             {
-                if (emailStatus == EmailStatus.SENDING)
+                if (_emailStatus == EmailStatus.SENDING)
                     return Visibility.Visible;
                 else
                     return Visibility.Collapsed;
@@ -3259,7 +3259,7 @@ namespace HMS_Client
         {
             get
             {
-                if (emailStatus == EmailStatus.SUCCESS)
+                if (_emailStatus == EmailStatus.SUCCESS)
                     return Visibility.Visible;
                 else
                     return Visibility.Collapsed;
@@ -3270,7 +3270,7 @@ namespace HMS_Client
         {
             get
             {
-                if (emailStatus == EmailStatus.FAILED)
+                if (_emailStatus == EmailStatus.FAILED)
                     return Visibility.Visible;
                 else
                     return Visibility.Collapsed;
@@ -3301,7 +3301,7 @@ namespace HMS_Client
             get
             {
                 if (_restrictionSector.status == DataStatus.OK &&
-                    restrictionSector.data != restrictionSector.data2)  // Dersom to/from sector er lik setter vi blank
+                    _restrictionSector.data != _restrictionSector.data2)  // Dersom to/from sector er lik setter vi blank
                     return _restrictionSector.data.ToString("000");
                 else
                     return Constants.HelideckReportNoData;
@@ -3313,7 +3313,7 @@ namespace HMS_Client
             get
             {
                 if (_restrictionSector.status == DataStatus.OK &&
-                    restrictionSector.data != restrictionSector.data2)  // Dersom to/from sector er lik setter vi blank
+                    _restrictionSector.data != _restrictionSector.data2)  // Dersom to/from sector er lik setter vi blank
                     return _restrictionSector.data2.ToString("000");
                 else
                     return Constants.HelideckReportNoData;

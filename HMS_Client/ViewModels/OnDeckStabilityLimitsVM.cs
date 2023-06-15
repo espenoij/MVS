@@ -143,12 +143,12 @@ namespace HMS_Client
         {
             get
             {
-                if (mms_msi != null)
+                if (_mms_msi != null)
                 {
                     // Sjekke om data er gyldig
-                    if (mms_msi.status == DataStatus.OK)
+                    if (_mms_msi.status == DataStatus.OK)
                     {
-                        return mms_msi.data.ToString("0.0");
+                        return _mms_msi.data.ToString("0.0");
                     }
                     else
                     {
@@ -191,12 +191,12 @@ namespace HMS_Client
         {
             get
             {
-                if (msi != null)
+                if (_msi != null)
                 {
                     // Sjekke om data er gyldig
-                    if (msi.status == DataStatus.OK)
+                    if (_msi.status == DataStatus.OK)
                     {
-                        return msi.data.ToString("0");
+                        return _msi.data.ToString("0");
                     }
                     else
                     {
@@ -330,12 +330,12 @@ namespace HMS_Client
         {
             get
             {
-                if (wsit != null)
+                if (_wsit != null)
                 {
                     // Sjekke om data er gyldig
-                    if (wsit.status == DataStatus.OK)
+                    if (_wsit.status == DataStatus.OK)
                     {
-                        return wsit.data.ToString("0.0");
+                        return _wsit.data.ToString("0.0");
                     }
                     else
                     {
@@ -378,12 +378,12 @@ namespace HMS_Client
         {
             get
             {
-                if (wsi != null)
+                if (_wsi != null)
                 {
                     // Sjekke om data er gyldig
-                    if (wsi.status == DataStatus.OK)
+                    if (_wsi.status == DataStatus.OK)
                     {
-                        return wsi.data.ToString("0");
+                        return _wsi.data.ToString("0");
                     }
                     else
                     {
@@ -411,10 +411,10 @@ namespace HMS_Client
             {
                 if (value != null)
                 {
+                    _msiwsi.Set(value);
+
                     OnPropertyChanged(nameof(msiwsiX));
                     OnPropertyChanged(nameof(msiwsiY));
-
-                    _msiwsi.Set(value);
                 }
             }
         }
@@ -434,8 +434,8 @@ namespace HMS_Client
         {
             get
             {
-                if (msiwsi?.status == DataStatus.OK)
-                    return msiwsi.data;
+                if (_msiwsi?.status == DataStatus.OK)
+                    return _msiwsi.data;
                 else
                     return double.NaN; // Settes til NaN slik at graf ikke viser data
             }

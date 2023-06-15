@@ -121,7 +121,7 @@ namespace HMS_Client
             {
                 get
                 {
-                    if (active)
+                    if (_active)
                         return Visibility.Visible;
                     else
                         return Visibility.Hidden;
@@ -170,10 +170,10 @@ namespace HMS_Client
             {
                 get
                 {
-                    switch (status)
+                    switch (_status)
                     {
                         case DataStatus.OK:
-                            if (even)
+                            if (_even)
                                 return StatusBackground.BACKGROUND_SEPARATOR;
                             else
                                 return StatusBackground.BLANK;

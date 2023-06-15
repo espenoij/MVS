@@ -253,16 +253,16 @@ namespace HMS_Client
         {
             get
             {
-                if (vesselHeadingDelta != null)
+                if (_vesselHeadingDelta != null)
                 {
                     // Sjekke om data er gyldig
-                    if (vesselHeadingDelta.status == DataStatus.OK)
+                    if (_vesselHeadingDelta.status == DataStatus.OK)
                     {
-                        if (Math.Round(vesselHeadingDelta.data, 0, MidpointRounding.AwayFromZero) >= 1)
-                            return string.Format("{0}° R", Math.Round(vesselHeadingDelta.data, 0, MidpointRounding.AwayFromZero).ToString(" 0"));
+                        if (Math.Round(_vesselHeadingDelta.data, 0, MidpointRounding.AwayFromZero) >= 1)
+                            return string.Format("{0}° R", Math.Round(_vesselHeadingDelta.data, 0, MidpointRounding.AwayFromZero).ToString(" 0"));
                         else
-                        if (vesselHeadingDelta.data <= -1)
-                            return string.Format("{0}° L", Math.Abs(Math.Round(vesselHeadingDelta.data, 0, MidpointRounding.AwayFromZero)).ToString(" 0"));
+                        if (_vesselHeadingDelta.data <= -1)
+                            return string.Format("{0}° L", Math.Abs(Math.Round(_vesselHeadingDelta.data, 0, MidpointRounding.AwayFromZero)).ToString(" 0"));
                         else
                             return "0°";
                     }
@@ -308,11 +308,11 @@ namespace HMS_Client
                     // Sjekke om data er gyldig
                     if (_windDirectionDelta.status == DataStatus.OK)
                     {
-                        if (windDirectionDelta.data >= 1)
-                            return string.Format("{0}° R", windDirectionDelta.data.ToString("0"));
+                        if (_windDirectionDelta.data >= 1)
+                            return string.Format("{0}° R", _windDirectionDelta.data.ToString("0"));
                         else
-                        if (windDirectionDelta.data <= -1)
-                            return string.Format("{0}° L", Math.Abs(windDirectionDelta.data).ToString("0"));
+                        if (_windDirectionDelta.data <= -1)
+                            return string.Format("{0}° L", Math.Abs(_windDirectionDelta.data).ToString("0"));
                         else
                             return "0°";
                     }
@@ -411,7 +411,7 @@ namespace HMS_Client
         {
             get
             {
-                return alignmentTime;
+                return _alignmentTime;
             }
         }
 
@@ -435,7 +435,7 @@ namespace HMS_Client
         {
             get
             {
-                if (Math.Abs(Math.Round(vesselHeadingDelta.data, 0, MidpointRounding.AwayFromZero)) >= 10)
+                if (Math.Abs(Math.Round(_vesselHeadingDelta.data, 0, MidpointRounding.AwayFromZero)) >= 10)
                     return true;
                 else
                     return false;

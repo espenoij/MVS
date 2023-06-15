@@ -110,10 +110,10 @@ namespace HMS_Client
         {
             get
             {
-                if (!string.IsNullOrEmpty(data3))
-                    return data3;
+                if (!string.IsNullOrEmpty(_data3))
+                    return _data3;
                 else
-                    return data.ToString();
+                    return _data.ToString();
             }
         }
 
@@ -135,7 +135,7 @@ namespace HMS_Client
         {
             get
             {
-                return timestamp.ToString(Constants.TimestampFormat, Constants.cultureInfo);
+                return _timestamp.ToString(Constants.TimestampFormat, Constants.cultureInfo);
             }
         }
 
@@ -157,7 +157,7 @@ namespace HMS_Client
         {
             get
             {
-                return status.ToString();
+                return _status.ToString();
             }
         }
 
@@ -179,7 +179,7 @@ namespace HMS_Client
         {
             get
             {
-                return limitStatus.ToString();
+                return _limitStatus.ToString();
             }
         }
 
@@ -201,10 +201,10 @@ namespace HMS_Client
         {
             get
             {
-                if (sensorGroupId == Constants.SensorIDNotSet)
+                if (_sensorGroupId == Constants.SensorIDNotSet)
                     return "None";
                 else
-                    return sensorGroupId.ToString();
+                    return _sensorGroupId.ToString();
             }
         }
 
@@ -259,8 +259,8 @@ namespace HMS_Client
         {
             get
             {
-                if (!string.IsNullOrEmpty(name))
-                    return name;
+                if (!string.IsNullOrEmpty(_name))
+                    return _name;
                 else
                     return Constants.NameNotSet;
             }
@@ -272,8 +272,8 @@ namespace HMS_Client
         {
             get
             {
-                if (status == DataStatus.OK)
-                    return data;
+                if (_status == DataStatus.OK)
+                    return _data;
                 else
                     // Ved å sende NaN til graf får vi mellomrom på graf-linjen
                     // der det ikke er gyldige data tilgjengelig.
@@ -285,8 +285,8 @@ namespace HMS_Client
         {
             get
             {
-                if (status == DataStatus.OK)
-                    return data2;
+                if (_status == DataStatus.OK)
+                    return _data2;
                 else
                     // Ved å sende NaN til graf får vi mellomrom på graf-linjen
                     // der det ikke er gyldige data tilgjengelig.

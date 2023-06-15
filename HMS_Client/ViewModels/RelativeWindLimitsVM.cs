@@ -204,16 +204,16 @@ namespace HMS_Client
         {
             get
             {
-                if (relativeWindDir != null)
+                if (_relativeWindDir != null)
                 {
                     // Sjekke om data er gyldig
-                    if (relativeWindDir.status == DataStatus.OK)
+                    if (_relativeWindDir.status == DataStatus.OK)
                     {
-                        if (relativeWindDir.data >= 1)
-                            return string.Format("{0}° R", relativeWindDir.data.ToString("0"));
+                        if (_relativeWindDir.data >= 1)
+                            return string.Format("{0}° R", _relativeWindDir.data.ToString("0"));
                         else
-                        if (relativeWindDir.data <= -1)
-                            return string.Format("{0}° L", Math.Abs(relativeWindDir.data).ToString("0"));
+                        if (_relativeWindDir.data <= -1)
+                            return string.Format("{0}° L", Math.Abs(_relativeWindDir.data).ToString("0"));
                         else
                             return "0°";
                     }

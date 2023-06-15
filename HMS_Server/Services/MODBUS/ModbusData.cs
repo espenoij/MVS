@@ -26,7 +26,7 @@ namespace HMS_Server
         {
             get
             {
-                return address.ToString();
+                return _address.ToString();
             }
         }
 
@@ -48,7 +48,7 @@ namespace HMS_Server
         {
             get
             {
-                return data.ToString();
+                return _data.ToString();
             }
         }
 
@@ -70,7 +70,7 @@ namespace HMS_Server
         {
             get
             {
-                return calculatedData.ToString();
+                return _calculatedData.ToString();
             }
         }
 

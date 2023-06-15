@@ -164,7 +164,7 @@ namespace HMS_Client
                     {
                         _windDirectionRT.Set(value);
 
-                        if (windMeasurement == WindMeasurement.RealTime)
+                        if (_windMeasurement == WindMeasurement.RealTime)
                         {
                             OnPropertyChanged(nameof(windDirectionString));
                             OnPropertyChanged(nameof(windDirectionRotation));
@@ -191,7 +191,7 @@ namespace HMS_Client
                     {
                         _windDirection2m.Set(value);
 
-                        if (windMeasurement == WindMeasurement.TwoMinuteMean)
+                        if (_windMeasurement == WindMeasurement.TwoMinuteMean)
                         {
                             OnPropertyChanged(nameof(windDirectionString));
                             OnPropertyChanged(nameof(windDirectionRotation));
@@ -218,7 +218,7 @@ namespace HMS_Client
                     {
                         _windDirection10m.Set(value);
 
-                        if (windMeasurement == WindMeasurement.TenMinuteMean)
+                        if (_windMeasurement == WindMeasurement.TenMinuteMean)
                         {
                             OnPropertyChanged(nameof(windDirectionString));
                             OnPropertyChanged(nameof(windDirectionRotation));
@@ -235,13 +235,13 @@ namespace HMS_Client
             {
                 int dir;
 
-                switch (windMeasurement)
+                switch (_windMeasurement)
                 {
                     case WindMeasurement.RealTime:
                         // Sjekke om data er gyldig
-                        if (windDirectionRT.status == DataStatus.OK)
+                        if (_windDirectionRT.status == DataStatus.OK)
                         {
-                            dir = (int)Math.Round(windDirectionRT.data, 0, MidpointRounding.AwayFromZero);
+                            dir = (int)Math.Round(_windDirectionRT.data, 0, MidpointRounding.AwayFromZero);
                         }
                         else
                         {
@@ -251,9 +251,9 @@ namespace HMS_Client
 
                     case WindMeasurement.TwoMinuteMean:
                         // Sjekke om data er gyldig
-                        if (windDirection2m.status == DataStatus.OK)
+                        if (_windDirection2m.status == DataStatus.OK)
                         {
-                            dir = (int)Math.Round(windDirection2m.data, 0, MidpointRounding.AwayFromZero);
+                            dir = (int)Math.Round(_windDirection2m.data, 0, MidpointRounding.AwayFromZero);
                         }
                         else
                         {
@@ -263,9 +263,9 @@ namespace HMS_Client
 
                     case WindMeasurement.TenMinuteMean:
                         // Sjekke om data er gyldig
-                        if (windDirection10m.status == DataStatus.OK)
+                        if (_windDirection10m.status == DataStatus.OK)
                         {
-                            dir = (int)Math.Round(windDirection10m.data, 0, MidpointRounding.AwayFromZero);
+                            dir = (int)Math.Round(_windDirection10m.data, 0, MidpointRounding.AwayFromZero);
                         }
                         else
                         {
@@ -288,13 +288,13 @@ namespace HMS_Client
         {
             get
             {
-                switch (windMeasurement)
+                switch (_windMeasurement)
                 {
                     case WindMeasurement.RealTime:
                         // Sjekke om data er gyldig
-                        if (windDirectionRT.status == DataStatus.OK)
+                        if (_windDirectionRT.status == DataStatus.OK)
                         {
-                            return windDirectionRT.data;
+                            return _windDirectionRT.data;
                         }
                         else
                         {
@@ -303,9 +303,9 @@ namespace HMS_Client
 
                     case WindMeasurement.TwoMinuteMean:
                         // Sjekke om data er gyldig
-                        if (windDirection2m.status == DataStatus.OK)
+                        if (_windDirection2m.status == DataStatus.OK)
                         {
-                            return windDirection2m.data;
+                            return _windDirection2m.data;
                         }
                         else
                         {
@@ -314,9 +314,9 @@ namespace HMS_Client
 
                     case WindMeasurement.TenMinuteMean:
                         // Sjekke om data er gyldig
-                        if (windDirection10m.status == DataStatus.OK)
+                        if (_windDirection10m.status == DataStatus.OK)
                         {
-                            return windDirection10m.data;
+                            return _windDirection10m.data;
                         }
                         else
                         {
@@ -359,7 +359,7 @@ namespace HMS_Client
                     {
                         _windSpeedRT.Set(value);
 
-                        if (windMeasurement == WindMeasurement.RealTime)
+                        if (_windMeasurement == WindMeasurement.RealTime)
                             OnPropertyChanged(nameof(windSpeedString));
                     }
                 }
@@ -382,7 +382,7 @@ namespace HMS_Client
                     {
                         _windSpeed2m.Set(value);
 
-                        if (windMeasurement == WindMeasurement.TwoMinuteMean)
+                        if (_windMeasurement == WindMeasurement.TwoMinuteMean)
                             OnPropertyChanged(nameof(windSpeedString));
                     }
                 }
@@ -405,7 +405,7 @@ namespace HMS_Client
                     {
                         _windSpeed10m.Set(value);
 
-                        if (windMeasurement == WindMeasurement.TenMinuteMean)
+                        if (_windMeasurement == WindMeasurement.TenMinuteMean)
                             OnPropertyChanged(nameof(windSpeedString));
                     }
                 }
@@ -416,15 +416,15 @@ namespace HMS_Client
         {
             get
             {
-                if (windSpeedRT != null)
+                if (_windSpeedRT != null)
                 {
-                    switch (windMeasurement)
+                    switch (_windMeasurement)
                     {
                         case WindMeasurement.RealTime:
                             // Sjekke om data er gyldig
-                            if (windSpeedRT.status == DataStatus.OK)
+                            if (_windSpeedRT.status == DataStatus.OK)
                             {
-                                return windSpeedRT.data.ToString("00");
+                                return _windSpeedRT.data.ToString("00");
                             }
                             else
                             {
@@ -433,9 +433,9 @@ namespace HMS_Client
 
                         case WindMeasurement.TwoMinuteMean:
                             // Sjekke om data er gyldig
-                            if (windSpeed2m.status == DataStatus.OK)
+                            if (_windSpeed2m.status == DataStatus.OK)
                             {
-                                return windSpeed2m.data.ToString("00");
+                                return _windSpeed2m.data.ToString("00");
                             }
                             else
                             {
@@ -444,9 +444,9 @@ namespace HMS_Client
 
                         case WindMeasurement.TenMinuteMean:
                             // Sjekke om data er gyldig
-                            if (windSpeed10m.status == DataStatus.OK)
+                            if (_windSpeed10m.status == DataStatus.OK)
                             {
-                                return windSpeed10m.data.ToString("00");
+                                return _windSpeed10m.data.ToString("00");
                             }
                             else
                             {
@@ -483,7 +483,7 @@ namespace HMS_Client
                     {
                         _windGust2m.Set(value);
 
-                        if (windMeasurement == WindMeasurement.TwoMinuteMean)
+                        if (_windMeasurement == WindMeasurement.TwoMinuteMean)
                             OnPropertyChanged(nameof(windGustString));
                     }
                 }
@@ -506,7 +506,7 @@ namespace HMS_Client
                     {
                         _windGust10m.Set(value);
 
-                        if (windMeasurement == WindMeasurement.TenMinuteMean)
+                        if (_windMeasurement == WindMeasurement.TenMinuteMean)
                             OnPropertyChanged(nameof(windGustString));
                     }
                 }
@@ -517,15 +517,15 @@ namespace HMS_Client
         {
             get
             {
-                if (windGust2m != null)
+                if (_windGust2m != null)
                 {
-                    switch (windMeasurement)
+                    switch (_windMeasurement)
                     {
                         case WindMeasurement.TwoMinuteMean:
                             // Sjekke om data er gyldig
-                            if (windGust2m.status == DataStatus.OK)
+                            if (_windGust2m.status == DataStatus.OK)
                             {
-                                return windGust2m.data.ToString("00");
+                                return _windGust2m.data.ToString("00");
                             }
                             else
                             {
@@ -534,9 +534,9 @@ namespace HMS_Client
 
                         case WindMeasurement.TenMinuteMean:
                             // Sjekke om data er gyldig
-                            if (windGust10m.status == DataStatus.OK)
+                            if (_windGust10m.status == DataStatus.OK)
                             {
-                                return windGust10m.data.ToString("00");
+                                return _windGust10m.data.ToString("00");
                             }
                             else
                             {
@@ -586,12 +586,12 @@ namespace HMS_Client
         {
             get
             {
-                if (vesselHeading != null)
+                if (_vesselHeading != null)
                 {
                     // Sjekke om data er gyldig
-                    if (vesselHeading.status == DataStatus.OK)
+                    if (_vesselHeading.status == DataStatus.OK)
                     {
-                        return string.Format("{0}°", vesselHeading.data.ToString("000"));
+                        return string.Format("{0}°", _vesselHeading.data.ToString("000"));
                     }
                     else
                     {
@@ -609,12 +609,12 @@ namespace HMS_Client
         {
             get
             {
-                if (vesselHeading != null)
+                if (_vesselHeading != null)
                 {
                     // Sjekke om data er gyldig
-                    if (vesselHeading.status == DataStatus.OK)
+                    if (_vesselHeading.status == DataStatus.OK)
                     {
-                        return vesselHeading.data;
+                        return _vesselHeading.data;
                     }
                     else
                     {
@@ -657,12 +657,12 @@ namespace HMS_Client
         {
             get
             {
-                if (vesselCOG != null)
+                if (_vesselCOG != null)
                 {
                     // Sjekke om data er gyldig
-                    if (vesselCOG.status == DataStatus.OK)
+                    if (_vesselCOG.status == DataStatus.OK)
                     {
-                        return string.Format("{0}°", vesselCOG.data.ToString("000"));
+                        return string.Format("{0}°", _vesselCOG.data.ToString("000"));
                     }
                     else
                     {
@@ -706,12 +706,12 @@ namespace HMS_Client
         {
             get
             {
-                if (vesselSOG != null)
+                if (_vesselSOG != null)
                 {
                     // Sjekke om data er gyldig
-                    if (vesselSOG.status == DataStatus.OK)
+                    if (_vesselSOG.status == DataStatus.OK)
                     {
-                        return vesselSOG.data.ToString("0.0");
+                        return _vesselSOG.data.ToString("0.0");
                     }
                     else
                     {
@@ -887,9 +887,9 @@ namespace HMS_Client
         {
             get
             {
-                if (helideckHeading.status == DataStatus.OK)
+                if (_helideckHeading.status == DataStatus.OK)
                 {
-                    return string.Format("{0}°", helideckHeading.data.ToString("000"));
+                    return string.Format("{0}°", _helideckHeading.data.ToString("000"));
                 }
                 else
                 {
@@ -902,9 +902,9 @@ namespace HMS_Client
         {
             get
             {
-                if (helideckHeading != null)
+                if (_helideckHeading != null)
                 {
-                    return helideckHeading.data;
+                    return _helideckHeading.data;
                 }
                 else
                 {
@@ -1027,9 +1027,9 @@ namespace HMS_Client
         {
             get
             {
-                if (helicopterHeading?.status == DataStatus.OK)
+                if (_helicopterHeading?.status == DataStatus.OK)
                 {
-                    return helicopterHeading.data;
+                    return _helicopterHeading.data;
                 }
                 else
                 {

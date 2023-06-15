@@ -434,7 +434,7 @@ public class RWDData : INotifyPropertyChanged
         {
             if (status == DataStatus.OK)
             {
-                double val = wind;
+                double val = _wind;
                 if (val > 60)
                     val = 60;
                 return val;
@@ -452,7 +452,7 @@ public class RWDData : INotifyPropertyChanged
         {
             if (status == DataStatus.OK)
             {
-                double val = Math.Abs(rwd);
+                double val = Math.Abs(_rwd);
                 if (val > 60)
                     val = 60;
                 return val;

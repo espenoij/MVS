@@ -109,7 +109,7 @@ namespace HMS_Server
         {
             get
             {
-                return status.ToString();
+                return _status.ToString();
             }
         }
 

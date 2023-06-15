@@ -225,8 +225,8 @@ namespace HMS_Client
             {
                 if (value != null)
                 {
-                    OnPropertyChanged(nameof(wavePeriodString));
                     _wavePeriodData.Set(value);
+                    OnPropertyChanged(nameof(wavePeriodString));
                 }
             }
         }
@@ -234,12 +234,12 @@ namespace HMS_Client
         {
             get
             {
-                if (wavePeriodData != null)
+                if (_wavePeriodData != null)
                 {
                     // Sjekke om data er gyldig
-                    if (wavePeriodData.status == DataStatus.OK)
+                    if (_wavePeriodData.status == DataStatus.OK)
                     {
-                        return string.Format("{0} s", wavePeriodData.data.ToString("0.0"));
+                        return string.Format("{0} s", _wavePeriodData.data.ToString("0.0"));
                     }
                     else
                     {
@@ -264,8 +264,8 @@ namespace HMS_Client
             {
                 if (value != null)
                 {
-                    OnPropertyChanged(nameof(wavePeriodMax20mString));
                     _wavePeriodMax20mData.Set(value);
+                    OnPropertyChanged(nameof(wavePeriodMax20mString));
                 }
             }
         }
@@ -273,12 +273,12 @@ namespace HMS_Client
         {
             get
             {
-                if (wavePeriodMax20mData != null)
+                if (_wavePeriodMax20mData != null)
                 {
                     // Sjekke om data er gyldig
-                    if (wavePeriodMax20mData.status == DataStatus.OK)
+                    if (_wavePeriodMax20mData.status == DataStatus.OK)
                     {
-                        return string.Format("{0} s", wavePeriodMax20mData.data.ToString("0.0"));
+                        return string.Format("{0} s", _wavePeriodMax20mData.data.ToString("0.0"));
                     }
                     else
                     {
@@ -303,9 +303,8 @@ namespace HMS_Client
             {
                 if (value != null)
                 {
-                    OnPropertyChanged(nameof(wavePeriodMax3hString));
-
                     _wavePeriodMax3hData.Set(value);
+                    OnPropertyChanged(nameof(wavePeriodMax3hString));
                 }
             }
         }
@@ -313,12 +312,12 @@ namespace HMS_Client
         {
             get
             {
-                if (wavePeriodMax3hData != null)
+                if (_wavePeriodMax3hData != null)
                 {
                     // Sjekke om data er gyldig
-                    if (wavePeriodMax3hData.status == DataStatus.OK)
+                    if (_wavePeriodMax3hData.status == DataStatus.OK)
                     {
-                        return string.Format("{0} s", wavePeriodMax3hData.data.ToString("0.0"));
+                        return string.Format("{0} s", _wavePeriodMax3hData.data.ToString("0.0"));
                     }
                     else
                     {
@@ -346,9 +345,8 @@ namespace HMS_Client
             {
                 if (value != null)
                 {
-                    OnPropertyChanged(nameof(waveSWHString));
-
                     _waveSWHData.Set(value);
+                    OnPropertyChanged(nameof(waveSWHString));
                 }
             }
         }
@@ -356,12 +354,12 @@ namespace HMS_Client
         {
             get
             {
-                if (waveSWHData != null)
+                if (_waveSWHData != null)
                 {
                     // Sjekke om data er gyldig
-                    if (waveSWHData.status == DataStatus.OK)
+                    if (_waveSWHData.status == DataStatus.OK)
                     {
-                        return string.Format("{0} m", waveSWHData.data.ToString("0.0"));
+                        return string.Format("{0} m", _waveSWHData.data.ToString("0.0"));
                     }
                     else
                     {
@@ -386,9 +384,8 @@ namespace HMS_Client
             {
                 if (value != null)
                 {
-                    OnPropertyChanged(nameof(waveSWHMax20mString));
-
                     _waveSWHMax20mData.Set(value);
+                    OnPropertyChanged(nameof(waveSWHMax20mString));
                 }
             }
         }
@@ -396,12 +393,12 @@ namespace HMS_Client
         {
             get
             {
-                if (waveSWHMax20mData != null)
+                if (_waveSWHMax20mData != null)
                 {
                     // Sjekke om data er gyldig
-                    if (waveSWHMax20mData.status == DataStatus.OK)
+                    if (_waveSWHMax20mData.status == DataStatus.OK)
                     {
-                        return string.Format("{0} m", waveSWHMax20mData.data.ToString("0.0"));
+                        return string.Format("{0} m", _waveSWHMax20mData.data.ToString("0.0"));
                     }
                     else
                     {
@@ -426,9 +423,8 @@ namespace HMS_Client
             {
                 if (value != null)
                 {
-                    OnPropertyChanged(nameof(waveSWHMax3hString));
-
                     _waveSWHMax3hData.Set(value);
+                    OnPropertyChanged(nameof(waveSWHMax3hString));
                 }
             }
         }
@@ -436,10 +432,10 @@ namespace HMS_Client
         {
             get
             {
-                if (waveSWHMax3hData != null)
+                if (_waveSWHMax3hData != null)
                 {
                     // Sjekke om data er gyldig
-                    if (waveSWHMax3hData.status == DataStatus.OK)
+                    if (_waveSWHMax3hData.status == DataStatus.OK)
                     {
                         return string.Format("{0} m", waveSWHMax3hData.data.ToString("0.0"));
                     }
@@ -499,7 +495,7 @@ namespace HMS_Client
         {
             get
             {
-                return alignmentTime;
+                return _alignmentTime;
             }
         }
 
@@ -510,7 +506,7 @@ namespace HMS_Client
         {
             get
             {
-                return (int)wavePeriodMax20mData.data / Constants.WaveChartPeriodInc * Constants.WaveChartPeriodInc + Constants.WaveChartPeriodInc;
+                return (int)_wavePeriodMax20mData.data / Constants.WaveChartPeriodInc * Constants.WaveChartPeriodInc + Constants.WaveChartPeriodInc;
             }
         }
 
@@ -518,7 +514,7 @@ namespace HMS_Client
         {
             get
             {
-                return (int)wavePeriodMax3hData.data / Constants.WaveChartPeriodInc * Constants.WaveChartPeriodInc + Constants.WaveChartPeriodInc;
+                return (int)_wavePeriodMax3hData.data / Constants.WaveChartPeriodInc * Constants.WaveChartPeriodInc + Constants.WaveChartPeriodInc;
             }
         }
 
@@ -526,7 +522,7 @@ namespace HMS_Client
         {
             get
             {
-                return (int)waveSWHMax20mData.data / Constants.WaveChartSWHInc * Constants.WaveChartSWHInc + Constants.WaveChartSWHInc;
+                return (int)_waveSWHMax20mData.data / Constants.WaveChartSWHInc * Constants.WaveChartSWHInc + Constants.WaveChartSWHInc;
             }
         }
 
@@ -534,7 +530,7 @@ namespace HMS_Client
         {
             get
             {
-                return (int)waveSWHMax3hData.data / Constants.WaveChartSWHInc * Constants.WaveChartSWHInc + Constants.WaveChartSWHInc;
+                return (int)_waveSWHMax3hData.data / Constants.WaveChartSWHInc * Constants.WaveChartSWHInc + Constants.WaveChartSWHInc;
             }
         }
 

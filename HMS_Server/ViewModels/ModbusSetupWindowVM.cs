@@ -42,7 +42,7 @@ namespace HMS_Server
                 _totalDataLinesString = validatedInput.ToString();
 
                 // Lagre ny setting til config fil
-                config.Write(ConfigKey.TotalDataLines, totalDataLinesString, ConfigSection.ModbusConfig);
+                config.Write(ConfigKey.TotalDataLines, _totalDataLinesString, ConfigSection.ModbusConfig);
 
                 OnPropertyChanged();
                 OnPropertyChanged(nameof(totalDataLines));

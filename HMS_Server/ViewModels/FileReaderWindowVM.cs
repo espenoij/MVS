@@ -63,7 +63,7 @@ namespace HMS_Server
         {
             get
             {
-                return string.Format($"{0}/{1}", fileFolder, fileName);
+                return string.Format($"{0}/{1}", _fileFolder, _fileName);
             }
         }
 
@@ -88,7 +88,7 @@ namespace HMS_Server
                 _totalDataLinesString = validatedInput.ToString();
 
                 // Lagre ny setting til config fil
-                config.Write(ConfigKey.TotalDataLines, totalDataLinesString, ConfigSection.FileReaderConfig);
+                config.Write(ConfigKey.TotalDataLines, _totalDataLinesString, ConfigSection.FileReaderConfig);
 
                 OnPropertyChanged();
                 OnPropertyChanged(nameof(totalDataLines));

@@ -146,7 +146,7 @@ namespace HMS_Client
         {
             get
             {
-                if (selectedGraphTime == GraphTime.Minutes20)
+                if (_selectedGraphTime == GraphTime.Minutes20)
                     return true;
                 else
                     return false;
@@ -157,7 +157,7 @@ namespace HMS_Client
         {
             get
             {
-                if (selectedGraphTime == GraphTime.Hours3)
+                if (_selectedGraphTime == GraphTime.Hours3)
                     return true;
                 else
                     return false;
