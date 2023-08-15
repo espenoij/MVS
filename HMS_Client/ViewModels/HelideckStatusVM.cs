@@ -90,11 +90,11 @@ namespace HMS_Client
                 {
                     LightsOutputType lightsOutput;
 
-                    if (helideckLightStatusData.status == DataStatus.OK)
+                    if (_helideckLightStatusData.status == DataStatus.OK)
                     {
                         if (userInputsVM.displayMode == DisplayMode.PreLanding)
                         {
-                            switch ((HelideckStatusType)helideckLightStatusData.data)
+                            switch ((HelideckStatusType)_helideckLightStatusData.data)
                             {
                                 case HelideckStatusType.OFF:
                                     lightsOutput = LightsOutputType.Off;
@@ -118,7 +118,7 @@ namespace HMS_Client
                         }
                         else
                         {
-                            switch ((HelideckStatusType)helideckLightStatusData.data)
+                            switch ((HelideckStatusType)_helideckLightStatusData.data)
                             {
                                 case HelideckStatusType.OFF:
                                     lightsOutput = LightsOutputType.Off;

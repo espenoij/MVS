@@ -490,9 +490,9 @@ namespace HMS_Client
             {
                 if (value != null)
                 {
-                    OnPropertyChanged(nameof(pitchMax20mString));
-
                     _pitchMax20mData.Set(value);
+
+                    OnPropertyChanged(nameof(pitchMax20mString));
                 }
             }
         }
@@ -500,12 +500,12 @@ namespace HMS_Client
         {
             get
             {
-                if (pitchMax20mData != null)
+                if (_pitchMax20mData != null)
                 {
                     // Sjekke om data er gyldig
-                    if (pitchMax20mData.status == DataStatus.OK)
+                    if (_pitchMax20mData.status == DataStatus.OK)
                     {
-                        return string.Format("{0} °", pitchMax20mData.data.ToString("0.0"));
+                        return string.Format("{0} °", _pitchMax20mData.data.ToString("0.0"));
                     }
                     else
                     {
@@ -541,12 +541,12 @@ namespace HMS_Client
         {
             get
             {
-                if (pitchMaxUp20mData != null)
+                if (_pitchMaxUp20mData != null)
                 {
                     // Sjekke om data er gyldig
-                    if (pitchMaxUp20mData.status == DataStatus.OK)
+                    if (_pitchMaxUp20mData.status == DataStatus.OK)
                     {
-                        double pitch = Math.Abs(pitchMaxUp20mData.data);
+                        double pitch = Math.Abs(_pitchMaxUp20mData.data);
                         return string.Format("{0} °", pitch.ToString("0.0"));
                     }
                     else
@@ -564,15 +564,15 @@ namespace HMS_Client
         {
             get
             {
-                if (pitchMaxUp20mData != null)
+                if (_pitchMaxUp20mData != null)
                 {
                     // Sjekke om data er gyldig
-                    if (pitchMaxUp20mData.status == DataStatus.OK)
+                    if (_pitchMaxUp20mData.status == DataStatus.OK)
                     {
-                        double pitch = Math.Abs(pitchMaxUp20mData.data);
+                        double pitch = Math.Abs(_pitchMaxUp20mData.data);
 
                         string dir;
-                        if (pitchMaxUp20mData.data > 0)
+                        if (_pitchMaxUp20mData.data > 0)
                             dir = "U";
                         else
                             dir = "D";
@@ -613,12 +613,12 @@ namespace HMS_Client
         {
             get
             {
-                if (pitchMaxDown20mData != null)
+                if (_pitchMaxDown20mData != null)
                 {
                     // Sjekke om data er gyldig
-                    if (pitchMaxDown20mData.status == DataStatus.OK)
+                    if (_pitchMaxDown20mData.status == DataStatus.OK)
                     {
-                        double pitch = Math.Abs(pitchMaxDown20mData.data);
+                        double pitch = Math.Abs(_pitchMaxDown20mData.data);
                         return string.Format("{0} °", pitch.ToString("0.0"));
                     }
                     else
@@ -636,15 +636,15 @@ namespace HMS_Client
         {
             get
             {
-                if (pitchMaxDown20mData != null)
+                if (_pitchMaxDown20mData != null)
                 {
                     // Sjekke om data er gyldig
-                    if (pitchMaxDown20mData.status == DataStatus.OK)
+                    if (_pitchMaxDown20mData.status == DataStatus.OK)
                     {
-                        double pitch = Math.Abs(pitchMaxDown20mData.data);
+                        double pitch = Math.Abs(_pitchMaxDown20mData.data);
 
                         string dir;
-                        if (pitchMaxDown20mData.data > 0)
+                        if (_pitchMaxDown20mData.data > 0)
                             dir = "U";
                         else
                             dir = "D";
@@ -757,9 +757,9 @@ namespace HMS_Client
             {
                 if (value != null)
                 {
-                    OnPropertyChanged(nameof(rollMax20mString));
-
                     _rollMax20mData.Set(value);
+
+                    OnPropertyChanged(nameof(rollMax20mString));
                 }
             }
         }
@@ -767,12 +767,12 @@ namespace HMS_Client
         {
             get
             {
-                if (rollMax20mData != null)
+                if (_rollMax20mData != null)
                 {
                     // Sjekke om data er gyldig
-                    if (rollMax20mData.status == DataStatus.OK)
+                    if (_rollMax20mData.status == DataStatus.OK)
                     {
-                        return string.Format("{0} °", rollMax20mData.data.ToString("0.0"));
+                        return string.Format("{0} °", _rollMax20mData.data.ToString("0.0"));
                     }
                     else
                     {
@@ -808,12 +808,12 @@ namespace HMS_Client
         {
             get
             {
-                if (rollMaxLeft20mData != null)
+                if (_rollMaxLeft20mData != null)
                 {
                     // Sjekke om data er gyldig
-                    if (rollMaxLeft20mData.status == DataStatus.OK)
+                    if (_rollMaxLeft20mData.status == DataStatus.OK)
                     {
-                        double roll = Math.Abs(rollMaxLeft20mData.data);
+                        double roll = Math.Abs(_rollMaxLeft20mData.data);
                         return string.Format("{0} °", roll.ToString("0.0"));
                     }
                     else
@@ -831,15 +831,15 @@ namespace HMS_Client
         {
             get
             {
-                if (rollMaxLeft20mData != null)
+                if (_rollMaxLeft20mData != null)
                 {
                     // Sjekke om data er gyldig
-                    if (rollMaxLeft20mData.status == DataStatus.OK)
+                    if (_rollMaxLeft20mData.status == DataStatus.OK)
                     {
-                        double roll = Math.Abs(rollMaxLeft20mData.data);
+                        double roll = Math.Abs(_rollMaxLeft20mData.data);
 
                         string dir;
-                        if (rollMaxLeft20mData.data >= 0)
+                        if (_rollMaxLeft20mData.data >= 0)
                             dir = "L";
                         else
                             dir = "R";
@@ -880,12 +880,12 @@ namespace HMS_Client
         {
             get
             {
-                if (rollMaxRight20mData != null)
+                if (_rollMaxRight20mData != null)
                 {
                     // Sjekke om data er gyldig
-                    if (rollMaxRight20mData.status == DataStatus.OK)
+                    if (_rollMaxRight20mData.status == DataStatus.OK)
                     {
-                        double roll = Math.Abs(rollMaxRight20mData.data);
+                        double roll = Math.Abs(_rollMaxRight20mData.data);
                         return string.Format("{0} °", roll.ToString("0.0"));
                     }
                     else
@@ -903,15 +903,15 @@ namespace HMS_Client
         {
             get
             {
-                if (rollMaxRight20mData != null)
+                if (_rollMaxRight20mData != null)
                 {
                     // Sjekke om data er gyldig
-                    if (rollMaxRight20mData.status == DataStatus.OK)
+                    if (_rollMaxRight20mData.status == DataStatus.OK)
                     {
-                        double roll = Math.Abs(rollMaxRight20mData.data);
+                        double roll = Math.Abs(_rollMaxRight20mData.data);
 
                         string dir;
-                        if (rollMaxRight20mData.data >= 0)
+                        if (_rollMaxRight20mData.data >= 0)
                             dir = "L";
                         else
                             dir = "R";
@@ -1022,9 +1022,9 @@ namespace HMS_Client
             {
                 if (value != null)
                 {
-                    OnPropertyChanged(nameof(inclinationMax20mString));
-
                     _inclinationMax20mData.Set(value);
+
+                    OnPropertyChanged(nameof(inclinationMax20mString));
                 }
             }
         }
@@ -1033,12 +1033,12 @@ namespace HMS_Client
         {
             get
             {
-                if (inclinationMax20mData != null)
+                if (_inclinationMax20mData != null)
                 {
                     // Sjekke om data er gyldig
-                    if (inclinationMax20mData.status == DataStatus.OK)
+                    if (_inclinationMax20mData.status == DataStatus.OK)
                     {
-                        return string.Format("{0} °", inclinationMax20mData.data.ToString("0.0"));
+                        return string.Format("{0} °", _inclinationMax20mData.data.ToString("0.0"));
                     }
                     else
                     {
@@ -1147,9 +1147,9 @@ namespace HMS_Client
             {
                 if (value != null)
                 {
-                    OnPropertyChanged(nameof(heaveHeightMax20mString));
-
                     _heaveHeightMax20mData.Set(value);
+
+                    OnPropertyChanged(nameof(heaveHeightMax20mString));
                 }
             }
         }
@@ -1158,12 +1158,12 @@ namespace HMS_Client
         {
             get
             {
-                if (heaveHeightMax20mData != null)
+                if (_heaveHeightMax20mData != null)
                 {
                     // Sjekke om data er gyldig
-                    if (heaveHeightMax20mData.status == DataStatus.OK)
+                    if (_heaveHeightMax20mData.status == DataStatus.OK)
                     {
-                        return string.Format("{0} m", heaveHeightMax20mData.data.ToString("0.0"));
+                        return string.Format("{0} m", _heaveHeightMax20mData.data.ToString("0.0"));
                     }
                     else
                     {
@@ -1256,9 +1256,9 @@ namespace HMS_Client
             {
                 if (value != null)
                 {
-                    OnPropertyChanged(nameof(significantHeaveRateString));
-
                     _significantHeaveRateData.Set(value);
+
+                    OnPropertyChanged(nameof(significantHeaveRateString));
                 }
             }
         }
@@ -1266,12 +1266,12 @@ namespace HMS_Client
         {
             get
             {
-                if (significantHeaveRateData != null)
+                if (_significantHeaveRateData != null)
                 {
                     // Sjekke om data er gyldig
-                    if (significantHeaveRateData.status == DataStatus.OK)
+                    if (_significantHeaveRateData.status == DataStatus.OK)
                     {
-                        return string.Format("{0} m/s", significantHeaveRateData.data.ToString("0.0"));
+                        return string.Format("{0} m/s", _significantHeaveRateData.data.ToString("0.0"));
                     }
                     else
                     {
@@ -1355,7 +1355,7 @@ namespace HMS_Client
         {
             get
             {
-                return alignmentTime;
+                return _alignmentTime;
             }
         }
 
@@ -1420,8 +1420,8 @@ namespace HMS_Client
         {
             get
             {
-                if (pitchMax20mData.data > GetMotionLimit(ValueType.MotionLimitPitchRoll) + Constants.PitchAxisMargin)
-                    return (double)((int)pitchMax20mData.data + Constants.PitchAxisMargin);
+                if (_pitchMax20mData.data > GetMotionLimit(ValueType.MotionLimitPitchRoll) + Constants.PitchAxisMargin)
+                    return (double)((int)_pitchMax20mData.data + Constants.PitchAxisMargin);
                 else
                     return GetMotionLimit(ValueType.MotionLimitPitchRoll) + Constants.PitchAxisMargin;
             }
@@ -1431,8 +1431,8 @@ namespace HMS_Client
         {
             get
             {
-                if (pitchMax3hData.data > GetMotionLimit(ValueType.MotionLimitPitchRoll) + Constants.PitchAxisMargin)
-                    return (double)((int)pitchMax3hData.data + Constants.PitchAxisMargin);
+                if (_pitchMax3hData.data > GetMotionLimit(ValueType.MotionLimitPitchRoll) + Constants.PitchAxisMargin)
+                    return (double)((int)_pitchMax3hData.data + Constants.PitchAxisMargin);
                 else
                     return GetMotionLimit(ValueType.MotionLimitPitchRoll) + Constants.PitchAxisMargin;
             }
@@ -1442,8 +1442,8 @@ namespace HMS_Client
         {
             get
             {
-                if (-pitchMax20mData.data < -GetMotionLimit(ValueType.MotionLimitPitchRoll) - Constants.PitchAxisMargin)
-                    return (double)((int)-pitchMax20mData.data - Constants.PitchAxisMargin);
+                if (-_pitchMax20mData.data < -GetMotionLimit(ValueType.MotionLimitPitchRoll) - Constants.PitchAxisMargin)
+                    return (double)((int)-_pitchMax20mData.data - Constants.PitchAxisMargin);
                 else
                     return -GetMotionLimit(ValueType.MotionLimitPitchRoll) - Constants.PitchAxisMargin;
             }
@@ -1453,8 +1453,8 @@ namespace HMS_Client
         {
             get
             {
-                if (-pitchMax3hData.data < -GetMotionLimit(ValueType.MotionLimitPitchRoll) - Constants.PitchAxisMargin)
-                    return (double)((int)-pitchMax3hData.data - Constants.PitchAxisMargin);
+                if (-_pitchMax3hData.data < -GetMotionLimit(ValueType.MotionLimitPitchRoll) - Constants.PitchAxisMargin)
+                    return (double)((int)-_pitchMax3hData.data - Constants.PitchAxisMargin);
                 else
                     return -GetMotionLimit(ValueType.MotionLimitPitchRoll) - Constants.PitchAxisMargin;
             }
@@ -1464,8 +1464,8 @@ namespace HMS_Client
         {
             get
             {
-                if (rollMax20mData?.data > GetMotionLimit(ValueType.MotionLimitPitchRoll) + Constants.RollAxisMargin)
-                    return (double)((int)rollMax20mData.data + Constants.RollAxisMargin);
+                if (_rollMax20mData?.data > GetMotionLimit(ValueType.MotionLimitPitchRoll) + Constants.RollAxisMargin)
+                    return (double)((int)_rollMax20mData.data + Constants.RollAxisMargin);
                 else
                     return GetMotionLimit(ValueType.MotionLimitPitchRoll) + Constants.RollAxisMargin;
             }
@@ -1475,8 +1475,8 @@ namespace HMS_Client
         {
             get
             {
-                if (rollMax3hData?.data > GetMotionLimit(ValueType.MotionLimitPitchRoll) + Constants.RollAxisMargin)
-                    return (double)((int)rollMax3hData.data + Constants.RollAxisMargin);
+                if (_rollMax3hData?.data > GetMotionLimit(ValueType.MotionLimitPitchRoll) + Constants.RollAxisMargin)
+                    return (double)((int)_rollMax3hData.data + Constants.RollAxisMargin);
                 else
                     return GetMotionLimit(ValueType.MotionLimitPitchRoll) + Constants.RollAxisMargin;
             }
@@ -1486,8 +1486,8 @@ namespace HMS_Client
         {
             get
             {
-                if (-rollMax20mData?.data < -GetMotionLimit(ValueType.MotionLimitPitchRoll) - Constants.RollAxisMargin)
-                    return (double)((int)-rollMax20mData.data - Constants.RollAxisMargin);
+                if (-_rollMax20mData?.data < -GetMotionLimit(ValueType.MotionLimitPitchRoll) - Constants.RollAxisMargin)
+                    return (double)((int)-_rollMax20mData.data - Constants.RollAxisMargin);
                 else
                     return -GetMotionLimit(ValueType.MotionLimitPitchRoll) - Constants.RollAxisMargin;
             }
@@ -1497,8 +1497,8 @@ namespace HMS_Client
         {
             get
             {
-                if (-rollMax3hData?.data < -GetMotionLimit(ValueType.MotionLimitPitchRoll) - Constants.RollAxisMargin)
-                    return (double)((int)-rollMax3hData.data - Constants.RollAxisMargin);
+                if (-_rollMax3hData?.data < -GetMotionLimit(ValueType.MotionLimitPitchRoll) - Constants.RollAxisMargin)
+                    return (double)((int)-_rollMax3hData.data - Constants.RollAxisMargin);
                 else
                     return -GetMotionLimit(ValueType.MotionLimitPitchRoll) - Constants.RollAxisMargin;
             }
@@ -1508,8 +1508,8 @@ namespace HMS_Client
         {
             get
             {
-                if (inclinationMax20mData?.data > GetMotionLimit(ValueType.MotionLimitInclination) + Constants.InclinationAxisMargin)
-                    return (double)((int)inclinationMax20mData.data + Constants.InclinationAxisMargin);
+                if (_inclinationMax20mData?.data > GetMotionLimit(ValueType.MotionLimitInclination) + Constants.InclinationAxisMargin)
+                    return (double)((int)_inclinationMax20mData.data + Constants.InclinationAxisMargin);
                 else
                     return GetMotionLimit(ValueType.MotionLimitInclination) + Constants.InclinationAxisMargin;
             }
@@ -1519,8 +1519,8 @@ namespace HMS_Client
         {
             get
             {
-                if (inclinationMax3hData?.data > GetMotionLimit(ValueType.MotionLimitInclination) + Constants.InclinationAxisMargin)
-                    return (double)((int)inclinationMax3hData.data + Constants.InclinationAxisMargin);
+                if (_inclinationMax3hData?.data > GetMotionLimit(ValueType.MotionLimitInclination) + Constants.InclinationAxisMargin)
+                    return (double)((int)_inclinationMax3hData.data + Constants.InclinationAxisMargin);
                 else
                     return GetMotionLimit(ValueType.MotionLimitInclination) + Constants.InclinationAxisMargin;
             }
@@ -1530,8 +1530,8 @@ namespace HMS_Client
         {
             get
             {
-                if (heaveHeightMax20mData?.data > GetMotionLimit(ValueType.MotionLimitHeaveHeight) + Constants.HeaveHeightAxisMargin)
-                    return (double)((int)heaveHeightMax20mData.data + Constants.HeaveHeightAxisMargin);
+                if (_heaveHeightMax20mData?.data > GetMotionLimit(ValueType.MotionLimitHeaveHeight) + Constants.HeaveHeightAxisMargin)
+                    return (double)((int)_heaveHeightMax20mData.data + Constants.HeaveHeightAxisMargin);
                 else
                     return GetMotionLimit(ValueType.MotionLimitHeaveHeight) + Constants.HeaveHeightAxisMargin;
             }
@@ -1541,8 +1541,8 @@ namespace HMS_Client
         {
             get
             {
-                if (heaveHeightMax3hData?.data > GetMotionLimit(ValueType.MotionLimitHeaveHeight) + Constants.HeaveHeightAxisMargin)
-                    return (double)((int)heaveHeightMax3hData.data + Constants.HeaveHeightAxisMargin);
+                if (_heaveHeightMax3hData?.data > GetMotionLimit(ValueType.MotionLimitHeaveHeight) + Constants.HeaveHeightAxisMargin)
+                    return (double)((int)_heaveHeightMax3hData.data + Constants.HeaveHeightAxisMargin);
                 else
                     return GetMotionLimit(ValueType.MotionLimitHeaveHeight) + Constants.HeaveHeightAxisMargin;
             }
@@ -1552,8 +1552,8 @@ namespace HMS_Client
         {
             get
             {
-                if (significantHeaveRateMax20mData?.data > GetMotionLimit(ValueType.MotionLimitSignificantHeaveRate) + Constants.SignificantHeaveRateAxisMargin)
-                    return significantHeaveRateMax20mData.data + Constants.SignificantHeaveRateAxisMargin;
+                if (_significantHeaveRateMax20mData?.data > GetMotionLimit(ValueType.MotionLimitSignificantHeaveRate) + Constants.SignificantHeaveRateAxisMargin)
+                    return _significantHeaveRateMax20mData.data + Constants.SignificantHeaveRateAxisMargin;
                 else
                     return GetMotionLimit(ValueType.MotionLimitSignificantHeaveRate) + Constants.SignificantHeaveRateAxisMargin;
             }
@@ -1563,8 +1563,8 @@ namespace HMS_Client
         {
             get
             {
-                if (significantHeaveRateMax3hData?.data > GetMotionLimit(ValueType.MotionLimitSignificantHeaveRate) + Constants.SignificantHeaveRateAxisMargin)
-                    return significantHeaveRateMax3hData.data + Constants.SignificantHeaveRateAxisMargin;
+                if (_significantHeaveRateMax3hData?.data > GetMotionLimit(ValueType.MotionLimitSignificantHeaveRate) + Constants.SignificantHeaveRateAxisMargin)
+                    return _significantHeaveRateMax3hData.data + Constants.SignificantHeaveRateAxisMargin;
                 else
                     return GetMotionLimit(ValueType.MotionLimitSignificantHeaveRate) + Constants.SignificantHeaveRateAxisMargin;
             }

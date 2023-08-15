@@ -109,9 +109,9 @@ namespace HMS_Server
             get
             {
                 if (!string.IsNullOrEmpty(data3))
-                    return data3;
+                    return _data3;
                 else
-                    return data.ToString();
+                    return _data.ToString();
             }
         }
 
@@ -133,7 +133,7 @@ namespace HMS_Server
         {
             get
             {
-                return timestamp.ToString();
+                return _timestamp.ToString();
             }
         }
 
@@ -174,7 +174,7 @@ namespace HMS_Server
         {
             get
             {
-                return status.ToString();
+                return _status.ToString();
             }
         }
 
@@ -196,7 +196,7 @@ namespace HMS_Server
         {
             get
             {
-                return limitStatus.ToString();
+                return _limitStatus.ToString();
             }
         }
 
@@ -218,7 +218,7 @@ namespace HMS_Server
         {
             get
             {
-                if (sensorGroupId == Constants.SensorIDNotSet)
+                if (_sensorGroupId == Constants.SensorIDNotSet)
                     return "None";
                 else
                     return sensorGroupId.ToString();
@@ -316,7 +316,7 @@ namespace HMS_Server
             // NB! dataCalcPos refererer til posisjonen i dataCalculations[] listen hvor bufferet befinner seg
 
             // Sjekk status, dersom OK
-            if (status == DataStatus.OK)
+            if (_status == DataStatus.OK)
                 // Er bufferet fyllt opp
                 if (dataProcess.BufferCount(dataCalcPos) < targetCount)
                     // Set OK, men ikke tilgjengelig

@@ -22,6 +22,9 @@ namespace HMS_Server
         private HMSData emailSecureConnection = new HMSData();
         private HMSData restrictedSector = new HMSData();
 
+        // HMS Web spesifikke variabler
+        //private HMSData adminSettingVesselSymbol = new HMSData();
+
         private AdminSettingsVM adminSettingsVM;
         private UserSettingsVM userSettingsVM;
 

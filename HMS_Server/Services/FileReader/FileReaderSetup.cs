@@ -56,7 +56,7 @@ namespace HMS_Server
         {
             get
             {
-                return string.Format("{0}\\{1}", fileFolder, fileName);
+                return string.Format("{0}\\{1}", _fileFolder, _fileName);
             }
         }
 
@@ -122,8 +122,8 @@ namespace HMS_Server
         {
             get
             {
-                if (timestamp.Ticks != 0)
-                    return timestamp.ToString(Constants.TimestampFormat, Constants.cultureInfo);
+                if (_timestamp.Ticks != 0)
+                    return _timestamp.ToString(Constants.TimestampFormat, Constants.cultureInfo);
                 else
                     return Constants.TimestampNotSet;
             }
@@ -148,7 +148,7 @@ namespace HMS_Server
         {
             get
             {
-                return portStatus.ToString();
+                return _portStatus.ToString();
             }
         }
 

@@ -131,7 +131,7 @@ namespace HMS_Server
         {
             get
             {
-                if (isActivated)
+                if (_isActivated)
                     return "Activated";
                 else
                     return "Not activated";

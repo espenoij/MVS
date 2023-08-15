@@ -104,7 +104,7 @@ namespace HMS_Client
         {
             get
             {
-                return status.ToString();
+                return _status.ToString();
             }
         }
 

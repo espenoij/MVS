@@ -98,6 +98,9 @@ namespace HMS_Server
                         }
                     }
                 }
+
+                // Slette alle meldinger når de er overført til skjerm.
+                errorHandler.ClearAllMessages();
             }
         }
 

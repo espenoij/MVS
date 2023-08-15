@@ -969,16 +969,6 @@
                         Canvas.Top="8"
                         Visibility="{Binding Path=displayOnDeckWindIndicator, Converter={StaticResource BoolToVisConverter} }"/>
 
-                    <!--Arrow Top Circle Outer-->
-                    <!--<Ellipse
-                        Width="40"
-                        Height="40"
-                        Stroke="Black"
-                        StrokeThickness="2"
-                        Canvas.Left="210"
-                        Canvas.Top="-6"
-                        Visibility="{Binding Path=displayOnDeckWindIndicator, Converter={StaticResource BoolToVisConverter} }"/>-->
-
                     <!--Vind pil tittel-->
                     <telerik:Label
                         Content="W"

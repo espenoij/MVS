@@ -257,7 +257,7 @@ namespace HMS_Server
                     sensorHeaveHeightMax20m.limitStatus == LimitStatus.OK &&
                     sensorSignificantHeaveRate.limitStatus == LimitStatus.OK)
                 {
-                    return GetMSIWSIState(); // TODO denne skal IKKE være her på NOROG
+                    return HelideckStatusType.GREEN; // TODO: Verifiser at denne virker
                 }
                 else
                 {

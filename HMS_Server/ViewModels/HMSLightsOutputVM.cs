@@ -162,9 +162,9 @@ namespace HMS_Server
                 }
                 else
                 {
-                    if (testModeDisplayMode == DisplayMode.PreLanding)
+                    if (_testModeDisplayMode == DisplayMode.PreLanding)
                     {
-                        switch (testModeStatus)
+                        switch (_testModeStatus)
                         {
                             case HelideckStatusType.OFF:
                                 lightsOutput = LightsOutputType.Off;
@@ -188,7 +188,7 @@ namespace HMS_Server
                     }
                     else
                     {
-                        switch (testModeStatus)
+                        switch (_testModeStatus)
                         {
                             case HelideckStatusType.OFF:
                                 lightsOutput = LightsOutputType.Off;

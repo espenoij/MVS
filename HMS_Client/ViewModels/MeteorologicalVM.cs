@@ -17,12 +17,12 @@ namespace HMS_Client
         public MeteorologicalVM()
         {
             // Cloud Init
-            cloudBase = new List<HMSData>();
-            cloudCoverage = new List<HMSData>();
+            _cloudBase = new List<HMSData>();
+            _cloudCoverage = new List<HMSData>();
             for (int i = 0; i < Constants.TOTAL_CLOUD_LAYERS; i++)
             {
-                cloudBase.Add(new HMSData());
-                cloudCoverage.Add(new HMSData());
+                _cloudBase.Add(new HMSData());
+                _cloudCoverage.Add(new HMSData());
             }
         }
 
@@ -65,15 +65,15 @@ namespace HMS_Client
                     OnPropertyChanged(nameof(weatherPhenomenaString));
                 }
 
-                if (sensorStatus.TimeoutCheck(cloudBase[0])) OnPropertyChanged(nameof(cloudBaseString1));
-                if (sensorStatus.TimeoutCheck(cloudBase[1])) OnPropertyChanged(nameof(cloudBaseString2));
-                if (sensorStatus.TimeoutCheck(cloudBase[2])) OnPropertyChanged(nameof(cloudBaseString3));
-                if (sensorStatus.TimeoutCheck(cloudBase[3])) OnPropertyChanged(nameof(cloudBaseString4));
+                if (sensorStatus.TimeoutCheck(_cloudBase[0])) OnPropertyChanged(nameof(cloudBaseString1));
+                if (sensorStatus.TimeoutCheck(_cloudBase[1])) OnPropertyChanged(nameof(cloudBaseString2));
+                if (sensorStatus.TimeoutCheck(_cloudBase[2])) OnPropertyChanged(nameof(cloudBaseString3));
+                if (sensorStatus.TimeoutCheck(_cloudBase[3])) OnPropertyChanged(nameof(cloudBaseString4));
 
-                if (sensorStatus.TimeoutCheck(cloudCoverage[0])) OnPropertyChanged(nameof(cloudCoverageString1));
-                if (sensorStatus.TimeoutCheck(cloudCoverage[1])) OnPropertyChanged(nameof(cloudCoverageString2));
-                if (sensorStatus.TimeoutCheck(cloudCoverage[2])) OnPropertyChanged(nameof(cloudCoverageString3));
-                if (sensorStatus.TimeoutCheck(cloudCoverage[3])) OnPropertyChanged(nameof(cloudCoverageString4));
+                if (sensorStatus.TimeoutCheck(_cloudCoverage[0])) OnPropertyChanged(nameof(cloudCoverageString1));
+                if (sensorStatus.TimeoutCheck(_cloudCoverage[1])) OnPropertyChanged(nameof(cloudCoverageString2));
+                if (sensorStatus.TimeoutCheck(_cloudCoverage[2])) OnPropertyChanged(nameof(cloudCoverageString3));
+                if (sensorStatus.TimeoutCheck(_cloudCoverage[3])) OnPropertyChanged(nameof(cloudCoverageString4));
             }
         }
 
@@ -124,12 +124,12 @@ namespace HMS_Client
         {
             get
             {
-                if (seaTemperature != null)
+                if (_seaTemperature != null)
                 {
                     // Sjekke om data er gyldig
-                    if (seaTemperature.status == DataStatus.OK)
+                    if (_seaTemperature.status == DataStatus.OK)
                     {
-                        return seaTemperature.data;
+                        return _seaTemperature.data;
                     }
                     else
                     {
@@ -146,12 +146,12 @@ namespace HMS_Client
         {
             get
             {
-                if (seaTemperature != null)
+                if (_seaTemperature != null)
                 {
                     // Sjekke om data er gyldig
-                    if (seaTemperature.status == DataStatus.OK)
+                    if (_seaTemperature.status == DataStatus.OK)
                     {
-                        return string.Format("{0} °C", seaTemperature.data.ToString("0.0"));
+                        return string.Format("{0} °C", _seaTemperature.data.ToString("0.0"));
                     }
                     else
                     {
@@ -194,12 +194,12 @@ namespace HMS_Client
         {
             get
             {
-                if (airTemperature != null)
+                if (_airTemperature != null)
                 {
                     // Sjekke om data er gyldig
-                    if (airTemperature.status == DataStatus.OK)
+                    if (_airTemperature.status == DataStatus.OK)
                     {
-                        return airTemperature.data;
+                        return _airTemperature.data;
                     }
                     else
                     {
@@ -216,12 +216,12 @@ namespace HMS_Client
         {
             get
             {
-                if (airTemperature != null)
+                if (_airTemperature != null)
                 {
                     // Sjekke om data er gyldig
-                    if (airTemperature.status == DataStatus.OK)
+                    if (_airTemperature.status == DataStatus.OK)
                     {
-                        return string.Format("{0} °C", airTemperature.data.ToString("0.0"));
+                        return string.Format("{0} °C", _airTemperature.data.ToString("0.0"));
                     }
                     else
                     {
@@ -265,12 +265,12 @@ namespace HMS_Client
         {
             get
             {
-                if (airHumidity != null)
+                if (_airHumidity != null)
                 {
                     // Sjekke om data er gyldig
-                    if (airHumidity.status == DataStatus.OK)
+                    if (_airHumidity.status == DataStatus.OK)
                     {
-                        return airHumidity.data;
+                        return _airHumidity.data;
                     }
                     else
                     {
@@ -288,12 +288,12 @@ namespace HMS_Client
         {
             get
             {
-                if (airHumidity != null)
+                if (_airHumidity != null)
                 {
                     // Sjekke om data er gyldig
-                    if (airHumidity.status == DataStatus.OK)
+                    if (_airHumidity.status == DataStatus.OK)
                     {
-                        return string.Format("{0} %", airHumidity.data.ToString("0.0"));
+                        return string.Format("{0} %", _airHumidity.data.ToString("0.0"));
                     }
                     else
                     {
@@ -336,12 +336,12 @@ namespace HMS_Client
         {
             get
             {
-                if (airDewPoint != null)
+                if (_airDewPoint != null)
                 {
                     // Sjekke om data er gyldig
-                    if (airDewPoint.status == DataStatus.OK)
+                    if (_airDewPoint.status == DataStatus.OK)
                     {
-                        return string.Format("{0} °C", airDewPoint.data.ToString("0.0"));
+                        return string.Format("{0} °C", _airDewPoint.data.ToString("0.0"));
                     }
                     else
                     {
@@ -385,12 +385,12 @@ namespace HMS_Client
         {
             get
             {
-                if (airPressureQNH != null)
+                if (_airPressureQNH != null)
                 {
                     // Sjekke om data er gyldig
-                    if (airPressureQNH.status == DataStatus.OK)
+                    if (_airPressureQNH.status == DataStatus.OK)
                     {
-                        return airPressureQNH.data;
+                        return _airPressureQNH.data;
                     }
                     else
                     {
@@ -408,12 +408,12 @@ namespace HMS_Client
         {
             get
             {
-                if (airPressureQNH != null)
+                if (_airPressureQNH != null)
                 {
                     // Sjekke om data er gyldig
-                    if (airPressureQNH.status == DataStatus.OK)
+                    if (_airPressureQNH.status == DataStatus.OK)
                     {
-                        return string.Format("{0} hPa", airPressureQNH.data.ToString("0.0"));
+                        return string.Format("{0} hPa", _airPressureQNH.data.ToString("0.0"));
                     }
                     else
                     {
@@ -456,12 +456,12 @@ namespace HMS_Client
         {
             get
             {
-                if (airPressureQFE != null)
+                if (_airPressureQFE != null)
                 {
                     // Sjekke om data er gyldig
-                    if (airPressureQFE.status == DataStatus.OK)
+                    if (_airPressureQFE.status == DataStatus.OK)
                     {
-                        return string.Format("{0} hPa", airPressureQFE.data.ToString("0.0"));
+                        return string.Format("{0} hPa", _airPressureQFE.data.ToString("0.0"));
                     }
                     else
                     {
@@ -504,12 +504,12 @@ namespace HMS_Client
         {
             get
             {
-                if (visibility != null)
+                if (_visibility != null)
                 {
                     // Sjekke om data er gyldig
-                    if (visibility.status == DataStatus.OK)
+                    if (_visibility.status == DataStatus.OK)
                     {
-                        return string.Format("{0} m", visibility.data.ToString());
+                        return string.Format("{0} m", _visibility.data.ToString());
                     }
                     else
                     {
@@ -552,16 +552,16 @@ namespace HMS_Client
         {
             get
             {
-                if (weather != null)
+                if (_weather != null)
                 {
                     // Sjekke om data er gyldig
-                    if (weather.status == DataStatus.OK)
+                    if (_weather.status == DataStatus.OK)
                     {
                         string weatherPhenomenaString = string.Empty;
 
-                        WeatherSeverity severity = Weather.DecodeSeverity((int)weather.data);
-                        WeatherPhenomena weather1 = Weather.DecodePhenomena1((int)weather.data);
-                        WeatherPhenomena weather2 = Weather.DecodePhenomena2((int)weather.data);
+                        WeatherSeverity severity = Weather.DecodeSeverity((int)_weather.data);
+                        WeatherPhenomena weather1 = Weather.DecodePhenomena1((int)_weather.data);
+                        WeatherPhenomena weather2 = Weather.DecodePhenomena2((int)_weather.data);
 
                         if (severity != WeatherSeverity.None)
                         {
@@ -595,15 +595,15 @@ namespace HMS_Client
         /////////////////////////////////////////////////////////////////////////////
         // Meteorological: Cloud Base Layer 1-4
         /////////////////////////////////////////////////////////////////////////////
-        private List<HMSData> cloudBase { get; set; }
-        private List<HMSData> cloudCoverage { get; set; }
+        private List<HMSData> _cloudBase { get; set; }
+        private List<HMSData> _cloudCoverage { get; set; }
 
         private void SetCloudData(int layer, HMSData cBase, HMSData cCoverage)
         {
             if (layer < Constants.TOTAL_CLOUD_LAYERS && layer >= 0)
             {
-                cloudBase[layer]?.Set(cBase);
-                cloudCoverage[layer]?.Set(cCoverage);
+                _cloudBase[layer]?.Set(cBase);
+                _cloudCoverage[layer]?.Set(cCoverage);
             }
 
             switch (layer)
@@ -634,9 +634,9 @@ namespace HMS_Client
         {
             if (layer < Constants.TOTAL_CLOUD_LAYERS && layer >= 0)
             {
-                if (cloudBase[layer]?.status == DataStatus.OK &&
-                    !double.IsNaN(cloudBase[layer].data))
-                    return string.Format("{0} ft", cloudBase[layer]?.data.ToString("0"));
+                if (_cloudBase[layer]?.status == DataStatus.OK &&
+                    !double.IsNaN(_cloudBase[layer].data))
+                    return string.Format("{0} ft", _cloudBase[layer]?.data.ToString("0"));
                 else
                     return Constants.NotAvailable;
             }
@@ -682,11 +682,11 @@ namespace HMS_Client
         {
             if (layer < Constants.TOTAL_CLOUD_LAYERS && layer >= 0)
             {
-                if (cloudCoverage[layer]?.status == DataStatus.OK &&    // Coverage status ok
-                    cloudBase[layer]?.status == DataStatus.OK &&        // Base status ok
-                    !double.IsNaN(cloudBase[layer].data))               // Base er satt
+                if (_cloudCoverage[layer]?.status == DataStatus.OK &&    // Coverage status ok
+                    _cloudBase[layer]?.status == DataStatus.OK &&        // Base status ok
+                    !double.IsNaN(_cloudBase[layer].data))               // Base er satt
                 {
-                    switch (cloudCoverage[layer].data)
+                    switch (_cloudCoverage[layer].data)
                     {
                         case 0:
                             return "SKC";

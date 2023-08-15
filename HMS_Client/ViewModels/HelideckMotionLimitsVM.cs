@@ -278,12 +278,12 @@ namespace HMS_Client
         {
             get
             {
-                if (pitchMax20mData != null)
+                if (_pitchMax20mData != null)
                 {
                     // Sjekke om data er gyldig
-                    if (pitchMax20mData.status == DataStatus.OK)
+                    if (_pitchMax20mData.status == DataStatus.OK)
                     {
-                        return string.Format("{0} °", pitchMax20mData.data.ToString("0.0"));
+                        return string.Format("{0} °", _pitchMax20mData.data.ToString("0.0"));
                     }
                     else
                     {
@@ -318,15 +318,15 @@ namespace HMS_Client
         {
             get
             {
-                if (pitchMaxUp20mData != null)
+                if (_pitchMaxUp20mData != null)
                 {
                     // Sjekke om data er gyldig
-                    if (pitchMaxUp20mData.status == DataStatus.OK)
+                    if (_pitchMaxUp20mData.status == DataStatus.OK)
                     {
-                        double pitch = Math.Abs(pitchMaxUp20mData.data);
+                        double pitch = Math.Abs(_pitchMaxUp20mData.data);
 
                         string dir;
-                        if (pitchMaxUp20mData.data > 0)
+                        if (_pitchMaxUp20mData.data > 0)
                             dir = "U";
                         else
                             dir = "D";
@@ -366,15 +366,15 @@ namespace HMS_Client
         {
             get
             {
-                if (pitchMaxDown20mData != null)
+                if (_pitchMaxDown20mData != null)
                 {
                     // Sjekke om data er gyldig
-                    if (pitchMaxDown20mData.status == DataStatus.OK)
+                    if (_pitchMaxDown20mData.status == DataStatus.OK)
                     {
-                        double pitch = Math.Abs(pitchMaxDown20mData.data);
+                        double pitch = Math.Abs(_pitchMaxDown20mData.data);
 
                         string dir;
-                        if (pitchMaxDown20mData.data > 0)
+                        if (_pitchMaxDown20mData.data > 0)
                             dir = "U";
                         else
                             dir = "D";
@@ -424,12 +424,12 @@ namespace HMS_Client
         {
             get
             {
-                if (rollMax20mData != null)
+                if (_rollMax20mData != null)
                 {
                     // Sjekke om data er gyldig
-                    if (rollMax20mData.status == DataStatus.OK)
+                    if (_rollMax20mData.status == DataStatus.OK)
                     {
-                        return string.Format("{0} °", rollMax20mData.data.ToString("0.0"));
+                        return string.Format("{0} °", _rollMax20mData.data.ToString("0.0"));
                     }
                     else
                     {
@@ -464,15 +464,15 @@ namespace HMS_Client
         {
             get
             {
-                if (rollMaxLeft20mData != null)
+                if (_rollMaxLeft20mData != null)
                 {
                     // Sjekke om data er gyldig
-                    if (rollMaxLeft20mData.status == DataStatus.OK)
+                    if (_rollMaxLeft20mData.status == DataStatus.OK)
                     {
-                        double roll = Math.Abs(rollMaxLeft20mData.data);
+                        double roll = Math.Abs(_rollMaxLeft20mData.data);
 
                         string dir;
-                        if (rollMaxLeft20mData.data >= 0)
+                        if (_rollMaxLeft20mData.data >= 0)
                             dir = "L";
                         else
                             dir = "R";
@@ -512,15 +512,15 @@ namespace HMS_Client
         {
             get
             {
-                if (rollMaxRight20mData != null)
+                if (_rollMaxRight20mData != null)
                 {
                     // Sjekke om data er gyldig
-                    if (rollMaxRight20mData.status == DataStatus.OK)
+                    if (_rollMaxRight20mData.status == DataStatus.OK)
                     {
-                        double roll = Math.Abs(rollMaxRight20mData.data);
+                        double roll = Math.Abs(_rollMaxRight20mData.data);
 
                         string dir;
-                        if (rollMaxRight20mData.data >= 0)
+                        if (_rollMaxRight20mData.data >= 0)
                             dir = "L";
                         else
                             dir = "R";
@@ -569,13 +569,13 @@ namespace HMS_Client
         {
             get
             {
-                if (inclinationMax20mData != null)
+                if (_inclinationMax20mData != null)
                 {
                     // Sjekke om data er gyldig
-                    if (pitchMax20mData.status == DataStatus.OK &&
-                        rollMax20mData.status == DataStatus.OK)
+                    if (_pitchMax20mData.status == DataStatus.OK &&
+                        _rollMax20mData.status == DataStatus.OK)
                     {
-                        return string.Format("{0} °", inclinationMax20mData.data.ToString("0.0"));
+                        return string.Format("{0} °", _inclinationMax20mData.data.ToString("0.0"));
                     }
                     else
                     {
@@ -619,12 +619,12 @@ namespace HMS_Client
         {
             get
             {
-                if (heaveHeightMax20mData != null)
+                if (_heaveHeightMax20mData != null)
                 {
                     // Sjekke om data er gyldig
-                    if (heaveHeightMax20mData.status == DataStatus.OK)
+                    if (_heaveHeightMax20mData.status == DataStatus.OK)
                     {
-                        return string.Format("{0} m", heaveHeightMax20mData.data.ToString("0.0"));
+                        return string.Format("{0} m", _heaveHeightMax20mData.data.ToString("0.0"));
                     }
                     else
                     {
@@ -667,12 +667,12 @@ namespace HMS_Client
         {
             get
             {
-                if (significantHeaveRateData != null)
+                if (_significantHeaveRateData != null)
                 {
                     // Sjekke om data er gyldig
-                    if (significantHeaveRateData.status == DataStatus.OK)
+                    if (_significantHeaveRateData.status == DataStatus.OK)
                     {
-                        return string.Format("{0} m/s", significantHeaveRateData.data.ToString("0.0"));
+                        return string.Format("{0} m/s", _significantHeaveRateData.data.ToString("0.0"));
                     }
                     else
                     {
@@ -714,12 +714,12 @@ namespace HMS_Client
         {
             get
             {
-                if (heavePeriodData != null)
+                if (_heavePeriodData != null)
                 {
                     // Sjekke om data er gyldig
-                    if (heavePeriodData.status == DataStatus.OK)
+                    if (_heavePeriodData.status == DataStatus.OK)
                     {
-                        return string.Format("{0} s", heavePeriodData.data.ToString("0.0"));
+                        return string.Format("{0} s", _heavePeriodData.data.ToString("0.0"));
                     }
                     else
                     {

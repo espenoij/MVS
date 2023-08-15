@@ -1,5 +1,6 @@
 ﻿using System;
 using System.Collections.Generic;
+using System.ComponentModel;
 using System.Linq;
 using System.Windows;
 using System.Windows.Data;
@@ -9,8 +10,11 @@ using Telerik.Windows.Data;
 
 namespace HMS_Server
 {
-    public class ErrorHandler
+    public class ErrorHandler : INotifyPropertyChanged
     {
+        // Change notification
+        public event PropertyChangedEventHandler PropertyChanged;
+
         public const bool ShowMessageBox = true;
         public const bool HideMessageBox = false;
 
