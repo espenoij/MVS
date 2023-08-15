@@ -110,7 +110,7 @@ namespace HMS_Server
         {
             get
             {
-                return TextHelper.RemoveNewLine(message);
+                return TextHelper.RemoveNewLine(_message);
             }
         }
 
