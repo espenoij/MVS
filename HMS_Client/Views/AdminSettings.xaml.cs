@@ -76,15 +76,15 @@ namespace HMS_Client
             cboRegulationStandard.Text = viewModel.regulationStandard.ToString();
 
             // Visualization: Vessel Image
-            foreach (VesselImage value in Enum.GetValues(typeof(VesselImage)))
-                cboVisVesselImage.Items.Add(value.ToString());
+            //foreach (VesselImage value in Enum.GetValues(typeof(VesselImage)))
+            //    cboVisVesselImage.Items.Add(value.ToString());
 
-            viewModel.vesselImage = (VesselImage)Enum.Parse(typeof(VesselImage), config.ReadWithDefault(ConfigKey.VesselImage, VesselImage.Ship.ToString()));
+            //viewModel.vesselImage = (VesselImage)Enum.Parse(typeof(VesselImage), config.ReadWithDefault(ConfigKey.VesselImage, VesselImage.Ship.ToString()));
 
-            cboVisVesselImage.Text = viewModel.vesselImage.ToString();
-            cboVisVesselImage.SelectedIndex = (int)viewModel.vesselImage;
+            //cboVisVesselImage.Text = viewModel.vesselImage.ToString();
+            //cboVisVesselImage.SelectedIndex = (int)viewModel.vesselImage;
 
-            cboVisVesselImage.Text = viewModel.vesselImage.ToString();
+            //cboVisVesselImage.Text = viewModel.vesselImage.ToString();
 
             // CAP: Helideck Category
             cboHelideckCategory_CAP.Items.Add(HelideckCategory.Category1.GetDescription());
@@ -451,12 +451,12 @@ namespace HMS_Client
             adminSettingsVM.chartDataUpdateFrequency3h = validatedInput;
         }
 
-        private void cboVisVesselImage_SelectionChanged(object sender, SelectionChangedEventArgs e)
-        {
-            adminSettingsVM.vesselImage = (VesselImage)cboVisVesselImage.SelectedIndex;
-            windHeadingVM.vesselImage = (VesselImage)cboVisVesselImage.SelectedIndex;
-            generalInformationVM.vesselImage = (VesselImage)cboVisVesselImage.SelectedIndex;
-        }
+        //private void cboVisVesselImage_SelectionChanged(object sender, SelectionChangedEventArgs e)
+        //{
+        //    adminSettingsVM.vesselImage = (VesselImage)cboVisVesselImage.SelectedIndex;
+        //    windHeadingVM.vesselImage = (VesselImage)cboVisVesselImage.SelectedIndex;
+        //    generalInformationVM.vesselImage = (VesselImage)cboVisVesselImage.SelectedIndex;
+        //}
 
         private void cboRegulationStandard_SelectionChanged(object sender, SelectionChangedEventArgs e)
         {

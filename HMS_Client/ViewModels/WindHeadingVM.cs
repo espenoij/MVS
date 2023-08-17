@@ -138,6 +138,8 @@ namespace HMS_Client
             vesselCOG = clientSensorList.GetData(ValueType.VesselCOG);
             vesselSOG = clientSensorList.GetData(ValueType.VesselSOG);
 
+            vesselImage = (VesselImage)Enum.Parse(typeof(VesselImage), clientSensorList.GetData(ValueType.SettingsVesselImage).data3);
+
             helideckHeading = clientSensorList.GetData(ValueType.HelideckHeading);
 
             helicopterHeading = clientSensorList.GetData(ValueType.HelicopterHeading);

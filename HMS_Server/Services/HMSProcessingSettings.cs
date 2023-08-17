@@ -21,6 +21,7 @@ namespace HMS_Server
         private HMSData emailPassword = new HMSData();
         private HMSData emailSecureConnection = new HMSData();
         private HMSData restrictedSector = new HMSData();
+        private HMSData vesselImage = new HMSData();
 
         // HMS Web spesifikke variabler
         //private HMSData adminSettingVesselSymbol = new HMSData();
@@ -59,6 +60,8 @@ namespace HMS_Server
             hmsOutputDataList.Add(emailSecureConnection);
 
             hmsOutputDataList.Add(restrictedSector);
+
+            hmsOutputDataList.Add(vesselImage);
 
             // Trenger ikke å lagre disse i databasen, derfor ingen database table navn
             helideckWindSensorHeight.id = (int)ValueType.SettingsHelideckWindSensorHeight;
@@ -100,6 +103,10 @@ namespace HMS_Server
             vesselName.id = (int)ValueType.SettingsVesselName;
             vesselName.name = "Vessel/Installation Name";
             vesselName.sensorGroupId = Constants.NO_SENSOR_GROUP_ID;
+
+            vesselImage.id = (int)ValueType.SettingsVesselImage;
+            vesselImage.name = "Vessel Image";
+            vesselImage.sensorGroupId = Constants.NO_SENSOR_GROUP_ID;
 
             emailServer.id = (int)ValueType.SettingsEmailServer;
             emailServer.name = "Email Server";
@@ -199,6 +206,11 @@ namespace HMS_Server
             vesselName.timestamp = DateTime.UtcNow;
             vesselName.status = DataStatus.OK;
 
+            // Vessel Image
+            vesselImage.data3 = adminSettingsVM.vesselImage.ToString();
+            vesselImage.timestamp = DateTime.UtcNow;
+            vesselImage.status = DataStatus.OK;
+
             // Email Server
             emailServer.data3 = adminSettingsVM.emailServer;
             emailServer.timestamp = DateTime.UtcNow;
@@ -246,5 +258,6 @@ namespace HMS_Server
             }
             restrictedSector.timestamp = DateTime.UtcNow;
         }
+
     }
 }

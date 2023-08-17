@@ -375,7 +375,7 @@
 
         </telerik:GroupBox>
 
-        <telerik:GroupBox
+        <!--<telerik:GroupBox
             Header="USER INTERFACE"
             Grid.Column="2"
             Grid.Row="0"
@@ -440,11 +440,11 @@
 
             </Grid>
 
-        </telerik:GroupBox>
+        </telerik:GroupBox>-->
 
         <telerik:GroupBox
             Header="CAP"
-            Grid.Column="3"
+            Grid.Column="2"
             Grid.Row="0"
             Margin="8">
 
@@ -592,8 +592,8 @@
 
         <telerik:GroupBox
             Header="TIMING"
-            Grid.Column="0"
-            Grid.Row="1"
+            Grid.Column="3"
+            Grid.Row="0"
             Margin="8">
 
 

@@ -221,6 +221,31 @@ namespace HMS_Server
         }
 
         /////////////////////////////////////////////////////////////////////////////
+        // Visualization: Vessel Image
+        /////////////////////////////////////////////////////////////////////////////
+        private VesselImage _vesselImage { get; set; }
+        public VesselImage vesselImage
+        {
+            get
+            {
+                return _vesselImage;
+            }
+            set
+            {
+                _vesselImage = value;
+                config.Write(ConfigKey.VesselImage, value.ToString());
+                OnPropertyChanged(nameof(vesselImageString));
+            }
+        }
+        public string vesselImageString
+        {
+            get
+            {
+                return _vesselImage.ToString();
+            }
+        }
+
+        /////////////////////////////////////////////////////////////////////////////
         // Helideck Heading Offset
         /////////////////////////////////////////////////////////////////////////////
         private int _helideckHeadingOffset { get; set; }

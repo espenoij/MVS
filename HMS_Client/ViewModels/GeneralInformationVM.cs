@@ -78,6 +78,7 @@ namespace HMS_Client
             longitude = clientSensorList.GetData(ValueType.Longitude);
             helideckCategory = clientSensorList.GetData(ValueType.SettingsHelideckCategory);
             vesselName = clientSensorList.GetData(ValueType.SettingsVesselName);
+            vesselImage = (VesselImage)Enum.Parse(typeof(VesselImage), clientSensorList.GetData(ValueType.SettingsVesselImage).data3);
         }
 
         /////////////////////////////////////////////////////////////////////////////

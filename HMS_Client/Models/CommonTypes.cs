@@ -238,6 +238,7 @@ public enum ValueType
     SettingsDynamicPositioning,
     SettingsAccurateMonitoringEquipment,
     SettingsVesselName,
+    SettingsVesselImage,
     SettingsEmailServer,
     SettingsEmailPort,
     SettingsEmailUsername,
@@ -515,4 +516,12 @@ public enum OutputConnectionType
     MODBUS_RTU,
     [Description("ADAM-4060")]
     ADAM_4060
+}
+
+public enum VesselImage
+{
+    None,
+    Triangle,
+    Rig,
+    Ship
 }

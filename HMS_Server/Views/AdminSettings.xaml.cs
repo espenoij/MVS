@@ -74,6 +74,17 @@ namespace HMS_Server
             cboRegulationStandard.SelectedIndex = (int)adminSettingsVM.regulationStandard;
             cboRegulationStandard.Text = adminSettingsVM.regulationStandard.ToString();
 
+            // Vessel Image
+            foreach (VesselImage value in Enum.GetValues(typeof(VesselImage)))
+                cboVisVesselImage.Items.Add(value.ToString());
+
+            adminSettingsVM.vesselImage = (VesselImage)Enum.Parse(typeof(VesselImage), config.ReadWithDefault(ConfigKey.VesselImage, VesselImage.Ship.ToString()));
+
+            cboVisVesselImage.Text = adminSettingsVM.vesselImage.ToString();
+            cboVisVesselImage.SelectedIndex = (int)adminSettingsVM.vesselImage;
+
+            cboVisVesselImage.Text = adminSettingsVM.vesselImage.ToString();
+
             // Helicopter WSI Limits: Helicopter Type
             foreach (HelicopterType value in Enum.GetValues(typeof(HelicopterType)))
                 cboHelicopterWSILimitType.Items.Add(value.GetDescription());
@@ -716,6 +727,11 @@ namespace HMS_Server
         private void tbHelideckHeadingOffset_LostFocus(object sender, RoutedEventArgs e)
         {
             tbHelideckHeadingOffset_Update(sender);
+        }
+
+        private void cboVisVesselImage_SelectionChanged(object sender, SelectionChangedEventArgs e)
+        {
+            adminSettingsVM.vesselImage = (VesselImage)cboVisVesselImage.SelectedIndex;
         }
 
         private void tbHelideckHeadingOffset_KeyDown(object sender, KeyEventArgs e)

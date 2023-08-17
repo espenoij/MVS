@@ -273,27 +273,27 @@ namespace HMS_Client
         /////////////////////////////////////////////////////////////////////////////
         // Visualization: Vessel Image
         /////////////////////////////////////////////////////////////////////////////
-        private VesselImage _vesselImage { get; set; }
-        public VesselImage vesselImage
-        {
-            get
-            {
-                return _vesselImage;
-            }
-            set
-            {
-                _vesselImage = value;
-                config.Write(ConfigKey.VesselImage, value.ToString());
-                OnPropertyChanged(nameof(vesselImageString));
-            }
-        }
-        public string vesselImageString
-        {
-            get
-            {
-                return _vesselImage.ToString();
-            }
-        }
+        //private VesselImage _vesselImage { get; set; }
+        //public VesselImage vesselImage
+        //{
+        //    get
+        //    {
+        //        return _vesselImage;
+        //    }
+        //    set
+        //    {
+        //        _vesselImage = value;
+        //        config.Write(ConfigKey.VesselImage, value.ToString());
+        //        OnPropertyChanged(nameof(vesselImageString));
+        //    }
+        //}
+        //public string vesselImageString
+        //{
+        //    get
+        //    {
+        //        return _vesselImage.ToString();
+        //    }
+        //}
 
         /////////////////////////////////////////////////////////////////////////////
         // CAP: Helideck Category
@@ -401,13 +401,5 @@ namespace HMS_Client
     {
         NOROG,
         CAP
-    }
-
-    public enum VesselImage
-    {
-        None,
-        Triangle,
-        Rig,
-        Ship
     }
 }

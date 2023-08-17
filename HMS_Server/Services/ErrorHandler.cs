@@ -11,10 +11,10 @@ using Telerik.Windows.Data;
 
 namespace HMS_Server
 {
-    public class ErrorHandler : INotifyPropertyChanged
+    public class ErrorHandler/* : INotifyPropertyChanged*/
     {
         // Change notification
-        public event PropertyChangedEventHandler PropertyChanged;
+        //public event PropertyChangedEventHandler PropertyChanged;
 
         public const bool ShowMessageBox = true;
         public const bool HideMessageBox = false;
