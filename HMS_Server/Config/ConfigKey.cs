@@ -148,6 +148,10 @@
     public const string HMSProcessingFrequency = "HMSProcessingFrequency";
     public const string LightsOutputFrequency = "LightsOutputFrequency";
 
+    // HMS Web
+    public const string WebPageUpdateFrequency = "WebPageUpdateFrequency";
+    public const string WebDataRequestFrequency = "WebDataRequestFrequency";
+
     // Server App: Serial Port Configuration
     public const string ShowControlChars = "ShowControlChars";
     public const string SensorDataType = "SensorDataType";

@@ -1200,6 +1200,112 @@
 
                 </telerik:GroupBox>
 
+                <!--HMS Web-->
+                <telerik:GroupBox
+                    Grid.Row="2"
+                    Grid.Column="2"
+                    Margin="8"
+                    Header="WEB">
+
+                    <Grid
+                        Margin="8">
+
+                        <Grid.RowDefinitions>
+                            <RowDefinition
+                                Height="*" />
+                            <RowDefinition
+                                Height="*" />
+                            <RowDefinition
+                                Height="*" />
+                            <RowDefinition
+                                Height="*" />
+                            <RowDefinition
+                                Height="*" />
+                            <RowDefinition
+                                Height="*" />
+                            <RowDefinition
+                                Height="*" />
+                        </Grid.RowDefinitions>
+
+                        <!--Page Update Frequency-->
+                        <Grid
+                            Grid.Row="0">
+
+                            <Grid.ColumnDefinitions>
+                                <ColumnDefinition
+                                    Width="*" />
+                                <ColumnDefinition
+                                    Width="*" />
+                            </Grid.ColumnDefinitions>
+
+                            <Viewbox
+                                Grid.Column="0"
+                                StretchDirection="Both"
+                                Stretch="Uniform"
+                                HorizontalAlignment="Left">
+
+                                <telerik:Label
+                                    Content="Page Update Frequency (ms)"
+                                    VerticalAlignment="Center" />
+                            </Viewbox>
+
+                            <Viewbox
+                                Grid.Column="1"
+                                StretchDirection="Both"
+                                Stretch="Uniform"
+                                HorizontalAlignment="Right">
+
+                                <TextBox
+                                    Name="tbSettingsWebPageUpdateFreq"
+                                    Width="110"
+                                    HorizontalAlignment="Right"
+                                    Text="{Binding Path=webPageUpdateFrequency}"
+                                    LostFocus="tbSettingsWebPageUpdateFreq_LostFocus"
+                                    KeyDown="tbSettingsWebPageUpdateFreq_KeyDown" />
+                            </Viewbox>
+                        </Grid>
+
+                        <!--Data Request Frequency-->
+                        <Grid
+                            Grid.Row="1">
+
+                            <Grid.ColumnDefinitions>
+                                <ColumnDefinition
+                                    Width="*" />
+                                <ColumnDefinition
+                                    Width="*" />
+                            </Grid.ColumnDefinitions>
+
+                            <Viewbox
+                                Grid.Column="0"
+                                StretchDirection="Both"
+                                Stretch="Uniform"
+                                HorizontalAlignment="Left">
+
+                                <telerik:Label
+                                    Content="Data Request Frequency (ms)"
+                                    VerticalAlignment="Center" />
+                            </Viewbox>
+
+                            <Viewbox
+                                Grid.Column="1"
+                                StretchDirection="Both"
+                                Stretch="Uniform"
+                                HorizontalAlignment="Right">
+
+                                <TextBox
+                                    Name="tbSettingsWebDataRequestFreq"
+                                    Width="110"
+                                    HorizontalAlignment="Right"
+                                    Text="{Binding Path=webDataRequestFrequency}"
+                                    LostFocus="tbSettingsWebDataRequestFreq_LostFocus"
+                                    KeyDown="tbSettingsWebDataRequestFreq_KeyDown" />
+                            </Viewbox>
+                        </Grid>
+
+                    </Grid>
+
+                </telerik:GroupBox>
                 <!--SENSOR-->
                 <telerik:GroupBox
                     Grid.Row="1"

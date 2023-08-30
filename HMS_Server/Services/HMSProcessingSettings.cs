@@ -15,13 +15,16 @@ namespace HMS_Server
         private HMSData logFrequency = new HMSData();
         private HMSData marineChannel = new HMSData();
         private HMSData vesselName = new HMSData();
+        private HMSData vesselImage = new HMSData();
         private HMSData emailServer = new HMSData();
         private HMSData emailPort = new HMSData();
         private HMSData emailUsername = new HMSData();
         private HMSData emailPassword = new HMSData();
         private HMSData emailSecureConnection = new HMSData();
         private HMSData restrictedSector = new HMSData();
-        private HMSData vesselImage = new HMSData();
+        private HMSData regulationStandard = new HMSData();
+        private HMSData webPageUpdateFrequency = new HMSData();
+        private HMSData webDataRequestFrequency = new HMSData();
 
         // HMS Web spesifikke variabler
         //private HMSData adminSettingVesselSymbol = new HMSData();
@@ -52,6 +55,7 @@ namespace HMS_Server
             hmsOutputDataList.Add(marineChannel);
 
             hmsOutputDataList.Add(vesselName);
+            hmsOutputDataList.Add(vesselImage);
 
             hmsOutputDataList.Add(emailServer);
             hmsOutputDataList.Add(emailPort);
@@ -61,7 +65,9 @@ namespace HMS_Server
 
             hmsOutputDataList.Add(restrictedSector);
 
-            hmsOutputDataList.Add(vesselImage);
+            hmsOutputDataList.Add(regulationStandard);
+            hmsOutputDataList.Add(webPageUpdateFrequency);
+            hmsOutputDataList.Add(webDataRequestFrequency);
 
             // Trenger ikke å lagre disse i databasen, derfor ingen database table navn
             helideckWindSensorHeight.id = (int)ValueType.SettingsHelideckWindSensorHeight;
@@ -131,6 +137,18 @@ namespace HMS_Server
             restrictedSector.id = (int)ValueType.SettingsRestrictedSector;
             restrictedSector.name = "Restricted Sector (CAP)";
             restrictedSector.sensorGroupId = Constants.NO_SENSOR_GROUP_ID;
+
+            regulationStandard.id = (int)ValueType.RegulationStandard;
+            regulationStandard.name = "Regulation Standard";
+            regulationStandard.sensorGroupId = Constants.NO_SENSOR_GROUP_ID;
+
+            webPageUpdateFrequency.id = (int)ValueType.WebPageUpdateFrequency;
+            webPageUpdateFrequency.name = "Web Page Update Frequency";
+            webPageUpdateFrequency.sensorGroupId = Constants.NO_SENSOR_GROUP_ID;
+
+            webDataRequestFrequency.id = (int)ValueType.WebDataRequestFrequency;
+            webDataRequestFrequency.name = "Web Data Request Frequency";
+            webDataRequestFrequency.sensorGroupId = Constants.NO_SENSOR_GROUP_ID;
         }
 
         public void Update()
@@ -257,7 +275,21 @@ namespace HMS_Server
                 restrictedSector.status = DataStatus.OK;
             }
             restrictedSector.timestamp = DateTime.UtcNow;
-        }
 
+            // Regulation Standard
+            regulationStandard.data3 = adminSettingsVM.regulationStandard.ToString();
+            regulationStandard.timestamp = DateTime.UtcNow;
+            regulationStandard.status = DataStatus.OK;
+
+            // Web Page Update Frequency
+            webPageUpdateFrequency.data = adminSettingsVM.webPageUpdateFrequency;
+            webPageUpdateFrequency.timestamp = DateTime.UtcNow;
+            webPageUpdateFrequency.status = DataStatus.OK;
+
+            // Web Data Request Frequency
+            webDataRequestFrequency.data = adminSettingsVM.webDataRequestFrequency;
+            webDataRequestFrequency.timestamp = DateTime.UtcNow;
+            webDataRequestFrequency.status = DataStatus.OK;
+        }
     }
 }

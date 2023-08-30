@@ -80,6 +80,10 @@ namespace HMS_Server
             hmsProcessingFrequency = config.ReadWithDefault(ConfigKey.HMSProcessingFrequency, Constants.HMSProcessingFrequencyDefault);
             lightsOutputFrequency = config.ReadWithDefault(ConfigKey.LightsOutputFrequency, Constants.LightsOutputFrequencyDefault);
 
+            // HMS Web
+            webPageUpdateFrequency = config.ReadWithDefault(ConfigKey.WebPageUpdateFrequency, Constants.WebPageUpdateFrequencyDefault);
+            webDataRequestFrequency = config.ReadWithDefault(ConfigKey.WebDataRequestFrequency, Constants.WebDataRequestFrequencyDefault);
+
             // Helideck Report
             if (config.Read(ConfigKey.NDBInstalled_NOROG) == "1")
                 ndbInstalled_NOROG = true;
@@ -1099,6 +1103,42 @@ namespace HMS_Server
         }
 
         /////////////////////////////////////////////////////////////////////////////
+        // Web: Page Update Frequency
+        /////////////////////////////////////////////////////////////////////////////
+        private double _webPageUpdateFrequency { get; set; }
+        public double webPageUpdateFrequency
+        {
+            get
+            {
+                return _webPageUpdateFrequency;
+            }
+            set
+            {
+                _webPageUpdateFrequency = value;
+                config.Write(ConfigKey.SetupGUIDataLimit, value.ToString());
+                OnPropertyChanged();
+            }
+        }
+
+        /////////////////////////////////////////////////////////////////////////////
+        // Web: Data Request Frequency
+        /////////////////////////////////////////////////////////////////////////////
+        private double _webDataRequestFrequency { get; set; }
+        public double webDataRequestFrequency
+        {
+            get
+            {
+                return _webDataRequestFrequency;
+            }
+            set
+            {
+                _webDataRequestFrequency = value;
+                config.Write(ConfigKey.WebDataRequestFrequency, value.ToString());
+                OnPropertyChanged();
+            }
+        }
+
+        /////////////////////////////////////////////////////////////////////////////
         // Email server
         /////////////////////////////////////////////////////////////////////////////
         private string _emailServer { get; set; }
@@ -1291,12 +1331,6 @@ namespace HMS_Server
         {
             PropertyChanged?.Invoke(this, new PropertyChangedEventArgs(name));
         }
-    }
-
-    public enum RegulationStandard
-    {
-        NOROG,
-        CAP
     }
 
     public class HelicopterWSILimit

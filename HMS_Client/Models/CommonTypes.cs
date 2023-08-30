@@ -255,7 +255,12 @@ public enum ValueType
     StatusMRU,
     StatusGyro,
     StatusWind,
-    StatusSOGCOG
+    StatusSOGCOG,
+
+    // Admin settings
+    RegulationStandard,
+    WebPageUpdateFrequency,
+    WebDataRequestFrequency
 }
 
 public enum HelideckStatusType
@@ -524,4 +529,10 @@ public enum VesselImage
     Triangle,
     Rig,
     Ship
+}
+
+public enum RegulationStandard
+{
+    NOROG,
+    CAP
 }

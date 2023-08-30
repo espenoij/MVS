@@ -1343,5 +1343,59 @@ namespace HMS_Server
         {
             adminSettingsVM.ApplicationRestartRequired();
         }
+
+        private void tbSettingsWebPageUpdateFreq_LostFocus(object sender, RoutedEventArgs e)
+        {
+            tbSettingsWebPageUpdateFreq_Update(sender);
+        }
+
+        private void tbSettingsWebPageUpdateFreq_KeyDown(object sender, KeyEventArgs e)
+        {
+            if (e.Key == Key.Return)
+            {
+                tbSettingsWebPageUpdateFreq_Update(sender);
+                Keyboard.ClearFocus();
+            }
+        }
+
+        private void tbSettingsWebPageUpdateFreq_Update(object sender)
+        {
+            // Sjekk av input
+            DataValidation.Double(
+                    (sender as TextBox).Text,
+                    Constants.WebPageUpdateFrequencyMin,
+                    Constants.WebPageUpdateFrequencyMax,
+                    Constants.WebPageUpdateFrequencyDefault,
+                    out double validatedInput);
+
+            adminSettingsVM.webPageUpdateFrequency = validatedInput;
+        }
+
+        private void tbSettingsWebDataRequestFreq_LostFocus(object sender, RoutedEventArgs e)
+        {
+            tbSettingsWebDataRequestFreq_Update(sender);
+        }
+
+        private void tbSettingsWebDataRequestFreq_KeyDown(object sender, KeyEventArgs e)
+        {
+            if (e.Key == Key.Return)
+            {
+                tbSettingsWebDataRequestFreq_Update(sender);
+                Keyboard.ClearFocus();
+            }
+        }
+
+        private void tbSettingsWebDataRequestFreq_Update(object sender)
+        {
+            // Sjekk av input
+            DataValidation.Double(
+                    (sender as TextBox).Text,
+                    Constants.WebDataRequestFrequencyMin,
+                    Constants.WebDataRequestFrequencyMax,
+                    Constants.WebDataRequestFrequencyDefault,
+                    out double validatedInput);
+
+            adminSettingsVM.webDataRequestFrequency = validatedInput;
+        }
     }
 }

@@ -54,6 +54,14 @@ class Constants
     public const int ServerUIUpdateFrequencyMin = 100;
     public const int ServerUIUpdateFrequencyMax = 5000;
 
+    public const int WebPageUpdateFrequencyDefault = 1000;
+    public const int WebPageUpdateFrequencyMin = 100;
+    public const int WebPageUpdateFrequencyMax = 5000;
+
+    public const int WebDataRequestFrequencyDefault = 1000;
+    public const int WebDataRequestFrequencyMin = 100;
+    public const int WebDataRequestFrequencyMax = 5000;
+
     //  Maintenance Frequency
     public const int DBHMSSaveFrequency = 1000;
     public const int DBMaintenanceFrequency = 43200000;         // Millisekund (12 timer)
