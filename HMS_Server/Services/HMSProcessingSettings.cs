@@ -25,6 +25,7 @@ namespace HMS_Server
         private HMSData regulationStandard = new HMSData();
         private HMSData webPageUpdateFrequency = new HMSData();
         private HMSData webDataRequestFrequency = new HMSData();
+        private HMSData dataTimeout = new HMSData();
 
         // HMS Web spesifikke variabler
         //private HMSData adminSettingVesselSymbol = new HMSData();
@@ -68,6 +69,7 @@ namespace HMS_Server
             hmsOutputDataList.Add(regulationStandard);
             hmsOutputDataList.Add(webPageUpdateFrequency);
             hmsOutputDataList.Add(webDataRequestFrequency);
+            hmsOutputDataList.Add(dataTimeout);
 
             // Trenger ikke å lagre disse i databasen, derfor ingen database table navn
             helideckWindSensorHeight.id = (int)ValueType.SettingsHelideckWindSensorHeight;
@@ -149,6 +151,10 @@ namespace HMS_Server
             webDataRequestFrequency.id = (int)ValueType.WebDataRequestFrequency;
             webDataRequestFrequency.name = "Web Data Request Frequency";
             webDataRequestFrequency.sensorGroupId = Constants.NO_SENSOR_GROUP_ID;
+
+            dataTimeout.id = (int)ValueType.DataTimeout;
+            dataTimeout.name = "Data Timeout";
+            dataTimeout.sensorGroupId = Constants.NO_SENSOR_GROUP_ID;
         }
 
         public void Update()
@@ -290,6 +296,11 @@ namespace HMS_Server
             webDataRequestFrequency.data = adminSettingsVM.webDataRequestFrequency;
             webDataRequestFrequency.timestamp = DateTime.UtcNow;
             webDataRequestFrequency.status = DataStatus.OK;
+
+            // Data Timeout
+            dataTimeout.data = adminSettingsVM.dataTimeout;
+            dataTimeout.timestamp = DateTime.UtcNow;
+            dataTimeout.status = DataStatus.OK;
         }
     }
 }

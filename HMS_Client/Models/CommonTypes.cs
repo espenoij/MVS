@@ -260,7 +260,8 @@ public enum ValueType
     // Admin settings
     RegulationStandard,
     WebPageUpdateFrequency,
-    WebDataRequestFrequency
+    WebDataRequestFrequency,
+    DataTimeout
 }
 
 public enum HelideckStatusType
