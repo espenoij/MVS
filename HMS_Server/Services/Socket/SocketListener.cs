@@ -381,21 +381,25 @@ namespace HMS_Server
                     // Server aksepterer bare et gitt antall klienter (spesifisert i lisensen til kunden)
                     bool clientIDCheckOK = true;
 
-                    lock (clientIDListLock)
+                    // Forespørsler fra web server skal alltid besvares
+                    if (packet.command != PacketCommand.GetDataUpdateWeb)
                     {
-                        var foundClientID = clientIDList.Find(x => x == packet.clientID);
-                        if (foundClientID == null)
+                        lock (clientIDListLock)
                         {
-                            // Fant ikke klient -> sjekke om vi har plass til å legge den inn i listen over aksepterte klienter
-                            if (clientIDList.Count < activationVM.licenseMaxClients)
+                            var foundClientID = clientIDList.Find(x => x == packet.clientID);
+                            if (foundClientID == null)
                             {
-                                // Legge inn klient ID
-                                clientIDList.Add(packet.clientID);
-                            }
-                            // Klient ID ligger ikke i listen og vi har ikke plass til flere
-                            else
-                            {
-                                clientIDCheckOK = false;
+                                // Fant ikke klient -> sjekke om vi har plass til å legge den inn i listen over aksepterte klienter
+                                if (clientIDList.Count < activationVM.licenseMaxClients)
+                                {
+                                    // Legge inn klient ID
+                                    clientIDList.Add(packet.clientID);
+                                }
+                                // Klient ID ligger ikke i listen og vi har ikke plass til flere
+                                else
+                                {
+                                    clientIDCheckOK = false;
+                                }
                             }
                         }
                     }
@@ -408,9 +412,10 @@ namespace HMS_Server
                             // Command: Get Data Update
                             ////////////////////////////////////////////////////////////////
                             case PacketCommand.GetDataUpdate:
-                                {
-                                    // Serialisere HMS data og lage data pakke
-                                    outPacket.command = packet.command;
+                            case PacketCommand.GetDataUpdateWeb:
+                            {
+                                // Serialisere HMS data og lage data pakke
+                                outPacket.command = packet.command;
                                     outPacket.payload = SerializeHMSData(outputDataList);
 
                                     if (AdminMode.IsActive)

@@ -18,6 +18,7 @@ public enum PacketCommand
 {
     None,
     GetDataUpdate,
+    GetDataUpdateWeb,
     GetSensorStatus,
     SetUserInputs,
     ClientDenied

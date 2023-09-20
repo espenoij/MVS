@@ -1115,7 +1115,7 @@ namespace HMS_Server
             set
             {
                 _webPageUpdateFrequency = value;
-                config.Write(ConfigKey.SetupGUIDataLimit, value.ToString());
+                config.Write(ConfigKey.WebPageUpdateFrequency, value.ToString());
                 OnPropertyChanged();
             }
         }
