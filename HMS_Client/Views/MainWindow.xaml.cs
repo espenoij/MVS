@@ -210,7 +210,7 @@ namespace HMS_Client
                 // Motion History
                 tabHelideckMotionHistory_NOROG.Visibility = Visibility.Visible;
                 tabHelideckMotionHistory_CAP.Visibility = Visibility.Collapsed;
-                ucHelideckMotionHistory_NOROG.Init(helideckMotionTrendVM);
+                ucHelideckMotionHistory_NOROG.Init(helideckMotionTrendVM, landingStatusTrendVM, config, tabHelideckMotionHistory_NOROG);
 
                 // Helideck Report
                 tabHelideckReport_NOROG.Visibility = Visibility.Visible;

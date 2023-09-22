@@ -233,7 +233,7 @@ namespace HMS_Server
             heaveHeightData.name = "Heave Height";
             heaveHeightData.dbColumn = "heave_height";
             heaveHeightData.InitProcessing(errorHandler, ErrorMessageCategory.AdminUser, adminSettingsVM);
-            heaveHeightData.AddProcessing(CalculationType.RoundingDecimals, 1);
+            heaveHeightData.AddProcessing(CalculationType.WaveHeight, Constants.Minutes20);
 
             heaveHeightMax20mData.id = (int)ValueType.HeaveHeightMax20m;
             heaveHeightMax20mData.name = "Heave Height Max (20m)";

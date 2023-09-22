@@ -19,27 +19,27 @@ namespace HMS_Client
             InitializeComponent();
         }
 
-        public void Init(HelideckMotionTrendVM helideckMotionTrendVM, LandingStatusTrendVM landingStatusTrendVM, Config config, RadTabItem tabHelideckMotionHistory)
+        public void Init(HelideckMotionTrendVM viewModel, LandingStatusTrendVM landingStatusTrendVM, Config config, RadTabItem tabHelideckMotionHistory)
         {
             // Context
-            DataContext = helideckMotionTrendVM;
+            DataContext = viewModel;
 
             // Koble chart til data
-            chartPitch20m.Series[0].ItemsSource = helideckMotionTrendVM.pitchMaxUp20mList;
-            chartPitch20m.Series[1].ItemsSource = helideckMotionTrendVM.pitchMaxDown20mList;
-            chartRoll20m.Series[0].ItemsSource = helideckMotionTrendVM.rollMaxLeft20mList;
-            chartRoll20m.Series[1].ItemsSource = helideckMotionTrendVM.rollMaxRight20mList;
+            chartPitch20m.Series[0].ItemsSource = viewModel.pitchMaxUp20mList;
+            chartPitch20m.Series[1].ItemsSource = viewModel.pitchMaxDown20mList;
+            chartRoll20m.Series[0].ItemsSource = viewModel.rollMaxLeft20mList;
+            chartRoll20m.Series[1].ItemsSource = viewModel.rollMaxRight20mList;
             
-            chartSignificantHeaveRate20m.Series[0].ItemsSource = helideckMotionTrendVM.significantHeaveRateData20mList;
-            chartInclination20m.Series[0].ItemsSource = helideckMotionTrendVM.inclinationData20mList;
+            chartSignificantHeaveRate20m.Series[0].ItemsSource = viewModel.significantHeaveRateData20mList;
+            chartInclination20m.Series[0].ItemsSource = viewModel.inclinationData20mList;
 
-            chartPitch3h.Series[0].ItemsSource = helideckMotionTrendVM.pitchMaxUp3hList;
-            chartPitch3h.Series[1].ItemsSource = helideckMotionTrendVM.pitchMaxDown3hList;
-            chartRoll3h.Series[0].ItemsSource = helideckMotionTrendVM.rollMaxLeft3hList;
-            chartRoll3h.Series[1].ItemsSource = helideckMotionTrendVM.rollMaxRight3hList;
+            chartPitch3h.Series[0].ItemsSource = viewModel.pitchMaxUp3hList;
+            chartPitch3h.Series[1].ItemsSource = viewModel.pitchMaxDown3hList;
+            chartRoll3h.Series[0].ItemsSource = viewModel.rollMaxLeft3hList;
+            chartRoll3h.Series[1].ItemsSource = viewModel.rollMaxRight3hList;
 
-            chartSignificantHeaveRate3h.Series[0].ItemsSource = helideckMotionTrendVM.significantHeaveRateData3hList;
-            chartInclination3h.Series[0].ItemsSource = helideckMotionTrendVM.inclinationData3hList;
+            chartSignificantHeaveRate3h.Series[0].ItemsSource = viewModel.significantHeaveRateData3hList;
+            chartInclination3h.Series[0].ItemsSource = viewModel.inclinationData3hList;
 
             // Generere grid til landing status trend display
             TrendLine.GenerateGridColumnDefinitions(statusTrendGrid20m, Constants.landingTrendHistoryDisplayListMax);
@@ -63,16 +63,16 @@ namespace HMS_Client
                     // Sette status string: Finne data: Overføre til display data liste og overføre trend data fra data liste til display liste
                     if (tab20Minutes.IsSelected)
                     {
-                        GraphBuffer.TransferDisplayData(landingStatusTrendVM.statusTrend20mList, helideckMotionTrendVM.landingTrend20mDispList);
-                        TrendLine.UpdateTrendData(helideckMotionTrendVM.landingTrend20mDispList, statusTrendGrid20m, Application.Current);
+                        GraphBuffer.TransferDisplayData(landingStatusTrendVM.statusTrend20mList, viewModel.landingTrend20mDispList);
+                        TrendLine.UpdateTrendData(viewModel.landingTrend20mDispList, statusTrendGrid20m, Application.Current);
 
                         statusList = landingStatusTrendVM.statusTrend20mList;
                         timeString = "20-minute";
                     }
                     else
                     {
-                        GraphBuffer.TransferDisplayData(landingStatusTrendVM.statusTrend3hList, helideckMotionTrendVM.statusTrend3hDispList);
-                        TrendLine.UpdateTrendData(helideckMotionTrendVM.statusTrend3hDispList, statusTrendGrid3h, Application.Current);
+                        GraphBuffer.TransferDisplayData(landingStatusTrendVM.statusTrend3hList, viewModel.statusTrend3hDispList);
+                        TrendLine.UpdateTrendData(viewModel.statusTrend3hDispList, statusTrendGrid3h, Application.Current);
 
                         statusList = landingStatusTrendVM.statusTrend3hList;
                         timeString = "3-hour";
@@ -81,24 +81,24 @@ namespace HMS_Client
                     // Sette Status string: Sette tid
                     if (statusList.Count > 0)
                     {
-                        helideckMotionTrendVM.landingStatusTimeString = string.Format("{0} Trend ({1} - {2} UTC)",
+                        viewModel.landingStatusTimeString = string.Format("{0} Trend ({1} - {2} UTC)",
                             timeString,
                             statusList[0].timestamp.ToString("HH:mm"),
                             statusList[statusList.Count - 1].timestamp.ToString("HH:mm"));
                     }
                     else
                     {
-                        helideckMotionTrendVM.landingStatusTimeString = string.Format("{0} Trend (--:-- - --:-- UTC)", timeString);
+                        viewModel.landingStatusTimeString = string.Format("{0} Trend (--:-- - --:-- UTC)", timeString);
                     }
 
-                    if (helideckMotionTrendVM != null)
+                    if (viewModel != null)
                     {
                         ///////////////////////////////////////////////////////////////////////////////////////////
                         // Helideck Motion: Max Pitch Up
                         ///////////////////////////////////////////////////////////////////////////////////////////                  
-                        if (helideckMotionTrendVM.pitchMaxUp20mData?.status == DataStatus.OK)
+                        if (viewModel.pitchMaxUp20mData?.status == DataStatus.OK)
                         {
-                            if (helideckMotionTrendVM.pitchMaxUp20mData.limitStatus == LimitStatus.OK)
+                            if (viewModel.pitchMaxUp20mData.limitStatus == LimitStatus.OK)
                             {
                                 // Blank bakgrunn
                                 gridMaxPitchUp20m.ClearValue(Panel.BackgroundProperty);
@@ -121,9 +121,9 @@ namespace HMS_Client
                         ///////////////////////////////////////////////////////////////////////////////////////////
                         // Helideck Motion: Max Pitch Down
                         ///////////////////////////////////////////////////////////////////////////////////////////                  
-                        if (helideckMotionTrendVM.pitchMaxDown20mData?.status == DataStatus.OK)
+                        if (viewModel.pitchMaxDown20mData?.status == DataStatus.OK)
                         {
-                            if (helideckMotionTrendVM.pitchMaxDown20mData.limitStatus == LimitStatus.OK)
+                            if (viewModel.pitchMaxDown20mData.limitStatus == LimitStatus.OK)
                             {
                                 // Blank bakgrunn
                                 gridMaxPitchDown20m.ClearValue(Panel.BackgroundProperty);
@@ -146,9 +146,9 @@ namespace HMS_Client
                         ///////////////////////////////////////////////////////////////////////////////////////////
                         // Helideck Motion: Max Roll Right
                         ///////////////////////////////////////////////////////////////////////////////////////////                  
-                        if (helideckMotionTrendVM.rollMaxRight20mData?.status == DataStatus.OK)
+                        if (viewModel.rollMaxRight20mData?.status == DataStatus.OK)
                         {
-                            if (helideckMotionTrendVM.rollMaxRight20mData.limitStatus == LimitStatus.OK)
+                            if (viewModel.rollMaxRight20mData.limitStatus == LimitStatus.OK)
                             {
                                 // Blank bakgrunn
                                 gridMaxRollRight20m.ClearValue(Panel.BackgroundProperty);
@@ -171,9 +171,9 @@ namespace HMS_Client
                         ///////////////////////////////////////////////////////////////////////////////////////////
                         // Helideck Motion: Max Roll Left
                         ///////////////////////////////////////////////////////////////////////////////////////////                  
-                        if (helideckMotionTrendVM.rollMaxLeft20mData?.status == DataStatus.OK)
+                        if (viewModel.rollMaxLeft20mData?.status == DataStatus.OK)
                         {
-                            if (helideckMotionTrendVM.rollMaxLeft20mData.limitStatus == LimitStatus.OK)
+                            if (viewModel.rollMaxLeft20mData.limitStatus == LimitStatus.OK)
                             {
                                 // Blank bakgrunn
                                 gridMaxRollLeft20m.ClearValue(Panel.BackgroundProperty);
@@ -196,9 +196,9 @@ namespace HMS_Client
                         ///////////////////////////////////////////////////////////////////////////////////////////
                         // Helideck Motion: Inclination
                         ///////////////////////////////////////////////////////////////////////////////////////////                  
-                        if (helideckMotionTrendVM.inclinationMax20mData?.status == DataStatus.OK)
+                        if (viewModel.inclinationMax20mData?.status == DataStatus.OK)
                         {
-                            if (helideckMotionTrendVM.inclinationMax20mData.limitStatus == LimitStatus.OK)
+                            if (viewModel.inclinationMax20mData.limitStatus == LimitStatus.OK)
                             {
                                 // Blank bakgrunn
                                 gridMaxInclination20m.ClearValue(Panel.BackgroundProperty);
@@ -221,9 +221,9 @@ namespace HMS_Client
                         ///////////////////////////////////////////////////////////////////////////////////////////
                         // Helideck Motion: SHR
                         ///////////////////////////////////////////////////////////////////////////////////////////                  
-                        if (helideckMotionTrendVM.significantHeaveRateData?.status == DataStatus.OK)
+                        if (viewModel.significantHeaveRateData?.status == DataStatus.OK)
                         {
-                            if (helideckMotionTrendVM.significantHeaveRateData.limitStatus == LimitStatus.OK)
+                            if (viewModel.significantHeaveRateData.limitStatus == LimitStatus.OK)
                             {
                                 // Blank bakgrunn
                                 gridSHR20m.ClearValue(Panel.BackgroundProperty);

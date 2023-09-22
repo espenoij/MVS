@@ -1,4 +1,8 @@
-﻿using System.Windows.Controls;
+﻿using System;
+using System.Windows.Controls;
+using System.Windows.Media;
+using System.Windows.Threading;
+using Telerik.Windows.Data;
 
 namespace HMS_Client
 {
@@ -10,9 +14,6 @@ namespace HMS_Client
         // Configuration settings
         private Config config;
 
-        // View Model
-        public HelideckMotionTrendVM viewModel;
-
         public HelideckMotionTrend_NOROG()
         {
             InitializeComponent();
@@ -20,16 +21,15 @@ namespace HMS_Client
 
         public void Init(HelideckMotionTrendVM viewModel, Config config)
         {
-            this.viewModel = viewModel;
             this.config = config;
 
             DataContext = viewModel;
 
             // Init UI
-            InitUI();
+            Init(viewModel);
         }
 
-        private void InitUI()
+        private void Init(HelideckMotionTrendVM viewModel)
         {
             // Koble chart til data
             chartPitch20m.Series[0].ItemsSource = viewModel.pitch20mList;
@@ -43,6 +43,194 @@ namespace HMS_Client
             chartInclination3h.Series[0].ItemsSource = viewModel.inclinationData3hList;
             chartHeaveHeight3h.Series[0].ItemsSource = viewModel.heaveHeightData3hList;
             chartSignificantHeaveRate3h.Series[0].ItemsSource = viewModel.significantHeaveRateData3hList;
+
+            DispatcherTimer timerUI = new DispatcherTimer();
+
+            // Oppdatere resten av UI
+            timerUI.Interval = TimeSpan.FromMilliseconds(config.ReadWithDefault(ConfigKey.ClientUpdateFrequencyUI, Constants.ClientUIUpdateFrequencyDefault));
+            timerUI.Tick += UpdateUI;
+            timerUI.Start();
+
+            void UpdateUI(object sender, EventArgs e)
+            {
+                if (viewModel != null)
+                {
+                    ///////////////////////////////////////////////////////////////////////////////////////////
+                    // Helideck Motion: Max Pitch Up
+                    ///////////////////////////////////////////////////////////////////////////////////////////                  
+                    if (viewModel.pitchMaxUp20mData?.status == DataStatus.OK)
+                    {
+                        if (viewModel.pitchMaxUp20mData.limitStatus == LimitStatus.OK)
+                        {
+                            // Blank bakgrunn
+                            gridMaxPitchUp20m.ClearValue(Panel.BackgroundProperty);
+                            gridMaxPitchUp3h.ClearValue(Panel.BackgroundProperty);
+                        }
+                        else
+                        {
+                            // Rød bakgrunn
+                            gridMaxPitchUp20m.Background = (Brush)FindResource("ColorRed");
+                            gridMaxPitchUp3h.Background = (Brush)FindResource("ColorRed");
+                        }
+                    }
+                    else
+                    {
+                        // Blank bakgrunn
+                        gridMaxPitchUp20m.ClearValue(Panel.BackgroundProperty);
+                        gridMaxPitchUp3h.ClearValue(Panel.BackgroundProperty);
+                    }
+
+                    ///////////////////////////////////////////////////////////////////////////////////////////
+                    // Helideck Motion: Max Pitch Down
+                    ///////////////////////////////////////////////////////////////////////////////////////////                  
+                    if (viewModel.pitchMaxDown20mData?.status == DataStatus.OK)
+                    {
+                        if (viewModel.pitchMaxDown20mData.limitStatus == LimitStatus.OK)
+                        {
+                            // Blank bakgrunn
+                            gridMaxPitchDown20m.ClearValue(Panel.BackgroundProperty);
+                            gridMaxPitchDown3h.ClearValue(Panel.BackgroundProperty);
+                        }
+                        else
+                        {
+                            // Rød bakgrunn
+                            gridMaxPitchDown20m.Background = (Brush)FindResource("ColorRed");
+                            gridMaxPitchDown3h.Background = (Brush)FindResource("ColorRed");
+                        }
+                    }
+                    else
+                    {
+                        // Blank bakgrunn
+                        gridMaxPitchDown20m.ClearValue(Panel.BackgroundProperty);
+                        gridMaxPitchDown3h.ClearValue(Panel.BackgroundProperty);
+                    }
+
+                    ///////////////////////////////////////////////////////////////////////////////////////////
+                    // Helideck Motion: Max Roll Right
+                    ///////////////////////////////////////////////////////////////////////////////////////////                  
+                    if (viewModel.rollMaxRight20mData?.status == DataStatus.OK)
+                    {
+                        if (viewModel.rollMaxRight20mData.limitStatus == LimitStatus.OK)
+                        {
+                            // Blank bakgrunn
+                            gridMaxRollRight20m.ClearValue(Panel.BackgroundProperty);
+                            gridMaxRollRight3h.ClearValue(Panel.BackgroundProperty);
+                        }
+                        else
+                        {
+                            // Rød bakgrunn
+                            gridMaxRollRight20m.Background = (Brush)FindResource("ColorRed");
+                            gridMaxRollRight3h.Background = (Brush)FindResource("ColorRed");
+                        }
+                    }
+                    else
+                    {
+                        // Blank bakgrunn
+                        gridMaxRollRight20m.ClearValue(Panel.BackgroundProperty);
+                        gridMaxRollRight3h.ClearValue(Panel.BackgroundProperty);
+                    }
+
+                    ///////////////////////////////////////////////////////////////////////////////////////////
+                    // Helideck Motion: Max Roll Left
+                    ///////////////////////////////////////////////////////////////////////////////////////////                  
+                    if (viewModel.rollMaxLeft20mData?.status == DataStatus.OK)
+                    {
+                        if (viewModel.rollMaxLeft20mData.limitStatus == LimitStatus.OK)
+                        {
+                            // Blank bakgrunn
+                            gridMaxRollLeft20m.ClearValue(Panel.BackgroundProperty);
+                            gridMaxRollLeft3h.ClearValue(Panel.BackgroundProperty);
+                        }
+                        else
+                        {
+                            // Rød bakgrunn
+                            gridMaxRollLeft20m.Background = (Brush)FindResource("ColorRed");
+                            gridMaxRollLeft3h.Background = (Brush)FindResource("ColorRed");
+                        }
+                    }
+                    else
+                    {
+                        // Blank bakgrunn
+                        gridMaxRollLeft20m.ClearValue(Panel.BackgroundProperty);
+                        gridMaxRollLeft3h.ClearValue(Panel.BackgroundProperty);
+                    }
+
+                    ///////////////////////////////////////////////////////////////////////////////////////////
+                    // Helideck Motion: Inclination
+                    ///////////////////////////////////////////////////////////////////////////////////////////                  
+                    if (viewModel.inclinationMax20mData?.status == DataStatus.OK)
+                    {
+                        if (viewModel.inclinationMax20mData.limitStatus == LimitStatus.OK)
+                        {
+                            // Blank bakgrunn
+                            gridMaxInclination20m.ClearValue(Panel.BackgroundProperty);
+                            gridMaxInclination3h.ClearValue(Panel.BackgroundProperty);
+                        }
+                        else
+                        {
+                            // Rød bakgrunn
+                            gridMaxInclination20m.Background = (Brush)FindResource("ColorRed");
+                            gridMaxInclination3h.Background = (Brush)FindResource("ColorRed");
+                        }
+                    }
+                    else
+                    {
+                        // Blank bakgrunn
+                        gridMaxInclination20m.ClearValue(Panel.BackgroundProperty);
+                        gridMaxInclination3h.ClearValue(Panel.BackgroundProperty);
+                    }
+
+                    ///////////////////////////////////////////////////////////////////////////////////////////
+                    // Helideck Motion: Heave Height
+                    ///////////////////////////////////////////////////////////////////////////////////////////                  
+                    if (viewModel.heaveHeightMax20mData?.status == DataStatus.OK)
+                    {
+                        if (viewModel.heaveHeightMax20mData.limitStatus == LimitStatus.OK)
+                        {
+                            // Blank bakgrunn
+                            gridMaxHeaveHeight20m.ClearValue(Panel.BackgroundProperty);
+                            gridMaxHeaveHeight3h.ClearValue(Panel.BackgroundProperty);
+                        }
+                        else
+                        {
+                            // Rød bakgrunn
+                            gridMaxHeaveHeight20m.Background = (Brush)FindResource("ColorRed");
+                            gridMaxHeaveHeight3h.Background = (Brush)FindResource("ColorRed");
+                        }
+                    }
+                    else
+                    {
+                        // Blank bakgrunn
+                        gridMaxHeaveHeight20m.ClearValue(Panel.BackgroundProperty);
+                        gridMaxHeaveHeight3h.ClearValue(Panel.BackgroundProperty);
+                    }
+
+                    ///////////////////////////////////////////////////////////////////////////////////////////
+                    // Helideck Motion: SHR
+                    ///////////////////////////////////////////////////////////////////////////////////////////                  
+                    if (viewModel.significantHeaveRateData?.status == DataStatus.OK)
+                    {
+                        if (viewModel.significantHeaveRateData.limitStatus == LimitStatus.OK)
+                        {
+                            // Blank bakgrunn
+                            gridSHR20m.ClearValue(Panel.BackgroundProperty);
+                            gridSHR3h.ClearValue(Panel.BackgroundProperty);
+                        }
+                        else
+                        {
+                            // Rød bakgrunn
+                            gridSHR20m.Background = (Brush)FindResource("ColorRed");
+                            gridSHR3h.Background = (Brush)FindResource("ColorRed");
+                        }
+                    }
+                    else
+                    {
+                        // Blank bakgrunn
+                        gridSHR20m.ClearValue(Panel.BackgroundProperty);
+                        gridSHR3h.ClearValue(Panel.BackgroundProperty);
+                    }
+                }
+            }
         }
     }
 }

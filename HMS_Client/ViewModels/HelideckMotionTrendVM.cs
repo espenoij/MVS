@@ -277,6 +277,7 @@ namespace HMS_Client
 
                 OnPropertyChanged(nameof(pitchRollLimitString));
                 OnPropertyChanged(nameof(inclinationLimitString));
+                OnPropertyChanged(nameof(heaveHeightLimitString));
                 OnPropertyChanged(nameof(significantHeaveRateLimitString));
             }
 
@@ -1948,6 +1949,24 @@ namespace HMS_Client
                 {
                     if (motionLimitInclination.status == DataStatus.OK)
                         return string.Format("{0} °", motionLimitInclination.data.ToString("0.0"));
+                    else
+                        return Constants.NotAvailable;
+                }
+                else
+                {
+                    return Constants.NotAvailable;
+                }
+            }
+        }
+
+        public string heaveHeightLimitString
+        {
+            get
+            {
+                if (motionLimitHeaveHeight != null)
+                {
+                    if (motionLimitHeaveHeight.status == DataStatus.OK)
+                        return string.Format("{0} m", motionLimitHeaveHeight.data.ToString("0.0"));
                     else
                         return Constants.NotAvailable;
                 }

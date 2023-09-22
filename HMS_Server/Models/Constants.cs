@@ -325,7 +325,7 @@ class Constants
                                                                 // På 1920 skjerm vil den være ca 500 pixler bred
                                                                 // Opplever "flicker" på trend linjen med for høy oppløsning, satt ned til 300
 
-    // Graph Accuracy
+    // Graph Accuracy (brukes til CAP)
     public const double GraphCullFrequency20m = 4000;           // 4 sek
     public const double GraphCullFrequency30m = 6000;           // 6 sek
     public const double GraphCullFrequency3h = 30000;           // 30 sek
