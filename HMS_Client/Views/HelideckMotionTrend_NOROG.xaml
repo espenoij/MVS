@@ -972,342 +972,10 @@
                         Grid.ColumnSpan="3"
                         VerticalAlignment="Bottom" />
 
-                    <!--Heave Height-->
-                    <Grid
-                        Grid.Column="0"
-                        Grid.Row="6">
-
-                        <Grid.RowDefinitions>
-                            <RowDefinition
-                                Height="2*" />
-                            <RowDefinition
-                                Height="*" />
-                            <RowDefinition
-                                Height="*" />
-                            <RowDefinition
-                                Height="2*" />
-                        </Grid.RowDefinitions>
-
-                        <Viewbox
-                            Grid.Row="1"
-                            StretchDirection="Both"
-                            Stretch="Uniform"
-                            HorizontalAlignment="Center">
-
-                            <TextBlock
-                                Text="Heave" />
-
-                        </Viewbox>
-
-                        <Viewbox
-                            Grid.Row="2"
-                            StretchDirection="Both"
-                            Stretch="Uniform"
-                            HorizontalAlignment="Center">
-
-                            <TextBlock
-                                Text="Height" />
-
-                        </Viewbox>
-
-                    </Grid>
-
-                    <!--Heave height chart-->
-                    <telerik:RadCartesianChart
-                        Grid.Column="1"
-                        Grid.Row="6"
-                        Margin="-2,-6,0,-6"
-                        Name="chartHeaveHeight20m">
-
-                        <telerik:LineSeries
-                            ZIndex="200"
-                            Stroke="{StaticResource ColorGraphLine}"
-                            CategoryBinding="timestamp"
-                            ValueBinding="graphData">
-
-                            <telerik:LineSeries.RenderOptions>
-                                <telerik:XamlRenderOptions
-                                    DefaultVisualsRenderMode="Batch" />
-                            </telerik:LineSeries.RenderOptions>
-
-                        </telerik:LineSeries>
-
-                        <telerik:RadCartesianChart.HorizontalAxis>
-                            <telerik:DateTimeContinuousAxis
-                                MajorStepUnit="Minute"
-                                MajorStep="5"
-                                ShowLabels="False"
-                                PlotMode="OnTicks"
-                                TickOrigin="{Binding alignmentTime}"
-                                Minimum="{Binding alignmentTimeMin20m}"
-                                Maximum="{Binding alignmentTimeMax}" />
-                        </telerik:RadCartesianChart.HorizontalAxis>
-
-                        <telerik:RadCartesianChart.VerticalAxis>
-                            <telerik:LinearAxis
-                                x:Name="chartHeaveHeightVerticalAxis20m"
-                                Maximum="{Binding heaveHeightChartAxisMax20m}"
-                                Minimum="0" />
-                        </telerik:RadCartesianChart.VerticalAxis>
-
-                        <telerik:RadCartesianChart.Grid>
-                            <telerik:CartesianChartGrid
-                                MajorLinesVisibility="XY" />
-                        </telerik:RadCartesianChart.Grid>
-
-                        <telerik:RadCartesianChart.Annotations>
-
-                            <telerik:CartesianGridLineAnnotation
-                                Axis="{Binding ElementName=chartHeaveHeightVerticalAxis20m}"
-                                Value="{Binding heaveHeightChartAnnotationRedMin20m}"
-                                Stroke="{StaticResource ColorRed}"
-                                StrokeThickness="2" />
-
-                        </telerik:RadCartesianChart.Annotations>
-
-                    </telerik:RadCartesianChart>
-
-                    <!--Heave height labels-->
-                    <Grid
-                        Grid.Column="1"
-                        Grid.Row="7"
-                        Margin="10,0,-6,0">
-
-                        <Grid.ColumnDefinitions>
-                            <ColumnDefinition
-                                Width="*" />
-                            <ColumnDefinition
-                                Width="*" />
-                            <ColumnDefinition
-                                Width="*" />
-                            <ColumnDefinition
-                                Width="*" />
-                            <ColumnDefinition
-                                Width="*" />
-                            <ColumnDefinition
-                                Width="*" />
-                            <ColumnDefinition
-                                Width="*" />
-                            <ColumnDefinition
-                                Width="*" />
-                        </Grid.ColumnDefinitions>
-
-                        <Viewbox
-                            Grid.Column="0"
-                            Grid.ColumnSpan="2"
-                            StretchDirection="Both"
-                            Stretch="Uniform"
-                            HorizontalAlignment="Left">
-
-                            <Label
-                                Content="-20 mins" />
-
-                        </Viewbox>
-
-                        <Viewbox
-                            Grid.Column="1"
-                            Grid.ColumnSpan="2"
-                            StretchDirection="Both"
-                            Stretch="Uniform"
-                            HorizontalAlignment="Center">
-
-                            <Label
-                                Content="-15" />
-
-                        </Viewbox>
-
-                        <Viewbox
-                            Grid.Column="3"
-                            Grid.ColumnSpan="2"
-                            StretchDirection="Both"
-                            Stretch="Uniform"
-                            HorizontalAlignment="Center">
-
-                            <Label
-                                Content="-10" />
-
-                        </Viewbox>
-
-                        <Viewbox
-                            Grid.Column="5"
-                            Grid.ColumnSpan="2"
-                            StretchDirection="Both"
-                            Stretch="Uniform"
-                            HorizontalAlignment="Center">
-
-                            <Label
-                                Content="-5" />
-
-                        </Viewbox>
-
-                        <Viewbox
-                            Grid.Column="10"
-                            StretchDirection="Both"
-                            Stretch="Uniform"
-                            HorizontalAlignment="Right">
-
-                            <Label
-                                Content="0" />
-
-                        </Viewbox>
-
-                    </Grid>
-
-                    <!--Heave height max-->
-                    <Grid
-                        Grid.Column="2"
-                        Grid.Row="6"
-                        Margin="16,0,0,0">
-
-                        <Grid.RowDefinitions>
-                            <RowDefinition
-                                Height="*" />
-                            <RowDefinition
-                                Height="*" />
-                            <RowDefinition
-                                Height="*" />
-                            <RowDefinition
-                                Height="*" />
-                            <RowDefinition
-                                Height="3*" />
-                        </Grid.RowDefinitions>
-
-                        <Grid
-                            Grid.Row="1"
-                            Name="gridMaxHeaveHeight20m">
-
-                            <Grid.ColumnDefinitions>
-                                <ColumnDefinition
-                                    Width="7*" />
-                                <ColumnDefinition
-                                    Width="3*" />
-                            </Grid.ColumnDefinitions>
-
-                            <Viewbox
-                                Grid.Column="0"
-                                StretchDirection="Both"
-                                Stretch="Uniform"
-                                HorizontalAlignment="Left">
-
-                                <TextBlock
-                                    Text="Max Heave Height" />
-
-                            </Viewbox>
-
-                            <Viewbox
-                                Grid.Column="1"
-                                StretchDirection="Both"
-                                Stretch="Uniform"
-                                HorizontalAlignment="Right">
-
-                                <TextBlock
-                                    Text="{Binding Path=heaveHeightMax20mString}"
-                                    FontSize="{StaticResource fontSizeData}" />
-
-                            </Viewbox>
-
-                        </Grid>
-
-                        <Grid
-                            Grid.Row="3">
-
-                            <Grid.ColumnDefinitions>
-                                <ColumnDefinition
-                                    Width="4*" />
-                                <ColumnDefinition
-                                    Width="2*" />
-                            </Grid.ColumnDefinitions>
-
-                            <Viewbox
-                                Grid.Column="0"
-                                StretchDirection="Both"
-                                Stretch="Uniform"
-                                HorizontalAlignment="Left">
-
-                                <TextBlock
-                                    Text="Limit" />
-
-                            </Viewbox>
-
-                            <Viewbox
-                                Grid.Column="1"
-                                StretchDirection="Both"
-                                Stretch="Uniform"
-                                HorizontalAlignment="Right">
-
-                                <TextBlock
-                                    Text="{Binding Path=heaveHeightLimitString}"
-                                    FontSize="{StaticResource fontSizeData}" />
-
-                            </Viewbox>
-
-                        </Grid>
-
-                    </Grid>
-
-                    <Separator
-                        Grid.Column="0"
-                        Grid.Row="7"
-                        Grid.ColumnSpan="3"
-                        VerticalAlignment="Bottom" />
-
-                    <!--Significant Heave Rate title-->
-                    <Grid
-                        Grid.Column="0"
-                        Grid.Row="8">
-
-                        <Grid.RowDefinitions>
-                            <RowDefinition
-                                Height="*" />
-                            <RowDefinition
-                                Height="*" />
-                            <RowDefinition
-                                Height="*" />
-                            <RowDefinition
-                                Height="*" />
-                            <RowDefinition
-                                Height="2*" />
-                        </Grid.RowDefinitions>
-
-                        <Viewbox
-                            Grid.Row="1"
-                            StretchDirection="Both"
-                            Stretch="Uniform"
-                            HorizontalAlignment="Center">
-
-                            <TextBlock
-                                Text="Significant" />
-
-                        </Viewbox>
-
-                        <Viewbox
-                            Grid.Row="2"
-                            StretchDirection="Both"
-                            Stretch="Uniform"
-                            HorizontalAlignment="Center">
-
-                            <TextBlock
-                                Text="Heave" />
-
-                        </Viewbox>
-
-                        <Viewbox
-                            Grid.Row="3"
-                            StretchDirection="Both"
-                            Stretch="Uniform"
-                            HorizontalAlignment="Center">
-
-                            <TextBlock
-                                Text="Rate" />
-
-                        </Viewbox>
-
-                    </Grid>
-
                     <!--Significant Heave Rate Chart-->
                     <telerik:RadCartesianChart
                         Grid.Column="1"
-                        Grid.Row="8"
+                        Grid.Row="6"
                         Margin="-12,-6,0,-6"
                         Name="chartSignificantHeaveRate20m">
 
@@ -1358,11 +1026,11 @@
                         </telerik:RadCartesianChart.Annotations>
 
                     </telerik:RadCartesianChart>
-                    
+
                     <!--Significant Heave Rate labels-->
                     <Grid
                         Grid.Column="1"
-                        Grid.Row="9"
+                        Grid.Row="7"
                         Margin="10,0,-6,0">
 
                         <Grid.ColumnDefinitions>
@@ -1448,7 +1116,7 @@
                     <!--Significant Heave Rate Max-->
                     <Grid
                         Grid.Column="2"
-                        Grid.Row="8"
+                        Grid.Row="6"
                         Margin="16,0,0,0">
 
                         <Grid.RowDefinitions>
@@ -1529,6 +1197,338 @@
 
                                 <TextBlock
                                     Text="{Binding Path=significantHeaveRateLimitString}"
+                                    FontSize="{StaticResource fontSizeData}" />
+
+                            </Viewbox>
+
+                        </Grid>
+
+                    </Grid>
+
+                    <!--Significant Heave Rate title-->
+                    <Grid
+                        Grid.Column="0"
+                        Grid.Row="6">
+
+                        <Grid.RowDefinitions>
+                            <RowDefinition
+                                Height="*" />
+                            <RowDefinition
+                                Height="*" />
+                            <RowDefinition
+                                Height="*" />
+                            <RowDefinition
+                                Height="*" />
+                            <RowDefinition
+                                Height="2*" />
+                        </Grid.RowDefinitions>
+
+                        <Viewbox
+                            Grid.Row="1"
+                            StretchDirection="Both"
+                            Stretch="Uniform"
+                            HorizontalAlignment="Center">
+
+                            <TextBlock
+                                Text="Significant" />
+
+                        </Viewbox>
+
+                        <Viewbox
+                            Grid.Row="2"
+                            StretchDirection="Both"
+                            Stretch="Uniform"
+                            HorizontalAlignment="Center">
+
+                            <TextBlock
+                                Text="Heave" />
+
+                        </Viewbox>
+
+                        <Viewbox
+                            Grid.Row="3"
+                            StretchDirection="Both"
+                            Stretch="Uniform"
+                            HorizontalAlignment="Center">
+
+                            <TextBlock
+                                Text="Rate" />
+
+                        </Viewbox>
+
+                    </Grid>
+
+                    <Separator
+                        Grid.Column="0"
+                        Grid.Row="7"
+                        Grid.ColumnSpan="3"
+                        VerticalAlignment="Bottom" />
+
+                    <!--Heave Height-->
+                    <Grid
+                        Grid.Column="0"
+                        Grid.Row="8">
+
+                        <Grid.RowDefinitions>
+                            <RowDefinition
+                                Height="2*" />
+                            <RowDefinition
+                                Height="*" />
+                            <RowDefinition
+                                Height="*" />
+                            <RowDefinition
+                                Height="2*" />
+                        </Grid.RowDefinitions>
+
+                        <Viewbox
+                            Grid.Row="1"
+                            StretchDirection="Both"
+                            Stretch="Uniform"
+                            HorizontalAlignment="Center">
+
+                            <TextBlock
+                                Text="Heave" />
+
+                        </Viewbox>
+
+                        <Viewbox
+                            Grid.Row="2"
+                            StretchDirection="Both"
+                            Stretch="Uniform"
+                            HorizontalAlignment="Center">
+
+                            <TextBlock
+                                Text="Height" />
+
+                        </Viewbox>
+
+                    </Grid>
+
+                    <!--Heave height chart-->
+                    <telerik:RadCartesianChart
+                        Grid.Column="1"
+                        Grid.Row="8"
+                        Margin="-2,-6,0,-6"
+                        Name="chartHeaveHeight20m">
+
+                        <telerik:LineSeries
+                            ZIndex="200"
+                            Stroke="{StaticResource ColorGraphLine}"
+                            CategoryBinding="timestamp"
+                            ValueBinding="graphData">
+
+                            <telerik:LineSeries.RenderOptions>
+                                <telerik:XamlRenderOptions
+                                    DefaultVisualsRenderMode="Batch" />
+                            </telerik:LineSeries.RenderOptions>
+
+                        </telerik:LineSeries>
+
+                        <telerik:RadCartesianChart.HorizontalAxis>
+                            <telerik:DateTimeContinuousAxis
+                                MajorStepUnit="Minute"
+                                MajorStep="5"
+                                ShowLabels="False"
+                                PlotMode="OnTicks"
+                                TickOrigin="{Binding alignmentTime}"
+                                Minimum="{Binding alignmentTimeMin20m}"
+                                Maximum="{Binding alignmentTimeMax}" />
+                        </telerik:RadCartesianChart.HorizontalAxis>
+
+                        <telerik:RadCartesianChart.VerticalAxis>
+                            <telerik:LinearAxis
+                                x:Name="chartHeaveHeightVerticalAxis20m"
+                                Maximum="{Binding heaveHeightChartAxisMax20m}"
+                                Minimum="0" />
+                        </telerik:RadCartesianChart.VerticalAxis>
+
+                        <telerik:RadCartesianChart.Grid>
+                            <telerik:CartesianChartGrid
+                                MajorLinesVisibility="XY" />
+                        </telerik:RadCartesianChart.Grid>
+
+                        <telerik:RadCartesianChart.Annotations>
+
+                            <telerik:CartesianGridLineAnnotation
+                                Axis="{Binding ElementName=chartHeaveHeightVerticalAxis20m}"
+                                Value="{Binding heaveHeightChartAnnotationRedMin20m}"
+                                Stroke="{StaticResource ColorRed}"
+                                StrokeThickness="2" />
+
+                        </telerik:RadCartesianChart.Annotations>
+
+                    </telerik:RadCartesianChart>
+
+                    <!--Heave height labels-->
+                    <Grid
+                        Grid.Column="1"
+                        Grid.Row="9"
+                        Margin="10,0,-6,0">
+
+                        <Grid.ColumnDefinitions>
+                            <ColumnDefinition
+                                Width="*" />
+                            <ColumnDefinition
+                                Width="*" />
+                            <ColumnDefinition
+                                Width="*" />
+                            <ColumnDefinition
+                                Width="*" />
+                            <ColumnDefinition
+                                Width="*" />
+                            <ColumnDefinition
+                                Width="*" />
+                            <ColumnDefinition
+                                Width="*" />
+                            <ColumnDefinition
+                                Width="*" />
+                        </Grid.ColumnDefinitions>
+
+                        <Viewbox
+                            Grid.Column="0"
+                            Grid.ColumnSpan="2"
+                            StretchDirection="Both"
+                            Stretch="Uniform"
+                            HorizontalAlignment="Left">
+
+                            <Label
+                                Content="-20 mins" />
+
+                        </Viewbox>
+
+                        <Viewbox
+                            Grid.Column="1"
+                            Grid.ColumnSpan="2"
+                            StretchDirection="Both"
+                            Stretch="Uniform"
+                            HorizontalAlignment="Center">
+
+                            <Label
+                                Content="-15" />
+
+                        </Viewbox>
+
+                        <Viewbox
+                            Grid.Column="3"
+                            Grid.ColumnSpan="2"
+                            StretchDirection="Both"
+                            Stretch="Uniform"
+                            HorizontalAlignment="Center">
+
+                            <Label
+                                Content="-10" />
+
+                        </Viewbox>
+
+                        <Viewbox
+                            Grid.Column="5"
+                            Grid.ColumnSpan="2"
+                            StretchDirection="Both"
+                            Stretch="Uniform"
+                            HorizontalAlignment="Center">
+
+                            <Label
+                                Content="-5" />
+
+                        </Viewbox>
+
+                        <Viewbox
+                            Grid.Column="10"
+                            StretchDirection="Both"
+                            Stretch="Uniform"
+                            HorizontalAlignment="Right">
+
+                            <Label
+                                Content="0" />
+
+                        </Viewbox>
+
+                    </Grid>
+
+                    <!--Heave height max-->
+                    <Grid
+                        Grid.Column="2"
+                        Grid.Row="8"
+                        Margin="16,0,0,0">
+
+                        <Grid.RowDefinitions>
+                            <RowDefinition
+                                Height="*" />
+                            <RowDefinition
+                                Height="*" />
+                            <RowDefinition
+                                Height="*" />
+                            <RowDefinition
+                                Height="*" />
+                            <RowDefinition
+                                Height="3*" />
+                        </Grid.RowDefinitions>
+
+                        <Grid
+                            Grid.Row="1"
+                            Name="gridMaxHeaveHeight20m">
+
+                            <Grid.ColumnDefinitions>
+                                <ColumnDefinition
+                                    Width="7*" />
+                                <ColumnDefinition
+                                    Width="3*" />
+                            </Grid.ColumnDefinitions>
+
+                            <Viewbox
+                                Grid.Column="0"
+                                StretchDirection="Both"
+                                Stretch="Uniform"
+                                HorizontalAlignment="Left">
+
+                                <TextBlock
+                                    Text="Max Heave Height" />
+
+                            </Viewbox>
+
+                            <Viewbox
+                                Grid.Column="1"
+                                StretchDirection="Both"
+                                Stretch="Uniform"
+                                HorizontalAlignment="Right">
+
+                                <TextBlock
+                                    Text="{Binding Path=heaveHeightMax20mString}"
+                                    FontSize="{StaticResource fontSizeData}" />
+
+                            </Viewbox>
+
+                        </Grid>
+
+                        <Grid
+                            Grid.Row="3">
+
+                            <Grid.ColumnDefinitions>
+                                <ColumnDefinition
+                                    Width="4*" />
+                                <ColumnDefinition
+                                    Width="2*" />
+                            </Grid.ColumnDefinitions>
+
+                            <Viewbox
+                                Grid.Column="0"
+                                StretchDirection="Both"
+                                Stretch="Uniform"
+                                HorizontalAlignment="Left">
+
+                                <TextBlock
+                                    Text="Limit" />
+
+                            </Viewbox>
+
+                            <Viewbox
+                                Grid.Column="1"
+                                StretchDirection="Both"
+                                Stretch="Uniform"
+                                HorizontalAlignment="Right">
+
+                                <TextBlock
+                                    Text="{Binding Path=heaveHeightLimitString}"
                                     FontSize="{StaticResource fontSizeData}" />
 
                             </Viewbox>
@@ -2454,14 +2454,16 @@
                         Grid.ColumnSpan="3"
                         VerticalAlignment="Bottom" />
 
-                    <!--Heave Height title-->
+                    <!--Significant heave rate title-->
                     <Grid
                         Grid.Column="0"
                         Grid.Row="6">
 
                         <Grid.RowDefinitions>
                             <RowDefinition
-                                Height="2*" />
+                                Height="*" />
+                            <RowDefinition
+                                Height="*" />
                             <RowDefinition
                                 Height="*" />
                             <RowDefinition
@@ -2477,7 +2479,7 @@
                             HorizontalAlignment="Center">
 
                             <TextBlock
-                                Text="Heave" />
+                                Text="Significant" />
 
                         </Viewbox>
 
@@ -2488,18 +2490,29 @@
                             HorizontalAlignment="Center">
 
                             <TextBlock
-                                Text="Height" />
+                                Text="Heave" />
+
+                        </Viewbox>
+
+                        <Viewbox
+                            Grid.Row="3"
+                            StretchDirection="Both"
+                            Stretch="Uniform"
+                            HorizontalAlignment="Center">
+
+                            <TextBlock
+                                Text="Rate" />
 
                         </Viewbox>
 
                     </Grid>
 
-                    <!--Heave Height chart-->
+                    <!--Significant heave rate chart-->
                     <telerik:RadCartesianChart
                         Grid.Column="1"
                         Grid.Row="6"
-                        Name="chartHeaveHeight3h"
-                        Margin="-2,-6,0,-6">
+                        Margin="-12,-6,0,-6"
+                        Name="chartSignificantHeaveRate3h">
 
                         <telerik:LineSeries
                             ZIndex="200"
@@ -2527,8 +2540,8 @@
 
                         <telerik:RadCartesianChart.VerticalAxis>
                             <telerik:LinearAxis
-                                x:Name="chartHeaveHeightVerticalAxis3h"
-                                Maximum="{Binding heaveHeightChartAxisMax3h}"
+                                x:Name="chartSignificantHeaveRateVerticalAxis3h"
+                                Maximum="{Binding significantHeaveRateChartAxisMax3h}"
                                 Minimum="0" />
                         </telerik:RadCartesianChart.VerticalAxis>
 
@@ -2540,8 +2553,8 @@
                         <telerik:RadCartesianChart.Annotations>
 
                             <telerik:CartesianGridLineAnnotation
-                                Axis="{Binding ElementName=chartHeaveHeightVerticalAxis3h}"
-                                Value="{Binding heaveHeightChartAnnotationRedMin3h}"
+                                Axis="{Binding ElementName=chartSignificantHeaveRateVerticalAxis3h}"
+                                Value="{Binding significantHeaveRateChartAnnotationRedMin3h}"
                                 Stroke="{StaticResource ColorRed}"
                                 StrokeThickness="2" />
 
@@ -2626,7 +2639,7 @@
 
                     </Grid>
 
-                    <!--Heave height max-->
+                    <!--Significant Heave Rate Max-->
                     <Grid
                         Grid.Column="2"
                         Grid.Row="6"
@@ -2647,13 +2660,13 @@
 
                         <Grid
                             Grid.Row="1"
-                            Name="gridMaxHeaveHeight3h">
+                            Name="gridSHR3h">
 
                             <Grid.ColumnDefinitions>
                                 <ColumnDefinition
-                                    Width="7*" />
+                                    Width="4*" />
                                 <ColumnDefinition
-                                    Width="3*" />
+                                    Width="2*" />
                             </Grid.ColumnDefinitions>
 
                             <Viewbox
@@ -2663,7 +2676,7 @@
                                 HorizontalAlignment="Left">
 
                                 <TextBlock
-                                    Text="Max Heave Height" />
+                                    Text="SHR" />
 
                             </Viewbox>
 
@@ -2674,7 +2687,7 @@
                                 HorizontalAlignment="Right">
 
                                 <TextBlock
-                                    Text="{Binding Path=heaveHeightMax20mString}"
+                                    Text="{Binding Path=significantHeaveRateString}"
                                     FontSize="{StaticResource fontSizeData}" />
 
                             </Viewbox>
@@ -2709,7 +2722,7 @@
                                 HorizontalAlignment="Right">
 
                                 <TextBlock
-                                    Text="{Binding Path=heaveHeightLimitString}"
+                                    Text="{Binding Path=significantHeaveRateLimitString}"
                                     FontSize="{StaticResource fontSizeData}" />
 
                             </Viewbox>
@@ -2724,16 +2737,14 @@
                         Grid.ColumnSpan="3"
                         VerticalAlignment="Bottom" />
 
-                    <!--Significant heave rate title-->
+                    <!--Heave Height title-->
                     <Grid
                         Grid.Column="0"
                         Grid.Row="8">
 
                         <Grid.RowDefinitions>
                             <RowDefinition
-                                Height="*" />
-                            <RowDefinition
-                                Height="*" />
+                                Height="2*" />
                             <RowDefinition
                                 Height="*" />
                             <RowDefinition
@@ -2749,7 +2760,7 @@
                             HorizontalAlignment="Center">
 
                             <TextBlock
-                                Text="Significant" />
+                                Text="Heave" />
 
                         </Viewbox>
 
@@ -2760,29 +2771,18 @@
                             HorizontalAlignment="Center">
 
                             <TextBlock
-                                Text="Heave" />
-
-                        </Viewbox>
-
-                        <Viewbox
-                            Grid.Row="3"
-                            StretchDirection="Both"
-                            Stretch="Uniform"
-                            HorizontalAlignment="Center">
-
-                            <TextBlock
-                                Text="Rate" />
+                                Text="Height" />
 
                         </Viewbox>
 
                     </Grid>
 
-                    <!--Significant heave rate chart-->
+                    <!--Heave Height chart-->
                     <telerik:RadCartesianChart
                         Grid.Column="1"
                         Grid.Row="8"
-                        Margin="-12,-6,0,-6"
-                        Name="chartSignificantHeaveRate3h">
+                        Name="chartHeaveHeight3h"
+                        Margin="-2,-6,0,-6">
 
                         <telerik:LineSeries
                             ZIndex="200"
@@ -2810,8 +2810,8 @@
 
                         <telerik:RadCartesianChart.VerticalAxis>
                             <telerik:LinearAxis
-                                x:Name="chartSignificantHeaveRateVerticalAxis3h"
-                                Maximum="{Binding significantHeaveRateChartAxisMax3h}"
+                                x:Name="chartHeaveHeightVerticalAxis3h"
+                                Maximum="{Binding heaveHeightChartAxisMax3h}"
                                 Minimum="0" />
                         </telerik:RadCartesianChart.VerticalAxis>
 
@@ -2823,8 +2823,8 @@
                         <telerik:RadCartesianChart.Annotations>
 
                             <telerik:CartesianGridLineAnnotation
-                                Axis="{Binding ElementName=chartSignificantHeaveRateVerticalAxis3h}"
-                                Value="{Binding significantHeaveRateChartAnnotationRedMin3h}"
+                                Axis="{Binding ElementName=chartHeaveHeightVerticalAxis3h}"
+                                Value="{Binding heaveHeightChartAnnotationRedMin3h}"
                                 Stroke="{StaticResource ColorRed}"
                                 StrokeThickness="2" />
 
@@ -2909,7 +2909,7 @@
 
                     </Grid>
 
-                    <!--Significant Heave Rate Max-->
+                    <!--Heave height max-->
                     <Grid
                         Grid.Column="2"
                         Grid.Row="8"
@@ -2930,13 +2930,13 @@
 
                         <Grid
                             Grid.Row="1"
-                            Name="gridSHR3h">
+                            Name="gridMaxHeaveHeight3h">
 
                             <Grid.ColumnDefinitions>
                                 <ColumnDefinition
-                                    Width="4*" />
+                                    Width="7*" />
                                 <ColumnDefinition
-                                    Width="2*" />
+                                    Width="3*" />
                             </Grid.ColumnDefinitions>
 
                             <Viewbox
@@ -2946,7 +2946,7 @@
                                 HorizontalAlignment="Left">
 
                                 <TextBlock
-                                    Text="SHR" />
+                                    Text="Max Heave Height" />
 
                             </Viewbox>
 
@@ -2957,7 +2957,7 @@
                                 HorizontalAlignment="Right">
 
                                 <TextBlock
-                                    Text="{Binding Path=significantHeaveRateString}"
+                                    Text="{Binding Path=heaveHeightMax20mString}"
                                     FontSize="{StaticResource fontSizeData}" />
 
                             </Viewbox>
@@ -2992,7 +2992,7 @@
                                 HorizontalAlignment="Right">
 
                                 <TextBlock
-                                    Text="{Binding Path=significantHeaveRateLimitString}"
+                                    Text="{Binding Path=heaveHeightLimitString}"
                                     FontSize="{StaticResource fontSizeData}" />
 
                             </Viewbox>
