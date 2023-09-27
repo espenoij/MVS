@@ -473,7 +473,7 @@ namespace HMS_Server
                 }
 
                 // Sjekke status: Heading (Gyro)
-                if (adminSettingsVM.regulationStandard == RegulationStandard.CAP && adminSettingsVM.statusGyroEnabled && statusGyro?.data != 1)
+                if (statusGyro.data != 1)
                 {
                     inputVesselHeading.status = DataStatus.TIMEOUT_ERROR;
                 }
