@@ -397,7 +397,7 @@ namespace HMS_Server
 
                 // Status Data
                 /////////////////////////////////////////////////////////////////////////////////////////
-                if (adminSettingsVM.statusGyroEnabled)
+                if (adminSettingsVM.regulationStandard == RegulationStandard.CAP && adminSettingsVM.statusGyroEnabled)
                 {
                     if (sensorSensorGyro?.timestamp.AddMilliseconds(adminSettingsVM.dataTimeout) < DateTime.UtcNow)
                         sensorSensorGyro.status = DataStatus.TIMEOUT_ERROR;
@@ -422,7 +422,7 @@ namespace HMS_Server
                     statusGyro.status = DataStatus.OK;
                 }
 
-                if (adminSettingsVM.statusWindEnabled)
+                if (adminSettingsVM.regulationStandard == RegulationStandard.CAP && adminSettingsVM.statusWindEnabled)
                 {
                     if (sensorSensorWindStatus?.timestamp.AddMilliseconds(adminSettingsVM.dataTimeout) < DateTime.UtcNow)
                         sensorSensorWindStatus.status = DataStatus.TIMEOUT_ERROR;
@@ -447,7 +447,7 @@ namespace HMS_Server
                     statusWind.status = DataStatus.OK;
                 }
 
-                if (adminSettingsVM.statusSOGCOGEnabled)
+                if (adminSettingsVM.regulationStandard == RegulationStandard.CAP && adminSettingsVM.statusSOGCOGEnabled)
                 {
                     if (sensorSensorSOGCOG?.timestamp.AddMilliseconds(adminSettingsVM.dataTimeout) < DateTime.UtcNow)
                         sensorSensorSOGCOG.status = DataStatus.TIMEOUT_ERROR;
@@ -473,7 +473,7 @@ namespace HMS_Server
                 }
 
                 // Sjekke status: Heading (Gyro)
-                if (adminSettingsVM.statusGyroEnabled && statusGyro?.data != 1)
+                if (adminSettingsVM.regulationStandard == RegulationStandard.CAP && adminSettingsVM.statusGyroEnabled && statusGyro?.data != 1)
                 {
                     inputVesselHeading.status = DataStatus.TIMEOUT_ERROR;
                 }

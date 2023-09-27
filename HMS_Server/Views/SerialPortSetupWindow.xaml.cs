@@ -557,25 +557,35 @@ namespace HMS_Server
             //////////////////////////////////////////////////////////////////////////////
             //inputDataBuffer += serialPort.ReadExisting();
 
-            int bytes = serialPort.BytesToRead;
-            byte[] array = new byte[bytes];
-            for (int i = 0; serialPort.BytesToRead > 0 && i < bytes; i++)
+            try
             {
-                array[i] = Convert.ToByte(serialPort.ReadByte());
+                if (serialPort.IsOpen)
+                {
+                    int bytes = serialPort.BytesToRead;
+                    byte[] array = new byte[bytes];
+
+                    for (int i = 0; serialPort.BytesToRead > 0 && i < bytes; i++)
+                        array[i] = Convert.ToByte(serialPort.ReadByte());
+
+                    switch (sensorData.serialPort.inputType)
+                    {
+                        case InputDataType.Text:
+                            inputDataBuffer += Encoding.UTF8.GetString(array, 0, array.Length);
+                            break;
+
+                        case InputDataType.Binary:
+                            inputDataBuffer += BitConverter.ToString(array);
+                            break;
+
+                        default:
+                            break;
+                    }
+                }
             }
-
-            switch (sensorData.serialPort.inputType)
+            catch (Exception ex)
             {
-                case InputDataType.Text:
-                    inputDataBuffer += Encoding.UTF8.GetString(array, 0, array.Length);
-                    break;
-
-                case InputDataType.Binary:
-                    inputDataBuffer += BitConverter.ToString(array);
-                    break;
-
-                default:
-                    break;
+                if (AdminMode.IsActive)
+                    RadWindow.Alert(string.Format("Error reading serial port\n\n{0}", TextHelper.Wrap(ex.Message)));
             }
 
             //switch (sensorData.serialPort.inputType)

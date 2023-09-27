@@ -377,6 +377,11 @@ namespace HMS_Server
                                 sensorData.message = string.Empty;
                             }
                         }
+                        else
+                        {
+                            // Fjerne melding fra skjerm
+                            sensorData.message = string.Empty;
+                        }
 
                         // Sette Warning status dersom vi leser data, men har en feilmelding
                         if (sensorData.portStatus == PortStatus.Reading &&

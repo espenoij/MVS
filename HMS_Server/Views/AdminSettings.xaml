@@ -2733,6 +2733,7 @@
                                 HorizontalAlignment="Left">
 
                                 <telerik:Label
+                                    Name="lbSensorStatusMRU"
                                     Content="Enable MRU Status Input"
                                     VerticalAlignment="Center" />
                             </Viewbox>
@@ -2744,6 +2745,7 @@
                                 HorizontalAlignment="Right">
 
                                 <CheckBox
+                                    Name="chSensorStatusMRU"
                                     IsChecked="{Binding Path=statusMRUEnabled, Mode=TwoWay}"
                                     VerticalAlignment="Center"
                                     HorizontalAlignment="Right" />
@@ -2768,6 +2770,7 @@
                                 HorizontalAlignment="Left">
 
                                 <telerik:Label
+                                    Name="lbSensorStatusGyro"
                                     Content="Enable Gyro Status Input"
                                     VerticalAlignment="Center" />
                             </Viewbox>
@@ -2779,6 +2782,7 @@
                                 HorizontalAlignment="Right">
 
                                 <CheckBox
+                                    Name="chSensorStatusGyro"
                                     IsChecked="{Binding Path=statusGyroEnabled, Mode=TwoWay}"
                                     VerticalAlignment="Center"
                                     HorizontalAlignment="Right" />
@@ -2803,6 +2807,7 @@
                                 HorizontalAlignment="Left">
 
                                 <telerik:Label
+                                    Name="lbSensorStatusWind"
                                     Content="Enable Wind Status Input"
                                     VerticalAlignment="Center" />
                             </Viewbox>
@@ -2814,6 +2819,7 @@
                                 HorizontalAlignment="Right">
 
                                 <CheckBox
+                                    Name="chSensorStatusWind"
                                     IsChecked="{Binding Path=statusWindEnabled, Mode=TwoWay}"
                                     VerticalAlignment="Center"
                                     HorizontalAlignment="Right" />
@@ -2838,6 +2844,7 @@
                                 HorizontalAlignment="Left">
 
                                 <telerik:Label
+                                    Name="lbSensorStatusSOGCOG"
                                     Content="Enable SOG/COG Status Input"
                                     VerticalAlignment="Center" />
                             </Viewbox>
@@ -2849,6 +2856,7 @@
                                 HorizontalAlignment="Right">
 
                                 <CheckBox
+                                    Name="chSensorStatusSOGCOG"
                                     IsChecked="{Binding Path=statusSOGCOGEnabled, Mode=TwoWay}"
                                     VerticalAlignment="Center"
                                     HorizontalAlignment="Right" />

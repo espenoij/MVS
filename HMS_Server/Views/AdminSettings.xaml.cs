@@ -164,6 +164,19 @@ namespace HMS_Server
                 // Timing
                 lbSettingsLightsOutputFrequency.IsEnabled = false;
                 tbSettingsLightsOutputFrequency.IsEnabled = false;
+
+                // Sensor Status
+                lbSensorStatusMRU.IsEnabled = false;
+                chSensorStatusMRU.IsEnabled = false;
+
+                lbSensorStatusGyro.IsEnabled = false;
+                chSensorStatusGyro.IsEnabled = false;
+
+                lbSensorStatusWind.IsEnabled = false;
+                chSensorStatusWind.IsEnabled = false;
+
+                lbSensorStatusSOGCOG.IsEnabled = false;
+                chSensorStatusSOGCOG.IsEnabled = false;
             }
             else
             {
