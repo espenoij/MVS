@@ -1031,7 +1031,8 @@ namespace HMS_Server
         private void UpdateGustData(HMSData newWindSpd, HMSData windSpdMean, GustData gustData, HMSData outputGust)
         {
             // Sjekker status på data først
-            if (newWindSpd?.timestamp != gustData.lastTimeStamp)   // Unngå duplikate data
+            if (newWindSpd?.timestamp != gustData.lastTimeStamp &&      // Unngå duplikate data
+                !double.IsNaN(newWindSpd.data))                         // Ikke få inn NaN data
             {
                 if (newWindSpd?.status == DataStatus.OK)
                 {
@@ -1063,10 +1064,18 @@ namespace HMS_Server
 
                             // Laveste av 3 sek gust verdiene
                             // (Målet er å finne høyeste gust verdi som har vart i 3 sek eller mer)
-                            double gust3SecLow = double.MaxValue;
-                            foreach (var item in gustData.gust3SecDataList)
-                                if (item.spd < gust3SecLow)
-                                    gust3SecLow = item.spd;
+                            double gust3SecLow;
+                            if (gustData.gust3SecDataList.Count != 0)
+                            {
+                                gust3SecLow = double.MaxValue;
+                                foreach (var item in gustData.gust3SecDataList)
+                                    if (item.spd < gust3SecLow)
+                                        gust3SecLow = item.spd;
+                            }
+                            else
+                            {
+                                gust3SecLow = 0;
+                            }
 
                             // Lagre i gust listen
                             gustData.gustDataList.Add(new Wind()
