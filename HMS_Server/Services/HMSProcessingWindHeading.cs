@@ -485,8 +485,8 @@ namespace HMS_Server
                 }
 
                 // Sjekke status: Wind
-                if ((statusWind.data != 1) ||
-                    (statusSOGCOG.data != 1) ||
+                if (statusWind.data != 1 ||
+                    statusSOGCOG.data != 1 ||
                     (statusGyro.data != 1 && adminSettingsVM.windDirRef == DirectionReference.VesselHeading))
                 {
                     inputSensorWindDirection.status = DataStatus.TIMEOUT_ERROR;
@@ -1032,7 +1032,7 @@ namespace HMS_Server
         {
             // Sjekker status på data først
             if (newWindSpd?.timestamp != gustData.lastTimeStamp &&      // Unngå duplikate data
-                !double.IsNaN(newWindSpd.data))                         // Ikke få inn NaN data
+                !double.IsNaN(newWindSpd.data))                         // Ikke ta inn NaN data
             {
                 if (newWindSpd?.status == DataStatus.OK)
                 {

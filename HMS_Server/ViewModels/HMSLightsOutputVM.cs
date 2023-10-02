@@ -17,15 +17,20 @@ namespace HMS_Server
         private Config config;
         private AdminSettingsVM adminSettingsVM;
 
+        // Test Mode Auto
+        private int testModeAutoStep = 0;
+        private DispatcherTimer testModeAutoTimer = new DispatcherTimer();
+
         public void Init(HMSDataCollection hmsOutputDataList, Config config, UserInputs userInputs, AdminSettingsVM adminSettingsVM)
         {
             this.userInputs = userInputs;
             this.config = config;
             this.adminSettingsVM = adminSettingsVM;
 
-            testMode = false;
+            testModeManual = false;
             testModeStatus = HelideckStatusType.OFF;
             testModeDisplayMode = DisplayMode.PreLanding;
+            testModeStepDuration = config.ReadWithDefault(ConfigKey.TestModeStepDuration, Constants.TestModeStepDurationDefault);
 
             // Lese output adresser fra fil
             for (int i = 0; i < 3; i++)
@@ -50,13 +55,56 @@ namespace HMS_Server
 
             // Oppdatere lys i display
             DispatcherTimer lightDisplayTimer = new DispatcherTimer();
-            lightDisplayTimer.Interval = TimeSpan.FromMilliseconds(100);
+            lightDisplayTimer.Interval = TimeSpan.FromMilliseconds(200);
             lightDisplayTimer.Tick += LightUpdate;
             lightDisplayTimer.Start();
 
             void LightUpdate(object sender, EventArgs e)
             {
                 OnPropertyChanged(nameof(HMSLightsOutputToDisplay));
+            }
+
+            // Test Mode Auto
+            testModeAutoTimer.Tick += TestModeAutoUpdate;
+
+            void TestModeAutoUpdate(object sender, EventArgs e)
+            {
+                testModeAutoStep++;
+
+                // CAP
+                if (adminSettingsVM.regulationStandard == RegulationStandard.CAP)
+                {
+                    if (testModeAutoStep > 6)
+                        testModeAutoStep = 0;
+                }
+                // NOROG
+                else
+                {
+                    if (testModeAutoStep > 2)
+                        testModeAutoStep = 0;
+                }
+            }
+        }
+
+        /////////////////////////////////////////////////////////////////////////////
+        // Test Mode Auto
+        /////////////////////////////////////////////////////////////////////////////
+        public void ToggleTestModeAuto()
+        {
+            if (testModeAuto)
+            {
+                if (!testModeAutoTimer.IsEnabled)
+                {
+                    testModeAutoStep = 0;
+
+                    testModeAutoTimer.Interval = TimeSpan.FromSeconds(testModeStepDuration);
+                    testModeAutoTimer.Start();
+                }
+            }
+            else
+            {
+                if (testModeAutoTimer.IsEnabled)
+                    testModeAutoTimer.Stop();
             }
         }
 
@@ -107,9 +155,114 @@ namespace HMS_Server
         {
             get
             {
-                LightsOutputType lightsOutput;
+                LightsOutputType lightsOutput = LightsOutputType.Off;
 
-                if (!testMode)
+                if (testModeManual)
+                {
+                    if (testModeDisplayMode == DisplayMode.PreLanding)
+                    {
+                        switch (testModeStatus)
+                        {
+                            case HelideckStatusType.OFF:
+                                lightsOutput = LightsOutputType.Off;
+                                break;
+                            case HelideckStatusType.BLUE:
+                                lightsOutput = LightsOutputType.Blue;
+                                break;
+                            case HelideckStatusType.AMBER:
+                                lightsOutput = LightsOutputType.Amber;
+                                break;
+                            case HelideckStatusType.RED:
+                                lightsOutput = LightsOutputType.Red;
+                                break;
+                            case HelideckStatusType.GREEN:
+                                lightsOutput = LightsOutputType.Green;
+                                break;
+                            default:
+                                lightsOutput = LightsOutputType.Off;
+                                break;
+                        }
+                    }
+                    else
+                    {
+                        switch (testModeStatus)
+                        {
+                            case HelideckStatusType.OFF:
+                                lightsOutput = LightsOutputType.Off;
+                                break;
+                            case HelideckStatusType.BLUE:
+                                lightsOutput = LightsOutputType.BlueFlash;
+                                break;
+                            case HelideckStatusType.AMBER:
+                                lightsOutput = LightsOutputType.AmberFlash;
+                                break;
+                            case HelideckStatusType.RED:
+                                lightsOutput = LightsOutputType.RedFlash;
+                                break;
+                            case HelideckStatusType.GREEN:
+                                lightsOutput = LightsOutputType.GreenFlash;
+                                break;
+                            default:
+                                lightsOutput = LightsOutputType.Off;
+                                break;
+                        }
+                    }
+                }
+                else
+                if (testModeAuto)
+                {
+                    // CAP
+                    if (adminSettingsVM.regulationStandard == RegulationStandard.CAP)
+                    {
+                        switch (testModeAutoStep)
+                        {
+                            case 0:
+                                lightsOutput = LightsOutputType.Red;
+                                break;
+                            case 1:
+                                lightsOutput = LightsOutputType.Amber;
+                                break;
+                            case 2:
+                                lightsOutput = LightsOutputType.Blue;
+                                break;
+                            case 3:
+                                lightsOutput = LightsOutputType.RedFlash;
+                                break;
+                            case 4:
+                                lightsOutput = LightsOutputType.AmberFlash;
+                                break;
+                            case 5:
+                                lightsOutput = LightsOutputType.BlueFlash;
+                                break;
+                            case 6:
+                                lightsOutput = LightsOutputType.Off;
+                                break;
+                            default:
+                                lightsOutput = LightsOutputType.Off;
+                                break;
+                        }
+                    }
+                    // NOROG
+                    else
+                    {
+                        switch (testModeAutoStep)
+                        {
+                            case 0:
+                                lightsOutput = LightsOutputType.Red;
+                                break;
+                            case 1:
+                                lightsOutput = LightsOutputType.Green;
+                                break;
+                            case 2:
+                                lightsOutput = LightsOutputType.Off;
+                                break;
+                            default:
+                                lightsOutput = LightsOutputType.Off;
+                                break;
+                        }
+                    }
+                }
+                else
                 {
                     if (userInputs.displayMode == DisplayMode.PreLanding)
                     {
@@ -138,57 +291,6 @@ namespace HMS_Server
                     else
                     {
                         switch (helideckStatus)
-                        {
-                            case HelideckStatusType.OFF:
-                                lightsOutput = LightsOutputType.Off;
-                                break;
-                            case HelideckStatusType.BLUE:
-                                lightsOutput = LightsOutputType.BlueFlash;
-                                break;
-                            case HelideckStatusType.AMBER:
-                                lightsOutput = LightsOutputType.AmberFlash;
-                                break;
-                            case HelideckStatusType.RED:
-                                lightsOutput = LightsOutputType.RedFlash;
-                                break;
-                            case HelideckStatusType.GREEN:
-                                lightsOutput = LightsOutputType.GreenFlash;
-                                break;
-                            default:
-                                lightsOutput = LightsOutputType.Off;
-                                break;
-                        }
-                    }
-                }
-                else
-                {
-                    if (_testModeDisplayMode == DisplayMode.PreLanding)
-                    {
-                        switch (_testModeStatus)
-                        {
-                            case HelideckStatusType.OFF:
-                                lightsOutput = LightsOutputType.Off;
-                                break;
-                            case HelideckStatusType.BLUE:
-                                lightsOutput = LightsOutputType.Blue;
-                                break;
-                            case HelideckStatusType.AMBER:
-                                lightsOutput = LightsOutputType.Amber;
-                                break;
-                            case HelideckStatusType.RED:
-                                lightsOutput = LightsOutputType.Red;
-                                break;
-                            case HelideckStatusType.GREEN:
-                                lightsOutput = LightsOutputType.Green;
-                                break;
-                            default:
-                                lightsOutput = LightsOutputType.Off;
-                                break;
-                        }
-                    }
-                    else
-                    {
-                        switch (_testModeStatus)
                         {
                             case HelideckStatusType.OFF:
                                 lightsOutput = LightsOutputType.Off;
@@ -285,16 +387,16 @@ namespace HMS_Server
         /////////////////////////////////////////////////////////////////////////////
         // Helideck Lights Output Test Mode
         /////////////////////////////////////////////////////////////////////////////
-        private bool _testMode { get; set; }
-        public bool testMode
+        private bool _testModeManual { get; set; }
+        public bool testModeManual
         {
             get
             {
-                return _testMode;
+                return _testModeManual;
             }
             set
             {
-                _testMode = value;
+                _testModeManual = value;
                 OnPropertyChanged();
                 OnPropertyChanged(nameof(HMSLightsOutput));
                 OnPropertyChanged(nameof(HMSLightsOutputToDisplay));
@@ -330,6 +432,35 @@ namespace HMS_Server
                 OnPropertyChanged();
                 OnPropertyChanged(nameof(HMSLightsOutput));
                 OnPropertyChanged(nameof(HMSLightsOutputToDisplay));
+            }
+        }
+
+        private bool _testModeAuto { get; set; }
+        public bool testModeAuto
+        {
+            get
+            {
+                return _testModeAuto;
+            }
+            set
+            {
+                _testModeAuto = value;
+                OnPropertyChanged();
+            }
+        }
+
+        private double _testModeStepDuration { get; set; }
+        public double testModeStepDuration
+        {
+            get
+            {
+                return _testModeStepDuration;
+            }
+            set
+            {
+                _testModeStepDuration = value;
+                config.Write(ConfigKey.TestModeStepDuration, value.ToString());
+                OnPropertyChanged();
             }
         }
 

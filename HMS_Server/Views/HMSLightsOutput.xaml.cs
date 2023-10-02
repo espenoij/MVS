@@ -58,9 +58,9 @@ namespace HMS_Server
             {
                 // Test Mode: Helideck Status
                 cboTestHelideckStatus.Items.Add(HelideckStatusType.OFF.ToString());
-                cboTestHelideckStatus.Items.Add(HelideckStatusType.BLUE.ToString());
-                cboTestHelideckStatus.Items.Add(HelideckStatusType.AMBER.ToString());
                 cboTestHelideckStatus.Items.Add(HelideckStatusType.RED.ToString());
+                cboTestHelideckStatus.Items.Add(HelideckStatusType.AMBER.ToString());
+                cboTestHelideckStatus.Items.Add(HelideckStatusType.BLUE.ToString());
 
                 cboTestHelideckStatus.SelectedIndex = (int)HelideckStatusType.OFF;
                 cboTestHelideckStatus.Text = HelideckStatusType.OFF.ToString();
@@ -657,6 +657,36 @@ namespace HMS_Server
             hmsLightsOutputVM.testModeDisplayMode = (DisplayMode)Enum.Parse(typeof(DisplayMode), cboTestDisplayMode.SelectedItem.ToString());
         }
 
+        private void tbTestModeStepDuration_LostFocus(object sender, RoutedEventArgs e)
+        {
+            tbTestStepModeDuration_Update(sender);
+        }
+
+        private void tbTestModeStepDuration_KeyDown(object sender, KeyEventArgs e)
+        {
+            if (e.Key == Key.Return)
+            {
+                tbTestStepModeDuration_Update(sender);
+                Keyboard.ClearFocus();
+            }
+        }
+
+        private void tbTestStepModeDuration_Update(object sender)
+        {
+            // Sjekk av input
+            DataValidation.Double(
+                (sender as TextBox).Text,
+                Constants.TestModeStepDurationMin,
+                Constants.TestModeStepDurationMax,
+                Constants.TestModeStepDurationDefault,
+                out double validatedInput);
+
+            hmsLightsOutputVM.testModeStepDuration = validatedInput;
+            (sender as TextBox).Text = validatedInput.ToString();
+
+            config.SetLightsOutputData(outputConnection.data);
+        }
+
         private void tbOutputAddress1_LostFocus(object sender, RoutedEventArgs e)
         {
             tbOutputAddress1_Update(sender);
@@ -812,6 +842,76 @@ namespace HMS_Server
             {
                 RadWindow.Alert(string.Format("Input Error\n\n{0}", TextHelper.Wrap(ex.Message)));
             }
+        }
+
+        private void TestModeChanged()
+        {
+            if (hmsLightsOutputVM.testModeManual)
+            {
+                lbTestModeManual.IsEnabled = true;
+                chkTestModeManual.IsEnabled = true;
+
+                lbTestHelideckStatus.IsEnabled = true;
+                cboTestHelideckStatus.IsEnabled = true;
+
+                lbTestDisplayMode.IsEnabled = true;
+                cboTestDisplayMode.IsEnabled = true;
+
+                lbTestModeAuto.IsEnabled = false;
+                chkTestModeAuto.IsEnabled = false;
+
+                lbTestStepDuration.IsEnabled = false;
+                tbTestStepDuration.IsEnabled = false;
+            }
+            else
+            {
+                if (hmsLightsOutputVM.testModeAuto)
+                {
+                    lbTestModeManual.IsEnabled = false;
+                    chkTestModeManual.IsEnabled = false;
+
+                    lbTestHelideckStatus.IsEnabled = false;
+                    cboTestHelideckStatus.IsEnabled = false;
+
+                    lbTestDisplayMode.IsEnabled = false;
+                    cboTestDisplayMode.IsEnabled = false;
+
+                    lbTestModeAuto.IsEnabled = true;
+                    chkTestModeAuto.IsEnabled = true;
+
+                    lbTestStepDuration.IsEnabled = false;
+                    tbTestStepDuration.IsEnabled = false;
+                }
+                else
+                {
+                    lbTestModeManual.IsEnabled = true;
+                    chkTestModeManual.IsEnabled = true;
+
+                    lbTestHelideckStatus.IsEnabled = true;
+                    cboTestHelideckStatus.IsEnabled = true;
+
+                    lbTestDisplayMode.IsEnabled = true;
+                    cboTestDisplayMode.IsEnabled = true;
+
+                    lbTestModeAuto.IsEnabled = true;
+                    chkTestModeAuto.IsEnabled = true;
+
+                    lbTestStepDuration.IsEnabled = true;
+                    tbTestStepDuration.IsEnabled = true;
+                }
+            }
+        }
+
+        private void chkTestModeManual_Click(object sender, RoutedEventArgs e)
+        {
+            TestModeChanged();
+            hmsLightsOutputVM.ToggleTestModeAuto();
+        }
+
+        private void chkTestModeAuto_Click(object sender, RoutedEventArgs e)
+        {
+            TestModeChanged();
+            hmsLightsOutputVM.ToggleTestModeAuto();
         }
     }
 }

@@ -692,13 +692,13 @@
                         Height="*" />
                 </Grid.RowDefinitions>
 
-                <!--Test: Enable Test Mode-->
+                <!--Manual Test: Enable Test Mode-->
                 <Grid
                     Grid.Row="0">
 
                     <Grid.ColumnDefinitions>
                         <ColumnDefinition
-                            Width="*" />
+                            Width="2*" />
                         <ColumnDefinition
                             Width="*" />
                     </Grid.ColumnDefinitions>
@@ -710,8 +710,8 @@
                         HorizontalAlignment="Left">
 
                         <telerik:Label
-                            Name="lbTestMode"
-                            Content="Enable Test Mode"
+                            Name="lbTestModeManual"
+                            Content="Enable Manual Test Mode"
                             VerticalAlignment="Center" />
                     </Viewbox>
 
@@ -722,20 +722,21 @@
                         HorizontalAlignment="Right">
 
                         <CheckBox
-                            Name="chkTestMode"
-                            IsChecked="{Binding Path=testMode, Mode=TwoWay}"
+                            Name="chkTestModeManual"
+                            IsChecked="{Binding Path=testModeManual, Mode=TwoWay}"
+                            Click="chkTestModeManual_Click"
                             VerticalAlignment="Center"
                             HorizontalAlignment="Right" />
                     </Viewbox>
                 </Grid>
 
-                <!--Test: Helideck Status-->
+                <!--Manual Test: Helideck Status-->
                 <Grid
                     Grid.Row="1">
 
                     <Grid.ColumnDefinitions>
                         <ColumnDefinition
-                            Width="*" />
+                            Width="2*" />
                         <ColumnDefinition
                             Width="*" />
                     </Grid.ColumnDefinitions>
@@ -765,13 +766,13 @@
                     </Viewbox>
                 </Grid>
 
-                <!--Test: Landing/Takeoff Mode-->
+                <!--Manual Test: Landing/Takeoff Mode-->
                 <Grid
                     Grid.Row="2">
 
                     <Grid.ColumnDefinitions>
                         <ColumnDefinition
-                            Width="*" />
+                            Width="2*" />
                         <ColumnDefinition
                             Width="*" />
                     </Grid.ColumnDefinitions>
@@ -801,6 +802,82 @@
                     </Viewbox>
                 </Grid>
 
+                <!--Automatic Test: Enable Automatic Test Mode-->
+                <Grid
+                    Grid.Row="4">
+
+                    <Grid.ColumnDefinitions>
+                        <ColumnDefinition
+                            Width="2*" />
+                        <ColumnDefinition
+                            Width="*" />
+                    </Grid.ColumnDefinitions>
+
+                    <Viewbox
+                        Grid.Column="0"
+                        StretchDirection="Both"
+                        Stretch="Uniform"
+                        HorizontalAlignment="Left">
+
+                        <telerik:Label
+                            Name="lbTestModeAuto"
+                            Content="Enable Automatic Test Mode"
+                            VerticalAlignment="Center" />
+                    </Viewbox>
+
+                    <Viewbox
+                        Grid.Column="1"
+                        StretchDirection="Both"
+                        Stretch="Uniform"
+                        HorizontalAlignment="Right">
+
+                        <CheckBox
+                            Name="chkTestModeAuto"
+                            IsChecked="{Binding Path=testModeAuto, Mode=TwoWay}"
+                            Click="chkTestModeAuto_Click"
+                            VerticalAlignment="Center"
+                            HorizontalAlignment="Right" />
+                    </Viewbox>
+                </Grid>
+
+                <!--Cyclic Test: Cyclic Step Duration-->
+                <Grid
+                    Grid.Row="5">
+
+                    <Grid.ColumnDefinitions>
+                        <ColumnDefinition
+                            Width="2*" />
+                        <ColumnDefinition
+                            Width="*" />
+                    </Grid.ColumnDefinitions>
+
+                    <Viewbox
+                        Grid.Column="0"
+                        StretchDirection="Both"
+                        Stretch="Uniform"
+                        HorizontalAlignment="Left">
+
+                        <telerik:Label
+                            Name="lbTestStepDuration"
+                            Content="Step Duration (sec)"
+                            VerticalAlignment="Center" />
+                    </Viewbox>
+                    
+                    <Viewbox
+                        Grid.Column="1"
+                        StretchDirection="Both"
+                        Stretch="Uniform"
+                        HorizontalAlignment="Right">
+
+                        <TextBox
+                            Name="tbTestStepDuration"
+                            Width="100"
+                            Text="{Binding Path=testModeStepDuration}"
+                            LostFocus="tbTestModeStepDuration_LostFocus"
+                            KeyDown="tbTestModeStepDuration_KeyDown" />
+
+                    </Viewbox>
+                </Grid>
             </Grid>
 
         </telerik:GroupBox>

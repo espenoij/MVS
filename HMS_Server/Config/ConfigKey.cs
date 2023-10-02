@@ -56,6 +56,7 @@
     public const string LightsOutputAddress1 = "LightsOutputAddress1";
     public const string LightsOutputAddress2 = "LightsOutputAddress2";
     public const string LightsOutputAddress3 = "LightsOutputAddress3";
+    public const string TestModeStepDuration = "TestModeStepDuration";
 
     // App: Wind/Heading
     public const string WindMeasurement = "WindMeasurement";

@@ -347,4 +347,9 @@ class Constants
     public const int WaveChartSWHInc = 5;
     public const int WaveChartPeriodInc = 10;
 
+    // Lights Output Test Step Duration
+    public const int TestModeStepDurationDefault = 10;
+    public const int TestModeStepDurationMin = 5;
+    public const int TestModeStepDurationMax = 60;
+
 }
