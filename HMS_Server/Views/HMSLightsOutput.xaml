@@ -801,6 +801,11 @@
                             SelectionChanged="cboTestDisplayMode_SelectionChanged" />
                     </Viewbox>
                 </Grid>
+                
+                <Separator
+                    Grid.Row="3"
+                    Height="1"
+                    VerticalAlignment="Center" />
 
                 <!--Automatic Test: Enable Automatic Test Mode-->
                 <Grid

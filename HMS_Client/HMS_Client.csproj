@@ -55,7 +55,7 @@
     <Prefer32Bit>false</Prefer32Bit>
   </PropertyGroup>
   <PropertyGroup>
-    <ApplicationIcon>Icons\swire_flag.ico</ApplicationIcon>
+    <ApplicationIcon>hms_windows_icon_client.ico</ApplicationIcon>
   </PropertyGroup>
   <ItemGroup>
     <Reference Include="BouncyCastle.Cryptography, Version=2.0.0.0, Culture=neutral, PublicKeyToken=072edcf4a5328938, processorArchitecture=MSIL">
@@ -634,6 +634,7 @@
     <EmbeddedResource Include="Properties\Resources.resx">
       <Generator>ResXFileCodeGenerator</Generator>
       <LastGenOutput>Resources.Designer.cs</LastGenOutput>
+      <SubType>Designer</SubType>
     </EmbeddedResource>
     <None Include="packages.config" />
     <None Include="Properties\Settings.settings">
@@ -761,6 +762,15 @@
   </ItemGroup>
   <ItemGroup>
     <Resource Include="Icons\waves.png" />
+  </ItemGroup>
+  <ItemGroup>
+    <Resource Include="swire_app_icon_client.png" />
+  </ItemGroup>
+  <ItemGroup>
+    <Resource Include="hms_windows_icon_client.ico" />
+  </ItemGroup>
+  <ItemGroup>
+    <Resource Include="swire_flag.ico" />
   </ItemGroup>
   <Import Project="$(MSBuildToolsPath)\Microsoft.CSharp.targets" />
 </Project>

@@ -1,4 +1,5 @@
-﻿using System;
+﻿using DocumentFormat.OpenXml.Wordprocessing;
+using System;
 using System.ComponentModel;
 using System.Runtime.CompilerServices;
 using System.Windows.Threading;
@@ -588,12 +589,14 @@ namespace HMS_Client
         {
             get
             {
+                int dir;
+
                 if (_vesselHeading != null)
                 {
                     // Sjekke om data er gyldig
                     if (_vesselHeading.status == DataStatus.OK)
                     {
-                        return string.Format("{0}°", _vesselHeading.data.ToString("000"));
+                        dir = (int)Math.Round(_vesselHeading.data, 0, MidpointRounding.AwayFromZero);
                     }
                     else
                     {
@@ -604,6 +607,11 @@ namespace HMS_Client
                 {
                     return Constants.NotAvailable;
                 }
+
+                if (dir == 0)
+                    dir = 360;
+
+                return string.Format("{0}°", dir.ToString("000"));
             }
         }
 

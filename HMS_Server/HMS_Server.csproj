@@ -53,7 +53,7 @@
     <WarningLevel>4</WarningLevel>
   </PropertyGroup>
   <PropertyGroup>
-    <ApplicationIcon>Icons\swire_flag.ico</ApplicationIcon>
+    <ApplicationIcon>hms_windows_icon_server.ico</ApplicationIcon>
   </PropertyGroup>
   <PropertyGroup>
     <ManifestCertificateThumbprint>602CBF00AFA1A46A7624D6ED256205145E8071BA</ManifestCertificateThumbprint>
@@ -674,7 +674,12 @@
   <ItemGroup>
     <Resource Include="Icons\outline_admin_panel_settings_white_36dp.png" />
   </ItemGroup>
-  <ItemGroup />
+  <ItemGroup>
+    <Resource Include="hms_windows_icon_server.ico" />
+  </ItemGroup>
+  <ItemGroup>
+    <Resource Include="swire_flag.ico" />
+  </ItemGroup>
   <Import Project="$(MSBuildToolsPath)\Microsoft.CSharp.targets" />
   <Import Project="..\packages\NETStandard.Library.2.0.3\build\netstandard2.0\NETStandard.Library.targets" Condition="Exists('..\packages\NETStandard.Library.2.0.3\build\netstandard2.0\NETStandard.Library.targets')" />
   <Target Name="EnsureNuGetPackageBuildImports" BeforeTargets="PrepareForBuild">

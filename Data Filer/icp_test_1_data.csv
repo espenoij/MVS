@@ -1,4 +1,3 @@
-Time(s),Time(m),"Roll (deg, +ve R)","Pitch (deg, +ve UP)",Heave (m),Heave Velocity (m/s),AX (m/s^2),AY (m/s^2),AZ (m/s^2),Vessel heading (degT),SOG (knots),COG (M deg),STATUS_MRU (1=OK),STATUS_GYRO (1=OK),STATUS_WIND (1=OK),STATUS_GPS (SOG_VOG) (1=OK),GPS Lat,GPS Lon,Visibility,Air Pressure,Air Temperature,Air Humidity,WX code,Cloud layer 1 altitude,Cloud layer 1 oct,Cloud layer 1 altitude,Cloud layer 1 oct,Cloud layer 1 altitude,Cloud layer 1 oct,Cloud layer 1 altitude,Cloud layer 1 oct
 19800,0,-0.758,-0.895,0.687,-0.392,0.224,-0.3,9.4,281.07,0,0,1,1,1,1,59.60151,5.4591311,3000,1005,20,80,+SHRA,1000,1,2000,2,3000,3,4000,4
 19800.5,0.0,-0.743,-0.9,0.316,-0.541,0.204,-0.221,9.455,281.07,0,0,1,1,1,1,59.60151,5.4591311,3000,1005,20,80,+SHRA,1000,1,2000,2,3000,3,4000,4
 19801,0.0,-0.714,-0.856,-0.063,-0.632,0.19,-0.168,9.521,281.07,0,0,1,1,1,1,59.60151,5.4591311,3000,1005,20,80,+SHRA,1000,1,2000,2,3000,3,4000,4
