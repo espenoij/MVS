@@ -59,7 +59,7 @@ namespace HMS_Client
             else
                 enableReportEmail = false;
 
-            // EMS: Enable EMS Page
+            // EMS: EMS Page
             if (config.ReadWithDefault(ConfigKey.EnableEMS, "0") == "1")
                 enableEMS = true;
             else
@@ -363,7 +363,7 @@ namespace HMS_Client
         }
 
         /////////////////////////////////////////////////////////////////////////////
-        // EMS: Enable EMS Page
+        // EMS: EMS Page
         /////////////////////////////////////////////////////////////////////////////
         private bool _enableEMS { get; set; }
         public bool enableEMS

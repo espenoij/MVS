@@ -144,7 +144,7 @@ namespace HMS_Server
             else
                 helideckLightsOutput = false;
 
-            // EMS: Enable EMS Module
+            // EMS: EMS Page
             if (config.ReadWithDefault(ConfigKey.EnableEMS, "0") == "1")
                 enableEMS = true;
             else
@@ -526,7 +526,7 @@ namespace HMS_Server
         }
 
         /////////////////////////////////////////////////////////////////////////////
-        // EMS: Enable EMS Page
+        // EMS: EMS Page
         /////////////////////////////////////////////////////////////////////////////
         private bool _enableEMS { get; set; }
         public bool enableEMS

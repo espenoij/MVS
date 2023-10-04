@@ -290,6 +290,28 @@ namespace HMS_Server
 
             // Div UI init
             SetStartStopButtons(true);
+
+            // Oppdatering av UI elementer
+            DispatcherTimer uiTimer = new DispatcherTimer();
+            uiTimer.Interval = TimeSpan.FromMilliseconds(config.ReadWithDefault(ConfigKey.ServerUIUpdateFrequency, Constants.ServerUIUpdateFrequencyDefault));
+            uiTimer.Tick += UpdateUI;
+            uiTimer.Start();
+        }
+
+        private void UpdateUI(object sender, EventArgs e)
+        {
+            // Enable/disable helideck lights output
+            if (!adminSettingsVM.helideckLightsOutput)
+            {
+                if (tabHMS_LightsOutput.IsSelected)
+                    tabHMS_SensorGroups.IsSelected = true;
+
+                tabHMS_LightsOutput.IsEnabled = false;
+            }
+            else
+            {
+                tabHMS_LightsOutput.IsEnabled = true;
+            }
         }
 
         private void SetStartStopButtons(bool state)
@@ -588,12 +610,6 @@ namespace HMS_Server
             {
                 // TODO: Modulen for output til NOROG lys system er ikke ferdig implementert.
                 //ucHMSLightsOutput.Init(new SensorData(SensorType.ModbusRTU), hmsLightsOutputVM, config, adminSettingsVM, errorHandler);
-            }
-
-            // Enable/disable helideck lights output
-            if (!adminSettingsVM.helideckLightsOutput)
-            {
-                tabHMS_LightsOutput.Visibility = Visibility.Collapsed;
             }
         }
 

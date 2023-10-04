@@ -150,7 +150,7 @@
                         HorizontalAlignment="Left">
 
                         <telerik:Label
-                            Content="Enable EMS Page"
+                            Content="EMS Page"
                             VerticalAlignment="Center" />
 
                     </Viewbox>

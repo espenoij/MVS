@@ -157,6 +157,7 @@ namespace HMS_Server
             {
                 LightsOutputType lightsOutput = LightsOutputType.Off;
 
+                // Test mode: Manual
                 if (testModeManual)
                 {
                     if (testModeDisplayMode == DisplayMode.PreLanding)
@@ -209,6 +210,7 @@ namespace HMS_Server
                     }
                 }
                 else
+                // Test Mode: Automatic
                 if (testModeAuto)
                 {
                     // CAP
@@ -262,6 +264,7 @@ namespace HMS_Server
                         }
                     }
                 }
+                // Normal operations
                 else
                 {
                     if (userInputs.displayMode == DisplayMode.PreLanding)

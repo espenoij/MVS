@@ -1347,11 +1347,6 @@ namespace HMS_Server
             }
         }
 
-        private void cbHelideckLightsOutput_Click(object sender, RoutedEventArgs e)
-        {
-            adminSettingsVM.ApplicationRestartRequired();
-        }
-
         private void chkEnableEMS_Click(object sender, RoutedEventArgs e)
         {
             adminSettingsVM.ApplicationRestartRequired();

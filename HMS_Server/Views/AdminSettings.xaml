@@ -213,13 +213,12 @@
 
                                 <CheckBox
                                     IsChecked="{Binding Path=helideckLightsOutput, Mode=TwoWay}"
-                                    Click="cbHelideckLightsOutput_Click"
                                     VerticalAlignment="Center"
                                     HorizontalAlignment="Right" />
                             </Viewbox>
                         </Grid>
 
-                        <!--Enable EMS Page-->
+                        <!--EMS Page-->
                         <Grid
                             Grid.Row="4">
 
@@ -237,7 +236,7 @@
                                 HorizontalAlignment="Left">
 
                                 <telerik:Label
-                                    Content="Enable EMS Module"
+                                    Content="EMS Page"
                                     VerticalAlignment="Center" />
                             </Viewbox>
 
