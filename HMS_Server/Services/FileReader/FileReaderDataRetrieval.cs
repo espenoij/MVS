@@ -1,6 +1,7 @@
 ﻿using System;
 using System.Collections.Generic;
 using System.Diagnostics.Metrics;
+using System.Threading;
 
 namespace HMS_Server
 {
@@ -114,10 +115,10 @@ namespace HMS_Server
                             // Utføre kalkulasjoner på utvalgt data
                             //////////////////////////////////////////////////////////////////////////////
                             CalculatedData calculatedData = process.ApplyCalculationsToSelectedData(
-                                                                        selectedData, 
+                                                                        selectedData,
                                                                         sensorData.dataCalculations,
-                                                                        fileReaderData.timestamp, 
-                                                                        errorHandler, 
+                                                                        fileReaderData.timestamp,
+                                                                        errorHandler,
                                                                         ErrorMessageCategory.Admin,
                                                                         adminSettingsVM);
 

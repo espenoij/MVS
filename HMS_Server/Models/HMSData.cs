@@ -108,7 +108,7 @@ namespace HMS_Server
         {
             get
             {
-                if (!string.IsNullOrEmpty(data3))
+                if (!string.IsNullOrEmpty(_data3))
                     return _data3;
                 else
                     return _data.ToString();
@@ -221,7 +221,7 @@ namespace HMS_Server
                 if (_sensorGroupId == Constants.SensorIDNotSet)
                     return "None";
                 else
-                    return sensorGroupId.ToString();
+                    return _sensorGroupId.ToString();
             }
         }
 

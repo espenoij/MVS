@@ -1,12 +1,16 @@
-﻿using System;
+﻿using Google.Protobuf.WellKnownTypes;
+using System;
 using System.Collections.Generic;
 using System.ComponentModel;
+using System.Diagnostics;
+using System.Diagnostics.Metrics;
 using System.IO;
 using System.Runtime.CompilerServices;
 using System.Threading;
 using System.Timers;
 using System.Windows.Documents;
 using System.Windows.Shapes;
+using System.Windows.Threading;
 
 namespace HMS_Server
 {
@@ -15,6 +19,7 @@ namespace HMS_Server
         //// TEST
         //private int counter1 = 0;
         //private int counter2 = 0;
+        //private int counter3 = 0;
 
         // Change notification
         public event PropertyChangedEventHandler PropertyChanged;
@@ -86,7 +91,7 @@ namespace HMS_Server
         public List<CalculationSetup> calculationSetup { get; set; }
 
         // Reader timer
-        private System.Timers.Timer timer;
+        private DispatcherTimer timer;
 
         // Data linje lest fra fil
         private string _dataLine { get; set; }
@@ -207,32 +212,32 @@ namespace HMS_Server
             fileReaderData.fileName = fileName;
 
             // Timer
-            timer = new System.Timers.Timer(config.ReadWithDefault(ConfigKey.HMSProcessingFrequency, Constants.HMSProcessingFrequencyDefault));
+            timer = new DispatcherTimer();
 
             try
             {
                 FileStream fs = File.Open(filePath, FileMode.Open, FileAccess.Read, FileShare.ReadWrite);
                 BufferedStream bs = new BufferedStream(fs);
                 StreamReader sr = new StreamReader(bs);
-                
+
                 // Timer parametre
-                timer.AutoReset = true;
-                timer.Elapsed += runReader;
+                timer.Interval = TimeSpan.FromMilliseconds(config.ReadWithDefault(ConfigKey.HMSProcessingFrequency, Constants.HMSProcessingFrequencyDefault));
+                timer.Tick += runReader;
 
                 // Starte timer
                 timer.Start();
 
                 void runReader(Object source, EventArgs e)
                 {
-                    // Finne ut om vi har kommet så langt i tid at vi må lese en ny linje fra fil
-                    double expectedLinesRead = (DateTime.UtcNow - readStartTime).TotalMilliseconds / readFrequency;
-                    if (linesRead < expectedLinesRead)
-                    {
-                        Thread thread = new Thread(() => runReaderTask());
-                        thread.IsBackground = true;
-                        thread.Start();
+                    Thread thread = new Thread(() => runReaderTask());
+                    thread.IsBackground = true;
+                    thread.Start();
 
-                        void runReaderTask()
+                    void runReaderTask()
+                    {
+                        // Finne ut om vi har kommet så langt i tid at vi må lese en ny linje fra fil
+                        double expectedLinesRead = (DateTime.UtcNow - readStartTime).TotalMilliseconds / readFrequency;
+                        while (linesRead < expectedLinesRead)
                         {
                             if (sr != null)
                             {
@@ -247,7 +252,19 @@ namespace HMS_Server
 
                                         // Sette timestamp
                                         timestamp = readStartTime.AddMilliseconds(linesRead * readFrequency);
+
+                                        // NB! Linjen over er det som ble brukt under CAP godkjenning.
+                                        // Den setter timestamp til det tidspunktet linje/data skulle ha vært lest.
+                                        // Dette gir større nøyaktighet ifht innlesing av data til korrekt tidspunkt.
+                                        // Problemet er at i noen tilfeller fyrer ikke timer så often som den er satt til.
+                                        // Da blir data satt med for gammle timestamp og som så blir merket med timeout
+                                        // og dermed blir forkastet.
+                                        // Problemet ble løst ved å lage en while loop her istedet for if.
+
                                         fileReaderData.timestamp = timestamp;
+
+                                        //// Test
+                                        //Debug.WriteLine(string.Format("timestamp: {0} - Now: {1}", timestamp, DateTime.UtcNow));
 
                                         // Øke antall leste linjer
                                         linesRead += 1;
@@ -295,19 +312,10 @@ namespace HMS_Server
                             //        ErrorMessageType.FileReader,
                             //        ErrorMessageCategory.AdminUser,
                             //        string.Format("1 expectedLinesRead: {0}, linesRead : {1} --- Elapsed Time: {2}", expectedLinesRead, linesRead, (DateTime.UtcNow - readStartTime).TotalSeconds)));
+                            //Debug.WriteLine(string.Format("1 expectedLinesRead: {0}, linesRead : {1} --- Elapsed Time: {2}", (int)expectedLinesRead, linesRead, (DateTime.UtcNow - readStartTime).TotalSeconds));
                         }
                     }
-                    //else
-                    //{
-                    //    // TEST
-                    //    errorHandler.Insert(
-                    //        new ErrorMessage(
-                    //            DateTime.UtcNow,
-                    //            ErrorMessageType.FileReader,
-                    //            ErrorMessageCategory.AdminUser,
-                    //            string.Format("0 expectedLinesRead: {0}, linesRead : {1} --- Elapsed Time: {2}", expectedLinesRead, linesRead, (DateTime.UtcNow - readStartTime).TotalSeconds)));
-                    //}
-                }                
+                }
             }
             catch (Exception ex)
             {
