@@ -30,6 +30,8 @@ static class Weather
     {
         switch (str)
         {
+            case "NSW": 
+                return WeatherPhenomena.NSW;
             case "BC":
                 return WeatherPhenomena.BC;
             case "BL":
@@ -103,6 +105,8 @@ public enum WeatherPhenomena
 {
     [Description("None")]
     None,
+    [Description("No Significant Weather")]
+    NSW,
     [Description("Patches of")]
     BC,
     [Description("Blowing")]

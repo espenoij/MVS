@@ -1603,40 +1603,49 @@ namespace HMS_Server
 
                             string phenomenaSubString = string.Empty;
 
-                            // Vær intensitet
-                            if (newData.Substring(0, 1).Equals("+"))
+                            // Vær intensitet og fenomen
+                            if (newData.Equals("NSW"))
                             {
-                                severity = WeatherSeverity.Heavy;
-
-                                phenomena1Pos = 1;
-                                phenomena2Pos = 3;
-                            }
-                            else
-                            if (newData.Substring(0, 1).Equals("-"))
-                            {
-                                severity = WeatherSeverity.Light;
-
-                                phenomena1Pos = 1;
-                                phenomena2Pos = 3;
+                                severity = WeatherSeverity.None;
+                                phenomena1 = WeatherPhenomena.NSW;
+                                phenomena2 = WeatherPhenomena.None; 
                             }
                             else
                             {
-                                severity = WeatherSeverity.Moderate;
+                                if (newData.Substring(0, 1).Equals("+"))
+                                {
+                                    severity = WeatherSeverity.Heavy;
 
-                                phenomena1Pos = 0;
-                                phenomena2Pos = 2;
+                                    phenomena1Pos = 1;
+                                    phenomena2Pos = 3;
+                                }
+                                else
+                                if (newData.Substring(0, 1).Equals("-"))
+                                {
+                                    severity = WeatherSeverity.Light;
+
+                                    phenomena1Pos = 1;
+                                    phenomena2Pos = 3;
+                                }
+                                else
+                                {
+                                    severity = WeatherSeverity.Moderate;
+
+                                    phenomena1Pos = 0;
+                                    phenomena2Pos = 2;
+                                }
+
+                                // Vær fenomen
+                                if (phenomena1Pos + 2 <= newData.Length)
+                                    phenomenaSubString = newData.Substring(phenomena1Pos, 2);
+
+                                phenomena1 = Weather.GetPhenomena(phenomenaSubString);
+
+                                if (phenomena2Pos + 2 <= newData.Length)
+                                    phenomenaSubString = newData.Substring(phenomena2Pos, 2);
+
+                                phenomena2 = Weather.GetPhenomena(phenomenaSubString);
                             }
-
-                            // Vær fenomen
-                            if (phenomena1Pos + 2 <= newData.Length)
-                                phenomenaSubString = newData.Substring(phenomena1Pos, 2);
-
-                            phenomena1 = Weather.GetPhenomena(phenomenaSubString);
-
-                            if (phenomena2Pos + 2 <= newData.Length)
-                                phenomenaSubString = newData.Substring(phenomena2Pos, 2);
-
-                            phenomena2 = Weather.GetPhenomena(phenomenaSubString);
 
                             // Weather encoding
                             result = Weather.Encode((int)severity, (int)phenomena1, (int)phenomena2);
