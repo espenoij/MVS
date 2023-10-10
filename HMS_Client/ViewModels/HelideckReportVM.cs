@@ -273,7 +273,7 @@ namespace HMS_Client
             rollLeft = clientSensorList.GetData(ValueType.RollMaxLeft20m);
             rollRight = clientSensorList.GetData(ValueType.RollMaxRight20m);
             inclination = clientSensorList.GetData(ValueType.InclinationMax20m);
-            maxHeave = clientSensorList.GetData(ValueType.HeaveHeightMax20m);
+            maxHeave = clientSensorList.GetData(ValueType.HeaveAmplitudeMax20m);
             heavePeriod = clientSensorList.GetData(ValueType.HeavePeriodMean);
             significantHeaveRate = clientSensorList.GetData(ValueType.SignificantHeaveRate);
             maximumHeaveRate = clientSensorList.GetData(ValueType.MaxHeaveRate);

@@ -84,7 +84,7 @@ public enum LimitType
     PitchRoll,
     Inclination,
     SignificantHeaveRate,
-    HeaveHeight
+    HeaveAmplitude
 }
 
 public enum DataStatus
@@ -157,9 +157,9 @@ public enum ValueType
     RollMax3h,
     RollMaxLeft20m,
     RollMaxRight20m,
-    HeaveHeight,
-    HeaveHeightMax20m,
-    HeaveHeightMax3h,
+    HeaveAmplitude,
+    HeaveAmplitudeMax20m,
+    HeaveAmplitudeMax3h,
     HeavePeriodMean,
     SignificantHeaveRate,
     SignificantHeaveRateMax20m,
@@ -213,7 +213,7 @@ public enum ValueType
     // Motion Limits
     MotionLimitPitchRoll,
     MotionLimitInclination,
-    MotionLimitHeaveHeight,
+    MotionLimitHeaveAmplitude,
     MotionLimitSignificantHeaveRate,
 
     // Diverse andre data

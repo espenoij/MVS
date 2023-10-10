@@ -223,7 +223,7 @@
 
                 </Grid>
 
-                <!--HEAVE HEIGHT-->
+                <!--HEAVE Amplitude-->
                 <Grid
                     Grid.Row="4">
 
@@ -270,7 +270,7 @@
 
                 </Grid>
 
-                <!--HEAVE HEIGHT-->
+                <!--HEAVE Amplitude-->
                 <Grid
                     Grid.Row="5">
 

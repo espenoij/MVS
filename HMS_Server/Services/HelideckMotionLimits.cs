@@ -306,7 +306,7 @@ namespace HMS_Server
                         }
                         break;
 
-                    case LimitType.HeaveHeight:
+                    case LimitType.HeaveAmplitude:
 
                         switch (adminSettingsVM.helideckCategory)
                         {
@@ -663,7 +663,7 @@ namespace HMS_Server
                         }
                         break;
 
-                    case LimitType.HeaveHeight:
+                    case LimitType.HeaveAmplitude:
                         // Ikke i bruk under CAP
                         break;
                 }

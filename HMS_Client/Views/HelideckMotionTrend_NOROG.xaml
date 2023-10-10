@@ -1264,7 +1264,7 @@
                         Grid.ColumnSpan="3"
                         VerticalAlignment="Bottom" />
 
-                    <!--Heave Height-->
+                    <!--Heave Amplitude-->
                     <Grid
                         Grid.Column="0"
                         Grid.Row="8">
@@ -1298,18 +1298,18 @@
                             HorizontalAlignment="Center">
 
                             <TextBlock
-                                Text="Height" />
+                                Text="Amplitude" />
 
                         </Viewbox>
 
                     </Grid>
 
-                    <!--Heave height chart-->
+                    <!--Heave Amplitude chart-->
                     <telerik:RadCartesianChart
                         Grid.Column="1"
                         Grid.Row="8"
                         Margin="-2,-6,0,-6"
-                        Name="chartHeaveHeight20m">
+                        Name="chartHeaveAmplitude20m">
 
                         <telerik:LineSeries
                             ZIndex="200"
@@ -1337,8 +1337,8 @@
 
                         <telerik:RadCartesianChart.VerticalAxis>
                             <telerik:LinearAxis
-                                x:Name="chartHeaveHeightVerticalAxis20m"
-                                Maximum="{Binding heaveHeightChartAxisMax20m}"
+                                x:Name="chartHeaveAmplitudeVerticalAxis20m"
+                                Maximum="{Binding heaveAmplitudeChartAxisMax20m}"
                                 Minimum="0" />
                         </telerik:RadCartesianChart.VerticalAxis>
 
@@ -1350,8 +1350,8 @@
                         <telerik:RadCartesianChart.Annotations>
 
                             <telerik:CartesianGridLineAnnotation
-                                Axis="{Binding ElementName=chartHeaveHeightVerticalAxis20m}"
-                                Value="{Binding heaveHeightChartAnnotationRedMin20m}"
+                                Axis="{Binding ElementName=chartHeaveAmplitudeVerticalAxis20m}"
+                                Value="{Binding heaveAmplitudeChartAnnotationRedMin20m}"
                                 Stroke="{StaticResource ColorRed}"
                                 StrokeThickness="2" />
 
@@ -1359,7 +1359,7 @@
 
                     </telerik:RadCartesianChart>
 
-                    <!--Heave height labels-->
+                    <!--Heave Amplitude labels-->
                     <Grid
                         Grid.Column="1"
                         Grid.Row="9"
@@ -1445,7 +1445,7 @@
 
                     </Grid>
 
-                    <!--Heave height max-->
+                    <!--Heave Amplitude max-->
                     <Grid
                         Grid.Column="2"
                         Grid.Row="8"
@@ -1466,7 +1466,7 @@
 
                         <Grid
                             Grid.Row="1"
-                            Name="gridMaxHeaveHeight20m">
+                            Name="gridMaxHeaveAmplitude20m">
 
                             <Grid.ColumnDefinitions>
                                 <ColumnDefinition
@@ -1482,7 +1482,7 @@
                                 HorizontalAlignment="Left">
 
                                 <TextBlock
-                                    Text="Max Heave Height" />
+                                    Text="Max Heave Amplitude" />
 
                             </Viewbox>
 
@@ -1493,7 +1493,7 @@
                                 HorizontalAlignment="Right">
 
                                 <TextBlock
-                                    Text="{Binding Path=heaveHeightMax20mString}"
+                                    Text="{Binding Path=heaveAmplitudeMax20mString}"
                                     FontSize="{StaticResource fontSizeData}" />
 
                             </Viewbox>
@@ -1528,7 +1528,7 @@
                                 HorizontalAlignment="Right">
 
                                 <TextBlock
-                                    Text="{Binding Path=heaveHeightLimitString}"
+                                    Text="{Binding Path=heaveAmplitudeLimitString}"
                                     FontSize="{StaticResource fontSizeData}" />
 
                             </Viewbox>
@@ -2737,7 +2737,7 @@
                         Grid.ColumnSpan="3"
                         VerticalAlignment="Bottom" />
 
-                    <!--Heave Height title-->
+                    <!--Heave Amplitude title-->
                     <Grid
                         Grid.Column="0"
                         Grid.Row="8">
@@ -2771,17 +2771,17 @@
                             HorizontalAlignment="Center">
 
                             <TextBlock
-                                Text="Height" />
+                                Text="Amplitude" />
 
                         </Viewbox>
 
                     </Grid>
 
-                    <!--Heave Height chart-->
+                    <!--Heave Amplitude chart-->
                     <telerik:RadCartesianChart
                         Grid.Column="1"
                         Grid.Row="8"
-                        Name="chartHeaveHeight3h"
+                        Name="chartHeaveAmplitude3h"
                         Margin="-2,-6,0,-6">
 
                         <telerik:LineSeries
@@ -2810,8 +2810,8 @@
 
                         <telerik:RadCartesianChart.VerticalAxis>
                             <telerik:LinearAxis
-                                x:Name="chartHeaveHeightVerticalAxis3h"
-                                Maximum="{Binding heaveHeightChartAxisMax3h}"
+                                x:Name="chartHeaveAmplitudeVerticalAxis3h"
+                                Maximum="{Binding heaveAmplitudeChartAxisMax3h}"
                                 Minimum="0" />
                         </telerik:RadCartesianChart.VerticalAxis>
 
@@ -2823,8 +2823,8 @@
                         <telerik:RadCartesianChart.Annotations>
 
                             <telerik:CartesianGridLineAnnotation
-                                Axis="{Binding ElementName=chartHeaveHeightVerticalAxis3h}"
-                                Value="{Binding heaveHeightChartAnnotationRedMin3h}"
+                                Axis="{Binding ElementName=chartHeaveAmplitudeVerticalAxis3h}"
+                                Value="{Binding heaveAmplitudeChartAnnotationRedMin3h}"
                                 Stroke="{StaticResource ColorRed}"
                                 StrokeThickness="2" />
 
@@ -2909,7 +2909,7 @@
 
                     </Grid>
 
-                    <!--Heave height max-->
+                    <!--Heave Amplitude max-->
                     <Grid
                         Grid.Column="2"
                         Grid.Row="8"
@@ -2930,7 +2930,7 @@
 
                         <Grid
                             Grid.Row="1"
-                            Name="gridMaxHeaveHeight3h">
+                            Name="gridMaxHeaveAmplitude3h">
 
                             <Grid.ColumnDefinitions>
                                 <ColumnDefinition
@@ -2946,7 +2946,7 @@
                                 HorizontalAlignment="Left">
 
                                 <TextBlock
-                                    Text="Max Heave Height" />
+                                    Text="Max Heave Amplitude" />
 
                             </Viewbox>
 
@@ -2957,7 +2957,7 @@
                                 HorizontalAlignment="Right">
 
                                 <TextBlock
-                                    Text="{Binding Path=heaveHeightMax20mString}"
+                                    Text="{Binding Path=heaveAmplitudeMax20mString}"
                                     FontSize="{StaticResource fontSizeData}" />
 
                             </Viewbox>
@@ -2992,7 +2992,7 @@
                                 HorizontalAlignment="Right">
 
                                 <TextBlock
-                                    Text="{Binding Path=heaveHeightLimitString}"
+                                    Text="{Binding Path=heaveAmplitudeLimitString}"
                                     FontSize="{StaticResource fontSizeData}" />
 
                             </Viewbox>

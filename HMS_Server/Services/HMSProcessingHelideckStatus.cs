@@ -8,7 +8,7 @@ namespace HMS_Server
         private HMSData sensorPitchMax20m = new HMSData();
         private HMSData sensorRollMax20m = new HMSData();
         private HMSData sensorInclinationMax20m = new HMSData();
-        private HMSData sensorHeaveHeightMax20m = new HMSData();
+        private HMSData sensorHeaveAmplitudeMax20m = new HMSData();
         private HMSData sensorSignificantHeaveRate = new HMSData();
 
         private HMSData sensorVesselHeading = new HMSData();
@@ -92,14 +92,14 @@ namespace HMS_Server
                 sensorPitchMax20m.Set(hmsOutputData.GetData(ValueType.PitchMax20m));
                 sensorRollMax20m.Set(hmsOutputData.GetData(ValueType.RollMax20m));
                 sensorInclinationMax20m.Set(hmsOutputData.GetData(ValueType.InclinationMax20m));
-                sensorHeaveHeightMax20m.Set(hmsOutputData.GetData(ValueType.HeaveHeightMax20m));
+                sensorHeaveAmplitudeMax20m.Set(hmsOutputData.GetData(ValueType.HeaveAmplitudeMax20m));
                 sensorSignificantHeaveRate.Set(hmsOutputData.GetData(ValueType.SignificantHeaveRate));
 
                 // Sjekker om vi har nye data før vi starter prosessering
                 if (sensorPitchMax20m.TimeStampCheck ||
                     sensorRollMax20m.TimeStampCheck ||
                     sensorInclinationMax20m.TimeStampCheck ||
-                    sensorHeaveHeightMax20m.TimeStampCheck ||
+                    sensorHeaveAmplitudeMax20m.TimeStampCheck ||
                     sensorSignificantHeaveRate.TimeStampCheck)
                 {
                     helideckLightStatus = CheckHelideckLightStatusNOROG(helideckLightStatus);
@@ -117,7 +117,7 @@ namespace HMS_Server
                 sensorPitchMax20m.Set(hmsOutputData.GetData(ValueType.PitchMax20m));
                 sensorRollMax20m.Set(hmsOutputData.GetData(ValueType.RollMax20m));
                 sensorInclinationMax20m.Set(hmsOutputData.GetData(ValueType.InclinationMax20m));
-                sensorHeaveHeightMax20m.Set(hmsOutputData.GetData(ValueType.HeaveHeightMax20m));
+                sensorHeaveAmplitudeMax20m.Set(hmsOutputData.GetData(ValueType.HeaveAmplitudeMax20m));
                 sensorSignificantHeaveRate.Set(hmsOutputData.GetData(ValueType.SignificantHeaveRate));
 
                 sensorVesselHeading.Set(hmsOutputData.GetData(ValueType.VesselHeading));
@@ -130,7 +130,7 @@ namespace HMS_Server
                 if (sensorPitchMax20m.TimeStampCheck ||
                     sensorRollMax20m.TimeStampCheck ||
                     sensorInclinationMax20m.TimeStampCheck ||
-                    sensorHeaveHeightMax20m.TimeStampCheck ||
+                    sensorHeaveAmplitudeMax20m.TimeStampCheck ||
                     sensorSignificantHeaveRate.TimeStampCheck ||
                     sensorVesselHeading.TimeStampCheck ||
                     sensorMSI.TimeStampCheck ||
@@ -248,13 +248,13 @@ namespace HMS_Server
             // Sjekke først at vi har gyldige data
             if (sensorPitchMax20m?.status != DataStatus.TIMEOUT_ERROR &&
                 sensorRollMax20m?.status != DataStatus.TIMEOUT_ERROR &&
-                sensorHeaveHeightMax20m?.status != DataStatus.TIMEOUT_ERROR &&
+                sensorHeaveAmplitudeMax20m?.status != DataStatus.TIMEOUT_ERROR &&
                 sensorSignificantHeaveRate?.status != DataStatus.TIMEOUT_ERROR)
             {
                 if (sensorPitchMax20m.limitStatus == LimitStatus.OK &&
                     sensorRollMax20m.limitStatus == LimitStatus.OK &&
                     sensorInclinationMax20m.limitStatus == LimitStatus.OK &&
-                    sensorHeaveHeightMax20m.limitStatus == LimitStatus.OK &&
+                    sensorHeaveAmplitudeMax20m.limitStatus == LimitStatus.OK &&
                     sensorSignificantHeaveRate.limitStatus == LimitStatus.OK)
                 {
                     return HelideckStatusType.GREEN; // TODO: Verifiser at denne virker
@@ -312,8 +312,8 @@ namespace HMS_Server
                 case ValueType.InclinationMax20m:
                     return hmsOutputData.GetData(value)?.data <= motionLimits.GetLimit(LimitType.Inclination);
 
-                case ValueType.HeaveHeightMax20m:
-                    return hmsOutputData.GetData(value)?.data <= motionLimits.GetLimit(LimitType.HeaveHeight);
+                case ValueType.HeaveAmplitudeMax20m:
+                    return hmsOutputData.GetData(value)?.data <= motionLimits.GetLimit(LimitType.HeaveAmplitude);
 
                 case ValueType.SignificantHeaveRate:
                     // SHR skal gå i rød dersom den er PÅ ELLER OVER grensen

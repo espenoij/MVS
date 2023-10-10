@@ -43,10 +43,10 @@ namespace HMS_Server
         private RadObservableCollection<TimeData> inclination20mMaxList = new RadObservableCollection<TimeData>();
         private RadObservableCollection<TimeData> inclination3hMaxList = new RadObservableCollection<TimeData>();
 
-        // Heave Height
-        private HMSData heaveHeightData = new HMSData();
-        private HMSData heaveHeightMax20mData = new HMSData();
-        private HMSData heaveHeightMax3hData = new HMSData();
+        // Heave Amplitude
+        private HMSData heaveAmplitudeData = new HMSData();
+        private HMSData heaveAmplitudeMax20mData = new HMSData();
+        private HMSData heaveAmplitudeMax3hData = new HMSData();
         private HMSData heavePeriodMeanData = new HMSData();
 
         // Significant Heave Rate
@@ -63,7 +63,7 @@ namespace HMS_Server
         // Limits
         private HMSData motionLimitPitchRoll = new HMSData();
         private HMSData motionLimitInclination = new HMSData();
-        private HMSData motionLimitHeaveHeight = new HMSData();
+        private HMSData motionLimitHeaveAmplitude = new HMSData();
         private HMSData motionLimitSignificantHeaveRate = new HMSData();
 
         // MSI
@@ -136,14 +136,14 @@ namespace HMS_Server
 
             //hmsOutputDataList.Add(significantWaveHeightData);
 
-            hmsOutputDataList.Add(heaveHeightData);
-            hmsOutputDataList.Add(heaveHeightMax20mData);
-            hmsOutputDataList.Add(heaveHeightMax3hData);
+            hmsOutputDataList.Add(heaveAmplitudeData);
+            hmsOutputDataList.Add(heaveAmplitudeMax20mData);
+            hmsOutputDataList.Add(heaveAmplitudeMax3hData);
             hmsOutputDataList.Add(heavePeriodMeanData);
 
             hmsOutputDataList.Add(motionLimitPitchRoll);
             hmsOutputDataList.Add(motionLimitInclination);
-            hmsOutputDataList.Add(motionLimitHeaveHeight);
+            hmsOutputDataList.Add(motionLimitHeaveAmplitude);
             hmsOutputDataList.Add(motionLimitSignificantHeaveRate);
 
             hmsOutputDataList.Add(statusRoll);
@@ -229,25 +229,25 @@ namespace HMS_Server
             inclination3hMaxData.name = "Inclination Max (3h)";
             inclination3hMaxData.dbColumn = "inclination_max_3h";
 
-            heaveHeightData.id = (int)ValueType.HeaveHeight;
-            heaveHeightData.name = "Heave Height";
-            heaveHeightData.dbColumn = "heave_height";
-            heaveHeightData.InitProcessing(errorHandler, ErrorMessageCategory.AdminUser, adminSettingsVM);
-            heaveHeightData.AddProcessing(CalculationType.WaveHeight, Constants.Minutes20);
+            heaveAmplitudeData.id = (int)ValueType.HeaveAmplitude;
+            heaveAmplitudeData.name = "Heave Amplitude";
+            heaveAmplitudeData.dbColumn = "heave_amplitude";
+            heaveAmplitudeData.InitProcessing(errorHandler, ErrorMessageCategory.AdminUser, adminSettingsVM);
+            heaveAmplitudeData.AddProcessing(CalculationType.WaveAmplitude, Constants.Minutes20);
 
-            heaveHeightMax20mData.id = (int)ValueType.HeaveHeightMax20m;
-            heaveHeightMax20mData.name = "Heave Height Max (20m)";
-            heaveHeightMax20mData.dbColumn = "heave_height_max_20m";
-            heaveHeightMax20mData.InitProcessing(errorHandler, ErrorMessageCategory.AdminUser, adminSettingsVM);
-            heaveHeightMax20mData.AddProcessing(CalculationType.RoundingDecimals, 1);
-            heaveHeightMax20mData.AddProcessing(CalculationType.TimeMaxHeight, Constants.Minutes20);
+            heaveAmplitudeMax20mData.id = (int)ValueType.HeaveAmplitudeMax20m;
+            heaveAmplitudeMax20mData.name = "Heave Amplitude Max (20m)";
+            heaveAmplitudeMax20mData.dbColumn = "heave_amplitude_max_20m";
+            heaveAmplitudeMax20mData.InitProcessing(errorHandler, ErrorMessageCategory.AdminUser, adminSettingsVM);
+            heaveAmplitudeMax20mData.AddProcessing(CalculationType.RoundingDecimals, 1);
+            heaveAmplitudeMax20mData.AddProcessing(CalculationType.TimeMaxAmplitude, Constants.Minutes20);
 
-            heaveHeightMax3hData.id = (int)ValueType.HeaveHeightMax3h;
-            heaveHeightMax3hData.name = "Heave Height Max (3h)";
-            heaveHeightMax3hData.dbColumn = "heave_height_max_3h";
-            heaveHeightMax3hData.InitProcessing(errorHandler, ErrorMessageCategory.AdminUser, adminSettingsVM);
-            heaveHeightMax3hData.AddProcessing(CalculationType.RoundingDecimals, 1);
-            heaveHeightMax3hData.AddProcessing(CalculationType.TimeMaxHeight, Constants.Hours3);
+            heaveAmplitudeMax3hData.id = (int)ValueType.HeaveAmplitudeMax3h;
+            heaveAmplitudeMax3hData.name = "Heave Amplitude Max (3h)";
+            heaveAmplitudeMax3hData.dbColumn = "heave_amplitude_max_3h";
+            heaveAmplitudeMax3hData.InitProcessing(errorHandler, ErrorMessageCategory.AdminUser, adminSettingsVM);
+            heaveAmplitudeMax3hData.AddProcessing(CalculationType.RoundingDecimals, 1);
+            heaveAmplitudeMax3hData.AddProcessing(CalculationType.TimeMaxAmplitude, Constants.Hours3);
 
             heavePeriodMeanData.id = (int)ValueType.HeavePeriodMean;
             heavePeriodMeanData.name = "Heave Period";
@@ -301,10 +301,10 @@ namespace HMS_Server
             motionLimitInclination.sensorGroupId = Constants.NO_SENSOR_GROUP_ID;
             motionLimitInclination.dbColumn = "motion_limit_inclination";
 
-            motionLimitHeaveHeight.id = (int)ValueType.MotionLimitHeaveHeight;
-            motionLimitHeaveHeight.name = "Motion Limit Heave Height";
-            motionLimitHeaveHeight.sensorGroupId = Constants.NO_SENSOR_GROUP_ID;
-            motionLimitHeaveHeight.dbColumn = "motion_limit_heave_height";
+            motionLimitHeaveAmplitude.id = (int)ValueType.MotionLimitHeaveAmplitude;
+            motionLimitHeaveAmplitude.name = "Motion Limit Heave Amplitude";
+            motionLimitHeaveAmplitude.sensorGroupId = Constants.NO_SENSOR_GROUP_ID;
+            motionLimitHeaveAmplitude.dbColumn = "motion_limit_heave_amplitude";
 
             motionLimitSignificantHeaveRate.id = (int)ValueType.MotionLimitSignificantHeaveRate;
             motionLimitSignificantHeaveRate.name = "Motion Limit Significant Heave Rate";
@@ -549,10 +549,10 @@ namespace HMS_Server
                 //    inclination3hMaxData.status = DataStatus.OK;
 
 
-                // Heave Height
-                heaveHeightData.DoProcessing(sensorHeave);
-                heaveHeightMax20mData.DoProcessing(sensorHeave);
-                heaveHeightMax3hData.DoProcessing(sensorHeave);
+                // Heave Amplitude
+                heaveAmplitudeData.DoProcessing(sensorHeave);
+                heaveAmplitudeMax20mData.DoProcessing(sensorHeave);
+                heaveAmplitudeMax3hData.DoProcessing(sensorHeave);
 
                 // Heave Period
                 heavePeriodMeanData.DoProcessing(sensorHeave);
@@ -587,9 +587,9 @@ namespace HMS_Server
                 motionLimitInclination.timestamp = DateTime.UtcNow;
                 motionLimitInclination.status = DataStatus.OK;
 
-                motionLimitHeaveHeight.data = motionLimits.GetLimit(LimitType.HeaveHeight);
-                motionLimitHeaveHeight.timestamp = DateTime.UtcNow;
-                motionLimitHeaveHeight.status = DataStatus.OK;
+                motionLimitHeaveAmplitude.data = motionLimits.GetLimit(LimitType.HeaveAmplitude);
+                motionLimitHeaveAmplitude.timestamp = DateTime.UtcNow;
+                motionLimitHeaveAmplitude.status = DataStatus.OK;
 
                 motionLimitSignificantHeaveRate.data = motionLimits.GetLimit(LimitType.SignificantHeaveRate);
                 motionLimitSignificantHeaveRate.timestamp = DateTime.UtcNow;
@@ -665,9 +665,9 @@ namespace HMS_Server
             rollMax3hData.ResetDataCalculations();
             rollMaxLeft20mData.ResetDataCalculations();
             rollMaxRight20mData.ResetDataCalculations();
-            heaveHeightData.ResetDataCalculations();
-            heaveHeightMax20mData.ResetDataCalculations();
-            heaveHeightMax3hData.ResetDataCalculations();
+            heaveAmplitudeData.ResetDataCalculations();
+            heaveAmplitudeMax20mData.ResetDataCalculations();
+            heaveAmplitudeMax3hData.ResetDataCalculations();
             heavePeriodMeanData.ResetDataCalculations();
             significantHeaveRateData.ResetDataCalculations();
             significantHeaveRateMax20mData.ResetDataCalculations();
@@ -803,7 +803,7 @@ namespace HMS_Server
             CheckLimit(inclination20mMaxData, LimitType.Inclination);
 
             // Heave
-            CheckLimit(heaveHeightMax20mData, LimitType.HeaveHeight);
+            CheckLimit(heaveAmplitudeMax20mData, LimitType.HeaveAmplitude);
 
             // Significant Heave Rate
             if (SHRIsWithinLimits)

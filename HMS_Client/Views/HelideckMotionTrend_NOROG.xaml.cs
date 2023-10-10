@@ -35,13 +35,13 @@ namespace HMS_Client
             chartPitch20m.Series[0].ItemsSource = viewModel.pitch20mList;
             chartRoll20m.Series[0].ItemsSource = viewModel.roll20mList;
             chartInclination20m.Series[0].ItemsSource = viewModel.inclinationData20mList;
-            chartHeaveHeight20m.Series[0].ItemsSource = viewModel.heaveHeightData20mList;
+            chartHeaveAmplitude20m.Series[0].ItemsSource = viewModel.heaveAmplitudeData20mList;
             chartSignificantHeaveRate20m.Series[0].ItemsSource = viewModel.significantHeaveRateData20mList;
 
             chartPitch3h.Series[0].ItemsSource = viewModel.pitch3hList;
             chartRoll3h.Series[0].ItemsSource = viewModel.rollData3hList;
             chartInclination3h.Series[0].ItemsSource = viewModel.inclinationData3hList;
-            chartHeaveHeight3h.Series[0].ItemsSource = viewModel.heaveHeightData3hList;
+            chartHeaveAmplitude3h.Series[0].ItemsSource = viewModel.heaveAmplitudeData3hList;
             chartSignificantHeaveRate3h.Series[0].ItemsSource = viewModel.significantHeaveRateData3hList;
 
             DispatcherTimer timerUI = new DispatcherTimer();
@@ -181,28 +181,28 @@ namespace HMS_Client
                     }
 
                     ///////////////////////////////////////////////////////////////////////////////////////////
-                    // Helideck Motion: Heave Height
+                    // Helideck Motion: Heave Amplitude
                     ///////////////////////////////////////////////////////////////////////////////////////////                  
-                    if (viewModel.heaveHeightMax20mData?.status == DataStatus.OK)
+                    if (viewModel.heaveAmplitudeMax20mData?.status == DataStatus.OK)
                     {
-                        if (viewModel.heaveHeightMax20mData.limitStatus == LimitStatus.OK)
+                        if (viewModel.heaveAmplitudeMax20mData.limitStatus == LimitStatus.OK)
                         {
                             // Blank bakgrunn
-                            gridMaxHeaveHeight20m.ClearValue(Panel.BackgroundProperty);
-                            gridMaxHeaveHeight3h.ClearValue(Panel.BackgroundProperty);
+                            gridMaxHeaveAmplitude20m.ClearValue(Panel.BackgroundProperty);
+                            gridMaxHeaveAmplitude3h.ClearValue(Panel.BackgroundProperty);
                         }
                         else
                         {
                             // Rød bakgrunn
-                            gridMaxHeaveHeight20m.Background = (Brush)FindResource("ColorRed");
-                            gridMaxHeaveHeight3h.Background = (Brush)FindResource("ColorRed");
+                            gridMaxHeaveAmplitude20m.Background = (Brush)FindResource("ColorRed");
+                            gridMaxHeaveAmplitude3h.Background = (Brush)FindResource("ColorRed");
                         }
                     }
                     else
                     {
                         // Blank bakgrunn
-                        gridMaxHeaveHeight20m.ClearValue(Panel.BackgroundProperty);
-                        gridMaxHeaveHeight3h.ClearValue(Panel.BackgroundProperty);
+                        gridMaxHeaveAmplitude20m.ClearValue(Panel.BackgroundProperty);
+                        gridMaxHeaveAmplitude3h.ClearValue(Panel.BackgroundProperty);
                     }
 
                     ///////////////////////////////////////////////////////////////////////////////////////////

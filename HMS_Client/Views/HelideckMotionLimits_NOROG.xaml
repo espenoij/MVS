@@ -302,11 +302,11 @@
                     </Viewbox>
 
                 </Grid>
-                
-                <!--Max Heave Height-->
+
+                <!--Max Heave Amplitude-->
                 <Grid
                     Grid.Row="4"
-                    Name="gridHeaveHeight">
+                    Name="gridHeaveAmplitude">
 
                     <Grid.ColumnDefinitions>
                         <ColumnDefinition
@@ -326,7 +326,7 @@
                         <telerik:Label
                             Grid.Column="0"
                             Grid.Row="3"
-                            Content="Max Heave Height" />
+                            Content="Max Heave Amplitude" />
 
                     </Viewbox>
 
@@ -338,8 +338,8 @@
                         <telerik:Label
                             Grid.Column="1"
                             Grid.Row="3"
-                            Name="lbMaxHeaveHeight"
-                            Content="{Binding Path=heaveHeightMax20mString}"
+                            Name="lbMaxHeaveAmplitude"
+                            Content="{Binding Path=heaveAmplitudeMax20mString}"
                             FontSize="{StaticResource fontSizeData}" />
 
                     </Viewbox>
@@ -352,7 +352,7 @@
                         <telerik:Label
                             Grid.Column="2"
                             Grid.Row="3"
-                            Content="{Binding Path=heaveHeightLimitString}" />
+                            Content="{Binding Path=heaveAmplitudeLimitString}" />
 
                     </Viewbox>
 

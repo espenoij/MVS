@@ -955,9 +955,9 @@ namespace HMS_Server
                         /// Bølgehøyde data
                         /// 
                         /// Brukes til:
-                        /// Heave Height Max
+                        /// Heave Amplitude Max
                         /// 
-                        case CalculationType.TimeMaxHeight:
+                        case CalculationType.TimeMaxAmplitude:
 
                             // Sjekke om string er numerisk
                             if (double.TryParse(newData, Constants.numberStyle, Constants.cultureInfo, out value))
@@ -1091,9 +1091,9 @@ namespace HMS_Server
                         /// Bølgehøyde data
                         /// 
                         /// Brukes til:
-                        /// Mean Heave Height
+                        /// Mean Heave Amplitude
                         /// 
-                        case CalculationType.MeanWaveHeight:
+                        case CalculationType.MeanWaveAmplitude:
 
                             // Sjekke om string er numerisk
                             if (double.TryParse(newData, Constants.numberStyle, Constants.cultureInfo, out value))
@@ -1188,7 +1188,7 @@ namespace HMS_Server
                             break;
 
                         ////////////////////////////////////////////////////////////////////////////////////////////////
-                        /// Wave Height
+                        /// Wave Amplitude
                         ////////////////////////////////////////////////////////////////////////////////////////////////
                         /// Beskrivelse:
                         /// Returnerer høyde i oscilerende data
@@ -1197,9 +1197,9 @@ namespace HMS_Server
                         /// Bølgehøyde data
                         /// 
                         /// Brukes til:
-                        /// Heave Height
+                        /// Heave Amplitude
                         /// 
-                        case CalculationType.WaveHeight:
+                        case CalculationType.WaveAmplitude:
 
                             // Sjekke om string er numerisk
                             if (double.TryParse(newData, Constants.numberStyle, Constants.cultureInfo, out value))
@@ -2000,7 +2000,7 @@ namespace HMS_Server
         [Description("Time Max Absolute")]
         TimeMaxAbsolute,
         [Description("Time Max Height")]
-        TimeMaxHeight,
+        TimeMaxAmplitude,
         [Description("Time Mean Period")]
         TimeMeanPeriod,
         [Description("Rounding Decimals")]
@@ -2008,9 +2008,9 @@ namespace HMS_Server
         [Description("Significant Heave Rate")]
         SignificantHeaveRate,
         [Description("Wave Height")]
-        WaveHeight,
+        WaveAmplitude,
         [Description("Mean Wave Height")]
-        MeanWaveHeight,
+        MeanWaveAmplitude,
         [Description("METAR Codes")]
         METARCodes,
         [Description("Significant Wave Height")]
