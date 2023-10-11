@@ -235,9 +235,11 @@ namespace HMS_Server
 
                     void runReaderTask()
                     {
+                        bool lineReadComplete = false;
+
                         // Finne ut om vi har kommet så langt i tid at vi må lese en ny linje fra fil
                         double expectedLinesRead = (DateTime.UtcNow - readStartTime).TotalMilliseconds / readFrequency;
-                        while (linesRead < expectedLinesRead)
+                        while (linesRead < expectedLinesRead && !lineReadComplete)
                         {
                             if (sr != null)
                             {
@@ -259,7 +261,7 @@ namespace HMS_Server
                                         // Problemet er at i noen tilfeller fyrer ikke timer så often som den er satt til.
                                         // Da blir data satt med for gammle timestamp og som så blir merket med timeout
                                         // og dermed blir forkastet.
-                                        // Problemet ble løst ved å lage en while loop her istedet for if.
+                                        // Løsning: Problemet ble løst ved å lage en while loop her istedet for if.
 
                                         fileReaderData.timestamp = timestamp;
 
@@ -276,18 +278,26 @@ namespace HMS_Server
                                     {
                                         // Status
                                         portStatus = PortStatus.NoData;
+
+                                        lineReadComplete = true;
                                     }
                                 }
                                 else
                                 {
                                     // Status
                                     portStatus = PortStatus.EndOfFile;
+
+                                    // Stoppe lesing av fil
+                                    lineReadComplete = true;
+                                    timer.Stop();
                                 }
                             }
                             else
                             {
                                 // Status
                                 portStatus = PortStatus.OpenError;
+
+                                lineReadComplete = true;
                             }
 
                             // Status
