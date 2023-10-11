@@ -1593,7 +1593,7 @@ namespace HMS_Server
                         // Leser NWS kode felt
                         //
                         case CalculationType.METARCodes:
-
+                        {
                             WeatherSeverity severity = WeatherSeverity.None;
                             WeatherPhenomena phenomena1 = WeatherPhenomena.None;
                             WeatherPhenomena phenomena2 = WeatherPhenomena.None;
@@ -1608,7 +1608,7 @@ namespace HMS_Server
                             {
                                 severity = WeatherSeverity.None;
                                 phenomena1 = WeatherPhenomena.NSW;
-                                phenomena2 = WeatherPhenomena.None; 
+                                phenomena2 = WeatherPhenomena.None;
                             }
                             else
                             {
@@ -1645,12 +1645,200 @@ namespace HMS_Server
                                     phenomenaSubString = newData.Substring(phenomena2Pos, 2);
 
                                 phenomena2 = Weather.GetPhenomena(phenomenaSubString);
+
+                                // Sjekk at ikke vi får inn duplikate vær fenomen
+                                if (phenomena1 == phenomena2)
+                                    phenomena2 = WeatherPhenomena.None;
                             }
 
                             // Weather encoding
                             result = Weather.Encode((int)severity, (int)phenomena1, (int)phenomena2);
+                        }
+                        break;
 
-                            break;
+                        ////////////////////////////////////////////////////////////////////////////////////////////////
+                        /// SYNOP Codes (Weather codes)
+                        ////////////////////////////////////////////////////////////////////////////////////////////////
+                        // Beskrivelse:
+                        // Leser SYNOP kode felt fra CS125
+                        //
+                        case CalculationType.SYNOPCodes:
+                        {
+                            WeatherSeverity severity;
+                            WeatherPhenomena phenomena1;
+                            WeatherPhenomena phenomena2;
+
+                            string phenomenaSubString = string.Empty;
+
+                            // Vær intensitet og fenomen
+                            switch (int.Parse(newData))
+                            {
+                                case 0:
+                                    severity = WeatherSeverity.None;
+                                    phenomena1 = WeatherPhenomena.NSW;
+                                    phenomena2 = WeatherPhenomena.None;
+                                    break;
+                                case 4:
+                                case 5:
+                                    severity = WeatherSeverity.None;
+                                    phenomena1 = WeatherPhenomena.HZ;
+                                    phenomena2 = WeatherPhenomena.FU;
+                                    break;
+                                case 10:
+                                    severity = WeatherSeverity.None;
+                                    phenomena1 = WeatherPhenomena.BR;
+                                    phenomena2 = WeatherPhenomena.None;
+                                    break;
+                                case 20:
+                                    severity = WeatherSeverity.None;
+                                    phenomena1 = WeatherPhenomena.FG;
+                                    phenomena2 = WeatherPhenomena.None;
+                                    break;
+                                case 21:
+                                    severity = WeatherSeverity.None;
+                                    phenomena1 = WeatherPhenomena.UP;
+                                    phenomena2 = WeatherPhenomena.None;
+                                    break;
+                                case 22:
+                                    severity = WeatherSeverity.None;
+                                    phenomena1 = WeatherPhenomena.DZ;
+                                    phenomena2 = WeatherPhenomena.SG;
+                                    break;
+                                case 23:
+                                    severity = WeatherSeverity.None;
+                                    phenomena1 = WeatherPhenomena.RA;
+                                    phenomena2 = WeatherPhenomena.None;
+                                    break;
+                                case 24:
+                                    severity = WeatherSeverity.None;
+                                    phenomena1 = WeatherPhenomena.SN;
+                                    phenomena2 = WeatherPhenomena.None;
+                                    break;
+                                case 25:
+                                    severity = WeatherSeverity.None;
+                                    phenomena1 = WeatherPhenomena.FZ;
+                                    phenomena2 = WeatherPhenomena.RA;
+                                    break;
+                                case 30:
+                                    severity = WeatherSeverity.None;
+                                    phenomena1 = WeatherPhenomena.FG;
+                                    phenomena2 = WeatherPhenomena.None;
+                                    break;
+                                case 35:
+                                    severity = WeatherSeverity.None;
+                                    phenomena1 = WeatherPhenomena.FZ;
+                                    phenomena2 = WeatherPhenomena.FG;
+                                    break;
+                                case 40:
+                                    severity = WeatherSeverity.None;
+                                    phenomena1 = WeatherPhenomena.UP;
+                                    phenomena2 = WeatherPhenomena.None;
+                                    break;
+                                case 51:
+                                    severity = WeatherSeverity.Light;
+                                    phenomena1 = WeatherPhenomena.DZ;
+                                    phenomena2 = WeatherPhenomena.None;
+                                    break;
+                                case 52:
+                                    severity = WeatherSeverity.Moderate;
+                                    phenomena1 = WeatherPhenomena.DZ;
+                                    phenomena2 = WeatherPhenomena.None;
+                                    break;
+                                case 53:
+                                    severity = WeatherSeverity.Heavy;
+                                    phenomena1 = WeatherPhenomena.DZ;
+                                    phenomena2 = WeatherPhenomena.None;
+                                    break;
+                                case 54:
+                                    severity = WeatherSeverity.Light;
+                                    phenomena1 = WeatherPhenomena.FZ;
+                                    phenomena2 = WeatherPhenomena.DZ;
+                                    break;
+                                case 55:
+                                    severity = WeatherSeverity.Moderate;
+                                    phenomena1 = WeatherPhenomena.FZ;
+                                    phenomena2 = WeatherPhenomena.DZ;
+                                    break;
+                                case 56:
+                                    severity = WeatherSeverity.Heavy;
+                                    phenomena1 = WeatherPhenomena.FZ;
+                                    phenomena2 = WeatherPhenomena.DZ;
+                                    break;
+                                case 57:
+                                    severity = WeatherSeverity.Light;
+                                    phenomena1 = WeatherPhenomena.DZ;
+                                    phenomena2 = WeatherPhenomena.RA;
+                                    break;
+                                case 58:
+                                    severity = WeatherSeverity.Heavy;
+                                    phenomena1 = WeatherPhenomena.DZ;
+                                    phenomena2 = WeatherPhenomena.RA;
+                                    break;
+                                case 61:
+                                    severity = WeatherSeverity.Light;
+                                    phenomena1 = WeatherPhenomena.RA;
+                                    phenomena2 = WeatherPhenomena.None;
+                                    break;
+                                case 62:
+                                    severity = WeatherSeverity.Moderate;
+                                    phenomena1 = WeatherPhenomena.RA;
+                                    phenomena2 = WeatherPhenomena.None;
+                                    break;
+                                case 63:
+                                    severity = WeatherSeverity.Heavy;
+                                    phenomena1 = WeatherPhenomena.RA;
+                                    phenomena2 = WeatherPhenomena.None;
+                                    break;
+                                case 64:
+                                    severity = WeatherSeverity.Light;
+                                    phenomena1 = WeatherPhenomena.FZ;
+                                    phenomena2 = WeatherPhenomena.RA;
+                                    break;
+                                case 65:
+                                    severity = WeatherSeverity.Moderate;
+                                    phenomena1 = WeatherPhenomena.FZ;
+                                    phenomena2 = WeatherPhenomena.RA;
+                                    break;
+                                case 66:
+                                    severity = WeatherSeverity.Heavy;
+                                    phenomena1 = WeatherPhenomena.FZ;
+                                    phenomena2 = WeatherPhenomena.RA;
+                                    break;
+                                case 67:
+                                    severity = WeatherSeverity.Light;
+                                    phenomena1 = WeatherPhenomena.RA;
+                                    phenomena2 = WeatherPhenomena.SN;
+                                    break;
+                                case 68:
+                                    severity = WeatherSeverity.Heavy;
+                                    phenomena1 = WeatherPhenomena.RA;
+                                    phenomena2 = WeatherPhenomena.SN;
+                                    break;
+                                case 71:
+                                    severity = WeatherSeverity.Light;
+                                    phenomena1 = WeatherPhenomena.SN;
+                                    phenomena2 = WeatherPhenomena.None;
+                                    break;
+                                case 72:
+                                    severity = WeatherSeverity.Moderate;
+                                    phenomena1 = WeatherPhenomena.SN;
+                                    phenomena2 = WeatherPhenomena.None;
+                                    break;
+                                case 73:
+                                    severity = WeatherSeverity.Heavy;
+                                    phenomena1 = WeatherPhenomena.SN;
+                                    phenomena2 = WeatherPhenomena.None;
+                                    break;
+                                default:
+                                    severity = WeatherSeverity.None;
+                                    phenomena1 = WeatherPhenomena.None;
+                                    phenomena2 = WeatherPhenomena.None;
+                                    break;
+                            }
+                            // Weather encoding
+                            result = Weather.Encode((int)severity, (int)phenomena1, (int)phenomena2);
+                        }
+                        break;
 
                         ////////////////////////////////////////////////////////////////////////////////////////////////
                         /// Absolute
@@ -2022,6 +2210,8 @@ namespace HMS_Server
         MeanWaveAmplitude,
         [Description("METAR Codes")]
         METARCodes,
+        [Description("SYNOP Codes")]
+        SYNOPCodes,
         [Description("Significant Wave Height")]
         SignificantWaveHeight,
         [Description("Absolute Value")]

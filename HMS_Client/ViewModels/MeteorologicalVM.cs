@@ -509,7 +509,11 @@ namespace HMS_Client
                     // Sjekke om data er gyldig
                     if (_visibility.status == DataStatus.OK)
                     {
-                        return string.Format("{0} m", _visibility.data.ToString());
+                        double vis = _visibility.data;
+                        if (vis > 9999)
+                            vis = 9999;
+
+                        return string.Format("{0} m", vis.ToString());
                     }
                     else
                     {
@@ -563,16 +567,48 @@ namespace HMS_Client
                         WeatherPhenomena weather1 = Weather.DecodePhenomena1((int)_weather.data);
                         WeatherPhenomena weather2 = Weather.DecodePhenomena2((int)_weather.data);
 
+                        // Severity
                         if (severity != WeatherSeverity.None)
                         {
                             weatherPhenomenaString = severity.GetDescription();
                         }
 
+                        // Phenomena 1
                         if (weather1 != WeatherPhenomena.None)
                         {
                             weatherPhenomenaString += " " + weather1.GetDescription();
                         }
 
+                        // Kombo: Drizzle or snow grains
+                        if (weather1 == WeatherPhenomena.DZ &&
+                            weather2 == WeatherPhenomena.SG)
+                        {
+                            weatherPhenomenaString += " or";
+                        }
+                        // Kombo: haze or smoke/dust
+                        else
+                        if (weather1 == WeatherPhenomena.HZ &&
+                            (weather2 == WeatherPhenomena.FU ||
+                             weather2 == WeatherPhenomena.DU))
+                        {
+                            weatherPhenomenaString += " or";
+                        }
+                        // Kombo: drizzle and rain
+                        else
+                        if (weather1 == WeatherPhenomena.DZ &&
+                            weather2 == WeatherPhenomena.RA)
+                        {
+                            weatherPhenomenaString += " and";
+                        }
+                        // Kombo: rain and snow
+                        else
+                        if (weather1 == WeatherPhenomena.RA &&
+                            weather2 == WeatherPhenomena.SN)
+                        {
+                            weatherPhenomenaString += " and";
+                        }
+
+                        // Phenomena 2
                         if (weather2 != WeatherPhenomena.None)
                         {
                             weatherPhenomenaString += " " + weather2.GetDescription();
