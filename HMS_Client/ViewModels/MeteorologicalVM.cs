@@ -671,7 +671,8 @@ namespace HMS_Client
             if (layer < Constants.TOTAL_CLOUD_LAYERS && layer >= 0)
             {
                 if (_cloudBase[layer]?.status == DataStatus.OK &&
-                    !double.IsNaN(_cloudBase[layer].data))
+                    !double.IsNaN(_cloudBase[layer].data) &&
+                    _cloudBase[layer].data != 0)
                     return string.Format("{0} ft", _cloudBase[layer]?.data.ToString("0"));
                 else
                     return Constants.NotAvailable;
@@ -725,7 +726,10 @@ namespace HMS_Client
                     switch (_cloudCoverage[layer].data)
                     {
                         case 0:
-                            return "SKC";
+                            if (layer == 0)
+                                return "SKC";
+                            else
+                                return Constants.NotAvailable;
                         case 1:
                         case 2:
                             return "FEW";
