@@ -51,7 +51,7 @@ namespace HMS_Server
 
             string address = config.ReadWithDefault(ConfigKey.DatabaseAddress, Constants.DefaultDatabaseAddress);
             string port = config.ReadWithDefault(ConfigKey.DatabasePort, Constants.DefaultDatabasePort).ToString();
-            string database = config.Read(ConfigKey.DatabaseName);
+            string database = config.ReadWithDefault(ConfigKey.DatabaseName, Constants.DefaultDatabaseName);
 
             // Database login
             SecureString userid = Encryption.DecryptString(config.Read(ConfigKey.DatabaseUserID));

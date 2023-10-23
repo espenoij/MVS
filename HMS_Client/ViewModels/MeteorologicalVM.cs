@@ -743,7 +743,7 @@ namespace HMS_Client
                         case 8:
                             return "OVC";
                         default:
-                            return string.Empty;
+                            return Constants.NotAvailable;
                     }
                 }
                 else
