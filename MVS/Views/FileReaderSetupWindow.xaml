@@ -1,0 +1,956 @@
+﻿<telerik:RadWindow
+    x:Class="MVS.FileReaderSetupWindow"
+    xmlns="http://schemas.microsoft.com/winfx/2006/xaml/presentation"
+    xmlns:d="http://schemas.microsoft.com/expression/blend/2008"
+    xmlns:x="http://schemas.microsoft.com/winfx/2006/xaml"
+    xmlns:mc="http://schemas.openxmlformats.org/markup-compatibility/2006"
+    xmlns:local="clr-namespace:MVS"
+    xmlns:telerik="http://schemas.telerik.com/2008/xaml/presentation"
+    mc:Ignorable="d"
+    telerik:Header="File Reader Data Setup"
+    WindowState="Maximized"
+    Closed="RadWindow_Closed"
+    Height="1010"
+    Width="1300">
+
+    <telerik:RadWindow.Resources>
+        <ResourceDictionary>
+            <Style
+                TargetType="local:FileReaderSetupWindow"
+                BasedOn="{StaticResource RadWindowStyle}" />
+        </ResourceDictionary>
+
+    </telerik:RadWindow.Resources>
+
+    <telerik:RadWindow.Icon>
+        <Image
+            Height="32"
+            Source="../Icons/swire_flag.ico" />
+    </telerik:RadWindow.Icon>
+
+    <DockPanel>
+
+        <!--Status Bar-->
+        <StatusBar
+            DockPanel.Dock="Bottom">
+            <StatusBarItem>
+                <TextBlock
+                    Name="fileReadingStatus" />
+            </StatusBarItem>
+        </StatusBar>
+
+        <Grid
+            DockPanel.Dock="Top">
+            <Grid.ColumnDefinitions>
+                <ColumnDefinition
+                    Width="400" />
+                <ColumnDefinition
+                    Width="*" />
+            </Grid.ColumnDefinitions>
+
+            <StackPanel
+                Grid.Row="0"
+                Grid.Column="0">
+
+                <!--Basic Information-->
+                <telerik:GroupBox
+                    Header="Basic Information"
+                    Margin="8">
+
+                    <StackPanel>
+
+                        <DockPanel>
+                            <Label
+                                Width="110"
+                                Content="ID" />
+                            <Label
+                                Name="lbSensorID" />
+                        </DockPanel>
+
+                        <DockPanel>
+                            <Label
+                                Width="110"
+                                Content="Name"
+                                VerticalAlignment="Center" />
+                            <Label
+                                Name="lbSensorName" />
+                        </DockPanel>
+
+                        <DockPanel>
+                            <Label
+                                Width="110"
+                                Content="Type"
+                                VerticalAlignment="Center" />
+                            <Label
+                                Name="lbSensorType" />
+                        </DockPanel>
+
+
+                    </StackPanel>
+
+                </telerik:GroupBox>
+
+                <!--Settings-->
+                <telerik:GroupBox
+                    Header="Settings"
+                    Margin="8">
+
+                    <StackPanel>
+
+                        <DockPanel>
+
+                            <Label
+                                Width="100"
+                                Content="File Folder"
+                                VerticalAlignment="Center" />
+
+                            <TextBox
+                                Name="tbFileFolder"
+                                Text="{Binding fileFolder}"/>
+
+                        </DockPanel>
+
+                        <DockPanel>
+
+                            <Label
+                                Width="100"
+                                Content="File Name"
+                                VerticalAlignment="Center" />
+
+                            <TextBox
+                                Name="tbFileName"
+                                Text="{Binding fileName}" />
+
+                        </DockPanel>
+
+                        <Button
+                            Name="btnFilePath"
+                            Click="btnFilePath_Click"
+                            Width="110"
+                            Margin="8"
+                            HorizontalAlignment="Right">Set File Path</Button>
+
+                        <DockPanel>
+                            
+                            <Label
+                                Content="Read Frequency"
+                                Width="180"                                
+                                VerticalAlignment="Center" />
+                            
+                            <TextBox
+                                Name="tbFileReadFrequency"
+                                Text="{Binding Path=readFrequency}"
+                                LostFocus="tbFileReadFrequency_LostFocus"
+                                KeyDown="tbFileReadFrequency_KeyDown" />
+                            
+                        </DockPanel>
+
+                    </StackPanel>
+
+                </telerik:GroupBox>
+
+                <!--Read Controls-->
+                <telerik:GroupBox
+                    Header="Read Controls"
+                    Margin="8">
+
+                    <StackPanel>
+
+                        <StackPanel
+                            Orientation="Horizontal"
+                            HorizontalAlignment="Center">
+
+                            <Button
+                                x:Name="btnFileReaderStart"
+                                Click="btnFileReaderStart_Click"
+                                Width="120"
+                                Margin="8"
+                                Content="Start" />
+                            <Button
+                                x:Name="btnFileReaderStop"
+                                Click="btnFileReaderStop_Click"
+                                Width="120"
+                                Margin="8"
+                                IsEnabled="False"
+                                Content="Stop" />
+
+                        </StackPanel>
+
+                        <Rectangle
+                            Width="auto"
+                            Height="7"
+                            Margin="8">
+                            <Rectangle.Fill>
+                                <VisualBrush
+                                    Stretch="None">
+                                    <VisualBrush.Visual>
+                                        <Border
+                                            x:Name="bFileReaderStatus"
+                                            CornerRadius="3,3,3,3"
+                                            Width="120"
+                                            Height="7"
+                                            Background="{StaticResource ColorRed}"
+                                            BorderThickness="1"
+                                            BorderBrush="Gray" />
+                                    </VisualBrush.Visual>
+                                </VisualBrush>
+                            </Rectangle.Fill>
+                        </Rectangle>
+
+                    </StackPanel>
+
+                </telerik:GroupBox>
+
+                <!--Data Display-->
+                <telerik:GroupBox
+                    Header="Data Display"
+                    Margin="8">
+
+                    <StackPanel>
+
+                        <DockPanel>
+
+                            <Label
+                                Width="200"
+                                Content="Data Lines"
+                                VerticalAlignment="Center" />
+
+                            <TextBox
+                                Name="tbTotalDataLines"
+                                Text="{Binding totalDataLinesString}"
+                                LostFocus="tbTotalDataLines_LostFocus"
+                                KeyDown="tbTotalDataLines_KeyDown" />
+
+                        </DockPanel>
+
+                        <Button
+                            x:Name="chkClearAllData"
+                            Click="chkClearAllData_Click"
+                            HorizontalAlignment="Left"
+                            Content="Clear All" />
+
+                    </StackPanel>
+
+                </telerik:GroupBox>
+
+            </StackPanel>
+
+            <telerik:RadTabControl
+                Grid.Row="0"
+                Grid.Column="1"
+                Margin="8"
+                HeaderBackground="{StaticResource ColorHorizontalBarBackground}">
+
+                <!--1. Data Selection-->
+                <telerik:RadTabItem
+                    Name="tabDataSelection"
+                    Header="1: Data Selection">
+
+                    <Grid>
+
+                        <Grid.ColumnDefinitions>
+                            <ColumnDefinition
+                                Width="407*" />
+                            <ColumnDefinition
+                                Width="567*" />
+                            <ColumnDefinition
+                                Width="360" />
+                        </Grid.ColumnDefinitions>
+
+                        <Grid.RowDefinitions>
+                            <RowDefinition
+                                Height="*" />
+                            <RowDefinition
+                                Height="*" />
+                            <RowDefinition
+                                Height="*" />
+                        </Grid.RowDefinitions>
+
+                        <!--Data Line-->
+                        <telerik:GroupBox
+                            Header="Data Line"
+                            Grid.Column="0"
+                            Grid.Row="0"
+                            Margin="8"
+                            Grid.ColumnSpan="2">
+
+                            <DockPanel>
+
+                                <telerik:RadGridView
+                                    Name="lvDataLine"
+                                    IsReadOnly="True"
+                                    IsManipulationEnabled="False"
+                                    CanUserSortColumns="False"
+                                    ShowGroupPanel="False"
+                                    ShowColumnHeaders="False"
+                                    RowHeight="25"
+                                    Margin="8"
+                                    CanUserReorderColumns="False"
+                                    CanUserDeleteRows="False"
+                                    RowIndicatorVisibility="Collapsed"
+                                    AutoGenerateColumns="False">
+
+                                    <telerik:RadGridView.Columns>
+                                        <telerik:GridViewDataColumn
+                                            DataMemberBinding="{Binding data}" />
+                                    </telerik:RadGridView.Columns>
+
+                                </telerik:RadGridView>
+
+                            </DockPanel>
+
+                        </telerik:GroupBox>
+
+                        <!--Data Fields-->
+                        <telerik:GroupBox
+                            Header="Data Fields"
+                            Grid.Column="0"
+                            Grid.Row="1"
+                            Margin="8"
+                            Grid.ColumnSpan="2">
+
+                            <DockPanel>
+
+                                <telerik:RadGridView
+                                    Name="lvDataField"
+                                    IsReadOnly="True"
+                                    IsManipulationEnabled="False"
+                                    CanUserSortColumns="False"
+                                    ShowGroupPanel="False"
+                                    ShowColumnHeaders="True"
+                                    IsFilteringAllowed="False"
+                                    RowHeight="25"
+                                    Margin="8"
+                                    CanUserReorderColumns="False"
+                                    CanUserDeleteRows="False"
+                                    RowIndicatorVisibility="Collapsed"
+                                    AutoGenerateColumns="False">
+
+                                    <telerik:RadGridView.Columns>
+                                        <telerik:GridViewDataColumn
+                                            Header="0"
+                                            Width="140"
+                                            DataMemberBinding="{Binding dataField[0]}" />
+                                        <telerik:GridViewDataColumn
+                                            Header="1"
+                                            Width="140"
+                                            DataMemberBinding="{Binding dataField[1]}" />
+                                        <telerik:GridViewDataColumn
+                                            Header="2"
+                                            Width="140"
+                                            DataMemberBinding="{Binding dataField[2]}" />
+                                        <telerik:GridViewDataColumn
+                                            Header="3"
+                                            Width="140"
+                                            DataMemberBinding="{Binding dataField[3]}" />
+                                        <telerik:GridViewDataColumn
+                                            Header="4"
+                                            Width="140"
+                                            DataMemberBinding="{Binding dataField[4]}" />
+                                        <telerik:GridViewDataColumn
+                                            Header="5"
+                                            Width="140"
+                                            DataMemberBinding="{Binding dataField[5]}" />
+                                        <telerik:GridViewDataColumn
+                                            Header="6"
+                                            Width="140"
+                                            DataMemberBinding="{Binding dataField[6]}" />
+                                        <telerik:GridViewDataColumn
+                                            Header="7"
+                                            Width="140"
+                                            DataMemberBinding="{Binding dataField[7]}" />
+                                        <telerik:GridViewDataColumn
+                                            Header="8"
+                                            Width="140"
+                                            DataMemberBinding="{Binding dataField[8]}" />
+                                        <telerik:GridViewDataColumn
+                                            Header="9"
+                                            Width="140"
+                                            DataMemberBinding="{Binding dataField[9]}" />
+                                        <telerik:GridViewDataColumn
+                                            Header="10"
+                                            Width="140"
+                                            DataMemberBinding="{Binding dataField[10]}" />
+                                        <telerik:GridViewDataColumn
+                                            Header="11"
+                                            Width="140"
+                                            DataMemberBinding="{Binding dataField[11]}" />
+                                        <telerik:GridViewDataColumn
+                                            Header="12"
+                                            Width="140"
+                                            DataMemberBinding="{Binding dataField[12]}" />
+                                        <telerik:GridViewDataColumn
+                                            Header="13"
+                                            Width="140"
+                                            DataMemberBinding="{Binding dataField[13]}" />
+                                        <telerik:GridViewDataColumn
+                                            Header="14"
+                                            Width="140"
+                                            DataMemberBinding="{Binding dataField[14]}" />
+                                        <telerik:GridViewDataColumn
+                                            Header="15"
+                                            Width="140"
+                                            DataMemberBinding="{Binding dataField[15]}" />
+                                        <telerik:GridViewDataColumn
+                                            Header="16"
+                                            Width="140"
+                                            DataMemberBinding="{Binding dataField[16]}" />
+                                        <telerik:GridViewDataColumn
+                                            Header="17"
+                                            Width="140"
+                                            DataMemberBinding="{Binding dataField[17]}" />
+                                        <telerik:GridViewDataColumn
+                                            Header="18"
+                                            Width="140"
+                                            DataMemberBinding="{Binding dataField[18]}" />
+                                        <telerik:GridViewDataColumn
+                                            Header="19"
+                                            Width="140"
+                                            DataMemberBinding="{Binding dataField[19]}" />
+                                        <telerik:GridViewDataColumn
+                                            Header="20"
+                                            Width="140"
+                                            DataMemberBinding="{Binding dataField[20]}" />
+                                        <telerik:GridViewDataColumn
+                                            Header="21"
+                                            Width="140"
+                                            DataMemberBinding="{Binding dataField[21]}" />
+                                        <telerik:GridViewDataColumn
+                                            Header="22"
+                                            Width="140"
+                                            DataMemberBinding="{Binding dataField[22]}" />
+                                        <telerik:GridViewDataColumn
+                                            Header="23"
+                                            Width="140"
+                                            DataMemberBinding="{Binding dataField[23]}" />
+                                        <telerik:GridViewDataColumn
+                                            Header="24"
+                                            Width="140"
+                                            DataMemberBinding="{Binding dataField[24]}" />
+                                        <telerik:GridViewDataColumn
+                                            Header="25"
+                                            Width="140"
+                                            DataMemberBinding="{Binding dataField[25]}" />
+                                        <telerik:GridViewDataColumn
+                                            Header="26"
+                                            Width="140"
+                                            DataMemberBinding="{Binding dataField[26]}" />
+                                        <telerik:GridViewDataColumn
+                                            Header="27"
+                                            Width="140"
+                                            DataMemberBinding="{Binding dataField[27]}" />
+                                        <telerik:GridViewDataColumn
+                                            Header="28"
+                                            Width="140"
+                                            DataMemberBinding="{Binding dataField[28]}" />
+                                        <telerik:GridViewDataColumn
+                                            Header="29"
+                                            Width="140"
+                                            DataMemberBinding="{Binding dataField[29]}" />
+                                        <telerik:GridViewDataColumn
+                                            Header="30"
+                                            Width="140"
+                                            DataMemberBinding="{Binding dataField[30]}" />
+                                        <telerik:GridViewDataColumn
+                                            Header="31"
+                                            Width="140"
+                                            DataMemberBinding="{Binding dataField[31]}" />
+                                        <telerik:GridViewDataColumn
+                                            Header="32"
+                                            Width="140"
+                                            DataMemberBinding="{Binding dataField[32]}" />
+                                        <telerik:GridViewDataColumn
+                                            Header="33"
+                                            Width="140"
+                                            DataMemberBinding="{Binding dataField[33]}" />
+                                        <telerik:GridViewDataColumn
+                                            Header="34"
+                                            Width="140"
+                                            DataMemberBinding="{Binding dataField[34]}" />
+                                        <telerik:GridViewDataColumn
+                                            Header="35"
+                                            Width="140"
+                                            DataMemberBinding="{Binding dataField[35]}" />
+                                        <telerik:GridViewDataColumn
+                                            Header="36"
+                                            Width="140"
+                                            DataMemberBinding="{Binding dataField[36]}" />
+                                        <telerik:GridViewDataColumn
+                                            Header="37"
+                                            Width="140"
+                                            DataMemberBinding="{Binding dataField[37]}" />
+                                        <telerik:GridViewDataColumn
+                                            Header="38"
+                                            Width="140"
+                                            DataMemberBinding="{Binding dataField[38]}" />
+                                        <telerik:GridViewDataColumn
+                                            Header="39"
+                                            Width="140"
+                                            DataMemberBinding="{Binding dataField[39]}" />
+                                        <telerik:GridViewDataColumn
+                                            Header="40"
+                                            Width="140"
+                                            DataMemberBinding="{Binding dataField[40]}" />
+                                        <telerik:GridViewDataColumn
+                                            Header="41"
+                                            Width="140"
+                                            DataMemberBinding="{Binding dataField[41]}" />
+                                        <telerik:GridViewDataColumn
+                                            Header="42"
+                                            Width="140"
+                                            DataMemberBinding="{Binding dataField[42]}" />
+                                        <telerik:GridViewDataColumn
+                                            Header="43"
+                                            Width="140"
+                                            DataMemberBinding="{Binding dataField[43]}" />
+                                        <telerik:GridViewDataColumn
+                                            Header="44"
+                                            Width="140"
+                                            DataMemberBinding="{Binding dataField[44]}" />
+                                        <telerik:GridViewDataColumn
+                                            Header="45"
+                                            Width="140"
+                                            DataMemberBinding="{Binding dataField[45]}" />
+                                        <telerik:GridViewDataColumn
+                                            Header="46"
+                                            Width="140"
+                                            DataMemberBinding="{Binding dataField[46]}" />
+                                        <telerik:GridViewDataColumn
+                                            Header="47"
+                                            Width="140"
+                                            DataMemberBinding="{Binding dataField[47]}" />
+                                        <telerik:GridViewDataColumn
+                                            Header="48"
+                                            Width="140"
+                                            DataMemberBinding="{Binding dataField[48]}" />
+                                        <telerik:GridViewDataColumn
+                                            Header="49"
+                                            Width="140"
+                                            DataMemberBinding="{Binding dataField[49]}" />
+                                        <telerik:GridViewDataColumn
+                                            Header="50"
+                                            Width="140"
+                                            DataMemberBinding="{Binding dataField[50]}" />
+                                        <telerik:GridViewDataColumn
+                                            Header="51"
+                                            Width="140"
+                                            DataMemberBinding="{Binding dataField[51]}" />
+                                        <telerik:GridViewDataColumn
+                                            Header="52"
+                                            Width="140"
+                                            DataMemberBinding="{Binding dataField[52]}" />
+                                        <telerik:GridViewDataColumn
+                                            Header="53"
+                                            Width="140"
+                                            DataMemberBinding="{Binding dataField[53]}" />
+                                        <telerik:GridViewDataColumn
+                                            Header="54"
+                                            Width="140"
+                                            DataMemberBinding="{Binding dataField[54]}" />
+                                        <telerik:GridViewDataColumn
+                                            Header="55"
+                                            Width="140"
+                                            DataMemberBinding="{Binding dataField[55]}" />
+                                        <telerik:GridViewDataColumn
+                                            Header="56"
+                                            Width="140"
+                                            DataMemberBinding="{Binding dataField[56]}" />
+                                        <telerik:GridViewDataColumn
+                                            Header="57"
+                                            Width="140"
+                                            DataMemberBinding="{Binding dataField[57]}" />
+                                        <telerik:GridViewDataColumn
+                                            Header="58"
+                                            Width="140"
+                                            DataMemberBinding="{Binding dataField[58]}" />
+                                        <telerik:GridViewDataColumn
+                                            Header="59"
+                                            Width="140"
+                                            DataMemberBinding="{Binding dataField[59]}" />
+
+                                    </telerik:RadGridView.Columns>
+
+                                </telerik:RadGridView>
+
+                            </DockPanel>
+
+                        </telerik:GroupBox>
+
+                        <!--Selected Data-->
+                        <telerik:GroupBox
+                            Grid.Column="0"
+                            Grid.Row="2"
+                            Header="Selected Data"
+                            Margin="8"
+                            Grid.ColumnSpan="2">
+
+                            <DockPanel>
+
+                                <telerik:RadGridView
+                                    Name="lvSelectedData"
+                                    IsReadOnly="True"
+                                    IsManipulationEnabled="False"
+                                    CanUserSortColumns="False"
+                                    ShowGroupPanel="False"
+                                    ShowColumnHeaders="False"
+                                    RowHeight="25"
+                                    Margin="8"
+                                    CanUserReorderColumns="False"
+                                    CanUserDeleteRows="False"
+                                    RowIndicatorVisibility="Collapsed"
+                                    AutoGenerateColumns="False">
+
+                                    <telerik:RadGridView.Columns>
+                                        <telerik:GridViewDataColumn
+                                            DataMemberBinding="{Binding selectedDataFieldString}" />
+                                    </telerik:RadGridView.Columns>
+
+                                </telerik:RadGridView>
+
+                            </DockPanel>
+
+                        </telerik:GroupBox>
+
+                        <telerik:GroupBox
+                            Grid.Column="2"
+                            Grid.Row="0"
+                            Header="Data Field Split"
+                            Margin="8">
+
+                            <StackPanel
+                                Margin="8">
+
+                                <DockPanel>
+                                    <Label
+                                        Width="120"
+                                        Content="Delimiter"
+                                        VerticalAlignment="Center" />
+                                    <TextBox
+                                        Name="tbFileReaderDelimiter"
+                                        LostFocus="tbFileReaderDelimiter_LostFocus"
+                                        KeyDown="tbFileReaderDelimiter_KeyDown" />
+                                </DockPanel>
+
+                                <Separator
+                                    Margin="0,8" />
+
+                                <CheckBox
+                                    Name="cboFileReaderFixedPositionData"
+                                    Content="Fixed Position Data"
+                                    Checked="cboFixedPositionData_Checked"
+                                    Unchecked="cboFixedPositionData_Unchecked" />
+
+                                <DockPanel>
+                                    <Label
+                                        Width="120"
+                                        Content="Start"
+                                        VerticalAlignment="Center" />
+                                    <TextBox
+                                        Name="tbFileReaderFixedPositionDataStart"
+                                        LostFocus="tbFixedPositionDataStart_LostFocus"
+                                        KeyDown="tbFixedPositionDataStart_KeyDown"/>
+                                </DockPanel>
+
+                                <DockPanel>
+                                    <Label
+                                        Width="120"
+                                        Content="Total"
+                                        VerticalAlignment="Center" />
+                                    <TextBox
+                                        Name="tbFileReaderFixedPositionDataTotal"
+                                        LostFocus="tbFixedPositionDataTotal_LostFocus"
+                                        KeyDown="tbFixedPositionDataTotal_KeyDown"/>
+                                </DockPanel>
+
+                            </StackPanel>
+
+                        </telerik:GroupBox>
+
+                        <!--Data Selection-->
+                        <telerik:GroupBox
+                            Header="Data Selection"
+                            Grid.Column="2"
+                            Grid.Row="1"
+                            Margin="8">
+
+                            <StackPanel
+                                Margin="8">
+
+                                <!--Selected Data Field-->
+                                <DockPanel>
+                                    <Label
+                                        Width="120"
+                                        Content="Data Field"
+                                        VerticalAlignment="Center" />
+                                    <telerik:RadComboBox
+                                        Width="auto"
+                                        Name="cboSelectedDataField"
+                                        SelectionChanged="cboSelectedDataField_SelectionChanged"/>
+                                </DockPanel>
+
+                                <!--Decimal Separator-->
+                                <DockPanel>
+                                    <Label
+                                        Width="100"
+                                        Content="Decimal Separator"
+                                        VerticalAlignment="Center" />
+                                    <telerik:RadComboBox
+                                        Width="auto"
+                                        Name="cboDecimalSeparator"
+                                        SelectionChanged="cboDecimalSeparator_SelectionChanged"/>
+                                </DockPanel>
+
+                                <!--Auto Extract Value-->
+                                <CheckBox
+                                    Name="cboSelectedDataAutoExtract"
+                                    Checked="cboSelectedDataAutoExtract_Checked"
+                                    Unchecked="cboSelectedDataAutoExtract_Unchecked">Auto Extract Value</CheckBox>
+
+                            </StackPanel>
+
+                        </telerik:GroupBox>
+
+                    </Grid>
+
+                </telerik:RadTabItem>
+
+
+                <!--2. Data Calculations-->
+                <telerik:RadTabItem
+                    Name="tabDataCalculations"
+                    Header="2: Data Calculations">
+
+                    <Grid>
+
+                        <Grid.ColumnDefinitions>
+                            <ColumnDefinition
+                                Width="*" />
+                            <ColumnDefinition
+                                Width="360" />
+                        </Grid.ColumnDefinitions>
+
+                        <Grid.RowDefinitions>
+                            <RowDefinition
+                                Height="*" />
+                            <RowDefinition
+                                Height="*" />
+                        </Grid.RowDefinitions>
+
+                        <!--Selected Data-->
+                        <telerik:GroupBox
+                            Grid.Column="0"
+                            Grid.Row="0"
+                            Header="Selected Data"
+                            Margin="8">
+
+                            <telerik:RadGridView
+                                Name="lvSelectedData2"
+                                IsReadOnly="True"
+                                IsManipulationEnabled="False"
+                                CanUserSortColumns="False"
+                                ShowGroupPanel="False"
+                                ShowColumnHeaders="False"
+                                RowHeight="25"
+                                Margin="8"
+                                CanUserReorderColumns="False"
+                                CanUserDeleteRows="False"
+                                RowIndicatorVisibility="Collapsed"
+                                AutoGenerateColumns="False">
+
+                                <telerik:RadGridView.Columns>
+                                    <telerik:GridViewDataColumn
+                                        DataMemberBinding="{Binding selectedDataFieldString}" />
+                                </telerik:RadGridView.Columns>
+
+                            </telerik:RadGridView>
+
+                        </telerik:GroupBox>
+
+                        <!--Calculated Data-->
+                        <telerik:GroupBox
+                            Grid.Column="0"
+                            Grid.Row="1"
+                            Header="Calculated Data"
+                            Margin="8">
+
+                            <telerik:RadGridView
+                                Name="lvCalculatedData"
+                                IsReadOnly="True"
+                                IsManipulationEnabled="False"
+                                CanUserSortColumns="False"
+                                ShowGroupPanel="False"
+                                ShowColumnHeaders="False"
+                                RowHeight="25"
+                                Margin="8"
+                                CanUserReorderColumns="False"
+                                CanUserDeleteRows="False"
+                                RowIndicatorVisibility="Collapsed"
+                                AutoGenerateColumns="False">
+
+                                <telerik:RadGridView.Columns>
+                                    <telerik:GridViewDataColumn
+                                        DataMemberBinding="{Binding dataString}" />
+                                </telerik:RadGridView.Columns>
+
+                            </telerik:RadGridView>
+
+                        </telerik:GroupBox>
+
+                        <StackPanel
+                            Grid.Column="1"
+                            Grid.Row="0"
+                            Grid.RowSpan="2">
+
+                            <!--Data Calculations 1-->
+                            <telerik:GroupBox
+                                Header="Data Calculations 1"
+                                Margin="8">
+
+                                <StackPanel
+                                    Margin="8">
+
+                                    <DockPanel>
+                                        <Label
+                                            Width="80"
+                                            Content="Type"
+                                            VerticalAlignment="Center" />
+                                        <telerik:RadComboBox
+                                            Width="auto"
+                                            Name="cboCalculationType1"
+                                            MaxDropDownHeight="400"
+                                            SelectionChanged="cboCalculationType1_SelectionChanged" />
+                                    </DockPanel>
+
+                                    <DockPanel>
+                                        <Label
+                                            Width="120"
+                                            Content="Parameter"
+                                            VerticalAlignment="Center" />
+                                        <TextBox
+                                            Name="tbCalculationParameter1"
+                                            LostFocus="tbCalculationParameter1_LostFocus"
+                                            KeyDown="tbCalculationParameter1_KeyDown" />
+                                    </DockPanel>
+
+                                </StackPanel>
+
+                            </telerik:GroupBox>
+
+                            <!--Data Calculations 2-->
+                            <telerik:GroupBox
+                                Header="Data Calculations 2"
+                                Margin="8">
+
+                                <StackPanel
+                                    Margin="8">
+
+                                    <DockPanel>
+                                        <Label
+                                            Width="80"
+                                            Content="Type"
+                                            VerticalAlignment="Center" />
+                                        <telerik:RadComboBox
+                                            Width="auto"
+                                            Name="cboCalculationType2"
+                                            MaxDropDownHeight="400"
+                                            SelectionChanged="cboCalculationType2_SelectionChanged" />
+                                    </DockPanel>
+
+                                    <DockPanel>
+                                        <Label
+                                            Width="120"
+                                            Content="Parameter"
+                                            VerticalAlignment="Center" />
+                                        <TextBox
+                                            Name="tbCalculationParameter2"
+                                            LostFocus="tbCalculationParameter2_LostFocus"
+                                            KeyDown="tbCalculationParameter2_KeyDown" />
+                                    </DockPanel>
+
+                                </StackPanel>
+
+                            </telerik:GroupBox>
+
+                            <!--Data Calculations 3-->
+                            <telerik:GroupBox
+                                Header="Data Calculations 3"
+                                Margin="8">
+
+                                <StackPanel
+                                    Margin="8">
+
+                                    <DockPanel>
+                                        <Label
+                                            Width="80"
+                                            Content="Type"
+                                            VerticalAlignment="Center" />
+                                        <telerik:RadComboBox
+                                            Width="auto"
+                                            Name="cboCalculationType3"
+                                            MaxDropDownHeight="400"
+                                            SelectionChanged="cboCalculationType3_SelectionChanged" />
+                                    </DockPanel>
+
+                                    <DockPanel>
+                                        <Label
+                                            Width="120"
+                                            Content="Parameter"
+                                            VerticalAlignment="Center" />
+                                        <TextBox
+                                            Name="tbCalculationParameter3"
+                                            LostFocus="tbCalculationParameter3_LostFocus"
+                                            KeyDown="tbCalculationParameter3_KeyDown" />
+                                    </DockPanel>
+
+                                </StackPanel>
+
+                            </telerik:GroupBox>
+
+                            <!--Data Calculations 4-->
+                            <telerik:GroupBox
+                                Header="Data Calculations 4"
+                                Margin="8">
+
+                                <StackPanel
+                                    Margin="8">
+
+                                    <DockPanel>
+                                        <Label
+                                            Width="80"
+                                            Content="Type"
+                                            VerticalAlignment="Center" />
+                                        <telerik:RadComboBox
+                                            Width="auto"
+                                            Name="cboCalculationType4"
+                                            MaxDropDownHeight="400"
+                                            SelectionChanged="cboCalculationType4_SelectionChanged" />
+                                    </DockPanel>
+
+                                    <DockPanel>
+                                        <Label
+                                            Width="120"
+                                            Content="Parameter"
+                                            VerticalAlignment="Center" />
+                                        <TextBox
+                                            Name="tbCalculationParameter4"
+                                            LostFocus="tbCalculationParameter4_LostFocus"
+                                            KeyDown="tbCalculationParameter4_KeyDown" />
+                                    </DockPanel>
+
+                                </StackPanel>
+
+                            </telerik:GroupBox>
+
+                        </StackPanel>
+
+                    </Grid>
+
+                </telerik:RadTabItem>
+
+            </telerik:RadTabControl>
+
+        </Grid>
+
+    </DockPanel>
+
+</telerik:RadWindow>
