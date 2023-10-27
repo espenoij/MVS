@@ -3,15 +3,15 @@
 namespace MVS
 {
 
-    public class HMSDataConfigCollection : ConfigurationElementCollection
+    public class MVSDataConfigCollection : ConfigurationElementCollection
     {
-        public HMSDataConfigCollection()
+        public MVSDataConfigCollection()
         {
         }
 
-        public HMSDataConfig this[int index]
+        public MVSDataConfig this[int index]
         {
-            get { return (HMSDataConfig)BaseGet(index); }
+            get { return (MVSDataConfig)BaseGet(index); }
             set
             {
                 if (BaseGet(index) != null)
@@ -22,7 +22,7 @@ namespace MVS
             }
         }
 
-        public void Add(HMSDataConfig clientDataConfig)
+        public void Add(MVSDataConfig clientDataConfig)
         {
             BaseAdd(clientDataConfig);
         }
@@ -34,15 +34,15 @@ namespace MVS
 
         protected override ConfigurationElement CreateNewElement()
         {
-            return new HMSDataConfig();
+            return new MVSDataConfig();
         }
 
         protected override object GetElementKey(ConfigurationElement element)
         {
-            return ((HMSDataConfig)element).id;
+            return ((MVSDataConfig)element).id;
         }
 
-        public void Remove(HMSDataConfig clientDataConfig)
+        public void Remove(MVSDataConfig clientDataConfig)
         {
             BaseRemove(clientDataConfig.id);
         }

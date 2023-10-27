@@ -41,7 +41,7 @@ namespace MVS
             {
                 List<MotionDataSet> dataSets = database.GetMotionDataSets();
 
-                errorHandler.ResetDatabaseError(ErrorHandler.DatabaseErrorType.InsertMVSDataSet);
+                errorHandler.ResetDatabaseError(ErrorHandler.DatabaseErrorType.GetAllMVSData);
 
                 return dataSets;
             }
@@ -52,9 +52,9 @@ namespace MVS
                         DateTime.UtcNow,
                         ErrorMessageType.Database,
                         ErrorMessageCategory.None,
-                        string.Format("Database Error (InsertData HMS)\n\nSystem Message:\n{0}", ex.Message)));
+                        string.Format("Database Error (GetAll)\n\nSystem Message:\n{0}", ex.Message)));
 
-                errorHandler.SetDatabaseError(ErrorHandler.DatabaseErrorType.InsertMVSDataSet);
+                errorHandler.SetDatabaseError(ErrorHandler.DatabaseErrorType.GetAllMVSData);
 
                 return null;
             }
@@ -91,7 +91,7 @@ namespace MVS
             {
                 database.Update(dataSet);
 
-                errorHandler.ResetDatabaseError(ErrorHandler.DatabaseErrorType.InsertMVSDataSet);
+                errorHandler.ResetDatabaseError(ErrorHandler.DatabaseErrorType.UpdateMVSDataSet);
             }
             catch (Exception ex)
             {
@@ -102,7 +102,7 @@ namespace MVS
                         ErrorMessageCategory.None,
                         string.Format("Database Error (InsertData HMS)\n\nSystem Message:\n{0}", ex.Message)));
 
-                errorHandler.SetDatabaseError(ErrorHandler.DatabaseErrorType.InsertMVSDataSet);
+                errorHandler.SetDatabaseError(ErrorHandler.DatabaseErrorType.UpdateMVSDataSet);
             }
         }
 
@@ -125,6 +125,27 @@ namespace MVS
                         string.Format("Database Error (InsertData HMS)\n\nSystem Message:\n{0}", ex.Message)));
 
                 errorHandler.SetDatabaseError(ErrorHandler.DatabaseErrorType.DeleteMVSDataSet);
+            }
+        }
+
+        public void DeleteData(MotionDataSet dataSet)
+        {
+            try
+            {
+                database.DeleteData(dataSet);
+
+                errorHandler.ResetDatabaseError(ErrorHandler.DatabaseErrorType.DeleteMVSData);
+            }
+            catch (Exception ex)
+            {
+                errorHandler.Insert(
+                    new ErrorMessage(
+                        DateTime.UtcNow,
+                        ErrorMessageType.Database,
+                        ErrorMessageCategory.None,
+                        string.Format("Database Error (InsertData HMS)\n\nSystem Message:\n{0}", ex.Message)));
+
+                errorHandler.SetDatabaseError(ErrorHandler.DatabaseErrorType.DeleteMVSData);
             }
         }
 

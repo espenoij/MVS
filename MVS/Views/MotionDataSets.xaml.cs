@@ -21,8 +21,6 @@ namespace MVS
         private RadObservableCollection<MotionDataSet> motionDataSetList = new RadObservableCollection<MotionDataSet>();
         private MotionDataSet motionDataSetSelected = new MotionDataSet();
 
-        private MainWindow.StopServerCallback stopServerCallback;
-
         private MainWindowVM mainWindowVM;
 
         public MotionDataSets()
@@ -30,16 +28,13 @@ namespace MVS
             InitializeComponent();
         }
 
-        public void Init(MainWindowVM mainWindowVM, MVSDatabase mvsDatabase, MainWindow.StopServerCallback stopServerCallback)
+        public void Init(MainWindowVM mainWindowVM, MVSDatabase mvsDatabase)
         {
             // Database
             this.mvsDatabase = mvsDatabase;
 
             // VM
             this.mainWindowVM = mainWindowVM;
-
-            // Stop server callback
-            this.stopServerCallback = stopServerCallback;
 
             InitUI();
         }
@@ -53,7 +48,7 @@ namespace MVS
             LoadMotionDataSets();
         }
 
-        public void ServerStartedCheck(bool serverStarted)
+        public void DisableButtons(bool serverStarted)
         {
             // Vi kan ikke utføre sensor input endringer dersom server kjører.
             if (serverStarted)
@@ -72,21 +67,29 @@ namespace MVS
 
         private void LoadMotionDataSets()
         {
-            // Hente liste med data fra database
+            // Hente liste med data set fra database
             List<MotionDataSet> dataSets = mvsDatabase.GetAll();
 
-            // Legge alle data inn i listview for visning på skjerm
-            foreach (var item in dataSets)
+            if (dataSets != null)
             {
-                motionDataSetList.Insert(0, item);
+                // Legge alle data inn i listview for visning på skjerm
+                foreach (var item in dataSets)
+                {
+                    motionDataSetList.Insert(0, item);
+                }
             }
+        }
+
+        public void Start()
+        {
+            DisableButtons(true);
         }
 
         public void Stop(OperationsMode operationsMode)
         {
             if (operationsMode == OperationsMode.Recording)
             {
-                // Sette timestamps til data set
+                // Sette timestamps på data set
                 mvsDatabase.SetTimestamps(motionDataSetSelected);
 
                 mainWindowVM.SelectedMotionDataSet = motionDataSetSelected;
@@ -94,16 +97,13 @@ namespace MVS
                 // Legge data i UI
                 lbDataSetStartTime.Content = motionDataSetSelected.StartTimeString;
                 lbDataSetEndTime.Content = motionDataSetSelected.EndTimeString;
+                lbDataSetDuration.Content = motionDataSetSelected.DurationString;
 
                 // Oppdatere databasen
                 mvsDatabase.Update(motionDataSetSelected);
             }
-        }
 
-        private void btnStop_Click(object sender, RoutedEventArgs e)
-        {
-            stopServerCallback();
-            ServerStartedCheck(false);
+            DisableButtons(false);
         }
 
         private void btnNew_Click(object sender, RoutedEventArgs e)
@@ -116,7 +116,6 @@ namespace MVS
             newDataSet.Description = "(description)";
             newDataSet.StartTime = System.Data.SqlTypes.SqlDateTime.MinValue.Value;
             newDataSet.EndTime = System.Data.SqlTypes.SqlDateTime.MinValue.Value;
-            newDataSet.Status = MotionDataStatus.Open;
 
             // Store motion data set in database
             newDataSet.Id = mvsDatabase.Insert(newDataSet);
@@ -166,7 +165,7 @@ namespace MVS
                 tbDataSetDescription.Text = motionDataSetSelected.Description;
                 lbDataSetStartTime.Content = motionDataSetSelected.StartTimeString;
                 lbDataSetEndTime.Content = motionDataSetSelected.EndTimeString;
-                lbDataSetStatus.Content = motionDataSetSelected.StatusString;
+                lbDataSetDuration.Content = motionDataSetSelected.DurationString;
             }
             else
             {
@@ -175,7 +174,7 @@ namespace MVS
                 tbDataSetDescription.Text = string.Empty;
                 lbDataSetStartTime.Content = string.Empty;
                 lbDataSetEndTime.Content = string.Empty;
-                lbDataSetStatus.Content = string.Empty;
+                lbDataSetDuration.Content = string.Empty;
             }
         }
 

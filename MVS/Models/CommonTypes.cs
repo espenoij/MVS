@@ -538,12 +538,6 @@ public enum RegulationStandard
     CAP
 }
 
-public enum MotionDataStatus
-{
-    Open,
-    Closed
-}
-
 public enum OperationsMode
 {
     Recording,

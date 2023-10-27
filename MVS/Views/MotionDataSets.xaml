@@ -106,17 +106,22 @@
 
                 <telerik:RadGridView.Columns>
                     <telerik:GridViewDataColumn
-                        Width="5*"
+                        Width="*"
+                        MinWidth="150"
                         Header="Name"
                         DataMemberBinding="{Binding Name}" />
                     <telerik:GridViewDataColumn
-                        Width="3*"
+                        Width="220"
                         Header="Start"
                         DataMemberBinding="{Binding StartTimeString}" />
                     <telerik:GridViewDataColumn
-                        Width="3*"
+                        Width="220"
                         Header="End"
                         DataMemberBinding="{Binding EndTimeString}" />
+                    <telerik:GridViewDataColumn
+                        Width="110"
+                        Header="Duration"
+                        DataMemberBinding="{Binding DurationString}" />
                 </telerik:RadGridView.Columns>
 
             </telerik:RadGridView>
@@ -125,7 +130,7 @@
                 Grid.Column="1">
 
                 <telerik:GroupBox
-                    Header="Basic Information"
+                    Header="Motion Data Set - Details"
                     Margin="8">
 
                     <StackPanel
@@ -184,10 +189,10 @@
                         <DockPanel>
                             <Label
                                 Width="140"
-                                Content="Status"
+                                Content="Duration"
                                 VerticalAlignment="Center" />
                             <Label
-                                Name="lbDataSetStatus" />
+                                Name="lbDataSetDuration" />
                         </DockPanel>
 
                     </StackPanel>

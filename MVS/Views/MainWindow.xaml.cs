@@ -1,10 +1,6 @@
 ﻿using System;
-using System.Diagnostics.Metrics;
-using System.IO.Ports;
-using System.Linq;
 using System.Threading;
 using System.Windows;
-using System.Windows.Input;
 using System.Windows.Threading;
 using Telerik.Windows.Controls;
 using Telerik.Windows.Data;
@@ -71,8 +67,11 @@ namespace MVS
         // Operations mode
         private OperationsMode operationsMode;
 
-        // About
+        // Model View
         private MainWindowVM mainWindowVM;
+
+        // About
+        private AboutVM aboutVM;
 
         public MainWindow()
         {
@@ -88,12 +87,16 @@ namespace MVS
             sensorDataRetrieval = new SensorDataRetrieval(config, database, errorHandler, adminSettingsVM);
 
             // Main Window VM
-            mainWindowVM = new MainWindowVM(Application.ResourceAssembly.GetName().Version);
+            mainWindowVM = new MainWindowVM();
+            DataContext = mainWindowVM;
+
+            // About VM
+            aboutVM = new AboutVM(Application.ResourceAssembly.GetName().Version);
 
             // MVS Output data
             mvsOutputData = new MVSDataCollection();
 
-            // HMS Database
+            // MVS Database
             mvsDatabase = new MVSDatabase(database, errorHandler);
 
             // Sørge for at databasen er opprettet
@@ -118,7 +121,7 @@ namespace MVS
             StopServerCallback stopServerCallback = new StopServerCallback(StopRecording);
 
             // Motion Data Sets page
-            ucMotionDataSets.Init(mainWindowVM, mvsDatabase, stopServerCallback);
+            ucMotionDataSets.Init(mainWindowVM, mvsDatabase);
 
             // Sensor Input Setup
             ucSensorSetupPage.Init(config, errorHandler, adminSettingsVM, stopServerCallback);
@@ -329,10 +332,9 @@ namespace MVS
                 dpApplicationRestartRequired.Visibility = Visibility.Collapsed;
         }
 
-        private void Window_Closing(object sender, Telerik.Windows.Controls.WindowClosedEventArgs e)
+        private void Window_Closing(object sender, WindowClosedEventArgs e)
         {
             StopRecording();
-            ExitServer();
 
             Application.Current.Shutdown();
         }
@@ -354,8 +356,6 @@ namespace MVS
                 DisplayList.Transfer(sensorDataRetrieval.GetSerialPortDataReceivedList(), serialPortDataDisplayList);
                 DisplayList.Transfer(sensorDataRetrieval.GetFileReaderList(), fileReaderDataDisplayList);
                 DisplayList.Transfer(sensorDataRetrieval.GetFixedValueList(), fixedValueDataDisplayList);
-
-                    //gvSerialPortDataDisplay.Items.Refresh();
             }
         }
 
@@ -491,6 +491,32 @@ namespace MVS
             }
             else
             {
+                // Sjekker om valgt data set allerede har data
+                if (mainWindowVM.SelectedMotionDataSet.DataSetHasData())
+                {
+                    RadWindow.Confirm("The selected data set already contains data.\n\nStarting a new recording session with this data set\nwill delete all the current data within it.", OnClosed);
+
+                    void OnClosed(object sendero, WindowClosedEventArgs ea)
+                    {
+                        // Starter selv om data set har data
+                        if ((bool)ea.DialogResult == true)
+                        {
+                            // Må først slette eksisterende data i databasen
+                            mvsDatabase.DeleteData(mainWindowVM.SelectedMotionDataSet);
+
+                            Start();
+                        }
+                    }
+                }
+                // ...har ikke data -> Start
+                else
+                {
+                    Start();
+                }
+            }
+
+            void Start()
+            {
                 // Resetter data listene i dataCalculations
                 mvsProcessing.ResetDataCalculations();
 
@@ -505,12 +531,19 @@ namespace MVS
                 ucSensorSetupPage.ServerStartedCheck(true);
                 ucMVSInputSetup.Start();
                 ucMVSOutput.Start();
+                ucMotionDataSets.Start();
 
                 // Sette operasjonsmodus
                 SetOperationsMode(OperationsMode.Recording);
 
                 // Server startet
                 serverStarted = true;
+
+                // Gå til input tab
+                tabInput.IsSelected = true;
+
+                // Start elapsed time
+                mainWindowVM.StartTimer();
             }
         }
 
@@ -530,12 +563,16 @@ namespace MVS
             ucSensorSetupPage.ServerStartedCheck(true);
             ucMVSInputSetup.Start();
             ucMVSOutput.Start();
+            ucMotionDataSets.Start();
 
             // Sette operasjonsmodus
             SetOperationsMode(OperationsMode.Test);
 
             // Server startet
             serverStarted = true;
+
+            // Gå til input tab
+            tabInput.IsSelected = true;
         }
 
         private void StopRecording()
@@ -559,10 +596,12 @@ namespace MVS
 
             // Resette sjekk på om database tabeller er opprettet
             databaseTablesCreated = false;
-        }
 
-        private void ExitServer()
-        {
+            // Gå til data set tab
+            tabMotionDataSets.IsSelected = true;
+
+            // Stoppe elapsed time
+            mainWindowVM.StopTimer();
         }
 
         private void DoDatabaseMaintenance()
@@ -650,7 +689,7 @@ namespace MVS
             // Åpne about dialog vindu
             DialogAbout aboutDlg = new DialogAbout();
             aboutDlg.Owner = App.Current.MainWindow;
-            aboutDlg.Init(mainWindowVM);
+            aboutDlg.Init(aboutVM);
             aboutDlg.ShowDialog();
         }
     }

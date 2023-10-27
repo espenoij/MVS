@@ -2,11 +2,11 @@
 
 namespace MVS
 {
-    public class HMSDataConfig : ConfigurationElement
+    public class MVSDataConfig : ConfigurationElement
     {
-        public HMSDataConfig() { }
+        public MVSDataConfig() { }
 
-        public HMSDataConfig(HMSData clientData)
+        public MVSDataConfig(HMSData clientData)
         {
             this.id = clientData.id;
             this.name = clientData.name;

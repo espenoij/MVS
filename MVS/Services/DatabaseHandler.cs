@@ -18,7 +18,6 @@ namespace MVS
         private const string columnMVSDescription = "description";
         private const string columnMVSStart = "start";
         private const string columnMVSEnd = "end";
-        private const string columnMVSStatus = "status";
 
         // MVS Data Set tabeller
         private const string tableNameMVSDataPrefix = "mvs_data_";
@@ -165,13 +164,12 @@ namespace MVS
                     connection.Open();
 
                     // Opprette nytt database table
-                    cmd.CommandText = string.Format(@"CREATE TABLE IF NOT EXISTS {0}(id INTEGER PRIMARY KEY AUTO_INCREMENT, {1} TEXT, {2} TEXT, {3} DATETIME(3), {4} DATETIME(3), {5} INTEGER)",
+                    cmd.CommandText = string.Format(@"CREATE TABLE IF NOT EXISTS {0}(id INTEGER PRIMARY KEY AUTO_INCREMENT, {1} TEXT, {2} TEXT, {3} DATETIME(3), {4} DATETIME(3))",
                         tableNameMVSDataSets,
                         columnMVSName,
                         columnMVSDescription,
                         columnMVSStart,
-                        columnMVSEnd,
-                        columnMVSStatus);
+                        columnMVSEnd);
 
                     cmd.ExecuteNonQuery();
 
@@ -439,20 +437,18 @@ namespace MVS
                         cmd.Connection = connection;
 
                         // Insert kommando
-                        cmd.CommandText = string.Format("INSERT INTO {0}({1}, {2}, {3}, {4}, {5}) VALUES(@1, @2, @3, @4, @5)",
+                        cmd.CommandText = string.Format("INSERT INTO {0}({1}, {2}, {3}, {4}) VALUES(@1, @2, @3, @4)",
                             tableNameMVSDataSets,
                             columnMVSName,
                             columnMVSDescription,
                             columnMVSStart,
-                            columnMVSEnd,
-                            columnMVSStatus);
+                            columnMVSEnd);
 
                         // Insert parametre
                         cmd.Parameters.AddWithValue("@1", dataSet.Name);
                         cmd.Parameters.AddWithValue("@2", dataSet.Description);
                         cmd.Parameters.AddWithValue("@3", dataSet.StartTime);
                         cmd.Parameters.AddWithValue("@4", dataSet.EndTime);
-                        cmd.Parameters.AddWithValue("@5", dataSet.Status);
 
                         // Åpne database connection
                         connection.Open();
@@ -489,13 +485,12 @@ namespace MVS
                         cmd.Connection = connection;
 
                         // Insert kommando
-                        cmd.CommandText = string.Format("UPDATE {0} SET {1}=@Name, {2}=@Description, {3}=@StartTime, {4}=@EndTime, {5}=@Status WHERE id={6}",
+                        cmd.CommandText = string.Format("UPDATE {0} SET {1}=@Name, {2}=@Description, {3}=@StartTime, {4}=@EndTime WHERE id={5}",
                             tableNameMVSDataSets,
                             columnMVSName,
                             columnMVSDescription,
                             columnMVSStart,
                             columnMVSEnd,
-                            columnMVSStatus,
                             dataSet.Id);
 
                         // Update parametre
@@ -503,7 +498,6 @@ namespace MVS
                         cmd.Parameters.AddWithValue("@Description", dataSet.Description);
                         cmd.Parameters.AddWithValue("@StartTime", dataSet.StartTime);
                         cmd.Parameters.AddWithValue("@EndTime", dataSet.EndTime);
-                        cmd.Parameters.AddWithValue("@Status", dataSet.Status);
 
                         // Åpne database connection
                         connection.Open();
@@ -615,8 +609,7 @@ namespace MVS
                                 reader.GetString(1),
                                 reader.GetString(2),
                                 reader.GetDateTime(3),
-                                reader.GetDateTime(4),
-                                (MotionDataStatus)Enum.Parse(typeof(MotionDataStatus), reader.GetString(5))));
+                                reader.GetDateTime(4)));
                         }
 
                         // Lukke database connection
@@ -703,7 +696,7 @@ namespace MVS
 
                         // Error Messages Data
                         ////////////////////////////////
-                        cmd.CommandText = string.Format(@"DELETE FROM {0} WHERE {1} < DATETIME(UTC_DATETIME() - INTERVAL {2} DAY)",
+                        cmd.CommandText = string.Format(@"DELETE FROM {0} WHERE {1} < TIMESTAMP(UTC_TIMESTAMP() - INTERVAL {2} DAY)",
                             tableNameErrorMessages,
                             columnTimestamp,
                             config.ReadWithDefault(ConfigKey.ErrorMessageStorageTime, Constants.DatabaseMessagesStorageTimeDefault));

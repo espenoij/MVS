@@ -1,7 +1,7 @@
-﻿using DeviceId;
-using System;
+﻿using System;
 using System.ComponentModel;
 using System.Runtime.CompilerServices;
+using System.Windows.Threading;
 
 namespace MVS
 {
@@ -10,15 +10,46 @@ namespace MVS
         // Change notification
         public event PropertyChangedEventHandler PropertyChanged;
 
-        public MainWindowVM( Version version)
-        {
-            // Software Version
-            softwareVersion = string.Format("{0} {1}",
-                version.ToString(),
-                Constants.SoftwareVersionPostfix);
+        // Reader timer
+        private DispatcherTimer timer;
 
-            // About Information
-            aboutInformation = string.Format("For support and other inquiries, please contact Swire Energy Services - Aviation.\n\nCopyright © 2023-{0} Swire Energy Services", DateTime.UtcNow.Year);
+        public MainWindowVM()
+        {
+            // Init
+            StartTime = System.Data.SqlTypes.SqlDateTime.MinValue.Value;
+
+            // Timer
+            timer = new DispatcherTimer();
+
+            // Timer parametre
+            timer.Interval = TimeSpan.FromMilliseconds(250);
+            timer.Tick += runTimer;
+
+            void runTimer(Object source, EventArgs e)
+            {
+                OnPropertyChanged(nameof(ElapsedTimeString));
+            }
+        }
+
+        /////////////////////////////////////////////////////////////////////////////
+        // Timer Ops
+        /////////////////////////////////////////////////////////////////////////////
+        public void StartTimer()
+        {
+            // Sette start tid
+            StartTime = DateTime.UtcNow;
+
+            // Starte timer
+            timer.Start();
+        }
+
+        public void StopTimer()
+        {
+            // Sette start tid
+            StartTime = System.Data.SqlTypes.SqlDateTime.MinValue.Value;
+
+            // Starte timer
+            timer.Stop();
         }
 
         /////////////////////////////////////////////////////////////////////////////
@@ -43,44 +74,30 @@ namespace MVS
         }
 
         /////////////////////////////////////////////////////////////////////////////
-        // Software Version
+        // Elapsed Time
         /////////////////////////////////////////////////////////////////////////////
-        private string _softwareVersion { get; set; }
-        public string softwareVersion
+        private DateTime _startTime { get; set; }
+        public DateTime StartTime
         {
             get
             {
-                return _softwareVersion;
+                return _startTime;
             }
             set
             {
-                if (value != _softwareVersion)
-                {
-                    _softwareVersion = value;
-
-                    OnPropertyChanged();
-                }
+                _startTime = value;
+                OnPropertyChanged();
+                OnPropertyChanged(nameof(ElapsedTimeString));
             }
         }
-
-        /////////////////////////////////////////////////////////////////////////////
-        // About Information
-        /////////////////////////////////////////////////////////////////////////////
-        private string _aboutInformation { get; set; }
-        public string aboutInformation
+        public string ElapsedTimeString
         {
             get
             {
-                return _aboutInformation;
-            }
-            set
-            {
-                if (value != _aboutInformation)
-                {
-                    _aboutInformation = value;
-
-                    OnPropertyChanged();
-                }
+                if (_startTime == System.Data.SqlTypes.SqlDateTime.MinValue.Value)
+                    return string.Empty;
+                else
+                    return string.Format("Elapsed Time: {0}", (DateTime.UtcNow - _startTime).ToString(@"hh\:mm\:ss"));
             }
         }
 

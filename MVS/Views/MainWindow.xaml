@@ -99,10 +99,10 @@
 
 
                 <!--==============================================================-->
-                <!--Side Menu: Motion Capture-->
+                <!--Side Menu: Motion Data Sets-->
                 <!--==============================================================-->
                 <telerik:RadTabItem
-                    Name="tabMotionCapture">
+                    Name="tabMotionDataSets">
 
                     <telerik:RadTabItem.Header>
                         <Image
@@ -139,13 +139,19 @@
                                 <telerik:RadButton
                                     Name="btnStart1"
                                     Click="btnStart_Click"
-                                    Width="110"
-                                    Margin="0,0,10,0">Start</telerik:RadButton>
+                                    Width="140"
+                                    Margin="0,0,10,0">Start Recording</telerik:RadButton>
+                                
                                 <telerik:RadButton
                                     Name="btnStop1"
                                     Click="btnStop_Click"
-                                    Width="110"
+                                    Width="140"
                                     VerticalAlignment="Top">Stop</telerik:RadButton>
+
+                                <Label
+                                    Margin="20,0"
+                                    VerticalAlignment="Center"
+                                    Content="{Binding ElapsedTimeString}" />
 
                             </StackPanel>
 
@@ -235,13 +241,19 @@
                                 <telerik:RadButton
                                     Name="btnStart2"
                                     Click="btnStart_Click"
-                                    Width="110"
+                                    Width="140"
                                     Margin="0,0,10,0">Start</telerik:RadButton>
+                                
                                 <telerik:RadButton
                                     Name="btnStop2"
                                     Click="btnStop_Click"
-                                    Width="110"
+                                    Width="140"
                                     VerticalAlignment="Top">Stop</telerik:RadButton>
+
+                                <Label
+                                    Margin="20,0"
+                                    VerticalAlignment="Center"
+                                    Content="{Binding ElapsedTimeString}" />
 
                             </StackPanel>
 
@@ -556,13 +568,19 @@
                                 <telerik:RadButton
                                     Name="btnStart3"
                                     Click="btnStart_Click"
-                                    Width="110"
+                                    Width="140"
                                     Margin="0,0,10,0">Start</telerik:RadButton>
+                                
                                 <telerik:RadButton
                                     Name="btnStop3"
                                     Click="btnStop_Click"
-                                    Width="110"
+                                    Width="140"
                                     VerticalAlignment="Top">Stop</telerik:RadButton>
+
+                                <Label
+                                    Margin="20,0"
+                                    VerticalAlignment="Center"
+                                    Content="{Binding ElapsedTimeString}" />
 
                             </StackPanel>
 

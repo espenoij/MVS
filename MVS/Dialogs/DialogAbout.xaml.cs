@@ -14,7 +14,7 @@ namespace MVS
             InitializeComponent();
         }
 
-        public void Init(MainWindowVM aboutVM)
+        public void Init(AboutVM aboutVM)
         {
             DataContext = aboutVM;
         }

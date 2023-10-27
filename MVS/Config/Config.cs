@@ -531,12 +531,12 @@ namespace MVS
         public void SetClientData(HMSData clientSensorData)
         {
             // NB! Dersom data med angitt ID allerede finnes vil dette gi feilmelding
-            HMSDataConfig sensorConfig = new HMSDataConfig(clientSensorData);
+            MVSDataConfig sensorConfig = new MVSDataConfig(clientSensorData);
 
             try
             {
                 // Hente seksjon
-                var clientConfigSection = dataConfig.GetSection(ConfigKey.HMSData) as HMSDataConfigSection;
+                var clientConfigSection = dataConfig.GetSection(ConfigKey.HMSData) as MVSDataConfigSection;
                 if (clientConfigSection != null)
                 {
                     bool found = false;
@@ -571,12 +571,12 @@ namespace MVS
         }
 
         // Hente ut liste med alle klient sensor data
-        public HMSDataConfigCollection GetClientDataList()
+        public MVSDataConfigCollection GetClientDataList()
         {
             try
             {
                 // Hente seksjon
-                var sensorConfigSection = dataConfig.GetSection(ConfigKey.HMSData) as HMSDataConfigSection;
+                var sensorConfigSection = dataConfig.GetSection(ConfigKey.HMSData) as MVSDataConfigSection;
                 if (sensorConfigSection != null)
                 {
                     return sensorConfigSection.ClientDataItems;

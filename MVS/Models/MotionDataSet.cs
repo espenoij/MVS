@@ -15,16 +15,14 @@ namespace MVS
         // Initialize
         public MotionDataSet()
         {
-            Status = MotionDataStatus.Open;
         }
-        public MotionDataSet(int id, string name, string description, DateTime startTime, DateTime endTime, MotionDataStatus status)
+        public MotionDataSet(int id, string name, string description, DateTime startTime, DateTime endTime)
         {
             Id = id;
             Name = name; 
             Description = description;
             StartTime = startTime;
             EndTime = endTime;
-            Status = status;
         }
 
         public MotionDataSet(MotionDataSet dataSet)
@@ -41,7 +39,6 @@ namespace MVS
                 Description = dataSet.Description;
                 StartTime = dataSet.StartTime;
                 EndTime = dataSet.EndTime;
-                Status = dataSet.Status;
             }
         }
 
@@ -99,6 +96,7 @@ namespace MVS
                 _startTime = value;
                 OnPropertyChanged();
                 OnPropertyChanged(nameof(StartTimeString));
+                OnPropertyChanged(nameof(DurationString));
             }
         }
         public string StartTimeString
@@ -108,7 +106,7 @@ namespace MVS
                 if (_startTime == System.Data.SqlTypes.SqlDateTime.MinValue.Value)
                     return Constants.NotAvailable;
                 else
-                    return string.Format("{0} - {1} (UTC)", _startTime.ToShortDateString(), _startTime.ToShortTimeString());
+                    return string.Format("{0} - {1} (UTC)", _startTime.ToShortDateString(), _startTime.ToString("HH:mm:ss"));
             }
         }
 
@@ -124,6 +122,7 @@ namespace MVS
                 _endTime = value;
                 OnPropertyChanged();
                 OnPropertyChanged(nameof(EndTimeString));
+                OnPropertyChanged(nameof(DurationString));
             }
         }
         public string EndTimeString
@@ -133,30 +132,33 @@ namespace MVS
                 if (_endTime == System.Data.SqlTypes.SqlDateTime.MinValue.Value)
                     return Constants.NotAvailable;
                 else
-                    return string.Format("{0} - {1} (UTC)", _endTime.ToShortDateString(), _endTime.ToShortTimeString());
+                    return string.Format("{0} - {1} (UTC)", _endTime.ToShortDateString(), _endTime.ToString("HH:mm:ss"));
             }
         }
 
-        private MotionDataStatus _status { get; set; }
-        public MotionDataStatus Status
+        public string DurationString
         {
             get
             {
-                return _status;
-            }
-            set
-            {
-                _status = value;
-                OnPropertyChanged();
-                OnPropertyChanged(nameof(StatusString));
+                if (_startTime == System.Data.SqlTypes.SqlDateTime.MinValue.Value ||
+                    _endTime == System.Data.SqlTypes.SqlDateTime.MinValue.Value)
+                {
+                    return Constants.NotAvailable;
+                }
+                else
+                {
+                    return string.Format("{0}", (_endTime - _startTime).ToString(@"hh\:mm\:ss"));
+                }
             }
         }
-        public string StatusString
+
+        public bool DataSetHasData()
         {
-            get
-            {
-                return _status.ToString();
-            }
+            if (_startTime == System.Data.SqlTypes.SqlDateTime.MinValue.Value ||
+                _endTime == System.Data.SqlTypes.SqlDateTime.MinValue.Value)
+                return false;
+            else
+                return true;
         }
 
         // Variabel oppdatert

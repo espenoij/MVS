@@ -2,18 +2,18 @@
 
 namespace MVS
 {
-    public class HMSDataConfigSection : ConfigurationSection
+    public class MVSDataConfigSection : ConfigurationSection
     {
         [ConfigurationProperty(ConfigKey.HMSDataItems, IsDefaultCollection = false)]
-        [ConfigurationCollection(typeof(HMSDataConfigCollection),
+        [ConfigurationCollection(typeof(MVSDataConfigCollection),
             AddItemName = "data",
             ClearItemsName = "clear",
             RemoveItemName = "remove")]
-        public HMSDataConfigCollection ClientDataItems
+        public MVSDataConfigCollection ClientDataItems
         {
             get
             {
-                return (HMSDataConfigCollection)base[ConfigKey.HMSDataItems];
+                return (MVSDataConfigCollection)base[ConfigKey.HMSDataItems];
             }
             set
             {

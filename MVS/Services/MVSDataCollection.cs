@@ -29,12 +29,12 @@ namespace MVS
             this.config = config;
 
             // Hente liste med data fra fil
-            HMSDataConfigCollection clientConfigCollection = config.GetClientDataList();
+            MVSDataConfigCollection clientConfigCollection = config.GetClientDataList();
 
             if (clientConfigCollection != null)
             {
                 // Legge alle data inn i listview for visning på skjerm
-                foreach (HMSDataConfig item in clientConfigCollection)
+                foreach (MVSDataConfig item in clientConfigCollection)
                 {
                     // Nytt data objekt
                     HMSData clientSensorData = new HMSData();

@@ -13,9 +13,6 @@ namespace MVS
 {
     public class ErrorHandler
     {
-        public const bool ShowMessageBox = true;
-        public const bool HideMessageBox = false;
-
         // Database
         private DatabaseHandler database;
 
@@ -51,12 +48,15 @@ namespace MVS
             DeleteErrorMessageData,
 
             InsertMVSDataSet,
+            UpdateMVSDataSet,
             DeleteMVSDataSet,
+            DeleteMVSData,
             CreateTablesMVSData,
             CreateTablesMVSDataSet,
             GetTimestamps,
             SaveMVSData,
             CreateErrorMessagesTables,
+            GetAllMVSData,
 
             TotalErrorTypes
         }

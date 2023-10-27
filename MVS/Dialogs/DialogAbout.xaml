@@ -9,7 +9,7 @@
     xmlns:local="clr-namespace:MVS"
     telerik:Header="About"
     WindowStartupLocation="CenterScreen"
-    Height="700"
+    Height="560"
     Width="800"
     telerik:StyleManager.Theme="Material">
 
@@ -29,65 +29,113 @@
 
     <DockPanel>
 
-        <telerik:Label
-            DockPanel.Dock="Top"
-            FontSize="20"
-            Margin="16"
-            HorizontalAlignment="Center"
-            Content="Motion Verification System" />
+        <StackPanel
+            DockPanel.Dock="Bottom">
 
-        <Button
-            DockPanel.Dock="Bottom"
-            Margin="8"
-            Width="150"
-            HorizontalAlignment="Center"
-            Content="Close"
-            Click="btnActivate_Click" />
+            <telerik:Label
+                HorizontalAlignment="Center"
+                Content="{Binding Path=aboutCopyright}" />
 
-        <!--SOFTWARE-->
-        <telerik:GroupBox
-            Header="Software"
-            DockPanel.Dock="Top"
-            Margin="8">
+            <Button
+                Margin="8"
+                Width="150"
+                HorizontalAlignment="Center"
+                Content="Close"
+                Click="btnActivate_Click" />
 
-            <StackPanel>
+        </StackPanel>
 
-                <!--Software Version-->
-                <DockPanel>
+        <StackPanel>
 
-                    <telerik:Label
-                        Width="200"
-                        Content="Version" />
+            <StackPanel
+                Background="{StaticResource ColorAboutBackground}">
 
-                    <telerik:Label
-                        Content="{Binding Path=softwareVersion}" />
+                <Image
+                    DockPanel.Dock="Top"
+                    HorizontalAlignment="Center"
+                    Margin="0,20,0,0"
+                    Width="50"
+                    Source="\mvs_windows_icon.ico" />
 
-                </DockPanel>
+                <telerik:Label
+                    DockPanel.Dock="Top"
+                    HorizontalAlignment="Center"
+                    FontSize="30"
+                    FontFamily="Candera"
+                    Foreground="White"
+                    Content="MVS" />
 
-            </StackPanel>
+                <Separator
+                    VerticalAlignment="Bottom"
+                    Background="White"
+                    Width="400" />
 
-        </telerik:GroupBox>
-
-        <!--INFO-->
-        <telerik:GroupBox
-            Header="Infomation"
-            DockPanel.Dock="Bottom"
-            Margin="8">
-
-            <StackPanel>
-
-                <!--Info-->
-                <DockPanel>
-
-                    <telerik:Label
-                        Content="{Binding Path=aboutInformation}" />
-
-                </DockPanel>
+                <telerik:Label
+                    HorizontalAlignment="Center"
+                    FontSize="16"
+                    Foreground="White"
+                    DockPanel.Dock="Top"
+                    Margin="0,0,0,20"
+                    Content="Motion Verification System" />
 
             </StackPanel>
 
-        </telerik:GroupBox>
+            <!--SOFTWARE-->
+            <telerik:GroupBox
+                Header="Software"
+                DockPanel.Dock="Top"
+                Margin="8">
 
+                <StackPanel>
+
+                    <!--Software Name-->
+                    <DockPanel>
+
+                        <telerik:Label
+                            Width="200"
+                            Content="Name" />
+
+                        <telerik:Label
+                            Content="{Binding Path=softwareName}" />
+
+                    </DockPanel>
+
+                    <!--Software Version-->
+                    <DockPanel>
+
+                        <telerik:Label
+                            Width="200"
+                            Content="Version" />
+
+                        <telerik:Label
+                            Content="{Binding Path=softwareVersion}" />
+
+                    </DockPanel>
+
+                </StackPanel>
+
+            </telerik:GroupBox>
+
+            <!--Support-->
+            <telerik:GroupBox
+                Header="Support"
+                Margin="8">
+
+                <StackPanel>
+
+                    <!--Info-->
+                    <DockPanel>
+
+                        <telerik:Label
+                            Content="{Binding Path=aboutSupport}" />
+
+                    </DockPanel>
+
+                </StackPanel>
+
+            </telerik:GroupBox>
+
+        </StackPanel>
 
     </DockPanel>
 

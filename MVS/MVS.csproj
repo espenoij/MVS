@@ -376,6 +376,7 @@
     <Compile Include="Services\FixedValue\FixedValueDataRetrieval.cs" />
     <Compile Include="Services\FixedValue\FixedValueSetup.cs" />
     <Compile Include="Models\WindVector.cs" />
+    <Compile Include="ViewModels\AboutVM.cs" />
     <Compile Include="ViewModels\MainWindowVM.cs" />
     <Compile Include="ViewModels\FixedValueWindowVM.cs" />
     <Compile Include="Views\FixedValueSetupWindow.xaml.cs">
@@ -399,9 +400,9 @@
     <Compile Include="Services\MVSProcessingMotion.cs" />
     <Compile Include="Services\ObservableCollectionEx.cs" />
     <Compile Include="ViewModels\AdminSettingsVM.cs" />
-    <Compile Include="Config\HMSDataConfig.cs" />
-    <Compile Include="Config\HMSDataConfigCollection.cs" />
-    <Compile Include="Config\HMSDataConfigSection.cs" />
+    <Compile Include="Config\MVSDataConfig.cs" />
+    <Compile Include="Config\MVSDataConfigCollection.cs" />
+    <Compile Include="Config\MVSDataConfigSection.cs" />
     <Compile Include="Helpers\HMSCalc.cs" />
     <Compile Include="Services\MVSProcessing.cs" />
     <Compile Include="Services\MVSDataCollection.cs" />

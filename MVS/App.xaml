@@ -25,6 +25,7 @@
             <SolidColorBrush x:Key="ColorHorizontalBarBackground">#ff666666</SolidColorBrush>
             <SolidColorBrush x:Key="ColorVerticalBarBackground">#ff000000</SolidColorBrush>
             <SolidColorBrush x:Key="ColorBackgroundSeparator">#FFf6f6f6</SolidColorBrush>
+            <SolidColorBrush x:Key="ColorAboutBackground">#ff333333</SolidColorBrush>
             <Style TargetType="local:MainWindow" BasedOn="{StaticResource RadWindowStyle}" />
         </ResourceDictionary>
     </Application.Resources>
