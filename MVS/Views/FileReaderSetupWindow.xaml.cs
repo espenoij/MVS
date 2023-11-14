@@ -99,7 +99,7 @@ namespace MVS
 
                         // Trinn 2: Dele data linje opp i individuelle data felt
                         //////////////////////////////////////////////////////////////////////////////
-                        FileDataFields dataFields =  process.SplitDataLine(dataLine);
+                        FileDataFields dataFields = process.SplitDataLine(dataLine);
 
                         // Vise data felt på skjerm
                         DisplayDataFields(dataFields);

@@ -1,6 +1,4 @@
-﻿using Org.BouncyCastle.Utilities.Encoders;
-using System;
-using System.Globalization;
+﻿using System.Globalization;
 
 class Constants
 {
@@ -128,7 +126,7 @@ class Constants
     public const int DatabaseStorageTimeMin = 0;
     public const int DatabaseStorageTimeMax = 365;
     public const int DatabaseStorageTimeDefault = 183;
-    public const int DatabaseMessagesStorageTimeDefault = 90; 
+    public const int DatabaseMessagesStorageTimeDefault = 90;
 
     // Program Save Frequency (default save to database frequency)
     public const int DatabaseSaveFreqDefault = 1000;
@@ -237,27 +235,15 @@ class Constants
     public const double WSIMax = 100; // CAP
 
     // Chart Axis Margins
-    public const double PitchAxisMargin = 1;
-    public const double RollAxisMargin = 1;
-    public const double InclinationAxisMargin = 0.5;
-    public const double HeaveAmplitudeAxisMargin = 1;
-    public const double SignificantHeaveRateAxisMargin = 0.3;
+    public const int PitchAxisMargin = 1;
+    public const int RollAxisMargin = 1;
+    public const int HeaveAmplitudeAxisMargin = 1;
 
     // Heading
     public const int HeadingMin = 1;
     public const int HeadingMax = 360;
     public const int HeadingDefault = HeadingMax;
     public const int MagneticDeclinationDefault = 0;
-
-    // Motion Limit Defaults
-    public const double MotionLimitDefaultPitchRoll = 4;
-    public const double MotionLimitDefaultInclination = 4.5;
-    public const double MotionLimitDefaultHeaveAmplitude = 5;
-    public const double MotionLimitDefaultSignificantHeaveRate = 1.3;
-
-    // PDF A4
-    public const double A4Width = 3508;
-    public const double A4Height = 2480;
 
     // Helideck Report: Return Load (passengers)
     public const int ReturnLoadMin = 0;
@@ -311,9 +297,9 @@ class Constants
                                                                 // Opplever "flicker" på trend linjen med for høy oppløsning, satt ned til 300
 
     // Graph Accuracy (brukes til CAP)
-    public const double GraphCullFrequency20m = 4000;           // 4 sek
-    public const double GraphCullFrequency30m = 6000;           // 6 sek
-    public const double GraphCullFrequency3h = 30000;           // 30 sek
+    //public const double GraphCullFrequency20m = 4000;           // 4 sek
+    //public const double GraphCullFrequency30m = 6000;           // 6 sek
+    //public const double GraphCullFrequency3h = 30000;           // 30 sek
 
     // Korreksjoner for DateTimeContinuousAxis
     // Disse korreksjonene legges inn for å få tidspunkt-label på X aksen til å vises korrekt

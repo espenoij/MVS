@@ -1,6 +1,4 @@
 ﻿using System;
-using System.Collections.Generic;
-using System.Linq;
 using Telerik.Windows.Data;
 
 namespace MVS
@@ -8,69 +6,57 @@ namespace MVS
     public class MVSProcessingMotion
     {
         // Input data
-        private HMSData sensorPitch = new HMSData();
-        private HMSData sensorRoll = new HMSData();
-        private HMSData sensorHeave = new HMSData();
-        private HMSData sensorHeaveRate = new HMSData();
-        private HMSData sensorAccelerationX = new HMSData();
-        private HMSData sensorAccelerationY = new HMSData();
-        private HMSData sensorAccelerationZ = new HMSData();
-
-        private HMSData sensorSensorMRU = new HMSData();
+        private HMSData refSensorPitch = new HMSData();
+        private HMSData refSensorRoll = new HMSData();
+        private HMSData refSensorHeave = new HMSData();
+        //private HMSData refSensorAccelerationX = new HMSData();
+        //private HMSData refSensorAccelerationY = new HMSData();
+        //private HMSData refSensorAccelerationZ = new HMSData();
+        private HMSData testSensorPitch = new HMSData();
+        private HMSData testSensorRoll = new HMSData();
+        private HMSData testSensorHeave = new HMSData();
 
         // Pitch
-        private HMSData pitchData = new HMSData();
-        private HMSData pitchMax20mData = new HMSData();
-        private HMSData pitchMax3hData = new HMSData();
-        private HMSData pitchMaxUp20mData = new HMSData();
-        private HMSData pitchMaxDown20mData = new HMSData();
+        private HMSData refPitchData = new HMSData();
+        private HMSData refPitchMean20mData = new HMSData();
+        private HMSData refPitchMax20mData = new HMSData();
+        private HMSData refPitchMaxUp20mData = new HMSData();
+        private HMSData refPitchMaxDown20mData = new HMSData();
+        private HMSData testPitchData = new HMSData();
+        private HMSData testPitchMean20mData = new HMSData();
+        private HMSData testPitchMax20mData = new HMSData();
+        private HMSData testPitchMaxUp20mData = new HMSData();
+        private HMSData testPitchMaxDown20mData = new HMSData();
 
         // Roll
-        private HMSData rollData = new HMSData();
-        private HMSData rollMax20mData = new HMSData();
-        private HMSData rollMax3hData = new HMSData();
-        private HMSData rollMaxLeft20mData = new HMSData();
-        private HMSData rollMaxRight20mData = new HMSData();
+        private HMSData refRollData = new HMSData();
+        private HMSData refRollMean20mData = new HMSData();
+        private HMSData refRollMax20mData = new HMSData();
+        private HMSData refRollMaxLeft20mData = new HMSData();
+        private HMSData refRollMaxRight20mData = new HMSData();
+        private HMSData testRollData = new HMSData();
+        private HMSData testRollMean20mData = new HMSData();
+        private HMSData testRollMax20mData = new HMSData();
+        private HMSData testRollMaxLeft20mData = new HMSData();
+        private HMSData testRollMaxRight20mData = new HMSData();
 
-        // Inclination
-        private HMSData inclinationData = new HMSData();
-        private HMSData inclination20mMaxData = new HMSData();
-        private HMSData inclination3hMaxData = new HMSData();
+        // Heave
+        private HMSData refHeaveData = new HMSData();
+        private HMSData refHeaveMean20mData = new HMSData();
+        private HMSData refHeaveMax20mData = new HMSData();
+        private HMSData refHeaveAmplitudeMax20mData = new HMSData();
+        private HMSData testHeaveData = new HMSData();
+        private HMSData testHeaveMean20mData = new HMSData();
+        private HMSData testHeaveMax20mData = new HMSData();
+        private HMSData testHeaveAmplitudeMax20mData = new HMSData();
 
-        private RadObservableCollection<TimeData> inclination20mMaxList = new RadObservableCollection<TimeData>();
-        private RadObservableCollection<TimeData> inclination3hMaxList = new RadObservableCollection<TimeData>();
-
-        // Heave Amplitude
-        private HMSData heaveAmplitudeData = new HMSData();
-        private HMSData heaveAmplitudeMax20mData = new HMSData();
-        private HMSData heaveAmplitudeMax3hData = new HMSData();
-        private HMSData heavePeriodMeanData = new HMSData();
-
-        // Significant Heave Rate
-        private HMSData significantHeaveRateData = new HMSData();
-        private HMSData significantHeaveRateMax20mData = new HMSData();
-        private HMSData significantHeaveRateMax3hData = new HMSData();
-
-        // Max Heave Rate
-        private HMSData maxHeaveRateData = new HMSData();
-
-        // Significant Wave Height
-        //private HMSData significantWaveHeightData = new HMSData();
-
+        // Admin Settings
         private AdminSettingsVM adminSettingsVM;
 
-        // Significant Heave Rate - Limit conditions
-        private double significantHeaveRate2mMin = double.MaxValue;
-        private double significantHeaveRate10mSum = 0;
-        private double significantHeaveRate10mMean = 0;
-        private double significantHeaveRate20mMax = 0;
-
-        private RadObservableCollection<TimeData> significantHeaveRate2mMinData = new RadObservableCollection<TimeData>();
-        private RadObservableCollection<TimeData> significantHeaveRate10mMeanData = new RadObservableCollection<TimeData>();
-        private RadObservableCollection<TimeData> significantHeaveRate20mMaxData = new RadObservableCollection<TimeData>();
-
+        // Error Handler
         private ErrorHandler errorHandler;
 
+        // Has the database setup been run
         private bool databaseSetupRun = true;
 
         public MVSProcessingMotion(MVSDataCollection hmsOutputData, AdminSettingsVM adminSettingsVM, ErrorHandler errorHandler)
@@ -84,327 +70,397 @@ namespace MVS
 
             RadObservableCollection<HMSData> hmsOutputDataList = hmsOutputData.GetDataList();
 
-            hmsOutputDataList.Add(pitchData);
-            hmsOutputDataList.Add(pitchMax20mData);
-            hmsOutputDataList.Add(pitchMax3hData);
-            hmsOutputDataList.Add(pitchMaxUp20mData);
-            hmsOutputDataList.Add(pitchMaxDown20mData);
+            // Reference MRU
+            hmsOutputDataList.Add(refPitchData);
+            hmsOutputDataList.Add(refPitchMean20mData);
+            hmsOutputDataList.Add(refPitchMax20mData);
+            hmsOutputDataList.Add(refPitchMaxUp20mData);
+            hmsOutputDataList.Add(refPitchMaxDown20mData);
 
-            hmsOutputDataList.Add(rollData);
-            hmsOutputDataList.Add(rollMax20mData);
-            hmsOutputDataList.Add(rollMax3hData);
-            hmsOutputDataList.Add(rollMaxLeft20mData);
-            hmsOutputDataList.Add(rollMaxRight20mData);
+            hmsOutputDataList.Add(refRollData);
+            hmsOutputDataList.Add(refRollMean20mData);
+            hmsOutputDataList.Add(refRollMax20mData);
+            hmsOutputDataList.Add(refRollMaxLeft20mData);
+            hmsOutputDataList.Add(refRollMaxRight20mData);
 
-            hmsOutputDataList.Add(inclinationData);
-            hmsOutputDataList.Add(inclination20mMaxData);
-            hmsOutputDataList.Add(inclination3hMaxData);
+            hmsOutputDataList.Add(refHeaveData);
+            hmsOutputDataList.Add(refHeaveMean20mData);
+            hmsOutputDataList.Add(refHeaveMax20mData);
+            hmsOutputDataList.Add(refHeaveAmplitudeMax20mData);
 
-            hmsOutputDataList.Add(significantHeaveRateData);
-            hmsOutputDataList.Add(significantHeaveRateMax20mData);
-            hmsOutputDataList.Add(significantHeaveRateMax3hData);
+            // Test MRU
+            hmsOutputDataList.Add(testPitchData);
+            hmsOutputDataList.Add(testPitchMean20mData);
+            hmsOutputDataList.Add(testPitchMax20mData);
+            hmsOutputDataList.Add(testPitchMaxUp20mData);
+            hmsOutputDataList.Add(testPitchMaxDown20mData);
 
-            hmsOutputDataList.Add(maxHeaveRateData);
+            hmsOutputDataList.Add(testRollData);
+            hmsOutputDataList.Add(testRollMean20mData);
+            hmsOutputDataList.Add(testRollMax20mData);
+            hmsOutputDataList.Add(testRollMaxLeft20mData);
+            hmsOutputDataList.Add(testRollMaxRight20mData);
 
-            //hmsOutputDataList.Add(significantWaveHeightData);
-
-            hmsOutputDataList.Add(heaveAmplitudeData);
-            hmsOutputDataList.Add(heaveAmplitudeMax20mData);
-            hmsOutputDataList.Add(heaveAmplitudeMax3hData);
-            hmsOutputDataList.Add(heavePeriodMeanData);
+            hmsOutputDataList.Add(testHeaveData);
+            hmsOutputDataList.Add(testHeaveMean20mData);
+            hmsOutputDataList.Add(testHeaveMax20mData);
+            hmsOutputDataList.Add(testHeaveAmplitudeMax20mData);
 
             // Legge på litt informasjon på de variablene som ikke får dette automatisk fra sensor input data
             // (Disse verdiene blir kalkulert her, mens sensor input data bare kopieres videre med denne typen info allerede inkludert)
 
-            pitchMax20mData.id = (int)ValueType.PitchMax20m;
-            pitchMax20mData.name = "Pitch Max (20m)";
-            pitchMax20mData.dbColumn = "pitch_max_20m";
-            pitchMax20mData.InitProcessing(errorHandler, ErrorMessageCategory.AdminUser, adminSettingsVM);
-            pitchMax20mData.AddProcessing(CalculationType.RoundingDecimals, 1);
-            pitchMax20mData.AddProcessing(CalculationType.TimeMaxAbsolute, Constants.Minutes20);
+            // Reference MRU
+            refPitchMean20mData.id = (int)ValueType.Ref_PitchMean20m;
+            refPitchMean20mData.name = "Ref MRU: Pitch Mean (20m)";
+            refPitchMean20mData.dbColumn = "ref_pitch_max";
+            refPitchMean20mData.InitProcessing(errorHandler, ErrorMessageCategory.AdminUser, adminSettingsVM);
+            refPitchMean20mData.AddProcessing(CalculationType.TimeAverage, Constants.Minutes20);
 
-            pitchMax3hData.id = (int)ValueType.PitchMax3h;
-            pitchMax3hData.name = "Pitch Max (3h)";
-            pitchMax3hData.dbColumn = "pitch_max_3h";
-            pitchMax3hData.InitProcessing(errorHandler, ErrorMessageCategory.AdminUser, adminSettingsVM);
-            pitchMax3hData.AddProcessing(CalculationType.RoundingDecimals, 1);
-            pitchMax3hData.AddProcessing(CalculationType.TimeMaxAbsolute, Constants.Hours3);
+            refPitchMax20mData.id = (int)ValueType.Ref_PitchMax20m;
+            refPitchMax20mData.name = "Ref MRU: Pitch Max (20m)";
+            refPitchMax20mData.InitProcessing(errorHandler, ErrorMessageCategory.AdminUser, adminSettingsVM);
+            refPitchMax20mData.AddProcessing(CalculationType.TimeMaxAbsolute, Constants.Minutes20);
 
-            pitchMaxUp20mData.id = (int)ValueType.PitchMaxUp20m;
-            pitchMaxUp20mData.name = "Pitch Max Up (20m)";
-            pitchMaxUp20mData.dbColumn = "pitch_max_up_20m";
-            pitchMaxUp20mData.InitProcessing(errorHandler, ErrorMessageCategory.AdminUser, adminSettingsVM);
-            pitchMaxUp20mData.AddProcessing(CalculationType.RoundingDecimals, 1);
-            pitchMaxUp20mData.AddProcessing(CalculationType.TimeMax, Constants.Minutes20);
+            refPitchMaxUp20mData.id = (int)ValueType.Ref_PitchMaxUp20m;
+            refPitchMaxUp20mData.name = "Ref MRU: Pitch Max Up (20m)";
+            refPitchMaxUp20mData.dbColumn = "ref_pitch_max_up";
+            refPitchMaxUp20mData.InitProcessing(errorHandler, ErrorMessageCategory.AdminUser, adminSettingsVM);
+            refPitchMaxUp20mData.AddProcessing(CalculationType.TimeMax, Constants.Minutes20);
 
-            pitchMaxDown20mData.id = (int)ValueType.PitchMaxDown20m;
-            pitchMaxDown20mData.name = "Pitch Max Down (20m)";
-            pitchMaxDown20mData.dbColumn = "pitch_max_down_20m";
-            pitchMaxDown20mData.InitProcessing(errorHandler, ErrorMessageCategory.AdminUser, adminSettingsVM);
-            pitchMaxDown20mData.AddProcessing(CalculationType.RoundingDecimals, 1);
-            pitchMaxDown20mData.AddProcessing(CalculationType.TimeMin, Constants.Minutes20);
+            refPitchMaxDown20mData.id = (int)ValueType.Ref_PitchMaxDown20m;
+            refPitchMaxDown20mData.name = "Ref MRU: Pitch Max Down (20m)";
+            refPitchMaxDown20mData.dbColumn = "ref_pitch_max_down";
+            refPitchMaxDown20mData.InitProcessing(errorHandler, ErrorMessageCategory.AdminUser, adminSettingsVM);
+            refPitchMaxDown20mData.AddProcessing(CalculationType.TimeMin, Constants.Minutes20);
 
-            rollMax20mData.id = (int)ValueType.RollMax20m;
-            rollMax20mData.name = "Roll Max (20m)";
-            rollMax20mData.dbColumn = "roll_max_20m";
-            rollMax20mData.InitProcessing(errorHandler, ErrorMessageCategory.AdminUser, adminSettingsVM);
-            rollMax20mData.AddProcessing(CalculationType.RoundingDecimals, 1);
-            rollMax20mData.AddProcessing(CalculationType.TimeMaxAbsolute, Constants.Minutes20);
+            refRollMean20mData.id = (int)ValueType.Ref_RollMean20m;
+            refRollMean20mData.name = "Ref MRU: Roll Mean (20m)";
+            refRollMean20mData.dbColumn = "ref_roll_mean";
+            refRollMean20mData.InitProcessing(errorHandler, ErrorMessageCategory.AdminUser, adminSettingsVM);
+            refRollMean20mData.AddProcessing(CalculationType.TimeAverage, Constants.Minutes20);
 
-            rollMax3hData.id = (int)ValueType.RollMax3h;
-            rollMax3hData.name = "Roll Max (3h)";
-            rollMax3hData.dbColumn = "roll_max_3h";
-            rollMax3hData.InitProcessing(errorHandler, ErrorMessageCategory.AdminUser, adminSettingsVM);
-            rollMax3hData.AddProcessing(CalculationType.RoundingDecimals, 1);
-            rollMax3hData.AddProcessing(CalculationType.TimeMaxAbsolute, Constants.Hours3);
+            refRollMaxLeft20mData.id = (int)ValueType.Ref_RollMaxLeft20m;
+            refRollMaxLeft20mData.name = "Ref MRU: Roll Max Left (20m)";
+            refRollMaxLeft20mData.dbColumn = "ref_roll_max_left";
+            refRollMaxLeft20mData.InitProcessing(errorHandler, ErrorMessageCategory.AdminUser, adminSettingsVM);
+            refRollMaxLeft20mData.AddProcessing(CalculationType.TimeMax, Constants.Minutes20);
 
-            rollMaxLeft20mData.id = (int)ValueType.RollMaxLeft20m;
-            rollMaxLeft20mData.name = "Roll Max Left (20m)";
-            rollMaxLeft20mData.dbColumn = "roll_max_left_20m";
-            rollMaxLeft20mData.InitProcessing(errorHandler, ErrorMessageCategory.AdminUser, adminSettingsVM);
-            rollMaxLeft20mData.AddProcessing(CalculationType.RoundingDecimals, 1);
-            rollMaxLeft20mData.AddProcessing(CalculationType.TimeMax, Constants.Minutes20);
+            refRollMax20mData.id = (int)ValueType.Ref_RollMax20m;
+            refRollMax20mData.name = "Ref MRU: Roll Max (20m)";
+            refRollMax20mData.InitProcessing(errorHandler, ErrorMessageCategory.AdminUser, adminSettingsVM);
+            refRollMax20mData.AddProcessing(CalculationType.TimeMaxAbsolute, Constants.Minutes20);
 
-            rollMaxRight20mData.id = (int)ValueType.RollMaxRight20m;
-            rollMaxRight20mData.name = "Roll Max Right (20m)";
-            rollMaxRight20mData.dbColumn = "roll_max_right_20m";
-            rollMaxRight20mData.InitProcessing(errorHandler, ErrorMessageCategory.AdminUser, adminSettingsVM);
-            rollMaxRight20mData.AddProcessing(CalculationType.RoundingDecimals, 1);
-            rollMaxRight20mData.AddProcessing(CalculationType.TimeMin, Constants.Minutes20);
+            refRollMaxRight20mData.id = (int)ValueType.Ref_RollMaxRight20m;
+            refRollMaxRight20mData.name = "Ref MRU: Roll Max Right (20m)";
+            refRollMaxRight20mData.dbColumn = "ref_roll_max_right";
+            refRollMaxRight20mData.InitProcessing(errorHandler, ErrorMessageCategory.AdminUser, adminSettingsVM);
+            refRollMaxRight20mData.AddProcessing(CalculationType.TimeMin, Constants.Minutes20);
 
-            inclinationData.id = (int)ValueType.Inclination;
-            inclinationData.name = "Inclination";
-            inclinationData.dbColumn = "inclination";
+            refHeaveMean20mData.id = (int)ValueType.Ref_HeaveMean20m;
+            refHeaveMean20mData.name = "Ref MRU: Heave Mean (20m)";
+            refHeaveMean20mData.dbColumn = "ref_heave_mean";
+            refHeaveMean20mData.InitProcessing(errorHandler, ErrorMessageCategory.AdminUser, adminSettingsVM);
+            refHeaveMean20mData.AddProcessing(CalculationType.MeanWaveAmplitude, Constants.Minutes20);
 
-            inclination20mMaxData.id = (int)ValueType.InclinationMax20m;
-            inclination20mMaxData.name = "Inclination Max (20m)";
-            inclination20mMaxData.dbColumn = "inclination_max_20m";
+            refHeaveMax20mData.id = (int)ValueType.Ref_HeaveMax20m;
+            refHeaveMax20mData.name = "Ref MRU: Heave Max (20m)";
+            refHeaveMax20mData.dbColumn = "ref_heave_max";
+            refHeaveMax20mData.InitProcessing(errorHandler, ErrorMessageCategory.AdminUser, adminSettingsVM);
+            refHeaveMax20mData.AddProcessing(CalculationType.TimeMaxAbsolute, Constants.Minutes20);
 
-            inclination3hMaxData.id = (int)ValueType.InclinationMax3h;
-            inclination3hMaxData.name = "Inclination Max (3h)";
-            inclination3hMaxData.dbColumn = "inclination_max_3h";
+            refHeaveAmplitudeMax20mData.id = (int)ValueType.Ref_HeaveAmplitudeMax20m;
+            refHeaveAmplitudeMax20mData.name = "Ref MRU: Heave Amplitude Max (20m)";
+            refHeaveAmplitudeMax20mData.InitProcessing(errorHandler, ErrorMessageCategory.AdminUser, adminSettingsVM);
+            refHeaveAmplitudeMax20mData.AddProcessing(CalculationType.TimeMaxAmplitude, Constants.Minutes20);
 
-            heaveAmplitudeData.id = (int)ValueType.HeaveAmplitude;
-            heaveAmplitudeData.name = "Heave Amplitude";
-            heaveAmplitudeData.dbColumn = "heave_amplitude";
-            heaveAmplitudeData.InitProcessing(errorHandler, ErrorMessageCategory.AdminUser, adminSettingsVM);
-            heaveAmplitudeData.AddProcessing(CalculationType.WaveAmplitude, Constants.Minutes20);
+            // Test MRU
+            testPitchMean20mData.id = (int)ValueType.Test_PitchMean20m;
+            testPitchMean20mData.name = "Test MRU: Pitch Mean (20m)";
+            testPitchMean20mData.dbColumn = "test_pitch_max";
+            testPitchMean20mData.InitProcessing(errorHandler, ErrorMessageCategory.AdminUser, adminSettingsVM);
+            testPitchMean20mData.AddProcessing(CalculationType.TimeAverage, Constants.Minutes20);
 
-            heaveAmplitudeMax20mData.id = (int)ValueType.HeaveAmplitudeMax20m;
-            heaveAmplitudeMax20mData.name = "Heave Amplitude Max (20m)";
-            heaveAmplitudeMax20mData.dbColumn = "heave_amplitude_max_20m";
-            heaveAmplitudeMax20mData.InitProcessing(errorHandler, ErrorMessageCategory.AdminUser, adminSettingsVM);
-            heaveAmplitudeMax20mData.AddProcessing(CalculationType.RoundingDecimals, 1);
-            heaveAmplitudeMax20mData.AddProcessing(CalculationType.TimeMaxAmplitude, Constants.Minutes20);
+            testPitchMax20mData.id = (int)ValueType.Test_PitchMax20m;
+            testPitchMax20mData.name = "Test MRU: Pitch Max (20m)";
+            testPitchMax20mData.InitProcessing(errorHandler, ErrorMessageCategory.AdminUser, adminSettingsVM);
+            testPitchMax20mData.AddProcessing(CalculationType.TimeMaxAbsolute, Constants.Minutes20);
 
-            heaveAmplitudeMax3hData.id = (int)ValueType.HeaveAmplitudeMax3h;
-            heaveAmplitudeMax3hData.name = "Heave Amplitude Max (3h)";
-            heaveAmplitudeMax3hData.dbColumn = "heave_amplitude_max_3h";
-            heaveAmplitudeMax3hData.InitProcessing(errorHandler, ErrorMessageCategory.AdminUser, adminSettingsVM);
-            heaveAmplitudeMax3hData.AddProcessing(CalculationType.RoundingDecimals, 1);
-            heaveAmplitudeMax3hData.AddProcessing(CalculationType.TimeMaxAmplitude, Constants.Hours3);
+            testPitchMaxUp20mData.id = (int)ValueType.Test_PitchMaxUp20m;
+            testPitchMaxUp20mData.name = "Test MRU: Pitch Max Up (20m)";
+            testPitchMaxUp20mData.dbColumn = "test_pitch_max_up";
+            testPitchMaxUp20mData.InitProcessing(errorHandler, ErrorMessageCategory.AdminUser, adminSettingsVM);
+            testPitchMaxUp20mData.AddProcessing(CalculationType.TimeMax, Constants.Minutes20);
 
-            heavePeriodMeanData.id = (int)ValueType.HeavePeriodMean;
-            heavePeriodMeanData.name = "Heave Period";
-            heavePeriodMeanData.dbColumn = "heave_period";
-            heavePeriodMeanData.InitProcessing(errorHandler, ErrorMessageCategory.AdminUser, adminSettingsVM);
-            heavePeriodMeanData.AddProcessing(CalculationType.TimeMeanPeriod, Constants.Minutes20);
-            heavePeriodMeanData.AddProcessing(CalculationType.RoundingDecimals, 1);
+            testPitchMaxDown20mData.id = (int)ValueType.Test_PitchMaxDown20m;
+            testPitchMaxDown20mData.name = "Test MRU: Pitch Max Down (20m)";
+            testPitchMaxDown20mData.dbColumn = "test_pitch_max_down";
+            testPitchMaxDown20mData.InitProcessing(errorHandler, ErrorMessageCategory.AdminUser, adminSettingsVM);
+            testPitchMaxDown20mData.AddProcessing(CalculationType.TimeMin, Constants.Minutes20);
 
-            significantHeaveRateData.id = (int)ValueType.SignificantHeaveRate;
-            significantHeaveRateData.name = "Significant Heave Rate";
-            significantHeaveRateData.dbColumn = "significant_heave_rate";
-            significantHeaveRateData.InitProcessing(errorHandler, ErrorMessageCategory.AdminUser, adminSettingsVM);
-            significantHeaveRateData.AddProcessing(CalculationType.SignificantHeaveRate, Constants.Minutes20);
-            significantHeaveRateData.AddProcessing(CalculationType.RoundingDecimals, 1);
+            testRollMean20mData.id = (int)ValueType.Test_RollMean20m;
+            testRollMean20mData.name = "Test MRU: Roll Mean (20m)";
+            testRollMean20mData.dbColumn = "test_roll_mean";
+            testRollMean20mData.InitProcessing(errorHandler, ErrorMessageCategory.AdminUser, adminSettingsVM);
+            testRollMean20mData.AddProcessing(CalculationType.TimeAverage, Constants.Minutes20);
 
-            significantHeaveRateMax20mData.id = (int)ValueType.SignificantHeaveRateMax20m; // Brukes til å justere akse på graf
-            significantHeaveRateMax20mData.name = "Significant Heave Rate Max (20m)";
-            significantHeaveRateMax20mData.dbColumn = "shr_max_20m";
-            significantHeaveRateMax20mData.InitProcessing(errorHandler, ErrorMessageCategory.AdminUser, adminSettingsVM);
-            significantHeaveRateMax20mData.AddProcessing(CalculationType.RoundingDecimals, 1);
-            significantHeaveRateMax20mData.AddProcessing(CalculationType.TimeMax, Constants.Minutes20);
+            testRollMaxLeft20mData.id = (int)ValueType.Test_RollMaxLeft20m;
+            testRollMaxLeft20mData.name = "Test MRU: Roll Max Left (20m)";
+            testRollMaxLeft20mData.dbColumn = "test_roll_max_left";
+            testRollMaxLeft20mData.InitProcessing(errorHandler, ErrorMessageCategory.AdminUser, adminSettingsVM);
+            testRollMaxLeft20mData.AddProcessing(CalculationType.TimeMax, Constants.Minutes20);
 
-            significantHeaveRateMax3hData.id = (int)ValueType.SignificantHeaveRateMax3h; // Brukes til å justere akse på graf
-            significantHeaveRateMax3hData.name = "Significant Heave Rate Max (3h)";
-            significantHeaveRateMax3hData.dbColumn = "shr_max_3h";
-            significantHeaveRateMax3hData.InitProcessing(errorHandler, ErrorMessageCategory.AdminUser, adminSettingsVM);
-            significantHeaveRateMax3hData.AddProcessing(CalculationType.RoundingDecimals, 1);
-            significantHeaveRateMax3hData.AddProcessing(CalculationType.TimeMax, Constants.Hours3);
+            testRollMax20mData.id = (int)ValueType.Test_RollMax20m;
+            testRollMax20mData.name = "Test MRU: Roll Max (20m)";
+            testRollMax20mData.InitProcessing(errorHandler, ErrorMessageCategory.AdminUser, adminSettingsVM);
+            testRollMax20mData.AddProcessing(CalculationType.TimeMaxAbsolute, Constants.Minutes20);
 
-            maxHeaveRateData.id = (int)ValueType.MaxHeaveRate;
-            maxHeaveRateData.name = "Max Heave Rate";
-            maxHeaveRateData.dbColumn = "max_heave_rate";
-            maxHeaveRateData.InitProcessing(errorHandler, ErrorMessageCategory.AdminUser, adminSettingsVM);
-            maxHeaveRateData.AddProcessing(CalculationType.RoundingDecimals, 1);
-            maxHeaveRateData.AddProcessing(CalculationType.TimeMaxAbsolute, Constants.Minutes20);
+            testRollMaxRight20mData.id = (int)ValueType.Test_RollMaxRight20m;
+            testRollMaxRight20mData.name = "Test MRU: Roll Max Right (20m)";
+            testRollMaxRight20mData.dbColumn = "test_roll_max_right";
+            testRollMaxRight20mData.InitProcessing(errorHandler, ErrorMessageCategory.AdminUser, adminSettingsVM);
+            testRollMaxRight20mData.AddProcessing(CalculationType.TimeMin, Constants.Minutes20);
 
-            //significantWaveHeightData.id = (int)ValueType.SignificantWaveHeight;
-            //significantWaveHeightData.name = "Significant Wave Height";
-            //significantWaveHeightData.dbColumn = "significant_wave_height";
-            //significantWaveHeightData.InitProcessing(errorHandler, ErrorMessageCategory.AdminUser);
-            //significantWaveHeightData.AddProcessing(CalculationType.SignificantWaveHeight, Constants.Minutes20);
-            //significantWaveHeightData.AddProcessing(CalculationType.RoundingDecimals, 1);
+            testHeaveMean20mData.id = (int)ValueType.Test_HeaveMean20m;
+            testHeaveMean20mData.name = "Test MRU: Heave Mean (20m)";
+            testHeaveMean20mData.dbColumn = "test_heave_mean";
+            testHeaveMean20mData.InitProcessing(errorHandler, ErrorMessageCategory.AdminUser, adminSettingsVM);
+            testHeaveMean20mData.AddProcessing(CalculationType.MeanWaveAmplitude, Constants.Minutes20);
+
+            testHeaveMax20mData.id = (int)ValueType.Test_HeaveMax20m;
+            testHeaveMax20mData.name = "Test MRU: Heave Max (20m)";
+            testHeaveMax20mData.dbColumn = "test_heave_max";
+            testHeaveMax20mData.InitProcessing(errorHandler, ErrorMessageCategory.AdminUser, adminSettingsVM);
+            testHeaveMax20mData.AddProcessing(CalculationType.TimeMaxAbsolute, Constants.Minutes20);
+
+            testHeaveAmplitudeMax20mData.id = (int)ValueType.Test_HeaveAmplitudeMax20m;
+            testHeaveAmplitudeMax20mData.name = "Test MRU: Heave Amplitude Max (20m)";
+            testHeaveAmplitudeMax20mData.InitProcessing(errorHandler, ErrorMessageCategory.AdminUser, adminSettingsVM);
+            testHeaveAmplitudeMax20mData.AddProcessing(CalculationType.TimeMaxAmplitude, Constants.Minutes20);
         }
 
-        public void Update(MVSDataCollection hmsInputDataList/*, ErrorHandler errorHandler*/)
+        public void Update(MVSDataCollection hmsInputDataList, MainWindowVM mainWindowVM)
         {
             // Hente input data vi skal bruke
-            sensorPitch.Set(hmsInputDataList.GetData(ValueType.Pitch));
-            sensorRoll.Set(hmsInputDataList.GetData(ValueType.Roll));
-            sensorHeave.Set(hmsInputDataList.GetData(ValueType.Heave));
-            sensorHeaveRate.Set(hmsInputDataList.GetData(ValueType.HeaveRate));
-            sensorAccelerationX.Set(hmsInputDataList.GetData(ValueType.AccelerationX));
-            sensorAccelerationY.Set(hmsInputDataList.GetData(ValueType.AccelerationY));
-            sensorAccelerationZ.Set(hmsInputDataList.GetData(ValueType.AccelerationZ));
-            sensorSensorMRU.Set(hmsInputDataList.GetData(ValueType.SensorMRUStatus));
+            refSensorPitch.Set(hmsInputDataList.GetData(ValueType.Ref_Pitch));
+            refSensorRoll.Set(hmsInputDataList.GetData(ValueType.Ref_Roll));
+            refSensorHeave.Set(hmsInputDataList.GetData(ValueType.Ref_Heave));
 
-            if (sensorPitch.TimeStampCheck ||
-                sensorRoll.TimeStampCheck ||
-                sensorHeave.TimeStampCheck ||
-                sensorHeaveRate.TimeStampCheck ||
-                sensorAccelerationX.TimeStampCheck ||
-                sensorAccelerationY.TimeStampCheck ||
-                sensorAccelerationZ.TimeStampCheck ||
-                sensorSensorMRU.TimeStampCheck ||
+            testSensorPitch.Set(hmsInputDataList.GetData(ValueType.Test_Pitch));
+            testSensorRoll.Set(hmsInputDataList.GetData(ValueType.Test_Roll));
+            testSensorHeave.Set(hmsInputDataList.GetData(ValueType.Test_Heave));
+            
+            //refSensorAccelerationX.Set(hmsInputDataList.GetData(ValueType.Ref_AccelerationX));
+            //refSensorAccelerationY.Set(hmsInputDataList.GetData(ValueType.Ref_AccelerationY));
+            //refSensorAccelerationZ.Set(hmsInputDataList.GetData(ValueType.Ref_AccelerationZ));
+
+            if (refSensorPitch.TimeStampCheck ||
+                refSensorRoll.TimeStampCheck ||
+                refSensorHeave.TimeStampCheck ||
+                testSensorPitch.TimeStampCheck ||
+                testSensorRoll.TimeStampCheck ||
+                testSensorHeave.TimeStampCheck ||
+                //refSensorAccelerationX.TimeStampCheck ||
+                //refSensorAccelerationY.TimeStampCheck ||
+                //refSensorAccelerationZ.TimeStampCheck ||
                 databaseSetupRun)
             {
                 databaseSetupRun = false;
 
-
                 // Sjekke data timeout
-                if (sensorPitch.timestamp.AddMilliseconds(adminSettingsVM.dataTimeout) < DateTime.UtcNow)
-                    sensorPitch.status = DataStatus.TIMEOUT_ERROR;
+                if (mainWindowVM.OperationsMode == OperationsMode.Test ||
+                    mainWindowVM.SelectedSession?.InputSetup == VerificationInputSetup.ReferenceMRU ||
+                    mainWindowVM.SelectedSession?.InputSetup == VerificationInputSetup.ReferenceMRU_TestMRU)
+                {
+                    if (refSensorPitch.timestamp.AddMilliseconds(adminSettingsVM.dataTimeout) < DateTime.UtcNow)
+                        refSensorPitch.status = DataStatus.TIMEOUT_ERROR;
 
-                if (sensorRoll.timestamp.AddMilliseconds(adminSettingsVM.dataTimeout) < DateTime.UtcNow)
-                    sensorRoll.status = DataStatus.TIMEOUT_ERROR;
+                    if (refSensorRoll.timestamp.AddMilliseconds(adminSettingsVM.dataTimeout) < DateTime.UtcNow)
+                        refSensorRoll.status = DataStatus.TIMEOUT_ERROR;
 
-                if (sensorHeave.timestamp.AddMilliseconds(adminSettingsVM.dataTimeout) < DateTime.UtcNow)
-                    sensorHeave.status = DataStatus.TIMEOUT_ERROR;
+                    if (refSensorHeave.timestamp.AddMilliseconds(adminSettingsVM.dataTimeout) < DateTime.UtcNow)
+                        refSensorHeave.status = DataStatus.TIMEOUT_ERROR;
 
-                if (sensorHeaveRate.timestamp.AddMilliseconds(adminSettingsVM.dataTimeout) < DateTime.UtcNow)
-                    sensorHeaveRate.status = DataStatus.TIMEOUT_ERROR;
+                    // Ref: Pitch
+                    refPitchData.Set(refSensorPitch);
+                    refPitchMean20mData.DoProcessing(refPitchData);
+                    refPitchMax20mData.DoProcessing(refPitchData);
+                    refPitchMaxUp20mData.DoProcessing(refPitchData);
+                    refPitchMaxDown20mData.DoProcessing(refPitchData);
 
-                if (sensorAccelerationX.timestamp.AddMilliseconds(adminSettingsVM.dataTimeout) < DateTime.UtcNow)
-                    sensorAccelerationX.status = DataStatus.TIMEOUT_ERROR;
+                    // Ref: Roll
+                    refRollData.Set(refSensorRoll);
+                    // I data fra sensor er positive tall roll til høyre.
+                    // Internt er positive tall roll til venstre. Venstre er høyest på grafen. Dette er standard i CAP.
+                    refRollData.data *= -1;
+                    refRollMean20mData.DoProcessing(refRollData);
+                    refRollMax20mData.DoProcessing(refRollData);
+                    refRollMaxLeft20mData.DoProcessing(refRollData);
+                    refRollMaxRight20mData.DoProcessing(refRollData);
 
-                if (sensorAccelerationY.timestamp.AddMilliseconds(adminSettingsVM.dataTimeout) < DateTime.UtcNow)
-                    sensorAccelerationY.status = DataStatus.TIMEOUT_ERROR;
+                    // Ref: Heave
+                    refHeaveData.Set(refSensorHeave);
+                    refHeaveMean20mData.DoProcessing(refSensorHeave);
+                    refHeaveMax20mData.DoProcessing(refSensorHeave);
+                    refHeaveAmplitudeMax20mData.DoProcessing(refSensorHeave);
 
-                if (sensorAccelerationZ.timestamp.AddMilliseconds(adminSettingsVM.dataTimeout) < DateTime.UtcNow)
-                    sensorAccelerationZ.status = DataStatus.TIMEOUT_ERROR;
+                    // Avrunding av data
+                    refPitchData.data = Math.Round(refPitchData.data, 3, MidpointRounding.AwayFromZero);
+                    refPitchMean20mData.data = Math.Round(refPitchMean20mData.data, 3, MidpointRounding.AwayFromZero);
+                    refPitchMax20mData.data = Math.Round(refPitchMax20mData.data, 3, MidpointRounding.AwayFromZero);
+                    refPitchMaxUp20mData.data = Math.Round(refPitchMaxUp20mData.data, 3, MidpointRounding.AwayFromZero);
+                    refPitchMaxDown20mData.data = Math.Round(refPitchMaxDown20mData.data, 3, MidpointRounding.AwayFromZero);
+
+                    refRollData.data = Math.Round(refRollData.data, 3, MidpointRounding.AwayFromZero);
+                    refRollMean20mData.data = Math.Round(refRollMean20mData.data, 3, MidpointRounding.AwayFromZero);
+                    refRollMax20mData.data = Math.Round(refRollMax20mData.data, 3, MidpointRounding.AwayFromZero);
+                    refRollMaxLeft20mData.data = Math.Round(refRollMaxLeft20mData.data, 3, MidpointRounding.AwayFromZero);
+                    refRollMaxRight20mData.data = Math.Round(refRollMaxRight20mData.data, 3, MidpointRounding.AwayFromZero);
+
+                    refHeaveData.data = Math.Round(refHeaveData.data, 3, MidpointRounding.AwayFromZero);
+                    refHeaveMean20mData.data = Math.Round(refHeaveMean20mData.data, 3, MidpointRounding.AwayFromZero);
+                    refHeaveMax20mData.data = Math.Round(refHeaveMax20mData.data, 3, MidpointRounding.AwayFromZero);
+                    refHeaveAmplitudeMax20mData.data = Math.Round(refHeaveAmplitudeMax20mData.data, 3, MidpointRounding.AwayFromZero);
+                }
+                else
+                {
+                    refSensorPitch.status = DataStatus.NONE;
+                    refSensorRoll.status = DataStatus.NONE;
+                    refSensorHeave.status = DataStatus.NONE;
+
+                    refPitchData.data = 0;
+                    refPitchData.status = DataStatus.NONE;
+                    refPitchMean20mData.data = 0;
+                    refPitchMean20mData.status = DataStatus.NONE;
+                    refPitchMax20mData.data = 0;
+                    refPitchMax20mData.status = DataStatus.NONE;
+                    refPitchMaxUp20mData.data = 0;
+                    refPitchMaxUp20mData.status = DataStatus.NONE;
+                    refPitchMaxDown20mData.data = 0;
+                    refPitchMaxDown20mData.status = DataStatus.NONE;
+
+                    refRollData.data = 0;
+                    refRollData.status = DataStatus.NONE;
+                    refRollMean20mData.data = 0;
+                    refRollMean20mData.status = DataStatus.NONE;
+                    refRollMax20mData.data = 0;
+                    refRollMax20mData.status = DataStatus.NONE;
+                    refRollMaxLeft20mData.data = 0;
+                    refRollMaxLeft20mData.status = DataStatus.NONE;
+                    refRollMaxRight20mData.data = 0;
+                    refRollMaxRight20mData.status = DataStatus.NONE;
+
+                    refHeaveData.data = 0;
+                    refHeaveData.status = DataStatus.NONE;
+                    refHeaveMean20mData.data = 0;
+                    refHeaveMean20mData.status = DataStatus.NONE;
+                    refHeaveMax20mData.data = 0;
+                    refHeaveMax20mData.status = DataStatus.NONE;
+                    refHeaveAmplitudeMax20mData.data = 0;
+                    refHeaveAmplitudeMax20mData.status = DataStatus.NONE;
+                }
+
+                if (mainWindowVM.OperationsMode == OperationsMode.Test || 
+                    mainWindowVM.SelectedSession?.InputSetup == VerificationInputSetup.ReferenceMRU_TestMRU)
+                {
+                    if (testSensorPitch.timestamp.AddMilliseconds(adminSettingsVM.dataTimeout) < DateTime.UtcNow)
+                        testSensorPitch.status = DataStatus.TIMEOUT_ERROR;
+
+                    if (testSensorRoll.timestamp.AddMilliseconds(adminSettingsVM.dataTimeout) < DateTime.UtcNow)
+                        testSensorRoll.status = DataStatus.TIMEOUT_ERROR;
+
+                    if (testSensorHeave.timestamp.AddMilliseconds(adminSettingsVM.dataTimeout) < DateTime.UtcNow)
+                        testSensorHeave.status = DataStatus.TIMEOUT_ERROR;
+
+                    // Test: Pitch
+                    testPitchData.Set(testSensorPitch);
+                    testPitchMean20mData.DoProcessing(testPitchData);
+                    testPitchMax20mData.DoProcessing(testPitchData);
+                    testPitchMaxUp20mData.DoProcessing(testPitchData);
+                    testPitchMaxDown20mData.DoProcessing(testPitchData);
+
+                    // Test: Roll
+                    testRollData.Set(testSensorRoll);
+                    // I data fra sensor er positive tall roll til høyre.
+                    // Internt er positive tall roll til venstre. Venstre er høyest på grafen. Dette er standard i CAP.
+                    testRollData.data *= -1;
+                    testRollMean20mData.DoProcessing(testRollData);
+                    testRollMax20mData.DoProcessing(testRollData);
+                    testRollMaxLeft20mData.DoProcessing(testRollData);
+                    testRollMaxRight20mData.DoProcessing(testRollData);
+
+                    // Test: Heave
+                    testHeaveData.Set(testSensorHeave);
+                    testHeaveMean20mData.DoProcessing(testSensorHeave);
+                    testHeaveMax20mData.DoProcessing(testSensorHeave);
+                    testHeaveAmplitudeMax20mData.DoProcessing(testSensorHeave);
+
+                    // Avrunding av data
+                    testPitchData.data = Math.Round(testPitchData.data, 3, MidpointRounding.AwayFromZero);
+                    testPitchMean20mData.data = Math.Round(testPitchMean20mData.data, 3, MidpointRounding.AwayFromZero);
+                    testPitchMax20mData.data = Math.Round(testPitchMax20mData.data, 3, MidpointRounding.AwayFromZero);
+                    testPitchMaxUp20mData.data = Math.Round(testPitchMaxUp20mData.data, 3, MidpointRounding.AwayFromZero);
+                    testPitchMaxDown20mData.data = Math.Round(testPitchMaxDown20mData.data, 3, MidpointRounding.AwayFromZero);
+
+                    testRollData.data = Math.Round(testRollData.data, 3, MidpointRounding.AwayFromZero);
+                    testRollMean20mData.data = Math.Round(testRollMean20mData.data, 3, MidpointRounding.AwayFromZero);
+                    testRollMax20mData.data = Math.Round(testRollMax20mData.data, 3, MidpointRounding.AwayFromZero);
+                    testRollMaxLeft20mData.data = Math.Round(testRollMaxLeft20mData.data, 3, MidpointRounding.AwayFromZero);
+                    testRollMaxRight20mData.data = Math.Round(testRollMaxRight20mData.data, 3, MidpointRounding.AwayFromZero);
+
+                    testHeaveData.data = Math.Round(testHeaveData.data, 3, MidpointRounding.AwayFromZero);
+                    testHeaveMean20mData.data = Math.Round(testHeaveMean20mData.data, 3, MidpointRounding.AwayFromZero);
+                    testHeaveMax20mData.data = Math.Round(testHeaveMax20mData.data, 3, MidpointRounding.AwayFromZero);
+                    testHeaveAmplitudeMax20mData.data = Math.Round(testHeaveAmplitudeMax20mData.data, 3, MidpointRounding.AwayFromZero);
+                }
+                else
+                {
+                    testSensorPitch.status = DataStatus.NONE;
+                    testSensorRoll.status = DataStatus.NONE;
+                    testSensorHeave.status = DataStatus.NONE;
+
+                    testPitchData.data = 0;
+                    testPitchData.status = DataStatus.NONE; 
+                    testPitchMean20mData.data = 0;
+                    testPitchMean20mData.status = DataStatus.NONE;
+                    testPitchMax20mData.data = 0;
+                    testPitchMax20mData.status = DataStatus.NONE;
+                    testPitchMaxUp20mData.data = 0;
+                    testPitchMaxUp20mData.status = DataStatus.NONE;
+                    testPitchMaxDown20mData.data = 0;
+                    testPitchMaxDown20mData.status = DataStatus.NONE;
+
+                    testRollData.data = 0;
+                    testRollData.status = DataStatus.NONE;
+                    testRollMean20mData.data = 0;
+                    testRollMean20mData.status = DataStatus.NONE;
+                    testRollMax20mData.data = 0;
+                    testRollMax20mData.status = DataStatus.NONE;
+                    testRollMaxLeft20mData.data = 0;
+                    testRollMaxLeft20mData.status = DataStatus.NONE;
+                    testRollMaxRight20mData.data = 0;
+                    testRollMaxRight20mData.status = DataStatus.NONE;
+
+                    testHeaveData.data = 0;
+                    testHeaveData.status = DataStatus.NONE;
+                    testHeaveMean20mData.data = 0;
+                    testHeaveMean20mData.status = DataStatus.NONE;
+                    testHeaveMax20mData.data = 0;
+                    testHeaveMax20mData.status = DataStatus.NONE;
+                    testHeaveAmplitudeMax20mData.data = 0;
+                    testHeaveAmplitudeMax20mData.status = DataStatus.NONE;
+                }
+
+                //if (refSensorAccelerationX.timestamp.AddMilliseconds(adminSettingsVM.dataTimeout) < DateTime.UtcNow)
+                //    refSensorAccelerationX.status = DataStatus.TIMEOUT_ERROR;
+
+                //if (refSensorAccelerationY.timestamp.AddMilliseconds(adminSettingsVM.dataTimeout) < DateTime.UtcNow)
+                //    refSensorAccelerationY.status = DataStatus.TIMEOUT_ERROR;
+
+                //if (refSensorAccelerationZ.timestamp.AddMilliseconds(adminSettingsVM.dataTimeout) < DateTime.UtcNow)
+                //    refSensorAccelerationZ.status = DataStatus.TIMEOUT_ERROR;
 
                 // Tar data fra input delen av server og overfører til HMS output delen
                 // og prosesserer input for overføring til HMS output også.
-
-                // Pitch
-                pitchData.Set(sensorPitch);
-
-                pitchMax20mData.DoProcessing(pitchData);
-                pitchMax3hData.DoProcessing(pitchData);
-                pitchMaxUp20mData.DoProcessing(pitchData);
-                pitchMaxDown20mData.DoProcessing(pitchData);
-
-                // Roll
-                rollData.Set(sensorRoll);
-
-                // I data fra sensor er positive tall roll til høyre.
-                // Internt er positive tall roll til venstre. Venstre er høyest på grafen. Dette er standard i CAP.
-                rollData.data *= -1;
-
-                rollMax20mData.DoProcessing(rollData);
-                rollMax3hData.DoProcessing(rollData);
-                rollMaxLeft20mData.DoProcessing(rollData);
-                rollMaxRight20mData.DoProcessing(rollData);
-
-                // Inclination
-                if ((pitchData.status == DataStatus.OK ||
-                     pitchData.status == DataStatus.OK_NA) &&
-                    (rollData.status == DataStatus.OK ||
-                     rollData.status == DataStatus.OK_NA))
-                {
-                    if ((rollMax20mData.status == DataStatus.OK ||
-                         rollMax20mData.status == DataStatus.OK_NA) &&
-                        (pitchMax20mData.status == DataStatus.OK ||
-                         pitchMax20mData.status == DataStatus.OK_NA))
-                    {
-                        UpdateInclinationData(pitchData, rollData, inclination20mMaxData, Constants.Minutes20);
-                    }
-
-                    if ((rollMax3hData.status == DataStatus.OK ||
-                         rollMax3hData.status == DataStatus.OK_NA) &&
-                        (pitchMax3hData.status == DataStatus.OK ||
-                         pitchMax3hData.status == DataStatus.OK_NA))
-                    {
-                        UpdateInclinationData(pitchData, rollData, inclination3hMaxData, Constants.Hours3);
-                    }
-
-                    //// Status settes i UpdateInclinationData, og denne er grei for NOROG, men for CAP
-                    //// må status også reflektere motion buffer fyllingsgrad.
-                    //if (adminSettingsVM.regulationStandard == RegulationStandard.CAP)
-                    //{
-                    //    // 20 mins
-                    //    if (pitchMax20mData.status == DataStatus.OK && rollMax20mData.status == DataStatus.OK)
-                    //    {
-                    //        inclination20mMaxData.status = DataStatus.OK;
-                    //    }
-                    //    else
-                    //    if ((pitchMax20mData.status == DataStatus.OK && rollMax20mData.status == DataStatus.OK_NA) ||
-                    //        (pitchMax20mData.status == DataStatus.OK_NA && rollMax20mData.status == DataStatus.OK) ||
-                    //        (pitchMax20mData.status == DataStatus.OK_NA && rollMax20mData.status == DataStatus.OK_NA))
-                    //    {
-                    //        inclination20mMaxData.status = DataStatus.OK_NA;
-                    //    }
-                    //    else
-                    //    {
-                    //        inclination20mMaxData.status = DataStatus.TIMEOUT_ERROR;
-                    //    }
-
-                    //    // 3 hours
-                    //    if (pitchMax3hData.status == DataStatus.OK && rollMax3hData.status == DataStatus.OK)
-                    //    {
-                    //        inclination3hMaxData.status = DataStatus.OK;
-                    //    }
-                    //    else
-                    //    if ((pitchMax3hData.status == DataStatus.OK && rollMax3hData.status == DataStatus.OK_NA) ||
-                    //        (pitchMax3hData.status == DataStatus.OK_NA && rollMax3hData.status == DataStatus.OK) ||
-                    //        (pitchMax3hData.status == DataStatus.OK_NA && rollMax3hData.status == DataStatus.OK_NA))
-                    //    {
-                    //        inclination3hMaxData.status = DataStatus.OK_NA;
-                    //    }
-                    //    else
-                    //    {
-                    //        inclination3hMaxData.status = DataStatus.TIMEOUT_ERROR;
-                    //    }
-                    //}
-                }
-
-                //// TEST
-                //if (inclination20mMaxData.status == DataStatus.OK)
-                //    inclination3hMaxData.status = DataStatus.OK;
-
-
-                // Heave Amplitude
-                heaveAmplitudeData.DoProcessing(sensorHeave);
-                heaveAmplitudeMax20mData.DoProcessing(sensorHeave);
-                heaveAmplitudeMax3hData.DoProcessing(sensorHeave);
-
-                // Heave Period
-                heavePeriodMeanData.DoProcessing(sensorHeave);
-
-                // Significant Heave Rate
-                significantHeaveRateData.DoProcessing(sensorHeaveRate);
-                significantHeaveRateMax20mData.DoProcessing(significantHeaveRateData);
-                significantHeaveRateMax3hData.DoProcessing(significantHeaveRateData);
-
-                // Maximum Heave Rate
-                maxHeaveRateData.DoProcessing(sensorHeaveRate);
-
-                // Significant Wave Height
-                //significantWaveHeightData.DoProcessing(inputHeaveData);
-
-                // SHR Limit
-                UpdateSHRLimitConditions(significantHeaveRateData);
             }
         }
 
@@ -412,291 +468,29 @@ namespace MVS
         public void ResetDataCalculations()
         {
             // Diverse
-            pitchMax20mData.ResetDataCalculations();
-            pitchMax3hData.ResetDataCalculations();
-            pitchMaxUp20mData.ResetDataCalculations();
-            pitchMaxDown20mData.ResetDataCalculations();
-            rollMax20mData.ResetDataCalculations();
-            rollMax3hData.ResetDataCalculations();
-            rollMaxLeft20mData.ResetDataCalculations();
-            rollMaxRight20mData.ResetDataCalculations();
-            heaveAmplitudeData.ResetDataCalculations();
-            heaveAmplitudeMax20mData.ResetDataCalculations();
-            heaveAmplitudeMax3hData.ResetDataCalculations();
-            heavePeriodMeanData.ResetDataCalculations();
-            significantHeaveRateData.ResetDataCalculations();
-            significantHeaveRateMax20mData.ResetDataCalculations();
-            significantHeaveRateMax3hData.ResetDataCalculations();
-            maxHeaveRateData.ResetDataCalculations();
-            //significantWaveHeightData.ResetDataCalculations();
+            refPitchMean20mData.ResetDataCalculations();
+            refPitchMax20mData.ResetDataCalculations();
+            refPitchMaxUp20mData.ResetDataCalculations();
+            refPitchMaxDown20mData.ResetDataCalculations();
+            refRollMean20mData.ResetDataCalculations();
+            refRollMax20mData.ResetDataCalculations();
+            refRollMaxLeft20mData.ResetDataCalculations();
+            refRollMaxRight20mData.ResetDataCalculations();
+            refHeaveMean20mData.ResetDataCalculations();
+            refHeaveMax20mData.ResetDataCalculations();
+            refHeaveAmplitudeMax20mData.ResetDataCalculations();
 
-            // Inclination
-            inclination20mMaxList.Clear();
-            inclination3hMaxList.Clear();
-            inclination20mMaxData.data = 0;
-            inclination3hMaxData.data = 0;
-
-            // SHR
-            significantHeaveRate2mMin = double.MaxValue;
-            significantHeaveRate10mSum = 0;
-            significantHeaveRate10mMean = 0;
-            significantHeaveRate20mMax = 0;
-
-            significantHeaveRate2mMinData.Clear();
-            significantHeaveRate10mMeanData.Clear();
-            significantHeaveRate20mMaxData.Clear();
-        }
-
-
-        /////////////////////////////////////////////////////////////////////////////
-        // Inclination Kalkulasjon
-        /////////////////////////////////////////////////////////////////////////////
-        private void CalcInclination(HMSData pitch, HMSData roll, HMSData outputInclination)
-        {
-            if (pitch != null &&
-                roll != null)
-            {
-                // Beregne inclination
-                double inclination = HMSCalc.Inclination(pitch.data, roll.data);
-
-                // Output
-                outputInclination.data = Math.Round(inclination, 1, MidpointRounding.AwayFromZero);
-
-                // Timestamp
-                if (pitch.timestamp < roll.timestamp)
-                    outputInclination.timestamp = pitch.timestamp;
-                else
-                    outputInclination.timestamp = roll.timestamp;
-
-                // Status
-                if (pitch.status == DataStatus.OK && roll.status == DataStatus.OK)
-                    outputInclination.status = DataStatus.OK;
-                else
-                if ((pitch.status == DataStatus.OK && roll.status == DataStatus.OK_NA) ||
-                    (pitch.status == DataStatus.OK_NA && roll.status == DataStatus.OK) ||
-                    (pitch.status == DataStatus.OK_NA && roll.status == DataStatus.OK_NA))
-                    outputInclination.status = DataStatus.OK_NA;
-                else
-                    outputInclination.status = DataStatus.TIMEOUT_ERROR;
-            }
-        }
-
-        /////////////////////////////////////////////////////////////////////////////
-        // Significant Heave Rate
-        /////////////////////////////////////////////////////////////////////////////
-        private void UpdateSHRLimitConditions(HMSData sensorData)
-        {
-            // Bruker avrundet verdi i beregninger ifm helideck status
-            double shrDataRounded = Math.Round(sensorData.data, 1, MidpointRounding.AwayFromZero);
-
-            // Sjekker status på data først
-            if (sensorData.status == DataStatus.OK)
-            {
-                // 2-minute minimum
-                ///////////////////////////////////////////////////////////
-
-                // Lagre i 2-minutters listen
-                significantHeaveRate2mMinData.Add(new TimeData()
-                {
-                    data = shrDataRounded,
-                    timestamp = sensorData.timestamp
-                });
-
-                // Sjekke om data er mindre enn minste SHR lagret siste 2 minutter
-                if (shrDataRounded < significantHeaveRate2mMin || significantHeaveRate2mMin == double.MaxValue)
-                    significantHeaveRate2mMin = shrDataRounded;
-
-                // Sjekke om vi skal fjerne data fra 2 min listen
-                bool findNewMinValue = false;
-
-                for (int i = 0; i < significantHeaveRate2mMinData.Count && significantHeaveRate2mMinData.Count > 0; i++)
-                {
-                    if (significantHeaveRate2mMinData[i]?.timestamp.AddMinutes(2) < DateTime.UtcNow)
-                    {
-                        // Er den verdien vi nå skal fjerne lik minimunsverdien?
-                        if (significantHeaveRate2mMinData[i].data == significantHeaveRate2mMin)
-                            findNewMinValue = true;
-
-                        significantHeaveRate2mMinData.RemoveAt(i--);
-                    }
-                }
-
-                // Gå gjennom hele listen og finne ny minimumsverdi
-                if (findNewMinValue)
-                {
-                    double oldMinValue = significantHeaveRate2mMin;
-                    significantHeaveRate2mMin = double.MaxValue;
-                    bool foundNewMax = false;
-
-                    for (int i = 0; i < significantHeaveRate2mMinData.Count && !foundNewMax; i++)
-                    {
-                        // Kan avslutte søket dersom vi finne en verdi like den gamle minimumsverdien (ingen er lavere)
-                        if (significantHeaveRate2mMinData[i]?.data == oldMinValue)
-                        {
-                            significantHeaveRate2mMin = oldMinValue;
-                            foundNewMax = true;
-                        }
-                        else
-                        {
-                            // Sjekke om data er mindre enn minste lagret
-                            if (significantHeaveRate2mMinData[i]?.data < significantHeaveRate2mMin)
-                                significantHeaveRate2mMin = significantHeaveRate2mMinData[i].data;
-                        }
-                    }
-                }
-
-                // 10-minute mean
-                ///////////////////////////////////////////////////////////
-                ///
-                // Legge inn den nye verdien i data settet
-                significantHeaveRate10mMeanData.Add(new TimeData()
-                {
-                    data = shrDataRounded,
-                    timestamp = sensorData.timestamp
-                });
-
-                // Legge til i total summen
-                significantHeaveRate10mSum += shrDataRounded;
-
-                // Sjekke om vi skal ta ut gamle verdier
-                for (int i = 0; i < significantHeaveRate10mMeanData.Count && significantHeaveRate10mMeanData.Count > 0; i++)
-                {
-                    if (significantHeaveRate10mMeanData[i]?.timestamp.AddMinutes(10) < DateTime.UtcNow)
-                    {
-                        // Trekke fra i total summen
-                        significantHeaveRate10mSum -= significantHeaveRate10mMeanData[i].data;
-
-                        // Fjerne fra verdi listne
-                        significantHeaveRate10mMeanData.RemoveAt(i--);
-                    }
-                }
-
-                // Beregne gjennomsnitt av de verdiene som ligger i datasettet
-                if (significantHeaveRate10mMeanData.Count > 0)
-                    significantHeaveRate10mMean = Math.Round(significantHeaveRate10mSum / significantHeaveRate10mMeanData.Count, 1, MidpointRounding.AwayFromZero);
-                else
-                    significantHeaveRate10mMean = 0;
-
-                // 20-minute max
-                ///////////////////////////////////////////////////////////
-                    ///
-                    // Legge inn den nye verdien i data settet
-                significantHeaveRate20mMaxData.Add(new TimeData()
-                {
-                    data = shrDataRounded,
-                    timestamp = sensorData.timestamp
-                });
-
-                // Sjekke om data er større enn største SHR lagret siste 20 minutter
-                if (shrDataRounded > significantHeaveRate20mMax)
-                    significantHeaveRate20mMax = shrDataRounded;
-
-                // Sjekke om vi skal fjerne data fra 20 min listen
-                bool findNewMaxValue = false;
-                for (int i = 0; i < significantHeaveRate20mMaxData.Count && significantHeaveRate20mMaxData.Count > 0; i++)
-                {
-                    if (significantHeaveRate20mMaxData[i]?.timestamp.AddMinutes(20) < DateTime.UtcNow)
-                    {
-                        // Er den verdien vi nå skal fjerne lik maximunsverdien?
-                        if (significantHeaveRate20mMaxData[i].data == significantHeaveRate20mMax)
-                            findNewMaxValue = true;
-
-                        significantHeaveRate20mMaxData.RemoveAt(i--);
-                    }
-                }
-
-                // Gå gjennom hele listen og finne ny maximumsverdi
-                if (findNewMaxValue)
-                {
-                    double oldMaxValue = significantHeaveRate20mMax;
-                    significantHeaveRate20mMax = double.MinValue;
-                    bool foundNewMax = false;
-
-                    for (int i = 0; i < significantHeaveRate20mMaxData.Count && !foundNewMax; i++)
-                    {
-                        // Kan avslutte søket dersom vi finne en verdi like den gamle minimumsverdien (ingen er lavere)
-                        if (significantHeaveRate20mMaxData[i]?.data == oldMaxValue)
-                        {
-                            significantHeaveRate20mMax = oldMaxValue;
-                            foundNewMax = true;
-                        }
-                        else
-                        {
-                            // Sjekke om data er mindre enn minste lagret
-                            if (significantHeaveRate20mMaxData[i]?.data > significantHeaveRate20mMax)
-                                significantHeaveRate20mMax = significantHeaveRate20mMaxData[i].data;
-                        }
-                    }
-                }
-            }
-        }
-
-        public void UpdateInclinationData(HMSData pitchData, HMSData rollData, HMSData inclinationMaxData, int time)
-        {
-            // Første regne nå-verdi for inclination
-            CalcInclination(pitchData, rollData, inclinationData);
-
-            // Avrunding
-            inclinationData.data = Math.Round(inclinationData.data, 1, MidpointRounding.AwayFromZero);
-
-            // 20-minute max
-            ///////////////////////////////////////////////////////////
-            ///
-            // Legge inn den nye verdien i data settet
-            inclination20mMaxList.Add(new TimeData()
-            {
-                data = inclinationData.data,
-                timestamp = inclinationData.timestamp
-            });
-
-            // Sjekke om data er større enn største inclination lagret siste 20 minutter
-            if (inclinationData.data > inclinationMaxData.data)
-            {
-                inclinationMaxData.data = inclinationData.data;
-            }
-
-            // Sjekke om vi skal fjerne data fra 20 min listen
-            bool findNewMaxValue = false;
-
-            for (int i = 0; i < inclination20mMaxList.Count && inclination20mMaxList.Count > 0; i++)
-            {
-                if (inclination20mMaxList[i]?.timestamp.AddSeconds(time) < DateTime.UtcNow)
-                {
-                    // Er den verdien vi nå skal fjerne lik maximunsverdien?
-                    if (inclination20mMaxList[i].data == inclinationMaxData.data)
-                        findNewMaxValue = true;
-
-                    inclination20mMaxList.RemoveAt(i--);
-                }
-            }
-
-            // Gå gjennom hele listen og finne ny maximumsverdi
-            if (findNewMaxValue)
-            {
-                double oldMaxValue = inclinationMaxData.data;
-                inclinationMaxData.data = 0;
-                bool foundNewMax = false;
-
-                for (int i = 0; i < inclination20mMaxList.Count && !foundNewMax; i++)
-                {
-                    // Kan avslutte søket dersom vi finne en verdi like den gamle maximumsverdien (ingen er høyere)
-                    if (inclination20mMaxList[i]?.data == oldMaxValue)
-                    {
-                        inclinationMaxData.data = inclination20mMaxList[i].data;
-                        foundNewMax = true;
-                    }
-                    else
-                    {
-                        // Sjekke om data er mindre enn minste lagret
-                        if (inclination20mMaxList[i]?.data > inclinationMaxData.data)
-                            inclinationMaxData.data = inclination20mMaxList[i].data;
-                    }
-                }
-            }
-
-            // Oppdatere timestamp og status
-            inclinationMaxData.timestamp = inclinationData.timestamp;
-            inclinationMaxData.status = inclinationData.status;
+            testPitchMean20mData.ResetDataCalculations();
+            testPitchMax20mData.ResetDataCalculations();
+            testPitchMaxUp20mData.ResetDataCalculations();
+            testPitchMaxDown20mData.ResetDataCalculations();
+            testRollMean20mData.ResetDataCalculations();
+            testRollMax20mData.ResetDataCalculations();
+            testRollMaxLeft20mData.ResetDataCalculations();
+            testRollMaxRight20mData.ResetDataCalculations();
+            testHeaveMean20mData.ResetDataCalculations();
+            testHeaveMax20mData.ResetDataCalculations();
+            testHeaveAmplitudeMax20mData.ResetDataCalculations();
         }
     }
 }

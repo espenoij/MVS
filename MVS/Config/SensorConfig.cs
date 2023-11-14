@@ -13,8 +13,7 @@ namespace MVS
             this.name = sensorData.name;
             this.description = sensorData.description;
 
-            this.saveToDatabase = sensorData.saveToDatabase.ToString();
-            this.saveFreq = sensorData.saveFreq.ToString();
+            this.mruType = sensorData.mruType.ToString();
 
             this.serialPort = null;
             this.modbus = null;
@@ -71,18 +70,11 @@ namespace MVS
             set { this["description"] = value; }
         }
 
-        [ConfigurationProperty("saveToDatabase", DefaultValue = "", IsRequired = true, IsKey = false)]
-        public string saveToDatabase
+        [ConfigurationProperty("mruType", DefaultValue = "", IsRequired = true, IsKey = false)]
+        public string mruType
         {
-            get { return (string)this["saveToDatabase"]; }
-            set { this["saveToDatabase"] = value; }
-        }
-
-        [ConfigurationProperty("saveFreq", DefaultValue = "", IsRequired = true, IsKey = false)]
-        public string saveFreq
-        {
-            get { return (string)this["saveFreq"]; }
-            set { this["saveFreq"] = value; }
+            get { return (string)this["mruType"]; }
+            set { this["mruType"] = value; }
         }
 
         [ConfigurationProperty("serialPort", IsRequired = false)]

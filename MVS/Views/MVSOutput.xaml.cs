@@ -1,9 +1,6 @@
 ﻿using System;
-using System.Linq;
 using System.Windows.Controls;
 using System.Windows.Threading;
-using Telerik.Windows.Controls;
-using Telerik.Windows.Controls.GridView;
 using Telerik.Windows.Data;
 
 namespace MVS

@@ -1,7 +1,5 @@
 ﻿using System;
 using System.Collections.Generic;
-using System.Diagnostics.Metrics;
-using System.Threading;
 
 namespace MVS
 {
@@ -41,19 +39,23 @@ namespace MVS
             fileReaderCallback = new FileReaderCallback(DataProcessing);
         }
 
-        public void Load(SensorData sensorData)
+        public void Load(SensorData sensorData, MainWindowVM mainWindowVM)
         {
-            // Legge til sensor i file reader sensor listen
-            fileReaderSensorList.Add(sensorData);
-
-            // Sjekke om file er lagt inn/åpnet fra før
-            FileReaderSetup fileReaderData = fileReaderList.Find(x => x.fileFolder == sensorData.fileReader.fileFolder && x.fileName == sensorData.fileReader.fileName);
-
-            // Dersom den ikke eksisterer -> så legger vi den inn i file reader fil listen
-            if (fileReaderData == null)
+            // Sjekke om denne sensoren skal brukes først
+            if (sensorData.UseThisSensor(mainWindowVM))
             {
-                // Legge inn i file reader listen
-                fileReaderList.Add(new FileReaderSetup(sensorData.fileReader));
+                // Legge til sensor i file reader sensor listen
+                fileReaderSensorList.Add(sensorData);
+
+                // Sjekke om file er lagt inn/åpnet fra før
+                FileReaderSetup fileReaderData = fileReaderList.Find(x => x.fileFolder == sensorData.fileReader.fileFolder && x.fileName == sensorData.fileReader.fileName);
+
+                // Dersom den ikke eksisterer -> så legger vi den inn i file reader fil listen
+                if (fileReaderData == null)
+                {
+                    // Legge inn i file reader listen
+                    fileReaderList.Add(new FileReaderSetup(sensorData.fileReader));
+                }
             }
         }
 

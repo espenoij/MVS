@@ -37,7 +37,6 @@ public enum HelicopterType
 {
     [Description("Default - CAT A")]
     Default,    // Heavy
-
     [Description("AS332 - CAT A")]
     AS332,      // Heavy
     [Description("AS365 - CAT B")]
@@ -104,164 +103,52 @@ public enum LimitStatus
 
 public enum ValueType
 {
+    None = 0,
+
     // NB! Matcher ID i config fil
     // Dette er variabler som blir direkte linket til sensor data.
     // Må matche med verdiene i SensorData.config.
-    None = 0,
-    Latitude = 1,
-    Longitude = 2,
-    Pitch = 3,
-    Roll = 4,
-    Heave = 5,
-    HeaveRate = 6,
-    AirTemperature = 7,
-    AirHumidity = 8,
-    AirPressure = 9,
-    Visibility = 10,
-    Weather = 11,
-    CloudLayer1Base = 12,
-    CloudLayer1Coverage = 13,
-    CloudLayer2Base = 14,
-    CloudLayer2Coverage = 15,
-    CloudLayer3Base = 16,
-    CloudLayer3Coverage = 17,
-    CloudLayer4Base = 18,
-    CloudLayer4Coverage = 19,
-    SensorWindDirection = 20,
-    SensorWindSpeed = 21,
-    VesselHeading = 22,
-    VesselCOG = 23,
-    VesselSOG = 24,
-    AccelerationX = 25,
-    AccelerationY = 26,
-    AccelerationZ = 27,
-    Wave = 28,
-    SeaTemperature = 29,
+    Ref_Pitch = 1,
+    Ref_Roll = 2,
+    Ref_Heave = 3,
 
-    // Database
-    Database = 30,
-
-    // Sensor Status
-    SensorMRUStatus = 31,
-    SensorGyroStatus = 32,
-    SensorWindStatus = 33,
-    SensorSOGCOGStatus = 34,
+    Test_Pitch = 4,
+    Test_Roll = 5,
+    Test_Heave = 6,
 
     // Ikke lagret i config fil
     // Dette er data som beregnes fra variablene over, dvs. fra sensor data
-    PitchMax20m,
-    PitchMax3h,
-    PitchMaxUp20m,
-    PitchMaxDown20m,
-    RollMax20m,
-    RollMax3h,
-    RollMaxLeft20m,
-    RollMaxRight20m,
-    HeaveAmplitude,
-    HeaveAmplitudeMax20m,
-    HeaveAmplitudeMax3h,
-    HeavePeriodMean,
-    SignificantHeaveRate,
-    SignificantHeaveRateMax20m,
-    SignificantHeaveRateMax3h,
-    SignificantHeaveRate95pct,
-    MaxHeaveRate,
-    Inclination,
-    InclinationMax20m,
-    InclinationMax3h,
-    AirDewPoint,
-    AirPressureQNH,
-    AirPressureQFE,
-    HelideckLight,
-    LandingStatus,          // CAP
-    RWDStatus,              // CAP
-    MSI,                    // CAP
-    WSI,                    // CAP
-    RelativeWindDir,
-    AreaWindDirection2m,
-    AreaWindSpeed2m,
-    AreaWindGust2m,
-    HelideckWindDirectionRT,
-    HelideckWindSpeedRT,
-    HelideckWindDirection2m,
-    HelideckWindDirection10m,
-    HelideckWindSpeed2m,
-    HelideckWindSpeed10m,
-    HelideckWindGust2m,
-    HelideckWindGust10m,
-    EMSWindDirectionRT,
-    EMSWindSpeedRT,
-    EMSWindDirection2m,
-    EMSWindDirection10m,
-    EMSWindSpeed2m,
-    EMSWindSpeed10m,
-    EMSWindGust2m,
-    EMSWindGust10m,
-    HelideckHeading,
-    WindDirectionDelta,
-    VesselHeadingDelta,
-    HelicopterHeading,
-    WaveMax20m,
-    WaveMax3h,
-    WavePeriod,
-    WavePeriodMax20m,
-    WavePeriodMax3h,
-    SignificantWaveHeight,
-    SignificantWaveHeightMax20m,
-    SignificantWaveHeightMax3h,
+    Ref_PitchMean20m,
+    Ref_PitchMax20m,
+    Ref_PitchMaxUp20m,
+    Ref_PitchMaxDown20m,
+
+    Ref_RollMean20m,
+    Ref_RollMax20m,
+    Ref_RollMaxLeft20m,
+    Ref_RollMaxRight20m,
+
+    Ref_HeaveMean20m,
+    Ref_HeaveMax20m,
+    Ref_HeaveAmplitudeMax20m,
+
+    Test_PitchMean20m,
+    Test_PitchMax20m,
+    Test_PitchMaxUp20m,
+    Test_PitchMaxDown20m,
+
+    Test_RollMean20m,
+    Test_RollMax20m,
+    Test_RollMaxLeft20m,
+    Test_RollMaxRight20m,
+
+    Test_HeaveMean20m,
+    Test_HeaveMax20m,
+    Test_HeaveAmplitudeMax20m,
 
     // Motion Limits
     MotionLimitPitchRoll,
-    MotionLimitInclination,
     MotionLimitHeaveAmplitude,
-    MotionLimitSignificantHeaveRate,
-
-    // Diverse andre data
-    SettingsHelicopterType,
-    SettingsHelideckCategory,
-    SettingsDayNight,
-    SettingsDisplayMode,
-    SettingsOnDeckTime,
-    SettingsOnDeckHelicopterHeading,
-    SettingsOnDeckHelicopterHeadingCorrected,
-    SettingsOnDeckVesselHeading,
-    SettingsOnDeckWindDirection,
-    SettingsHelideckWindSensorHeight,
-    SettingsHelideckWindSensorDistance,
-    SettingsAreaWindSensorHeight,
-    SettingsAreaWindSensorDistance,
-    SettingsNDBFrequency,
-    SettingsNDBIdent,
-    SettingsVHFFrequency,
-    SettingsLogFrequency,
-    SettingsMarineChannel,
-    SettingsDynamicPositioning,
-    SettingsAccurateMonitoringEquipment,
-    SettingsVesselName,
-    SettingsVesselImage,
-    SettingsEmailServer,
-    SettingsEmailPort,
-    SettingsEmailUsername,
-    SettingsEmailPassword,
-    SettingsEmailSecureConnection,
-    SettingsRestrictedSector,
-
-    // CAP: Lagring av status data i databasen
-    StatusRoll,
-    StatusPitch,
-    StatusInclination,
-    StatusSHR,
-    StatusMSIWSI,
-    StatusMRU,
-    StatusGyro,
-    StatusWind,
-    StatusSOGCOG,
-
-    // Admin settings
-    RegulationStandard,
-    WebPageUpdateFrequency,
-    WebDataRequestFrequency,
-    DataTimeout
 }
 
 public enum HelideckStatusType
@@ -395,7 +282,7 @@ public class RWDData : INotifyPropertyChanged
     public event PropertyChangedEventHandler PropertyChanged;
 
     public double _rwd { get; set; }
-    public double rwd 
+    public double rwd
     {
         get
         {
@@ -544,3 +431,56 @@ public enum OperationsMode
     Test,
     Stop
 }
+
+public enum SensorType
+{
+    None,
+    SerialPort,
+    ModbusRTU,      // Remote Terminal Unit (serial port)
+    ModbusASCII,
+    ModbusTCP,
+    FileReader,
+    FixedValue
+}
+
+public enum DatabaseSaveFrequency
+{
+    Sensor,
+    Program,
+    Freq_2hz = 500,
+    Freq_1hz = 1000,
+    Freq_2sec = 2000,
+    Freq_3sec = 3000,
+    Freq_4sec = 4000,
+    Freq_5sec = 5000
+}
+
+public enum ModbusObjectType
+{
+    None,
+    Coil,
+    DiscreteInput,
+    InputRegister,
+    HoldingRegister
+}
+
+public enum MRUType
+{
+    [Description("None")]
+    None,
+    [Description("Reference MRU")]
+    ReferenceMRU,
+    [Description("Test MRU")]
+    TestMRU
+}
+
+public enum VerificationInputSetup
+{
+    [Description("No Input")]
+    None,
+    [Description("Reference MRU Only")]
+    ReferenceMRU,
+    [Description("Reference MRU + Test MRU")]
+    ReferenceMRU_TestMRU,
+}
+

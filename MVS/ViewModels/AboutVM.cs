@@ -1,5 +1,4 @@
-﻿using DeviceId;
-using System;
+﻿using System;
 using System.ComponentModel;
 using System.Runtime.CompilerServices;
 

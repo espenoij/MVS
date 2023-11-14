@@ -1,5 +1,4 @@
-﻿using System;
-using System.Globalization;
+﻿using System.Globalization;
 using System.Threading;
 using System.Windows;
 using System.Windows.Markup;
@@ -22,7 +21,7 @@ namespace MVS
                    typeof(FrameworkElement),
                    new FrameworkPropertyMetadata(
                        XmlLanguage.GetLanguage(CultureInfo.CurrentCulture.IetfLanguageTag)));
-            
+
             // Generell exception handler
             //Dispatcher.UnhandledException += OnDispatcherUnhandledException;
         }

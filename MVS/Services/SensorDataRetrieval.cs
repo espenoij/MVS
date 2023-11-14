@@ -2,7 +2,6 @@
 using System.Collections.Generic;
 using System.IO.Ports;
 using System.Linq;
-using System.Linq.Expressions;
 using System.Windows.Data;
 using System.Windows.Threading;
 using Telerik.Windows.Data;
@@ -13,9 +12,6 @@ namespace MVS
     {
         // Configuration
         private Config config;
-
-        // Database
-        private DatabaseHandler database;
 
         // Error Handler
         private ErrorHandler errorHandler;
@@ -42,7 +38,6 @@ namespace MVS
         public SensorDataRetrieval(Config config, DatabaseHandler database, ErrorHandler errorHandler, AdminSettingsVM adminSettingsVM)
         {
             this.config = config;
-            this.database = database;
             this.errorHandler = errorHandler;
 
             sensorDataList = new RadObservableCollection<SensorData>();
@@ -61,7 +56,7 @@ namespace MVS
             fixedValueDataRetrieval = new FixedValueDataRetrieval(database, errorHandler);
         }
 
-        public void LoadSensors()
+        public void LoadSensors(MainWindowVM mainWindowVM)
         {
             // Slette data listene
             sensorDataList.Clear();
@@ -88,21 +83,21 @@ namespace MVS
                     switch (sensorData.type)
                     {
                         case SensorType.SerialPort:
-                            serialPortDataRetrieval.Load(sensorData);
+                            serialPortDataRetrieval.Load(sensorData, mainWindowVM);
                             break;
 
                         case SensorType.ModbusRTU:
                         case SensorType.ModbusASCII:
                         case SensorType.ModbusTCP:
-                            modbusDataRetrieval.Load(sensorData);
+                            modbusDataRetrieval.Load(sensorData, mainWindowVM);
                             break;
 
                         case SensorType.FileReader:
-                            fileReaderDataRetrieval.Load(sensorData);
+                            fileReaderDataRetrieval.Load(sensorData, mainWindowVM);
                             break;
 
                         case SensorType.FixedValue:
-                            fixedValueDataRetrieval.Load(sensorData);
+                            fixedValueDataRetrieval.Load(sensorData, mainWindowVM);
                             break;
                     }
                 }
@@ -164,7 +159,7 @@ namespace MVS
             fixedValueDataRetrieval.Stop();
         }
 
-        public void UpdateSensorStatus()
+        public void UpdateSensorStatus(MainWindowVM mainWindowVM)
         {
             // Dispatcher som oppdatere UI
             DispatcherTimer statusTimer = new DispatcherTimer();
@@ -239,10 +234,17 @@ namespace MVS
                                                 // Det er data på porten
                                                 else
                                                 {
-                                                    // Sette status
-                                                    if (serialPortData.portStatus == PortStatus.Closed)
+                                                    if (sensorData.UseThisSensor(mainWindowVM))
                                                     {
-                                                        serialPortData.portStatus = PortStatus.Open;
+                                                        // Sette status
+                                                        if (serialPortData.portStatus == PortStatus.Closed)
+                                                        {
+                                                            serialPortData.portStatus = PortStatus.Open;
+                                                        }
+                                                    }
+                                                    else
+                                                    {
+                                                        serialPortData.portStatus = PortStatus.Closed;
                                                     }
                                                 }
                                             }
@@ -272,9 +274,16 @@ namespace MVS
 
                                 if (dataRetrievalStarted)
                                 {
-                                    if (sensorData.portStatus == PortStatus.Closed)
+                                    if (sensorData.UseThisSensor(mainWindowVM))
                                     {
-                                        sensorData.portStatus = PortStatus.Open;
+                                        if (sensorData.portStatus == PortStatus.Closed)
+                                        {
+                                            sensorData.portStatus = PortStatus.Open;
+                                        }
+                                    }
+                                    else
+                                    {
+                                        sensorData.portStatus = PortStatus.Closed;
                                     }
                                 }
                                 else
@@ -294,13 +303,20 @@ namespace MVS
 
                                 if (dataRetrievalStarted)
                                 {
-                                    if (sensorData.portStatus == PortStatus.Closed)
+                                    if (sensorData.UseThisSensor(mainWindowVM))
                                     {
-                                        sensorData.portStatus = PortStatus.Open;
+                                        if (sensorData.portStatus == PortStatus.Closed)
+                                        {
+                                            sensorData.portStatus = PortStatus.Open;
 
-                                        // Oppdatere status
-                                        if (fileReaderData != null)
-                                            fileReaderData.portStatus = sensorData.portStatus;
+                                            // Oppdatere status
+                                            if (fileReaderData != null)
+                                                fileReaderData.portStatus = sensorData.portStatus;
+                                        }
+                                    }
+                                    else
+                                    {
+                                        sensorData.portStatus = PortStatus.Closed;
                                     }
                                 }
                                 else
@@ -321,13 +337,20 @@ namespace MVS
 
                                 if (dataRetrievalStarted)
                                 {
-                                    if (sensorData.portStatus == PortStatus.Closed)
+                                    if (sensorData.UseThisSensor(mainWindowVM))
                                     {
-                                        sensorData.portStatus = PortStatus.Open;
+                                        if (sensorData.portStatus == PortStatus.Closed)
+                                        {
+                                            sensorData.portStatus = PortStatus.Open;
 
-                                        // Oppdatere status
-                                        if (fixedValueData != null)
-                                            fixedValueData.portStatus = sensorData.portStatus;
+                                            // Oppdatere status
+                                            if (fixedValueData != null)
+                                                fixedValueData.portStatus = sensorData.portStatus;
+                                        }
+                                    }
+                                    else
+                                    {
+                                        sensorData.portStatus = PortStatus.Closed;
                                     }
                                 }
                                 else

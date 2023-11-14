@@ -43,33 +43,37 @@ namespace MVS
             this.adminSettingsVM = adminSettingsVM;
         }
 
-        public void Load(SensorData sensorData)
+        public void Load(SensorData sensorData, MainWindowVM mainWindowVM)
         {
-            // Legge til sensor i MODBUS sensor listen
-            modbusSensorList.Add(sensorData);
-
-            // Sjekke om serie port er lagt inn/åpnet fra før
-            SerialPort sp = modbusSerialPortList.Find(x => x.PortName == sensorData.modbus.portName);
-
-            // Dersom den ikke eksisterer -> så legger vi den inn i serie port listen...
-            if (sp == null)
+            // Sjekke om denne sensoren skal brukes først
+            if (sensorData.UseThisSensor(mainWindowVM))
             {
-                // Sette serie port settings på SerialPort object
-                SerialPort serialPort = new SerialPort();
+                // Legge til sensor i MODBUS sensor listen
+                modbusSensorList.Add(sensorData);
 
-                serialPort.PortName = sensorData.modbus.portName;
-                serialPort.BaudRate = sensorData.modbus.baudRate;
-                serialPort.DataBits = sensorData.modbus.dataBits;
-                serialPort.StopBits = sensorData.modbus.stopBits;
-                serialPort.Parity = sensorData.modbus.parity;
-                serialPort.Handshake = sensorData.modbus.handshake;
+                // Sjekke om serie port er lagt inn/åpnet fra før
+                SerialPort sp = modbusSerialPortList.Find(x => x.PortName == sensorData.modbus.portName);
 
-                // Timeout
-                serialPort.ReadTimeout = Constants.ModbusTimeout;       // NB! Brukes av ReadHoldingRegisters etc. Uten disse vil programmet fryse dersom MODBUS read funksjonene ikke får svar.
-                serialPort.WriteTimeout = Constants.ModbusTimeout;
+                // Dersom den ikke eksisterer -> så legger vi den inn i serie port listen...
+                if (sp == null)
+                {
+                    // Sette serie port settings på SerialPort object
+                    SerialPort serialPort = new SerialPort();
 
-                // Legge inn i MODBUS serie port listen
-                modbusSerialPortList.Add(serialPort);
+                    serialPort.PortName = sensorData.modbus.portName;
+                    serialPort.BaudRate = sensorData.modbus.baudRate;
+                    serialPort.DataBits = sensorData.modbus.dataBits;
+                    serialPort.StopBits = sensorData.modbus.stopBits;
+                    serialPort.Parity = sensorData.modbus.parity;
+                    serialPort.Handshake = sensorData.modbus.handshake;
+
+                    // Timeout
+                    serialPort.ReadTimeout = Constants.ModbusTimeout;       // NB! Brukes av ReadHoldingRegisters etc. Uten disse vil programmet fryse dersom MODBUS read funksjonene ikke får svar.
+                    serialPort.WriteTimeout = Constants.ModbusTimeout;
+
+                    // Legge inn i MODBUS serie port listen
+                    modbusSerialPortList.Add(serialPort);
+                }
             }
         }
 
@@ -81,13 +85,7 @@ namespace MVS
 
         public void InitReader()
         {
-            // Finne høyeste frekvens
-            double highFreq = (double)DatabaseSaveFrequency.Freq_5sec;
-            foreach (var sensor in modbusSensorList)
-                if (sensor.GetSaveFrequency(config) < highFreq)
-                    highFreq = sensor.GetSaveFrequency(config);
-
-            modbusReader = new System.Timers.Timer((int)highFreq);
+            modbusReader = new System.Timers.Timer(Constants.ClientUIUpdateFrequencyDefault);
             modbusReader.AutoReset = true;
             modbusReader.Elapsed += runModbusReader;
 
@@ -142,47 +140,47 @@ namespace MVS
                                                 // RTU eller ASCII
                                                 case SensorType.ModbusRTU:
                                                 case SensorType.ModbusASCII:
+                                                {
+                                                    // Åpne port
+                                                    if (!serialPort.IsOpen)
+                                                        serialPort.Open();
+
+                                                    if (serialPort.IsOpen)
                                                     {
-                                                        // Åpne port
-                                                        if (!serialPort.IsOpen)
-                                                            serialPort.Open();
-
-                                                        if (serialPort.IsOpen)
-                                                        {
-                                                            // Starte MODBUS
-                                                            IModbusSerialMaster modbusMaster;
-                                                            if (sensorData.type == SensorType.ModbusRTU)
-                                                                modbusMaster = modbusFactory.CreateRtuMaster(new SerialPortAdapter(serialPort));
-                                                            else
-                                                                modbusMaster = modbusFactory.CreateAsciiMaster(new SerialPortAdapter(serialPort));
-
-                                                            // Lese data
-                                                            registers = modbusMaster.ReadCoils(sensorData.modbus.slaveID, modbusHelper.AddressToOffset(sensorData.modbus.startAddress), (ushort)sensorData.modbus.totalAddresses);
-
-                                                            // Lukke port
-                                                            serialPort.Close();
-                                                        }
-                                                    }
-                                                    break;
-
-                                                case SensorType.ModbusTCP:
-                                                    {
-                                                        // TCP client
-                                                        TcpClient modbusTCPClient = new TcpClient(sensorData.modbus.tcpAddress, sensorData.modbus.tcpPort);
-
-                                                        modbusTCPClient.ReceiveTimeout = Constants.ModbusTimeout;
-                                                        modbusTCPClient.SendTimeout = Constants.ModbusTimeout;
-
                                                         // Starte MODBUS
-                                                        IModbusMaster modbusMaster = modbusFactory.CreateMaster(modbusTCPClient);
+                                                        IModbusSerialMaster modbusMaster;
+                                                        if (sensorData.type == SensorType.ModbusRTU)
+                                                            modbusMaster = modbusFactory.CreateRtuMaster(new SerialPortAdapter(serialPort));
+                                                        else
+                                                            modbusMaster = modbusFactory.CreateAsciiMaster(new SerialPortAdapter(serialPort));
 
                                                         // Lese data
                                                         registers = modbusMaster.ReadCoils(sensorData.modbus.slaveID, modbusHelper.AddressToOffset(sensorData.modbus.startAddress), (ushort)sensorData.modbus.totalAddresses);
 
-                                                        // Lukke forbindelse
-                                                        modbusTCPClient.Close();
+                                                        // Lukke port
+                                                        serialPort.Close();
                                                     }
-                                                    break;
+                                                }
+                                                break;
+
+                                                case SensorType.ModbusTCP:
+                                                {
+                                                    // TCP client
+                                                    TcpClient modbusTCPClient = new TcpClient(sensorData.modbus.tcpAddress, sensorData.modbus.tcpPort);
+
+                                                    modbusTCPClient.ReceiveTimeout = Constants.ModbusTimeout;
+                                                    modbusTCPClient.SendTimeout = Constants.ModbusTimeout;
+
+                                                    // Starte MODBUS
+                                                    IModbusMaster modbusMaster = modbusFactory.CreateMaster(modbusTCPClient);
+
+                                                    // Lese data
+                                                    registers = modbusMaster.ReadCoils(sensorData.modbus.slaveID, modbusHelper.AddressToOffset(sensorData.modbus.startAddress), (ushort)sensorData.modbus.totalAddresses);
+
+                                                    // Lukke forbindelse
+                                                    modbusTCPClient.Close();
+                                                }
+                                                break;
                                             }
 
                                             // Overføre leste data til midlertidig register
@@ -223,47 +221,47 @@ namespace MVS
                                                 // RTU eller ASCII
                                                 case SensorType.ModbusRTU:
                                                 case SensorType.ModbusASCII:
+                                                {
+                                                    // Åpne port
+                                                    if (!serialPort.IsOpen)
+                                                        serialPort.Open();
+
+                                                    if (serialPort.IsOpen)
                                                     {
-                                                        // Åpne port
-                                                        if (!serialPort.IsOpen)
-                                                            serialPort.Open();
-
-                                                        if (serialPort.IsOpen)
-                                                        {
-                                                            // Starte MODBUS
-                                                            IModbusSerialMaster modbusMaster;
-                                                            if (sensorData.type == SensorType.ModbusRTU)
-                                                                modbusMaster = modbusFactory.CreateRtuMaster(new SerialPortAdapter(serialPort));
-                                                            else
-                                                                modbusMaster = modbusFactory.CreateAsciiMaster(new SerialPortAdapter(serialPort));
-
-                                                            // Lese data
-                                                            registers = modbusMaster.ReadInputs(sensorData.modbus.slaveID, modbusHelper.AddressToOffset(sensorData.modbus.startAddress), (ushort)sensorData.modbus.totalAddresses);
-
-                                                            // Lukke port
-                                                            serialPort.Close();
-                                                        }
-                                                    }
-                                                    break;
-
-                                                case SensorType.ModbusTCP:
-                                                    {
-                                                        // TCP client
-                                                        TcpClient modbusTCPClient = new TcpClient(sensorData.modbus.tcpAddress, sensorData.modbus.tcpPort);
-
-                                                        modbusTCPClient.ReceiveTimeout = Constants.ModbusTimeout;
-                                                        modbusTCPClient.SendTimeout = Constants.ModbusTimeout;
-
                                                         // Starte MODBUS
-                                                        IModbusMaster modbusMaster = modbusFactory.CreateMaster(modbusTCPClient);
+                                                        IModbusSerialMaster modbusMaster;
+                                                        if (sensorData.type == SensorType.ModbusRTU)
+                                                            modbusMaster = modbusFactory.CreateRtuMaster(new SerialPortAdapter(serialPort));
+                                                        else
+                                                            modbusMaster = modbusFactory.CreateAsciiMaster(new SerialPortAdapter(serialPort));
 
                                                         // Lese data
                                                         registers = modbusMaster.ReadInputs(sensorData.modbus.slaveID, modbusHelper.AddressToOffset(sensorData.modbus.startAddress), (ushort)sensorData.modbus.totalAddresses);
 
-                                                        // Lukke forbindelse
-                                                        modbusTCPClient.Close();
+                                                        // Lukke port
+                                                        serialPort.Close();
                                                     }
-                                                    break;
+                                                }
+                                                break;
+
+                                                case SensorType.ModbusTCP:
+                                                {
+                                                    // TCP client
+                                                    TcpClient modbusTCPClient = new TcpClient(sensorData.modbus.tcpAddress, sensorData.modbus.tcpPort);
+
+                                                    modbusTCPClient.ReceiveTimeout = Constants.ModbusTimeout;
+                                                    modbusTCPClient.SendTimeout = Constants.ModbusTimeout;
+
+                                                    // Starte MODBUS
+                                                    IModbusMaster modbusMaster = modbusFactory.CreateMaster(modbusTCPClient);
+
+                                                    // Lese data
+                                                    registers = modbusMaster.ReadInputs(sensorData.modbus.slaveID, modbusHelper.AddressToOffset(sensorData.modbus.startAddress), (ushort)sensorData.modbus.totalAddresses);
+
+                                                    // Lukke forbindelse
+                                                    modbusTCPClient.Close();
+                                                }
+                                                break;
                                             }
 
                                             // Overføre leste data til midlertidig register
@@ -304,47 +302,47 @@ namespace MVS
                                                 // RTU eller ASCII
                                                 case SensorType.ModbusRTU:
                                                 case SensorType.ModbusASCII:
+                                                {
+                                                    // Åpne port
+                                                    if (!serialPort.IsOpen)
+                                                        serialPort.Open();
+
+                                                    if (serialPort.IsOpen)
                                                     {
-                                                        // Åpne port
-                                                        if (!serialPort.IsOpen)
-                                                            serialPort.Open();
-
-                                                        if (serialPort.IsOpen)
-                                                        {
-                                                            // Starte MODBUS
-                                                            IModbusSerialMaster modbusMaster;
-                                                            if (sensorData.type == SensorType.ModbusRTU)
-                                                                modbusMaster = modbusFactory.CreateRtuMaster(new SerialPortAdapter(serialPort));
-                                                            else
-                                                                modbusMaster = modbusFactory.CreateAsciiMaster(new SerialPortAdapter(serialPort));
-
-                                                            // Lese data
-                                                            registers = modbusMaster.ReadInputRegisters(sensorData.modbus.slaveID, modbusHelper.AddressToOffset(sensorData.modbus.startAddress), (ushort)sensorData.modbus.totalAddresses);
-
-                                                            // Lukke port
-                                                            serialPort.Close();
-                                                        }
-                                                    }
-                                                    break;
-
-                                                case SensorType.ModbusTCP:
-                                                    {
-                                                        // TCP client
-                                                        TcpClient modbusTCPClient = new TcpClient(sensorData.modbus.tcpAddress, sensorData.modbus.tcpPort);
-
-                                                        modbusTCPClient.ReceiveTimeout = Constants.ModbusTimeout;
-                                                        modbusTCPClient.SendTimeout = Constants.ModbusTimeout;
-
                                                         // Starte MODBUS
-                                                        IModbusMaster modbusMaster = modbusFactory.CreateMaster(modbusTCPClient);
+                                                        IModbusSerialMaster modbusMaster;
+                                                        if (sensorData.type == SensorType.ModbusRTU)
+                                                            modbusMaster = modbusFactory.CreateRtuMaster(new SerialPortAdapter(serialPort));
+                                                        else
+                                                            modbusMaster = modbusFactory.CreateAsciiMaster(new SerialPortAdapter(serialPort));
 
                                                         // Lese data
                                                         registers = modbusMaster.ReadInputRegisters(sensorData.modbus.slaveID, modbusHelper.AddressToOffset(sensorData.modbus.startAddress), (ushort)sensorData.modbus.totalAddresses);
 
-                                                        // Lukke forbindelse
-                                                        modbusTCPClient.Close();
+                                                        // Lukke port
+                                                        serialPort.Close();
                                                     }
-                                                    break;
+                                                }
+                                                break;
+
+                                                case SensorType.ModbusTCP:
+                                                {
+                                                    // TCP client
+                                                    TcpClient modbusTCPClient = new TcpClient(sensorData.modbus.tcpAddress, sensorData.modbus.tcpPort);
+
+                                                    modbusTCPClient.ReceiveTimeout = Constants.ModbusTimeout;
+                                                    modbusTCPClient.SendTimeout = Constants.ModbusTimeout;
+
+                                                    // Starte MODBUS
+                                                    IModbusMaster modbusMaster = modbusFactory.CreateMaster(modbusTCPClient);
+
+                                                    // Lese data
+                                                    registers = modbusMaster.ReadInputRegisters(sensorData.modbus.slaveID, modbusHelper.AddressToOffset(sensorData.modbus.startAddress), (ushort)sensorData.modbus.totalAddresses);
+
+                                                    // Lukke forbindelse
+                                                    modbusTCPClient.Close();
+                                                }
+                                                break;
                                             }
 
                                             // Overføre leste data til midlertidig register
@@ -385,47 +383,47 @@ namespace MVS
                                                 // RTU eller ASCII
                                                 case SensorType.ModbusRTU:
                                                 case SensorType.ModbusASCII:
+                                                {
+                                                    // Åpne port
+                                                    if (!serialPort.IsOpen)
+                                                        serialPort.Open();
+
+                                                    if (serialPort.IsOpen)
                                                     {
-                                                        // Åpne port
-                                                        if (!serialPort.IsOpen)
-                                                            serialPort.Open();
-
-                                                        if (serialPort.IsOpen)
-                                                        {
-                                                            // Starte MODBUS
-                                                            IModbusSerialMaster modbusMaster;
-                                                            if (sensorData.type == SensorType.ModbusRTU)
-                                                                modbusMaster = modbusFactory.CreateRtuMaster(new SerialPortAdapter(serialPort));
-                                                            else
-                                                                modbusMaster = modbusFactory.CreateAsciiMaster(new SerialPortAdapter(serialPort));
-
-                                                            // Lese data
-                                                            registers = modbusMaster.ReadHoldingRegisters(sensorData.modbus.slaveID, modbusHelper.AddressToOffset(sensorData.modbus.startAddress), (ushort)sensorData.modbus.totalAddresses);
-
-                                                            // Lukke port
-                                                            serialPort.Close();
-                                                        }
-                                                    }
-                                                    break;
-
-                                                case SensorType.ModbusTCP:
-                                                    {
-                                                        // TCP client
-                                                        TcpClient modbusTCPClient = new TcpClient(sensorData.modbus.tcpAddress, sensorData.modbus.tcpPort);
-
-                                                        modbusTCPClient.ReceiveTimeout = Constants.ModbusTimeout;
-                                                        modbusTCPClient.SendTimeout = Constants.ModbusTimeout;
-
                                                         // Starte MODBUS
-                                                        IModbusMaster modbusMaster = modbusFactory.CreateMaster(modbusTCPClient);
+                                                        IModbusSerialMaster modbusMaster;
+                                                        if (sensorData.type == SensorType.ModbusRTU)
+                                                            modbusMaster = modbusFactory.CreateRtuMaster(new SerialPortAdapter(serialPort));
+                                                        else
+                                                            modbusMaster = modbusFactory.CreateAsciiMaster(new SerialPortAdapter(serialPort));
 
                                                         // Lese data
                                                         registers = modbusMaster.ReadHoldingRegisters(sensorData.modbus.slaveID, modbusHelper.AddressToOffset(sensorData.modbus.startAddress), (ushort)sensorData.modbus.totalAddresses);
 
-                                                        // Lukke forbindelse
-                                                        modbusTCPClient.Close();
+                                                        // Lukke port
+                                                        serialPort.Close();
                                                     }
-                                                    break;
+                                                }
+                                                break;
+
+                                                case SensorType.ModbusTCP:
+                                                {
+                                                    // TCP client
+                                                    TcpClient modbusTCPClient = new TcpClient(sensorData.modbus.tcpAddress, sensorData.modbus.tcpPort);
+
+                                                    modbusTCPClient.ReceiveTimeout = Constants.ModbusTimeout;
+                                                    modbusTCPClient.SendTimeout = Constants.ModbusTimeout;
+
+                                                    // Starte MODBUS
+                                                    IModbusMaster modbusMaster = modbusFactory.CreateMaster(modbusTCPClient);
+
+                                                    // Lese data
+                                                    registers = modbusMaster.ReadHoldingRegisters(sensorData.modbus.slaveID, modbusHelper.AddressToOffset(sensorData.modbus.startAddress), (ushort)sensorData.modbus.totalAddresses);
+
+                                                    // Lukke forbindelse
+                                                    modbusTCPClient.Close();
+                                                }
+                                                break;
                                             }
 
                                             // Overføre leste data til midlertidig register

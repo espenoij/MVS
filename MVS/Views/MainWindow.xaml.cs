@@ -36,10 +36,10 @@ namespace MVS
         // Error Handler
         private ErrorHandler errorHandler;
 
-        // Liste med HMS sensor data: Data som skal gjennom HMS prosessen og sendes til HMS klient
+        // Liste med MVS sensor data: Data som skal gjennom MVS prosessen og sendes til MVS klient
         private MVSDataCollection mvsInputData;
 
-        // HMS
+        // MVS
         private MVSProcessing mvsProcessing;
         private MVSDataCollection mvsOutputData;
         private MVSDatabase mvsDatabase;
@@ -58,19 +58,15 @@ namespace MVS
         // Database tabeller opprettet
         private bool databaseTablesCreated = false;
 
-        // Stop server callback
-        public delegate void StopServerCallback();
+        // Update UI buttons
+        public delegate void UpdateUIButtonsCallback();
 
         // Kommer fra sensor input edit
         private bool sensorInputEdited = false;
 
-        // Operations mode
-        private OperationsMode operationsMode;
-
         // Model View
         private MainWindowVM mainWindowVM;
-
-        // About
+        private HelideckMotionVM helideckMotionVM;
         private AboutVM aboutVM;
 
         public MainWindow()
@@ -90,6 +86,10 @@ namespace MVS
             mainWindowVM = new MainWindowVM();
             DataContext = mainWindowVM;
 
+            // Helideck Motion VM
+            helideckMotionVM = new HelideckMotionVM();
+            helideckMotionVM.Init();
+
             // About VM
             aboutVM = new AboutVM(Application.ResourceAssembly.GetName().Version);
 
@@ -104,7 +104,7 @@ namespace MVS
             mvsDatabase.CreateErrorMessagesTables();
 
             // Operations mode
-            operationsMode = OperationsMode.Stop;
+            mainWindowVM.OperationsMode = OperationsMode.Stop;
 
             // Init view model
             InitViewModel();
@@ -118,22 +118,25 @@ namespace MVS
                 sensorDataRetrieval.GetSensorDataList());
 
             // Stop Recording Callback
-            StopServerCallback stopServerCallback = new StopServerCallback(StopRecording);
+            UpdateUIButtonsCallback updateUIButtonsCallback = new UpdateUIButtonsCallback(UpdateUIButtons);
 
             // Motion Data Sets page
-            ucMotionDataSets.Init(mainWindowVM, mvsDatabase);
+            ucVerificationSessions.Init(mainWindowVM, mvsDatabase, updateUIButtonsCallback);
 
             // Sensor Input Setup
-            ucSensorSetupPage.Init(config, errorHandler, adminSettingsVM, stopServerCallback);
+            ucSensorSetupPage.Init(config, errorHandler, adminSettingsVM);
+
+            // Helideck Motion page
+            ucMVSSessionGraphs.Init(helideckMotionVM);
 
             // Error Message
             ucErrorMessagesPage.Init(config, errorHandler);
 
             // Laste sensor data setups fra fil
-            sensorDataRetrieval.LoadSensors();
+            sensorDataRetrieval.LoadSensors(mainWindowVM);
 
             // Starter kjøring av status oppdatering
-            sensorDataRetrieval.UpdateSensorStatus();
+            sensorDataRetrieval.UpdateSensorStatus(mainWindowVM);
 
             // Init UI
             InitUI();
@@ -142,8 +145,8 @@ namespace MVS
             // Init UI Input
             InitUIInputUpdate();
 
-            // Init HMS Data Flow
-            InitHMSUpdate();
+            // Init MVS Data Flow
+            InitMVSUpdate();
 
             //// Opprette database tabeller
             //// Sjekker først om bruker og passord for databasen er satt (ikke satt rett etter installasjon)
@@ -219,6 +222,7 @@ namespace MVS
             tabInput_SerialData.Visibility = Visibility.Visible;
             tabInput_FileReader.Visibility = Visibility.Visible;
             tabInput_FixedValue.Visibility = Visibility.Visible;
+            tabInput_HelideckMotion.Visibility = Visibility.Visible;
         }
 
         private void InitViewModel()
@@ -262,9 +266,17 @@ namespace MVS
 
         private void SetOperationsMode(OperationsMode mode)
         {
-            operationsMode = mode;
+            // Stopper verfication session
+            if (mainWindowVM.OperationsMode == OperationsMode.Recording && mode == OperationsMode.Stop)
+                ucVerificationSessions.Stop();
 
-            switch (operationsMode)
+            mainWindowVM.OperationsMode = mode;
+            UpdateUIButtons();
+        }
+
+        private void UpdateUIButtons()
+        {
+            switch (mainWindowVM.OperationsMode)
             {
                 case OperationsMode.Recording:
                 case OperationsMode.Test:
@@ -282,9 +294,19 @@ namespace MVS
                     break;
 
                 case OperationsMode.Stop:
-                    btnStart1.IsEnabled = true;
-                    btnStart2.IsEnabled = true;
-                    btnStart3.IsEnabled = true;
+
+                    if (mainWindowVM.SelectedSession != null)
+                    {
+                        btnStart1.IsEnabled = true;
+                        btnStart2.IsEnabled = true;
+                        btnStart3.IsEnabled = true;
+                    }
+                    else
+                    {
+                        btnStart1.IsEnabled = false;
+                        btnStart2.IsEnabled = false;
+                        btnStart3.IsEnabled = false;
+                    }
 
                     btnTest1.IsEnabled = true;
                     btnTest2.IsEnabled = true;
@@ -302,11 +324,11 @@ namespace MVS
 
         private void InitUIHMS()
         {
-            // HMS data list
+            // MVS data list
             mvsInputData = new MVSDataCollection();
             mvsInputData.LoadMVSInput(config);
 
-            // HMS data: Prosessering av input data til output data
+            // MVS data: Prosessering av input data til output data
             mvsProcessing = new MVSProcessing(
                 mvsOutputData,
                 adminSettingsVM,
@@ -318,7 +340,7 @@ namespace MVS
                 mvsInputData,
                 config);
 
-            // Main Menu HMS: MVS Output
+            // Main Menu MVS: MVS Output
             ucMVSOutput.Init(
                 mvsOutputData,
                 config);
@@ -334,7 +356,7 @@ namespace MVS
 
         private void Window_Closing(object sender, WindowClosedEventArgs e)
         {
-            StopRecording();
+            Stop();
 
             Application.Current.Shutdown();
         }
@@ -359,9 +381,9 @@ namespace MVS
             }
         }
 
-        private void InitHMSUpdate()
+        private void InitMVSUpdate()
         {
-            // Dispatcher som oppdatere HMS prosessering
+            // Dispatcher som oppdatere MVS prosessering
             mvsTimer.Interval = TimeSpan.FromMilliseconds(config.ReadWithDefault(ConfigKey.HMSProcessingFrequency, Constants.HMSProcessingFrequencyDefault));
             mvsTimer.Tick += runHMSUpdate;
 
@@ -375,29 +397,31 @@ namespace MVS
 
                     void UpdateHMS_Thread()
                     {
-                        // HMS Update
+                        // MVS Update
                         /////////////////////////////////////////////////////////////////////////////////////////////////////
 
-                        // HMS: HMS Input Data
-                        mvsInputData.TransferData(sensorDataRetrieval.GetSensorDataList());
+                        // MVS: MVS Input Data
+                        mvsInputData.TransferData(sensorDataRetrieval.GetSensorDataList(), mainWindowVM);
 
-                        // HMS: HMS Output Data
-                        // Prosesserer sensor data om til data som kan sendes til HMS klient
-                        mvsProcessing.Update(mvsInputData);
+                        // MVS: MVS Output Data
+                        mvsProcessing.Update(mvsInputData, mainWindowVM);
+
+                        // Oppdatere graf data
+                        helideckMotionVM.UpdateData(mvsOutputData);
 
                         // Sette database status
-                        SetDatabaseStatus(mvsInputData);
+                        //SetDatabaseStatus(mvsInputData);
 
-                        // HMS: Lagre data i databasen
+                        // MVS: Lagre data i databasen
                         /////////////////////////////////////////////////////////////////////////////////////////////////////
 
                         // Utfører første en sjekk på om database tabellene er opprettet.
                         // Grunnen til at dette gjøres her, så sent etter init, er at output listen (med dbColumnNames) fylles av 
                         // inidividuelle sub-rutiner rundt omkring.
                         // Output listen er derfor ikke komplett før en update (hmsProcessing.Update ovenfor) er utført.
-                        if (!databaseTablesCreated)
+                        if (!databaseTablesCreated && mainWindowVM.OperationsMode != OperationsMode.Test)
                         {
-                            mvsDatabase.CreateDataTables(mainWindowVM.SelectedMotionDataSet, mvsOutputData);
+                            mvsDatabase.CreateDataTables(mainWindowVM.SelectedSession, mvsOutputData);
 
                             databaseTablesCreated = true;
 
@@ -432,7 +456,7 @@ namespace MVS
                     void SaveMVSData_Thread()
                     {
                         // Lagre data i databasen
-                        mvsDatabase.Insert(mainWindowVM.SelectedMotionDataSet, mvsOutputData);
+                        mvsDatabase.Insert(mainWindowVM.SelectedSession, mvsOutputData);
                     }
                 }
                 catch (Exception ex)
@@ -447,25 +471,25 @@ namespace MVS
             }
         }
 
-        private void SetDatabaseStatus(MVSDataCollection hmsInputData)
-        {
-            // Finne match i mottaker data listen
-            var dbStatus = hmsInputData.GetData(ValueType.Database);
+        //private void SetDatabaseStatus(MVSDataCollection hmsInputData)
+        //{
+        //    // Finne match i mottaker data listen
+        //    var dbStatus = hmsInputData.GetData(ValueType.Database);
 
-            if (dbStatus != null)
-            {
-                if (errorHandler.IsDatabaseError())
-                {
-                    dbStatus.status = DataStatus.TIMEOUT_ERROR;
-                    dbStatus.timestamp = DateTime.MinValue;
-                }
-                else
-                {
-                    dbStatus.status = DataStatus.OK;
-                    dbStatus.timestamp = DateTime.UtcNow;
-                }
-            }
-        }
+        //    if (dbStatus != null)
+        //    {
+        //        if (errorHandler.IsDatabaseError())
+        //        {
+        //            dbStatus.status = DataStatus.TIMEOUT_ERROR;
+        //            dbStatus.timestamp = DateTime.MinValue;
+        //        }
+        //        else
+        //        {
+        //            dbStatus.status = DataStatus.OK;
+        //            dbStatus.timestamp = DateTime.UtcNow;
+        //        }
+        //    }
+        //}
 
         private void btnStart_Click(object sender, RoutedEventArgs e)
         {
@@ -474,7 +498,7 @@ namespace MVS
 
         private void btnStop_Click(object sender, RoutedEventArgs e)
         {
-            StopRecording();
+            Stop();
         }
 
         private void btnTest_Click(object sender, RoutedEventArgs e)
@@ -485,14 +509,14 @@ namespace MVS
         private void StartRecording()
         {
             // Sjekker at et data set er valgt
-            if (mainWindowVM.SelectedMotionDataSet == null)
+            if (mainWindowVM.SelectedSession == null)
             {
                 DialogHandler.Warning("No data set selected.", "Please select a data set to record data into before starting a recording session.");
             }
             else
             {
                 // Sjekker om valgt data set allerede har data
-                if (mainWindowVM.SelectedMotionDataSet.DataSetHasData())
+                if (mainWindowVM.SelectedSession.DataSetHasData())
                 {
                     RadWindow.Confirm("The selected data set already contains data.\n\nStarting a new recording session with this data set\nwill delete all the current data within it.", OnClosed);
 
@@ -502,7 +526,7 @@ namespace MVS
                         if ((bool)ea.DialogResult == true)
                         {
                             // Må først slette eksisterende data i databasen
-                            mvsDatabase.DeleteData(mainWindowVM.SelectedMotionDataSet);
+                            mvsDatabase.DeleteData(mainWindowVM.SelectedSession);
 
                             Start();
                         }
@@ -517,13 +541,19 @@ namespace MVS
 
             void Start()
             {
+                // Sette operasjonsmodus
+                SetOperationsMode(OperationsMode.Recording);
+
                 // Resetter data listene i dataCalculations
                 mvsProcessing.ResetDataCalculations();
+
+                // Laste sensor data setups fra fil
+                sensorDataRetrieval.LoadSensors(mainWindowVM);
 
                 // Starter data-innhenting 
                 sensorDataRetrieval.SensorDataRetrieval_Start();
 
-                // HMS prosessering updater
+                // MVS prosessering updater
                 mvsTimer.Start();
                 mvsDatabaseTimer.Start();
 
@@ -531,52 +561,62 @@ namespace MVS
                 ucSensorSetupPage.ServerStartedCheck(true);
                 ucMVSInputSetup.Start();
                 ucMVSOutput.Start();
-                ucMotionDataSets.Start();
-
-                // Sette operasjonsmodus
-                SetOperationsMode(OperationsMode.Recording);
+                ucVerificationSessions.Start();
 
                 // Server startet
                 serverStarted = true;
 
                 // Gå til input tab
-                tabInput.IsSelected = true;
+                //tabInput.IsSelected = true;
 
                 // Start elapsed time
                 mainWindowVM.StartTimer();
+
+                // Vise recording symbol
+                recordingSymbol1.Visibility = Visibility.Visible;
+                recordingSymbol2.Visibility = Visibility.Visible;
+                recordingSymbol3.Visibility = Visibility.Visible;
             }
         }
 
         private void StartTest()
         {
+            // Sette operasjonsmodus
+            SetOperationsMode(OperationsMode.Test);
+
             // Resetter data listene i dataCalculations
             mvsProcessing.ResetDataCalculations();
+
+            // Laste sensor data setups fra fil
+            sensorDataRetrieval.LoadSensors(mainWindowVM);
 
             // Starter data-innhenting 
             sensorDataRetrieval.SensorDataRetrieval_Start();
 
-            // HMS prosessering updater
+            // MVS prosessering updater
             mvsTimer.Start();
-            mvsDatabaseTimer.Start();
 
             // Sensor Setup
             ucSensorSetupPage.ServerStartedCheck(true);
             ucMVSInputSetup.Start();
             ucMVSOutput.Start();
-            ucMotionDataSets.Start();
-
-            // Sette operasjonsmodus
-            SetOperationsMode(OperationsMode.Test);
+            ucVerificationSessions.Start();
 
             // Server startet
             serverStarted = true;
 
+            // Start elapsed time
+            mainWindowVM.StartTimer();
+
             // Gå til input tab
-            tabInput.IsSelected = true;
+            //tabInput.IsSelected = true;
         }
 
-        private void StopRecording()
+        private void Stop()
         {
+            // Sette operasjonsmodus
+            SetOperationsMode(OperationsMode.Stop);
+
             sensorDataRetrieval.SensorDataRetrieval_Stop();
 
             // MVS prosessering updater
@@ -586,10 +626,6 @@ namespace MVS
             ucSensorSetupPage.ServerStartedCheck(false);
             ucMVSInputSetup.Stop();
             ucMVSOutput.Stop();
-            ucMotionDataSets.Stop(operationsMode);
-
-            // Sette operasjonsmodus
-            SetOperationsMode(OperationsMode.Stop);
 
             // Server startet
             serverStarted = false;
@@ -598,10 +634,15 @@ namespace MVS
             databaseTablesCreated = false;
 
             // Gå til data set tab
-            tabMotionDataSets.IsSelected = true;
+            //tabMotionVerificationSessions.IsSelected = true;
 
             // Stoppe elapsed time
             mainWindowVM.StopTimer();
+
+            // Vise recording symbol
+            recordingSymbol1.Visibility = Visibility.Collapsed;
+            recordingSymbol2.Visibility = Visibility.Collapsed;
+            recordingSymbol3.Visibility = Visibility.Collapsed;
         }
 
         private void DoDatabaseMaintenance()
@@ -656,7 +697,7 @@ namespace MVS
             if (!tabSensorSetup.IsSelected && sensorInputEdited && !serverStarted)
             {
                 // Laste sensor data setups fra fil
-                sensorDataRetrieval.LoadSensors();
+                sensorDataRetrieval.LoadSensors(mainWindowVM);
 
                 // Resette display lister
                 statusDisplayList.Clear();

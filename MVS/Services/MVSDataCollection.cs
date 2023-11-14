@@ -47,10 +47,6 @@ namespace MVS
                         item.dataId = "0";
                     clientSensorData.dataId = int.Parse(item.dataId, Constants.cultureInfo);
 
-                    if (item.sensorId == string.Empty)
-                        item.sensorId = "0";
-                    clientSensorData.sensorGroupId = int.Parse(item.sensorId, Constants.cultureInfo);
-
                     clientSensorData.dbColumn = item.dbTableName;
 
                     // Legge inn i data listen
@@ -123,8 +119,8 @@ namespace MVS
         }
 
         // Overføre data fra liste i input to denne data samlingen
-        // HMS: Overføre fra sensor data liste til HMS data liste
-        public void TransferData(RadObservableCollection<SensorData> sensorDataList)
+        // MVS: Overføre fra sensor data liste til MVS data liste
+        public void TransferData(RadObservableCollection<SensorData> sensorDataList, MainWindowVM mainWindowVM)
         {
             // Lese timeout fra config
             double dataTimeout = config.ReadWithDefault(ConfigKey.DataTimeout, Constants.DataTimeoutDefault);
@@ -132,35 +128,42 @@ namespace MVS
             // Løper gjennom data listen
             lock (hmsDataListLock)
             {
-                foreach (var hmsData in dataList.ToList())
+                foreach (var mvsData in dataList.ToList())
                 {
                     // Finne match i mottaker data listen
-                    var sensorData = sensorDataList.Where(x => x?.id == hmsData?.dataId);
+                    var sensorData = sensorDataList.Where(x => x?.id == mvsData?.dataId);
 
                     // Fant match?
-                    if (hmsData != null &&
+                    if (mvsData != null &&
                         sensorData.Count() > 0)
                     {
-                        // Har vi nye data?
-                        if (hmsData.timestamp != sensorData.First().timestamp)
+                        if (sensorData.First().UseThisSensor(mainWindowVM))
                         {
-                            // Overføre data
-                            hmsData.data = sensorData.First().data;
+                            // Har vi nye data?
+                            if (mvsData.timestamp != sensorData.First().timestamp)
+                            {
+                                // Overføre data
+                                mvsData.data = sensorData.First().data;
 
-                            // Overføre time stamp
-                            hmsData.timestamp = sensorData.First().timestamp;
+                                // Overføre time stamp
+                                mvsData.timestamp = sensorData.First().timestamp;
 
-                            // Sjekke timestamp for data timeout
-                            if (hmsData.timestamp.AddMilliseconds(dataTimeout) < DateTime.UtcNow)
-                                hmsData.status = DataStatus.TIMEOUT_ERROR;
-                            else
-                                hmsData.status = DataStatus.OK;
+                                // Sjekke timestamp for data timeout
+                                if (mvsData.timestamp.AddMilliseconds(dataTimeout) < DateTime.UtcNow)
+                                    mvsData.status = DataStatus.TIMEOUT_ERROR;
+                                else
+                                    mvsData.status = DataStatus.OK;
+                            }
+                        }
+                        else
+                        {
+                            mvsData.status = DataStatus.NONE;
                         }
                     }
                     // Ingen verdi i data samlingen knyttet til verdi i mottaker listen
                     else
                     {
-                        hmsData.status = DataStatus.TIMEOUT_ERROR;
+                        mvsData.status = DataStatus.TIMEOUT_ERROR;
                     }
                 }
             }

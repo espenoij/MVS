@@ -4,7 +4,7 @@ namespace MVS
 {
     public class MVSDataConfigSection : ConfigurationSection
     {
-        [ConfigurationProperty(ConfigKey.HMSDataItems, IsDefaultCollection = false)]
+        [ConfigurationProperty(ConfigKey.MVSDataItems, IsDefaultCollection = false)]
         [ConfigurationCollection(typeof(MVSDataConfigCollection),
             AddItemName = "data",
             ClearItemsName = "clear",
@@ -13,11 +13,11 @@ namespace MVS
         {
             get
             {
-                return (MVSDataConfigCollection)base[ConfigKey.HMSDataItems];
+                return (MVSDataConfigCollection)base[ConfigKey.MVSDataItems];
             }
             set
             {
-                base[ConfigKey.HMSDataItems] = value;
+                base[ConfigKey.MVSDataItems] = value;
             }
         }
     }

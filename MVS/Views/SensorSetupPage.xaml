@@ -120,7 +120,7 @@
 
                         <DockPanel>
                             <Label
-                                Width="100"
+                                Width="120"
                                 Content="ID" />
                             <Label
                                 Name="lbSensorID" />
@@ -128,7 +128,7 @@
 
                         <DockPanel>
                             <Label
-                                Width="100"
+                                Width="120"
                                 Content="Name"
                                 VerticalAlignment="Center" />
                             <TextBox
@@ -139,8 +139,8 @@
 
                         <DockPanel>
                             <Label
-                                Width="100"
-                                Content="Type"
+                                Width="120"
+                                Content="Input Type"
                                 VerticalAlignment="Center" />
                             <telerik:RadComboBox
                                 Width="auto"
@@ -150,7 +150,7 @@
 
                         <DockPanel>
                             <Label
-                                Width="100"
+                                Width="120"
                                 Content="Description"
                                 VerticalAlignment="Center" />
                             <TextBox
@@ -161,51 +161,15 @@
                                 TextWrapping="Wrap" />
                         </DockPanel>
 
-                    </StackPanel>
-
-                </telerik:GroupBox>
-
-
-                <telerik:GroupBox
-                    Name="gbSetupSummaryNone"
-                    Header="Setup Summery"
-                    Visibility="Collapsed">
-
-                    <StackPanel
-                        Height="350">
-
                         <DockPanel>
                             <Label
-                                Content="None"
-                                HorizontalAlignment="Left" />
-                        </DockPanel>
-                    </StackPanel>
-
-                </telerik:GroupBox>
-
-                <telerik:GroupBox
-                    Header="Sensor Data Options"
-                    Margin="8">
-
-                    <StackPanel
-                        Margin="8">
-
-                        <CheckBox
-                            Name="chkSaveToDatabase"
-                            Checked="chkSaveToDatabase_Checked"
-                            Unchecked="chkSaveToDatabase_Unchecked"
-                            VerticalAlignment="Center">Save to Database</CheckBox>
-
-                        <DockPanel>
-                            <Label
-                                Width="140"
-                                Content="Save Frequency"
+                                Width="120"
+                                Content="MRU Type"
                                 VerticalAlignment="Center" />
                             <telerik:RadComboBox
                                 Width="auto"
-                                Name="cboDBStorageFrequencyType"
-                                SelectionChanged="cboDBStorageFrequencyType_SelectionChanged"
-                                HorizontalAlignment="Right" />
+                                Name="cboMRUType"
+                                DropDownClosed="cboMRUType_DropDownClosed" />
                         </DockPanel>
 
                     </StackPanel>
@@ -214,6 +178,23 @@
 
             </StackPanel>
 
+            <telerik:GroupBox
+                Grid.Column="2"
+                Name="gbSetupSummaryNone"
+                Header="Setup Summery"
+                Visibility="Collapsed"
+                Margin="8">
+
+                <StackPanel>
+
+                    <DockPanel>
+                        <Label
+                            Content="None"
+                            HorizontalAlignment="Left" />
+                    </DockPanel>
+                </StackPanel>
+
+            </telerik:GroupBox>
 
             <StackPanel
                 Grid.Column="2">
@@ -948,7 +929,7 @@
 
             <telerik:RadGridView
                 DockPanel.Dock="Left"
-                Name="gvMotionDataSets"
+                Name="gvVerificationSessions"
                 Margin="8,0,0,8"
                 ItemsSource="{Binding SensorData}"
                 IsReadOnly="True"
@@ -960,7 +941,7 @@
                 RowIndicatorVisibility="Collapsed"
                 SelectionMode="Single"
                 AutoGenerateColumns="False"
-                SelectionChanged="gvMotionDataSets_SelectionChanged">
+                SelectionChanged="gvVerificationSessions_SelectionChanged">
 
                 <telerik:RadGridView.Columns>
                     <telerik:GridViewDataColumn
@@ -972,9 +953,13 @@
                         Header="Type"
                         DataMemberBinding="{Binding type}" />
                     <telerik:GridViewDataColumn
-                        Width="140"
+                        Width="200"
                         Header="Source"
                         DataMemberBinding="{Binding source}" />
+                    <telerik:GridViewDataColumn
+                        Width="160"
+                        Header="MRU Type"
+                        DataMemberBinding="{Binding mruTypeString}" />
                     <telerik:GridViewDataColumn
                         Width="400"
                         Header="Name"

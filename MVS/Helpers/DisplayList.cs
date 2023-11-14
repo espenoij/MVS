@@ -1,5 +1,4 @@
-﻿using System;
-using System.Collections.Generic;
+﻿using System.Collections.Generic;
 using System.Linq;
 using Telerik.Windows.Data;
 
@@ -8,7 +7,7 @@ namespace MVS
     static class DisplayList
     {
         public static void Transfer(RadObservableCollection<HMSData> dataList, RadObservableCollection<HMSData> displayList)
-        {                        
+        {
             //// TEST BLIP
             //foreach (var item in dataList.ToList())
             //    if (item.id == (int)ValueType.MSI &&
@@ -132,29 +131,6 @@ namespace MVS
                 {
                     // Legg den inn i listen
                     displayList.Add(new FixedValueSetup(item));
-                }
-            }
-        }
-
-        public static void Transfer(RadObservableCollection<SensorGroup> dataList, RadObservableCollection<SensorGroup> displayList)
-        {
-            // Løpe gjennom listen med data som skal overføres til skjerm
-            foreach (var item in dataList.ToList())
-            {
-                // Finne igjen data i display listen
-                var displayItem = displayList.ToList().Where(x => x.id == item.id);
-
-                // Dersom vi fant data
-                if (displayItem.Count() > 0)
-                {
-                    // Oppdater data
-                    displayItem.First().Set(item);
-                }
-                // ...fant ikke data
-                else
-                {
-                    // Legg den inn i listen
-                    displayList.Add(new SensorGroup(item));
                 }
             }
         }

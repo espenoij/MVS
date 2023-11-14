@@ -61,8 +61,7 @@ namespace MVS
             for (int i = 0; i < Constants.DataCalculationSteps && i < sensorData.dataCalculations.Count; i++)
                 dataCalculations[i] = sensorData.dataCalculations[i];
 
-            saveToDatabase = sensorData.saveToDatabase;
-            saveFreq = sensorData.saveFreq;
+            mruType = sensorData.mruType;
             data = sensorData.data;
             timestamp = sensorData.timestamp;
             portStatus = sensorData.portStatus;
@@ -84,8 +83,7 @@ namespace MVS
                     type = (SensorType)Enum.Parse(typeof(SensorType), sensorConfig.type);
                     name = sensorConfig.name;
                     description = sensorConfig.description;
-                    saveToDatabase = bool.Parse(sensorConfig.saveToDatabase);
-                    saveFreq = (DatabaseSaveFrequency)Enum.Parse(typeof(DatabaseSaveFrequency), sensorConfig.saveFreq);
+                    mruType = (MRUType)Enum.Parse(typeof(MRUType), sensorConfig.mruType);
 
                     switch (type)
                     {
@@ -323,7 +321,7 @@ namespace MVS
                         serialPort = new SerialPortSetup();
                         modbus = null;
                         fileReader = null;
-                        fixedValue = null; 
+                        fixedValue = null;
                         break;
 
                     case SensorType.ModbusRTU:
@@ -332,7 +330,7 @@ namespace MVS
                         serialPort = null;
                         modbus = new ModbusSetup();
                         fileReader = null;
-                        fixedValue = null; 
+                        fixedValue = null;
                         break;
 
                     case SensorType.FileReader:
@@ -385,11 +383,28 @@ namespace MVS
 
         public List<DataCalculations> dataCalculations = new List<DataCalculations>();
 
-        // Lagre data til databasen
-        public bool saveToDatabase { get; set; }
-
-        // Database lagringsfrekvens
-        public DatabaseSaveFrequency saveFreq { get; set; }
+        // MRU Type
+        private MRUType _mruType { get; set; }
+        public MRUType mruType
+        {
+            get
+            {
+                return _mruType;
+            }
+            set
+            {
+                _mruType = value;
+                OnPropertyChanged();
+                OnPropertyChanged(nameof(mruTypeString));
+            }
+        }
+        public string mruTypeString
+        {
+            get
+            {
+                return _mruType.GetDescription();
+            }
+        }
 
         // Resultat data
         public double data { get; set; }
@@ -538,34 +553,19 @@ namespace MVS
             OnPropertyChanged(nameof(source));
         }
 
-        public double GetSaveFrequency(Config config)
+        // Funksjon som avgjør om sensoren skal brukes ut i fra MRU type og valgt MRU session input.
+        public bool UseThisSensor(MainWindowVM mainWindowVM)
         {
-            // Returnerer frekvens i millisekund
-            switch (saveFreq)
+            if (mainWindowVM.OperationsMode == OperationsMode.Test ||
+                (mainWindowVM.SelectedSession?.InputSetup == VerificationInputSetup.ReferenceMRU && mruType == MRUType.ReferenceMRU) ||
+                (mainWindowVM.SelectedSession?.InputSetup == VerificationInputSetup.ReferenceMRU_TestMRU && mruType == MRUType.ReferenceMRU) ||
+                (mainWindowVM.SelectedSession?.InputSetup == VerificationInputSetup.ReferenceMRU_TestMRU && mruType == MRUType.TestMRU))
             {
-                case DatabaseSaveFrequency.Program:
-                    return config.ReadWithDefault(ConfigKey.DatabaseSaveFrequency, Constants.DatabaseSaveFreqDefault);
-
-                case DatabaseSaveFrequency.Freq_2hz:
-                    return (int)DatabaseSaveFrequency.Freq_2hz;
-
-                case DatabaseSaveFrequency.Freq_1hz:
-                    return (int)DatabaseSaveFrequency.Freq_1hz;
-
-                case DatabaseSaveFrequency.Freq_2sec:
-                    return (int)DatabaseSaveFrequency.Freq_2sec;
-
-                case DatabaseSaveFrequency.Freq_3sec:
-                    return (int)DatabaseSaveFrequency.Freq_3sec;
-
-                case DatabaseSaveFrequency.Freq_4sec:
-                    return (int)DatabaseSaveFrequency.Freq_4sec;
-
-                case DatabaseSaveFrequency.Freq_5sec:
-                    return (int)DatabaseSaveFrequency.Freq_5sec;
-
-                default:
-                    return 1000;
+                return true;
+            }
+            else
+            {
+                return false;
             }
         }
 
@@ -575,37 +575,5 @@ namespace MVS
         {
             PropertyChanged?.Invoke(this, new PropertyChangedEventArgs(name));
         }
-    }
-
-    public enum SensorType
-    {
-        None,
-        SerialPort,
-        ModbusRTU,      // Remote Terminal Unit (serial port)
-        ModbusASCII,
-        ModbusTCP,
-        FileReader,
-        FixedValue
-    }
-
-    public enum DatabaseSaveFrequency
-    {
-        Sensor,
-        Program,
-        Freq_2hz = 500,
-        Freq_1hz = 1000,
-        Freq_2sec = 2000,
-        Freq_3sec = 3000,
-        Freq_4sec = 4000,
-        Freq_5sec = 5000
-    }
-
-    public enum ModbusObjectType
-    {
-        None,
-        Coil,
-        DiscreteInput,
-        InputRegister,
-        HoldingRegister
     }
 }

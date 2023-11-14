@@ -30,7 +30,7 @@ static class Weather
     {
         switch (str)
         {
-            case "NSW": 
+            case "NSW":
                 return WeatherPhenomena.NSW;
             case "BC":
                 return WeatherPhenomena.BC;

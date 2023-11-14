@@ -17,7 +17,7 @@ namespace MVS
 
             inputType = InputDataType.Text;
             binaryType = BinaryType.Byte;
-            
+
             packetHeader = string.Empty;
             packetEnd = "\\r\\n";
             packetDelimiter = string.Empty;
@@ -81,13 +81,13 @@ namespace MVS
 
         public string packetHeader { get; set; }
         public string packetEnd { get; set; }
-        
+
         public string packetDelimiter { get; set; }
         public CombineFields packetCombineFields { get; set; }
         public bool fixedPosData { get; set; }
         public int fixedPosStart { get; set; }
         public int fixedPosTotal { get; set; }
-        
+
         public string dataField { get; set; }
         public DecimalSeparator decimalSeparator { get; set; }
         public bool autoExtractValue { get; set; }

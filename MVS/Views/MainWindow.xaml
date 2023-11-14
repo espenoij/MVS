@@ -99,10 +99,10 @@
 
 
                 <!--==============================================================-->
-                <!--Side Menu: Motion Data Sets-->
+                <!--Side Menu: Motion Verification Sessions-->
                 <!--==============================================================-->
                 <telerik:RadTabItem
-                    Name="tabMotionDataSets">
+                    Name="tabMotionVerificationSessions">
 
                     <telerik:RadTabItem.Header>
                         <Image
@@ -148,10 +148,35 @@
                                     Width="140"
                                     VerticalAlignment="Top">Stop</telerik:RadButton>
 
-                                <Label
-                                    Margin="20,0"
-                                    VerticalAlignment="Center"
-                                    Content="{Binding ElapsedTimeString}" />
+                                <Grid
+                                    Width="300">
+
+                                    <Grid.ColumnDefinitions>
+                                        <ColumnDefinition
+                                            Width="*" />
+                                        <ColumnDefinition
+                                            Width="3*" />
+                                    </Grid.ColumnDefinitions>
+
+                                    <!--Recording Time-->
+                                    <Ellipse
+                                        Grid.Column="0"
+                                        Name="recordingSymbol1"
+                                        VerticalAlignment="Center"
+                                        HorizontalAlignment="Center"
+                                        Width="20"
+                                        Height="20"
+                                        Fill="{StaticResource ColorRed}"
+                                        Visibility="Collapsed" />
+
+                                    <!--Operations Mode Info String-->
+                                    <Label
+                                        Grid.Column="1"
+                                        VerticalAlignment="Center"
+                                        FontSize="{StaticResource fontSizeTimer}"
+                                        Content="{Binding OperationsModeString}" />
+
+                                </Grid>
 
                             </StackPanel>
 
@@ -166,7 +191,7 @@
                                 <Button
                                     Name="btnTest1"
                                     Click="btnTest_Click"
-                                    Width="110">Test</Button>
+                                    Width="110">Test Run</Button>
 
                             </StackPanel>
 
@@ -178,19 +203,28 @@
                             Margin="8,0,8,8">
 
                             <telerik:RadTabItem
-                                Header="Data Sets">
+                                Header="Sessions">
 
                                 <DockPanel>
 
-                                    <uc:MotionDataSets
-                                        x:Name="ucMotionDataSets" />
+                                    <uc:VerificationSessions
+                                        x:Name="ucVerificationSessions" />
 
                                 </DockPanel>
 
                             </telerik:RadTabItem>
 
                             <telerik:RadTabItem
-                                Header="Data Capture">
+                                Name="tabInput_HelideckMotion"
+                                Header="Graphs"
+                                Visibility="Collapsed">
+
+                                <DockPanel>
+
+                                    <uc:MVSSessionGraphs
+                                        x:Name="ucMVSSessionGraphs" />
+
+                                </DockPanel>
 
                             </telerik:RadTabItem>
 
@@ -242,18 +276,43 @@
                                     Name="btnStart2"
                                     Click="btnStart_Click"
                                     Width="140"
-                                    Margin="0,0,10,0">Start</telerik:RadButton>
-                                
+                                    Margin="0,0,10,0">Start Recording</telerik:RadButton>
+
                                 <telerik:RadButton
                                     Name="btnStop2"
                                     Click="btnStop_Click"
                                     Width="140"
                                     VerticalAlignment="Top">Stop</telerik:RadButton>
 
-                                <Label
-                                    Margin="20,0"
-                                    VerticalAlignment="Center"
-                                    Content="{Binding ElapsedTimeString}" />
+                                <Grid
+                                    Width="300">
+
+                                    <Grid.ColumnDefinitions>
+                                        <ColumnDefinition
+                                            Width="*" />
+                                        <ColumnDefinition
+                                            Width="3*" />
+                                    </Grid.ColumnDefinitions>
+
+                                    <!--Recording Time-->
+                                    <Ellipse
+                                        Grid.Column="0"
+                                        Name="recordingSymbol2"
+                                        VerticalAlignment="Center"
+                                        HorizontalAlignment="Center"
+                                        Width="20"
+                                        Height="20"
+                                        Fill="{StaticResource ColorRed}"
+                                        Visibility="Collapsed" />
+
+                                    <!--Operations Mode Info String-->
+                                    <Label
+                                        Grid.Column="1"
+                                        VerticalAlignment="Center"
+                                        FontSize="{StaticResource fontSizeTimer}"
+                                        Content="{Binding OperationsModeString}" />
+
+                                </Grid>
 
                             </StackPanel>
 
@@ -268,7 +327,7 @@
                                 <Button
                                     Name="btnTest2"
                                     Click="btnTest_Click"
-                                    Width="110">Test</Button>
+                                    Width="110">Test Run</Button>
 
                             </StackPanel>
 
@@ -569,18 +628,43 @@
                                     Name="btnStart3"
                                     Click="btnStart_Click"
                                     Width="140"
-                                    Margin="0,0,10,0">Start</telerik:RadButton>
-                                
+                                    Margin="0,0,10,0">Start Recording</telerik:RadButton>
+
                                 <telerik:RadButton
                                     Name="btnStop3"
                                     Click="btnStop_Click"
                                     Width="140"
                                     VerticalAlignment="Top">Stop</telerik:RadButton>
 
-                                <Label
-                                    Margin="20,0"
-                                    VerticalAlignment="Center"
-                                    Content="{Binding ElapsedTimeString}" />
+                                <Grid
+                                    Width="300">
+
+                                    <Grid.ColumnDefinitions>
+                                        <ColumnDefinition
+                                            Width="*" />
+                                        <ColumnDefinition
+                                            Width="3*" />
+                                    </Grid.ColumnDefinitions>
+
+                                    <!--Recording Time-->
+                                    <Ellipse
+                                        Grid.Column="0"
+                                        Name="recordingSymbol3"
+                                        VerticalAlignment="Center"
+                                        HorizontalAlignment="Center"
+                                        Width="20"
+                                        Height="20"
+                                        Fill="{StaticResource ColorRed}"
+                                        Visibility="Collapsed" />
+
+                                    <!--Operations Mode Info String-->
+                                    <Label
+                                        Grid.Column="1"
+                                        VerticalAlignment="Center"
+                                        FontSize="{StaticResource fontSizeTimer}"
+                                        Content="{Binding OperationsModeString}" />
+
+                                </Grid>
 
                             </StackPanel>
 
@@ -595,7 +679,7 @@
                                 <Button
                                     Name="btnTest3"
                                     Click="btnTest_Click"
-                                    Width="110">Test</Button>
+                                    Width="110">Test Run</Button>
 
                             </StackPanel>
 
@@ -624,7 +708,7 @@
 
                                 <DockPanel>
 
-                                    <uc:HMSInputSetup
+                                    <uc:MVSInputSetup
                                         x:Name="ucMVSInputSetup" />
 
                                 </DockPanel>

@@ -59,7 +59,7 @@ namespace MVS
         {
             string returnValue = string.Empty;
 
-            if (input  != null)
+            if (input != null)
             {
                 IntPtr ptr = System.Runtime.InteropServices.Marshal.SecureStringToBSTR(input);
                 try

@@ -431,72 +431,72 @@ namespace MVS
                     switch (modbusObjectType)
                     {
                         case ModbusObjectType.Coil:
-                            {
-                                bool[] registers = new bool[0];
+                        {
+                            bool[] registers = new bool[0];
 
-                                if (sensorData.type == SensorType.ModbusTCP)
-                                    registers = modbusTCPMaster.ReadCoils(sensorData.modbus.slaveID, modbusHelper.AddressToOffset(sensorData.modbus.startAddress), (ushort)sensorData.modbus.totalAddresses);
-                                else
-                                    registers = modbusSerialMaster.ReadCoils(sensorData.modbus.slaveID, modbusHelper.AddressToOffset(sensorData.modbus.startAddress), (ushort)sensorData.modbus.totalAddresses);
+                            if (sensorData.type == SensorType.ModbusTCP)
+                                registers = modbusTCPMaster.ReadCoils(sensorData.modbus.slaveID, modbusHelper.AddressToOffset(sensorData.modbus.startAddress), (ushort)sensorData.modbus.totalAddresses);
+                            else
+                                registers = modbusSerialMaster.ReadCoils(sensorData.modbus.slaveID, modbusHelper.AddressToOffset(sensorData.modbus.startAddress), (ushort)sensorData.modbus.totalAddresses);
 
-                                // Vise sample data
-                                DisplayRegisters(registers, sensorData.modbus);
+                            // Vise sample data
+                            DisplayRegisters(registers, sensorData.modbus);
 
-                                // Selected Data
-                                process.GetSelectedData(sensorData, registers, modbusData);
-                            }
-                            break;
+                            // Selected Data
+                            process.GetSelectedData(sensorData, registers, modbusData);
+                        }
+                        break;
 
                         case ModbusObjectType.DiscreteInput:
-                            {
-                                bool[] registers = new bool[0]; ;
+                        {
+                            bool[] registers = new bool[0]; ;
 
-                                if (sensorData.type == SensorType.ModbusTCP)
-                                    registers = modbusTCPMaster.ReadInputs(sensorData.modbus.slaveID, modbusHelper.AddressToOffset(sensorData.modbus.startAddress), (ushort)sensorData.modbus.totalAddresses);
-                                else
-                                    registers = modbusSerialMaster.ReadInputs(sensorData.modbus.slaveID, modbusHelper.AddressToOffset(sensorData.modbus.startAddress), (ushort)sensorData.modbus.totalAddresses);
+                            if (sensorData.type == SensorType.ModbusTCP)
+                                registers = modbusTCPMaster.ReadInputs(sensorData.modbus.slaveID, modbusHelper.AddressToOffset(sensorData.modbus.startAddress), (ushort)sensorData.modbus.totalAddresses);
+                            else
+                                registers = modbusSerialMaster.ReadInputs(sensorData.modbus.slaveID, modbusHelper.AddressToOffset(sensorData.modbus.startAddress), (ushort)sensorData.modbus.totalAddresses);
 
-                                // Vise sample data
-                                DisplayRegisters(registers, sensorData.modbus);
+                            // Vise sample data
+                            DisplayRegisters(registers, sensorData.modbus);
 
-                                // Selected Data
-                                process.GetSelectedData(sensorData, registers, modbusData);
-                            }
-                            break;
+                            // Selected Data
+                            process.GetSelectedData(sensorData, registers, modbusData);
+                        }
+                        break;
 
                         case ModbusObjectType.InputRegister:
-                            {
-                                ushort[] registers = new ushort[0];
+                        {
+                            ushort[] registers = new ushort[0];
 
-                                if (sensorData.type == SensorType.ModbusTCP)
-                                    registers = modbusTCPMaster.ReadInputRegisters(sensorData.modbus.slaveID, modbusHelper.AddressToOffset(sensorData.modbus.startAddress), (ushort)sensorData.modbus.totalAddresses);
-                                else
-                                    registers = modbusSerialMaster.ReadInputRegisters(sensorData.modbus.slaveID, modbusHelper.AddressToOffset(sensorData.modbus.startAddress), (ushort)sensorData.modbus.totalAddresses);
+                            if (sensorData.type == SensorType.ModbusTCP)
+                                registers = modbusTCPMaster.ReadInputRegisters(sensorData.modbus.slaveID, modbusHelper.AddressToOffset(sensorData.modbus.startAddress), (ushort)sensorData.modbus.totalAddresses);
+                            else
+                                registers = modbusSerialMaster.ReadInputRegisters(sensorData.modbus.slaveID, modbusHelper.AddressToOffset(sensorData.modbus.startAddress), (ushort)sensorData.modbus.totalAddresses);
 
-                                // Vise sample data
-                                DisplayRegisters(registers, sensorData.modbus);
+                            // Vise sample data
+                            DisplayRegisters(registers, sensorData.modbus);
 
-                                // Selected Data
-                                process.GetSelectedData(sensorData, registers, modbusData);
-                            }
-                            break;
+                            // Selected Data
+                            process.GetSelectedData(sensorData, registers, modbusData);
+                        }
+                        break;
 
                         case ModbusObjectType.HoldingRegister:
-                            {
-                                ushort[] registers = new ushort[0];
+                        {
+                            ushort[] registers = new ushort[0];
 
-                                if (sensorData.type == SensorType.ModbusTCP)
-                                    registers = modbusTCPMaster.ReadHoldingRegisters(sensorData.modbus.slaveID, modbusHelper.AddressToOffset(sensorData.modbus.startAddress), (ushort)sensorData.modbus.totalAddresses);
-                                else
-                                    registers = modbusSerialMaster.ReadHoldingRegisters(sensorData.modbus.slaveID, modbusHelper.AddressToOffset(sensorData.modbus.startAddress), (ushort)sensorData.modbus.totalAddresses);
+                            if (sensorData.type == SensorType.ModbusTCP)
+                                registers = modbusTCPMaster.ReadHoldingRegisters(sensorData.modbus.slaveID, modbusHelper.AddressToOffset(sensorData.modbus.startAddress), (ushort)sensorData.modbus.totalAddresses);
+                            else
+                                registers = modbusSerialMaster.ReadHoldingRegisters(sensorData.modbus.slaveID, modbusHelper.AddressToOffset(sensorData.modbus.startAddress), (ushort)sensorData.modbus.totalAddresses);
 
-                                // Vise sample data
-                                DisplayRegisters(registers, sensorData.modbus);
+                            // Vise sample data
+                            DisplayRegisters(registers, sensorData.modbus);
 
-                                // Selected Data
-                                process.GetSelectedData(sensorData, registers, modbusData);
-                            }
-                            break;
+                            // Selected Data
+                            process.GetSelectedData(sensorData, registers, modbusData);
+                        }
+                        break;
                     }
 
                     // Vise selected data
@@ -611,7 +611,7 @@ namespace MVS
             // Ellers venter den til intervallet er gått før den kjører første gang.
             modbusReader.Interval = TimeSpan.FromMilliseconds(0);
             modbusReader.Start();
-            modbusReader.Interval = TimeSpan.FromMilliseconds(sensorData.GetSaveFrequency(config));
+            modbusReader.Interval = TimeSpan.FromMilliseconds(Constants.ClientUIUpdateFrequencyDefault);
         }
 
         private void ModbusDispatcher_Stop()

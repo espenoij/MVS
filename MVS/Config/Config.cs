@@ -536,7 +536,7 @@ namespace MVS
             try
             {
                 // Hente seksjon
-                var clientConfigSection = dataConfig.GetSection(ConfigKey.HMSData) as MVSDataConfigSection;
+                var clientConfigSection = dataConfig.GetSection(ConfigKey.MVSData) as MVSDataConfigSection;
                 if (clientConfigSection != null)
                 {
                     bool found = false;
@@ -555,7 +555,7 @@ namespace MVS
 
                     // Oppdater XML fil
                     dataConfig.Save(ConfigurationSaveMode.Modified);
-                    ConfigurationManager.RefreshSection(ConfigKey.HMSData);
+                    ConfigurationManager.RefreshSection(ConfigKey.MVSData);
                 }
             }
             catch (Exception ex)
@@ -570,13 +570,13 @@ namespace MVS
             }
         }
 
-        // Hente ut liste med alle klient sensor data
+        // Hente ut liste med alle MVS sensor data
         public MVSDataConfigCollection GetClientDataList()
         {
             try
             {
                 // Hente seksjon
-                var sensorConfigSection = dataConfig.GetSection(ConfigKey.HMSData) as MVSDataConfigSection;
+                var sensorConfigSection = dataConfig.GetSection(ConfigKey.MVSData) as MVSDataConfigSection;
                 if (sensorConfigSection != null)
                 {
                     return sensorConfigSection.ClientDataItems;
@@ -595,7 +595,7 @@ namespace MVS
 
             return null;
         }
-        
+
         // Oppdatere eksisterende test data i config fil
         public void SetTestData(HMSData testData)
         {
@@ -729,76 +729,6 @@ namespace MVS
                         ErrorMessageType.Config,
                         ErrorMessageCategory.AdminUser,
                         string.Format("Client Config (GetReferenceDataList): Could not read all reference data from config file. {0}", ex.Message)));
-            }
-
-            return null;
-        }
-
-
-        // Oppdatere eksisterende sensor group data i config fil
-        public void SetSensorGroupIDData(SensorGroup sensor)
-        {
-            // NB! Dersom data med angitt ID allerede finnes vil dette gi feilmelding
-            SensorGroupIDConfig sensorIDConfig = new SensorGroupIDConfig(sensor);
-
-            try
-            {
-                // Hente seksjon
-                var sensorIDConfigSection = dataConfig.GetSection(ConfigKey.SensorGroupID) as SensorGroupIDConfigSection;
-                if (sensorIDConfigSection != null)
-                {
-                    bool found = false;
-
-                    // Søke etter sensor verdi med angitt ID
-                    for (int i = 0; i < sensorIDConfigSection.SensorIDDataItems.Count && !found; i++)
-                    {
-                        // Sjekke ID
-                        if (sensorIDConfigSection.SensorIDDataItems[i]?.id == sensorIDConfig.id)
-                        {
-                            // Oppdatere data
-                            sensorIDConfigSection.SensorIDDataItems[i] = sensorIDConfig;
-                            found = true;
-                        }
-                    }
-
-                    // Oppdater XML fil
-                    dataConfig.Save(ConfigurationSaveMode.Modified);
-                    ConfigurationManager.RefreshSection(ConfigKey.SensorGroupID);
-                }
-            }
-            catch (Exception ex)
-            {
-                // Sette feilmelding
-                errorHandler?.Insert(
-                    new ErrorMessage(
-                        DateTime.UtcNow,
-                        ErrorMessageType.Config,
-                        ErrorMessageCategory.AdminUser,
-                        string.Format("Sensor Group ID Config (SetSensorIDData): Could not update sensor data in config file. {0}", ex.Message)));
-            }
-        }
-
-        // Hente ut liste med alle sensor group data
-        public SensorGroupIDConfigCollection GetSensorGroupIDDataList()
-        {
-            try
-            {
-                // Hente seksjon
-                var sensorIDConfigSection = dataConfig.GetSection(ConfigKey.SensorGroupID) as SensorGroupIDConfigSection;
-                if (sensorIDConfigSection != null)
-                {
-                    return sensorIDConfigSection.SensorIDDataItems;
-                }
-            }
-            catch (Exception ex)
-            {
-                // Sette feilmelding
-                errorHandler?.Insert(
-                    new ErrorMessage(
-                        DateTime.UtcNow,
-                        ErrorMessageType.Config,
-                        ErrorMessageCategory.AdminUser,
-                        string.Format("Sensor Group ID Config (GetSensorIDDataList): Could not read all sensor ID data from config file. {0}", ex.Message)));
             }
 
             return null;

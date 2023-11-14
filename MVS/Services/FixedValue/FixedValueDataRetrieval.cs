@@ -32,13 +32,17 @@ namespace MVS
             fixedValueReaderCallback = new FixedValueReaderCallback(DataProcessing);
         }
 
-        public void Load(SensorData sensorData)
+        public void Load(SensorData sensorData, MainWindowVM mainWindowVM)
         {
-            // Legge til sensor i fixed value sensor listen
-            fixedValueSensorList.Add(sensorData);
+            // Sjekke om denne sensoren skal brukes først
+            if (sensorData.UseThisSensor(mainWindowVM))
+            {
+                // Legge til sensor i fixed value sensor listen
+                fixedValueSensorList.Add(sensorData);
 
-            // Legge inn i file reader listen
-            fixedValueList.Add(new FixedValueSetup(sensorData));
+                // Legge inn i file reader listen
+                fixedValueList.Add(new FixedValueSetup(sensorData));
+            }
         }
 
         public void Start()

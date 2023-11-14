@@ -83,8 +83,8 @@
     <Reference Include="DeviceId.Windows.Wmi, Version=6.5.0.0, Culture=neutral, PublicKeyToken=f755c371b5c59c52, processorArchitecture=MSIL">
       <HintPath>..\packages\DeviceId.Windows.Wmi.6.5.0\lib\net40\DeviceId.Windows.Wmi.dll</HintPath>
     </Reference>
-    <Reference Include="Google.Protobuf, Version=3.24.3.0, Culture=neutral, PublicKeyToken=a7d26565bac4d604, processorArchitecture=MSIL">
-      <HintPath>..\packages\Google.Protobuf.3.24.3\lib\net45\Google.Protobuf.dll</HintPath>
+    <Reference Include="Google.Protobuf, Version=3.25.0.0, Culture=neutral, PublicKeyToken=a7d26565bac4d604, processorArchitecture=MSIL">
+      <HintPath>..\packages\Google.Protobuf.3.25.0\lib\net45\Google.Protobuf.dll</HintPath>
     </Reference>
     <Reference Include="K4os.Compression.LZ4, Version=1.3.6.0, Culture=neutral, PublicKeyToken=2186fa9121ef231d, processorArchitecture=MSIL">
       <HintPath>..\packages\K4os.Compression.LZ4.1.3.6\lib\net462\K4os.Compression.LZ4.dll</HintPath>
@@ -104,16 +104,16 @@
       <Private>True</Private>
     </Reference>
     <Reference Include="Microsoft.Xaml.Behaviors, Version=1.1.0.0, Culture=neutral, PublicKeyToken=b03f5f7f11d50a3a, processorArchitecture=MSIL">
-      <HintPath>..\packages\Microsoft.Xaml.Behaviors.Wpf.1.1.39\lib\net45\Microsoft.Xaml.Behaviors.dll</HintPath>
+      <HintPath>..\packages\Microsoft.Xaml.Behaviors.Wpf.1.1.77\lib\net462\Microsoft.Xaml.Behaviors.dll</HintPath>
     </Reference>
-    <Reference Include="MySql.Data, Version=8.1.0.0, Culture=neutral, PublicKeyToken=c5687fc88969c44d, processorArchitecture=MSIL">
-      <HintPath>..\packages\MySql.Data.8.1.0\lib\net462\MySql.Data.dll</HintPath>
+    <Reference Include="MySql.Data, Version=8.2.0.0, Culture=neutral, PublicKeyToken=c5687fc88969c44d, processorArchitecture=MSIL">
+      <HintPath>..\packages\MySql.Data.8.2.0\lib\net462\MySql.Data.dll</HintPath>
     </Reference>
-    <Reference Include="NModbus, Version=3.0.80.0, Culture=neutral, processorArchitecture=MSIL">
-      <HintPath>..\packages\NModbus.3.0.80\lib\net46\NModbus.dll</HintPath>
+    <Reference Include="NModbus, Version=3.0.81.0, Culture=neutral, processorArchitecture=MSIL">
+      <HintPath>..\packages\NModbus.3.0.81\lib\net46\NModbus.dll</HintPath>
     </Reference>
-    <Reference Include="NModbus.Serial, Version=3.0.80.0, Culture=neutral, processorArchitecture=MSIL">
-      <HintPath>..\packages\NModbus.Serial.3.0.80\lib\net46\NModbus.Serial.dll</HintPath>
+    <Reference Include="NModbus.Serial, Version=3.0.81.0, Culture=neutral, processorArchitecture=MSIL">
+      <HintPath>..\packages\NModbus.Serial.3.0.81\lib\net46\NModbus.Serial.dll</HintPath>
     </Reference>
     <Reference Include="System" />
     <Reference Include="System.AppContext, Version=4.1.1.0, Culture=neutral, PublicKeyToken=b03f5f7f11d50a3a, processorArchitecture=MSIL">
@@ -347,8 +347,8 @@
     <Reference Include="WindowsBase" />
     <Reference Include="PresentationCore" />
     <Reference Include="PresentationFramework" />
-    <Reference Include="ZstdSharp, Version=0.7.2.0, Culture=neutral, PublicKeyToken=8d151af33a4ad5cf, processorArchitecture=MSIL">
-      <HintPath>..\packages\ZstdSharp.Port.0.7.2\lib\net461\ZstdSharp.dll</HintPath>
+    <Reference Include="ZstdSharp, Version=0.7.3.0, Culture=neutral, PublicKeyToken=8d151af33a4ad5cf, processorArchitecture=MSIL">
+      <HintPath>..\packages\ZstdSharp.Port.0.7.3\lib\net461\ZstdSharp.dll</HintPath>
     </Reference>
   </ItemGroup>
   <ItemGroup>
@@ -370,13 +370,15 @@
     <Compile Include="Helpers\Crc32.cs" />
     <Compile Include="Helpers\DisplayList.cs" />
     <Compile Include="Helpers\GraphBuffer.cs" />
+    <Compile Include="Helpers\LabelAbsConverter.cs" />
     <Compile Include="Models\CommonTypes.cs" />
-    <Compile Include="Models\MotionDataSet.cs" />
+    <Compile Include="Models\VerificationSession.cs" />
     <Compile Include="Services\FixedValue\FixedValueConfig.cs" />
     <Compile Include="Services\FixedValue\FixedValueDataRetrieval.cs" />
     <Compile Include="Services\FixedValue\FixedValueSetup.cs" />
     <Compile Include="Models\WindVector.cs" />
     <Compile Include="ViewModels\AboutVM.cs" />
+    <Compile Include="ViewModels\HelideckMotionVM.cs" />
     <Compile Include="ViewModels\MainWindowVM.cs" />
     <Compile Include="ViewModels\FixedValueWindowVM.cs" />
     <Compile Include="Views\FixedValueSetupWindow.xaml.cs">
@@ -409,16 +411,12 @@
     <Compile Include="Config\HelicopterWSILimitConfig.cs" />
     <Compile Include="Config\HelicopterWSILimitConfigCollection.cs" />
     <Compile Include="Config\HelicopterWSILimitConfigSection.cs" />
-    <Compile Include="Views\HMSInputSetup.xaml.cs">
-      <DependentUpon>HMSInputSetup.xaml</DependentUpon>
+    <Compile Include="Views\MVSInputSetup.xaml.cs">
+      <DependentUpon>MVSInputSetup.xaml</DependentUpon>
     </Compile>
     <Compile Include="Services\CalculationSetup.cs" />
     <Compile Include="Helpers\EnumExtension.cs" />
     <Compile Include="Services\DataValidation.cs" />
-    <Compile Include="Models\SensorGroup.cs" />
-    <Compile Include="Config\SensorGroupIDConfig.cs" />
-    <Compile Include="Config\SensorGroupIDConfigCollection.cs" />
-    <Compile Include="Config\SensorGroupIDConfigSection.cs" />
     <Compile Include="Config\Config.cs" />
     <Compile Include="Config\ConfigKey.cs" />
     <Compile Include="Models\Constants.cs" />
@@ -452,8 +450,8 @@
     <Compile Include="Config\SensorConfigSection.cs" />
     <Compile Include="Models\SensorData.cs" />
     <Compile Include="Config\SensorConfig.cs" />
-    <Compile Include="Views\MotionDataSets.xaml.cs">
-      <DependentUpon>MotionDataSets.xaml</DependentUpon>
+    <Compile Include="Views\VerificationSessions.xaml.cs">
+      <DependentUpon>VerificationSessions.xaml</DependentUpon>
     </Compile>
     <Compile Include="Views\SensorSetupPage.xaml.cs">
       <DependentUpon>SensorSetupPage.xaml</DependentUpon>
@@ -469,6 +467,9 @@
     <Compile Include="Helpers\SortAdorner.cs" />
     <Compile Include="Helpers\TextHelper.cs" />
     <Compile Include="Services\Weather.cs" />
+    <Compile Include="Views\MVSSessionGraphs.xaml.cs">
+      <DependentUpon>MVSSessionGraphs.xaml</DependentUpon>
+    </Compile>
     <Page Include="Dialogs\DialogAbout.xaml">
       <Generator>MSBuild:Compile</Generator>
       <SubType>Designer</SubType>
@@ -485,7 +486,7 @@
       <Generator>MSBuild:Compile</Generator>
       <SubType>Designer</SubType>
     </Page>
-    <Page Include="Views\HMSInputSetup.xaml">
+    <Page Include="Views\MVSInputSetup.xaml">
       <Generator>MSBuild:Compile</Generator>
       <SubType>Designer</SubType>
     </Page>
@@ -509,7 +510,7 @@
       <SubType>Designer</SubType>
       <Generator>MSBuild:Compile</Generator>
     </Page>
-    <Page Include="Views\MotionDataSets.xaml">
+    <Page Include="Views\VerificationSessions.xaml">
       <Generator>MSBuild:Compile</Generator>
       <SubType>Designer</SubType>
     </Page>
@@ -529,6 +530,10 @@
       <DependentUpon>SerialPortSetupWindow.xaml</DependentUpon>
       <SubType>Code</SubType>
     </Compile>
+    <Page Include="Views\MVSSessionGraphs.xaml">
+      <Generator>MSBuild:UpdateDesignTimeXaml</Generator>
+      <SubType>Designer</SubType>
+    </Page>
   </ItemGroup>
   <ItemGroup>
     <Compile Include="Properties\AssemblyInfo.cs">

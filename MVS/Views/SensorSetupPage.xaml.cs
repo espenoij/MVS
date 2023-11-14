@@ -26,14 +26,13 @@ namespace MVS
         private SensorData sensorDataSelected = new SensorData();
 
         private bool serverStarted = false;
-        private MainWindow.StopServerCallback stopServerCallback;
 
         public SensorSetupPage()
         {
             InitializeComponent();
         }
 
-        public void Init(Config config, ErrorHandler errorHandler, AdminSettingsVM adminSettingsVM, MainWindow.StopServerCallback stopServerCallback)
+        public void Init(Config config, ErrorHandler errorHandler, AdminSettingsVM adminSettingsVM)
         {
             // Config
             this.config = config;
@@ -44,16 +43,13 @@ namespace MVS
             // Admin Settings
             this.adminSettingsVM = adminSettingsVM;
 
-            // Stop server callback
-            this.stopServerCallback = stopServerCallback;
-
             InitUI();
         }
 
         public void InitUI()
         {
             // Liste med sensor verdier
-            gvMotionDataSets.ItemsSource = sensorDataList;
+            gvVerificationSessions.ItemsSource = sensorDataList;
 
             // Fylle sensor type combobox
             foreach (var value in Enum.GetValues(typeof(SensorType)))
@@ -62,9 +58,12 @@ namespace MVS
             // Sette default verdi
             cboSensorType.Text = cboSensorType.Items[0].ToString();
 
-            // Fylle database option save frequency combobox
-            foreach (var value in Enum.GetValues(typeof(DatabaseSaveFrequency)))
-                cboDBStorageFrequencyType.Items.Add(value.ToString());
+            // Fylle MRU type combobox
+            foreach (MRUType value in Enum.GetValues(typeof(MRUType)))
+                cboMRUType.Items.Add(value.GetDescription());
+
+            // Sette default verdi
+            cboMRUType.Text = cboMRUType.Items[0].ToString();
 
             // Laste sensor data
             LoadSensorData();
@@ -120,8 +119,7 @@ namespace MVS
             newSensor.name = "New Sensor Value";
             newSensor.description = "(description)";
             newSensor.type = SensorType.None;
-            newSensor.saveToDatabase = false;
-            newSensor.saveFreq = DatabaseSaveFrequency.Sensor;
+            newSensor.mruType = MRUType.None;
 
             // Legge i listen
             sensorDataList.Add(newSensor);
@@ -130,8 +128,8 @@ namespace MVS
             config.NewData(sensorDataList[sensorDataList.Count - 1]);
 
             // Sette ny item som selected (vil også laste data ettersom SelectionChange under kalles automatisk når vi gjør dette)
-            int index = gvMotionDataSets.Items.IndexOf(newSensor);
-            gvMotionDataSets.SelectedItem = gvMotionDataSets.Items[index];
+            int index = gvVerificationSessions.Items.IndexOf(newSensor);
+            gvVerificationSessions.SelectedItem = gvVerificationSessions.Items[index];
         }
 
         private void btnCopy_Click(object sender, RoutedEventArgs e)
@@ -144,8 +142,7 @@ namespace MVS
             newSensor.name = string.Format("{0} (copy)", sensorDataSelected.name);
             newSensor.type = sensorDataSelected.type;
             newSensor.description = sensorDataSelected.description;
-            newSensor.saveToDatabase = sensorDataSelected.saveToDatabase;
-            newSensor.saveFreq = sensorDataSelected.saveFreq;
+            newSensor.mruType = sensorDataSelected.mruType;
 
             switch (sensorDataSelected.type)
             {
@@ -178,8 +175,8 @@ namespace MVS
             config.NewData(sensorDataList[sensorDataList.Count - 1]);
 
             // Sette ny item som selected (vil også laste data ettersom SelectionChange under kalles automatisk når vi gjør dette)
-            int index = gvMotionDataSets.Items.IndexOf(newSensor);
-            gvMotionDataSets.SelectedItem = gvMotionDataSets.Items[index];
+            int index = gvVerificationSessions.Items.IndexOf(newSensor);
+            gvVerificationSessions.SelectedItem = gvVerificationSessions.Items[index];
         }
 
         private void btnDelete_Click(object sender, RoutedEventArgs e)
@@ -198,12 +195,12 @@ namespace MVS
                     //((List<SensorData>)gvSensorSetupsItems.ItemsSource).Remove(sensorDataSelected);
 
                     // Sette item 0 som selected (vil også laste data ettersom SelectionChange under kalles automatisk når vi gjør dette)
-                    gvMotionDataSets.SelectedItem = gvMotionDataSets.Items[0];
+                    gvVerificationSessions.SelectedItem = gvVerificationSessions.Items[0];
                 }
             }
         }
 
-        private void gvMotionDataSets_SelectionChanged(object sender, SelectionChangeEventArgs e)
+        private void gvVerificationSessions_SelectionChanged(object sender, SelectionChangeEventArgs e)
         {
             sensorDataSelected = (sender as RadGridView).SelectedItem as SensorData; // <------------- Elegant kode
 
@@ -214,6 +211,7 @@ namespace MVS
                 tbSensorName.Text = sensorDataSelected.name;
                 tbSensorDescription.Text = sensorDataSelected.description;
                 cboSensorType.Text = sensorDataSelected.type.ToString();
+                cboMRUType.Text = sensorDataSelected.mruType.GetDescription();
 
                 // Laste Sensor Setup UI for valgt sensor type
                 UISensorSetup_Load(sensorDataSelected.type);
@@ -224,7 +222,7 @@ namespace MVS
                 tbSensorName.Text = string.Empty;
                 cboSensorType.Text = SensorType.None.ToString();
                 tbSensorDescription.Text = string.Empty;
-                cboDBStorageFrequencyType.Text = string.Empty;
+                cboMRUType.Text = MRUType.None.GetDescription();
 
                 UISensorSetup_Load(SensorType.None);
             }
@@ -319,28 +317,6 @@ namespace MVS
                     // Sette ny sensor type
                     sensorDataSelected.type = newSensorType;
 
-                    // Sensor Data Options
-                    switch (newSensorType)
-                    {
-                        case SensorType.SerialPort:
-                            sensorDataSelected.saveFreq = DatabaseSaveFrequency.Sensor;
-                            break;
-
-                        case SensorType.ModbusRTU:
-                        case SensorType.ModbusASCII:
-                        case SensorType.ModbusTCP:
-                            sensorDataSelected.saveFreq = DatabaseSaveFrequency.Program;
-                            break;
-
-                        case SensorType.FileReader:
-                            sensorDataSelected.saveFreq = DatabaseSaveFrequency.Program;
-                            break;
-
-                        case SensorType.FixedValue:
-                            sensorDataSelected.saveFreq = DatabaseSaveFrequency.Program;
-                            break;
-                    }
-
                     // Lagre til fil
                     config.SetData(sensorDataSelected);
 
@@ -393,28 +369,13 @@ namespace MVS
             }
         }
 
-        private void chkSaveToDatabase_Checked(object sender, RoutedEventArgs e)
-        {
-            sensorDataSelected.saveToDatabase = true;
-
-            // Lagre til fil
-            config.SetData(sensorDataSelected);
-        }
-
-        private void chkSaveToDatabase_Unchecked(object sender, RoutedEventArgs e)
-        {
-            sensorDataSelected.saveToDatabase = false;
-
-            // Lagre til fil
-            config.SetData(sensorDataSelected);
-        }
-
-        private void cboDBStorageFrequencyType_SelectionChanged(object sender, SelectionChangedEventArgs e)
+        private void cboMRUType_DropDownClosed(object sender, EventArgs e)
         {
             if (sensorDataSelected != null &&
                 (sender as RadComboBox).SelectedItem != null)
             {
-                sensorDataSelected.saveFreq = (DatabaseSaveFrequency)Enum.Parse(typeof(DatabaseSaveFrequency), (sender as RadComboBox).SelectedItem.ToString());
+                // Ny valgt MRU type
+                sensorDataSelected.mruType = (MRUType)(sender as RadComboBox).SelectedIndex;
 
                 // Lagre til fil
                 config.SetData(sensorDataSelected);
@@ -805,10 +766,10 @@ namespace MVS
 
         public void UILoadData_SerialPort()
         {
-            // Fylle database option save frequency combobox
-            cboDBStorageFrequencyType.Items.Clear();
-            foreach (var value in Enum.GetValues(typeof(DatabaseSaveFrequency)))
-                cboDBStorageFrequencyType.Items.Add(value.ToString());
+            // Fylle MRU type combobox
+            cboMRUType.Items.Clear();
+            foreach (var value in Enum.GetValues(typeof(MRUType)))
+                cboMRUType.Items.Add(value.ToString());
 
             lbSerialPortName.Content = sensorDataSelected.serialPort.portName;
             lbSerialPortBaudRate.Content = sensorDataSelected.serialPort.baudRate.ToString();
@@ -845,29 +806,15 @@ namespace MVS
             lbSerialPortCalculationType4.Content = sensorDataSelected.serialPort.calculationSetup[3].type.GetDescription();
             lbSerialPortCalculationParameter4.Content = sensorDataSelected.serialPort.calculationSetup[3].parameter.ToString();
 
-            if (sensorDataSelected.saveToDatabase)
-                chkSaveToDatabase.IsChecked = true;
-            else
-                chkSaveToDatabase.IsChecked = false;
-
-            cboDBStorageFrequencyType.Text = sensorDataSelected.saveFreq.ToString();
+            cboMRUType.Text = sensorDataSelected.mruType.ToString();
         }
 
         public void UILoadData_MODBUS()
         {
-            // Fylle sensor data option save frequency combobox
-            // Frekvensen "Sensor" skal ikke brukes for MODBUS sensorer
-            cboDBStorageFrequencyType.Items.Clear();
-            foreach (var value in Enum.GetValues(typeof(DatabaseSaveFrequency)))
-            {
-                if (!((sensorDataSelected.type == SensorType.ModbusRTU ||
-                            sensorDataSelected.type == SensorType.ModbusASCII ||
-                            sensorDataSelected.type == SensorType.ModbusTCP) &&
-                        value.ToString() == DatabaseSaveFrequency.Sensor.ToString()))
-                {
-                    cboDBStorageFrequencyType.Items.Add(value.ToString());
-                }
-            }
+            // Fylle MRU type combobox
+            cboMRUType.Items.Clear();
+            foreach (var value in Enum.GetValues(typeof(MRUType)))
+                cboMRUType.Items.Add(value.ToString());
 
             if (sensorDataSelected.type == SensorType.ModbusRTU ||
                 sensorDataSelected.type == SensorType.ModbusASCII)
@@ -904,12 +851,7 @@ namespace MVS
             lbModbusCalculationType4.Content = sensorDataSelected.modbus.calculationSetup[3].type.GetDescription();
             lbModbusCalculationParameter4.Content = sensorDataSelected.modbus.calculationSetup[3].parameter.ToString();
 
-            if (sensorDataSelected.saveToDatabase)
-                chkSaveToDatabase.IsChecked = true;
-            else
-                chkSaveToDatabase.IsChecked = false;
-
-            cboDBStorageFrequencyType.Text = sensorDataSelected.saveFreq.ToString();
+            cboMRUType.Text = sensorDataSelected.mruType.ToString();
         }
 
         public void UILoadData_FileReader()

@@ -1,5 +1,4 @@
-﻿using System;
-using Telerik.Windows.Controls;
+﻿using Telerik.Windows.Controls;
 
 namespace MVS
 {

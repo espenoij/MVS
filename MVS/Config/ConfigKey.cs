@@ -66,9 +66,9 @@
     public const string DataRequestFrequency = "DataRequestFrequency";
     public const string SensorStatusRequestFrequency = "SensorStatusRequestFrequency";
 
-    // HMS data
-    public const string HMSData = "HMSData";
-    public const string HMSDataItems = "HMSDataItems";
+    // MVS data
+    public const string MVSData = "MVSData";
+    public const string MVSDataItems = "MVSDataItems";
 
     // Test/Reference Data
     public const string TestData = "TestData";
@@ -119,9 +119,6 @@
     public const string LicenseLocation = "LicenseLocation";
     public const string LicenseMaxClients = "LicenseMaxClients";
     public const string DeviceID = "DeviceID";
-
-    // Sensor Group ID Data
-    public const string SensorGroupID = "SensorGroupID";
 
     // Helicopter WSI Limit Data
     public const string HelicopterWSILimit = "HelicopterWSILimit";

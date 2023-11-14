@@ -1,6 +1,4 @@
-﻿using System;
-
-namespace MVS
+﻿namespace MVS
 {
     // Klasse for prosessering av data fra sensor til HMS output
     public class MVSProcessing
@@ -17,9 +15,9 @@ namespace MVS
         }
 
         // Kjøre prosessering og oppdatere data
-        public void Update(MVSDataCollection hmsInputDataList)
+        public void Update(MVSDataCollection hmsInputDataList, MainWindowVM mainWindowVM)
         {
-            hmsProcessingMotion.Update(hmsInputDataList);
+            hmsProcessingMotion.Update(hmsInputDataList, mainWindowVM);
         }
 
         public void ResetDataCalculations()

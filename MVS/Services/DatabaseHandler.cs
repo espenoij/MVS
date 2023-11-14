@@ -3,7 +3,6 @@ using System;
 using System.Collections.Generic;
 using System.Linq;
 using System.Security;
-using Telerik.Windows.Data;
 
 namespace MVS
 {
@@ -18,6 +17,7 @@ namespace MVS
         private const string columnMVSDescription = "description";
         private const string columnMVSStart = "start";
         private const string columnMVSEnd = "end";
+        private const string columnMVSInputSetup = "input_setup";
 
         // MVS Data Set tabeller
         private const string tableNameMVSDataPrefix = "mvs_data_";
@@ -111,7 +111,7 @@ namespace MVS
         //    }
         //}
 
-        public void CreateDataTables(MotionDataSet dataSet, MVSDataCollection mvsDataCollection)
+        public void CreateDataTables(VerificationSession dataSet, MVSDataCollection mvsDataCollection)
         {
             try
             {
@@ -164,12 +164,13 @@ namespace MVS
                     connection.Open();
 
                     // Opprette nytt database table
-                    cmd.CommandText = string.Format(@"CREATE TABLE IF NOT EXISTS {0}(id INTEGER PRIMARY KEY AUTO_INCREMENT, {1} TEXT, {2} TEXT, {3} DATETIME(3), {4} DATETIME(3))",
+                    cmd.CommandText = string.Format(@"CREATE TABLE IF NOT EXISTS {0}(id INTEGER PRIMARY KEY AUTO_INCREMENT, {1} TEXT, {2} TEXT, {3} DATETIME(3), {4} DATETIME(3), {5} INTEGER)",
                         tableNameMVSDataSets,
                         columnMVSName,
                         columnMVSDescription,
                         columnMVSStart,
-                        columnMVSEnd);
+                        columnMVSEnd,
+                        columnMVSInputSetup);
 
                     cmd.ExecuteNonQuery();
 
@@ -337,7 +338,7 @@ namespace MVS
             }
         }
 
-        public void Insert(MotionDataSet dataSet, MVSDataCollection mvsDataCollection)
+        public void Insert(VerificationSession dataSet, MVSDataCollection mvsDataCollection)
         {
             try
             {
@@ -422,7 +423,7 @@ namespace MVS
             }
         }
 
-        public int Insert(MotionDataSet dataSet)
+        public int Insert(VerificationSession dataSet)
         {
             int id = -1;
 
@@ -437,18 +438,20 @@ namespace MVS
                         cmd.Connection = connection;
 
                         // Insert kommando
-                        cmd.CommandText = string.Format("INSERT INTO {0}({1}, {2}, {3}, {4}) VALUES(@1, @2, @3, @4)",
+                        cmd.CommandText = string.Format("INSERT INTO {0}({1}, {2}, {3}, {4}, {5}) VALUES(@1, @2, @3, @4, @5)",
                             tableNameMVSDataSets,
                             columnMVSName,
                             columnMVSDescription,
                             columnMVSStart,
-                            columnMVSEnd);
+                            columnMVSEnd,
+                            columnMVSInputSetup);
 
                         // Insert parametre
                         cmd.Parameters.AddWithValue("@1", dataSet.Name);
                         cmd.Parameters.AddWithValue("@2", dataSet.Description);
                         cmd.Parameters.AddWithValue("@3", dataSet.StartTime);
                         cmd.Parameters.AddWithValue("@4", dataSet.EndTime);
+                        cmd.Parameters.AddWithValue("@5", (int)dataSet.InputSetup);
 
                         // Åpne database connection
                         connection.Open();
@@ -472,7 +475,7 @@ namespace MVS
             return id;
         }
 
-        public void Update(MotionDataSet dataSet)
+        public void Update(VerificationSession dataSet)
         {
             try
             {
@@ -485,12 +488,13 @@ namespace MVS
                         cmd.Connection = connection;
 
                         // Insert kommando
-                        cmd.CommandText = string.Format("UPDATE {0} SET {1}=@Name, {2}=@Description, {3}=@StartTime, {4}=@EndTime WHERE id={5}",
+                        cmd.CommandText = string.Format("UPDATE {0} SET {1}=@Name, {2}=@Description, {3}=@StartTime, {4}=@EndTime, {5}=@InputSetup WHERE id={6}",
                             tableNameMVSDataSets,
                             columnMVSName,
                             columnMVSDescription,
                             columnMVSStart,
                             columnMVSEnd,
+                            columnMVSInputSetup,
                             dataSet.Id);
 
                         // Update parametre
@@ -498,6 +502,7 @@ namespace MVS
                         cmd.Parameters.AddWithValue("@Description", dataSet.Description);
                         cmd.Parameters.AddWithValue("@StartTime", dataSet.StartTime);
                         cmd.Parameters.AddWithValue("@EndTime", dataSet.EndTime);
+                        cmd.Parameters.AddWithValue("@InputSetup", (int)dataSet.InputSetup);
 
                         // Åpne database connection
                         connection.Open();
@@ -516,7 +521,7 @@ namespace MVS
             }
         }
 
-        public void DeleteDataSet(MotionDataSet dataSet)
+        public void DeleteDataSet(VerificationSession dataSet)
         {
             try
             {
@@ -548,7 +553,7 @@ namespace MVS
             }
         }
 
-        public void DeleteData(MotionDataSet dataSet)
+        public void DeleteData(VerificationSession dataSet)
         {
             try
             {
@@ -579,9 +584,9 @@ namespace MVS
             }
         }
 
-        public List<MotionDataSet> GetMotionDataSets()
+        public List<VerificationSession> GetAllSessions()
         {
-            List<MotionDataSet> dataSets = new List<MotionDataSet>();
+            List<VerificationSession> dataSets = new List<VerificationSession>();
 
             try
             {
@@ -604,12 +609,13 @@ namespace MVS
                         // Lese ut data
                         while (reader.Read())
                         {
-                            dataSets.Add(new MotionDataSet(
+                            dataSets.Add(new VerificationSession(
                                 reader.GetInt32(0),
                                 reader.GetString(1),
                                 reader.GetString(2),
                                 reader.GetDateTime(3),
-                                reader.GetDateTime(4)));
+                                reader.GetDateTime(4),
+                                (VerificationInputSetup)reader.GetInt32(5)));
                         }
 
                         // Lukke database connection
@@ -625,7 +631,7 @@ namespace MVS
             return dataSets;
         }
 
-        public void GetTimestamps(MotionDataSet dataSet)
+        public void GetTimestamps(VerificationSession dataSet)
         {
             try
             {
@@ -648,7 +654,7 @@ namespace MVS
                         MySqlDataReader readerStart = cmd.ExecuteReader();
 
                         // Lagre start tid
-                        if (readerStart.Read()) 
+                        if (readerStart.Read())
                             dataSet.StartTime = readerStart.GetDateTime(1);
 
                         // Lukke leser

@@ -85,16 +85,6 @@
                     Header="Status"
                     IsReadOnly="True"
                     DataMemberBinding="{Binding statusString}" />
-                <telerik:GridViewDataColumn
-                    Width="*"
-                    Header="Limit"
-                    IsReadOnly="True"
-                    DataMemberBinding="{Binding limitStatusString}" />
-                <telerik:GridViewDataColumn
-                    Width="*"
-                    Header="Group ID"
-                    IsReadOnly="True"
-                    DataMemberBinding="{Binding sensorGroupIdString}" />
 
             </telerik:RadGridView.Columns>
 

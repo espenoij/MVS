@@ -27,7 +27,7 @@ namespace MVS
 
             void runTimer(Object source, EventArgs e)
             {
-                OnPropertyChanged(nameof(ElapsedTimeString));
+                OnPropertyChanged(nameof(OperationsModeString));
             }
         }
 
@@ -53,20 +53,20 @@ namespace MVS
         }
 
         /////////////////////////////////////////////////////////////////////////////
-        // Selected Motion Data Set
+        // Selected Motion Verification Session
         /////////////////////////////////////////////////////////////////////////////
-        private MotionDataSet _selectedMotionDataSet { get; set; }
-        public MotionDataSet SelectedMotionDataSet
+        private VerificationSession _selectedSession { get; set; }
+        public VerificationSession SelectedSession
         {
             get
             {
-                return _selectedMotionDataSet;
+                return _selectedSession;
             }
             set
             {
-                if (value != _selectedMotionDataSet)
+                if (value != _selectedSession)
                 {
-                    _selectedMotionDataSet = value;
+                    _selectedSession = value;
 
                     OnPropertyChanged();
                 }
@@ -87,19 +87,51 @@ namespace MVS
             {
                 _startTime = value;
                 OnPropertyChanged();
-                OnPropertyChanged(nameof(ElapsedTimeString));
             }
         }
-        public string ElapsedTimeString
+        /////////////////////////////////////////////////////////////////////////////
+        // Operations mode
+        /////////////////////////////////////////////////////////////////////////////
+        private OperationsMode _operationsMode;
+        public OperationsMode OperationsMode
         {
             get
             {
-                if (_startTime == System.Data.SqlTypes.SqlDateTime.MinValue.Value)
-                    return string.Empty;
-                else
-                    return string.Format("Elapsed Time: {0}", (DateTime.UtcNow - _startTime).ToString(@"hh\:mm\:ss"));
+                return _operationsMode;
+            }
+            set
+            {
+                _operationsMode = value;
+                OnPropertyChanged(nameof(OperationsModeString));
             }
         }
+        public string OperationsModeString
+        {
+            get
+            {
+                switch (OperationsMode)
+                {
+                    case OperationsMode.Test:
+                    case OperationsMode.Recording:
+
+                        string modeText = string.Empty;
+                        if (OperationsMode == OperationsMode.Test)
+                            modeText = "- Test Run";
+
+                        if (_startTime != System.Data.SqlTypes.SqlDateTime.MinValue.Value)
+                            return string.Format("{0} {1}", (DateTime.UtcNow - _startTime).ToString(@"hh\:mm\:ss"), modeText);
+                        else
+                            return string.Empty;
+
+                    case OperationsMode.Stop:
+                        return string.Empty;
+
+                    default:
+                        return "Error";
+                }
+            }
+        }
+
 
         // Variabel oppdatert
         // Dersom navn ikke er satt brukes kallende medlem sitt navn

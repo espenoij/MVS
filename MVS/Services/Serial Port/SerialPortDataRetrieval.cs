@@ -1,10 +1,8 @@
 ﻿using System;
 using System.Collections.Generic;
 using System.IO.Ports;
-using System.Linq;
 using System.Text;
 using System.Text.RegularExpressions;
-using System.Threading;
 using System.Windows.Threading;
 using Telerik.Windows.Data;
 
@@ -56,35 +54,39 @@ namespace MVS
             }
         }
 
-        public void Load(SensorData sensorData)
+        public void Load(SensorData sensorData, MainWindowVM mainWindowVM)
         {
-            // Sjekke om serie port er lagt inn/åpnet fra før
-            SerialPort sp = serialPortList.Find(x => x.PortName == sensorData.serialPort.portName);
-
-            // Dersom den ikke eksisterer -> så legger vi den inn i serie port listen...
-            if (sp == null)
+            // Sjekke om denne sensoren skal brukes først
+            if (sensorData.UseThisSensor(mainWindowVM))
             {
-                // Sette serie port settings på SerialPort object
-                SerialPort serialPort = new SerialPort();
+                // Sjekke om serie port er lagt inn/åpnet fra før
+                SerialPort sp = serialPortList.Find(x => x.PortName == sensorData.serialPort.portName);
 
-                serialPort.PortName = sensorData.serialPort.portName;
-                serialPort.BaudRate = sensorData.serialPort.baudRate;
-                serialPort.DataBits = sensorData.serialPort.dataBits;
-                serialPort.StopBits = sensorData.serialPort.stopBits;
-                serialPort.Parity = sensorData.serialPort.parity;
-                serialPort.Handshake = sensorData.serialPort.handshake;
+                // Dersom den ikke eksisterer -> så legger vi den inn i serie port listen...
+                if (sp == null)
+                {
+                    // Sette serie port settings på SerialPort object
+                    SerialPort serialPort = new SerialPort();
 
-                // Koble opp metode for å motta data
-                serialPort.DataReceived += new SerialDataReceivedEventHandler(DataReceived);
+                    serialPort.PortName = sensorData.serialPort.portName;
+                    serialPort.BaudRate = sensorData.serialPort.baudRate;
+                    serialPort.DataBits = sensorData.serialPort.dataBits;
+                    serialPort.StopBits = sensorData.serialPort.stopBits;
+                    serialPort.Parity = sensorData.serialPort.parity;
+                    serialPort.Handshake = sensorData.serialPort.handshake;
 
-                // Legge inn i serie port listen
-                serialPortList.Add(serialPort);
+                    // Koble opp metode for å motta data
+                    serialPort.DataReceived += new SerialDataReceivedEventHandler(DataReceived);
 
-                // Opprette enhet i data mottakslisten også
-                SerialPortData dataReceived = new SerialPortData();
-                dataReceived.portName = serialPort.PortName;
-                dataReceived.firstRead = true;
-                serialPortDataReceivedList.Add(dataReceived);
+                    // Legge inn i serie port listen
+                    serialPortList.Add(serialPort);
+
+                    // Opprette enhet i data mottakslisten også
+                    SerialPortData dataReceived = new SerialPortData();
+                    dataReceived.portName = serialPort.PortName;
+                    dataReceived.firstRead = true;
+                    serialPortDataReceivedList.Add(dataReceived);
+                }
             }
         }
 

@@ -405,10 +405,10 @@ namespace MVS
         }
 
         public CalculatedData ApplyCalculationsToSelectedData(
-            SelectedDataField selectedData, 
-            List<DataCalculations> dataCalculations, 
-            DateTime timestamp, 
-            ErrorHandler errorHandler, 
+            SelectedDataField selectedData,
+            List<DataCalculations> dataCalculations,
+            DateTime timestamp,
+            ErrorHandler errorHandler,
             ErrorMessageCategory errorMessageCat,
             AdminSettingsVM adminSettingsVM)
         {

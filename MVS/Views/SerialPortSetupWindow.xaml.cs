@@ -1,5 +1,4 @@
-﻿using Org.BouncyCastle.Bcpg;
-using System;
+﻿using System;
 using System.Collections.Generic;
 using System.ComponentModel;
 using System.Diagnostics;
@@ -1461,7 +1460,7 @@ namespace MVS
                     sensorData.serialPort.packetDelimiter = Constants.BinaryDataDelimiter;
                     tbPacketDataDelimiter.Text = Constants.BinaryDataDelimiter;
                 }
-                
+
                 process.inputType = sensorData.serialPort.inputType;
 
                 SetDataFieldSplitDisplay();

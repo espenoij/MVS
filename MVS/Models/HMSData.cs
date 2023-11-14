@@ -16,7 +16,6 @@ namespace MVS
         public HMSData()
         {
             status = DataStatus.TIMEOUT_ERROR;
-            sensorGroupId = Constants.SensorIDNotSet;
         }
 
         private int _id { get; set; }
@@ -178,53 +177,6 @@ namespace MVS
             }
         }
 
-        private LimitStatus _limitStatus { get; set; }
-        public LimitStatus limitStatus
-        {
-            get
-            {
-                return _limitStatus;
-            }
-            set
-            {
-                _limitStatus = value;
-                OnPropertyChanged();
-                OnPropertyChanged(nameof(limitStatusString));
-            }
-        }
-        public string limitStatusString
-        {
-            get
-            {
-                return _limitStatus.ToString();
-            }
-        }
-
-        private int _sensorGroupId { get; set; }
-        public int sensorGroupId
-        {
-            get
-            {
-                return _sensorGroupId;
-            }
-            set
-            {
-                _sensorGroupId = value;
-                OnPropertyChanged();
-                OnPropertyChanged(nameof(sensorGroupIdString));
-            }
-        }
-        public string sensorGroupIdString
-        {
-            get
-            {
-                if (_sensorGroupId == Constants.SensorIDNotSet)
-                    return "None";
-                else
-                    return _sensorGroupId.ToString();
-            }
-        }
-
         private string _dbTableName { get; set; }
         public string dbColumn
         {
@@ -256,8 +208,6 @@ namespace MVS
                 data3 = inputData.data3;
                 timestamp = inputData.timestamp;
                 status = inputData.status;
-                limitStatus = inputData.limitStatus;
-                sensorGroupId = inputData.sensorGroupId;
                 dbColumn = inputData.dbColumn;
             }
         }
@@ -306,7 +256,6 @@ namespace MVS
                     // Setter timestamp og sensorGroup lik inndata
                     timestamp = newData.timestamp;
                     status = newData.status;
-                    sensorGroupId = newData.sensorGroupId;
                 }
             }
         }
@@ -332,6 +281,49 @@ namespace MVS
         {
             // Resette dataCalculations
             dataProcess.ResetDataCalculations();
+        }
+
+
+        // Klient spesifikk:
+        ////////////////////////////////////////////////////////////////////
+        ///
+        public string nameString
+        {
+            get
+            {
+                if (!string.IsNullOrEmpty(_name))
+                    return _name;
+                else
+                    return Constants.NameNotSet;
+            }
+        }
+
+        // Data som skal ut i graf
+        ////////////////////////////////////////////////////////////////////
+        public double graphData
+        {
+            get
+            {
+                if (_status == DataStatus.OK)
+                    return _data;
+                else
+                    // Ved å sende NaN til graf får vi mellomrom på graf-linjen
+                    // der det ikke er gyldige data tilgjengelig.
+                    return double.NaN;
+            }
+        }
+
+        public double graphData2
+        {
+            get
+            {
+                if (_status == DataStatus.OK)
+                    return _data2;
+                else
+                    // Ved å sende NaN til graf får vi mellomrom på graf-linjen
+                    // der det ikke er gyldige data tilgjengelig.
+                    return double.NaN;
+            }
         }
     }
 }

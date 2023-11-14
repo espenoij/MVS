@@ -14,7 +14,7 @@ namespace MVS
             this.errorHandler = errorHandler;
         }
 
-        public void Insert(MotionDataSet dataSet, MVSDataCollection hmsDataCollection)
+        public void Insert(VerificationSession dataSet, MVSDataCollection hmsDataCollection)
         {
             try
             {
@@ -35,11 +35,11 @@ namespace MVS
             }
         }
 
-        public List<MotionDataSet> GetAll()
+        public List<VerificationSession> GetAllSessions()
         {
             try
             {
-                List<MotionDataSet> dataSets = database.GetMotionDataSets();
+                List<VerificationSession> dataSets = database.GetAllSessions();
 
                 errorHandler.ResetDatabaseError(ErrorHandler.DatabaseErrorType.GetAllMVSData);
 
@@ -60,7 +60,7 @@ namespace MVS
             }
         }
 
-        public int Insert(MotionDataSet dataSet)
+        public int Insert(VerificationSession dataSet)
         {
             int id = 0;
 
@@ -85,7 +85,7 @@ namespace MVS
             return id;
         }
 
-        public void Update(MotionDataSet dataSet)
+        public void Update(VerificationSession dataSet)
         {
             try
             {
@@ -106,7 +106,7 @@ namespace MVS
             }
         }
 
-        public void Remove(MotionDataSet dataSet)
+        public void Remove(VerificationSession dataSet)
         {
             try
             {
@@ -128,7 +128,7 @@ namespace MVS
             }
         }
 
-        public void DeleteData(MotionDataSet dataSet)
+        public void DeleteData(VerificationSession dataSet)
         {
             try
             {
@@ -149,7 +149,7 @@ namespace MVS
             }
         }
 
-        public void SetTimestamps(MotionDataSet dataSet)
+        public void SetTimestamps(VerificationSession dataSet)
         {
             try
             {
@@ -192,7 +192,7 @@ namespace MVS
             }
         }
 
-        public void CreateDataTables(MotionDataSet dataSet, MVSDataCollection mvsDataCollection)
+        public void CreateDataTables(VerificationSession dataSet, MVSDataCollection mvsDataCollection)
         {
             try
             {

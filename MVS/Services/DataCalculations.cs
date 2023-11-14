@@ -3,8 +3,6 @@ using System.Collections.Generic;
 using System.ComponentModel;
 using System.Globalization;
 using System.Linq;
-using System.Text.RegularExpressions;
-using System.Windows.Markup;
 
 namespace MVS
 {
@@ -403,10 +401,12 @@ namespace MVS
                                     double y = Math.Sin(HMSCalc.ToRadians(value));
 
                                     // Legge inn den nye verdien i data settet
-                                    windDirTimeAverageDataList.Add(new TimeData() {
+                                    windDirTimeAverageDataList.Add(new TimeData()
+                                    {
                                         data = x,
                                         data2 = y,
-                                        timestamp = newTimeStamp });
+                                        timestamp = newTimeStamp
+                                    });
 
                                     // Legge til i total summene
                                     windDirTimeAverageTotalX += x;
@@ -478,7 +478,7 @@ namespace MVS
                             if (double.TryParse(newData, Constants.numberStyle, Constants.cultureInfo, out value))
                             {
                                 // Sjekke at ny verdi ikke er lik den forrige som ble lagt inn i datasettet -> unngå duplikater
-                                if (!double.IsNaN(value) && 
+                                if (!double.IsNaN(value) &&
                                     timeMaxAbsoluteDataList.LastOrDefault()?.timestamp != newTimeStamp)
                                 {
 
@@ -557,7 +557,7 @@ namespace MVS
                             if (double.TryParse(newData, Constants.numberStyle, Constants.cultureInfo, out value))
                             {
                                 // Sjekke at ny verdi ikke er lik den forrige som ble lagt inn i datasettet -> unngå duplikater
-                                if (!double.IsNaN(value) && 
+                                if (!double.IsNaN(value) &&
                                     timeHighestDataList.LastOrDefault()?.timestamp != newTimeStamp)
                                 {
                                     // Legge inn den nye verdien i data settet
@@ -633,7 +633,7 @@ namespace MVS
                             if (double.TryParse(newData, Constants.numberStyle, Constants.cultureInfo, out value))
                             {
                                 // Sjekke at ny verdi ikke er lik den forrige som ble lagt inn i datasettet -> unngå duplikater
-                                if (!double.IsNaN(value) && 
+                                if (!double.IsNaN(value) &&
                                     timeLowestDataList.LastOrDefault()?.timestamp != newTimeStamp)
                                 {
                                     // Legge inn den nye verdien i data settet
@@ -824,10 +824,10 @@ namespace MVS
                                                 else
                                                 {
                                                     swhDataList.Add(new TimeData()
-                                                        {
-                                                            data = height,
-                                                            timestamp = newTimeStamp
-                                                        });
+                                                    {
+                                                        data = height,
+                                                        timestamp = newTimeStamp
+                                                    });
                                                 }
 
                                                 // Dersom denne bølgehøyden ble lagt inn i høyeste 1/3 av bølger så må vi kalkulere ny SWH
@@ -880,10 +880,10 @@ namespace MVS
                                                 else
                                                 {
                                                     swhDataList.Add(new TimeData()
-                                                        {
-                                                            data = height,
-                                                            timestamp = newTimeStamp
-                                                        });
+                                                    {
+                                                        data = height,
+                                                        timestamp = newTimeStamp
+                                                    });
                                                 }
 
                                                 // Dersom denne bølgehøyden ble lagt inn i høyeste 1/3 av bølger så må vi kalkulere ny SWH
@@ -990,10 +990,10 @@ namespace MVS
 
                                                 // Legge inn height i data listen
                                                 timeMaxWaveHeightDataList.Add(new TimeData()
-                                                    {
-                                                        data = height,
-                                                        timestamp = newTimeStamp
-                                                    });
+                                                {
+                                                    data = height,
+                                                    timestamp = newTimeStamp
+                                                });
 
                                                 // Ny max height?
                                                 if (height > timeMaxWaveHeightMaxValue)
@@ -1019,10 +1019,10 @@ namespace MVS
 
                                                 // Legge inn height i data listen
                                                 timeMaxWaveHeightDataList.Add(new TimeData()
-                                                    {
-                                                        data = height,
-                                                        timestamp = newTimeStamp
-                                                    });
+                                                {
+                                                    data = height,
+                                                    timestamp = newTimeStamp
+                                                });
 
                                                 // Ny max height?
                                                 if (height > timeMaxWaveHeightMaxValue)

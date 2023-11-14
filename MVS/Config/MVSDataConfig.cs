@@ -11,7 +11,6 @@ namespace MVS
             this.id = clientData.id;
             this.name = clientData.name;
             this.dataId = clientData.dataId.ToString();
-            this.sensorId = clientData.sensorGroupId.ToString();
             this.dbTableName = clientData.dbColumn.ToString();
         }
 
@@ -35,13 +34,6 @@ namespace MVS
         {
             get { return (string)this["dataId"]; }
             set { this["dataId"] = value; }
-        }
-
-        [ConfigurationProperty("sensorId", DefaultValue = "", IsRequired = true, IsKey = false)]
-        public string sensorId
-        {
-            get { return (string)this["sensorId"]; }
-            set { this["sensorId"] = value; }
         }
 
         [ConfigurationProperty("dbTableName", DefaultValue = "", IsRequired = true, IsKey = false)]
