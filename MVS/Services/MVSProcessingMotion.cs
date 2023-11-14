@@ -9,9 +9,7 @@ namespace MVS
         private HMSData refSensorPitch = new HMSData();
         private HMSData refSensorRoll = new HMSData();
         private HMSData refSensorHeave = new HMSData();
-        //private HMSData refSensorAccelerationX = new HMSData();
-        //private HMSData refSensorAccelerationY = new HMSData();
-        //private HMSData refSensorAccelerationZ = new HMSData();
+
         private HMSData testSensorPitch = new HMSData();
         private HMSData testSensorRoll = new HMSData();
         private HMSData testSensorHeave = new HMSData();
@@ -22,6 +20,7 @@ namespace MVS
         private HMSData refPitchMax20mData = new HMSData();
         private HMSData refPitchMaxUp20mData = new HMSData();
         private HMSData refPitchMaxDown20mData = new HMSData();
+
         private HMSData testPitchData = new HMSData();
         private HMSData testPitchMean20mData = new HMSData();
         private HMSData testPitchMax20mData = new HMSData();
@@ -34,6 +33,7 @@ namespace MVS
         private HMSData refRollMax20mData = new HMSData();
         private HMSData refRollMaxLeft20mData = new HMSData();
         private HMSData refRollMaxRight20mData = new HMSData();
+
         private HMSData testRollData = new HMSData();
         private HMSData testRollMean20mData = new HMSData();
         private HMSData testRollMax20mData = new HMSData();
@@ -45,6 +45,7 @@ namespace MVS
         private HMSData refHeaveMean20mData = new HMSData();
         private HMSData refHeaveMax20mData = new HMSData();
         private HMSData refHeaveAmplitudeMax20mData = new HMSData();
+
         private HMSData testHeaveData = new HMSData();
         private HMSData testHeaveMean20mData = new HMSData();
         private HMSData testHeaveMax20mData = new HMSData();
@@ -248,10 +249,6 @@ namespace MVS
             testSensorPitch.Set(hmsInputDataList.GetData(ValueType.Test_Pitch));
             testSensorRoll.Set(hmsInputDataList.GetData(ValueType.Test_Roll));
             testSensorHeave.Set(hmsInputDataList.GetData(ValueType.Test_Heave));
-            
-            //refSensorAccelerationX.Set(hmsInputDataList.GetData(ValueType.Ref_AccelerationX));
-            //refSensorAccelerationY.Set(hmsInputDataList.GetData(ValueType.Ref_AccelerationY));
-            //refSensorAccelerationZ.Set(hmsInputDataList.GetData(ValueType.Ref_AccelerationZ));
 
             if (refSensorPitch.TimeStampCheck ||
                 refSensorRoll.TimeStampCheck ||
@@ -259,9 +256,6 @@ namespace MVS
                 testSensorPitch.TimeStampCheck ||
                 testSensorRoll.TimeStampCheck ||
                 testSensorHeave.TimeStampCheck ||
-                //refSensorAccelerationX.TimeStampCheck ||
-                //refSensorAccelerationY.TimeStampCheck ||
-                //refSensorAccelerationZ.TimeStampCheck ||
                 databaseSetupRun)
             {
                 databaseSetupRun = false;
@@ -449,18 +443,6 @@ namespace MVS
                     testHeaveAmplitudeMax20mData.data = 0;
                     testHeaveAmplitudeMax20mData.status = DataStatus.NONE;
                 }
-
-                //if (refSensorAccelerationX.timestamp.AddMilliseconds(adminSettingsVM.dataTimeout) < DateTime.UtcNow)
-                //    refSensorAccelerationX.status = DataStatus.TIMEOUT_ERROR;
-
-                //if (refSensorAccelerationY.timestamp.AddMilliseconds(adminSettingsVM.dataTimeout) < DateTime.UtcNow)
-                //    refSensorAccelerationY.status = DataStatus.TIMEOUT_ERROR;
-
-                //if (refSensorAccelerationZ.timestamp.AddMilliseconds(adminSettingsVM.dataTimeout) < DateTime.UtcNow)
-                //    refSensorAccelerationZ.status = DataStatus.TIMEOUT_ERROR;
-
-                // Tar data fra input delen av server og overfører til HMS output delen
-                // og prosesserer input for overføring til HMS output også.
             }
         }
 

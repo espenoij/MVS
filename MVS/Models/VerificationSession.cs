@@ -200,6 +200,12 @@ namespace MVS
                 return true;
         }
 
+        public void ClearTimestamps()
+        {
+            StartTime = System.Data.SqlTypes.SqlDateTime.MinValue.Value;
+            EndTime = System.Data.SqlTypes.SqlDateTime.MinValue.Value;
+        }
+
         private VerificationInputSetup _inputSetup { get; set; }
         public VerificationInputSetup InputSetup
         {

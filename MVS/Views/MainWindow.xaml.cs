@@ -528,6 +528,9 @@ namespace MVS
                             // Må først slette eksisterende data i databasen
                             mvsDatabase.DeleteData(mainWindowVM.SelectedSession);
 
+                            // Fjerne timestamps
+                            mainWindowVM.SelectedSession.ClearTimestamps();
+
                             Start();
                         }
                     }
