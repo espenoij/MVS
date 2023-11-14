@@ -108,6 +108,9 @@ namespace MVS
                 // Legge alle data inn i listview for visning på skjerm
                 foreach (var item in sessionList)
                 {
+                    // Laste timestamps på data set
+                    mvsDatabase.LoadTimestamps(item);
+
                     motionVerificationSessionList.Insert(0, item);
                 }
             }
@@ -121,8 +124,8 @@ namespace MVS
 
         public void Stop()
         {
-            // Sette timestamps på data set
-            mvsDatabase.SetTimestamps(mainWindowVM.SelectedSession);
+            // Laste timestamps på data set
+            mvsDatabase.LoadTimestamps(mainWindowVM.SelectedSession);
 
             // Legge data i UI
             LoadSelectedItemsDetails();

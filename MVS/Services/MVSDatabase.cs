@@ -149,11 +149,11 @@ namespace MVS
             }
         }
 
-        public void SetTimestamps(VerificationSession dataSet)
+        public void LoadTimestamps(VerificationSession dataSet)
         {
             try
             {
-                database.GetTimestamps(dataSet);
+                database.LoadTimestamps(dataSet);
 
                 errorHandler.ResetDatabaseError(ErrorHandler.DatabaseErrorType.GetTimestamps);
             }

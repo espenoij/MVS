@@ -22,13 +22,11 @@ namespace MVS
             InputSetup = VerificationInputSetup.ReferenceMRU;
         }
 
-        public VerificationSession(int id, string name, string description, DateTime startTime, DateTime endTime, VerificationInputSetup inputSetup)
+        public VerificationSession(int id, string name, string description, VerificationInputSetup inputSetup)
         {
             Id = id;
             Name = name;
             Description = description;
-            StartTime = startTime;
-            EndTime = endTime;
             InputSetup = inputSetup;
         }
 

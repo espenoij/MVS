@@ -15,8 +15,6 @@ namespace MVS
         private const string tableNameMVSDataSets = "mvs_data_sets";
         private const string columnMVSName = "name";
         private const string columnMVSDescription = "description";
-        private const string columnMVSStart = "start";
-        private const string columnMVSEnd = "end";
         private const string columnMVSInputSetup = "input_setup";
 
         // MVS Data Set tabeller
@@ -164,12 +162,10 @@ namespace MVS
                     connection.Open();
 
                     // Opprette nytt database table
-                    cmd.CommandText = string.Format(@"CREATE TABLE IF NOT EXISTS {0}(id INTEGER PRIMARY KEY AUTO_INCREMENT, {1} TEXT, {2} TEXT, {3} DATETIME(3), {4} DATETIME(3), {5} INTEGER)",
+                    cmd.CommandText = string.Format(@"CREATE TABLE IF NOT EXISTS {0}(id INTEGER PRIMARY KEY AUTO_INCREMENT, {1} TEXT, {2} TEXT, {3} INTEGER)",
                         tableNameMVSDataSets,
                         columnMVSName,
                         columnMVSDescription,
-                        columnMVSStart,
-                        columnMVSEnd,
                         columnMVSInputSetup);
 
                     cmd.ExecuteNonQuery();
@@ -438,20 +434,16 @@ namespace MVS
                         cmd.Connection = connection;
 
                         // Insert kommando
-                        cmd.CommandText = string.Format("INSERT INTO {0}({1}, {2}, {3}, {4}, {5}) VALUES(@1, @2, @3, @4, @5)",
+                        cmd.CommandText = string.Format("INSERT INTO {0}({1}, {2}, {3}) VALUES(@Name, @Description, @InputSetup)",
                             tableNameMVSDataSets,
                             columnMVSName,
                             columnMVSDescription,
-                            columnMVSStart,
-                            columnMVSEnd,
                             columnMVSInputSetup);
 
                         // Insert parametre
-                        cmd.Parameters.AddWithValue("@1", dataSet.Name);
-                        cmd.Parameters.AddWithValue("@2", dataSet.Description);
-                        cmd.Parameters.AddWithValue("@3", dataSet.StartTime);
-                        cmd.Parameters.AddWithValue("@4", dataSet.EndTime);
-                        cmd.Parameters.AddWithValue("@5", (int)dataSet.InputSetup);
+                        cmd.Parameters.AddWithValue("@Name", dataSet.Name);
+                        cmd.Parameters.AddWithValue("@Description", dataSet.Description);
+                        cmd.Parameters.AddWithValue("@InputSetup", (int)dataSet.InputSetup);
 
                         // Åpne database connection
                         connection.Open();
@@ -488,20 +480,16 @@ namespace MVS
                         cmd.Connection = connection;
 
                         // Insert kommando
-                        cmd.CommandText = string.Format("UPDATE {0} SET {1}=@Name, {2}=@Description, {3}=@StartTime, {4}=@EndTime, {5}=@InputSetup WHERE id={6}",
+                        cmd.CommandText = string.Format("UPDATE {0} SET {1}=@Name, {2}=@Description, {3}=@InputSetup WHERE id={4}",
                             tableNameMVSDataSets,
                             columnMVSName,
                             columnMVSDescription,
-                            columnMVSStart,
-                            columnMVSEnd,
                             columnMVSInputSetup,
                             dataSet.Id);
 
                         // Update parametre
                         cmd.Parameters.AddWithValue("@Name", dataSet.Name);
                         cmd.Parameters.AddWithValue("@Description", dataSet.Description);
-                        cmd.Parameters.AddWithValue("@StartTime", dataSet.StartTime);
-                        cmd.Parameters.AddWithValue("@EndTime", dataSet.EndTime);
                         cmd.Parameters.AddWithValue("@InputSetup", (int)dataSet.InputSetup);
 
                         // Åpne database connection
@@ -613,9 +601,7 @@ namespace MVS
                                 reader.GetInt32(0),
                                 reader.GetString(1),
                                 reader.GetString(2),
-                                reader.GetDateTime(3),
-                                reader.GetDateTime(4),
-                                (VerificationInputSetup)reader.GetInt32(5)));
+                                (VerificationInputSetup)reader.GetInt32(3)));
                         }
 
                         // Lukke database connection
@@ -631,7 +617,7 @@ namespace MVS
             return dataSets;
         }
 
-        public void GetTimestamps(VerificationSession dataSet)
+        public void LoadTimestamps(VerificationSession dataSet)
         {
             try
             {
