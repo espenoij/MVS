@@ -5,14 +5,14 @@ namespace MVS
     /// <summary>
     /// Interaction logic for MVSSessionGraphs.xaml
     /// </summary>
-    public partial class MVSSessionGraphs : UserControl
+    public partial class VerificationSessionData : UserControl
     {
-        public MVSSessionGraphs()
+        public VerificationSessionData()
         {
             InitializeComponent();
         }
 
-        public void Init(HelideckMotionVM helideckMotionVM)
+        public void Init(VerificationSessionDataVM helideckMotionVM)
         {
             // Context
             DataContext = helideckMotionVM;

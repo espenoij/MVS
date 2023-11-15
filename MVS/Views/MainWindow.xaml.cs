@@ -66,7 +66,7 @@ namespace MVS
 
         // Model View
         private MainWindowVM mainWindowVM;
-        private HelideckMotionVM helideckMotionVM;
+        private VerificationSessionDataVM helideckMotionVM;
         private AboutVM aboutVM;
 
         public MainWindow()
@@ -87,7 +87,7 @@ namespace MVS
             DataContext = mainWindowVM;
 
             // Helideck Motion VM
-            helideckMotionVM = new HelideckMotionVM();
+            helideckMotionVM = new VerificationSessionDataVM();
             helideckMotionVM.Init();
 
             // About VM
@@ -127,7 +127,7 @@ namespace MVS
             ucSensorSetupPage.Init(config, errorHandler, adminSettingsVM);
 
             // Helideck Motion page
-            ucMVSSessionGraphs.Init(helideckMotionVM);
+            ucVerificationSessionData.Init(helideckMotionVM);
 
             // Error Message
             ucErrorMessagesPage.Init(config, errorHandler);

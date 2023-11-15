@@ -216,13 +216,13 @@
 
                             <telerik:RadTabItem
                                 Name="tabInput_HelideckMotion"
-                                Header="Graphs"
+                                Header="Data"
                                 Visibility="Collapsed">
 
                                 <DockPanel>
 
-                                    <uc:MVSSessionGraphs
-                                        x:Name="ucMVSSessionGraphs" />
+                                    <uc:VerificationSessionData
+                                        x:Name="ucVerificationSessionData" />
 
                                 </DockPanel>
 

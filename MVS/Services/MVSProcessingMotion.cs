@@ -157,7 +157,7 @@ namespace MVS
             refRollMaxRight20mData.InitProcessing(errorHandler, ErrorMessageCategory.AdminUser, adminSettingsVM);
             refRollMaxRight20mData.AddProcessing(CalculationType.TimeMin, Constants.Minutes20);
 
-            refHeaveMean20mData.id = (int)ValueType.Ref_HeaveMean20m;
+            refHeaveMean20mData.id = (int)ValueType.Ref_HeaveAmplitudeMean20m;
             refHeaveMean20mData.name = "Ref MRU: Heave Mean (20m)";
             refHeaveMean20mData.dbColumn = "ref_heave_mean";
             refHeaveMean20mData.InitProcessing(errorHandler, ErrorMessageCategory.AdminUser, adminSettingsVM);

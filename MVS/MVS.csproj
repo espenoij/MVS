@@ -378,7 +378,7 @@
     <Compile Include="Services\FixedValue\FixedValueSetup.cs" />
     <Compile Include="Models\WindVector.cs" />
     <Compile Include="ViewModels\AboutVM.cs" />
-    <Compile Include="ViewModels\HelideckMotionVM.cs" />
+    <Compile Include="ViewModels\VerificationSessionDataVM.cs" />
     <Compile Include="ViewModels\MainWindowVM.cs" />
     <Compile Include="ViewModels\FixedValueWindowVM.cs" />
     <Compile Include="Views\FixedValueSetupWindow.xaml.cs">
@@ -467,8 +467,8 @@
     <Compile Include="Helpers\SortAdorner.cs" />
     <Compile Include="Helpers\TextHelper.cs" />
     <Compile Include="Services\Weather.cs" />
-    <Compile Include="Views\MVSSessionGraphs.xaml.cs">
-      <DependentUpon>MVSSessionGraphs.xaml</DependentUpon>
+    <Compile Include="Views\VerificationSessionData.xaml.cs">
+      <DependentUpon>VerificationSessionData.xaml</DependentUpon>
     </Compile>
     <Page Include="Dialogs\DialogAbout.xaml">
       <Generator>MSBuild:Compile</Generator>
@@ -530,7 +530,7 @@
       <DependentUpon>SerialPortSetupWindow.xaml</DependentUpon>
       <SubType>Code</SubType>
     </Compile>
-    <Page Include="Views\MVSSessionGraphs.xaml">
+    <Page Include="Views\VerificationSessionData.xaml">
       <Generator>MSBuild:UpdateDesignTimeXaml</Generator>
       <SubType>Designer</SubType>
     </Page>
