@@ -6,7 +6,7 @@ using Telerik.Windows.Data;
 
 namespace MVS
 {
-    public class VerificationSessionDataVM : INotifyPropertyChanged
+    public class RecordingsDataVM : INotifyPropertyChanged
     {
         // Change notification
         public event PropertyChangedEventHandler PropertyChanged;
@@ -127,7 +127,7 @@ namespace MVS
 
             GraphBuffer.Update(mvsDataCollection.GetData(ValueType.Test_PitchMean20m), testPitch20mBuffer);
             GraphBuffer.Update(mvsDataCollection.GetData(ValueType.Test_RollMean20m), testRoll20mBuffer);
-            GraphBuffer.Update(mvsDataCollection.GetData(ValueType.Test_HeaveMean20m), testHeave20mBuffer);
+            GraphBuffer.Update(mvsDataCollection.GetData(ValueType.Test_HeaveAmplitudeMean20m), testHeave20mBuffer);
 
             // Oppdatere max verdier
             refPitchMax20mData = mvsDataCollection.GetData(ValueType.Ref_PitchMax20m);
@@ -152,7 +152,7 @@ namespace MVS
             testRollMean20mData = mvsDataCollection.GetData(ValueType.Test_RollMean20m);
             testHeaveMax20mData = mvsDataCollection.GetData(ValueType.Test_HeaveMax20m);
             testHeaveAmplitudeMax20mData = mvsDataCollection.GetData(ValueType.Test_HeaveAmplitudeMax20m);
-            testHeaveAmplitudeMean20mData = mvsDataCollection.GetData(ValueType.Test_HeaveAmplitudeMax20m);
+            testHeaveAmplitudeMean20mData = mvsDataCollection.GetData(ValueType.Test_HeaveAmplitudeMean20m);
 
             // Oppdatere mean verdier
             refPitchMean20mData = mvsDataCollection.GetData(ValueType.Ref_PitchMean20m);
@@ -217,30 +217,6 @@ namespace MVS
                 if (value != null)
                 {
                     _refPitchMax20mData.Set(value);
-
-                    OnPropertyChanged(nameof(refPitchMax20mString));
-                }
-            }
-        }
-        public string refPitchMax20mString
-        {
-            get
-            {
-                if (_refPitchMax20mData != null)
-                {
-                    // Sjekke om data er gyldig
-                    if (_refPitchMax20mData.status == DataStatus.OK)
-                    {
-                        return string.Format("{0} °", Math.Round(_refPitchMax20mData.data, 3, MidpointRounding.AwayFromZero).ToString("0.000"));
-                    }
-                    else
-                    {
-                        return Constants.NotAvailable;
-                    }
-                }
-                else
-                {
-                    return Constants.NotAvailable;
                 }
             }
         }
@@ -257,30 +233,6 @@ namespace MVS
                 if (value != null)
                 {
                     _testPitchMax20mData.Set(value);
-
-                    OnPropertyChanged(nameof(testPitchMax20mString));
-                }
-            }
-        }
-        public string testPitchMax20mString
-        {
-            get
-            {
-                if (_testPitchMax20mData != null)
-                {
-                    // Sjekke om data er gyldig
-                    if (_testPitchMax20mData.status == DataStatus.OK)
-                    {
-                        return string.Format("{0} °", Math.Round(_testPitchMax20mData.data, 3, MidpointRounding.AwayFromZero).ToString("0.000"));
-                    }
-                    else
-                    {
-                        return Constants.NotAvailable;
-                    }
-                }
-                else
-                {
-                    return Constants.NotAvailable;
                 }
             }
         }
@@ -564,7 +516,7 @@ namespace MVS
         {
             get
             {
-                return Math.Round(_testPitchMean20mData.data - _refPitchMean20mData.data, 3, MidpointRounding.AwayFromZero).ToString("+0.000");
+                return Math.Round(_testPitchMean20mData.data - _refPitchMean20mData.data, 3, MidpointRounding.AwayFromZero).ToString("+0.000;-0.000");
             }
         }
 
@@ -624,30 +576,6 @@ namespace MVS
                 if (value != null)
                 {
                     _refRollMax20mData.Set(value);
-
-                    OnPropertyChanged(nameof(refRollMax20mString));
-                }
-            }
-        }
-        public string refRollMax20mString
-        {
-            get
-            {
-                if (_refRollMax20mData != null)
-                {
-                    // Sjekke om data er gyldig
-                    if (_refRollMax20mData.status == DataStatus.OK)
-                    {
-                        return string.Format("{0} °", Math.Round(_refRollMax20mData.data, 3, MidpointRounding.AwayFromZero).ToString("0.000"));
-                    }
-                    else
-                    {
-                        return Constants.NotAvailable;
-                    }
-                }
-                else
-                {
-                    return Constants.NotAvailable;
                 }
             }
         }
@@ -664,30 +592,6 @@ namespace MVS
                 if (value != null)
                 {
                     _testRollMax20mData.Set(value);
-
-                    OnPropertyChanged(nameof(testRollMax20mString));
-                }
-            }
-        }
-        public string testRollMax20mString
-        {
-            get
-            {
-                if (_testRollMax20mData != null)
-                {
-                    // Sjekke om data er gyldig
-                    if (_testRollMax20mData.status == DataStatus.OK)
-                    {
-                        return string.Format("{0} °", Math.Round(_testRollMax20mData.data, 3, MidpointRounding.AwayFromZero).ToString("0.000"));
-                    }
-                    else
-                    {
-                        return Constants.NotAvailable;
-                    }
-                }
-                else
-                {
-                    return Constants.NotAvailable;
                 }
             }
         }
@@ -726,7 +630,7 @@ namespace MVS
                         else
                             dir = "R";
 
-                        return string.Format("{0} ° {1}", roll.ToString("0.0"), dir);
+                        return string.Format("{0} ° {1}", Math.Round(roll, 3, MidpointRounding.AwayFromZero).ToString("0.000"), dir);
                     }
                     else
                     {
@@ -774,7 +678,7 @@ namespace MVS
                         else
                             dir = "R";
 
-                        return string.Format("{0} ° {1}", roll.ToString("0.0"), dir);
+                        return string.Format("{0} ° {1}", Math.Round(roll, 3, MidpointRounding.AwayFromZero).ToString("0.000"), dir);
                     }
                     else
                     {
@@ -815,7 +719,14 @@ namespace MVS
                     if (_refRollMaxRight20mData.status == DataStatus.OK)
                     {
                         double roll = Math.Abs(_refRollMaxRight20mData.data);
-                        return string.Format("{0} °R", Math.Round(roll, 3, MidpointRounding.AwayFromZero).ToString("0.000"));
+
+                        string dir;
+                        if (_refRollMaxRight20mData.data >= 0)
+                            dir = "L";
+                        else
+                            dir = "R";
+
+                        return string.Format("{0} ° {1}", Math.Round(roll, 3, MidpointRounding.AwayFromZero).ToString("0.000"), dir);
                     }
                     else
                     {
@@ -856,7 +767,14 @@ namespace MVS
                     if (_testRollMaxRight20mData.status == DataStatus.OK)
                     {
                         double roll = Math.Abs(_testRollMaxRight20mData.data);
-                        return string.Format("{0} °R", Math.Round(roll, 3, MidpointRounding.AwayFromZero).ToString("0.000"));
+
+                        string dir;
+                        if (_testRollMaxRight20mData.data >= 0)
+                            dir = "L";
+                        else
+                            dir = "R";
+
+                        return string.Format("{0} ° {1}", Math.Round(roll, 3, MidpointRounding.AwayFromZero).ToString("0.000"), dir);
                     }
                     else
                     {
@@ -884,6 +802,7 @@ namespace MVS
                     _refRollMean20mData.Set(value);
 
                     OnPropertyChanged(nameof(refRollMean20mDataString));
+                    OnPropertyChanged(nameof(rollMeanDeviationString));
                 }
             }
         }
@@ -924,6 +843,7 @@ namespace MVS
                     _testRollMean20mData.Set(value);
 
                     OnPropertyChanged(nameof(testRollMean20mDataString));
+                    OnPropertyChanged(nameof(rollMeanDeviationString));                    
                 }
             }
         }
@@ -950,6 +870,13 @@ namespace MVS
             }
         }
 
+        public string rollMeanDeviationString
+        {
+            get
+            {
+                return Math.Round(_testRollMean20mData.data - _refRollMean20mData.data, 3, MidpointRounding.AwayFromZero).ToString("+0.000;-0.000");
+            }
+        }
 
         /////////////////////////////////////////////////////////////////////////////
         // Heave
@@ -1203,6 +1130,7 @@ namespace MVS
                     _refHeaveAmplitudeMean20mData.Set(value);
 
                     OnPropertyChanged(nameof(refHeaveAmplitudeMean20mString));
+                    OnPropertyChanged(nameof(heaveAmplitudeMeanDeviationString));
                 }
             }
         }
@@ -1243,6 +1171,7 @@ namespace MVS
                     _testHeaveAmplitudeMean20mData.Set(value);
 
                     OnPropertyChanged(nameof(testHeaveAmplitudeMean20mString));
+                    OnPropertyChanged(nameof(heaveAmplitudeMeanDeviationString));
                 }
             }
         }
@@ -1346,6 +1275,14 @@ namespace MVS
                 {
                     return Constants.NotAvailable;
                 }
+            }
+        }
+
+        public string heaveAmplitudeMeanDeviationString
+        {
+            get
+            {
+                return Math.Round(_testHeaveAmplitudeMean20mData.data - _refHeaveAmplitudeMean20mData.data, 3, MidpointRounding.AwayFromZero).ToString("+0.000;-0.000");
             }
         }
 

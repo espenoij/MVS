@@ -1,5 +1,5 @@
 ﻿<UserControl
-    x:Class="MVS.VerificationSessionData"
+    x:Class="MVS.RecordingsData"
     xmlns="http://schemas.microsoft.com/winfx/2006/xaml/presentation"
     xmlns:x="http://schemas.microsoft.com/winfx/2006/xaml"
     xmlns:mc="http://schemas.openxmlformats.org/markup-compatibility/2006"
@@ -15,9 +15,15 @@
 
         <sys:Double
             x:Key="ChartWidth">1600</sys:Double>
-
         <sys:Double
             x:Key="ChartHeight">200</sys:Double>
+
+        <sys:Double
+            x:Key="lineLegendWidth">2</sys:Double>
+        <sys:Double
+            x:Key="lineLegendWidthTitle">4</sys:Double>
+        <sys:Double
+            x:Key="lineLegendHeight">2</sys:Double>
 
         <local:LabelAbsConverter
             x:Key="LabelAbsConverter" />
@@ -33,8 +39,10 @@
                 Height="30*" />
         </Grid.RowDefinitions>
 
+        <!--Title Bar-->
         <Grid
-            Grid.Row="0">
+            Grid.Row="0"
+            Background="{StaticResource ColorBackgroundSeparator}">
 
             <Grid.ColumnDefinitions>
                 <ColumnDefinition
@@ -44,12 +52,12 @@
                 <ColumnDefinition
                     Width="20*" />
                 <ColumnDefinition
-                    Width="14*" />
+                    Width="16*" />
             </Grid.ColumnDefinitions>
 
             <Viewbox
                 Grid.Column="0"
-                Margin="8"
+                Margin="4"
                 StretchDirection="Both"
                 Stretch="Uniform"
                 HorizontalAlignment="Center">
@@ -61,16 +69,91 @@
 
             <Viewbox
                 Grid.Column="2"
-                Margin="8"
+                Margin="4"
                 StretchDirection="Both"
                 Stretch="Uniform"
                 HorizontalAlignment="Center">
 
                 <TextBlock
-                    Text="Calculated Mean Data" />
+                    Text="20-Minutes Mean Data" />
 
             </Viewbox>
 
+            <!--Title Bar Line Legend-->
+            <Grid
+                Grid.Column="3">
+
+                <Grid.ColumnDefinitions>
+                    <ColumnDefinition
+                        Width="1*" />
+                    <ColumnDefinition
+                        Width="5*" />
+                    <ColumnDefinition
+                        Width="1*" />
+                    <ColumnDefinition
+                        Width="5*" />
+                </Grid.ColumnDefinitions>
+
+                <StackPanel
+                    Orientation="Horizontal"
+                    Grid.Column="1">
+
+                    <Viewbox
+                        StretchDirection="Both"
+                        Stretch="Uniform"
+                        HorizontalAlignment="Center">
+
+                        <Rectangle
+                            Margin="1"
+                            Width="{StaticResource lineLegendWidthTitle}"
+                            Height="{StaticResource lineLegendHeight}"
+                            Fill="{StaticResource ColorGraphLineRef}" />
+                    </Viewbox>
+
+                    <Viewbox
+                        StretchDirection="Both"
+                        Stretch="Uniform"
+                        HorizontalAlignment="Center">
+
+                        <TextBlock
+                            Margin="4"
+                            Text="Reference Sensor" />
+
+                    </Viewbox>
+
+                </StackPanel>
+
+
+                <StackPanel
+                    Orientation="Horizontal"
+                    Grid.Column="3">
+
+                    <Viewbox
+                        StretchDirection="Both"
+                        Stretch="Uniform"
+                        HorizontalAlignment="Center">
+
+                        <Rectangle
+                            Margin="1"
+                            Width="{StaticResource lineLegendWidthTitle}"
+                            Height="{StaticResource lineLegendHeight}"
+                            Fill="{StaticResource ColorGraphLineTest}" />
+                    </Viewbox>
+
+                    <Viewbox
+                        StretchDirection="Both"
+                        Stretch="Uniform"
+                        HorizontalAlignment="Center">
+
+                        <TextBlock
+                            Margin="4"
+                            Text="Tested Sensor" />
+
+                    </Viewbox>
+
+                </StackPanel>
+
+            </Grid>
 
         </Grid>
 
@@ -85,7 +168,7 @@
                 <ColumnDefinition
                     Width="20*" />
                 <ColumnDefinition
-                    Width="14*" />
+                    Width="16*" />
             </Grid.ColumnDefinitions>
 
             <Grid
@@ -96,7 +179,7 @@
 
                     <Grid.ColumnDefinitions>
                         <ColumnDefinition
-                            Width="5*" />
+                            Width="10*" />
                         <ColumnDefinition
                             Width="60*" />
                     </Grid.ColumnDefinitions>
@@ -204,10 +287,10 @@
                         Name="chartPitch"                       
                         Margin="10,32,0,0">
 
-                        <!--Ref Pitch-->
+                        <!--Test Pitch-->
                         <telerik:LineSeries
                             ZIndex="200"
-                            Stroke="{StaticResource ColorGraphLineRef}"
+                            Stroke="{StaticResource ColorGraphLineTest}"
                             CategoryBinding="timestamp"
                             ValueBinding="graphData">
 
@@ -218,10 +301,10 @@
 
                         </telerik:LineSeries>
 
-                        <!--Test Pitch-->
+                        <!--Ref Pitch-->
                         <telerik:LineSeries
                             ZIndex="200"
-                            Stroke="{StaticResource ColorGraphLineTest}"
+                            Stroke="{StaticResource ColorGraphLineRef}"
                             CategoryBinding="timestamp"
                             ValueBinding="graphData">
 
@@ -452,10 +535,10 @@
                         Name="chartRoll"
                         Margin="10,32,0,0">
 
-                        <!--Ref Roll-->
+                        <!--Test Roll-->
                         <telerik:LineSeries
                             ZIndex="200"
-                            Stroke="{StaticResource ColorGraphLineRef}"
+                            Stroke="{StaticResource ColorGraphLineTest}"
                             CategoryBinding="timestamp"
                             ValueBinding="graphData">
 
@@ -466,10 +549,10 @@
 
                         </telerik:LineSeries>
 
-                        <!--Test Roll-->
+                        <!--Ref Roll-->
                         <telerik:LineSeries
                             ZIndex="200"
-                            Stroke="{StaticResource ColorGraphLineTest}"
+                            Stroke="{StaticResource ColorGraphLineRef}"
                             CategoryBinding="timestamp"
                             ValueBinding="graphData">
 
@@ -699,10 +782,10 @@
                         Name="chartHeave"
                         Margin="0,32,0,0">
 
-                        <!--Ref Heave-->
+                        <!--Test Heave-->
                         <telerik:LineSeries
                             ZIndex="200"
-                            Stroke="{StaticResource ColorGraphLineRef}"
+                            Stroke="{StaticResource ColorGraphLineTest}"
                             CategoryBinding="timestamp"
                             ValueBinding="graphData">
 
@@ -713,10 +796,10 @@
 
                         </telerik:LineSeries>
 
-                        <!--Test Heave-->
+                        <!--Ref Heave-->
                         <telerik:LineSeries
                             ZIndex="200"
-                            Stroke="{StaticResource ColorGraphLineTest}"
+                            Stroke="{StaticResource ColorGraphLineRef}"
                             CategoryBinding="timestamp"
                             ValueBinding="graphData">
 
@@ -865,7 +948,7 @@
 
                     <Grid.ColumnDefinitions>
                         <ColumnDefinition
-                            Width="5*" />
+                            Width="10*" />
                         <ColumnDefinition
                             Width="60*" />
                     </Grid.ColumnDefinitions>
@@ -983,6 +1066,20 @@
                         Name="chartPitch20m"
                         Margin="10,32,0,0">
 
+                        <!--Test Pitch-->
+                        <telerik:LineSeries
+                            ZIndex="200"
+                            Stroke="{StaticResource ColorGraphLineTest}"
+                            CategoryBinding="timestamp"
+                            ValueBinding="graphData">
+
+                            <telerik:LineSeries.RenderOptions>
+                                <telerik:XamlRenderOptions
+                                    DefaultVisualsRenderMode="Batch" />
+                            </telerik:LineSeries.RenderOptions>
+
+                        </telerik:LineSeries>
+
                         <!--Ref Pitch-->
                         <telerik:LineSeries
                             ZIndex="200"
@@ -997,10 +1094,10 @@
 
                         </telerik:LineSeries>
 
-                        <!--Test Pitch-->
+                        <!--Ref Pitch-->
                         <telerik:LineSeries
                             ZIndex="200"
-                            Stroke="{StaticResource ColorGraphLineTest}"
+                            Stroke="{StaticResource ColorGraphLineRef}"
                             CategoryBinding="timestamp"
                             ValueBinding="graphData">
 
@@ -1235,10 +1332,10 @@
                         Name="chartRoll20m"
                         Margin="10,32,0,0">
 
-                        <!--Ref Roll-->
+                        <!--Test Roll-->
                         <telerik:LineSeries
                             ZIndex="200"
-                            Stroke="{StaticResource ColorGraphLineRef}"
+                            Stroke="{StaticResource ColorGraphLineTest}"
                             CategoryBinding="timestamp"
                             ValueBinding="graphData">
 
@@ -1249,10 +1346,10 @@
 
                         </telerik:LineSeries>
 
-                        <!--Test Roll-->
+                        <!--Ref Roll-->
                         <telerik:LineSeries
                             ZIndex="200"
-                            Stroke="{StaticResource ColorGraphLineTest}"
+                            Stroke="{StaticResource ColorGraphLineRef}"
                             CategoryBinding="timestamp"
                             ValueBinding="graphData">
 
@@ -1444,7 +1541,9 @@
                             <RowDefinition
                                 Height="*" />
                             <RowDefinition
-                                Height="6*" />
+                                Height="*" />
+                            <RowDefinition
+                                Height="5*" />
                         </Grid.RowDefinitions>
 
                         <Viewbox
@@ -1471,6 +1570,18 @@
 
                         </Viewbox>
 
+                        <Viewbox
+                            Grid.Row="3"
+                            Grid.Column="0"
+                            StretchDirection="Both"
+                            Stretch="Uniform"
+                            HorizontalAlignment="Center">
+
+                            <TextBlock
+                                Text="Amplitude" />
+
+                        </Viewbox>
+
                     </Grid>
 
                     <telerik:RadCartesianChart
@@ -1479,10 +1590,10 @@
                         Margin="0,32,0,0"
                         Name="chartHeaveAmplitude20m">
 
-                        <!--Ref Heave-->
+                        <!--Test Heave-->
                         <telerik:LineSeries
                             ZIndex="200"
-                            Stroke="{StaticResource ColorGraphLineRef}"
+                            Stroke="{StaticResource ColorGraphLineTest}"
                             CategoryBinding="timestamp"
                             ValueBinding="graphData">
 
@@ -1493,10 +1604,10 @@
 
                         </telerik:LineSeries>
 
-                        <!--Test Heave-->
+                        <!--Ref Heave-->
                         <telerik:LineSeries
                             ZIndex="200"
-                            Stroke="{StaticResource ColorGraphLineTest}"
+                            Stroke="{StaticResource ColorGraphLineRef}"
                             CategoryBinding="timestamp"
                             ValueBinding="graphData">
 
@@ -1625,7 +1736,6 @@
                 Grid.Column="3">
 
                 <Grid
-                    Margin="8"
                     Background="{StaticResource ColorBackgroundSeparator}">
 
                     <Grid.RowDefinitions>
@@ -1643,13 +1753,14 @@
                             Height="30" />
                     </Grid.RowDefinitions>
 
+                    <!--Pitch Data-->
                     <Grid
                         Grid.Row="0"
                         Margin="8">
 
                         <Grid.RowDefinitions>
                             <RowDefinition
-                                Height="*" />
+                                Height="2*" />
                             <RowDefinition
                                 Height="*" />
                             <RowDefinition
@@ -1665,16 +1776,65 @@
                             <RowDefinition
                                 Height="*" />
                             <RowDefinition
-                                Height="4*" />
+                                Height="*" />
+                            <RowDefinition
+                                Height="*" />
+                            <RowDefinition
+                                Height="*" />
+                            <RowDefinition
+                                Height="*" />
                         </Grid.RowDefinitions>
 
-                        <!--Labels-->
+                        <!--Pitch Line Legend-->
                         <Grid
-                            Grid.Row="0">
+                            Grid.Row="2">
 
                             <Grid.ColumnDefinitions>
                                 <ColumnDefinition
-                                    Width="4*" />
+                                    Width="5*" />
+                                <ColumnDefinition
+                                    Width="2*" />
+                                <ColumnDefinition
+                                    Width="2*" />
+                            </Grid.ColumnDefinitions>
+
+                            <Viewbox
+                                Grid.Column="1"
+                                StretchDirection="Both"
+                                Stretch="Uniform"
+                                HorizontalAlignment="Center">
+
+                                <Rectangle
+                                    Margin="1"
+                                    Width="{StaticResource lineLegendWidth}"
+                                    Height="{StaticResource lineLegendHeight}"
+                                    Fill="{StaticResource ColorGraphLineRef}" />
+
+                            </Viewbox>
+
+                            <Viewbox
+                                Grid.Column="2"
+                                StretchDirection="Both"
+                                Stretch="Uniform"
+                                HorizontalAlignment="Center">
+
+                                <Rectangle
+                                    Margin="1"
+                                    Width="{StaticResource lineLegendWidth}"
+                                    Height="{StaticResource lineLegendHeight}"
+                                    Fill="{StaticResource ColorGraphLineTest}" />
+
+                            </Viewbox>
+
+                        </Grid>
+
+                        <!--Pitch Labels-->
+                        <Grid
+                            Grid.Row="3">
+
+                            <Grid.ColumnDefinitions>
+                                <ColumnDefinition
+                                    Width="5*" />
                                 <ColumnDefinition
                                     Width="2*" />
                                 <ColumnDefinition
@@ -1714,11 +1874,11 @@
 
                         <!--Max Pitch up-->
                         <Grid
-                            Grid.Row="1">
+                            Grid.Row="4">
 
                             <Grid.ColumnDefinitions>
                                 <ColumnDefinition
-                                    Width="4*" />
+                                    Width="5*" />
                                 <ColumnDefinition
                                     Width="2*" />
                                 <ColumnDefinition
@@ -1764,11 +1924,11 @@
 
                         <!--Max Pitch Down-->
                         <Grid
-                            Grid.Row="2">
+                            Grid.Row="5">
 
                             <Grid.ColumnDefinitions>
                                 <ColumnDefinition
-                                    Width="4*" />
+                                    Width="5*" />
                                 <ColumnDefinition
                                     Width="2*" />
                                 <ColumnDefinition
@@ -1803,11 +1963,11 @@
 
                         <!--Mean Pitch-->
                         <Grid
-                            Grid.Row="4">
+                            Grid.Row="7">
 
                             <Grid.ColumnDefinitions>
                                 <ColumnDefinition
-                                    Width="4*" />
+                                    Width="5*" />
                                 <ColumnDefinition
                                     Width="2*" />
                                 <ColumnDefinition
@@ -1853,11 +2013,12 @@
 
                         <!--Mean Pitch Deviation-->
                         <Grid
-                            Grid.Row="7">
+                            Grid.Row="10"
+                            Background="{StaticResource ColorBackgroundSeparatorDark}">
 
                             <Grid.ColumnDefinitions>
                                 <ColumnDefinition
-                                    Width="4*" />
+                                    Width="5*" />
                                 <ColumnDefinition
                                     Width="2*" />
                                 <ColumnDefinition
@@ -1884,6 +2045,565 @@
 
                                 <TextBlock
                                     Text="{Binding Path=pitchMeanDeviationString}"
+                                    FontSize="{StaticResource fontSizeData}" />
+
+                            </Viewbox>
+
+                        </Grid>
+
+                    </Grid>
+
+                    <!--Roll Data-->
+                    <Grid
+                        Grid.Row="2"
+                        Margin="8">
+
+                        <Grid.RowDefinitions>
+                            <RowDefinition
+                                Height="2*" />
+                            <RowDefinition
+                                Height="*" />
+                            <RowDefinition
+                                Height="*" />
+                            <RowDefinition
+                                Height="*" />
+                            <RowDefinition
+                                Height="*" />
+                            <RowDefinition
+                                Height="*" />
+                            <RowDefinition
+                                Height="*" />
+                            <RowDefinition
+                                Height="*" />
+                            <RowDefinition
+                                Height="*" />
+                            <RowDefinition
+                                Height="*" />
+                            <RowDefinition
+                                Height="*" />
+                            <RowDefinition
+                                Height="*" />
+                        </Grid.RowDefinitions>
+
+                        <!--Roll Line Legend-->
+                        <Grid
+                            Grid.Row="2">
+
+                            <Grid.ColumnDefinitions>
+                                <ColumnDefinition
+                                    Width="5*" />
+                                <ColumnDefinition
+                                    Width="2*" />
+                                <ColumnDefinition
+                                    Width="2*" />
+                            </Grid.ColumnDefinitions>
+
+                            <Viewbox
+                                Grid.Column="1"
+                                StretchDirection="Both"
+                                Stretch="Uniform"
+                                HorizontalAlignment="Center">
+
+                                <Rectangle
+                                    Margin="1"
+                                    Width="{StaticResource lineLegendWidth}"
+                                    Height="{StaticResource lineLegendHeight}"
+                                    Fill="{StaticResource ColorGraphLineRef}" />
+
+                            </Viewbox>
+
+                            <Viewbox
+                                Grid.Column="2"
+                                StretchDirection="Both"
+                                Stretch="Uniform"
+                                HorizontalAlignment="Center">
+
+                                <Rectangle
+                                    Margin="1"
+                                    Width="{StaticResource lineLegendWidth}"
+                                    Height="{StaticResource lineLegendHeight}"
+                                    Fill="{StaticResource ColorGraphLineTest}" />
+
+                            </Viewbox>
+
+                        </Grid>
+
+                        <!--Roll Labels-->
+                        <Grid
+                            Grid.Row="3">
+
+                            <Grid.ColumnDefinitions>
+                                <ColumnDefinition
+                                    Width="5*" />
+                                <ColumnDefinition
+                                    Width="2*" />
+                                <ColumnDefinition
+                                    Width="2*" />
+                            </Grid.ColumnDefinitions>
+
+
+                            <Separator
+                                Grid.Column="0"
+                                Grid.Row="3"
+                                Grid.ColumnSpan="3"
+                                VerticalAlignment="Bottom" />
+
+                            <Viewbox
+                                Grid.Column="1"
+                                StretchDirection="Both"
+                                Stretch="Uniform"
+                                HorizontalAlignment="Center">
+
+                                <TextBlock
+                                    Text="Ref" />
+
+                            </Viewbox>
+
+                            <Viewbox
+                                Grid.Column="2"
+                                StretchDirection="Both"
+                                Stretch="Uniform"
+                                HorizontalAlignment="Center">
+
+                                <TextBlock
+                                    Text="Test" />
+
+                            </Viewbox>
+
+                        </Grid>
+
+                        <!--Max Roll Left-->
+                        <Grid
+                            Grid.Row="4">
+
+                            <Grid.ColumnDefinitions>
+                                <ColumnDefinition
+                                    Width="5*" />
+                                <ColumnDefinition
+                                    Width="2*" />
+                                <ColumnDefinition
+                                    Width="2*" />
+                            </Grid.ColumnDefinitions>
+
+                            <Viewbox
+                                Grid.Column="0"
+                                StretchDirection="Both"
+                                Stretch="Uniform"
+                                HorizontalAlignment="Left">
+
+                                <TextBlock
+                                    Text="Max Roll" />
+
+                            </Viewbox>
+
+                            <Viewbox
+                                Grid.Column="1"
+                                StretchDirection="Both"
+                                Stretch="Uniform"
+                                HorizontalAlignment="Center">
+
+                                <TextBlock
+                                    Text="{Binding Path=refRollMaxLeft20mString}"
+                                    FontSize="{StaticResource fontSizeData}" />
+
+                            </Viewbox>
+
+                            <Viewbox
+                                Grid.Column="2"
+                                StretchDirection="Both"
+                                Stretch="Uniform"
+                                HorizontalAlignment="Center">
+
+                                <TextBlock
+                                    Text="{Binding Path=testRollMaxLeft20mString}"
+                                    FontSize="{StaticResource fontSizeData}" />
+
+                            </Viewbox>
+
+                        </Grid>
+
+                        <!--Max Roll Right-->
+                        <Grid
+                            Grid.Row="5">
+
+                            <Grid.ColumnDefinitions>
+                                <ColumnDefinition
+                                    Width="5*" />
+                                <ColumnDefinition
+                                    Width="2*" />
+                                <ColumnDefinition
+                                    Width="2*" />
+                            </Grid.ColumnDefinitions>
+
+                            <Viewbox
+                                Grid.Column="1"
+                                StretchDirection="Both"
+                                Stretch="Uniform"
+                                HorizontalAlignment="Center">
+
+                                <TextBlock
+                                    Text="{Binding Path=refRollMaxRight20mString}"
+                                    FontSize="{StaticResource fontSizeData}" />
+
+                            </Viewbox>
+
+                            <Viewbox
+                                Grid.Column="2"
+                                StretchDirection="Both"
+                                Stretch="Uniform"
+                                HorizontalAlignment="Center">
+
+                                <TextBlock
+                                    Text="{Binding Path=testRollMaxRight20mString}"
+                                    FontSize="{StaticResource fontSizeData}" />
+
+                            </Viewbox>
+
+                        </Grid>
+
+                        <!--Mean Roll-->
+                        <Grid
+                            Grid.Row="7">
+
+                            <Grid.ColumnDefinitions>
+                                <ColumnDefinition
+                                    Width="5*" />
+                                <ColumnDefinition
+                                    Width="2*" />
+                                <ColumnDefinition
+                                    Width="2*" />
+                            </Grid.ColumnDefinitions>
+
+                            <Viewbox
+                                Grid.Column="0"
+                                StretchDirection="Both"
+                                Stretch="Uniform"
+                                HorizontalAlignment="Left">
+
+                                <TextBlock
+                                    Text="Mean Roll" />
+
+                            </Viewbox>
+
+                            <Viewbox
+                                Grid.Column="1"
+                                StretchDirection="Both"
+                                Stretch="Uniform"
+                                HorizontalAlignment="Center">
+
+                                <TextBlock
+                                    Text="{Binding Path=refRollMean20mDataString}"
+                                    FontSize="{StaticResource fontSizeData}" />
+
+                            </Viewbox>
+
+                            <Viewbox
+                                Grid.Column="2"
+                                StretchDirection="Both"
+                                Stretch="Uniform"
+                                HorizontalAlignment="Center">
+
+                                <TextBlock
+                                    Text="{Binding Path=testRollMean20mDataString}"
+                                    FontSize="{StaticResource fontSizeData}" />
+
+                            </Viewbox>
+
+                        </Grid>
+
+                        <!--Mean Roll Deviation-->
+                        <Grid
+                            Grid.Row="10"
+                            Background="{StaticResource ColorBackgroundSeparatorDark}">
+
+                            <Grid.ColumnDefinitions>
+                                <ColumnDefinition
+                                    Width="5*" />
+                                <ColumnDefinition
+                                    Width="2*" />
+                                <ColumnDefinition
+                                    Width="2*" />
+                            </Grid.ColumnDefinitions>
+
+                            <Viewbox
+                                Grid.Column="0"
+                                StretchDirection="Both"
+                                Stretch="Uniform"
+                                HorizontalAlignment="Left">
+
+                                <TextBlock
+                                    Text="Mean Roll Deviation" />
+
+                            </Viewbox>
+
+                            <Viewbox
+                                Grid.Column="1"
+                                Grid.ColumnSpan="2"
+                                StretchDirection="Both"
+                                Stretch="Uniform"
+                                HorizontalAlignment="Center">
+
+                                <TextBlock
+                                    Text="{Binding Path=rollMeanDeviationString}"
+                                    FontSize="{StaticResource fontSizeData}" />
+
+                            </Viewbox>
+
+                        </Grid>
+
+                    </Grid>
+
+                    <!--Heave Data-->
+                    <Grid
+                        Grid.Row="4"
+                        Margin="8">
+
+                        <Grid.RowDefinitions>
+                            <RowDefinition
+                                Height="2*" />
+                            <RowDefinition
+                                Height="*" />
+                            <RowDefinition
+                                Height="*" />
+                            <RowDefinition
+                                Height="*" />
+                            <RowDefinition
+                                Height="*" />
+                            <RowDefinition
+                                Height="*" />
+                            <RowDefinition
+                                Height="*" />
+                            <RowDefinition
+                                Height="*" />
+                            <RowDefinition
+                                Height="*" />
+                            <RowDefinition
+                                Height="*" />
+                            <RowDefinition
+                                Height="2*" />
+                        </Grid.RowDefinitions>
+
+                        <!--Heave Line Legend-->
+                        <Grid
+                            Grid.Row="2">
+
+                            <Grid.ColumnDefinitions>
+                                <ColumnDefinition
+                                    Width="5*" />
+                                <ColumnDefinition
+                                    Width="2*" />
+                                <ColumnDefinition
+                                    Width="2*" />
+                            </Grid.ColumnDefinitions>
+
+                            <Viewbox
+                                Grid.Column="1"
+                                StretchDirection="Both"
+                                Stretch="Uniform"
+                                HorizontalAlignment="Center">
+
+                                <Rectangle
+                                    Margin="1"
+                                    Width="{StaticResource lineLegendWidth}"
+                                    Height="{StaticResource lineLegendHeight}"
+                                    Fill="{StaticResource ColorGraphLineRef}" />
+
+                            </Viewbox>
+
+                            <Viewbox
+                                Grid.Column="2"
+                                StretchDirection="Both"
+                                Stretch="Uniform"
+                                HorizontalAlignment="Center">
+
+                                <Rectangle
+                                    Margin="1"
+                                    Width="{StaticResource lineLegendWidth}"
+                                    Height="{StaticResource lineLegendHeight}"
+                                    Fill="{StaticResource ColorGraphLineTest}" />
+
+                            </Viewbox>
+
+                        </Grid>
+
+                        <!--Heave Labels-->
+                        <Grid
+                            Grid.Row="3">
+
+                            <Grid.ColumnDefinitions>
+                                <ColumnDefinition
+                                    Width="5*" />
+                                <ColumnDefinition
+                                    Width="2*" />
+                                <ColumnDefinition
+                                    Width="2*" />
+                            </Grid.ColumnDefinitions>
+
+
+                            <Separator
+                                Grid.Column="0"
+                                Grid.Row="3"
+                                Grid.ColumnSpan="3"
+                                VerticalAlignment="Bottom" />
+
+                            <Viewbox
+                                Grid.Column="1"
+                                StretchDirection="Both"
+                                Stretch="Uniform"
+                                HorizontalAlignment="Center">
+
+                                <TextBlock
+                                    Text="Ref" />
+
+                            </Viewbox>
+
+                            <Viewbox
+                                Grid.Column="2"
+                                StretchDirection="Both"
+                                Stretch="Uniform"
+                                HorizontalAlignment="Center">
+
+                                <TextBlock
+                                    Text="Test" />
+
+                            </Viewbox>
+
+                        </Grid>
+
+                        <!--Max Heave Amplitude-->
+                        <Grid
+                            Grid.Row="4">
+
+                            <Grid.ColumnDefinitions>
+                                <ColumnDefinition
+                                    Width="5*" />
+                                <ColumnDefinition
+                                    Width="2*" />
+                                <ColumnDefinition
+                                    Width="2*" />
+                            </Grid.ColumnDefinitions>
+
+                            <Viewbox
+                                Grid.Column="0"
+                                StretchDirection="Both"
+                                Stretch="Uniform"
+                                HorizontalAlignment="Left">
+
+                                <TextBlock
+                                    Text="Max Heave Amplitude" />
+
+                            </Viewbox>
+
+                            <Viewbox
+                                Grid.Column="1"
+                                StretchDirection="Both"
+                                Stretch="Uniform"
+                                HorizontalAlignment="Center">
+
+                                <TextBlock
+                                    Text="{Binding Path=refHeaveAmplitudeMax20mString}"
+                                    FontSize="{StaticResource fontSizeData}" />
+
+                            </Viewbox>
+
+                            <Viewbox
+                                Grid.Column="2"
+                                StretchDirection="Both"
+                                Stretch="Uniform"
+                                HorizontalAlignment="Center">
+
+                                <TextBlock
+                                    Text="{Binding Path=testHeaveAmplitudeMax20mString}"
+                                    FontSize="{StaticResource fontSizeData}" />
+
+                            </Viewbox>
+
+                        </Grid>
+
+                        <!--Mean Heave Amplitude-->
+                        <Grid
+                            Grid.Row="6">
+
+                            <Grid.ColumnDefinitions>
+                                <ColumnDefinition
+                                    Width="5*" />
+                                <ColumnDefinition
+                                    Width="2*" />
+                                <ColumnDefinition
+                                    Width="2*" />
+                            </Grid.ColumnDefinitions>
+
+                            <Viewbox
+                                Grid.Column="0"
+                                StretchDirection="Both"
+                                Stretch="Uniform"
+                                HorizontalAlignment="Left">
+
+                                <TextBlock
+                                    Text="Mean Heave Amplitude" />
+
+                            </Viewbox>
+
+                            <Viewbox
+                                Grid.Column="1"
+                                StretchDirection="Both"
+                                Stretch="Uniform"
+                                HorizontalAlignment="Center">
+
+                                <TextBlock
+                                    Text="{Binding Path=refHeaveAmplitudeMean20mString}"
+                                    FontSize="{StaticResource fontSizeData}" />
+
+                            </Viewbox>
+
+                            <Viewbox
+                                Grid.Column="2"
+                                StretchDirection="Both"
+                                Stretch="Uniform"
+                                HorizontalAlignment="Center">
+
+                                <TextBlock
+                                    Text="{Binding Path=testHeaveAmplitudeMean20mString}"
+                                    FontSize="{StaticResource fontSizeData}" />
+
+                            </Viewbox>
+
+                        </Grid>
+
+                        <!--Mean Heave Amplitude Deviation-->
+                        <Grid
+                            Grid.Row="9"
+                            Background="{StaticResource ColorBackgroundSeparatorDark}">
+
+                            <Grid.ColumnDefinitions>
+                                <ColumnDefinition
+                                    Width="5*" />
+                                <ColumnDefinition
+                                    Width="2*" />
+                                <ColumnDefinition
+                                    Width="2*" />
+                            </Grid.ColumnDefinitions>
+
+                            <Viewbox
+                                Grid.Column="0"
+                                StretchDirection="Both"
+                                Stretch="Uniform"
+                                HorizontalAlignment="Left">
+
+                                <TextBlock
+                                    Text="Mean Heave Amplitude Deviation" />
+
+                            </Viewbox>
+
+                            <Viewbox
+                                Grid.Column="1"
+                                Grid.ColumnSpan="2"
+                                StretchDirection="Both"
+                                Stretch="Uniform"
+                                HorizontalAlignment="Center">
+
+                                <TextBlock
+                                    Text="{Binding Path=heaveAmplitudeMeanDeviationString}"
                                     FontSize="{StaticResource fontSizeData}" />
 
                             </Viewbox>

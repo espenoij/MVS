@@ -7,13 +7,13 @@ namespace MVS
     /// <summary>
     /// Represents a motion data set and provides change notification through the INotifyPropertyChanged interface.
     /// </summary>
-    public class VerificationSession : INotifyPropertyChanged
+    public class RecordingSession : INotifyPropertyChanged
     {
         // Change notification
         public event PropertyChangedEventHandler PropertyChanged;
 
         // Initialize
-        public VerificationSession()
+        public RecordingSession()
         {
             Name = string.Empty;
             Description = string.Empty;
@@ -22,7 +22,7 @@ namespace MVS
             InputSetup = VerificationInputSetup.ReferenceMRU;
         }
 
-        public VerificationSession(int id, string name, string description, VerificationInputSetup inputSetup)
+        public RecordingSession(int id, string name, string description, VerificationInputSetup inputSetup)
         {
             Id = id;
             Name = name;
@@ -30,12 +30,12 @@ namespace MVS
             InputSetup = inputSetup;
         }
 
-        public VerificationSession(VerificationSession session)
+        public RecordingSession(RecordingSession session)
         {
             Set(session);
         }
 
-        public void Set(VerificationSession session)
+        public void Set(RecordingSession session)
         {
             if (session != null)
             {

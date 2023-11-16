@@ -25,10 +25,11 @@
             <SolidColorBrush x:Key="ColorHorizontalBarBackground">#ff666666</SolidColorBrush>
             <SolidColorBrush x:Key="ColorVerticalBarBackground">#ff000000</SolidColorBrush>
             <SolidColorBrush x:Key="ColorBackgroundSeparator">#FFf6f6f6</SolidColorBrush>
+            <SolidColorBrush x:Key="ColorBackgroundSeparatorDark">gainsboro</SolidColorBrush>
             <SolidColorBrush x:Key="ColorAboutBackground">#ff333333</SolidColorBrush>
             <SolidColorBrush x:Key="ColorGraphLine">#FF333333</SolidColorBrush>
-            <SolidColorBrush x:Key="ColorGraphLineRef">#FFE11444</SolidColorBrush>
-            <SolidColorBrush x:Key="ColorGraphLineTest">#FF06D6A0</SolidColorBrush>
+            <SolidColorBrush x:Key="ColorGraphLineTest">#FFE11444</SolidColorBrush>
+            <SolidColorBrush x:Key="ColorGraphLineRef">#FF06D6A0</SolidColorBrush>
             
             <Style TargetType="local:MainWindow" BasedOn="{StaticResource RadWindowStyle}" />
             

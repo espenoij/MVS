@@ -66,7 +66,7 @@ namespace MVS
 
         // Model View
         private MainWindowVM mainWindowVM;
-        private VerificationSessionDataVM helideckMotionVM;
+        private RecordingsDataVM helideckMotionVM;
         private AboutVM aboutVM;
 
         public MainWindow()
@@ -87,7 +87,7 @@ namespace MVS
             DataContext = mainWindowVM;
 
             // Helideck Motion VM
-            helideckMotionVM = new VerificationSessionDataVM();
+            helideckMotionVM = new RecordingsDataVM();
             helideckMotionVM.Init();
 
             // About VM
@@ -120,14 +120,14 @@ namespace MVS
             // Stop Recording Callback
             UpdateUIButtonsCallback updateUIButtonsCallback = new UpdateUIButtonsCallback(UpdateUIButtons);
 
-            // Motion Data Sets page
-            ucVerificationSessions.Init(mainWindowVM, mvsDatabase, updateUIButtonsCallback);
+            // Recordings page
+            ucRecordings.Init(mainWindowVM, mvsDatabase, updateUIButtonsCallback);
 
             // Sensor Input Setup
             ucSensorSetupPage.Init(config, errorHandler, adminSettingsVM);
 
-            // Helideck Motion page
-            ucVerificationSessionData.Init(helideckMotionVM);
+            // Recodrings Data page
+            ucRecordingsData.Init(helideckMotionVM);
 
             // Error Message
             ucErrorMessagesPage.Init(config, errorHandler);
@@ -268,7 +268,7 @@ namespace MVS
         {
             // Stopper verfication session
             if (mainWindowVM.OperationsMode == OperationsMode.Recording && mode == OperationsMode.Stop)
-                ucVerificationSessions.Stop();
+                ucRecordings.Stop();
 
             mainWindowVM.OperationsMode = mode;
             UpdateUIButtons();
@@ -564,7 +564,7 @@ namespace MVS
                 ucSensorSetupPage.ServerStartedCheck(true);
                 ucMVSInputSetup.Start();
                 ucMVSOutput.Start();
-                ucVerificationSessions.Start();
+                ucRecordings.Start();
 
                 // Server startet
                 serverStarted = true;
@@ -603,7 +603,7 @@ namespace MVS
             ucSensorSetupPage.ServerStartedCheck(true);
             ucMVSInputSetup.Start();
             ucMVSOutput.Start();
-            ucVerificationSessions.Start();
+            ucRecordings.Start();
 
             // Server startet
             serverStarted = true;
@@ -635,9 +635,6 @@ namespace MVS
 
             // Resette sjekk på om database tabeller er opprettet
             databaseTablesCreated = false;
-
-            // Gå til data set tab
-            //tabMotionVerificationSessions.IsSelected = true;
 
             // Stoppe elapsed time
             mainWindowVM.StopTimer();

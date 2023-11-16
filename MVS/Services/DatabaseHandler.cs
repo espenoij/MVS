@@ -109,7 +109,7 @@ namespace MVS
         //    }
         //}
 
-        public void CreateDataTables(VerificationSession dataSet, MVSDataCollection mvsDataCollection)
+        public void CreateDataTables(RecordingSession dataSet, MVSDataCollection mvsDataCollection)
         {
             try
             {
@@ -334,7 +334,7 @@ namespace MVS
             }
         }
 
-        public void Insert(VerificationSession dataSet, MVSDataCollection mvsDataCollection)
+        public void Insert(RecordingSession dataSet, MVSDataCollection mvsDataCollection)
         {
             try
             {
@@ -419,7 +419,7 @@ namespace MVS
             }
         }
 
-        public int Insert(VerificationSession dataSet)
+        public int Insert(RecordingSession dataSet)
         {
             int id = -1;
 
@@ -467,7 +467,7 @@ namespace MVS
             return id;
         }
 
-        public void Update(VerificationSession dataSet)
+        public void Update(RecordingSession dataSet)
         {
             try
             {
@@ -509,7 +509,7 @@ namespace MVS
             }
         }
 
-        public void DeleteDataSet(VerificationSession dataSet)
+        public void DeleteDataSet(RecordingSession dataSet)
         {
             try
             {
@@ -541,7 +541,7 @@ namespace MVS
             }
         }
 
-        public void DeleteData(VerificationSession dataSet)
+        public void DeleteData(RecordingSession dataSet)
         {
             try
             {
@@ -572,9 +572,9 @@ namespace MVS
             }
         }
 
-        public List<VerificationSession> GetAllSessions()
+        public List<RecordingSession> GetAllSessions()
         {
-            List<VerificationSession> dataSets = new List<VerificationSession>();
+            List<RecordingSession> dataSets = new List<RecordingSession>();
 
             try
             {
@@ -597,7 +597,7 @@ namespace MVS
                         // Lese ut data
                         while (reader.Read())
                         {
-                            dataSets.Add(new VerificationSession(
+                            dataSets.Add(new RecordingSession(
                                 reader.GetInt32(0),
                                 reader.GetString(1),
                                 reader.GetString(2),
@@ -617,7 +617,7 @@ namespace MVS
             return dataSets;
         }
 
-        public void LoadTimestamps(VerificationSession dataSet)
+        public void LoadTimestamps(RecordingSession dataSet)
         {
             try
             {

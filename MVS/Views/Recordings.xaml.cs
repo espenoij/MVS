@@ -12,13 +12,13 @@ namespace MVS
     /// <summary>
     /// Interaction logic for VerificationSessions.xaml
     /// </summary>
-    public partial class VerificationSessions : UserControl
+    public partial class Recordings : UserControl
     {
         // Database handler
         private MVSDatabase mvsDatabase;
 
         // Motion Data Set List
-        private RadObservableCollection<VerificationSession> motionVerificationSessionList = new RadObservableCollection<VerificationSession>();
+        private RadObservableCollection<RecordingSession> motionVerificationSessionList = new RadObservableCollection<RecordingSession>();
 
         private MainWindowVM mainWindowVM;
 
@@ -26,7 +26,7 @@ namespace MVS
 
         private MainWindow.UpdateUIButtonsCallback updateUIButtonsCallback;
 
-        public VerificationSessions()
+        public Recordings()
         {
             InitializeComponent();
         }
@@ -101,7 +101,7 @@ namespace MVS
         private void LoadVerificationSessions()
         {
             // Hente liste med data set fra database
-            List<VerificationSession> sessionList = mvsDatabase.GetAllSessions();
+            List<RecordingSession> sessionList = mvsDatabase.GetAllSessions();
 
             if (sessionList != null)
             {
@@ -140,7 +140,7 @@ namespace MVS
         private void btnNew_Click(object sender, RoutedEventArgs e)
         {
             // Legge inne nytt tomt motion data set objekt
-            VerificationSession newSession = new VerificationSession();
+            RecordingSession newSession = new RecordingSession();
 
             // Store motion data set in database
             newSession.Id = mvsDatabase.Insert(newSession);
@@ -187,7 +187,7 @@ namespace MVS
 
         private void gvVerificationSessions_SelectionChanged(object sender, SelectionChangeEventArgs e)
         {
-            mainWindowVM.SelectedSession = (sender as RadGridView).SelectedItem as VerificationSession;
+            mainWindowVM.SelectedSession = (sender as RadGridView).SelectedItem as RecordingSession;
 
             LoadSelectedItemsDetails();
             UpdateButtonStates();

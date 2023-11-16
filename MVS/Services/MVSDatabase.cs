@@ -14,7 +14,7 @@ namespace MVS
             this.errorHandler = errorHandler;
         }
 
-        public void Insert(VerificationSession dataSet, MVSDataCollection hmsDataCollection)
+        public void Insert(RecordingSession dataSet, MVSDataCollection hmsDataCollection)
         {
             try
             {
@@ -35,11 +35,11 @@ namespace MVS
             }
         }
 
-        public List<VerificationSession> GetAllSessions()
+        public List<RecordingSession> GetAllSessions()
         {
             try
             {
-                List<VerificationSession> dataSets = database.GetAllSessions();
+                List<RecordingSession> dataSets = database.GetAllSessions();
 
                 errorHandler.ResetDatabaseError(ErrorHandler.DatabaseErrorType.GetAllMVSData);
 
@@ -60,7 +60,7 @@ namespace MVS
             }
         }
 
-        public int Insert(VerificationSession dataSet)
+        public int Insert(RecordingSession dataSet)
         {
             int id = 0;
 
@@ -85,7 +85,7 @@ namespace MVS
             return id;
         }
 
-        public void Update(VerificationSession dataSet)
+        public void Update(RecordingSession dataSet)
         {
             try
             {
@@ -106,7 +106,7 @@ namespace MVS
             }
         }
 
-        public void Remove(VerificationSession dataSet)
+        public void Remove(RecordingSession dataSet)
         {
             try
             {
@@ -128,7 +128,7 @@ namespace MVS
             }
         }
 
-        public void DeleteData(VerificationSession dataSet)
+        public void DeleteData(RecordingSession dataSet)
         {
             try
             {
@@ -149,7 +149,7 @@ namespace MVS
             }
         }
 
-        public void LoadTimestamps(VerificationSession dataSet)
+        public void LoadTimestamps(RecordingSession dataSet)
         {
             try
             {
@@ -192,7 +192,7 @@ namespace MVS
             }
         }
 
-        public void CreateDataTables(VerificationSession dataSet, MVSDataCollection mvsDataCollection)
+        public void CreateDataTables(RecordingSession dataSet, MVSDataCollection mvsDataCollection)
         {
             try
             {

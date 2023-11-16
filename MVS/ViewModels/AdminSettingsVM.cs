@@ -282,16 +282,4 @@ namespace MVS
             PropertyChanged?.Invoke(this, new PropertyChangedEventArgs(name));
         }
     }
-
-    public class HelicopterWSILimit
-    {
-        public HelicopterType helicopterType { get; set; }
-        public double limit;
-
-        public HelicopterWSILimit(HelicopterWSILimitConfig data)
-        {
-            helicopterType = (HelicopterType)data.id;
-            double.TryParse(data.limit, out limit);
-        }
-    }
 }

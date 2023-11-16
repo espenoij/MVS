@@ -142,8 +142,8 @@ public enum ValueType
     Test_RollMaxLeft20m,
     Test_RollMaxRight20m,
 
-    Test_HeaveMean20m,
     Test_HeaveMax20m,
+    Test_HeaveAmplitudeMean20m,
     Test_HeaveAmplitudeMax20m,
 
     // Motion Limits

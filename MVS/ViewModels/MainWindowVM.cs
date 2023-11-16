@@ -55,8 +55,8 @@ namespace MVS
         /////////////////////////////////////////////////////////////////////////////
         // Selected Motion Verification Session
         /////////////////////////////////////////////////////////////////////////////
-        private VerificationSession _selectedSession { get; set; }
-        public VerificationSession SelectedSession
+        private RecordingSession _selectedSession { get; set; }
+        public RecordingSession SelectedSession
         {
             get
             {

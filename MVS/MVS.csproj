@@ -372,13 +372,13 @@
     <Compile Include="Helpers\GraphBuffer.cs" />
     <Compile Include="Helpers\LabelAbsConverter.cs" />
     <Compile Include="Models\CommonTypes.cs" />
-    <Compile Include="Models\VerificationSession.cs" />
+    <Compile Include="Models\RecordingSession.cs" />
     <Compile Include="Services\FixedValue\FixedValueConfig.cs" />
     <Compile Include="Services\FixedValue\FixedValueDataRetrieval.cs" />
     <Compile Include="Services\FixedValue\FixedValueSetup.cs" />
     <Compile Include="Models\WindVector.cs" />
     <Compile Include="ViewModels\AboutVM.cs" />
-    <Compile Include="ViewModels\VerificationSessionDataVM.cs" />
+    <Compile Include="ViewModels\RecordingsDataVM.cs" />
     <Compile Include="ViewModels\MainWindowVM.cs" />
     <Compile Include="ViewModels\FixedValueWindowVM.cs" />
     <Compile Include="Views\FixedValueSetupWindow.xaml.cs">
@@ -408,9 +408,6 @@
     <Compile Include="Helpers\HMSCalc.cs" />
     <Compile Include="Services\MVSProcessing.cs" />
     <Compile Include="Services\MVSDataCollection.cs" />
-    <Compile Include="Config\HelicopterWSILimitConfig.cs" />
-    <Compile Include="Config\HelicopterWSILimitConfigCollection.cs" />
-    <Compile Include="Config\HelicopterWSILimitConfigSection.cs" />
     <Compile Include="Views\MVSInputSetup.xaml.cs">
       <DependentUpon>MVSInputSetup.xaml</DependentUpon>
     </Compile>
@@ -450,8 +447,8 @@
     <Compile Include="Config\SensorConfigSection.cs" />
     <Compile Include="Models\SensorData.cs" />
     <Compile Include="Config\SensorConfig.cs" />
-    <Compile Include="Views\VerificationSessions.xaml.cs">
-      <DependentUpon>VerificationSessions.xaml</DependentUpon>
+    <Compile Include="Views\Recordings.xaml.cs">
+      <DependentUpon>Recordings.xaml</DependentUpon>
     </Compile>
     <Compile Include="Views\SensorSetupPage.xaml.cs">
       <DependentUpon>SensorSetupPage.xaml</DependentUpon>
@@ -467,8 +464,8 @@
     <Compile Include="Helpers\SortAdorner.cs" />
     <Compile Include="Helpers\TextHelper.cs" />
     <Compile Include="Services\Weather.cs" />
-    <Compile Include="Views\VerificationSessionData.xaml.cs">
-      <DependentUpon>VerificationSessionData.xaml</DependentUpon>
+    <Compile Include="Views\RecordingsData.xaml.cs">
+      <DependentUpon>RecordingsData.xaml</DependentUpon>
     </Compile>
     <Page Include="Dialogs\DialogAbout.xaml">
       <Generator>MSBuild:Compile</Generator>
@@ -510,7 +507,7 @@
       <SubType>Designer</SubType>
       <Generator>MSBuild:Compile</Generator>
     </Page>
-    <Page Include="Views\VerificationSessions.xaml">
+    <Page Include="Views\Recordings.xaml">
       <Generator>MSBuild:Compile</Generator>
       <SubType>Designer</SubType>
     </Page>
@@ -530,7 +527,7 @@
       <DependentUpon>SerialPortSetupWindow.xaml</DependentUpon>
       <SubType>Code</SubType>
     </Compile>
-    <Page Include="Views\VerificationSessionData.xaml">
+    <Page Include="Views\RecordingsData.xaml">
       <Generator>MSBuild:UpdateDesignTimeXaml</Generator>
       <SubType>Designer</SubType>
     </Page>

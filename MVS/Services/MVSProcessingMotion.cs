@@ -47,8 +47,8 @@ namespace MVS
         private HMSData refHeaveAmplitudeMax20mData = new HMSData();
 
         private HMSData testHeaveData = new HMSData();
-        private HMSData testHeaveMean20mData = new HMSData();
         private HMSData testHeaveMax20mData = new HMSData();
+        private HMSData testHeaveAmplitudeMean20mData = new HMSData();
         private HMSData testHeaveAmplitudeMax20mData = new HMSData();
 
         // Admin Settings
@@ -103,7 +103,7 @@ namespace MVS
             hmsOutputDataList.Add(testRollMaxRight20mData);
 
             hmsOutputDataList.Add(testHeaveData);
-            hmsOutputDataList.Add(testHeaveMean20mData);
+            hmsOutputDataList.Add(testHeaveAmplitudeMean20mData);
             hmsOutputDataList.Add(testHeaveMax20mData);
             hmsOutputDataList.Add(testHeaveAmplitudeMax20mData);
 
@@ -221,17 +221,17 @@ namespace MVS
             testRollMaxRight20mData.InitProcessing(errorHandler, ErrorMessageCategory.AdminUser, adminSettingsVM);
             testRollMaxRight20mData.AddProcessing(CalculationType.TimeMin, Constants.Minutes20);
 
-            testHeaveMean20mData.id = (int)ValueType.Test_HeaveMean20m;
-            testHeaveMean20mData.name = "Test MRU: Heave Mean (20m)";
-            testHeaveMean20mData.dbColumn = "test_heave_mean";
-            testHeaveMean20mData.InitProcessing(errorHandler, ErrorMessageCategory.AdminUser, adminSettingsVM);
-            testHeaveMean20mData.AddProcessing(CalculationType.MeanWaveAmplitude, Constants.Minutes20);
-
             testHeaveMax20mData.id = (int)ValueType.Test_HeaveMax20m;
             testHeaveMax20mData.name = "Test MRU: Heave Max (20m)";
             testHeaveMax20mData.dbColumn = "test_heave_max";
             testHeaveMax20mData.InitProcessing(errorHandler, ErrorMessageCategory.AdminUser, adminSettingsVM);
             testHeaveMax20mData.AddProcessing(CalculationType.TimeMaxAbsolute, Constants.Minutes20);
+
+            testHeaveAmplitudeMean20mData.id = (int)ValueType.Test_HeaveAmplitudeMean20m;
+            testHeaveAmplitudeMean20mData.name = "Test MRU: Heave Mean (20m)";
+            testHeaveAmplitudeMean20mData.dbColumn = "test_heave_mean";
+            testHeaveAmplitudeMean20mData.InitProcessing(errorHandler, ErrorMessageCategory.AdminUser, adminSettingsVM);
+            testHeaveAmplitudeMean20mData.AddProcessing(CalculationType.MeanWaveAmplitude, Constants.Minutes20);
 
             testHeaveAmplitudeMax20mData.id = (int)ValueType.Test_HeaveAmplitudeMax20m;
             testHeaveAmplitudeMax20mData.name = "Test MRU: Heave Amplitude Max (20m)";
@@ -384,7 +384,7 @@ namespace MVS
 
                     // Test: Heave
                     testHeaveData.Set(testSensorHeave);
-                    testHeaveMean20mData.DoProcessing(testSensorHeave);
+                    testHeaveAmplitudeMean20mData.DoProcessing(testSensorHeave);
                     testHeaveMax20mData.DoProcessing(testSensorHeave);
                     testHeaveAmplitudeMax20mData.DoProcessing(testSensorHeave);
 
@@ -402,7 +402,7 @@ namespace MVS
                     testRollMaxRight20mData.data = Math.Round(testRollMaxRight20mData.data, 3, MidpointRounding.AwayFromZero);
 
                     testHeaveData.data = Math.Round(testHeaveData.data, 3, MidpointRounding.AwayFromZero);
-                    testHeaveMean20mData.data = Math.Round(testHeaveMean20mData.data, 3, MidpointRounding.AwayFromZero);
+                    testHeaveAmplitudeMean20mData.data = Math.Round(testHeaveAmplitudeMean20mData.data, 3, MidpointRounding.AwayFromZero);
                     testHeaveMax20mData.data = Math.Round(testHeaveMax20mData.data, 3, MidpointRounding.AwayFromZero);
                     testHeaveAmplitudeMax20mData.data = Math.Round(testHeaveAmplitudeMax20mData.data, 3, MidpointRounding.AwayFromZero);
                 }
@@ -436,8 +436,8 @@ namespace MVS
 
                     testHeaveData.data = 0;
                     testHeaveData.status = DataStatus.NONE;
-                    testHeaveMean20mData.data = 0;
-                    testHeaveMean20mData.status = DataStatus.NONE;
+                    testHeaveAmplitudeMean20mData.data = 0;
+                    testHeaveAmplitudeMean20mData.status = DataStatus.NONE;
                     testHeaveMax20mData.data = 0;
                     testHeaveMax20mData.status = DataStatus.NONE;
                     testHeaveAmplitudeMax20mData.data = 0;
@@ -470,7 +470,7 @@ namespace MVS
             testRollMax20mData.ResetDataCalculations();
             testRollMaxLeft20mData.ResetDataCalculations();
             testRollMaxRight20mData.ResetDataCalculations();
-            testHeaveMean20mData.ResetDataCalculations();
+            testHeaveAmplitudeMean20mData.ResetDataCalculations();
             testHeaveMax20mData.ResetDataCalculations();
             testHeaveAmplitudeMax20mData.ResetDataCalculations();
         }
