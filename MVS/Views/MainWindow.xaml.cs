@@ -66,7 +66,7 @@ namespace MVS
 
         // Model View
         private MainWindowVM mainWindowVM;
-        private RecordingsDataVM helideckMotionVM;
+        private RecordingsDataVM recordingsDataVM;
         private AboutVM aboutVM;
 
         public MainWindow()
@@ -87,8 +87,8 @@ namespace MVS
             DataContext = mainWindowVM;
 
             // Helideck Motion VM
-            helideckMotionVM = new RecordingsDataVM();
-            helideckMotionVM.Init();
+            recordingsDataVM = new RecordingsDataVM();
+            recordingsDataVM.Init();
 
             // About VM
             aboutVM = new AboutVM(Application.ResourceAssembly.GetName().Version);
@@ -126,8 +126,8 @@ namespace MVS
             // Sensor Input Setup
             ucSensorSetupPage.Init(config, errorHandler, adminSettingsVM);
 
-            // Recodrings Data page
-            ucRecordingsData.Init(helideckMotionVM);
+            // Recordings Data page
+            ucRecordingsData.Init(recordingsDataVM);
 
             // Error Message
             ucErrorMessagesPage.Init(config, errorHandler);
@@ -407,7 +407,7 @@ namespace MVS
                         mvsProcessing.Update(mvsInputData, mainWindowVM);
 
                         // Oppdatere graf data
-                        helideckMotionVM.UpdateData(mvsOutputData);
+                        recordingsDataVM.UpdateData(mvsOutputData);
 
                         // Sette database status
                         //SetDatabaseStatus(mvsInputData);
@@ -579,6 +579,8 @@ namespace MVS
                 recordingSymbol1.Visibility = Visibility.Visible;
                 recordingSymbol2.Visibility = Visibility.Visible;
                 recordingSymbol3.Visibility = Visibility.Visible;
+
+                recordingsDataVM.StartRecording();
             }
         }
 
@@ -611,8 +613,7 @@ namespace MVS
             // Start elapsed time
             mainWindowVM.StartTimer();
 
-            // Gå til input tab
-            //tabInput.IsSelected = true;
+            recordingsDataVM.StartRecording();
         }
 
         private void Stop()
@@ -639,10 +640,13 @@ namespace MVS
             // Stoppe elapsed time
             mainWindowVM.StopTimer();
 
-            // Vise recording symbol
+            // Skjule recording symbol
             recordingSymbol1.Visibility = Visibility.Collapsed;
             recordingSymbol2.Visibility = Visibility.Collapsed;
             recordingSymbol3.Visibility = Visibility.Collapsed;
+
+            // Fjerne data fra Recording Data page
+            recordingsDataVM.StopRecording();
         }
 
         private void DoDatabaseMaintenance()

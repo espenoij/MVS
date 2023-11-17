@@ -323,4 +323,8 @@ class Constants
     public const int TestModeStepDurationMin = 5;
     public const int TestModeStepDurationMax = 60;
 
+    // Number Formatting
+    public const string numberFormatRecData = "0.00";
+    public const string numberFormatRecDataSigned = "+0.00;-0.00";
+
 }

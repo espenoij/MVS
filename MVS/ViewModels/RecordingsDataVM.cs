@@ -31,21 +31,21 @@ namespace MVS
         public RadObservableCollection<HMSData> testHeaveList = new RadObservableCollection<HMSData>();
 
         // 20 minutters data
-        public RadObservableCollection<HMSData> refPitch20mList = new RadObservableCollection<HMSData>();
-        public RadObservableCollection<HMSData> refRoll20mList = new RadObservableCollection<HMSData>();
-        public RadObservableCollection<HMSData> refHeave20mList = new RadObservableCollection<HMSData>();
-
         private RadObservableCollection<HMSData> refPitch20mBuffer = new RadObservableCollection<HMSData>();
         private RadObservableCollection<HMSData> refRoll20mBuffer = new RadObservableCollection<HMSData>();
         private RadObservableCollection<HMSData> refHeave20mBuffer = new RadObservableCollection<HMSData>();
 
-        public RadObservableCollection<HMSData> testPitch20mList = new RadObservableCollection<HMSData>();
-        public RadObservableCollection<HMSData> testRoll20mList = new RadObservableCollection<HMSData>();
-        public RadObservableCollection<HMSData> testHeave20mList = new RadObservableCollection<HMSData>();
+        public RadObservableCollection<HMSData> refPitch20mList = new RadObservableCollection<HMSData>();
+        public RadObservableCollection<HMSData> refRoll20mList = new RadObservableCollection<HMSData>();
+        public RadObservableCollection<HMSData> refHeave20mList = new RadObservableCollection<HMSData>();
 
         private RadObservableCollection<HMSData> testPitch20mBuffer = new RadObservableCollection<HMSData>();
         private RadObservableCollection<HMSData> testRoll20mBuffer = new RadObservableCollection<HMSData>();
         private RadObservableCollection<HMSData> testHeave20mBuffer = new RadObservableCollection<HMSData>();
+
+        public RadObservableCollection<HMSData> testPitch20mList = new RadObservableCollection<HMSData>();
+        public RadObservableCollection<HMSData> testRoll20mList = new RadObservableCollection<HMSData>();
+        public RadObservableCollection<HMSData> testHeave20mList = new RadObservableCollection<HMSData>();
 
         public void Init()
         {
@@ -56,7 +56,6 @@ namespace MVS
             // Oppdatere trend data i UI: 20 minutter
             ChartUpdateTimer.Interval = TimeSpan.FromMilliseconds(Constants.ChartUpdateFrequencyUI20mDefault);
             ChartUpdateTimer.Tick += ChartDataUpdate20m;
-            ChartUpdateTimer.Start();
 
             void ChartDataUpdate20m(object sender, EventArgs e)
             {
@@ -160,6 +159,79 @@ namespace MVS
             refHeaveMean20mData = mvsDataCollection.GetData(ValueType.Ref_HeaveAmplitudeMean20m);
         }
 
+        public void StartRecording()
+        {
+            InitPitchData();
+            InitRollData();
+            InitHeaveData();
+
+            ChartUpdateTimer.Start();
+        }
+
+        public void StopRecording()
+        {
+            HMSData noData = new HMSData()
+            {
+                data = double.NaN,
+                status = DataStatus.NONE
+            };
+
+            refPitchMaxUp20mData = noData;
+            refPitchMaxDown20mData = noData;
+            refPitchMean20mData = noData;
+            refRollMaxLeft20mData = noData;
+            refRollMaxRight20mData = noData;
+            refRollMean20mData = noData;
+            refHeaveAmplitudeMax20mData = noData;
+            refHeaveAmplitudeMean20mData = noData;
+
+            testPitchMaxUp20mData = noData;
+            testPitchMaxDown20mData = noData;
+            testPitchMean20mData = noData;
+            testRollMaxLeft20mData = noData;
+            testRollMaxRight20mData = noData;
+            testRollMean20mData = noData;
+            testHeaveAmplitudeMax20mData = noData;
+            testHeaveAmplitudeMean20mData = noData;
+
+            refPitchMean20mData = noData;
+            refRollMean20mData = noData;
+            refHeaveMean20mData = noData;
+
+            refPitchBuffer.Clear();
+            refRollBuffer.Clear();
+            refHeaveBuffer.Clear();
+
+            testPitchBuffer.Clear();
+            testRollBuffer.Clear();
+            testHeaveBuffer.Clear();
+
+            refPitch20mBuffer.Clear();
+            refRoll20mBuffer.Clear();
+            refHeave20mBuffer.Clear();
+
+            testPitch20mBuffer.Clear();
+            testRoll20mBuffer.Clear();
+            testHeave20mBuffer.Clear();
+
+            refPitchList.Clear();
+            refRollList.Clear();
+            refHeaveList.Clear();
+
+            testPitchList.Clear();
+            testRollList.Clear();
+            testHeaveList.Clear();
+
+            refPitch20mList.Clear();
+            refRoll20mList.Clear();
+            refHeave20mList.Clear();
+
+            testPitch20mList.Clear();
+            testRoll20mList.Clear();
+            testHeave20mList.Clear();
+
+            ChartUpdateTimer.Stop();
+        }
 
         /////////////////////////////////////////////////////////////////////////////
         // Pitch
@@ -179,9 +251,18 @@ namespace MVS
             _testPitchMean20mData = new HMSData();
 
             // Init av chart data
+            refPitch20mList.Clear();
+            testPitch20mList.Clear();
+
             for (int i = -Constants.Minutes20; i <= 0; i++)
             {
                 refPitch20mList.Add(new HMSData()
+                {
+                    data = 0,
+                    timestamp = DateTime.UtcNow.AddSeconds(i)
+                });
+
+                testPitch20mList.Add(new HMSData()
                 {
                     data = 0,
                     timestamp = DateTime.UtcNow.AddSeconds(i)
@@ -261,7 +342,7 @@ namespace MVS
                 if (_refPitchMaxUp20mData != null)
                 {
                     // Sjekke om data er gyldig
-                    if (_refPitchMaxUp20mData.status == DataStatus.OK)
+                    if (_refPitchMaxUp20mData.status == DataStatus.OK && !double.IsNaN(_refPitchMaxUp20mData.data))
                     {
                         double pitch = Math.Abs(_refPitchMaxUp20mData.data);
 
@@ -271,7 +352,7 @@ namespace MVS
                         else
                             dir = "D";
 
-                        return string.Format("{0} ° {1}", Math.Round(pitch, 3, MidpointRounding.AwayFromZero).ToString("0.000"), dir);
+                        return string.Format("{0} ° {1}", Math.Round(pitch, 3, MidpointRounding.AwayFromZero).ToString(Constants.numberFormatRecData), dir);
                     }
                     else
                     {
@@ -309,7 +390,7 @@ namespace MVS
                 if (_testPitchMaxUp20mData != null)
                 {
                     // Sjekke om data er gyldig
-                    if (_testPitchMaxUp20mData.status == DataStatus.OK)
+                    if (_testPitchMaxUp20mData.status == DataStatus.OK && !double.IsNaN(_testPitchMaxUp20mData.data))
                     {
                         double pitch = Math.Abs(_testPitchMaxUp20mData.data);
 
@@ -319,7 +400,7 @@ namespace MVS
                         else
                             dir = "D";
 
-                        return string.Format("{0} ° {1}", Math.Round(pitch, 3, MidpointRounding.AwayFromZero).ToString("0.000"), dir);
+                        return string.Format("{0} ° {1}", Math.Round(pitch, 3, MidpointRounding.AwayFromZero).ToString(Constants.numberFormatRecData), dir);
                     }
                     else
                     {
@@ -357,7 +438,7 @@ namespace MVS
                 if (_refPitchMaxDown20mData != null)
                 {
                     // Sjekke om data er gyldig
-                    if (_refPitchMaxDown20mData.status == DataStatus.OK)
+                    if (_refPitchMaxDown20mData.status == DataStatus.OK && !double.IsNaN(_refPitchMaxDown20mData.data))
                     {
                         double pitch = Math.Abs(_refPitchMaxDown20mData.data);
 
@@ -367,7 +448,7 @@ namespace MVS
                         else
                             dir = "D";
 
-                        return string.Format("{0} ° {1}", Math.Round(pitch, 3, MidpointRounding.AwayFromZero).ToString("0.000"), dir);
+                        return string.Format("{0} ° {1}", Math.Round(pitch, 3, MidpointRounding.AwayFromZero).ToString(Constants.numberFormatRecData), dir);
                     }
                     else
                     {
@@ -405,7 +486,7 @@ namespace MVS
                 if (_testPitchMaxDown20mData != null)
                 {
                     // Sjekke om data er gyldig
-                    if (_testPitchMaxDown20mData.status == DataStatus.OK)
+                    if (_testPitchMaxDown20mData.status == DataStatus.OK && !double.IsNaN(_testPitchMaxDown20mData.data))
                     {
                         double pitch = Math.Abs(_testPitchMaxDown20mData.data);
 
@@ -415,7 +496,7 @@ namespace MVS
                         else
                             dir = "D";
 
-                        return string.Format("{0} ° {1}", Math.Round(pitch, 3, MidpointRounding.AwayFromZero).ToString("0.000"), dir);
+                        return string.Format("{0} ° {1}", Math.Round(pitch, 3, MidpointRounding.AwayFromZero).ToString(Constants.numberFormatRecData), dir);
                     }
                     else
                     {
@@ -455,9 +536,9 @@ namespace MVS
                 if (_refPitchMean20mData != null)
                 {
                     // Sjekke om data er gyldig
-                    if (_refPitchMean20mData.status == DataStatus.OK)
+                    if (_refPitchMean20mData.status == DataStatus.OK && !double.IsNaN(_refPitchMean20mData.data))
                     {
-                        return string.Format("{0} °", Math.Round(_refPitchMean20mData.data, 3, MidpointRounding.AwayFromZero).ToString("0.000"));
+                        return string.Format("{0} °", Math.Round(_refPitchMean20mData.data, 3, MidpointRounding.AwayFromZero).ToString(Constants.numberFormatRecData));
                     }
                     else
                     {
@@ -496,9 +577,9 @@ namespace MVS
                 if (_testPitchMean20mData != null)
                 {
                     // Sjekke om data er gyldig
-                    if (_testPitchMean20mData.status == DataStatus.OK)
+                    if (_testPitchMean20mData.status == DataStatus.OK && !double.IsNaN(_testPitchMean20mData.data))
                     {
-                        return string.Format("{0} °", Math.Round(_testPitchMean20mData.data, 3, MidpointRounding.AwayFromZero).ToString("0.000"));
+                        return string.Format("{0} °", Math.Round(_testPitchMean20mData.data, 3, MidpointRounding.AwayFromZero).ToString(Constants.numberFormatRecData));
                     }
                     else
                     {
@@ -516,7 +597,15 @@ namespace MVS
         {
             get
             {
-                return Math.Round(_testPitchMean20mData.data - _refPitchMean20mData.data, 3, MidpointRounding.AwayFromZero).ToString("+0.000;-0.000");
+                if (_testPitchMean20mData.status == DataStatus.OK && !double.IsNaN(_testPitchMean20mData.data) &&
+                    _refPitchMean20mData.status == DataStatus.OK && !double.IsNaN(_refPitchMean20mData.data))
+                {
+                    return Math.Round(_testPitchMean20mData.data - _refPitchMean20mData.data, 3, MidpointRounding.AwayFromZero).ToString(Constants.numberFormatRecDataSigned);
+                }
+                else
+                {
+                    return Constants.NotAvailable;
+                }
             }
         }
 
@@ -538,9 +627,18 @@ namespace MVS
             _testRollMean20mData = new HMSData();
 
             // Init av chart data
+            refRoll20mList.Clear();
+            testRoll20mList.Clear();
+
             for (int i = -Constants.Minutes20; i <= 0; i++)
             {
                 refRoll20mList.Add(new HMSData()
+                {
+                    data = 0,
+                    timestamp = DateTime.UtcNow.AddSeconds(i)
+                });
+
+               testRoll20mList.Add(new HMSData()
                 {
                     data = 0,
                     timestamp = DateTime.UtcNow.AddSeconds(i)
@@ -620,7 +718,7 @@ namespace MVS
                 if (_refRollMaxLeft20mData != null)
                 {
                     // Sjekke om data er gyldig
-                    if (_refRollMaxLeft20mData.status == DataStatus.OK)
+                    if (_refRollMaxLeft20mData.status == DataStatus.OK && !double.IsNaN(_refRollMaxLeft20mData.data))
                     {
                         double roll = Math.Abs(_refRollMaxLeft20mData.data);
 
@@ -630,7 +728,7 @@ namespace MVS
                         else
                             dir = "R";
 
-                        return string.Format("{0} ° {1}", Math.Round(roll, 3, MidpointRounding.AwayFromZero).ToString("0.000"), dir);
+                        return string.Format("{0} ° {1}", Math.Round(roll, 3, MidpointRounding.AwayFromZero).ToString(Constants.numberFormatRecData), dir);
                     }
                     else
                     {
@@ -668,7 +766,7 @@ namespace MVS
                 if (_testRollMaxLeft20mData != null)
                 {
                     // Sjekke om data er gyldig
-                    if (_testRollMaxLeft20mData.status == DataStatus.OK)
+                    if (_testRollMaxLeft20mData.status == DataStatus.OK && !double.IsNaN(_testRollMaxLeft20mData.data))
                     {
                         double roll = Math.Abs(_testRollMaxLeft20mData.data);
 
@@ -678,7 +776,7 @@ namespace MVS
                         else
                             dir = "R";
 
-                        return string.Format("{0} ° {1}", Math.Round(roll, 3, MidpointRounding.AwayFromZero).ToString("0.000"), dir);
+                        return string.Format("{0} ° {1}", Math.Round(roll, 3, MidpointRounding.AwayFromZero).ToString(Constants.numberFormatRecData), dir);
                     }
                     else
                     {
@@ -716,7 +814,7 @@ namespace MVS
                 if (_refRollMaxRight20mData != null)
                 {
                     // Sjekke om data er gyldig
-                    if (_refRollMaxRight20mData.status == DataStatus.OK)
+                    if (_refRollMaxRight20mData.status == DataStatus.OK && !double.IsNaN(_refRollMaxRight20mData.data))
                     {
                         double roll = Math.Abs(_refRollMaxRight20mData.data);
 
@@ -726,7 +824,7 @@ namespace MVS
                         else
                             dir = "R";
 
-                        return string.Format("{0} ° {1}", Math.Round(roll, 3, MidpointRounding.AwayFromZero).ToString("0.000"), dir);
+                        return string.Format("{0} ° {1}", Math.Round(roll, 3, MidpointRounding.AwayFromZero).ToString(Constants.numberFormatRecData), dir);
                     }
                     else
                     {
@@ -764,7 +862,7 @@ namespace MVS
                 if (_testRollMaxRight20mData != null)
                 {
                     // Sjekke om data er gyldig
-                    if (_testRollMaxRight20mData.status == DataStatus.OK)
+                    if (_testRollMaxRight20mData.status == DataStatus.OK && !double.IsNaN(_testRollMaxRight20mData.data))
                     {
                         double roll = Math.Abs(_testRollMaxRight20mData.data);
 
@@ -774,7 +872,7 @@ namespace MVS
                         else
                             dir = "R";
 
-                        return string.Format("{0} ° {1}", Math.Round(roll, 3, MidpointRounding.AwayFromZero).ToString("0.000"), dir);
+                        return string.Format("{0} ° {1}", Math.Round(roll, 3, MidpointRounding.AwayFromZero).ToString(Constants.numberFormatRecData), dir);
                     }
                     else
                     {
@@ -813,9 +911,9 @@ namespace MVS
                 if (_refRollMean20mData != null)
                 {
                     // Sjekke om data er gyldig
-                    if (_refRollMean20mData.status == DataStatus.OK)
+                    if (_refRollMean20mData.status == DataStatus.OK && !double.IsNaN(_refRollMean20mData.data))
                     {
-                        return string.Format("{0} °", Math.Round(_refRollMean20mData.data, 3, MidpointRounding.AwayFromZero).ToString("0.000"));
+                        return string.Format("{0} °", Math.Round(_refRollMean20mData.data, 3, MidpointRounding.AwayFromZero).ToString(Constants.numberFormatRecData));
                     }
                     else
                     {
@@ -854,9 +952,9 @@ namespace MVS
                 if (_testRollMean20mData != null)
                 {
                     // Sjekke om data er gyldig
-                    if (_testRollMean20mData.status == DataStatus.OK)
+                    if (_testRollMean20mData.status == DataStatus.OK && !double.IsNaN(_testRollMean20mData.data))
                     {
-                        return string.Format("{0} °", Math.Round(_testRollMean20mData.data, 3, MidpointRounding.AwayFromZero).ToString("0.000"));
+                        return string.Format("{0} °", Math.Round(_testRollMean20mData.data, 3, MidpointRounding.AwayFromZero).ToString(Constants.numberFormatRecData));
                     }
                     else
                     {
@@ -874,7 +972,15 @@ namespace MVS
         {
             get
             {
-                return Math.Round(_testRollMean20mData.data - _refRollMean20mData.data, 3, MidpointRounding.AwayFromZero).ToString("+0.000;-0.000");
+                if (_testRollMean20mData.status == DataStatus.OK && !double.IsNaN(_testRollMean20mData.data) &&
+                    _refRollMean20mData.status == DataStatus.OK && !double.IsNaN(_refRollMean20mData.data))
+                {
+                    return Math.Round(_testRollMean20mData.data - _refRollMean20mData.data, 3, MidpointRounding.AwayFromZero).ToString(Constants.numberFormatRecDataSigned);
+                }
+                else
+                {
+                    return Constants.NotAvailable;
+                }
             }
         }
 
@@ -898,9 +1004,18 @@ namespace MVS
             _testHeaveMean20mData = new HMSData();
 
             // Init av chart data
+            refHeave20mList.Clear();
+            testHeave20mList.Clear();
+
             for (int i = -Constants.Minutes20; i <= 0; i++)
             {
                 refHeave20mList.Add(new HMSData()
+                {
+                    data = 0,
+                    timestamp = DateTime.UtcNow.AddSeconds(i)
+                });
+
+                testHeave20mList.Add(new HMSData()
                 {
                     data = 0,
                     timestamp = DateTime.UtcNow.AddSeconds(i)
@@ -950,7 +1065,7 @@ namespace MVS
                     // Sjekke om data er gyldig
                     if (_refHeaveMax20mData.status == DataStatus.OK)
                     {
-                        return string.Format("{0} m", Math.Round(_refHeaveMax20mData.data, 3, MidpointRounding.AwayFromZero).ToString("0.000"));
+                        return string.Format("{0} m", Math.Round(_refHeaveMax20mData.data, 3, MidpointRounding.AwayFromZero).ToString(Constants.numberFormatRecData));
                     }
                     else
                     {
@@ -990,7 +1105,7 @@ namespace MVS
                     // Sjekke om data er gyldig
                     if (_testHeaveMax20mData.status == DataStatus.OK)
                     {
-                        return string.Format("{0} m", Math.Round(_testHeaveMax20mData.data, 3, MidpointRounding.AwayFromZero).ToString("0.000"));
+                        return string.Format("{0} m", Math.Round(_testHeaveMax20mData.data, 3, MidpointRounding.AwayFromZero).ToString(Constants.numberFormatRecData));
                     }
                     else
                     {
@@ -1060,9 +1175,9 @@ namespace MVS
                 if (_refHeaveAmplitudeMax20mData != null)
                 {
                     // Sjekke om data er gyldig
-                    if (_refHeaveAmplitudeMax20mData.status == DataStatus.OK)
+                    if (_refHeaveAmplitudeMax20mData.status == DataStatus.OK && !double.IsNaN(_refHeaveAmplitudeMax20mData.data))
                     {
-                        return string.Format("{0} m", Math.Round(_refHeaveAmplitudeMax20mData.data, 3, MidpointRounding.AwayFromZero).ToString("0.000"));
+                        return string.Format("{0} m", Math.Round(_refHeaveAmplitudeMax20mData.data, 3, MidpointRounding.AwayFromZero).ToString(Constants.numberFormatRecData));
                     }
                     else
                     {
@@ -1100,9 +1215,9 @@ namespace MVS
                 if (_testHeaveAmplitudeMax20mData != null)
                 {
                     // Sjekke om data er gyldig
-                    if (_testHeaveAmplitudeMax20mData.status == DataStatus.OK)
+                    if (_testHeaveAmplitudeMax20mData.status == DataStatus.OK && !double.IsNaN(_testHeaveAmplitudeMax20mData.data))
                     {
-                        return string.Format("{0} m", Math.Round(_testHeaveAmplitudeMax20mData.data, 3, MidpointRounding.AwayFromZero).ToString("0.000"));
+                        return string.Format("{0} m", Math.Round(_testHeaveAmplitudeMax20mData.data, 3, MidpointRounding.AwayFromZero).ToString(Constants.numberFormatRecData));
                     }
                     else
                     {
@@ -1141,9 +1256,9 @@ namespace MVS
                 if (_refHeaveAmplitudeMean20mData != null)
                 {
                     // Sjekke om data er gyldig
-                    if (_refHeaveAmplitudeMean20mData.status == DataStatus.OK)
+                    if (_refHeaveAmplitudeMean20mData.status == DataStatus.OK && !double.IsNaN(_refHeaveAmplitudeMean20mData.data))
                     {
-                        return string.Format("{0} m", Math.Round(_refHeaveAmplitudeMean20mData.data, 3, MidpointRounding.AwayFromZero).ToString("0.000"));
+                        return string.Format("{0} m", Math.Round(_refHeaveAmplitudeMean20mData.data, 3, MidpointRounding.AwayFromZero).ToString(Constants.numberFormatRecData));
                     }
                     else
                     {
@@ -1182,9 +1297,9 @@ namespace MVS
                 if (_testHeaveAmplitudeMean20mData != null)
                 {
                     // Sjekke om data er gyldig
-                    if (_testHeaveAmplitudeMean20mData.status == DataStatus.OK)
+                    if (_testHeaveAmplitudeMean20mData.status == DataStatus.OK && !double.IsNaN(_testHeaveAmplitudeMean20mData.data))
                     {
-                        return string.Format("{0} m", Math.Round(_testHeaveAmplitudeMean20mData.data, 3, MidpointRounding.AwayFromZero).ToString("0.000"));
+                        return string.Format("{0} m", Math.Round(_testHeaveAmplitudeMean20mData.data, 3, MidpointRounding.AwayFromZero).ToString(Constants.numberFormatRecData));
                     }
                     else
                     {
@@ -1224,7 +1339,7 @@ namespace MVS
                     // Sjekke om data er gyldig
                     if (_refHeaveMean20mData.status == DataStatus.OK)
                     {
-                        return string.Format("{0} m", Math.Round(_refHeaveMean20mData.data, 3, MidpointRounding.AwayFromZero).ToString("0.000"));
+                        return string.Format("{0} m", Math.Round(_refHeaveMean20mData.data, 3, MidpointRounding.AwayFromZero).ToString(Constants.numberFormatRecData));
                     }
                     else
                     {
@@ -1264,7 +1379,7 @@ namespace MVS
                     // Sjekke om data er gyldig
                     if (_testHeaveMean20mData.status == DataStatus.OK)
                     {
-                        return string.Format("{0} m", Math.Round(_testHeaveMean20mData.data, 3, MidpointRounding.AwayFromZero).ToString("0.000"));
+                        return string.Format("{0} m", Math.Round(_testHeaveMean20mData.data, 3, MidpointRounding.AwayFromZero).ToString(Constants.numberFormatRecData));
                     }
                     else
                     {
@@ -1282,7 +1397,15 @@ namespace MVS
         {
             get
             {
-                return Math.Round(_testHeaveAmplitudeMean20mData.data - _refHeaveAmplitudeMean20mData.data, 3, MidpointRounding.AwayFromZero).ToString("+0.000;-0.000");
+                if (_testHeaveAmplitudeMean20mData.status == DataStatus.OK && !double.IsNaN(_testHeaveAmplitudeMean20mData.data) &&
+                    _refHeaveAmplitudeMean20mData.status == DataStatus.OK && !double.IsNaN(_refHeaveAmplitudeMean20mData.data))
+                {
+                    return Math.Round(_testHeaveAmplitudeMean20mData.data - _refHeaveAmplitudeMean20mData.data, 3, MidpointRounding.AwayFromZero).ToString(Constants.numberFormatRecDataSigned);
+                }
+                else
+                {
+                    return Constants.NotAvailable;
+                }
             }
         }
 
