@@ -456,7 +456,8 @@ namespace MVS
                     void SaveMVSData_Thread()
                     {
                         // Lagre data i databasen
-                        mvsDatabase.Insert(mainWindowVM.SelectedSession, mvsOutputData);
+                        if (mainWindowVM.StoreToDatabase())
+                            mvsDatabase.Insert(mainWindowVM.SelectedSession, mvsOutputData);
                     }
                 }
                 catch (Exception ex)

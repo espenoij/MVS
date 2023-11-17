@@ -10,6 +10,7 @@
                 <ResourceDictionary Source="/Telerik.Windows.Themes.Material;component/Themes/Telerik.Windows.Controls.Input.xaml" />
                 <ResourceDictionary Source="/Telerik.Windows.Themes.Material;component/Themes/Telerik.Windows.Controls.GridView.xaml" />
             </ResourceDictionary.MergedDictionaries>
+            
             <SolidColorBrush x:Key="ColorSelected">#FFE0E0E0</SolidColorBrush>
             <SolidColorBrush x:Key="ColorMouseOver">#FFC8C8C8</SolidColorBrush>
             <SolidColorBrush x:Key="ColorGreen">#FF06D6A0</SolidColorBrush>

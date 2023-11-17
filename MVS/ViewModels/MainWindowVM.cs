@@ -37,7 +37,7 @@ namespace MVS
         public void StartTimer()
         {
             // Sette start tid
-            StartTime = DateTime.UtcNow;
+            StartTime = DateTime.UtcNow.AddMinutes(20);
 
             // Starte timer
             timer.Start();
@@ -119,9 +119,17 @@ namespace MVS
                             modeText = "- Test Run";
 
                         if (_startTime != System.Data.SqlTypes.SqlDateTime.MinValue.Value)
-                            return string.Format("{0} {1}", (DateTime.UtcNow - _startTime).ToString(@"hh\:mm\:ss"), modeText);
+                        {
+                            string sign = string.Empty;
+                            if ((DateTime.UtcNow - _startTime).TotalSeconds < 0)
+                                sign = "-";
+
+                            return string.Format("{0}{1} {2}", sign, (DateTime.UtcNow - _startTime).ToString(@"hh\:mm\:ss"), modeText);
+                        }
                         else
+                        {
                             return string.Empty;
+                        }
 
                     case OperationsMode.Stop:
                         return string.Empty;
@@ -132,6 +140,11 @@ namespace MVS
             }
         }
 
+        public bool StoreToDatabase()
+        {
+            // Lagrer kun til databasen når vi først har kjørt i 20 minutter.
+            return (DateTime.UtcNow - _startTime).TotalSeconds >= 0;
+        }
 
         // Variabel oppdatert
         // Dersom navn ikke er satt brukes kallende medlem sitt navn
