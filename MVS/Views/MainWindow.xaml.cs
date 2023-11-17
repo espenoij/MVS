@@ -222,7 +222,8 @@ namespace MVS
             tabInput_SerialData.Visibility = Visibility.Visible;
             tabInput_FileReader.Visibility = Visibility.Visible;
             tabInput_FixedValue.Visibility = Visibility.Visible;
-            tabInput_HelideckMotion.Visibility = Visibility.Visible;
+
+            tabInput_RecordingsData.Visibility = Visibility.Visible;
         }
 
         private void InitViewModel()
@@ -570,9 +571,6 @@ namespace MVS
                 // Server startet
                 serverStarted = true;
 
-                // Gå til input tab
-                //tabInput.IsSelected = true;
-
                 // Start elapsed time
                 mainWindowVM.StartTimer();
 
@@ -582,6 +580,9 @@ namespace MVS
                 recordingSymbol3.Visibility = Visibility.Visible;
 
                 recordingsDataVM.StartRecording();
+
+                // Gå til Data tab
+                tabInput_RecordingsData.IsSelected = true;
             }
         }
 

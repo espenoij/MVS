@@ -214,7 +214,7 @@
                             </telerik:RadTabItem>
 
                             <telerik:RadTabItem
-                                Name="tabInput_HelideckMotion"
+                                Name="tabInput_RecordingsData"
                                 Header="Data"
                                 Visibility="Collapsed">
 

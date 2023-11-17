@@ -378,6 +378,7 @@
     <Compile Include="Services\FixedValue\FixedValueSetup.cs" />
     <Compile Include="Models\WindVector.cs" />
     <Compile Include="ViewModels\AboutVM.cs" />
+    <Compile Include="ViewModels\RecordingsAnalysisVM.cs" />
     <Compile Include="ViewModels\RecordingsDataVM.cs" />
     <Compile Include="ViewModels\MainWindowVM.cs" />
     <Compile Include="ViewModels\FixedValueWindowVM.cs" />
@@ -450,6 +451,9 @@
     <Compile Include="Views\Recordings.xaml.cs">
       <DependentUpon>Recordings.xaml</DependentUpon>
     </Compile>
+    <Compile Include="Views\RecordingsAnalysis.xaml.cs">
+      <DependentUpon>RecordingsAnalysis.xaml</DependentUpon>
+    </Compile>
     <Compile Include="Views\SensorSetupPage.xaml.cs">
       <DependentUpon>SensorSetupPage.xaml</DependentUpon>
     </Compile>
@@ -509,6 +513,10 @@
     </Page>
     <Page Include="Views\Recordings.xaml">
       <Generator>MSBuild:Compile</Generator>
+      <SubType>Designer</SubType>
+    </Page>
+    <Page Include="Views\RecordingsAnalysis.xaml">
+      <Generator>MSBuild:UpdateDesignTimeXaml</Generator>
       <SubType>Designer</SubType>
     </Page>
     <Page Include="Views\SensorSetupPage.xaml">
