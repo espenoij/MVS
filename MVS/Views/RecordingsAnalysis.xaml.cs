@@ -17,6 +17,10 @@ namespace MVS
             // Context
             DataContext = recordingsAnalysisVM;
 
+            // Koble chart til data
+            chartPitch.Series[0].ItemsSource = recordingsAnalysisVM.refPitchList;
+            chartPitch.Series[1].ItemsSource = recordingsAnalysisVM.testPitchList;
+
         }
     }
 }

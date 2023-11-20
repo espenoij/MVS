@@ -34,18 +34,15 @@
 
         <Grid.RowDefinitions>
             <RowDefinition
-                Height="0*" />
+                Height="50" />
             <RowDefinition
-                Height="41*" />
-            <RowDefinition
-                Height="1239*" />
+                Height="*" />
         </Grid.RowDefinitions>
 
         <!--Title Bar-->
         <Grid
             Grid.Row="0"
-            Background="{StaticResource ColorBackgroundSeparator}"
-            Grid.RowSpan="2">
+            Background="{StaticResource ColorBackgroundSeparator}">
 
             <Grid.ColumnDefinitions>
                 <ColumnDefinition

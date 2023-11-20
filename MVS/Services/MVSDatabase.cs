@@ -1,5 +1,6 @@
 ﻿using System;
 using System.Collections.Generic;
+using Telerik.Windows.Data;
 
 namespace MVS
 {
@@ -12,6 +13,72 @@ namespace MVS
         {
             this.database = database;
             this.errorHandler = errorHandler;
+        }
+
+        public void CreateDataSetTables()
+        {
+            try
+            {
+                // Oppretter tabellene dersom de ikke eksisterer
+                database.CreateSessionTables();
+
+                errorHandler.ResetDatabaseError(ErrorHandler.DatabaseErrorType.CreateTablesMVSDataSet);
+            }
+            catch (Exception ex)
+            {
+                errorHandler.Insert(
+                    new ErrorMessage(
+                        DateTime.UtcNow,
+                        ErrorMessageType.Database,
+                        ErrorMessageCategory.None,
+                        string.Format("Database Error (CreateTables Data Sets)\n\nSystem Message:\n{0}", ex.Message)));
+
+                errorHandler.SetDatabaseError(ErrorHandler.DatabaseErrorType.CreateTablesMVSDataSet);
+            }
+        }
+
+        public void CreateDataTables(RecordingSession dataSet, MVSDataCollection mvsDataCollection)
+        {
+            try
+            {
+                // Oppretter tabellene dersom de ikke eksisterer
+                database.CreateDataTables(dataSet, mvsDataCollection);
+
+                errorHandler.ResetDatabaseError(ErrorHandler.DatabaseErrorType.CreateTablesMVSData);
+            }
+            catch (Exception ex)
+            {
+                errorHandler.Insert(
+                    new ErrorMessage(
+                        DateTime.UtcNow,
+                        ErrorMessageType.Database,
+                        ErrorMessageCategory.None,
+                        string.Format("Database Error (CreateTables Data)\n\nSystem Message:\n{0}", ex.Message)));
+
+                errorHandler.SetDatabaseError(ErrorHandler.DatabaseErrorType.CreateTablesMVSData);
+            }
+        }
+
+        public void CreateErrorMessagesTables()
+        {
+            try
+            {
+                // Oppretter feilmeldingstabell dersom den ikke eksisterer
+                database.CreateErrorMessagesTables();
+
+                errorHandler.ResetDatabaseError(ErrorHandler.DatabaseErrorType.CreateErrorMessagesTables);
+            }
+            catch (Exception ex)
+            {
+                errorHandler.Insert(
+                    new ErrorMessage(
+                        DateTime.UtcNow,
+                        ErrorMessageType.Database,
+                        ErrorMessageCategory.None,
+                        string.Format("Database Error (CreateTables Data Sets)\n\nSystem Message:\n{0}", ex.Message)));
+
+                errorHandler.SetDatabaseError(ErrorHandler.DatabaseErrorType.CreateErrorMessagesTables);
+            }
         }
 
         public void Insert(RecordingSession dataSet, MVSDataCollection hmsDataCollection)
@@ -155,7 +222,7 @@ namespace MVS
             {
                 database.LoadTimestamps(dataSet);
 
-                errorHandler.ResetDatabaseError(ErrorHandler.DatabaseErrorType.GetTimestamps);
+                errorHandler.ResetDatabaseError(ErrorHandler.DatabaseErrorType.LoadTimestamps);
             }
             catch (Exception ex)
             {
@@ -166,18 +233,17 @@ namespace MVS
                         ErrorMessageCategory.None,
                         string.Format("Database Error (GetTimestamps)\n\nSystem Message:\n{0}", ex.Message)));
 
-                errorHandler.SetDatabaseError(ErrorHandler.DatabaseErrorType.GetTimestamps);
+                errorHandler.SetDatabaseError(ErrorHandler.DatabaseErrorType.LoadTimestamps);
             }
         }
 
-        public void CreateDataSetTables()
+        public void LoadSessionData(RecordingSession dataSet, RadObservableCollection<HMSData> dataList)
         {
             try
             {
-                // Oppretter tabellene dersom de ikke eksisterer
-                database.CreateDataSetTables();
+                database.LoadSessionData(dataSet, dataList);
 
-                errorHandler.ResetDatabaseError(ErrorHandler.DatabaseErrorType.CreateTablesMVSDataSet);
+                errorHandler.ResetDatabaseError(ErrorHandler.DatabaseErrorType.LoadSessionData);
             }
             catch (Exception ex)
             {
@@ -186,53 +252,9 @@ namespace MVS
                         DateTime.UtcNow,
                         ErrorMessageType.Database,
                         ErrorMessageCategory.None,
-                        string.Format("Database Error (CreateTables Data Sets)\n\nSystem Message:\n{0}", ex.Message)));
+                        string.Format("Database Error (LoadSessionData)\n\nSystem Message:\n{0}", ex.Message)));
 
-                errorHandler.SetDatabaseError(ErrorHandler.DatabaseErrorType.CreateTablesMVSDataSet);
-            }
-        }
-
-        public void CreateDataTables(RecordingSession dataSet, MVSDataCollection mvsDataCollection)
-        {
-            try
-            {
-                // Oppretter tabellene dersom de ikke eksisterer
-                database.CreateDataTables(dataSet, mvsDataCollection);
-
-                errorHandler.ResetDatabaseError(ErrorHandler.DatabaseErrorType.CreateTablesMVSData);
-            }
-            catch (Exception ex)
-            {
-                errorHandler.Insert(
-                    new ErrorMessage(
-                        DateTime.UtcNow,
-                        ErrorMessageType.Database,
-                        ErrorMessageCategory.None,
-                        string.Format("Database Error (CreateTables Data)\n\nSystem Message:\n{0}", ex.Message)));
-
-                errorHandler.SetDatabaseError(ErrorHandler.DatabaseErrorType.CreateTablesMVSData);
-            }
-        }
-
-        public void CreateErrorMessagesTables()
-        {
-            try
-            {
-                // Oppretter feilmeldingstabell dersom den ikke eksisterer
-                database.CreateErrorMessagesTables();
-
-                errorHandler.ResetDatabaseError(ErrorHandler.DatabaseErrorType.CreateErrorMessagesTables);
-            }
-            catch (Exception ex)
-            {
-                errorHandler.Insert(
-                    new ErrorMessage(
-                        DateTime.UtcNow,
-                        ErrorMessageType.Database,
-                        ErrorMessageCategory.None,
-                        string.Format("Database Error (CreateTables Data Sets)\n\nSystem Message:\n{0}", ex.Message)));
-
-                errorHandler.SetDatabaseError(ErrorHandler.DatabaseErrorType.CreateErrorMessagesTables);
+                errorHandler.SetDatabaseError(ErrorHandler.DatabaseErrorType.LoadSessionData);
             }
         }
     }

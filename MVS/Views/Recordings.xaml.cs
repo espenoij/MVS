@@ -22,8 +22,6 @@ namespace MVS
 
         private MainWindowVM mainWindowVM;
 
-        private bool serverStarted;
-
         private MainWindow.UpdateUIButtonsCallback updateUIButtonsCallback;
 
         public Recordings()
@@ -67,11 +65,10 @@ namespace MVS
             //    LoadSelectedItemsDetails();
             //}
 
-            serverStarted = false;
-            UpdateButtonStates();
+            UpdateButtonStates(false);
         }
 
-        public void UpdateButtonStates()
+        public void UpdateButtonStates(bool serverStarted)
         {
             // Vi kan ikke utføre data set endringer dersom server kjører.
             if (serverStarted)
@@ -79,6 +76,8 @@ namespace MVS
                 btnNew.IsEnabled = false;
                 btnDelete.IsEnabled = false;
                 btnImport.IsEnabled = false;
+
+                gvVerificationSessions.IsEnabled = false;
             }
             else
             {
@@ -95,6 +94,8 @@ namespace MVS
                     btnDelete.IsEnabled = true;
                     btnImport.IsEnabled = true;
                 }
+
+                gvVerificationSessions.IsEnabled = true;
             }
         }
 
@@ -118,12 +119,13 @@ namespace MVS
 
         public void Start()
         {
-            serverStarted = true;
-            UpdateButtonStates();
+            UpdateButtonStates(true);
         }
 
         public void Stop()
         {
+            UpdateButtonStates(false);
+
             // Laste timestamps på data set
             mvsDatabase.LoadTimestamps(mainWindowVM.SelectedSession);
 
@@ -132,9 +134,6 @@ namespace MVS
 
             // Oppdatere databasen
             mvsDatabase.Update(mainWindowVM.SelectedSession);
-
-            serverStarted = false;
-            UpdateButtonStates();
         }
 
         private void btnNew_Click(object sender, RoutedEventArgs e)
@@ -190,7 +189,7 @@ namespace MVS
             mainWindowVM.SelectedSession = (sender as RadGridView).SelectedItem as RecordingSession;
 
             LoadSelectedItemsDetails();
-            UpdateButtonStates();
+            UpdateButtonStates(false);
 
             updateUIButtonsCallback();
         }

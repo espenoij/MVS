@@ -372,6 +372,7 @@
     <Compile Include="Helpers\GraphBuffer.cs" />
     <Compile Include="Helpers\LabelAbsConverter.cs" />
     <Compile Include="Models\CommonTypes.cs" />
+    <Compile Include="Models\SessionData.cs" />
     <Compile Include="Models\RecordingSession.cs" />
     <Compile Include="Services\FixedValue\FixedValueConfig.cs" />
     <Compile Include="Services\FixedValue\FixedValueDataRetrieval.cs" />

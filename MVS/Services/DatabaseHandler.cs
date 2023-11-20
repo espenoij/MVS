@@ -3,6 +3,7 @@ using System;
 using System.Collections.Generic;
 using System.Linq;
 using System.Security;
+using Telerik.Windows.Data;
 
 namespace MVS
 {
@@ -150,7 +151,7 @@ namespace MVS
             }
         }
 
-        public void CreateDataSetTables()
+        public void CreateSessionTables()
         {
             try
             {
@@ -642,6 +643,8 @@ namespace MVS
                         // Lagre start tid
                         if (readerStart.Read())
                             dataSet.StartTime = readerStart.GetDateTime(1);
+                        else
+                            dataSet.StartTime = System.Data.SqlTypes.SqlDateTime.MinValue.Value;
 
                         // Lukke leser
                         readerStart.Close();
@@ -656,9 +659,53 @@ namespace MVS
                         // Lagre end tid
                         if (readerEnd.Read())
                             dataSet.EndTime = readerEnd.GetDateTime(1);
+                        else
+                            dataSet.EndTime = System.Data.SqlTypes.SqlDateTime.MinValue.Value;
 
                         // Lukke leser
                         readerEnd.Close();
+
+                        // Lukke database connection
+                        connection.Close();
+                    }
+                }
+            }
+            catch (Exception)
+            {
+                throw;
+            }
+        }
+
+        public void LoadSessionData(RecordingSession dataSet, RadObservableCollection<HMSData> dataList)
+        {
+            try
+            {
+                if (isDatabaseConnectionOK)
+                {
+                    using (var connection = new MySqlConnection(connectionString))
+                    {
+                        // SQL kommando
+                        var cmd = new MySqlCommand();
+                        cmd.Connection = connection;
+
+                        // Åpne database connection
+                        connection.Open();
+
+                        // 1: Hente start timestamp
+                        cmd.CommandText = string.Format("SELECT * FROM {0}",
+                            tableNameMVSDataPrefix + dataSet.Id);
+
+                        // Hente data
+                        MySqlDataReader dbReader = cmd.ExecuteReader();
+
+                        // Lagre start tid
+                        if (dbReader.Read())
+                        {
+                            dataSet.StartTime = dbReader.GetDateTime(1);
+                        }
+
+                        // Lukke leser
+                        dbReader.Close();
 
                         // Lukke database connection
                         connection.Close();
