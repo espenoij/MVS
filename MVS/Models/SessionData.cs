@@ -4,16 +4,16 @@ namespace MVS
 {
     public class SessionData
     {
-        private int id;
-        private DateTime timestamp;
+        public int id;
+        public DateTime timestamp;
 
-        private double refPitch;
-        private double refRoll;
-        private double refHeave;
+        public double refPitch;
+        public double refRoll;
+        public double refHeave;
 
-        private double testPitch;
-        private double testRoll;
-        private double testHeave;
+        public double testPitch;
+        public double testRoll;
+        public double testHeave;
 
         // Initialize
         public SessionData()

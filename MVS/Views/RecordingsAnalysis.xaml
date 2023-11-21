@@ -34,11 +34,25 @@
 
         <Grid.RowDefinitions>
             <RowDefinition
-                Height="50" />
+                Height="auto" />
             <RowDefinition
                 Height="*" />
         </Grid.RowDefinitions>
 
+        <!--Motion Data Set Controls-->
+        <StackPanel
+            Grid.Row="0"
+            Grid.Column="0"
+            Orientation="Horizontal"
+            HorizontalAlignment="Left"
+            Margin="8">
+
+            <Button
+                Name="btnRunAnalysis"
+                Click="btnRunAnalysis_Click"
+                Width="140">Run Analysis</Button>
+
+        </StackPanel>
 
         <Grid
             Grid.Row="1"

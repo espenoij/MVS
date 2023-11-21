@@ -67,6 +67,7 @@ namespace MVS
         // Model View
         private MainWindowVM mainWindowVM;
         private RecordingsDataVM recordingsDataVM;
+        private RecordingsAnalysisVM recordingsAnalysisVM;
         private AboutVM aboutVM;
 
         public MainWindow()
@@ -86,9 +87,13 @@ namespace MVS
             mainWindowVM = new MainWindowVM();
             DataContext = mainWindowVM;
 
-            // Helideck Motion VM
+            // Recordings Data VM
             recordingsDataVM = new RecordingsDataVM();
             recordingsDataVM.Init();
+
+            // Recordings Analysis VM
+            recordingsAnalysisVM = new RecordingsAnalysisVM();
+            recordingsAnalysisVM.Init();
 
             // About VM
             aboutVM = new AboutVM(Application.ResourceAssembly.GetName().Version);
@@ -123,11 +128,14 @@ namespace MVS
             // Recordings page
             ucRecordings.Init(mainWindowVM, mvsDatabase, updateUIButtonsCallback);
 
-            // Sensor Input Setup
-            ucSensorSetupPage.Init(config, errorHandler, adminSettingsVM);
-
             // Recordings Data page
             ucRecordingsData.Init(recordingsDataVM);
+
+            // Recordings Analysis page
+            ucRecordingsAnalysis.Init(recordingsAnalysisVM, mainWindowVM, mvsInputData, mvsDatabase);
+
+            // Sensor Input Setup
+            ucSensorSetupPage.Init(config, errorHandler, adminSettingsVM);
 
             // Error Message
             ucErrorMessagesPage.Init(config, errorHandler);

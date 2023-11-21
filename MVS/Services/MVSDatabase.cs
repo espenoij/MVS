@@ -237,11 +237,11 @@ namespace MVS
             }
         }
 
-        public void LoadSessionData(RecordingSession dataSet, RadObservableCollection<HMSData> dataList)
+        public void LoadSessionData(RecordingSession dataSet, MVSDataCollection mvsDataCollection, RadObservableCollection<SessionData> dataList)
         {
             try
             {
-                database.LoadSessionData(dataSet, dataList);
+                database.LoadSessionData(dataSet, mvsDataCollection, dataList);
 
                 errorHandler.ResetDatabaseError(ErrorHandler.DatabaseErrorType.LoadSessionData);
             }

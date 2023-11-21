@@ -227,6 +227,20 @@
 
                             </telerik:RadTabItem>
 
+                            <telerik:RadTabItem
+                                Name="tabInput_RecordingsAnalysis"
+                                Header="Analysis"
+                                Visibility="Collapsed">
+
+                                <DockPanel>
+
+                                    <uc:RecordingsAnalysis
+                                        x:Name="ucRecordingsAnalysis" />
+
+                                </DockPanel>
+
+                            </telerik:RadTabItem>
+
                         </telerik:RadTabControl>
 
                     </DockPanel>

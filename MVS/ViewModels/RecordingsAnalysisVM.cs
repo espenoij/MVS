@@ -11,9 +11,9 @@ namespace MVS
         // Change notification
         public event PropertyChangedEventHandler PropertyChanged;
 
-        private RadObservableCollection<HMSData> refPitchList = new RadObservableCollection<HMSData>();
+        public RadObservableCollection<SessionData> refPitchList = new RadObservableCollection<SessionData>();
 
-        private RadObservableCollection<HMSData> testPitchList = new RadObservableCollection<HMSData>();
+        public RadObservableCollection<SessionData> testPitchList = new RadObservableCollection<SessionData>();
 
         public void Init()
         {

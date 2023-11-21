@@ -676,7 +676,7 @@ namespace MVS
             }
         }
 
-        public void LoadSessionData(RecordingSession dataSet, RadObservableCollection<HMSData> dataList)
+        public void LoadSessionData(RecordingSession dataSet, MVSDataCollection mvsDataCollection, RadObservableCollection<SessionData> dataList)
         {
             try
             {
@@ -692,16 +692,37 @@ namespace MVS
                         connection.Open();
 
                         // 1: Hente start timestamp
-                        cmd.CommandText = string.Format("SELECT * FROM {0}",
+                        cmd.CommandText = string.Format("SELECT {0}, {1}, {2}, {3}, {4}, {5}, {6}, {7} FROM {8}",
+                            "id",
+                            columnTimestamp,
+                            mvsDataCollection.GetData(ValueType.Ref_Pitch).dbColumn,
+                            mvsDataCollection.GetData(ValueType.Ref_Roll).dbColumn,
+                            mvsDataCollection.GetData(ValueType.Ref_Heave).dbColumn,
+                            mvsDataCollection.GetData(ValueType.Test_Pitch).dbColumn,
+                            mvsDataCollection.GetData(ValueType.Test_Roll).dbColumn,
+                            mvsDataCollection.GetData(ValueType.Test_Heave).dbColumn,
                             tableNameMVSDataPrefix + dataSet.Id);
 
                         // Hente data
                         MySqlDataReader dbReader = cmd.ExecuteReader();
 
                         // Lagre start tid
-                        if (dbReader.Read())
+                        while (dbReader.Read())
                         {
-                            dataSet.StartTime = dbReader.GetDateTime(1);
+                            SessionData data = new SessionData();
+
+                            data.id = dbReader.GetInt16(0);
+                            data.timestamp = dbReader.GetDateTime(1);
+
+                            data.refPitch = dbReader.GetDouble(2);
+                            data.refRoll = dbReader.GetDouble(3);
+                            data.refHeave = dbReader.GetDouble(4);
+
+                            data.testPitch = dbReader.GetDouble(5);
+                            data.testRoll = dbReader.GetDouble(6);
+                            data.testHeave = dbReader.GetDouble(7);
+
+                            dataList.Add(data);
                         }
 
                         // Lukke leser
