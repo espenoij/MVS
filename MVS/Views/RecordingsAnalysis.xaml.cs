@@ -28,14 +28,21 @@ namespace MVS
             this.mvsDatabase = mvsDatabase;
 
             // Koble chart til data
-            chartPitch.Series[0].ItemsSource = recordingsAnalysisVM.refPitchList;
-            chartPitch.Series[1].ItemsSource = recordingsAnalysisVM.testPitchList;
+            chartPitch.Series[0].ItemsSource = recordingsAnalysisVM.testPitchList;
+            chartPitch.Series[1].ItemsSource = recordingsAnalysisVM.refPitchList;
 
         }
 
         private void btnRunAnalysis_Click(object sender, System.Windows.RoutedEventArgs e)
         {
+            // Laste session data fra databasen
             mvsDatabase.LoadSessionData(mainWindowVM.SelectedSession, mvsInputData, recordingsAnalysisVM.refDataList);
+
+            // Prosessere session dasta
+            recordingsAnalysisVM.ProcessSessionData();
+
+            // Overføre session data til grafer
+            recordingsAnalysisVM.TransferSessionData();
         }
     }
 }

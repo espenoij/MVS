@@ -153,6 +153,7 @@ namespace MVS
                         }
 
                     case OperationsMode.Stop:
+                    case OperationsMode.Analysis:
                         return string.Empty;
 
                     default:

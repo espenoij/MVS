@@ -1,4 +1,5 @@
 ﻿using System;
+using System.ComponentModel.DataAnnotations;
 using System.Linq;
 using System.Windows.Data;
 using Telerik.Windows.Data;
@@ -16,12 +17,12 @@ namespace MVS
 
         // Liste med data
         private RadObservableCollection<HMSData> dataList;
-        private object hmsDataListLock = new object();
+        private object dataListLock = new object();
 
         public MVSDataCollection()
         {
             dataList = new RadObservableCollection<HMSData>();
-            BindingOperations.EnableCollectionSynchronization(dataList, hmsDataListLock);
+            BindingOperations.EnableCollectionSynchronization(dataList, dataListLock);
         }
 
         public void LoadMVSInput(Config config)
@@ -50,7 +51,7 @@ namespace MVS
                     clientSensorData.dbColumn = item.dbTableName;
 
                     // Legge inn i data listen
-                    lock (hmsDataListLock)
+                    lock (dataListLock)
                         dataList.Add(clientSensorData);
                 }
             }
@@ -82,7 +83,7 @@ namespace MVS
                     clientSensorData.dataId = int.Parse(item.dataId, Constants.cultureInfo);
 
                     // Legge inn i data listen
-                    lock (hmsDataListLock)
+                    lock (dataListLock)
                         dataList.Add(clientSensorData);
                 }
             }
@@ -112,7 +113,7 @@ namespace MVS
                     clientSensorData.dataId = int.Parse(item.dataId, Constants.cultureInfo);
 
                     // Legge inn i data listen
-                    lock (hmsDataListLock)
+                    lock (dataListLock)
                         dataList.Add(clientSensorData);
                 }
             }
@@ -126,7 +127,7 @@ namespace MVS
             double dataTimeout = config.ReadWithDefault(ConfigKey.DataTimeout, Constants.DataTimeoutDefault);
 
             // Løper gjennom data listen
-            lock (hmsDataListLock)
+            lock (dataListLock)
             {
                 foreach (var mvsData in dataList.ToList())
                 {
@@ -176,7 +177,7 @@ namespace MVS
             double dataTimeout = config.ReadWithDefault(ConfigKey.DataTimeout, Constants.DataTimeoutDefault);
 
             // Løper gjennom data listen
-            lock (hmsDataListLock)
+            lock (dataListLock)
             {
                 foreach (var hmsData in dataList.ToList())
                 {
@@ -203,6 +204,50 @@ namespace MVS
                     {
                         hmsData.status = DataStatus.TIMEOUT_ERROR;
                     }
+                }
+            }
+        }
+
+        // Overføre data fra liste i input to denne data samlingen
+        public void TransferData(SessionData sessionData)
+        {
+            // Løper gjennom data listen
+            lock (dataListLock)
+            {
+                foreach (var item in dataList.ToList())
+                {
+                    switch ((ValueType)item.dataId)
+                    {
+                        case ValueType.Ref_Pitch:
+                            item.data = sessionData.refPitch;
+                            break;
+
+                        case ValueType.Ref_Roll:
+                            item.data = sessionData.refRoll;
+                            break;
+
+                        case ValueType.Ref_Heave:
+                            item.data = sessionData.refHeave;
+                            break;
+
+                        case ValueType.Test_Pitch:
+                            item.data = sessionData.testPitch;
+                            break;
+
+                        case ValueType.Test_Roll:
+                            item.data = sessionData.testRoll;
+                            break;
+
+                        case ValueType.Test_Heave:
+                            item.data = sessionData.testHeave;
+                            break;
+
+                        default:
+                            break;
+                    }
+
+                    item.timestamp = sessionData.timestamp;
+                    item.status = DataStatus.OK;
                 }
             }
         }

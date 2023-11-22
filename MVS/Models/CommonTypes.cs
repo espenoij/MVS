@@ -429,7 +429,8 @@ public enum OperationsMode
 {
     Recording,
     Test,
-    Stop
+    Stop,
+    Analysis
 }
 
 public enum SensorType
