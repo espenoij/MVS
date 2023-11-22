@@ -263,6 +263,7 @@ namespace MVS
                 // Sjekke data timeout
                 if (mainWindowVM.OperationsMode == OperationsMode.Test ||
                     mainWindowVM.SelectedSession?.InputSetup == VerificationInputSetup.ReferenceMRU ||
+                    mainWindowVM.SelectedSession?.InputSetup == VerificationInputSetup.TestMRU ||
                     mainWindowVM.SelectedSession?.InputSetup == VerificationInputSetup.ReferenceMRU_TestMRU)
                 {
                     if (refSensorPitch.timestamp.AddMilliseconds(adminSettingsVM.dataTimeout) < DateTime.UtcNow)
@@ -353,7 +354,8 @@ namespace MVS
                     refHeaveAmplitudeMax20mData.status = DataStatus.NONE;
                 }
 
-                if (mainWindowVM.OperationsMode == OperationsMode.Test || 
+                if (mainWindowVM.OperationsMode == OperationsMode.Test ||
+                    mainWindowVM.SelectedSession?.InputSetup == VerificationInputSetup.TestMRU ||
                     mainWindowVM.SelectedSession?.InputSetup == VerificationInputSetup.ReferenceMRU_TestMRU)
                 {
                     if (testSensorPitch.timestamp.AddMilliseconds(adminSettingsVM.dataTimeout) < DateTime.UtcNow)

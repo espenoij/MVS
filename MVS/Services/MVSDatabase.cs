@@ -1,5 +1,6 @@
 ﻿using System;
 using System.Collections.Generic;
+using Telerik.Charting;
 using Telerik.Windows.Data;
 
 namespace MVS
@@ -220,7 +221,18 @@ namespace MVS
         {
             try
             {
-                database.LoadTimestamps(dataSet);
+                // Eksisterer database tabell for dataset?
+                if (database.TableExists(dataSet))
+                {
+                    database.LoadTimestamps(dataSet);
+                }
+                // ...dersom tabell ikke eksisterer
+                else
+                {
+                    // Sette timestamp 0
+                    dataSet.StartTime = System.Data.SqlTypes.SqlDateTime.MinValue.Value;
+                    dataSet.EndTime = System.Data.SqlTypes.SqlDateTime.MinValue.Value;
+                }
 
                 errorHandler.ResetDatabaseError(ErrorHandler.DatabaseErrorType.LoadTimestamps);
             }

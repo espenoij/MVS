@@ -125,6 +125,10 @@ namespace MVS
             // Stop Recording Callback
             UpdateUIButtonsCallback updateUIButtonsCallback = new UpdateUIButtonsCallback(UpdateUIButtons);
 
+            // Init UI
+            InitUI();
+            InitUIMVS();
+
             // Recordings page
             ucRecordings.Init(mainWindowVM, mvsDatabase, updateUIButtonsCallback);
 
@@ -145,10 +149,6 @@ namespace MVS
 
             // Starter kjøring av status oppdatering
             sensorDataRetrieval.UpdateSensorStatus(mainWindowVM);
-
-            // Init UI
-            InitUI();
-            InitUIHMS();
 
             // Init UI Input
             InitUIInputUpdate();
@@ -230,8 +230,6 @@ namespace MVS
             tabInput_SerialData.Visibility = Visibility.Visible;
             tabInput_FileReader.Visibility = Visibility.Visible;
             tabInput_FixedValue.Visibility = Visibility.Visible;
-
-            tabInput_RecordingsData.Visibility = Visibility.Visible;
         }
 
         private void InitViewModel()
@@ -289,41 +287,24 @@ namespace MVS
             {
                 case OperationsMode.Recording:
                 case OperationsMode.Test:
-                    btnStart1.IsEnabled = false;
-                    btnStart2.IsEnabled = false;
-                    btnStart3.IsEnabled = false;
-
-                    btnTest1.IsEnabled = false;
-                    btnTest2.IsEnabled = false;
-                    btnTest3.IsEnabled = false;
-
-                    btnStop1.IsEnabled = true;
-                    btnStop2.IsEnabled = true;
-                    btnStop3.IsEnabled = true;
+                    mainWindowVM.StartButtonEnabled = false;
+                    mainWindowVM.TestButtonEnabled = false;
+                    mainWindowVM.StopButtonEnabled = true;
                     break;
 
                 case OperationsMode.Stop:
 
                     if (mainWindowVM.SelectedSession != null)
                     {
-                        btnStart1.IsEnabled = true;
-                        btnStart2.IsEnabled = true;
-                        btnStart3.IsEnabled = true;
+                        mainWindowVM.StartButtonEnabled = true;
                     }
                     else
                     {
-                        btnStart1.IsEnabled = false;
-                        btnStart2.IsEnabled = false;
-                        btnStart3.IsEnabled = false;
+                        mainWindowVM.StartButtonEnabled = false;
                     }
 
-                    btnTest1.IsEnabled = true;
-                    btnTest2.IsEnabled = true;
-                    btnTest3.IsEnabled = true;
-
-                    btnStop1.IsEnabled = false;
-                    btnStop2.IsEnabled = false;
-                    btnStop3.IsEnabled = false;
+                    mainWindowVM.TestButtonEnabled = true;
+                    mainWindowVM.StopButtonEnabled = false;
                     break;
 
                 default:
@@ -331,7 +312,7 @@ namespace MVS
             }
         }
 
-        private void InitUIHMS()
+        private void InitUIMVS()
         {
             // MVS data list
             mvsInputData = new MVSDataCollection();
@@ -540,16 +521,23 @@ namespace MVS
 
                             // Fjerne timestamps
                             mainWindowVM.SelectedSession.ClearTimestamps();
-
-                            Start();
+                        }
+                        else
+                        {
+                            return;
                         }
                     }
                 }
-                // ...har ikke data -> Start
-                else
+
+                // Sjekke om recording session har navn
+                if (string.IsNullOrEmpty(mainWindowVM.SelectedSession.Name))
                 {
-                    Start();
+                    RadWindow.Alert(TextHelper.Wrap("The selected data recording session does not have a name.\n\nPlease set a name before starting the data recording session."));
+                    return;
                 }
+
+                // Alt klart for å starte!
+                Start();
             }
 
             void Start()
@@ -580,12 +568,10 @@ namespace MVS
                 serverStarted = true;
 
                 // Start elapsed time
-                mainWindowVM.StartTimer();
+                mainWindowVM.StartTimer(20);
 
                 // Vise recording symbol
-                recordingSymbol1.Visibility = Visibility.Visible;
-                recordingSymbol2.Visibility = Visibility.Visible;
-                recordingSymbol3.Visibility = Visibility.Visible;
+                mainWindowVM.RecordingSymbolVisibility = Visibility.Visible;
 
                 recordingsDataVM.StartRecording();
 
@@ -621,7 +607,7 @@ namespace MVS
             serverStarted = true;
 
             // Start elapsed time
-            mainWindowVM.StartTimer();
+            mainWindowVM.StartTimer(0);
 
             recordingsDataVM.StartRecording();
         }
@@ -651,9 +637,7 @@ namespace MVS
             mainWindowVM.StopTimer();
 
             // Skjule recording symbol
-            recordingSymbol1.Visibility = Visibility.Collapsed;
-            recordingSymbol2.Visibility = Visibility.Collapsed;
-            recordingSymbol3.Visibility = Visibility.Collapsed;
+            mainWindowVM.RecordingSymbolVisibility = Visibility.Collapsed;
 
             // Fjerne data fra Recording Data page
             recordingsDataVM.StopRecording();

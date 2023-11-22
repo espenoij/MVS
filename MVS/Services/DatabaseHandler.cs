@@ -1,6 +1,7 @@
 ﻿using MySql.Data.MySqlClient;
 using System;
 using System.Collections.Generic;
+using System.Data;
 using System.Linq;
 using System.Security;
 using Telerik.Windows.Data;
@@ -213,6 +214,24 @@ namespace MVS
 
                 // Sendes videre oppover fordi vi ikke kan lagre feilmeldinger herfra
                 throw;
+            }
+        }
+
+        public bool TableExists(RecordingSession dataSet)
+        {
+            using (var connection = new MySqlConnection(connectionString))
+            {
+                var cmd = new MySqlCommand();
+                cmd.Connection = connection;
+
+                connection.Open();
+
+                cmd.CommandText = "SELECT COUNT(*) FROM INFORMATION_SCHEMA.TABLES WHERE TABLE_NAME = @TableName";
+                cmd.Parameters.AddWithValue("@TableName", tableNameMVSDataPrefix + dataSet.Id);
+        
+                int count = Convert.ToInt32(cmd.ExecuteScalar());
+        
+                return count > 0;
             }
         }
 

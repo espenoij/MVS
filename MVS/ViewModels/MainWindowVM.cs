@@ -1,6 +1,7 @@
 ﻿using System;
 using System.ComponentModel;
 using System.Runtime.CompilerServices;
+using System.Windows;
 using System.Windows.Threading;
 
 namespace MVS
@@ -15,7 +16,10 @@ namespace MVS
 
         public MainWindowVM()
         {
-            // Init
+            RecordingSymbolVisibility = Visibility.Collapsed;
+            AnalysisTabEnabled = false;
+
+            // Starttime Init
             StartTime = System.Data.SqlTypes.SqlDateTime.MinValue.Value;
 
             // Timer
@@ -34,10 +38,10 @@ namespace MVS
         /////////////////////////////////////////////////////////////////////////////
         // Timer Ops
         /////////////////////////////////////////////////////////////////////////////
-        public void StartTimer()
+        public void StartTimer(double minutes)
         {
             // Sette start tid
-            StartTime = DateTime.UtcNow.AddMinutes(20);
+            StartTime = DateTime.UtcNow.AddMinutes(minutes);
 
             // Starte timer
             timer.Start();
@@ -53,7 +57,7 @@ namespace MVS
         }
 
         /////////////////////////////////////////////////////////////////////////////
-        // Selected Motion Verification Session
+        // Selected Recording Session
         /////////////////////////////////////////////////////////////////////////////
         private RecordingSession _selectedSession { get; set; }
         public RecordingSession SelectedSession
@@ -68,9 +72,26 @@ namespace MVS
                 {
                     _selectedSession = value;
 
+                    AnalysisTabEnabled = true;
+
                     OnPropertyChanged();
+                    OnPropertyChanged(nameof(SelectedSessionString));
                 }
             }
+        }
+        public string SelectedSessionString
+        {
+            get
+            {
+                if (!string.IsNullOrEmpty(_selectedSession?.Name))
+                    return string.Format("\"{0}\"", _selectedSession.Name);
+                else
+                    return string.Empty;
+            }
+        }
+        public void SelectedSessionNameUpdated()
+        {
+            OnPropertyChanged(nameof(SelectedSessionString));
         }
 
         /////////////////////////////////////////////////////////////////////////////
@@ -116,7 +137,7 @@ namespace MVS
 
                         string modeText = string.Empty;
                         if (OperationsMode == OperationsMode.Test)
-                            modeText = "- Test Run";
+                            modeText = "(Test Run)";
 
                         if (_startTime != System.Data.SqlTypes.SqlDateTime.MinValue.Value)
                         {
@@ -144,6 +165,85 @@ namespace MVS
         {
             // Lagrer kun til databasen når vi først har kjørt i 20 minutter.
             return (DateTime.UtcNow - _startTime).TotalSeconds >= 0;
+        }
+
+        /////////////////////////////////////////////////////////////////////////////
+        // Knapper
+        /////////////////////////////////////////////////////////////////////////////
+        private bool _startButtonEnabled { get; set; }
+        public bool StartButtonEnabled
+        {
+            get
+            {
+                return _startButtonEnabled;
+            }
+            set
+            {
+                _startButtonEnabled = value;
+                OnPropertyChanged();
+            }
+        }
+
+        private bool _stopButtonEnabled { get; set; }
+        public bool StopButtonEnabled
+        {
+            get
+            {
+                return _stopButtonEnabled;
+            }
+            set
+            {
+                _stopButtonEnabled = value;
+                OnPropertyChanged();
+            }
+        }
+
+        private bool _testButtonEnabled { get; set; }
+        public bool TestButtonEnabled
+        {
+            get
+            {
+                return _testButtonEnabled;
+            }
+            set
+            {
+                _testButtonEnabled = value;
+                OnPropertyChanged();
+            }
+        }
+
+        /////////////////////////////////////////////////////////////////////////////
+        // Recording Symbol
+        /////////////////////////////////////////////////////////////////////////////
+        private Visibility _recordingSymbolVisibility { get; set; }
+        public Visibility RecordingSymbolVisibility
+        {
+            get
+            {
+                return _recordingSymbolVisibility;
+            }
+            set
+            {
+                _recordingSymbolVisibility = value;
+                OnPropertyChanged();
+            }
+        }
+
+        /////////////////////////////////////////////////////////////////////////////
+        // Analysis Tab
+        /////////////////////////////////////////////////////////////////////////////
+        private bool _analysisTabEnabled { get; set; }
+        public bool AnalysisTabEnabled
+        {
+            get
+            {
+                return _analysisTabEnabled;
+            }
+            set
+            {
+                _analysisTabEnabled = value;
+                OnPropertyChanged();
+            }
         }
 
         // Variabel oppdatert

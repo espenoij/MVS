@@ -242,6 +242,8 @@ namespace MVS
 
                 // Oppdatere database
                 mvsDatabase.Update(mainWindowVM.SelectedSession);
+
+                mainWindowVM.SelectedSessionNameUpdated();
             }
         }
 

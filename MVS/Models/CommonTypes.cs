@@ -480,6 +480,8 @@ public enum VerificationInputSetup
     None,
     [Description("Reference MRU Only")]
     ReferenceMRU,
+    [Description("Test MRU Only")]
+    TestMRU,
     [Description("Reference MRU + Test MRU")]
     ReferenceMRU_TestMRU,
 }

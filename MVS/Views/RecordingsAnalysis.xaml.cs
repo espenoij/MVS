@@ -35,7 +35,7 @@ namespace MVS
 
         private void btnRunAnalysis_Click(object sender, System.Windows.RoutedEventArgs e)
         {
-            mvsDatabase.LoadSessionData(mainWindowVM.SelectedSession, mvsInputData, recordingsAnalysisVM.refPitchList);
+            mvsDatabase.LoadSessionData(mainWindowVM.SelectedSession, mvsInputData, recordingsAnalysisVM.refDataList);
         }
     }
 }

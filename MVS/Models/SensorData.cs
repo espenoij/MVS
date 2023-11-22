@@ -559,6 +559,7 @@ namespace MVS
             if (mainWindowVM.OperationsMode == OperationsMode.Test ||
                 (mainWindowVM.SelectedSession?.InputSetup == VerificationInputSetup.ReferenceMRU && mruType == MRUType.ReferenceMRU) ||
                 (mainWindowVM.SelectedSession?.InputSetup == VerificationInputSetup.ReferenceMRU_TestMRU && mruType == MRUType.ReferenceMRU) ||
+                (mainWindowVM.SelectedSession?.InputSetup == VerificationInputSetup.TestMRU && mruType == MRUType.TestMRU) ||
                 (mainWindowVM.SelectedSession?.InputSetup == VerificationInputSetup.ReferenceMRU_TestMRU && mruType == MRUType.TestMRU))
             {
                 return true;
