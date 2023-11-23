@@ -260,20 +260,29 @@ namespace MVS
             {
                 databaseSetupRun = false;
 
-                // Sjekke data timeout
                 if (mainWindowVM.OperationsMode == OperationsMode.Test ||
                     mainWindowVM.OperationsMode == OperationsMode.Analysis ||
                     mainWindowVM.SelectedSession?.InputSetup == VerificationInputSetup.ReferenceMRU ||
                     mainWindowVM.SelectedSession?.InputSetup == VerificationInputSetup.ReferenceMRU_TestMRU)
                 {
-                    if (refSensorPitch.timestamp.AddMilliseconds(adminSettingsVM.dataTimeout) < DateTime.UtcNow)
-                        refSensorPitch.status = DataStatus.TIMEOUT_ERROR;
+                    // Sjekke data timeout
+                    if (mainWindowVM.OperationsMode == OperationsMode.Analysis)
+                    {
+                        refSensorPitch.status = DataStatus.OK;
+                        refSensorRoll.status = DataStatus.OK;
+                        refSensorHeave.status = DataStatus.OK;
+                    }
+                    else
+                    {
+                        if (refSensorPitch.timestamp.AddMilliseconds(adminSettingsVM.dataTimeout) < DateTime.UtcNow)
+                            refSensorPitch.status = DataStatus.TIMEOUT_ERROR;
 
-                    if (refSensorRoll.timestamp.AddMilliseconds(adminSettingsVM.dataTimeout) < DateTime.UtcNow)
-                        refSensorRoll.status = DataStatus.TIMEOUT_ERROR;
+                        if (refSensorRoll.timestamp.AddMilliseconds(adminSettingsVM.dataTimeout) < DateTime.UtcNow)
+                            refSensorRoll.status = DataStatus.TIMEOUT_ERROR;
 
-                    if (refSensorHeave.timestamp.AddMilliseconds(adminSettingsVM.dataTimeout) < DateTime.UtcNow)
-                        refSensorHeave.status = DataStatus.TIMEOUT_ERROR;
+                        if (refSensorHeave.timestamp.AddMilliseconds(adminSettingsVM.dataTimeout) < DateTime.UtcNow)
+                            refSensorHeave.status = DataStatus.TIMEOUT_ERROR;
+                    }
 
                     // Ref: Pitch
                     refPitchData.Set(refSensorPitch);
@@ -359,14 +368,24 @@ namespace MVS
                     mainWindowVM.SelectedSession?.InputSetup == VerificationInputSetup.TestMRU ||
                     mainWindowVM.SelectedSession?.InputSetup == VerificationInputSetup.ReferenceMRU_TestMRU)
                 {
-                    if (testSensorPitch.timestamp.AddMilliseconds(adminSettingsVM.dataTimeout) < DateTime.UtcNow)
-                        testSensorPitch.status = DataStatus.TIMEOUT_ERROR;
+                    if (mainWindowVM.OperationsMode == OperationsMode.Analysis)
+                    {
+                        testSensorPitch.status = DataStatus.OK;
+                        testSensorRoll.status = DataStatus.OK;
+                        testSensorHeave.status = DataStatus.OK;
+                    }
+                    else
+                    {
+                        // Sjekke data timeout
+                        if (testSensorPitch.timestamp.AddMilliseconds(adminSettingsVM.dataTimeout) < DateTime.UtcNow)
+                            testSensorPitch.status = DataStatus.TIMEOUT_ERROR;
 
-                    if (testSensorRoll.timestamp.AddMilliseconds(adminSettingsVM.dataTimeout) < DateTime.UtcNow)
-                        testSensorRoll.status = DataStatus.TIMEOUT_ERROR;
+                        if (testSensorRoll.timestamp.AddMilliseconds(adminSettingsVM.dataTimeout) < DateTime.UtcNow)
+                            testSensorRoll.status = DataStatus.TIMEOUT_ERROR;
 
-                    if (testSensorHeave.timestamp.AddMilliseconds(adminSettingsVM.dataTimeout) < DateTime.UtcNow)
-                        testSensorHeave.status = DataStatus.TIMEOUT_ERROR;
+                        if (testSensorHeave.timestamp.AddMilliseconds(adminSettingsVM.dataTimeout) < DateTime.UtcNow)
+                            testSensorHeave.status = DataStatus.TIMEOUT_ERROR;
+                    }
 
                     // Test: Pitch
                     testPitchData.Set(testSensorPitch);

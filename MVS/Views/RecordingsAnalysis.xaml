@@ -55,10 +55,7 @@
         </StackPanel>
 
         <Grid
-            Grid.Row="1"
-            Margin="0,41,0,0"
-            Grid.RowSpan="2">
-
+            Grid.Row="1">
 
             <Grid.RowDefinitions>
                 <RowDefinition
@@ -84,9 +81,9 @@
 
                     <Grid.ColumnDefinitions>
                         <ColumnDefinition
-                            Width="10*" />
+                            Width="1*" />
                         <ColumnDefinition
-                            Width="60*" />
+                            Width="10*" />
                     </Grid.ColumnDefinitions>
 
                     <Grid

@@ -26,7 +26,7 @@
             <SolidColorBrush x:Key="ColorAboutBackground">#ff333333</SolidColorBrush>
             <SolidColorBrush x:Key="ColorGraphLine">#FF333333</SolidColorBrush>
             <SolidColorBrush x:Key="ColorGraphLineTest">#FFE11444</SolidColorBrush>
-            <SolidColorBrush x:Key="ColorGraphLineRef">#FF06D6A0</SolidColorBrush>
+            <SolidColorBrush x:Key="ColorGraphLineRef">#FF6495ED</SolidColorBrush>
             
             <Style TargetType="local:MainWindow" BasedOn="{StaticResource RadWindowStyle}" />
             

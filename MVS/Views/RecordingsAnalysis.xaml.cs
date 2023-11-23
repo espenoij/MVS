@@ -31,18 +31,21 @@ namespace MVS
             chartPitch.Series[0].ItemsSource = recordingsAnalysisVM.testPitchList;
             chartPitch.Series[1].ItemsSource = recordingsAnalysisVM.refPitchList;
 
+            chartPitch20m.Series[0].ItemsSource = recordingsAnalysisVM.testPitchMean20mList;
+            chartPitch20m.Series[1].ItemsSource = recordingsAnalysisVM.refPitchMean20mList;
         }
 
         private void btnRunAnalysis_Click(object sender, System.Windows.RoutedEventArgs e)
         {
+            mainWindowVM.OperationsMode = OperationsMode.Analysis;
+
             // Laste session data fra databasen
             mvsDatabase.LoadSessionData(mainWindowVM.SelectedSession, mvsInputData, recordingsAnalysisVM.refDataList);
 
-            // Prosessere session dasta
+            // Prosessere session data
             recordingsAnalysisVM.ProcessSessionData();
 
-            // Overføre session data til grafer
-            recordingsAnalysisVM.TransferSessionData();
+            mainWindowVM.OperationsMode = OperationsMode.Stop;
         }
     }
 }

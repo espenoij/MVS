@@ -14,6 +14,7 @@ namespace MVS
         private MainWindowVM mainWindowVM;
         private MVSProcessing mvsProcessing;
         private MVSDataCollection mvsInputData;
+        private MVSDataCollection mvsOutputData;
 
         // Alle session data
         public RadObservableCollection<SessionData> refDataList = new RadObservableCollection<SessionData>();
@@ -25,41 +26,60 @@ namespace MVS
         public RadObservableCollection<HMSData> testPitchList = new RadObservableCollection<HMSData>();
         public RadObservableCollection<HMSData> testPitchMean20mList = new RadObservableCollection<HMSData>();
 
-        public void Init(MainWindowVM mainWindowVM, MVSProcessing mvsProcessing)
+        public void Init(MainWindowVM mainWindowVM, MVSProcessing mvsProcessing, MVSDataCollection mvsInputData, MVSDataCollection mvsOutputData)
         {
             this.mainWindowVM = mainWindowVM;
             this.mvsProcessing = mvsProcessing;
+            this.mvsInputData = mvsInputData;
+            this.mvsOutputData = mvsOutputData;
         }
 
         public void ProcessSessionData()
         {
-            foreach (var item in refDataList)
-            {
-                mvsInputData.TransferData(item);
-                mvsProcessing.Update(mvsInputData, mainWindowVM);
-            }
-        }
-
-        public void TransferSessionData()
-        {
+            // Slette gamle data i graf data lister
             refPitchList.Clear();
             refPitchMean20mList.Clear();
 
-            refPitchList.Clear();
+            testPitchList.Clear();
             testPitchMean20mList.Clear();
 
-            foreach (var item in refDataList) 
+            foreach (var item in refDataList)
             {
+                // Overføre data fra DB til input
+                mvsInputData.TransferData(item);
+
+                // Prosessere data i input
+                mvsProcessing.Update(mvsInputData, mainWindowVM);
+
+                // TEST TEST TEST
+                double test1 = mvsOutputData.GetData(ValueType.Ref_Pitch).data;
+                double test2 = mvsOutputData.GetData(ValueType.Test_Pitch).data;
+
+                // Overføre data til grafer
                 refPitchList.Add(new HMSData()
                 {
-                    data = item.refPitch,
+                    data = mvsOutputData.GetData(ValueType.Ref_Pitch).data,
+                    timestamp = item.timestamp,
+                    status = DataStatus.OK
+                });
+
+                refPitchMean20mList.Add(new HMSData()
+                {
+                    data = mvsOutputData.GetData(ValueType.Ref_PitchMean20m).data,
                     timestamp = item.timestamp,
                     status = DataStatus.OK
                 });
 
                 testPitchList.Add(new HMSData()
                 {
-                    data = item.testPitch,
+                    data = mvsOutputData.GetData(ValueType.Test_Pitch).data,
+                    timestamp = item.timestamp,
+                    status = DataStatus.OK
+                });
+
+                testPitchMean20mList.Add(new HMSData()
+                {
+                    data = mvsOutputData.GetData(ValueType.Test_PitchMean20m).data,
                     timestamp = item.timestamp,
                     status = DataStatus.OK
                 });

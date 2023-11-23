@@ -91,10 +91,6 @@ namespace MVS
             recordingsDataVM = new RecordingsDataVM();
             recordingsDataVM.Init();
 
-            // Recordings Analysis VM
-            recordingsAnalysisVM = new RecordingsAnalysisVM();
-            recordingsAnalysisVM.Init();
-
             // About VM
             aboutVM = new AboutVM(Application.ResourceAssembly.GetName().Version);
 
@@ -128,6 +124,10 @@ namespace MVS
             // Init UI
             InitUI();
             InitUIMVS();
+
+            // Recordings Analysis VM
+            recordingsAnalysisVM = new RecordingsAnalysisVM();
+            recordingsAnalysisVM.Init(mainWindowVM, mvsProcessing, mvsInputData, mvsOutputData);
 
             // Recordings page
             ucRecordings.Init(mainWindowVM, mvsDatabase, updateUIButtonsCallback);
@@ -568,7 +568,7 @@ namespace MVS
                 serverStarted = true;
 
                 // Start elapsed time
-                mainWindowVM.StartTimer(20);
+                mainWindowVM.StartTimer(0); // TODO: 20
 
                 // Vise recording symbol
                 mainWindowVM.RecordingSymbolVisibility = Visibility.Visible;
