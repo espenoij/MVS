@@ -1,10 +1,10 @@
-﻿using MySql.Data.MySqlClient;
-using System;
+﻿using System;
 using System.Collections.Generic;
 using System.Data;
 using System.Linq;
 using System.Security;
 using Telerik.Windows.Data;
+using MySqlConnector;
 
 namespace MVS
 {
@@ -733,13 +733,13 @@ namespace MVS
                             data.id = dbReader.GetInt16(0);
                             data.timestamp = dbReader.GetDateTime(1);
 
-                            data.refPitch = dbReader.GetDouble(2);
-                            data.refRoll = dbReader.GetDouble(3);
-                            data.refHeave = dbReader.GetDouble(4);
+                            data.refPitch = Convert.ToDouble(dbReader.GetString(2));
+                            data.refRoll = Convert.ToDouble(dbReader.GetString(3));
+                            data.refHeave = Convert.ToDouble(dbReader.GetString(4));
 
-                            data.testPitch = dbReader.GetDouble(5);
-                            data.testRoll = dbReader.GetDouble(6);
-                            data.testHeave = dbReader.GetDouble(7);
+                            data.testPitch = Convert.ToDouble(dbReader.GetString(5));
+                            data.testRoll = Convert.ToDouble(dbReader.GetString(6));
+                            data.testHeave = Convert.ToDouble(dbReader.GetString(7));
 
                             dataList.Add(data);
                         }
