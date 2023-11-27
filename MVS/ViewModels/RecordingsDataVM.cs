@@ -132,11 +132,9 @@ namespace MVS
             refPitchMax20mData = mvsDataCollection.GetData(ValueType.Ref_PitchMax20m);
             refPitchMaxUp20mData = mvsDataCollection.GetData(ValueType.Ref_PitchMaxUp20m);
             refPitchMaxDown20mData = mvsDataCollection.GetData(ValueType.Ref_PitchMaxDown20m);
-            refPitchMean20mData = mvsDataCollection.GetData(ValueType.Ref_PitchMean20m);
             refRollMax20mData = mvsDataCollection.GetData(ValueType.Ref_RollMax20m);
             refRollMaxLeft20mData = mvsDataCollection.GetData(ValueType.Ref_RollMaxLeft20m);
             refRollMaxRight20mData = mvsDataCollection.GetData(ValueType.Ref_RollMaxRight20m);
-            refRollMean20mData = mvsDataCollection.GetData(ValueType.Ref_RollMean20m);
             refHeaveMax20mData = mvsDataCollection.GetData(ValueType.Ref_HeaveMax20m);
             refHeaveAmplitudeMax20mData = mvsDataCollection.GetData(ValueType.Ref_HeaveAmplitudeMax20m);
             refHeaveAmplitudeMean20mData = mvsDataCollection.GetData(ValueType.Ref_HeaveAmplitudeMean20m);
@@ -144,7 +142,6 @@ namespace MVS
             testPitchMax20mData = mvsDataCollection.GetData(ValueType.Test_PitchMax20m);
             testPitchMaxUp20mData = mvsDataCollection.GetData(ValueType.Test_PitchMaxUp20m);
             testPitchMaxDown20mData = mvsDataCollection.GetData(ValueType.Test_PitchMaxDown20m);
-            testPitchMean20mData = mvsDataCollection.GetData(ValueType.Test_PitchMean20m);
             testRollMax20mData = mvsDataCollection.GetData(ValueType.Test_RollMax20m);
             testRollMaxLeft20mData = mvsDataCollection.GetData(ValueType.Test_RollMaxLeft20m);
             testRollMaxRight20mData = mvsDataCollection.GetData(ValueType.Test_RollMaxRight20m);
@@ -157,6 +154,10 @@ namespace MVS
             refPitchMean20mData = mvsDataCollection.GetData(ValueType.Ref_PitchMean20m);
             refRollMean20mData = mvsDataCollection.GetData(ValueType.Ref_RollMean20m);
             refHeaveMean20mData = mvsDataCollection.GetData(ValueType.Ref_HeaveAmplitudeMean20m);
+
+            testPitchMean20mData = mvsDataCollection.GetData(ValueType.Test_PitchMean20m);
+            testRollMean20mData = mvsDataCollection.GetData(ValueType.Test_RollMean20m);
+            testHeaveMean20mData = mvsDataCollection.GetData(ValueType.Test_HeaveAmplitudeMean20m);
         }
 
         public void StartRecording()

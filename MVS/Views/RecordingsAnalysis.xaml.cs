@@ -49,7 +49,7 @@ namespace MVS
             mainWindowVM.OperationsMode = OperationsMode.Analysis;
 
             // Laste session data fra databasen
-            mvsDatabase.LoadSessionData(mainWindowVM.SelectedSession, mvsInputData, recordingsAnalysisVM.refDataList);
+            mvsDatabase.LoadSessionData(mainWindowVM.SelectedSession, mvsInputData, recordingsAnalysisVM.sessionDataList);
 
             // Prosessere session data
             recordingsAnalysisVM.ProcessSessionData();
