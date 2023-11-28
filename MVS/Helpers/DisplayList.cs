@@ -6,14 +6,18 @@ namespace MVS
 {
     static class DisplayList
     {
+        public static void TransferDirect(RadObservableCollection<HMSData> dataList, RadObservableCollection<HMSData> displayList)
+        {
+            displayList.Clear();
+
+            // Løpe gjennom listen med data som skal overføres til skjerm
+            foreach (var item in dataList.ToList())
+                // Legg den inn i listen
+                displayList.Add(new HMSData(item));
+        }
+
         public static void Transfer(RadObservableCollection<HMSData> dataList, RadObservableCollection<HMSData> displayList)
         {
-            //// TEST BLIP
-            //foreach (var item in dataList.ToList())
-            //    if (item.id == (int)ValueType.MSI &&
-            //        item.status == DataStatus.OK)
-            //        item.data3 = String.Empty;
-
             // Løpe gjennom listen med data som skal overføres til skjerm
             foreach (var item in dataList.ToList())
             {
@@ -33,12 +37,6 @@ namespace MVS
                     displayList.Add(new HMSData(item));
                 }
             }
-
-            //// TEST BLIP
-            //foreach (var item in dataList.ToList())
-            //    if (item.id == (int)ValueType.MSI &&
-            //        item.status == DataStatus.OK)
-            //        item.data3 = String.Empty;
         }
 
         public static void Transfer(RadObservableCollection<SensorData> dataList, RadObservableCollection<SensorData> displayList)

@@ -99,7 +99,7 @@
 
 
                 <!--==============================================================-->
-                <!--Side Menu: Motion Verification Recordings-->
+                <!--Side Menu: Verification Recordings-->
                 <!--==============================================================-->
                 <telerik:RadTabItem>
 
@@ -199,9 +199,11 @@
                         </Grid>
 
                         <telerik:RadTabControl
+                            Name="tcVerificationRecordings"
                             DockPanel.Dock="Top"
                             HeaderBackground="{StaticResource ColorHorizontalBarBackground}"
-                            Margin="8,0,8,8">
+                            Margin="8,0,8,8"
+                            SelectionChanged="tcVerificationRecordings_SelectionChanged">
 
                             <telerik:RadTabItem
                                 Header="Recordings">
@@ -216,7 +218,7 @@
                             </telerik:RadTabItem>
 
                             <telerik:RadTabItem
-                                Name="tabInput_RecordingsData"
+                                Name="tabVerificationRecordings_RecordingsData"
                                 Header="Data">
 
                                 <DockPanel>
@@ -229,6 +231,7 @@
                             </telerik:RadTabItem>
 
                             <telerik:RadTabItem
+                                Name="tabVerificationRecordings_RecordingsAnalysis"
                                 Header="Analysis"
                                 IsEnabled="{Binding AnalysisTabEnabled}">
 

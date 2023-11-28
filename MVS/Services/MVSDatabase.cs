@@ -253,6 +253,9 @@ namespace MVS
         {
             try
             {
+                // Slette gamle data i listen
+                dataList.Clear();
+
                 database.LoadSessionData(dataSet, mvsDataCollection, dataList);
 
                 errorHandler.ResetDatabaseError(ErrorHandler.DatabaseErrorType.LoadSessionData);

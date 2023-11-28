@@ -32,13 +32,6 @@
 
     <Grid>
 
-        <Grid.RowDefinitions>
-            <RowDefinition
-                Height="auto" />
-            <RowDefinition
-                Height="*" />
-        </Grid.RowDefinitions>
-
         <Grid.ColumnDefinitions>
             <ColumnDefinition
                 Width="41*" />
@@ -46,23 +39,7 @@
                 Width="16*" />
         </Grid.ColumnDefinitions>
 
-        <!--Motion Data Set Controls-->
-        <StackPanel
-            Grid.Row="0"
-            Grid.Column="0"
-            Orientation="Horizontal"
-            HorizontalAlignment="Left"
-            Margin="8">
-
-            <Button
-                Name="btnRunAnalysis"
-                Click="btnRunAnalysis_Click"
-                Width="140">Run Analysis</Button>
-
-        </StackPanel>
-
-        <Grid
-            Grid.Row="1">
+        <Grid>
 
             <Grid.RowDefinitions>
                 <RowDefinition
@@ -277,7 +254,7 @@
                             <telerik:RadCartesianChart.Annotations>
 
                                 <telerik:CartesianGridLineAnnotation
-                                    Axis="{Binding ElementName=chartPitchVerticalAxis}"
+                                    Axis="{Binding ElementName=chartPitchVerticalAxis20m}"
                                     Value="0"
                                     Stroke="Black"
                                     StrokeThickness="2" />
@@ -496,7 +473,7 @@
                             <telerik:RadCartesianChart.Annotations>
 
                                 <telerik:CartesianGridLineAnnotation
-                                    Axis="{Binding ElementName=chartRollVerticalAxis}"
+                                    Axis="{Binding ElementName=chartRollVerticalAxis20m}"
                                     Value="0"
                                     Stroke="Black"
                                     StrokeThickness="2" />
@@ -715,8 +692,8 @@
                             <telerik:RadCartesianChart.Annotations>
 
                                 <telerik:CartesianGridLineAnnotation
-                                    Axis="{Binding ElementName=chartHeaveVerticalAxis}"
-                                    Value="0"
+                                    Axis="{Binding ElementName=chartHeaveVerticalAxis20m}"
+                                    Value="0.05"
                                     Stroke="Black"
                                     StrokeThickness="2" />
 

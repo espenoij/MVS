@@ -1,6 +1,8 @@
 ﻿using System;
+using System.ComponentModel;
 using System.Threading;
 using System.Windows;
+using System.Windows.Controls;
 using System.Windows.Threading;
 using Telerik.Windows.Controls;
 using Telerik.Windows.Data;
@@ -63,6 +65,9 @@ namespace MVS
 
         // Kommer fra sensor input edit
         private bool sensorInputEdited = false;
+
+        // Analysis worker
+        private readonly BackgroundWorker analysisWorker = new BackgroundWorker();
 
         // Model View
         private MainWindowVM mainWindowVM;
@@ -136,7 +141,7 @@ namespace MVS
             ucRecordingsData.Init(recordingsDataVM);
 
             // Recordings Analysis page
-            ucRecordingsAnalysis.Init(recordingsAnalysisVM, mainWindowVM, mvsInputData, mvsDatabase);
+            ucRecordingsAnalysis.Init(recordingsAnalysisVM);
 
             // Sensor Input Setup
             ucSensorSetupPage.Init(config, errorHandler, adminSettingsVM);
@@ -217,6 +222,9 @@ namespace MVS
                     errorHandler.SetDatabaseError(ErrorHandler.DatabaseErrorType.StatusCheck);
                 }
             }
+
+            // Analysis init
+            InitAnalysisWorker();
 
             // Sette start/stop knappene
             SetOperationsMode(OperationsMode.Stop);
@@ -576,7 +584,7 @@ namespace MVS
                 recordingsDataVM.StartRecording();
 
                 // Gå til Data tab
-                tabInput_RecordingsData.IsSelected = true;
+                tabVerificationRecordings_RecordingsData.IsSelected = true;
             }
         }
 
@@ -730,6 +738,39 @@ namespace MVS
             aboutDlg.Owner = App.Current.MainWindow;
             aboutDlg.Init(aboutVM);
             aboutDlg.ShowDialog();
+        }
+
+        private void tcVerificationRecordings_SelectionChanged(object sender, RadSelectionChangedEventArgs e)
+        {
+            // Analyse tab valgt -> Analysere data
+            if (tabVerificationRecordings_RecordingsAnalysis.IsSelected)
+                analysisWorker.RunWorkerAsync();
+        }
+
+        private void InitAnalysisWorker()
+        {
+            analysisWorker.DoWork += analysisWorker_DoWork;
+            analysisWorker.RunWorkerCompleted += analysisWorker_RunWorkerCompleted;
+        }
+
+        private void analysisWorker_DoWork(object sender, DoWorkEventArgs e)
+        {
+            // Sette ops mode til analyse
+            mainWindowVM.OperationsMode = OperationsMode.Analysis;
+
+            // Laste session data fra databasen
+            mvsDatabase.LoadSessionData(mainWindowVM.SelectedSession, mvsInputData, recordingsAnalysisVM.sessionDataList);
+
+            // Prosessere session data
+            recordingsAnalysisVM.ProcessSessionData();
+        }
+
+        private void analysisWorker_RunWorkerCompleted(object sender, RunWorkerCompletedEventArgs e)
+        {
+            // Resette ops mode
+            mainWindowVM.OperationsMode = OperationsMode.Stop;
+
+            ucRecordingsAnalysis.TransferToDisplay();
         }
     }
 }

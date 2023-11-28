@@ -1,5 +1,6 @@
 ﻿using System;
 using System.ComponentModel;
+using System.Linq;
 using System.Runtime.CompilerServices;
 using System.Windows.Threading;
 using Telerik.Windows.Data;
@@ -72,44 +73,40 @@ namespace MVS
             testHeaveList.Clear();
             testHeaveAmplitudeMean20mList.Clear();
 
-            foreach (var item in sessionDataList)
+            foreach (SessionData sessionData in sessionDataList.ToList())
             {
                 // Overføre data fra DB til input
-                mvsInputData.TransferData(item);
+                mvsInputData.TransferData(sessionData);
 
                 // Prosessere data i input
                 mvsProcessing.Update(mvsInputData, mainWindowVM);
-
-                // TEST TEST TEST
-                //double test1 = mvsOutputData.GetData(ValueType.Ref_Pitch).data;
-                //double test2 = mvsOutputData.GetData(ValueType.Test_Pitch).data;
 
                 // Overføre data til grafer - Pitch
                 refPitchList.Add(new HMSData()
                 {
                     data = mvsOutputData.GetData(ValueType.Ref_Pitch).data,
-                    timestamp = item.timestamp,
+                    timestamp = sessionData.timestamp,
                     status = DataStatus.OK
                 });
 
                 refPitchMean20mList.Add(new HMSData()
                 {
                     data = mvsOutputData.GetData(ValueType.Ref_PitchMean20m).data,
-                    timestamp = item.timestamp,
+                    timestamp = sessionData.timestamp,
                     status = DataStatus.OK
                 });
 
                 testPitchList.Add(new HMSData()
                 {
                     data = mvsOutputData.GetData(ValueType.Test_Pitch).data,
-                    timestamp = item.timestamp,
+                    timestamp = sessionData.timestamp,
                     status = DataStatus.OK
                 });
 
                 testPitchMean20mList.Add(new HMSData()
                 {
                     data = mvsOutputData.GetData(ValueType.Test_PitchMean20m).data,
-                    timestamp = item.timestamp,
+                    timestamp = sessionData.timestamp,
                     status = DataStatus.OK
                 });
 
@@ -117,28 +114,28 @@ namespace MVS
                 refRollList.Add(new HMSData()
                 {
                     data = mvsOutputData.GetData(ValueType.Ref_Roll).data,
-                    timestamp = item.timestamp,
+                    timestamp = sessionData.timestamp,
                     status = DataStatus.OK
                 });
 
                 refRollMean20mList.Add(new HMSData()
                 {
                     data = mvsOutputData.GetData(ValueType.Ref_RollMean20m).data,
-                    timestamp = item.timestamp,
+                    timestamp = sessionData.timestamp,
                     status = DataStatus.OK
                 });
 
                 testRollList.Add(new HMSData()
                 {
                     data = mvsOutputData.GetData(ValueType.Test_Roll).data,
-                    timestamp = item.timestamp,
+                    timestamp = sessionData.timestamp,
                     status = DataStatus.OK
                 });
 
                 testRollMean20mList.Add(new HMSData()
                 {
                     data = mvsOutputData.GetData(ValueType.Test_RollMean20m).data,
-                    timestamp = item.timestamp,
+                    timestamp = sessionData.timestamp,
                     status = DataStatus.OK
                 });
 
@@ -146,28 +143,28 @@ namespace MVS
                 refHeaveList.Add(new HMSData()
                 {
                     data = mvsOutputData.GetData(ValueType.Ref_Heave).data,
-                    timestamp = item.timestamp,
+                    timestamp = sessionData.timestamp,
                     status = DataStatus.OK
                 });
 
                 refHeaveAmplitudeMean20mList.Add(new HMSData()
                 {
                     data = mvsOutputData.GetData(ValueType.Ref_HeaveAmplitudeMean20m).data,
-                    timestamp = item.timestamp,
+                    timestamp = sessionData.timestamp,
                     status = DataStatus.OK
                 });
 
                 testHeaveList.Add(new HMSData()
                 {
                     data = mvsOutputData.GetData(ValueType.Test_Heave).data,
-                    timestamp = item.timestamp,
+                    timestamp = sessionData.timestamp,
                     status = DataStatus.OK
                 });
 
                 testHeaveAmplitudeMean20mList.Add(new HMSData()
                 {
                     data = mvsOutputData.GetData(ValueType.Test_HeaveAmplitudeMean20m).data,
-                    timestamp = item.timestamp,
+                    timestamp = sessionData.timestamp,
                     status = DataStatus.OK
                 });
 
@@ -205,23 +202,31 @@ namespace MVS
             testHeaveAmplitudeMean20mData = mvsOutputData.GetData(ValueType.Test_HeaveAmplitudeMean20m);
 
             // Oppdatere mean verdier
-            refPitchMean20mData.data = refMeanPitchSum / sessionDataList.Count;
-            refPitchMean20mData.status = DataStatus.OK;
+            HMSData meanData = new HMSData();
 
-            refRollMean20mData.data = refMeanRollSum / sessionDataList.Count;
-            refRollMean20mData.status = DataStatus.OK;
+            meanData.data = refMeanPitchSum / sessionDataList.Count;
+            meanData.status = DataStatus.OK;
+            refPitchMean20mData = meanData;
 
-            refHeaveMean20mData.data = refMeanHeaveSum / sessionDataList.Count;
-            refHeaveMean20mData.status = DataStatus.OK;
+            meanData.data = refMeanRollSum / sessionDataList.Count;
+            meanData.status = DataStatus.OK;
+            refRollMean20mData = meanData;
 
-            testPitchMean20mData.data = testMeanPitchSum / sessionDataList.Count;
-            testPitchMean20mData.status = DataStatus.OK;
+            meanData.data = refMeanHeaveSum / sessionDataList.Count;
+            meanData.status = DataStatus.OK;
+            refHeaveMean20mData = meanData;
 
-            testRollMean20mData.data = testMeanRollSum / sessionDataList.Count;
-            testRollMean20mData.status = DataStatus.OK;
+            meanData.data = testMeanPitchSum / sessionDataList.Count;
+            meanData.status = DataStatus.OK;
+            testPitchMean20mData = meanData;
 
-            testHeaveMean20mData.data = testMeanHeaveSum / sessionDataList.Count;
-            testHeaveMean20mData.status = DataStatus.OK;
+            meanData.data = testMeanRollSum / sessionDataList.Count;
+            meanData.status = DataStatus.OK;
+            testRollMean20mData = meanData;
+
+            meanData.data = testMeanHeaveSum / sessionDataList.Count;
+            meanData.status = DataStatus.OK;
+            testHeaveMean20mData = meanData;
         }
 
 

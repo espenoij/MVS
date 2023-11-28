@@ -3,26 +3,26 @@
     // Klasse for prosessering av data fra sensor til HMS output
     public class MVSProcessing
     {
-        private MVSProcessingMotion hmsProcessingMotion;
+        private MVSProcessingMotion mvsProcessingMotion;
 
         // Init data prosessering
         public MVSProcessing(
-            MVSDataCollection hmsOutputData,
+            MVSDataCollection mvsOutputData,
             AdminSettingsVM adminSettingsVM,
             ErrorHandler errorHandler)
         {
-            hmsProcessingMotion = new MVSProcessingMotion(hmsOutputData, adminSettingsVM, errorHandler);
+            mvsProcessingMotion = new MVSProcessingMotion(mvsOutputData, adminSettingsVM, errorHandler);
         }
 
         // Kjøre prosessering og oppdatere data
-        public void Update(MVSDataCollection hmsInputDataList, MainWindowVM mainWindowVM)
+        public void Update(MVSDataCollection mvsInputDataList, MainWindowVM mainWindowVM)
         {
-            hmsProcessingMotion.Update(hmsInputDataList, mainWindowVM);
+            mvsProcessingMotion.Update(mvsInputDataList, mainWindowVM);
         }
 
         public void ResetDataCalculations()
         {
-            hmsProcessingMotion.ResetDataCalculations();
+            mvsProcessingMotion.ResetDataCalculations();
         }
     }
 }
