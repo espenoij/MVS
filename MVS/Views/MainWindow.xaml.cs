@@ -71,8 +71,7 @@ namespace MVS
 
         // Model View
         private MainWindowVM mainWindowVM;
-        private RecordingsDataVM recordingsDataVM;
-        private RecordingsAnalysisVM recordingsAnalysisVM;
+        private RecordingsAnalysisVM recordingsDataVM;
         private AboutVM aboutVM;
 
         public MainWindow()
@@ -91,10 +90,6 @@ namespace MVS
             // Main Window VM
             mainWindowVM = new MainWindowVM();
             DataContext = mainWindowVM;
-
-            // Recordings Data VM
-            recordingsDataVM = new RecordingsDataVM();
-            recordingsDataVM.Init();
 
             // About VM
             aboutVM = new AboutVM(Application.ResourceAssembly.GetName().Version);
@@ -130,18 +125,15 @@ namespace MVS
             InitUI();
             InitUIMVS();
 
-            // Recordings Analysis VM
-            recordingsAnalysisVM = new RecordingsAnalysisVM();
-            recordingsAnalysisVM.Init(mainWindowVM, mvsProcessing, mvsInputData, mvsOutputData);
+            // Recordings Data VM
+            recordingsDataVM = new RecordingsAnalysisVM();
+            recordingsDataVM.Init(mainWindowVM, mvsProcessing, mvsInputData, mvsOutputData);
 
             // Recordings page
             ucRecordings.Init(mainWindowVM, mvsDatabase, updateUIButtonsCallback);
 
             // Recordings Data page
-            ucRecordingsData.Init(recordingsDataVM);
-
-            // Recordings Analysis page
-            ucRecordingsAnalysis.Init(recordingsAnalysisVM);
+            ucRecordingsAnalysis.Init(recordingsDataVM);
 
             // Sensor Input Setup
             ucSensorSetupPage.Init(config, errorHandler, adminSettingsVM);
@@ -583,8 +575,8 @@ namespace MVS
 
                 recordingsDataVM.StartRecording();
 
-                // Gå til Data tab
-                tabVerificationRecordings_RecordingsData.IsSelected = true;
+                // Gå til Analyse tab
+                tabVerificationRecordings_RecordingsAnalysis.IsSelected = true;
             }
         }
 
@@ -740,13 +732,6 @@ namespace MVS
             aboutDlg.ShowDialog();
         }
 
-        private void tcVerificationRecordings_SelectionChanged(object sender, RadSelectionChangedEventArgs e)
-        {
-            // Analyse tab valgt -> Analysere data
-            if (tabVerificationRecordings_RecordingsAnalysis.IsSelected)
-                analysisWorker.RunWorkerAsync();
-        }
-
         private void InitAnalysisWorker()
         {
             analysisWorker.DoWork += analysisWorker_DoWork;
@@ -759,18 +744,25 @@ namespace MVS
             mainWindowVM.OperationsMode = OperationsMode.Analysis;
 
             // Laste session data fra databasen
-            mvsDatabase.LoadSessionData(mainWindowVM.SelectedSession, mvsInputData, recordingsAnalysisVM.sessionDataList);
+            mvsDatabase.LoadSessionData(mainWindowVM.SelectedSession, mvsInputData, recordingsDataVM.sessionDataList);
 
             // Prosessere session data
-            recordingsAnalysisVM.ProcessSessionData();
+            recordingsDataVM.ProcessSessionData();
         }
 
         private void analysisWorker_RunWorkerCompleted(object sender, RunWorkerCompletedEventArgs e)
         {
             // Resette ops mode
-            mainWindowVM.OperationsMode = OperationsMode.Stop;
+            //mainWindowVM.OperationsMode = OperationsMode.Stop;
 
-            ucRecordingsAnalysis.TransferToDisplay();
+            ucRecordingsAnalysis.TransferToDisplay(recordingsDataVM);
+        }
+
+        private void tcVerificationRecordings_SelectionChanged(object sender, RadSelectionChangedEventArgs e)
+        {
+            if (tabVerificationRecordings_RecordingsAnalysis.IsSelected)
+                // Starte data analyse
+                analysisWorker.RunWorkerAsync();
         }
     }
 }

@@ -131,8 +131,7 @@
                                 FontSize="{StaticResource fontSizeSelectedSession}"
                                 Content="{Binding SelectedSessionString}" />
 
-
-                            <!--Start/Stop-->
+                            <!--Top Buttons & Header-->
                             <StackPanel
                                 Grid.Column="0"
                                 Orientation="Horizontal"
@@ -192,12 +191,13 @@
                                 <Button
                                     Click="btnTest_Click"
                                     IsEnabled="{Binding TestButtonEnabled}"
-                                    Width="110">Test Run</Button>
+                                    Width="140">Test Run</Button>
 
                             </StackPanel>
 
                         </Grid>
 
+                        <!--Verification Recordings Tab-->
                         <telerik:RadTabControl
                             Name="tcVerificationRecordings"
                             DockPanel.Dock="Top"
@@ -205,6 +205,7 @@
                             Margin="8,0,8,8"
                             SelectionChanged="tcVerificationRecordings_SelectionChanged">
 
+                            <!--Recordings-->
                             <telerik:RadTabItem
                                 Header="Recordings">
 
@@ -217,23 +218,10 @@
 
                             </telerik:RadTabItem>
 
-                            <telerik:RadTabItem
-                                Name="tabVerificationRecordings_RecordingsData"
-                                Header="Data">
-
-                                <DockPanel>
-
-                                    <uc:RecordingsData
-                                        x:Name="ucRecordingsData" />
-
-                                </DockPanel>
-
-                            </telerik:RadTabItem>
-
+                            <!--Analysis-->
                             <telerik:RadTabItem
                                 Name="tabVerificationRecordings_RecordingsAnalysis"
-                                Header="Analysis"
-                                IsEnabled="{Binding AnalysisTabEnabled}">
+                                Header="Analysis">
 
                                 <DockPanel>
 
@@ -271,32 +259,34 @@
                                     Width="*" />
                                 <ColumnDefinition
                                     Width="*" />
+                                <ColumnDefinition
+                                    Width="*" />
                             </Grid.ColumnDefinitions>
 
-                            <Grid.RowDefinitions>
-                                <RowDefinition
-                                    Height="auto" />
-                                <RowDefinition
-                                    Height="auto" />
-                            </Grid.RowDefinitions>
+                            <!--Selected Recording Session-->
+                            <Label
+                                Grid.Column="1"
+                                VerticalAlignment="Center"
+                                HorizontalAlignment="Center"
+                                FontSize="{StaticResource fontSizeSelectedSession}"
+                                Content="{Binding SelectedSessionString}" />
 
-                            <!--Start/Stop-->
+                            <!--Top Buttons & Header-->
                             <StackPanel
-                                Grid.Row="0"
                                 Grid.Column="0"
                                 Orientation="Horizontal"
                                 HorizontalAlignment="Left"
                                 Margin="8">
 
                                 <telerik:RadButton
-                                    Name="btnStart2"
                                     Click="btnStart_Click"
+                                    IsEnabled="{Binding StartButtonEnabled}"
                                     Width="140"
                                     Margin="0,0,10,0">Start Recording</telerik:RadButton>
 
                                 <telerik:RadButton
-                                    Name="btnStop2"
                                     Click="btnStop_Click"
+                                    IsEnabled="{Binding StopButtonEnabled}"
                                     Width="140"
                                     VerticalAlignment="Top">Stop</telerik:RadButton>
 
@@ -310,23 +300,15 @@
                                             Width="3*" />
                                     </Grid.ColumnDefinitions>
 
-                                    <!--Selected Recording Session-->
-                                    <Label
-                                        Grid.Column="1"
-                                        VerticalAlignment="Center"
-                                        FontSize="{StaticResource fontSizeTimer}"
-                                        Content="{Binding SelectedSessionString}" />
-
                                     <!--Recording Time-->
                                     <Ellipse
                                         Grid.Column="0"
-                                        Name="recordingSymbol2"
                                         VerticalAlignment="Center"
                                         HorizontalAlignment="Center"
+                                        Visibility="{Binding RecordingSymbolVisibility}"
                                         Width="20"
                                         Height="20"
-                                        Fill="{StaticResource ColorRed}"
-                                        Visibility="Collapsed" />
+                                        Fill="{StaticResource ColorRed}" />
 
                                     <!--Operations Mode Info String-->
                                     <Label
@@ -342,7 +324,7 @@
                             <!--Test-->
                             <StackPanel
                                 Grid.Row="0"
-                                Grid.Column="1"
+                                Grid.Column="2"
                                 Orientation="Horizontal"
                                 HorizontalAlignment="Right"
                                 Margin="8">
@@ -350,7 +332,7 @@
                                 <Button
                                     Name="btnTest2"
                                     Click="btnTest_Click"
-                                    Width="110">Test Run</Button>
+                                    Width="140">Test Run</Button>
 
                             </StackPanel>
 

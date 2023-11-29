@@ -386,7 +386,6 @@
     <Compile Include="Models\WindVector.cs" />
     <Compile Include="ViewModels\AboutVM.cs" />
     <Compile Include="ViewModels\RecordingsAnalysisVM.cs" />
-    <Compile Include="ViewModels\RecordingsDataVM.cs" />
     <Compile Include="ViewModels\MainWindowVM.cs" />
     <Compile Include="ViewModels\FixedValueWindowVM.cs" />
     <Compile Include="Views\FixedValueSetupWindow.xaml.cs">
@@ -458,9 +457,6 @@
     <Compile Include="Views\Recordings.xaml.cs">
       <DependentUpon>Recordings.xaml</DependentUpon>
     </Compile>
-    <Compile Include="Views\RecordingsAnalysis.xaml.cs">
-      <DependentUpon>RecordingsAnalysis.xaml</DependentUpon>
-    </Compile>
     <Compile Include="Views\SensorSetupPage.xaml.cs">
       <DependentUpon>SensorSetupPage.xaml</DependentUpon>
     </Compile>
@@ -475,8 +471,8 @@
     <Compile Include="Helpers\SortAdorner.cs" />
     <Compile Include="Helpers\TextHelper.cs" />
     <Compile Include="Services\Weather.cs" />
-    <Compile Include="Views\RecordingsData.xaml.cs">
-      <DependentUpon>RecordingsData.xaml</DependentUpon>
+    <Compile Include="Views\RecordingsAnalysis.xaml.cs">
+      <DependentUpon>RecordingsAnalysis.xaml</DependentUpon>
     </Compile>
     <Page Include="Dialogs\DialogAbout.xaml">
       <Generator>MSBuild:Compile</Generator>
@@ -522,10 +518,6 @@
       <Generator>MSBuild:Compile</Generator>
       <SubType>Designer</SubType>
     </Page>
-    <Page Include="Views\RecordingsAnalysis.xaml">
-      <Generator>MSBuild:UpdateDesignTimeXaml</Generator>
-      <SubType>Designer</SubType>
-    </Page>
     <Page Include="Views\SensorSetupPage.xaml">
       <SubType>Designer</SubType>
       <Generator>MSBuild:Compile</Generator>
@@ -542,7 +534,7 @@
       <DependentUpon>SerialPortSetupWindow.xaml</DependentUpon>
       <SubType>Code</SubType>
     </Compile>
-    <Page Include="Views\RecordingsData.xaml">
+    <Page Include="Views\RecordingsAnalysis.xaml">
       <Generator>MSBuild:UpdateDesignTimeXaml</Generator>
       <SubType>Designer</SubType>
     </Page>
