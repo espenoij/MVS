@@ -73,7 +73,7 @@ namespace MVS
 
             void ChartDataUpdate20m(object sender, EventArgs e)
             {
-                // Overføre data fra buffer til chart data: 20m
+                // Overføre data fra buffer til chart data
                 GraphBuffer.Transfer(refPitchBuffer, refPitchList);
                 GraphBuffer.Transfer(refRollBuffer, refRollList);
                 GraphBuffer.Transfer(refHeaveBuffer, refHeaveList);
@@ -257,21 +257,21 @@ namespace MVS
             double testMeanRollSum = 0;
             double testMeanHeaveSum = 0;
 
-            // Slette gamle data i graf data lister
-            refPitchList.Clear();
-            refPitchMean20mList.Clear();
-            testPitchList.Clear();
-            testPitchMean20mList.Clear();
+            // Slette gamle data i buffer lister
+            refPitchBuffer.Clear();
+            refPitchMean20mBuffer.Clear();
+            testPitchBuffer.Clear();
+            testPitchMean20mBuffer.Clear();
 
-            refRollList.Clear();
-            refRollMean20mList.Clear();
-            testRollList.Clear();
-            testRollMean20mList.Clear();
+            refRollBuffer.Clear();
+            refRollMean20mBuffer.Clear();
+            testRollBuffer.Clear();
+            testRollMean20mBuffer.Clear();
 
-            refHeaveList.Clear();
-            refHeaveAmplitudeMean20mList.Clear();
-            testHeaveList.Clear();
-            testHeaveAmplitudeMean20mList.Clear();
+            refHeaveBuffer.Clear();
+            refHeaveAmplitudeMean20mBuffer.Clear();
+            testHeaveBuffer.Clear();
+            testHeaveAmplitudeMean20mBuffer.Clear();
 
             foreach (SessionData sessionData in sessionDataList.ToList())
             {
@@ -282,28 +282,28 @@ namespace MVS
                 mvsProcessing.Update(mvsInputData, mainWindowVM);
 
                 // Overføre data til grafer - Pitch
-                refPitchList.Add(new HMSData()
+                refPitchBuffer.Add(new HMSData()
                 {
                     data = mvsOutputData.GetData(ValueType.Ref_Pitch).data,
                     timestamp = sessionData.timestamp,
                     status = DataStatus.OK
                 });
 
-                refPitchMean20mList.Add(new HMSData()
+                refPitchMean20mBuffer.Add(new HMSData()
                 {
                     data = mvsOutputData.GetData(ValueType.Ref_PitchMean20m).data,
                     timestamp = sessionData.timestamp,
                     status = DataStatus.OK
                 });
 
-                testPitchList.Add(new HMSData()
+                testPitchBuffer.Add(new HMSData()
                 {
                     data = mvsOutputData.GetData(ValueType.Test_Pitch).data,
                     timestamp = sessionData.timestamp,
                     status = DataStatus.OK
                 });
 
-                testPitchMean20mList.Add(new HMSData()
+                testPitchMean20mBuffer.Add(new HMSData()
                 {
                     data = mvsOutputData.GetData(ValueType.Test_PitchMean20m).data,
                     timestamp = sessionData.timestamp,
@@ -311,28 +311,28 @@ namespace MVS
                 });
 
                 // Overføre data til grafer - Roll
-                refRollList.Add(new HMSData()
+                refRollBuffer.Add(new HMSData()
                 {
                     data = mvsOutputData.GetData(ValueType.Ref_Roll).data,
                     timestamp = sessionData.timestamp,
                     status = DataStatus.OK
                 });
 
-                refRollMean20mList.Add(new HMSData()
+                refRollMean20mBuffer.Add(new HMSData()
                 {
                     data = mvsOutputData.GetData(ValueType.Ref_RollMean20m).data,
                     timestamp = sessionData.timestamp,
                     status = DataStatus.OK
                 });
 
-                testRollList.Add(new HMSData()
+                testRollBuffer.Add(new HMSData()
                 {
                     data = mvsOutputData.GetData(ValueType.Test_Roll).data,
                     timestamp = sessionData.timestamp,
                     status = DataStatus.OK
                 });
 
-                testRollMean20mList.Add(new HMSData()
+                testRollMean20mBuffer.Add(new HMSData()
                 {
                     data = mvsOutputData.GetData(ValueType.Test_RollMean20m).data,
                     timestamp = sessionData.timestamp,
@@ -340,28 +340,28 @@ namespace MVS
                 });
 
                 // Overføre data til grafer - Heave
-                refHeaveList.Add(new HMSData()
+                refHeaveBuffer.Add(new HMSData()
                 {
                     data = mvsOutputData.GetData(ValueType.Ref_Heave).data,
                     timestamp = sessionData.timestamp,
                     status = DataStatus.OK
                 });
 
-                refHeaveAmplitudeMean20mList.Add(new HMSData()
+                refHeaveAmplitudeMean20mBuffer.Add(new HMSData()
                 {
                     data = mvsOutputData.GetData(ValueType.Ref_HeaveAmplitudeMean20m).data,
                     timestamp = sessionData.timestamp,
                     status = DataStatus.OK
                 });
 
-                testHeaveList.Add(new HMSData()
+                testHeaveBuffer.Add(new HMSData()
                 {
                     data = mvsOutputData.GetData(ValueType.Test_Heave).data,
                     timestamp = sessionData.timestamp,
                     status = DataStatus.OK
                 });
 
-                testHeaveAmplitudeMean20mList.Add(new HMSData()
+                testHeaveAmplitudeMean20mBuffer.Add(new HMSData()
                 {
                     data = mvsOutputData.GetData(ValueType.Test_HeaveAmplitudeMean20m).data,
                     timestamp = sessionData.timestamp,
@@ -377,7 +377,6 @@ namespace MVS
                 testMeanRollSum += mvsOutputData.GetData(ValueType.Test_Roll).data;
                 testMeanHeaveSum += mvsOutputData.GetData(ValueType.Test_Heave).data;
             }
-
 
             // Oppdatere max verdier
             refPitchMax20mData = mvsOutputData.GetData(ValueType.Ref_PitchMax20m);
@@ -441,6 +440,42 @@ namespace MVS
             OnPropertyChanged(nameof(heaveChartAxisMax20m));
             OnPropertyChanged(nameof(heaveChartAxisMin20m));
             OnPropertyChanged(nameof(heaveAmplitudeChartAxisMax20m));
+        }
+
+        public void TransferToDisplay()
+        {
+            // Slette gamle data i graf data lister
+            refPitchList.Clear();
+            refPitchMean20mList.Clear();
+            testPitchList.Clear();
+            testPitchMean20mList.Clear();
+
+            refRollList.Clear();
+            refRollMean20mList.Clear();
+            testRollList.Clear();
+            testRollMean20mList.Clear();
+
+            refHeaveList.Clear();
+            refHeaveAmplitudeMean20mList.Clear();
+            testHeaveList.Clear();
+            testHeaveAmplitudeMean20mList.Clear();
+
+            // Overføre data fra buffer til chart data
+            GraphBuffer.Transfer(refPitchBuffer, refPitchList);
+            GraphBuffer.Transfer(refRollBuffer, refRollList);
+            GraphBuffer.Transfer(refHeaveBuffer, refHeaveList);
+
+            GraphBuffer.Transfer(refPitchMean20mBuffer, refPitchMean20mList);
+            GraphBuffer.Transfer(refRollMean20mBuffer, refRollMean20mList);
+            GraphBuffer.Transfer(refHeaveAmplitudeMean20mBuffer, refHeaveAmplitudeMean20mList);
+
+            GraphBuffer.Transfer(testPitchBuffer, testPitchList);
+            GraphBuffer.Transfer(testRollBuffer, testRollList);
+            GraphBuffer.Transfer(testHeaveBuffer, testHeaveList);
+
+            GraphBuffer.Transfer(testPitchMean20mBuffer, testPitchMean20mList);
+            GraphBuffer.Transfer(testRollMean20mBuffer, testRollMean20mList);
+            GraphBuffer.Transfer(testHeaveAmplitudeMean20mBuffer, testHeaveAmplitudeMean20mList);
         }
 
         /////////////////////////////////////////////////////////////////////////////
@@ -1715,7 +1750,8 @@ namespace MVS
         {
             get
             {
-                return ChartAxisMax(_refHeaveAmplitudeMax20mData, _testHeaveAmplitudeMax20mData, Constants.HeaveAmplitudeAxisMargin);
+                return heaveChartAxisMax20m;
+                //return ChartAxisMax(_refHeaveAmplitudeMax20mData, _testHeaveAmplitudeMax20mData, Constants.HeaveAmplitudeAxisMargin);
             }
         }
 
@@ -1729,9 +1765,9 @@ namespace MVS
         private double ChartAxisMax(HMSData refData, HMSData testData, double margin)
         {
             if (refData.data > testData.data)
-                return (double)((int)refData.data + margin);
+                return (double)((Math.Round(refData.data * (1 / margin), MidpointRounding.AwayFromZero) / (1 / margin)) + margin);
             else
-                return (double)((int)testData.data + margin);
+                return (double)((Math.Round(testData.data * (1 / margin), MidpointRounding.AwayFromZero) / (1 / margin)) + margin);
         }
     }
 }

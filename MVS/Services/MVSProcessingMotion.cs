@@ -54,16 +54,9 @@ namespace MVS
         // Admin Settings
         private AdminSettingsVM adminSettingsVM;
 
-        // Error Handler
-        private ErrorHandler errorHandler;
-
-        // Has the database setup been run
-        private bool databaseSetupRun = true;
-
         public MVSProcessingMotion(MVSDataCollection hmsOutputData, AdminSettingsVM adminSettingsVM, ErrorHandler errorHandler)
         {
             this.adminSettingsVM = adminSettingsVM;
-            this.errorHandler = errorHandler;
 
             // Fyller output listen med MVS Output data
             // NB! Variablene som legges inn i listen her fungerer som pekere: Oppdateres variabelen -> oppdateres listen
@@ -250,221 +243,220 @@ namespace MVS
             testSensorRoll.Set(hmsInputDataList.GetData(ValueType.Test_Roll));
             testSensorHeave.Set(hmsInputDataList.GetData(ValueType.Test_Heave));
 
-            if (refSensorPitch.TimeStampCheck ||
-                refSensorRoll.TimeStampCheck ||
-                refSensorHeave.TimeStampCheck ||
-                testSensorPitch.TimeStampCheck ||
-                testSensorRoll.TimeStampCheck ||
-                testSensorHeave.TimeStampCheck ||
-                databaseSetupRun)
+            // Reference MRU
+            //////////////////////////////////////////////////////////////////
+            if ((mainWindowVM.OperationsMode == OperationsMode.Test ||
+                 mainWindowVM.OperationsMode == OperationsMode.Analysis) &&
+                (mainWindowVM.SelectedSession?.InputSetup == VerificationInputSetup.ReferenceMRU ||
+                 mainWindowVM.SelectedSession?.InputSetup == VerificationInputSetup.ReferenceMRU_TestMRU))
             {
-                databaseSetupRun = false;
+                // Sjekke data timeout
+                if (mainWindowVM.OperationsMode == OperationsMode.Analysis)
+                {
+                    refSensorPitch.status = DataStatus.OK;
+                    refSensorRoll.status = DataStatus.OK;
+                    refSensorHeave.status = DataStatus.OK;
+                }
+                else
+                {
+                    if (refSensorPitch.timestamp.AddMilliseconds(adminSettingsVM.dataTimeout) < DateTime.UtcNow)
+                        refSensorPitch.status = DataStatus.TIMEOUT_ERROR;
 
-                if (mainWindowVM.OperationsMode == OperationsMode.Test ||
-                    mainWindowVM.OperationsMode == OperationsMode.Analysis ||
-                    mainWindowVM.SelectedSession?.InputSetup == VerificationInputSetup.ReferenceMRU ||
-                    mainWindowVM.SelectedSession?.InputSetup == VerificationInputSetup.ReferenceMRU_TestMRU)
+                    if (refSensorRoll.timestamp.AddMilliseconds(adminSettingsVM.dataTimeout) < DateTime.UtcNow)
+                        refSensorRoll.status = DataStatus.TIMEOUT_ERROR;
+
+                    if (refSensorHeave.timestamp.AddMilliseconds(adminSettingsVM.dataTimeout) < DateTime.UtcNow)
+                        refSensorHeave.status = DataStatus.TIMEOUT_ERROR;
+                }
+
+                // Ref: Pitch
+                refPitchData.Set(refSensorPitch);
+                refPitchMean20mData.DoProcessing(refPitchData);
+                refPitchMax20mData.DoProcessing(refPitchData);
+                refPitchMaxUp20mData.DoProcessing(refPitchData);
+                refPitchMaxDown20mData.DoProcessing(refPitchData);
+
+                // Ref: Roll
+                refRollData.Set(refSensorRoll);
+                // I data fra sensor er positive tall roll til høyre.
+                // Internt er positive tall roll til venstre. Venstre er høyest på grafen. Dette er standard i CAP.
+                refRollData.data *= -1;
+                refRollMean20mData.DoProcessing(refRollData);
+                refRollMax20mData.DoProcessing(refRollData);
+                refRollMaxLeft20mData.DoProcessing(refRollData);
+                refRollMaxRight20mData.DoProcessing(refRollData);
+
+                // Ref: Heave
+                refHeaveData.Set(refSensorHeave);
+                refHeaveAmplitudeMean20mData.DoProcessing(refSensorHeave);
+                refHeaveMax20mData.DoProcessing(refSensorHeave);
+                refHeaveAmplitudeMax20mData.DoProcessing(refSensorHeave);
+
+                // Avrunding av data
+                refPitchData.data = Math.Round(refPitchData.data, 3, MidpointRounding.AwayFromZero);
+                refPitchMean20mData.data = Math.Round(refPitchMean20mData.data, 3, MidpointRounding.AwayFromZero);
+                refPitchMax20mData.data = Math.Round(refPitchMax20mData.data, 3, MidpointRounding.AwayFromZero);
+                refPitchMaxUp20mData.data = Math.Round(refPitchMaxUp20mData.data, 3, MidpointRounding.AwayFromZero);
+                refPitchMaxDown20mData.data = Math.Round(refPitchMaxDown20mData.data, 3, MidpointRounding.AwayFromZero);
+
+                refRollData.data = Math.Round(refRollData.data, 3, MidpointRounding.AwayFromZero);
+                refRollMean20mData.data = Math.Round(refRollMean20mData.data, 3, MidpointRounding.AwayFromZero);
+                refRollMax20mData.data = Math.Round(refRollMax20mData.data, 3, MidpointRounding.AwayFromZero);
+                refRollMaxLeft20mData.data = Math.Round(refRollMaxLeft20mData.data, 3, MidpointRounding.AwayFromZero);
+                refRollMaxRight20mData.data = Math.Round(refRollMaxRight20mData.data, 3, MidpointRounding.AwayFromZero);
+
+                refHeaveData.data = Math.Round(refHeaveData.data, 3, MidpointRounding.AwayFromZero);
+                refHeaveAmplitudeMean20mData.data = Math.Round(refHeaveAmplitudeMean20mData.data, 3, MidpointRounding.AwayFromZero);
+                refHeaveMax20mData.data = Math.Round(refHeaveMax20mData.data, 3, MidpointRounding.AwayFromZero);
+                refHeaveAmplitudeMax20mData.data = Math.Round(refHeaveAmplitudeMax20mData.data, 3, MidpointRounding.AwayFromZero);
+            }
+            else
+            {
+                refSensorPitch.status = DataStatus.NONE;
+                refSensorRoll.status = DataStatus.NONE;
+                refSensorHeave.status = DataStatus.NONE;
+
+                refPitchData.Set(refSensorPitch);
+                refPitchData.data = double.NaN;
+                refPitchData.status = DataStatus.NONE;
+                refPitchMean20mData.data = double.NaN;
+                refPitchMean20mData.status = DataStatus.NONE;
+                refPitchMax20mData.data = double.NaN;
+                refPitchMax20mData.status = DataStatus.NONE;
+                refPitchMaxUp20mData.data = double.NaN;
+                refPitchMaxUp20mData.status = DataStatus.NONE;
+                refPitchMaxDown20mData.data = double.NaN;
+                refPitchMaxDown20mData.status = DataStatus.NONE;
+
+                refRollData.Set(refSensorRoll);
+                refRollData.data = double.NaN;
+                refRollData.status = DataStatus.NONE;
+                refRollMean20mData.data = double.NaN;
+                refRollMean20mData.status = DataStatus.NONE;
+                refRollMax20mData.data = double.NaN;
+                refRollMax20mData.status = DataStatus.NONE;
+                refRollMaxLeft20mData.data = double.NaN;
+                refRollMaxLeft20mData.status = DataStatus.NONE;
+                refRollMaxRight20mData.data = double.NaN;
+                refRollMaxRight20mData.status = DataStatus.NONE;
+
+                refHeaveData.Set(refSensorHeave);
+                refHeaveData.data = double.NaN;
+                refHeaveData.status = DataStatus.NONE;
+                refHeaveAmplitudeMean20mData.data = double.NaN;
+                refHeaveAmplitudeMean20mData.status = DataStatus.NONE;
+                refHeaveMax20mData.data = double.NaN;
+                refHeaveMax20mData.status = DataStatus.NONE;
+                refHeaveAmplitudeMax20mData.data = double.NaN;
+                refHeaveAmplitudeMax20mData.status = DataStatus.NONE;
+            }
+
+            // Tested MRU
+            //////////////////////////////////////////////////////////////////
+            if ((mainWindowVM.OperationsMode == OperationsMode.Test ||
+                 mainWindowVM.OperationsMode == OperationsMode.Analysis) &&
+                (mainWindowVM.SelectedSession?.InputSetup == VerificationInputSetup.TestMRU ||
+                 mainWindowVM.SelectedSession?.InputSetup == VerificationInputSetup.ReferenceMRU_TestMRU))
+            {
+                if (mainWindowVM.OperationsMode == OperationsMode.Analysis)
+                {
+                    testSensorPitch.status = DataStatus.OK;
+                    testSensorRoll.status = DataStatus.OK;
+                    testSensorHeave.status = DataStatus.OK;
+                }
+                else
                 {
                     // Sjekke data timeout
-                    if (mainWindowVM.OperationsMode == OperationsMode.Analysis)
-                    {
-                        refSensorPitch.status = DataStatus.OK;
-                        refSensorRoll.status = DataStatus.OK;
-                        refSensorHeave.status = DataStatus.OK;
-                    }
-                    else
-                    {
-                        if (refSensorPitch.timestamp.AddMilliseconds(adminSettingsVM.dataTimeout) < DateTime.UtcNow)
-                            refSensorPitch.status = DataStatus.TIMEOUT_ERROR;
+                    if (testSensorPitch.timestamp.AddMilliseconds(adminSettingsVM.dataTimeout) < DateTime.UtcNow)
+                        testSensorPitch.status = DataStatus.TIMEOUT_ERROR;
 
-                        if (refSensorRoll.timestamp.AddMilliseconds(adminSettingsVM.dataTimeout) < DateTime.UtcNow)
-                            refSensorRoll.status = DataStatus.TIMEOUT_ERROR;
+                    if (testSensorRoll.timestamp.AddMilliseconds(adminSettingsVM.dataTimeout) < DateTime.UtcNow)
+                        testSensorRoll.status = DataStatus.TIMEOUT_ERROR;
 
-                        if (refSensorHeave.timestamp.AddMilliseconds(adminSettingsVM.dataTimeout) < DateTime.UtcNow)
-                            refSensorHeave.status = DataStatus.TIMEOUT_ERROR;
-                    }
-
-                    // Ref: Pitch
-                    refPitchData.Set(refSensorPitch);
-                    refPitchMean20mData.DoProcessing(refPitchData);
-                    refPitchMax20mData.DoProcessing(refPitchData);
-                    refPitchMaxUp20mData.DoProcessing(refPitchData);
-                    refPitchMaxDown20mData.DoProcessing(refPitchData);
-
-                    // Ref: Roll
-                    refRollData.Set(refSensorRoll);
-                    // I data fra sensor er positive tall roll til høyre.
-                    // Internt er positive tall roll til venstre. Venstre er høyest på grafen. Dette er standard i CAP.
-                    refRollData.data *= -1;
-                    refRollMean20mData.DoProcessing(refRollData);
-                    refRollMax20mData.DoProcessing(refRollData);
-                    refRollMaxLeft20mData.DoProcessing(refRollData);
-                    refRollMaxRight20mData.DoProcessing(refRollData);
-
-                    // Ref: Heave
-                    refHeaveData.Set(refSensorHeave);
-                    refHeaveAmplitudeMean20mData.DoProcessing(refSensorHeave);
-                    refHeaveMax20mData.DoProcessing(refSensorHeave);
-                    refHeaveAmplitudeMax20mData.DoProcessing(refSensorHeave);
-
-                    // Avrunding av data
-                    refPitchData.data = Math.Round(refPitchData.data, 3, MidpointRounding.AwayFromZero);
-                    refPitchMean20mData.data = Math.Round(refPitchMean20mData.data, 3, MidpointRounding.AwayFromZero);
-                    refPitchMax20mData.data = Math.Round(refPitchMax20mData.data, 3, MidpointRounding.AwayFromZero);
-                    refPitchMaxUp20mData.data = Math.Round(refPitchMaxUp20mData.data, 3, MidpointRounding.AwayFromZero);
-                    refPitchMaxDown20mData.data = Math.Round(refPitchMaxDown20mData.data, 3, MidpointRounding.AwayFromZero);
-
-                    refRollData.data = Math.Round(refRollData.data, 3, MidpointRounding.AwayFromZero);
-                    refRollMean20mData.data = Math.Round(refRollMean20mData.data, 3, MidpointRounding.AwayFromZero);
-                    refRollMax20mData.data = Math.Round(refRollMax20mData.data, 3, MidpointRounding.AwayFromZero);
-                    refRollMaxLeft20mData.data = Math.Round(refRollMaxLeft20mData.data, 3, MidpointRounding.AwayFromZero);
-                    refRollMaxRight20mData.data = Math.Round(refRollMaxRight20mData.data, 3, MidpointRounding.AwayFromZero);
-
-                    refHeaveData.data = Math.Round(refHeaveData.data, 3, MidpointRounding.AwayFromZero);
-                    refHeaveAmplitudeMean20mData.data = Math.Round(refHeaveAmplitudeMean20mData.data, 3, MidpointRounding.AwayFromZero);
-                    refHeaveMax20mData.data = Math.Round(refHeaveMax20mData.data, 3, MidpointRounding.AwayFromZero);
-                    refHeaveAmplitudeMax20mData.data = Math.Round(refHeaveAmplitudeMax20mData.data, 3, MidpointRounding.AwayFromZero);
-                }
-                else
-                {
-                    refSensorPitch.status = DataStatus.NONE;
-                    refSensorRoll.status = DataStatus.NONE;
-                    refSensorHeave.status = DataStatus.NONE;
-
-                    refPitchData.data = 0;
-                    refPitchData.status = DataStatus.NONE;
-                    refPitchMean20mData.data = 0;
-                    refPitchMean20mData.status = DataStatus.NONE;
-                    refPitchMax20mData.data = 0;
-                    refPitchMax20mData.status = DataStatus.NONE;
-                    refPitchMaxUp20mData.data = 0;
-                    refPitchMaxUp20mData.status = DataStatus.NONE;
-                    refPitchMaxDown20mData.data = 0;
-                    refPitchMaxDown20mData.status = DataStatus.NONE;
-
-                    refRollData.data = 0;
-                    refRollData.status = DataStatus.NONE;
-                    refRollMean20mData.data = 0;
-                    refRollMean20mData.status = DataStatus.NONE;
-                    refRollMax20mData.data = 0;
-                    refRollMax20mData.status = DataStatus.NONE;
-                    refRollMaxLeft20mData.data = 0;
-                    refRollMaxLeft20mData.status = DataStatus.NONE;
-                    refRollMaxRight20mData.data = 0;
-                    refRollMaxRight20mData.status = DataStatus.NONE;
-
-                    refHeaveData.data = 0;
-                    refHeaveData.status = DataStatus.NONE;
-                    refHeaveAmplitudeMean20mData.data = 0;
-                    refHeaveAmplitudeMean20mData.status = DataStatus.NONE;
-                    refHeaveMax20mData.data = 0;
-                    refHeaveMax20mData.status = DataStatus.NONE;
-                    refHeaveAmplitudeMax20mData.data = 0;
-                    refHeaveAmplitudeMax20mData.status = DataStatus.NONE;
+                    if (testSensorHeave.timestamp.AddMilliseconds(adminSettingsVM.dataTimeout) < DateTime.UtcNow)
+                        testSensorHeave.status = DataStatus.TIMEOUT_ERROR;
                 }
 
-                if (mainWindowVM.OperationsMode == OperationsMode.Test ||
-                    mainWindowVM.OperationsMode == OperationsMode.Analysis ||
-                    mainWindowVM.SelectedSession?.InputSetup == VerificationInputSetup.TestMRU ||
-                    mainWindowVM.SelectedSession?.InputSetup == VerificationInputSetup.ReferenceMRU_TestMRU)
-                {
-                    if (mainWindowVM.OperationsMode == OperationsMode.Analysis)
-                    {
-                        testSensorPitch.status = DataStatus.OK;
-                        testSensorRoll.status = DataStatus.OK;
-                        testSensorHeave.status = DataStatus.OK;
-                    }
-                    else
-                    {
-                        // Sjekke data timeout
-                        if (testSensorPitch.timestamp.AddMilliseconds(adminSettingsVM.dataTimeout) < DateTime.UtcNow)
-                            testSensorPitch.status = DataStatus.TIMEOUT_ERROR;
+                // Test: Pitch
+                testPitchData.Set(testSensorPitch);
+                testPitchMean20mData.DoProcessing(testPitchData);
+                testPitchMax20mData.DoProcessing(testPitchData);
+                testPitchMaxUp20mData.DoProcessing(testPitchData);
+                testPitchMaxDown20mData.DoProcessing(testPitchData);
 
-                        if (testSensorRoll.timestamp.AddMilliseconds(adminSettingsVM.dataTimeout) < DateTime.UtcNow)
-                            testSensorRoll.status = DataStatus.TIMEOUT_ERROR;
+                // Test: Roll
+                testRollData.Set(testSensorRoll);
+                // I data fra sensor er positive tall roll til høyre.
+                // Internt er positive tall roll til venstre. Venstre er høyest på grafen. Dette er standard i CAP.
+                testRollData.data *= -1;
+                testRollMean20mData.DoProcessing(testRollData);
+                testRollMax20mData.DoProcessing(testRollData);
+                testRollMaxLeft20mData.DoProcessing(testRollData);
+                testRollMaxRight20mData.DoProcessing(testRollData);
 
-                        if (testSensorHeave.timestamp.AddMilliseconds(adminSettingsVM.dataTimeout) < DateTime.UtcNow)
-                            testSensorHeave.status = DataStatus.TIMEOUT_ERROR;
-                    }
+                // Test: Heave
+                testHeaveData.Set(testSensorHeave);
+                testHeaveAmplitudeMean20mData.DoProcessing(testSensorHeave);
+                testHeaveMax20mData.DoProcessing(testSensorHeave);
+                testHeaveAmplitudeMax20mData.DoProcessing(testSensorHeave);
 
-                    // Test: Pitch
-                    testPitchData.Set(testSensorPitch);
-                    testPitchMean20mData.DoProcessing(testPitchData);
-                    testPitchMax20mData.DoProcessing(testPitchData);
-                    testPitchMaxUp20mData.DoProcessing(testPitchData);
-                    testPitchMaxDown20mData.DoProcessing(testPitchData);
+                // Avrunding av data
+                testPitchData.data = Math.Round(testPitchData.data, 3, MidpointRounding.AwayFromZero);
+                testPitchMean20mData.data = Math.Round(testPitchMean20mData.data, 3, MidpointRounding.AwayFromZero);
+                testPitchMax20mData.data = Math.Round(testPitchMax20mData.data, 3, MidpointRounding.AwayFromZero);
+                testPitchMaxUp20mData.data = Math.Round(testPitchMaxUp20mData.data, 3, MidpointRounding.AwayFromZero);
+                testPitchMaxDown20mData.data = Math.Round(testPitchMaxDown20mData.data, 3, MidpointRounding.AwayFromZero);
 
-                    // Test: Roll
-                    testRollData.Set(testSensorRoll);
-                    // I data fra sensor er positive tall roll til høyre.
-                    // Internt er positive tall roll til venstre. Venstre er høyest på grafen. Dette er standard i CAP.
-                    testRollData.data *= -1;
-                    testRollMean20mData.DoProcessing(testRollData);
-                    testRollMax20mData.DoProcessing(testRollData);
-                    testRollMaxLeft20mData.DoProcessing(testRollData);
-                    testRollMaxRight20mData.DoProcessing(testRollData);
+                testRollData.data = Math.Round(testRollData.data, 3, MidpointRounding.AwayFromZero);
+                testRollMean20mData.data = Math.Round(testRollMean20mData.data, 3, MidpointRounding.AwayFromZero);
+                testRollMax20mData.data = Math.Round(testRollMax20mData.data, 3, MidpointRounding.AwayFromZero);
+                testRollMaxLeft20mData.data = Math.Round(testRollMaxLeft20mData.data, 3, MidpointRounding.AwayFromZero);
+                testRollMaxRight20mData.data = Math.Round(testRollMaxRight20mData.data, 3, MidpointRounding.AwayFromZero);
 
-                    // Test: Heave
-                    testHeaveData.Set(testSensorHeave);
-                    testHeaveAmplitudeMean20mData.DoProcessing(testSensorHeave);
-                    testHeaveMax20mData.DoProcessing(testSensorHeave);
-                    testHeaveAmplitudeMax20mData.DoProcessing(testSensorHeave);
+                testHeaveData.data = Math.Round(testHeaveData.data, 3, MidpointRounding.AwayFromZero);
+                testHeaveAmplitudeMean20mData.data = Math.Round(testHeaveAmplitudeMean20mData.data, 3, MidpointRounding.AwayFromZero);
+                testHeaveMax20mData.data = Math.Round(testHeaveMax20mData.data, 3, MidpointRounding.AwayFromZero);
+                testHeaveAmplitudeMax20mData.data = Math.Round(testHeaveAmplitudeMax20mData.data, 3, MidpointRounding.AwayFromZero);
+            }
+            else
+            {
+                testSensorPitch.status = DataStatus.NONE;
+                testSensorRoll.status = DataStatus.NONE;
+                testSensorHeave.status = DataStatus.NONE;
 
-                    // Avrunding av data
-                    testPitchData.data = Math.Round(testPitchData.data, 3, MidpointRounding.AwayFromZero);
-                    testPitchMean20mData.data = Math.Round(testPitchMean20mData.data, 3, MidpointRounding.AwayFromZero);
-                    testPitchMax20mData.data = Math.Round(testPitchMax20mData.data, 3, MidpointRounding.AwayFromZero);
-                    testPitchMaxUp20mData.data = Math.Round(testPitchMaxUp20mData.data, 3, MidpointRounding.AwayFromZero);
-                    testPitchMaxDown20mData.data = Math.Round(testPitchMaxDown20mData.data, 3, MidpointRounding.AwayFromZero);
+                testPitchData.Set(testSensorPitch);
+                testPitchData.data = double.NaN;
+                testPitchData.status = DataStatus.NONE;
+                testPitchMean20mData.data = double.NaN;
+                testPitchMean20mData.status = DataStatus.NONE;
+                testPitchMax20mData.data = double.NaN;
+                testPitchMax20mData.status = DataStatus.NONE;
+                testPitchMaxUp20mData.data = double.NaN;
+                testPitchMaxUp20mData.status = DataStatus.NONE;
+                testPitchMaxDown20mData.data = double.NaN;
+                testPitchMaxDown20mData.status = DataStatus.NONE;
 
-                    testRollData.data = Math.Round(testRollData.data, 3, MidpointRounding.AwayFromZero);
-                    testRollMean20mData.data = Math.Round(testRollMean20mData.data, 3, MidpointRounding.AwayFromZero);
-                    testRollMax20mData.data = Math.Round(testRollMax20mData.data, 3, MidpointRounding.AwayFromZero);
-                    testRollMaxLeft20mData.data = Math.Round(testRollMaxLeft20mData.data, 3, MidpointRounding.AwayFromZero);
-                    testRollMaxRight20mData.data = Math.Round(testRollMaxRight20mData.data, 3, MidpointRounding.AwayFromZero);
+                testRollData.Set(testSensorRoll);
+                testRollData.data = double.NaN;
+                testRollData.status = DataStatus.NONE;
+                testRollMean20mData.data = double.NaN;
+                testRollMean20mData.status = DataStatus.NONE;
+                testRollMax20mData.data = double.NaN;
+                testRollMax20mData.status = DataStatus.NONE;
+                testRollMaxLeft20mData.data = double.NaN;
+                testRollMaxLeft20mData.status = DataStatus.NONE;
+                testRollMaxRight20mData.data = double.NaN;
+                testRollMaxRight20mData.status = DataStatus.NONE;
 
-                    testHeaveData.data = Math.Round(testHeaveData.data, 3, MidpointRounding.AwayFromZero);
-                    testHeaveAmplitudeMean20mData.data = Math.Round(testHeaveAmplitudeMean20mData.data, 3, MidpointRounding.AwayFromZero);
-                    testHeaveMax20mData.data = Math.Round(testHeaveMax20mData.data, 3, MidpointRounding.AwayFromZero);
-                    testHeaveAmplitudeMax20mData.data = Math.Round(testHeaveAmplitudeMax20mData.data, 3, MidpointRounding.AwayFromZero);
-                }
-                else
-                {
-                    testSensorPitch.status = DataStatus.NONE;
-                    testSensorRoll.status = DataStatus.NONE;
-                    testSensorHeave.status = DataStatus.NONE;
-
-                    testPitchData.data = 0;
-                    testPitchData.status = DataStatus.NONE; 
-                    testPitchMean20mData.data = 0;
-                    testPitchMean20mData.status = DataStatus.NONE;
-                    testPitchMax20mData.data = 0;
-                    testPitchMax20mData.status = DataStatus.NONE;
-                    testPitchMaxUp20mData.data = 0;
-                    testPitchMaxUp20mData.status = DataStatus.NONE;
-                    testPitchMaxDown20mData.data = 0;
-                    testPitchMaxDown20mData.status = DataStatus.NONE;
-
-                    testRollData.data = 0;
-                    testRollData.status = DataStatus.NONE;
-                    testRollMean20mData.data = 0;
-                    testRollMean20mData.status = DataStatus.NONE;
-                    testRollMax20mData.data = 0;
-                    testRollMax20mData.status = DataStatus.NONE;
-                    testRollMaxLeft20mData.data = 0;
-                    testRollMaxLeft20mData.status = DataStatus.NONE;
-                    testRollMaxRight20mData.data = 0;
-                    testRollMaxRight20mData.status = DataStatus.NONE;
-
-                    testHeaveData.data = 0;
-                    testHeaveData.status = DataStatus.NONE;
-                    testHeaveAmplitudeMean20mData.data = 0;
-                    testHeaveAmplitudeMean20mData.status = DataStatus.NONE;
-                    testHeaveMax20mData.data = 0;
-                    testHeaveMax20mData.status = DataStatus.NONE;
-                    testHeaveAmplitudeMax20mData.data = 0;
-                    testHeaveAmplitudeMax20mData.status = DataStatus.NONE;
-                }
+                testHeaveData.Set(testSensorHeave);
+                testHeaveData.data = double.NaN;
+                testHeaveData.status = DataStatus.NONE;
+                testHeaveAmplitudeMean20mData.data = double.NaN;
+                testHeaveAmplitudeMean20mData.status = DataStatus.NONE;
+                testHeaveMax20mData.data = double.NaN;
+                testHeaveMax20mData.status = DataStatus.NONE;
+                testHeaveAmplitudeMax20mData.data = double.NaN;
+                testHeaveAmplitudeMax20mData.status = DataStatus.NONE;
             }
         }
 
