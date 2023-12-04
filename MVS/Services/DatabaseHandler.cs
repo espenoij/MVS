@@ -463,7 +463,7 @@ namespace MVS
                         // Insert parametre
                         cmd.Parameters.AddWithValue("@Name", dataSet.Name);
                         cmd.Parameters.AddWithValue("@Description", dataSet.Description);
-                        cmd.Parameters.AddWithValue("@InputSetup", (int)dataSet.InputSetup);
+                        cmd.Parameters.AddWithValue("@InputSetup", (int)dataSet.InputMRUs);
 
                         // Åpne database connection
                         connection.Open();
@@ -510,7 +510,7 @@ namespace MVS
                         // Update parametre
                         cmd.Parameters.AddWithValue("@Name", dataSet.Name);
                         cmd.Parameters.AddWithValue("@Description", dataSet.Description);
-                        cmd.Parameters.AddWithValue("@InputSetup", (int)dataSet.InputSetup);
+                        cmd.Parameters.AddWithValue("@InputSetup", (int)dataSet.InputMRUs);
 
                         // Åpne database connection
                         connection.Open();
@@ -621,7 +621,7 @@ namespace MVS
                                 reader.GetInt32(0),
                                 reader.GetString(1),
                                 reader.GetString(2),
-                                (VerificationInputSetup)reader.GetInt32(3)));
+                                (InputMRUType)reader.GetInt32(3)));
                         }
 
                         // Lukke database connection

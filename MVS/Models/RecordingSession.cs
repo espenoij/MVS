@@ -19,15 +19,15 @@ namespace MVS
             Description = string.Empty;
             StartTime = System.Data.SqlTypes.SqlDateTime.MinValue.Value;
             EndTime = System.Data.SqlTypes.SqlDateTime.MinValue.Value;
-            InputSetup = VerificationInputSetup.ReferenceMRU;
+            InputMRUs = InputMRUType.ReferenceMRU;
         }
 
-        public RecordingSession(int id, string name, string description, VerificationInputSetup inputSetup)
+        public RecordingSession(int id, string name, string description, InputMRUType inputMRUs)
         {
             Id = id;
             Name = name;
             Description = description;
-            InputSetup = inputSetup;
+            InputMRUs = inputMRUs;
         }
 
         public RecordingSession(RecordingSession session)
@@ -44,7 +44,7 @@ namespace MVS
                 Description = session.Description;
                 StartTime = session.StartTime;
                 EndTime = session.EndTime;
-                InputSetup = session.InputSetup;
+                InputMRUs = session.InputMRUs;
             }
         }
 
@@ -206,16 +206,16 @@ namespace MVS
             EndTime = System.Data.SqlTypes.SqlDateTime.MinValue.Value;
         }
 
-        private VerificationInputSetup _inputSetup { get; set; }
-        public VerificationInputSetup InputSetup
+        private InputMRUType _inputMRUs { get; set; }
+        public InputMRUType InputMRUs
         {
             get
             {
-                return _inputSetup;
+                return _inputMRUs;
             }
             set
             {
-                _inputSetup = value;
+                _inputMRUs = value;
                 OnPropertyChanged();
             }
         }

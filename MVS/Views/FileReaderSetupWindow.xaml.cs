@@ -404,8 +404,8 @@ namespace MVS
             };
             if (dialog.ShowDialog() == true)
             {
-                fileReaderWindowVM.fileFolder = Path.GetDirectoryName(dialog.FileName);
-                fileReaderWindowVM.fileName = Path.GetFileName(dialog.FileName);
+                fileReaderWindowVM.fileFolder = Path.GetDirectoryName(dialog.FileName).ToLower();
+                fileReaderWindowVM.fileName = Path.GetFileName(dialog.FileName).ToLower();
 
                 sensorData.fileReader.fileFolder = fileReaderWindowVM.fileFolder;
                 sensorData.fileReader.fileName = fileReaderWindowVM.fileName;

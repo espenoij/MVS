@@ -48,11 +48,11 @@ namespace MVS
             gvVerificationSessions.ItemsSource = motionVerificationSessionList;
 
             // Fylle input setup combobox
-            foreach (VerificationInputSetup value in Enum.GetValues(typeof(VerificationInputSetup)))
-                cboInputSetup.Items.Add(value.GetDescription());
+            foreach (InputMRUType value in Enum.GetValues(typeof(InputMRUType)))
+                cboInputMRUs.Items.Add(value.GetDescription());
 
             // Sette default verdi
-            cboInputSetup.Text = cboInputSetup.Items[0].ToString();
+            cboInputMRUs.Text = cboInputMRUs.Items[0].ToString();
 
             // Laste sensor data
             LoadVerificationSessions();
@@ -201,7 +201,7 @@ namespace MVS
                 lbDataSetID.Content = mainWindowVM.SelectedSession.Id.ToString();
                 tbDataSetName.Text = mainWindowVM.SelectedSession.Name;
                 tbDataSetDescription.Text = mainWindowVM.SelectedSession.Description;
-                cboInputSetup.Text = mainWindowVM.SelectedSession.InputSetup.GetDescription();
+                cboInputMRUs.Text = mainWindowVM.SelectedSession.InputMRUs.GetDescription();
                 lbDataSetDate.Content = mainWindowVM.SelectedSession.DateString;
                 lbDataSetStartTime.Content = mainWindowVM.SelectedSession.StartTimeString2;
                 lbDataSetEndTime.Content = mainWindowVM.SelectedSession.EndTimeString2;
@@ -212,7 +212,7 @@ namespace MVS
                 lbDataSetID.Content = string.Empty;
                 tbDataSetName.Text = string.Empty;
                 tbDataSetDescription.Text = string.Empty;
-                cboInputSetup.Text = VerificationInputSetup.None.GetDescription();
+                cboInputMRUs.Text = InputMRUType.None.GetDescription();
                 lbDataSetDate.Content = string.Empty;
                 lbDataSetStartTime.Content = string.Empty;
                 lbDataSetEndTime.Content = string.Empty;
@@ -272,12 +272,12 @@ namespace MVS
             }
         }
 
-        private void cboInputSetup_DropDownClosed(object sender, EventArgs e)
+        private void cboInputMRUs_DropDownClosed(object sender, EventArgs e)
         {
             if (mainWindowVM.SelectedSession != null)
             {
                 // Ny valgt MRU type
-                mainWindowVM.SelectedSession.InputSetup = (VerificationInputSetup)(sender as RadComboBox).SelectedIndex;
+                mainWindowVM.SelectedSession.InputMRUs = (InputMRUType)(sender as RadComboBox).SelectedIndex;
 
                 // Oppdatere database
                 mvsDatabase.Update(mainWindowVM.SelectedSession);

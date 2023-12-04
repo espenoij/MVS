@@ -133,7 +133,7 @@ namespace MVS
             ucRecordings.Init(mainWindowVM, mvsDatabase, updateUIButtonsCallback);
 
             // Recordings Data page
-            ucRecordingsAnalysis.Init(recordingsAnalysisVM);
+            ucRecordingsAnalysis.Init(recordingsAnalysisVM, config);
 
             // Sensor Input Setup
             ucSensorSetupPage.Init(config, errorHandler, adminSettingsVM);
@@ -536,6 +536,13 @@ namespace MVS
                     return;
                 }
 
+                // Check if input setup is set
+                if (mainWindowVM.SelectedSession.InputMRUs == InputMRUType.None)
+                {
+                    RadWindow.Alert(TextHelper.Wrap("The input MRUs have not been set.\n\nPlease set the input MRUs before starting the data recording session."));
+                    return;
+                }
+
                 // Alt klart for å starte!
                 Start();
             }
@@ -564,11 +571,14 @@ namespace MVS
                 ucMVSOutput.Start();
                 ucRecordings.Start();
 
+                // Transfer data to display
+                //ucRecordingsAnalysis.Start();
+
                 // Server startet
                 serverStarted = true;
 
                 // Start elapsed time
-                mainWindowVM.StartTimer(0); // TODO: 20
+                mainWindowVM.StartTimer();
 
                 // Vise recording symbol
                 mainWindowVM.RecordingSymbolVisibility = Visibility.Visible;
@@ -603,11 +613,14 @@ namespace MVS
             ucMVSOutput.Start();
             ucRecordings.Start();
 
+            // Transfer data to display
+            //ucRecordingsAnalysis.Start();
+
             // Server startet
             serverStarted = true;
 
             // Start elapsed time
-            mainWindowVM.StartTimer(0);
+            mainWindowVM.StartTimer();
 
             recordingsAnalysisVM.StartRecording();
         }
@@ -626,6 +639,9 @@ namespace MVS
             ucSensorSetupPage.ServerStartedCheck(false);
             ucMVSInputSetup.Stop();
             ucMVSOutput.Stop();
+
+            // Stoppe oppdatering av grafer
+            //ucRecordingsAnalysis.Stop();
 
             // Server startet
             serverStarted = false;

@@ -245,10 +245,14 @@ namespace MVS
 
             // Reference MRU
             //////////////////////////////////////////////////////////////////
-            if ((mainWindowVM.OperationsMode == OperationsMode.Test ||
+            if ((mainWindowVM.OperationsMode == OperationsMode.Recording || 
+                 mainWindowVM.OperationsMode == OperationsMode.Test ||
                  mainWindowVM.OperationsMode == OperationsMode.Analysis) &&
-                (mainWindowVM.SelectedSession?.InputSetup == VerificationInputSetup.ReferenceMRU ||
-                 mainWindowVM.SelectedSession?.InputSetup == VerificationInputSetup.ReferenceMRU_TestMRU))
+                (mainWindowVM.SelectedSession?.InputMRUs == InputMRUType.ReferenceMRU ||
+                 mainWindowVM.SelectedSession?.InputMRUs == InputMRUType.ReferenceMRU_TestMRU) &&
+                refSensorPitch.status != DataStatus.TIMEOUT_ERROR &&
+                refSensorRoll.status != DataStatus.TIMEOUT_ERROR &&
+                refSensorHeave.status != DataStatus.TIMEOUT_ERROR)
             {
                 // Sjekke data timeout
                 if (mainWindowVM.OperationsMode == OperationsMode.Analysis)
@@ -353,10 +357,14 @@ namespace MVS
 
             // Tested MRU
             //////////////////////////////////////////////////////////////////
-            if ((mainWindowVM.OperationsMode == OperationsMode.Test ||
+            if ((mainWindowVM.OperationsMode == OperationsMode.Recording || 
+                 mainWindowVM.OperationsMode == OperationsMode.Test ||
                  mainWindowVM.OperationsMode == OperationsMode.Analysis) &&
-                (mainWindowVM.SelectedSession?.InputSetup == VerificationInputSetup.TestMRU ||
-                 mainWindowVM.SelectedSession?.InputSetup == VerificationInputSetup.ReferenceMRU_TestMRU))
+                (mainWindowVM.SelectedSession?.InputMRUs == InputMRUType.TestMRU ||
+                 mainWindowVM.SelectedSession?.InputMRUs == InputMRUType.ReferenceMRU_TestMRU) &&
+                testSensorPitch.status != DataStatus.TIMEOUT_ERROR &&
+                testSensorRoll.status != DataStatus.TIMEOUT_ERROR &&
+                testSensorHeave.status != DataStatus.TIMEOUT_ERROR)
             {
                 if (mainWindowVM.OperationsMode == OperationsMode.Analysis)
                 {

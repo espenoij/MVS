@@ -1,5 +1,4 @@
 ﻿using System.Windows.Controls;
-using Telerik.Windows.Data;
 
 namespace MVS
 {
@@ -13,7 +12,7 @@ namespace MVS
             InitializeComponent();
         }
 
-        public void Init(RecordingsAnalysisVM recordingsAnalysisVM)
+        public void Init(RecordingsAnalysisVM recordingsAnalysisVM, Config config)
         {
             // Context
             DataContext = recordingsAnalysisVM;

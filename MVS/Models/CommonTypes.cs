@@ -475,15 +475,15 @@ public enum MRUType
     TestMRU
 }
 
-//public enum VerificationInputSetup
-//{
-//    [Description("No Input")]
-//    None,
-//    [Description("Reference MRU Only")]
-//    ReferenceMRU,
-//    [Description("Test MRU Only")]
-//    TestMRU,
-//    [Description("Reference MRU + Test MRU")]
-//    ReferenceMRU_TestMRU,
-//}
+public enum InputMRUType
+{
+    [Description("No Input")]
+    None,
+    [Description("Reference MRU")]
+    ReferenceMRU,
+    [Description("Test MRU")]
+    TestMRU,
+    [Description("Reference MRU + Test MRU")]
+    ReferenceMRU_TestMRU,
+}
 

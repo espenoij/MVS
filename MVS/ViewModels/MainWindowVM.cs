@@ -38,10 +38,10 @@ namespace MVS
         /////////////////////////////////////////////////////////////////////////////
         // Timer Ops
         /////////////////////////////////////////////////////////////////////////////
-        public void StartTimer(double minutes)
+        public void StartTimer()
         {
             // Sette start tid
-            StartTime = DateTime.UtcNow.AddMinutes(minutes);
+            StartTime = DateTime.UtcNow;
 
             // Starte timer
             timer.Start();

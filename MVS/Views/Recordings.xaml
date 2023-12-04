@@ -241,12 +241,12 @@
                             Margin="8">
                             <Label
                                 Width="120"
-                                Content="Input"
+                                Content="Input MRUs"
                                 VerticalAlignment="Center" />
                             <telerik:RadComboBox
                                 Width="auto"
-                                Name="cboInputSetup"
-                                DropDownClosed="cboInputSetup_DropDownClosed" />
+                                Name="cboInputMRUs"
+                                DropDownClosed="cboInputMRUs_DropDownClosed" />
                         </DockPanel>
 
                         <DockPanel

@@ -176,75 +176,15 @@ namespace MVS
 
         public void StartRecording()
         {
-            InitPitchData();
-            InitRollData();
-            InitHeaveData();
+            ClearPitchData();
+            ClearRollData();
+            ClearHeaveData();
 
             ChartUpdateTimer.Start();
         }
 
         public void StopRecording()
         {
-            HMSData noData = new HMSData()
-            {
-                data = double.NaN,
-                status = DataStatus.NONE
-            };
-
-            refPitchMaxUp20mData = noData;
-            refPitchMaxDown20mData = noData;
-            refPitchMean20mData = noData;
-            refRollMaxLeft20mData = noData;
-            refRollMaxRight20mData = noData;
-            refRollMean20mData = noData;
-            refHeaveAmplitudeMax20mData = noData;
-            refHeaveAmplitudeMean20mData = noData;
-
-            testPitchMaxUp20mData = noData;
-            testPitchMaxDown20mData = noData;
-            testPitchMean20mData = noData;
-            testRollMaxLeft20mData = noData;
-            testRollMaxRight20mData = noData;
-            testRollMean20mData = noData;
-            testHeaveAmplitudeMax20mData = noData;
-            testHeaveAmplitudeMean20mData = noData;
-
-            refPitchMean20mData = noData;
-            refRollMean20mData = noData;
-            refHeaveMean20mData = noData;
-
-            refPitchBuffer.Clear();
-            refRollBuffer.Clear();
-            refHeaveBuffer.Clear();
-
-            testPitchBuffer.Clear();
-            testRollBuffer.Clear();
-            testHeaveBuffer.Clear();
-
-            refPitchMean20mBuffer.Clear();
-            refRollMean20mBuffer.Clear();
-            refHeaveAmplitudeMean20mBuffer.Clear();
-
-            testPitchMean20mBuffer.Clear();
-            testRollMean20mBuffer.Clear();
-            testHeaveAmplitudeMean20mBuffer.Clear();
-
-            refPitchList.Clear();
-            refRollList.Clear();
-            refHeaveList.Clear();
-
-            testPitchList.Clear();
-            testRollList.Clear();
-            testHeaveList.Clear();
-
-            refPitchMean20mList.Clear();
-            refRollMean20mList.Clear();
-            refHeaveAmplitudeMean20mList.Clear();
-
-            testPitchMean20mList.Clear();
-            testRollMean20mList.Clear();
-            testHeaveAmplitudeMean20mList.Clear();
-
             ChartUpdateTimer.Stop();
         }
 
@@ -481,7 +421,7 @@ namespace MVS
         /////////////////////////////////////////////////////////////////////////////
         // Pitch
         /////////////////////////////////////////////////////////////////////////////
-        public void InitPitchData()
+        private void InitPitchData()
         {
             _pitchData = new HMSData();
 
@@ -495,8 +435,32 @@ namespace MVS
             _testPitchMaxDown20mData = new HMSData();
             _testPitchMean20mData = new HMSData();
 
-            // Init av chart data
+        }
+
+        private void ClearPitchData()
+        {
+            HMSData noData = new HMSData()
+            {
+                data = double.NaN,
+                status = DataStatus.NONE
+            };
+
+            refPitchMaxUp20mData = noData;
+            refPitchMaxDown20mData = noData;
+            refPitchMean20mData = noData;
+
+            testPitchMaxUp20mData = noData;
+            testPitchMaxDown20mData = noData;
+            testPitchMean20mData = noData;
+
+            refPitchBuffer.Clear();
+            refPitchMean20mBuffer.Clear();
+            refPitchList.Clear();
             refPitchMean20mList.Clear();
+
+            testPitchBuffer.Clear();
+            testPitchMean20mBuffer.Clear();
+            testPitchList.Clear();
             testPitchMean20mList.Clear();
 
             for (int i = -Constants.Minutes20; i <= 0; i++)
@@ -891,6 +855,48 @@ namespace MVS
             }
         }
 
+        private void ClearRollData()
+        {
+            HMSData noData = new HMSData()
+            {
+                data = double.NaN,
+                status = DataStatus.NONE
+            };
+
+            refRollMaxLeft20mData = noData;
+            refRollMaxRight20mData = noData;
+            refRollMean20mData = noData;
+
+            testRollMaxLeft20mData = noData;
+            testRollMaxRight20mData = noData;
+            testRollMean20mData = noData;
+
+            refRollBuffer.Clear();
+            refRollMean20mBuffer.Clear();
+            refRollList.Clear();
+            refRollMean20mList.Clear();
+
+            testRollBuffer.Clear();
+            testRollMean20mBuffer.Clear();
+            testRollList.Clear();
+            testRollMean20mList.Clear();
+
+            for (int i = -Constants.Minutes20; i <= 0; i++)
+            {
+                refRollMean20mList.Add(new HMSData()
+                {
+                    data = 0,
+                    timestamp = DateTime.UtcNow.AddSeconds(i)
+                });
+
+                testRollMean20mList.Add(new HMSData()
+                {
+                    data = 0,
+                    timestamp = DateTime.UtcNow.AddSeconds(i)
+                });
+            }
+        }
+
         private HMSData _refRollData { get; set; }
         public HMSData refRollData
         {
@@ -1250,6 +1256,48 @@ namespace MVS
 
             // Init av chart data
             refHeaveAmplitudeMean20mList.Clear();
+            testHeaveAmplitudeMean20mList.Clear();
+
+            for (int i = -Constants.Minutes20; i <= 0; i++)
+            {
+                refHeaveAmplitudeMean20mList.Add(new HMSData()
+                {
+                    data = 0,
+                    timestamp = DateTime.UtcNow.AddSeconds(i)
+                });
+
+                testHeaveAmplitudeMean20mList.Add(new HMSData()
+                {
+                    data = 0,
+                    timestamp = DateTime.UtcNow.AddSeconds(i)
+                });
+            }
+        }
+
+        private void ClearHeaveData()
+        {
+            HMSData noData = new HMSData()
+            {
+                data = double.NaN,
+                status = DataStatus.NONE
+            };
+
+            refHeaveMax20mData = noData;
+            refHeaveAmplitudeMax20mData = noData;
+            refHeaveMean20mData = noData;
+
+            testHeaveMax20mData = noData;
+            testHeaveAmplitudeMax20mData = noData;
+            testHeaveMean20mData = noData;
+
+            refHeaveBuffer.Clear();
+            refHeaveAmplitudeMean20mBuffer.Clear();
+            refHeaveList.Clear();
+            refHeaveAmplitudeMean20mList.Clear();
+
+            testHeaveBuffer.Clear();
+            testHeaveAmplitudeMean20mBuffer.Clear();
+            testHeaveList.Clear();
             testHeaveAmplitudeMean20mList.Clear();
 
             for (int i = -Constants.Minutes20; i <= 0; i++)
@@ -1702,7 +1750,7 @@ namespace MVS
         {
             get
             {
-                return ChartAxisMax(_refPitchMax20mData, _testPitchMax20mData, Constants.PitchAxisMargin);
+                return ChartAxisMax(_refPitchMax20mData, _testPitchMax20mData, Constants.PitchAxisMargin, 2);
             }
         }
 
@@ -1718,7 +1766,7 @@ namespace MVS
         {
             get
             {
-                return ChartAxisMax(_refRollMax20mData, _testRollMax20mData, Constants.RollAxisMargin);
+                return ChartAxisMax(_refRollMax20mData, _testRollMax20mData, Constants.RollAxisMargin, 2);
             }
         }
 
@@ -1734,7 +1782,7 @@ namespace MVS
         {
             get
             {
-                return ChartAxisMax(_refHeaveMax20mData, _testHeaveMax20mData, Constants.HeaveAmplitudeAxisMargin);
+                return ChartAxisMax(_refHeaveMax20mData, _testHeaveMax20mData, Constants.HeaveAmplitudeAxisMargin, 2);
             }
         }
 
@@ -1762,12 +1810,19 @@ namespace MVS
             PropertyChanged?.Invoke(this, new PropertyChangedEventArgs(name));
         }
 
-        private double ChartAxisMax(HMSData refData, HMSData testData, double margin)
+        private double ChartAxisMax(HMSData refData, HMSData testData, double margin, double defaultValue)
         {
-            if (refData.data > testData.data)
-                return (double)((Math.Round(refData.data * (1 / margin), MidpointRounding.AwayFromZero) / (1 / margin)) + margin);
+            if (!double.IsNaN(refData.data) && !double.IsNaN(testData.data))
+            {
+                if (refData.data > testData.data)
+                    return (double)((Math.Round(refData.data * (1 / margin), MidpointRounding.AwayFromZero) / (1 / margin)) + margin);
+                else
+                    return (double)((Math.Round(testData.data * (1 / margin), MidpointRounding.AwayFromZero) / (1 / margin)) + margin);
+            }
             else
-                return (double)((Math.Round(testData.data * (1 / margin), MidpointRounding.AwayFromZero) / (1 / margin)) + margin);
+            {
+                return defaultValue;
+            }
         }
     }
 }
