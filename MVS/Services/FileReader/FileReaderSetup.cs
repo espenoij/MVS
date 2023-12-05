@@ -28,7 +28,7 @@ namespace MVS
             }
             set
             {
-                _fileFolder = value;
+                _fileFolder = value.ToLower();
                 OnPropertyChanged();
                 OnPropertyChanged(nameof(filePath));
             }
@@ -44,7 +44,7 @@ namespace MVS
             }
             set
             {
-                _fileName = value;
+                _fileName = value.ToLower();
                 OnPropertyChanged();
                 OnPropertyChanged(nameof(filePath));
             }
