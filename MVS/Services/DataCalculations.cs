@@ -61,21 +61,21 @@ namespace MVS
         private double timeMaxWaveHeightWaveBottom = double.NaN;
         private List<TimeData> timeMaxWaveHeightDataList = new List<TimeData>();
 
-        // Wave Height
-        private double waveHeightLast = double.NaN;
-        private WavePhase waveHeightWavePhase = WavePhase.Init;
-        private double waveHeightWaveTop = double.NaN;
-        private double waveHeightWaveBottom = double.NaN;
-        private double waveHeightValue = 0;
+        // Wave Amplitude
+        private double waveAmplitudeLast = double.NaN;
+        private WavePhase waveAmplitudeWavePhase = WavePhase.Init;
+        private double waveAmplitudeWaveTop = double.NaN;
+        private double waveAmplitudeWaveBottom = double.NaN;
+        private double waveAmplitudeValue = 0;
 
         // Wave Mean Height
-        private double waveMeanHeightLast = double.NaN;
-        private WavePhase waveMeanHeightWavePhase = WavePhase.Init;
-        private double waveMeanHeightWaveTop = double.NaN;
-        private double waveMeanHeightWaveBottom = double.NaN;
-        private double waveMeanHeightValue = 0;
-        private double waveMeanHeightTotal = 0;
-        private List<TimeData> waveMeanHeightDataList = new List<TimeData>();
+        private double waveMeanAmplitudeLast = double.NaN;
+        private WavePhase waveMeanAmplitudeWavePhase = WavePhase.Init;
+        private double waveMeanAmplitudeWaveTop = double.NaN;
+        private double waveMeanAmplitudeWaveBottom = double.NaN;
+        private double waveMeanAmplitudeValue = 0;
+        private double waveMeanAmplitudeTotal = 0;
+        private List<TimeData> waveMeanAmplitudeDataList = new List<TimeData>();
 
         // Period
         private double periodHeightTop = double.NaN;
@@ -1100,17 +1100,17 @@ namespace MVS
                             {
                                 bool newWaveHeightValue = false;
 
-                                switch (waveMeanHeightWavePhase)
+                                switch (waveMeanAmplitudeWavePhase)
                                 {
                                     // Init
                                     case WavePhase.Init:
-                                        if (!double.IsNaN(waveMeanHeightLast))
+                                        if (!double.IsNaN(waveMeanAmplitudeLast))
                                         {
-                                            if (value > waveMeanHeightLast)
-                                                waveMeanHeightWavePhase = WavePhase.Ascending;
+                                            if (value > waveMeanAmplitudeLast)
+                                                waveMeanAmplitudeWavePhase = WavePhase.Ascending;
                                             else
-                                            if (value < waveMeanHeightLast)
-                                                waveMeanHeightWavePhase = WavePhase.Descending;
+                                            if (value < waveMeanAmplitudeLast)
+                                                waveMeanAmplitudeWavePhase = WavePhase.Descending;
                                         }
                                         break;
 
@@ -1118,18 +1118,18 @@ namespace MVS
                                     case WavePhase.Ascending:
 
                                         // Dersom neste verdi er mindre enn forrige -> passert toppen av bølgen
-                                        if (value < waveMeanHeightLast && value > 0)
+                                        if (value < waveMeanAmplitudeLast && value > 0)
                                         {
-                                            waveMeanHeightWaveTop = waveMeanHeightLast;
+                                            waveMeanAmplitudeWaveTop = waveMeanAmplitudeLast;
 
-                                            if (!double.IsNaN(waveMeanHeightWaveBottom))
+                                            if (!double.IsNaN(waveMeanAmplitudeWaveBottom))
                                             {
-                                                waveMeanHeightValue = Math.Abs(waveMeanHeightWaveTop) + Math.Abs(waveMeanHeightWaveBottom);
+                                                waveMeanAmplitudeValue = Math.Abs(waveMeanAmplitudeWaveTop) + Math.Abs(waveMeanAmplitudeWaveBottom);
                                                 newWaveHeightValue = true;
                                             }
 
                                             // På vei ned
-                                            waveMeanHeightWavePhase = WavePhase.Descending;
+                                            waveMeanAmplitudeWavePhase = WavePhase.Descending;
                                         }
                                         break;
 
@@ -1137,51 +1137,51 @@ namespace MVS
                                     case WavePhase.Descending:
 
                                         // Dersom neste verdi er større enn forrige -> passert bunnen av bølgen
-                                        if (value > waveMeanHeightLast && value < 0)
+                                        if (value > waveMeanAmplitudeLast && value < 0)
                                         {
-                                            waveMeanHeightWaveBottom = waveMeanHeightLast;
+                                            waveMeanAmplitudeWaveBottom = waveMeanAmplitudeLast;
 
-                                            if (!double.IsNaN(waveMeanHeightWaveTop))
+                                            if (!double.IsNaN(waveMeanAmplitudeWaveTop))
                                             {
-                                                waveMeanHeightValue = Math.Abs(waveMeanHeightWaveTop) + Math.Abs(waveMeanHeightWaveBottom);
+                                                waveMeanAmplitudeValue = Math.Abs(waveMeanAmplitudeWaveTop) + Math.Abs(waveMeanAmplitudeWaveBottom);
                                                 newWaveHeightValue = true;
                                             }
 
                                             // På vei opp igjen
-                                            waveMeanHeightWavePhase = WavePhase.Ascending;
+                                            waveMeanAmplitudeWavePhase = WavePhase.Ascending;
                                         }
                                         break;
                                 }
 
                                 // Oppdatere siste verdi
-                                waveMeanHeightLast = value;
+                                waveMeanAmplitudeLast = value;
 
                                 // Ny bølgehøyde funnet?
                                 if (newWaveHeightValue)
                                 {
                                     // Legge inn periode i data listen
-                                    waveMeanHeightDataList.Add(new TimeData()
+                                    waveMeanAmplitudeDataList.Add(new TimeData()
                                     {
-                                        data = waveMeanHeightValue,
+                                        data = waveMeanAmplitudeValue,
                                         timestamp = newTimeStamp
                                     });
 
-                                    waveMeanHeightTotal += waveMeanHeightValue;
+                                    waveMeanAmplitudeTotal += waveMeanAmplitudeValue;
                                 }
 
                                 // Sjekke om vi skal ta ut gamle verdier
-                                while (waveMeanHeightDataList.Count > 0 && waveMeanHeightDataList[0]?.timestamp.AddSeconds(parameter) < newTimeStamp)
+                                while (waveMeanAmplitudeDataList.Count > 0 && waveMeanAmplitudeDataList[0]?.timestamp.AddSeconds(parameter) < newTimeStamp)
                                 {
                                     // Trekke fra data fra gammel periode
-                                    waveMeanHeightTotal -= waveMeanHeightDataList[0].data;
+                                    waveMeanAmplitudeTotal -= waveMeanAmplitudeDataList[0].data;
 
                                     // Fjerne fra verdiliste
-                                    waveMeanHeightDataList.RemoveAt(0);
+                                    waveMeanAmplitudeDataList.RemoveAt(0);
                                 }
 
                                 // Finne gjennomsnitt verdi
-                                if (waveMeanHeightDataList.Count > 0)
-                                    result = waveMeanHeightTotal / (double)waveMeanHeightDataList.Count;
+                                if (waveMeanAmplitudeDataList.Count > 0)
+                                    result = waveMeanAmplitudeTotal / (double)waveMeanAmplitudeDataList.Count;
                                 else
                                     return double.NaN;
                             }
@@ -1204,17 +1204,17 @@ namespace MVS
                             // Sjekke om string er numerisk
                             if (double.TryParse(newData, Constants.numberStyle, Constants.cultureInfo, out value))
                             {
-                                switch (waveHeightWavePhase)
+                                switch (waveAmplitudeWavePhase)
                                 {
                                     // Init
                                     case WavePhase.Init:
-                                        if (!double.IsNaN(waveHeightLast))
+                                        if (!double.IsNaN(waveAmplitudeLast))
                                         {
-                                            if (value > waveHeightLast)
-                                                waveHeightWavePhase = WavePhase.Ascending;
+                                            if (value > waveAmplitudeLast)
+                                                waveAmplitudeWavePhase = WavePhase.Ascending;
                                             else
-                                            if (value < waveHeightLast)
-                                                waveHeightWavePhase = WavePhase.Descending;
+                                            if (value < waveAmplitudeLast)
+                                                waveAmplitudeWavePhase = WavePhase.Descending;
                                         }
                                         break;
 
@@ -1222,15 +1222,15 @@ namespace MVS
                                     case WavePhase.Ascending:
 
                                         // Dersom neste verdi er mindre enn forrige -> passert toppen av bølgen
-                                        if (value < waveHeightLast && value > 0)
+                                        if (value < waveAmplitudeLast && value > 0)
                                         {
-                                            waveHeightWaveTop = waveHeightLast;
+                                            waveAmplitudeWaveTop = waveAmplitudeLast;
 
-                                            if (!double.IsNaN(waveHeightWaveBottom))
-                                                waveHeightValue = Math.Abs(waveHeightWaveTop) + Math.Abs(waveHeightWaveBottom);
+                                            if (!double.IsNaN(waveAmplitudeWaveBottom))
+                                                waveAmplitudeValue = Math.Abs(waveAmplitudeWaveTop) + Math.Abs(waveAmplitudeWaveBottom);
 
                                             // På vei ned
-                                            waveHeightWavePhase = WavePhase.Descending;
+                                            waveAmplitudeWavePhase = WavePhase.Descending;
                                         }
                                         break;
 
@@ -1238,24 +1238,24 @@ namespace MVS
                                     case WavePhase.Descending:
 
                                         // Dersom neste verdi er større enn forrige -> passert bunnen av bølgen
-                                        if (value > waveHeightLast && value < 0)
+                                        if (value > waveAmplitudeLast && value < 0)
                                         {
-                                            waveHeightWaveBottom = waveHeightLast;
+                                            waveAmplitudeWaveBottom = waveAmplitudeLast;
 
-                                            if (!double.IsNaN(waveHeightWaveTop))
-                                                waveHeightValue = Math.Abs(waveHeightWaveTop) + Math.Abs(waveHeightWaveBottom);
+                                            if (!double.IsNaN(waveAmplitudeWaveTop))
+                                                waveAmplitudeValue = Math.Abs(waveAmplitudeWaveTop) + Math.Abs(waveAmplitudeWaveBottom);
 
                                             // På vei opp igjen
-                                            waveHeightWavePhase = WavePhase.Ascending;
+                                            waveAmplitudeWavePhase = WavePhase.Ascending;
                                         }
                                         break;
                                 }
 
                                 // Oppdatere siste verdi
-                                waveHeightLast = value;
+                                waveAmplitudeLast = value;
 
                                 // Returnere siste bølgehøyde
-                                return waveHeightValue;
+                                return waveAmplitudeValue;
                             }
                             break;
 
@@ -2109,19 +2109,49 @@ namespace MVS
             timeMaxWaveHeightWaveBottom = double.NaN;
             timeMaxWaveHeightDataList.Clear();
 
-            // Height
-            waveMeanHeightLast = double.NaN;
-            waveMeanHeightWavePhase = WavePhase.Init;
-            waveMeanHeightWaveTop = double.NaN;
-            waveMeanHeightWaveBottom = double.NaN;
-            waveMeanHeightValue = 0;
+            // Wave Amplitude
+            waveAmplitudeLast = double.NaN;
+            waveAmplitudeWavePhase = WavePhase.Init;
+            waveAmplitudeWaveTop = double.NaN;
+            waveAmplitudeWaveBottom = double.NaN;
+            waveAmplitudeValue = 0;
+
+            // Wave Mean Amplitude
+            waveMeanAmplitudeLast = double.NaN;
+            waveMeanAmplitudeWavePhase = WavePhase.Init;
+            waveMeanAmplitudeWaveTop = double.NaN;
+            waveMeanAmplitudeWaveBottom = double.NaN;
+            waveMeanAmplitudeValue = 0;
+            waveMeanAmplitudeTotal = 0;
+            waveMeanAmplitudeDataList.Clear();
+
+            // Period
+            periodHeightTop = double.NaN;
+            periodHeightBottom = double.NaN;
+            periodLast = double.NaN;
+            periodCurrent = double.NaN;
+            periodWavePhase = WavePhase.Init;
+            periodLastWaveTopTime = DateTime.MinValue;
 
             // Time Mean Period
+            timeMeanPeriodWaveHeightTop = double.NaN;
+            timeMeanPeriodWaveHeightBottom = double.NaN;
             timeMeanPeriodTotal = 0;
             timeMeanPeriodLast = double.NaN;
             timeMeanPeriodWavePhase = WavePhase.Init;
             timeMeanPeriodLastWaveTopTime = DateTime.MinValue;
             timeMeanPeriodDataList.Clear();
+
+            // Wave Radar
+            waveRadarLastTop = double.NaN;
+            waveRadarLastBottom = double.NaN;
+            waveRadarLast = double.NaN;
+            waveRadarWavePhase = WavePhase.Init;
+
+            // Wind Data Spike
+            dataSpikeAverageTotal = 0;
+            dataSpikeAverageDataList.Clear();
+            dataSpikeAverage = 0;
         }
 
         public double BufferCount()

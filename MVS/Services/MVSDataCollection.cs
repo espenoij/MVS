@@ -277,5 +277,14 @@ namespace MVS
                 sensorData.First().Set(hmsData);
             }
         }
+
+        // Slette alle data i samlingen
+        public void ClearData()
+        {
+            foreach (var hmsData in dataList.ToList())
+            {
+                hmsData.ClearData();
+            }
+        }
     }
 }

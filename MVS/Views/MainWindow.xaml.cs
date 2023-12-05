@@ -555,6 +555,9 @@ namespace MVS
                 // Resetter data listene i dataCalculations
                 mvsProcessing.ResetDataCalculations();
 
+                // Clear output data
+                mvsOutputData.ClearData();
+
                 // Laste sensor data setups fra fil
                 sensorDataRetrieval.LoadSensors(mainWindowVM);
 
@@ -597,6 +600,9 @@ namespace MVS
 
             // Resetter data listene i dataCalculations
             mvsProcessing.ResetDataCalculations();
+
+            // Clear output data
+            mvsOutputData.ClearData();
 
             // Laste sensor data setups fra fil
             sensorDataRetrieval.LoadSensors(mainWindowVM);
@@ -761,6 +767,9 @@ namespace MVS
 
             // Laste session data fra databasen
             mvsDatabase.LoadSessionData(mainWindowVM.SelectedSession, mvsInputData, recordingsAnalysisVM.sessionDataList);
+
+            // Resetter data listene i dataCalculations
+            mvsProcessing.ResetDataCalculations();
 
             // Prosessere session data
             recordingsAnalysisVM.ProcessSessionData();

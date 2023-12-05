@@ -225,6 +225,15 @@ namespace MVS
             dbColumn = string.Empty;
         }
 
+        public void ClearData()
+        {
+            data = 0;
+            data2 = 0;
+            data3 = string.Empty;
+            timestamp = DateTime.MinValue;
+            status = DataStatus.NONE;
+        }
+
         // Variabel oppdatert
         // Dersom navn ikke settes brukes kallende medlem sitt navn
         protected virtual void OnPropertyChanged([CallerMemberName] string name = null)

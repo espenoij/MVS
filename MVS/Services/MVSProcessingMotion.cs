@@ -480,8 +480,8 @@ namespace MVS
             refRollMax20mData.ResetDataCalculations();
             refRollMaxLeft20mData.ResetDataCalculations();
             refRollMaxRight20mData.ResetDataCalculations();
-            refHeaveAmplitudeMean20mData.ResetDataCalculations();
             refHeaveMax20mData.ResetDataCalculations();
+            refHeaveAmplitudeMean20mData.ResetDataCalculations();
             refHeaveAmplitudeMax20mData.ResetDataCalculations();
 
             testPitchMean20mData.ResetDataCalculations();
@@ -492,8 +492,8 @@ namespace MVS
             testRollMax20mData.ResetDataCalculations();
             testRollMaxLeft20mData.ResetDataCalculations();
             testRollMaxRight20mData.ResetDataCalculations();
-            testHeaveAmplitudeMean20mData.ResetDataCalculations();
             testHeaveMax20mData.ResetDataCalculations();
+            testHeaveAmplitudeMean20mData.ResetDataCalculations();
             testHeaveAmplitudeMax20mData.ResetDataCalculations();
         }
     }

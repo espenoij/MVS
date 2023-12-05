@@ -215,7 +215,7 @@ namespace MVS
 
             foreach (SessionData sessionData in sessionDataList.ToList())
             {
-                // Overføre data fra DB til input
+                // Overføre database data til MVS input
                 mvsInputData.TransferData(sessionData);
 
                 // Prosessere data i input
@@ -1798,8 +1798,7 @@ namespace MVS
         {
             get
             {
-                return heaveChartAxisMax20m;
-                //return ChartAxisMax(_refHeaveAmplitudeMax20mData, _testHeaveAmplitudeMax20mData, Constants.HeaveAmplitudeAxisMargin);
+                return ChartAxisMax(_refHeaveAmplitudeMax20mData, _testHeaveAmplitudeMax20mData, Constants.HeaveAmplitudeAxisMargin, 4);
             }
         }
 
