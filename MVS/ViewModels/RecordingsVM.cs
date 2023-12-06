@@ -7,7 +7,7 @@ using Telerik.Windows.Data;
 
 namespace MVS
 {
-    public class RecordingsAnalysisVM : INotifyPropertyChanged
+    public class RecordingsVM : INotifyPropertyChanged
     {
         // Change notification
         public event PropertyChangedEventHandler PropertyChanged;

@@ -12,27 +12,27 @@ namespace MVS
             InitializeComponent();
         }
 
-        public void Init(RecordingsAnalysisVM recordingsAnalysisVM, Config config)
+        public void Init(RecordingsVM recordingsVM, Config config)
         {
             // Context
-            DataContext = recordingsAnalysisVM;
+            DataContext = recordingsVM;
 
             // Koble chart til data
-            chartPitch.Series[0].ItemsSource = recordingsAnalysisVM.testPitchList;
-            chartRoll.Series[0].ItemsSource = recordingsAnalysisVM.testRollList;
-            chartHeave.Series[0].ItemsSource = recordingsAnalysisVM.testHeaveList;
+            chartPitch.Series[0].ItemsSource = recordingsVM.testPitchList;
+            chartRoll.Series[0].ItemsSource = recordingsVM.testRollList;
+            chartHeave.Series[0].ItemsSource = recordingsVM.testHeaveList;
 
-            chartPitch.Series[1].ItemsSource = recordingsAnalysisVM.refPitchList;
-            chartRoll.Series[1].ItemsSource = recordingsAnalysisVM.refRollList;
-            chartHeave.Series[1].ItemsSource = recordingsAnalysisVM.refHeaveList;
+            chartPitch.Series[1].ItemsSource = recordingsVM.refPitchList;
+            chartRoll.Series[1].ItemsSource = recordingsVM.refRollList;
+            chartHeave.Series[1].ItemsSource = recordingsVM.refHeaveList;
 
-            chartPitch20m.Series[0].ItemsSource = recordingsAnalysisVM.testPitchMean20mList;
-            chartRoll20m.Series[0].ItemsSource = recordingsAnalysisVM.testRollMean20mList;
-            chartHeaveAmplitude20m.Series[0].ItemsSource = recordingsAnalysisVM.testHeaveAmplitudeMean20mList;
+            chartPitch20m.Series[0].ItemsSource = recordingsVM.testPitchMean20mList;
+            chartRoll20m.Series[0].ItemsSource = recordingsVM.testRollMean20mList;
+            chartHeaveAmplitude20m.Series[0].ItemsSource = recordingsVM.testHeaveAmplitudeMean20mList;
 
-            chartPitch20m.Series[1].ItemsSource = recordingsAnalysisVM.refPitchMean20mList;
-            chartRoll20m.Series[1].ItemsSource = recordingsAnalysisVM.refRollMean20mList;
-            chartHeaveAmplitude20m.Series[1].ItemsSource = recordingsAnalysisVM.refHeaveAmplitudeMean20mList;
+            chartPitch20m.Series[1].ItemsSource = recordingsVM.refPitchMean20mList;
+            chartRoll20m.Series[1].ItemsSource = recordingsVM.refRollMean20mList;
+            chartHeaveAmplitude20m.Series[1].ItemsSource = recordingsVM.refHeaveAmplitudeMean20mList;
         }
     }
 }

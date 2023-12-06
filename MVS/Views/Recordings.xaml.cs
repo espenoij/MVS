@@ -1,4 +1,5 @@
-﻿using System;
+﻿using Google.Protobuf.WellKnownTypes;
+using System;
 using System.Collections.Generic;
 using System.Windows;
 using System.Windows.Controls;
@@ -21,18 +22,25 @@ namespace MVS
         private RadObservableCollection<RecordingSession> motionVerificationSessionList = new RadObservableCollection<RecordingSession>();
 
         private MainWindowVM mainWindowVM;
+        private Config config;
+        private ImportVM importVM;
 
         private MainWindow.UpdateUIButtonsCallback updateUIButtonsCallback;
 
         public Recordings()
         {
             InitializeComponent();
+
+            importVM = new ImportVM();
         }
 
-        public void Init(MainWindowVM mainWindowVM, MVSDatabase mvsDatabase, UpdateUIButtonsCallback updateUIButtonsCallback)
+        public void Init(MainWindowVM mainWindowVM, Config config, MVSDatabase mvsDatabase, UpdateUIButtonsCallback updateUIButtonsCallback)
         {
             // Database
             this.mvsDatabase = mvsDatabase;
+
+            // Config
+            this.config = config;
 
             // VM
             this.mainWindowVM = mainWindowVM;
@@ -44,12 +52,14 @@ namespace MVS
 
         public void InitUI()
         {
+            importVM.Init(config);
+
             // Liste med sensor verdier
             gvVerificationSessions.ItemsSource = motionVerificationSessionList;
 
             // Fylle input setup combobox
-            foreach (InputMRUType value in Enum.GetValues(typeof(InputMRUType)))
-                cboInputMRUs.Items.Add(value.GetDescription());
+            cboInputMRUs.Items.Add(InputMRUType.ReferenceMRU.GetDescription());
+            cboInputMRUs.Items.Add(InputMRUType.ReferenceMRU_TestMRU.GetDescription());
 
             // Sette default verdi
             cboInputMRUs.Text = cboInputMRUs.Items[0].ToString();
@@ -92,7 +102,11 @@ namespace MVS
                 else
                 {
                     btnDelete.IsEnabled = true;
-                    btnImport.IsEnabled = true;
+
+                    if (mainWindowVM.SelectedSession.StartTime == System.Data.SqlTypes.SqlDateTime.MinValue.Value)
+                        btnImport.IsEnabled = false;
+                    else
+                        btnImport.IsEnabled = true;
                 }
 
                 gvVerificationSessions.IsEnabled = true;
@@ -181,7 +195,11 @@ namespace MVS
 
         private void btnImport_Click(object sender, RoutedEventArgs e)
         {
-
+            // Åpne HMS data import dialog vindu
+            DialogImport importDlg = new DialogImport();
+            importDlg.Owner = App.Current.MainWindow;
+            importDlg.Init(importVM, config, mainWindowVM.SelectedSession);
+            importDlg.ShowDialog();
         }
 
         private void gvVerificationSessions_SelectionChanged(object sender, SelectionChangeEventArgs e)

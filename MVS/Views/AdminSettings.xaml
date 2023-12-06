@@ -48,7 +48,6 @@
                 <telerik:GroupBox
                     Grid.Row="0"
                     Grid.Column="0"
-                    Grid.RowSpan="2"
                     Header="DATABASE"
                     Margin="8">
 
@@ -56,24 +55,6 @@
                         Margin="8">
 
                         <Grid.RowDefinitions>
-                            <RowDefinition
-                                Height="*" />
-                            <RowDefinition
-                                Height="*" />
-                            <RowDefinition
-                                Height="*" />
-                            <RowDefinition
-                                Height="*" />
-                            <RowDefinition
-                                Height="*" />
-                            <RowDefinition
-                                Height="*" />
-                            <RowDefinition
-                                Height="*" />
-                            <RowDefinition
-                                Height="*" />
-                            <RowDefinition
-                                Height="*" />
                             <RowDefinition
                                 Height="*" />
                             <RowDefinition

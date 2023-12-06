@@ -129,7 +129,7 @@
 
     /************************************************************************/
 
-    // Server App: Database
+    // MVS: Database
     public const string DatabaseAddress = "DatabaseAddress";
     public const string DatabasePort = "DatabasePort";
     public const string DatabaseName = "DatabaseName";
@@ -137,6 +137,13 @@
     public const string DatabasePassword = "DatabasePassword";
     public const string DataStorageTime = "DataStorageTime";
     public const string ErrorMessageStorageTime = "ErrorMessageStorageTime";
+
+    // HMS: Database (import av data)
+    public const string HMSDatabaseAddress = "HMSDatabaseAddress";
+    public const string HMSDatabasePort = "HMSDatabasePort";
+    public const string HMSDatabaseName = "HMSDatabaseName";
+    public const string HMSDatabaseUserID = "HMSDatabaseUserID";
+    public const string HMSDatabasePassword = "HMSDatabasePassword";
 
     // Server App: Various
     public const string SetupGUIDataLimit = "SetupGUIDataLimit";

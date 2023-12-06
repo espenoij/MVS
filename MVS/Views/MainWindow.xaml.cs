@@ -71,7 +71,7 @@ namespace MVS
 
         // Model View
         private MainWindowVM mainWindowVM;
-        private RecordingsAnalysisVM recordingsAnalysisVM;
+        private RecordingsVM recordingsVM;
         private AboutVM aboutVM;
 
         public MainWindow()
@@ -126,14 +126,14 @@ namespace MVS
             InitUIMVS();
 
             // Recordings Data VM
-            recordingsAnalysisVM = new RecordingsAnalysisVM();
-            recordingsAnalysisVM.Init(mainWindowVM, mvsProcessing, mvsInputData, mvsOutputData);
+            recordingsVM = new RecordingsVM();
+            recordingsVM.Init(mainWindowVM, mvsProcessing, mvsInputData, mvsOutputData);
 
             // Recordings page
-            ucRecordings.Init(mainWindowVM, mvsDatabase, updateUIButtonsCallback);
+            ucRecordings.Init(mainWindowVM, config, mvsDatabase, updateUIButtonsCallback);
 
             // Recordings Data page
-            ucRecordingsAnalysis.Init(recordingsAnalysisVM, config);
+            ucRecordingsAnalysis.Init(recordingsVM, config);
 
             // Sensor Input Setup
             ucSensorSetupPage.Init(config, errorHandler, adminSettingsVM);
@@ -397,7 +397,7 @@ namespace MVS
                         mvsProcessing.Update(mvsInputData, mainWindowVM);
 
                         // Oppdatere graf data
-                        recordingsAnalysisVM.UpdateData(mvsOutputData);
+                        recordingsVM.UpdateData(mvsOutputData);
 
                         // Sette database status
                         //SetDatabaseStatus(mvsInputData);
@@ -586,7 +586,7 @@ namespace MVS
                 // Vise recording symbol
                 mainWindowVM.RecordingSymbolVisibility = Visibility.Visible;
 
-                recordingsAnalysisVM.StartRecording();
+                recordingsVM.StartRecording();
 
                 // Gå til Analyse tab
                 tabVerificationRecordings_RecordingsAnalysis.IsSelected = true;
@@ -628,7 +628,7 @@ namespace MVS
             // Start elapsed time
             mainWindowVM.StartTimer();
 
-            recordingsAnalysisVM.StartRecording();
+            recordingsVM.StartRecording();
         }
 
         private void Stop()
@@ -662,7 +662,7 @@ namespace MVS
             mainWindowVM.RecordingSymbolVisibility = Visibility.Collapsed;
 
             // Fjerne data fra Recording Data page
-            recordingsAnalysisVM.StopRecording();
+            recordingsVM.StopRecording();
         }
 
         private void DoDatabaseMaintenance()
@@ -766,13 +766,13 @@ namespace MVS
             mainWindowVM.OperationsMode = OperationsMode.Analysis;
 
             // Laste session data fra databasen
-            mvsDatabase.LoadSessionData(mainWindowVM.SelectedSession, mvsInputData, recordingsAnalysisVM.sessionDataList);
+            mvsDatabase.LoadSessionData(mainWindowVM.SelectedSession, mvsInputData, recordingsVM.sessionDataList);
 
             // Resetter data listene i dataCalculations
             mvsProcessing.ResetDataCalculations();
 
             // Prosessere session data
-            recordingsAnalysisVM.ProcessSessionData();
+            recordingsVM.ProcessSessionData();
         }
 
         private void analysisWorker_RunWorkerCompleted(object sender, RunWorkerCompletedEventArgs e)
@@ -780,9 +780,9 @@ namespace MVS
             // Resette ops mode
             //mainWindowVM.OperationsMode = OperationsMode.Stop;
 
-            //ucRecordingsAnalysis.TransferToDisplay(recordingsAnalysisVM);
+            //ucRecordingsAnalysis.TransferToDisplay(recordingsVM);
 
-            recordingsAnalysisVM.TransferToDisplay();
+            recordingsVM.TransferToDisplay();
         }
 
         private void tcVerificationRecordings_SelectionChanged(object sender, RadSelectionChangedEventArgs e)
@@ -790,8 +790,10 @@ namespace MVS
             if (tabVerificationRecordings_RecordingsAnalysis.IsSelected &&
                 mainWindowVM.OperationsMode != OperationsMode.Recording &&
                 mainWindowVM.OperationsMode != OperationsMode.Test)
+            {
                 // Starte data analyse
                 analysisWorker.RunWorkerAsync();
+            }
         }
     }
 }

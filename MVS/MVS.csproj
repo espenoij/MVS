@@ -368,6 +368,9 @@
     <Compile Include="Config\TestDataConfigCollection.cs" />
     <Compile Include="Config\ReferenceDataConfigSection.cs" />
     <Compile Include="Config\TestDataConfigSection.cs" />
+    <Compile Include="Dialogs\DialogImport.xaml.cs">
+      <DependentUpon>DialogImport.xaml</DependentUpon>
+    </Compile>
     <Compile Include="Dialogs\DialogAbout.xaml.cs">
       <DependentUpon>DialogAbout.xaml</DependentUpon>
     </Compile>
@@ -384,8 +387,9 @@
     <Compile Include="Services\FixedValue\FixedValueDataRetrieval.cs" />
     <Compile Include="Services\FixedValue\FixedValueSetup.cs" />
     <Compile Include="Models\WindVector.cs" />
+    <Compile Include="ViewModels\ImportVM.cs" />
     <Compile Include="ViewModels\AboutVM.cs" />
-    <Compile Include="ViewModels\RecordingsAnalysisVM.cs" />
+    <Compile Include="ViewModels\RecordingsVM.cs" />
     <Compile Include="ViewModels\MainWindowVM.cs" />
     <Compile Include="ViewModels\FixedValueWindowVM.cs" />
     <Compile Include="Views\FixedValueSetupWindow.xaml.cs">
@@ -474,6 +478,10 @@
     <Compile Include="Views\RecordingsAnalysis.xaml.cs">
       <DependentUpon>RecordingsAnalysis.xaml</DependentUpon>
     </Compile>
+    <Page Include="Dialogs\DialogImport.xaml">
+      <Generator>MSBuild:Compile</Generator>
+      <SubType>Designer</SubType>
+    </Page>
     <Page Include="Dialogs\DialogAbout.xaml">
       <Generator>MSBuild:Compile</Generator>
       <SubType>Designer</SubType>
