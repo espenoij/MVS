@@ -227,7 +227,7 @@ namespace MVS
                             break;
 
                         case ValueType.Ref_Heave:
-                            item.data = sessionData.refHeave;
+                            item.data = sessionData.refHeaveAmplitude;
                             break;
 
                         case ValueType.Test_Pitch:
@@ -239,7 +239,7 @@ namespace MVS
                             break;
 
                         case ValueType.Test_Heave:
-                            item.data = sessionData.testHeave;
+                            item.data = sessionData.testHeaveAmplitude;
                             break;
 
                         default:

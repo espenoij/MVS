@@ -1,6 +1,4 @@
 ﻿using System;
-using System.Net.NetworkInformation;
-using System.Windows.Markup;
 
 namespace MVS
 {
@@ -11,11 +9,11 @@ namespace MVS
 
         public double refPitch;
         public double refRoll;
-        public double refHeave;
+        public double refHeaveAmplitude;
 
         public double testPitch;
         public double testRoll;
-        public double testHeave;
+        public double testHeaveAmplitude;
 
         // Initialize
         public SessionData()
@@ -35,10 +33,10 @@ namespace MVS
                 timestamp = session.timestamp;
                 refPitch = session.refPitch;
                 refRoll = session.refRoll;
-                refHeave = session.refHeave;
+                refHeaveAmplitude = session.refHeaveAmplitude;
                 testPitch = session.testPitch;
                 testRoll = session.testRoll;
-                testHeave = session.testHeave;
+                testHeaveAmplitude = session.testHeaveAmplitude;
             }
         }
     }

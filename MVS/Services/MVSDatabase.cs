@@ -1,5 +1,6 @@
 ﻿using System;
 using System.Collections.Generic;
+using System.Data;
 using Telerik.Charting;
 using Telerik.Windows.Data;
 
@@ -249,14 +250,14 @@ namespace MVS
             }
         }
 
-        public void LoadSessionData(RecordingSession dataSet, MVSDataCollection mvsDataCollection, RadObservableCollection<SessionData> dataList)
+        public void LoadSessionData(RecordingSession dataSet, RadObservableCollection<SessionData> dataList)
         {
             try
             {
                 // Slette gamle data i listen
                 dataList.Clear();
 
-                database.LoadSessionData(dataSet, mvsDataCollection, dataList);
+                database.LoadSessionData(dataSet, dataList);
 
                 errorHandler.ResetDatabaseError(ErrorHandler.DatabaseErrorType.LoadSessionData);
             }
@@ -270,6 +271,27 @@ namespace MVS
                         string.Format("Database Error (LoadSessionData)\n\nSystem Message:\n{0}", ex.Message)));
 
                 errorHandler.SetDatabaseError(ErrorHandler.DatabaseErrorType.LoadSessionData);
+            }
+        }
+
+        public void ImportHMSData(RecordingSession selectedSession)
+        {
+            try
+            {
+                database.ImportHMSData(selectedSession);
+
+                errorHandler.ResetDatabaseError(ErrorHandler.DatabaseErrorType.ImportHMSData);
+            }
+            catch (Exception ex)
+            {
+                errorHandler.Insert(
+                    new ErrorMessage(
+                        DateTime.UtcNow,
+                        ErrorMessageType.Database,
+                        ErrorMessageCategory.None,
+                        string.Format("Database Error (ImportHMSData)\n\nSystem Message:\n{0}", ex.Message)));
+
+                errorHandler.SetDatabaseError(ErrorHandler.DatabaseErrorType.ImportHMSData);
             }
         }
     }

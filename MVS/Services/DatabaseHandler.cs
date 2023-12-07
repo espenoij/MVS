@@ -1,6 +1,5 @@
 ﻿using System;
 using System.Collections.Generic;
-using System.Data;
 using System.Linq;
 using System.Security;
 using Telerik.Windows.Data;
@@ -13,15 +12,21 @@ namespace MVS
         // Database connection parametre
         private string connectionString;
 
-        // MVS Data Set tabeller
+        // MVS Data Set tabell
         private const string tableNameMVSDataSets = "mvs_data_sets";
         private const string columnMVSName = "name";
         private const string columnMVSDescription = "description";
         private const string columnMVSInputSetup = "input_setup";
 
-        // MVS Data Set tabeller
+        // MVS Data tabeller
         private const string tableNameMVSDataPrefix = "mvs_data_";
         private const string columnTimestamp = "timestamp";
+        private const string columnRefPitch = "ref_pitch";
+        private const string columnRefRoll = "ref_roll";
+        private const string columnRefHeaveAmplitude = "ref_heave_amplitude";
+        private const string columnTestPitch = "test_pitch";
+        private const string columnTestRoll = "test_roll";
+        private const string columnTestHeaveAmplitude = "test_heave_amplitude";
 
         // Error Messages
         private const string tableNameErrorMessages = "error_messages";
@@ -695,7 +700,7 @@ namespace MVS
             }
         }
 
-        public void LoadSessionData(RecordingSession dataSet, MVSDataCollection mvsDataCollection, RadObservableCollection<SessionData> dataList)
+        public void LoadSessionData(RecordingSession dataSet, RadObservableCollection<SessionData> dataList)
         {
             try
             {
@@ -710,22 +715,22 @@ namespace MVS
                         // Åpne database connection
                         connection.Open();
 
-                        // 1: Hente start timestamp
+                        // SQL
                         cmd.CommandText = string.Format("SELECT {0}, {1}, {2}, {3}, {4}, {5}, {6}, {7} FROM {8}",
                             "id",
                             columnTimestamp,
-                            mvsDataCollection.GetData(ValueType.Ref_Pitch).dbColumn,
-                            mvsDataCollection.GetData(ValueType.Ref_Roll).dbColumn,
-                            mvsDataCollection.GetData(ValueType.Ref_Heave).dbColumn,
-                            mvsDataCollection.GetData(ValueType.Test_Pitch).dbColumn,
-                            mvsDataCollection.GetData(ValueType.Test_Roll).dbColumn,
-                            mvsDataCollection.GetData(ValueType.Test_Heave).dbColumn,
+                            columnRefPitch,
+                            columnRefRoll,
+                            columnRefHeaveAmplitude,
+                            columnTestPitch,
+                            columnTestRoll,
+                            columnTestHeaveAmplitude,
                             tableNameMVSDataPrefix + dataSet.Id);
 
                         // Hente data
                         MySqlDataReader dbReader = cmd.ExecuteReader();
 
-                        // Lagre start tid
+                        // Lagre data
                         while (dbReader.Read())
                         {
                             SessionData data = new SessionData();
@@ -735,11 +740,11 @@ namespace MVS
 
                             data.refPitch = Convert.ToDouble(dbReader.GetString(2));
                             data.refRoll = Convert.ToDouble(dbReader.GetString(3));
-                            data.refHeave = Convert.ToDouble(dbReader.GetString(4));
+                            data.refHeaveAmplitude = Convert.ToDouble(dbReader.GetString(4));
 
                             data.testPitch = Convert.ToDouble(dbReader.GetString(5));
                             data.testRoll = Convert.ToDouble(dbReader.GetString(6));
-                            data.testHeave = Convert.ToDouble(dbReader.GetString(7));
+                            data.testHeaveAmplitude = Convert.ToDouble(dbReader.GetString(7));
 
                             dataList.Add(data);
                         }
@@ -749,6 +754,120 @@ namespace MVS
 
                         // Lukke database connection
                         connection.Close();
+                    }
+                }
+            }
+            catch (Exception)
+            {
+                throw;
+            }
+        }
+
+        public void ImportHMSData(RecordingSession selectedSession)
+        {
+            try
+            {
+                if (isDatabaseConnectionOK)
+                {
+                    RadObservableCollection<SessionData> dataList = new RadObservableCollection<SessionData>();
+
+                    string hmsDBaddress = config.ReadWithDefault(ConfigKey.HMSDatabaseAddress, Constants.DefaultHMSDatabaseAddress);
+                    string hmsDBport = config.ReadWithDefault(ConfigKey.HMSDatabasePort, Constants.DefaultHMSDatabasePort).ToString();
+                    string hmsDBdatabase = config.ReadWithDefault(ConfigKey.HMSDatabaseName, Constants.DefaultHMSDatabaseName);
+                    string hmsDBdatabaseTableName = config.ReadWithDefault(ConfigKey.HMSDatabaseTableName, Constants.DefaultHMSDatabaseName);
+
+                    // Database login
+                    SecureString hmsDBuserid = Encryption.DecryptString(config.Read(ConfigKey.HMSDatabaseUserID));
+                    SecureString hmsDBpassword = Encryption.DecryptString(config.Read(ConfigKey.HMSDatabasePassword));
+
+                    string hmsDBconnectionString = string.Format(@"server={0};port={1};userid={2};password={3};database={4};sslmode=none",
+                        hmsDBaddress,
+                        hmsDBport,
+                        Encryption.ToInsecureString(hmsDBuserid),
+                        Encryption.ToInsecureString(hmsDBpassword),
+                        hmsDBdatabase);
+
+                    using (var connection = new MySqlConnection(hmsDBconnectionString))
+                    {
+                        // SQL kommando
+                        var cmd = new MySqlCommand();
+                        cmd.Connection = connection;
+
+                        // Åpne database connection
+                        connection.Open();
+
+                        // SQL
+                        cmd.CommandText = string.Format("SELECT {0}, {1}, {2}, {3}, {4} FROM {5} WHERE {6} BETWEEN @StartTime AND @EndTime",
+                            "id",
+                            columnTimestamp,
+                            "pitch",
+                            "roll",
+                            "heave_amplitude",
+                            hmsDBdatabaseTableName,
+                            columnTimestamp);
+
+                        // Update parametre
+                        cmd.Parameters.AddWithValue("@StartTime", selectedSession.StartTime);
+                        cmd.Parameters.AddWithValue("@EndTime", selectedSession.EndTime);
+
+                        // Hente data
+                        MySqlDataReader dbReader = cmd.ExecuteReader();
+
+                        // Lagre data
+                        while (dbReader.Read())
+                        {
+                            SessionData data = new SessionData();
+
+                            data.id = dbReader.GetInt16(0);
+                            data.timestamp = dbReader.GetDateTime(1);
+
+                            data.testPitch = Convert.ToDouble(dbReader.GetString(2));
+                            data.testRoll = Convert.ToDouble(dbReader.GetString(3));
+                            data.testHeaveAmplitude = Convert.ToDouble(dbReader.GetString(4));
+
+                            dataList.Add(data);
+                        }
+
+                        // Lukke leser
+                        dbReader.Close();
+
+                        // Lukke database connection
+                        connection.Close();
+                    }
+
+                    using (var connection = new MySqlConnection(connectionString))
+                    {
+                        foreach (var data in dataList)
+                        {
+                            // SQL kommando
+                            var cmd = new MySqlCommand();
+                            cmd.Connection = connection;
+
+                            // Åpne database connection
+                            connection.Open();
+
+                            cmd.CommandText = string.Format("UPDATE {0} SET {1}=@testPitch, {2}=@testRoll, {3}=@testHeave WHERE {4} = (SELECT {4} FROM (SELECT {4} FROM {0} ORDER BY ABS(TIMSTAMPDIFF(SECOND, {4}, @timestamp)) LIMIT 1))",
+                                tableNameMVSDataPrefix + selectedSession.Id,
+                                columnTestPitch,
+                                columnTestRoll,
+                                columnTestHeaveAmplitude,
+                                columnTimestamp);
+
+                            // Update parametre
+                            cmd.Parameters.AddWithValue("@timestamp", data.timestamp);
+                            cmd.Parameters.AddWithValue("@testPitch", data.testPitch);
+                            cmd.Parameters.AddWithValue("@testRoll", data.testRoll);
+                            cmd.Parameters.AddWithValue("@testHeaveAmplitude", data.testHeaveAmplitude);
+
+                            // Åpne database connection
+                            connection.Open();
+
+                            // Execute
+                            cmd.ExecuteNonQuery();
+
+                            // Lukke database connection
+                            connection.Close();
+                        }
                     }
                 }
             }

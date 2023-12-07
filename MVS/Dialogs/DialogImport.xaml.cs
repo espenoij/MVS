@@ -14,17 +14,21 @@ namespace MVS
     {
         private ImportVM importVM;
         private Config config;
+        private MVSDatabase mvsDatabase;
+        private RecordingSession selectedSession;
 
         public DialogImport()
         {
             InitializeComponent();
         }
 
-        public void Init(ImportVM importVM, Config config, RecordingSession selectedSession)
+        public void Init(ImportVM importVM, Config config, RecordingSession selectedSession, MVSDatabase mvsDatabase)
         {
             DataContext = importVM;
             this.importVM = importVM;
             this.config = config;
+            this.selectedSession = selectedSession;
+            this.mvsDatabase = mvsDatabase;
 
             // Database User ID
             tbSettingsHMSDatabaseUserID.Text = Encryption.ToInsecureString(Encryption.DecryptString(config.Read(ConfigKey.HMSDatabaseUserID)));
@@ -51,6 +55,7 @@ namespace MVS
 
         private void btnImport_Click(object sender, System.Windows.RoutedEventArgs e)
         {
+            mvsDatabase.ImportHMSData(selectedSession);
         }
 
 

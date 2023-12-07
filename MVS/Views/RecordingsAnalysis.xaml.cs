@@ -20,11 +20,11 @@ namespace MVS
             // Koble chart til data
             chartPitch.Series[0].ItemsSource = recordingsVM.testPitchList;
             chartRoll.Series[0].ItemsSource = recordingsVM.testRollList;
-            chartHeave.Series[0].ItemsSource = recordingsVM.testHeaveList;
+            chartHeaveAmplitude.Series[0].ItemsSource = recordingsVM.testHeaveAmplitudeList;
 
             chartPitch.Series[1].ItemsSource = recordingsVM.refPitchList;
             chartRoll.Series[1].ItemsSource = recordingsVM.refRollList;
-            chartHeave.Series[1].ItemsSource = recordingsVM.refHeaveList;
+            chartHeaveAmplitude.Series[1].ItemsSource = recordingsVM.refHeaveAmplitudeList;
 
             chartPitch20m.Series[0].ItemsSource = recordingsVM.testPitchMean20mList;
             chartRoll20m.Series[0].ItemsSource = recordingsVM.testRollMean20mList;

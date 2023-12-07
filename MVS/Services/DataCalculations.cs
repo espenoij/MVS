@@ -66,14 +66,14 @@ namespace MVS
         private WavePhase waveAmplitudeWavePhase = WavePhase.Init;
         private double waveAmplitudeWaveTop = double.NaN;
         private double waveAmplitudeWaveBottom = double.NaN;
-        private double waveAmplitudeValue = 0;
+        private double waveAmplitudeValue = double.NaN;
 
         // Wave Mean Height
         private double waveMeanAmplitudeLast = double.NaN;
         private WavePhase waveMeanAmplitudeWavePhase = WavePhase.Init;
         private double waveMeanAmplitudeWaveTop = double.NaN;
         private double waveMeanAmplitudeWaveBottom = double.NaN;
-        private double waveMeanAmplitudeValue = 0;
+        private double waveMeanAmplitudeValue = double.NaN;
         private double waveMeanAmplitudeTotal = 0;
         private List<TimeData> waveMeanAmplitudeDataList = new List<TimeData>();
 
@@ -2114,14 +2114,14 @@ namespace MVS
             waveAmplitudeWavePhase = WavePhase.Init;
             waveAmplitudeWaveTop = double.NaN;
             waveAmplitudeWaveBottom = double.NaN;
-            waveAmplitudeValue = 0;
+            waveAmplitudeValue = double.NaN;
 
             // Wave Mean Amplitude
             waveMeanAmplitudeLast = double.NaN;
             waveMeanAmplitudeWavePhase = WavePhase.Init;
             waveMeanAmplitudeWaveTop = double.NaN;
             waveMeanAmplitudeWaveBottom = double.NaN;
-            waveMeanAmplitudeValue = 0;
+            waveMeanAmplitudeValue = double.NaN;
             waveMeanAmplitudeTotal = 0;
             waveMeanAmplitudeDataList.Clear();
 

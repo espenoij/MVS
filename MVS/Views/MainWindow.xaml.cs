@@ -766,7 +766,7 @@ namespace MVS
             mainWindowVM.OperationsMode = OperationsMode.Analysis;
 
             // Laste session data fra databasen
-            mvsDatabase.LoadSessionData(mainWindowVM.SelectedSession, mvsInputData, recordingsVM.sessionDataList);
+            mvsDatabase.LoadSessionData(mainWindowVM.SelectedSession, recordingsVM.sessionDataList);
 
             // Resetter data listene i dataCalculations
             mvsProcessing.ResetDataCalculations();

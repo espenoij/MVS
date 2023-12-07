@@ -128,7 +128,7 @@ public enum ValueType
     Ref_RollMaxLeft20m,
     Ref_RollMaxRight20m,
 
-    Ref_HeaveMax20m,
+    Ref_HeaveAmplitude,
     Ref_HeaveAmplitudeMean20m,
     Ref_HeaveAmplitudeMax20m,
 
@@ -142,7 +142,7 @@ public enum ValueType
     Test_RollMaxLeft20m,
     Test_RollMaxRight20m,
 
-    Test_HeaveMax20m,
+    Test_HeaveAmplitude,
     Test_HeaveAmplitudeMean20m,
     Test_HeaveAmplitudeMax20m,
 
