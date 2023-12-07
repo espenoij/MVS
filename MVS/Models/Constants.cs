@@ -132,6 +132,7 @@ class Constants
     public const string DefaultHMSDatabaseName = "ses_hms";
     public const string DefaultHMSDatabaseAddress = "127.0.0.1";
     public const int DefaultHMSDatabasePort = 3306;
+    public const string DefaultHMSDatabaseTableName = "hms_data_v1";
 
     // Program Save Frequency (default save to database frequency)
     public const int DatabaseSaveFreqDefault = 1000;

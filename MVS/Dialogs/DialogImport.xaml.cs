@@ -27,10 +27,10 @@ namespace MVS
             this.config = config;
 
             // Database User ID
-            tbSettingsDatabaseUserID.Text = Encryption.ToInsecureString(Encryption.DecryptString(config.Read(ConfigKey.HMSDatabaseUserID)));
+            tbSettingsHMSDatabaseUserID.Text = Encryption.ToInsecureString(Encryption.DecryptString(config.Read(ConfigKey.HMSDatabaseUserID)));
 
             // Database Password
-            tbSettingsDatabasePassword.Text = Encryption.ToInsecureString(Encryption.DecryptString(config.Read(ConfigKey.HMSDatabasePassword)));
+            tbSettingsHMSDatabasePassword.Text = Encryption.ToInsecureString(Encryption.DecryptString(config.Read(ConfigKey.HMSDatabasePassword)));
 
             tbDataSetName.Content = selectedSession.Name;
             lbDataSetDate.Content = selectedSession.DateString;
@@ -54,21 +54,21 @@ namespace MVS
         }
 
 
-        private void tbSettingsDatabaseAddress_LostFocus(object sender, RoutedEventArgs e)
+        private void tbSettingsHMSDatabaseAddress_LostFocus(object sender, RoutedEventArgs e)
         {
-            tbSettingsDatabaseAddress_Update(sender);
+            tbSettingsHMSDatabaseAddress_Update(sender);
         }
 
-        private void tbSettingsDatabaseAddress_KeyDown(object sender, KeyEventArgs e)
+        private void tbSettingsHMSDatabaseAddress_KeyDown(object sender, KeyEventArgs e)
         {
             if (e.Key == Key.Return)
             {
-                tbSettingsDatabaseAddress_Update(sender);
+                tbSettingsHMSDatabaseAddress_Update(sender);
                 Keyboard.ClearFocus();
             }
         }
 
-        private void tbSettingsDatabaseAddress_Update(object sender)
+        private void tbSettingsHMSDatabaseAddress_Update(object sender)
         {
             DataValidation.IPAddress(
                    (sender as TextBox).Text,
@@ -78,21 +78,21 @@ namespace MVS
             importVM.databaseAddress = validatedInput;
         }
 
-        private void tbSettingsDatabasePort_LostFocus(object sender, RoutedEventArgs e)
+        private void tbSettingsHMSDatabasePort_LostFocus(object sender, RoutedEventArgs e)
         {
-            tbSettingsDatabasePort_Update(sender);
+            tbSettingsHMSDatabasePort_Update(sender);
         }
 
-        private void tbSettingsDatabasePort_KeyDown(object sender, KeyEventArgs e)
+        private void tbSettingsHMSDatabasePort_KeyDown(object sender, KeyEventArgs e)
         {
             if (e.Key == Key.Return)
             {
-                tbSettingsDatabasePort_Update(sender);
+                tbSettingsHMSDatabasePort_Update(sender);
                 Keyboard.ClearFocus();
             }
         }
 
-        private void tbSettingsDatabasePort_Update(object sender)
+        private void tbSettingsHMSDatabasePort_Update(object sender)
         {
             // Sjekk av input
             DataValidation.Double(
@@ -105,40 +105,40 @@ namespace MVS
             importVM.databasePort = validatedInput;
         }
 
-        private void tbSettingsDatabaseName_LostFocus(object sender, RoutedEventArgs e)
+        private void tbSettingsHMSDatabaseName_LostFocus(object sender, RoutedEventArgs e)
         {
-            tbSettingsDatabaseName_Update(sender);
+            tbSettingsHMSDatabaseName_Update(sender);
         }
 
-        private void tbSettingsDatabaseName_KeyDown(object sender, KeyEventArgs e)
+        private void tbSettingsHMSDatabaseName_KeyDown(object sender, KeyEventArgs e)
         {
             if (e.Key == Key.Return)
             {
-                tbSettingsDatabaseName_Update(sender);
+                tbSettingsHMSDatabaseName_Update(sender);
                 Keyboard.ClearFocus();
             }
         }
 
-        private void tbSettingsDatabaseName_Update(object sender)
+        private void tbSettingsHMSDatabaseName_Update(object sender)
         {
             importVM.databaseName = (sender as TextBox).Text;
         }
 
-        private void tbSettingsDatabaseUserID_LostFocus(object sender, RoutedEventArgs e)
+        private void tbSettingsHMSDatabaseUserID_LostFocus(object sender, RoutedEventArgs e)
         {
-            tbSettingsDatabaseUserID_Update(sender);
+            tbSettingsHMSDatabaseUserID_Update(sender);
         }
 
-        private void tbSettingsDatabaseUserID_KeyDown(object sender, KeyEventArgs e)
+        private void tbSettingsHMSDatabaseUserID_KeyDown(object sender, KeyEventArgs e)
         {
             if (e.Key == Key.Return)
             {
-                tbSettingsDatabaseUserID_Update(sender);
+                tbSettingsHMSDatabaseUserID_Update(sender);
                 Keyboard.ClearFocus();
             }
         }
 
-        private void tbSettingsDatabaseUserID_Update(object sender)
+        private void tbSettingsHMSDatabaseUserID_Update(object sender)
         {
             if ((sender as TextBox).Text != Encryption.ToInsecureString(Encryption.DecryptString(config.Read(ConfigKey.HMSDatabaseUserID))))
             {
@@ -146,26 +146,45 @@ namespace MVS
             }
         }
 
-        private void tbSettingsDatabasePassword_LostFocus(object sender, RoutedEventArgs e)
+        private void tbSettingsHMSDatabasePassword_LostFocus(object sender, RoutedEventArgs e)
         {
-            tbSettingsDatabasePassword_Update(sender);
+            tbSettingsHMSDatabasePassword_Update(sender);
         }
 
-        private void tbSettingsDatabasePassword_KeyDown(object sender, KeyEventArgs e)
+        private void tbSettingsHMSDatabasePassword_KeyDown(object sender, KeyEventArgs e)
         {
             if (e.Key == Key.Return)
             {
-                tbSettingsDatabasePassword_Update(sender);
+                tbSettingsHMSDatabasePassword_Update(sender);
                 Keyboard.ClearFocus();
             }
         }
 
-        private void tbSettingsDatabasePassword_Update(object sender)
+        private void tbSettingsHMSDatabasePassword_Update(object sender)
         {
             if ((sender as TextBox).Text != Encryption.ToInsecureString(Encryption.DecryptString(config.Read(ConfigKey.HMSDatabasePassword))))
             {
                 config.Write(ConfigKey.HMSDatabasePassword, Encryption.EncryptString(Encryption.ToSecureString((sender as TextBox).Text)));
             }
+        }
+
+        private void tbSettingsHMSDatabaseTableName_LostFocus(object sender, RoutedEventArgs e)
+        {
+            tbSettingsHMSDatabaseTableName_Update(sender);
+        }
+
+        private void tbSettingsHMSDatabaseTableName_KeyDown(object sender, KeyEventArgs e)
+        {
+            if (e.Key == Key.Return)
+            {
+                tbSettingsHMSDatabaseTableName_Update(sender);
+                Keyboard.ClearFocus();
+            }
+        }
+
+        private void tbSettingsHMSDatabaseTableName_Update(object sender)
+        {
+            importVM.databaseTableName = (sender as TextBox).Text;
         }
     }
 }

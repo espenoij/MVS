@@ -9,7 +9,7 @@
     xmlns:local="clr-namespace:MVS"
     telerik:Header="Import from HMS Database"
     WindowStartupLocation="CenterScreen"
-    Height="400"
+    Height="440"
     Width="700"
     telerik:StyleManager.Theme="Material">
 
@@ -69,6 +69,8 @@
                     Margin="8">
 
                     <Grid.RowDefinitions>
+                        <RowDefinition
+                            Height="*" />
                         <RowDefinition
                             Height="*" />
                         <RowDefinition
@@ -266,7 +268,7 @@
 
             </telerik:GroupBox>
 
-            <!--DATABASE-->
+            <!--HMS DATABASE-->
             <telerik:GroupBox
                 Grid.Column="1"
                 Header="HMS DATABASE"
@@ -276,6 +278,8 @@
                     Margin="8">
 
                     <Grid.RowDefinitions>
+                        <RowDefinition
+                            Height="*" />
                         <RowDefinition
                             Height="*" />
                         <RowDefinition
@@ -323,8 +327,8 @@
                                 HorizontalContentAlignment="Left"
                                 HorizontalAlignment="Right"
                                 Text="{Binding Path=databaseAddress}"
-                                LostFocus="tbSettingsDatabaseAddress_LostFocus"
-                                KeyDown="tbSettingsDatabaseAddress_KeyDown" />
+                                LostFocus="tbSettingsHMSDatabaseAddress_LostFocus"
+                                KeyDown="tbSettingsHMSDatabaseAddress_KeyDown" />
                         </Viewbox>
                     </Grid>
 
@@ -357,13 +361,13 @@
                             HorizontalAlignment="Right">
 
                             <TextBox
-                                Name="tbSettingsDatabasePort"
+                                Name="tbSettingsHMSDatabasePort"
                                 Width="110"
                                 HorizontalAlignment="Right"
                                 HorizontalContentAlignment="Left"
                                 Text="{Binding Path=databasePort}"
-                                LostFocus="tbSettingsDatabasePort_LostFocus"
-                                KeyDown="tbSettingsDatabasePort_KeyDown" />
+                                LostFocus="tbSettingsHMSDatabasePort_LostFocus"
+                                KeyDown="tbSettingsHMSDatabasePort_KeyDown" />
                         </Viewbox>
                     </Grid>
 
@@ -396,12 +400,12 @@
                             HorizontalAlignment="Right">
 
                             <TextBox
-                                Name="tbSettingsDatabaseName"
+                                Name="tbSettingsHMSDatabaseName"
                                 Width="110"
                                 HorizontalAlignment="Right"
                                 Text="{Binding Path=databaseName}"
-                                LostFocus="tbSettingsDatabaseName_LostFocus"
-                                KeyDown="tbSettingsDatabaseName_KeyDown" />
+                                LostFocus="tbSettingsHMSDatabaseName_LostFocus"
+                                KeyDown="tbSettingsHMSDatabaseName_KeyDown" />
                         </Viewbox>
                     </Grid>
 
@@ -434,11 +438,11 @@
                             HorizontalAlignment="Right">
 
                             <TextBox
-                                Name="tbSettingsDatabaseUserID"
+                                Name="tbSettingsHMSDatabaseUserID"
                                 Width="110"
                                 HorizontalAlignment="Right"
-                                LostFocus="tbSettingsDatabaseUserID_LostFocus"
-                                KeyDown="tbSettingsDatabaseUserID_KeyDown" />
+                                LostFocus="tbSettingsHMSDatabaseUserID_LostFocus"
+                                KeyDown="tbSettingsHMSDatabaseUserID_KeyDown" />
                         </Viewbox>
                     </Grid>
 
@@ -471,11 +475,49 @@
                             HorizontalAlignment="Right">
 
                             <TextBox
-                                Name="tbSettingsDatabasePassword"
+                                Name="tbSettingsHMSDatabasePassword"
                                 Width="110"
                                 HorizontalAlignment="Right"
-                                LostFocus="tbSettingsDatabasePassword_LostFocus"
-                                KeyDown="tbSettingsDatabasePassword_KeyDown" />
+                                LostFocus="tbSettingsHMSDatabasePassword_LostFocus"
+                                KeyDown="tbSettingsHMSDatabasePassword_KeyDown" />
+                        </Viewbox>
+                    </Grid>
+
+                    <!--Table Name-->
+                    <Grid
+                        Grid.Row="5">
+
+                        <Grid.ColumnDefinitions>
+                            <ColumnDefinition
+                                Width="*" />
+                            <ColumnDefinition
+                                Width="*" />
+                        </Grid.ColumnDefinitions>
+
+                        <Viewbox
+                            Grid.Column="0"
+                            StretchDirection="Both"
+                            Stretch="Uniform"
+                            HorizontalAlignment="Left">
+
+                            <telerik:Label
+                                Content="Table Name"
+                                VerticalAlignment="Center" />
+                        </Viewbox>
+
+                        <Viewbox
+                            Grid.Column="1"
+                            StretchDirection="Both"
+                            Stretch="Uniform"
+                            HorizontalAlignment="Right">
+
+                            <TextBox
+                                Name="tbSettingsHMSDatabaseTableName"
+                                Width="110"
+                                Text="{Binding Path=databaseTableName}"
+                                HorizontalAlignment="Right"
+                                LostFocus="tbSettingsHMSDatabaseTableName_LostFocus"
+                                KeyDown="tbSettingsHMSDatabaseTableName_KeyDown" />
                         </Viewbox>
                     </Grid>
 
