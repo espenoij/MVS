@@ -4,6 +4,7 @@ using System.Linq;
 using System.Security;
 using Telerik.Windows.Data;
 using MySqlConnector;
+using System.Windows.Markup;
 
 namespace MVS
 {
@@ -642,6 +643,7 @@ namespace MVS
             return dataSets;
         }
 
+        // Henter start og end timestamp fra databasen
         public void LoadTimestamps(RecordingSession dataSet)
         {
             try
@@ -837,37 +839,36 @@ namespace MVS
 
                     using (var connection = new MySqlConnection(connectionString))
                     {
+                        // SQL kommando
+                        var cmd = new MySqlCommand();
+                        cmd.Connection = connection;
+
+                        // Åpne database connection
+                        connection.Open();
+
+                        cmd.CommandText = string.Format("UPDATE {0} SET {1}=@testPitch, {2}=@testRoll, {3}=@testHeaveAmplitude WHERE {4} = (SELECT {4} FROM {0} ORDER BY ABS(TIMEDIFF({4}, @timestamp)) LIMIT 1)",
+                            tableNameMVSDataPrefix + selectedSession.Id,
+                            columnTestPitch,
+                            columnTestRoll,
+                            columnTestHeaveAmplitude,
+                            columnTimestamp);
+
                         foreach (var data in dataList)
                         {
-                            // SQL kommando
-                            var cmd = new MySqlCommand();
-                            cmd.Connection = connection;
-
-                            // Åpne database connection
-                            connection.Open();
-
-                            cmd.CommandText = string.Format("UPDATE {0} SET {1}=@testPitch, {2}=@testRoll, {3}=@testHeave WHERE {4} = (SELECT {4} FROM (SELECT {4} FROM {0} ORDER BY ABS(TIMSTAMPDIFF(SECOND, {4}, @timestamp)) LIMIT 1))",
-                                tableNameMVSDataPrefix + selectedSession.Id,
-                                columnTestPitch,
-                                columnTestRoll,
-                                columnTestHeaveAmplitude,
-                                columnTimestamp);
+                            cmd.Parameters.Clear();
 
                             // Update parametre
                             cmd.Parameters.AddWithValue("@timestamp", data.timestamp);
-                            cmd.Parameters.AddWithValue("@testPitch", data.testPitch);
-                            cmd.Parameters.AddWithValue("@testRoll", data.testRoll);
-                            cmd.Parameters.AddWithValue("@testHeaveAmplitude", data.testHeaveAmplitude);
-
-                            // Åpne database connection
-                            connection.Open();
+                            cmd.Parameters.AddWithValue("@testPitch", data.testPitch.ToString());
+                            cmd.Parameters.AddWithValue("@testRoll", data.testRoll.ToString());
+                            cmd.Parameters.AddWithValue("@testHeaveAmplitude", data.testHeaveAmplitude.ToString());
 
                             // Execute
                             cmd.ExecuteNonQuery();
-
-                            // Lukke database connection
-                            connection.Close();
                         }
+
+                        // Lukke database connection
+                        connection.Close();
                     }
                 }
             }

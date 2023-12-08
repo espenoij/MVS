@@ -240,7 +240,7 @@
                         <DockPanel
                             Margin="8">
                             <Label
-                                Width="120"
+                                Width="140"
                                 Content="Input MRUs"
                                 VerticalAlignment="Center" />
                             <telerik:RadComboBox

@@ -75,10 +75,10 @@ namespace MVS
             //    LoadSelectedItemsDetails();
             //}
 
-            UpdateButtonStates(false);
+            UpdateUIStates(false);
         }
 
-        public void UpdateButtonStates(bool serverStarted)
+        public void UpdateUIStates(bool serverStarted)
         {
             // Vi kan ikke utføre data set endringer dersom server kjører.
             if (serverStarted)
@@ -111,6 +111,19 @@ namespace MVS
 
                 gvVerificationSessions.IsEnabled = true;
             }
+
+            if (mainWindowVM.SelectedSession != null)
+            {
+                tbDataSetName.IsEnabled = true;
+                tbDataSetDescription.IsEnabled = true;
+                cboInputMRUs.IsEnabled = true;
+            }
+            else
+            {
+                tbDataSetName.IsEnabled = false;
+                tbDataSetDescription.IsEnabled = false;
+                cboInputMRUs.IsEnabled = false;
+            }
         }
 
         private void LoadVerificationSessions()
@@ -133,15 +146,15 @@ namespace MVS
 
         public void Start()
         {
-            UpdateButtonStates(true);
+            UpdateUIStates(true);
         }
 
         public void Stop()
         {
-            UpdateButtonStates(false);
-
             // Laste timestamps på data set
             mvsDatabase.LoadTimestamps(mainWindowVM.SelectedSession);
+
+            UpdateUIStates(false);
 
             // Legge data i UI
             LoadSelectedItemsDetails();
@@ -207,7 +220,7 @@ namespace MVS
             mainWindowVM.SelectedSession = (sender as RadGridView).SelectedItem as RecordingSession;
 
             LoadSelectedItemsDetails();
-            UpdateButtonStates(false);
+            UpdateUIStates(false);
 
             updateUIButtonsCallback();
         }
@@ -295,7 +308,7 @@ namespace MVS
             if (mainWindowVM.SelectedSession != null)
             {
                 // Ny valgt MRU type
-                mainWindowVM.SelectedSession.InputMRUs = (InputMRUType)(sender as RadComboBox).SelectedIndex;
+                mainWindowVM.SelectedSession.InputMRUs = EnumExtension.GetEnumValueFromDescription<InputMRUType>((sender as RadComboBox).Text);
 
                 // Oppdatere database
                 mvsDatabase.Update(mainWindowVM.SelectedSession);

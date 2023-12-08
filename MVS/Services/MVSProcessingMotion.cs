@@ -252,7 +252,10 @@ namespace MVS
                  mainWindowVM.SelectedSession?.InputMRUs == InputMRUType.ReferenceMRU_TestMRU) &&
                 refSensorPitch.status != DataStatus.TIMEOUT_ERROR &&
                 refSensorRoll.status != DataStatus.TIMEOUT_ERROR &&
-                refSensorHeave.status != DataStatus.TIMEOUT_ERROR)
+                refSensorHeave.status != DataStatus.TIMEOUT_ERROR &&
+                !double.IsNaN(testSensorPitch.data) &&
+                !double.IsNaN(testSensorRoll.data) &&
+                !double.IsNaN(testSensorHeave.data))
             {
                 // Sjekke data timeout
                 if (mainWindowVM.OperationsMode == OperationsMode.Analysis)
@@ -364,7 +367,10 @@ namespace MVS
                  mainWindowVM.SelectedSession?.InputMRUs == InputMRUType.ReferenceMRU_TestMRU) &&
                 testSensorPitch.status != DataStatus.TIMEOUT_ERROR &&
                 testSensorRoll.status != DataStatus.TIMEOUT_ERROR &&
-                testSensorHeave.status != DataStatus.TIMEOUT_ERROR)
+                testSensorHeave.status != DataStatus.TIMEOUT_ERROR &&
+                !double.IsNaN(testSensorPitch.data) &&
+                !double.IsNaN(testSensorRoll.data) &&
+                !double.IsNaN(testSensorHeave.data))
             {
                 if (mainWindowVM.OperationsMode == OperationsMode.Analysis)
                 {
