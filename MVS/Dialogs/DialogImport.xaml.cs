@@ -15,6 +15,7 @@ namespace MVS
         private ImportVM importVM;
         private Config config;
         private MVSDatabase mvsDatabase;
+        private MainWindowVM mainWindowVM;
         private RecordingSession selectedSession;
 
         public DialogImport()
@@ -22,13 +23,14 @@ namespace MVS
             InitializeComponent();
         }
 
-        public void Init(ImportVM importVM, Config config, RecordingSession selectedSession, MVSDatabase mvsDatabase)
+        public void Init(ImportVM importVM, Config config, RecordingSession selectedSession, MVSDatabase mvsDatabase, MainWindowVM mainWindowVM)
         {
             DataContext = importVM;
             this.importVM = importVM;
             this.config = config;
             this.selectedSession = selectedSession;
             this.mvsDatabase = mvsDatabase;
+            this.mainWindowVM = mainWindowVM;
 
             // Database User ID
             tbSettingsHMSDatabaseUserID.Text = Encryption.ToInsecureString(Encryption.DecryptString(config.Read(ConfigKey.HMSDatabaseUserID)));
@@ -55,7 +57,14 @@ namespace MVS
 
         private void btnImport_Click(object sender, System.Windows.RoutedEventArgs e)
         {
-            mvsDatabase.ImportHMSData(selectedSession);
+            if (mvsDatabase.ImportHMSData(selectedSession))
+            {
+                // Ny valgt MRU type
+                mainWindowVM.SelectedSession.InputMRUs = InputMRUType.ReferenceMRU_TestMRU;
+
+                // Oppdatere database
+                mvsDatabase.Update(mainWindowVM.SelectedSession);
+            }
         }
 
 

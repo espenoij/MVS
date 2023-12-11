@@ -24,10 +24,10 @@ namespace MVS
         private const string columnTimestamp = "timestamp";
         private const string columnRefPitch = "ref_pitch";
         private const string columnRefRoll = "ref_roll";
-        private const string columnRefHeaveAmplitude = "ref_heave_amplitude";
+        private const string columnRefHeave = "ref_heave";
         private const string columnTestPitch = "test_pitch";
         private const string columnTestRoll = "test_roll";
-        private const string columnTestHeaveAmplitude = "test_heave_amplitude";
+        private const string columnTestHeave = "test_heave";
 
         // Error Messages
         private const string tableNameErrorMessages = "error_messages";
@@ -723,10 +723,10 @@ namespace MVS
                             columnTimestamp,
                             columnRefPitch,
                             columnRefRoll,
-                            columnRefHeaveAmplitude,
+                            columnRefHeave,
                             columnTestPitch,
                             columnTestRoll,
-                            columnTestHeaveAmplitude,
+                            columnTestHeave,
                             tableNameMVSDataPrefix + dataSet.Id);
 
                         // Hente data
@@ -742,11 +742,11 @@ namespace MVS
 
                             data.refPitch = Convert.ToDouble(dbReader.GetString(2));
                             data.refRoll = Convert.ToDouble(dbReader.GetString(3));
-                            data.refHeaveAmplitude = Convert.ToDouble(dbReader.GetString(4));
+                            data.refHeave = Convert.ToDouble(dbReader.GetString(4));
 
                             data.testPitch = Convert.ToDouble(dbReader.GetString(5));
                             data.testRoll = Convert.ToDouble(dbReader.GetString(6));
-                            data.testHeaveAmplitude = Convert.ToDouble(dbReader.GetString(7));
+                            data.testHeave = Convert.ToDouble(dbReader.GetString(7));
 
                             dataList.Add(data);
                         }
@@ -765,8 +765,10 @@ namespace MVS
             }
         }
 
-        public void ImportHMSData(RecordingSession selectedSession)
+        public bool ImportHMSData(RecordingSession selectedSession)
         {
+            bool ret = false;
+
             try
             {
                 if (isDatabaseConnectionOK)
@@ -776,7 +778,7 @@ namespace MVS
                     string hmsDBaddress = config.ReadWithDefault(ConfigKey.HMSDatabaseAddress, Constants.DefaultHMSDatabaseAddress);
                     string hmsDBport = config.ReadWithDefault(ConfigKey.HMSDatabasePort, Constants.DefaultHMSDatabasePort).ToString();
                     string hmsDBdatabase = config.ReadWithDefault(ConfigKey.HMSDatabaseName, Constants.DefaultHMSDatabaseName);
-                    string hmsDBdatabaseTableName = config.ReadWithDefault(ConfigKey.HMSDatabaseTableName, Constants.DefaultHMSDatabaseName);
+                    string hmsDBdatabaseTable = config.ReadWithDefault(ConfigKey.HMSDatabaseTable, Constants.DefaultHMSDatabaseTable);
 
                     // Database login
                     SecureString hmsDBuserid = Encryption.DecryptString(config.Read(ConfigKey.HMSDatabaseUserID));
@@ -804,8 +806,8 @@ namespace MVS
                             columnTimestamp,
                             "pitch",
                             "roll",
-                            "heave_amplitude",
-                            hmsDBdatabaseTableName,
+                            "heave",
+                            hmsDBdatabaseTable,
                             columnTimestamp);
 
                         // Update parametre
@@ -825,7 +827,7 @@ namespace MVS
 
                             data.testPitch = Convert.ToDouble(dbReader.GetString(2));
                             data.testRoll = Convert.ToDouble(dbReader.GetString(3));
-                            data.testHeaveAmplitude = Convert.ToDouble(dbReader.GetString(4));
+                            data.testHeave = Convert.ToDouble(dbReader.GetString(4));
 
                             dataList.Add(data);
                         }
@@ -837,38 +839,43 @@ namespace MVS
                         connection.Close();
                     }
 
-                    using (var connection = new MySqlConnection(connectionString))
+                    if (dataList.Count > 0)
                     {
-                        // SQL kommando
-                        var cmd = new MySqlCommand();
-                        cmd.Connection = connection;
-
-                        // Åpne database connection
-                        connection.Open();
-
-                        cmd.CommandText = string.Format("UPDATE {0} SET {1}=@testPitch, {2}=@testRoll, {3}=@testHeaveAmplitude WHERE {4} = (SELECT {4} FROM {0} ORDER BY ABS(TIMEDIFF({4}, @timestamp)) LIMIT 1)",
-                            tableNameMVSDataPrefix + selectedSession.Id,
-                            columnTestPitch,
-                            columnTestRoll,
-                            columnTestHeaveAmplitude,
-                            columnTimestamp);
-
-                        foreach (var data in dataList)
+                        using (var connection = new MySqlConnection(connectionString))
                         {
-                            cmd.Parameters.Clear();
+                            // SQL kommando
+                            var cmd = new MySqlCommand();
+                            cmd.Connection = connection;
 
-                            // Update parametre
-                            cmd.Parameters.AddWithValue("@timestamp", data.timestamp);
-                            cmd.Parameters.AddWithValue("@testPitch", data.testPitch.ToString());
-                            cmd.Parameters.AddWithValue("@testRoll", data.testRoll.ToString());
-                            cmd.Parameters.AddWithValue("@testHeaveAmplitude", data.testHeaveAmplitude.ToString());
+                            // Åpne database connection
+                            connection.Open();
 
-                            // Execute
-                            cmd.ExecuteNonQuery();
+                            cmd.CommandText = string.Format("UPDATE {0} SET {1}=@testPitch, {2}=@testRoll, {3}=@testHeave WHERE {4} = (SELECT {4} FROM {0} ORDER BY ABS(TIMEDIFF({4}, @timestamp)) LIMIT 1)",
+                                tableNameMVSDataPrefix + selectedSession.Id,
+                                columnTestPitch,
+                                columnTestRoll,
+                                columnTestHeave,
+                                columnTimestamp);
+
+                            foreach (var data in dataList)
+                            {
+                                cmd.Parameters.Clear();
+
+                                // Update parametre
+                                cmd.Parameters.AddWithValue("@timestamp", data.timestamp);
+                                cmd.Parameters.AddWithValue("@testPitch", data.testPitch.ToString());
+                                cmd.Parameters.AddWithValue("@testRoll", data.testRoll.ToString());
+                                cmd.Parameters.AddWithValue("@testHeave", data.testHeave.ToString());
+
+                                // Execute
+                                cmd.ExecuteNonQuery();
+                            }
+
+                            // Lukke database connection
+                            connection.Close();
                         }
 
-                        // Lukke database connection
-                        connection.Close();
+                        ret = true;
                     }
                 }
             }
@@ -876,6 +883,8 @@ namespace MVS
             {
                 throw;
             }
+
+            return ret;
         }
 
         // Method to get the first entry in the database

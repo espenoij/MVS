@@ -9,11 +9,11 @@ namespace MVS
 
         public double refPitch;
         public double refRoll;
-        public double refHeaveAmplitude;
+        public double refHeave;
 
         public double testPitch;
         public double testRoll;
-        public double testHeaveAmplitude;
+        public double testHeave;
 
         // Initialize
         public SessionData()
@@ -33,10 +33,10 @@ namespace MVS
                 timestamp = session.timestamp;
                 refPitch = session.refPitch;
                 refRoll = session.refRoll;
-                refHeaveAmplitude = session.refHeaveAmplitude;
+                refHeave = session.refHeave;
                 testPitch = session.testPitch;
                 testRoll = session.testRoll;
-                testHeaveAmplitude = session.testHeaveAmplitude;
+                testHeave = session.testHeave;
             }
         }
     }

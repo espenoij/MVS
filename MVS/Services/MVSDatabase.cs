@@ -274,11 +274,13 @@ namespace MVS
             }
         }
 
-        public void ImportHMSData(RecordingSession selectedSession)
+        public bool ImportHMSData(RecordingSession selectedSession)
         {
+            bool ret = false;
+
             try
             {
-                database.ImportHMSData(selectedSession);
+                ret = database.ImportHMSData(selectedSession);
 
                 errorHandler.ResetDatabaseError(ErrorHandler.DatabaseErrorType.ImportHMSData);
             }
@@ -293,6 +295,8 @@ namespace MVS
 
                 errorHandler.SetDatabaseError(ErrorHandler.DatabaseErrorType.ImportHMSData);
             }
+
+            return ret;
         }
     }
 }

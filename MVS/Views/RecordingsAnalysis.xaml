@@ -727,6 +727,7 @@
                         <Viewbox
                             Grid.Row="1"
                             Grid.Column="0"
+                            Grid.ColumnSpan="2"
                             StretchDirection="Both"
                             Stretch="Uniform"
                             HorizontalAlignment="Center">
@@ -739,6 +740,7 @@
                         <Viewbox
                             Grid.Row="2"
                             Grid.Column="0"
+                            Grid.ColumnSpan="2"
                             StretchDirection="Both"
                             Stretch="Uniform"
                             HorizontalAlignment="Center">
@@ -747,47 +749,6 @@
                                 Text="Amplitude" />
 
                         </Viewbox>
-
-                        <Grid
-                            Grid.Column="1"
-                            Grid.RowSpan="3">
-
-                            <Grid.RowDefinitions>
-                                <RowDefinition
-                                    Height="2*" />
-                                <RowDefinition
-                                    Height="1*" />
-                                <RowDefinition
-                                    Height="5*" />
-                                <RowDefinition
-                                    Height="1*" />
-                                <RowDefinition
-                                    Height="1*" />
-                            </Grid.RowDefinitions>
-
-                            <Viewbox
-                                Grid.Row="1"
-                                StretchDirection="Both"
-                                Stretch="Uniform"
-                                VerticalAlignment="Center">
-
-                                <TextBlock
-                                    Text="U" />
-
-                            </Viewbox>
-
-                            <Viewbox
-                                Grid.Row="3"
-                                StretchDirection="Both"
-                                Stretch="Uniform"
-                                VerticalAlignment="Center">
-
-                                <TextBlock
-                                    Text="D" />
-
-                            </Viewbox>
-
-                        </Grid>
 
                     </Grid>
 

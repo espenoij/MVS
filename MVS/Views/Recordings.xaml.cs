@@ -211,7 +211,7 @@ namespace MVS
             // Åpne HMS data import dialog vindu
             DialogImport importDlg = new DialogImport();
             importDlg.Owner = App.Current.MainWindow;
-            importDlg.Init(importVM, config, mainWindowVM.SelectedSession, mvsDatabase);
+            importDlg.Init(importVM, config, mainWindowVM.SelectedSession, mvsDatabase, mainWindowVM);
             importDlg.ShowDialog();
         }
 

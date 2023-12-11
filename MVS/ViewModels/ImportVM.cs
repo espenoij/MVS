@@ -29,7 +29,7 @@ namespace MVS
             databaseName = config.ReadWithDefault(ConfigKey.HMSDatabaseName, Constants.DefaultHMSDatabaseName);
 
             // Database Table Name
-            databaseTableName = config.ReadWithDefault(ConfigKey.HMSDatabaseTableName, Constants.DefaultHMSDatabaseTableName);
+            databaseTableName = config.ReadWithDefault(ConfigKey.HMSDatabaseTable, Constants.DefaultHMSDatabaseTable);
         }
 
         /////////////////////////////////////////////////////////////////////////////
@@ -107,7 +107,7 @@ namespace MVS
                 if (value != null)
                 {
                     _databaseTableName = value;
-                    config.Write(ConfigKey.HMSDatabaseTableName, value);
+                    config.Write(ConfigKey.HMSDatabaseTable, value);
                     OnPropertyChanged();
                 }
             }

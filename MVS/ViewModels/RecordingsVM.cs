@@ -186,6 +186,13 @@ namespace MVS
 
         public void ProcessSessionData()
         {
+            double refMeanPitchCount = 0;
+            double refMeanRollCount = 0;
+            double refMeanHeaveAmplitudeCount = 0;
+            double testMeanPitchCount = 0;
+            double testMeanRollCount = 0;
+            double testMeanHeaveAmplitudeCount = 0;
+
             double refMeanPitchSum = 0;
             double refMeanRollSum = 0;
             double refMeanHeaveAmplitudeSum = 0;
@@ -226,6 +233,8 @@ namespace MVS
                         timestamp = sessionData.timestamp,
                         status = DataStatus.OK
                     });
+
+                    refMeanPitchCount++;
                 }
 
                 if (mvsOutputData.GetData(ValueType.Ref_PitchMean20m).status == DataStatus.OK)
@@ -246,6 +255,8 @@ namespace MVS
                         timestamp = sessionData.timestamp,
                         status = DataStatus.OK
                     });
+
+                    testMeanPitchCount++;
                 }
 
                 if (mvsOutputData.GetData(ValueType.Test_PitchMean20m).status == DataStatus.OK)
@@ -267,6 +278,8 @@ namespace MVS
                         timestamp = sessionData.timestamp,
                         status = DataStatus.OK
                     });
+
+                    refMeanRollCount++;
                 }
 
                 if (mvsOutputData.GetData(ValueType.Ref_RollMean20m).status == DataStatus.OK)
@@ -287,6 +300,8 @@ namespace MVS
                         timestamp = sessionData.timestamp,
                         status = DataStatus.OK
                     });
+
+                    testMeanRollCount++;
                 }
 
                 if (mvsOutputData.GetData(ValueType.Test_RollMean20m).status == DataStatus.OK)
@@ -308,6 +323,8 @@ namespace MVS
                         timestamp = sessionData.timestamp,
                         status = DataStatus.OK
                     });
+
+                    refMeanHeaveAmplitudeCount++;
                 }
 
                 if (mvsOutputData.GetData(ValueType.Ref_HeaveAmplitudeMean20m).status == DataStatus.OK)
@@ -328,6 +345,8 @@ namespace MVS
                         timestamp = sessionData.timestamp,
                         status = DataStatus.OK
                     });
+
+                    testMeanHeaveAmplitudeCount++;
                 }
 
                 if (mvsOutputData.GetData(ValueType.Test_HeaveAmplitudeMean20m).status == DataStatus.OK)
@@ -341,61 +360,45 @@ namespace MVS
                 }
 
                 // Beregner et totalt snitt av alle enkeltverdiene for pitch, roll og heave
-                if (mvsOutputData.GetData(ValueType.Ref_Pitch).status == DataStatus.OK) refMeanPitchSum += mvsOutputData.GetData(ValueType.Ref_Pitch).data;
-                if (mvsOutputData.GetData(ValueType.Ref_Roll).status == DataStatus.OK) refMeanRollSum += mvsOutputData.GetData(ValueType.Ref_Roll).data;                
-                if (mvsOutputData.GetData(ValueType.Ref_HeaveAmplitude).status == DataStatus.OK) refMeanHeaveAmplitudeSum += mvsOutputData.GetData(ValueType.Ref_HeaveAmplitude).data;
+                refMeanPitchSum += AddToMeanSum(mvsOutputData.GetData(ValueType.Ref_Pitch));
+                refMeanRollSum += AddToMeanSum(mvsOutputData.GetData(ValueType.Ref_Roll));
+                refMeanHeaveAmplitudeSum += AddToMeanSum(mvsOutputData.GetData(ValueType.Ref_HeaveAmplitude));
 
-                if (mvsOutputData.GetData(ValueType.Test_Pitch).status == DataStatus.OK) testMeanPitchSum += mvsOutputData.GetData(ValueType.Test_Pitch).data;
-                if (mvsOutputData.GetData(ValueType.Test_Roll).status == DataStatus.OK) testMeanRollSum += mvsOutputData.GetData(ValueType.Test_Roll).data;
-                if (mvsOutputData.GetData(ValueType.Test_HeaveAmplitude).status == DataStatus.OK) testMeanHeaveAmplitudeSum += mvsOutputData.GetData(ValueType.Test_HeaveAmplitude).data;
+                testMeanPitchSum += AddToMeanSum(mvsOutputData.GetData(ValueType.Test_Pitch));
+                testMeanRollSum += AddToMeanSum(mvsOutputData.GetData(ValueType.Test_Roll));
+                testMeanHeaveAmplitudeSum += AddToMeanSum(mvsOutputData.GetData(ValueType.Test_HeaveAmplitude));
+
+                // Oppdatere max verdier
+                if (MaxValueCheckOK(mvsOutputData.GetData(ValueType.Ref_PitchMax20m))) refPitchMax20mData = mvsOutputData.GetData(ValueType.Ref_PitchMax20m);
+                if (MaxValueCheckOK(mvsOutputData.GetData(ValueType.Ref_PitchMaxUp20m))) refPitchMaxUp20mData = mvsOutputData.GetData(ValueType.Ref_PitchMaxUp20m);
+                if (MaxValueCheckOK(mvsOutputData.GetData(ValueType.Ref_PitchMaxDown20m))) refPitchMaxDown20mData = mvsOutputData.GetData(ValueType.Ref_PitchMaxDown20m);
+                if (MaxValueCheckOK(mvsOutputData.GetData(ValueType.Ref_RollMax20m))) refRollMax20mData = mvsOutputData.GetData(ValueType.Ref_RollMax20m);
+                if (MaxValueCheckOK(mvsOutputData.GetData(ValueType.Ref_RollMaxLeft20m))) refRollMaxLeft20mData = mvsOutputData.GetData(ValueType.Ref_RollMaxLeft20m);
+                if (MaxValueCheckOK(mvsOutputData.GetData(ValueType.Ref_RollMaxRight20m))) refRollMaxRight20mData = mvsOutputData.GetData(ValueType.Ref_RollMaxRight20m);
+                if (MaxValueCheckOK(mvsOutputData.GetData(ValueType.Ref_HeaveAmplitudeMax20m))) refHeaveAmplitudeMax20mData = mvsOutputData.GetData(ValueType.Ref_HeaveAmplitudeMax20m);
+                if (MaxValueCheckOK(mvsOutputData.GetData(ValueType.Ref_HeaveAmplitudeMean20m))) refHeaveAmplitudeMean20mData = mvsOutputData.GetData(ValueType.Ref_HeaveAmplitudeMean20m);
+
+                if (MaxValueCheckOK(mvsOutputData.GetData(ValueType.Test_PitchMax20m))) testPitchMax20mData = mvsOutputData.GetData(ValueType.Test_PitchMax20m);
+                if (MaxValueCheckOK(mvsOutputData.GetData(ValueType.Test_PitchMaxUp20m))) testPitchMaxUp20mData = mvsOutputData.GetData(ValueType.Test_PitchMaxUp20m);
+                if (MaxValueCheckOK(mvsOutputData.GetData(ValueType.Test_PitchMaxDown20m))) testPitchMaxDown20mData = mvsOutputData.GetData(ValueType.Test_PitchMaxDown20m);
+                if (MaxValueCheckOK(mvsOutputData.GetData(ValueType.Test_RollMax20m))) testRollMax20mData = mvsOutputData.GetData(ValueType.Test_RollMax20m);
+                if (MaxValueCheckOK(mvsOutputData.GetData(ValueType.Test_RollMaxLeft20m))) testRollMaxLeft20mData = mvsOutputData.GetData(ValueType.Test_RollMaxLeft20m);
+                if (MaxValueCheckOK(mvsOutputData.GetData(ValueType.Test_RollMaxRight20m))) testRollMaxRight20mData = mvsOutputData.GetData(ValueType.Test_RollMaxRight20m);
+                if (MaxValueCheckOK(mvsOutputData.GetData(ValueType.Test_RollMean20m))) testRollMean20mData = mvsOutputData.GetData(ValueType.Test_RollMean20m);
+                if (MaxValueCheckOK(mvsOutputData.GetData(ValueType.Test_HeaveAmplitudeMax20m))) testHeaveAmplitudeMax20mData = mvsOutputData.GetData(ValueType.Test_HeaveAmplitudeMax20m);
+                if (MaxValueCheckOK(mvsOutputData.GetData(ValueType.Test_HeaveAmplitudeMean20m))) testHeaveAmplitudeMean20mData = mvsOutputData.GetData(ValueType.Test_HeaveAmplitudeMean20m);
+
             }
 
-            // Oppdatere max verdier
-            if (mvsOutputData.GetData(ValueType.Ref_PitchMax20m).status == DataStatus.OK) refPitchMax20mData = mvsOutputData.GetData(ValueType.Ref_PitchMax20m);
-            if (mvsOutputData.GetData(ValueType.Ref_PitchMaxUp20m).status == DataStatus.OK) refPitchMaxUp20mData = mvsOutputData.GetData(ValueType.Ref_PitchMaxUp20m);
-            if (mvsOutputData.GetData(ValueType.Ref_PitchMaxDown20m).status == DataStatus.OK) refPitchMaxDown20mData = mvsOutputData.GetData(ValueType.Ref_PitchMaxDown20m);
-            if (mvsOutputData.GetData(ValueType.Ref_RollMax20m).status == DataStatus.OK) refRollMax20mData = mvsOutputData.GetData(ValueType.Ref_RollMax20m);
-            if (mvsOutputData.GetData(ValueType.Ref_RollMaxLeft20m).status == DataStatus.OK) refRollMaxLeft20mData = mvsOutputData.GetData(ValueType.Ref_RollMaxLeft20m);
-            if (mvsOutputData.GetData(ValueType.Ref_RollMaxRight20m).status == DataStatus.OK) refRollMaxRight20mData = mvsOutputData.GetData(ValueType.Ref_RollMaxRight20m);
-            if (mvsOutputData.GetData(ValueType.Ref_HeaveAmplitudeMax20m).status == DataStatus.OK) refHeaveAmplitudeMax20mData = mvsOutputData.GetData(ValueType.Ref_HeaveAmplitudeMax20m);
-            if (mvsOutputData.GetData(ValueType.Ref_HeaveAmplitudeMean20m).status == DataStatus.OK) refHeaveAmplitudeMean20mData = mvsOutputData.GetData(ValueType.Ref_HeaveAmplitudeMean20m);
-
-            if (mvsOutputData.GetData(ValueType.Test_PitchMax20m).status == DataStatus.OK) testPitchMax20mData = mvsOutputData.GetData(ValueType.Test_PitchMax20m);
-            if (mvsOutputData.GetData(ValueType.Test_PitchMaxUp20m).status == DataStatus.OK) testPitchMaxUp20mData = mvsOutputData.GetData(ValueType.Test_PitchMaxUp20m);
-            if (mvsOutputData.GetData(ValueType.Test_PitchMaxDown20m).status == DataStatus.OK) testPitchMaxDown20mData = mvsOutputData.GetData(ValueType.Test_PitchMaxDown20m);
-            if (mvsOutputData.GetData(ValueType.Test_RollMax20m).status == DataStatus.OK) testRollMax20mData = mvsOutputData.GetData(ValueType.Test_RollMax20m);
-            if (mvsOutputData.GetData(ValueType.Test_RollMaxLeft20m).status == DataStatus.OK) testRollMaxLeft20mData = mvsOutputData.GetData(ValueType.Test_RollMaxLeft20m);
-            if (mvsOutputData.GetData(ValueType.Test_RollMaxRight20m).status == DataStatus.OK) testRollMaxRight20mData = mvsOutputData.GetData(ValueType.Test_RollMaxRight20m);
-            if (mvsOutputData.GetData(ValueType.Test_RollMean20m).status == DataStatus.OK) testRollMean20mData = mvsOutputData.GetData(ValueType.Test_RollMean20m);
-            if (mvsOutputData.GetData(ValueType.Test_HeaveAmplitudeMax20m).status == DataStatus.OK) testHeaveAmplitudeMax20mData = mvsOutputData.GetData(ValueType.Test_HeaveAmplitudeMax20m);
-            if (mvsOutputData.GetData(ValueType.Test_HeaveAmplitudeMean20m).status == DataStatus.OK) testHeaveAmplitudeMean20mData = mvsOutputData.GetData(ValueType.Test_HeaveAmplitudeMean20m);
-
             // Oppdatere mean verdier
-            HMSData meanData = new HMSData();
 
-            meanData.data = refMeanPitchSum / sessionDataList.Count;
-            meanData.status = DataStatus.OK;
-            refPitchMean20mData = meanData;
-
-            meanData.data = refMeanRollSum / sessionDataList.Count;
-            meanData.status = DataStatus.OK;
-            refRollMean20mData = meanData;
-
-            meanData.data = refMeanHeaveAmplitudeSum / sessionDataList.Count;
-            meanData.status = DataStatus.OK;
-            refHeaveMean20mData = meanData;
-
-            meanData.data = testMeanPitchSum / sessionDataList.Count;
-            meanData.status = DataStatus.OK;
-            testPitchMean20mData = meanData;
-
-            meanData.data = testMeanRollSum / sessionDataList.Count;
-            meanData.status = DataStatus.OK;
-            testRollMean20mData = meanData;
-
-            meanData.data = testMeanHeaveAmplitudeSum / sessionDataList.Count;
-            meanData.status = DataStatus.OK;
-            testHeaveMean20mData = meanData;
+            refPitchMean20mData = UpdateMeanSum(refMeanPitchSum, refMeanPitchCount);
+            refRollMean20mData = UpdateMeanSum(refMeanRollSum, refMeanRollCount);
+            refHeaveMean20mData = UpdateMeanSum(refMeanHeaveAmplitudeSum, refMeanHeaveAmplitudeCount);
+           
+            testPitchMean20mData = UpdateMeanSum(testMeanPitchSum, testMeanPitchCount);
+            testRollMean20mData = UpdateMeanSum(testMeanRollSum, testMeanRollCount);
+            testHeaveMean20mData = UpdateMeanSum(testMeanHeaveAmplitudeSum, testMeanHeaveAmplitudeCount);
 
             // Oppdatere alignment datetime til alle chart
             alignmentTime = sessionDataList.Last().timestamp;
@@ -408,6 +411,32 @@ namespace MVS
             OnPropertyChanged(nameof(rollChartAxisMin20m));
 
             OnPropertyChanged(nameof(heaveAmplitudeChartAxisMax20m));
+        }
+
+        public double AddToMeanSum(HMSData hmsData)
+        {
+            if (hmsData.status == DataStatus.OK && !double.IsNaN(hmsData.data))
+                return hmsData.data;
+            else
+                return 0;
+        }
+
+        public HMSData UpdateMeanSum(double meanSum, double count)
+        {
+            HMSData meanData = new HMSData();
+
+            meanData.data = meanSum / count;
+            meanData.status = DataStatus.OK;
+
+            return meanData;
+        }
+
+        public bool MaxValueCheckOK(HMSData hmsData)
+        {
+            if (hmsData.status == DataStatus.OK && !double.IsNaN(hmsData.data))
+                return true;
+            else
+                return false;
         }
 
         public void TransferToDisplay()

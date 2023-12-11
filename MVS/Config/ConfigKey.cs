@@ -142,7 +142,7 @@
     public const string HMSDatabaseAddress = "HMSDatabaseAddress";
     public const string HMSDatabasePort = "HMSDatabasePort";
     public const string HMSDatabaseName = "HMSDatabaseName";
-    public const string HMSDatabaseTableName = "HMSDatabaseTableName";
+    public const string HMSDatabaseTable = "HMSDatabaseTable";
     public const string HMSDatabaseUserID = "HMSDatabaseUserID";
     public const string HMSDatabasePassword = "HMSDatabasePassword";
 

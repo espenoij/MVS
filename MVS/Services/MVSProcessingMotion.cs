@@ -253,9 +253,9 @@ namespace MVS
                 refSensorPitch.status != DataStatus.TIMEOUT_ERROR &&
                 refSensorRoll.status != DataStatus.TIMEOUT_ERROR &&
                 refSensorHeave.status != DataStatus.TIMEOUT_ERROR &&
-                !double.IsNaN(testSensorPitch.data) &&
-                !double.IsNaN(testSensorRoll.data) &&
-                !double.IsNaN(testSensorHeave.data))
+                !double.IsNaN(refSensorPitch.data) &&
+                !double.IsNaN(refSensorRoll.data) &&
+                !double.IsNaN(refSensorHeave.data))
             {
                 // Sjekke data timeout
                 if (mainWindowVM.OperationsMode == OperationsMode.Analysis)
