@@ -1,0 +1,47 @@
+﻿<telerik:RadWindow
+    x:Class="MVS.DialogImportProgress"
+    xmlns="http://schemas.microsoft.com/winfx/2006/xaml/presentation"
+    xmlns:x="http://schemas.microsoft.com/winfx/2006/xaml"
+    xmlns:d="http://schemas.microsoft.com/expression/blend/2008"
+    xmlns:telerik="http://schemas.telerik.com/2008/xaml/presentation"
+    xmlns:mc="http://schemas.openxmlformats.org/markup-compatibility/2006"
+    mc:Ignorable="d"
+    xmlns:local="clr-namespace:MVS"
+    telerik:Header="Import from HMS Database"
+    WindowStartupLocation="CenterScreen"
+    Height="200"
+    Width="500"
+    telerik:StyleManager.Theme="Material">
+
+    <telerik:RadWindow.Icon>
+        <Image
+            Height="32"
+            Source="../Icons/swire_flag.ico" />
+    </telerik:RadWindow.Icon>
+
+    <telerik:RadWindow.Resources>
+        <ResourceDictionary>
+            <Style
+                TargetType="local:DialogImportProgress"
+                BasedOn="{StaticResource RadWindowStyle}" />
+        </ResourceDictionary>
+    </telerik:RadWindow.Resources>
+
+    <StackPanel
+        Margin="8">
+
+        <telerik:Label
+            Content="Importing HMS data..." />
+
+        <telerik:RadProgressBar
+            Name="importProgressBar"
+            Minimum="0"
+            Maximum="100"
+            Orientation="Horizontal"
+            Height="30"
+            Background="{StaticResource ColorBackgroundSeparatorDark}"
+            Foreground="{StaticResource ColorGreen}" />
+
+    </StackPanel>
+
+</telerik:RadWindow>

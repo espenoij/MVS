@@ -5,6 +5,8 @@ using System.Security;
 using Telerik.Windows.Data;
 using MySqlConnector;
 using System.Windows.Markup;
+using static MVS.DialogImport;
+using MVS.Models;
 
 namespace MVS
 {
@@ -765,9 +767,9 @@ namespace MVS
             }
         }
 
-        public bool ImportHMSData(RecordingSession selectedSession)
+        public ImportResult ImportHMSData(RecordingSession selectedSession, ReportProgressDelegate reportProgress)
         {
-            bool ret = false;
+            ImportResult result = new ImportResult();
 
             try
             {
@@ -857,6 +859,8 @@ namespace MVS
                                 columnTestHeave,
                                 columnTimestamp);
 
+                            double progressCount = 0;
+
                             foreach (var data in dataList)
                             {
                                 cmd.Parameters.Clear();
@@ -869,14 +873,23 @@ namespace MVS
 
                                 // Execute
                                 cmd.ExecuteNonQuery();
+
+                                // Progress oppdatering
+                                reportProgress((int)((progressCount++ / dataList.Count) * 100));
                             }
 
                             // Lukke database connection
                             connection.Close();
                         }
-
-                        ret = true;
                     }
+                    else
+                    {
+                        result.code = ImportResultCode.NoDataFoundForSelectedTimeframe;
+                    }
+                }
+                else
+                {
+                    result.code = ImportResultCode.ConnectionToMVSDatabaseFailed;
                 }
             }
             catch (Exception)
@@ -884,7 +897,7 @@ namespace MVS
                 throw;
             }
 
-            return ret;
+            return result;
         }
 
         // Method to get the first entry in the database

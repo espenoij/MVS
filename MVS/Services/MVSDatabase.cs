@@ -1,8 +1,10 @@
-﻿using System;
+﻿using MVS.Models;
+using System;
 using System.Collections.Generic;
 using System.Data;
 using Telerik.Charting;
 using Telerik.Windows.Data;
+using static MVS.DialogImport;
 
 namespace MVS
 {
@@ -274,13 +276,13 @@ namespace MVS
             }
         }
 
-        public bool ImportHMSData(RecordingSession selectedSession)
+        public ImportResult ImportHMSData(RecordingSession selectedSession, ReportProgressDelegate reportProgress)
         {
-            bool ret = false;
+            ImportResult result = new ImportResult();
 
             try
             {
-                ret = database.ImportHMSData(selectedSession);
+                result = database.ImportHMSData(selectedSession, reportProgress);
 
                 errorHandler.ResetDatabaseError(ErrorHandler.DatabaseErrorType.ImportHMSData);
             }
@@ -294,9 +296,13 @@ namespace MVS
                         string.Format("Database Error (ImportHMSData)\n\nSystem Message:\n{0}", ex.Message)));
 
                 errorHandler.SetDatabaseError(ErrorHandler.DatabaseErrorType.ImportHMSData);
+
+                // Sende feilmelding videre
+                result.code = ImportResultCode.DatabaseError;
+                result.message = ex.Message;
             }
 
-            return ret;
+            return result;
         }
     }
 }

@@ -1,4 +1,5 @@
-﻿using System.ComponentModel;
+﻿using MVS.Models;
+using System.ComponentModel;
 using System.Runtime.CompilerServices;
 
 namespace MVS
@@ -112,6 +113,29 @@ namespace MVS
                 }
             }
         }
+
+        /////////////////////////////////////////////////////////////////////////////
+        // Import Progress
+        /////////////////////////////////////////////////////////////////////////////
+        private int _importProgress { get; set; }
+        public int importProgress
+        {
+            get
+            {
+                return _importProgress;
+            }
+            set
+            {
+                _importProgress = value;
+                OnPropertyChanged();
+            }
+        }
+
+        /////////////////////////////////////////////////////////////////////////////
+        // Import Result
+        /////////////////////////////////////////////////////////////////////////////
+        public ImportResult Result { get; set; }
+
 
         // Variabel oppdatert
         // Dersom navn ikke er satt brukes kallende medlem sitt navn

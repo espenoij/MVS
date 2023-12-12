@@ -368,6 +368,9 @@
     <Compile Include="Config\TestDataConfigCollection.cs" />
     <Compile Include="Config\ReferenceDataConfigSection.cs" />
     <Compile Include="Config\TestDataConfigSection.cs" />
+    <Compile Include="Dialogs\DialogImportProgress.xaml.cs">
+      <DependentUpon>DialogImportProgress.xaml</DependentUpon>
+    </Compile>
     <Compile Include="Dialogs\DialogImport.xaml.cs">
       <DependentUpon>DialogImport.xaml</DependentUpon>
     </Compile>
@@ -381,6 +384,7 @@
     <Compile Include="Helpers\GraphBuffer.cs" />
     <Compile Include="Helpers\LabelAbsConverter.cs" />
     <Compile Include="Models\CommonTypes.cs" />
+    <Compile Include="Models\ImportResult.cs" />
     <Compile Include="Models\SessionData.cs" />
     <Compile Include="Models\RecordingSession.cs" />
     <Compile Include="Services\FixedValue\FixedValueConfig.cs" />
@@ -478,6 +482,10 @@
     <Compile Include="Views\RecordingsAnalysis.xaml.cs">
       <DependentUpon>RecordingsAnalysis.xaml</DependentUpon>
     </Compile>
+    <Page Include="Dialogs\DialogImportProgress.xaml">
+      <Generator>MSBuild:Compile</Generator>
+      <SubType>Designer</SubType>
+    </Page>
     <Page Include="Dialogs\DialogImport.xaml">
       <Generator>MSBuild:Compile</Generator>
       <SubType>Designer</SubType>

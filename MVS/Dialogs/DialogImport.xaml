@@ -35,12 +35,6 @@
             DockPanel.Dock="Bottom">
 
             <Button
-                Margin="8"
-                Width="110"
-                Content="Cancel"
-                Click="btnCancel_Click" />
-
-            <Button
                 Name="btnImport"
                 Margin="8"
                 Width="110"

@@ -487,3 +487,11 @@ public enum InputMRUType
     ReferenceMRU_TestMRU,
 }
 
+public enum ImportResultCode
+{
+    OK,
+    DatabaseError,
+    ConnectionToMVSDatabaseFailed,
+    NoDataFoundForSelectedTimeframe
+}
+

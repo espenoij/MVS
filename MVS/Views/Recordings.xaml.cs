@@ -213,6 +213,9 @@ namespace MVS
             importDlg.Owner = App.Current.MainWindow;
             importDlg.Init(importVM, config, mainWindowVM.SelectedSession, mvsDatabase, mainWindowVM);
             importDlg.ShowDialog();
+
+            // Laster items data på nytt ettersom de kan ha blitt endret under import over
+            LoadSelectedItemsDetails();
         }
 
         private void gvVerificationSessions_SelectionChanged(object sender, SelectionChangeEventArgs e)

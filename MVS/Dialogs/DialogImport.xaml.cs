@@ -2,7 +2,7 @@
 using System.Windows.Input;
 using System.Windows;
 using Telerik.Windows.Controls;
-using static Org.BouncyCastle.Math.EC.ECCurve;
+using System.ComponentModel;
 
 namespace MVS
 {
@@ -17,6 +17,10 @@ namespace MVS
         private MVSDatabase mvsDatabase;
         private MainWindowVM mainWindowVM;
         private RecordingSession selectedSession;
+
+        private BackgroundWorker importWorker = new BackgroundWorker();
+
+        public delegate void ReportProgressDelegate(int percentage);
 
         public DialogImport()
         {
@@ -48,25 +52,59 @@ namespace MVS
                 btnImport.IsEnabled = false;
             else
                 btnImport.IsEnabled = true;
+
+            importWorker.DoWork += importWorker_DoWork;
+            importWorker.ProgressChanged += importWorker_ProgressChanged;
+            importWorker.WorkerReportsProgress = true;
         }
 
-        private void btnCancel_Click(object sender, System.Windows.RoutedEventArgs e)
+        private void importWorker_DoWork(object sender, System.ComponentModel.DoWorkEventArgs e)
         {
-            Close();
+            importVM.Result = mvsDatabase.ImportHMSData(selectedSession, importWorker.ReportProgress);
+        }
+
+        private void importWorker_ProgressChanged(object sender, System.ComponentModel.ProgressChangedEventArgs e)
+        {
+            importVM.importProgress = e.ProgressPercentage;
         }
 
         private void btnImport_Click(object sender, System.Windows.RoutedEventArgs e)
         {
-            if (mvsDatabase.ImportHMSData(selectedSession))
-            {
-                // Ny valgt MRU type
-                mainWindowVM.SelectedSession.InputMRUs = InputMRUType.ReferenceMRU_TestMRU;
+            // Oppdatere database
+            importWorker.RunWorkerAsync();
 
-                // Oppdatere database
-                mvsDatabase.Update(mainWindowVM.SelectedSession);
+            // Åpne HMS data import dialog vindu
+            DialogImportProgress importProgressDlg = new DialogImportProgress();
+            importProgressDlg.Owner = App.Current.MainWindow;
+            importProgressDlg.Init(importVM);
+            importProgressDlg.ShowDialog();
+
+            switch(importVM.Result.code)
+            {
+                case ImportResultCode.OK:
+                    // Ny valgt MRU type
+                    mainWindowVM.SelectedSession.InputMRUs = InputMRUType.ReferenceMRU_TestMRU;
+
+                    // Oppdatere database
+                    mvsDatabase.Update(mainWindowVM.SelectedSession);
+                    break;
+
+                case ImportResultCode.DatabaseError:
+                    DialogHandler.Warning("Database Error", importVM.Result.message);
+                    break;
+
+                case ImportResultCode.ConnectionToMVSDatabaseFailed:
+                    DialogHandler.Warning("Import Error", "Unable to connect to MVS database.");
+                    break;
+
+                case ImportResultCode.NoDataFoundForSelectedTimeframe:
+                    DialogHandler.Warning("Import Error", "No data was found in the HMS database for the selected timeframe.");
+                    break;
+
+                default:
+                    break;
             }
         }
-
 
         private void tbSettingsHMSDatabaseAddress_LostFocus(object sender, RoutedEventArgs e)
         {
