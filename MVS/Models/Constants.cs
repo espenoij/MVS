@@ -269,11 +269,12 @@ class Constants
     public const double MeanAdiabaticLapseRate = 0.0065;
 
     // Filer og kataloger
-    public const string HelideckReportFolder = "Helideck Report";
-    public const string HelideckReportFilename = "helideck_report";
-    public const string HelideckReportName = "Helidekkrapport";
-    public const string ScreenCaptureFilename = "hms_screencapture";
-    public const string OffshoreWeatherReportFilename = "offshore_weather_report";
+    //public const string HelideckReportFolder = "Helideck Report";
+    //public const string HelideckReportFilename = "helideck_report";
+    //public const string HelideckReportName = "Helidekkrapport";
+    public const string ScreenCaptureFilename = "mvs_screencapture";
+    public const string ScreenCaptureFolder = "ScreenCaptures";
+    //public const string OffshoreWeatherReportFilename = "offshore_weather_report";
 
     // Email
     public const int DefaultSMTPPort = 25;

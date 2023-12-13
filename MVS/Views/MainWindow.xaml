@@ -779,24 +779,47 @@
 
         </DockPanel>
 
-        <!--About button-->
-        <Button
-            x:Name="btnAbout"
-            Margin="8"
-            HorizontalAlignment="Left"
+        <StackPanel
             VerticalAlignment="Bottom"
-            Background="Transparent"
-            Click="btnAbout_Click">
+            Orientation="Vertical">
+            
+            <!--Screen Capture button-->
+            <Button
+                x:Name="btnScreenCapture"
+                Margin="8"
+                HorizontalAlignment="Left"
+                Background="Transparent"
+                Click="btnScreenCapture_Click">
 
-            <StackPanel>
+                <StackPanel>
 
-                <Image
-                    Width="36"
-                    Source="..\Icons\information-outline.png" />
+                    <Image
+                        Width="36"
+                        Source="..\Icons\outline_photo_camera_white_48dp.png" />
 
-            </StackPanel>
+                </StackPanel>
 
-        </Button>
+            </Button>
+
+            <!--About button-->
+            <Button
+                x:Name="btnAbout"
+                Margin="8"
+                HorizontalAlignment="Left"
+                Background="Transparent"
+                Click="btnAbout_Click">
+
+                <StackPanel>
+
+                    <Image
+                        Width="36"
+                        Source="..\Icons\information-outline.png" />
+
+                </StackPanel>
+
+            </Button>
+
+        </StackPanel>
 
     </Grid>
 

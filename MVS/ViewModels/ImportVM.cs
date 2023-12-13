@@ -134,7 +134,7 @@ namespace MVS
         /////////////////////////////////////////////////////////////////////////////
         // Import Result
         /////////////////////////////////////////////////////////////////////////////
-        public ImportResult Result { get; set; }
+        public ImportResult Result { get; set; } = new ImportResult();
 
 
         // Variabel oppdatert

@@ -1,5 +1,7 @@
-﻿using System;
+﻿using MVS.Services;
+using System;
 using System.ComponentModel;
+using System.IO;
 using System.Threading;
 using System.Windows;
 using System.Windows.Controls;
@@ -797,6 +799,16 @@ namespace MVS
                 // Starte data analyse
                 analysisWorker.RunWorkerAsync();
             }
+        }
+
+        private void btnScreenCapture_Click(object sender, RoutedEventArgs e)
+        {
+            // Ta et screenshot
+            string screenCaptureFolder = Path.Combine(Environment.CurrentDirectory, Constants.ScreenCaptureFolder);
+            string screenCaptureFile = string.Format("{0}_{1}.jpg", Constants.ScreenCaptureFilename, DateTime.UtcNow.ToString("yyyy-MM-dd_hh-mm-ss"));
+
+            ScreenCapture screenCapture = new ScreenCapture();
+            screenCapture.Capture(screenCaptureFolder, screenCaptureFile);
         }
     }
 }
