@@ -267,7 +267,7 @@ namespace MVS
                 catch (Exception ex)
                 {
                     // Sette feilmelding
-                    new ErrorHandler(new DatabaseHandler(true)).Insert(
+                    new ErrorHandler(new DatabaseHandler(null, true)).Insert(
                         new ErrorMessage(
                             DateTime.UtcNow,
                             ErrorMessageType.All,

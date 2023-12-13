@@ -27,7 +27,7 @@ namespace MVS
         //private SensorData sensorDataSelected = new SensorData();
 
         // Database
-        private DatabaseHandler database = new DatabaseHandler();
+        private DatabaseHandler database;
 
         // Configuration settings
         private Config config;
@@ -78,11 +78,14 @@ namespace MVS
         {
             InitializeComponent();
 
-            // Error Handler
-            errorHandler = new ErrorHandler(database);
-
             // Config
             config = new Config();
+
+            // Database Handler
+            database = new DatabaseHandler(config);
+
+            // Error Handler
+            errorHandler = new ErrorHandler(database);
 
             // Init
             sensorDataRetrieval = new SensorDataRetrieval(config, database, errorHandler, adminSettingsVM);

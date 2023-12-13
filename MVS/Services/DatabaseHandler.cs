@@ -43,23 +43,26 @@ namespace MVS
         // Configuration
         private Config config;
 
-        public DatabaseHandler(bool isDatabaseConnectionOK = false)
+        public DatabaseHandler(Config config = null, bool isDatabaseConnectionOK = false)
         {
-            config = new Config();
+            if (config == null)
+                this.config = new Config();
+            else
+                this.config = config;
 
             // Generate encrypted user ID
-            //config.Write(ConfigKey.DatabaseUserID, Encryption.EncryptString(Encryption.ToSecureString("root")));
+            //this.config.Write(ConfigKey.DatabaseUserID, Encryption.EncryptString(Encryption.ToSecureString("root")));
 
             // Generate encrypted password
-            //config.Write(ConfigKey.DatabasePassword, Encryption.EncryptString(Encryption.ToSecureString("test99")));
+            //this.config.Write(ConfigKey.DatabasePassword, Encryption.EncryptString(Encryption.ToSecureString("test99")));
 
-            string address = config.ReadWithDefault(ConfigKey.DatabaseAddress, Constants.DefaultDatabaseAddress);
-            string port = config.ReadWithDefault(ConfigKey.DatabasePort, Constants.DefaultDatabasePort).ToString();
-            string database = config.ReadWithDefault(ConfigKey.DatabaseName, Constants.DefaultDatabaseName);
+            string address = this.config.ReadWithDefault(ConfigKey.DatabaseAddress, Constants.DefaultDatabaseAddress);
+            string port = this.config.ReadWithDefault(ConfigKey.DatabasePort, Constants.DefaultDatabasePort).ToString();
+            string database = this.config.ReadWithDefault(ConfigKey.DatabaseName, Constants.DefaultDatabaseName);
 
             // Database login
-            SecureString userid = Encryption.DecryptString(config.Read(ConfigKey.DatabaseUserID));
-            SecureString password = Encryption.DecryptString(config.Read(ConfigKey.DatabasePassword));
+            SecureString userid = Encryption.DecryptString(this.config.Read(ConfigKey.DatabaseUserID));
+            SecureString password = Encryption.DecryptString(this.config.Read(ConfigKey.DatabasePassword));
 
             connectionString = string.Format(@"server={0};port={1};userid={2};password={3};database={4};sslmode=none",
                 address,
