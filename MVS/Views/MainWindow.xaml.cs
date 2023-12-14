@@ -138,7 +138,7 @@ namespace MVS
             ucRecordings.Init(mainWindowVM, config, mvsDatabase, updateUIButtonsCallback);
 
             // Recordings Data page
-            ucRecordingsAnalysis.Init(recordingsVM, config);
+            ucRecordingsAnalysis.Init(recordingsVM);
 
             // Sensor Input Setup
             ucSensorSetupPage.Init(config, errorHandler, adminSettingsVM);
@@ -666,7 +666,6 @@ namespace MVS
             // Skjule recording symbol
             mainWindowVM.RecordingSymbolVisibility = Visibility.Collapsed;
 
-            // Fjerne data fra Recording Data page
             recordingsVM.StopRecording();
         }
 

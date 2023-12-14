@@ -12,7 +12,7 @@ namespace MVS
             InitializeComponent();
         }
 
-        public void Init(RecordingsVM recordingsVM, Config config)
+        public void Init(RecordingsVM recordingsVM)
         {
             // Context
             DataContext = recordingsVM;
