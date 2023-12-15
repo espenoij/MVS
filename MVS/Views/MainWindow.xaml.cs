@@ -279,8 +279,13 @@ namespace MVS
         private void SetOperationsMode(OperationsMode mode)
         {
             // Stopper verfication session
-            if (mainWindowVM.OperationsMode == OperationsMode.Recording && mode == OperationsMode.Stop)
-                ucRecordings.Stop();
+            if ((mainWindowVM.OperationsMode == OperationsMode.Recording ||
+                 mainWindowVM.OperationsMode == OperationsMode.Analysis ||
+                 mainWindowVM.OperationsMode == OperationsMode.Test) &&
+                mode == OperationsMode.Stop)
+            {
+                ucRecordings.Stop(mainWindowVM.OperationsMode);
+            }
 
             mainWindowVM.OperationsMode = mode;
             UpdateUIButtons();
@@ -775,8 +780,8 @@ namespace MVS
             // Resetter data listene i dataCalculations
             mvsProcessing.ResetDataCalculations();
 
-            // Prosessere session data
-            recordingsVM.ProcessSessionData();
+            // Analysere session data
+            recordingsVM.AnalyseSessionData();
         }
 
         private void analysisWorker_RunWorkerCompleted(object sender, RunWorkerCompletedEventArgs e)

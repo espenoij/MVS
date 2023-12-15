@@ -113,18 +113,18 @@
                         Width="1*"
                         Header="Date"
                         DataMemberBinding="{Binding DateString}" />
-                    <telerik:GridViewDataColumn
+                    <!--<telerik:GridViewDataColumn
                         Width="1*"
                         Header="Start Time"
                         DataMemberBinding="{Binding StartTimeString}" />
                     <telerik:GridViewDataColumn
                         Width="1*"
                         Header="End Time"
-                        DataMemberBinding="{Binding EndTimeString}" />
-                    <telerik:GridViewDataColumn
+                        DataMemberBinding="{Binding EndTimeString}" />-->
+                    <!--<telerik:GridViewDataColumn
                         Width="1*"
                         Header="Duration"
-                        DataMemberBinding="{Binding DurationString}" />
+                        DataMemberBinding="{Binding DurationString}" />-->
                 </telerik:RadGridView.Columns>
 
             </telerik:RadGridView>

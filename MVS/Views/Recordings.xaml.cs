@@ -149,18 +149,21 @@ namespace MVS
             UpdateUIStates(true);
         }
 
-        public void Stop()
+        public void Stop(OperationsMode mode)
         {
-            // Laste timestamps på data set
-            mvsDatabase.LoadTimestamps(mainWindowVM.SelectedSession);
+            if (mode != OperationsMode.Test)
+            {
+                // Laste timestamps på data set
+                mvsDatabase.LoadTimestamps(mainWindowVM.SelectedSession);
+
+                // Oppdatere databasen
+                mvsDatabase.Update(mainWindowVM.SelectedSession);
+            }
 
             UpdateUIStates(false);
 
             // Legge data i UI
             LoadSelectedItemsDetails();
-
-            // Oppdatere databasen
-            mvsDatabase.Update(mainWindowVM.SelectedSession);
         }
 
         private void btnNew_Click(object sender, RoutedEventArgs e)
