@@ -3,6 +3,7 @@ using System.Collections.Generic;
 using System.IO.Ports;
 using System.Text;
 using System.Text.RegularExpressions;
+using System.Threading;
 using System.Windows.Threading;
 using Telerik.Windows.Data;
 
@@ -110,21 +111,8 @@ namespace MVS
                     else
                     {
                         // Lese fra port
-                        int bytes = serialPort.BytesToRead;
-                        byte[] array = new byte[bytes];
-                        for (int i = 0; serialPort.BytesToRead > 0 && i < bytes; i++)
-                        {
-                            array[i] = Convert.ToByte(serialPort.ReadByte());
-                        }
-
-                        // Data er prosessert -> slette buffer
-                        if (serialPortData.processingDone)
-                        {
-                            serialPortData.buffer_text = string.Empty;
-                            serialPortData.buffer_binary = string.Empty;
-
-                            serialPortData.processingDone = false;
-                        }
+                        byte[] array = new byte[serialPort.ReadBufferSize];
+                        serialPort.Read(array, 0, serialPort.ReadBufferSize);
 
                         // Lagre data
                         serialPortData.buffer_text += Encoding.UTF8.GetString(array, 0, array.Length);
@@ -218,30 +206,48 @@ namespace MVS
             }
         }
 
-        public void Restart(string portName)
+        public void Restart(SerialPortData serialPortData)
         {
-            // Restarter en port
-            SerialPort serialPort = serialPortList.Find(x => x.PortName == portName);
-            if (serialPort != null)
-            {
-                try
-                {
-                    // Lukke...
-                    serialPort.Close();
+            // NB! Pass på å ikke kalle denne metoden for ofte.
+            // Når CPU bruk overstiger 80% så vil nye tråder bli satt som pending av operativsystemet.
 
-                    // ...og åpne igjen
-                    serialPort.Open();
-                }
-                catch (Exception ex)
+            Thread thread = new Thread(() => runRestart());
+            thread.IsBackground = true;
+            thread.Start();
+
+            void runRestart()
+            {
+                SerialPort serialPort = serialPortList.Find(x => x.PortName == serialPortData.portName);
+
+                // Restarter en port
+                if (serialPort != null)
                 {
-                    // Sette feilmelding
-                    errorHandler.Insert(
-                        new ErrorMessage(
-                            DateTime.UtcNow,
-                            ErrorMessageType.SerialPort,
-                            ErrorMessageCategory.AdminUser,
-                            string.Format("Error restarting serial port: {0} (Restart), System Message: {1}", serialPort.PortName, ex.Message)));
+                    try
+                    {
+                        // Lukke...
+                        if (serialPort.IsOpen)
+                            serialPort.Close();
+
+                        // Bug i SerialPort klassen som gjør at Dispose og Close trenger tid på å lukkes ordentlig
+                        Thread.Sleep(1000);
+
+                        // ...og åpne igjen
+                        if (!serialPort.IsOpen)
+                            serialPort.Open();
+                    }
+                    catch (Exception ex)
+                    {
+                        // Sette feilmelding
+                        errorHandler.Insert(
+                            new ErrorMessage(
+                                DateTime.UtcNow,
+                                ErrorMessageType.SerialPort,
+                                ErrorMessageCategory.AdminUser,
+                                string.Format("Error restarting serial port: {0} (Restart), System Message: {1}", serialPort.PortName, ex.Message)));
+                    }
                 }
+
+                serialPortData.restartTime = DateTime.UtcNow;
             }
         }
 
@@ -329,69 +335,9 @@ namespace MVS
                         }
                     }
 
-                    //int lastHeaderPos;
-                    //int lastEndPos;
-
-                    //switch (process.inputType)
-                    //{
-                    //    case InputDataType.Text:
-                    //        // Sjekk om vi skal ta vare på noe data eller om buffer skal slettes
-                    //        lastHeaderPos = serialPortData.buffer_text.LastIndexOf(process.packetHeader);
-                    //        lastEndPos = serialPortData.buffer_text.LastIndexOf(process.packetEnd);
-
-                    //        // Dersom vi har en HEADER etter en END
-                    //        if (lastHeaderPos > lastEndPos &&
-                    //            lastHeaderPos != -1 &&
-                    //            lastEndPos != -1 &&
-                    //            !string.IsNullOrEmpty(process.packetHeader) &&
-                    //            !string.IsNullOrEmpty(process.packetEnd))
-                    //            // Lagre fra header (i tilfelle resten av packet kommer i neste sending fra serieport)
-                    //            serialPortData.buffer_text = serialPortData.buffer_text.Substring(lastHeaderPos);
-                    //        else
-                    //            // Ingen HEADER etter END -> Slette buffer
-                    //            serialPortData.buffer_text = String.Empty;
-
-                    //        // Må også begrense hvor my data som skal leses i input buffer når vi ikke finner packets
-                    //        // slik at den ikke fylles i det uendelige.
-                    //        if (serialPortData.buffer_text.Count() > 4096) // 4KB limit per packet
-                    //            serialPortData.buffer_text = String.Empty;
-
-                    //        // Sletter binary buffer
-                    //        serialPortData.buffer_binary = String.Empty;
-                    //        break;
-
-                    //    case InputDataType.Binary:
-                    //        // Sjekk om vi skal ta vare på noe data eller om buffer skal slettes
-                    //        lastHeaderPos = serialPortData.buffer_binary.LastIndexOf(process.packetHeader);
-                    //        lastEndPos = serialPortData.buffer_binary.LastIndexOf(process.packetEnd);
-
-                    //        // Dersom vi har en HEADER etter en END
-                    //        if (lastHeaderPos > lastEndPos &&
-                    //            lastHeaderPos != -1 &&
-                    //            lastEndPos != -1 &&
-                    //            !string.IsNullOrEmpty(process.packetHeader) &&
-                    //            !string.IsNullOrEmpty(process.packetEnd))
-                    //            // Lagre fra header (i tilfelle resten av packet kommer i neste sending fra serieport)
-                    //            serialPortData.buffer_binary = serialPortData.buffer_binary.Substring(lastHeaderPos);
-                    //        else
-                    //            // Ingen HEADER etter END -> Slette buffer
-                    //            serialPortData.buffer_binary = String.Empty;
-
-                    //        // Må også begrense hvor my data som skal leses i input buffer når vi ikke finner packets
-                    //        // slik at den ikke fylles i det uendelige.
-                    //        if (serialPortData.buffer_binary.Count() > 4096) // 4KB limit per packet
-                    //            serialPortData.buffer_binary = String.Empty;
-
-                    //        // Sletter text buffer
-                    //        serialPortData.buffer_text = String.Empty;
-                    //        break;
-
-                    //    default:
-                    //        break;
-                    //}
-
-                    // Ferdig med prosessering
-                    serialPortData.processingDone = true;
+                    // Ferdig med prosessering - tømme buffer
+                    serialPortData.buffer_text = string.Empty;
+                    serialPortData.buffer_binary = string.Empty;
                 }
             }
         }

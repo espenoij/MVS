@@ -15,17 +15,12 @@ namespace MVS
             buffer_text = string.Empty;
             firstRead = true;
             portStatus = PortStatus.Closed;
-            processingDone = false;
+            restartTime = DateTime.UtcNow;
         }
 
         public SerialPortData(SerialPortData serialPortData)
         {
-            portName = serialPortData.portName;
-            buffer_text = serialPortData.buffer_text;
-            firstRead = serialPortData.firstRead;
-            portStatus = serialPortData.portStatus;
-            timestamp = serialPortData.timestamp;
-            processingDone = false;
+            Set(serialPortData);
         }
 
         public void Set(SerialPortData serialPortData)
@@ -35,6 +30,7 @@ namespace MVS
             firstRead = serialPortData.firstRead;
             portStatus = serialPortData.portStatus;
             timestamp = serialPortData.timestamp;
+            restartTime = serialPortData.restartTime;
         }
 
         // Port Name
@@ -135,8 +131,8 @@ namespace MVS
             }
         }
 
-        // Ferdig prosessert
-        public bool processingDone { get; set; }
+        // Siste restart av porten
+        public DateTime restartTime { get; set; }
 
         // Variabel oppdatert
         // Dersom navn ikke settes brukes kallende medlem sitt navn

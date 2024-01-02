@@ -169,6 +169,9 @@ namespace MVS
 
             void runUpdateSensorStatus(object sender, EventArgs e)
             {
+                // Lese data timeout fra config
+                double dataTimeout = config.ReadWithDefault(ConfigKey.DataTimeout, Constants.DataTimeoutDefault);
+
                 // Gå gjennom listen
                 lock (sensorDataListLock)
                 {
@@ -197,7 +200,7 @@ namespace MVS
                                                 if (dataRetrievalStarted)
                                                 {
                                                     // Prøv å restarte porten
-                                                    serialPortDataRetrieval.Restart(serialPortData.portName);
+                                                    serialPortDataRetrieval.Restart(serialPortData);
                                                 }
                                                 else
                                                 {
@@ -207,9 +210,6 @@ namespace MVS
                                             // Porten er åpen
                                             else
                                             {
-                                                // Lese data timeout fra config
-                                                double dataTimeout = config.ReadWithDefault(ConfigKey.DataTimeout, Constants.DataTimeoutDefault);
-
                                                 // Dersom det ikke er satt data på porten innen timeout
                                                 if (serialPortData.timestamp.AddMilliseconds(dataTimeout) < DateTime.UtcNow)
                                                 {
@@ -220,7 +220,11 @@ namespace MVS
                                                     serialPortData.buffer_text = string.Empty;
 
                                                     // Prøv å restarte porten
-                                                    serialPortDataRetrieval.Restart(serialPortData.portName);
+                                                    if (serialPortData.restartTime.AddMilliseconds(dataTimeout) < DateTime.UtcNow)
+                                                    {
+                                                        serialPortDataRetrieval.Restart(serialPortData);
+                                                        serialPortData.restartTime = DateTime.UtcNow;
+                                                    }
 
                                                     // Sette feilmelding
                                                     errorHandler.Insert(
