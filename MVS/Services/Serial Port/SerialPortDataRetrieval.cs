@@ -76,6 +76,14 @@ namespace MVS
                     serialPort.Parity = sensorData.serialPort.parity;
                     serialPort.Handshake = sensorData.serialPort.handshake;
 
+                    // Timeout
+                    // Default timeout er: public const int InfiniteTimeout = -1;
+                    //serialPort.ReadTimeout = Constants.SerialPortTimeout;
+                    //serialPort.WriteTimeout = Constants.SerialPortTimeout;
+
+                    serialPort.DtrEnable = true;    // Data-terminal-ready
+                    serialPort.RtsEnable = true;    // Request-to-send
+
                     // Koble opp metode for å motta data
                     serialPort.DataReceived += new SerialDataReceivedEventHandler(DataReceived);
 
@@ -150,34 +158,44 @@ namespace MVS
                 item.timestamp = DateTime.UtcNow;
             }
 
-            // Starte serial ports
-            foreach (var item in serialPortList)
+            Thread thread = new Thread(() => runStart());
+            thread.IsBackground = true;
+            thread.Start();
+
+            void runStart()
             {
-                if (!item.IsOpen)
+                // Starte serial ports
+                foreach (var item in serialPortList)
                 {
-                    try
+                    if (!item.IsOpen)
                     {
-                        item.Open();
-                    }
-                    catch (Exception ex)
-                    {
-                        // Sette feilmelding
-                        errorHandler.Insert(
-                            new ErrorMessage(
-                                DateTime.UtcNow,
-                                ErrorMessageType.SerialPort,
-                                ErrorMessageCategory.AdminUser,
-                                string.Format("Error opening serial port: {0} (Start), System Message: {1}", item.PortName, ex.Message)));
+                        try
+                        {
+                            item.Open();
+                        }
+                        catch (Exception ex)
+                        {
+                            // Sette feilmelding
+                            errorHandler.Insert(
+                                new ErrorMessage(
+                                    DateTime.UtcNow,
+                                    ErrorMessageType.SerialPort,
+                                    ErrorMessageCategory.AdminUser,
+                                    string.Format("Error opening serial port: {0} (Start), System Message: {1}", item.PortName, ex.Message)));
 
-                        // Endre status
-                        SerialPortData serialPortData = serialPortDataReceivedList.Find(x => x.portName == item.PortName);
-                        if (serialPortData != null)
-                            serialPortData.portStatus = PortStatus.OpenError;
+                            // Endre status
+                            SerialPortData serialPortData = serialPortDataReceivedList.Find(x => x.portName == item.PortName);
+                            if (serialPortData != null)
+                                serialPortData.portStatus = PortStatus.OpenError;
+                        }
                     }
+
+                    // Større sjanse for suksess dersom alle serie porter ikke åpnes samtidig? 03.01.2024
+                    Thread.Sleep(100);
                 }
-            }
 
-            sensorProcessingTimer.Start();
+                sensorProcessingTimer.Start();
+            }
         }
 
         public void Stop()
