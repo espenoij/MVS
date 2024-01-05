@@ -19,7 +19,7 @@ namespace MVS
             Description = string.Empty;
             StartTime = System.Data.SqlTypes.SqlDateTime.MinValue.Value;
             EndTime = System.Data.SqlTypes.SqlDateTime.MinValue.Value;
-            InputMRUs = InputMRUType.ReferenceMRU;
+            InputMRUs = InputMRUType.ReferenceMRU_TestMRU;
         }
 
         public RecordingSession(int id, string name, string description, InputMRUType inputMRUs)

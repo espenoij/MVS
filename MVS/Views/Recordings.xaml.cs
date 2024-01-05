@@ -58,8 +58,8 @@ namespace MVS
             gvVerificationSessions.ItemsSource = motionVerificationSessionList;
 
             // Fylle input setup combobox
-            cboInputMRUs.Items.Add(InputMRUType.ReferenceMRU.GetDescription());
             cboInputMRUs.Items.Add(InputMRUType.ReferenceMRU_TestMRU.GetDescription());
+            cboInputMRUs.Items.Add(InputMRUType.ReferenceMRU.GetDescription());
 
             // Sette default verdi
             cboInputMRUs.Text = cboInputMRUs.Items[0].ToString();
