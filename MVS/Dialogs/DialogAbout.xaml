@@ -9,14 +9,14 @@
     xmlns:local="clr-namespace:MVS"
     telerik:Header="About"
     WindowStartupLocation="CenterScreen"
-    Height="560"
-    Width="800"
+    Height="620"
+    Width="700"
     telerik:StyleManager.Theme="Material">
 
     <telerik:RadWindow.Icon>
         <Image
             Height="32"
-            Source="../Icons/swire_flag.ico" />
+            Source="../Icons/mvs_windows_icon.ico" />
     </telerik:RadWindow.Icon>
 
     <telerik:RadWindow.Resources>
@@ -55,7 +55,7 @@
                     HorizontalAlignment="Center"
                     Margin="0,20,0,0"
                     Width="50"
-                    Source="\mvs_windows_icon.ico" />
+                    Source="../Icons/mvs_windows_icon.ico" />
 
                 <telerik:Label
                     DockPanel.Dock="Top"
@@ -79,6 +79,13 @@
                     Content="Motion Verification System" />
 
             </StackPanel>
+
+            <Image
+                DockPanel.Dock="Top"
+                HorizontalAlignment="Center"
+                Margin="10"
+                Width="250"
+                Source="../Icons/ses_logo.png" />
 
             <!--SOFTWARE-->
             <telerik:GroupBox

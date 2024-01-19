@@ -596,5 +596,11 @@
       <Version>0.7.3</Version>
     </PackageReference>
   </ItemGroup>
+  <ItemGroup>
+    <Resource Include="Icons\ses_logo.png" />
+  </ItemGroup>
+  <ItemGroup>
+    <Resource Include="Icons\mvs_windows_icon.ico" />
+  </ItemGroup>
   <Import Project="$(MSBuildToolsPath)\Microsoft.CSharp.targets" />
 </Project>
