@@ -190,7 +190,7 @@
 
                                 <Button
                                     Click="btnTest_Click"
-                                    IsEnabled="{Binding TestButtonEnabled}"
+                                    IsEnabled="{Binding StartButtonEnabled}"
                                     Width="140">Test Run</Button>
 
                             </StackPanel>
@@ -330,7 +330,7 @@
                                 Margin="8">
 
                                 <Button
-                                    IsEnabled="{Binding TestButtonEnabled}"
+                                    IsEnabled="{Binding StartButtonEnabled}"
                                     Click="btnTest_Click"
                                     Width="140">Test Run</Button>
 
@@ -683,7 +683,7 @@
                                 Margin="8">
 
                                 <Button
-                                    IsEnabled="{Binding TestButtonEnabled}"
+                                    IsEnabled="{Binding StartButtonEnabled}"
                                     Click="btnTest_Click"
                                     Width="140">Test Run</Button>
 

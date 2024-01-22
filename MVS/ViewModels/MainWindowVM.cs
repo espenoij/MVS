@@ -199,20 +199,6 @@ namespace MVS
             }
         }
 
-        private bool _testButtonEnabled { get; set; }
-        public bool TestButtonEnabled
-        {
-            get
-            {
-                return _testButtonEnabled;
-            }
-            set
-            {
-                _testButtonEnabled = value;
-                OnPropertyChanged();
-            }
-        }
-
         /////////////////////////////////////////////////////////////////////////////
         // Recording Symbol
         /////////////////////////////////////////////////////////////////////////////

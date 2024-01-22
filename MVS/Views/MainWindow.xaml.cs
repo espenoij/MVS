@@ -298,7 +298,6 @@ namespace MVS
                 case OperationsMode.Recording:
                 case OperationsMode.Test:
                     mainWindowVM.StartButtonEnabled = false;
-                    mainWindowVM.TestButtonEnabled = false;
                     mainWindowVM.StopButtonEnabled = true;
                     break;
 
@@ -313,7 +312,6 @@ namespace MVS
                         mainWindowVM.StartButtonEnabled = false;
                     }
 
-                    mainWindowVM.TestButtonEnabled = true;
                     mainWindowVM.StopButtonEnabled = false;
                     break;
 
