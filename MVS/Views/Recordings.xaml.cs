@@ -115,13 +115,13 @@ namespace MVS
             if (mainWindowVM.SelectedSession != null)
             {
                 tbDataSetName.IsEnabled = true;
-                tbDataSetDescription.IsEnabled = true;
+                tbDataSetComments.IsEnabled = true;
                 cboInputMRUs.IsEnabled = true;
             }
             else
             {
                 tbDataSetName.IsEnabled = false;
-                tbDataSetDescription.IsEnabled = false;
+                tbDataSetComments.IsEnabled = false;
                 cboInputMRUs.IsEnabled = false;
             }
         }
@@ -237,7 +237,7 @@ namespace MVS
             {
                 lbDataSetID.Content = mainWindowVM.SelectedSession.Id.ToString();
                 tbDataSetName.Text = mainWindowVM.SelectedSession.Name;
-                tbDataSetDescription.Text = mainWindowVM.SelectedSession.Description;
+                tbDataSetComments.Text = mainWindowVM.SelectedSession.Comments;
                 cboInputMRUs.Text = mainWindowVM.SelectedSession.InputMRUs.GetDescription();
                 lbDataSetDate.Content = mainWindowVM.SelectedSession.DateString;
                 lbDataSetStartTime.Content = mainWindowVM.SelectedSession.StartTimeString2;
@@ -248,7 +248,7 @@ namespace MVS
             {
                 lbDataSetID.Content = string.Empty;
                 tbDataSetName.Text = string.Empty;
-                tbDataSetDescription.Text = string.Empty;
+                tbDataSetComments.Text = string.Empty;
                 cboInputMRUs.Text = InputMRUType.None.GetDescription();
                 lbDataSetDate.Content = string.Empty;
                 lbDataSetStartTime.Content = string.Empty;
@@ -302,7 +302,7 @@ namespace MVS
         {
             if (mainWindowVM.SelectedSession != null)
             {
-                mainWindowVM.SelectedSession.Description = (sender as TextBox).Text;
+                mainWindowVM.SelectedSession.Comments = (sender as TextBox).Text;
 
                 // Oppdatere database
                 mvsDatabase.Update(mainWindowVM.SelectedSession);

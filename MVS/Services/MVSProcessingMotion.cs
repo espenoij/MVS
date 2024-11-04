@@ -247,7 +247,7 @@ namespace MVS
             //////////////////////////////////////////////////////////////////
             if ((mainWindowVM.OperationsMode == OperationsMode.Recording || 
                  mainWindowVM.OperationsMode == OperationsMode.Test ||
-                 mainWindowVM.OperationsMode == OperationsMode.Analysis) &&
+                 mainWindowVM.OperationsMode == OperationsMode.ViewData) &&
                 (mainWindowVM.SelectedSession?.InputMRUs == InputMRUType.ReferenceMRU ||
                  mainWindowVM.SelectedSession?.InputMRUs == InputMRUType.ReferenceMRU_TestMRU) &&
                 refSensorPitch.status != DataStatus.TIMEOUT_ERROR &&
@@ -258,7 +258,7 @@ namespace MVS
                 !double.IsNaN(refSensorHeave.data))
             {
                 // Sjekke data timeout
-                if (mainWindowVM.OperationsMode == OperationsMode.Analysis)
+                if (mainWindowVM.OperationsMode == OperationsMode.ViewData)
                 {
                     refSensorPitch.status = DataStatus.OK;
                     refSensorRoll.status = DataStatus.OK;
@@ -362,7 +362,7 @@ namespace MVS
             //////////////////////////////////////////////////////////////////
             if ((mainWindowVM.OperationsMode == OperationsMode.Recording || 
                  mainWindowVM.OperationsMode == OperationsMode.Test ||
-                 mainWindowVM.OperationsMode == OperationsMode.Analysis) &&
+                 mainWindowVM.OperationsMode == OperationsMode.ViewData) &&
                 (mainWindowVM.SelectedSession?.InputMRUs == InputMRUType.TestMRU ||
                  mainWindowVM.SelectedSession?.InputMRUs == InputMRUType.ReferenceMRU_TestMRU) &&
                 testSensorPitch.status != DataStatus.TIMEOUT_ERROR &&
@@ -372,7 +372,7 @@ namespace MVS
                 !double.IsNaN(testSensorRoll.data) &&
                 !double.IsNaN(testSensorHeave.data))
             {
-                if (mainWindowVM.OperationsMode == OperationsMode.Analysis)
+                if (mainWindowVM.OperationsMode == OperationsMode.ViewData)
                 {
                     testSensorPitch.status = DataStatus.OK;
                     testSensorRoll.status = DataStatus.OK;

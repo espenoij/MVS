@@ -3,11 +3,11 @@
 namespace MVS
 {
     /// <summary>
-    /// Interaction logic for RecordingsData.xaml
+    /// Interaction logic for RecordingsDataView.xaml
     /// </summary>
-    public partial class RecordingsAnalysis : UserControl
+    public partial class RecordingsDataView : UserControl
     {
-        public RecordingsAnalysis()
+        public RecordingsDataView()
         {
             InitializeComponent();
         }

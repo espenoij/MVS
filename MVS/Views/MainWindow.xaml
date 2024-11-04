@@ -218,15 +218,15 @@
 
                             </telerik:RadTabItem>
 
-                            <!--Analysis-->
+                            <!--Data-->
                             <telerik:RadTabItem
-                                Name="tabVerificationRecordings_RecordingsAnalysis"
-                                Header="Analysis">
+                                Name="tabVerificationRecordings_DataView"
+                                Header="Data">
 
                                 <DockPanel>
 
-                                    <uc:RecordingsAnalysis
-                                        x:Name="ucRecordingsAnalysis" />
+                                    <uc:RecordingsDataView
+                                        x:Name="ucRecordingsDataView" />
 
                                 </DockPanel>
 

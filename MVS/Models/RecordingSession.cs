@@ -16,17 +16,17 @@ namespace MVS
         public RecordingSession()
         {
             Name = string.Empty;
-            Description = string.Empty;
+            Comments = string.Empty;
             StartTime = System.Data.SqlTypes.SqlDateTime.MinValue.Value;
             EndTime = System.Data.SqlTypes.SqlDateTime.MinValue.Value;
             InputMRUs = InputMRUType.ReferenceMRU_TestMRU;
         }
 
-        public RecordingSession(int id, string name, string description, InputMRUType inputMRUs)
+        public RecordingSession(int id, string name, string comments, InputMRUType inputMRUs)
         {
             Id = id;
             Name = name;
-            Description = description;
+            Comments = comments;
             InputMRUs = inputMRUs;
         }
 
@@ -41,7 +41,7 @@ namespace MVS
             {
                 Id = session.Id;
                 Name = session.Name;
-                Description = session.Description;
+                Comments = session.Comments;
                 StartTime = session.StartTime;
                 EndTime = session.EndTime;
                 InputMRUs = session.InputMRUs;
@@ -76,16 +76,16 @@ namespace MVS
             }
         }
 
-        private string _description { get; set; }
-        public string Description
+        private string _comments { get; set; }
+        public string Comments
         {
             get
             {
-                return _description;
+                return _comments;
             }
             set
             {
-                _description = value;
+                _comments = value;
                 OnPropertyChanged();
             }
         }

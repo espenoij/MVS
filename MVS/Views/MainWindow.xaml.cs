@@ -68,8 +68,8 @@ namespace MVS
         // Kommer fra sensor input edit
         private bool sensorInputEdited = false;
 
-        // Analysis worker
-        private readonly BackgroundWorker analysisWorker = new BackgroundWorker();
+        // Data View worker
+        private readonly BackgroundWorker dataViewWorker = new BackgroundWorker();
 
         // Model View
         private MainWindowVM mainWindowVM;
@@ -138,7 +138,7 @@ namespace MVS
             ucRecordings.Init(mainWindowVM, config, mvsDatabase, updateUIButtonsCallback);
 
             // Recordings Data page
-            ucRecordingsAnalysis.Init(recordingsVM);
+            ucRecordingsDataView.Init(recordingsVM);
 
             // Sensor Input Setup
             ucSensorSetupPage.Init(config, errorHandler, adminSettingsVM);
@@ -221,7 +221,7 @@ namespace MVS
             }
 
             // Analysis init
-            InitAnalysisWorker();
+            InitDataViewWorker();
 
             // Sette start/stop knappene
             SetOperationsMode(OperationsMode.Stop);
@@ -280,7 +280,7 @@ namespace MVS
         {
             // Stopper verfication session
             if ((mainWindowVM.OperationsMode == OperationsMode.Recording ||
-                 mainWindowVM.OperationsMode == OperationsMode.Analysis ||
+                 mainWindowVM.OperationsMode == OperationsMode.ViewData ||
                  mainWindowVM.OperationsMode == OperationsMode.Test) &&
                 mode == OperationsMode.Stop)
             {
@@ -582,9 +582,6 @@ namespace MVS
                 ucMVSOutput.Start();
                 ucRecordings.Start();
 
-                // Transfer data to display
-                //ucRecordingsAnalysis.Start();
-
                 // Server startet
                 serverStarted = true;
 
@@ -597,7 +594,7 @@ namespace MVS
                 recordingsVM.StartRecording();
 
                 // Gå til Analyse tab
-                tabVerificationRecordings_RecordingsAnalysis.IsSelected = true;
+                tabVerificationRecordings_DataView.IsSelected = true;
             }
         }
 
@@ -627,9 +624,6 @@ namespace MVS
             ucMVSOutput.Start();
             ucRecordings.Start();
 
-            // Transfer data to display
-            //ucRecordingsAnalysis.Start();
-
             // Server startet
             serverStarted = true;
 
@@ -653,9 +647,6 @@ namespace MVS
             ucSensorSetupPage.ServerStartedCheck(false);
             ucMVSInputSetup.Stop();
             ucMVSOutput.Stop();
-
-            // Stoppe oppdatering av grafer
-            //ucRecordingsAnalysis.Stop();
 
             // Server startet
             serverStarted = false;
@@ -761,16 +752,16 @@ namespace MVS
             aboutDlg.ShowDialog();
         }
 
-        private void InitAnalysisWorker()
+        private void InitDataViewWorker()
         {
-            analysisWorker.DoWork += analysisWorker_DoWork;
-            analysisWorker.RunWorkerCompleted += analysisWorker_RunWorkerCompleted;
+            dataViewWorker.DoWork += dataViewWorker_DoWork;
+            dataViewWorker.RunWorkerCompleted += dataViewWorker_RunWorkerCompleted;
         }
 
-        private void analysisWorker_DoWork(object sender, DoWorkEventArgs e)
+        private void dataViewWorker_DoWork(object sender, DoWorkEventArgs e)
         {
             // Sette ops mode til analyse
-            mainWindowVM.OperationsMode = OperationsMode.Analysis;
+            mainWindowVM.OperationsMode = OperationsMode.ViewData;
 
             // Laste session data fra databasen
             mvsDatabase.LoadSessionData(mainWindowVM.SelectedSession, recordingsVM.sessionDataList);
@@ -782,7 +773,7 @@ namespace MVS
             recordingsVM.AnalyseSessionData();
         }
 
-        private void analysisWorker_RunWorkerCompleted(object sender, RunWorkerCompletedEventArgs e)
+        private void dataViewWorker_RunWorkerCompleted(object sender, RunWorkerCompletedEventArgs e)
         {
             // Resette ops mode
             //mainWindowVM.OperationsMode = OperationsMode.Stop;
@@ -794,12 +785,12 @@ namespace MVS
 
         private void tcVerificationRecordings_SelectionChanged(object sender, RadSelectionChangedEventArgs e)
         {
-            if (tabVerificationRecordings_RecordingsAnalysis.IsSelected &&
+            if (tabVerificationRecordings_DataView.IsSelected &&
                 mainWindowVM.OperationsMode != OperationsMode.Recording &&
                 mainWindowVM.OperationsMode != OperationsMode.Test)
             {
                 // Starte data analyse
-                analysisWorker.RunWorkerAsync();
+                dataViewWorker.RunWorkerAsync();
             }
         }
 
