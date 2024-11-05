@@ -430,7 +430,7 @@ public enum OperationsMode
     Recording,
     Test,
     Stop,
-    Analysis
+    ViewData
 }
 
 public enum SensorType

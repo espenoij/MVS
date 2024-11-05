@@ -17,7 +17,7 @@ namespace MVS
         public MainWindowVM()
         {
             RecordingSymbolVisibility = Visibility.Collapsed;
-            AnalysisTabEnabled = false;
+            DataViewTabEnabled = false;
 
             // Starttime Init
             StartTime = System.Data.SqlTypes.SqlDateTime.MinValue.Value;
@@ -72,7 +72,7 @@ namespace MVS
                 {
                     _selectedSession = value;
 
-                    AnalysisTabEnabled = true;
+                    DataViewTabEnabled = true;
 
                     OnPropertyChanged();
                     OnPropertyChanged(nameof(SelectedSessionString));
@@ -153,7 +153,7 @@ namespace MVS
                         }
 
                     case OperationsMode.Stop:
-                    case OperationsMode.Analysis:
+                    case OperationsMode.ViewData:
                         return string.Empty;
 
                     default:
@@ -217,18 +217,18 @@ namespace MVS
         }
 
         /////////////////////////////////////////////////////////////////////////////
-        // Analysis Tab
+        // Data View Tab
         /////////////////////////////////////////////////////////////////////////////
-        private bool _analysisTabEnabled { get; set; }
-        public bool AnalysisTabEnabled
+        private bool _dataViewTabEnabled { get; set; }
+        public bool DataViewTabEnabled
         {
             get
             {
-                return _analysisTabEnabled;
+                return _dataViewTabEnabled;
             }
             set
             {
-                _analysisTabEnabled = value;
+                _dataViewTabEnabled = value;
                 OnPropertyChanged();
             }
         }

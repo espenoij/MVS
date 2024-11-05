@@ -1723,7 +1723,7 @@ namespace MVS
         {
             get
             {
-                if (mainWindowVM.OperationsMode == OperationsMode.Analysis && _alignmentTime != DateTime.MinValue)
+                if (mainWindowVM.OperationsMode == OperationsMode.ViewData && _alignmentTime != DateTime.MinValue)
                     return _alignmentTime.AddSeconds(-Constants.Minutes20);
                 else
                     return DateTime.UtcNow.AddSeconds(-Constants.Minutes20);

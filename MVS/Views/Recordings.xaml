@@ -196,11 +196,11 @@
                             <Label
                                 Width="140"
                                 Margin="0,5,0,0"
-                                Content="Description" />
+                                Content="Comments" />
                             
                             <Grid>
                                 <TextBox
-                                    Name="tbDataSetDescription"
+                                    Name="tbDataSetComments"
                                     Height="90"
                                     VerticalContentAlignment="Top"
                                     LostFocus="tbDataSetDescription_LostFocus"
@@ -209,7 +209,7 @@
                                 
                                 <TextBlock
                                     IsHitTestVisible="False"
-                                    Text="Enter a description here"
+                                    Text="Enter comments here"
                                     VerticalAlignment="Top"
                                     Margin="10,10,0,0"
                                     Foreground="DarkGray">
@@ -222,7 +222,7 @@
                                                 Value="Collapsed" />
                                             <Style.Triggers>
                                                 <DataTrigger
-                                                    Binding="{Binding Text, ElementName=tbDataSetDescription}"
+                                                    Binding="{Binding Text, ElementName=tbDataSetComments}"
                                                     Value="">
                                                     <Setter
                                                         Property="Visibility"

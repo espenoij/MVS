@@ -18,7 +18,7 @@ namespace MVS
         // MVS Data Set tabell
         private const string tableNameMVSDataSets = "mvs_data_sets";
         private const string columnMVSName = "name";
-        private const string columnMVSDescription = "description";
+        private const string columnMVSComments = "comments";
         private const string columnMVSInputSetup = "input_setup";
 
         // MVS Data tabeller
@@ -178,7 +178,7 @@ namespace MVS
                     cmd.CommandText = string.Format(@"CREATE TABLE IF NOT EXISTS {0}(id INTEGER PRIMARY KEY AUTO_INCREMENT, {1} TEXT, {2} TEXT, {3} INTEGER)",
                         tableNameMVSDataSets,
                         columnMVSName,
-                        columnMVSDescription,
+                        columnMVSComments,
                         columnMVSInputSetup);
 
                     cmd.ExecuteNonQuery();
@@ -465,15 +465,15 @@ namespace MVS
                         cmd.Connection = connection;
 
                         // Insert kommando
-                        cmd.CommandText = string.Format("INSERT INTO {0}({1}, {2}, {3}) VALUES(@Name, @Description, @InputSetup)",
+                        cmd.CommandText = string.Format("INSERT INTO {0}({1}, {2}, {3}) VALUES(@Name, @Comments, @InputSetup)",
                             tableNameMVSDataSets,
                             columnMVSName,
-                            columnMVSDescription,
+                            columnMVSComments,
                             columnMVSInputSetup);
 
                         // Insert parametre
                         cmd.Parameters.AddWithValue("@Name", dataSet.Name);
-                        cmd.Parameters.AddWithValue("@Description", dataSet.Description);
+                        cmd.Parameters.AddWithValue("@Comments", dataSet.Comments);
                         cmd.Parameters.AddWithValue("@InputSetup", (int)dataSet.InputMRUs);
 
                         // Åpne database connection
@@ -511,16 +511,16 @@ namespace MVS
                         cmd.Connection = connection;
 
                         // Insert kommando
-                        cmd.CommandText = string.Format("UPDATE {0} SET {1}=@Name, {2}=@Description, {3}=@InputSetup WHERE id={4}",
+                        cmd.CommandText = string.Format("UPDATE {0} SET {1}=@Name, {2}=@Comments, {3}=@InputSetup WHERE id={4}",
                             tableNameMVSDataSets,
                             columnMVSName,
-                            columnMVSDescription,
+                            columnMVSComments,
                             columnMVSInputSetup,
                             dataSet.Id);
 
                         // Update parametre
                         cmd.Parameters.AddWithValue("@Name", dataSet.Name);
-                        cmd.Parameters.AddWithValue("@Description", dataSet.Description);
+                        cmd.Parameters.AddWithValue("@Comments", dataSet.Comments);
                         cmd.Parameters.AddWithValue("@InputSetup", (int)dataSet.InputMRUs);
 
                         // Åpne database connection
