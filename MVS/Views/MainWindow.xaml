@@ -780,16 +780,49 @@
         </DockPanel>
 
         <StackPanel
-            VerticalAlignment="Bottom"
-            Orientation="Vertical">
-            
+            HorizontalAlignment="Left"
+            VerticalAlignment="Bottom">
+
             <!--Screen Capture button-->
             <Button
                 x:Name="btnScreenCapture"
-                Margin="8"
-                HorizontalAlignment="Left"
+                HorizontalAlignment="Center"
                 Background="Transparent"
+                Width="80"
+                Height="60"
                 Click="btnScreenCapture_Click">
+
+                <Button.Style>
+                    <Style
+                        TargetType="{x:Type Button}">
+
+                        <Setter
+                            Property="Template">
+                            <Setter.Value>
+                                <ControlTemplate
+                                    TargetType="{x:Type Button}">
+                                    <Border
+                                        x:Name="Border"
+                                        Background="{TemplateBinding Background}">
+                                        <ContentPresenter
+                                            HorizontalAlignment="Center"
+                                            VerticalAlignment="Center" />
+                                    </Border>
+                                    <ControlTemplate.Triggers>
+                                        <Trigger
+                                            Property="IsMouseOver"
+                                            Value="True">
+                                            <Setter
+                                                Property="Background"
+                                                Value="DimGray"
+                                                TargetName="Border" />
+                                        </Trigger>
+                                    </ControlTemplate.Triggers>
+                                </ControlTemplate>
+                            </Setter.Value>
+                        </Setter>
+                    </Style>
+                </Button.Style>
 
                 <StackPanel>
 
@@ -804,10 +837,43 @@
             <!--About button-->
             <Button
                 x:Name="btnAbout"
-                Margin="8"
-                HorizontalAlignment="Left"
+                HorizontalAlignment="Center"
+                Width="80"
+                Height="60"
                 Background="Transparent"
                 Click="btnAbout_Click">
+
+                <Button.Style>
+                    <Style
+                        TargetType="{x:Type Button}">
+
+                        <Setter
+                            Property="Template">
+                            <Setter.Value>
+                                <ControlTemplate
+                                    TargetType="{x:Type Button}">
+                                    <Border
+                                        x:Name="Border"
+                                        Background="{TemplateBinding Background}">
+                                        <ContentPresenter
+                                            HorizontalAlignment="Center"
+                                            VerticalAlignment="Center" />
+                                    </Border>
+                                    <ControlTemplate.Triggers>
+                                        <Trigger
+                                            Property="IsMouseOver"
+                                            Value="True">
+                                            <Setter
+                                                Property="Background"
+                                                Value="DimGray"
+                                                TargetName="Border" />
+                                        </Trigger>
+                                    </ControlTemplate.Triggers>
+                                </ControlTemplate>
+                            </Setter.Value>
+                        </Setter>
+                    </Style>
+                </Button.Style>
 
                 <StackPanel>
 
@@ -820,6 +886,7 @@
             </Button>
 
         </StackPanel>
+
 
     </Grid>
 
