@@ -47,8 +47,8 @@ namespace MVS
         private MVSProcessing mvsProcessing;
         private MVSDataCollection mvsOutputData;
         private MVSDatabase mvsDatabase;
-        private DispatcherTimer mvsTimer = new DispatcherTimer();
-        private DispatcherTimer mvsDatabaseTimer = new DispatcherTimer();
+        private DispatcherTimer mvsProcessingTimer = new DispatcherTimer();
+        //private DispatcherTimer mvsDatabaseTimer = new DispatcherTimer();
 
         // View Models
         private AdminSettingsVM adminSettingsVM = new AdminSettingsVM();
@@ -73,7 +73,7 @@ namespace MVS
 
         // Model View
         private MainWindowVM mainWindowVM;
-        private RecordingsVM recordingsVM;
+        private ProjectVM recordingsVM;
         private AboutVM aboutVM;
 
         public MainWindow()
@@ -131,14 +131,14 @@ namespace MVS
             InitUIMVS();
 
             // Recordings Data VM
-            recordingsVM = new RecordingsVM();
+            recordingsVM = new ProjectVM();
             recordingsVM.Init(mainWindowVM, mvsProcessing, mvsInputData, mvsOutputData);
 
             // Recordings page
-            ucRecordings.Init(mainWindowVM, config, mvsDatabase, updateUIButtonsCallback);
+            ucProjects.Init(mainWindowVM, config, mvsDatabase, updateUIButtonsCallback);
 
             // Recordings Data page
-            ucRecordingsDataView.Init(recordingsVM);
+            ucDataAnalysis.Init(recordingsVM);
 
             // Sensor Input Setup
             ucSensorSetupPage.Init(config, errorHandler, adminSettingsVM);
@@ -156,7 +156,7 @@ namespace MVS
             InitUIInputUpdate();
 
             // Init MVS Data Flow
-            InitMVSUpdate();
+            InitMVSProcessing();
 
             //// Opprette database tabeller
             //// Sjekker først om bruker og passord for databasen er satt (ikke satt rett etter installasjon)
@@ -284,7 +284,7 @@ namespace MVS
                  mainWindowVM.OperationsMode == OperationsMode.Test) &&
                 mode == OperationsMode.Stop)
             {
-                ucRecordings.Stop(mainWindowVM.OperationsMode);
+                ucProjects.Stop(mainWindowVM.OperationsMode);
             }
 
             mainWindowVM.OperationsMode = mode;
@@ -303,7 +303,7 @@ namespace MVS
 
                 case OperationsMode.Stop:
 
-                    if (mainWindowVM.SelectedSession != null)
+                    if (mainWindowVM.SelectedProject != null)
                     {
                         mainWindowVM.StartButtonEnabled = true;
                     }
@@ -379,13 +379,13 @@ namespace MVS
             }
         }
 
-        private void InitMVSUpdate()
+        private void InitMVSProcessing()
         {
             // Dispatcher som oppdatere MVS prosessering
-            mvsTimer.Interval = TimeSpan.FromMilliseconds(config.ReadWithDefault(ConfigKey.HMSProcessingFrequency, Constants.HMSProcessingFrequencyDefault));
-            mvsTimer.Tick += runHMSUpdate;
+            mvsProcessingTimer.Interval = TimeSpan.FromMilliseconds(config.ReadWithDefault(ConfigKey.HMSProcessingFrequency, Constants.HMSProcessingFrequencyDefault));
+            mvsProcessingTimer.Tick += runMVSProcessing;
 
-            void runHMSUpdate(object sender, EventArgs e)
+            void runMVSProcessing(object sender, EventArgs e)
             {
                 try
                 {
@@ -407,11 +407,10 @@ namespace MVS
                         // Oppdatere graf data
                         recordingsVM.UpdateData(mvsOutputData);
 
-                        // Sette database status
-                        //SetDatabaseStatus(mvsInputData);
-
                         // MVS: Lagre data i databasen
                         /////////////////////////////////////////////////////////////////////////////////////////////////////
+                        if (databaseTablesCreated)
+                            mvsDatabase.Insert(mainWindowVM.SelectedProject, mvsOutputData);
 
                         // Utfører første en sjekk på om database tabellene er opprettet.
                         // Grunnen til at dette gjøres her, så sent etter init, er at output listen (med dbColumnNames) fylles av 
@@ -419,7 +418,7 @@ namespace MVS
                         // Output listen er derfor ikke komplett før en update (hmsProcessing.Update ovenfor) er utført.
                         if (!databaseTablesCreated && mainWindowVM.OperationsMode != OperationsMode.Test)
                         {
-                            mvsDatabase.CreateDataTables(mainWindowVM.SelectedSession, mvsOutputData);
+                            mvsDatabase.CreateDataTables(mainWindowVM.SelectedProject, mvsOutputData);
 
                             databaseTablesCreated = true;
 
@@ -439,35 +438,35 @@ namespace MVS
                 }
             }
 
-            // Dispatcher som lagrerer MVS data til databasen
-            mvsDatabaseTimer.Interval = TimeSpan.FromMilliseconds(config.ReadWithDefault(ConfigKey.DatabaseSaveFrequency, Constants.DatabaseSaveFreqDefault));
-            mvsDatabaseTimer.Tick += runSaveMVSData;
+            //// Dispatcher som lagrerer MVS data til databasen
+            //mvsDatabaseTimer.Interval = TimeSpan.FromMilliseconds(config.ReadWithDefault(ConfigKey.DatabaseSaveFrequency, Constants.DatabaseSaveFreqDefault));
+            //mvsDatabaseTimer.Tick += runSaveMVSData;
 
-            void runSaveMVSData(object sender, EventArgs e)
-            {
-                try
-                {
-                    Thread thread = new Thread(() => SaveMVSData_Thread());
-                    thread.IsBackground = true;
-                    thread.Start();
+            //void runSaveMVSData(object sender, EventArgs e)
+            //{
+            //    try
+            //    {
+            //        Thread thread = new Thread(() => SaveMVSData_Thread());
+            //        thread.IsBackground = true;
+            //        thread.Start();
 
-                    void SaveMVSData_Thread()
-                    {
-                        // Lagre data i databasen
-                        if (mainWindowVM.StoreToDatabase())
-                            mvsDatabase.Insert(mainWindowVM.SelectedSession, mvsOutputData);
-                    }
-                }
-                catch (Exception ex)
-                {
-                    errorHandler.Insert(
-                        new ErrorMessage(
-                            DateTime.UtcNow,
-                            ErrorMessageType.Database,
-                            ErrorMessageCategory.Admin,
-                            string.Format("Database Insert Error (runSaveHMSData)\n\nSystem Message:\n{0}", ex.Message)));
-                }
-            }
+            //        void SaveMVSData_Thread()
+            //        {
+            //            // Lagre data i databasen
+            //            if (mainWindowVM.StoreToDatabase())
+            //                mvsDatabase.Insert(mainWindowVM.SelectedSession, mvsOutputData);
+            //        }
+            //    }
+            //    catch (Exception ex)
+            //    {
+            //        errorHandler.Insert(
+            //            new ErrorMessage(
+            //                DateTime.UtcNow,
+            //                ErrorMessageType.Database,
+            //                ErrorMessageCategory.Admin,
+            //                string.Format("Database Insert Error (runSaveHMSData)\n\nSystem Message:\n{0}", ex.Message)));
+            //    }
+            //}
         }
 
         //private void SetDatabaseStatus(MVSDataCollection hmsInputData)
@@ -508,14 +507,14 @@ namespace MVS
         private void StartRecording()
         {
             // Sjekker at et data set er valgt
-            if (mainWindowVM.SelectedSession == null)
+            if (mainWindowVM.SelectedProject == null)
             {
                 DialogHandler.Warning("No data set selected.", "Please select a data set to record data into before starting a recording session.");
             }
             else
             {
                 // Sjekker om valgt data set allerede har data
-                if (mainWindowVM.SelectedSession.DataSetHasData())
+                if (mainWindowVM.SelectedProject.DataSetHasData())
                 {
                     RadWindow.Confirm("The selected data set already contains data.\n\nStarting a new recording session with this data set\nwill delete all the current data within it.", OnClosed);
 
@@ -525,10 +524,10 @@ namespace MVS
                         if ((bool)ea.DialogResult == true)
                         {
                             // Må først slette eksisterende data i databasen
-                            mvsDatabase.DeleteData(mainWindowVM.SelectedSession);
+                            mvsDatabase.DeleteData(mainWindowVM.SelectedProject);
 
                             // Fjerne timestamps
-                            mainWindowVM.SelectedSession.ClearTimestamps();
+                            mainWindowVM.SelectedProject.ClearTimestamps();
                         }
                         else
                         {
@@ -538,14 +537,14 @@ namespace MVS
                 }
 
                 // Sjekke om recording session har navn
-                if (string.IsNullOrEmpty(mainWindowVM.SelectedSession.Name))
+                if (string.IsNullOrEmpty(mainWindowVM.SelectedProject.Name))
                 {
                     RadWindow.Alert(TextHelper.Wrap("The selected data recording session does not have a name.\n\nPlease set a name before starting the data recording session."));
                     return;
                 }
 
                 // Check if input setup is set
-                if (mainWindowVM.SelectedSession.InputMRUs == InputMRUType.None)
+                if (mainWindowVM.SelectedProject.InputMRUs == InputMRUType.None)
                 {
                     RadWindow.Alert(TextHelper.Wrap("The input MRUs have not been set.\n\nPlease set the input MRUs before starting the data recording session."));
                     return;
@@ -573,14 +572,14 @@ namespace MVS
                 sensorDataRetrieval.SensorDataRetrieval_Start();
 
                 // MVS prosessering updater
-                mvsTimer.Start();
-                mvsDatabaseTimer.Start();
+                mvsProcessingTimer.Start();
+                //mvsDatabaseTimer.Start();
 
                 // Sensor Setup
                 ucSensorSetupPage.ServerStartedCheck(true);
                 ucMVSInputSetup.Start();
                 ucMVSOutput.Start();
-                ucRecordings.Start();
+                ucProjects.Start();
 
                 // Server startet
                 serverStarted = true;
@@ -616,13 +615,13 @@ namespace MVS
             sensorDataRetrieval.SensorDataRetrieval_Start();
 
             // MVS prosessering updater
-            mvsTimer.Start();
+            mvsProcessingTimer.Start();
 
             // Sensor Setup
             ucSensorSetupPage.ServerStartedCheck(true);
             ucMVSInputSetup.Start();
             ucMVSOutput.Start();
-            ucRecordings.Start();
+            ucProjects.Start();
 
             // Server startet
             serverStarted = true;
@@ -641,8 +640,8 @@ namespace MVS
             sensorDataRetrieval.SensorDataRetrieval_Stop();
 
             // MVS prosessering updater
-            mvsTimer.Stop();
-            mvsDatabaseTimer.Stop();
+            mvsProcessingTimer.Stop();
+            //mvsDatabaseTimer.Stop();
 
             ucSensorSetupPage.ServerStartedCheck(false);
             ucMVSInputSetup.Stop();
@@ -764,13 +763,13 @@ namespace MVS
             mainWindowVM.OperationsMode = OperationsMode.ViewData;
 
             // Laste session data fra databasen
-            mvsDatabase.LoadSessionData(mainWindowVM.SelectedSession, recordingsVM.sessionDataList);
+            mvsDatabase.LoadSessionData(mainWindowVM.SelectedProject, recordingsVM.sessionDataList);
 
             // Resetter data listene i dataCalculations
             mvsProcessing.ResetDataCalculations();
 
             // Analysere session data
-            recordingsVM.AnalyseSessionData();
+            recordingsVM.AnalyseProjectData();
         }
 
         private void dataViewWorker_RunWorkerCompleted(object sender, RunWorkerCompletedEventArgs e)
@@ -778,7 +777,7 @@ namespace MVS
             // Resette ops mode
             //mainWindowVM.OperationsMode = OperationsMode.Stop;
 
-            //ucRecordingsAnalysis.TransferToDisplay(recordingsVM);
+            //ucProjectsAnalysis.TransferToDisplay(recordingsVM);
 
             recordingsVM.TransferToDisplay();
         }

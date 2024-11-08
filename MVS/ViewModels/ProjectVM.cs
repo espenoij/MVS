@@ -7,7 +7,7 @@ using Telerik.Windows.Data;
 
 namespace MVS
 {
-    public class RecordingsVM : INotifyPropertyChanged
+    public class ProjectVM : INotifyPropertyChanged
     {
         // Change notification
         public event PropertyChangedEventHandler PropertyChanged;
@@ -183,7 +183,7 @@ namespace MVS
             chartUpdateTimer.Stop();
         }
 
-        public void AnalyseSessionData()
+        public void AnalyseProjectData()
         {
             double refMeanPitchCount = 0;
             double refMeanRollCount = 0;
@@ -425,7 +425,10 @@ namespace MVS
             testHeaveAmplitudeMean20mData = UpdateMeanSum(testMeanHeaveAmplitudeSum, testMeanHeaveAmplitudeCount);
 
             // Oppdatere alignment datetime til alle chart
-            alignmentTime = sessionDataList.Last().timestamp;
+            if (sessionDataList.Count > 0)
+                alignmentTime = sessionDataList.Last().timestamp;
+            else
+                alignmentTime = DateTime.UtcNow;
 
             // Oppdatere aksene
             OnPropertyChanged(nameof(pitchChartAxisMax20m));

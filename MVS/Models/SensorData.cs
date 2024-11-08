@@ -557,10 +557,10 @@ namespace MVS
         public bool UseThisSensor(MainWindowVM mainWindowVM)
         {
             if (mainWindowVM.OperationsMode == OperationsMode.Test ||
-                (mainWindowVM.SelectedSession?.InputMRUs == InputMRUType.ReferenceMRU && mruType == MRUType.ReferenceMRU) ||
-                (mainWindowVM.SelectedSession?.InputMRUs == InputMRUType.ReferenceMRU_TestMRU && mruType == MRUType.ReferenceMRU) ||
-                (mainWindowVM.SelectedSession?.InputMRUs == InputMRUType.TestMRU && mruType == MRUType.TestMRU) ||
-                (mainWindowVM.SelectedSession?.InputMRUs == InputMRUType.ReferenceMRU_TestMRU && mruType == MRUType.TestMRU))
+                (mainWindowVM.SelectedProject?.InputMRUs == InputMRUType.ReferenceMRU && mruType == MRUType.ReferenceMRU) ||
+                (mainWindowVM.SelectedProject?.InputMRUs == InputMRUType.ReferenceMRU_TestMRU && mruType == MRUType.ReferenceMRU) ||
+                (mainWindowVM.SelectedProject?.InputMRUs == InputMRUType.TestMRU && mruType == MRUType.TestMRU) ||
+                (mainWindowVM.SelectedProject?.InputMRUs == InputMRUType.ReferenceMRU_TestMRU && mruType == MRUType.TestMRU))
             {
                 return true;
             }

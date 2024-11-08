@@ -7,13 +7,13 @@ namespace MVS
     /// <summary>
     /// Represents a motion data set and provides change notification through the INotifyPropertyChanged interface.
     /// </summary>
-    public class RecordingSession : INotifyPropertyChanged
+    public class Project : INotifyPropertyChanged
     {
         // Change notification
         public event PropertyChangedEventHandler PropertyChanged;
 
         // Initialize
-        public RecordingSession()
+        public Project()
         {
             Name = string.Empty;
             Comments = string.Empty;
@@ -22,7 +22,7 @@ namespace MVS
             InputMRUs = InputMRUType.ReferenceMRU_TestMRU;
         }
 
-        public RecordingSession(int id, string name, string comments, InputMRUType inputMRUs)
+        public Project(int id, string name, string comments, InputMRUType inputMRUs)
         {
             Id = id;
             Name = name;
@@ -30,12 +30,12 @@ namespace MVS
             InputMRUs = inputMRUs;
         }
 
-        public RecordingSession(RecordingSession session)
+        public Project(Project session)
         {
             Set(session);
         }
 
-        public void Set(RecordingSession session)
+        public void Set(Project session)
         {
             if (session != null)
             {
@@ -114,7 +114,7 @@ namespace MVS
                 if (_startTime == System.Data.SqlTypes.SqlDateTime.MinValue.Value)
                     return Constants.NotAvailable;
                 else
-                    return string.Format("{0}", _startTime.ToShortDateString());
+                    return string.Format("{0}-{1}-{2}", _startTime.Year, _startTime.Month.ToString("00"), _startTime.Day.ToString("00"));
             }
         }
         public string StartTimeString

@@ -41,7 +41,9 @@ namespace MVS
         public void StartTimer()
         {
             // Sette start tid
-            StartTime = DateTime.UtcNow;
+            // Start tid sette 40 minutter frem i tid slik at vi har
+            // 20 min snitt før vi begynner målinger og 20 min med måling
+            StartTime = DateTime.UtcNow.AddMinutes(40);
 
             // Starte timer
             timer.Start();
@@ -57,41 +59,41 @@ namespace MVS
         }
 
         /////////////////////////////////////////////////////////////////////////////
-        // Selected Recording Session
+        // Selected Project
         /////////////////////////////////////////////////////////////////////////////
-        private RecordingSession _selectedSession { get; set; }
-        public RecordingSession SelectedSession
+        private Project _selectedProject { get; set; }
+        public Project SelectedProject
         {
             get
             {
-                return _selectedSession;
+                return _selectedProject;
             }
             set
             {
-                if (value != _selectedSession)
+                if (value != _selectedProject)
                 {
-                    _selectedSession = value;
+                    _selectedProject = value;
 
                     DataViewTabEnabled = true;
 
                     OnPropertyChanged();
-                    OnPropertyChanged(nameof(SelectedSessionString));
+                    OnPropertyChanged(nameof(SelectedProjectString));
                 }
             }
         }
-        public string SelectedSessionString
+        public string SelectedProjectString
         {
             get
             {
-                if (!string.IsNullOrEmpty(_selectedSession?.Name))
-                    return string.Format("\"{0}\"", _selectedSession.Name);
+                if (!string.IsNullOrEmpty(_selectedProject?.Name))
+                    return string.Format("{0}", _selectedProject.Name);
                 else
                     return string.Empty;
             }
         }
         public void SelectedSessionNameUpdated()
         {
-            OnPropertyChanged(nameof(SelectedSessionString));
+            OnPropertyChanged(nameof(SelectedProjectString));
         }
 
         /////////////////////////////////////////////////////////////////////////////
@@ -160,12 +162,6 @@ namespace MVS
                         return "Error";
                 }
             }
-        }
-
-        public bool StoreToDatabase()
-        {
-            // Lagrer kun til databasen når vi først har kjørt i 20 minutter.
-            return (DateTime.UtcNow - _startTime).TotalSeconds >= 0;
         }
 
         /////////////////////////////////////////////////////////////////////////////

@@ -41,7 +41,7 @@ namespace MVS
             }
         }
 
-        public void CreateDataTables(RecordingSession dataSet, MVSDataCollection mvsDataCollection)
+        public void CreateDataTables(Project dataSet, MVSDataCollection mvsDataCollection)
         {
             try
             {
@@ -85,7 +85,7 @@ namespace MVS
             }
         }
 
-        public void Insert(RecordingSession dataSet, MVSDataCollection hmsDataCollection)
+        public void Insert(Project dataSet, MVSDataCollection hmsDataCollection)
         {
             try
             {
@@ -106,11 +106,11 @@ namespace MVS
             }
         }
 
-        public List<RecordingSession> GetAllSessions()
+        public List<Project> GetAllSessions()
         {
             try
             {
-                List<RecordingSession> dataSets = database.GetAllSessions();
+                List<Project> dataSets = database.GetAllSessions();
 
                 errorHandler.ResetDatabaseError(ErrorHandler.DatabaseErrorType.GetAllMVSData);
 
@@ -131,7 +131,7 @@ namespace MVS
             }
         }
 
-        public int Insert(RecordingSession dataSet)
+        public int Insert(Project dataSet)
         {
             int id = 0;
 
@@ -156,7 +156,7 @@ namespace MVS
             return id;
         }
 
-        public void Update(RecordingSession dataSet)
+        public void Update(Project dataSet)
         {
             try
             {
@@ -177,7 +177,7 @@ namespace MVS
             }
         }
 
-        public void Remove(RecordingSession dataSet)
+        public void Remove(Project dataSet)
         {
             try
             {
@@ -199,7 +199,7 @@ namespace MVS
             }
         }
 
-        public void DeleteData(RecordingSession dataSet)
+        public void DeleteData(Project dataSet)
         {
             try
             {
@@ -220,7 +220,7 @@ namespace MVS
             }
         }
 
-        public void LoadTimestamps(RecordingSession dataSet)
+        public void LoadTimestamps(Project dataSet)
         {
             try
             {
@@ -252,7 +252,7 @@ namespace MVS
             }
         }
 
-        public void LoadSessionData(RecordingSession dataSet, RadObservableCollection<SessionData> dataList)
+        public void LoadSessionData(Project dataSet, RadObservableCollection<SessionData> dataList)
         {
             try
             {
@@ -276,7 +276,7 @@ namespace MVS
             }
         }
 
-        public ImportResult ImportHMSData(RecordingSession selectedSession, ReportProgressDelegate reportProgress)
+        public ImportResult ImportHMSData(Project selectedSession, ReportProgressDelegate reportProgress)
         {
             ImportResult result = new ImportResult();
 

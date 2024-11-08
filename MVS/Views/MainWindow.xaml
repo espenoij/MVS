@@ -99,7 +99,7 @@
 
 
                 <!--==============================================================-->
-                <!--Side Menu: Recordings-->
+                <!--Side Menu: Projects-->
                 <!--==============================================================-->
                 <telerik:RadTabItem>
 
@@ -123,13 +123,13 @@
                                     Width="*" />
                             </Grid.ColumnDefinitions>
 
-                            <!--Selected Recording Session-->
+                            <!--Selected Project-->
                             <Label
                                 Grid.Column="1"
                                 VerticalAlignment="Center"
                                 HorizontalAlignment="Center"
-                                FontSize="{StaticResource fontSizeSelectedSession}"
-                                Content="{Binding SelectedSessionString}" />
+                                FontSize="{StaticResource fontSizeProject}"
+                                Content="{Binding SelectedProjectString}" />
 
                             <!--Top Buttons & Header-->
                             <StackPanel
@@ -197,7 +197,7 @@
 
                         </Grid>
 
-                        <!--Recordings Tab-->
+                        <!--Projects Tab-->
                         <telerik:RadTabControl
                             Name="tcVerificationRecordings"
                             DockPanel.Dock="Top"
@@ -205,14 +205,14 @@
                             Margin="8,0,8,8"
                             SelectionChanged="tcVerificationRecordings_SelectionChanged">
 
-                            <!--Recordings-->
+                            <!--Project-->
                             <telerik:RadTabItem
-                                Header="Recordings">
+                                Header="Projects">
 
                                 <DockPanel>
 
-                                    <uc:Recordings
-                                        x:Name="ucRecordings" />
+                                    <uc:Projects
+                                        x:Name="ucProjects" />
 
                                 </DockPanel>
 
@@ -225,8 +225,8 @@
 
                                 <DockPanel>
 
-                                    <uc:RecordingsDataView
-                                        x:Name="ucRecordingsDataView" />
+                                    <uc:DataAnalysis
+                                        x:Name="ucDataAnalysis" />
 
                                 </DockPanel>
 
@@ -268,8 +268,8 @@
                                 Grid.Column="1"
                                 VerticalAlignment="Center"
                                 HorizontalAlignment="Center"
-                                FontSize="{StaticResource fontSizeSelectedSession}"
-                                Content="{Binding SelectedSessionString}" />
+                                FontSize="{StaticResource fontSizeProject}"
+                                Content="{Binding SelectedProjectString}" />
 
                             <!--Top Buttons & Header-->
                             <StackPanel
@@ -621,8 +621,8 @@
                                 Grid.Column="1"
                                 VerticalAlignment="Center"
                                 HorizontalAlignment="Center"
-                                FontSize="{StaticResource fontSizeSelectedSession}"
-                                Content="{Binding SelectedSessionString}" />
+                                FontSize="{StaticResource fontSizeProject}"
+                                Content="{Binding SelectedProjectString}" />
 
                             <!--Top Buttons & Header-->
                             <StackPanel

@@ -12,13 +12,13 @@ namespace MVS
     /// <summary>
     /// Interaction logic for VerificationSessions.xaml
     /// </summary>
-    public partial class Recordings : UserControl
+    public partial class Projects : UserControl
     {
         // Database handler
         private MVSDatabase mvsDatabase;
 
         // Motion Data Set List
-        private RadObservableCollection<RecordingSession> motionVerificationSessionList = new RadObservableCollection<RecordingSession>();
+        private RadObservableCollection<Project> motionVerificationSessionList = new RadObservableCollection<Project>();
 
         private MainWindowVM mainWindowVM;
         private Config config;
@@ -26,7 +26,7 @@ namespace MVS
 
         private MainWindow.UpdateUIButtonsCallback updateUIButtonsCallback;
 
-        public Recordings()
+        public Projects()
         {
             InitializeComponent();
 
@@ -93,7 +93,7 @@ namespace MVS
                 btnNew.IsEnabled = true;
 
                 // Er et data sett valgt?
-                if (mainWindowVM.SelectedSession == null)
+                if (mainWindowVM.SelectedProject == null)
                 {
                     btnDelete.IsEnabled = false;
                     btnImport.IsEnabled = false;
@@ -102,7 +102,7 @@ namespace MVS
                 {
                     btnDelete.IsEnabled = true;
 
-                    if (mainWindowVM.SelectedSession.StartTime == System.Data.SqlTypes.SqlDateTime.MinValue.Value)
+                    if (mainWindowVM.SelectedProject.StartTime == System.Data.SqlTypes.SqlDateTime.MinValue.Value)
                         btnImport.IsEnabled = false;
                     else
                         btnImport.IsEnabled = true;
@@ -111,7 +111,7 @@ namespace MVS
                 gvVerificationSessions.IsEnabled = true;
             }
 
-            if (mainWindowVM.SelectedSession != null)
+            if (mainWindowVM.SelectedProject != null)
             {
                 tbDataSetName.IsEnabled = true;
                 tbDataSetComments.IsEnabled = true;
@@ -128,7 +128,7 @@ namespace MVS
         private void LoadVerificationSessions()
         {
             // Hente liste med data set fra database
-            List<RecordingSession> sessionList = mvsDatabase.GetAllSessions();
+            List<Project> sessionList = mvsDatabase.GetAllSessions();
 
             if (sessionList != null)
             {
@@ -153,10 +153,10 @@ namespace MVS
             if (mode != OperationsMode.Test)
             {
                 // Laste timestamps på data set
-                mvsDatabase.LoadTimestamps(mainWindowVM.SelectedSession);
+                mvsDatabase.LoadTimestamps(mainWindowVM.SelectedProject);
 
                 // Oppdatere databasen
-                mvsDatabase.Update(mainWindowVM.SelectedSession);
+                mvsDatabase.Update(mainWindowVM.SelectedProject);
             }
 
             UpdateUIStates(false);
@@ -168,7 +168,7 @@ namespace MVS
         private void btnNew_Click(object sender, RoutedEventArgs e)
         {
             // Legge inne nytt tomt motion data set objekt
-            RecordingSession newSession = new RecordingSession();
+            Project newSession = new Project();
 
             // Store motion data set in database
             newSession.Id = mvsDatabase.Insert(newSession);
@@ -185,7 +185,7 @@ namespace MVS
 
         private void btnDelete_Click(object sender, RoutedEventArgs e)
         {
-            if (mainWindowVM.SelectedSession != null)
+            if (mainWindowVM.SelectedProject != null)
             {
                 RadWindow.Confirm("Delete the selected motion data set and all associated data?", OnClosed);
 
@@ -194,10 +194,10 @@ namespace MVS
                     if ((bool)ea.DialogResult == true)
                     {
                         // Slette fra database
-                        mvsDatabase.Remove(mainWindowVM.SelectedSession);
+                        mvsDatabase.Remove(mainWindowVM.SelectedProject);
 
                         // Slette fra listen
-                        motionVerificationSessionList.Remove(mainWindowVM.SelectedSession);
+                        motionVerificationSessionList.Remove(mainWindowVM.SelectedProject);
 
                         // Sette item 0 som selected (vil også laste data ettersom SelectionChange under kalles automatisk når vi gjør dette)
                         gvVerificationSessions.SelectedItem = gvVerificationSessions.Items[0];
@@ -213,7 +213,7 @@ namespace MVS
             // Åpne HMS data import dialog vindu
             DialogImport importDlg = new DialogImport();
             importDlg.Owner = App.Current.MainWindow;
-            importDlg.Init(importVM, config, mainWindowVM.SelectedSession, mvsDatabase, mainWindowVM);
+            importDlg.Init(importVM, config, mainWindowVM.SelectedProject, mvsDatabase, mainWindowVM);
             importDlg.ShowDialog();
 
             // Laster items data på nytt ettersom de kan ha blitt endret under import over
@@ -222,7 +222,7 @@ namespace MVS
 
         private void gvVerificationSessions_SelectionChanged(object sender, SelectionChangeEventArgs e)
         {
-            mainWindowVM.SelectedSession = (sender as RadGridView).SelectedItem as RecordingSession;
+            mainWindowVM.SelectedProject = (sender as RadGridView).SelectedItem as Project;
 
             LoadSelectedItemsDetails();
             UpdateUIStates(false);
@@ -232,16 +232,16 @@ namespace MVS
 
         private void LoadSelectedItemsDetails()
         {
-            if (mainWindowVM.SelectedSession != null)
+            if (mainWindowVM.SelectedProject != null)
             {
-                lbDataSetID.Content = mainWindowVM.SelectedSession.Id.ToString();
-                tbDataSetName.Text = mainWindowVM.SelectedSession.Name;
-                tbDataSetComments.Text = mainWindowVM.SelectedSession.Comments;
-                cboInputMRUs.Text = mainWindowVM.SelectedSession.InputMRUs.GetDescription();
-                lbDataSetDate.Content = mainWindowVM.SelectedSession.DateString;
-                lbDataSetStartTime.Content = mainWindowVM.SelectedSession.StartTimeString2;
-                lbDataSetEndTime.Content = mainWindowVM.SelectedSession.EndTimeString2;
-                lbDataSetDuration.Content = mainWindowVM.SelectedSession.DurationString;
+                lbDataSetID.Content = mainWindowVM.SelectedProject.Id.ToString();
+                tbDataSetName.Text = mainWindowVM.SelectedProject.Name;
+                tbDataSetComments.Text = mainWindowVM.SelectedProject.Comments;
+                cboInputMRUs.Text = mainWindowVM.SelectedProject.InputMRUs.GetDescription();
+                lbDataSetDate.Content = mainWindowVM.SelectedProject.DateString;
+                lbDataSetStartTime.Content = mainWindowVM.SelectedProject.StartTimeString2;
+                lbDataSetEndTime.Content = mainWindowVM.SelectedProject.EndTimeString2;
+                lbDataSetDuration.Content = mainWindowVM.SelectedProject.DurationString;
             }
             else
             {
@@ -272,12 +272,12 @@ namespace MVS
 
         private void tbDataSetName_Update(object sender)
         {
-            if (mainWindowVM.SelectedSession != null)
+            if (mainWindowVM.SelectedProject != null)
             {
-                mainWindowVM.SelectedSession.Name = (sender as TextBox).Text;
+                mainWindowVM.SelectedProject.Name = (sender as TextBox).Text;
 
                 // Oppdatere database
-                mvsDatabase.Update(mainWindowVM.SelectedSession);
+                mvsDatabase.Update(mainWindowVM.SelectedProject);
 
                 mainWindowVM.SelectedSessionNameUpdated();
             }
@@ -299,24 +299,24 @@ namespace MVS
 
         private void tbDataSetDescription_Update(object sender)
         {
-            if (mainWindowVM.SelectedSession != null)
+            if (mainWindowVM.SelectedProject != null)
             {
-                mainWindowVM.SelectedSession.Comments = (sender as TextBox).Text;
+                mainWindowVM.SelectedProject.Comments = (sender as TextBox).Text;
 
                 // Oppdatere database
-                mvsDatabase.Update(mainWindowVM.SelectedSession);
+                mvsDatabase.Update(mainWindowVM.SelectedProject);
             }
         }
 
         private void cboInputMRUs_DropDownClosed(object sender, EventArgs e)
         {
-            if (mainWindowVM.SelectedSession != null)
+            if (mainWindowVM.SelectedProject != null)
             {
                 // Ny valgt MRU type
-                mainWindowVM.SelectedSession.InputMRUs = EnumExtension.GetEnumValueFromDescription<InputMRUType>((sender as RadComboBox).Text);
+                mainWindowVM.SelectedProject.InputMRUs = EnumExtension.GetEnumValueFromDescription<InputMRUType>((sender as RadComboBox).Text);
 
                 // Oppdatere database
-                mvsDatabase.Update(mainWindowVM.SelectedSession);
+                mvsDatabase.Update(mainWindowVM.SelectedProject);
             }
         }
     }

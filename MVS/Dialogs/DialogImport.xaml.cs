@@ -16,7 +16,7 @@ namespace MVS
         private Config config;
         private MVSDatabase mvsDatabase;
         private MainWindowVM mainWindowVM;
-        private RecordingSession selectedSession;
+        private Project selectedSession;
 
         private BackgroundWorker importWorker = new BackgroundWorker();
 
@@ -27,7 +27,7 @@ namespace MVS
             InitializeComponent();
         }
 
-        public void Init(ImportVM importVM, Config config, RecordingSession selectedSession, MVSDatabase mvsDatabase, MainWindowVM mainWindowVM)
+        public void Init(ImportVM importVM, Config config, Project selectedSession, MVSDatabase mvsDatabase, MainWindowVM mainWindowVM)
         {
             DataContext = importVM;
             this.importVM = importVM;
@@ -83,10 +83,10 @@ namespace MVS
             {
                 case ImportResultCode.OK:
                     // Ny valgt MRU type
-                    mainWindowVM.SelectedSession.InputMRUs = InputMRUType.ReferenceMRU_TestMRU;
+                    mainWindowVM.SelectedProject.InputMRUs = InputMRUType.ReferenceMRU_TestMRU;
 
                     // Oppdatere database
-                    mvsDatabase.Update(mainWindowVM.SelectedSession);
+                    mvsDatabase.Update(mainWindowVM.SelectedProject);
                     break;
 
                 case ImportResultCode.DatabaseError:

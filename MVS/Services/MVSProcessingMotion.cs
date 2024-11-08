@@ -248,8 +248,8 @@ namespace MVS
             if ((mainWindowVM.OperationsMode == OperationsMode.Recording || 
                  mainWindowVM.OperationsMode == OperationsMode.Test ||
                  mainWindowVM.OperationsMode == OperationsMode.ViewData) &&
-                (mainWindowVM.SelectedSession?.InputMRUs == InputMRUType.ReferenceMRU ||
-                 mainWindowVM.SelectedSession?.InputMRUs == InputMRUType.ReferenceMRU_TestMRU) &&
+                (mainWindowVM.SelectedProject?.InputMRUs == InputMRUType.ReferenceMRU ||
+                 mainWindowVM.SelectedProject?.InputMRUs == InputMRUType.ReferenceMRU_TestMRU) &&
                 refSensorPitch.status != DataStatus.TIMEOUT_ERROR &&
                 refSensorRoll.status != DataStatus.TIMEOUT_ERROR &&
                 refSensorHeave.status != DataStatus.TIMEOUT_ERROR &&
@@ -287,7 +287,7 @@ namespace MVS
                 refRollData.Set(refSensorRoll);
                 // I data fra sensor er positive tall roll til høyre.
                 // Internt er positive tall roll til venstre. Venstre er høyest på grafen. Dette er standard i CAP.
-                refRollData.data *= -1;
+                //refRollData.data *= -1;
                 refRollMean20mData.DoProcessing(refRollData);
                 refRollMax20mData.DoProcessing(refRollData);
                 refRollMaxLeft20mData.DoProcessing(refRollData);
@@ -363,8 +363,8 @@ namespace MVS
             if ((mainWindowVM.OperationsMode == OperationsMode.Recording || 
                  mainWindowVM.OperationsMode == OperationsMode.Test ||
                  mainWindowVM.OperationsMode == OperationsMode.ViewData) &&
-                (mainWindowVM.SelectedSession?.InputMRUs == InputMRUType.TestMRU ||
-                 mainWindowVM.SelectedSession?.InputMRUs == InputMRUType.ReferenceMRU_TestMRU) &&
+                (mainWindowVM.SelectedProject?.InputMRUs == InputMRUType.TestMRU ||
+                 mainWindowVM.SelectedProject?.InputMRUs == InputMRUType.ReferenceMRU_TestMRU) &&
                 testSensorPitch.status != DataStatus.TIMEOUT_ERROR &&
                 testSensorRoll.status != DataStatus.TIMEOUT_ERROR &&
                 testSensorHeave.status != DataStatus.TIMEOUT_ERROR &&
@@ -402,7 +402,7 @@ namespace MVS
                 testRollData.Set(testSensorRoll);
                 // I data fra sensor er positive tall roll til høyre.
                 // Internt er positive tall roll til venstre. Venstre er høyest på grafen. Dette er standard i CAP.
-                testRollData.data *= -1;
+                //testRollData.data *= -1;
                 testRollMean20mData.DoProcessing(testRollData);
                 testRollMax20mData.DoProcessing(testRollData);
                 testRollMaxLeft20mData.DoProcessing(testRollData);

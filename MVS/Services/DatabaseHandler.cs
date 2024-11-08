@@ -122,7 +122,7 @@ namespace MVS
         //    }
         //}
 
-        public void CreateDataTables(RecordingSession dataSet, MVSDataCollection mvsDataCollection)
+        public void CreateDataTables(Project dataSet, MVSDataCollection mvsDataCollection)
         {
             try
             {
@@ -228,7 +228,7 @@ namespace MVS
             }
         }
 
-        public bool TableExists(RecordingSession dataSet)
+        public bool TableExists(Project dataSet)
         {
             using (var connection = new MySqlConnection(connectionString))
             {
@@ -365,7 +365,7 @@ namespace MVS
             }
         }
 
-        public void Insert(RecordingSession dataSet, MVSDataCollection mvsDataCollection)
+        public void Insert(Project dataSet, MVSDataCollection mvsDataCollection)
         {
             try
             {
@@ -450,7 +450,7 @@ namespace MVS
             }
         }
 
-        public int Insert(RecordingSession dataSet)
+        public int Insert(Project dataSet)
         {
             int id = -1;
 
@@ -498,7 +498,7 @@ namespace MVS
             return id;
         }
 
-        public void Update(RecordingSession dataSet)
+        public void Update(Project dataSet)
         {
             try
             {
@@ -540,7 +540,7 @@ namespace MVS
             }
         }
 
-        public void DeleteDataSet(RecordingSession dataSet)
+        public void DeleteDataSet(Project dataSet)
         {
             try
             {
@@ -572,7 +572,7 @@ namespace MVS
             }
         }
 
-        public void DeleteData(RecordingSession dataSet)
+        public void DeleteData(Project dataSet)
         {
             try
             {
@@ -603,9 +603,9 @@ namespace MVS
             }
         }
 
-        public List<RecordingSession> GetAllSessions()
+        public List<Project> GetAllSessions()
         {
-            List<RecordingSession> dataSets = new List<RecordingSession>();
+            List<Project> dataSets = new List<Project>();
 
             try
             {
@@ -628,7 +628,7 @@ namespace MVS
                         // Lese ut data
                         while (reader.Read())
                         {
-                            dataSets.Add(new RecordingSession(
+                            dataSets.Add(new Project(
                                 reader.GetInt32(0),
                                 reader.GetString(1),
                                 reader.GetString(2),
@@ -649,7 +649,7 @@ namespace MVS
         }
 
         // Henter start og end timestamp fra databasen
-        public void LoadTimestamps(RecordingSession dataSet)
+        public void LoadTimestamps(Project dataSet)
         {
             try
             {
@@ -707,7 +707,7 @@ namespace MVS
             }
         }
 
-        public void LoadSessionData(RecordingSession dataSet, RadObservableCollection<SessionData> dataList)
+        public void LoadSessionData(Project dataSet, RadObservableCollection<SessionData> dataList)
         {
             try
             {
@@ -770,7 +770,7 @@ namespace MVS
             }
         }
 
-        public ImportResult ImportHMSData(RecordingSession selectedSession, ReportProgressDelegate reportProgress)
+        public ImportResult ImportHMSData(Project selectedSession, ReportProgressDelegate reportProgress)
         {
             ImportResult result = new ImportResult();
 

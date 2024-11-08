@@ -169,7 +169,7 @@
     <Compile Include="Models\CommonTypes.cs" />
     <Compile Include="Models\ImportResult.cs" />
     <Compile Include="Models\SessionData.cs" />
-    <Compile Include="Models\RecordingSession.cs" />
+    <Compile Include="Models\Project.cs" />
     <Compile Include="Services\FixedValue\FixedValueConfig.cs" />
     <Compile Include="Services\FixedValue\FixedValueDataRetrieval.cs" />
     <Compile Include="Services\FixedValue\FixedValueSetup.cs" />
@@ -177,7 +177,7 @@
     <Compile Include="Services\ScreenCapture.cs" />
     <Compile Include="ViewModels\ImportVM.cs" />
     <Compile Include="ViewModels\AboutVM.cs" />
-    <Compile Include="ViewModels\RecordingsVM.cs" />
+    <Compile Include="ViewModels\ProjectVM.cs" />
     <Compile Include="ViewModels\MainWindowVM.cs" />
     <Compile Include="ViewModels\FixedValueWindowVM.cs" />
     <Compile Include="Views\FixedValueSetupWindow.xaml.cs">
@@ -246,8 +246,8 @@
     <Compile Include="Config\SensorConfigSection.cs" />
     <Compile Include="Models\SensorData.cs" />
     <Compile Include="Config\SensorConfig.cs" />
-    <Compile Include="Views\Recordings.xaml.cs">
-      <DependentUpon>Recordings.xaml</DependentUpon>
+    <Compile Include="Views\Projects.xaml.cs">
+      <DependentUpon>Projects.xaml</DependentUpon>
     </Compile>
     <Compile Include="Views\SensorSetupPage.xaml.cs">
       <DependentUpon>SensorSetupPage.xaml</DependentUpon>
@@ -263,8 +263,8 @@
     <Compile Include="Helpers\SortAdorner.cs" />
     <Compile Include="Helpers\TextHelper.cs" />
     <Compile Include="Services\Weather.cs" />
-    <Compile Include="Views\RecordingsDataView.xaml.cs">
-      <DependentUpon>RecordingsDataView.xaml</DependentUpon>
+    <Compile Include="Views\DataAnalysis.xaml.cs">
+      <DependentUpon>DataAnalysis.xaml</DependentUpon>
     </Compile>
     <Page Include="Dialogs\DialogImportProgress.xaml">
       <Generator>MSBuild:Compile</Generator>
@@ -318,7 +318,7 @@
       <SubType>Designer</SubType>
       <Generator>MSBuild:Compile</Generator>
     </Page>
-    <Page Include="Views\Recordings.xaml">
+    <Page Include="Views\Projects.xaml">
       <Generator>MSBuild:Compile</Generator>
       <SubType>Designer</SubType>
     </Page>
@@ -338,7 +338,7 @@
       <DependentUpon>SerialPortSetupWindow.xaml</DependentUpon>
       <SubType>Code</SubType>
     </Compile>
-    <Page Include="Views\RecordingsDataView.xaml">
+    <Page Include="Views\DataAnalysis.xaml">
       <Generator>MSBuild:UpdateDesignTimeXaml</Generator>
       <SubType>Designer</SubType>
     </Page>
