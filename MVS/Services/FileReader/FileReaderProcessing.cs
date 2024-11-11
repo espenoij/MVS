@@ -179,11 +179,11 @@ namespace MVS
                         // Utføre valgt prosessering
                         switch (dataCalculations[i].type)
                         {
-                            case CalculationType.GPSPosition:
-                            //case CalculationType.NWSCodes:
-                            case CalculationType.METARCodes:
-                                calculatedData.data = dataCalculations[i].DoCalculations(selectedData.selectedDataFieldString, timestamp, errorHandler, errorMessageCat, adminSettingsVM);
-                                break;
+                            //case CalculationType.GPSPosition:
+                            ////case CalculationType.NWSCodes:
+                            //case CalculationType.METARCodes:
+                            //    calculatedData.data = dataCalculations[i].DoCalculations(selectedData.selectedDataFieldString, timestamp, errorHandler, errorMessageCat, adminSettingsVM);
+                            //    break;
 
                             default:
                                 calculatedData.data = dataCalculations[i].DoCalculations(calculatedData.data.ToString(Constants.cultureInfo), timestamp, errorHandler, errorMessageCat, adminSettingsVM);

@@ -16,8 +16,7 @@ class Constants
     public const int ClientUIUpdateFrequencyMin = 100;
     public const int ClientUIUpdateFrequencyMax = 5000;
 
-    public const int ChartUpdateFrequencyUI20mDefault = 5000;
-    public const int ChartUpdateFrequencyUI3hDefault = 15000;
+    public const int ChartUpdateFrequencyUIDefault = 5000;
     public const int ChartUpdateFrequencyUIMin = 500;
     public const int ChartUpdateFrequencyUIMax = 60000;
 
@@ -331,7 +330,7 @@ class Constants
     public const int TestModeStepDurationMax = 60;
 
     // Number Formatting
-    public const string numberFormatRecData = "0.00";
-    public const string numberFormatRecDataSigned = "+0.00;-0.00";
+    public const string numberFormatRecData = "0.000";
+    public const string numberFormatRecDataSigned = "+0.000;-0.000";
 
 }

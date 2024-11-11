@@ -75,7 +75,7 @@
                 HorizontalAlignment="Center">
 
                 <TextBlock
-                    Text="20-Minutes Mean Data" />
+                    Text="Mean Data" />
 
             </Viewbox>
 
@@ -285,7 +285,7 @@
                     <telerik:RadCartesianChart
                         Grid.Column="1"
                         Grid.Row="2"
-                        Name="chartPitch"
+                        Name="chartPitch1"
                         Margin="10,32,0,0">
 
                         <!--Test Pitch-->
@@ -323,15 +323,15 @@
                                 ShowLabels="False"
                                 PlotMode="OnTicks"
                                 TickOrigin="{Binding alignmentTime}"
-                                Minimum="{Binding alignmentTimeMin20m}"
-                                Maximum="{Binding alignmentTimeMax20m}" />
+                                Minimum="{Binding alignmentTimeMin}"
+                                Maximum="{Binding alignmentTimeMax}" />
                         </telerik:RadCartesianChart.HorizontalAxis>
 
                         <telerik:RadCartesianChart.VerticalAxis>
                             <telerik:LinearAxis
                                 x:Name="chartPitchVerticalAxis"
-                                Maximum="{Binding pitchChartAxisMax20m}"
-                                Minimum="{Binding pitchChartAxisMin20m}">
+                                Maximum="{Binding pitchChartAxisMax}"
+                                Minimum="{Binding pitchChartAxisMin}">
 
                                 <telerik:LinearAxis.LabelTemplate>
                                     <DataTemplate>
@@ -533,7 +533,7 @@
                     <telerik:RadCartesianChart
                         Grid.Column="1"
                         Grid.Row="4"
-                        Name="chartRoll"
+                        Name="chartRoll1"
                         Margin="10,32,0,0">
 
                         <!--Test Roll-->
@@ -571,15 +571,15 @@
                                 ShowLabels="False"
                                 PlotMode="OnTicks"
                                 TickOrigin="{Binding alignmentTime}"
-                                Minimum="{Binding alignmentTimeMin20m}"
-                                Maximum="{Binding alignmentTimeMax20m}" />
+                                Minimum="{Binding alignmentTimeMin}"
+                                Maximum="{Binding alignmentTimeMax}" />
                         </telerik:RadCartesianChart.HorizontalAxis>
 
                         <telerik:RadCartesianChart.VerticalAxis>
                             <telerik:LinearAxis
                                 x:Name="chartRollVerticalAxis"
-                                Maximum="{Binding rollChartAxisMax20m}"
-                                Minimum="{Binding rollChartAxisMin20m}">
+                                Maximum="{Binding rollChartAxisMax}"
+                                Minimum="{Binding rollChartAxisMin}">
 
                                 <telerik:LinearAxis.LabelTemplate>
                                     <DataTemplate>
@@ -755,7 +755,7 @@
                     <telerik:RadCartesianChart
                         Grid.Column="1"
                         Grid.Row="6"
-                        Name="chartHeaveAmplitude"
+                        Name="chartHeaveAmplitude1"
                         Margin="0,32,0,0">
 
                         <!--Test Heave Amplitude-->
@@ -793,8 +793,8 @@
                                 ShowLabels="False"
                                 PlotMode="OnTicks"
                                 TickOrigin="{Binding alignmentTime}"
-                                Minimum="{Binding alignmentTimeMin20m}"
-                                Maximum="{Binding alignmentTimeMax20m}"
+                                Minimum="{Binding alignmentTimeMin}"
+                                Maximum="{Binding alignmentTimeMax}"
                                 LineThickness="2"
                                 LineStroke="Black" />
                         </telerik:RadCartesianChart.HorizontalAxis>
@@ -802,7 +802,7 @@
                         <telerik:RadCartesianChart.VerticalAxis>
                             <telerik:LinearAxis
                                 x:Name="chartHeaveVerticalAxis"
-                                Maximum="{Binding heaveAmplitudeChartAxisMax20m}"
+                                Maximum="{Binding heaveAmplitudeChartAxisMax}"
                                 Minimum="0" />
                         </telerik:RadCartesianChart.VerticalAxis>
 
@@ -1031,7 +1031,7 @@
                     <telerik:RadCartesianChart
                         Grid.Column="1"
                         Grid.Row="0"
-                        Name="chartPitch20m"
+                        Name="chartPitch2"
                         Margin="10,32,0,0">
 
                         <!--Test Pitch-->
@@ -1083,15 +1083,15 @@
                                 ShowLabels="False"
                                 PlotMode="OnTicks"
                                 TickOrigin="{Binding alignmentTime}"
-                                Minimum="{Binding alignmentTimeMin20m}"
-                                Maximum="{Binding alignmentTimeMax20m}" />
+                                Minimum="{Binding alignmentTimeMin}"
+                                Maximum="{Binding alignmentTimeMax}" />
                         </telerik:RadCartesianChart.HorizontalAxis>
 
                         <telerik:RadCartesianChart.VerticalAxis>
                             <telerik:LinearAxis
-                                x:Name="chartPitchVerticalAxis20m"
-                                Maximum="{Binding pitchChartAxisMax20m}"
-                                Minimum="{Binding pitchChartAxisMin20m}">
+                                x:Name="chartPitchVerticalAxis1"
+                                Maximum="{Binding pitchChartAxisMax}"
+                                Minimum="{Binding pitchChartAxisMin}">
 
                                 <telerik:LinearAxis.LabelTemplate>
                                     <DataTemplate>
@@ -1111,7 +1111,7 @@
                         <telerik:RadCartesianChart.Annotations>
 
                             <telerik:CartesianGridLineAnnotation
-                                Axis="{Binding ElementName=chartPitchVerticalAxis20m}"
+                                Axis="{Binding ElementName=chartPitchVerticalAxis1}"
                                 Value="0"
                                 Stroke="Black"
                                 StrokeThickness="2" />
@@ -1307,7 +1307,7 @@
                     <telerik:RadCartesianChart
                         Grid.Column="1"
                         Grid.Row="2"
-                        Name="chartRoll20m"
+                        Name="chartRoll2"
                         Margin="10,32,0,0">
 
                         <!--Test Roll-->
@@ -1345,15 +1345,15 @@
                                 ShowLabels="False"
                                 PlotMode="OnTicks"
                                 TickOrigin="{Binding alignmentTime}"
-                                Minimum="{Binding alignmentTimeMin20m}"
-                                Maximum="{Binding alignmentTimeMax20m}" />
+                                Minimum="{Binding alignmentTimeMin}"
+                                Maximum="{Binding alignmentTimeMax}" />
                         </telerik:RadCartesianChart.HorizontalAxis>
 
                         <telerik:RadCartesianChart.VerticalAxis>
                             <telerik:LinearAxis
-                                x:Name="chartRollVerticalAxis20m"
-                                Maximum="{Binding rollChartAxisMax20m}"
-                                Minimum="{Binding rollChartAxisMin20m}">
+                                x:Name="chartRollVerticalAxis2"
+                                Maximum="{Binding rollChartAxisMax}"
+                                Minimum="{Binding rollChartAxisMin}">
 
                                 <telerik:LinearAxis.LabelTemplate>
                                     <DataTemplate>
@@ -1408,7 +1408,7 @@
                         <telerik:RadCartesianChart.Annotations>
 
                             <telerik:CartesianGridLineAnnotation
-                                Axis="{Binding ElementName=chartRollVerticalAxis20m}"
+                                Axis="{Binding ElementName=chartRollVerticalAxis2}"
                                 Value="0"
                                 Stroke="Black"
                                 StrokeThickness="2" />
@@ -1576,7 +1576,7 @@
                         Grid.Column="1"
                         Grid.Row="4"
                         Margin="0,32,0,0"
-                        Name="chartHeaveAmplitude20m">
+                        Name="chartHeaveAmplitude2">
 
                         <!--Test Heave-->
                         <telerik:LineSeries
@@ -1613,15 +1613,15 @@
                                 ShowLabels="False"
                                 PlotMode="OnTicks"
                                 TickOrigin="{Binding alignmentTime}"
-                                Minimum="{Binding alignmentTimeMin20m}"
-                                Maximum="{Binding alignmentTimeMax20m}"
+                                Minimum="{Binding alignmentTimeMin}"
+                                Maximum="{Binding alignmentTimeMax}"
                                 LineThickness="2"
                                 LineStroke="Black"/>
                         </telerik:RadCartesianChart.HorizontalAxis>
 
                         <telerik:RadCartesianChart.VerticalAxis>
                             <telerik:LinearAxis
-                                Maximum="{Binding heaveAmplitudeChartAxisMax20m}"
+                                Maximum="{Binding heaveAmplitudeChartAxisMax}"
                                 Minimum="0"/>
                         </telerik:RadCartesianChart.VerticalAxis>
 
@@ -1893,7 +1893,7 @@
                                 HorizontalAlignment="Center">
 
                                 <TextBlock
-                                    Text="{Binding Path=refPitchMaxUp20mString}"
+                                    Text="{Binding Path=refPitchMaxUpString}"
                                     FontSize="{StaticResource fontSizeData}" />
 
                             </Viewbox>
@@ -1905,7 +1905,7 @@
                                 HorizontalAlignment="Center">
 
                                 <TextBlock
-                                    Text="{Binding Path=testPitchMaxUp20mString}"
+                                    Text="{Binding Path=testPitchMaxUpString}"
                                     FontSize="{StaticResource fontSizeData}" />
 
                             </Viewbox>
@@ -1932,7 +1932,7 @@
                                 HorizontalAlignment="Center">
 
                                 <TextBlock
-                                    Text="{Binding Path=refPitchMaxDown20mString}"
+                                    Text="{Binding Path=refPitchMaxDownString}"
                                     FontSize="{StaticResource fontSizeData}" />
 
                             </Viewbox>
@@ -1944,7 +1944,7 @@
                                 HorizontalAlignment="Center">
 
                                 <TextBlock
-                                    Text="{Binding Path=testPitchMaxDown20mString}"
+                                    Text="{Binding Path=testPitchMaxDownString}"
                                     FontSize="{StaticResource fontSizeData}" />
 
                             </Viewbox>
@@ -1982,7 +1982,7 @@
                                 HorizontalAlignment="Center">
 
                                 <TextBlock
-                                    Text="{Binding Path=refPitchMean20mDataString}"
+                                    Text="{Binding Path=refPitchMeanDataString}"
                                     FontSize="{StaticResource fontSizeData}" />
 
                             </Viewbox>
@@ -1994,7 +1994,7 @@
                                 HorizontalAlignment="Center">
 
                                 <TextBlock
-                                    Text="{Binding Path=testPitchMean20mDataString}"
+                                    Text="{Binding Path=testPitchMeanDataString}"
                                     FontSize="{StaticResource fontSizeData}" />
 
                             </Viewbox>
@@ -2193,7 +2193,7 @@
                                 HorizontalAlignment="Center">
 
                                 <TextBlock
-                                    Text="{Binding Path=refRollMaxLeft20mString}"
+                                    Text="{Binding Path=refRollMaxLeftString}"
                                     FontSize="{StaticResource fontSizeData}" />
 
                             </Viewbox>
@@ -2205,7 +2205,7 @@
                                 HorizontalAlignment="Center">
 
                                 <TextBlock
-                                    Text="{Binding Path=testRollMaxLeft20mString}"
+                                    Text="{Binding Path=testRollMaxLeftString}"
                                     FontSize="{StaticResource fontSizeData}" />
 
                             </Viewbox>
@@ -2232,7 +2232,7 @@
                                 HorizontalAlignment="Center">
 
                                 <TextBlock
-                                    Text="{Binding Path=refRollMaxRight20mString}"
+                                    Text="{Binding Path=refRollMaxRightString}"
                                     FontSize="{StaticResource fontSizeData}" />
 
                             </Viewbox>
@@ -2244,7 +2244,7 @@
                                 HorizontalAlignment="Center">
 
                                 <TextBlock
-                                    Text="{Binding Path=testRollMaxRight20mString}"
+                                    Text="{Binding Path=testRollMaxRightString}"
                                     FontSize="{StaticResource fontSizeData}" />
 
                             </Viewbox>
@@ -2282,7 +2282,7 @@
                                 HorizontalAlignment="Center">
 
                                 <TextBlock
-                                    Text="{Binding Path=refRollMean20mDataString}"
+                                    Text="{Binding Path=refRollMeanDataString}"
                                     FontSize="{StaticResource fontSizeData}" />
 
                             </Viewbox>
@@ -2294,7 +2294,7 @@
                                 HorizontalAlignment="Center">
 
                                 <TextBlock
-                                    Text="{Binding Path=testRollMean20mDataString}"
+                                    Text="{Binding Path=testRollMeanDataString}"
                                     FontSize="{StaticResource fontSizeData}" />
 
                             </Viewbox>
@@ -2491,7 +2491,7 @@
                                 HorizontalAlignment="Center">
 
                                 <TextBlock
-                                    Text="{Binding Path=refHeaveAmplitudeMax20mString}"
+                                    Text="{Binding Path=refHeaveAmplitudeMaxString}"
                                     FontSize="{StaticResource fontSizeData}" />
 
                             </Viewbox>
@@ -2503,7 +2503,7 @@
                                 HorizontalAlignment="Center">
 
                                 <TextBlock
-                                    Text="{Binding Path=testHeaveAmplitudeMax20mString}"
+                                    Text="{Binding Path=testHeaveAmplitudeMaxString}"
                                     FontSize="{StaticResource fontSizeData}" />
 
                             </Viewbox>
@@ -2541,7 +2541,7 @@
                                 HorizontalAlignment="Center">
 
                                 <TextBlock
-                                    Text="{Binding Path=refHeaveAmplitudeMean20mString}"
+                                    Text="{Binding Path=refHeaveAmplitudeMeanString}"
                                     FontSize="{StaticResource fontSizeData}" />
 
                             </Viewbox>
@@ -2553,7 +2553,7 @@
                                 HorizontalAlignment="Center">
 
                                 <TextBlock
-                                    Text="{Binding Path=testHeaveAmplitudeMean20mString}"
+                                    Text="{Binding Path=testHeaveAmplitudeMeanString}"
                                     FontSize="{StaticResource fontSizeData}" />
 
                             </Viewbox>

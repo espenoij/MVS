@@ -37,21 +37,21 @@ namespace MVS
         public RadObservableCollection<HMSData> testHeaveAmplitudeList = new RadObservableCollection<HMSData>();
 
         // 20 minutters data
-        private RadObservableCollection<HMSData> refPitchMean20mBuffer = new RadObservableCollection<HMSData>();
-        private RadObservableCollection<HMSData> refRollMean20mBuffer = new RadObservableCollection<HMSData>();
-        private RadObservableCollection<HMSData> refHeaveAmplitudeMean20mBuffer = new RadObservableCollection<HMSData>();
+        private RadObservableCollection<HMSData> refPitchMeanBuffer = new RadObservableCollection<HMSData>();
+        private RadObservableCollection<HMSData> refRollMeanBuffer = new RadObservableCollection<HMSData>();
+        private RadObservableCollection<HMSData> refHeaveAmplitudeMeanBuffer = new RadObservableCollection<HMSData>();
 
-        public RadObservableCollection<HMSData> refPitchMean20mList = new RadObservableCollection<HMSData>();
-        public RadObservableCollection<HMSData> refRollMean20mList = new RadObservableCollection<HMSData>();
-        public RadObservableCollection<HMSData> refHeaveAmplitudeMean20mList = new RadObservableCollection<HMSData>();
+        public RadObservableCollection<HMSData> refPitchMeanList = new RadObservableCollection<HMSData>();
+        public RadObservableCollection<HMSData> refRollMeanList = new RadObservableCollection<HMSData>();
+        public RadObservableCollection<HMSData> refHeaveAmplitudeMeanList = new RadObservableCollection<HMSData>();
 
-        private RadObservableCollection<HMSData> testPitchMean20mBuffer = new RadObservableCollection<HMSData>();
-        private RadObservableCollection<HMSData> testRollMean20mBuffer = new RadObservableCollection<HMSData>();
-        private RadObservableCollection<HMSData> testHeaveAmplitudeMean20mBuffer = new RadObservableCollection<HMSData>();
+        private RadObservableCollection<HMSData> testPitchMeanBuffer = new RadObservableCollection<HMSData>();
+        private RadObservableCollection<HMSData> testRollMeanBuffer = new RadObservableCollection<HMSData>();
+        private RadObservableCollection<HMSData> testHeaveAmplitudeMeanBuffer = new RadObservableCollection<HMSData>();
 
-        public RadObservableCollection<HMSData> testPitchMean20mList = new RadObservableCollection<HMSData>();
-        public RadObservableCollection<HMSData> testRollMean20mList = new RadObservableCollection<HMSData>();
-        public RadObservableCollection<HMSData> testHeaveAmplitudeMean20mList = new RadObservableCollection<HMSData>();
+        public RadObservableCollection<HMSData> testPitchMeanList = new RadObservableCollection<HMSData>();
+        public RadObservableCollection<HMSData> testRollMeanList = new RadObservableCollection<HMSData>();
+        public RadObservableCollection<HMSData> testHeaveAmplitudeMeanList = new RadObservableCollection<HMSData>();
 
         // Alle session data
         public RadObservableCollection<SessionData> sessionDataList = new RadObservableCollection<SessionData>();
@@ -68,56 +68,56 @@ namespace MVS
             InitHeaveData();
 
             // Oppdatere trend data i UI: 20 minutter
-            chartUpdateTimer.Interval = TimeSpan.FromMilliseconds(Constants.ChartUpdateFrequencyUI20mDefault);
-            chartUpdateTimer.Tick += ChartDataUpdate20m;
+            chartUpdateTimer.Interval = TimeSpan.FromMilliseconds(Constants.ChartUpdateFrequencyUIDefault);
+            chartUpdateTimer.Tick += ChartDataUpdate;
 
-            void ChartDataUpdate20m(object sender, EventArgs e)
+            void ChartDataUpdate(object sender, EventArgs e)
             {
                 // Overføre data fra buffer til chart data
                 GraphBuffer.Transfer(refPitchBuffer, refPitchList);
                 GraphBuffer.Transfer(refRollBuffer, refRollList);
                 GraphBuffer.Transfer(refHeaveAmplitudeBuffer, refHeaveAmplitudeList);
 
-                GraphBuffer.Transfer(refPitchMean20mBuffer, refPitchMean20mList);
-                GraphBuffer.Transfer(refRollMean20mBuffer, refRollMean20mList);
-                GraphBuffer.Transfer(refHeaveAmplitudeMean20mBuffer, refHeaveAmplitudeMean20mList);
+                GraphBuffer.Transfer(refPitchMeanBuffer, refPitchMeanList);
+                GraphBuffer.Transfer(refRollMeanBuffer, refRollMeanList);
+                GraphBuffer.Transfer(refHeaveAmplitudeMeanBuffer, refHeaveAmplitudeMeanList);
 
                 GraphBuffer.Transfer(testPitchBuffer, testPitchList);
                 GraphBuffer.Transfer(testRollBuffer, testRollList);
                 GraphBuffer.Transfer(testHeaveAmplitudeBuffer, testHeaveAmplitudeList);
 
-                GraphBuffer.Transfer(testPitchMean20mBuffer, testPitchMean20mList);
-                GraphBuffer.Transfer(testRollMean20mBuffer, testRollMean20mList);
-                GraphBuffer.Transfer(testHeaveAmplitudeMean20mBuffer, testHeaveAmplitudeMean20mList);
+                GraphBuffer.Transfer(testPitchMeanBuffer, testPitchMeanList);
+                GraphBuffer.Transfer(testRollMeanBuffer, testRollMeanList);
+                GraphBuffer.Transfer(testHeaveAmplitudeMeanBuffer, testHeaveAmplitudeMeanList);
 
                 // Fjerne gamle data fra chart data
                 GraphBuffer.RemoveOldData(refPitchList, Constants.Minutes20 + Constants.ChartTimeCorrMin);
                 GraphBuffer.RemoveOldData(refRollList, Constants.Minutes20 + Constants.ChartTimeCorrMin);
                 GraphBuffer.RemoveOldData(refHeaveAmplitudeList, Constants.Minutes20 + Constants.ChartTimeCorrMin);
 
-                GraphBuffer.RemoveOldData(refPitchMean20mList, Constants.Minutes20 + Constants.ChartTimeCorrMin);
-                GraphBuffer.RemoveOldData(refRollMean20mList, Constants.Minutes20 + Constants.ChartTimeCorrMin);
-                GraphBuffer.RemoveOldData(refHeaveAmplitudeMean20mList, Constants.Minutes20 + Constants.ChartTimeCorrMin);
+                GraphBuffer.RemoveOldData(refPitchMeanList, Constants.Minutes20 + Constants.ChartTimeCorrMin);
+                GraphBuffer.RemoveOldData(refRollMeanList, Constants.Minutes20 + Constants.ChartTimeCorrMin);
+                GraphBuffer.RemoveOldData(refHeaveAmplitudeMeanList, Constants.Minutes20 + Constants.ChartTimeCorrMin);
 
                 GraphBuffer.RemoveOldData(testPitchList, Constants.Minutes20 + Constants.ChartTimeCorrMin);
                 GraphBuffer.RemoveOldData(testRollList, Constants.Minutes20 + Constants.ChartTimeCorrMin);
                 GraphBuffer.RemoveOldData(testHeaveAmplitudeList, Constants.Minutes20 + Constants.ChartTimeCorrMin);
 
-                GraphBuffer.RemoveOldData(testPitchMean20mList, Constants.Minutes20 + Constants.ChartTimeCorrMin);
-                GraphBuffer.RemoveOldData(testRollMean20mList, Constants.Minutes20 + Constants.ChartTimeCorrMin);
-                GraphBuffer.RemoveOldData(testHeaveAmplitudeMean20mList, Constants.Minutes20 + Constants.ChartTimeCorrMin);
+                GraphBuffer.RemoveOldData(testPitchMeanList, Constants.Minutes20 + Constants.ChartTimeCorrMin);
+                GraphBuffer.RemoveOldData(testRollMeanList, Constants.Minutes20 + Constants.ChartTimeCorrMin);
+                GraphBuffer.RemoveOldData(testHeaveAmplitudeMeanList, Constants.Minutes20 + Constants.ChartTimeCorrMin);
 
                 // Oppdatere alignment datetime (nåtid) til alle chart
                 alignmentTime = DateTime.UtcNow;
 
                 // Oppdatere aksene
-                OnPropertyChanged(nameof(pitchChartAxisMax20m));
-                OnPropertyChanged(nameof(pitchChartAxisMin20m));
+                OnPropertyChanged(nameof(pitchChartAxisMax));
+                OnPropertyChanged(nameof(pitchChartAxisMin));
 
-                OnPropertyChanged(nameof(rollChartAxisMax20m));
-                OnPropertyChanged(nameof(rollChartAxisMin20m));
+                OnPropertyChanged(nameof(rollChartAxisMax));
+                OnPropertyChanged(nameof(rollChartAxisMin));
 
-                OnPropertyChanged(nameof(heaveAmplitudeChartAxisMax20m));
+                OnPropertyChanged(nameof(heaveAmplitudeChartAxisMax));
             }
         }
 
@@ -128,45 +128,45 @@ namespace MVS
             GraphBuffer.Update(mvsDataCollection.GetData(ValueType.Ref_Roll), refRollBuffer);
             GraphBuffer.Update(mvsDataCollection.GetData(ValueType.Ref_HeaveAmplitude), refHeaveAmplitudeBuffer);
 
-            GraphBuffer.Update(mvsDataCollection.GetData(ValueType.Ref_PitchMean20m), refPitchMean20mBuffer);
-            GraphBuffer.Update(mvsDataCollection.GetData(ValueType.Ref_RollMean20m), refRollMean20mBuffer);
-            GraphBuffer.Update(mvsDataCollection.GetData(ValueType.Ref_HeaveAmplitudeMean20m), refHeaveAmplitudeMean20mBuffer);
+            GraphBuffer.Update(mvsDataCollection.GetData(ValueType.Ref_PitchMean), refPitchMeanBuffer);
+            GraphBuffer.Update(mvsDataCollection.GetData(ValueType.Ref_RollMean), refRollMeanBuffer);
+            GraphBuffer.Update(mvsDataCollection.GetData(ValueType.Ref_HeaveAmplitudeMean), refHeaveAmplitudeMeanBuffer);
 
             GraphBuffer.Update(mvsDataCollection.GetData(ValueType.Test_Pitch), testPitchBuffer);
             GraphBuffer.Update(mvsDataCollection.GetData(ValueType.Test_Roll), testRollBuffer);
             GraphBuffer.Update(mvsDataCollection.GetData(ValueType.Test_HeaveAmplitude), testHeaveAmplitudeBuffer);
 
-            GraphBuffer.Update(mvsDataCollection.GetData(ValueType.Test_PitchMean20m), testPitchMean20mBuffer);
-            GraphBuffer.Update(mvsDataCollection.GetData(ValueType.Test_RollMean20m), testRollMean20mBuffer);
-            GraphBuffer.Update(mvsDataCollection.GetData(ValueType.Test_HeaveAmplitudeMean20m), testHeaveAmplitudeMean20mBuffer);
+            GraphBuffer.Update(mvsDataCollection.GetData(ValueType.Test_PitchMean), testPitchMeanBuffer);
+            GraphBuffer.Update(mvsDataCollection.GetData(ValueType.Test_RollMean), testRollMeanBuffer);
+            GraphBuffer.Update(mvsDataCollection.GetData(ValueType.Test_HeaveAmplitudeMean), testHeaveAmplitudeMeanBuffer);
 
             // Oppdatere max verdier
-            refPitchMax20mData = mvsDataCollection.GetData(ValueType.Ref_PitchMax20m);
-            refPitchMaxUp20mData = mvsDataCollection.GetData(ValueType.Ref_PitchMaxUp20m);
-            refPitchMaxDown20mData = mvsDataCollection.GetData(ValueType.Ref_PitchMaxDown20m);
-            refRollMax20mData = mvsDataCollection.GetData(ValueType.Ref_RollMax20m);
-            refRollMaxLeft20mData = mvsDataCollection.GetData(ValueType.Ref_RollMaxLeft20m);
-            refRollMaxRight20mData = mvsDataCollection.GetData(ValueType.Ref_RollMaxRight20m);
-            refHeaveAmplitudeMax20mData = mvsDataCollection.GetData(ValueType.Ref_HeaveAmplitudeMax20m);
+            refPitchMaxData = mvsDataCollection.GetData(ValueType.Ref_PitchMax);
+            refPitchMaxUpData = mvsDataCollection.GetData(ValueType.Ref_PitchMaxUp);
+            refPitchMaxDownData = mvsDataCollection.GetData(ValueType.Ref_PitchMaxDown);
+            refRollMaxData = mvsDataCollection.GetData(ValueType.Ref_RollMax);
+            refRollMaxLeftData = mvsDataCollection.GetData(ValueType.Ref_RollMaxLeft);
+            refRollMaxRightData = mvsDataCollection.GetData(ValueType.Ref_RollMaxRight);
+            refHeaveAmplitudeMaxData = mvsDataCollection.GetData(ValueType.Ref_HeaveAmplitudeMax);
 
-            testPitchMax20mData = mvsDataCollection.GetData(ValueType.Test_PitchMax20m);
-            testPitchMaxUp20mData = mvsDataCollection.GetData(ValueType.Test_PitchMaxUp20m);
-            testPitchMaxDown20mData = mvsDataCollection.GetData(ValueType.Test_PitchMaxDown20m);
-            testRollMax20mData = mvsDataCollection.GetData(ValueType.Test_RollMax20m);
-            testRollMaxLeft20mData = mvsDataCollection.GetData(ValueType.Test_RollMaxLeft20m);
-            testRollMaxRight20mData = mvsDataCollection.GetData(ValueType.Test_RollMaxRight20m);
-            testRollMean20mData = mvsDataCollection.GetData(ValueType.Test_RollMean20m);
-            testHeaveAmplitudeMax20mData = mvsDataCollection.GetData(ValueType.Test_HeaveAmplitudeMax20m);
-            testHeaveAmplitudeMean20mData = mvsDataCollection.GetData(ValueType.Test_HeaveAmplitudeMean20m);
+            testPitchMaxData = mvsDataCollection.GetData(ValueType.Test_PitchMax);
+            testPitchMaxUpData = mvsDataCollection.GetData(ValueType.Test_PitchMaxUp);
+            testPitchMaxDownData = mvsDataCollection.GetData(ValueType.Test_PitchMaxDown);
+            testRollMaxData = mvsDataCollection.GetData(ValueType.Test_RollMax);
+            testRollMaxLeftData = mvsDataCollection.GetData(ValueType.Test_RollMaxLeft);
+            testRollMaxRightData = mvsDataCollection.GetData(ValueType.Test_RollMaxRight);
+            testRollMeanData = mvsDataCollection.GetData(ValueType.Test_RollMean);
+            testHeaveAmplitudeMaxData = mvsDataCollection.GetData(ValueType.Test_HeaveAmplitudeMax);
+            testHeaveAmplitudeMeanData = mvsDataCollection.GetData(ValueType.Test_HeaveAmplitudeMean);
 
             // Oppdatere mean verdier
-            refPitchMean20mData = mvsDataCollection.GetData(ValueType.Ref_PitchMean20m);
-            refRollMean20mData = mvsDataCollection.GetData(ValueType.Ref_RollMean20m);
-            refHeaveAmplitudeMean20mData = mvsDataCollection.GetData(ValueType.Ref_HeaveAmplitudeMean20m);
+            refPitchMeanData = mvsDataCollection.GetData(ValueType.Ref_PitchMean);
+            refRollMeanData = mvsDataCollection.GetData(ValueType.Ref_RollMean);
+            refHeaveAmplitudeMeanData = mvsDataCollection.GetData(ValueType.Ref_HeaveAmplitudeMean);
 
-            testPitchMean20mData = mvsDataCollection.GetData(ValueType.Test_PitchMean20m);
-            testRollMean20mData = mvsDataCollection.GetData(ValueType.Test_RollMean20m);
-            testHeaveAmplitudeMean20mData = mvsDataCollection.GetData(ValueType.Test_HeaveAmplitudeMean20m);
+            testPitchMeanData = mvsDataCollection.GetData(ValueType.Test_PitchMean);
+            testRollMeanData = mvsDataCollection.GetData(ValueType.Test_RollMean);
+            testHeaveAmplitudeMeanData = mvsDataCollection.GetData(ValueType.Test_HeaveAmplitudeMean);
         }
 
         public void StartRecording()
@@ -185,20 +185,6 @@ namespace MVS
 
         public void AnalyseProjectData()
         {
-            double refMeanPitchCount = 0;
-            double refMeanRollCount = 0;
-            double refMeanHeaveAmplitudeCount = 0;
-            double testMeanPitchCount = 0;
-            double testMeanRollCount = 0;
-            double testMeanHeaveAmplitudeCount = 0;
-
-            double refMeanPitchSum = 0;
-            double refMeanRollSum = 0;
-            double refMeanHeaveAmplitudeSum = 0;
-            double testMeanPitchSum = 0;
-            double testMeanRollSum = 0;
-            double testMeanHeaveAmplitudeSum = 0;
-
             // Slette gamle data i output felt
             HMSData noData = new HMSData()
             {
@@ -206,40 +192,40 @@ namespace MVS
                 status = DataStatus.NONE
             };
 
-            refPitchMaxUp20mData = noData;
-            refPitchMaxDown20mData = noData;
-            refPitchMean20mData = noData;
-            testPitchMaxUp20mData = noData;
-            testPitchMaxDown20mData = noData;
-            testPitchMean20mData = noData;
+            refPitchMaxUpData = noData;
+            refPitchMaxDownData = noData;
+            refPitchMeanData = noData;
+            testPitchMaxUpData = noData;
+            testPitchMaxDownData = noData;
+            testPitchMeanData = noData;
 
-            refRollMaxLeft20mData = noData;
-            refRollMaxRight20mData = noData;
-            refRollMean20mData = noData;
-            testRollMaxLeft20mData = noData;
-            testRollMaxRight20mData = noData;
-            testRollMean20mData = noData;
+            refRollMaxLeftData = noData;
+            refRollMaxRightData = noData;
+            refRollMeanData = noData;
+            testRollMaxLeftData = noData;
+            testRollMaxRightData = noData;
+            testRollMeanData = noData;
 
-            refHeaveAmplitudeMax20mData = noData;
-            refHeaveAmplitudeMean20mData = noData;
-            testHeaveAmplitudeMax20mData = noData;
-            testHeaveAmplitudeMean20mData = noData;
+            refHeaveAmplitudeMaxData = noData;
+            refHeaveAmplitudeMeanData = noData;
+            testHeaveAmplitudeMaxData = noData;
+            testHeaveAmplitudeMeanData = noData;
 
             // Slette gamle data i buffer lister
             refPitchBuffer.Clear();
-            refPitchMean20mBuffer.Clear();
+            refPitchMeanBuffer.Clear();
             testPitchBuffer.Clear();
-            testPitchMean20mBuffer.Clear();
+            testPitchMeanBuffer.Clear();
 
             refRollBuffer.Clear();
-            refRollMean20mBuffer.Clear();
+            refRollMeanBuffer.Clear();
             testRollBuffer.Clear();
-            testRollMean20mBuffer.Clear();
+            testRollMeanBuffer.Clear();
 
             refHeaveAmplitudeBuffer.Clear();
-            refHeaveAmplitudeMean20mBuffer.Clear();
+            refHeaveAmplitudeMeanBuffer.Clear();
             testHeaveAmplitudeBuffer.Clear();
-            testHeaveAmplitudeMean20mBuffer.Clear();
+            testHeaveAmplitudeMeanBuffer.Clear();
 
             foreach (SessionData sessionData in sessionDataList.ToList())
             {
@@ -258,15 +244,13 @@ namespace MVS
                         timestamp = sessionData.timestamp,
                         status = DataStatus.OK
                     });
-
-                    refMeanPitchCount++;
                 }
 
-                if (mvsOutputData.GetData(ValueType.Ref_PitchMean20m).status == DataStatus.OK)
+                if (mvsOutputData.GetData(ValueType.Ref_PitchMean).status == DataStatus.OK)
                 {
-                    refPitchMean20mBuffer.Add(new HMSData()
+                    refPitchMeanBuffer.Add(new HMSData()
                     {
-                        data = mvsOutputData.GetData(ValueType.Ref_PitchMean20m).data,
+                        data = mvsOutputData.GetData(ValueType.Ref_PitchMean).data,
                         timestamp = sessionData.timestamp,
                         status = DataStatus.OK
                     });
@@ -280,15 +264,13 @@ namespace MVS
                         timestamp = sessionData.timestamp,
                         status = DataStatus.OK
                     });
-
-                    testMeanPitchCount++;
                 }
 
-                if (mvsOutputData.GetData(ValueType.Test_PitchMean20m).status == DataStatus.OK)
+                if (mvsOutputData.GetData(ValueType.Test_PitchMean).status == DataStatus.OK)
                 {
-                    testPitchMean20mBuffer.Add(new HMSData()
+                    testPitchMeanBuffer.Add(new HMSData()
                     {
-                        data = mvsOutputData.GetData(ValueType.Test_PitchMean20m).data,
+                        data = mvsOutputData.GetData(ValueType.Test_PitchMean).data,
                         timestamp = sessionData.timestamp,
                         status = DataStatus.OK
                     });
@@ -303,15 +285,13 @@ namespace MVS
                         timestamp = sessionData.timestamp,
                         status = DataStatus.OK
                     });
-
-                    refMeanRollCount++;
                 }
 
-                if (mvsOutputData.GetData(ValueType.Ref_RollMean20m).status == DataStatus.OK)
+                if (mvsOutputData.GetData(ValueType.Ref_RollMean).status == DataStatus.OK)
                 {
-                    refRollMean20mBuffer.Add(new HMSData()
+                    refRollMeanBuffer.Add(new HMSData()
                     {
-                        data = mvsOutputData.GetData(ValueType.Ref_RollMean20m).data,
+                        data = mvsOutputData.GetData(ValueType.Ref_RollMean).data,
                         timestamp = sessionData.timestamp,
                         status = DataStatus.OK
                     });
@@ -325,15 +305,13 @@ namespace MVS
                         timestamp = sessionData.timestamp,
                         status = DataStatus.OK
                     });
-
-                    testMeanRollCount++;
                 }
 
-                if (mvsOutputData.GetData(ValueType.Test_RollMean20m).status == DataStatus.OK)
+                if (mvsOutputData.GetData(ValueType.Test_RollMean).status == DataStatus.OK)
                 {
-                    testRollMean20mBuffer.Add(new HMSData()
+                    testRollMeanBuffer.Add(new HMSData()
                     {
-                        data = mvsOutputData.GetData(ValueType.Test_RollMean20m).data,
+                        data = mvsOutputData.GetData(ValueType.Test_RollMean).data,
                         timestamp = sessionData.timestamp,
                         status = DataStatus.OK
                     });
@@ -348,15 +326,13 @@ namespace MVS
                         timestamp = sessionData.timestamp,
                         status = DataStatus.OK
                     });
-
-                    refMeanHeaveAmplitudeCount++;
                 }
 
-                if (mvsOutputData.GetData(ValueType.Ref_HeaveAmplitudeMean20m).status == DataStatus.OK)
+                if (mvsOutputData.GetData(ValueType.Ref_HeaveAmplitudeMean).status == DataStatus.OK)
                 {
-                    refHeaveAmplitudeMean20mBuffer.Add(new HMSData()
+                    refHeaveAmplitudeMeanBuffer.Add(new HMSData()
                     {
-                        data = mvsOutputData.GetData(ValueType.Ref_HeaveAmplitudeMean20m).data,
+                        data = mvsOutputData.GetData(ValueType.Ref_HeaveAmplitudeMean).data,
                         timestamp = sessionData.timestamp,
                         status = DataStatus.OK
                     });
@@ -370,59 +346,51 @@ namespace MVS
                         timestamp = sessionData.timestamp,
                         status = DataStatus.OK
                     });
-
-                    testMeanHeaveAmplitudeCount++;
                 }
 
-                if (mvsOutputData.GetData(ValueType.Test_HeaveAmplitudeMean20m).status == DataStatus.OK)
+                if (mvsOutputData.GetData(ValueType.Test_HeaveAmplitudeMean).status == DataStatus.OK)
                 {
-                    testHeaveAmplitudeMean20mBuffer.Add(new HMSData()
+                    testHeaveAmplitudeMeanBuffer.Add(new HMSData()
                     {
-                        data = mvsOutputData.GetData(ValueType.Test_HeaveAmplitudeMean20m).data,
+                        data = mvsOutputData.GetData(ValueType.Test_HeaveAmplitudeMean).data,
                         timestamp = sessionData.timestamp,
                         status = DataStatus.OK
                     });
                 }
-
-                // Beregner et totalt snitt av alle enkeltverdiene for pitch, roll og heave
-                refMeanPitchSum += AddToMeanSum(mvsOutputData.GetData(ValueType.Ref_Pitch));
-                refMeanRollSum += AddToMeanSum(mvsOutputData.GetData(ValueType.Ref_Roll));
-                refMeanHeaveAmplitudeSum += AddToMeanSum(mvsOutputData.GetData(ValueType.Ref_HeaveAmplitude));
-
-                testMeanPitchSum += AddToMeanSum(mvsOutputData.GetData(ValueType.Test_Pitch));
-                testMeanRollSum += AddToMeanSum(mvsOutputData.GetData(ValueType.Test_Roll));
-                testMeanHeaveAmplitudeSum += AddToMeanSum(mvsOutputData.GetData(ValueType.Test_HeaveAmplitude));
-
-                // Oppdatere max verdier
-                if (MaxValueCheckOK(mvsOutputData.GetData(ValueType.Ref_PitchMax20m))) refPitchMax20mData = mvsOutputData.GetData(ValueType.Ref_PitchMax20m);
-                if (MaxValueCheckOK(mvsOutputData.GetData(ValueType.Ref_PitchMaxUp20m))) refPitchMaxUp20mData = mvsOutputData.GetData(ValueType.Ref_PitchMaxUp20m);
-                if (MaxValueCheckOK(mvsOutputData.GetData(ValueType.Ref_PitchMaxDown20m))) refPitchMaxDown20mData = mvsOutputData.GetData(ValueType.Ref_PitchMaxDown20m);
-                if (MaxValueCheckOK(mvsOutputData.GetData(ValueType.Ref_RollMax20m))) refRollMax20mData = mvsOutputData.GetData(ValueType.Ref_RollMax20m);
-                if (MaxValueCheckOK(mvsOutputData.GetData(ValueType.Ref_RollMaxLeft20m))) refRollMaxLeft20mData = mvsOutputData.GetData(ValueType.Ref_RollMaxLeft20m);
-                if (MaxValueCheckOK(mvsOutputData.GetData(ValueType.Ref_RollMaxRight20m))) refRollMaxRight20mData = mvsOutputData.GetData(ValueType.Ref_RollMaxRight20m);
-                if (MaxValueCheckOK(mvsOutputData.GetData(ValueType.Ref_HeaveAmplitudeMax20m))) refHeaveAmplitudeMax20mData = mvsOutputData.GetData(ValueType.Ref_HeaveAmplitudeMax20m);
-                if (MaxValueCheckOK(mvsOutputData.GetData(ValueType.Ref_HeaveAmplitudeMean20m))) refHeaveAmplitudeMean20mData = mvsOutputData.GetData(ValueType.Ref_HeaveAmplitudeMean20m);
-
-                if (MaxValueCheckOK(mvsOutputData.GetData(ValueType.Test_PitchMax20m))) testPitchMax20mData = mvsOutputData.GetData(ValueType.Test_PitchMax20m);
-                if (MaxValueCheckOK(mvsOutputData.GetData(ValueType.Test_PitchMaxUp20m))) testPitchMaxUp20mData = mvsOutputData.GetData(ValueType.Test_PitchMaxUp20m);
-                if (MaxValueCheckOK(mvsOutputData.GetData(ValueType.Test_PitchMaxDown20m))) testPitchMaxDown20mData = mvsOutputData.GetData(ValueType.Test_PitchMaxDown20m);
-                if (MaxValueCheckOK(mvsOutputData.GetData(ValueType.Test_RollMax20m))) testRollMax20mData = mvsOutputData.GetData(ValueType.Test_RollMax20m);
-                if (MaxValueCheckOK(mvsOutputData.GetData(ValueType.Test_RollMaxLeft20m))) testRollMaxLeft20mData = mvsOutputData.GetData(ValueType.Test_RollMaxLeft20m);
-                if (MaxValueCheckOK(mvsOutputData.GetData(ValueType.Test_RollMaxRight20m))) testRollMaxRight20mData = mvsOutputData.GetData(ValueType.Test_RollMaxRight20m);
-                if (MaxValueCheckOK(mvsOutputData.GetData(ValueType.Test_RollMean20m))) testRollMean20mData = mvsOutputData.GetData(ValueType.Test_RollMean20m);
-                if (MaxValueCheckOK(mvsOutputData.GetData(ValueType.Test_HeaveAmplitudeMax20m))) testHeaveAmplitudeMax20mData = mvsOutputData.GetData(ValueType.Test_HeaveAmplitudeMax20m);
-                if (MaxValueCheckOK(mvsOutputData.GetData(ValueType.Test_HeaveAmplitudeMean20m))) testHeaveAmplitudeMean20mData = mvsOutputData.GetData(ValueType.Test_HeaveAmplitudeMean20m);
-
             }
 
-            // Oppdatere mean verdier
-            refPitchMean20mData = UpdateMeanSum(refMeanPitchSum, refMeanPitchCount);
-            refRollMean20mData = UpdateMeanSum(refMeanRollSum, refMeanRollCount);
-            refHeaveAmplitudeMean20mData = UpdateMeanSum(refMeanHeaveAmplitudeSum, refMeanHeaveAmplitudeCount);
-           
-            testPitchMean20mData = UpdateMeanSum(testMeanPitchSum, testMeanPitchCount);
-            testRollMean20mData = UpdateMeanSum(testMeanRollSum, testMeanRollCount);
-            testHeaveAmplitudeMean20mData = UpdateMeanSum(testMeanHeaveAmplitudeSum, testMeanHeaveAmplitudeCount);
+            if (mvsOutputData.Count() > 0)
+            {
+                // Hente max verdier
+                refPitchMaxData = mvsOutputData.GetData(ValueType.Ref_PitchMax);
+                refPitchMaxUpData = mvsOutputData.GetData(ValueType.Ref_PitchMaxUp);
+                refPitchMaxDownData = mvsOutputData.GetData(ValueType.Ref_PitchMaxDown);
+
+                refRollMaxData = mvsOutputData.GetData(ValueType.Ref_RollMax);
+                refRollMaxLeftData = mvsOutputData.GetData(ValueType.Ref_RollMaxLeft);
+                refRollMaxRightData = mvsOutputData.GetData(ValueType.Ref_RollMaxRight);
+
+                refHeaveAmplitudeMaxData = mvsOutputData.GetData(ValueType.Ref_HeaveAmplitudeMax);
+
+                testPitchMaxData = mvsOutputData.GetData(ValueType.Test_PitchMax);
+                testPitchMaxUpData = mvsOutputData.GetData(ValueType.Test_PitchMaxUp);
+                testPitchMaxDownData = mvsOutputData.GetData(ValueType.Test_PitchMaxDown);
+
+                testRollMaxData = mvsOutputData.GetData(ValueType.Test_RollMax);
+                testRollMaxLeftData = mvsOutputData.GetData(ValueType.Test_RollMaxLeft);
+                testRollMaxRightData = mvsOutputData.GetData(ValueType.Test_RollMaxRight);
+
+                testHeaveAmplitudeMaxData = mvsOutputData.GetData(ValueType.Test_HeaveAmplitudeMax);
+
+                // Hente mean verdier
+                refPitchMeanData = mvsOutputData.GetData(ValueType.Ref_PitchMean);
+                refRollMeanData = mvsOutputData.GetData(ValueType.Ref_RollMean);
+                refHeaveAmplitudeMeanData = mvsOutputData.GetData(ValueType.Ref_HeaveAmplitudeMean);
+
+                testPitchMeanData = mvsOutputData.GetData(ValueType.Test_PitchMean);
+                testRollMeanData = mvsOutputData.GetData(ValueType.Test_RollMean);
+                testHeaveAmplitudeMeanData = mvsOutputData.GetData(ValueType.Test_HeaveAmplitudeMean);
+            }
 
             // Oppdatere alignment datetime til alle chart
             if (sessionDataList.Count > 0)
@@ -431,13 +399,13 @@ namespace MVS
                 alignmentTime = DateTime.UtcNow;
 
             // Oppdatere aksene
-            OnPropertyChanged(nameof(pitchChartAxisMax20m));
-            OnPropertyChanged(nameof(pitchChartAxisMin20m));
+            OnPropertyChanged(nameof(pitchChartAxisMax));
+            OnPropertyChanged(nameof(pitchChartAxisMin));
 
-            OnPropertyChanged(nameof(rollChartAxisMax20m));
-            OnPropertyChanged(nameof(rollChartAxisMin20m));
+            OnPropertyChanged(nameof(rollChartAxisMax));
+            OnPropertyChanged(nameof(rollChartAxisMin));
 
-            OnPropertyChanged(nameof(heaveAmplitudeChartAxisMax20m));
+            OnPropertyChanged(nameof(heaveAmplitudeChartAxisMax));
         }
 
         public double AddToMeanSum(HMSData hmsData)
@@ -470,36 +438,36 @@ namespace MVS
         {
             // Slette gamle data i graf data lister
             refPitchList.Clear();
-            refPitchMean20mList.Clear();
+            refPitchMeanList.Clear();
             testPitchList.Clear();
-            testPitchMean20mList.Clear();
+            testPitchMeanList.Clear();
 
             refRollList.Clear();
-            refRollMean20mList.Clear();
+            refRollMeanList.Clear();
             testRollList.Clear();
-            testRollMean20mList.Clear();
+            testRollMeanList.Clear();
 
             refHeaveAmplitudeList.Clear();
-            refHeaveAmplitudeMean20mList.Clear();
+            refHeaveAmplitudeMeanList.Clear();
             testHeaveAmplitudeList.Clear();
-            testHeaveAmplitudeMean20mList.Clear();
+            testHeaveAmplitudeMeanList.Clear();
 
             // Overføre data fra buffer til chart data
             GraphBuffer.Transfer(refPitchBuffer, refPitchList);
             GraphBuffer.Transfer(refRollBuffer, refRollList);
             GraphBuffer.Transfer(refHeaveAmplitudeBuffer, refHeaveAmplitudeList);
 
-            GraphBuffer.Transfer(refPitchMean20mBuffer, refPitchMean20mList);
-            GraphBuffer.Transfer(refRollMean20mBuffer, refRollMean20mList);
-            GraphBuffer.Transfer(refHeaveAmplitudeMean20mBuffer, refHeaveAmplitudeMean20mList);
+            GraphBuffer.Transfer(refPitchMeanBuffer, refPitchMeanList);
+            GraphBuffer.Transfer(refRollMeanBuffer, refRollMeanList);
+            GraphBuffer.Transfer(refHeaveAmplitudeMeanBuffer, refHeaveAmplitudeMeanList);
 
             GraphBuffer.Transfer(testPitchBuffer, testPitchList);
             GraphBuffer.Transfer(testRollBuffer, testRollList);
             GraphBuffer.Transfer(testHeaveAmplitudeBuffer, testHeaveAmplitudeList);
 
-            GraphBuffer.Transfer(testPitchMean20mBuffer, testPitchMean20mList);
-            GraphBuffer.Transfer(testRollMean20mBuffer, testRollMean20mList);
-            GraphBuffer.Transfer(testHeaveAmplitudeMean20mBuffer, testHeaveAmplitudeMean20mList);
+            GraphBuffer.Transfer(testPitchMeanBuffer, testPitchMeanList);
+            GraphBuffer.Transfer(testRollMeanBuffer, testRollMeanList);
+            GraphBuffer.Transfer(testHeaveAmplitudeMeanBuffer, testHeaveAmplitudeMeanList);
         }
 
         /////////////////////////////////////////////////////////////////////////////
@@ -509,15 +477,15 @@ namespace MVS
         {
             _pitchData = new HMSData();
 
-            _refPitchMax20mData = new HMSData();
-            _refPitchMaxUp20mData = new HMSData();
-            _refPitchMaxDown20mData = new HMSData();
-            _refPitchMean20mData = new HMSData();
+            _refPitchMaxData = new HMSData();
+            _refPitchMaxUpData = new HMSData();
+            _refPitchMaxDownData = new HMSData();
+            _refPitchMeanData = new HMSData();
 
-            _testPitchMax20mData = new HMSData();
-            _testPitchMaxUp20mData = new HMSData();
-            _testPitchMaxDown20mData = new HMSData();
-            _testPitchMean20mData = new HMSData();
+            _testPitchMaxData = new HMSData();
+            _testPitchMaxUpData = new HMSData();
+            _testPitchMaxDownData = new HMSData();
+            _testPitchMeanData = new HMSData();
 
         }
 
@@ -529,33 +497,33 @@ namespace MVS
                 status = DataStatus.NONE
             };
 
-            refPitchMaxUp20mData = noData;
-            refPitchMaxDown20mData = noData;
-            refPitchMean20mData = noData;
+            refPitchMaxUpData = noData;
+            refPitchMaxDownData = noData;
+            refPitchMeanData = noData;
 
-            testPitchMaxUp20mData = noData;
-            testPitchMaxDown20mData = noData;
-            testPitchMean20mData = noData;
+            testPitchMaxUpData = noData;
+            testPitchMaxDownData = noData;
+            testPitchMeanData = noData;
 
             refPitchBuffer.Clear();
-            refPitchMean20mBuffer.Clear();
+            refPitchMeanBuffer.Clear();
             refPitchList.Clear();
-            refPitchMean20mList.Clear();
+            refPitchMeanList.Clear();
 
             testPitchBuffer.Clear();
-            testPitchMean20mBuffer.Clear();
+            testPitchMeanBuffer.Clear();
             testPitchList.Clear();
-            testPitchMean20mList.Clear();
+            testPitchMeanList.Clear();
 
             for (int i = -Constants.Minutes20; i <= 0; i++)
             {
-                refPitchMean20mList.Add(new HMSData()
+                refPitchMeanList.Add(new HMSData()
                 {
                     data = 0,
                     timestamp = DateTime.UtcNow.AddSeconds(i)
                 });
 
-                testPitchMean20mList.Add(new HMSData()
+                testPitchMeanList.Add(new HMSData()
                 {
                     data = 0,
                     timestamp = DateTime.UtcNow.AddSeconds(i)
@@ -579,68 +547,68 @@ namespace MVS
             }
         }
 
-        private HMSData _refPitchMax20mData { get; set; }
-        public HMSData refPitchMax20mData
+        private HMSData _refPitchMaxData { get; set; }
+        public HMSData refPitchMaxData
         {
             get
             {
-                return _refPitchMax20mData;
+                return _refPitchMaxData;
             }
             set
             {
                 if (value != null)
                 {
-                    _refPitchMax20mData.Set(value);
+                    _refPitchMaxData.Set(value);
                 }
             }
         }
 
-        private HMSData _testPitchMax20mData { get; set; }
-        public HMSData testPitchMax20mData
+        private HMSData _testPitchMaxData { get; set; }
+        public HMSData testPitchMaxData
         {
             get
             {
-                return _testPitchMax20mData;
+                return _testPitchMaxData;
             }
             set
             {
                 if (value != null)
                 {
-                    _testPitchMax20mData.Set(value);
+                    _testPitchMaxData.Set(value);
                 }
             }
         }
 
-        private HMSData _refPitchMaxUp20mData { get; set; }
-        public HMSData refPitchMaxUp20mData
+        private HMSData _refPitchMaxUpData { get; set; }
+        public HMSData refPitchMaxUpData
         {
             get
             {
-                return _refPitchMaxUp20mData;
+                return _refPitchMaxUpData;
             }
             set
             {
                 if (value != null)
                 {
-                    _refPitchMaxUp20mData.Set(value);
+                    _refPitchMaxUpData.Set(value);
 
-                    OnPropertyChanged(nameof(refPitchMaxUp20mString));
+                    OnPropertyChanged(nameof(refPitchMaxUpString));
                 }
             }
         }
-        public string refPitchMaxUp20mString
+        public string refPitchMaxUpString
         {
             get
             {
-                if (_refPitchMaxUp20mData != null)
+                if (_refPitchMaxUpData != null)
                 {
                     // Sjekke om data er gyldig
-                    if (_refPitchMaxUp20mData.status == DataStatus.OK && !double.IsNaN(_refPitchMaxUp20mData.data))
+                    if (_refPitchMaxUpData.status == DataStatus.OK && !double.IsNaN(_refPitchMaxUpData.data))
                     {
-                        double pitch = Math.Abs(_refPitchMaxUp20mData.data);
+                        double pitch = Math.Abs(_refPitchMaxUpData.data);
 
                         string dir;
-                        if (_refPitchMaxUp20mData.data > 0)
+                        if (_refPitchMaxUpData.data > 0)
                             dir = "U";
                         else
                             dir = "D";
@@ -659,36 +627,36 @@ namespace MVS
             }
         }
 
-        private HMSData _testPitchMaxUp20mData { get; set; }
-        public HMSData testPitchMaxUp20mData
+        private HMSData _testPitchMaxUpData { get; set; }
+        public HMSData testPitchMaxUpData
         {
             get
             {
-                return _testPitchMaxUp20mData;
+                return _testPitchMaxUpData;
             }
             set
             {
                 if (value != null)
                 {
-                    _testPitchMaxUp20mData.Set(value);
+                    _testPitchMaxUpData.Set(value);
 
-                    OnPropertyChanged(nameof(testPitchMaxUp20mString));
+                    OnPropertyChanged(nameof(testPitchMaxUpString));
                 }
             }
         }
-        public string testPitchMaxUp20mString
+        public string testPitchMaxUpString
         {
             get
             {
-                if (_testPitchMaxUp20mData != null)
+                if (_testPitchMaxUpData != null)
                 {
                     // Sjekke om data er gyldig
-                    if (_testPitchMaxUp20mData.status == DataStatus.OK && !double.IsNaN(_testPitchMaxUp20mData.data))
+                    if (_testPitchMaxUpData.status == DataStatus.OK && !double.IsNaN(_testPitchMaxUpData.data))
                     {
-                        double pitch = Math.Abs(_testPitchMaxUp20mData.data);
+                        double pitch = Math.Abs(_testPitchMaxUpData.data);
 
                         string dir;
-                        if (_testPitchMaxUp20mData.data > 0)
+                        if (_testPitchMaxUpData.data > 0)
                             dir = "U";
                         else
                             dir = "D";
@@ -707,36 +675,36 @@ namespace MVS
             }
         }
 
-        private HMSData _refPitchMaxDown20mData { get; set; }
-        public HMSData refPitchMaxDown20mData
+        private HMSData _refPitchMaxDownData { get; set; }
+        public HMSData refPitchMaxDownData
         {
             get
             {
-                return _refPitchMaxDown20mData;
+                return _refPitchMaxDownData;
             }
             set
             {
                 if (value != null)
                 {
-                    _refPitchMaxDown20mData.Set(value);
+                    _refPitchMaxDownData.Set(value);
 
-                    OnPropertyChanged(nameof(refPitchMaxDown20mString));
+                    OnPropertyChanged(nameof(refPitchMaxDownString));
                 }
             }
         }
-        public string refPitchMaxDown20mString
+        public string refPitchMaxDownString
         {
             get
             {
-                if (_refPitchMaxDown20mData != null)
+                if (_refPitchMaxDownData != null)
                 {
                     // Sjekke om data er gyldig
-                    if (_refPitchMaxDown20mData.status == DataStatus.OK && !double.IsNaN(_refPitchMaxDown20mData.data))
+                    if (_refPitchMaxDownData.status == DataStatus.OK && !double.IsNaN(_refPitchMaxDownData.data))
                     {
-                        double pitch = Math.Abs(_refPitchMaxDown20mData.data);
+                        double pitch = Math.Abs(_refPitchMaxDownData.data);
 
                         string dir;
-                        if (_refPitchMaxDown20mData.data > 0)
+                        if (_refPitchMaxDownData.data > 0)
                             dir = "U";
                         else
                             dir = "D";
@@ -755,36 +723,36 @@ namespace MVS
             }
         }
 
-        private HMSData _testPitchMaxDown20mData { get; set; }
-        public HMSData testPitchMaxDown20mData
+        private HMSData _testPitchMaxDownData { get; set; }
+        public HMSData testPitchMaxDownData
         {
             get
             {
-                return _testPitchMaxDown20mData;
+                return _testPitchMaxDownData;
             }
             set
             {
                 if (value != null)
                 {
-                    _testPitchMaxDown20mData.Set(value);
+                    _testPitchMaxDownData.Set(value);
 
-                    OnPropertyChanged(nameof(testPitchMaxDown20mString));
+                    OnPropertyChanged(nameof(testPitchMaxDownString));
                 }
             }
         }
-        public string testPitchMaxDown20mString
+        public string testPitchMaxDownString
         {
             get
             {
-                if (_testPitchMaxDown20mData != null)
+                if (_testPitchMaxDownData != null)
                 {
                     // Sjekke om data er gyldig
-                    if (_testPitchMaxDown20mData.status == DataStatus.OK && !double.IsNaN(_testPitchMaxDown20mData.data))
+                    if (_testPitchMaxDownData.status == DataStatus.OK && !double.IsNaN(_testPitchMaxDownData.data))
                     {
-                        double pitch = Math.Abs(_testPitchMaxDown20mData.data);
+                        double pitch = Math.Abs(_testPitchMaxDownData.data);
 
                         string dir;
-                        if (_testPitchMaxDown20mData.data > 0)
+                        if (_testPitchMaxDownData.data > 0)
                             dir = "U";
                         else
                             dir = "D";
@@ -804,34 +772,34 @@ namespace MVS
         }
 
 
-        private HMSData _refPitchMean20mData { get; set; }
-        public HMSData refPitchMean20mData
+        private HMSData _refPitchMeanData { get; set; }
+        public HMSData refPitchMeanData
         {
             get
             {
-                return _refPitchMean20mData;
+                return _refPitchMeanData;
             }
             set
             {
                 if (value != null)
                 {
-                    _refPitchMean20mData.Set(value);
+                    _refPitchMeanData.Set(value);
 
-                    OnPropertyChanged(nameof(refPitchMean20mDataString));
+                    OnPropertyChanged(nameof(refPitchMeanDataString));
                     OnPropertyChanged(nameof(pitchMeanDeviationString));
                 }
             }
         }
-        public string refPitchMean20mDataString
+        public string refPitchMeanDataString
         {
             get
             {
-                if (_refPitchMean20mData != null)
+                if (_refPitchMeanData != null)
                 {
                     // Sjekke om data er gyldig
-                    if (_refPitchMean20mData.status == DataStatus.OK && !double.IsNaN(_refPitchMean20mData.data))
+                    if (_refPitchMeanData.status == DataStatus.OK && !double.IsNaN(_refPitchMeanData.data))
                     {
-                        return string.Format("{0} °", Math.Round(_refPitchMean20mData.data, 3, MidpointRounding.AwayFromZero).ToString(Constants.numberFormatRecData));
+                        return string.Format("{0} °", Math.Round(_refPitchMeanData.data, 3, MidpointRounding.AwayFromZero).ToString(Constants.numberFormatRecData));
                     }
                     else
                     {
@@ -845,34 +813,34 @@ namespace MVS
             }
         }
 
-        private HMSData _testPitchMean20mData { get; set; }
-        public HMSData testPitchMean20mData
+        private HMSData _testPitchMeanData { get; set; }
+        public HMSData testPitchMeanData
         {
             get
             {
-                return _testPitchMean20mData;
+                return _testPitchMeanData;
             }
             set
             {
                 if (value != null)
                 {
-                    _testPitchMean20mData.Set(value);
+                    _testPitchMeanData.Set(value);
 
-                    OnPropertyChanged(nameof(testPitchMean20mDataString));
+                    OnPropertyChanged(nameof(testPitchMeanDataString));
                     OnPropertyChanged(nameof(pitchMeanDeviationString)); 
                 }
             }
         }
-        public string testPitchMean20mDataString
+        public string testPitchMeanDataString
         {
             get
             {
-                if (_testPitchMean20mData != null)
+                if (_testPitchMeanData != null)
                 {
                     // Sjekke om data er gyldig
-                    if (_testPitchMean20mData.status == DataStatus.OK && !double.IsNaN(_testPitchMean20mData.data))
+                    if (_testPitchMeanData.status == DataStatus.OK && !double.IsNaN(_testPitchMeanData.data))
                     {
-                        return string.Format("{0} °", Math.Round(_testPitchMean20mData.data, 3, MidpointRounding.AwayFromZero).ToString(Constants.numberFormatRecData));
+                        return string.Format("{0} °", Math.Round(_testPitchMeanData.data, 3, MidpointRounding.AwayFromZero).ToString(Constants.numberFormatRecData));
                     }
                     else
                     {
@@ -890,10 +858,10 @@ namespace MVS
         {
             get
             {
-                if (_testPitchMean20mData.status == DataStatus.OK && !double.IsNaN(_testPitchMean20mData.data) &&
-                    _refPitchMean20mData.status == DataStatus.OK && !double.IsNaN(_refPitchMean20mData.data))
+                if (_testPitchMeanData.status == DataStatus.OK && !double.IsNaN(_testPitchMeanData.data) &&
+                    _refPitchMeanData.status == DataStatus.OK && !double.IsNaN(_refPitchMeanData.data))
                 {
-                    return Math.Round(_testPitchMean20mData.data - _refPitchMean20mData.data, 3, MidpointRounding.AwayFromZero).ToString(Constants.numberFormatRecDataSigned);
+                    return Math.Round(_testPitchMeanData.data - _refPitchMeanData.data, 3, MidpointRounding.AwayFromZero).ToString(Constants.numberFormatRecDataSigned);
                 }
                 else
                 {
@@ -909,29 +877,29 @@ namespace MVS
         {
             _refRollData = new HMSData();
 
-            _refRollMax20mData = new HMSData();
-            _refRollMaxLeft20mData = new HMSData();
-            _refRollMaxRight20mData = new HMSData();
-            _refRollMean20mData = new HMSData();
+            _refRollMaxData = new HMSData();
+            _refRollMaxLeftData = new HMSData();
+            _refRollMaxRightData = new HMSData();
+            _refRollMeanData = new HMSData();
 
-            _testRollMax20mData = new HMSData();
-            _testRollMaxLeft20mData = new HMSData();
-            _testRollMaxRight20mData = new HMSData();
-            _testRollMean20mData = new HMSData();
+            _testRollMaxData = new HMSData();
+            _testRollMaxLeftData = new HMSData();
+            _testRollMaxRightData = new HMSData();
+            _testRollMeanData = new HMSData();
 
             // Init av chart data
-            refRollMean20mList.Clear();
-            testRollMean20mList.Clear();
+            refRollMeanList.Clear();
+            testRollMeanList.Clear();
 
             for (int i = -Constants.Minutes20; i <= 0; i++)
             {
-                refRollMean20mList.Add(new HMSData()
+                refRollMeanList.Add(new HMSData()
                 {
                     data = 0,
                     timestamp = DateTime.UtcNow.AddSeconds(i)
                 });
 
-               testRollMean20mList.Add(new HMSData()
+               testRollMeanList.Add(new HMSData()
                 {
                     data = 0,
                     timestamp = DateTime.UtcNow.AddSeconds(i)
@@ -947,33 +915,33 @@ namespace MVS
                 status = DataStatus.NONE
             };
 
-            refRollMaxLeft20mData = noData;
-            refRollMaxRight20mData = noData;
-            refRollMean20mData = noData;
+            refRollMaxLeftData = noData;
+            refRollMaxRightData = noData;
+            refRollMeanData = noData;
 
-            testRollMaxLeft20mData = noData;
-            testRollMaxRight20mData = noData;
-            testRollMean20mData = noData;
+            testRollMaxLeftData = noData;
+            testRollMaxRightData = noData;
+            testRollMeanData = noData;
 
             refRollBuffer.Clear();
-            refRollMean20mBuffer.Clear();
+            refRollMeanBuffer.Clear();
             refRollList.Clear();
-            refRollMean20mList.Clear();
+            refRollMeanList.Clear();
 
             testRollBuffer.Clear();
-            testRollMean20mBuffer.Clear();
+            testRollMeanBuffer.Clear();
             testRollList.Clear();
-            testRollMean20mList.Clear();
+            testRollMeanList.Clear();
 
             for (int i = -Constants.Minutes20; i <= 0; i++)
             {
-                refRollMean20mList.Add(new HMSData()
+                refRollMeanList.Add(new HMSData()
                 {
                     data = 0,
                     timestamp = DateTime.UtcNow.AddSeconds(i)
                 });
 
-                testRollMean20mList.Add(new HMSData()
+                testRollMeanList.Add(new HMSData()
                 {
                     data = 0,
                     timestamp = DateTime.UtcNow.AddSeconds(i)
@@ -997,68 +965,68 @@ namespace MVS
             }
         }
 
-        private HMSData _refRollMax20mData { get; set; }
-        public HMSData refRollMax20mData
+        private HMSData _refRollMaxData { get; set; }
+        public HMSData refRollMaxData
         {
             get
             {
-                return _refRollMax20mData;
+                return _refRollMaxData;
             }
             set
             {
                 if (value != null)
                 {
-                    _refRollMax20mData.Set(value);
+                    _refRollMaxData.Set(value);
                 }
             }
         }
 
-        private HMSData _testRollMax20mData { get; set; }
-        public HMSData testRollMax20mData
+        private HMSData _testRollMaxData { get; set; }
+        public HMSData testRollMaxData
         {
             get
             {
-                return _testRollMax20mData;
+                return _testRollMaxData;
             }
             set
             {
                 if (value != null)
                 {
-                    _testRollMax20mData.Set(value);
+                    _testRollMaxData.Set(value);
                 }
             }
         }
 
-        private HMSData _refRollMaxLeft20mData { get; set; }
-        public HMSData refRollMaxLeft20mData
+        private HMSData _refRollMaxLeftData { get; set; }
+        public HMSData refRollMaxLeftData
         {
             get
             {
-                return _refRollMaxLeft20mData;
+                return _refRollMaxLeftData;
             }
             set
             {
                 if (value != null)
                 {
-                    _refRollMaxLeft20mData.Set(value);
+                    _refRollMaxLeftData.Set(value);
 
-                    OnPropertyChanged(nameof(refRollMaxLeft20mString));
+                    OnPropertyChanged(nameof(refRollMaxLeftString));
                 }
             }
         }
-        public string refRollMaxLeft20mString
+        public string refRollMaxLeftString
         {
             get
             {
-                if (_refRollMaxLeft20mData != null)
+                if (_refRollMaxLeftData != null)
                 {
                     // Sjekke om data er gyldig
-                    if (_refRollMaxLeft20mData.status == DataStatus.OK && !double.IsNaN(_refRollMaxLeft20mData.data))
+                    if (_refRollMaxLeftData.status == DataStatus.OK && !double.IsNaN(_refRollMaxLeftData.data))
                     {
-                        double roll = Math.Abs(_refRollMaxLeft20mData.data);
+                        double roll = Math.Abs(_refRollMaxLeftData.data);
 
                         string dir;
-                        if (_refRollMaxLeft20mData.data >= 0)
+                        if (_refRollMaxLeftData.data >= 0)
                             dir = "L";
                         else
                             dir = "R";
@@ -1077,36 +1045,36 @@ namespace MVS
             }
         }
 
-        private HMSData _testRollMaxLeft20mData { get; set; }
-        public HMSData testRollMaxLeft20mData
+        private HMSData _testRollMaxLeftData { get; set; }
+        public HMSData testRollMaxLeftData
         {
             get
             {
-                return _testRollMaxLeft20mData;
+                return _testRollMaxLeftData;
             }
             set
             {
                 if (value != null)
                 {
-                    _testRollMaxLeft20mData.Set(value);
+                    _testRollMaxLeftData.Set(value);
 
-                    OnPropertyChanged(nameof(testRollMaxLeft20mString));
+                    OnPropertyChanged(nameof(testRollMaxLeftString));
                 }
             }
         }
-        public string testRollMaxLeft20mString
+        public string testRollMaxLeftString
         {
             get
             {
-                if (_testRollMaxLeft20mData != null)
+                if (_testRollMaxLeftData != null)
                 {
                     // Sjekke om data er gyldig
-                    if (_testRollMaxLeft20mData.status == DataStatus.OK && !double.IsNaN(_testRollMaxLeft20mData.data))
+                    if (_testRollMaxLeftData.status == DataStatus.OK && !double.IsNaN(_testRollMaxLeftData.data))
                     {
-                        double roll = Math.Abs(_testRollMaxLeft20mData.data);
+                        double roll = Math.Abs(_testRollMaxLeftData.data);
 
                         string dir;
-                        if (_testRollMaxLeft20mData.data >= 0)
+                        if (_testRollMaxLeftData.data >= 0)
                             dir = "L";
                         else
                             dir = "R";
@@ -1125,36 +1093,36 @@ namespace MVS
             }
         }
 
-        private HMSData _refRollMaxRight20mData { get; set; }
-        public HMSData refRollMaxRight20mData
+        private HMSData _refRollMaxRightData { get; set; }
+        public HMSData refRollMaxRightData
         {
             get
             {
-                return _refRollMaxRight20mData;
+                return _refRollMaxRightData;
             }
             set
             {
                 if (value != null)
                 {
-                    _refRollMaxRight20mData.Set(value);
+                    _refRollMaxRightData.Set(value);
 
-                    OnPropertyChanged(nameof(refRollMaxRight20mString));
+                    OnPropertyChanged(nameof(refRollMaxRightString));
                 }
             }
         }
-        public string refRollMaxRight20mString
+        public string refRollMaxRightString
         {
             get
             {
-                if (_refRollMaxRight20mData != null)
+                if (_refRollMaxRightData != null)
                 {
                     // Sjekke om data er gyldig
-                    if (_refRollMaxRight20mData.status == DataStatus.OK && !double.IsNaN(_refRollMaxRight20mData.data))
+                    if (_refRollMaxRightData.status == DataStatus.OK && !double.IsNaN(_refRollMaxRightData.data))
                     {
-                        double roll = Math.Abs(_refRollMaxRight20mData.data);
+                        double roll = Math.Abs(_refRollMaxRightData.data);
 
                         string dir;
-                        if (_refRollMaxRight20mData.data >= 0)
+                        if (_refRollMaxRightData.data >= 0)
                             dir = "L";
                         else
                             dir = "R";
@@ -1173,36 +1141,36 @@ namespace MVS
             }
         }
 
-        private HMSData _testRollMaxRight20mData { get; set; }
-        public HMSData testRollMaxRight20mData
+        private HMSData _testRollMaxRightData { get; set; }
+        public HMSData testRollMaxRightData
         {
             get
             {
-                return _testRollMaxRight20mData;
+                return _testRollMaxRightData;
             }
             set
             {
                 if (value != null)
                 {
-                    _testRollMaxRight20mData.Set(value);
+                    _testRollMaxRightData.Set(value);
 
-                    OnPropertyChanged(nameof(testRollMaxRight20mString));
+                    OnPropertyChanged(nameof(testRollMaxRightString));
                 }
             }
         }
-        public string testRollMaxRight20mString
+        public string testRollMaxRightString
         {
             get
             {
-                if (_testRollMaxRight20mData != null)
+                if (_testRollMaxRightData != null)
                 {
                     // Sjekke om data er gyldig
-                    if (_testRollMaxRight20mData.status == DataStatus.OK && !double.IsNaN(_testRollMaxRight20mData.data))
+                    if (_testRollMaxRightData.status == DataStatus.OK && !double.IsNaN(_testRollMaxRightData.data))
                     {
-                        double roll = Math.Abs(_testRollMaxRight20mData.data);
+                        double roll = Math.Abs(_testRollMaxRightData.data);
 
                         string dir;
-                        if (_testRollMaxRight20mData.data >= 0)
+                        if (_testRollMaxRightData.data >= 0)
                             dir = "L";
                         else
                             dir = "R";
@@ -1221,34 +1189,34 @@ namespace MVS
             }
         }
 
-        private HMSData _refRollMean20mData { get; set; }
-        public HMSData refRollMean20mData
+        private HMSData _refRollMeanData { get; set; }
+        public HMSData refRollMeanData
         {
             get
             {
-                return _refRollMean20mData;
+                return _refRollMeanData;
             }
             set
             {
                 if (value != null)
                 {
-                    _refRollMean20mData.Set(value);
+                    _refRollMeanData.Set(value);
 
-                    OnPropertyChanged(nameof(refRollMean20mDataString));
+                    OnPropertyChanged(nameof(refRollMeanDataString));
                     OnPropertyChanged(nameof(rollMeanDeviationString));
                 }
             }
         }
-        public string refRollMean20mDataString
+        public string refRollMeanDataString
         {
             get
             {
-                if (_refRollMean20mData != null)
+                if (_refRollMeanData != null)
                 {
                     // Sjekke om data er gyldig
-                    if (_refRollMean20mData.status == DataStatus.OK && !double.IsNaN(_refRollMean20mData.data))
+                    if (_refRollMeanData.status == DataStatus.OK && !double.IsNaN(_refRollMeanData.data))
                     {
-                        return string.Format("{0} °", Math.Round(_refRollMean20mData.data, 3, MidpointRounding.AwayFromZero).ToString(Constants.numberFormatRecData));
+                        return string.Format("{0} °", Math.Round(_refRollMeanData.data, 3, MidpointRounding.AwayFromZero).ToString(Constants.numberFormatRecData));
                     }
                     else
                     {
@@ -1262,34 +1230,34 @@ namespace MVS
             }
         }
 
-        private HMSData _testRollMean20mData { get; set; }
-        public HMSData testRollMean20mData
+        private HMSData _testRollMeanData { get; set; }
+        public HMSData testRollMeanData
         {
             get
             {
-                return _testRollMean20mData;
+                return _testRollMeanData;
             }
             set
             {
                 if (value != null)
                 {
-                    _testRollMean20mData.Set(value);
+                    _testRollMeanData.Set(value);
 
-                    OnPropertyChanged(nameof(testRollMean20mDataString));
+                    OnPropertyChanged(nameof(testRollMeanDataString));
                     OnPropertyChanged(nameof(rollMeanDeviationString));                    
                 }
             }
         }
-        public string testRollMean20mDataString
+        public string testRollMeanDataString
         {
             get
             {
-                if (_testRollMean20mData != null)
+                if (_testRollMeanData != null)
                 {
                     // Sjekke om data er gyldig
-                    if (_testRollMean20mData.status == DataStatus.OK && !double.IsNaN(_testRollMean20mData.data))
+                    if (_testRollMeanData.status == DataStatus.OK && !double.IsNaN(_testRollMeanData.data))
                     {
-                        return string.Format("{0} °", Math.Round(_testRollMean20mData.data, 3, MidpointRounding.AwayFromZero).ToString(Constants.numberFormatRecData));
+                        return string.Format("{0} °", Math.Round(_testRollMeanData.data, 3, MidpointRounding.AwayFromZero).ToString(Constants.numberFormatRecData));
                     }
                     else
                     {
@@ -1307,10 +1275,10 @@ namespace MVS
         {
             get
             {
-                if (_testRollMean20mData.status == DataStatus.OK && !double.IsNaN(_testRollMean20mData.data) &&
-                    _refRollMean20mData.status == DataStatus.OK && !double.IsNaN(_refRollMean20mData.data))
+                if (_testRollMeanData.status == DataStatus.OK && !double.IsNaN(_testRollMeanData.data) &&
+                    _refRollMeanData.status == DataStatus.OK && !double.IsNaN(_refRollMeanData.data))
                 {
-                    return Math.Round(_testRollMean20mData.data - _refRollMean20mData.data, 3, MidpointRounding.AwayFromZero).ToString(Constants.numberFormatRecDataSigned);
+                    return Math.Round(_testRollMeanData.data - _refRollMeanData.data, 3, MidpointRounding.AwayFromZero).ToString(Constants.numberFormatRecDataSigned);
                 }
                 else
                 {
@@ -1327,26 +1295,26 @@ namespace MVS
             _refHeaveData = new HMSData();
 
             _refHeaveAmplitudeData = new HMSData();
-            _refHeaveAmplitudeMax20mData = new HMSData();
-            _refHeaveAmplitudeMean20mData = new HMSData();
+            _refHeaveAmplitudeMaxData = new HMSData();
+            _refHeaveAmplitudeMeanData = new HMSData();
 
             _testHeaveAmplitudeData = new HMSData();
-            _testHeaveAmplitudeMax20mData = new HMSData();
-            _testHeaveAmplitudeMean20mData = new HMSData();
+            _testHeaveAmplitudeMaxData = new HMSData();
+            _testHeaveAmplitudeMeanData = new HMSData();
 
             // Init av chart data
-            refHeaveAmplitudeMean20mList.Clear();
-            testHeaveAmplitudeMean20mList.Clear();
+            refHeaveAmplitudeMeanList.Clear();
+            testHeaveAmplitudeMeanList.Clear();
 
             for (int i = -Constants.Minutes20; i <= 0; i++)
             {
-                refHeaveAmplitudeMean20mList.Add(new HMSData()
+                refHeaveAmplitudeMeanList.Add(new HMSData()
                 {
                     data = 0,
                     timestamp = DateTime.UtcNow.AddSeconds(i)
                 });
 
-                testHeaveAmplitudeMean20mList.Add(new HMSData()
+                testHeaveAmplitudeMeanList.Add(new HMSData()
                 {
                     data = 0,
                     timestamp = DateTime.UtcNow.AddSeconds(i)
@@ -1362,31 +1330,31 @@ namespace MVS
                 status = DataStatus.NONE
             };
 
-            refHeaveAmplitudeMax20mData = noData;
-            refHeaveAmplitudeMean20mData = noData;
+            refHeaveAmplitudeMaxData = noData;
+            refHeaveAmplitudeMeanData = noData;
 
-            testHeaveAmplitudeMax20mData = noData;
-            testHeaveAmplitudeMean20mData = noData;
+            testHeaveAmplitudeMaxData = noData;
+            testHeaveAmplitudeMeanData = noData;
 
             refHeaveAmplitudeBuffer.Clear();
-            refHeaveAmplitudeMean20mBuffer.Clear();
+            refHeaveAmplitudeMeanBuffer.Clear();
             refHeaveAmplitudeList.Clear();
-            refHeaveAmplitudeMean20mList.Clear();
+            refHeaveAmplitudeMeanList.Clear();
 
             testHeaveAmplitudeBuffer.Clear();
-            testHeaveAmplitudeMean20mBuffer.Clear();
+            testHeaveAmplitudeMeanBuffer.Clear();
             testHeaveAmplitudeList.Clear();
-            testHeaveAmplitudeMean20mList.Clear();
+            testHeaveAmplitudeMeanList.Clear();
 
             for (int i = -Constants.Minutes20; i <= 0; i++)
             {
-                refHeaveAmplitudeMean20mList.Add(new HMSData()
+                refHeaveAmplitudeMeanList.Add(new HMSData()
                 {
                     data = 0,
                     timestamp = DateTime.UtcNow.AddSeconds(i)
                 });
 
-                testHeaveAmplitudeMean20mList.Add(new HMSData()
+                testHeaveAmplitudeMeanList.Add(new HMSData()
                 {
                     data = 0,
                     timestamp = DateTime.UtcNow.AddSeconds(i)
@@ -1442,33 +1410,33 @@ namespace MVS
             }
         }
 
-        private HMSData _refHeaveAmplitudeMax20mData { get; set; }
-        public HMSData refHeaveAmplitudeMax20mData
+        private HMSData _refHeaveAmplitudeMaxData { get; set; }
+        public HMSData refHeaveAmplitudeMaxData
         {
             get
             {
-                return _refHeaveAmplitudeMax20mData;
+                return _refHeaveAmplitudeMaxData;
             }
             set
             {
                 if (value != null)
                 {
-                    _refHeaveAmplitudeMax20mData.Set(value);
+                    _refHeaveAmplitudeMaxData.Set(value);
 
-                    OnPropertyChanged(nameof(refHeaveAmplitudeMax20mString));
+                    OnPropertyChanged(nameof(refHeaveAmplitudeMaxString));
                 }
             }
         }
-        public string refHeaveAmplitudeMax20mString
+        public string refHeaveAmplitudeMaxString
         {
             get
             {
-                if (_refHeaveAmplitudeMax20mData != null)
+                if (_refHeaveAmplitudeMaxData != null)
                 {
                     // Sjekke om data er gyldig
-                    if (_refHeaveAmplitudeMax20mData.status == DataStatus.OK && !double.IsNaN(_refHeaveAmplitudeMax20mData.data))
+                    if (_refHeaveAmplitudeMaxData.status == DataStatus.OK && !double.IsNaN(_refHeaveAmplitudeMaxData.data))
                     {
-                        return string.Format("{0} m", Math.Round(_refHeaveAmplitudeMax20mData.data, 3, MidpointRounding.AwayFromZero).ToString(Constants.numberFormatRecData));
+                        return string.Format("{0} m", Math.Round(_refHeaveAmplitudeMaxData.data, 3, MidpointRounding.AwayFromZero).ToString(Constants.numberFormatRecData));
                     }
                     else
                     {
@@ -1482,33 +1450,33 @@ namespace MVS
             }
         }
 
-        private HMSData _testHeaveAmplitudeMax20mData { get; set; }
-        public HMSData testHeaveAmplitudeMax20mData
+        private HMSData _testHeaveAmplitudeMaxData { get; set; }
+        public HMSData testHeaveAmplitudeMaxData
         {
             get
             {
-                return _testHeaveAmplitudeMax20mData;
+                return _testHeaveAmplitudeMaxData;
             }
             set
             {
                 if (value != null)
                 {
-                    _testHeaveAmplitudeMax20mData.Set(value);
+                    _testHeaveAmplitudeMaxData.Set(value);
 
-                    OnPropertyChanged(nameof(testHeaveAmplitudeMax20mString));
+                    OnPropertyChanged(nameof(testHeaveAmplitudeMaxString));
                 }
             }
         }
-        public string testHeaveAmplitudeMax20mString
+        public string testHeaveAmplitudeMaxString
         {
             get
             {
-                if (_testHeaveAmplitudeMax20mData != null)
+                if (_testHeaveAmplitudeMaxData != null)
                 {
                     // Sjekke om data er gyldig
-                    if (_testHeaveAmplitudeMax20mData.status == DataStatus.OK && !double.IsNaN(_testHeaveAmplitudeMax20mData.data))
+                    if (_testHeaveAmplitudeMaxData.status == DataStatus.OK && !double.IsNaN(_testHeaveAmplitudeMaxData.data))
                     {
-                        return string.Format("{0} m", Math.Round(_testHeaveAmplitudeMax20mData.data, 3, MidpointRounding.AwayFromZero).ToString(Constants.numberFormatRecData));
+                        return string.Format("{0} m", Math.Round(_testHeaveAmplitudeMaxData.data, 3, MidpointRounding.AwayFromZero).ToString(Constants.numberFormatRecData));
                     }
                     else
                     {
@@ -1522,34 +1490,34 @@ namespace MVS
             }
         }
 
-        private HMSData _refHeaveAmplitudeMean20mData { get; set; }
-        public HMSData refHeaveAmplitudeMean20mData
+        private HMSData _refHeaveAmplitudeMeanData { get; set; }
+        public HMSData refHeaveAmplitudeMeanData
         {
             get
             {
-                return _refHeaveAmplitudeMean20mData;
+                return _refHeaveAmplitudeMeanData;
             }
             set
             {
                 if (value != null)
                 {
-                    _refHeaveAmplitudeMean20mData.Set(value);
+                    _refHeaveAmplitudeMeanData.Set(value);
 
-                    OnPropertyChanged(nameof(refHeaveAmplitudeMean20mString));
+                    OnPropertyChanged(nameof(refHeaveAmplitudeMeanString));
                     OnPropertyChanged(nameof(heaveAmplitudeMeanDeviationString));
                 }
             }
         }
-        public string refHeaveAmplitudeMean20mString
+        public string refHeaveAmplitudeMeanString
         {
             get
             {
-                if (_refHeaveAmplitudeMean20mData != null)
+                if (_refHeaveAmplitudeMeanData != null)
                 {
                     // Sjekke om data er gyldig
-                    if (_refHeaveAmplitudeMean20mData.status == DataStatus.OK && !double.IsNaN(_refHeaveAmplitudeMean20mData.data))
+                    if (_refHeaveAmplitudeMeanData.status == DataStatus.OK && !double.IsNaN(_refHeaveAmplitudeMeanData.data))
                     {
-                        return string.Format("{0} m", Math.Round(_refHeaveAmplitudeMean20mData.data, 3, MidpointRounding.AwayFromZero).ToString(Constants.numberFormatRecData));
+                        return string.Format("{0} m", Math.Round(_refHeaveAmplitudeMeanData.data, 3, MidpointRounding.AwayFromZero).ToString(Constants.numberFormatRecData));
                     }
                     else
                     {
@@ -1563,34 +1531,34 @@ namespace MVS
             }
         }
 
-        private HMSData _testHeaveAmplitudeMean20mData { get; set; }
-        public HMSData testHeaveAmplitudeMean20mData
+        private HMSData _testHeaveAmplitudeMeanData { get; set; }
+        public HMSData testHeaveAmplitudeMeanData
         {
             get
             {
-                return _testHeaveAmplitudeMean20mData;
+                return _testHeaveAmplitudeMeanData;
             }
             set
             {
                 if (value != null)
                 {
-                    _testHeaveAmplitudeMean20mData.Set(value);
+                    _testHeaveAmplitudeMeanData.Set(value);
 
-                    OnPropertyChanged(nameof(testHeaveAmplitudeMean20mString));
+                    OnPropertyChanged(nameof(testHeaveAmplitudeMeanString));
                     OnPropertyChanged(nameof(heaveAmplitudeMeanDeviationString));
                 }
             }
         }
-        public string testHeaveAmplitudeMean20mString
+        public string testHeaveAmplitudeMeanString
         {
             get
             {
-                if (_testHeaveAmplitudeMean20mData != null)
+                if (_testHeaveAmplitudeMeanData != null)
                 {
                     // Sjekke om data er gyldig
-                    if (_testHeaveAmplitudeMean20mData.status == DataStatus.OK && !double.IsNaN(_testHeaveAmplitudeMean20mData.data))
+                    if (_testHeaveAmplitudeMeanData.status == DataStatus.OK && !double.IsNaN(_testHeaveAmplitudeMeanData.data))
                     {
-                        return string.Format("{0} m", Math.Round(_testHeaveAmplitudeMean20mData.data, 3, MidpointRounding.AwayFromZero).ToString(Constants.numberFormatRecData));
+                        return string.Format("{0} m", Math.Round(_testHeaveAmplitudeMeanData.data, 3, MidpointRounding.AwayFromZero).ToString(Constants.numberFormatRecData));
                     }
                     else
                     {
@@ -1604,33 +1572,33 @@ namespace MVS
             }
         }
 
-        //private HMSData _refHeaveMean20mData { get; set; }
-        //public HMSData refHeaveAmplitudeMean20mData
+        //private HMSData _refHeaveMeanData { get; set; }
+        //public HMSData refHeaveAmplitudeMeanData
         //{
         //    get
         //    {
-        //        return _refHeaveMean20mData;
+        //        return _refHeaveMeanData;
         //    }
         //    set
         //    {
         //        if (value != null)
         //        {
-        //            _refHeaveMean20mData.Set(value);
+        //            _refHeaveMeanData.Set(value);
 
-        //            OnPropertyChanged(nameof(refHeaveMean20mDataString));
+        //            OnPropertyChanged(nameof(refHeaveMeanDataString));
         //        }
         //    }
         //}
-        //public string refHeaveMean20mDataString
+        //public string refHeaveMeanDataString
         //{
         //    get
         //    {
-        //        if (_refHeaveMean20mData != null)
+        //        if (_refHeaveMeanData != null)
         //        {
         //            // Sjekke om data er gyldig
-        //            if (_refHeaveMean20mData.status == DataStatus.OK)
+        //            if (_refHeaveMeanData.status == DataStatus.OK)
         //            {
-        //                return string.Format("{0} m", Math.Round(_refHeaveMean20mData.data, 3, MidpointRounding.AwayFromZero).ToString(Constants.numberFormatRecData));
+        //                return string.Format("{0} m", Math.Round(_refHeaveMeanData.data, 3, MidpointRounding.AwayFromZero).ToString(Constants.numberFormatRecData));
         //            }
         //            else
         //            {
@@ -1644,33 +1612,33 @@ namespace MVS
         //    }
         //}
 
-        //private HMSData _testHeaveMean20mData { get; set; }
+        //private HMSData _testHeaveMeanData { get; set; }
         //public HMSData 
         //{
         //    get
         //    {
-        //        return _testHeaveMean20mData;
+        //        return _testHeaveMeanData;
         //    }
         //    set
         //    {
         //        if (value != null)
         //        {
-        //            _testHeaveMean20mData.Set(value);
+        //            _testHeaveMeanData.Set(value);
 
-        //            OnPropertyChanged(nameof(testHeaveMean20mDataString));
+        //            OnPropertyChanged(nameof(testHeaveMeanDataString));
         //        }
         //    }
         //}
-        //public string testHeaveMean20mDataString
+        //public string testHeaveMeanDataString
         //{
         //    get
         //    {
-        //        if (_testHeaveMean20mData != null)
+        //        if (_testHeaveMeanData != null)
         //        {
         //            // Sjekke om data er gyldig
-        //            if (_testHeaveMean20mData.status == DataStatus.OK)
+        //            if (_testHeaveMeanData.status == DataStatus.OK)
         //            {
-        //                return string.Format("{0} m", Math.Round(_testHeaveMean20mData.data, 3, MidpointRounding.AwayFromZero).ToString(Constants.numberFormatRecData));
+        //                return string.Format("{0} m", Math.Round(_testHeaveMeanData.data, 3, MidpointRounding.AwayFromZero).ToString(Constants.numberFormatRecData));
         //            }
         //            else
         //            {
@@ -1688,10 +1656,10 @@ namespace MVS
         {
             get
             {
-                if (_testHeaveAmplitudeMean20mData.status == DataStatus.OK && !double.IsNaN(_testHeaveAmplitudeMean20mData.data) &&
-                    _refHeaveAmplitudeMean20mData.status == DataStatus.OK && !double.IsNaN(_refHeaveAmplitudeMean20mData.data))
+                if (_testHeaveAmplitudeMeanData.status == DataStatus.OK && !double.IsNaN(_testHeaveAmplitudeMeanData.data) &&
+                    _refHeaveAmplitudeMeanData.status == DataStatus.OK && !double.IsNaN(_refHeaveAmplitudeMeanData.data))
                 {
-                    return Math.Round(_testHeaveAmplitudeMean20mData.data - _refHeaveAmplitudeMean20mData.data, 3, MidpointRounding.AwayFromZero).ToString(Constants.numberFormatRecDataSigned);
+                    return Math.Round(_testHeaveAmplitudeMeanData.data - _refHeaveAmplitudeMeanData.data, 3, MidpointRounding.AwayFromZero).ToString(Constants.numberFormatRecDataSigned);
                 }
                 else
                 {
@@ -1716,13 +1684,13 @@ namespace MVS
                 {
                     _alignmentTime = value;
                     OnPropertyChanged();
-                    OnPropertyChanged(nameof(alignmentTimeMin20m));
-                    OnPropertyChanged(nameof(alignmentTimeMax20m));
+                    OnPropertyChanged(nameof(alignmentTimeMin));
+                    OnPropertyChanged(nameof(alignmentTimeMax));
                 }
             }
         }
 
-        public DateTime alignmentTimeMin20m
+        public DateTime alignmentTimeMin
         {
             get
             {
@@ -1733,7 +1701,7 @@ namespace MVS
             }
         }
 
-        public DateTime alignmentTimeMax20m
+        public DateTime alignmentTimeMax
         {
             get
             {
@@ -1744,43 +1712,43 @@ namespace MVS
         /////////////////////////////////////////////////////////////////////////////
         // Chart Axis Min/Max
         /////////////////////////////////////////////////////////////////////////////
-        public double pitchChartAxisMax20m
+        public double pitchChartAxisMax
         {
             get
             {
-                return ChartAxisMax(_refPitchMax20mData, _testPitchMax20mData, Constants.PitchAxisMargin, 2);
+                return ChartAxisMax(_refPitchMaxData, _testPitchMaxData, Constants.PitchAxisMargin, 2);
             }
         }
 
-        public double pitchChartAxisMin20m
+        public double pitchChartAxisMin
         {
             get
             {
-                return -pitchChartAxisMax20m;
+                return -pitchChartAxisMax;
             }
         }
 
-        public double rollChartAxisMax20m
+        public double rollChartAxisMax
         {
             get
             {
-                return ChartAxisMax(_refRollMax20mData, _testRollMax20mData, Constants.RollAxisMargin, 2);
+                return ChartAxisMax(_refRollMaxData, _testRollMaxData, Constants.RollAxisMargin, 2);
             }
         }
 
-        public double rollChartAxisMin20m
+        public double rollChartAxisMin
         {
             get
             {
-                return -rollChartAxisMax20m;
+                return -rollChartAxisMax;
             }
         }
 
-        public double heaveAmplitudeChartAxisMax20m
+        public double heaveAmplitudeChartAxisMax
         {
             get
             {
-                return ChartAxisMax(_refHeaveAmplitudeMax20mData, _testHeaveAmplitudeMax20mData, Constants.HeaveAmplitudeAxisMargin, 4);
+                return ChartAxisMax(_refHeaveAmplitudeMaxData, _testHeaveAmplitudeMaxData, Constants.HeaveAmplitudeAxisMargin, 4);
             }
         }
 

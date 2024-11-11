@@ -278,6 +278,12 @@ namespace MVS
             }
         }
 
+        // Hente datalisten
+        public int Count()
+        {
+            return dataList.Count;
+        }
+
         // Slette alle data i samlingen
         public void ClearData()
         {

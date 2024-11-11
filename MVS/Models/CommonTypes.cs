@@ -118,33 +118,33 @@ public enum ValueType
 
     // Ikke lagret i config fil
     // Dette er data som beregnes fra variablene over, dvs. fra sensor data
-    Ref_PitchMean20m,
-    Ref_PitchMax20m,
-    Ref_PitchMaxUp20m,
-    Ref_PitchMaxDown20m,
+    Ref_PitchMean,
+    Ref_PitchMax,
+    Ref_PitchMaxUp,
+    Ref_PitchMaxDown,
 
-    Ref_RollMean20m,
-    Ref_RollMax20m,
-    Ref_RollMaxLeft20m,
-    Ref_RollMaxRight20m,
+    Ref_RollMean,
+    Ref_RollMax,
+    Ref_RollMaxLeft,
+    Ref_RollMaxRight,
 
     Ref_HeaveAmplitude,
-    Ref_HeaveAmplitudeMean20m,
-    Ref_HeaveAmplitudeMax20m,
+    Ref_HeaveAmplitudeMean,
+    Ref_HeaveAmplitudeMax,
 
-    Test_PitchMean20m,
-    Test_PitchMax20m,
-    Test_PitchMaxUp20m,
-    Test_PitchMaxDown20m,
+    Test_PitchMean,
+    Test_PitchMax,
+    Test_PitchMaxUp,
+    Test_PitchMaxDown,
 
-    Test_RollMean20m,
-    Test_RollMax20m,
-    Test_RollMaxLeft20m,
-    Test_RollMaxRight20m,
+    Test_RollMean,
+    Test_RollMax,
+    Test_RollMaxLeft,
+    Test_RollMaxRight,
 
     Test_HeaveAmplitude,
-    Test_HeaveAmplitudeMean20m,
-    Test_HeaveAmplitudeMax20m,
+    Test_HeaveAmplitudeMean,
+    Test_HeaveAmplitudeMax,
 
     // Motion Limits
     MotionLimitPitchRoll,
