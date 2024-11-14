@@ -128,9 +128,10 @@ public enum ValueType
     Ref_RollMaxLeft,
     Ref_RollMaxRight,
 
-    Ref_HeaveAmplitude,
-    Ref_HeaveAmplitudeMean,
-    Ref_HeaveAmplitudeMax,
+    Ref_HeaveMean,
+    Ref_HeaveMax,
+    Ref_HeaveMaxUp,
+    Ref_HeaveMaxDown,
 
     Test_PitchMean,
     Test_PitchMax,
@@ -142,9 +143,10 @@ public enum ValueType
     Test_RollMaxLeft,
     Test_RollMaxRight,
 
-    Test_HeaveAmplitude,
-    Test_HeaveAmplitudeMean,
-    Test_HeaveAmplitudeMax,
+    Test_HeaveMean,
+    Test_HeaveMax,
+    Test_HeaveMaxUp,
+    Test_HeaveMaxDown,
 
     // Motion Limits
     MotionLimitPitchRoll,

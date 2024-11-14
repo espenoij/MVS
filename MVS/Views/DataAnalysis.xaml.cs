@@ -24,15 +24,15 @@ namespace MVS
 
             chartPitch1.Series[1].ItemsSource = projectVM.refPitchList;
             chartRoll1.Series[1].ItemsSource = projectVM.refRollList;
-            chartHeaveAmplitude1.Series[1].ItemsSource = projectVM.refHeaveAmplitudeList;
+            chartHeaveAmplitude1.Series[1].ItemsSource = projectVM.refHeaveList;
 
             chartPitch2.Series[0].ItemsSource = projectVM.testPitchMeanList;
             chartRoll2.Series[0].ItemsSource = projectVM.testRollMeanList;
-            chartHeaveAmplitude2.Series[0].ItemsSource = projectVM.testHeaveAmplitudeMeanList;
+            chartHeaveAmplitude2.Series[0].ItemsSource = projectVM.testHeaveMeanList;
 
             chartPitch2.Series[1].ItemsSource = projectVM.refPitchMeanList;
             chartRoll2.Series[1].ItemsSource = projectVM.refRollMeanList;
-            chartHeaveAmplitude2.Series[1].ItemsSource = projectVM.refHeaveAmplitudeMeanList;
+            chartHeaveAmplitude2.Series[1].ItemsSource = projectVM.refHeaveMeanList;
         }
     }
 }
