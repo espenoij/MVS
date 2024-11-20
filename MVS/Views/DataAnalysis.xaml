@@ -741,10 +741,10 @@
                     <telerik:RadCartesianChart
                         Grid.Column="1"
                         Grid.Row="6"
-                        Name="chartHeaveAmplitude1"
+                        Name="chartHeave1"
                         Margin="0,32,0,0">
 
-                        <!--Test Heave Amplitude-->
+                        <!--Test Heave-->
                         <telerik:LineSeries
                             ZIndex="200"
                             Stroke="{StaticResource ColorGraphLineTest}"
@@ -758,7 +758,7 @@
 
                         </telerik:LineSeries>
 
-                        <!--Ref Heave Amplitude-->
+                        <!--Ref Heave-->
                         <telerik:LineSeries
                             ZIndex="200"
                             Stroke="{StaticResource ColorGraphLineRef}"
@@ -788,8 +788,8 @@
                         <telerik:RadCartesianChart.VerticalAxis>
                             <telerik:LinearAxis
                                 x:Name="chartHeaveVerticalAxis"
-                                Maximum="{Binding heaveAmplitudeChartAxisMax}"
-                                Minimum="0" />
+                                Maximum="{Binding heaveChartAxisMax}"
+                                Minimum="{Binding heaveChartAxisMin}" />
                         </telerik:RadCartesianChart.VerticalAxis>
 
                         <telerik:RadCartesianChart.Grid>
@@ -1076,8 +1076,8 @@
                         <telerik:RadCartesianChart.VerticalAxis>
                             <telerik:LinearAxis
                                 x:Name="chartPitchVerticalAxis1"
-                                Maximum="{Binding pitchChartAxisMax}"
-                                Minimum="{Binding pitchChartAxisMin}">
+                                Maximum="{Binding meanPitchChartAxisMax}"
+                                Minimum="{Binding meanPitchChartAxisMin}">
 
                                 <telerik:LinearAxis.LabelTemplate>
                                     <DataTemplate>
@@ -1338,8 +1338,8 @@
                         <telerik:RadCartesianChart.VerticalAxis>
                             <telerik:LinearAxis
                                 x:Name="chartRollVerticalAxis2"
-                                Maximum="{Binding rollChartAxisMax}"
-                                Minimum="{Binding rollChartAxisMin}">
+                                Maximum="{Binding meanRollChartAxisMax}"
+                                Minimum="{Binding meanRollChartAxisMin}">
 
                                 <telerik:LinearAxis.LabelTemplate>
                                     <DataTemplate>
@@ -1495,7 +1495,7 @@
                         Grid.ColumnSpan="3"
                         VerticalAlignment="Bottom" />-->
 
-                    <!--Heave Amplitude-->
+                    <!--Heave-->
                     <Grid
                         Grid.Column="0"
                         Grid.Row="4">
@@ -1549,7 +1549,7 @@
                         Grid.Column="1"
                         Grid.Row="4"
                         Margin="0,32,0,0"
-                        Name="chartHeaveAmplitude2">
+                        Name="chartHeave2">
 
                         <!--Test Heave-->
                         <telerik:LineSeries
@@ -1594,8 +1594,8 @@
 
                         <telerik:RadCartesianChart.VerticalAxis>
                             <telerik:LinearAxis
-                                Maximum="{Binding heaveAmplitudeChartAxisMax}"
-                                Minimum="0"/>
+                                Maximum="{Binding meanHeaveChartAxisMax}"
+                                Minimum="{Binding meanHeaveChartAxisMin}"/>
                         </telerik:RadCartesianChart.VerticalAxis>
 
                         <telerik:RadCartesianChart.Grid>
@@ -1605,7 +1605,7 @@
 
                     </telerik:RadCartesianChart>
 
-                    <!--Heave Amplitude labels-->
+                    <!--Heave labels-->
                     <Grid
                         Grid.Column="1"
                         Grid.Row="5"
@@ -2007,7 +2007,7 @@
                                 HorizontalAlignment="Center">
 
                                 <TextBlock
-                                    Text="{Binding Path=pitchMeanDeviationString}"
+                                    Text="{Binding Path=deviationPitchMeanString}"
                                     FontSize="{StaticResource fontSizeData}" />
 
                             </Viewbox>
@@ -2433,7 +2433,7 @@
 
                         </Grid>
 
-                        <!--Max Heave Amplitude-->
+                        <!--Max Heave-->
                         <Grid
                             Grid.Row="4">
 
@@ -2464,7 +2464,7 @@
                                 HorizontalAlignment="Center">
 
                                 <TextBlock
-                                    Text="{Binding Path=refHeaveAmplitudeMaxString}"
+                                    Text="{Binding Path=refHeaveMaxString}"
                                     FontSize="{StaticResource fontSizeData}" />
 
                             </Viewbox>
@@ -2476,14 +2476,14 @@
                                 HorizontalAlignment="Center">
 
                                 <TextBlock
-                                    Text="{Binding Path=testHeaveAmplitudeMaxString}"
+                                    Text="{Binding Path=testHeaveMaxString}"
                                     FontSize="{StaticResource fontSizeData}" />
 
                             </Viewbox>
 
                         </Grid>
 
-                        <!--Mean Heave Amplitude-->
+                        <!--Mean Heave-->
                         <Grid
                             Grid.Row="6">
 
@@ -2514,7 +2514,7 @@
                                 HorizontalAlignment="Center">
 
                                 <TextBlock
-                                    Text="{Binding Path=refHeaveAmplitudeMeanString}"
+                                    Text="{Binding Path=refHeaveMeanString}"
                                     FontSize="{StaticResource fontSizeData}" />
 
                             </Viewbox>
@@ -2526,14 +2526,14 @@
                                 HorizontalAlignment="Center">
 
                                 <TextBlock
-                                    Text="{Binding Path=testHeaveAmplitudeMeanString}"
+                                    Text="{Binding Path=testHeaveMeanString}"
                                     FontSize="{StaticResource fontSizeData}" />
 
                             </Viewbox>
 
                         </Grid>
 
-                        <!--Mean Heave Amplitude Deviation-->
+                        <!--Mean Heave Deviation-->
                         <Grid
                             Grid.Row="9"
                             Background="{StaticResource ColorBackgroundSeparatorDark}">
@@ -2554,7 +2554,7 @@
                                 HorizontalAlignment="Left">
 
                                 <TextBlock
-                                    Text="Mean Heave Amplitude Deviation" />
+                                    Text="Mean Heave Deviation" />
 
                             </Viewbox>
 
@@ -2566,7 +2566,7 @@
                                 HorizontalAlignment="Center">
 
                                 <TextBlock
-                                    Text="{Binding Path=heaveAmplitudeMeanDeviationString}"
+                                    Text="{Binding Path=deviationMeanHeaveString}"
                                     FontSize="{StaticResource fontSizeData}" />
 
                             </Viewbox>

@@ -240,9 +240,10 @@ class Constants
     public const double WSIMax = 100; // CAP
 
     // Chart Axis Margins
-    public const double PitchAxisMargin = 0.5;
-    public const double RollAxisMargin = 0.5;
-    public const double HeaveAmplitudeAxisMargin = 0.5;
+    public const double InputAxisMargin = 0.5;
+    public const double InputAxisDefault = 1;
+    public const double MeanAxisMargin = 0.1;
+    public const double MeanAxisDefault = 0.5;
 
     // Heading
     public const int HeadingMin = 1;

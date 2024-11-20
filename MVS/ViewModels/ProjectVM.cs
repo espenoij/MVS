@@ -34,7 +34,7 @@ namespace MVS
 
         public RadObservableCollection<HMSData> testPitchList = new RadObservableCollection<HMSData>();
         public RadObservableCollection<HMSData> testRollList = new RadObservableCollection<HMSData>();
-        public RadObservableCollection<HMSData> testHeaveAmplitudeList = new RadObservableCollection<HMSData>();
+        public RadObservableCollection<HMSData> testHeaveList = new RadObservableCollection<HMSData>();
 
         // 20 minutters data
         private RadObservableCollection<HMSData> refPitchMeanBuffer = new RadObservableCollection<HMSData>();
@@ -84,7 +84,7 @@ namespace MVS
 
                 GraphBuffer.Transfer(testPitchBuffer, testPitchList);
                 GraphBuffer.Transfer(testRollBuffer, testRollList);
-                GraphBuffer.Transfer(testHeaveBuffer, testHeaveAmplitudeList);
+                GraphBuffer.Transfer(testHeaveBuffer, testHeaveList);
 
                 GraphBuffer.Transfer(testPitchMeanBuffer, testPitchMeanList);
                 GraphBuffer.Transfer(testRollMeanBuffer, testRollMeanList);
@@ -101,7 +101,7 @@ namespace MVS
 
                 GraphBuffer.RemoveOldData(testPitchList, Constants.Minutes20 + Constants.ChartTimeCorrMin);
                 GraphBuffer.RemoveOldData(testRollList, Constants.Minutes20 + Constants.ChartTimeCorrMin);
-                GraphBuffer.RemoveOldData(testHeaveAmplitudeList, Constants.Minutes20 + Constants.ChartTimeCorrMin);
+                GraphBuffer.RemoveOldData(testHeaveList, Constants.Minutes20 + Constants.ChartTimeCorrMin);
 
                 GraphBuffer.RemoveOldData(testPitchMeanList, Constants.Minutes20 + Constants.ChartTimeCorrMin);
                 GraphBuffer.RemoveOldData(testRollMeanList, Constants.Minutes20 + Constants.ChartTimeCorrMin);
@@ -117,7 +117,17 @@ namespace MVS
                 OnPropertyChanged(nameof(rollChartAxisMax));
                 OnPropertyChanged(nameof(rollChartAxisMin));
 
-                OnPropertyChanged(nameof(heaveAmplitudeChartAxisMax));
+                OnPropertyChanged(nameof(heaveChartAxisMax));
+                OnPropertyChanged(nameof(heaveChartAxisMin));
+
+                OnPropertyChanged(nameof(meanPitchChartAxisMax));
+                OnPropertyChanged(nameof(meanPitchChartAxisMin));
+
+                OnPropertyChanged(nameof(meanRollChartAxisMax));
+                OnPropertyChanged(nameof(meanRollChartAxisMin));
+
+                OnPropertyChanged(nameof(meanHeaveChartAxisMax));
+                OnPropertyChanged(nameof(meanHeaveChartAxisMin));
             }
         }
 
@@ -147,7 +157,7 @@ namespace MVS
             refRollMaxData = mvsDataCollection.GetData(ValueType.Ref_RollMax);
             refRollMaxLeftData = mvsDataCollection.GetData(ValueType.Ref_RollMaxLeft);
             refRollMaxRightData = mvsDataCollection.GetData(ValueType.Ref_RollMaxRight);
-            refHeaveAmplitudeMaxData = mvsDataCollection.GetData(ValueType.Ref_HeaveMax);
+            refHeaveMaxData = mvsDataCollection.GetData(ValueType.Ref_HeaveMax);
 
             testPitchMaxData = mvsDataCollection.GetData(ValueType.Test_PitchMax);
             testPitchMaxUpData = mvsDataCollection.GetData(ValueType.Test_PitchMaxUp);
@@ -156,17 +166,22 @@ namespace MVS
             testRollMaxLeftData = mvsDataCollection.GetData(ValueType.Test_RollMaxLeft);
             testRollMaxRightData = mvsDataCollection.GetData(ValueType.Test_RollMaxRight);
             testRollMeanData = mvsDataCollection.GetData(ValueType.Test_RollMean);
-            testHeaveAmplitudeMaxData = mvsDataCollection.GetData(ValueType.Test_HeaveMax);
-            testHeaveAmplitudeMeanData = mvsDataCollection.GetData(ValueType.Test_HeaveMean);
+            testHeaveMaxData = mvsDataCollection.GetData(ValueType.Test_HeaveMax);
+            testHeaveMeanData = mvsDataCollection.GetData(ValueType.Test_HeaveMean);
 
             // Oppdatere mean verdier
             refPitchMeanData = mvsDataCollection.GetData(ValueType.Ref_PitchMean);
+            refPitchMeanMaxData = mvsDataCollection.GetData(ValueType.Ref_PitchMeanMax);
+            
             refRollMeanData = mvsDataCollection.GetData(ValueType.Ref_RollMean);
-            refHeaveAmplitudeMeanData = mvsDataCollection.GetData(ValueType.Ref_HeaveMean);
+
+            refHeaveMeanData = mvsDataCollection.GetData(ValueType.Ref_HeaveMean);
 
             testPitchMeanData = mvsDataCollection.GetData(ValueType.Test_PitchMean);
+            testPitchMeanMaxData = mvsDataCollection.GetData(ValueType.Test_PitchMeanMax);
+
             testRollMeanData = mvsDataCollection.GetData(ValueType.Test_RollMean);
-            testHeaveAmplitudeMeanData = mvsDataCollection.GetData(ValueType.Test_HeaveMean);
+            testHeaveMeanData = mvsDataCollection.GetData(ValueType.Test_HeaveMean);
         }
 
         public void StartRecording()
@@ -206,10 +221,10 @@ namespace MVS
             testRollMaxRightData = noData;
             testRollMeanData = noData;
 
-            refHeaveAmplitudeMaxData = noData;
-            refHeaveAmplitudeMeanData = noData;
-            testHeaveAmplitudeMaxData = noData;
-            testHeaveAmplitudeMeanData = noData;
+            refHeaveMaxData = noData;
+            refHeaveMeanData = noData;
+            testHeaveMaxData = noData;
+            testHeaveMeanData = noData;
 
             // Slette gamle data i buffer lister
             refPitchBuffer.Clear();
@@ -370,7 +385,7 @@ namespace MVS
                 refRollMaxLeftData = mvsOutputData.GetData(ValueType.Ref_RollMaxLeft);
                 refRollMaxRightData = mvsOutputData.GetData(ValueType.Ref_RollMaxRight);
 
-                refHeaveAmplitudeMaxData = mvsOutputData.GetData(ValueType.Ref_HeaveMax);
+                refHeaveMaxData = mvsOutputData.GetData(ValueType.Ref_HeaveMax);
 
                 testPitchMaxData = mvsOutputData.GetData(ValueType.Test_PitchMax);
                 testPitchMaxUpData = mvsOutputData.GetData(ValueType.Test_PitchMaxUp);
@@ -380,16 +395,18 @@ namespace MVS
                 testRollMaxLeftData = mvsOutputData.GetData(ValueType.Test_RollMaxLeft);
                 testRollMaxRightData = mvsOutputData.GetData(ValueType.Test_RollMaxRight);
 
-                testHeaveAmplitudeMaxData = mvsOutputData.GetData(ValueType.Test_HeaveMax);
+                testHeaveMaxData = mvsOutputData.GetData(ValueType.Test_HeaveMax);
 
                 // Hente mean verdier
                 refPitchMeanData = mvsOutputData.GetData(ValueType.Ref_PitchMean);
+                refPitchMeanMaxData = mvsOutputData.GetData(ValueType.Ref_PitchMeanMax);
                 refRollMeanData = mvsOutputData.GetData(ValueType.Ref_RollMean);
-                refHeaveAmplitudeMeanData = mvsOutputData.GetData(ValueType.Ref_HeaveMean);
+                refHeaveMeanData = mvsOutputData.GetData(ValueType.Ref_HeaveMean);
 
                 testPitchMeanData = mvsOutputData.GetData(ValueType.Test_PitchMean);
+                testPitchMeanMaxData = mvsOutputData.GetData(ValueType.Test_PitchMeanMax);
                 testRollMeanData = mvsOutputData.GetData(ValueType.Test_RollMean);
-                testHeaveAmplitudeMeanData = mvsOutputData.GetData(ValueType.Test_HeaveMean);
+                testHeaveMeanData = mvsOutputData.GetData(ValueType.Test_HeaveMean);
             }
 
             // Oppdatere alignment datetime til alle chart
@@ -405,7 +422,8 @@ namespace MVS
             OnPropertyChanged(nameof(rollChartAxisMax));
             OnPropertyChanged(nameof(rollChartAxisMin));
 
-            OnPropertyChanged(nameof(heaveAmplitudeChartAxisMax));
+            OnPropertyChanged(nameof(heaveChartAxisMax));
+            OnPropertyChanged(nameof(heaveChartAxisMin));
         }
 
         public double AddToMeanSum(HMSData hmsData)
@@ -449,7 +467,7 @@ namespace MVS
 
             refHeaveList.Clear();
             refHeaveMeanList.Clear();
-            testHeaveAmplitudeList.Clear();
+            testHeaveList.Clear();
             testHeaveMeanList.Clear();
 
             // Overføre data fra buffer til chart data
@@ -463,7 +481,7 @@ namespace MVS
 
             GraphBuffer.Transfer(testPitchBuffer, testPitchList);
             GraphBuffer.Transfer(testRollBuffer, testRollList);
-            GraphBuffer.Transfer(testHeaveBuffer, testHeaveAmplitudeList);
+            GraphBuffer.Transfer(testHeaveBuffer, testHeaveList);
 
             GraphBuffer.Transfer(testPitchMeanBuffer, testPitchMeanList);
             GraphBuffer.Transfer(testRollMeanBuffer, testRollMeanList);
@@ -481,11 +499,13 @@ namespace MVS
             _refPitchMaxUpData = new HMSData();
             _refPitchMaxDownData = new HMSData();
             _refPitchMeanData = new HMSData();
+            _refPitchMeanMaxData = new HMSData();
 
             _testPitchMaxData = new HMSData();
             _testPitchMaxUpData = new HMSData();
             _testPitchMaxDownData = new HMSData();
             _testPitchMeanData = new HMSData();
+            _testPitchMeanMaxData = new HMSData();
 
         }
 
@@ -500,10 +520,12 @@ namespace MVS
             refPitchMaxUpData = noData;
             refPitchMaxDownData = noData;
             refPitchMeanData = noData;
+            refPitchMeanMaxData = noData;
 
             testPitchMaxUpData = noData;
             testPitchMaxDownData = noData;
             testPitchMeanData = noData;
+            testPitchMeanMaxData = noData;
 
             refPitchBuffer.Clear();
             refPitchMeanBuffer.Clear();
@@ -786,7 +808,7 @@ namespace MVS
                     _refPitchMeanData.Set(value);
 
                     OnPropertyChanged(nameof(refPitchMeanDataString));
-                    OnPropertyChanged(nameof(pitchMeanDeviationString));
+                    OnPropertyChanged(nameof(deviationPitchMeanString));
                 }
             }
         }
@@ -812,6 +834,24 @@ namespace MVS
                 }
             }
         }
+        private HMSData _refPitchMeanMaxData { get; set; }
+        public HMSData refPitchMeanMaxData
+        {
+            get
+            {
+                return _refPitchMeanMaxData;
+            }
+            set
+            {
+                if (value != null)
+                {
+                    _refPitchMeanMaxData.Set(value);
+
+                    OnPropertyChanged(nameof(meanPitchChartAxisMax));
+                    OnPropertyChanged(nameof(meanPitchChartAxisMin));
+                }
+            }
+        }
 
         private HMSData _testPitchMeanData { get; set; }
         public HMSData testPitchMeanData
@@ -827,7 +867,7 @@ namespace MVS
                     _testPitchMeanData.Set(value);
 
                     OnPropertyChanged(nameof(testPitchMeanDataString));
-                    OnPropertyChanged(nameof(pitchMeanDeviationString)); 
+                    OnPropertyChanged(nameof(deviationPitchMeanString)); 
                 }
             }
         }
@@ -853,8 +893,42 @@ namespace MVS
                 }
             }
         }
+        private HMSData _testPitchMeanMaxData { get; set; }
+        public HMSData testPitchMeanMaxData
+        {
+            get
+            {
+                return _testPitchMeanMaxData;
+            }
+            set
+            {
+                if (value != null)
+                {
+                    _testPitchMeanMaxData.Set(value);
 
-        public string pitchMeanDeviationString
+                    OnPropertyChanged(nameof(meanPitchChartAxisMax));
+                    OnPropertyChanged(nameof(meanPitchChartAxisMin));
+                }
+            }
+        }
+
+        public double deviationPitchMeanMax
+        {
+            get
+            {
+                if (_testPitchMeanData.status == DataStatus.OK && !double.IsNaN(_testPitchMeanData.data) &&
+                    _refPitchMeanData.status == DataStatus.OK && !double.IsNaN(_refPitchMeanData.data))
+                {
+                    return Math.Round(_testPitchMeanData.data - _refPitchMeanData.data, 3, MidpointRounding.AwayFromZero);
+                }
+                else
+                {
+                    return double.NaN;
+                }
+            }
+        }
+
+        public string deviationPitchMeanString
         {
             get
             {
@@ -1271,6 +1345,22 @@ namespace MVS
             }
         }
 
+        public double deviationMeanRollMax
+        {
+            get
+            {
+                if (_testRollMeanData.status == DataStatus.OK && !double.IsNaN(_testRollMeanData.data) &&
+                    _refRollMeanData.status == DataStatus.OK && !double.IsNaN(_refRollMeanData.data))
+                {
+                    return Math.Round(_testRollMeanData.data - _refRollMeanData.data, 3, MidpointRounding.AwayFromZero);
+                }
+                else
+                {
+                    return double.NaN;
+                }
+            }
+        }
+
         public string rollMeanDeviationString
         {
             get
@@ -1293,14 +1383,12 @@ namespace MVS
         public void InitHeaveData()
         {
             _refHeaveData = new HMSData();
+            _refHeaveMaxData = new HMSData();
+            _refHeaveMeanData = new HMSData();
 
-            _refHeaveAmplitudeData = new HMSData();
-            _refHeaveAmplitudeMaxData = new HMSData();
-            _refHeaveAmplitudeMeanData = new HMSData();
-
-            _testHeaveAmplitudeData = new HMSData();
-            _testHeaveAmplitudeMaxData = new HMSData();
-            _testHeaveAmplitudeMeanData = new HMSData();
+            _testHeaveData = new HMSData();
+            _testHeaveMaxData = new HMSData();
+            _testHeaveMeanData = new HMSData();
 
             // Init av chart data
             refHeaveMeanList.Clear();
@@ -1330,11 +1418,11 @@ namespace MVS
                 status = DataStatus.NONE
             };
 
-            refHeaveAmplitudeMaxData = noData;
-            refHeaveAmplitudeMeanData = noData;
+            refHeaveMaxData = noData;
+            refHeaveMeanData = noData;
 
-            testHeaveAmplitudeMaxData = noData;
-            testHeaveAmplitudeMeanData = noData;
+            testHeaveMaxData = noData;
+            testHeaveMeanData = noData;
 
             refHeaveBuffer.Clear();
             refHeaveMeanBuffer.Clear();
@@ -1343,7 +1431,7 @@ namespace MVS
 
             testHeaveBuffer.Clear();
             testHeaveMeanBuffer.Clear();
-            testHeaveAmplitudeList.Clear();
+            testHeaveList.Clear();
             testHeaveMeanList.Clear();
 
             for (int i = -Constants.Minutes20; i <= 0; i++)
@@ -1378,65 +1466,49 @@ namespace MVS
             }
         }
 
-        private HMSData _refHeaveAmplitudeData { get; set; }
-        public HMSData refHeaveAmplitudeData
+        private HMSData _testHeaveData { get; set; }
+        public HMSData testHeaveData
         {
             get
             {
-                return _refHeaveAmplitudeData;
+                return _testHeaveData;
             }
             set
             {
                 if (value != null)
                 {
-                    _refHeaveAmplitudeData.Set(value);
+                    _testHeaveData.Set(value);
                 }
             }
         }
 
-        private HMSData _testHeaveAmplitudeData { get; set; }
-        public HMSData testHeaveAmplitudeData
+        private HMSData _refHeaveMaxData { get; set; }
+        public HMSData refHeaveMaxData
         {
             get
             {
-                return _testHeaveAmplitudeData;
+                return _refHeaveMaxData;
             }
             set
             {
                 if (value != null)
                 {
-                    _testHeaveAmplitudeData.Set(value);
+                    _refHeaveMaxData.Set(value);
+
+                    OnPropertyChanged(nameof(refHeaveMaxString));
                 }
             }
         }
-
-        private HMSData _refHeaveAmplitudeMaxData { get; set; }
-        public HMSData refHeaveAmplitudeMaxData
+        public string refHeaveMaxString
         {
             get
             {
-                return _refHeaveAmplitudeMaxData;
-            }
-            set
-            {
-                if (value != null)
-                {
-                    _refHeaveAmplitudeMaxData.Set(value);
-
-                    OnPropertyChanged(nameof(refHeaveAmplitudeMaxString));
-                }
-            }
-        }
-        public string refHeaveAmplitudeMaxString
-        {
-            get
-            {
-                if (_refHeaveAmplitudeMaxData != null)
+                if (_refHeaveMaxData != null)
                 {
                     // Sjekke om data er gyldig
-                    if (_refHeaveAmplitudeMaxData.status == DataStatus.OK && !double.IsNaN(_refHeaveAmplitudeMaxData.data))
+                    if (_refHeaveMaxData.status == DataStatus.OK && !double.IsNaN(_refHeaveMaxData.data))
                     {
-                        return string.Format("{0} m", Math.Round(_refHeaveAmplitudeMaxData.data, 3, MidpointRounding.AwayFromZero).ToString(Constants.numberFormatRecData));
+                        return string.Format("{0} m", Math.Round(_refHeaveMaxData.data, 3, MidpointRounding.AwayFromZero).ToString(Constants.numberFormatRecData));
                     }
                     else
                     {
@@ -1450,33 +1522,33 @@ namespace MVS
             }
         }
 
-        private HMSData _testHeaveAmplitudeMaxData { get; set; }
-        public HMSData testHeaveAmplitudeMaxData
+        private HMSData _testHeaveMaxData { get; set; }
+        public HMSData testHeaveMaxData
         {
             get
             {
-                return _testHeaveAmplitudeMaxData;
+                return _testHeaveMaxData;
             }
             set
             {
                 if (value != null)
                 {
-                    _testHeaveAmplitudeMaxData.Set(value);
+                    _testHeaveMaxData.Set(value);
 
-                    OnPropertyChanged(nameof(testHeaveAmplitudeMaxString));
+                    OnPropertyChanged(nameof(testHeaveMaxString));
                 }
             }
         }
-        public string testHeaveAmplitudeMaxString
+        public string testHeaveMaxString
         {
             get
             {
-                if (_testHeaveAmplitudeMaxData != null)
+                if (_testHeaveMaxData != null)
                 {
                     // Sjekke om data er gyldig
-                    if (_testHeaveAmplitudeMaxData.status == DataStatus.OK && !double.IsNaN(_testHeaveAmplitudeMaxData.data))
+                    if (_testHeaveMaxData.status == DataStatus.OK && !double.IsNaN(_testHeaveMaxData.data))
                     {
-                        return string.Format("{0} m", Math.Round(_testHeaveAmplitudeMaxData.data, 3, MidpointRounding.AwayFromZero).ToString(Constants.numberFormatRecData));
+                        return string.Format("{0} m", Math.Round(_testHeaveMaxData.data, 3, MidpointRounding.AwayFromZero).ToString(Constants.numberFormatRecData));
                     }
                     else
                     {
@@ -1490,34 +1562,35 @@ namespace MVS
             }
         }
 
-        private HMSData _refHeaveAmplitudeMeanData { get; set; }
-        public HMSData refHeaveAmplitudeMeanData
+        private HMSData _refHeaveMeanData { get; set; }
+        public HMSData refHeaveMeanData
         {
             get
             {
-                return _refHeaveAmplitudeMeanData;
+                return _refHeaveMeanData;
             }
             set
             {
                 if (value != null)
                 {
-                    _refHeaveAmplitudeMeanData.Set(value);
+                    _refHeaveMeanData.Set(value);
 
-                    OnPropertyChanged(nameof(refHeaveAmplitudeMeanString));
-                    OnPropertyChanged(nameof(heaveAmplitudeMeanDeviationString));
+                    OnPropertyChanged(nameof(refHeaveMeanString));
+                    OnPropertyChanged(nameof(deviationMeanHeaveMax));
+                    OnPropertyChanged(nameof(deviationMeanHeaveString));
                 }
             }
         }
-        public string refHeaveAmplitudeMeanString
+        public string refHeaveMeanString
         {
             get
             {
-                if (_refHeaveAmplitudeMeanData != null)
+                if (_refHeaveMeanData != null)
                 {
                     // Sjekke om data er gyldig
-                    if (_refHeaveAmplitudeMeanData.status == DataStatus.OK && !double.IsNaN(_refHeaveAmplitudeMeanData.data))
+                    if (_refHeaveMeanData.status == DataStatus.OK && !double.IsNaN(_refHeaveMeanData.data))
                     {
-                        return string.Format("{0} m", Math.Round(_refHeaveAmplitudeMeanData.data, 3, MidpointRounding.AwayFromZero).ToString(Constants.numberFormatRecData));
+                        return string.Format("{0} m", Math.Round(_refHeaveMeanData.data, 3, MidpointRounding.AwayFromZero).ToString(Constants.numberFormatRecData));
                     }
                     else
                     {
@@ -1531,34 +1604,35 @@ namespace MVS
             }
         }
 
-        private HMSData _testHeaveAmplitudeMeanData { get; set; }
-        public HMSData testHeaveAmplitudeMeanData
+        private HMSData _testHeaveMeanData { get; set; }
+        public HMSData testHeaveMeanData
         {
             get
             {
-                return _testHeaveAmplitudeMeanData;
+                return _testHeaveMeanData;
             }
             set
             {
                 if (value != null)
                 {
-                    _testHeaveAmplitudeMeanData.Set(value);
+                    _testHeaveMeanData.Set(value);
 
-                    OnPropertyChanged(nameof(testHeaveAmplitudeMeanString));
-                    OnPropertyChanged(nameof(heaveAmplitudeMeanDeviationString));
+                    OnPropertyChanged(nameof(testHeaveMeanString));
+                    OnPropertyChanged(nameof(deviationMeanHeaveMax));
+                    OnPropertyChanged(nameof(deviationMeanHeaveString));
                 }
             }
         }
-        public string testHeaveAmplitudeMeanString
+        public string testHeaveMeanString
         {
             get
             {
-                if (_testHeaveAmplitudeMeanData != null)
+                if (_testHeaveMeanData != null)
                 {
                     // Sjekke om data er gyldig
-                    if (_testHeaveAmplitudeMeanData.status == DataStatus.OK && !double.IsNaN(_testHeaveAmplitudeMeanData.data))
+                    if (_testHeaveMeanData.status == DataStatus.OK && !double.IsNaN(_testHeaveMeanData.data))
                     {
-                        return string.Format("{0} m", Math.Round(_testHeaveAmplitudeMeanData.data, 3, MidpointRounding.AwayFromZero).ToString(Constants.numberFormatRecData));
+                        return string.Format("{0} m", Math.Round(_testHeaveMeanData.data, 3, MidpointRounding.AwayFromZero).ToString(Constants.numberFormatRecData));
                     }
                     else
                     {
@@ -1572,94 +1646,30 @@ namespace MVS
             }
         }
 
-        //private HMSData _refHeaveMeanData { get; set; }
-        //public HMSData refHeaveAmplitudeMeanData
-        //{
-        //    get
-        //    {
-        //        return _refHeaveMeanData;
-        //    }
-        //    set
-        //    {
-        //        if (value != null)
-        //        {
-        //            _refHeaveMeanData.Set(value);
-
-        //            OnPropertyChanged(nameof(refHeaveMeanDataString));
-        //        }
-        //    }
-        //}
-        //public string refHeaveMeanDataString
-        //{
-        //    get
-        //    {
-        //        if (_refHeaveMeanData != null)
-        //        {
-        //            // Sjekke om data er gyldig
-        //            if (_refHeaveMeanData.status == DataStatus.OK)
-        //            {
-        //                return string.Format("{0} m", Math.Round(_refHeaveMeanData.data, 3, MidpointRounding.AwayFromZero).ToString(Constants.numberFormatRecData));
-        //            }
-        //            else
-        //            {
-        //                return Constants.NotAvailable;
-        //            }
-        //        }
-        //        else
-        //        {
-        //            return Constants.NotAvailable;
-        //        }
-        //    }
-        //}
-
-        //private HMSData _testHeaveMeanData { get; set; }
-        //public HMSData 
-        //{
-        //    get
-        //    {
-        //        return _testHeaveMeanData;
-        //    }
-        //    set
-        //    {
-        //        if (value != null)
-        //        {
-        //            _testHeaveMeanData.Set(value);
-
-        //            OnPropertyChanged(nameof(testHeaveMeanDataString));
-        //        }
-        //    }
-        //}
-        //public string testHeaveMeanDataString
-        //{
-        //    get
-        //    {
-        //        if (_testHeaveMeanData != null)
-        //        {
-        //            // Sjekke om data er gyldig
-        //            if (_testHeaveMeanData.status == DataStatus.OK)
-        //            {
-        //                return string.Format("{0} m", Math.Round(_testHeaveMeanData.data, 3, MidpointRounding.AwayFromZero).ToString(Constants.numberFormatRecData));
-        //            }
-        //            else
-        //            {
-        //                return Constants.NotAvailable;
-        //            }
-        //        }
-        //        else
-        //        {
-        //            return Constants.NotAvailable;
-        //        }
-        //    }
-        //}
-
-        public string heaveAmplitudeMeanDeviationString
+        public double deviationMeanHeaveMax
         {
             get
             {
-                if (_testHeaveAmplitudeMeanData.status == DataStatus.OK && !double.IsNaN(_testHeaveAmplitudeMeanData.data) &&
-                    _refHeaveAmplitudeMeanData.status == DataStatus.OK && !double.IsNaN(_refHeaveAmplitudeMeanData.data))
+                if (_testHeaveMeanData.status == DataStatus.OK && !double.IsNaN(_testHeaveMeanData.data) &&
+                    _refHeaveMeanData.status == DataStatus.OK && !double.IsNaN(_refHeaveMeanData.data))
                 {
-                    return Math.Round(_testHeaveAmplitudeMeanData.data - _refHeaveAmplitudeMeanData.data, 3, MidpointRounding.AwayFromZero).ToString(Constants.numberFormatRecDataSigned);
+                    return Math.Round(_testHeaveMeanData.data - _refHeaveMeanData.data, 3, MidpointRounding.AwayFromZero);
+                }
+                else
+                {
+                    return double.NaN;
+                }
+            }
+        }
+
+        public string deviationMeanHeaveString
+        {
+            get
+            {
+                if (_testHeaveMeanData.status == DataStatus.OK && !double.IsNaN(_testHeaveMeanData.data) &&
+                    _refHeaveMeanData.status == DataStatus.OK && !double.IsNaN(_refHeaveMeanData.data))
+                {
+                    return Math.Round(_testHeaveMeanData.data - _refHeaveMeanData.data, 3, MidpointRounding.AwayFromZero).ToString(Constants.numberFormatRecDataSigned);
                 }
                 else
                 {
@@ -1716,7 +1726,7 @@ namespace MVS
         {
             get
             {
-                return ChartAxisMax(_refPitchMaxData, _testPitchMaxData, Constants.PitchAxisMargin, 2);
+                return ChartAxisMax(_refPitchMaxData, _testPitchMaxData, Constants.InputAxisMargin, Constants.InputAxisDefault, 0);
             }
         }
 
@@ -1728,11 +1738,27 @@ namespace MVS
             }
         }
 
+        public double meanPitchChartAxisMax
+        {
+            get
+            {
+                return ChartAxisMax(_refPitchMeanMaxData, _testPitchMeanMaxData, Constants.MeanAxisMargin, Constants.MeanAxisDefault, 1);
+            }
+        }
+
+        public double meanPitchChartAxisMin
+        {
+            get
+            {
+                return -meanPitchChartAxisMax;
+            }
+        }
+
         public double rollChartAxisMax
         {
             get
             {
-                return ChartAxisMax(_refRollMaxData, _testRollMaxData, Constants.RollAxisMargin, 2);
+                return ChartAxisMax(_refRollMaxData, _testRollMaxData, Constants.InputAxisMargin, Constants.InputAxisDefault, 0);
             }
         }
 
@@ -1744,11 +1770,51 @@ namespace MVS
             }
         }
 
-        public double heaveAmplitudeChartAxisMax
+        public double meanRollChartAxisMax
         {
             get
             {
-                return ChartAxisMax(_refHeaveAmplitudeMaxData, _testHeaveAmplitudeMaxData, Constants.HeaveAmplitudeAxisMargin, 4);
+                return ChartAxisMax(deviationMeanRollMax, Constants.MeanAxisMargin, Constants.MeanAxisDefault);
+            }
+        }
+
+        public double meanRollChartAxisMin
+        {
+            get
+            {
+                return -meanRollChartAxisMax;
+            }
+        }
+
+        public double heaveChartAxisMax
+        {
+            get
+            {
+                return ChartAxisMax(_refHeaveMaxData, _testHeaveMaxData, Constants.InputAxisMargin, Constants.InputAxisDefault, 0);
+            }
+        }
+
+        public double heaveChartAxisMin
+        {
+            get
+            {
+                return -heaveChartAxisMax;
+            }
+        }
+
+        public double meanHeaveChartAxisMax
+        {
+            get
+            {
+                return ChartAxisMax(deviationMeanHeaveMax, Constants.MeanAxisMargin, Constants.MeanAxisDefault);
+            }
+        }
+
+        public double meanHeaveChartAxisMin
+        {
+            get
+            {
+                return -meanHeaveChartAxisMax;
             }
         }
 
@@ -1759,24 +1825,36 @@ namespace MVS
             PropertyChanged?.Invoke(this, new PropertyChangedEventArgs(name));
         }
 
-        private double ChartAxisMax(HMSData refData, HMSData testData, double margin, double defaultValue)
+        private double ChartAxisMax(HMSData refData, HMSData testData, double margin, double defaultValue, int decimals)
         {
             if (!double.IsNaN(refData.data) && !double.IsNaN(testData.data))
             {
-                if (refData.data > testData.data)
-                    return (double)((Math.Round(refData.data * (1 / margin), MidpointRounding.AwayFromZero) / (1 / margin)) + margin);
+                if (Math.Abs(refData.data) > Math.Abs(testData.data))
+                    return (double)(Math.Round(((Math.Round(refData.data * (1 / margin), MidpointRounding.AwayFromZero) / (1 / margin)) + margin), decimals, MidpointRounding.AwayFromZero));
                 else
-                    return (double)((Math.Round(testData.data * (1 / margin), MidpointRounding.AwayFromZero) / (1 / margin)) + margin);
+                    return (double)(Math.Round(((Math.Round(testData.data * (1 / margin), MidpointRounding.AwayFromZero) / (1 / margin)) + margin), decimals, MidpointRounding.AwayFromZero));
             }
             else
             if (!double.IsNaN(refData.data))
             {
-                return (double)((Math.Round(refData.data * (1 / margin), MidpointRounding.AwayFromZero) / (1 / margin)) + margin);
+                return (double)(Math.Round(((Math.Round(refData.data * (1 / margin), MidpointRounding.AwayFromZero) / (1 / margin)) + margin), decimals, MidpointRounding.AwayFromZero));
             }
             else
             if (!double.IsNaN(testData.data))
             {
-                return (double)((Math.Round(testData.data * (1 / margin), MidpointRounding.AwayFromZero) / (1 / margin)) + margin);
+                return (double)(Math.Round(((Math.Round(testData.data * (1 / margin), MidpointRounding.AwayFromZero) / (1 / margin)) + margin), decimals, MidpointRounding.AwayFromZero));
+            }
+            else
+            {
+                return defaultValue;
+            }
+        }
+
+        private double ChartAxisMax(double inputData, double margin, double defaultValue)
+        {
+            if (!double.IsNaN(inputData))
+            {
+                return (double)((Math.Round(inputData * (1 / margin), MidpointRounding.AwayFromZero) / (1 / margin)) + margin);
             }
             else
             {
