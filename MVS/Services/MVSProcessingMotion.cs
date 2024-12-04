@@ -499,10 +499,6 @@ namespace MVS
                 testHeaveMeanData.DoProcessing(testSensorHeave);
                 testHeaveMeanMaxData.DoProcessing(testHeaveMeanData);
 
-
-                FORTSETT HER!!!
-
-
                 // Avrunding av data
                 testPitchData.data = Math.Round(testPitchData.data, 3, MidpointRounding.AwayFromZero);
                 testPitchMaxData.data = Math.Round(testPitchMaxData.data, 3, MidpointRounding.AwayFromZero);
@@ -512,16 +508,18 @@ namespace MVS
                 testPitchMeanMaxData.data = Math.Round(testPitchMeanMaxData.data, 3, MidpointRounding.AwayFromZero);
 
                 testRollData.data = Math.Round(testRollData.data, 3, MidpointRounding.AwayFromZero);
-                testRollMeanData.data = Math.Round(testRollMeanData.data, 3, MidpointRounding.AwayFromZero);
                 testRollMaxData.data = Math.Round(testRollMaxData.data, 3, MidpointRounding.AwayFromZero);
                 testRollMaxLeftData.data = Math.Round(testRollMaxLeftData.data, 3, MidpointRounding.AwayFromZero);
                 testRollMaxRightData.data = Math.Round(testRollMaxRightData.data, 3, MidpointRounding.AwayFromZero);
+                testRollMeanData.data = Math.Round(testRollMeanData.data, 3, MidpointRounding.AwayFromZero);
+                testRollMeanMaxData.data = Math.Round(testRollMeanMaxData.data, 3, MidpointRounding.AwayFromZero);
 
                 testHeaveData.data = Math.Round(testHeaveData.data, 3, MidpointRounding.AwayFromZero);
-                testHeaveMeanData.data = Math.Round(testHeaveMeanData.data, 3, MidpointRounding.AwayFromZero);
                 testHeaveMaxData.data = Math.Round(testHeaveMaxData.data, 3, MidpointRounding.AwayFromZero);
                 testHeaveMaxUpData.data = Math.Round(testHeaveMaxUpData.data, 3, MidpointRounding.AwayFromZero);
                 testHeaveMaxDownData.data = Math.Round(testHeaveMaxDownData.data, 3, MidpointRounding.AwayFromZero);
+                testHeaveMeanData.data = Math.Round(testHeaveMeanData.data, 3, MidpointRounding.AwayFromZero);
+                testHeaveMeanMaxData.data = Math.Round(testHeaveMeanMaxData.data, 3, MidpointRounding.AwayFromZero);
             }
             else
             {
@@ -546,26 +544,30 @@ namespace MVS
                 testRollData.Set(testSensorRoll);
                 testRollData.data = double.NaN;
                 testRollData.status = DataStatus.NONE;
-                testRollMeanData.data = double.NaN;
-                testRollMeanData.status = DataStatus.NONE;
                 testRollMaxData.data = double.NaN;
                 testRollMaxData.status = DataStatus.NONE;
                 testRollMaxLeftData.data = double.NaN;
                 testRollMaxLeftData.status = DataStatus.NONE;
                 testRollMaxRightData.data = double.NaN;
                 testRollMaxRightData.status = DataStatus.NONE;
+                testRollMeanData.data = double.NaN;
+                testRollMeanData.status = DataStatus.NONE;
+                testRollMeanMaxData.data = double.NaN;
+                testRollMeanMaxData.status = DataStatus.NONE;
 
                 testHeaveData.Set(testSensorHeave);
                 testHeaveData.data = double.NaN;
                 testHeaveData.status = DataStatus.NONE;
-                testHeaveMeanData.data = double.NaN;
-                testHeaveMeanData.status = DataStatus.NONE;
                 testHeaveMaxData.data = double.NaN;
                 testHeaveMaxData.status = DataStatus.NONE;
                 testHeaveMaxUpData.data = double.NaN;
                 testHeaveMaxUpData.status = DataStatus.NONE;
                 testHeaveMaxDownData.data = double.NaN;
                 testHeaveMaxDownData.status = DataStatus.NONE;
+                testHeaveMeanData.data = double.NaN;
+                testHeaveMeanData.status = DataStatus.NONE;
+                testHeaveMeanMaxData.data = double.NaN;
+                testHeaveMeanMaxData.status = DataStatus.NONE;
             }
         }
 
@@ -579,15 +581,17 @@ namespace MVS
             refPitchMeanData.ResetDataCalculations();
             refPitchMeanMaxData.ResetDataCalculations();
 
-            refRollMeanData.ResetDataCalculations();
             refRollMaxData.ResetDataCalculations();
             refRollMaxLeftData.ResetDataCalculations();
             refRollMaxRightData.ResetDataCalculations();
+            refRollMeanData.ResetDataCalculations();
+            refRollMeanMaxData.ResetDataCalculations();
 
-            refHeaveMeanData.ResetDataCalculations();
             refHeaveMaxData.ResetDataCalculations();
             refHeaveMaxUpData.ResetDataCalculations();
             refHeaveMaxDownData.ResetDataCalculations();
+            refHeaveMeanData.ResetDataCalculations();
+            refHeaveMeanMaxData.ResetDataCalculations();
 
             testPitchMaxData.ResetDataCalculations();
             testPitchMaxUpData.ResetDataCalculations();
@@ -595,15 +599,17 @@ namespace MVS
             testPitchMeanData.ResetDataCalculations();
             testPitchMeanMaxData.ResetDataCalculations();
 
-            testRollMeanData.ResetDataCalculations();
             testRollMaxData.ResetDataCalculations();
             testRollMaxLeftData.ResetDataCalculations();
             testRollMaxRightData.ResetDataCalculations();
-            
-            testHeaveMeanData.ResetDataCalculations();
+            testRollMeanData.ResetDataCalculations();
+            testRollMeanMaxData.ResetDataCalculations();
+
             testHeaveMaxData.ResetDataCalculations();
             testHeaveMaxUpData.ResetDataCalculations();
             testHeaveMaxDownData.ResetDataCalculations();
+            testHeaveMeanData.ResetDataCalculations();
+            testHeaveMeanMaxData.ResetDataCalculations();
         }
     }
 }
