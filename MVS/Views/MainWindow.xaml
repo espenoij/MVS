@@ -66,6 +66,48 @@
             </Style.Triggers>
         </Style>
 
+        <Style
+            x:Key="RecordingStatusIndicator"
+            TargetType="Ellipse">
+            <Style.Triggers>
+                <DataTrigger
+                    Binding="{Binding Path=recordingStatus}"
+                    Value="OFF">
+                    <Setter
+                        Property="Fill"
+                        Value="{StaticResource ColorBackgroundSeparator}" />
+                </DataTrigger>
+                <DataTrigger
+                    Binding="{Binding Path=recordingStatus}"
+                    Value="RED">
+                    <Setter
+                        Property="Fill"
+                        Value="{StaticResource ColorRed}" />
+                </DataTrigger>
+                <DataTrigger
+                    Binding="{Binding Path=recordingStatus}"
+                    Value="BLUE">
+                    <Setter
+                        Property="Fill"
+                        Value="{StaticResource ColorAmber}" />
+                </DataTrigger>
+                <DataTrigger
+                    Binding="{Binding Path=recordingStatus}"
+                    Value="AMBER">
+                    <Setter
+                        Property="Fill"
+                        Value="{StaticResource ColorGreen}" />
+                </DataTrigger>
+                <DataTrigger
+                    Binding="{Binding Path=recordingStatus}"
+                    Value="OFF">
+                    <Setter
+                        Property="Fill"
+                        Value="{StaticResource ColorBackgroundSeparator}" />
+                </DataTrigger>
+            </Style.Triggers>
+        </Style>
+
     </telerik:RadWindow.Resources>
 
     <Grid>
@@ -123,27 +165,21 @@
                                     Width="*" />
                             </Grid.ColumnDefinitions>
 
-                            <!--Selected Project-->
-                            <Label
-                                Grid.Column="1"
-                                VerticalAlignment="Center"
-                                HorizontalAlignment="Center"
-                                FontSize="{StaticResource fontSizeProject}"
-                                Content="{Binding SelectedProjectString}" />
-
-                            <!--Top Buttons & Header-->
                             <StackPanel
                                 Grid.Column="0"
+                                Grid.ColumnSpan="2"
                                 Orientation="Horizontal"
                                 HorizontalAlignment="Left"
                                 Margin="8">
 
+                                <!--Start Button-->
                                 <telerik:RadButton
                                     Click="btnStart_Click"
                                     IsEnabled="{Binding StartButtonEnabled}"
                                     Width="140"
                                     Margin="0,0,10,0">Start Recording</telerik:RadButton>
 
+                                <!--Stop-->
                                 <telerik:RadButton
                                     Click="btnStop_Click"
                                     IsEnabled="{Binding StopButtonEnabled}"
@@ -160,7 +196,7 @@
                                             Width="3*" />
                                     </Grid.ColumnDefinitions>
 
-                                    <!--Recording Time-->
+                                    <!--Recording Indicator-->
                                     <Ellipse
                                         Grid.Column="0"
                                         VerticalAlignment="Center"
@@ -168,9 +204,9 @@
                                         Visibility="{Binding RecordingSymbolVisibility}"
                                         Width="20"
                                         Height="20"
-                                        Fill="{StaticResource ColorRed}"/>
+                                        Style="{StaticResource RecordingStatusIndicator}"/>
 
-                                    <!--Operations Mode Info String-->
+                                    <!--Operations Mode/Time Info String-->
                                     <Label
                                         Grid.Column="1"
                                         VerticalAlignment="Center"
@@ -181,16 +217,26 @@
 
                             </StackPanel>
 
-                            <!--Test-->
+                            <!--Selected Project Title-->
+                            <Label
+                                Grid.Column="0"
+                                Grid.ColumnSpan="3"
+                                VerticalAlignment="Center"
+                                HorizontalAlignment="Center"
+                                FontSize="{StaticResource fontSizeProject}"
+                                Content="{Binding SelectedProjectString}" />
+
+                            <!--Test Button-->
                             <StackPanel
+                                Grid.Row="0"
                                 Grid.Column="2"
                                 Orientation="Horizontal"
                                 HorizontalAlignment="Right"
                                 Margin="8">
 
                                 <Button
-                                    Click="btnTest_Click"
                                     IsEnabled="{Binding StartButtonEnabled}"
+                                    Click="btnTest_Click"
                                     Width="140">Test Run</Button>
 
                             </StackPanel>
@@ -200,7 +246,7 @@
                         <!--Projects Tab-->
                         <telerik:RadTabControl
                             Name="tcVerificationRecordings"
-                            DockPanel.Dock="Top"
+                            DockPanel.Dock="Bottom"
                             HeaderBackground="{StaticResource ColorHorizontalBarBackground}"
                             Margin="8,0,8,8"
                             SelectionChanged="tcVerificationRecordings_SelectionChanged">
@@ -254,6 +300,7 @@
 
                         <Grid
                             DockPanel.Dock="Top">
+                            
                             <Grid.ColumnDefinitions>
                                 <ColumnDefinition
                                     Width="*" />
@@ -263,7 +310,7 @@
                                     Width="*" />
                             </Grid.ColumnDefinitions>
 
-                            <!--Selected Recording Session-->
+                            <!--Selected Project-->
                             <Label
                                 Grid.Column="1"
                                 VerticalAlignment="Center"
@@ -616,7 +663,7 @@
                                     Width="*" />
                             </Grid.ColumnDefinitions>
 
-                            <!--Selected Recording Session-->
+                            <!--Selected Project-->
                             <Label
                                 Grid.Column="1"
                                 VerticalAlignment="Center"

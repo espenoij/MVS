@@ -371,27 +371,27 @@ namespace MVS
                 refHeaveMeanData.DoProcessing(refSensorHeave);
                 refHeaveMeanMaxData.DoProcessing(refHeaveMeanData);
 
-                // Avrunding av data
-                refPitchData.data = Math.Round(refPitchData.data, 3, MidpointRounding.AwayFromZero);
-                refPitchMaxData.data = Math.Round(refPitchMaxData.data, 3, MidpointRounding.AwayFromZero);
-                refPitchMaxUpData.data = Math.Round(refPitchMaxUpData.data, 3, MidpointRounding.AwayFromZero);
-                refPitchMaxDownData.data = Math.Round(refPitchMaxDownData.data, 3, MidpointRounding.AwayFromZero);
-                refPitchMeanData.data = Math.Round(refPitchMeanData.data, 3, MidpointRounding.AwayFromZero);
-                refPitchMeanMaxData.data = Math.Round(refPitchMeanMaxData.data, 3, MidpointRounding.AwayFromZero);
+                //// Avrunding av data
+                //refPitchData.data = Math.Round(refPitchData.data, 3, MidpointRounding.AwayFromZero);
+                //refPitchMaxData.data = Math.Round(refPitchMaxData.data, 3, MidpointRounding.AwayFromZero);
+                //refPitchMaxUpData.data = Math.Round(refPitchMaxUpData.data, 3, MidpointRounding.AwayFromZero);
+                //refPitchMaxDownData.data = Math.Round(refPitchMaxDownData.data, 3, MidpointRounding.AwayFromZero);
+                //refPitchMeanData.data = Math.Round(refPitchMeanData.data, 3, MidpointRounding.AwayFromZero);
+                //refPitchMeanMaxData.data = Math.Round(refPitchMeanMaxData.data, 3, MidpointRounding.AwayFromZero);
 
-                refRollData.data = Math.Round(refRollData.data, 3, MidpointRounding.AwayFromZero);
-                refRollMaxData.data = Math.Round(refRollMaxData.data, 3, MidpointRounding.AwayFromZero);
-                refRollMaxLeftData.data = Math.Round(refRollMaxLeftData.data, 3, MidpointRounding.AwayFromZero);
-                refRollMaxRightData.data = Math.Round(refRollMaxRightData.data, 3, MidpointRounding.AwayFromZero);
-                refRollMeanData.data = Math.Round(refRollMeanData.data, 3, MidpointRounding.AwayFromZero);
-                refRollMeanMaxData.data = Math.Round(refRollMeanMaxData.data, 3, MidpointRounding.AwayFromZero);
+                //refRollData.data = Math.Round(refRollData.data, 3, MidpointRounding.AwayFromZero);
+                //refRollMaxData.data = Math.Round(refRollMaxData.data, 3, MidpointRounding.AwayFromZero);
+                //refRollMaxLeftData.data = Math.Round(refRollMaxLeftData.data, 3, MidpointRounding.AwayFromZero);
+                //refRollMaxRightData.data = Math.Round(refRollMaxRightData.data, 3, MidpointRounding.AwayFromZero);
+                //refRollMeanData.data = Math.Round(refRollMeanData.data, 3, MidpointRounding.AwayFromZero);
+                //refRollMeanMaxData.data = Math.Round(refRollMeanMaxData.data, 3, MidpointRounding.AwayFromZero);
 
-                refHeaveData.data = Math.Round(refHeaveData.data, 3, MidpointRounding.AwayFromZero);
-                refHeaveMaxData.data = Math.Round(refHeaveMaxData.data, 3, MidpointRounding.AwayFromZero);
-                refHeaveMaxUpData.data = Math.Round(refHeaveMaxUpData.data, 3, MidpointRounding.AwayFromZero);
-                refHeaveMaxDownData.data = Math.Round(refHeaveMaxDownData.data, 3, MidpointRounding.AwayFromZero);
-                refHeaveMeanData.data = Math.Round(refHeaveMeanData.data, 3, MidpointRounding.AwayFromZero);
-                refHeaveMeanMaxData.data = Math.Round(refHeaveMeanMaxData.data, 3, MidpointRounding.AwayFromZero);
+                //refHeaveData.data = Math.Round(refHeaveData.data, 3, MidpointRounding.AwayFromZero);
+                //refHeaveMaxData.data = Math.Round(refHeaveMaxData.data, 3, MidpointRounding.AwayFromZero);
+                //refHeaveMaxUpData.data = Math.Round(refHeaveMaxUpData.data, 3, MidpointRounding.AwayFromZero);
+                //refHeaveMaxDownData.data = Math.Round(refHeaveMaxDownData.data, 3, MidpointRounding.AwayFromZero);
+                //refHeaveMeanData.data = Math.Round(refHeaveMeanData.data, 3, MidpointRounding.AwayFromZero);
+                //refHeaveMeanMaxData.data = Math.Round(refHeaveMeanMaxData.data, 3, MidpointRounding.AwayFromZero);
             }
             else
             {
@@ -499,27 +499,27 @@ namespace MVS
                 testHeaveMeanData.DoProcessing(testSensorHeave);
                 testHeaveMeanMaxData.DoProcessing(testHeaveMeanData);
 
-                // Avrunding av data
-                testPitchData.data = Math.Round(testPitchData.data, 3, MidpointRounding.AwayFromZero);
-                testPitchMaxData.data = Math.Round(testPitchMaxData.data, 3, MidpointRounding.AwayFromZero);
-                testPitchMaxUpData.data = Math.Round(testPitchMaxUpData.data, 3, MidpointRounding.AwayFromZero);
-                testPitchMaxDownData.data = Math.Round(testPitchMaxDownData.data, 3, MidpointRounding.AwayFromZero);
-                testPitchMeanData.data = Math.Round(testPitchMeanData.data, 3, MidpointRounding.AwayFromZero);
-                testPitchMeanMaxData.data = Math.Round(testPitchMeanMaxData.data, 3, MidpointRounding.AwayFromZero);
+                //// Avrunding av data
+                //testPitchData.data = Math.Round(testPitchData.data, 3, MidpointRounding.AwayFromZero);
+                //testPitchMaxData.data = Math.Round(testPitchMaxData.data, 3, MidpointRounding.AwayFromZero);
+                //testPitchMaxUpData.data = Math.Round(testPitchMaxUpData.data, 3, MidpointRounding.AwayFromZero);
+                //testPitchMaxDownData.data = Math.Round(testPitchMaxDownData.data, 3, MidpointRounding.AwayFromZero);
+                //testPitchMeanData.data = Math.Round(testPitchMeanData.data, 3, MidpointRounding.AwayFromZero);
+                //testPitchMeanMaxData.data = Math.Round(testPitchMeanMaxData.data, 3, MidpointRounding.AwayFromZero);
 
-                testRollData.data = Math.Round(testRollData.data, 3, MidpointRounding.AwayFromZero);
-                testRollMaxData.data = Math.Round(testRollMaxData.data, 3, MidpointRounding.AwayFromZero);
-                testRollMaxLeftData.data = Math.Round(testRollMaxLeftData.data, 3, MidpointRounding.AwayFromZero);
-                testRollMaxRightData.data = Math.Round(testRollMaxRightData.data, 3, MidpointRounding.AwayFromZero);
-                testRollMeanData.data = Math.Round(testRollMeanData.data, 3, MidpointRounding.AwayFromZero);
-                testRollMeanMaxData.data = Math.Round(testRollMeanMaxData.data, 3, MidpointRounding.AwayFromZero);
+                //testRollData.data = Math.Round(testRollData.data, 3, MidpointRounding.AwayFromZero);
+                //testRollMaxData.data = Math.Round(testRollMaxData.data, 3, MidpointRounding.AwayFromZero);
+                //testRollMaxLeftData.data = Math.Round(testRollMaxLeftData.data, 3, MidpointRounding.AwayFromZero);
+                //testRollMaxRightData.data = Math.Round(testRollMaxRightData.data, 3, MidpointRounding.AwayFromZero);
+                //testRollMeanData.data = Math.Round(testRollMeanData.data, 3, MidpointRounding.AwayFromZero);
+                //testRollMeanMaxData.data = Math.Round(testRollMeanMaxData.data, 3, MidpointRounding.AwayFromZero);
 
-                testHeaveData.data = Math.Round(testHeaveData.data, 3, MidpointRounding.AwayFromZero);
-                testHeaveMaxData.data = Math.Round(testHeaveMaxData.data, 3, MidpointRounding.AwayFromZero);
-                testHeaveMaxUpData.data = Math.Round(testHeaveMaxUpData.data, 3, MidpointRounding.AwayFromZero);
-                testHeaveMaxDownData.data = Math.Round(testHeaveMaxDownData.data, 3, MidpointRounding.AwayFromZero);
-                testHeaveMeanData.data = Math.Round(testHeaveMeanData.data, 3, MidpointRounding.AwayFromZero);
-                testHeaveMeanMaxData.data = Math.Round(testHeaveMeanMaxData.data, 3, MidpointRounding.AwayFromZero);
+                //testHeaveData.data = Math.Round(testHeaveData.data, 3, MidpointRounding.AwayFromZero);
+                //testHeaveMaxData.data = Math.Round(testHeaveMaxData.data, 3, MidpointRounding.AwayFromZero);
+                //testHeaveMaxUpData.data = Math.Round(testHeaveMaxUpData.data, 3, MidpointRounding.AwayFromZero);
+                //testHeaveMaxDownData.data = Math.Round(testHeaveMaxDownData.data, 3, MidpointRounding.AwayFromZero);
+                //testHeaveMeanData.data = Math.Round(testHeaveMeanData.data, 3, MidpointRounding.AwayFromZero);
+                //testHeaveMeanMaxData.data = Math.Round(testHeaveMeanMaxData.data, 3, MidpointRounding.AwayFromZero);
             }
             else
             {

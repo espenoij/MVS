@@ -32,6 +32,7 @@ namespace MVS
             void runTimer(Object source, EventArgs e)
             {
                 OnPropertyChanged(nameof(OperationsModeString));
+                OnPropertyChanged(nameof(recordingStatus));
             }
         }
 
@@ -56,6 +57,8 @@ namespace MVS
 
             // Starte timer
             timer.Stop();
+
+            OnPropertyChanged(nameof(recordingStatus));
         }
 
         /////////////////////////////////////////////////////////////////////////////
@@ -97,7 +100,37 @@ namespace MVS
         }
 
         /////////////////////////////////////////////////////////////////////////////
-        // Elapsed Time
+        // Project Recording Sstatus
+        /////////////////////////////////////////////////////////////////////////////
+        public RecordingStatusType recordingStatus
+        {
+            get
+            {
+                if (_startTime == System.Data.SqlTypes.SqlDateTime.MinValue.Value)
+                {
+                    return RecordingStatusType.OFF;
+                }
+                else 
+                {
+                    if (_startTime.AddMinutes(40) < DateTime.UtcNow)
+                    {
+                        return RecordingStatusType.GREEN;
+                    }
+                    else
+                    if (_startTime.AddMinutes(20) < DateTime.UtcNow)
+                    {
+                        return RecordingStatusType.AMBER;
+                    }
+                    else
+                    {
+                        return RecordingStatusType.RED;
+                    }
+                }
+            }
+        }
+
+        /////////////////////////////////////////////////////////////////////////////
+        // Time start
         /////////////////////////////////////////////////////////////////////////////
         private DateTime _startTime { get; set; }
         public DateTime StartTime

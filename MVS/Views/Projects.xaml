@@ -9,6 +9,51 @@
     d:DesignHeight="1100"
     d:DesignWidth="1400">
 
+    <UserControl.Resources>
+
+        <Style
+            x:Key="RecordingStatusIndicator"
+            TargetType="telerik:GridViewRow"
+            BasedOn="{StaticResource GridViewRowStyle}">
+            <Style.Triggers>
+
+                <DataTrigger
+                    Binding="{Binding Path=recordingStatus}"
+                    Value="OFF">
+                    <Setter
+                        Property="Background"
+                        Value="{StaticResource ColorBackgroundSeparator}" />
+                </DataTrigger>
+
+                <DataTrigger
+                    Binding="{Binding Path=recordingStatus}"
+                    Value="GREEN">
+                    <Setter
+                        Property="Background"
+                        Value="{StaticResource ColorGreen}" />
+                </DataTrigger>
+
+                <DataTrigger
+                    Binding="{Binding Path=recordingStatus}"
+                    Value="AMBER">
+                    <Setter
+                        Property="Background"
+                        Value="{StaticResource ColorAmber}" />
+                </DataTrigger>
+
+                <DataTrigger
+                    Binding="{Binding Path=recordingStatus}"
+                    Value="RED">
+                    <Setter
+                        Property="Background"
+                        Value="{StaticResource ColorRed}" />
+                </DataTrigger>
+
+            </Style.Triggers>
+        </Style>
+
+    </UserControl.Resources>
+
     <Grid>
 
         <Grid.RowDefinitions>
@@ -58,25 +103,7 @@
 
             </StackPanel>
 
-            <!--Sensor Value Setup-->
-            <!--<StackPanel
-                Name="spSensorValueSetupButtons"
-                Grid.Row="0"
-                Grid.Column="1"
-                Orientation="Horizontal"
-                HorizontalAlignment="Right"
-                Margin="8">
-
-                <Button
-                    Name="btnSerialPortSetup"
-                    Click="btnSerialPortSetup_Click"
-                    Width="180"
-                    Visibility="Collapsed">Serial Port Data Setup</Button>
-
-            </StackPanel>-->
-
         </Grid>
-
 
         <Grid
             Grid.Row="1">
@@ -88,7 +115,7 @@
                     Width="6*" />
             </Grid.ColumnDefinitions>
 
-            <telerik:RadGridView
+            <telerik:RadGridView   
                 Grid.Column="0"
                 Name="gvVerificationSessions"
                 Margin="8,0,0,8"
