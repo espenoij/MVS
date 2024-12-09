@@ -87,6 +87,10 @@ namespace MVS
 
                     // Oppdatere database
                     mvsDatabase.Update(mainWindowVM.SelectedProject);
+
+                    // Lukke import vindu
+                    Close();
+
                     break;
 
                 case ImportResultCode.DatabaseError:

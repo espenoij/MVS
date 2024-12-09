@@ -117,7 +117,7 @@ namespace MVS
             hmsOutputDataList.Add(testHeaveMeanMaxData);
 
             // Legge på litt informasjon på de variablene som ikke får dette automatisk fra sensor input data
-            // (Disse verdiene blir kalkulert her, mens sensor input data bare kopieres videre med denne typen info allerede inkludert)
+            // (Disse verdiene blir kalkulert her, mens sensor input data over bare kopieres videre med denne typen info allerede inkludert)
 
             // Reference Pitch
             refPitchMaxData.id = (int)ValueType.Ref_PitchMax;
@@ -127,32 +127,27 @@ namespace MVS
 
             refPitchMaxUpData.id = (int)ValueType.Ref_PitchMaxUp;
             refPitchMaxUpData.name = "Ref MRU: Pitch Max Up";
-            refPitchMaxUpData.dbColumn = "ref_pitch_max_up";
             refPitchMaxUpData.InitProcessing(errorHandler, ErrorMessageCategory.AdminUser, adminSettingsVM);
             refPitchMaxUpData.AddProcessing(CalculationType.TimeMax, Constants.Minutes20);
 
             refPitchMaxDownData.id = (int)ValueType.Ref_PitchMaxDown;
             refPitchMaxDownData.name = "Ref MRU: Pitch Max Down";
-            refPitchMaxDownData.dbColumn = "ref_pitch_max_down";
             refPitchMaxDownData.InitProcessing(errorHandler, ErrorMessageCategory.AdminUser, adminSettingsVM);
             refPitchMaxDownData.AddProcessing(CalculationType.TimeMin, Constants.Minutes20);
 
             refPitchMeanData.id = (int)ValueType.Ref_PitchMean;
             refPitchMeanData.name = "Ref MRU: Pitch Mean";
-            refPitchMeanData.dbColumn = "ref_pitch_mean";
             refPitchMeanData.InitProcessing(errorHandler, ErrorMessageCategory.AdminUser, adminSettingsVM);
             refPitchMeanData.AddProcessing(CalculationType.TimeAverage, Constants.Minutes20);
 
             refPitchMeanMaxData.id = (int)ValueType.Ref_PitchMeanMax;
             refPitchMeanMaxData.name = "Ref MRU: Pitch Mean Max";
-            refPitchMeanMaxData.dbColumn = "ref_pitch_mean_max";
             refPitchMeanMaxData.InitProcessing(errorHandler, ErrorMessageCategory.AdminUser, adminSettingsVM);
             refPitchMeanMaxData.AddProcessing(CalculationType.TimeMaxAbsolute, Constants.Minutes20);
 
             // Reference Roll
             refRollMaxLeftData.id = (int)ValueType.Ref_RollMaxLeft;
             refRollMaxLeftData.name = "Ref MRU: Roll Max Left";
-            refRollMaxLeftData.dbColumn = "ref_roll_max_left";
             refRollMaxLeftData.InitProcessing(errorHandler, ErrorMessageCategory.AdminUser, adminSettingsVM);
             refRollMaxLeftData.AddProcessing(CalculationType.TimeMax, Constants.Minutes20);
 
@@ -163,50 +158,42 @@ namespace MVS
 
             refRollMaxRightData.id = (int)ValueType.Ref_RollMaxRight;
             refRollMaxRightData.name = "Ref MRU: Roll Max Right";
-            refRollMaxRightData.dbColumn = "ref_roll_max_right";
             refRollMaxRightData.InitProcessing(errorHandler, ErrorMessageCategory.AdminUser, adminSettingsVM);
             refRollMaxRightData.AddProcessing(CalculationType.TimeMin, Constants.Minutes20);
 
             refRollMeanData.id = (int)ValueType.Ref_RollMean;
             refRollMeanData.name = "Ref MRU: Roll Mean";
-            refRollMeanData.dbColumn = "ref_roll_mean";
             refRollMeanData.InitProcessing(errorHandler, ErrorMessageCategory.AdminUser, adminSettingsVM);
             refRollMeanData.AddProcessing(CalculationType.TimeAverage, Constants.Minutes20);
 
             refRollMeanMaxData.id = (int)ValueType.Ref_RollMeanMax;
             refRollMeanMaxData.name = "Ref MRU: Roll Mean Max";
-            refRollMeanMaxData.dbColumn = "ref_roll_mean_max";
             refRollMeanMaxData.InitProcessing(errorHandler, ErrorMessageCategory.AdminUser, adminSettingsVM);
             refRollMeanMaxData.AddProcessing(CalculationType.TimeMaxAbsolute, Constants.Minutes20);
 
             // Reference Heave
             refHeaveMaxData.id = (int)ValueType.Ref_HeaveMax;
             refHeaveMaxData.name = "Ref MRU: Heave Max";
-            refHeaveMeanData.dbColumn = "ref_heave_max";
             refHeaveMaxData.InitProcessing(errorHandler, ErrorMessageCategory.AdminUser, adminSettingsVM);
             refHeaveMaxData.AddProcessing(CalculationType.TimeMaxAbsolute, Constants.Minutes20);
 
             refHeaveMaxUpData.id = (int)ValueType.Ref_HeaveMaxUp;
             refHeaveMaxUpData.name = "Ref MRU: Heave Max Up";
-            refHeaveMaxUpData.dbColumn = "ref_heave_max_up";
             refHeaveMaxUpData.InitProcessing(errorHandler, ErrorMessageCategory.AdminUser, adminSettingsVM);
             refHeaveMaxUpData.AddProcessing(CalculationType.TimeMax, Constants.Minutes20);
 
             refHeaveMaxDownData.id = (int)ValueType.Ref_HeaveMaxDown;
             refHeaveMaxDownData.name = "Ref MRU: Heave Max Down";
-            refHeaveMaxDownData.dbColumn = "ref_heave_max_down";
             refHeaveMaxDownData.InitProcessing(errorHandler, ErrorMessageCategory.AdminUser, adminSettingsVM);
             refHeaveMaxDownData.AddProcessing(CalculationType.TimeMin, Constants.Minutes20);
 
             refHeaveMeanData.id = (int)ValueType.Ref_HeaveMean;
             refHeaveMeanData.name = "Ref MRU: Heave Mean";
-            refHeaveMeanData.dbColumn = "ref_heave_mean";
             refHeaveMeanData.InitProcessing(errorHandler, ErrorMessageCategory.AdminUser, adminSettingsVM);
             refHeaveMeanData.AddProcessing(CalculationType.TimeAverage, Constants.Minutes20);
 
             refHeaveMeanMaxData.id = (int)ValueType.Ref_HeaveMeanMax;
             refHeaveMeanMaxData.name = "Ref MRU: Heave Mean Max";
-            refHeaveMeanMaxData.dbColumn = "ref_heave_mean_max";
             refHeaveMeanMaxData.InitProcessing(errorHandler, ErrorMessageCategory.AdminUser, adminSettingsVM);
             refHeaveMeanMaxData.AddProcessing(CalculationType.TimeMaxAbsolute, Constants.Minutes20);
 
@@ -218,32 +205,27 @@ namespace MVS
 
             testPitchMaxUpData.id = (int)ValueType.Test_PitchMaxUp;
             testPitchMaxUpData.name = "Test MRU: Pitch Max Up";
-            testPitchMaxUpData.dbColumn = "test_pitch_max_up";
             testPitchMaxUpData.InitProcessing(errorHandler, ErrorMessageCategory.AdminUser, adminSettingsVM);
             testPitchMaxUpData.AddProcessing(CalculationType.TimeMax, Constants.Minutes20);
 
             testPitchMaxDownData.id = (int)ValueType.Test_PitchMaxDown;
             testPitchMaxDownData.name = "Test MRU: Pitch Max Down";
-            testPitchMaxDownData.dbColumn = "test_pitch_max_down";
             testPitchMaxDownData.InitProcessing(errorHandler, ErrorMessageCategory.AdminUser, adminSettingsVM);
             testPitchMaxDownData.AddProcessing(CalculationType.TimeMin, Constants.Minutes20);
 
             testPitchMeanData.id = (int)ValueType.Test_PitchMean;
             testPitchMeanData.name = "Test MRU: Pitch Mean";
-            testPitchMeanData.dbColumn = "test_pitch_mean";
             testPitchMeanData.InitProcessing(errorHandler, ErrorMessageCategory.AdminUser, adminSettingsVM);
             testPitchMeanData.AddProcessing(CalculationType.TimeAverage, Constants.Minutes20);
 
             testPitchMeanMaxData.id = (int)ValueType.Test_PitchMeanMax;
             testPitchMeanMaxData.name = "Test MRU: Pitch Mean Max";
-            testPitchMeanMaxData.dbColumn = "test_pitch_mean_max";
             testPitchMeanMaxData.InitProcessing(errorHandler, ErrorMessageCategory.AdminUser, adminSettingsVM);
             testPitchMeanMaxData.AddProcessing(CalculationType.TimeMaxAbsolute, Constants.Minutes20);
 
             // Test Roll
             testRollMaxLeftData.id = (int)ValueType.Test_RollMaxLeft;
             testRollMaxLeftData.name = "Test MRU: Roll Max Left";
-            testRollMaxLeftData.dbColumn = "test_roll_max_left";
             testRollMaxLeftData.InitProcessing(errorHandler, ErrorMessageCategory.AdminUser, adminSettingsVM);
             testRollMaxLeftData.AddProcessing(CalculationType.TimeMax, Constants.Minutes20);
 
@@ -254,50 +236,42 @@ namespace MVS
 
             testRollMaxRightData.id = (int)ValueType.Test_RollMaxRight;
             testRollMaxRightData.name = "Test MRU: Roll Max Right";
-            testRollMaxRightData.dbColumn = "test_roll_max_right";
             testRollMaxRightData.InitProcessing(errorHandler, ErrorMessageCategory.AdminUser, adminSettingsVM);
             testRollMaxRightData.AddProcessing(CalculationType.TimeMin, Constants.Minutes20);
 
             testRollMeanData.id = (int)ValueType.Test_RollMean;
             testRollMeanData.name = "Test MRU: Roll Mean";
-            testRollMeanData.dbColumn = "test_roll_mean";
             testRollMeanData.InitProcessing(errorHandler, ErrorMessageCategory.AdminUser, adminSettingsVM);
             testRollMeanData.AddProcessing(CalculationType.TimeAverage, Constants.Minutes20);
 
             testRollMeanMaxData.id = (int)ValueType.Test_RollMeanMax;
             testRollMeanMaxData.name = "Test MRU: Roll Mean Max";
-            testRollMeanMaxData.dbColumn = "test_roll_mean_max";
             testRollMeanMaxData.InitProcessing(errorHandler, ErrorMessageCategory.AdminUser, adminSettingsVM);
             testRollMeanMaxData.AddProcessing(CalculationType.TimeMaxAbsolute, Constants.Minutes20);
 
             // Test Heave
             testHeaveMaxData.id = (int)ValueType.Test_HeaveMax;
             testHeaveMaxData.name = "Test MRU: Heave Amplitude Max";
-            testHeaveMaxData.dbColumn = "test_heave_max";
             testHeaveMaxData.InitProcessing(errorHandler, ErrorMessageCategory.AdminUser, adminSettingsVM);
             testHeaveMaxData.AddProcessing(CalculationType.TimeMaxAbsolute, Constants.Minutes20);
 
             testHeaveMaxUpData.id = (int)ValueType.Test_HeaveMaxUp;
             testHeaveMaxUpData.name = "Test MRU: Heave Amplitude Max Up";
-            testHeaveMaxUpData.dbColumn = "test_heave_max_up";
             testHeaveMaxUpData.InitProcessing(errorHandler, ErrorMessageCategory.AdminUser, adminSettingsVM);
             testHeaveMaxUpData.AddProcessing(CalculationType.TimeMax, Constants.Minutes20);
 
             testHeaveMaxDownData.id = (int)ValueType.Test_HeaveMaxDown;
             testHeaveMaxDownData.name = "Test MRU: Heave Amplitude Max Down";
-            testHeaveMaxDownData.dbColumn = "test_heave_max_down";
             testHeaveMaxDownData.InitProcessing(errorHandler, ErrorMessageCategory.AdminUser, adminSettingsVM);
             testHeaveMaxDownData.AddProcessing(CalculationType.TimeMin, Constants.Minutes20);
 
             testHeaveMeanData.id = (int)ValueType.Test_HeaveMean;
             testHeaveMeanData.name = "Test MRU: Heave Amplitude Mean";
-            testHeaveMeanData.dbColumn = "test_heave_mean";
             testHeaveMeanData.InitProcessing(errorHandler, ErrorMessageCategory.AdminUser, adminSettingsVM);
             testHeaveMeanData.AddProcessing(CalculationType.TimeAverage, Constants.Minutes20);
 
             testHeaveMeanMaxData.id = (int)ValueType.Test_HeaveMeanMax;
             testHeaveMeanMaxData.name = "Test MRU: Heave Amplitude Mean Max";
-            testHeaveMeanMaxData.dbColumn = "test_heave_mean_max";
             testHeaveMeanMaxData.InitProcessing(errorHandler, ErrorMessageCategory.AdminUser, adminSettingsVM);
             testHeaveMeanMaxData.AddProcessing(CalculationType.TimeMaxAbsolute, Constants.Minutes20);
 

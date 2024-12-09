@@ -112,12 +112,12 @@ namespace MVS
                 }
                 else 
                 {
-                    if (_startTime.AddMinutes(40) < DateTime.UtcNow)
+                    if (_startTime < DateTime.UtcNow)
                     {
                         return RecordingStatusType.GREEN;
                     }
                     else
-                    if (_startTime.AddMinutes(20) < DateTime.UtcNow)
+                    if (_startTime.AddMinutes(-20) < DateTime.UtcNow)
                     {
                         return RecordingStatusType.AMBER;
                     }

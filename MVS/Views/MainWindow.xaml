@@ -86,24 +86,17 @@
                 </DataTrigger>
                 <DataTrigger
                     Binding="{Binding Path=recordingStatus}"
-                    Value="BLUE">
+                    Value="AMBER">
                     <Setter
                         Property="Fill"
                         Value="{StaticResource ColorAmber}" />
                 </DataTrigger>
                 <DataTrigger
                     Binding="{Binding Path=recordingStatus}"
-                    Value="AMBER">
+                    Value="GREEN">
                     <Setter
                         Property="Fill"
                         Value="{StaticResource ColorGreen}" />
-                </DataTrigger>
-                <DataTrigger
-                    Binding="{Binding Path=recordingStatus}"
-                    Value="OFF">
-                    <Setter
-                        Property="Fill"
-                        Value="{StaticResource ColorBackgroundSeparator}" />
                 </DataTrigger>
             </Style.Triggers>
         </Style>
@@ -129,6 +122,18 @@
 
             </DockPanel>
 
+            <!--Database Status-->
+            <DockPanel
+                 Name="tbDatabaseStatus"
+                 Visibility="Collapsed"
+                 DockPanel.Dock="Top"
+                 Background="{StaticResource ColorAmber}">
+
+                <TextBlock
+                    x:Name="tbDatabaseStatusText"
+                    HorizontalAlignment="Center" />
+
+            </DockPanel>
 
             <telerik:RadTabControl
                 DockPanel.Dock="Top"
@@ -395,21 +400,6 @@
                                 Header="Status">
 
                                 <DockPanel>
-
-                                    <Border
-                                        BorderBrush="{x:Null}"
-                                        x:Name="tbDatabaseStatus"
-                                        DockPanel.Dock="Top"
-                                        Height="50"
-                                        Visibility="Collapsed"
-                                        Background="{StaticResource ColorAmber}">
-
-                                        <TextBlock
-                                            x:Name="tbDatabaseStatusText"
-                                            TextAlignment="Center"
-                                            Margin="0,16" />
-
-                                    </Border>
 
                                     <telerik:RadGridView
                                         Name="gvStatusDisplay"
