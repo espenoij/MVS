@@ -277,7 +277,7 @@ namespace MVS
 
         }
 
-        public void Update(MVSDataCollection hmsInputDataList, MainWindowVM mainWindowVM)
+        public void Update(MVSDataCollection hmsInputDataList, MainWindowVM mainWindowVM, ProcessingType processingType)
         {
             // Hente input data vi skal bruke
             refSensorPitch.Set(hmsInputDataList.GetData(ValueType.Ref_Pitch));
@@ -369,56 +369,59 @@ namespace MVS
             }
             else
             {
-                refSensorPitch.status = DataStatus.NONE;
-                refSensorRoll.status = DataStatus.NONE;
-                refSensorHeave.status = DataStatus.NONE;
+                if (processingType == ProcessingType.LIVE_DATA)
+                {
+                    refSensorPitch.status = DataStatus.NONE;
+                    refSensorRoll.status = DataStatus.NONE;
+                    refSensorHeave.status = DataStatus.NONE;
 
-                refPitchData.Set(refSensorPitch);
-                refPitchData.data = double.NaN;
-                refPitchData.status = DataStatus.NONE;
-                refPitchMaxData.data = double.NaN;
-                refPitchMaxData.status = DataStatus.NONE;
-                refPitchMaxUpData.data = double.NaN;
-                refPitchMaxUpData.status = DataStatus.NONE;
-                refPitchMaxDownData.data = double.NaN;
-                refPitchMaxDownData.status = DataStatus.NONE;
-                refPitchMeanData.data = double.NaN;
-                refPitchMeanData.status = DataStatus.NONE;
-                refPitchMeanMaxData.data = double.NaN;
-                refPitchMeanMaxData.status = DataStatus.NONE;
+                    refPitchData.Set(refSensorPitch);
+                    refPitchData.data = double.NaN;
+                    refPitchData.status = DataStatus.NONE;
+                    refPitchMaxData.data = double.NaN;
+                    refPitchMaxData.status = DataStatus.NONE;
+                    refPitchMaxUpData.data = double.NaN;
+                    refPitchMaxUpData.status = DataStatus.NONE;
+                    refPitchMaxDownData.data = double.NaN;
+                    refPitchMaxDownData.status = DataStatus.NONE;
+                    refPitchMeanData.data = double.NaN;
+                    refPitchMeanData.status = DataStatus.NONE;
+                    refPitchMeanMaxData.data = double.NaN;
+                    refPitchMeanMaxData.status = DataStatus.NONE;
 
-                refRollData.Set(refSensorRoll);
-                refRollData.data = double.NaN;
-                refRollData.status = DataStatus.NONE;
-                refRollMaxData.data = double.NaN;
-                refRollMaxData.status = DataStatus.NONE;
-                refRollMaxLeftData.data = double.NaN;
-                refRollMaxLeftData.status = DataStatus.NONE;
-                refRollMaxRightData.data = double.NaN;
-                refRollMaxRightData.status = DataStatus.NONE;
-                refRollMeanData.data = double.NaN;
-                refRollMeanData.status = DataStatus.NONE;
-                refRollMeanMaxData.data = double.NaN;
-                refRollMeanMaxData.status = DataStatus.NONE;
+                    refRollData.Set(refSensorRoll);
+                    refRollData.data = double.NaN;
+                    refRollData.status = DataStatus.NONE;
+                    refRollMaxData.data = double.NaN;
+                    refRollMaxData.status = DataStatus.NONE;
+                    refRollMaxLeftData.data = double.NaN;
+                    refRollMaxLeftData.status = DataStatus.NONE;
+                    refRollMaxRightData.data = double.NaN;
+                    refRollMaxRightData.status = DataStatus.NONE;
+                    refRollMeanData.data = double.NaN;
+                    refRollMeanData.status = DataStatus.NONE;
+                    refRollMeanMaxData.data = double.NaN;
+                    refRollMeanMaxData.status = DataStatus.NONE;
 
-                refHeaveData.Set(refSensorHeave);
-                refHeaveData.data = double.NaN;
-                refHeaveData.status = DataStatus.NONE;
-                refHeaveMaxData.data = double.NaN;
-                refHeaveMaxData.status = DataStatus.NONE;
-                refHeaveMaxUpData.data = double.NaN;
-                refHeaveMaxUpData.status = DataStatus.NONE;
-                refHeaveMaxDownData.data = double.NaN;
-                refHeaveMaxDownData.status = DataStatus.NONE;
-                refHeaveMeanData.data = double.NaN;
-                refHeaveMeanData.status = DataStatus.NONE;
-                refHeaveMeanMaxData.data = double.NaN;
-                refHeaveMeanMaxData.status = DataStatus.NONE;
+                    refHeaveData.Set(refSensorHeave);
+                    refHeaveData.data = double.NaN;
+                    refHeaveData.status = DataStatus.NONE;
+                    refHeaveMaxData.data = double.NaN;
+                    refHeaveMaxData.status = DataStatus.NONE;
+                    refHeaveMaxUpData.data = double.NaN;
+                    refHeaveMaxUpData.status = DataStatus.NONE;
+                    refHeaveMaxDownData.data = double.NaN;
+                    refHeaveMaxDownData.status = DataStatus.NONE;
+                    refHeaveMeanData.data = double.NaN;
+                    refHeaveMeanData.status = DataStatus.NONE;
+                    refHeaveMeanMaxData.data = double.NaN;
+                    refHeaveMeanMaxData.status = DataStatus.NONE;
+                }
             }
 
             // Tested MRU
             //////////////////////////////////////////////////////////////////
-            if ((mainWindowVM.OperationsMode == OperationsMode.Recording || 
+            if ((mainWindowVM.OperationsMode == OperationsMode.Recording ||
                  mainWindowVM.OperationsMode == OperationsMode.Test ||
                  mainWindowVM.OperationsMode == OperationsMode.ViewData) &&
                 (mainWindowVM.SelectedProject?.InputMRUs == InputMRUType.TestMRU ||
@@ -497,51 +500,54 @@ namespace MVS
             }
             else
             {
-                testSensorPitch.status = DataStatus.NONE;
-                testSensorRoll.status = DataStatus.NONE;
-                testSensorHeave.status = DataStatus.NONE;
+                if (processingType == ProcessingType.LIVE_DATA)
+                {
+                    testSensorPitch.status = DataStatus.NONE;
+                    testSensorRoll.status = DataStatus.NONE;
+                    testSensorHeave.status = DataStatus.NONE;
 
-                testPitchData.Set(testSensorPitch);
-                testPitchData.data = double.NaN;
-                testPitchData.status = DataStatus.NONE;
-                testPitchMaxData.data = double.NaN;
-                testPitchMaxData.status = DataStatus.NONE;
-                testPitchMaxUpData.data = double.NaN;
-                testPitchMaxUpData.status = DataStatus.NONE;
-                testPitchMaxDownData.data = double.NaN;
-                testPitchMaxDownData.status = DataStatus.NONE;
-                testPitchMeanData.data = double.NaN;
-                testPitchMeanData.status = DataStatus.NONE;
-                testPitchMeanMaxData.data = double.NaN;
-                testPitchMeanMaxData.status = DataStatus.NONE;
+                    testPitchData.Set(testSensorPitch);
+                    testPitchData.data = double.NaN;
+                    testPitchData.status = DataStatus.NONE;
+                    testPitchMaxData.data = double.NaN;
+                    testPitchMaxData.status = DataStatus.NONE;
+                    testPitchMaxUpData.data = double.NaN;
+                    testPitchMaxUpData.status = DataStatus.NONE;
+                    testPitchMaxDownData.data = double.NaN;
+                    testPitchMaxDownData.status = DataStatus.NONE;
+                    testPitchMeanData.data = double.NaN;
+                    testPitchMeanData.status = DataStatus.NONE;
+                    testPitchMeanMaxData.data = double.NaN;
+                    testPitchMeanMaxData.status = DataStatus.NONE;
 
-                testRollData.Set(testSensorRoll);
-                testRollData.data = double.NaN;
-                testRollData.status = DataStatus.NONE;
-                testRollMaxData.data = double.NaN;
-                testRollMaxData.status = DataStatus.NONE;
-                testRollMaxLeftData.data = double.NaN;
-                testRollMaxLeftData.status = DataStatus.NONE;
-                testRollMaxRightData.data = double.NaN;
-                testRollMaxRightData.status = DataStatus.NONE;
-                testRollMeanData.data = double.NaN;
-                testRollMeanData.status = DataStatus.NONE;
-                testRollMeanMaxData.data = double.NaN;
-                testRollMeanMaxData.status = DataStatus.NONE;
+                    testRollData.Set(testSensorRoll);
+                    testRollData.data = double.NaN;
+                    testRollData.status = DataStatus.NONE;
+                    testRollMaxData.data = double.NaN;
+                    testRollMaxData.status = DataStatus.NONE;
+                    testRollMaxLeftData.data = double.NaN;
+                    testRollMaxLeftData.status = DataStatus.NONE;
+                    testRollMaxRightData.data = double.NaN;
+                    testRollMaxRightData.status = DataStatus.NONE;
+                    testRollMeanData.data = double.NaN;
+                    testRollMeanData.status = DataStatus.NONE;
+                    testRollMeanMaxData.data = double.NaN;
+                    testRollMeanMaxData.status = DataStatus.NONE;
 
-                testHeaveData.Set(testSensorHeave);
-                testHeaveData.data = double.NaN;
-                testHeaveData.status = DataStatus.NONE;
-                testHeaveMaxData.data = double.NaN;
-                testHeaveMaxData.status = DataStatus.NONE;
-                testHeaveMaxUpData.data = double.NaN;
-                testHeaveMaxUpData.status = DataStatus.NONE;
-                testHeaveMaxDownData.data = double.NaN;
-                testHeaveMaxDownData.status = DataStatus.NONE;
-                testHeaveMeanData.data = double.NaN;
-                testHeaveMeanData.status = DataStatus.NONE;
-                testHeaveMeanMaxData.data = double.NaN;
-                testHeaveMeanMaxData.status = DataStatus.NONE;
+                    testHeaveData.Set(testSensorHeave);
+                    testHeaveData.data = double.NaN;
+                    testHeaveData.status = DataStatus.NONE;
+                    testHeaveMaxData.data = double.NaN;
+                    testHeaveMaxData.status = DataStatus.NONE;
+                    testHeaveMaxUpData.data = double.NaN;
+                    testHeaveMaxUpData.status = DataStatus.NONE;
+                    testHeaveMaxDownData.data = double.NaN;
+                    testHeaveMaxDownData.status = DataStatus.NONE;
+                    testHeaveMeanData.data = double.NaN;
+                    testHeaveMeanData.status = DataStatus.NONE;
+                    testHeaveMeanMaxData.data = double.NaN;
+                    testHeaveMeanMaxData.status = DataStatus.NONE;
+                }
             }
         }
 

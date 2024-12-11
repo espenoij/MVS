@@ -3,6 +3,7 @@ using System.ComponentModel;
 using System.Runtime.CompilerServices;
 using System.Windows;
 using System.Windows.Threading;
+using MVS.Models;
 
 namespace MVS
 {
@@ -261,6 +262,28 @@ namespace MVS
                 OnPropertyChanged();
             }
         }
+
+        /////////////////////////////////////////////////////////////////////////////
+        // Data Analysis Progress
+        /////////////////////////////////////////////////////////////////////////////
+        private int _dataAnalysisProgress { get; set; }
+        public int dataAnalysisProgress
+        {
+            get
+            {
+                return _dataAnalysisProgress;
+            }
+            set
+            {
+                _dataAnalysisProgress = value;
+                OnPropertyChanged();
+            }
+        }
+
+        /////////////////////////////////////////////////////////////////////////////
+        // Import Result
+        /////////////////////////////////////////////////////////////////////////////
+        public ImportResult Result { get; set; } = new ImportResult();
 
         // Variabel oppdatert
         // Dersom navn ikke er satt brukes kallende medlem sitt navn

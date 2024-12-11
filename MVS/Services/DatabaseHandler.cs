@@ -796,6 +796,7 @@ namespace MVS
                         Encryption.ToInsecureString(hmsDBpassword),
                         hmsDBdatabase);
 
+                    // Leser først fra HMS database
                     using (var connection = new MySqlConnection(hmsDBconnectionString))
                     {
                         // SQL kommando
@@ -844,6 +845,7 @@ namespace MVS
                         connection.Close();
                     }
 
+                    // Så lagrer vi data i MVS database
                     if (dataList.Count > 0)
                     {
                         using (var connection = new MySqlConnection(connectionString))

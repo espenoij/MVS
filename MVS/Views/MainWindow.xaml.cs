@@ -402,7 +402,7 @@ namespace MVS
                         mvsInputData.TransferData(sensorDataRetrieval.GetSensorDataList(), mainWindowVM);
 
                         // MVS: MVS Output Data
-                        mvsProcessing.Update(mvsInputData, mainWindowVM);
+                        mvsProcessing.Update(mvsInputData, mainWindowVM, ProcessingType.LIVE_DATA);
 
                         // Oppdatere graf data
                         recordingsVM.UpdateData(mvsOutputData);
@@ -754,7 +754,9 @@ namespace MVS
         private void InitDataViewWorker()
         {
             dataViewWorker.DoWork += dataViewWorker_DoWork;
+            dataViewWorker.ProgressChanged += importWorker_ProgressChanged;
             dataViewWorker.RunWorkerCompleted += dataViewWorker_RunWorkerCompleted;
+            dataViewWorker.WorkerReportsProgress = true;
         }
 
         private void dataViewWorker_DoWork(object sender, DoWorkEventArgs e)
@@ -769,7 +771,12 @@ namespace MVS
             mvsProcessing.ResetDataCalculations();
 
             // Analysere session data
-            recordingsVM.AnalyseProjectData();
+            recordingsVM.AnalyseProjectData(dataViewWorker.ReportProgress);
+        }
+
+        private void importWorker_ProgressChanged(object sender, System.ComponentModel.ProgressChangedEventArgs e)
+        {
+            mainWindowVM.dataAnalysisProgress = e.ProgressPercentage;
         }
 
         private void dataViewWorker_RunWorkerCompleted(object sender, RunWorkerCompletedEventArgs e)
@@ -790,6 +797,12 @@ namespace MVS
             {
                 // Starte data analyse
                 dataViewWorker.RunWorkerAsync();
+
+                // Åpne progress dialog
+                DialogDataAnalysisProgress progressDlg = new DialogDataAnalysisProgress();
+                progressDlg.Owner = App.Current.MainWindow;
+                progressDlg.Init(mainWindowVM);
+                progressDlg.ShowDialog();
             }
         }
 

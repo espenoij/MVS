@@ -148,6 +148,9 @@
     <Compile Include="Config\TestDataConfigCollection.cs" />
     <Compile Include="Config\ReferenceDataConfigSection.cs" />
     <Compile Include="Config\TestDataConfigSection.cs" />
+    <Compile Include="Dialogs\DialogDataAnalysisProgress.xaml.cs">
+      <DependentUpon>DialogDataAnalysisProgress.xaml</DependentUpon>
+    </Compile>
     <Compile Include="Dialogs\DialogImportProgress.xaml.cs">
       <DependentUpon>DialogImportProgress.xaml</DependentUpon>
     </Compile>
@@ -266,6 +269,10 @@
     <Compile Include="Views\DataAnalysis.xaml.cs">
       <DependentUpon>DataAnalysis.xaml</DependentUpon>
     </Compile>
+    <Page Include="Dialogs\DialogDataAnalysisProgress.xaml">
+      <Generator>MSBuild:Compile</Generator>
+      <SubType>Designer</SubType>
+    </Page>
     <Page Include="Dialogs\DialogImportProgress.xaml">
       <Generator>MSBuild:Compile</Generator>
       <SubType>Designer</SubType>

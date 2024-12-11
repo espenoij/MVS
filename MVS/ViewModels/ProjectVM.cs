@@ -4,6 +4,7 @@ using System.Linq;
 using System.Runtime.CompilerServices;
 using System.Windows.Threading;
 using Telerik.Windows.Data;
+using static MVS.DialogImport;
 
 namespace MVS
 {
@@ -19,7 +20,7 @@ namespace MVS
 
         private DispatcherTimer chartUpdateTimer = new DispatcherTimer();
 
-        // Live Data
+        // Input
         private RadObservableCollection<HMSData> refPitchBuffer = new RadObservableCollection<HMSData>();
         private RadObservableCollection<HMSData> refRollBuffer = new RadObservableCollection<HMSData>();
         private RadObservableCollection<HMSData> refHeaveBuffer = new RadObservableCollection<HMSData>();
@@ -36,7 +37,7 @@ namespace MVS
         public RadObservableCollection<HMSData> testRollList = new RadObservableCollection<HMSData>();
         public RadObservableCollection<HMSData> testHeaveList = new RadObservableCollection<HMSData>();
 
-        // 20 minutters data
+        // Mean
         private RadObservableCollection<HMSData> refPitchMeanBuffer = new RadObservableCollection<HMSData>();
         private RadObservableCollection<HMSData> refRollMeanBuffer = new RadObservableCollection<HMSData>();
         private RadObservableCollection<HMSData> refHeaveMeanBuffer = new RadObservableCollection<HMSData>();
@@ -52,6 +53,15 @@ namespace MVS
         public RadObservableCollection<HMSData> testPitchMeanList = new RadObservableCollection<HMSData>();
         public RadObservableCollection<HMSData> testRollMeanList = new RadObservableCollection<HMSData>();
         public RadObservableCollection<HMSData> testHeaveMeanList = new RadObservableCollection<HMSData>();
+
+        // Deviation
+        public RadObservableCollection<HMSData> pitchDeviationBuffer = new RadObservableCollection<HMSData>();
+        public RadObservableCollection<HMSData> rollDeviationBuffer = new RadObservableCollection<HMSData>();
+        public RadObservableCollection<HMSData> heaveDeviationBuffer = new RadObservableCollection<HMSData>();
+        
+        public RadObservableCollection<HMSData> pitchDeviationList = new RadObservableCollection<HMSData>();
+        public RadObservableCollection<HMSData> rollDeviationList = new RadObservableCollection<HMSData>();
+        public RadObservableCollection<HMSData> heaveDeviationList = new RadObservableCollection<HMSData>();
 
         // Alle session data
         public RadObservableCollection<SessionData> sessionDataList = new RadObservableCollection<SessionData>();
@@ -90,6 +100,10 @@ namespace MVS
                 GraphBuffer.Transfer(testRollMeanBuffer, testRollMeanList);
                 GraphBuffer.Transfer(testHeaveMeanBuffer, testHeaveMeanList);
 
+                GraphBuffer.Transfer(pitchDeviationBuffer, pitchDeviationList);
+                GraphBuffer.Transfer(rollDeviationBuffer, rollDeviationList);
+                GraphBuffer.Transfer(heaveDeviationBuffer, heaveDeviationList);
+
                 // Fjerne gamle data fra chart data
                 GraphBuffer.RemoveOldData(refPitchList, Constants.Minutes20 + Constants.ChartTimeCorrMin);
                 GraphBuffer.RemoveOldData(refRollList, Constants.Minutes20 + Constants.ChartTimeCorrMin);
@@ -106,6 +120,10 @@ namespace MVS
                 GraphBuffer.RemoveOldData(testPitchMeanList, Constants.Minutes20 + Constants.ChartTimeCorrMin);
                 GraphBuffer.RemoveOldData(testRollMeanList, Constants.Minutes20 + Constants.ChartTimeCorrMin);
                 GraphBuffer.RemoveOldData(testHeaveMeanList, Constants.Minutes20 + Constants.ChartTimeCorrMin);
+
+                GraphBuffer.RemoveOldData(pitchDeviationList, Constants.Minutes20 + Constants.ChartTimeCorrMin);
+                GraphBuffer.RemoveOldData(rollDeviationList, Constants.Minutes20 + Constants.ChartTimeCorrMin);
+                GraphBuffer.RemoveOldData(heaveDeviationList, Constants.Minutes20 + Constants.ChartTimeCorrMin);
 
                 // Oppdatere alignment datetime (nåtid) til alle chart
                 alignmentTime = DateTime.UtcNow;
@@ -182,6 +200,46 @@ namespace MVS
 
             testRollMeanData = mvsDataCollection.GetData(ValueType.Test_RollMean);
             testHeaveMeanData = mvsDataCollection.GetData(ValueType.Test_HeaveMean);
+
+            // Oppdatere deviation verdier
+            HMSData pitchDeviationData = new HMSData();
+            HMSData rollDeviationData = new HMSData();
+            HMSData heaveDeviationData = new HMSData();
+
+            if (testPitchMeanData.status == DataStatus.OK && !double.IsNaN(testPitchMeanData.data) &&
+                refPitchMeanData.status == DataStatus.OK && !double.IsNaN(refPitchMeanData.data))
+            {
+                pitchDeviationData.data = testPitchMeanData.data - refPitchMeanData.data;
+            }
+            else
+            {
+                pitchDeviationData.data = double.NaN;
+            }
+
+            if (testRollMeanData.status == DataStatus.OK && !double.IsNaN(testRollMeanData.data) &&
+                refRollMeanData.status == DataStatus.OK && !double.IsNaN(refRollMeanData.data))
+            {
+                rollDeviationData.data = testRollMeanData.data - refRollMeanData.data;
+            }
+            else
+            {
+                rollDeviationData.data = double.NaN;
+            }
+
+            if (testHeaveMeanData.status == DataStatus.OK && !double.IsNaN(testHeaveMeanData.data) &&
+                refHeaveMeanData.status == DataStatus.OK && !double.IsNaN(refHeaveMeanData.data))
+            {
+                heaveDeviationData.data = testHeaveMeanData.data - refHeaveMeanData.data;
+            }
+            else
+            {
+                heaveDeviationData.data = double.NaN;
+            }
+
+            GraphBuffer.Update(pitchDeviationData, testPitchMeanBuffer);
+            GraphBuffer.Update(rollDeviationData, testRollMeanBuffer);
+            GraphBuffer.Update(heaveDeviationData, testHeaveMeanBuffer);
+
         }
 
         public void StartRecording()
@@ -198,7 +256,7 @@ namespace MVS
             chartUpdateTimer.Stop();
         }
 
-        public void AnalyseProjectData()
+        public void AnalyseProjectData(ReportProgressDelegate reportProgress)
         {
             // Slette gamle data i output felt
             HMSData noData = new HMSData()
@@ -242,16 +300,18 @@ namespace MVS
             testHeaveBuffer.Clear();
             testHeaveMeanBuffer.Clear();
 
+            double progressCount = 0;
+
             foreach (SessionData sessionData in sessionDataList.ToList())
             {
                 // Overføre database data til MVS input
                 mvsInputData.TransferData(sessionData);
 
                 // Prosessere data i input
-                mvsProcessing.Update(mvsInputData, mainWindowVM);
+                mvsProcessing.Update(mvsInputData, mainWindowVM, ProcessingType.DATA_ANALYSIS);
 
                 // Overføre data til grafer - Pitch
-                if (mvsOutputData.GetData(ValueType.Ref_Pitch).status == DataStatus.OK)
+                if (mvsOutputData.GetData(ValueType.Ref_Pitch)?.status == DataStatus.OK)
                 {
                     refPitchBuffer.Add(new HMSData()
                     {
@@ -261,7 +321,7 @@ namespace MVS
                     });
                 }
 
-                if (mvsOutputData.GetData(ValueType.Ref_PitchMean).status == DataStatus.OK)
+                if (mvsOutputData.GetData(ValueType.Ref_PitchMean)?.status == DataStatus.OK)
                 {
                     refPitchMeanBuffer.Add(new HMSData()
                     {
@@ -271,7 +331,7 @@ namespace MVS
                     });
                 }
 
-                if (mvsOutputData.GetData(ValueType.Test_Pitch).status == DataStatus.OK)
+                if (mvsOutputData.GetData(ValueType.Test_Pitch)?.status == DataStatus.OK)
                 {
                     testPitchBuffer.Add(new HMSData()
                     {
@@ -281,7 +341,7 @@ namespace MVS
                     });
                 }
 
-                if (mvsOutputData.GetData(ValueType.Test_PitchMean).status == DataStatus.OK)
+                if (mvsOutputData.GetData(ValueType.Test_PitchMean)?.status == DataStatus.OK)
                 {
                     testPitchMeanBuffer.Add(new HMSData()
                     {
@@ -292,7 +352,7 @@ namespace MVS
                 }
 
                 // Overføre data til grafer - Roll
-                if (mvsOutputData.GetData(ValueType.Ref_Roll).status == DataStatus.OK)
+                if (mvsOutputData.GetData(ValueType.Ref_Roll)?.status == DataStatus.OK)
                 {
                     refRollBuffer.Add(new HMSData()
                     {
@@ -302,7 +362,7 @@ namespace MVS
                     });
                 }
 
-                if (mvsOutputData.GetData(ValueType.Ref_RollMean).status == DataStatus.OK)
+                if (mvsOutputData.GetData(ValueType.Ref_RollMean)?.status == DataStatus.OK)
                 {
                     refRollMeanBuffer.Add(new HMSData()
                     {
@@ -312,7 +372,7 @@ namespace MVS
                     });
                 }
 
-                if (mvsOutputData.GetData(ValueType.Test_Roll).status == DataStatus.OK)
+                if (mvsOutputData.GetData(ValueType.Test_Roll)?.status == DataStatus.OK)
                 {
                     testRollBuffer.Add(new HMSData()
                     {
@@ -322,7 +382,7 @@ namespace MVS
                     });
                 }
 
-                if (mvsOutputData.GetData(ValueType.Test_RollMean).status == DataStatus.OK)
+                if (mvsOutputData.GetData(ValueType.Test_RollMean)?.status == DataStatus.OK)
                 {
                     testRollMeanBuffer.Add(new HMSData()
                     {
@@ -333,7 +393,7 @@ namespace MVS
                 }
 
                 // Overføre data til grafer - Heave
-                if (mvsOutputData.GetData(ValueType.Ref_Heave).status == DataStatus.OK)
+                if (mvsOutputData.GetData(ValueType.Ref_Heave)?.status == DataStatus.OK)
                 {
                     refHeaveBuffer.Add(new HMSData()
                     {
@@ -343,7 +403,7 @@ namespace MVS
                     });
                 }
 
-                if (mvsOutputData.GetData(ValueType.Ref_HeaveMean).status == DataStatus.OK)
+                if (mvsOutputData.GetData(ValueType.Ref_HeaveMean)?.status == DataStatus.OK)
                 {
                     refHeaveMeanBuffer.Add(new HMSData()
                     {
@@ -353,7 +413,7 @@ namespace MVS
                     });
                 }
 
-                if (mvsOutputData.GetData(ValueType.Test_Heave).status == DataStatus.OK)
+                if (mvsOutputData.GetData(ValueType.Test_Heave)?.status == DataStatus.OK)
                 {
                     testHeaveBuffer.Add(new HMSData()
                     {
@@ -363,7 +423,7 @@ namespace MVS
                     });
                 }
 
-                if (mvsOutputData.GetData(ValueType.Test_HeaveMean).status == DataStatus.OK)
+                if (mvsOutputData.GetData(ValueType.Test_HeaveMean)?.status == DataStatus.OK)
                 {
                     testHeaveMeanBuffer.Add(new HMSData()
                     {
@@ -372,6 +432,9 @@ namespace MVS
                         status = DataStatus.OK
                     });
                 }
+
+                // Progress oppdatering
+                reportProgress((int)((progressCount++ / sessionDataList.Count) * 100));
             }
 
             if (mvsOutputData.Count() > 0)

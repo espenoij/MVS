@@ -18,6 +18,7 @@ namespace MVS
             DataContext = projectVM;
 
             // Koble chart til data
+            // Input
             chartPitch1.Series[0].ItemsSource = projectVM.testPitchList;
             chartRoll1.Series[0].ItemsSource = projectVM.testRollList;
             chartHeave1.Series[0].ItemsSource = projectVM.testHeaveList;
@@ -26,6 +27,7 @@ namespace MVS
             chartRoll1.Series[1].ItemsSource = projectVM.refRollList;
             chartHeave1.Series[1].ItemsSource = projectVM.refHeaveList;
 
+            // Mean
             chartPitch2.Series[0].ItemsSource = projectVM.testPitchMeanList;
             chartRoll2.Series[0].ItemsSource = projectVM.testRollMeanList;
             chartHeave2.Series[0].ItemsSource = projectVM.testHeaveMeanList;
@@ -33,6 +35,11 @@ namespace MVS
             chartPitch2.Series[1].ItemsSource = projectVM.refPitchMeanList;
             chartRoll2.Series[1].ItemsSource = projectVM.refRollMeanList;
             chartHeave2.Series[1].ItemsSource = projectVM.refHeaveMeanList;
+
+            // Deviation
+            chartPitch3.Series[0].ItemsSource = projectVM.pitchDeviationList;
+            chartRoll3.Series[0].ItemsSource = projectVM.rollDeviationList;
+            chartHeave3.Series[0].ItemsSource = projectVM.heaveDeviationList;
         }
     }
 }

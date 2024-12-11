@@ -258,7 +258,7 @@
 
                             <!--Project-->
                             <telerik:RadTabItem
-                                Header="Projects">
+                                Header="1. Projects">
 
                                 <DockPanel>
 
@@ -269,10 +269,10 @@
 
                             </telerik:RadTabItem>
 
-                            <!--Data-->
+                            <!--Data Analysis-->
                             <telerik:RadTabItem
                                 Name="tabVerificationRecordings_DataView"
-                                Header="Data">
+                                Header="2. Data Analysis">
 
                                 <DockPanel>
 

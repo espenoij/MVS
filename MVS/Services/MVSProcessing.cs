@@ -15,9 +15,9 @@
         }
 
         // Kjøre prosessering og oppdatere data
-        public void Update(MVSDataCollection mvsInputDataList, MainWindowVM mainWindowVM)
+        public void Update(MVSDataCollection mvsInputDataList, MainWindowVM mainWindowVM, ProcessingType processingType)
         {
-            mvsProcessingMotion.Update(mvsInputDataList, mainWindowVM);
+            mvsProcessingMotion.Update(mvsInputDataList, mainWindowVM, processingType);
         }
 
         public void ResetDataCalculations()

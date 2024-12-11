@@ -305,4 +305,9 @@ public enum ImportResultCode
     ConnectionToMVSDatabaseFailed,
     NoDataFoundForSelectedTimeframe
 }
+public enum ProcessingType
+{
+    LIVE_DATA,
+    DATA_ANALYSIS
+}
 
