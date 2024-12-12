@@ -85,6 +85,7 @@ namespace MVS
                 btnNew.IsEnabled = false;
                 btnDelete.IsEnabled = false;
                 btnImport.IsEnabled = false;
+                lbImport.IsEnabled = false;
 
                 gvVerificationSessions.IsEnabled = false;
             }
@@ -97,15 +98,22 @@ namespace MVS
                 {
                     btnDelete.IsEnabled = false;
                     btnImport.IsEnabled = false;
+                    lbImport.IsEnabled = false;
                 }
                 else
                 {
                     btnDelete.IsEnabled = true;
 
                     if (mainWindowVM.SelectedProject.StartTime == System.Data.SqlTypes.SqlDateTime.MinValue.Value)
+                    {
                         btnImport.IsEnabled = false;
+                        lbImport.IsEnabled = false;
+                    }
                     else
+                    {
                         btnImport.IsEnabled = true;
+                        lbImport.IsEnabled = true;
+                    }
                 }
 
                 gvVerificationSessions.IsEnabled = true;

@@ -95,11 +95,6 @@
                     Click="btnDelete_Click"
                     Width="110"
                     Margin="8,0,0,0">Delete</Button>
-                <Button
-                    Name="btnImport"
-                    Click="btnImport_Click"
-                    Width="140"
-                    Margin="8,0,0,0">Import Data</Button>
 
             </StackPanel>
 
@@ -277,6 +272,21 @@
                                 Width="auto"
                                 Name="cboInputMRUs"
                                 DropDownClosed="cboInputMRUs_DropDownClosed" />
+                        </DockPanel>
+
+                        <DockPanel
+                            Margin="8">
+                            <Label
+                                Name="lbImport"
+                                Width="140"
+                                Content="Import DB Data"
+                                VerticalAlignment="Center" />
+                            <Button
+                                Name="btnImport"
+                                Click="btnImport_Click"
+                                HorizontalAlignment="Right"
+                                Width="100"
+                                Margin="8,0,0,0">Import</Button>
                         </DockPanel>
 
                         <DockPanel

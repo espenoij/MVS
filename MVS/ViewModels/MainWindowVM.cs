@@ -90,7 +90,7 @@ namespace MVS
             get
             {
                 if (!string.IsNullOrEmpty(_selectedProject?.Name))
-                    return string.Format("{0}", _selectedProject.Name);
+                    return string.Format("Project: {0}", _selectedProject.Name);
                 else
                     return string.Empty;
             }

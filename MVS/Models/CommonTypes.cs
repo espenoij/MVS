@@ -154,6 +154,18 @@ public enum ValueType
     Test_HeaveMean,
     Test_HeaveMeanMax,
 
+    Dev_Pitch,
+    Dev_PitchMean,
+    Dev_PitchMax,
+
+    Dev_Roll,
+    Dev_RollMean,
+    Dev_RollMax,
+
+    Dev_Heave,
+    Dev_HeaveMean,
+    Dev_HeaveMax,
+
     // Motion Limits
     MotionLimitPitchRoll,
     MotionLimitHeaveAmplitude,
@@ -310,4 +322,5 @@ public enum ProcessingType
     LIVE_DATA,
     DATA_ANALYSIS
 }
+
 

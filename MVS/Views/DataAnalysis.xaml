@@ -38,27 +38,79 @@
 
             <Grid.ColumnDefinitions>
                 <ColumnDefinition
-                    Width="14*" />
+                    Width="2*" />
                 <ColumnDefinition
                     Width="14*" />
                 <ColumnDefinition
                     Width="14*" />
                 <ColumnDefinition
-                    Width="16*" />
+                    Width="14*" />
+                <ColumnDefinition
+                    Width="12*" />
             </Grid.ColumnDefinitions>
+            
+            <!--Labels-->
+            <Grid
+                Grid.Column="0">
+
+                <Grid.RowDefinitions>
+                    <RowDefinition
+                        Height="6*" />
+                    <RowDefinition
+                        Height="*" />
+                    <RowDefinition
+                        Height="10*" />
+                    <RowDefinition
+                        Height="*" />
+                    <RowDefinition
+                        Height="10*" />
+                    <RowDefinition
+                        Height="*" />
+                    <RowDefinition
+                        Height="6*" />
+                </Grid.RowDefinitions>
+
+                <Viewbox
+                    Grid.Row="1"
+                    StretchDirection="Both"
+                    Stretch="Uniform"
+                    VerticalAlignment="Center">
+                    <TextBlock
+                        Text="Pitch" />
+                </Viewbox>
+
+                <Viewbox
+                    Grid.Row="3"
+                    StretchDirection="Both"
+                    Stretch="Uniform"
+                    VerticalAlignment="Center">
+                    <TextBlock
+                        Text="Roll" />
+                </Viewbox>
+
+                <Viewbox
+                    Grid.Row="5"
+                    StretchDirection="Both"
+                    Stretch="Uniform"
+                    VerticalAlignment="Center">
+                    <TextBlock
+                        Text="Heave" />
+                </Viewbox>
+
+            </Grid>
 
             <!--Input Values-->
             <telerik:GroupBox
-                    Grid.Column="0"
-                    Header="Input"
-                    Margin="8">
+                Grid.Column="1"
+                Header="Input"
+                Margin="8">
 
                 <Grid
                     Margin="8">
 
                     <Grid.ColumnDefinitions>
                         <ColumnDefinition
-                            Width="10*" />
+                            Width="2*" />
                         <ColumnDefinition
                             Width="60*" />
                     </Grid.ColumnDefinitions>
@@ -87,13 +139,6 @@
                         Grid.Column="0"
                         Grid.Row="2">
 
-                        <Grid.ColumnDefinitions>
-                            <ColumnDefinition
-                                Width="4*" />
-                            <ColumnDefinition
-                                Width="1*" />
-                        </Grid.ColumnDefinitions>
-
                         <Grid.RowDefinitions>
                             <RowDefinition
                                 Height="6*" />
@@ -102,19 +147,6 @@
                             <RowDefinition
                                 Height="6*" />
                         </Grid.RowDefinitions>
-
-                        <Viewbox
-                            Grid.Row="1"
-                            Grid.Column="0"
-                            Grid.ColumnSpan="2"
-                            StretchDirection="Both"
-                            Stretch="Uniform"
-                            HorizontalAlignment="Center">
-
-                            <TextBlock
-                                Text="Pitch" />
-
-                        </Viewbox>
 
                         <Grid
                             Grid.Column="1"
@@ -335,13 +367,6 @@
                         Grid.Column="0"
                         Grid.Row="4">
 
-                        <Grid.ColumnDefinitions>
-                            <ColumnDefinition
-                                Width="4*" />
-                            <ColumnDefinition
-                                Width="1*" />
-                        </Grid.ColumnDefinitions>
-
                         <Grid.RowDefinitions>
                             <RowDefinition
                                 Height="6*" />
@@ -350,20 +375,6 @@
                             <RowDefinition
                                 Height="6*" />
                         </Grid.RowDefinitions>
-
-
-                        <Viewbox
-                            Grid.Row="1"
-                            Grid.Column="0"
-                            Grid.ColumnSpan="2"
-                            StretchDirection="Both"
-                            Stretch="Uniform"
-                            HorizontalAlignment="Center">
-
-                            <TextBlock
-                                Text="Roll" />
-
-                        </Viewbox>
 
                         <Grid
                             Grid.Column="1"
@@ -584,13 +595,6 @@
                         Grid.Column="0"
                         Grid.Row="6">
 
-                        <Grid.ColumnDefinitions>
-                            <ColumnDefinition
-                                Width="4*" />
-                            <ColumnDefinition
-                                Width="1*" />
-                        </Grid.ColumnDefinitions>
-
                         <Grid.RowDefinitions>
                             <RowDefinition
                                 Height="6*" />
@@ -599,19 +603,6 @@
                             <RowDefinition
                                 Height="6*" />
                         </Grid.RowDefinitions>
-
-                        <Viewbox
-                            Grid.Row="1"
-                            Grid.Column="0"
-                            Grid.ColumnSpan="2"
-                            StretchDirection="Both"
-                            Stretch="Uniform"
-                            HorizontalAlignment="Center">
-
-                            <TextBlock
-                                Text="Heave" />
-
-                        </Viewbox>
 
 
                     </Grid>
@@ -658,9 +649,7 @@
                                 PlotMode="OnTicks"
                                 TickOrigin="{Binding alignmentTime}"
                                 Minimum="{Binding alignmentTimeMin}"
-                                Maximum="{Binding alignmentTimeMax}"
-                                LineThickness="2"
-                                LineStroke="Black" />
+                                Maximum="{Binding alignmentTimeMax}" />
                         </telerik:RadCartesianChart.HorizontalAxis>
 
                         <telerik:RadCartesianChart.VerticalAxis>
@@ -674,6 +663,16 @@
                             <telerik:CartesianChartGrid
                                 MajorLinesVisibility="XY" />
                         </telerik:RadCartesianChart.Grid>
+
+                        <telerik:RadCartesianChart.Annotations>
+
+                            <telerik:CartesianGridLineAnnotation
+                                Axis="{Binding ElementName=chartPitchVerticalAxis}"
+                                Value="0"
+                                Stroke="Black"
+                                StrokeThickness="2" />
+
+                        </telerik:RadCartesianChart.Annotations>
 
                     </telerik:RadCartesianChart>
 
@@ -770,16 +769,16 @@
 
             <!--Mean Values-->
             <telerik:GroupBox
-                    Grid.Column="1"
-                    Header="Mean"
-                    Margin="8">
+                Grid.Column="2"
+                Header="Mean"
+                Margin="8">
 
                 <Grid
                     Margin="8">
 
                     <Grid.ColumnDefinitions>
                         <ColumnDefinition
-                            Width="10*" />
+                            Width="2*" />
                         <ColumnDefinition
                             Width="60*" />
                     </Grid.ColumnDefinitions>
@@ -804,13 +803,6 @@
                         Grid.Column="0"
                         Grid.Row="0">
 
-                        <Grid.ColumnDefinitions>
-                            <ColumnDefinition
-                                Width="4*" />
-                            <ColumnDefinition
-                                Width="1*" />
-                        </Grid.ColumnDefinitions>
-
                         <Grid.RowDefinitions>
                             <RowDefinition
                                 Height="5*" />
@@ -821,32 +813,6 @@
                             <RowDefinition
                                 Height="6*" />
                         </Grid.RowDefinitions>
-
-                        <Viewbox
-                            Grid.Row="1"
-                            Grid.Column="0"
-                            Grid.ColumnSpan="2"
-                            StretchDirection="Both"
-                            Stretch="Uniform"
-                            HorizontalAlignment="Center">
-
-                            <TextBlock
-                                Text="Mean" />
-
-                        </Viewbox>
-
-                        <Viewbox
-                            Grid.Row="2"
-                            Grid.Column="0"
-                            Grid.ColumnSpan="2"
-                            StretchDirection="Both"
-                            Stretch="Uniform"
-                            HorizontalAlignment="Center">
-
-                            <TextBlock
-                                Text="Pitch" />
-
-                        </Viewbox>
 
                         <Grid
                             Grid.Column="1"
@@ -1074,13 +1040,6 @@
                         Grid.Column="0"
                         Grid.Row="2">
 
-                        <Grid.ColumnDefinitions>
-                            <ColumnDefinition
-                                Width="4*" />
-                            <ColumnDefinition
-                                Width="1*" />
-                        </Grid.ColumnDefinitions>
-
                         <Grid.RowDefinitions>
                             <RowDefinition
                                 Height="5*" />
@@ -1091,32 +1050,6 @@
                             <RowDefinition
                                 Height="6*" />
                         </Grid.RowDefinitions>
-
-                        <Viewbox
-                            Grid.Row="1"
-                            Grid.Column="0"
-                            Grid.ColumnSpan="2"
-                            StretchDirection="Both"
-                            Stretch="Uniform"
-                            HorizontalAlignment="Center">
-
-                            <TextBlock
-                                Text="Mean" />
-
-                        </Viewbox>
-
-                        <Viewbox
-                            Grid.Row="2"
-                            Grid.Column="0"
-                            Grid.ColumnSpan="2"
-                            StretchDirection="Both"
-                            Stretch="Uniform"
-                            HorizontalAlignment="Center">
-
-                            <TextBlock
-                                Text="Roll" />
-
-                        </Viewbox>
 
                         <Grid
                             Grid.Column="1"
@@ -1367,55 +1300,6 @@
                         VerticalAlignment="Bottom" />-->
 
                     <!--Heave-->
-                    <Grid
-                        Grid.Column="0"
-                        Grid.Row="4">
-
-                        <Grid.ColumnDefinitions>
-                            <ColumnDefinition
-                                Width="4*" />
-                            <ColumnDefinition
-                                Width="1*" />
-                        </Grid.ColumnDefinitions>
-
-                        <Grid.RowDefinitions>
-                            <RowDefinition
-                                Height="5*" />
-                            <RowDefinition
-                                Height="*" />
-                            <RowDefinition
-                                Height="*" />
-                            <RowDefinition
-                                Height="5*" />
-                        </Grid.RowDefinitions>
-
-                        <Viewbox
-                            Grid.Row="1"
-                            Grid.Column="0"
-                            StretchDirection="Both"
-                            Stretch="Uniform"
-                            HorizontalAlignment="Center">
-
-                            <TextBlock
-                                Text="Mean" />
-
-                        </Viewbox>
-
-                        <Viewbox
-                            Grid.Row="2"
-                            Grid.Column="0"
-                            StretchDirection="Both"
-                            Stretch="Uniform"
-                            HorizontalAlignment="Center">
-
-                            <TextBlock
-                                Text="Heave" />
-
-                        </Viewbox>
-
-
-                    </Grid>
-
                     <telerik:RadCartesianChart
                         Grid.Column="1"
                         Grid.Row="4"
@@ -1458,21 +1342,29 @@
                                 PlotMode="OnTicks"
                                 TickOrigin="{Binding alignmentTime}"
                                 Minimum="{Binding alignmentTimeMin}"
-                                Maximum="{Binding alignmentTimeMax}"
-                                LineThickness="2"
-                                LineStroke="Black"/>
+                                Maximum="{Binding alignmentTimeMax}" />
                         </telerik:RadCartesianChart.HorizontalAxis>
 
                         <telerik:RadCartesianChart.VerticalAxis>
                             <telerik:LinearAxis
                                 Maximum="{Binding meanHeaveChartAxisMax}"
-                                Minimum="{Binding meanHeaveChartAxisMin}"/>
+                                Minimum="{Binding meanHeaveChartAxisMin}" />
                         </telerik:RadCartesianChart.VerticalAxis>
 
                         <telerik:RadCartesianChart.Grid>
                             <telerik:CartesianChartGrid
                                 MajorLinesVisibility="XY" />
                         </telerik:RadCartesianChart.Grid>
+
+                        <telerik:RadCartesianChart.Annotations>
+
+                            <telerik:CartesianGridLineAnnotation
+                                Axis="{Binding ElementName=chartPitchVerticalAxis}"
+                                Value="0"
+                                Stroke="Black"
+                                StrokeThickness="2" />
+
+                        </telerik:RadCartesianChart.Annotations>
 
                     </telerik:RadCartesianChart>
 
@@ -1568,16 +1460,16 @@
 
             <!--Deviation Values-->
             <telerik:GroupBox
-                    Grid.Column="2"
-                    Header="Mean"
-                    Margin="8">
+                Grid.Column="3"
+                Header="Deviation"
+                Margin="8">
 
                 <Grid
                     Margin="8">
 
                     <Grid.ColumnDefinitions>
                         <ColumnDefinition
-                            Width="10*" />
+                            Width="2*" />
                         <ColumnDefinition
                             Width="60*" />
                     </Grid.ColumnDefinitions>
@@ -1602,13 +1494,6 @@
                         Grid.Column="0"
                         Grid.Row="0">
 
-                        <Grid.ColumnDefinitions>
-                            <ColumnDefinition
-                                Width="4*" />
-                            <ColumnDefinition
-                                Width="1*" />
-                        </Grid.ColumnDefinitions>
-
                         <Grid.RowDefinitions>
                             <RowDefinition
                                 Height="5*" />
@@ -1619,32 +1504,6 @@
                             <RowDefinition
                                 Height="6*" />
                         </Grid.RowDefinitions>
-
-                        <Viewbox
-                            Grid.Row="1"
-                            Grid.Column="0"
-                            Grid.ColumnSpan="2"
-                            StretchDirection="Both"
-                            Stretch="Uniform"
-                            HorizontalAlignment="Center">
-
-                            <TextBlock
-                                Text="Pitch" />
-
-                        </Viewbox>
-
-                        <Viewbox
-                            Grid.Row="2"
-                            Grid.Column="0"
-                            Grid.ColumnSpan="2"
-                            StretchDirection="Both"
-                            Stretch="Uniform"
-                            HorizontalAlignment="Center">
-
-                            <TextBlock
-                                Text="Dev" />
-
-                        </Viewbox>
 
                         <Grid
                             Grid.Column="1"
@@ -1872,13 +1731,6 @@
                         Grid.Column="0"
                         Grid.Row="2">
 
-                        <Grid.ColumnDefinitions>
-                            <ColumnDefinition
-                                Width="4*" />
-                            <ColumnDefinition
-                                Width="1*" />
-                        </Grid.ColumnDefinitions>
-
                         <Grid.RowDefinitions>
                             <RowDefinition
                                 Height="5*" />
@@ -1889,32 +1741,6 @@
                             <RowDefinition
                                 Height="6*" />
                         </Grid.RowDefinitions>
-
-                        <Viewbox
-                            Grid.Row="1"
-                            Grid.Column="0"
-                            Grid.ColumnSpan="2"
-                            StretchDirection="Both"
-                            Stretch="Uniform"
-                            HorizontalAlignment="Center">
-
-                            <TextBlock
-                                Text="Roll" />
-
-                        </Viewbox>
-
-                        <Viewbox
-                            Grid.Row="2"
-                            Grid.Column="0"
-                            Grid.ColumnSpan="2"
-                            StretchDirection="Both"
-                            Stretch="Uniform"
-                            HorizontalAlignment="Center">
-
-                            <TextBlock
-                                Text="Dev" />
-
-                        </Viewbox>
 
                         <Grid
                             Grid.Column="1"
@@ -2165,55 +1991,6 @@
                         VerticalAlignment="Bottom" />-->
 
                     <!--Heave-->
-                    <Grid
-                        Grid.Column="0"
-                        Grid.Row="4">
-
-                        <Grid.ColumnDefinitions>
-                            <ColumnDefinition
-                                Width="4*" />
-                            <ColumnDefinition
-                                Width="1*" />
-                        </Grid.ColumnDefinitions>
-
-                        <Grid.RowDefinitions>
-                            <RowDefinition
-                                Height="5*" />
-                            <RowDefinition
-                                Height="*" />
-                            <RowDefinition
-                                Height="*" />
-                            <RowDefinition
-                                Height="5*" />
-                        </Grid.RowDefinitions>
-
-                        <Viewbox
-                            Grid.Row="1"
-                            Grid.Column="0"
-                            StretchDirection="Both"
-                            Stretch="Uniform"
-                            HorizontalAlignment="Center">
-
-                            <TextBlock
-                                Text="Heave" />
-
-                        </Viewbox>
-
-                        <Viewbox
-                            Grid.Row="2"
-                            Grid.Column="0"
-                            StretchDirection="Both"
-                            Stretch="Uniform"
-                            HorizontalAlignment="Center">
-
-                            <TextBlock
-                                Text="Dev" />
-
-                        </Viewbox>
-
-
-                    </Grid>
-
                     <telerik:RadCartesianChart
                         Grid.Column="1"
                         Grid.Row="4"
@@ -2256,21 +2033,29 @@
                                 PlotMode="OnTicks"
                                 TickOrigin="{Binding alignmentTime}"
                                 Minimum="{Binding alignmentTimeMin}"
-                                Maximum="{Binding alignmentTimeMax}"
-                                LineThickness="2"
-                                LineStroke="Black"/>
+                                Maximum="{Binding alignmentTimeMax}" />
                         </telerik:RadCartesianChart.HorizontalAxis>
 
                         <telerik:RadCartesianChart.VerticalAxis>
                             <telerik:LinearAxis
                                 Maximum="{Binding meanHeaveChartAxisMax}"
-                                Minimum="{Binding meanHeaveChartAxisMin}"/>
+                                Minimum="{Binding meanHeaveChartAxisMin}" />
                         </telerik:RadCartesianChart.VerticalAxis>
 
                         <telerik:RadCartesianChart.Grid>
                             <telerik:CartesianChartGrid
                                 MajorLinesVisibility="XY" />
                         </telerik:RadCartesianChart.Grid>
+
+                        <telerik:RadCartesianChart.Annotations>
+
+                            <telerik:CartesianGridLineAnnotation
+                                Axis="{Binding ElementName=chartPitchVerticalAxis}"
+                                Value="0"
+                                Stroke="Black"
+                                StrokeThickness="2" />
+
+                        </telerik:RadCartesianChart.Annotations>
 
                     </telerik:RadCartesianChart>
 
@@ -2365,89 +2150,83 @@
             </telerik:GroupBox>
 
             <Grid
-                Grid.Column="3"
+                Grid.Column="4"
                 Background="{StaticResource ColorBackgroundSeparator}">
 
                 <Grid.RowDefinitions>
                     <RowDefinition
-                            Height="32" />
+                        Height="2*" />
                     <RowDefinition
-                            Height="*" />
+                        Height="20*" />
                 </Grid.RowDefinitions>
 
                 <!--Title Bar Line Legend-->
                 <Grid
                     Grid.Row="0">
 
-                    <Grid.ColumnDefinitions>
-                        <ColumnDefinition
-                        Width="1*" />
-                        <ColumnDefinition
-                        Width="5*" />
-                        <ColumnDefinition
-                        Width="1*" />
-                        <ColumnDefinition
-                        Width="5*" />
-                    </Grid.ColumnDefinitions>
+                    <Grid.RowDefinitions>
+                        <RowDefinition
+                            Height="*" />
+                        <RowDefinition
+                            Height="*" />
+                    </Grid.RowDefinitions>
 
-                    <StackPanel
-                    Orientation="Horizontal"
-                    Grid.Column="1">
+                    <DockPanel
+                        Grid.Row="0">
 
                         <Viewbox
-                        StretchDirection="Both"
-                        Stretch="Uniform"
-                        HorizontalAlignment="Center">
+                            StretchDirection="Both"
+                            Stretch="Uniform"
+                            HorizontalAlignment="Center">
 
                             <Rectangle
-                            Margin="1"
-                            Width="{StaticResource lineLegendWidthTitle}"
-                            Height="{StaticResource lineLegendHeight}"
-                            Fill="{StaticResource ColorGraphLineRef}" />
+                                Margin="1"
+                                Width="{StaticResource lineLegendWidthTitle}"
+                                Height="{StaticResource lineLegendHeight}"
+                                Fill="{StaticResource ColorGraphLineRef}" />
                         </Viewbox>
 
                         <Viewbox
-                        StretchDirection="Both"
-                        Stretch="Uniform"
-                        HorizontalAlignment="Center">
+                            StretchDirection="Both"
+                            Stretch="Uniform"
+                            HorizontalAlignment="Left">
 
-                            <TextBlock
-                            Margin="4"
-                            Text="Reference MRU" />
+                            <telerik:Label
+                                Margin="4"
+                                Content="Reference MRU" />
 
                         </Viewbox>
 
-                    </StackPanel>
+                    </DockPanel>
 
 
-                    <StackPanel
-                    Orientation="Horizontal"
-                    Grid.Column="3">
+                    <DockPanel
+                        Grid.Row="1">
 
                         <Viewbox
-                        StretchDirection="Both"
-                        Stretch="Uniform"
-                        HorizontalAlignment="Center">
+                            StretchDirection="Both"
+                            Stretch="Uniform"
+                            HorizontalAlignment="Center">
 
                             <Rectangle
-                            Margin="1"
-                            Width="{StaticResource lineLegendWidthTitle}"
-                            Height="{StaticResource lineLegendHeight}"
-                            Fill="{StaticResource ColorGraphLineTest}" />
+                                Margin="1"
+                                Width="{StaticResource lineLegendWidthTitle}"
+                                Height="{StaticResource lineLegendHeight}"
+                                Fill="{StaticResource ColorGraphLineTest}" />
                         </Viewbox>
 
                         <Viewbox
-                        StretchDirection="Both"
-                        Stretch="Uniform"
-                        HorizontalAlignment="Center">
+                            StretchDirection="Both"
+                            Stretch="Uniform"
+                            HorizontalAlignment="Left">
 
-                            <TextBlock
-                            Margin="4"
-                            Text="Test MRU" />
+                            <telerik:Label
+                                Margin="4"
+                                Content="Test MRU" />
 
                         </Viewbox>
 
-                    </StackPanel>
+                    </DockPanel>
 
                 </Grid>
 
@@ -2544,6 +2323,24 @@
 
                         </Grid>
 
+                        <!--Pitch Title-->
+                        <Grid
+                            Grid.Row="2"
+                            Grid.RowSpan="2">
+
+                            <Viewbox
+                                Grid.Column="1"
+                                StretchDirection="Both"
+                                Stretch="Uniform"
+                                HorizontalAlignment="Left">
+
+                                <TextBlock
+                                    Text="Pitch" />
+
+                            </Viewbox>
+
+                        </Grid>
+
                         <!--Pitch Labels-->
                         <Grid
                             Grid.Row="3">
@@ -2608,7 +2405,7 @@
                                 HorizontalAlignment="Left">
 
                                 <TextBlock
-                                    Text="Max Pitch" />
+                                    Text="Max" />
 
                             </Viewbox>
 
@@ -2697,7 +2494,7 @@
                                 HorizontalAlignment="Left">
 
                                 <TextBlock
-                                    Text="Mean Pitch" />
+                                    Text="Mean" />
 
                             </Viewbox>
 
@@ -2748,7 +2545,7 @@
                                 HorizontalAlignment="Left">
 
                                 <TextBlock
-                                    Text="Mean Pitch Deviation" />
+                                    Text="Deviation" />
 
                             </Viewbox>
 
@@ -2760,7 +2557,7 @@
                                 HorizontalAlignment="Center">
 
                                 <TextBlock
-                                    Text="{Binding Path=deviationPitchMeanString}"
+                                    Text="{Binding Path=devPitchMeanString}"
                                     FontSize="{StaticResource fontSizeData}" />
 
                             </Viewbox>
@@ -2844,6 +2641,24 @@
 
                         </Grid>
 
+                        <!--Roll Title-->
+                        <Grid
+                            Grid.Row="2"
+                            Grid.RowSpan="2">
+
+                            <Viewbox
+                                Grid.Column="1"
+                                StretchDirection="Both"
+                                Stretch="Uniform"
+                                HorizontalAlignment="Left">
+
+                                <TextBlock
+                                    Text="Roll" />
+
+                            </Viewbox>
+
+                        </Grid>
+
                         <!--Roll Labels-->
                         <Grid
                             Grid.Row="3">
@@ -2908,7 +2723,7 @@
                                 HorizontalAlignment="Left">
 
                                 <TextBlock
-                                    Text="Max Roll" />
+                                    Text="Max" />
 
                             </Viewbox>
 
@@ -2997,7 +2812,7 @@
                                 HorizontalAlignment="Left">
 
                                 <TextBlock
-                                    Text="Mean Roll" />
+                                    Text="Mean" />
 
                             </Viewbox>
 
@@ -3048,7 +2863,7 @@
                                 HorizontalAlignment="Left">
 
                                 <TextBlock
-                                    Text="Mean Roll Deviation" />
+                                    Text="Deviation" />
 
                             </Viewbox>
 
@@ -3060,7 +2875,7 @@
                                 HorizontalAlignment="Center">
 
                                 <TextBlock
-                                    Text="{Binding Path=rollMeanDeviationString}"
+                                    Text="{Binding Path=devRollMeanString}"
                                     FontSize="{StaticResource fontSizeData}" />
 
                             </Viewbox>
@@ -3142,6 +2957,24 @@
 
                         </Grid>
 
+                        <!--Heave Title-->
+                        <Grid
+                            Grid.Row="2"
+                            Grid.RowSpan="2">
+
+                            <Viewbox
+                                Grid.Column="1"
+                                StretchDirection="Both"
+                                Stretch="Uniform"
+                                HorizontalAlignment="Left">
+
+                                <TextBlock
+                                    Text="Heave" />
+
+                            </Viewbox>
+
+                        </Grid>
+
                         <!--Heave Labels-->
                         <Grid
                             Grid.Row="3">
@@ -3206,7 +3039,7 @@
                                 HorizontalAlignment="Left">
 
                                 <TextBlock
-                                    Text="Max Heave" />
+                                    Text="Max" />
 
                             </Viewbox>
 
@@ -3256,7 +3089,7 @@
                                 HorizontalAlignment="Left">
 
                                 <TextBlock
-                                    Text="Mean Heave" />
+                                    Text="Mean" />
 
                             </Viewbox>
 
@@ -3307,7 +3140,7 @@
                                 HorizontalAlignment="Left">
 
                                 <TextBlock
-                                    Text="Mean Heave Deviation" />
+                                    Text="Deviation" />
 
                             </Viewbox>
 
@@ -3319,7 +3152,7 @@
                                 HorizontalAlignment="Center">
 
                                 <TextBlock
-                                    Text="{Binding Path=deviationMeanHeaveString}"
+                                    Text="{Binding Path=devHeaveMeanString}"
                                     FontSize="{StaticResource fontSizeData}" />
 
                             </Viewbox>

@@ -29,6 +29,10 @@ namespace MVS
         private HMSData testPitchMeanData = new HMSData();
         private HMSData testPitchMeanMaxData = new HMSData();
 
+        private HMSData devPitchData = new HMSData();
+        private HMSData devPitchMeanData = new HMSData();
+        private HMSData devPitchMaxData = new HMSData();
+
         // Roll
         private HMSData refRollData = new HMSData();
         private HMSData refRollMaxData = new HMSData();
@@ -44,6 +48,10 @@ namespace MVS
         private HMSData testRollMeanData = new HMSData();
         private HMSData testRollMeanMaxData = new HMSData();
 
+        private HMSData devRollData = new HMSData();
+        private HMSData devRollMeanData = new HMSData();
+        private HMSData devRollMaxData = new HMSData();
+
         // Heave
         private HMSData refHeaveData = new HMSData();
         private HMSData refHeaveMaxData = new HMSData();
@@ -58,6 +66,10 @@ namespace MVS
         private HMSData testHeaveMaxDownData = new HMSData();
         private HMSData testHeaveMeanData = new HMSData();
         private HMSData testHeaveMeanMaxData = new HMSData();
+
+        private HMSData devHeaveData = new HMSData();
+        private HMSData devHeaveMeanData = new HMSData();
+        private HMSData devHeaveMaxData = new HMSData();
 
         // Admin Settings
         private AdminSettingsVM adminSettingsVM;
@@ -115,6 +127,19 @@ namespace MVS
             hmsOutputDataList.Add(testHeaveMaxDownData);
             hmsOutputDataList.Add(testHeaveMeanData);
             hmsOutputDataList.Add(testHeaveMeanMaxData);
+
+            // Deviation
+            hmsOutputDataList.Add(devPitchData);
+            hmsOutputDataList.Add(devPitchMeanData);
+            hmsOutputDataList.Add(devPitchMaxData);
+            
+            hmsOutputDataList.Add(devRollData);
+            hmsOutputDataList.Add(devRollMeanData);
+            hmsOutputDataList.Add(devRollMaxData);
+            
+            hmsOutputDataList.Add(devHeaveData);
+            hmsOutputDataList.Add(devHeaveMeanData);
+            hmsOutputDataList.Add(devHeaveMaxData);
 
             // Legge på litt informasjon på de variablene som ikke får dette automatisk fra sensor input data
             // (Disse verdiene blir kalkulert her, mens sensor input data over bare kopieres videre med denne typen info allerede inkludert)
@@ -275,6 +300,47 @@ namespace MVS
             testHeaveMeanMaxData.InitProcessing(errorHandler, ErrorMessageCategory.AdminUser, adminSettingsVM);
             testHeaveMeanMaxData.AddProcessing(CalculationType.TimeMaxAbsolute, Constants.Minutes20);
 
+            // Deviation Pitch
+            devPitchData.id = (int)ValueType.Dev_Pitch;
+            devPitchData.name = "Deviation: Pitch";
+
+            devPitchMeanData.id = (int)ValueType.Dev_PitchMean;
+            devPitchMeanData.name = "Deviation: Pitch Mean";
+            devPitchMeanData.InitProcessing(errorHandler, ErrorMessageCategory.AdminUser, adminSettingsVM);
+            devPitchMeanData.AddProcessing(CalculationType.TimeAverage, Constants.Minutes20);
+
+            devPitchMaxData.id = (int)ValueType.Dev_PitchMax;
+            devPitchMaxData.name = "Deviation: Pitch Max";
+            devPitchMaxData.InitProcessing(errorHandler, ErrorMessageCategory.AdminUser, adminSettingsVM);
+            devPitchMaxData.AddProcessing(CalculationType.TimeMaxAbsolute, Constants.Minutes20);
+
+            // Deviation Roll
+            devRollData.id = (int)ValueType.Dev_Roll;
+            devRollData.name = "Deviation: Roll";
+
+            devRollMeanData.id = (int)ValueType.Dev_RollMean;
+            devRollMeanData.name = "Deviation: Roll Mean";
+            devRollMeanData.InitProcessing(errorHandler, ErrorMessageCategory.AdminUser, adminSettingsVM);
+            devRollMeanData.AddProcessing(CalculationType.TimeAverage, Constants.Minutes20);
+
+            devRollMaxData.id = (int)ValueType.Dev_RollMax;
+            devRollMaxData.name = "Deviation: Roll Max";
+            devRollMaxData.InitProcessing(errorHandler, ErrorMessageCategory.AdminUser, adminSettingsVM);
+            devRollMaxData.AddProcessing(CalculationType.TimeMaxAbsolute, Constants.Minutes20);
+
+            // Deviation Heave
+            devHeaveData.id = (int)ValueType.Dev_Heave;
+            devHeaveData.name = "Deviation: Heave";
+
+            devHeaveMeanData.id = (int)ValueType.Dev_HeaveMean;
+            devHeaveMeanData.name = "Deviation: Heave Mean";
+            devHeaveMeanData.InitProcessing(errorHandler, ErrorMessageCategory.AdminUser, adminSettingsVM);
+            devHeaveMeanData.AddProcessing(CalculationType.TimeAverage, Constants.Minutes20);
+
+            devHeaveMaxData.id = (int)ValueType.Dev_HeaveMax;
+            devHeaveMaxData.name = "Deviation: Heave Max";
+            devHeaveMaxData.InitProcessing(errorHandler, ErrorMessageCategory.AdminUser, adminSettingsVM);
+            devHeaveMaxData.AddProcessing(CalculationType.TimeMaxAbsolute, Constants.Minutes20);
         }
 
         public void Update(MVSDataCollection hmsInputDataList, MainWindowVM mainWindowVM, ProcessingType processingType)
@@ -549,6 +615,57 @@ namespace MVS
                     testHeaveMeanMaxData.status = DataStatus.NONE;
                 }
             }
+
+            // Deviation
+            //////////////////////////////////////////////////////////////////
+            ///
+            // Pitch
+            if (refPitchData.status == DataStatus.OK && !double.IsNaN(refPitchData.data) &&
+                testPitchData.status == DataStatus.OK && !double.IsNaN(testPitchData.data))
+            {
+                devPitchData.data = testPitchData.data - refPitchData.data;
+                devPitchData.status = DataStatus.OK;
+            }
+            else
+            {
+                devPitchData.data = double.NaN;
+                devPitchData.status = DataStatus.NONE;
+            }
+
+            devPitchMeanData.DoProcessing(devPitchData);
+            devPitchMaxData.DoProcessing(devPitchData);
+
+            // Roll
+            if (refRollData.status == DataStatus.OK && !double.IsNaN(refRollData.data) &&
+                testRollData.status == DataStatus.OK && !double.IsNaN(testRollData.data))
+            {
+                devRollData.data = testRollData.data - refRollData.data;
+                devRollData.status = DataStatus.OK;
+            }
+            else
+            {
+                devRollData.data = double.NaN;
+                devRollData.status = DataStatus.NONE;
+            }
+
+            devRollMeanData.DoProcessing(devRollData);
+            devRollMaxData.DoProcessing(devRollData);
+
+            // Heave
+            if (refHeaveData.status == DataStatus.OK && !double.IsNaN(refHeaveData.data) &&
+                testHeaveData.status == DataStatus.OK && !double.IsNaN(testHeaveData.data))
+            {
+                devHeaveData.data = testHeaveData.data - refHeaveData.data;
+                devHeaveData.status = DataStatus.OK;
+            }
+            else
+            {
+                devHeaveData.data = double.NaN;
+                devHeaveData.status = DataStatus.NONE;
+            }
+
+            devHeaveMeanData.DoProcessing(devHeaveData);
+            devHeaveMaxData.DoProcessing(devHeaveData);
         }
 
         // Resette dataCalculations
@@ -590,6 +707,15 @@ namespace MVS
             testHeaveMaxDownData.ResetDataCalculations();
             testHeaveMeanData.ResetDataCalculations();
             testHeaveMeanMaxData.ResetDataCalculations();
+
+            devPitchMeanData.ResetDataCalculations();
+            devPitchMaxData.ResetDataCalculations();
+
+            devRollMaxData.ResetDataCalculations();
+            devRollMeanData.ResetDataCalculations();
+
+            devHeaveMeanData.ResetDataCalculations();
+            devHeaveMaxData.ResetDataCalculations();
         }
     }
 }
