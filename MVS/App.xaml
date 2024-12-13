@@ -29,7 +29,9 @@
             
             <SolidColorBrush
                 x:Key="ColorGraphLineRef">#FF06D6A0</SolidColorBrush>
-            
+            <SolidColorBrush
+                x:Key="ColorGraphLineDev">#ff0099ff</SolidColorBrush>
+
             <Style TargetType="local:MainWindow" BasedOn="{StaticResource RadWindowStyle}" />
             
             <sys:Double x:Key="fontSizeTab">16</sys:Double>

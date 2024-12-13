@@ -624,6 +624,7 @@ namespace MVS
                 testPitchData.status == DataStatus.OK && !double.IsNaN(testPitchData.data))
             {
                 devPitchData.data = testPitchData.data - refPitchData.data;
+                devPitchData.timestamp = DateTime.UtcNow;
                 devPitchData.status = DataStatus.OK;
             }
             else
@@ -640,6 +641,7 @@ namespace MVS
                 testRollData.status == DataStatus.OK && !double.IsNaN(testRollData.data))
             {
                 devRollData.data = testRollData.data - refRollData.data;
+                devRollData.timestamp = DateTime.UtcNow;
                 devRollData.status = DataStatus.OK;
             }
             else
@@ -656,6 +658,7 @@ namespace MVS
                 testHeaveData.status == DataStatus.OK && !double.IsNaN(testHeaveData.data))
             {
                 devHeaveData.data = testHeaveData.data - refHeaveData.data;
+                devHeaveData.timestamp = DateTime.UtcNow;
                 devHeaveData.status = DataStatus.OK;
             }
             else

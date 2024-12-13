@@ -1,4 +1,5 @@
-﻿using System;
+﻿using Org.BouncyCastle.Ocsp;
+using System;
 using System.ComponentModel;
 using System.Linq;
 using System.Runtime.CompilerServices;
@@ -218,12 +219,6 @@ namespace MVS
             devHeaveData = mvsDataCollection.GetData(ValueType.Dev_Heave);
             devHeaveMeanData = mvsDataCollection.GetData(ValueType.Dev_HeaveMean);
             devHeaveMaxData = mvsDataCollection.GetData(ValueType.Dev_HeaveMax);
-
-
-            GraphBuffer.Update(devPitchData, testPitchMeanBuffer);
-            GraphBuffer.Update(devRollData, testRollMeanBuffer);
-            GraphBuffer.Update(devHeaveData, testHeaveMeanBuffer);
-
         }
 
         public void StartRecording()
@@ -336,6 +331,16 @@ namespace MVS
                     });
                 }
 
+                if (mvsOutputData.GetData(ValueType.Dev_Pitch)?.status == DataStatus.OK)
+                {
+                    devPitchBuffer.Add(new HMSData()
+                    {
+                        data = mvsOutputData.GetData(ValueType.Dev_Pitch).data,
+                        timestamp = sessionData.timestamp,
+                        status = DataStatus.OK
+                    });
+                }
+
                 // Overføre data til grafer - Roll
                 if (mvsOutputData.GetData(ValueType.Ref_Roll)?.status == DataStatus.OK)
                 {
@@ -372,6 +377,16 @@ namespace MVS
                     testRollMeanBuffer.Add(new HMSData()
                     {
                         data = mvsOutputData.GetData(ValueType.Test_RollMean).data,
+                        timestamp = sessionData.timestamp,
+                        status = DataStatus.OK
+                    });
+                }
+
+                if (mvsOutputData.GetData(ValueType.Dev_Roll)?.status == DataStatus.OK)
+                {
+                    devRollBuffer.Add(new HMSData()
+                    {
+                        data = mvsOutputData.GetData(ValueType.Dev_Roll).data,
                         timestamp = sessionData.timestamp,
                         status = DataStatus.OK
                     });
@@ -418,6 +433,16 @@ namespace MVS
                     });
                 }
 
+                if (mvsOutputData.GetData(ValueType.Dev_Heave)?.status == DataStatus.OK)
+                {
+                    devHeaveBuffer.Add(new HMSData()
+                    {
+                        data = mvsOutputData.GetData(ValueType.Dev_Heave).data,
+                        timestamp = sessionData.timestamp,
+                        status = DataStatus.OK
+                    });
+                }
+
                 // Progress oppdatering
                 reportProgress((int)((progressCount++ / sessionDataList.Count) * 100));
             }
@@ -428,22 +453,22 @@ namespace MVS
                 refPitchMaxData = mvsOutputData.GetData(ValueType.Ref_PitchMax);
                 refPitchMaxUpData = mvsOutputData.GetData(ValueType.Ref_PitchMaxUp);
                 refPitchMaxDownData = mvsOutputData.GetData(ValueType.Ref_PitchMaxDown);
-
                 refRollMaxData = mvsOutputData.GetData(ValueType.Ref_RollMax);
                 refRollMaxLeftData = mvsOutputData.GetData(ValueType.Ref_RollMaxLeft);
                 refRollMaxRightData = mvsOutputData.GetData(ValueType.Ref_RollMaxRight);
-
                 refHeaveMaxData = mvsOutputData.GetData(ValueType.Ref_HeaveMax);
 
                 testPitchMaxData = mvsOutputData.GetData(ValueType.Test_PitchMax);
                 testPitchMaxUpData = mvsOutputData.GetData(ValueType.Test_PitchMaxUp);
                 testPitchMaxDownData = mvsOutputData.GetData(ValueType.Test_PitchMaxDown);
-
                 testRollMaxData = mvsOutputData.GetData(ValueType.Test_RollMax);
                 testRollMaxLeftData = mvsOutputData.GetData(ValueType.Test_RollMaxLeft);
                 testRollMaxRightData = mvsOutputData.GetData(ValueType.Test_RollMaxRight);
-
                 testHeaveMaxData = mvsOutputData.GetData(ValueType.Test_HeaveMax);
+
+                devPitchMaxData = mvsOutputData.GetData(ValueType.Dev_PitchMax);
+                devRollMaxData = mvsOutputData.GetData(ValueType.Dev_RollMax);
+                devHeaveMaxData = mvsOutputData.GetData(ValueType.Dev_HeaveMax);
 
                 // Hente mean verdier
                 refPitchMeanData = mvsOutputData.GetData(ValueType.Ref_PitchMean);
@@ -459,6 +484,10 @@ namespace MVS
                 testRollMeanMaxData = mvsOutputData.GetData(ValueType.Test_RollMeanMax);
                 testHeaveMeanData = mvsOutputData.GetData(ValueType.Test_HeaveMean);
                 testHeaveMeanMaxData = mvsOutputData.GetData(ValueType.Test_HeaveMeanMax);
+
+                devPitchMeanData = mvsOutputData.GetData(ValueType.Dev_PitchMean);
+                devRollMeanData = mvsOutputData.GetData(ValueType.Dev_RollMean);
+                devHeaveMeanData = mvsOutputData.GetData(ValueType.Dev_HeaveMean);
             }
 
             // Oppdatere alignment datetime til alle chart
@@ -582,27 +611,6 @@ namespace MVS
 
             devPitchBuffer.Clear();
             devPitchList.Clear();
-
-            for (int i = -Constants.Minutes20; i <= 0; i++)
-            {
-                refPitchMeanList.Add(new HMSData()
-                {
-                    data = 0,
-                    timestamp = DateTime.UtcNow.AddSeconds(i)
-                });
-
-                testPitchMeanList.Add(new HMSData()
-                {
-                    data = 0,
-                    timestamp = DateTime.UtcNow.AddSeconds(i)
-                });
-
-                devPitchList.Add(new HMSData()
-                {
-                    data = 0,
-                    timestamp = DateTime.UtcNow.AddSeconds(i)
-                });
-            }
         }
 
         private HMSData _pitchData { get; set; } = new HMSData();
@@ -995,6 +1003,22 @@ namespace MVS
 
                     OnPropertyChanged(nameof(devPitchChartAxisMax));
                     OnPropertyChanged(nameof(devPitchChartAxisMin));
+                    OnPropertyChanged(nameof(devPitchMaxString));
+                }
+            }
+        }
+
+        public string devPitchMaxString
+        {
+            get
+            {
+                if (_devPitchMaxData.status == DataStatus.OK && !double.IsNaN(_devPitchMaxData.data))
+                {
+                    return Math.Round(_devPitchMaxData.data, 3, MidpointRounding.AwayFromZero).ToString(Constants.numberFormatRecDataSigned);
+                }
+                else
+                {
+                    return Constants.NotAvailable;
                 }
             }
         }
@@ -1064,27 +1088,6 @@ namespace MVS
 
             devRollBuffer.Clear();
             devRollList.Clear();
-
-            for (int i = -Constants.Minutes20; i <= 0; i++)
-            {
-                refRollMeanList.Add(new HMSData()
-                {
-                    data = 0,
-                    timestamp = DateTime.UtcNow.AddSeconds(i)
-                });
-
-                testRollMeanList.Add(new HMSData()
-                {
-                    data = 0,
-                    timestamp = DateTime.UtcNow.AddSeconds(i)
-                });
-
-                devRollList.Add(new HMSData()
-                {
-                    data = 0,
-                    timestamp = DateTime.UtcNow.AddSeconds(i)
-                });
-            }
         }
 
         private HMSData _refRollData { get; set; } = new HMSData();
@@ -1478,6 +1481,22 @@ namespace MVS
 
                     OnPropertyChanged(nameof(devRollChartAxisMax));
                     OnPropertyChanged(nameof(devRollChartAxisMin));
+                    OnPropertyChanged(nameof(devRollMaxString));
+                }
+            }
+        }
+
+        public string devRollMaxString
+        {
+            get
+            {
+                if (_devRollMaxData.status == DataStatus.OK && !double.IsNaN(_devRollMaxData.data))
+                {
+                    return Math.Round(_devRollMaxData.data, 3, MidpointRounding.AwayFromZero).ToString(Constants.numberFormatRecDataSigned);
+                }
+                else
+                {
+                    return Constants.NotAvailable;
                 }
             }
         }
@@ -1546,27 +1565,6 @@ namespace MVS
 
             devHeaveBuffer.Clear();
             devHeaveList.Clear();
-
-            for (int i = -Constants.Minutes20; i <= 0; i++)
-            {
-                refHeaveMeanList.Add(new HMSData()
-                {
-                    data = 0,
-                    timestamp = DateTime.UtcNow.AddSeconds(i)
-                });
-
-                testHeaveMeanList.Add(new HMSData()
-                {
-                    data = 0,
-                    timestamp = DateTime.UtcNow.AddSeconds(i)
-                });
-
-                devHeaveList.Add(new HMSData()
-                {
-                    data = 0,
-                    timestamp = DateTime.UtcNow.AddSeconds(i)
-                });
-            }
         }
 
         private HMSData _refHeaveData { get; set; } = new HMSData();
@@ -1835,6 +1833,21 @@ namespace MVS
             }
         }
 
+        public string devHeaveMaxString
+        {
+            get
+            {
+                if (_devHeaveMaxData.status == DataStatus.OK && !double.IsNaN(_devHeaveMaxData.data))
+                {
+                    return Math.Round(_devHeaveMaxData.data, 3, MidpointRounding.AwayFromZero).ToString(Constants.numberFormatRecDataSigned);
+                }
+                else
+                {
+                    return Constants.NotAvailable;
+                }
+            }
+        }
+
         private HMSData _devHeaveMeanData { get; set; } = new HMSData();
         public HMSData devHeaveMeanData
         {
@@ -1857,7 +1870,7 @@ namespace MVS
         {
             get
             {
-                if (_devHeaveData.status == DataStatus.OK && !double.IsNaN(_devHeaveData.data))
+                if (_devHeaveMeanData.status == DataStatus.OK && !double.IsNaN(_devHeaveMeanData.data))
                 {
                     return Math.Round(_devHeaveMeanData.data, 3, MidpointRounding.AwayFromZero).ToString(Constants.numberFormatRecDataSigned);
                 }
@@ -1951,7 +1964,7 @@ namespace MVS
         {
             get
             {
-                return ChartAxisMax(_devPitchMaxData.data, Constants.MeanAxisMargin, Constants.MeanAxisDefault);
+                return ChartAxisMax(_devPitchMaxData.data, Constants.InputAxisMargin, Constants.InputAxisDefault);
             }
         }
 
@@ -2001,7 +2014,7 @@ namespace MVS
         {
             get
             {
-                return ChartAxisMax(_devRollMaxData.data, Constants.MeanAxisMargin, Constants.MeanAxisDefault);
+                return ChartAxisMax(_devRollMaxData.data, Constants.InputAxisMargin, Constants.InputAxisDefault);
             }
         }
 
@@ -2051,7 +2064,7 @@ namespace MVS
         {
             get
             {
-                return ChartAxisMax(_devHeaveMaxData.data, Constants.MeanAxisDefault, Constants.InputAxisDefault);
+                return ChartAxisMax(_devHeaveMaxData.data, Constants.InputAxisMargin, Constants.InputAxisDefault);
             }
         }
 
@@ -2075,19 +2088,19 @@ namespace MVS
             if (!double.IsNaN(refData.data) && !double.IsNaN(testData.data))
             {
                 if (Math.Abs(refData.data) > Math.Abs(testData.data))
-                    return (double)(Math.Round(((Math.Round(refData.data * (1 / margin), MidpointRounding.AwayFromZero) / (1 / margin)) + margin), decimals, MidpointRounding.AwayFromZero));
+                    return (double)(Math.Round(((Math.Round(Math.Abs(refData.data) * (1 / margin), MidpointRounding.AwayFromZero) / (1 / margin)) + margin), decimals, MidpointRounding.AwayFromZero));
                 else
-                    return (double)(Math.Round(((Math.Round(testData.data * (1 / margin), MidpointRounding.AwayFromZero) / (1 / margin)) + margin), decimals, MidpointRounding.AwayFromZero));
+                    return (double)(Math.Round(((Math.Round(Math.Abs(testData.data) * (1 / margin), MidpointRounding.AwayFromZero) / (1 / margin)) + margin), decimals, MidpointRounding.AwayFromZero));
             }
             else
             if (!double.IsNaN(refData.data))
             {
-                return (double)(Math.Round(((Math.Round(refData.data * (1 / margin), MidpointRounding.AwayFromZero) / (1 / margin)) + margin), decimals, MidpointRounding.AwayFromZero));
+                return (double)(Math.Round(((Math.Round(Math.Abs(refData.data) * (1 / margin), MidpointRounding.AwayFromZero) / (1 / margin)) + margin), decimals, MidpointRounding.AwayFromZero));
             }
             else
             if (!double.IsNaN(testData.data))
             {
-                return (double)(Math.Round(((Math.Round(testData.data * (1 / margin), MidpointRounding.AwayFromZero) / (1 / margin)) + margin), decimals, MidpointRounding.AwayFromZero));
+                return (double)(Math.Round(((Math.Round(Math.Abs(testData.data) * (1 / margin), MidpointRounding.AwayFromZero) / (1 / margin)) + margin), decimals, MidpointRounding.AwayFromZero));
             }
             else
             {
@@ -2099,7 +2112,7 @@ namespace MVS
         {
             if (!double.IsNaN(inputData))
             {
-                return (double)((Math.Round(inputData * (1 / margin), MidpointRounding.AwayFromZero) / (1 / margin)) + margin);
+                return (double)((Math.Round(Math.Abs(inputData) * (1 / margin), MidpointRounding.AwayFromZero) / (1 / margin)) + margin);
             }
             else
             {
