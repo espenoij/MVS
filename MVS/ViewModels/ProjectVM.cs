@@ -126,23 +126,7 @@ namespace MVS
                 alignmentTime = DateTime.UtcNow;
 
                 // Oppdatere aksene
-                OnPropertyChanged(nameof(pitchChartAxisMax));
-                OnPropertyChanged(nameof(pitchChartAxisMin));
-
-                OnPropertyChanged(nameof(rollChartAxisMax));
-                OnPropertyChanged(nameof(rollChartAxisMin));
-
-                OnPropertyChanged(nameof(heaveChartAxisMax));
-                OnPropertyChanged(nameof(heaveChartAxisMin));
-
-                OnPropertyChanged(nameof(meanPitchChartAxisMax));
-                OnPropertyChanged(nameof(meanPitchChartAxisMin));
-
-                OnPropertyChanged(nameof(meanRollChartAxisMax));
-                OnPropertyChanged(nameof(meanRollChartAxisMin));
-
-                OnPropertyChanged(nameof(meanHeaveChartAxisMax));
-                OnPropertyChanged(nameof(meanHeaveChartAxisMin));
+                UpdateAxies();
             }
         }
 
@@ -219,6 +203,36 @@ namespace MVS
             devHeaveData = mvsDataCollection.GetData(ValueType.Dev_Heave);
             devHeaveMeanData = mvsDataCollection.GetData(ValueType.Dev_HeaveMean);
             devHeaveMaxData = mvsDataCollection.GetData(ValueType.Dev_HeaveMax);
+        }
+
+        public void UpdateAxies()
+        {
+            OnPropertyChanged(nameof(pitchChartAxisMax));
+            OnPropertyChanged(nameof(pitchChartAxisMin));
+
+            OnPropertyChanged(nameof(rollChartAxisMax));
+            OnPropertyChanged(nameof(rollChartAxisMin));
+
+            OnPropertyChanged(nameof(heaveChartAxisMax));
+            OnPropertyChanged(nameof(heaveChartAxisMin));
+
+            OnPropertyChanged(nameof(meanPitchChartAxisMax));
+            OnPropertyChanged(nameof(meanPitchChartAxisMin));
+
+            OnPropertyChanged(nameof(meanRollChartAxisMax));
+            OnPropertyChanged(nameof(meanRollChartAxisMin));
+
+            OnPropertyChanged(nameof(meanHeaveChartAxisMax));
+            OnPropertyChanged(nameof(meanHeaveChartAxisMin));
+
+            OnPropertyChanged(nameof(devPitchChartAxisMax));
+            OnPropertyChanged(nameof(devPitchChartAxisMin));
+
+            OnPropertyChanged(nameof(devRollChartAxisMax));
+            OnPropertyChanged(nameof(devRollChartAxisMin));
+
+            OnPropertyChanged(nameof(devHeaveChartAxisMax));
+            OnPropertyChanged(nameof(devHeaveChartAxisMin));
         }
 
         public void StartRecording()
@@ -495,16 +509,6 @@ namespace MVS
                 alignmentTime = sessionDataList.Last().timestamp;
             else
                 alignmentTime = DateTime.UtcNow;
-
-            // Oppdatere aksene
-            OnPropertyChanged(nameof(pitchChartAxisMax));
-            OnPropertyChanged(nameof(pitchChartAxisMin));
-
-            OnPropertyChanged(nameof(rollChartAxisMax));
-            OnPropertyChanged(nameof(rollChartAxisMin));
-
-            OnPropertyChanged(nameof(heaveChartAxisMax));
-            OnPropertyChanged(nameof(heaveChartAxisMin));
         }
 
         public double AddToMeanSum(HMSData hmsData)
@@ -574,6 +578,9 @@ namespace MVS
             GraphBuffer.Transfer(devPitchBuffer, devPitchList);
             GraphBuffer.Transfer(devRollBuffer, devRollList);
             GraphBuffer.Transfer(devHeaveBuffer, devHeaveList);
+
+            // Oppdatere aksene
+            UpdateAxies();
         }
 
         /////////////////////////////////////////////////////////////////////////////
