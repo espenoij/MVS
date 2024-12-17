@@ -19,7 +19,7 @@
     <telerik:RadWindow.Resources>
         <Style
             x:Key="SensorDataColorCode"
-            TargetType="telerik:GridViewRow"
+            TargetType="telerik:GridViewDataColumn"
             BasedOn="{StaticResource GridViewRowStyle}">
             <Style.Triggers>
 
@@ -67,32 +67,32 @@
         </Style>
 
         <Style
-            x:Key="RecordingStatusIndicator"
+            x:Key="ProjectRecordingStatusIndicator"
             TargetType="Ellipse">
             <Style.Triggers>
                 <DataTrigger
-                    Binding="{Binding Path=recordingStatus}"
+                    Binding="{Binding Path=projectRecordingStatus}"
                     Value="OFF">
                     <Setter
                         Property="Fill"
                         Value="{StaticResource ColorBackgroundSeparator}" />
                 </DataTrigger>
                 <DataTrigger
-                    Binding="{Binding Path=recordingStatus}"
+                    Binding="{Binding Path=projectRecordingStatus}"
                     Value="RED">
                     <Setter
                         Property="Fill"
                         Value="{StaticResource ColorRed}" />
                 </DataTrigger>
                 <DataTrigger
-                    Binding="{Binding Path=recordingStatus}"
+                    Binding="{Binding Path=projectRecordingStatus}"
                     Value="AMBER">
                     <Setter
                         Property="Fill"
                         Value="{StaticResource ColorAmber}" />
                 </DataTrigger>
                 <DataTrigger
-                    Binding="{Binding Path=recordingStatus}"
+                    Binding="{Binding Path=projectRecordingStatus}"
                     Value="GREEN">
                     <Setter
                         Property="Fill"
@@ -209,7 +209,7 @@
                                         Visibility="{Binding RecordingSymbolVisibility}"
                                         Width="20"
                                         Height="20"
-                                        Style="{StaticResource RecordingStatusIndicator}"/>
+                                        Style="{StaticResource ProjectRecordingStatusIndicator}"/>
 
                                     <!--Operations Mode/Time Info String-->
                                     <Label
@@ -250,11 +250,11 @@
 
                         <!--Projects Tab-->
                         <telerik:RadTabControl
-                            Name="tcVerificationRecordings"
+                            Name="tcProjects"
                             DockPanel.Dock="Bottom"
                             HeaderBackground="{StaticResource ColorHorizontalBarBackground}"
                             Margin="8,0,8,8"
-                            SelectionChanged="tcVerificationRecordings_SelectionChanged">
+                            SelectionChanged="tcProjects_SelectionChanged">
 
                             <!--Project-->
                             <telerik:RadTabItem
@@ -271,7 +271,7 @@
 
                             <!--Data Analysis-->
                             <telerik:RadTabItem
-                                Name="tabVerificationRecordings_DataView"
+                                Name="tabDataAnalysis"
                                 Header="2. Data Analysis">
 
                                 <DockPanel>

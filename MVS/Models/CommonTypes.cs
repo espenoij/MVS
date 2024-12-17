@@ -171,7 +171,7 @@ public enum ValueType
     MotionLimitHeaveAmplitude,
 }
 
-public enum RecordingStatusType
+public enum ProjectStatusType
 {
     OFF,
     RED,

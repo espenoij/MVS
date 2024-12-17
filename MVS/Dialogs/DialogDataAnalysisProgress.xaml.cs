@@ -1,6 +1,7 @@
 ﻿using Telerik.Windows.Controls;
 using System.Windows.Threading;
 using System;
+using System.ComponentModel;
 
 namespace MVS
 {

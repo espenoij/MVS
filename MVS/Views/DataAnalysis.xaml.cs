@@ -37,9 +37,9 @@ namespace MVS
             chartHeave2.Series[1].ItemsSource = projectVM.refHeaveMeanList;
 
             // Deviation
-            chartPitch3.Series[0].ItemsSource = projectVM.devPitchList;
-            chartRoll3.Series[0].ItemsSource = projectVM.devRollList;
-            chartHeave3.Series[0].ItemsSource = projectVM.devHeaveList;
+            chartPitch3.Series[0].ItemsSource = projectVM.devPitchMeanList;
+            chartRoll3.Series[0].ItemsSource = projectVM.devRollMeanList;
+            chartHeave3.Series[0].ItemsSource = projectVM.devHeaveMeanList;
         }
     }
 }

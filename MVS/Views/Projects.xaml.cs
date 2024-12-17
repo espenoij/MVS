@@ -10,7 +10,7 @@ using static MVS.MainWindow;
 namespace MVS
 {
     /// <summary>
-    /// Interaction logic for VerificationSessions.xaml
+    /// Interaction logic for Projects.xaml
     /// </summary>
     public partial class Projects : UserControl
     {
@@ -18,7 +18,7 @@ namespace MVS
         private MVSDatabase mvsDatabase;
 
         // Motion Data Set List
-        private RadObservableCollection<Project> motionVerificationSessionList = new RadObservableCollection<Project>();
+        private RadObservableCollection<Project> mvsProjectList = new RadObservableCollection<Project>();
 
         private MainWindowVM mainWindowVM;
         private Config config;
@@ -54,7 +54,7 @@ namespace MVS
             importVM.Init(config);
 
             // Liste med sensor verdier
-            gvVerificationSessions.ItemsSource = motionVerificationSessionList;
+            gvProjects.ItemsSource = mvsProjectList;
 
             // Fylle input setup combobox
             cboInputMRUs.Items.Add(InputMRUType.ReferenceMRU_TestMRU.GetDescription());
@@ -64,13 +64,13 @@ namespace MVS
             cboInputMRUs.Text = cboInputMRUs.Items[0].ToString();
 
             // Laste sensor data
-            LoadVerificationSessions();
+            LoadProjects();
 
             //// Sette første set som selected
-            //if (gvVerificationSessions.Items.Count > 0)
+            //if (gvProjects.Items.Count > 0)
             //{
-            //    gvVerificationSessions.SelectedItem = gvVerificationSessions.Items[0];
-            //    mainWindowVM.SelectedSession = (MotionDataSet)gvVerificationSessions.Items[0];
+            //    gvProjects.SelectedItem = gvProjects.Items[0];
+            //    mainWindowVM.SelectedSession = (MotionDataSet)gvProjects.Items[0];
             //    LoadSelectedItemsDetails();
             //}
 
@@ -87,7 +87,7 @@ namespace MVS
                 btnImport.IsEnabled = false;
                 lbImport.IsEnabled = false;
 
-                gvVerificationSessions.IsEnabled = false;
+                gvProjects.IsEnabled = false;
             }
             else
             {
@@ -116,7 +116,7 @@ namespace MVS
                     }
                 }
 
-                gvVerificationSessions.IsEnabled = true;
+                gvProjects.IsEnabled = true;
             }
 
             if (mainWindowVM.SelectedProject != null)
@@ -133,7 +133,7 @@ namespace MVS
             }
         }
 
-        private void LoadVerificationSessions()
+        private void LoadProjects()
         {
             // Hente liste med data set fra database
             List<Project> sessionList = mvsDatabase.GetAllSessions();
@@ -146,7 +146,7 @@ namespace MVS
                     // Laste timestamps på data set
                     mvsDatabase.LoadTimestamps(item);
 
-                    motionVerificationSessionList.Insert(0, item);
+                    mvsProjectList.Insert(0, item);
                 }
             }
         }
@@ -182,11 +182,11 @@ namespace MVS
             newSession.Id = mvsDatabase.Insert(newSession);
 
             // Legge i listen
-            motionVerificationSessionList.Insert(0, newSession);
+            mvsProjectList.Insert(0, newSession);
 
             // Sette ny item som selected (vil også laste data ettersom SelectionChange under kalles automatisk når vi gjør dette)
-            int index = gvVerificationSessions.Items.IndexOf(newSession);
-            gvVerificationSessions.SelectedItem = gvVerificationSessions.Items[index];
+            int index = gvProjects.Items.IndexOf(newSession);
+            gvProjects.SelectedItem = gvProjects.Items[index];
 
             updateUIButtonsCallback();
         }
@@ -205,10 +205,10 @@ namespace MVS
                         mvsDatabase.Remove(mainWindowVM.SelectedProject);
 
                         // Slette fra listen
-                        motionVerificationSessionList.Remove(mainWindowVM.SelectedProject);
+                        mvsProjectList.Remove(mainWindowVM.SelectedProject);
 
                         // Sette item 0 som selected (vil også laste data ettersom SelectionChange under kalles automatisk når vi gjør dette)
-                        gvVerificationSessions.SelectedItem = gvVerificationSessions.Items[0];
+                        gvProjects.SelectedItem = gvProjects.Items[0];
                     }
                 }
             }
@@ -228,7 +228,7 @@ namespace MVS
             LoadSelectedItemsDetails();
         }
 
-        private void gvVerificationSessions_SelectionChanged(object sender, SelectionChangeEventArgs e)
+        private void gvProjects_SelectionChanged(object sender, SelectionChangeEventArgs e)
         {
             mainWindowVM.SelectedProject = (sender as RadGridView).SelectedItem as Project;
 

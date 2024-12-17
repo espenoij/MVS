@@ -2,7 +2,7 @@
 
 namespace MVS
 {
-    public class SessionData
+    public class ProjectData
     {
         public int id;
         public DateTime timestamp;
@@ -16,16 +16,16 @@ namespace MVS
         public double testHeave;
 
         // Initialize
-        public SessionData()
+        public ProjectData()
         {
         }
 
-        public SessionData(SessionData session)
+        public ProjectData(ProjectData session)
         {
             Set(session);
         }
 
-        public void Set(SessionData session)
+        public void Set(ProjectData session)
         {
             if (session != null)
             {

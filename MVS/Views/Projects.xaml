@@ -6,51 +6,56 @@
     xmlns:d="http://schemas.microsoft.com/expression/blend/2008"
     xmlns:telerik="http://schemas.telerik.com/2008/xaml/presentation"
     mc:Ignorable="d"
+    xmlns:mvs="clr-namespace:MVS.Helpers"
     d:DesignHeight="1100"
     d:DesignWidth="1400">
 
     <UserControl.Resources>
 
-        <Style
-            x:Key="RecordingStatusIndicator"
-            TargetType="telerik:GridViewRow"
-            BasedOn="{StaticResource GridViewRowStyle}">
-            <Style.Triggers>
-
-                <DataTrigger
-                    Binding="{Binding Path=recordingStatus}"
-                    Value="OFF">
-                    <Setter
-                        Property="Background"
-                        Value="{StaticResource ColorBackgroundSeparator}" />
-                </DataTrigger>
-
-                <DataTrigger
-                    Binding="{Binding Path=recordingStatus}"
-                    Value="GREEN">
+        <mvs:ProjectDurationStyle
+            x:Key="projectDurationStyle">
+            
+            <mvs:ProjectDurationStyle.ProjectStatusGreenStyle>
+                <Style
+                    TargetType="telerik:GridViewCell"
+                    BasedOn="{StaticResource GridViewCellStyle}">
                     <Setter
                         Property="Background"
                         Value="{StaticResource ColorGreen}" />
-                </DataTrigger>
+                </Style>
+            </mvs:ProjectDurationStyle.ProjectStatusGreenStyle>
 
-                <DataTrigger
-                    Binding="{Binding Path=recordingStatus}"
-                    Value="AMBER">
-                    <Setter
-                        Property="Background"
-                        Value="{StaticResource ColorAmber}" />
-                </DataTrigger>
-
-                <DataTrigger
-                    Binding="{Binding Path=recordingStatus}"
-                    Value="RED">
+            <mvs:ProjectDurationStyle.ProjectStatusRedStyle>
+                <Style
+                    TargetType="telerik:GridViewCell"
+                    BasedOn="{StaticResource GridViewCellStyle}">
                     <Setter
                         Property="Background"
                         Value="{StaticResource ColorRed}" />
-                </DataTrigger>
+                </Style>
+            </mvs:ProjectDurationStyle.ProjectStatusRedStyle>
 
-            </Style.Triggers>
-        </Style>
+            <mvs:ProjectDurationStyle.ProjectStatusAmberStyle>
+                <Style
+                    TargetType="telerik:GridViewCell"
+                    BasedOn="{StaticResource GridViewCellStyle}">
+                    <Setter
+                        Property="Background"
+                        Value="{StaticResource ColorAmber}" />
+                </Style>
+            </mvs:ProjectDurationStyle.ProjectStatusAmberStyle>
+
+            <mvs:ProjectDurationStyle.ProjectStatusOffStyle>
+                <Style
+                    TargetType="telerik:GridViewCell"
+                    BasedOn="{StaticResource GridViewCellStyle}">
+                    <Setter
+                        Property="Background"
+                        Value="{StaticResource ColorBackgroundSeparator}" />
+                </Style>
+            </mvs:ProjectDurationStyle.ProjectStatusOffStyle>
+
+        </mvs:ProjectDurationStyle>
 
     </UserControl.Resources>
 
@@ -112,9 +117,9 @@
 
             <telerik:RadGridView   
                 Grid.Column="0"
-                Name="gvVerificationSessions"
+                Name="gvProjects"
                 Margin="8,0,0,8"
-                ItemsSource="{Binding RecordingSession}"
+                ItemsSource="{Binding Project}"
                 IsReadOnly="True"
                 IsManipulationEnabled="True"
                 CanUserSortColumns="True"
@@ -122,9 +127,10 @@
                 CanUserReorderColumns="False"
                 CanUserDeleteRows="True"
                 RowIndicatorVisibility="Collapsed"
+
                 SelectionMode="Single"
                 AutoGenerateColumns="False"
-                SelectionChanged="gvVerificationSessions_SelectionChanged">
+                SelectionChanged="gvProjects_SelectionChanged">
 
                 <telerik:RadGridView.Columns>
                     <telerik:GridViewDataColumn
@@ -139,18 +145,12 @@
                         Width="2*"
                         Header="Date"
                         DataMemberBinding="{Binding DateString}" />
-                    <!--<telerik:GridViewDataColumn
-                        Width="1*"
-                        Header="Start Time"
-                        DataMemberBinding="{Binding StartTimeString}" />
                     <telerik:GridViewDataColumn
-                        Width="1*"
-                        Header="End Time"
-                        DataMemberBinding="{Binding EndTimeString}" />-->
-                    <!--<telerik:GridViewDataColumn
-                        Width="1*"
+                        Width="*"
                         Header="Duration"
-                        DataMemberBinding="{Binding DurationString}" />-->
+                        CellStyleSelector="{StaticResource projectDurationStyle}"
+                        DataMemberBinding="{Binding DurationString}" />
+
                 </telerik:RadGridView.Columns>
 
             </telerik:RadGridView>

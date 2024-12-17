@@ -22,7 +22,7 @@
     <telerik:RadWindow.Resources>
         <ResourceDictionary>
             <Style
-                TargetType="local:DialogImportProgress"
+                TargetType="local:DialogDataAnalysisProgress"
                 BasedOn="{StaticResource RadWindowStyle}" />
         </ResourceDictionary>
     </telerik:RadWindow.Resources>
@@ -31,7 +31,7 @@
         Margin="8">
 
         <telerik:Label
-            Content="Loading Data and Analysing..." />
+            Content="Loading Data and Analyzing..." />
 
         <telerik:RadProgressBar
             Name="dataAnalysisProgressBar"

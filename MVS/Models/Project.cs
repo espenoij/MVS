@@ -105,6 +105,7 @@ namespace MVS
                 OnPropertyChanged(nameof(StartTimeString2));
                 OnPropertyChanged(nameof(DateString));
                 OnPropertyChanged(nameof(DurationString));
+                OnPropertyChanged(nameof(projectStatus));
             }
         }
         public string DateString
@@ -152,6 +153,7 @@ namespace MVS
                 OnPropertyChanged(nameof(EndTimeString));
                 OnPropertyChanged(nameof(EndTimeString2));
                 OnPropertyChanged(nameof(DurationString));
+                OnPropertyChanged(nameof(projectStatus));
             }
         }
         public string EndTimeString
@@ -217,6 +219,35 @@ namespace MVS
             {
                 _inputMRUs = value;
                 OnPropertyChanged();
+            }
+        }
+
+        public ProjectStatusType projectStatus
+        {
+            get
+            {
+                if (DataSetHasData())
+                {
+                    TimeSpan duration = _endTime - _startTime;
+
+                    if (duration.TotalMinutes >= 40)
+                    {
+                        return ProjectStatusType.GREEN;
+                    }
+                    else
+                    if (duration.TotalMinutes >= 20)
+                    {
+                        return ProjectStatusType.AMBER;
+                    }
+                    else
+                    {
+                        return ProjectStatusType.RED;
+                    }
+                }
+                else
+                {
+                    return ProjectStatusType.OFF;
+                }
             }
         }
 

@@ -49,7 +49,7 @@ namespace MVS
         public void InitUI()
         {
             // Liste med sensor verdier
-            gvVerificationSessions.ItemsSource = sensorDataList;
+            gvProjects.ItemsSource = sensorDataList;
 
             // Fylle sensor type combobox
             foreach (var value in Enum.GetValues(typeof(SensorType)))
@@ -128,8 +128,8 @@ namespace MVS
             config.NewData(sensorDataList[sensorDataList.Count - 1]);
 
             // Sette ny item som selected (vil også laste data ettersom SelectionChange under kalles automatisk når vi gjør dette)
-            int index = gvVerificationSessions.Items.IndexOf(newSensor);
-            gvVerificationSessions.SelectedItem = gvVerificationSessions.Items[index];
+            int index = gvProjects.Items.IndexOf(newSensor);
+            gvProjects.SelectedItem = gvProjects.Items[index];
         }
 
         private void btnCopy_Click(object sender, RoutedEventArgs e)
@@ -175,8 +175,8 @@ namespace MVS
             config.NewData(sensorDataList[sensorDataList.Count - 1]);
 
             // Sette ny item som selected (vil også laste data ettersom SelectionChange under kalles automatisk når vi gjør dette)
-            int index = gvVerificationSessions.Items.IndexOf(newSensor);
-            gvVerificationSessions.SelectedItem = gvVerificationSessions.Items[index];
+            int index = gvProjects.Items.IndexOf(newSensor);
+            gvProjects.SelectedItem = gvProjects.Items[index];
         }
 
         private void btnDelete_Click(object sender, RoutedEventArgs e)
@@ -195,12 +195,12 @@ namespace MVS
                     //((List<SensorData>)gvSensorSetupsItems.ItemsSource).Remove(sensorDataSelected);
 
                     // Sette item 0 som selected (vil også laste data ettersom SelectionChange under kalles automatisk når vi gjør dette)
-                    gvVerificationSessions.SelectedItem = gvVerificationSessions.Items[0];
+                    gvProjects.SelectedItem = gvProjects.Items[0];
                 }
             }
         }
 
-        private void gvVerificationSessions_SelectionChanged(object sender, SelectionChangeEventArgs e)
+        private void gvProjects_SelectionChanged(object sender, SelectionChangeEventArgs e)
         {
             sensorDataSelected = (sender as RadGridView).SelectedItem as SensorData; // <------------- Elegant kode
 

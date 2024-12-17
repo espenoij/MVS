@@ -707,7 +707,7 @@ namespace MVS
             }
         }
 
-        public void LoadSessionData(Project dataSet, RadObservableCollection<SessionData> dataList)
+        public void LoadSessionData(Project dataSet, RadObservableCollection<ProjectData> dataList)
         {
             try
             {
@@ -740,7 +740,7 @@ namespace MVS
                         // Lagre data
                         while (dbReader.Read())
                         {
-                            SessionData data = new SessionData();
+                            ProjectData data = new ProjectData();
 
                             data.id = dbReader.GetInt16(0);
                             data.timestamp = dbReader.GetDateTime(1);
@@ -778,7 +778,7 @@ namespace MVS
             {
                 if (isDatabaseConnectionOK)
                 {
-                    RadObservableCollection<SessionData> dataList = new RadObservableCollection<SessionData>();
+                    RadObservableCollection<ProjectData> dataList = new RadObservableCollection<ProjectData>();
 
                     string hmsDBaddress = config.ReadWithDefault(ConfigKey.HMSDatabaseAddress, Constants.DefaultHMSDatabaseAddress);
                     string hmsDBport = config.ReadWithDefault(ConfigKey.HMSDatabasePort, Constants.DefaultHMSDatabasePort).ToString();
@@ -826,7 +826,7 @@ namespace MVS
                         // Lagre data
                         while (dbReader.Read())
                         {
-                            SessionData data = new SessionData();
+                            ProjectData data = new ProjectData();
 
                             data.id = dbReader.GetInt16(0);
                             data.timestamp = dbReader.GetDateTime(1);

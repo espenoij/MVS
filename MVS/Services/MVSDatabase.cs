@@ -252,7 +252,7 @@ namespace MVS
             }
         }
 
-        public void LoadSessionData(Project dataSet, RadObservableCollection<SessionData> dataList)
+        public void LoadSessionData(Project dataSet, RadObservableCollection<ProjectData> dataList)
         {
             try
             {

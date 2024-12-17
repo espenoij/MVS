@@ -73,7 +73,7 @@ namespace MVS
 
         // Model View
         private MainWindowVM mainWindowVM;
-        private ProjectVM recordingsVM;
+        private ProjectVM projectVM;
         private AboutVM aboutVM;
 
         public MainWindow()
@@ -131,14 +131,14 @@ namespace MVS
             InitUIMVS();
 
             // Recordings Data VM
-            recordingsVM = new ProjectVM();
-            recordingsVM.Init(mainWindowVM, mvsProcessing, mvsInputData, mvsOutputData);
+            projectVM = new ProjectVM();
+            projectVM.Init(mainWindowVM, mvsProcessing, mvsInputData, mvsOutputData);
 
             // Recordings page
             ucProjects.Init(mainWindowVM, config, mvsDatabase, updateUIButtonsCallback);
 
             // Recordings Data page
-            ucDataAnalysis.Init(recordingsVM);
+            ucDataAnalysis.Init(projectVM);
 
             // Sensor Input Setup
             ucSensorSetupPage.Init(config, errorHandler, adminSettingsVM);
@@ -405,7 +405,7 @@ namespace MVS
                         mvsProcessing.Update(mvsInputData, mainWindowVM, ProcessingType.LIVE_DATA);
 
                         // Oppdatere graf data
-                        recordingsVM.UpdateData(mvsOutputData);
+                        projectVM.UpdateData(mvsOutputData);
 
                         // MVS: Lagre data i databasen
                         /////////////////////////////////////////////////////////////////////////////////////////////////////
@@ -590,10 +590,10 @@ namespace MVS
                 // Vise recording symbol
                 mainWindowVM.RecordingSymbolVisibility = Visibility.Visible;
 
-                recordingsVM.StartRecording();
+                projectVM.StartRecording();
 
                 // Gå til Analyse tab
-                tabVerificationRecordings_DataView.IsSelected = true;
+                tabDataAnalysis.IsSelected = true;
             }
         }
 
@@ -629,7 +629,7 @@ namespace MVS
             // Start elapsed time
             mainWindowVM.StartTimer();
 
-            recordingsVM.StartRecording();
+            projectVM.StartRecording();
         }
 
         private void Stop()
@@ -659,7 +659,7 @@ namespace MVS
             // Skjule recording symbol
             mainWindowVM.RecordingSymbolVisibility = Visibility.Collapsed;
 
-            recordingsVM.StopRecording();
+            projectVM.StopRecording();
         }
 
         private void DoDatabaseMaintenance()
@@ -764,37 +764,35 @@ namespace MVS
             // Sette ops mode til analyse
             mainWindowVM.OperationsMode = OperationsMode.ViewData;
 
-            // Laste session data fra databasen
-            mvsDatabase.LoadSessionData(mainWindowVM.SelectedProject, recordingsVM.sessionDataList);
-
             // Resetter data listene i dataCalculations
             mvsProcessing.ResetDataCalculations();
 
+            // Laste session data fra databasen
+            mvsDatabase.LoadSessionData(mainWindowVM.SelectedProject, projectVM.projectsDataList);
+
             // Analysere session data
-            recordingsVM.AnalyseProjectData(dataViewWorker.ReportProgress);
+            projectVM.AnalyseProjectData(dataViewWorker.ReportProgress);
         }
 
-        private void importWorker_ProgressChanged(object sender, System.ComponentModel.ProgressChangedEventArgs e)
+        private void importWorker_ProgressChanged(object sender, ProgressChangedEventArgs e)
         {
             mainWindowVM.dataAnalysisProgress = e.ProgressPercentage;
         }
 
         private void dataViewWorker_RunWorkerCompleted(object sender, RunWorkerCompletedEventArgs e)
         {
-            // Resette ops mode
-            //mainWindowVM.OperationsMode = OperationsMode.Stop;
-
-            //ucProjectsAnalysis.TransferToDisplay(recordingsVM);
-
-            recordingsVM.TransferToDisplay();
+            projectVM.TransferToDisplay();
         }
 
-        private void tcVerificationRecordings_SelectionChanged(object sender, RadSelectionChangedEventArgs e)
+        private void tcProjects_SelectionChanged(object sender, RadSelectionChangedEventArgs e)
         {
-            if (tabVerificationRecordings_DataView.IsSelected &&
+            if (tabDataAnalysis.IsSelected &&
                 mainWindowVM.OperationsMode != OperationsMode.Recording &&
                 mainWindowVM.OperationsMode != OperationsMode.Test)
             {
+                // Clear display data
+                projectVM.ClearDisplayData();
+
                 // Starte data analyse
                 dataViewWorker.RunWorkerAsync();
 

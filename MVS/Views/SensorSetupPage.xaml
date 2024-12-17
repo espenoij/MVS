@@ -929,7 +929,7 @@
 
             <telerik:RadGridView
                 DockPanel.Dock="Left"
-                Name="gvVerificationSessions"
+                Name="gvProjects"
                 Margin="8,0,0,8"
                 ItemsSource="{Binding SensorData}"
                 IsReadOnly="True"
@@ -941,7 +941,7 @@
                 RowIndicatorVisibility="Collapsed"
                 SelectionMode="Single"
                 AutoGenerateColumns="False"
-                SelectionChanged="gvVerificationSessions_SelectionChanged">
+                SelectionChanged="gvProjects_SelectionChanged">
 
                 <telerik:RadGridView.Columns>
                     <telerik:GridViewDataColumn

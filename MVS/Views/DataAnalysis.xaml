@@ -402,84 +402,101 @@
 
                     </Grid>
 
-                    <!--Pitch Mean Chart-->
-                    <telerik:RadCartesianChart
+                    <Grid
                         Grid.Column="1"
-                        Grid.Row="0"
-                        Name="chartPitch2"
-                        Margin="10,0,0,0">
+                        Grid.Row="0">
 
-                        <!--Pitch Mean Test-->
-                        <telerik:LineSeries
-                            ZIndex="200"
-                            Stroke="{StaticResource ColorGraphLineTest}"
-                            CategoryBinding="timestamp"
-                            ValueBinding="graphData">
+                        <Grid.RowDefinitions>
+                            <RowDefinition
+                                Height="Auto" />
+                            <RowDefinition
+                                Height="*" />
+                        </Grid.RowDefinitions>
 
-                            <telerik:LineSeries.RenderOptions>
-                                <telerik:XamlRenderOptions
-                                    DefaultVisualsRenderMode="Batch" />
-                            </telerik:LineSeries.RenderOptions>
+                        <!--Chart header-->
+                        <TextBlock
+                            Text="Mean Pitch"
+                            HorizontalAlignment="Center" />
 
-                        </telerik:LineSeries>
+                        <!--Pitch Mean Chart-->
+                        <telerik:RadCartesianChart
+                            Grid.Row="1"
+                            Name="chartPitch2"
+                            Margin="10,0,0,0">
 
-                        <!--Pitch Mean Ref-->
-                        <telerik:LineSeries
-                            ZIndex="200"
-                            Stroke="{StaticResource ColorGraphLineRef}"
-                            CategoryBinding="timestamp"
-                            ValueBinding="graphData">
+                            <!--Pitch Mean Test-->
+                            <telerik:LineSeries
+                                ZIndex="200"
+                                Stroke="{StaticResource ColorGraphLineTest}"
+                                CategoryBinding="timestamp"
+                                ValueBinding="graphData">
 
-                            <telerik:LineSeries.RenderOptions>
-                                <telerik:XamlRenderOptions
-                                    DefaultVisualsRenderMode="Batch" />
-                            </telerik:LineSeries.RenderOptions>
+                                <telerik:LineSeries.RenderOptions>
+                                    <telerik:XamlRenderOptions
+                                        DefaultVisualsRenderMode="Batch" />
+                                </telerik:LineSeries.RenderOptions>
 
-                        </telerik:LineSeries>
+                            </telerik:LineSeries>
 
-                        <telerik:RadCartesianChart.HorizontalAxis>
-                            <telerik:DateTimeContinuousAxis
-                                MajorStepUnit="Minute"
-                                MajorStep="5"
-                                ShowLabels="False"
-                                PlotMode="OnTicks"
-                                TickOrigin="{Binding alignmentTime}"
-                                Minimum="{Binding alignmentTimeMin}"
-                                Maximum="{Binding alignmentTimeMax}" />
-                        </telerik:RadCartesianChart.HorizontalAxis>
+                            <!--Pitch Mean Ref-->
+                            <telerik:LineSeries
+                                ZIndex="200"
+                                Stroke="{StaticResource ColorGraphLineRef}"
+                                CategoryBinding="timestamp"
+                                ValueBinding="graphData">
 
-                        <telerik:RadCartesianChart.VerticalAxis>
-                            <telerik:LinearAxis
-                                x:Name="chartPitchVerticalAxis1"
-                                Maximum="{Binding meanPitchChartAxisMax}"
-                                Minimum="{Binding meanPitchChartAxisMin}">
+                                <telerik:LineSeries.RenderOptions>
+                                    <telerik:XamlRenderOptions
+                                        DefaultVisualsRenderMode="Batch" />
+                                </telerik:LineSeries.RenderOptions>
 
-                                <telerik:LinearAxis.LabelTemplate>
-                                    <DataTemplate>
-                                        <TextBlock
-                                            Text="{Binding Converter={StaticResource LabelAbsConverter}}" />
-                                    </DataTemplate>
-                                </telerik:LinearAxis.LabelTemplate>
+                            </telerik:LineSeries>
 
-                            </telerik:LinearAxis>
-                        </telerik:RadCartesianChart.VerticalAxis>
+                            <telerik:RadCartesianChart.HorizontalAxis>
+                                <telerik:DateTimeContinuousAxis
+                                    MajorStepUnit="Minute"
+                                    MajorStep="5"
+                                    ShowLabels="False"
+                                    PlotMode="OnTicks"
+                                    TickOrigin="{Binding alignmentTime}"
+                                    Minimum="{Binding alignmentTimeMin}"
+                                    Maximum="{Binding alignmentTimeMax}" />
+                            </telerik:RadCartesianChart.HorizontalAxis>
 
-                        <telerik:RadCartesianChart.Grid>
-                            <telerik:CartesianChartGrid
-                                MajorLinesVisibility="XY" />
-                        </telerik:RadCartesianChart.Grid>
+                            <telerik:RadCartesianChart.VerticalAxis>
+                                <telerik:LinearAxis
+                                    x:Name="chartPitchVerticalAxis1"
+                                    Maximum="{Binding meanPitchChartAxisMax}"
+                                    Minimum="{Binding meanPitchChartAxisMin}">
 
-                        <telerik:RadCartesianChart.Annotations>
+                                    <telerik:LinearAxis.LabelTemplate>
+                                        <DataTemplate>
+                                            <TextBlock
+                                                Text="{Binding Converter={StaticResource LabelAbsConverter}}" />
+                                        </DataTemplate>
+                                    </telerik:LinearAxis.LabelTemplate>
 
-                            <telerik:CartesianGridLineAnnotation
-                                Axis="{Binding ElementName=chartPitchVerticalAxis1}"
-                                Value="0"
-                                Stroke="Black"
-                                StrokeThickness="2" />
+                                </telerik:LinearAxis>
+                            </telerik:RadCartesianChart.VerticalAxis>
 
-                        </telerik:RadCartesianChart.Annotations>
+                            <telerik:RadCartesianChart.Grid>
+                                <telerik:CartesianChartGrid
+                                    MajorLinesVisibility="XY" />
+                            </telerik:RadCartesianChart.Grid>
 
-                    </telerik:RadCartesianChart>
+                            <telerik:RadCartesianChart.Annotations>
+
+                                <telerik:CartesianGridLineAnnotation
+                                    Axis="{Binding ElementName=chartPitchVerticalAxis1}"
+                                    Value="0"
+                                    Stroke="Black"
+                                    StrokeThickness="2" />
+
+                            </telerik:RadCartesianChart.Annotations>
+
+                        </telerik:RadCartesianChart>
+
+                    </Grid>
 
                     <!--Pitch Mean X-axis labels-->
                     <Grid
@@ -587,7 +604,7 @@
                             Height="30" />
                     </Grid.RowDefinitions>
 
-                    <!--PITCH DEVIATION-->
+                    <!--MEAN PITCH DEVIATION-->
                     <Grid
                         Grid.Column="0"
                         Grid.Row="0">
@@ -646,70 +663,87 @@
 
                     </Grid>
 
-                    <!--Pitch Deviation Chart-->
-                    <telerik:RadCartesianChart
+                    <Grid
                         Grid.Column="1"
-                        Grid.Row="0"
-                        Name="chartPitch3"
-                        Margin="10,0,0,0">
+                        Grid.Row="0">
 
-                        <!--Deviation Pitch-->
-                        <telerik:LineSeries
-                            ZIndex="200"
-                            Stroke="{StaticResource ColorGraphLineDev}"
-                            CategoryBinding="timestamp"
-                            ValueBinding="graphData">
+                        <Grid.RowDefinitions>
+                            <RowDefinition
+                                Height="Auto" />
+                            <RowDefinition
+                                Height="*" />
+                        </Grid.RowDefinitions>
 
-                            <telerik:LineSeries.RenderOptions>
-                                <telerik:XamlRenderOptions
-                                    DefaultVisualsRenderMode="Batch" />
-                            </telerik:LineSeries.RenderOptions>
+                        <!--Chart header-->
+                        <TextBlock
+                            Text="Mean Pitch Deviation"
+                            HorizontalAlignment="Center" />
 
-                        </telerik:LineSeries>
+                        <!--Mean Pitch Deviation Chart-->
+                        <telerik:RadCartesianChart
+                            Grid.Row="1"
+                            Name="chartPitch3"
+                            Margin="10,0,0,0">
 
-                        <telerik:RadCartesianChart.HorizontalAxis>
-                            <telerik:DateTimeContinuousAxis
-                                MajorStepUnit="Minute"
-                                MajorStep="5"
-                                ShowLabels="False"
-                                PlotMode="OnTicks"
-                                TickOrigin="{Binding alignmentTime}"
-                                Minimum="{Binding alignmentTimeMin}"
-                                Maximum="{Binding alignmentTimeMax}" />
-                        </telerik:RadCartesianChart.HorizontalAxis>
+                            <!--Deviation Pitch-->
+                            <telerik:LineSeries
+                                ZIndex="200"
+                                Stroke="{StaticResource ColorGraphLineDev}"
+                                CategoryBinding="timestamp"
+                                ValueBinding="graphData">
 
-                        <telerik:RadCartesianChart.VerticalAxis>
-                            <telerik:LinearAxis
-                                x:Name="chartPitchVerticalAxis3"
-                                Maximum="{Binding devPitchChartAxisMax}"
-                                Minimum="{Binding devPitchChartAxisMin}">
+                                <telerik:LineSeries.RenderOptions>
+                                    <telerik:XamlRenderOptions
+                                        DefaultVisualsRenderMode="Batch" />
+                                </telerik:LineSeries.RenderOptions>
 
-                                <telerik:LinearAxis.LabelTemplate>
-                                    <DataTemplate>
-                                        <TextBlock
-                                            Text="{Binding Converter={StaticResource LabelAbsConverter}}" />
-                                    </DataTemplate>
-                                </telerik:LinearAxis.LabelTemplate>
+                            </telerik:LineSeries>
 
-                            </telerik:LinearAxis>
-                        </telerik:RadCartesianChart.VerticalAxis>
+                            <telerik:RadCartesianChart.HorizontalAxis>
+                                <telerik:DateTimeContinuousAxis
+                                    MajorStepUnit="Minute"
+                                    MajorStep="5"
+                                    ShowLabels="False"
+                                    PlotMode="OnTicks"
+                                    TickOrigin="{Binding alignmentTime}"
+                                    Minimum="{Binding alignmentTimeMin}"
+                                    Maximum="{Binding alignmentTimeMax}" />
+                            </telerik:RadCartesianChart.HorizontalAxis>
 
-                        <telerik:RadCartesianChart.Grid>
-                            <telerik:CartesianChartGrid
-                                MajorLinesVisibility="XY" />
-                        </telerik:RadCartesianChart.Grid>
+                            <telerik:RadCartesianChart.VerticalAxis>
+                                <telerik:LinearAxis
+                                    x:Name="chartPitchVerticalAxis3"
+                                    Maximum="{Binding devPitchChartAxisMax}"
+                                    Minimum="{Binding devPitchChartAxisMin}">
 
-                        <telerik:RadCartesianChart.Annotations>
+                                    <telerik:LinearAxis.LabelTemplate>
+                                        <DataTemplate>
+                                            <TextBlock
+                                                Text="{Binding Converter={StaticResource LabelAbsConverter}}" />
+                                        </DataTemplate>
+                                    </telerik:LinearAxis.LabelTemplate>
 
-                            <telerik:CartesianGridLineAnnotation
-                                Axis="{Binding ElementName=chartPitchVerticalAxis3}"
-                                Value="0"
-                                Stroke="Black"
-                                StrokeThickness="2" />
+                                </telerik:LinearAxis>
+                            </telerik:RadCartesianChart.VerticalAxis>
 
-                        </telerik:RadCartesianChart.Annotations>
+                            <telerik:RadCartesianChart.Grid>
+                                <telerik:CartesianChartGrid
+                                    MajorLinesVisibility="XY" />
+                            </telerik:RadCartesianChart.Grid>
 
-                    </telerik:RadCartesianChart>
+                            <telerik:RadCartesianChart.Annotations>
+
+                                <telerik:CartesianGridLineAnnotation
+                                    Axis="{Binding ElementName=chartPitchVerticalAxis3}"
+                                    Value="0"
+                                    Stroke="Black"
+                                    StrokeThickness="2" />
+
+                            </telerik:RadCartesianChart.Annotations>
+
+                        </telerik:RadCartesianChart>
+
+                    </Grid>
 
                     <!--Pitch Deviation X-axis labels-->
                     <Grid
@@ -1189,85 +1223,102 @@
 
                     </Grid>
 
-                    <!--Roll Input Chart-->
-                    <telerik:RadCartesianChart
+                    <Grid
                         Grid.Column="1"
-                        Grid.Row="0"
-                        Name="chartRoll1"
-                        Margin="10,0,0,0">
+                        Grid.Row="0">
 
-                        <!--Roll Input Test-->
-                        <telerik:LineSeries
-                            ZIndex="200"
-                            Stroke="{StaticResource ColorGraphLineTest}"
-                            CategoryBinding="timestamp"
-                            ValueBinding="graphData">
+                        <Grid.RowDefinitions>
+                            <RowDefinition
+                                Height="Auto" />
+                            <RowDefinition
+                                Height="*" />
+                        </Grid.RowDefinitions>
 
-                            <telerik:LineSeries.RenderOptions>
-                                <telerik:XamlRenderOptions
-                                    DefaultVisualsRenderMode="Batch" />
-                            </telerik:LineSeries.RenderOptions>
+                        <!--Chart header-->
+                        <TextBlock
+                            Text="Roll Input"
+                            HorizontalAlignment="Center" />
 
-                        </telerik:LineSeries>
+                        <!--Roll Input Chart-->
+                        <telerik:RadCartesianChart
+                            Grid.Row="1"
+                            Name="chartRoll1"
+                            Margin="10,0,0,0">
 
-                        <!--Roll Input Ref-->
-                        <telerik:LineSeries
-                            ZIndex="200"
-                            Stroke="{StaticResource ColorGraphLineRef}"
-                            CategoryBinding="timestamp"
-                            ValueBinding="graphData">
+                            <!--Roll Input Test-->
+                            <telerik:LineSeries
+                                ZIndex="200"
+                                Stroke="{StaticResource ColorGraphLineTest}"
+                                CategoryBinding="timestamp"
+                                ValueBinding="graphData">
 
-                            <telerik:LineSeries.RenderOptions>
-                                <telerik:XamlRenderOptions
-                                    DefaultVisualsRenderMode="Batch" />
-                            </telerik:LineSeries.RenderOptions>
+                                <telerik:LineSeries.RenderOptions>
+                                    <telerik:XamlRenderOptions
+                                        DefaultVisualsRenderMode="Batch" />
+                                </telerik:LineSeries.RenderOptions>
 
-                        </telerik:LineSeries>
+                            </telerik:LineSeries>
 
-                        <telerik:RadCartesianChart.HorizontalAxis>
-                            <telerik:DateTimeContinuousAxis
-                                MajorStepUnit="Minute"
-                                MajorStep="5"
-                                ShowLabels="False"
-                                PlotMode="OnTicks"
-                                TickOrigin="{Binding alignmentTime}"
-                                Minimum="{Binding alignmentTimeMin}"
-                                Maximum="{Binding alignmentTimeMax}" />
-                        </telerik:RadCartesianChart.HorizontalAxis>
+                            <!--Roll Input Ref-->
+                            <telerik:LineSeries
+                                ZIndex="200"
+                                Stroke="{StaticResource ColorGraphLineRef}"
+                                CategoryBinding="timestamp"
+                                ValueBinding="graphData">
 
-                        <telerik:RadCartesianChart.VerticalAxis>
-                            <telerik:LinearAxis
-                                x:Name="chartRollVerticalAxis"
-                                Maximum="{Binding rollChartAxisMax}"
-                                Minimum="{Binding rollChartAxisMin}">
+                                <telerik:LineSeries.RenderOptions>
+                                    <telerik:XamlRenderOptions
+                                        DefaultVisualsRenderMode="Batch" />
+                                </telerik:LineSeries.RenderOptions>
 
-                                <telerik:LinearAxis.LabelTemplate>
-                                    <DataTemplate>
-                                        <TextBlock
-                                            Text="{Binding Converter={StaticResource LabelAbsConverter}}" />
-                                    </DataTemplate>
-                                </telerik:LinearAxis.LabelTemplate>
+                            </telerik:LineSeries>
 
-                            </telerik:LinearAxis>
+                            <telerik:RadCartesianChart.HorizontalAxis>
+                                <telerik:DateTimeContinuousAxis
+                                    MajorStepUnit="Minute"
+                                    MajorStep="5"
+                                    ShowLabels="False"
+                                    PlotMode="OnTicks"
+                                    TickOrigin="{Binding alignmentTime}"
+                                    Minimum="{Binding alignmentTimeMin}"
+                                    Maximum="{Binding alignmentTimeMax}" />
+                            </telerik:RadCartesianChart.HorizontalAxis>
 
-                        </telerik:RadCartesianChart.VerticalAxis>
+                            <telerik:RadCartesianChart.VerticalAxis>
+                                <telerik:LinearAxis
+                                    x:Name="chartRollVerticalAxis"
+                                    Maximum="{Binding rollChartAxisMax}"
+                                    Minimum="{Binding rollChartAxisMin}">
 
-                        <telerik:RadCartesianChart.Grid>
-                            <telerik:CartesianChartGrid
-                                MajorLinesVisibility="XY" />
-                        </telerik:RadCartesianChart.Grid>
+                                    <telerik:LinearAxis.LabelTemplate>
+                                        <DataTemplate>
+                                            <TextBlock
+                                                Text="{Binding Converter={StaticResource LabelAbsConverter}}" />
+                                        </DataTemplate>
+                                    </telerik:LinearAxis.LabelTemplate>
 
-                        <telerik:RadCartesianChart.Annotations>
+                                </telerik:LinearAxis>
 
-                            <telerik:CartesianGridLineAnnotation
-                                Axis="{Binding ElementName=chartRollVerticalAxis}"
-                                Value="0"
-                                Stroke="Black"
-                                StrokeThickness="2" />
+                            </telerik:RadCartesianChart.VerticalAxis>
 
-                        </telerik:RadCartesianChart.Annotations>
+                            <telerik:RadCartesianChart.Grid>
+                                <telerik:CartesianChartGrid
+                                    MajorLinesVisibility="XY" />
+                            </telerik:RadCartesianChart.Grid>
 
-                    </telerik:RadCartesianChart>
+                            <telerik:RadCartesianChart.Annotations>
+
+                                <telerik:CartesianGridLineAnnotation
+                                    Axis="{Binding ElementName=chartRollVerticalAxis}"
+                                    Value="0"
+                                    Stroke="Black"
+                                    StrokeThickness="2" />
+
+                            </telerik:RadCartesianChart.Annotations>
+
+                        </telerik:RadCartesianChart>
+
+                    </Grid>
 
                     <!--Roll Input X-axis labels-->
                     <Grid
@@ -1435,66 +1486,81 @@
 
                     </Grid>
 
-                    <!--Roll Mean Chart-->
-                    <telerik:RadCartesianChart
+                    <Grid
                         Grid.Column="1"
-                        Grid.Row="0"
-                        Name="chartRoll2"
-                        Margin="10,0,0,0">
+                        Grid.Row="0">
 
-                        <!--Roll Mean Test-->
-                        <telerik:LineSeries
-                            ZIndex="200"
-                            Stroke="{StaticResource ColorGraphLineTest}"
-                            CategoryBinding="timestamp"
-                            ValueBinding="graphData">
+                        <Grid.RowDefinitions>
+                            <RowDefinition
+                                Height="Auto" />
+                            <RowDefinition
+                                Height="*" />
+                        </Grid.RowDefinitions>
 
-                            <telerik:LineSeries.RenderOptions>
-                                <telerik:XamlRenderOptions
-                                    DefaultVisualsRenderMode="Batch" />
-                            </telerik:LineSeries.RenderOptions>
+                        <!--Chart header-->
+                        <TextBlock
+                            Text="Mean Roll"
+                            HorizontalAlignment="Center" />
 
-                        </telerik:LineSeries>
+                        <!--Roll Mean Chart-->
+                        <telerik:RadCartesianChart
+                            Grid.Row="1"
+                            Name="chartRoll2"
+                            Margin="10,0,0,0">
 
-                        <!--Roll Mean Ref-->
-                        <telerik:LineSeries
-                            ZIndex="200"
-                            Stroke="{StaticResource ColorGraphLineRef}"
-                            CategoryBinding="timestamp"
-                            ValueBinding="graphData">
+                            <!--Roll Mean Test-->
+                            <telerik:LineSeries
+                                ZIndex="200"
+                                Stroke="{StaticResource ColorGraphLineTest}"
+                                CategoryBinding="timestamp"
+                                ValueBinding="graphData">
 
-                            <telerik:LineSeries.RenderOptions>
-                                <telerik:XamlRenderOptions
-                                    DefaultVisualsRenderMode="Batch" />
-                            </telerik:LineSeries.RenderOptions>
+                                <telerik:LineSeries.RenderOptions>
+                                    <telerik:XamlRenderOptions
+                                        DefaultVisualsRenderMode="Batch" />
+                                </telerik:LineSeries.RenderOptions>
 
-                        </telerik:LineSeries>
+                            </telerik:LineSeries>
 
-                        <telerik:RadCartesianChart.HorizontalAxis>
-                            <telerik:DateTimeContinuousAxis
-                                MajorStepUnit="Minute"
-                                MajorStep="5"
-                                ShowLabels="False"
-                                PlotMode="OnTicks"
-                                TickOrigin="{Binding alignmentTime}"
-                                Minimum="{Binding alignmentTimeMin}"
-                                Maximum="{Binding alignmentTimeMax}" />
-                        </telerik:RadCartesianChart.HorizontalAxis>
+                            <!--Roll Mean Ref-->
+                            <telerik:LineSeries
+                                ZIndex="200"
+                                Stroke="{StaticResource ColorGraphLineRef}"
+                                CategoryBinding="timestamp"
+                                ValueBinding="graphData">
 
-                        <telerik:RadCartesianChart.VerticalAxis>
-                            <telerik:LinearAxis
-                                x:Name="chartRollVerticalAxis2"
-                                Maximum="{Binding meanRollChartAxisMax}"
-                                Minimum="{Binding meanRollChartAxisMin}">
+                                <telerik:LineSeries.RenderOptions>
+                                    <telerik:XamlRenderOptions
+                                        DefaultVisualsRenderMode="Batch" />
+                                </telerik:LineSeries.RenderOptions>
 
-                                <telerik:LinearAxis.LabelTemplate>
-                                    <DataTemplate>
-                                        <TextBlock
-                                            Text="{Binding Converter={StaticResource LabelAbsConverter}}" />
-                                    </DataTemplate>
-                                </telerik:LinearAxis.LabelTemplate>
+                            </telerik:LineSeries>
 
-                                <!--<telerik:LinearAxis.TitleTemplate>
+                            <telerik:RadCartesianChart.HorizontalAxis>
+                                <telerik:DateTimeContinuousAxis
+                                    MajorStepUnit="Minute"
+                                    MajorStep="5"
+                                    ShowLabels="False"
+                                    PlotMode="OnTicks"
+                                    TickOrigin="{Binding alignmentTime}"
+                                    Minimum="{Binding alignmentTimeMin}"
+                                    Maximum="{Binding alignmentTimeMax}" />
+                            </telerik:RadCartesianChart.HorizontalAxis>
+
+                            <telerik:RadCartesianChart.VerticalAxis>
+                                <telerik:LinearAxis
+                                    x:Name="chartRollVerticalAxis2"
+                                    Maximum="{Binding meanRollChartAxisMax}"
+                                    Minimum="{Binding meanRollChartAxisMin}">
+
+                                    <telerik:LinearAxis.LabelTemplate>
+                                        <DataTemplate>
+                                            <TextBlock
+                                                Text="{Binding Converter={StaticResource LabelAbsConverter}}" />
+                                        </DataTemplate>
+                                    </telerik:LinearAxis.LabelTemplate>
+
+                                    <!--<telerik:LinearAxis.TitleTemplate>
                                         <DataTemplate>
                                             <DockPanel>
                                                 <Label
@@ -1528,26 +1594,28 @@
                                         </DataTemplate>
                                     </telerik:LinearAxis.TitleTemplate>-->
 
-                            </telerik:LinearAxis>
+                                </telerik:LinearAxis>
 
-                        </telerik:RadCartesianChart.VerticalAxis>
+                            </telerik:RadCartesianChart.VerticalAxis>
 
-                        <telerik:RadCartesianChart.Grid>
-                            <telerik:CartesianChartGrid
-                                MajorLinesVisibility="XY" />
-                        </telerik:RadCartesianChart.Grid>
+                            <telerik:RadCartesianChart.Grid>
+                                <telerik:CartesianChartGrid
+                                    MajorLinesVisibility="XY" />
+                            </telerik:RadCartesianChart.Grid>
 
-                        <telerik:RadCartesianChart.Annotations>
+                            <telerik:RadCartesianChart.Annotations>
 
-                            <telerik:CartesianGridLineAnnotation
-                                Axis="{Binding ElementName=chartRollVerticalAxis2}"
-                                Value="0"
-                                Stroke="Black"
-                                StrokeThickness="2" />
+                                <telerik:CartesianGridLineAnnotation
+                                    Axis="{Binding ElementName=chartRollVerticalAxis2}"
+                                    Value="0"
+                                    Stroke="Black"
+                                    StrokeThickness="2" />
 
-                        </telerik:RadCartesianChart.Annotations>
+                            </telerik:RadCartesianChart.Annotations>
 
-                    </telerik:RadCartesianChart>
+                        </telerik:RadCartesianChart>
+
+                    </Grid>
 
                     <!--Roll Mean X-axis labels-->
                     <Grid
@@ -1715,52 +1783,67 @@
 
                     </Grid>
 
-                    <!--Roll Deviation Chart-->
-                    <telerik:RadCartesianChart
+                    <Grid
                         Grid.Column="1"
-                        Grid.Row="0"
-                        Name="chartRoll3"
-                        Margin="10,0,0,0">
+                        Grid.Row="0">
 
-                        <!--Roll Deviation-->
-                        <telerik:LineSeries
-                            ZIndex="200"
-                            Stroke="{StaticResource ColorGraphLineDev}"
-                            CategoryBinding="timestamp"
-                            ValueBinding="graphData">
+                        <Grid.RowDefinitions>
+                            <RowDefinition
+                                Height="Auto" />
+                            <RowDefinition
+                                Height="*" />
+                        </Grid.RowDefinitions>
 
-                            <telerik:LineSeries.RenderOptions>
-                                <telerik:XamlRenderOptions
-                                    DefaultVisualsRenderMode="Batch" />
-                            </telerik:LineSeries.RenderOptions>
+                        <!--Chart header-->
+                        <TextBlock
+                            Text="Mean Roll Deviation"
+                            HorizontalAlignment="Center" />
 
-                        </telerik:LineSeries>
+                        <!--Mean Roll Deviation Chart-->
+                        <telerik:RadCartesianChart
+                            Grid.Row="1"
+                            Name="chartRoll3"
+                            Margin="10,0,0,0">
 
-                        <telerik:RadCartesianChart.HorizontalAxis>
-                            <telerik:DateTimeContinuousAxis
-                                MajorStepUnit="Minute"
-                                MajorStep="5"
-                                ShowLabels="False"
-                                PlotMode="OnTicks"
-                                TickOrigin="{Binding alignmentTime}"
-                                Minimum="{Binding alignmentTimeMin}"
-                                Maximum="{Binding alignmentTimeMax}" />
-                        </telerik:RadCartesianChart.HorizontalAxis>
+                            <!--Mean Roll Deviation-->
+                            <telerik:LineSeries
+                                ZIndex="200"
+                                Stroke="{StaticResource ColorGraphLineDev}"
+                                CategoryBinding="timestamp"
+                                ValueBinding="graphData">
 
-                        <telerik:RadCartesianChart.VerticalAxis>
-                            <telerik:LinearAxis
-                                x:Name="chartRollVerticalAxis3"
-                                Maximum="{Binding devRollChartAxisMax}"
-                                Minimum="{Binding devRollChartAxisMin}">
+                                <telerik:LineSeries.RenderOptions>
+                                    <telerik:XamlRenderOptions
+                                        DefaultVisualsRenderMode="Batch" />
+                                </telerik:LineSeries.RenderOptions>
 
-                                <telerik:LinearAxis.LabelTemplate>
-                                    <DataTemplate>
-                                        <TextBlock
-                                            Text="{Binding Converter={StaticResource LabelAbsConverter}}" />
-                                    </DataTemplate>
-                                </telerik:LinearAxis.LabelTemplate>
+                            </telerik:LineSeries>
 
-                                <!--<telerik:LinearAxis.TitleTemplate>
+                            <telerik:RadCartesianChart.HorizontalAxis>
+                                <telerik:DateTimeContinuousAxis
+                                    MajorStepUnit="Minute"
+                                    MajorStep="5"
+                                    ShowLabels="False"
+                                    PlotMode="OnTicks"
+                                    TickOrigin="{Binding alignmentTime}"
+                                    Minimum="{Binding alignmentTimeMin}"
+                                    Maximum="{Binding alignmentTimeMax}" />
+                            </telerik:RadCartesianChart.HorizontalAxis>
+
+                            <telerik:RadCartesianChart.VerticalAxis>
+                                <telerik:LinearAxis
+                                    x:Name="chartRollVerticalAxis3"
+                                    Maximum="{Binding devRollChartAxisMax}"
+                                    Minimum="{Binding devRollChartAxisMin}">
+
+                                    <telerik:LinearAxis.LabelTemplate>
+                                        <DataTemplate>
+                                            <TextBlock
+                                                Text="{Binding Converter={StaticResource LabelAbsConverter}}" />
+                                        </DataTemplate>
+                                    </telerik:LinearAxis.LabelTemplate>
+
+                                    <!--<telerik:LinearAxis.TitleTemplate>
                                         <DataTemplate>
                                             <DockPanel>
                                                 <Label
@@ -1794,28 +1877,30 @@
                                         </DataTemplate>
                                     </telerik:LinearAxis.TitleTemplate>-->
 
-                            </telerik:LinearAxis>
+                                </telerik:LinearAxis>
 
-                        </telerik:RadCartesianChart.VerticalAxis>
+                            </telerik:RadCartesianChart.VerticalAxis>
 
-                        <telerik:RadCartesianChart.Grid>
-                            <telerik:CartesianChartGrid
-                                MajorLinesVisibility="XY" />
-                        </telerik:RadCartesianChart.Grid>
+                            <telerik:RadCartesianChart.Grid>
+                                <telerik:CartesianChartGrid
+                                    MajorLinesVisibility="XY" />
+                            </telerik:RadCartesianChart.Grid>
 
-                        <telerik:RadCartesianChart.Annotations>
+                            <telerik:RadCartesianChart.Annotations>
 
-                            <telerik:CartesianGridLineAnnotation
-                                Axis="{Binding ElementName=chartRollVerticalAxis3}"
-                                Value="0"
-                                Stroke="Black"
-                                StrokeThickness="2" />
+                                <telerik:CartesianGridLineAnnotation
+                                    Axis="{Binding ElementName=chartRollVerticalAxis3}"
+                                    Value="0"
+                                    Stroke="Black"
+                                    StrokeThickness="2" />
 
-                        </telerik:RadCartesianChart.Annotations>
+                            </telerik:RadCartesianChart.Annotations>
 
-                    </telerik:RadCartesianChart>
+                        </telerik:RadCartesianChart>
 
-                    <!--Roll Deviation X-axis labels-->
+                    </Grid>
+
+                    <!--Mean Roll Deviation X-axis labels-->
                     <Grid
                         Grid.Column="1"
                         Grid.Row="1"
@@ -2249,74 +2334,91 @@
 
                     </Grid>
 
-                    <telerik:RadCartesianChart
+                    <Grid
                         Grid.Column="1"
-                        Grid.Row="0"
-                        Name="chartHeave1"
-                        Margin="0,0,0,0">
+                        Grid.Row="0">
 
-                        <!--Heave Input Test-->
-                        <telerik:LineSeries
-                            ZIndex="200"
-                            Stroke="{StaticResource ColorGraphLineTest}"
-                            CategoryBinding="timestamp"
-                            ValueBinding="graphData">
+                        <Grid.RowDefinitions>
+                            <RowDefinition
+                                Height="Auto" />
+                            <RowDefinition
+                                Height="*" />
+                        </Grid.RowDefinitions>
 
-                            <telerik:LineSeries.RenderOptions>
-                                <telerik:XamlRenderOptions
-                                    DefaultVisualsRenderMode="Batch" />
-                            </telerik:LineSeries.RenderOptions>
+                        <!--Chart header-->
+                        <TextBlock
+                            Text="Heave Input"
+                            HorizontalAlignment="Center" />
 
-                        </telerik:LineSeries>
+                        <telerik:RadCartesianChart
+                            Grid.Row="1"
+                            Name="chartHeave1"
+                            Margin="0,0,0,0">
 
-                        <!--Heave Input Ref-->
-                        <telerik:LineSeries
-                            ZIndex="200"
-                            Stroke="{StaticResource ColorGraphLineRef}"
-                            CategoryBinding="timestamp"
-                            ValueBinding="graphData">
+                            <!--Heave Input Test-->
+                            <telerik:LineSeries
+                                ZIndex="200"
+                                Stroke="{StaticResource ColorGraphLineTest}"
+                                CategoryBinding="timestamp"
+                                ValueBinding="graphData">
 
-                            <telerik:LineSeries.RenderOptions>
-                                <telerik:XamlRenderOptions
-                                    DefaultVisualsRenderMode="Batch" />
-                            </telerik:LineSeries.RenderOptions>
+                                <telerik:LineSeries.RenderOptions>
+                                    <telerik:XamlRenderOptions
+                                        DefaultVisualsRenderMode="Batch" />
+                                </telerik:LineSeries.RenderOptions>
 
-                        </telerik:LineSeries>
+                            </telerik:LineSeries>
 
-                        <telerik:RadCartesianChart.HorizontalAxis>
-                            <telerik:DateTimeContinuousAxis
-                                MajorStepUnit="Minute"
-                                MajorStep="5"
-                                ShowLabels="False"
-                                PlotMode="OnTicks"
-                                TickOrigin="{Binding alignmentTime}"
-                                Minimum="{Binding alignmentTimeMin}"
-                                Maximum="{Binding alignmentTimeMax}" />
-                        </telerik:RadCartesianChart.HorizontalAxis>
+                            <!--Heave Input Ref-->
+                            <telerik:LineSeries
+                                ZIndex="200"
+                                Stroke="{StaticResource ColorGraphLineRef}"
+                                CategoryBinding="timestamp"
+                                ValueBinding="graphData">
 
-                        <telerik:RadCartesianChart.VerticalAxis>
-                            <telerik:LinearAxis
-                                x:Name="chartHeaveVerticalAxis"
-                                Maximum="{Binding heaveChartAxisMax}"
-                                Minimum="{Binding heaveChartAxisMin}" />
-                        </telerik:RadCartesianChart.VerticalAxis>
+                                <telerik:LineSeries.RenderOptions>
+                                    <telerik:XamlRenderOptions
+                                        DefaultVisualsRenderMode="Batch" />
+                                </telerik:LineSeries.RenderOptions>
 
-                        <telerik:RadCartesianChart.Grid>
-                            <telerik:CartesianChartGrid
-                                MajorLinesVisibility="XY" />
-                        </telerik:RadCartesianChart.Grid>
+                            </telerik:LineSeries>
 
-                        <telerik:RadCartesianChart.Annotations>
+                            <telerik:RadCartesianChart.HorizontalAxis>
+                                <telerik:DateTimeContinuousAxis
+                                    MajorStepUnit="Minute"
+                                    MajorStep="5"
+                                    ShowLabels="False"
+                                    PlotMode="OnTicks"
+                                    TickOrigin="{Binding alignmentTime}"
+                                    Minimum="{Binding alignmentTimeMin}"
+                                    Maximum="{Binding alignmentTimeMax}" />
+                            </telerik:RadCartesianChart.HorizontalAxis>
 
-                            <telerik:CartesianGridLineAnnotation
-                                Axis="{Binding ElementName=chartPitchVerticalAxis}"
-                                Value="0"
-                                Stroke="Black"
-                                StrokeThickness="2" />
+                            <telerik:RadCartesianChart.VerticalAxis>
+                                <telerik:LinearAxis
+                                    x:Name="chartHeaveVerticalAxis"
+                                    Maximum="{Binding heaveChartAxisMax}"
+                                    Minimum="{Binding heaveChartAxisMin}" />
+                            </telerik:RadCartesianChart.VerticalAxis>
 
-                        </telerik:RadCartesianChart.Annotations>
+                            <telerik:RadCartesianChart.Grid>
+                                <telerik:CartesianChartGrid
+                                    MajorLinesVisibility="XY" />
+                            </telerik:RadCartesianChart.Grid>
 
-                    </telerik:RadCartesianChart>
+                            <telerik:RadCartesianChart.Annotations>
+
+                                <telerik:CartesianGridLineAnnotation
+                                    Axis="{Binding ElementName=chartPitchVerticalAxis}"
+                                    Value="0"
+                                    Stroke="Black"
+                                    StrokeThickness="2" />
+
+                            </telerik:RadCartesianChart.Annotations>
+
+                        </telerik:RadCartesianChart>
+
+                    </Grid>
 
                     <!--Heave Input X-axis labels-->
                     <Grid
@@ -2424,74 +2526,91 @@
                             Height="30" />
                     </Grid.RowDefinitions>
 
-                    <!--Heave Mean Chart-->
-                    <telerik:RadCartesianChart
+                    <Grid
                         Grid.Column="1"
-                        Grid.Row="0"
-                        Margin="0,0,0,0"
-                        Name="chartHeave2">
+                        Grid.Row="0">
 
-                        <!--Heave Mean Test-->
-                        <telerik:LineSeries
-                            ZIndex="200"
-                            Stroke="{StaticResource ColorGraphLineTest}"
-                            CategoryBinding="timestamp"
-                            ValueBinding="graphData">
+                        <Grid.RowDefinitions>
+                            <RowDefinition
+                                Height="Auto" />
+                            <RowDefinition
+                                Height="*" />
+                        </Grid.RowDefinitions>
 
-                            <telerik:LineSeries.RenderOptions>
-                                <telerik:XamlRenderOptions
-                                    DefaultVisualsRenderMode="Batch" />
-                            </telerik:LineSeries.RenderOptions>
+                        <!--Chart header-->
+                        <TextBlock
+                            Text="Mean Heave"
+                            HorizontalAlignment="Center" />
 
-                        </telerik:LineSeries>
+                        <!--Heave Mean Chart-->
+                        <telerik:RadCartesianChart
+                            Grid.Row="1"
+                            Margin="0,0,0,0"
+                            Name="chartHeave2">
 
-                        <!--Heave Mean Ref-->
-                        <telerik:LineSeries
-                            ZIndex="200"
-                            Stroke="{StaticResource ColorGraphLineRef}"
-                            CategoryBinding="timestamp"
-                            ValueBinding="graphData">
+                            <!--Heave Mean Test-->
+                            <telerik:LineSeries
+                                ZIndex="200"
+                                Stroke="{StaticResource ColorGraphLineTest}"
+                                CategoryBinding="timestamp"
+                                ValueBinding="graphData">
 
-                            <telerik:LineSeries.RenderOptions>
-                                <telerik:XamlRenderOptions
-                                    DefaultVisualsRenderMode="Batch" />
-                            </telerik:LineSeries.RenderOptions>
+                                <telerik:LineSeries.RenderOptions>
+                                    <telerik:XamlRenderOptions
+                                        DefaultVisualsRenderMode="Batch" />
+                                </telerik:LineSeries.RenderOptions>
 
-                        </telerik:LineSeries>
+                            </telerik:LineSeries>
 
-                        <telerik:RadCartesianChart.HorizontalAxis>
-                            <telerik:DateTimeContinuousAxis
-                                MajorStepUnit="Minute"
-                                MajorStep="5"
-                                ShowLabels="False"
-                                PlotMode="OnTicks"
-                                TickOrigin="{Binding alignmentTime}"
-                                Minimum="{Binding alignmentTimeMin}"
-                                Maximum="{Binding alignmentTimeMax}" />
-                        </telerik:RadCartesianChart.HorizontalAxis>
+                            <!--Heave Mean Ref-->
+                            <telerik:LineSeries
+                                ZIndex="200"
+                                Stroke="{StaticResource ColorGraphLineRef}"
+                                CategoryBinding="timestamp"
+                                ValueBinding="graphData">
 
-                        <telerik:RadCartesianChart.VerticalAxis>
-                            <telerik:LinearAxis
-                                Maximum="{Binding meanHeaveChartAxisMax}"
-                                Minimum="{Binding meanHeaveChartAxisMin}" />
-                        </telerik:RadCartesianChart.VerticalAxis>
+                                <telerik:LineSeries.RenderOptions>
+                                    <telerik:XamlRenderOptions
+                                        DefaultVisualsRenderMode="Batch" />
+                                </telerik:LineSeries.RenderOptions>
 
-                        <telerik:RadCartesianChart.Grid>
-                            <telerik:CartesianChartGrid
-                                MajorLinesVisibility="XY" />
-                        </telerik:RadCartesianChart.Grid>
+                            </telerik:LineSeries>
 
-                        <telerik:RadCartesianChart.Annotations>
+                            <telerik:RadCartesianChart.HorizontalAxis>
+                                <telerik:DateTimeContinuousAxis
+                                    MajorStepUnit="Minute"
+                                    MajorStep="5"
+                                    ShowLabels="False"
+                                    PlotMode="OnTicks"
+                                    TickOrigin="{Binding alignmentTime}"
+                                    Minimum="{Binding alignmentTimeMin}"
+                                    Maximum="{Binding alignmentTimeMax}" />
+                            </telerik:RadCartesianChart.HorizontalAxis>
 
-                            <telerik:CartesianGridLineAnnotation
-                                Axis="{Binding ElementName=chartPitchVerticalAxis}"
-                                Value="0"
-                                Stroke="Black"
-                                StrokeThickness="2" />
+                            <telerik:RadCartesianChart.VerticalAxis>
+                                <telerik:LinearAxis
+                                    Maximum="{Binding meanHeaveChartAxisMax}"
+                                    Minimum="{Binding meanHeaveChartAxisMin}" />
+                            </telerik:RadCartesianChart.VerticalAxis>
 
-                        </telerik:RadCartesianChart.Annotations>
+                            <telerik:RadCartesianChart.Grid>
+                                <telerik:CartesianChartGrid
+                                    MajorLinesVisibility="XY" />
+                            </telerik:RadCartesianChart.Grid>
 
-                    </telerik:RadCartesianChart>
+                            <telerik:RadCartesianChart.Annotations>
+
+                                <telerik:CartesianGridLineAnnotation
+                                    Axis="{Binding ElementName=chartPitchVerticalAxis}"
+                                    Value="0"
+                                    Stroke="Black"
+                                    StrokeThickness="2" />
+
+                            </telerik:RadCartesianChart.Annotations>
+
+                        </telerik:RadCartesianChart>
+
+                    </Grid>
 
                     <!--Heave Mean labels-->
                     <Grid
@@ -2599,62 +2718,79 @@
                             Height="30" />
                     </Grid.RowDefinitions>
 
-                    <!--Heave Deviation Chart-->
-                    <telerik:RadCartesianChart
+                    <Grid
                         Grid.Column="1"
-                        Grid.Row="0"
-                        Margin="0,0,0,0"
-                        Name="chartHeave3">
+                        Grid.Row="0">
 
-                        <!--Heave Deviation-->
-                        <telerik:LineSeries
-                            ZIndex="200"
-                            Stroke="{StaticResource ColorGraphLineDev}"
-                            CategoryBinding="timestamp"
-                            ValueBinding="graphData">
+                        <Grid.RowDefinitions>
+                            <RowDefinition
+                                Height="Auto" />
+                            <RowDefinition
+                                Height="*" />
+                        </Grid.RowDefinitions>
 
-                            <telerik:LineSeries.RenderOptions>
-                                <telerik:XamlRenderOptions
-                                    DefaultVisualsRenderMode="Batch" />
-                            </telerik:LineSeries.RenderOptions>
+                        <!--Chart header-->
+                        <TextBlock
+                            Text="Mean Heave Deviation"
+                            HorizontalAlignment="Center" />
 
-                        </telerik:LineSeries>
+                        <!--Mean Heave Deviation Chart-->
+                        <telerik:RadCartesianChart
+                            Grid.Row="1"
+                            Margin="0,0,0,0"
+                            Name="chartHeave3">
 
-                        <telerik:RadCartesianChart.HorizontalAxis>
-                            <telerik:DateTimeContinuousAxis
-                                MajorStepUnit="Minute"
-                                MajorStep="5"
-                                ShowLabels="False"
-                                PlotMode="OnTicks"
-                                TickOrigin="{Binding alignmentTime}"
-                                Minimum="{Binding alignmentTimeMin}"
-                                Maximum="{Binding alignmentTimeMax}" />
-                        </telerik:RadCartesianChart.HorizontalAxis>
+                            <!--Mean Heave Deviation-->
+                            <telerik:LineSeries
+                                ZIndex="200"
+                                Stroke="{StaticResource ColorGraphLineDev}"
+                                CategoryBinding="timestamp"
+                                ValueBinding="graphData">
 
-                        <telerik:RadCartesianChart.VerticalAxis>
-                            <telerik:LinearAxis
-                                Maximum="{Binding devHeaveChartAxisMax}"
-                                Minimum="{Binding devHeaveChartAxisMin}" />
-                        </telerik:RadCartesianChart.VerticalAxis>
+                                <telerik:LineSeries.RenderOptions>
+                                    <telerik:XamlRenderOptions
+                                        DefaultVisualsRenderMode="Batch" />
+                                </telerik:LineSeries.RenderOptions>
 
-                        <telerik:RadCartesianChart.Grid>
-                            <telerik:CartesianChartGrid
-                                MajorLinesVisibility="XY" />
-                        </telerik:RadCartesianChart.Grid>
+                            </telerik:LineSeries>
 
-                        <telerik:RadCartesianChart.Annotations>
+                            <telerik:RadCartesianChart.HorizontalAxis>
+                                <telerik:DateTimeContinuousAxis
+                                    MajorStepUnit="Minute"
+                                    MajorStep="5"
+                                    ShowLabels="False"
+                                    PlotMode="OnTicks"
+                                    TickOrigin="{Binding alignmentTime}"
+                                    Minimum="{Binding alignmentTimeMin}"
+                                    Maximum="{Binding alignmentTimeMax}" />
+                            </telerik:RadCartesianChart.HorizontalAxis>
 
-                            <telerik:CartesianGridLineAnnotation
-                                Axis="{Binding ElementName=chartPitchVerticalAxis}"
-                                Value="0"
-                                Stroke="Black"
-                                StrokeThickness="2" />
+                            <telerik:RadCartesianChart.VerticalAxis>
+                                <telerik:LinearAxis
+                                    Maximum="{Binding devHeaveChartAxisMax}"
+                                    Minimum="{Binding devHeaveChartAxisMin}" />
+                            </telerik:RadCartesianChart.VerticalAxis>
 
-                        </telerik:RadCartesianChart.Annotations>
+                            <telerik:RadCartesianChart.Grid>
+                                <telerik:CartesianChartGrid
+                                    MajorLinesVisibility="XY" />
+                            </telerik:RadCartesianChart.Grid>
 
-                    </telerik:RadCartesianChart>
+                            <telerik:RadCartesianChart.Annotations>
 
-                    <!--Heave Deviation labels-->
+                                <telerik:CartesianGridLineAnnotation
+                                    Axis="{Binding ElementName=chartPitchVerticalAxis}"
+                                    Value="0"
+                                    Stroke="Black"
+                                    StrokeThickness="2" />
+
+                            </telerik:RadCartesianChart.Annotations>
+
+                        </telerik:RadCartesianChart>
+
+                    </Grid>
+
+                    <!--Mean Heave Deviation labels-->
                     <Grid
                         Grid.Column="1"
                         Grid.Row="1"

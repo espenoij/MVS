@@ -209,7 +209,7 @@ namespace MVS
         }
 
         // Overføre data fra liste i input to denne data samlingen
-        public void TransferData(SessionData sessionData)
+        public void TransferData(ProjectData sessionData)
         {
             // Løper gjennom data listen
             lock (dataListLock)
