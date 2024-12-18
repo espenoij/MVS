@@ -1,6 +1,7 @@
 ﻿using System;
 using System.ComponentModel;
 using System.Runtime.CompilerServices;
+using System.Windows;
 
 namespace MVS
 {
@@ -189,6 +190,27 @@ namespace MVS
                 else
                 {
                     return string.Format("{0}", (_endTime - _startTime).ToString(@"hh\:mm\:ss"));
+                }
+            }
+        }
+
+        public Visibility DurationWarning()
+        {
+            if (_startTime == System.Data.SqlTypes.SqlDateTime.MinValue.Value ||
+                _endTime == System.Data.SqlTypes.SqlDateTime.MinValue.Value)
+            {
+                return Visibility.Collapsed;
+            }
+            else
+            {
+                TimeSpan duration = _endTime - _startTime;
+                if (duration.TotalMinutes >= 20)
+                {
+                    return Visibility.Collapsed;
+                }
+                else
+                {
+                    return Visibility.Visible;
                 }
             }
         }

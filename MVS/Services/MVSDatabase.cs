@@ -106,11 +106,11 @@ namespace MVS
             }
         }
 
-        public List<Project> GetAllSessions()
+        public List<Project> GetAllProjects()
         {
             try
             {
-                List<Project> dataSets = database.GetAllSessions();
+                List<Project> dataSets = database.GetAllProjects();
 
                 errorHandler.ResetDatabaseError(ErrorHandler.DatabaseErrorType.GetAllMVSData);
 

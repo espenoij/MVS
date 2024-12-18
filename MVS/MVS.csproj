@@ -163,7 +163,6 @@
     <Compile Include="Helpers\DisplayList.cs" />
     <Compile Include="Helpers\GraphBuffer.cs" />
     <Compile Include="Helpers\LabelAbsConverter.cs" />
-    <Compile Include="Helpers\ProjectDurationStyle.cs" />
     <Compile Include="Models\CommonTypes.cs" />
     <Compile Include="Models\ImportResult.cs" />
     <Compile Include="Models\ProjectData.cs" />

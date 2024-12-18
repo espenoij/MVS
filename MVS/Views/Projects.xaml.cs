@@ -136,7 +136,7 @@ namespace MVS
         private void LoadProjects()
         {
             // Hente liste med data set fra database
-            List<Project> sessionList = mvsDatabase.GetAllSessions();
+            List<Project> sessionList = mvsDatabase.GetAllProjects();
 
             if (sessionList != null)
             {
@@ -250,6 +250,8 @@ namespace MVS
                 lbDataSetStartTime.Content = mainWindowVM.SelectedProject.StartTimeString2;
                 lbDataSetEndTime.Content = mainWindowVM.SelectedProject.EndTimeString2;
                 lbDataSetDuration.Content = mainWindowVM.SelectedProject.DurationString;
+
+                tbDurationWarning.Visibility = mainWindowVM.SelectedProject.DurationWarning();
             }
             else
             {
@@ -261,6 +263,8 @@ namespace MVS
                 lbDataSetStartTime.Content = string.Empty;
                 lbDataSetEndTime.Content = string.Empty;
                 lbDataSetDuration.Content = string.Empty;
+
+                tbDurationWarning.Visibility = Visibility.Collapsed;
             }
         }
 

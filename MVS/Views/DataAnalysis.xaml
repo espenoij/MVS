@@ -2317,6 +2317,63 @@
                             Height="30" />
                     </Grid.RowDefinitions>
 
+                    <!--HEAVE UP DOWN-->
+                    <Grid
+                        Grid.Column="0"
+                        Grid.Row="0">
+
+                        <Grid.RowDefinitions>
+                            <RowDefinition
+                                Height="6*" />
+                            <RowDefinition
+                                Height="*" />
+                            <RowDefinition
+                                Height="6*" />
+                        </Grid.RowDefinitions>
+
+                        <Grid
+                            Grid.Column="1"
+                            Grid.RowSpan="3">
+
+                            <Grid.RowDefinitions>
+                                <RowDefinition
+                                    Height="2*" />
+                                <RowDefinition
+                                    Height="1*" />
+                                <RowDefinition
+                                    Height="5*" />
+                                <RowDefinition
+                                    Height="1*" />
+                                <RowDefinition
+                                    Height="1*" />
+                            </Grid.RowDefinitions>
+
+                            <Viewbox
+                                Grid.Row="1"
+                                StretchDirection="Both"
+                                Stretch="Uniform"
+                                VerticalAlignment="Center">
+
+                                <TextBlock
+                                    Text="U" />
+
+                            </Viewbox>
+
+                            <Viewbox
+                                Grid.Row="3"
+                                StretchDirection="Both"
+                                Stretch="Uniform"
+                                VerticalAlignment="Center">
+
+                                <TextBlock
+                                    Text="D" />
+
+                            </Viewbox>
+
+                        </Grid>
+
+                    </Grid>
+
                     <!--Heave Input Chart Labels-->
                     <Grid
                         Grid.Column="0"
@@ -2526,6 +2583,63 @@
                             Height="30" />
                     </Grid.RowDefinitions>
 
+                    <!--HEAVE MEAN UP DOWN-->
+                    <Grid
+                        Grid.Column="0"
+                        Grid.Row="0">
+
+                        <Grid.RowDefinitions>
+                            <RowDefinition
+                                Height="6*" />
+                            <RowDefinition
+                                Height="*" />
+                            <RowDefinition
+                                Height="6*" />
+                        </Grid.RowDefinitions>
+
+                        <Grid
+                            Grid.Column="1"
+                            Grid.RowSpan="3">
+
+                            <Grid.RowDefinitions>
+                                <RowDefinition
+                                    Height="2*" />
+                                <RowDefinition
+                                    Height="1*" />
+                                <RowDefinition
+                                    Height="5*" />
+                                <RowDefinition
+                                    Height="1*" />
+                                <RowDefinition
+                                    Height="1*" />
+                            </Grid.RowDefinitions>
+
+                            <Viewbox
+                                Grid.Row="1"
+                                StretchDirection="Both"
+                                Stretch="Uniform"
+                                VerticalAlignment="Center">
+
+                                <TextBlock
+                                    Text="U" />
+
+                            </Viewbox>
+
+                            <Viewbox
+                                Grid.Row="3"
+                                StretchDirection="Both"
+                                Stretch="Uniform"
+                                VerticalAlignment="Center">
+
+                                <TextBlock
+                                    Text="D" />
+
+                            </Viewbox>
+
+                        </Grid>
+
+                    </Grid>
+
                     <Grid
                         Grid.Column="1"
                         Grid.Row="0">
@@ -2717,6 +2831,63 @@
                         <RowDefinition
                             Height="30" />
                     </Grid.RowDefinitions>
+
+                    <!--HEAVE MEAN DEVIATION-->
+                    <Grid
+                        Grid.Column="0"
+                        Grid.Row="0">
+
+                        <Grid.RowDefinitions>
+                            <RowDefinition
+                                Height="6*" />
+                            <RowDefinition
+                                Height="*" />
+                            <RowDefinition
+                                Height="6*" />
+                        </Grid.RowDefinitions>
+
+                        <Grid
+                            Grid.Column="1"
+                            Grid.RowSpan="3">
+
+                            <Grid.RowDefinitions>
+                                <RowDefinition
+                                    Height="2*" />
+                                <RowDefinition
+                                    Height="1*" />
+                                <RowDefinition
+                                    Height="5*" />
+                                <RowDefinition
+                                    Height="1*" />
+                                <RowDefinition
+                                    Height="1*" />
+                            </Grid.RowDefinitions>
+
+                            <Viewbox
+                                Grid.Row="1"
+                                StretchDirection="Both"
+                                Stretch="Uniform"
+                                VerticalAlignment="Center">
+
+                                <TextBlock
+                                    Text="U" />
+
+                            </Viewbox>
+
+                            <Viewbox
+                                Grid.Row="3"
+                                StretchDirection="Both"
+                                Stretch="Uniform"
+                                VerticalAlignment="Center">
+
+                                <TextBlock
+                                    Text="D" />
+
+                            </Viewbox>
+
+                        </Grid>
+
+                    </Grid>
 
                     <Grid
                         Grid.Column="1"

@@ -12,50 +12,45 @@
 
     <UserControl.Resources>
 
-        <mvs:ProjectDurationStyle
-            x:Key="projectDurationStyle">
-            
-            <mvs:ProjectDurationStyle.ProjectStatusGreenStyle>
-                <Style
-                    TargetType="telerik:GridViewCell"
-                    BasedOn="{StaticResource GridViewCellStyle}">
-                    <Setter
-                        Property="Background"
-                        Value="{StaticResource ColorGreen}" />
-                </Style>
-            </mvs:ProjectDurationStyle.ProjectStatusGreenStyle>
+        <Style
+            x:Key="ProjectStatusColor"
+            TargetType="Ellipse">
+            <Style.Triggers>
 
-            <mvs:ProjectDurationStyle.ProjectStatusRedStyle>
-                <Style
-                    TargetType="telerik:GridViewCell"
-                    BasedOn="{StaticResource GridViewCellStyle}">
+                <DataTrigger
+                    Binding="{Binding projectStatus}"
+                    Value="OFF">
                     <Setter
-                        Property="Background"
-                        Value="{StaticResource ColorRed}" />
-                </Style>
-            </mvs:ProjectDurationStyle.ProjectStatusRedStyle>
-
-            <mvs:ProjectDurationStyle.ProjectStatusAmberStyle>
-                <Style
-                    TargetType="telerik:GridViewCell"
-                    BasedOn="{StaticResource GridViewCellStyle}">
-                    <Setter
-                        Property="Background"
-                        Value="{StaticResource ColorAmber}" />
-                </Style>
-            </mvs:ProjectDurationStyle.ProjectStatusAmberStyle>
-
-            <mvs:ProjectDurationStyle.ProjectStatusOffStyle>
-                <Style
-                    TargetType="telerik:GridViewCell"
-                    BasedOn="{StaticResource GridViewCellStyle}">
-                    <Setter
-                        Property="Background"
+                        Property="Fill"
                         Value="{StaticResource ColorBackgroundSeparator}" />
-                </Style>
-            </mvs:ProjectDurationStyle.ProjectStatusOffStyle>
+                </DataTrigger>
 
-        </mvs:ProjectDurationStyle>
+                <DataTrigger
+                    Binding="{Binding projectStatus}"
+                    Value="GREEN">
+                    <Setter
+                        Property="Fill"
+                        Value="{StaticResource ColorGreen}" />
+                </DataTrigger>
+
+                <DataTrigger
+                    Binding="{Binding projectStatus}"
+                    Value="AMBER">
+                    <Setter
+                        Property="Fill"
+                        Value="{StaticResource ColorAmber}" />
+                </DataTrigger>
+
+                <DataTrigger
+                    Binding="{Binding projectStatus}"
+                    Value="RED">
+                    <Setter
+                        Property="Fill"
+                        Value="{StaticResource ColorRed}" />
+                </DataTrigger>
+
+            </Style.Triggers>
+        </Style>
 
     </UserControl.Resources>
 
@@ -145,11 +140,28 @@
                         Width="2*"
                         Header="Date"
                         DataMemberBinding="{Binding DateString}" />
-                    <telerik:GridViewDataColumn
+                    <!--<telerik:GridViewDataColumn
                         Width="*"
-                        Header="Duration"
-                        CellStyleSelector="{StaticResource projectDurationStyle}"
-                        DataMemberBinding="{Binding DurationString}" />
+                        Header="Duration">
+                    
+                        <telerik:GridViewDataColumn.CellTemplate>
+                            <DataTemplate>
+                                <StackPanel
+                                    HorizontalAlignment="Left"
+                                    Orientation="Horizontal">
+                                    <TextBlock
+                                        Margin="0,0,8,0"
+                                        Text="{Binding DurationString}" />
+                                    <Ellipse
+                                        Grid.Column="0"
+                                        Width="20"
+                                        Height="20"
+                                        Style="{StaticResource ProjectStatusColor}" />
+                                </StackPanel>
+                            </DataTemplate>
+                        </telerik:GridViewDataColumn.CellTemplate>
+                        
+                    </telerik:GridViewDataColumn>-->
 
                 </telerik:RadGridView.Columns>
 
@@ -326,7 +338,19 @@
                                 Content="Duration"
                                 VerticalAlignment="Center" />
                             <Label
-                                Name="lbDataSetDuration" />
+                                Name="lbDataSetDuration"/>
+                        </DockPanel>
+
+                        <DockPanel
+                            Margin="8">
+                            <TextBlock
+                                HorizontalAlignment="Left"
+                                Name="tbDurationWarning"
+                                Visibility="Collapsed"
+                                Foreground="{StaticResource ColorRed}"
+                                TextWrapping="Wrap"
+                                Text="Warning: Data recording duration is to short. 20 minutes minimum. 40+ minutes is best."                                
+                                VerticalAlignment="Center" />
                         </DockPanel>
 
                     </StackPanel>
