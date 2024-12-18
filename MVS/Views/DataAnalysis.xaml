@@ -1104,18 +1104,23 @@
                     </Viewbox>
 
                     <!--Mean Pitch Deviation-->
-                    <Viewbox
+                    <Grid
                         Grid.Row="7"
                         Grid.Column="3"
-                        StretchDirection="Both"
-                        Stretch="Uniform"
-                        HorizontalAlignment="Center">
+                        Background="{StaticResource ColorBackgroundSeparatorDark}">
 
-                        <TextBlock
-                            Text="{Binding Path=devPitchMeanString}"
-                            FontSize="{StaticResource fontSizeData}" />
+                        <Viewbox
+                            StretchDirection="Both"
+                            Stretch="Uniform"
+                            HorizontalAlignment="Center">
 
-                    </Viewbox>
+                            <TextBlock
+                                Text="{Binding Path=devPitchMeanString}"
+                                FontSize="{StaticResource fontSizeData}" />
+
+                        </Viewbox>
+
+                    </Grid>
 
                 </Grid>
 
@@ -2254,19 +2259,24 @@
                     </Viewbox>
 
                     <!--Mean Roll Deviation-->
-                    <Viewbox
+                    <Grid
                         Grid.Row="7"
                         Grid.Column="3"
-                        Grid.ColumnSpan="2"
-                        StretchDirection="Both"
-                        Stretch="Uniform"
-                        HorizontalAlignment="Center">
+                        Background="{StaticResource ColorBackgroundSeparatorDark}">
 
-                        <TextBlock
-                            Text="{Binding Path=devRollMeanString}"
-                            FontSize="{StaticResource fontSizeData}" />
+                        <Viewbox
+                            Grid.ColumnSpan="2"
+                            StretchDirection="Both"
+                            Stretch="Uniform"
+                            HorizontalAlignment="Center">
 
-                    </Viewbox>
+                            <TextBlock
+                                Text="{Binding Path=devRollMeanString}"
+                                FontSize="{StaticResource fontSizeData}" />
+
+                        </Viewbox>
+                        
+                    </Grid>
 
                 </Grid>
 
@@ -3286,19 +3296,22 @@
                     </Viewbox>
 
                     <!--Mean Heave Deviation-->
-                    <Viewbox
+                    <Grid
                         Grid.Row="6"
                         Grid.Column="3"
-                        Grid.ColumnSpan="2"
-                        StretchDirection="Both"
-                        Stretch="Uniform"
-                        HorizontalAlignment="Center">
+                        Background="{StaticResource ColorBackgroundSeparatorDark}">
+                        <Viewbox
+                            Grid.ColumnSpan="2"
+                            StretchDirection="Both"
+                            Stretch="Uniform"
+                            HorizontalAlignment="Center">
 
-                        <TextBlock
-                            Text="{Binding Path=devHeaveMeanString}"
-                            FontSize="{StaticResource fontSizeData}" />
+                            <TextBlock
+                                Text="{Binding Path=devHeaveMeanString}"
+                                FontSize="{StaticResource fontSizeData}" />
 
-                    </Viewbox>
+                        </Viewbox>
+                    </Grid>
 
                 </Grid>
 

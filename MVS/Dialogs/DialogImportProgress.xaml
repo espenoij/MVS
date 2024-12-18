@@ -31,7 +31,7 @@
         Margin="8">
 
         <telerik:Label
-            Content="Importing data from HMS Server..." />
+            Content="Importing data..." />
 
         <telerik:RadProgressBar
             Name="importProgressBar"

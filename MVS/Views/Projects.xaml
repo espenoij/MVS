@@ -291,13 +291,13 @@
                             <Label
                                 Name="lbImport"
                                 Width="140"
-                                Content="Import DB Data"
+                                Content="Import Test Data"
                                 VerticalAlignment="Center" />
                             <Button
                                 Name="btnImport"
                                 Click="btnImport_Click"
                                 HorizontalAlignment="Right"
-                                Width="100"
+                                Width="140"
                                 Margin="8,0,0,0">Import</Button>
                         </DockPanel>
 

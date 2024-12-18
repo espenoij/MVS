@@ -7,7 +7,7 @@
     xmlns:mc="http://schemas.openxmlformats.org/markup-compatibility/2006"
     mc:Ignorable="d"
     xmlns:local="clr-namespace:MVS"
-    telerik:Header="Import from HMS Database"
+    telerik:Header="Import Test Data from HMS Database"
     WindowStartupLocation="CenterScreen"
     Height="440"
     Width="700"
@@ -53,10 +53,10 @@
                     Width="*" />
             </Grid.ColumnDefinitions>
 
-            <!--RECORDING-->
+            <!--PROJECT-->
             <telerik:GroupBox
                 Grid.Column="0"
-                Header="RECORDING"
+                Header="PROJECT"
                 Margin="8">
 
                 <Grid

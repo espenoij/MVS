@@ -19,7 +19,7 @@
     <telerik:RadWindow.Resources>
         <Style
             x:Key="SensorDataColorCode"
-            TargetType="telerik:GridViewDataColumn"
+            TargetType="telerik:GridViewRow"
             BasedOn="{StaticResource GridViewRowStyle}">
             <Style.Triggers>
 
@@ -63,41 +63,6 @@
                         Value="{StaticResource ColorAmber}" />
                 </DataTrigger>
 
-            </Style.Triggers>
-        </Style>
-
-        <Style
-            x:Key="ProjectRecordingStatusIndicator"
-            TargetType="Ellipse">
-            <Style.Triggers>
-                <DataTrigger
-                    Binding="{Binding Path=projectRecordingStatus}"
-                    Value="OFF">
-                    <Setter
-                        Property="Fill"
-                        Value="{StaticResource ColorBackgroundSeparator}" />
-                </DataTrigger>
-                <DataTrigger
-                    Binding="{Binding Path=projectRecordingStatus}"
-                    Value="RED">
-                    <Setter
-                        Property="Fill"
-                        Value="{StaticResource ColorRed}" />
-                </DataTrigger>
-                <DataTrigger
-                    Binding="{Binding Path=projectRecordingStatus}"
-                    Value="AMBER">
-                    <Setter
-                        Property="Fill"
-                        Value="{StaticResource ColorAmber}" />
-                </DataTrigger>
-                <DataTrigger
-                    Binding="{Binding Path=projectRecordingStatus}"
-                    Value="GREEN">
-                    <Setter
-                        Property="Fill"
-                        Value="{StaticResource ColorGreen}" />
-                </DataTrigger>
             </Style.Triggers>
         </Style>
 
@@ -209,7 +174,7 @@
                                         Visibility="{Binding RecordingSymbolVisibility}"
                                         Width="20"
                                         Height="20"
-                                        Style="{StaticResource ProjectRecordingStatusIndicator}"/>
+                                        Fill="{StaticResource ColorRed}"/>
 
                                     <!--Operations Mode/Time Info String-->
                                     <Label

@@ -607,7 +607,7 @@ namespace MVS
                         {
                             ProjectData data = new ProjectData();
 
-                            data.id = dbReader.GetInt16(0);
+                            data.id = dbReader.GetInt32(0);
                             data.timestamp = dbReader.GetDateTime(1);
 
                             data.refPitch = Convert.ToDouble(dbReader.GetString(2));
@@ -693,11 +693,15 @@ namespace MVS
                         {
                             ProjectData data = new ProjectData();
 
-                            data.id = dbReader.GetInt16(0);
+                            data.id = dbReader.GetInt32(0);
                             data.timestamp = dbReader.GetDateTime(1);
 
                             data.testPitch = Convert.ToDouble(dbReader.GetString(2));
-                            data.testRoll = Convert.ToDouble(dbReader.GetString(3));
+
+                            // I data fra sensor er positive tall roll til høyre.
+                            // Internt er positive tall roll til venstre. Venstre er høyest på grafen. Dette er standard i CAP.
+                            data.testRoll = Convert.ToDouble(dbReader.GetString(3)) * -1;
+                            
                             data.testHeave = Convert.ToDouble(dbReader.GetString(4));
 
                             dataList.Add(data);
