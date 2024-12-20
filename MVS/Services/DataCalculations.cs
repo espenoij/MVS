@@ -136,53 +136,53 @@ namespace MVS
                         ////////////////////////////////////////////////////////////////////////////////////////////////
                         /// Addisjon
                         ////////////////////////////////////////////////////////////////////////////////////////////////
-                        //case CalculationType.Addition:
+                        case CalculationType.Addition:
 
-                        //    // Sjekke om string er numerisk
-                        //    if (double.TryParse(newData, Constants.numberStyle, Constants.cultureInfo, out value))
-                        //    {
-                        //        result = value + parameter;
-                        //    }
-                        //    break;
+                            // Sjekke om string er numerisk
+                            if (double.TryParse(newData, Constants.numberStyle, Constants.cultureInfo, out value))
+                            {
+                                result = value + parameter;
+                            }
+                            break;
 
                         ////////////////////////////////////////////////////////////////////////////////////////////////
                         /// Subtraction
                         ////////////////////////////////////////////////////////////////////////////////////////////////
-                        //case CalculationType.Subtraction:
+                        case CalculationType.Subtraction:
 
-                        //    // Sjekke om string er numerisk
-                        //    if (double.TryParse(newData, Constants.numberStyle, Constants.cultureInfo, out value))
-                        //    {
-                        //        result = value - parameter;
-                        //    }
-                        //    break;
+                            // Sjekke om string er numerisk
+                            if (double.TryParse(newData, Constants.numberStyle, Constants.cultureInfo, out value))
+                            {
+                                result = value - parameter;
+                            }
+                            break;
 
                         ////////////////////////////////////////////////////////////////////////////////////////////////
                         /// Multiplication
                         ////////////////////////////////////////////////////////////////////////////////////////////////
-                        //case CalculationType.Multiplication:
+                        case CalculationType.Multiplication:
 
-                        //    // Sjekke om string er numerisk
-                        //    if (double.TryParse(newData, Constants.numberStyle, Constants.cultureInfo, out value))
-                        //    {
-                        //        result = value * parameter;
-                        //    }
-                        //    break;
+                            // Sjekke om string er numerisk
+                            if (double.TryParse(newData, Constants.numberStyle, Constants.cultureInfo, out value))
+                            {
+                                result = value * parameter;
+                            }
+                            break;
 
                         ////////////////////////////////////////////////////////////////////////////////////////////////
                         /// Division
                         ////////////////////////////////////////////////////////////////////////////////////////////////
-                        //case CalculationType.Division:
+                        case CalculationType.Division:
 
-                        //    // Sjekke om string er numerisk
-                        //    if (double.TryParse(newData, Constants.numberStyle, Constants.cultureInfo, out value))
-                        //    {
-                        //        if (parameter != 0.0)
-                        //            result = value / parameter;
-                        //        else
-                        //            result = 0.0;
-                        //    }
-                        //    break;
+                            // Sjekke om string er numerisk
+                            if (double.TryParse(newData, Constants.numberStyle, Constants.cultureInfo, out value))
+                            {
+                                if (parameter != 0.0)
+                                    result = value / parameter;
+                                else
+                                    result = 0.0;
+                            }
+                            break;
 
                         ////////////////////////////////////////////////////////////////////////////////////////////////
                         /// Degrees to Radians
@@ -2213,14 +2213,14 @@ namespace MVS
     {
         [Description("None")]
         None,
-        //[Description("Addition")]
-        //Addition,
-        //[Description("Subtraction")]
-        //Subtraction,
-        //[Description("Multiplication")]
-        //Multiplication,
-        //[Description("Division")]
-        //Division,
+        [Description("Addition")]
+        Addition,
+        [Description("Subtraction")]
+        Subtraction,
+        [Description("Multiplication")]
+        Multiplication,
+        [Description("Division")]
+        Division,
         //[Description("Degrees To Radians")]
         //DegToRad,
         //[Description("Radians To Degrees")]

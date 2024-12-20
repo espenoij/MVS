@@ -903,6 +903,7 @@ namespace MVS
 
                     OnPropertyChanged(nameof(refPitchMeanDataString));
                     OnPropertyChanged(nameof(devPitchMeanString));
+                    OnPropertyChanged(nameof(corrPitchString));
                 }
             }
         }
@@ -961,7 +962,8 @@ namespace MVS
                     _testPitchMeanData.Set(value);
 
                     OnPropertyChanged(nameof(testPitchMeanDataString));
-                    OnPropertyChanged(nameof(devPitchMeanString)); 
+                    OnPropertyChanged(nameof(devPitchMeanString));
+                    OnPropertyChanged(nameof(corrPitchString));
                 }
             }
         }
@@ -1071,6 +1073,7 @@ namespace MVS
                     _devPitchMeanData.Set(value);
 
                     OnPropertyChanged(nameof(devPitchMeanString));
+                    OnPropertyChanged(nameof(corrPitchString));
                 }
             }
         }
@@ -1082,6 +1085,21 @@ namespace MVS
                 if (_devPitchMeanData.status == DataStatus.OK && !double.IsNaN(_devPitchMeanData.data))
                 {
                     return Math.Round(_devPitchMeanData.data, 3, MidpointRounding.AwayFromZero).ToString(Constants.numberFormatRecDataSigned);
+                }
+                else
+                {
+                    return Constants.NotAvailable;
+                }
+            }
+        }
+
+        public string corrPitchString
+        {
+            get
+            {
+                if (_devPitchMeanData.status == DataStatus.OK && !double.IsNaN(_devPitchMeanData.data))
+                {
+                    return Math.Round(_devPitchMeanData.data * -1, 1, MidpointRounding.AwayFromZero).ToString(Constants.numberFormatCorrDataSigned);
                 }
                 else
                 {
@@ -1379,6 +1397,7 @@ namespace MVS
 
                     OnPropertyChanged(nameof(refRollMeanDataString));
                     OnPropertyChanged(nameof(devRollMeanString));
+                    OnPropertyChanged(nameof(corrRollString));
                 }
             }
         }
@@ -1438,7 +1457,8 @@ namespace MVS
                     _testRollMeanData.Set(value);
 
                     OnPropertyChanged(nameof(testRollMeanDataString));
-                    OnPropertyChanged(nameof(devRollMeanString));                    
+                    OnPropertyChanged(nameof(devRollMeanString));
+                    OnPropertyChanged(nameof(corrRollString));
                 }
             }
         }
@@ -1549,6 +1569,7 @@ namespace MVS
                     _devRollMeanData.Set(value);
 
                     OnPropertyChanged(nameof(devRollMeanString));
+                    OnPropertyChanged(nameof(corrRollString));
                 }
             }
         }
@@ -1560,6 +1581,21 @@ namespace MVS
                 if (_devRollMeanData.status == DataStatus.OK && !double.IsNaN(_devRollMeanData.data))
                 {
                     return Math.Round(_devRollMeanData.data, 3, MidpointRounding.AwayFromZero).ToString(Constants.numberFormatRecDataSigned);
+                }
+                else
+                {
+                    return Constants.NotAvailable;
+                }
+            }
+        }
+
+        public string corrRollString
+        {
+            get
+            {
+                if (_devRollMeanData.status == DataStatus.OK && !double.IsNaN(_devRollMeanData.data))
+                {
+                    return Math.Round(_devRollMeanData.data * -1, 1, MidpointRounding.AwayFromZero).ToString(Constants.numberFormatCorrDataSigned);
                 }
                 else
                 {
@@ -1728,6 +1764,7 @@ namespace MVS
 
                     OnPropertyChanged(nameof(refHeaveMeanString));
                     OnPropertyChanged(nameof(devHeaveMeanString));
+                    OnPropertyChanged(nameof(corrHeaveString));
                 }
             }
         }
@@ -1787,6 +1824,8 @@ namespace MVS
                     _testHeaveMeanData.Set(value);
 
                     OnPropertyChanged(nameof(testHeaveMeanString));
+                    OnPropertyChanged(nameof(devHeaveMeanString));
+                    OnPropertyChanged(nameof(corrHeaveString));
                 }
             }
         }
@@ -1897,6 +1936,7 @@ namespace MVS
                     _devHeaveMeanData.Set(value);
 
                     OnPropertyChanged(nameof(devHeaveMeanString));
+                    OnPropertyChanged(nameof(corrHeaveString));
                 }
             }
         }
@@ -1908,6 +1948,21 @@ namespace MVS
                 if (_devHeaveMeanData.status == DataStatus.OK && !double.IsNaN(_devHeaveMeanData.data))
                 {
                     return Math.Round(_devHeaveMeanData.data, 3, MidpointRounding.AwayFromZero).ToString(Constants.numberFormatRecDataSigned);
+                }
+                else
+                {
+                    return Constants.NotAvailable;
+                }
+            }
+        }
+
+        public string corrHeaveString
+        {
+            get
+            {
+                if (_devHeaveMeanData.status == DataStatus.OK && !double.IsNaN(_devHeaveMeanData.data))
+                {
+                    return Math.Round(_devHeaveMeanData.data * -1, 1, MidpointRounding.AwayFromZero).ToString(Constants.numberFormatCorrDataSigned);
                 }
                 else
                 {

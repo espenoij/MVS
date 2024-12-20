@@ -1106,6 +1106,42 @@
                     <!--Mean Pitch Deviation-->
                     <Grid
                         Grid.Row="7"
+                        Grid.Column="3">
+
+                        <Viewbox
+                            StretchDirection="Both"
+                            Stretch="Uniform"
+                            HorizontalAlignment="Center">
+
+                            <TextBlock
+                                Text="{Binding Path=devPitchMeanString}"
+                                FontSize="{StaticResource fontSizeData}" />
+
+                        </Viewbox>
+
+                    </Grid>
+
+                    <!--Pitch Correction-->
+                    <Grid
+                        Grid.Row="9"
+                        Grid.Column="0"
+                        Grid.ColumnSpan="4"
+                        Background="{StaticResource ColorBackgroundSeparatorDark}">
+
+                        <Viewbox
+                            StretchDirection="Both"
+                            Stretch="Uniform"
+                            HorizontalAlignment="Left">
+
+                            <TextBlock
+                                Text="Correction" />
+
+                        </Viewbox>
+                        
+                    </Grid>
+
+                    <Grid
+                        Grid.Row="9"
                         Grid.Column="3"
                         Background="{StaticResource ColorBackgroundSeparatorDark}">
 
@@ -1115,7 +1151,7 @@
                             HorizontalAlignment="Center">
 
                             <TextBlock
-                                Text="{Binding Path=devPitchMeanString}"
+                                Text="{Binding Path=corrPitchString}"
                                 FontSize="{StaticResource fontSizeData}" />
 
                         </Viewbox>
@@ -2261,8 +2297,7 @@
                     <!--Mean Roll Deviation-->
                     <Grid
                         Grid.Row="7"
-                        Grid.Column="3"
-                        Background="{StaticResource ColorBackgroundSeparatorDark}">
+                        Grid.Column="3">
 
                         <Viewbox
                             Grid.ColumnSpan="2"
@@ -2276,6 +2311,43 @@
 
                         </Viewbox>
                         
+                    </Grid>
+
+                    <!--Roll Correction-->
+                    <Grid
+                        Grid.Row="9"
+                        Grid.Column="0"
+                        Grid.ColumnSpan="4"
+                        Background="{StaticResource ColorBackgroundSeparatorDark}">
+
+                        <Viewbox
+                            StretchDirection="Both"
+                            Stretch="Uniform"
+                            HorizontalAlignment="Left">
+
+                            <TextBlock
+                                Text="Correction" />
+
+                        </Viewbox>
+
+                    </Grid>
+
+                    <Grid
+                        Grid.Row="9"
+                        Grid.Column="3"
+                        Background="{StaticResource ColorBackgroundSeparatorDark}">
+
+                        <Viewbox
+                            StretchDirection="Both"
+                            Stretch="Uniform"
+                            HorizontalAlignment="Center">
+
+                            <TextBlock
+                                Text="{Binding Path=corrRollString}"
+                                FontSize="{StaticResource fontSizeData}" />
+
+                        </Viewbox>
+
                     </Grid>
 
                 </Grid>
@@ -3258,7 +3330,7 @@
 
                     <!--Mean Heave-->
                     <Viewbox
-                        Grid.Row="6"
+                        Grid.Row="7"
                         Grid.Column="0"
                         StretchDirection="Both"
                         Stretch="Uniform"
@@ -3270,7 +3342,7 @@
                     </Viewbox>
 
                     <Viewbox
-                        Grid.Row="6"
+                        Grid.Row="7"
                         Grid.Column="1"
                         StretchDirection="Both"
                         Stretch="Uniform"
@@ -3283,7 +3355,7 @@
                     </Viewbox>
 
                     <Viewbox
-                        Grid.Row="6"
+                        Grid.Row="7"
                         Grid.Column="2"
                         StretchDirection="Both"
                         Stretch="Uniform"
@@ -3295,11 +3367,9 @@
 
                     </Viewbox>
 
-                    <!--Mean Heave Deviation-->
                     <Grid
-                        Grid.Row="6"
-                        Grid.Column="3"
-                        Background="{StaticResource ColorBackgroundSeparatorDark}">
+                        Grid.Row="7"
+                        Grid.Column="3">
                         <Viewbox
                             Grid.ColumnSpan="2"
                             StretchDirection="Both"
@@ -3311,6 +3381,43 @@
                                 FontSize="{StaticResource fontSizeData}" />
 
                         </Viewbox>
+                    </Grid>
+
+                    <!--Heave Correction-->
+                    <Grid
+                        Grid.Row="9"
+                        Grid.Column="0"
+                        Grid.ColumnSpan="4"
+                        Background="{StaticResource ColorBackgroundSeparatorDark}">
+
+                        <Viewbox
+                            StretchDirection="Both"
+                            Stretch="Uniform"
+                            HorizontalAlignment="Left">
+
+                            <TextBlock
+                                Text="Correction" />
+
+                        </Viewbox>
+
+                    </Grid>
+
+                    <Grid
+                        Grid.Row="9"
+                        Grid.Column="3"
+                        Background="{StaticResource ColorBackgroundSeparatorDark}">
+
+                        <Viewbox
+                            StretchDirection="Both"
+                            Stretch="Uniform"
+                            HorizontalAlignment="Center">
+
+                            <TextBlock
+                                Text="{Binding Path=corrHeaveString}"
+                                FontSize="{StaticResource fontSizeData}" />
+
+                        </Viewbox>
+
                     </Grid>
 
                 </Grid>

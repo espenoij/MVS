@@ -333,5 +333,6 @@ class Constants
     // Number Formatting
     public const string numberFormatRecData = "0.000";
     public const string numberFormatRecDataSigned = "+0.000;-0.000";
+    public const string numberFormatCorrDataSigned = "+0.0;-0.0";
 
 }

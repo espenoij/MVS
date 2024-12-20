@@ -171,6 +171,14 @@
                                         Grid.Column="0"
                                         VerticalAlignment="Center"
                                         HorizontalAlignment="Center"
+                                        Width="20"
+                                        Height="20"
+                                        Fill="{StaticResource ColorBackgroundSeparator}" />
+                                    
+                                    <Ellipse
+                                        Grid.Column="0"
+                                        VerticalAlignment="Center"
+                                        HorizontalAlignment="Center"
                                         Visibility="{Binding RecordingSymbolVisibility}"
                                         Width="20"
                                         Height="20"

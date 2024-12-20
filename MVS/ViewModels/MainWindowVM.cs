@@ -14,6 +14,7 @@ namespace MVS
 
         // Reader timer
         private DispatcherTimer timer;
+        private DispatcherTimer timerBlink;
 
         public MainWindowVM()
         {
@@ -35,6 +36,18 @@ namespace MVS
                 OnPropertyChanged(nameof(OperationsModeString));
                 OnPropertyChanged(nameof(projectRecordingStatus));
             }
+
+            // Timer 2
+            timerBlink = new DispatcherTimer();
+
+            // Timer 2 parametre
+            timerBlink.Interval = TimeSpan.FromMilliseconds(100);
+            timerBlink.Tick += runTimerBlink;
+
+            void runTimerBlink(Object source, EventArgs e)
+            {
+                OnPropertyChanged(nameof(RecordingSymbolVisibility));
+            }
         }
 
         /////////////////////////////////////////////////////////////////////////////
@@ -49,6 +62,7 @@ namespace MVS
 
             // Starte timer
             timer.Start();
+            timerBlink.Start();
         }
 
         public void StopTimer()
@@ -58,6 +72,7 @@ namespace MVS
 
             // Starte timer
             timer.Stop();
+            timerBlink.Stop();
 
             OnPropertyChanged(nameof(projectRecordingStatus));
         }
@@ -237,8 +252,18 @@ namespace MVS
         {
             get
             {
-                return _recordingSymbolVisibility;
-            }
+                if (_recordingSymbolVisibility == Visibility.Visible)
+                {
+                    if (DateTime.Now.Millisecond < 500)
+                        return Visibility.Visible;
+                    else
+                        return Visibility.Collapsed;
+                }
+                else
+                {
+                    return Visibility.Collapsed;
+                }
+            }   
             set
             {
                 _recordingSymbolVisibility = value;
