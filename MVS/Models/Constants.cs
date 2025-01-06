@@ -313,11 +313,6 @@ class Constants
     public const int ChartTimeCorrMin = 3;
     public const int ChartTimeCorrMax = -2;
 
-    // Buffer Fill
-    public const double WindBufferFill95Pct2m = 456;            // 4 hz * 2 min * 60 sek * 0.95 (95%)
-    public const double WindBufferFill95Pct10m = 2280;          // 4 hz * 10 min * 60 sek * 0.95 (95%)
-    public const double MotionBufferFill99Pct = 2376;           // 2 hz * 20 min * 60 sek * 0.99 (99%)
-
     // Binary data delimiter
     public const string BinaryDataDelimiter = "-";
 
