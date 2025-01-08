@@ -729,7 +729,7 @@ namespace MVS
                         else
                             dir = "D";
 
-                        return string.Format("{0} ° {1}", Math.Round(pitch, 3, MidpointRounding.AwayFromZero).ToString(Constants.numberFormatRecData), dir);
+                        return string.Format("{0} ° {1}", Math.Round(pitch, Constants.NumberPrecisionData, MidpointRounding.AwayFromZero).ToString(Constants.numberFormatRecData), dir);
                     }
                     else
                     {
@@ -777,7 +777,7 @@ namespace MVS
                         else
                             dir = "D";
 
-                        return string.Format("{0} ° {1}", Math.Round(pitch, 3, MidpointRounding.AwayFromZero).ToString(Constants.numberFormatRecData), dir);
+                        return string.Format("{0} ° {1}", Math.Round(pitch, Constants.NumberPrecisionData, MidpointRounding.AwayFromZero).ToString(Constants.numberFormatRecData), dir);
                     }
                     else
                     {
@@ -825,7 +825,7 @@ namespace MVS
                         else
                             dir = "D";
 
-                        return string.Format("{0} ° {1}", Math.Round(pitch, 3, MidpointRounding.AwayFromZero).ToString(Constants.numberFormatRecData), dir);
+                        return string.Format("{0} ° {1}", Math.Round(pitch, Constants.NumberPrecisionData, MidpointRounding.AwayFromZero).ToString(Constants.numberFormatRecData), dir);
                     }
                     else
                     {
@@ -873,7 +873,7 @@ namespace MVS
                         else
                             dir = "D";
 
-                        return string.Format("{0} ° {1}", Math.Round(pitch, 3, MidpointRounding.AwayFromZero).ToString(Constants.numberFormatRecData), dir);
+                        return string.Format("{0} ° {1}", Math.Round(pitch, Constants.NumberPrecisionData, MidpointRounding.AwayFromZero).ToString(Constants.numberFormatRecData), dir);
                     }
                     else
                     {
@@ -916,7 +916,7 @@ namespace MVS
                     // Sjekke om data er gyldig
                     if (_refPitchMeanData.status == DataStatus.OK && !double.IsNaN(_refPitchMeanData.data))
                     {
-                        return string.Format("{0} °", Math.Round(_refPitchMeanData.data, 3, MidpointRounding.AwayFromZero).ToString(Constants.numberFormatRecData));
+                        return string.Format("{0} °", Math.Round(_refPitchMeanData.data, Constants.NumberPrecisionData, MidpointRounding.AwayFromZero).ToString(Constants.numberFormatRecData));
                     }
                     else
                     {
@@ -976,7 +976,7 @@ namespace MVS
                     // Sjekke om data er gyldig
                     if (_testPitchMeanData.status == DataStatus.OK && !double.IsNaN(_testPitchMeanData.data))
                     {
-                        return string.Format("{0} °", Math.Round(_testPitchMeanData.data, 3, MidpointRounding.AwayFromZero).ToString(Constants.numberFormatRecData));
+                        return string.Format("{0} °", Math.Round(_testPitchMeanData.data, Constants.NumberPrecisionData, MidpointRounding.AwayFromZero).ToString(Constants.numberFormatRecData));
                     }
                     else
                     {
@@ -1050,7 +1050,7 @@ namespace MVS
             {
                 if (_devPitchMaxData.status == DataStatus.OK && !double.IsNaN(_devPitchMaxData.data))
                 {
-                    return Math.Round(_devPitchMaxData.data, 3, MidpointRounding.AwayFromZero).ToString(Constants.numberFormatRecDataSigned);
+                    return Math.Round(_devPitchMaxData.data, Constants.NumberPrecisionData, MidpointRounding.AwayFromZero).ToString(Constants.numberFormatRecDataSigned);
                 }
                 else
                 {
@@ -1084,7 +1084,7 @@ namespace MVS
             {
                 if (_devPitchMeanData.status == DataStatus.OK && !double.IsNaN(_devPitchMeanData.data))
                 {
-                    return Math.Round(_devPitchMeanData.data, 3, MidpointRounding.AwayFromZero).ToString(Constants.numberFormatRecDataSigned);
+                    return Math.Round(_devPitchMeanData.data, Constants.NumberPrecisionData, MidpointRounding.AwayFromZero).ToString(Constants.numberFormatRecDataSigned);
                 }
                 else
                 {
@@ -1099,7 +1099,7 @@ namespace MVS
             {
                 if (_devPitchMeanData.status == DataStatus.OK && !double.IsNaN(_devPitchMeanData.data))
                 {
-                    return Math.Round(_devPitchMeanData.data * -1, 1, MidpointRounding.AwayFromZero).ToString(Constants.numberFormatCorrDataSigned);
+                    return Math.Round(_devPitchMeanData.data * -1, Constants.NumberPrecisionDeviation, MidpointRounding.AwayFromZero).ToString(Constants.numberFormatCorrDataSigned);
                 }
                 else
                 {
@@ -1224,7 +1224,7 @@ namespace MVS
                         else
                             dir = "R";
 
-                        return string.Format("{0} ° {1}", Math.Round(roll, 3, MidpointRounding.AwayFromZero).ToString(Constants.numberFormatRecData), dir);
+                        return string.Format("{0} ° {1}", Math.Round(roll, Constants.NumberPrecisionData, MidpointRounding.AwayFromZero).ToString(Constants.numberFormatRecData), dir);
                     }
                     else
                     {
@@ -1272,7 +1272,7 @@ namespace MVS
                         else
                             dir = "R";
 
-                        return string.Format("{0} ° {1}", Math.Round(roll, 3, MidpointRounding.AwayFromZero).ToString(Constants.numberFormatRecData), dir);
+                        return string.Format("{0} ° {1}", Math.Round(roll, Constants.NumberPrecisionData, MidpointRounding.AwayFromZero).ToString(Constants.numberFormatRecData), dir);
                     }
                     else
                     {
@@ -1320,7 +1320,7 @@ namespace MVS
                         else
                             dir = "R";
 
-                        return string.Format("{0} ° {1}", Math.Round(roll, 3, MidpointRounding.AwayFromZero).ToString(Constants.numberFormatRecData), dir);
+                        return string.Format("{0} ° {1}", Math.Round(roll, Constants.NumberPrecisionData, MidpointRounding.AwayFromZero).ToString(Constants.numberFormatRecData), dir);
                     }
                     else
                     {
@@ -1368,7 +1368,7 @@ namespace MVS
                         else
                             dir = "R";
 
-                        return string.Format("{0} ° {1}", Math.Round(roll, 3, MidpointRounding.AwayFromZero).ToString(Constants.numberFormatRecData), dir);
+                        return string.Format("{0} ° {1}", Math.Round(roll, Constants.NumberPrecisionData, MidpointRounding.AwayFromZero).ToString(Constants.numberFormatRecData), dir);
                     }
                     else
                     {
@@ -1410,7 +1410,7 @@ namespace MVS
                     // Sjekke om data er gyldig
                     if (_refRollMeanData.status == DataStatus.OK && !double.IsNaN(_refRollMeanData.data))
                     {
-                        return string.Format("{0} °", Math.Round(_refRollMeanData.data, 3, MidpointRounding.AwayFromZero).ToString(Constants.numberFormatRecData));
+                        return string.Format("{0} °", Math.Round(_refRollMeanData.data, Constants.NumberPrecisionData, MidpointRounding.AwayFromZero).ToString(Constants.numberFormatRecData));
                     }
                     else
                     {
@@ -1471,7 +1471,7 @@ namespace MVS
                     // Sjekke om data er gyldig
                     if (_testRollMeanData.status == DataStatus.OK && !double.IsNaN(_testRollMeanData.data))
                     {
-                        return string.Format("{0} °", Math.Round(_testRollMeanData.data, 3, MidpointRounding.AwayFromZero).ToString(Constants.numberFormatRecData));
+                        return string.Format("{0} °", Math.Round(_testRollMeanData.data, Constants.NumberPrecisionData, MidpointRounding.AwayFromZero).ToString(Constants.numberFormatRecData));
                     }
                     else
                     {
@@ -1546,7 +1546,7 @@ namespace MVS
             {
                 if (_devRollMaxData.status == DataStatus.OK && !double.IsNaN(_devRollMaxData.data))
                 {
-                    return Math.Round(_devRollMaxData.data, 3, MidpointRounding.AwayFromZero).ToString(Constants.numberFormatRecDataSigned);
+                    return Math.Round(_devRollMaxData.data, Constants.NumberPrecisionData, MidpointRounding.AwayFromZero).ToString(Constants.numberFormatRecDataSigned);
                 }
                 else
                 {
@@ -1580,7 +1580,7 @@ namespace MVS
             {
                 if (_devRollMeanData.status == DataStatus.OK && !double.IsNaN(_devRollMeanData.data))
                 {
-                    return Math.Round(_devRollMeanData.data, 3, MidpointRounding.AwayFromZero).ToString(Constants.numberFormatRecDataSigned);
+                    return Math.Round(_devRollMeanData.data, Constants.NumberPrecisionData, MidpointRounding.AwayFromZero).ToString(Constants.numberFormatRecDataSigned);
                 }
                 else
                 {
@@ -1595,7 +1595,7 @@ namespace MVS
             {
                 if (_devRollMeanData.status == DataStatus.OK && !double.IsNaN(_devRollMeanData.data))
                 {
-                    return Math.Round(_devRollMeanData.data * -1, 1, MidpointRounding.AwayFromZero).ToString(Constants.numberFormatCorrDataSigned);
+                    return Math.Round(_devRollMeanData.data * -1, Constants.NumberPrecisionDeviation, MidpointRounding.AwayFromZero).ToString(Constants.numberFormatCorrDataSigned);
                 }
                 else
                 {
@@ -1695,7 +1695,7 @@ namespace MVS
                     // Sjekke om data er gyldig
                     if (_refHeaveMaxData.status == DataStatus.OK && !double.IsNaN(_refHeaveMaxData.data))
                     {
-                        return string.Format("{0} m", Math.Round(_refHeaveMaxData.data, 3, MidpointRounding.AwayFromZero).ToString(Constants.numberFormatRecData));
+                        return string.Format("{0} m", Math.Round(_refHeaveMaxData.data, Constants.NumberPrecisionData, MidpointRounding.AwayFromZero).ToString(Constants.numberFormatRecData));
                     }
                     else
                     {
@@ -1735,7 +1735,7 @@ namespace MVS
                     // Sjekke om data er gyldig
                     if (_testHeaveMaxData.status == DataStatus.OK && !double.IsNaN(_testHeaveMaxData.data))
                     {
-                        return string.Format("{0} m", Math.Round(_testHeaveMaxData.data, 3, MidpointRounding.AwayFromZero).ToString(Constants.numberFormatRecData));
+                        return string.Format("{0} m", Math.Round(_testHeaveMaxData.data, Constants.NumberPrecisionData, MidpointRounding.AwayFromZero).ToString(Constants.numberFormatRecData));
                     }
                     else
                     {
@@ -1777,7 +1777,7 @@ namespace MVS
                     // Sjekke om data er gyldig
                     if (_refHeaveMeanData.status == DataStatus.OK && !double.IsNaN(_refHeaveMeanData.data))
                     {
-                        return string.Format("{0} m", Math.Round(_refHeaveMeanData.data, 3, MidpointRounding.AwayFromZero).ToString(Constants.numberFormatRecData));
+                        return string.Format("{0} m", Math.Round(_refHeaveMeanData.data, Constants.NumberPrecisionData, MidpointRounding.AwayFromZero).ToString(Constants.numberFormatRecData));
                     }
                     else
                     {
@@ -1838,7 +1838,7 @@ namespace MVS
                     // Sjekke om data er gyldig
                     if (_testHeaveMeanData.status == DataStatus.OK && !double.IsNaN(_testHeaveMeanData.data))
                     {
-                        return string.Format("{0} m", Math.Round(_testHeaveMeanData.data, 3, MidpointRounding.AwayFromZero).ToString(Constants.numberFormatRecData));
+                        return string.Format("{0} m", Math.Round(_testHeaveMeanData.data, Constants.NumberPrecisionData, MidpointRounding.AwayFromZero).ToString(Constants.numberFormatRecData));
                     }
                     else
                     {
@@ -1913,7 +1913,7 @@ namespace MVS
             {
                 if (_devHeaveMaxData.status == DataStatus.OK && !double.IsNaN(_devHeaveMaxData.data))
                 {
-                    return Math.Round(_devHeaveMaxData.data, 3, MidpointRounding.AwayFromZero).ToString(Constants.numberFormatRecDataSigned);
+                    return Math.Round(_devHeaveMaxData.data, Constants.NumberPrecisionData, MidpointRounding.AwayFromZero).ToString(Constants.numberFormatRecDataSigned);
                 }
                 else
                 {
@@ -1947,7 +1947,7 @@ namespace MVS
             {
                 if (_devHeaveMeanData.status == DataStatus.OK && !double.IsNaN(_devHeaveMeanData.data))
                 {
-                    return Math.Round(_devHeaveMeanData.data, 3, MidpointRounding.AwayFromZero).ToString(Constants.numberFormatRecDataSigned);
+                    return Math.Round(_devHeaveMeanData.data, Constants.NumberPrecisionData, MidpointRounding.AwayFromZero).ToString(Constants.numberFormatRecDataSigned);
                 }
                 else
                 {
@@ -1962,7 +1962,7 @@ namespace MVS
             {
                 if (_devHeaveMeanData.status == DataStatus.OK && !double.IsNaN(_devHeaveMeanData.data))
                 {
-                    return Math.Round(_devHeaveMeanData.data * -1, 1, MidpointRounding.AwayFromZero).ToString(Constants.numberFormatCorrDataSigned);
+                    return Math.Round(_devHeaveMeanData.data * -1, Constants.NumberPrecisionDeviation, MidpointRounding.AwayFromZero).ToString(Constants.numberFormatCorrDataSigned);
                 }
                 else
                 {

@@ -330,4 +330,7 @@ class Constants
     public const string numberFormatRecDataSigned = "+0.000;-0.000";
     public const string numberFormatCorrDataSigned = "+0.0;-0.0";
 
+    // Number Precision
+    public const int NumberPrecisionData = 3;
+    public const int NumberPrecisionDeviation = 1;
 }
