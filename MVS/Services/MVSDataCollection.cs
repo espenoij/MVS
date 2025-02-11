@@ -48,7 +48,7 @@ namespace MVS
                         item.dataId = "0";
                     clientSensorData.dataId = int.Parse(item.dataId, Constants.cultureInfo);
 
-                    clientSensorData.dbColumn = item.dbTableName;
+                    clientSensorData.dbColumn = item.dbColumn;
 
                     // Legge inn i data listen
                     lock (dataListLock)

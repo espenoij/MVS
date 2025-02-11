@@ -177,16 +177,16 @@ namespace MVS
             }
         }
 
-        private string _dbTableName { get; set; }
+        private string _dbColumn { get; set; }
         public string dbColumn
         {
             get
             {
-                return _dbTableName;
+                return _dbColumn;
             }
             set
             {
-                _dbTableName = value;
+                _dbColumn = value;
                 OnPropertyChanged();
             }
         }

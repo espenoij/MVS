@@ -18,7 +18,7 @@ namespace MVS
             InitializeComponent();
         }
 
-        public void Init(MainWindowVM mainWindowVM)
+        public void Start(MainWindowVM mainWindowVM)
         {
             DataContext = mainWindowVM;
 
@@ -32,11 +32,11 @@ namespace MVS
             {
                 dataAnalysisProgressBar.Value = mainWindowVM.dataAnalysisProgress;
 
-                if (mainWindowVM.dataAnalysisProgress >= 99 ||
-                    mainWindowVM.Result.code != ImportResultCode.OK) 
-                {
-                    Close();
-                }
+                //if (mainWindowVM.dataAnalysisProgress >= 99 ||
+                //    mainWindowVM.Result.code != ImportResultCode.OK) 
+                //{
+                //    Close();
+                //}
             }
         }
     }

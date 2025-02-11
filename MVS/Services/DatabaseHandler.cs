@@ -86,7 +86,7 @@ namespace MVS
                     connection.Open();
 
                     // Liste med database column navn
-                    string columnNames = "";
+                    string columnNames = string.Empty;
                     foreach (var hmsData in mvsDataCollection.GetDataList().ToList())
                     {
                         // Kun variabler som har column navn satt skal legges inn

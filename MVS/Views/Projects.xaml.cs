@@ -1,5 +1,6 @@
 ﻿using System;
 using System.Collections.Generic;
+using System.ComponentModel;
 using System.Windows;
 using System.Windows.Controls;
 using System.Windows.Input;
@@ -23,8 +24,15 @@ namespace MVS
         private MainWindowVM mainWindowVM;
         private Config config;
         private ImportVM importVM;
+        private ProjectVM projectVM;
+
+        // Data View worker
+        private readonly BackgroundWorker dataViewWorker = new BackgroundWorker();
 
         private MainWindow.UpdateUIButtonsCallback updateUIButtonsCallback;
+
+        // Progress dialog
+        DialogDataAnalysisProgress progressDlg = new DialogDataAnalysisProgress();
 
         public Projects()
         {
@@ -33,7 +41,7 @@ namespace MVS
             importVM = new ImportVM();
         }
 
-        public void Init(MainWindowVM mainWindowVM, Config config, MVSDatabase mvsDatabase, UpdateUIButtonsCallback updateUIButtonsCallback)
+        public void Init(MainWindowVM mainWindowVM, ProjectVM projectVM, Config config, MVSDatabase mvsDatabase, UpdateUIButtonsCallback updateUIButtonsCallback)
         {
             // Database
             this.mvsDatabase = mvsDatabase;
@@ -43,6 +51,7 @@ namespace MVS
 
             // VM
             this.mainWindowVM = mainWindowVM;
+            this.projectVM = projectVM;
 
             this.updateUIButtonsCallback = updateUIButtonsCallback;
 
@@ -63,8 +72,14 @@ namespace MVS
             // Sette default verdi
             cboInputMRUs.Text = cboInputMRUs.Items[0].ToString();
 
+            // Analysis init
+            InitDataViewWorker();
+
             // Laste sensor data
             LoadProjects();
+
+            // Progress dialog
+            progressDlg.Owner = App.Current.MainWindow;
 
             //// Sette første set som selected
             //if (gvProjects.Items.Count > 0)
@@ -235,6 +250,19 @@ namespace MVS
             LoadSelectedItemsDetails();
             UpdateUIStates(false);
 
+            if (mainWindowVM.SelectedProject.DataSetHasData())
+            {
+                // Clear display data
+                projectVM.ClearDisplayData();
+
+                // Starte data analyse
+                dataViewWorker.RunWorkerAsync();
+
+                // Åpne progress dialog
+                progressDlg.Start(mainWindowVM);
+                progressDlg.ShowDialog();
+            }
+
             updateUIButtonsCallback();
         }
 
@@ -330,6 +358,41 @@ namespace MVS
                 // Oppdatere database
                 mvsDatabase.Update(mainWindowVM.SelectedProject);
             }
+        }
+
+        private void InitDataViewWorker()
+        {
+            dataViewWorker.DoWork += dataViewWorker_DoWork;
+            dataViewWorker.ProgressChanged += importWorker_ProgressChanged;
+            dataViewWorker.RunWorkerCompleted += dataViewWorker_RunWorkerCompleted;
+            dataViewWorker.WorkerReportsProgress = true;
+        }
+
+        private void dataViewWorker_DoWork(object sender, DoWorkEventArgs e)
+        {
+            // Sette ops mode til analyse
+            mainWindowVM.OperationsMode = OperationsMode.ViewData;
+
+            // Resetter data listene i dataCalculations
+            projectVM.ResetDataCalculations();
+
+            // Laste session data fra databasen
+            mvsDatabase.LoadSessionData(mainWindowVM.SelectedProject, projectVM.projectsDataList);
+
+            // Analysere session data
+            projectVM.AnalyseProjectData(dataViewWorker.ReportProgress);
+        }
+
+        private void importWorker_ProgressChanged(object sender, ProgressChangedEventArgs e)
+        {
+            mainWindowVM.dataAnalysisProgress = e.ProgressPercentage;
+        }
+
+        private void dataViewWorker_RunWorkerCompleted(object sender, RunWorkerCompletedEventArgs e)
+        {
+            projectVM.TransferToDisplay();
+
+            progressDlg.Close();
         }
     }
 }

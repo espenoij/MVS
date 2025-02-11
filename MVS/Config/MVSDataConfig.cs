@@ -11,7 +11,7 @@ namespace MVS
             this.id = clientData.id;
             this.name = clientData.name;
             this.dataId = clientData.dataId.ToString();
-            this.dbTableName = clientData.dbColumn.ToString();
+            this.dbColumn = clientData.dbColumn.ToString();
         }
 
         [ConfigurationProperty("id", DefaultValue = 0, IsRequired = true, IsKey = true)]
@@ -36,11 +36,11 @@ namespace MVS
             set { this["dataId"] = value; }
         }
 
-        [ConfigurationProperty("dbTableName", DefaultValue = "", IsRequired = true, IsKey = false)]
-        public string dbTableName
+        [ConfigurationProperty("dbColumn", DefaultValue = "", IsRequired = true, IsKey = false)]
+        public string dbColumn
         {
-            get { return (string)this["dbTableName"]; }
-            set { this["dbTableName"] = value; }
+            get { return (string)this["dbColumn"]; }
+            set { this["dbColumn"] = value; }
         }
     }
 }

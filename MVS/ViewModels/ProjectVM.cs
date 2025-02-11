@@ -59,7 +59,7 @@ namespace MVS
         public RadObservableCollection<HMSData> devPitchMeanBuffer = new RadObservableCollection<HMSData>();
         public RadObservableCollection<HMSData> devRollMeanBuffer = new RadObservableCollection<HMSData>();
         public RadObservableCollection<HMSData> devHeaveMeanBuffer = new RadObservableCollection<HMSData>();
-        
+
         public RadObservableCollection<HMSData> devPitchMeanList = new RadObservableCollection<HMSData>();
         public RadObservableCollection<HMSData> devRollMeanList = new RadObservableCollection<HMSData>();
         public RadObservableCollection<HMSData> devHeaveMeanList = new RadObservableCollection<HMSData>();
@@ -175,7 +175,7 @@ namespace MVS
             // Oppdatere mean verdier
             refPitchMeanData = mvsDataCollection.GetData(ValueType.Ref_PitchMean);
             refPitchMeanMaxData = mvsDataCollection.GetData(ValueType.Ref_PitchMeanMax);
-            
+
             refRollMeanData = mvsDataCollection.GetData(ValueType.Ref_RollMean);
             refRollMeanMaxData = mvsDataCollection.GetData(ValueType.Ref_RollMeanMax);
 
@@ -199,7 +199,7 @@ namespace MVS
             devRollData = mvsDataCollection.GetData(ValueType.Dev_Roll);
             devRollMeanData = mvsDataCollection.GetData(ValueType.Dev_RollMean);
             devRollMaxData = mvsDataCollection.GetData(ValueType.Dev_RollMax);
-            
+
             devHeaveData = mvsDataCollection.GetData(ValueType.Dev_Heave);
             devHeaveMeanData = mvsDataCollection.GetData(ValueType.Dev_HeaveMean);
             devHeaveMaxData = mvsDataCollection.GetData(ValueType.Dev_HeaveMax);
@@ -747,7 +747,7 @@ namespace MVS
         public HMSData testPitchMaxUpData
         {
             get
-            {   
+            {
                 return _testPitchMaxUpData;
             }
             set
@@ -2015,7 +2015,7 @@ namespace MVS
         /////////////////////////////////////////////////////////////////////////////
         // Chart Axis Min/Max
         /////////////////////////////////////////////////////////////////////////////
-        
+
         // Pitch
         /////////////////////////////////////////////////
         public double pitchChartAxisMax
@@ -2208,6 +2208,11 @@ namespace MVS
             {
                 return defaultValue;
             }
+        }
+
+        public void ResetDataCalculations()
+        {
+            mvsProcessing.ResetDataCalculations();
         }
     }
 }

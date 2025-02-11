@@ -68,9 +68,6 @@ namespace MVS
         // Kommer fra sensor input edit
         private bool sensorInputEdited = false;
 
-        // Data View worker
-        private readonly BackgroundWorker dataViewWorker = new BackgroundWorker();
-
         // Model View
         private MainWindowVM mainWindowVM;
         private ProjectVM projectVM;
@@ -135,7 +132,7 @@ namespace MVS
             projectVM.Init(mainWindowVM, mvsProcessing, mvsInputData, mvsOutputData);
 
             // Recordings page
-            ucProjects.Init(mainWindowVM, config, mvsDatabase, updateUIButtonsCallback);
+            ucProjects.Init(mainWindowVM, projectVM, config, mvsDatabase, updateUIButtonsCallback);
 
             // Recordings Data page
             ucDataAnalysis.Init(projectVM);
@@ -220,9 +217,6 @@ namespace MVS
                 }
             }
 
-            // Analysis init
-            InitDataViewWorker();
-
             // Sette start/stop knappene
             SetOperationsMode(OperationsMode.Stop);
 
@@ -302,6 +296,7 @@ namespace MVS
                     break;
 
                 case OperationsMode.Stop:
+                case OperationsMode.ViewData:
 
                     if (mainWindowVM.SelectedProject != null)
                     {
@@ -751,57 +746,8 @@ namespace MVS
             aboutDlg.ShowDialog();
         }
 
-        private void InitDataViewWorker()
-        {
-            dataViewWorker.DoWork += dataViewWorker_DoWork;
-            dataViewWorker.ProgressChanged += importWorker_ProgressChanged;
-            dataViewWorker.RunWorkerCompleted += dataViewWorker_RunWorkerCompleted;
-            dataViewWorker.WorkerReportsProgress = true;
-        }
-
-        private void dataViewWorker_DoWork(object sender, DoWorkEventArgs e)
-        {
-            // Sette ops mode til analyse
-            mainWindowVM.OperationsMode = OperationsMode.ViewData;
-
-            // Resetter data listene i dataCalculations
-            mvsProcessing.ResetDataCalculations();
-
-            // Laste session data fra databasen
-            mvsDatabase.LoadSessionData(mainWindowVM.SelectedProject, projectVM.projectsDataList);
-
-            // Analysere session data
-            projectVM.AnalyseProjectData(dataViewWorker.ReportProgress);
-        }
-
-        private void importWorker_ProgressChanged(object sender, ProgressChangedEventArgs e)
-        {
-            mainWindowVM.dataAnalysisProgress = e.ProgressPercentage;
-        }
-
-        private void dataViewWorker_RunWorkerCompleted(object sender, RunWorkerCompletedEventArgs e)
-        {
-            projectVM.TransferToDisplay();
-        }
-
         private void tcProjects_SelectionChanged(object sender, RadSelectionChangedEventArgs e)
         {
-            if (tabDataAnalysis.IsSelected &&
-                mainWindowVM.OperationsMode != OperationsMode.Recording &&
-                mainWindowVM.OperationsMode != OperationsMode.Test)
-            {
-                // Clear display data
-                projectVM.ClearDisplayData();
-
-                // Starte data analyse
-                dataViewWorker.RunWorkerAsync();
-
-                // Åpne progress dialog
-                DialogDataAnalysisProgress progressDlg = new DialogDataAnalysisProgress();
-                progressDlg.Owner = App.Current.MainWindow;
-                progressDlg.Init(mainWindowVM);
-                progressDlg.ShowDialog();
-            }
         }
 
         private void btnScreenCapture_Click(object sender, RoutedEventArgs e)
