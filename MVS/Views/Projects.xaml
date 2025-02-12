@@ -110,8 +110,20 @@
                     Width="6*" />
             </Grid.ColumnDefinitions>
 
-            <telerik:RadGridView   
+            <Grid.RowDefinitions>
+                <RowDefinition
+                    Height="6*" />
+                <RowDefinition
+                    Height="2*" />
+                <RowDefinition
+                    Height="2*" />
+                <RowDefinition
+                    Height="2*" />
+            </Grid.RowDefinitions>
+
+            <telerik:RadGridView
                 Grid.Column="0"
+                Grid.RowSpan="5"
                 Name="gvProjects"
                 Margin="8,0,0,8"
                 ItemsSource="{Binding Project}"
@@ -122,7 +134,6 @@
                 CanUserReorderColumns="False"
                 CanUserDeleteRows="True"
                 RowIndicatorVisibility="Collapsed"
-
                 SelectionMode="Single"
                 AutoGenerateColumns="False"
                 SelectionChanged="gvProjects_SelectionChanged">
@@ -167,197 +178,473 @@
 
             </telerik:RadGridView>
 
-            <StackPanel
-                Grid.Column="1">
+            <telerik:GroupBox
+                Grid.Column="1"
+                Grid.Row="0"
+                Header="Project Details"
+                Margin="8">
 
-                <telerik:GroupBox
-                    Header="Project Details"
-                    Margin="8">
+                <Grid>
 
-                    <StackPanel
-                        Margin="8">
+                    <Grid.ColumnDefinitions>
+                        <ColumnDefinition
+                            Width="2*" />
+                        <ColumnDefinition
+                            Width="4*" />
+                    </Grid.ColumnDefinitions>
 
-                        <DockPanel
-                            Margin="8">
-                            <Label
-                                Width="140"
-                                Content="ID" />
-                            <Label
-                                Name="lbDataSetID" />
-                        </DockPanel>
+                    <Grid.RowDefinitions>
+                        <RowDefinition
+                            Height="*" />
+                        <RowDefinition
+                            Height="*" />
+                        <RowDefinition
+                            Height="*" />
+                        <RowDefinition
+                            Height="*" />
+                        <RowDefinition
+                            Height="*" />
+                        <RowDefinition
+                            Height="*" />
+                        <RowDefinition
+                            Height="*" />
+                        <RowDefinition
+                            Height="*" />
+                        <RowDefinition
+                            Height="*" />
+                        <RowDefinition
+                            Height="*" />
+                        <RowDefinition
+                            Height="*" />
+                        <RowDefinition
+                            Height="*" />
+                    </Grid.RowDefinitions>
 
-                        <DockPanel
-                            Margin="8">
-                            <Label
-                                Width="140"
-                                Content="Name"
-                                VerticalAlignment="Center" />
+                    <!--ID-->
+                    <Viewbox
+                        Grid.Row="0"
+                        Grid.Column="0"
+                        StretchDirection="Both"
+                        Stretch="Uniform"
+                        HorizontalAlignment="Left">
+                        <telerik:Label
+                            Grid.Column="0"
+                            Content="ID" />
+                    </Viewbox>
 
-                            <Grid>
-                                <TextBox
-                                    Name="tbDataSetName"
-                                    LostFocus="tbDataSetName_LostFocus"
-                                    KeyDown="tbDataSetName_KeyDown" />
+                    <Viewbox
+                        Grid.Row="0"
+                        Grid.Column="1"
+                        StretchDirection="Both"
+                        Stretch="Uniform"
+                        HorizontalAlignment="Left">
+                        <telerik:Label
+                            Name="lbDataSetID" />
+                    </Viewbox>
 
-                                <TextBlock
-                                    IsHitTestVisible="False"
-                                    VerticalAlignment="Center"
-                                    Text="Enter a name here"
-                                    Margin="10,0,0,0"
-                                    Foreground="DarkGray">
+                    <Viewbox
+                        Grid.Row="1"
+                        Grid.Column="0"
+                        StretchDirection="Both"
+                        Stretch="Uniform"
+                        HorizontalAlignment="Left">
+                        <telerik:Label
+                            Content="Name"
+                            VerticalAlignment="Center" />
+                    </Viewbox>
 
-                                    <TextBlock.Style>
-                                        <Style
-                                            TargetType="{x:Type TextBlock}">
+                    <Viewbox
+                        Grid.Row="1"
+                        Grid.Column="1"
+                        StretchDirection="Both"
+                        Stretch="Uniform"
+                        HorizontalAlignment="Left">
+                        <TextBox
+                            Grid.Row="1"
+                            Grid.Column="1"
+                            Name="tbDataSetName"
+                            LostFocus="tbDataSetName_LostFocus"
+                            KeyDown="tbDataSetName_KeyDown" />
+                    </Viewbox>
+
+                    <Viewbox
+                        Grid.Row="1"
+                        Grid.Column="1"
+                        Margin="4"
+                        StretchDirection="Both"
+                        Height="30"
+                        Stretch="Uniform"
+                        HorizontalAlignment="Left">
+
+                        <TextBlock
+                            Margin="2"
+                            IsHitTestVisible="False"
+                            Text="Enter a name here"
+                            Foreground="DarkGray">
+
+                            <TextBlock.Style>
+                                <Style
+                                    TargetType="{x:Type TextBlock}">
+                                    <Setter
+                                        Property="Visibility"
+                                        Value="Collapsed" />
+                                    <Style.Triggers>
+                                        <DataTrigger
+                                            Binding="{Binding Text, ElementName=tbDataSetName}"
+                                            Value="">
                                             <Setter
                                                 Property="Visibility"
-                                                Value="Collapsed" />
-                                            <Style.Triggers>
-                                                <DataTrigger
-                                                    Binding="{Binding Text, ElementName=tbDataSetName}"
-                                                    Value="">
-                                                    <Setter
-                                                        Property="Visibility"
-                                                        Value="Visible" />
-                                                </DataTrigger>
-                                            </Style.Triggers>
-                                        </Style>
-                                    </TextBlock.Style>
-                                </TextBlock>
-                            </Grid>
-                            
-                        </DockPanel>
+                                                Value="Visible" />
+                                        </DataTrigger>
+                                    </Style.Triggers>
+                                </Style>
+                            </TextBlock.Style>
+                        </TextBlock>
+                    </Viewbox>
 
-                        <DockPanel
-                            Margin="8">
-                            
-                            <Label
-                                Width="140"
-                                Margin="0,5,0,0"
-                                Content="Comments" />
-                            
-                            <Grid>
-                                <TextBox
-                                    Name="tbDataSetComments"
-                                    Height="90"
-                                    VerticalContentAlignment="Top"
-                                    LostFocus="tbDataSetDescription_LostFocus"
-                                    KeyDown="tbDataSetDescription_KeyDown"
-                                    TextWrapping="Wrap" />
-                                
-                                <TextBlock
-                                    IsHitTestVisible="False"
-                                    Text="Enter comments here"
-                                    VerticalAlignment="Top"
-                                    Margin="10,10,0,0"
-                                    Foreground="DarkGray">
-                                    
-                                    <TextBlock.Style>
-                                        <Style
-                                            TargetType="{x:Type TextBlock}">
+                    <Viewbox
+                        Grid.Row="2"
+                        Grid.Column="0"
+                        StretchDirection="Both"
+                        Stretch="Uniform"
+                        HorizontalAlignment="Left">
+                        <telerik:Label
+                            Content="Comments" />
+                    </Viewbox>
+
+                    <Viewbox
+                        Grid.Row="2"
+                        Grid.RowSpan="3"
+                        Grid.Column="1"
+                        Margin="3"
+                        StretchDirection="Both"
+                        Stretch="Uniform"
+                        HorizontalAlignment="Left">
+
+                        <TextBox
+                            Name="tbDataSetComments"
+                            LostFocus="tbDataSetDescription_LostFocus"
+                            KeyDown="tbDataSetDescription_KeyDown"
+                            TextWrapping="Wrap" />
+
+                    </Viewbox>
+
+                    <Viewbox
+                        Grid.Row="2"
+                        Grid.Column="1"
+                        StretchDirection="Both"
+                        Stretch="Uniform"
+                        HorizontalAlignment="Left">
+
+                        <TextBlock
+                            Margin="2"
+                            IsHitTestVisible="False"
+                            Text="Enter comments here"
+                            Foreground="DarkGray">
+
+                            <TextBlock.Style>
+                                <Style
+                                    TargetType="{x:Type TextBlock}">
+                                    <Setter
+                                        Property="Visibility"
+                                        Value="Collapsed" />
+                                    <Style.Triggers>
+                                        <DataTrigger
+                                            Binding="{Binding Text, ElementName=tbDataSetComments}"
+                                            Value="">
                                             <Setter
                                                 Property="Visibility"
-                                                Value="Collapsed" />
-                                            <Style.Triggers>
-                                                <DataTrigger
-                                                    Binding="{Binding Text, ElementName=tbDataSetComments}"
-                                                    Value="">
-                                                    <Setter
-                                                        Property="Visibility"
-                                                        Value="Visible" />
-                                                </DataTrigger>
-                                            </Style.Triggers>
-                                        </Style>
-                                    </TextBlock.Style>
-                                </TextBlock>
-                            </Grid>
-                            
-                        </DockPanel>
+                                                Value="Visible" />
+                                        </DataTrigger>
+                                    </Style.Triggers>
+                                </Style>
+                            </TextBlock.Style>
+                        </TextBlock>
+                    </Viewbox>
 
-                        <DockPanel
-                            Margin="8">
-                            <Label
-                                Width="140"
-                                Content="Input MRUs"
-                                VerticalAlignment="Center" />
-                            <telerik:RadComboBox
-                                Width="auto"
-                                Name="cboInputMRUs"
-                                DropDownClosed="cboInputMRUs_DropDownClosed" />
-                        </DockPanel>
+                    <Viewbox
+                        Grid.Row="5"
+                        Grid.Column="0"
+                        StretchDirection="Both"
+                        Stretch="Uniform"
+                        HorizontalAlignment="Left">
+                        <telerik:Label
+                            Content="Input MRUs"
+                            VerticalAlignment="Center" />
+                    </Viewbox>
 
-                        <DockPanel
-                            Margin="8">
-                            <Label
-                                Name="lbImport"
-                                Width="140"
-                                Content="Import Test Data"
-                                VerticalAlignment="Center" />
-                            <Button
-                                Name="btnImport"
-                                Click="btnImport_Click"
-                                HorizontalAlignment="Right"
-                                Width="140"
-                                Margin="8,0,0,0">Import</Button>
-                        </DockPanel>
+                    <telerik:RadComboBox
+                        Grid.Row="5"
+                        Grid.Column="1"
+                        Width="auto"
+                        Name="cboInputMRUs"
+                        DropDownClosed="cboInputMRUs_DropDownClosed" />
 
-                        <DockPanel
-                            Margin="8">
-                            <Label
-                                Width="140"
-                                Content="Date"
-                                VerticalAlignment="Center" />
-                            <Label
-                                Name="lbDataSetDate" />
-                        </DockPanel>
+                    <Viewbox
+                        Grid.Row="6"
+                        Grid.Column="0"
+                        StretchDirection="Both"
+                        Stretch="Uniform"
+                        HorizontalAlignment="Left">
+                        <telerik:Label
+                            Content="Date" />
+                    </Viewbox>
 
-                        <DockPanel
-                            Margin="8">
-                            <Label
-                                Width="140"
-                                Content="Start Time"
-                                VerticalAlignment="Center" />
-                            <Label
-                                Name="lbDataSetStartTime" />
-                        </DockPanel>
+                    <Viewbox
+                        Grid.Row="6"
+                        Grid.Column="1"
+                        StretchDirection="Both"
+                        Stretch="Uniform"
+                        HorizontalAlignment="Left">
+                        <telerik:Label
+                            Name="lbDataSetDate" />
+                    </Viewbox>
 
-                        <DockPanel
-                            Margin="8">
-                            <Label
-                                Width="140"
-                                Content="End Time"
-                                VerticalAlignment="Center" />
-                            <Label
-                                Name="lbDataSetEndTime" />
-                        </DockPanel>
+                    <Viewbox
+                        Grid.Row="7"
+                        Grid.Column="0"
+                        StretchDirection="Both"
+                        Stretch="Uniform"
+                        HorizontalAlignment="Left">
+                        <telerik:Label
+                            Content="Start Time" />
+                    </Viewbox>
 
-                        <DockPanel
-                            Margin="8">
-                            <Label
-                                Width="140"
-                                Content="Duration"
-                                VerticalAlignment="Center" />
-                            <Label
-                                Name="lbDataSetDuration"/>
-                        </DockPanel>
+                    <Viewbox
+                        Grid.Row="7"
+                        Grid.Column="1"
+                        StretchDirection="Both"
+                        Stretch="Uniform"
+                        HorizontalAlignment="Left">
+                        <telerik:Label
+                            Name="lbDataSetStartTime" />
+                    </Viewbox>
 
-                        <DockPanel
-                            Margin="8">
-                            <TextBlock
-                                HorizontalAlignment="Left"
-                                Name="tbDurationWarning"
-                                Visibility="Collapsed"
-                                Foreground="{StaticResource ColorRed}"
-                                TextWrapping="Wrap"
-                                Text="Warning: Data recording duration is to short. 20 minutes minimum. 40+ minutes is best."                                
-                                VerticalAlignment="Center" />
-                        </DockPanel>
+                    <Viewbox
+                        Grid.Row="8"
+                        Grid.Column="0"
+                        StretchDirection="Both"
+                        Stretch="Uniform"
+                        HorizontalAlignment="Left">
+                        <telerik:Label
+                            Content="End Time" />
+                    </Viewbox>
 
-                    </StackPanel>
+                    <Viewbox
+                        Grid.Row="8"
+                        Grid.Column="1"
+                        StretchDirection="Both"
+                        Stretch="Uniform"
+                        HorizontalAlignment="Left">
+                        <telerik:Label
+                            Name="lbDataSetEndTime" />
+                    </Viewbox>
 
-                </telerik:GroupBox>
+                    <Viewbox
+                        Grid.Row="9"
+                        Grid.Column="0"
+                        StretchDirection="Both"
+                        Stretch="Uniform"
+                        HorizontalAlignment="Left">
+                        <telerik:Label
+                            Content="Duration" />
+                    </Viewbox>
 
-            </StackPanel>
+                    <Viewbox
+                        Grid.Row="9"
+                        Grid.Column="1"
+                        StretchDirection="Both"
+                        Stretch="Uniform"
+                        HorizontalAlignment="Left">
+                        <telerik:Label
+                            Name="lbDataSetDuration" />
+                    </Viewbox>
+
+                    <Viewbox
+                        Grid.Row="10"
+                        Grid.Column="0"
+                        StretchDirection="Both"
+                        Stretch="Uniform"
+                        HorizontalAlignment="Left">
+                        <telerik:Label
+                            Name="lbImport"
+                            Content="Import Test Data"
+                            VerticalAlignment="Center" />
+                    </Viewbox>
+
+                    <Button
+                        Grid.Row="10"
+                        Grid.Column="1"
+                        Name="btnImport"
+                        Click="btnImport_Click"
+                        Width="140"
+                        HorizontalAlignment="Right">Import</Button>
+
+                    <Viewbox
+                        Grid.Row="11"
+                        Grid.Column="0"
+                        Grid.ColumnSpan="2"
+                        Margin="8"
+                        StretchDirection="Both"
+                        Stretch="Uniform"
+                        HorizontalAlignment="Left">
+                        <TextBlock
+                            HorizontalAlignment="Left"
+                            Name="tbDurationWarning"
+                            Visibility="Collapsed"
+                            Foreground="{StaticResource ColorRed}"
+                            TextWrapping="Wrap"
+                            Text="Warning: Data recording duration is to short. 20 minutes minimum. 40+ minutes is best."
+                            VerticalAlignment="Center" />
+                    </Viewbox>
+
+                </Grid>
+
+            </telerik:GroupBox>
+
+            <telerik:GroupBox
+                Grid.Column="1"
+                Grid.Row="1"
+                Header="Pitch"
+                Margin="8">
+
+                <Grid>
+
+                    <Grid.RowDefinitions>
+                        <RowDefinition
+                            Height="*" />
+                        <RowDefinition
+                            Height="*" />
+                        <RowDefinition
+                            Height="*" />
+                    </Grid.RowDefinitions>
+
+                    <Grid.ColumnDefinitions>
+                        <ColumnDefinition
+                            Width="*" />
+                        <ColumnDefinition
+                            Width="*" />
+                        <ColumnDefinition
+                            Width="*" />
+                        <ColumnDefinition
+                            Width="*" />
+                    </Grid.ColumnDefinitions>
+
+                    <!--Pitch Title-->
+                    <Viewbox
+                        Grid.Row="0"
+                        Grid.Column="1"
+                        StretchDirection="Both"
+                        Stretch="Uniform"
+                        HorizontalAlignment="Center">
+                        <telerik:Label
+                            Content="Ref" />
+                    </Viewbox>
+
+                    <Viewbox
+                        Grid.Row="0"
+                        Grid.Column="2"
+                        StretchDirection="Both"
+                        Stretch="Uniform"
+                        HorizontalAlignment="Center">
+                        <telerik:Label
+                            Grid.Row="0"
+                            Grid.Column="2"
+                            Content="Test" />
+                    </Viewbox>
+
+                    <Viewbox
+                        Grid.Row="0"
+                        Grid.Column="3"
+                        StretchDirection="Both"
+                        Stretch="Uniform"
+                        HorizontalAlignment="Center">
+                        <telerik:Label
+                            Grid.Row="0"
+                            Grid.Column="3"
+                            Content="Deviation" />
+                    </Viewbox>
+
+                    <!--Pitch Separator-->
+                    <Separator
+                        Grid.Row="0"
+                        Grid.Column="0"
+                        Grid.ColumnSpan="4"
+                        VerticalAlignment="Bottom" />
+
+                    <!--Mean Pitch-->
+                    <Viewbox
+                        Grid.Row="1"
+                        Grid.Column="0"
+                        StretchDirection="Both"
+                        Stretch="Uniform"
+                        HorizontalAlignment="Left">
+                        <telerik:Label
+                            Content="Mean" />
+                    </Viewbox>
+
+                    <Viewbox
+                        Grid.Row="1"
+                        Grid.Column="1"
+                        StretchDirection="Both"
+                        Stretch="Uniform"
+                        HorizontalAlignment="Center">
+                        <telerik:Label
+                            Content="{Binding Path=refPitchMeanDataString}"
+                            FontSize="{StaticResource fontSizeData}" />
+                    </Viewbox>
+
+                    <Viewbox
+                        Grid.Row="1"
+                        Grid.Column="2"
+                        StretchDirection="Both"
+                        Stretch="Uniform"
+                        HorizontalAlignment="Center">
+                        <telerik:Label
+                            Content="{Binding Path=testPitchMeanDataString}"
+                            FontSize="{StaticResource fontSizeData}" />
+                    </Viewbox>
+
+                    <!--Mean Pitch Deviation-->
+                    <Viewbox
+                        Grid.Row="1"
+                        Grid.Column="3"
+                        StretchDirection="Both"
+                        Stretch="Uniform"
+                        HorizontalAlignment="Center">
+                        <telerik:Label
+                            Content="{Binding Path=devPitchMeanString}"
+                            FontSize="{StaticResource fontSizeData}" />
+                    </Viewbox>
+
+                    <!--Pitch Correction-->
+                    <Viewbox
+                        Grid.Row="2"
+                        Grid.Column="0"
+                        StretchDirection="Both"
+                        Stretch="Uniform"
+                        HorizontalAlignment="Left">
+                        <telerik:Label
+                            Content="Correction" />
+                    </Viewbox>
+
+                    <Grid
+                        Grid.Row="2"
+                        Grid.Column="3"
+                        Background="{StaticResource ColorBackgroundSeparatorDark}">
+
+                        <Viewbox
+                            StretchDirection="Both"
+                            Stretch="Uniform"
+                            HorizontalAlignment="Center">
+                            <telerik:Label
+                                Content="{Binding Path=corrPitchString}"
+                                FontSize="{StaticResource fontSizeData}" />
+                        </Viewbox>
+                    </Grid>
+                </Grid>
+
+            </telerik:GroupBox>
 
         </Grid>
 

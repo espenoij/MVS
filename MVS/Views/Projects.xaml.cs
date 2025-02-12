@@ -50,6 +50,7 @@ namespace MVS
             this.config = config;
 
             // VM
+            DataContext = projectVM;
             this.mainWindowVM = mainWindowVM;
             this.projectVM = projectVM;
 
