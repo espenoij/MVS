@@ -38,6 +38,8 @@
             <sys:Double x:Key="fontSizeData">18</sys:Double>
             <sys:Double x:Key="fontSizeTimer">22</sys:Double>
             <sys:Double x:Key="fontSizeProject">20</sys:Double>
+            <sys:Double
+                x:Key="fontSizeProjectDetails">16</sys:Double>
 
         </ResourceDictionary>
     </Application.Resources>

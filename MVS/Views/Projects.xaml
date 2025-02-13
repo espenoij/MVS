@@ -112,7 +112,7 @@
 
             <Grid.RowDefinitions>
                 <RowDefinition
-                    Height="6*" />
+                    Height="5*" />
                 <RowDefinition
                     Height="2*" />
                 <RowDefinition
@@ -214,10 +214,6 @@
                             Height="*" />
                         <RowDefinition
                             Height="*" />
-                        <RowDefinition
-                            Height="*" />
-                        <RowDefinition
-                            Height="*" />
                     </Grid.RowDefinitions>
 
                     <!--ID-->
@@ -259,9 +255,12 @@
                         StretchDirection="Both"
                         Stretch="Uniform"
                         HorizontalAlignment="Left">
+                        
                         <TextBox
                             Grid.Row="1"
                             Grid.Column="1"
+                            FontSize="{StaticResource fontSizeProjectDetails}"
+                            Width="450"
                             Name="tbDataSetName"
                             LostFocus="tbDataSetName_LostFocus"
                             KeyDown="tbDataSetName_KeyDown" />
@@ -270,14 +269,14 @@
                     <Viewbox
                         Grid.Row="1"
                         Grid.Column="1"
-                        Margin="4"
                         StretchDirection="Both"
-                        Height="30"
                         Stretch="Uniform"
                         HorizontalAlignment="Left">
 
                         <TextBlock
-                            Margin="2"
+                            Margin="10,0,0,0"
+                            FontSize="{StaticResource fontSizeProjectDetails}"
+                            Width="450"
                             IsHitTestVisible="False"
                             Text="Enter a name here"
                             Foreground="DarkGray">
@@ -314,15 +313,15 @@
 
                     <Viewbox
                         Grid.Row="2"
-                        Grid.RowSpan="3"
                         Grid.Column="1"
-                        Margin="3"
                         StretchDirection="Both"
                         Stretch="Uniform"
                         HorizontalAlignment="Left">
 
                         <TextBox
                             Name="tbDataSetComments"
+                            FontSize="{StaticResource fontSizeProjectDetails}"
+                            Width="450"
                             LostFocus="tbDataSetDescription_LostFocus"
                             KeyDown="tbDataSetDescription_KeyDown"
                             TextWrapping="Wrap" />
@@ -337,7 +336,9 @@
                         HorizontalAlignment="Left">
 
                         <TextBlock
-                            Margin="2"
+                            Margin="10,0,0,0"
+                            Width="450"
+                            FontSize="{StaticResource fontSizeProjectDetails}"
                             IsHitTestVisible="False"
                             Text="Enter comments here"
                             Foreground="DarkGray">
@@ -363,7 +364,7 @@
                     </Viewbox>
 
                     <Viewbox
-                        Grid.Row="5"
+                        Grid.Row="3"
                         Grid.Column="0"
                         StretchDirection="Both"
                         Stretch="Uniform"
@@ -374,14 +375,14 @@
                     </Viewbox>
 
                     <telerik:RadComboBox
-                        Grid.Row="5"
+                        Grid.Row="3"
                         Grid.Column="1"
                         Width="auto"
                         Name="cboInputMRUs"
                         DropDownClosed="cboInputMRUs_DropDownClosed" />
 
                     <Viewbox
-                        Grid.Row="6"
+                        Grid.Row="4"
                         Grid.Column="0"
                         StretchDirection="Both"
                         Stretch="Uniform"
@@ -391,7 +392,7 @@
                     </Viewbox>
 
                     <Viewbox
-                        Grid.Row="6"
+                        Grid.Row="4"
                         Grid.Column="1"
                         StretchDirection="Both"
                         Stretch="Uniform"
@@ -401,7 +402,7 @@
                     </Viewbox>
 
                     <Viewbox
-                        Grid.Row="7"
+                        Grid.Row="5"
                         Grid.Column="0"
                         StretchDirection="Both"
                         Stretch="Uniform"
@@ -411,7 +412,7 @@
                     </Viewbox>
 
                     <Viewbox
-                        Grid.Row="7"
+                        Grid.Row="5"
                         Grid.Column="1"
                         StretchDirection="Both"
                         Stretch="Uniform"
@@ -421,7 +422,7 @@
                     </Viewbox>
 
                     <Viewbox
-                        Grid.Row="8"
+                        Grid.Row="6"
                         Grid.Column="0"
                         StretchDirection="Both"
                         Stretch="Uniform"
@@ -431,7 +432,7 @@
                     </Viewbox>
 
                     <Viewbox
-                        Grid.Row="8"
+                        Grid.Row="6"
                         Grid.Column="1"
                         StretchDirection="Both"
                         Stretch="Uniform"
@@ -441,7 +442,7 @@
                     </Viewbox>
 
                     <Viewbox
-                        Grid.Row="9"
+                        Grid.Row="7"
                         Grid.Column="0"
                         StretchDirection="Both"
                         Stretch="Uniform"
@@ -451,7 +452,7 @@
                     </Viewbox>
 
                     <Viewbox
-                        Grid.Row="9"
+                        Grid.Row="7"
                         Grid.Column="1"
                         StretchDirection="Both"
                         Stretch="Uniform"
@@ -461,7 +462,7 @@
                     </Viewbox>
 
                     <Viewbox
-                        Grid.Row="10"
+                        Grid.Row="8"
                         Grid.Column="0"
                         StretchDirection="Both"
                         Stretch="Uniform"
@@ -472,16 +473,20 @@
                             VerticalAlignment="Center" />
                     </Viewbox>
 
-                    <Button
-                        Grid.Row="10"
+                    <Viewbox
+                        Grid.Row="8"
                         Grid.Column="1"
-                        Name="btnImport"
-                        Click="btnImport_Click"
-                        Width="140"
-                        HorizontalAlignment="Right">Import</Button>
+                        StretchDirection="Both"
+                        Stretch="Uniform"
+                        HorizontalAlignment="Right">
+                        <Button
+                            Name="btnImport"
+                            Click="btnImport_Click"
+                            Width="140">Import</Button>
+                    </Viewbox>
 
                     <Viewbox
-                        Grid.Row="11"
+                        Grid.Row="9"
                         Grid.Column="0"
                         Grid.ColumnSpan="2"
                         Margin="8"

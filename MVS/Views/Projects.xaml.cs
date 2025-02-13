@@ -251,7 +251,8 @@ namespace MVS
             LoadSelectedItemsDetails();
             UpdateUIStates(false);
 
-            if (mainWindowVM.SelectedProject.DataSetHasData())
+            if (mainWindowVM.SelectedProject != null &&
+                mainWindowVM.SelectedProject.DataSetHasData())
             {
                 // Clear display data
                 projectVM.ClearDisplayData();
