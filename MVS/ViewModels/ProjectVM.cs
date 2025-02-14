@@ -477,25 +477,39 @@ namespace MVS
                 status = DataStatus.NONE
             };
 
+            // Pitch
             refPitchMaxUpData = noData;
             refPitchMaxDownData = noData;
             refPitchMeanData = noData;
+
             testPitchMaxUpData = noData;
             testPitchMaxDownData = noData;
             testPitchMeanData = noData;
 
+            devPitchMaxData = noData;
+            devPitchMeanData = noData;
+
+            // Roll
             refRollMaxLeftData = noData;
             refRollMaxRightData = noData;
             refRollMeanData = noData;
-            refRollMeanMaxData = noData;
+            
             testRollMaxLeftData = noData;
             testRollMaxRightData = noData;
             testRollMeanData = noData;
 
+            devRollMaxData = noData;
+            devRollMeanData = noData;
+
+            // Heave
             refHeaveMaxData = noData;
             refHeaveMeanData = noData;
+            
             testHeaveMaxData = noData;
             testHeaveMeanData = noData;
+
+            devHeaveMaxData = noData;
+            devHeaveMeanData = noData;
 
             // Slette gamle data i buffer lister
             refPitchBuffer.Clear();
