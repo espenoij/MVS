@@ -170,7 +170,8 @@ namespace MVS
         FileReader,
         FixedValue,
         Config,
-        Debug
+        Debug,
+        LivoxLidar
     }
 
     public enum ErrorMessageCategory

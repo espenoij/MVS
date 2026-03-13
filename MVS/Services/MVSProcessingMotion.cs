@@ -5,6 +5,9 @@ namespace MVS
 {
     public class MVSProcessingMotion
     {
+        // LiDAR helideck correction (Reference MRU only)
+        private LivoxLidarCorrection lidarCorrection;
+
         // Input data
         private HMSData refSensorPitch = new HMSData();
         private HMSData refSensorRoll = new HMSData();
@@ -74,9 +77,11 @@ namespace MVS
         // Admin Settings
         private AdminSettingsVM adminSettingsVM;
 
-        public MVSProcessingMotion(MVSDataCollection hmsOutputData, AdminSettingsVM adminSettingsVM, ErrorHandler errorHandler)
+        public MVSProcessingMotion(MVSDataCollection hmsOutputData, AdminSettingsVM adminSettingsVM,
+                                    ErrorHandler errorHandler, LivoxLidarCorrection lidarCorrection = null)
         {
-            this.adminSettingsVM = adminSettingsVM;
+            this.adminSettingsVM  = adminSettingsVM;
+            this.lidarCorrection  = lidarCorrection;
 
             // Fyller output listen med MVS Output data
             // NB! Variablene som legges inn i listen her fungerer som pekere: Oppdateres variabelen -> oppdateres listen
@@ -349,6 +354,22 @@ namespace MVS
             refSensorPitch.Set(hmsInputDataList.GetData(ValueType.Ref_Pitch));
             refSensorRoll.Set(hmsInputDataList.GetData(ValueType.Ref_Roll));
             refSensorHeave.Set(hmsInputDataList.GetData(ValueType.Ref_Heave));
+
+            // Apply LiDAR helideck correction to Reference MRU ONLY.
+            // 1. De-rotate MRU axes to align with the helideck bow/stern frame.
+            // 2. Subtract the fitted helideck static tilt offsets.
+            if (lidarCorrection != null && lidarCorrection.IsActive)
+            {
+                double h  = lidarCorrection.HeadingOffset * Math.PI / 180.0;
+                double ch = Math.Cos(h);
+                double sh = Math.Sin(h);
+
+                double pitchRot = ch * refSensorPitch.data - sh * refSensorRoll.data;
+                double rollRot  = sh * refSensorPitch.data + ch * refSensorRoll.data;
+
+                refSensorPitch.data = pitchRot - lidarCorrection.PitchOffset;
+                refSensorRoll.data  = rollRot  - lidarCorrection.RollOffset;
+            }
 
             testSensorPitch.Set(hmsInputDataList.GetData(ValueType.Test_Pitch));
             testSensorRoll.Set(hmsInputDataList.GetData(ValueType.Test_Roll));

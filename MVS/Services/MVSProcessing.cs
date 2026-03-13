@@ -9,9 +9,10 @@
         public MVSProcessing(
             MVSDataCollection mvsOutputData,
             AdminSettingsVM adminSettingsVM,
-            ErrorHandler errorHandler)
+            ErrorHandler errorHandler,
+            LivoxLidarCorrection lidarCorrection = null)
         {
-            mvsProcessingMotion = new MVSProcessingMotion(mvsOutputData, adminSettingsVM, errorHandler);
+            mvsProcessingMotion = new MVSProcessingMotion(mvsOutputData, adminSettingsVM, errorHandler, lidarCorrection);
         }
 
         // Kjøre prosessering og oppdatere data

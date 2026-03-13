@@ -1,4 +1,4 @@
-﻿<?xml version="1.0" encoding="utf-8"?>
+<?xml version="1.0" encoding="utf-8"?>
 <Project ToolsVersion="15.0" xmlns="http://schemas.microsoft.com/developer/msbuild/2003">
   <Import Project="$(MSBuildExtensionsPath)\$(MSBuildToolsVersion)\Microsoft.Common.props" Condition="Exists('$(MSBuildExtensionsPath)\$(MSBuildToolsVersion)\Microsoft.Common.props')" />
   <PropertyGroup>
@@ -136,6 +136,7 @@
       <Generator>MSBuild:Compile</Generator>
       <SubType>Designer</SubType>
     </ApplicationDefinition>
+    <Compile Include="Config\LivoxLidarSystemConfig.cs" />
     <Compile Include="Config\ReferenceDataConfig.cs" />
     <Compile Include="Config\TestDataConfig.cs" />
     <Compile Include="Config\ReferenceDataConfigCollection.cs" />
@@ -171,9 +172,14 @@
     <Compile Include="Services\FixedValue\FixedValueDataRetrieval.cs" />
     <Compile Include="Services\FixedValue\FixedValueSetup.cs" />
     <Compile Include="Models\WindVector.cs" />
+    <Compile Include="Services\LivoxLidar\LivoxLidarApi.cs" />
+    <Compile Include="Services\LivoxLidar\LivoxLidarCorrection.cs" />
+    <Compile Include="Services\LivoxLidar\LivoxLidarPlaneFitter.cs" />
+    <Compile Include="Services\LivoxLidar\LivoxLidarSubsystem.cs" />
     <Compile Include="Services\ScreenCapture.cs" />
     <Compile Include="ViewModels\ImportVM.cs" />
     <Compile Include="ViewModels\AboutVM.cs" />
+    <Compile Include="ViewModels\LivoxLidarVM.cs" />
     <Compile Include="ViewModels\ProjectVM.cs" />
     <Compile Include="ViewModels\MainWindowVM.cs" />
     <Compile Include="ViewModels\FixedValueWindowVM.cs" />
@@ -182,6 +188,9 @@
     </Compile>
     <Compile Include="Views\FileReaderSetupWindow.xaml.cs">
       <DependentUpon>FileReaderSetupWindow.xaml</DependentUpon>
+    </Compile>
+    <Compile Include="Views\LivoxLidar\LivoxLidarPage.xaml.cs">
+      <DependentUpon>LivoxLidarPage.xaml</DependentUpon>
     </Compile>
     <Compile Include="Views\MVSOutput.xaml.cs">
       <DependentUpon>MVSOutput.xaml</DependentUpon>
@@ -291,6 +300,9 @@
       <Generator>MSBuild:Compile</Generator>
       <SubType>Designer</SubType>
     </Page>
+    <Page Include="Views\LivoxLidar\LivoxLidarPage.xaml">
+      <Generator>MSBuild:Compile</Generator>
+    </Page>
     <Page Include="Views\MVSOutput.xaml">
       <Generator>MSBuild:Compile</Generator>
       <SubType>Designer</SubType>
@@ -365,6 +377,7 @@
     <None Include="..\.editorconfig">
       <Link>.editorconfig</Link>
     </None>
+    <None Include="Config\LivoxLidar\mid360_config.json" />
     <None Include="Properties\Settings.settings">
       <Generator>SettingsSingleFileGenerator</Generator>
       <LastGenOutput>Settings.Designer.cs</LastGenOutput>
@@ -601,6 +614,12 @@
   </ItemGroup>
   <ItemGroup>
     <Resource Include="Icons\mvs_windows_icon.ico" />
+  </ItemGroup>
+  <ItemGroup>
+    <Folder Include="obj\" />
+  </ItemGroup>
+  <ItemGroup>
+    <Resource Include="Icons\detector_white_36dp.png" />
   </ItemGroup>
   <Import Project="$(MSBuildToolsPath)\Microsoft.CSharp.targets" />
 </Project>

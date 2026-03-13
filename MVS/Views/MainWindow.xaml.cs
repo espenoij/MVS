@@ -73,6 +73,10 @@ namespace MVS
         private ProjectVM projectVM;
         private AboutVM aboutVM;
 
+        // Livox LiDAR calibration subsystem
+        private LivoxLidarSubsystem  livoxSubsystem  = new LivoxLidarSubsystem();
+        private LivoxLidarCorrection livoxCorrection = new LivoxLidarCorrection();
+
         public MainWindow()
         {
             InitializeComponent();
@@ -139,6 +143,10 @@ namespace MVS
 
             // Sensor Input Setup
             ucSensorSetupPage.Init(config, errorHandler, adminSettingsVM);
+
+            // Livox LiDAR calibration page
+            var livoxVM = new LivoxLidarVM(livoxSubsystem, livoxCorrection, errorHandler, config);
+            ucLivoxLidarPage.Init(livoxVM);
 
             // Error Message
             ucErrorMessagesPage.Init(config, errorHandler);
@@ -325,7 +333,8 @@ namespace MVS
             mvsProcessing = new MVSProcessing(
                 mvsOutputData,
                 adminSettingsVM,
-                errorHandler);
+                errorHandler,
+                livoxCorrection);
 
             // Main Menu MVS: Input Setup
             ucMVSInputSetup.Init(

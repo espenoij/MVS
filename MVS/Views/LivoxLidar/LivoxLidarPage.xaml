@@ -1,0 +1,247 @@
+<UserControl
+    x:Class="MVS.LivoxLidarPage"
+    xmlns="http://schemas.microsoft.com/winfx/2006/xaml/presentation"
+    xmlns:x="http://schemas.microsoft.com/winfx/2006/xaml"
+    xmlns:telerik="http://schemas.telerik.com/2008/xaml/presentation"
+    xmlns:mc="http://schemas.openxmlformats.org/markup-compatibility/2006"
+    xmlns:d="http://schemas.microsoft.com/expression/blend/2008"
+    mc:Ignorable="d"
+    d:DesignHeight="900" d:DesignWidth="1400">
+
+    <Grid>
+        <Grid.ColumnDefinitions>
+            <ColumnDefinition Width="360" />
+            <ColumnDefinition Width="360" />
+            <ColumnDefinition Width="*"   />
+        </Grid.ColumnDefinitions>
+
+        <!-- ═══════════════════════════════════════════════════ Column 0: Connection + Filters -->
+        <StackPanel Grid.Column="0" Margin="8,8,4,8">
+
+            <!-- Connection -->
+            <telerik:GroupBox Header="Connection" Margin="0,0,0,8">
+                <StackPanel Margin="8">
+
+                    <DockPanel Margin="0,0,0,4">
+                        <Label Width="130" Content="SDK Config File" VerticalAlignment="Center"/>
+                        <TextBox Name="tbConfigFilePath"
+                                 Text="{Binding ConfigFilePath, UpdateSourceTrigger=LostFocus}"
+                                 ToolTip="Path to mid360_config.json" />
+                    </DockPanel>
+
+                    <DockPanel Margin="0,0,0,4">
+                        <Label Width="130" Content="LiDAR IP" VerticalAlignment="Center"/>
+                        <TextBox Text="{Binding IpAddress, UpdateSourceTrigger=LostFocus}" />
+                    </DockPanel>
+
+                    <DockPanel Margin="0,0,0,4">
+                        <Label Width="130" Content="SDK Status" VerticalAlignment="Center"/>
+                        <Label Content="{Binding SdkStatus}" />
+                    </DockPanel>
+
+                    <StackPanel Orientation="Horizontal" HorizontalAlignment="Right" Margin="0,8,0,0">
+                        <telerik:RadButton Command="{Binding ConnectCommand}"
+                                           Width="100" Margin="0,0,8,0">Connect</telerik:RadButton>
+                        <telerik:RadButton Command="{Binding DisconnectCommand}"
+                                           Width="100">Disconnect</telerik:RadButton>
+                    </StackPanel>
+
+                </StackPanel>
+            </telerik:GroupBox>
+
+            <!-- Point Cloud Filters -->
+            <telerik:GroupBox Header="Point Cloud Filters" Margin="0,0,0,8">
+                <StackPanel Margin="8">
+
+                    <DockPanel Margin="0,0,0,4">
+                        <Label Width="130" Content="Range Min (mm)" VerticalAlignment="Center"/>
+                        <TextBox Text="{Binding RangeMinMm, UpdateSourceTrigger=LostFocus}" />
+                    </DockPanel>
+                    <DockPanel Margin="0,0,0,4">
+                        <Label Width="130" Content="Range Max (mm)" VerticalAlignment="Center"/>
+                        <TextBox Text="{Binding RangeMaxMm, UpdateSourceTrigger=LostFocus}" />
+                    </DockPanel>
+                    <Separator Margin="0,4,0,4"/>
+                    <DockPanel Margin="0,0,0,4">
+                        <Label Width="130" Content="Azimuth Min (°)" VerticalAlignment="Center"/>
+                        <TextBox Text="{Binding AzimuthMinDeg, UpdateSourceTrigger=LostFocus}" />
+                    </DockPanel>
+                    <DockPanel Margin="0,0,0,4">
+                        <Label Width="130" Content="Azimuth Max (°)" VerticalAlignment="Center"/>
+                        <TextBox Text="{Binding AzimuthMaxDeg, UpdateSourceTrigger=LostFocus}" />
+                    </DockPanel>
+                    <Separator Margin="0,4,0,4"/>
+                    <DockPanel Margin="0,0,0,4">
+                        <Label Width="130" Content="Elevation Min (°)" VerticalAlignment="Center"/>
+                        <TextBox Text="{Binding ElevationMinDeg, UpdateSourceTrigger=LostFocus}" />
+                    </DockPanel>
+                    <DockPanel Margin="0,0,0,4">
+                        <Label Width="130" Content="Elevation Max (°)" VerticalAlignment="Center"/>
+                        <TextBox Text="{Binding ElevationMaxDeg, UpdateSourceTrigger=LostFocus}" />
+                    </DockPanel>
+
+                </StackPanel>
+            </telerik:GroupBox>
+
+        </StackPanel>
+
+        <!-- ═══════════════════════════════════════════════════ Column 1: Scan + Fit + Correction -->
+        <StackPanel Grid.Column="1" Margin="4,8,4,8">
+
+            <!-- Scan Control -->
+            <telerik:GroupBox Header="Scan Control" Margin="0,0,0,8">
+                <StackPanel Margin="8">
+
+                    <DockPanel Margin="0,0,0,8">
+                        <Label Width="150" Content="Accumulated Points" VerticalAlignment="Center"/>
+                        <Label Content="{Binding AccumulatedPointsString}" FontWeight="Bold"/>
+                    </DockPanel>
+
+                    <StackPanel Orientation="Horizontal" HorizontalAlignment="Right">
+                        <telerik:RadButton Command="{Binding StartScanCommand}"
+                                           Width="110" Margin="0,0,8,0">Start Scan</telerik:RadButton>
+                        <telerik:RadButton Command="{Binding StopScanCommand}"
+                                           Width="110">Stop Scan</telerik:RadButton>
+                    </StackPanel>
+
+                    <telerik:RadButton Command="{Binding FitPlaneCommand}"
+                                       HorizontalAlignment="Right"
+                                       Width="228" Margin="0,8,0,0">Fit Plane</telerik:RadButton>
+
+                </StackPanel>
+            </telerik:GroupBox>
+
+            <!-- Fit Result -->
+            <telerik:GroupBox Header="Plane Fit Result" Margin="0,0,0,8">
+                <StackPanel Margin="8">
+
+                    <DockPanel Margin="0,0,0,4">
+                        <Label Width="150" Content="Pitch" VerticalAlignment="Center"/>
+                        <Label Content="{Binding FitPitch}" FontWeight="Bold"/>
+                    </DockPanel>
+                    <DockPanel Margin="0,0,0,4">
+                        <Label Width="150" Content="Roll" VerticalAlignment="Center"/>
+                        <Label Content="{Binding FitRoll}" FontWeight="Bold"/>
+                    </DockPanel>
+                    <DockPanel Margin="0,0,0,4">
+                        <Label Width="150" Content="Heading" VerticalAlignment="Center"/>
+                        <Label Content="{Binding FitHeading}" FontWeight="Bold"/>
+                    </DockPanel>
+                    <Separator Margin="0,4,0,4"/>
+                    <DockPanel Margin="0,0,0,4">
+                        <Label Width="150" Content="Fit RMSE" VerticalAlignment="Center"/>
+                        <Label Content="{Binding FitRmse}"/>
+                    </DockPanel>
+                    <DockPanel Margin="0,0,0,4">
+                        <Label Width="150" Content="Points used" VerticalAlignment="Center"/>
+                        <Label Content="{Binding FitPoints}"/>
+                    </DockPanel>
+
+                    <StackPanel Orientation="Horizontal" HorizontalAlignment="Right" Margin="0,8,0,0">
+                        <telerik:RadButton Command="{Binding ApplyCorrectionCommand}"
+                                           Width="150" Margin="0,0,8,0"
+                                           ToolTip="Apply this fit as the Reference MRU correction">
+                            Apply Correction
+                        </telerik:RadButton>
+                    </StackPanel>
+
+                </StackPanel>
+            </telerik:GroupBox>
+
+            <!-- Active Correction -->
+            <telerik:GroupBox Header="Active Correction (Reference MRU)" Margin="0,0,0,8">
+                <StackPanel Margin="8">
+
+                    <DockPanel Margin="0,0,0,4">
+                        <Label Width="150" Content="Status" VerticalAlignment="Center"/>
+                        <Label Content="{Binding Correction.StatusString}" FontWeight="Bold"/>
+                    </DockPanel>
+                    <DockPanel Margin="0,0,0,4">
+                        <Label Width="150" Content="Pitch Offset" VerticalAlignment="Center"/>
+                        <Label Content="{Binding Correction.PitchOffsetString}"/>
+                    </DockPanel>
+                    <DockPanel Margin="0,0,0,4">
+                        <Label Width="150" Content="Roll Offset" VerticalAlignment="Center"/>
+                        <Label Content="{Binding Correction.RollOffsetString}"/>
+                    </DockPanel>
+                    <DockPanel Margin="0,0,0,4">
+                        <Label Width="150" Content="Heading Offset" VerticalAlignment="Center"/>
+                        <Label Content="{Binding Correction.HeadingOffsetString}"/>
+                    </DockPanel>
+                    <DockPanel Margin="0,0,0,4">
+                        <Label Width="150" Content="Fit RMSE" VerticalAlignment="Center"/>
+                        <Label Content="{Binding Correction.FitRmseString}"/>
+                    </DockPanel>
+                    <DockPanel Margin="0,0,0,8">
+                        <Label Width="150" Content="Applied" VerticalAlignment="Center"/>
+                        <Label Content="{Binding Correction.TimestampString}"/>
+                    </DockPanel>
+
+                    <telerik:RadButton Command="{Binding ClearCorrectionCommand}"
+                                       HorizontalAlignment="Right" Width="228">
+                        Clear Correction
+                    </telerik:RadButton>
+
+                </StackPanel>
+            </telerik:GroupBox>
+
+            <!-- Status Bar -->
+            <TextBox Name="tbStatus"
+                     Text="{Binding StatusMessage, Mode=OneWay}"
+                     IsReadOnly="True"
+                     TextWrapping="Wrap"
+                     Margin="0,0,0,0" />
+
+        </StackPanel>
+
+        <!-- ═══════════════════════════════════════════════════ Column 2: 3D Viewport -->
+        <Grid Grid.Column="2" Margin="4,8,8,8">
+
+            <telerik:GroupBox Header="Point Cloud — 3D View">
+                <Grid>
+
+                    <!-- 3D Viewport -->
+                    <Viewport3D Name="viewport3D" ClipToBounds="True"
+                                MouseLeftButtonDown="Viewport_MouseLeftButtonDown"
+                                MouseLeftButtonUp="Viewport_MouseLeftButtonUp"
+                                MouseMove="Viewport_MouseMove"
+                                MouseWheel="Viewport_MouseWheel">
+
+                        <Viewport3D.Camera>
+                            <PerspectiveCamera x:Name="camera"
+                                               Position="0,0,15000"
+                                               LookDirection="0,0,-1"
+                                               UpDirection="0,1,0"
+                                               FieldOfView="45" />
+                        </Viewport3D.Camera>
+
+                        <ModelVisual3D>
+                            <ModelVisual3D.Content>
+                                <Model3DGroup>
+                                    <AmbientLight Color="#888888" />
+                                    <DirectionalLight Color="White" Direction="-1,-1,-2" />
+                                </Model3DGroup>
+                            </ModelVisual3D.Content>
+                        </ModelVisual3D>
+
+                        <!-- Point cloud mesh — populated from code-behind -->
+                        <ModelVisual3D x:Name="pointCloudVisual" />
+
+                        <!-- Fitted plane mesh — populated from code-behind -->
+                        <ModelVisual3D x:Name="planeVisual" />
+
+                    </Viewport3D>
+
+                    <!-- Overlay hint -->
+                    <TextBlock HorizontalAlignment="Left" VerticalAlignment="Bottom"
+                               Margin="8" Opacity="0.6" FontSize="11"
+                               Text="Drag to rotate  •  Scroll to zoom" />
+
+                </Grid>
+            </telerik:GroupBox>
+
+        </Grid>
+
+    </Grid>
+
+</UserControl>

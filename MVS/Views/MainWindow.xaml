@@ -601,6 +601,23 @@
                 </telerik:RadTabItem>
 
                 <!--==============================================================-->
+                <!--Side Menu: LiDAR Helideck Calibration-->
+                <!--==============================================================-->
+                <telerik:RadTabItem
+                    Name="tabLivoxLidar">
+
+                    <telerik:RadTabItem.Header>
+                        <Image
+                            Width="36"
+                            Source="../Icons/detector_white_36dp.png" />
+                    </telerik:RadTabItem.Header>
+
+                    <uc:LivoxLidarPage
+                        x:Name="ucLivoxLidarPage" />
+
+                </telerik:RadTabItem>
+
+                <!--==============================================================-->
                 <!--Side Menu: Input Setup-->
                 <!--==============================================================-->
                 <telerik:RadTabItem
