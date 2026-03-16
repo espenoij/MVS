@@ -189,9 +189,10 @@
     <Compile Include="Views\FileReaderSetupWindow.xaml.cs">
       <DependentUpon>FileReaderSetupWindow.xaml</DependentUpon>
     </Compile>
-    <Compile Include="Views\LivoxLidar\LivoxLidarPage.xaml.cs">
+    <Compile Include="Views\LivoxLidarPage.xaml.cs">
       <DependentUpon>LivoxLidarPage.xaml</DependentUpon>
     </Compile>
+    <Compile Include="Views\LivoxLidar\LivoxLidarPage.xaml.cs" />
     <Compile Include="Views\MVSOutput.xaml.cs">
       <DependentUpon>MVSOutput.xaml</DependentUpon>
     </Compile>
@@ -300,7 +301,7 @@
       <Generator>MSBuild:Compile</Generator>
       <SubType>Designer</SubType>
     </Page>
-    <Page Include="Views\LivoxLidar\LivoxLidarPage.xaml">
+    <Page Include="Views\LivoxLidarPage.xaml">
       <Generator>MSBuild:Compile</Generator>
     </Page>
     <Page Include="Views\MVSOutput.xaml">

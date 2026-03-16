@@ -1,4 +1,4 @@
-<UserControl
+﻿<UserControl
     x:Class="MVS.LivoxLidarPage"
     xmlns="http://schemas.microsoft.com/winfx/2006/xaml/presentation"
     xmlns:x="http://schemas.microsoft.com/winfx/2006/xaml"
@@ -79,6 +79,38 @@
                         <Label Width="130" Content="Elevation Max (°)" VerticalAlignment="Center"/>
                         <TextBox Text="{Binding ElevationMaxDeg, UpdateSourceTrigger=LostFocus}" />
                     </DockPanel>
+
+                </StackPanel>
+            </telerik:GroupBox>
+
+            <!-- Simulation Mode -->
+            <telerik:GroupBox Header="Simulation Mode" Margin="0,0,0,8">
+                <StackPanel Margin="8">
+
+                    <TextBlock TextWrapping="Wrap" Margin="0,0,0,8"
+                               Foreground="Gray" FontStyle="Italic"
+                               Text="Generate a synthetic helideck scan without hardware. Uses the same filter, fit and correction pipeline as a real scan." />
+
+                    <DockPanel Margin="0,0,0,4">
+                        <Label Width="130" Content="Sim Pitch (°)" VerticalAlignment="Center"
+                               ToolTip="Helideck pitch to embed in the synthetic point cloud (bow-up positive)"/>
+                        <TextBox Text="{Binding SimPitchDeg, UpdateSourceTrigger=LostFocus}" />
+                    </DockPanel>
+                    <DockPanel Margin="0,0,0,4">
+                        <Label Width="130" Content="Sim Roll (°)" VerticalAlignment="Center"
+                               ToolTip="Helideck roll to embed in the synthetic point cloud (port-up positive)"/>
+                        <TextBox Text="{Binding SimRollDeg, UpdateSourceTrigger=LostFocus}" />
+                    </DockPanel>
+                    <DockPanel Margin="0,0,0,8">
+                        <Label Width="130" Content="Noise (mm σ)" VerticalAlignment="Center"
+                               ToolTip="Gaussian noise standard deviation added to each simulated point"/>
+                        <TextBox Text="{Binding SimNoiseMm, UpdateSourceTrigger=LostFocus}" />
+                    </DockPanel>
+
+                    <telerik:RadButton Command="{Binding SimulateScanCommand}"
+                                       HorizontalAlignment="Right" Width="228">
+                        Simulate Scan
+                    </telerik:RadButton>
 
                 </StackPanel>
             </telerik:GroupBox>
@@ -190,6 +222,9 @@
                      Text="{Binding StatusMessage, Mode=OneWay}"
                      IsReadOnly="True"
                      TextWrapping="Wrap"
+                     Height="120"
+                     VerticalScrollBarVisibility="Auto"
+                     HorizontalScrollBarVisibility="Disabled"
                      Margin="0,0,0,0" />
 
         </StackPanel>
@@ -230,12 +265,26 @@
                         <!-- Fitted plane mesh — populated from code-behind -->
                         <ModelVisual3D x:Name="planeVisual" />
 
+                        <!-- Vessel forward direction arrow — populated from code-behind -->
+                        <ModelVisual3D x:Name="forwardArrowVisual" />
+
+                        <!-- Plane normal arrow — populated from code-behind -->
+                        <ModelVisual3D x:Name="normalArrowVisual" />
+
                     </Viewport3D>
 
                     <!-- Overlay hint -->
                     <TextBlock HorizontalAlignment="Left" VerticalAlignment="Bottom"
                                Margin="8" Opacity="0.6" FontSize="11"
                                Text="Drag to rotate  •  Scroll to zoom" />
+
+                    <!-- Reset View button -->
+                    <telerik:RadButton HorizontalAlignment="Right" VerticalAlignment="Top"
+                                       Margin="8" Width="110" Opacity="0.8"
+                                       Click="ResetCamera_Click"
+                                       ToolTip="Reset camera to default view">
+                        Reset View
+                    </telerik:RadButton>
 
                 </Grid>
             </telerik:GroupBox>

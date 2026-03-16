@@ -67,6 +67,16 @@ namespace MVS
         public float ElevationMinDeg { get; set; } = -90f;
         public float ElevationMaxDeg { get; set; } =  90f;
 
+        // ── Simulation settings ──────────────────────────────────────────────
+
+        public double SimPitchDeg   { get; set; } = 2.0;
+        public double SimRollDeg    { get; set; } = 1.5;
+        public double SimNoiseMm    { get; set; } = 10.0;
+        public int    SimPointCount { get; set; } = 50_000;
+
+        private Thread        _simThread;
+        private volatile bool _simRunning;
+
         // ── Public operations ────────────────────────────────────────────────
 
         public bool Connect(string configFilePath, ErrorHandler errorHandler)
@@ -157,9 +167,9 @@ namespace MVS
 
         public void StopScan()
         {
-            _scanning = false;
-            if (_sdkInitialised)
-                CurrentStatus = Status.Connected;
+            _simRunning = false;
+            _scanning   = false;
+            CurrentStatus = _sdkInitialised ? Status.Connected : Status.Disconnected;
         }
 
         /// <summary>
@@ -183,6 +193,123 @@ namespace MVS
                 _accumulatedPoints = 0;
             }
             PointCountUpdated?.Invoke(0);
+        }
+
+        public List<(float x, float y, float z)> GetPointCloudSnapshot()
+        {
+            lock (_bufferLock)
+                return new List<(float, float, float)>(_buffer);
+        }
+
+        // ── Simulation ───────────────────────────────────────────────────────
+
+        /// <summary>
+        /// Generates a synthetic helideck point cloud without real hardware.
+        /// Runs the same range/azimuth/elevation filter pipeline as live data.
+        /// Fires PointCountUpdated as points accumulate; call StopScan() to abort early.
+        /// When complete, status returns to Disconnected (no real SDK session).
+        /// </summary>
+        public void StartSimulation()
+        {
+            if (_scanning) return;
+
+            lock (_bufferLock)
+            {
+                _buffer.Clear();
+                _accumulatedPoints = 0;
+            }
+
+            _simRunning = true;
+            _scanning   = true;
+            CurrentStatus = Status.Scanning;
+
+            _simThread = new Thread(SimulationWorker) { IsBackground = true, Name = "LivoxSimulator" };
+            _simThread.Start();
+        }
+
+        private void SimulationWorker()
+        {
+            var    rng      = new Random();
+            double pitchRad = SimPitchDeg * Math.PI / 180.0;
+            double rollRad  = SimRollDeg  * Math.PI / 180.0;
+
+            const int BatchSize = 500;
+            int batches = Math.Max(1, SimPointCount / BatchSize);
+
+            for (int b = 0; b < batches && _simRunning; b++)
+            {
+                var batch = new List<(float, float, float)>(BatchSize);
+                for (int i = 0; i < BatchSize; i++)
+                {
+                    // Rejection-sample within a regular hexagonal helideck boundary.
+                    // Circumradius 12 000 mm → flat-top hexagon 24 000 mm wide, ~20 785 mm tall.
+                    const float HexRadius = 12_000f;
+                    float x, y;
+                    do
+                    {
+                        x = (float)((rng.NextDouble() * 2.0 - 1.0) * HexRadius);
+                        y = (float)((rng.NextDouble() * 2.0 - 1.0) * HexRadius);
+                    }
+                    while (!IsInsideHexagon(x, y, HexRadius));
+
+                    float z = (float)(800.0
+                                     + x * Math.Tan(pitchRad)
+                                     + y * Math.Tan(rollRad)
+                                     + NextGaussian(rng, SimNoiseMm));
+                    batch.Add((x, y, z));
+                }
+
+                var filtered = new List<(float, float, float)>(batch.Count);
+                foreach (var (x, y, z) in batch)
+                {
+                    float range = (float)Math.Sqrt(x * x + y * y + z * z);
+                    if (range < RangeMinMm || range > RangeMaxMm) continue;
+
+                    float azDeg = (float)(Math.Atan2(y, x) * 180.0 / Math.PI);
+                    float elDeg = (float)(Math.Atan2(z, Math.Sqrt(x * x + y * y)) * 180.0 / Math.PI);
+
+                    if (azDeg < AzimuthMinDeg || azDeg > AzimuthMaxDeg)    continue;
+                    if (elDeg < ElevationMinDeg || elDeg > ElevationMaxDeg) continue;
+
+                    filtered.Add((x, y, z));
+                }
+
+                if (filtered.Count > 0)
+                {
+                    lock (_bufferLock)
+                    {
+                        _buffer.AddRange(filtered);
+                        Interlocked.Exchange(ref _accumulatedPoints, _buffer.Count);
+                    }
+                    PointCountUpdated?.Invoke(_accumulatedPoints);
+                }
+
+                Thread.Sleep(50);
+            }
+
+            _scanning   = false;
+            _simRunning = false;
+            CurrentStatus = _sdkInitialised ? Status.Connected : Status.Disconnected;
+        }
+
+        private static double NextGaussian(Random rng, double sigma)
+        {
+            double u1 = 1.0 - rng.NextDouble();
+            double u2 = 1.0 - rng.NextDouble();
+            return sigma * Math.Sqrt(-2.0 * Math.Log(u1)) * Math.Sin(2.0 * Math.PI * u2);
+        }
+
+        /// <summary>
+        /// Returns true when (x, y) lies inside a flat-top regular hexagon
+        /// centred at the origin with circumradius <paramref name="r"/>.
+        /// Conditions: |y| ≤ r·√3/2  AND  |x| + |y|/√3 ≤ r
+        /// </summary>
+        private static bool IsInsideHexagon(float x, float y, float r)
+        {
+            float ax = Math.Abs(x);
+            float ay = Math.Abs(y);
+            return ay <= r * 0.866025f          // r · √3/2
+                && ax + ay * 0.577350f <= r;    // |x| + |y|/√3 ≤ r
         }
 
         // ── SDK callbacks ────────────────────────────────────────────────────

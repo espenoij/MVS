@@ -1,4 +1,5 @@
 using System;
+using System.Collections.Generic;
 using System.ComponentModel;
 using System.Runtime.CompilerServices;
 using System.Windows;
@@ -19,6 +20,8 @@ namespace MVS
         // Last fit result — shown in the UI before the user decides to apply
         private LivoxLidarPlaneFitResult _lastFit;
 
+        private bool _simulationInProgress;
+
         public LivoxLidarVM(LivoxLidarSubsystem subsystem, LivoxLidarCorrection correction,
                             ErrorHandler errorHandler, Config config)
         {
@@ -33,19 +36,20 @@ namespace MVS
             // Wire subsystem events → UI
             _subsystem.StatusChanged     += OnStatusChanged;
             _subsystem.PointCountUpdated += OnPointCountUpdated;
-            _subsystem.ErrorOccurred     += msg => StatusMessage = msg;
+            _subsystem.ErrorOccurred     += msg => AppendStatus(msg);
 
             // Expose the shared correction object for direct binding
             Correction = correction;
 
             // Commands
-            ConnectCommand          = new RelayCommand(_ => Connect(),     _ => CanConnect);
-            DisconnectCommand       = new RelayCommand(_ => Disconnect(),   _ => CanDisconnect);
-            StartScanCommand        = new RelayCommand(_ => StartScan(),    _ => CanScan);
-            StopScanCommand         = new RelayCommand(_ => StopScan(),     _ => IsScanning);
-            FitPlaneCommand         = new RelayCommand(_ => FitPlane(),     _ => CanFit);
+            ConnectCommand          = new RelayCommand(_ => Connect(),        _ => CanConnect);
+            DisconnectCommand       = new RelayCommand(_ => Disconnect(),      _ => CanDisconnect);
+            StartScanCommand        = new RelayCommand(_ => StartScan(),       _ => CanScan);
+            StopScanCommand         = new RelayCommand(_ => StopScan(),        _ => IsScanning);
+            FitPlaneCommand         = new RelayCommand(_ => FitPlane(),        _ => CanFit);
             ApplyCorrectionCommand  = new RelayCommand(_ => ApplyCorrection(), _ => HasFitResult);
             ClearCorrectionCommand  = new RelayCommand(_ => ClearCorrection());
+            SimulateScanCommand     = new RelayCommand(_ => SimulateScan(),    _ => CanSimulate);
         }
 
         // ── Bound properties ─────────────────────────────────────────────────
@@ -108,12 +112,37 @@ namespace MVS
             set { _elevationMaxDeg = value; OnPropertyChanged(); SaveConfig(); }
         }
 
-        // Status / readouts
-        private string _statusMessage = "Disconnected";
-        public string StatusMessage
+        private double _simPitchDeg = 2.0;
+        public double SimPitchDeg
         {
-            get { return _statusMessage; }
-            set { _statusMessage = value; OnPropertyChanged(); }
+            get { return _simPitchDeg; }
+            set { _simPitchDeg = value; OnPropertyChanged(); }
+        }
+
+        private double _simRollDeg = 1.5;
+        public double SimRollDeg
+        {
+            get { return _simRollDeg; }
+            set { _simRollDeg = value; OnPropertyChanged(); }
+        }
+
+        private double _simNoiseMm = 10.0;
+        public double SimNoiseMm
+        {
+            get { return _simNoiseMm; }
+            set { _simNoiseMm = value; OnPropertyChanged(); }
+        }
+
+        // Status / readouts
+        private readonly System.Text.StringBuilder _statusLog = new System.Text.StringBuilder();
+        public string StatusMessage => _statusLog.ToString();
+
+        private void AppendStatus(string msg)
+        {
+            string line = $"[{DateTime.Now:HH:mm:ss}] {msg}";
+            if (_statusLog.Length > 0) _statusLog.AppendLine();
+            _statusLog.Append(line);
+            OnPropertyChanged(nameof(StatusMessage));
         }
 
         private string _sdkStatus = "Disconnected";
@@ -154,6 +183,8 @@ namespace MVS
         public bool IsScanning    => _subsystem.CurrentStatus == LivoxLidarSubsystem.Status.Scanning;
         public bool CanFit        => _accumulatedPoints >= 20;
         public bool HasFitResult  => _lastFit != null && _lastFit.IsValid;
+        public bool CanSimulate   => _subsystem.CurrentStatus == LivoxLidarSubsystem.Status.Disconnected ||
+                                     _subsystem.CurrentStatus == LivoxLidarSubsystem.Status.Connected;
 
         // ── Commands ─────────────────────────────────────────────────────────
 
@@ -164,51 +195,66 @@ namespace MVS
         public ICommand FitPlaneCommand        { get; }
         public ICommand ApplyCorrectionCommand { get; }
         public ICommand ClearCorrectionCommand { get; }
+        public ICommand SimulateScanCommand    { get; }
 
         // ── Command implementations ───────────────────────────────────────────
 
         private void Connect()
         {
             ApplyFiltersToSubsystem();
-            StatusMessage = "Connecting...";
+            AppendStatus("Connecting...");
             _subsystem.Connect(ConfigFilePath, _errorHandler);
         }
 
         private void Disconnect()
         {
             _subsystem.Disconnect();
-            StatusMessage = "Disconnected";
+            AppendStatus("Disconnected");
         }
 
         private void StartScan()
         {
             ApplyFiltersToSubsystem();
             _subsystem.StartScan();
-            StatusMessage = "Scanning...";
+            AppendStatus("Scanning...");
             _lastFit = null;
             RefreshFitDisplay();
         }
 
         private void StopScan()
         {
+            _simulationInProgress = false;
             _subsystem.StopScan();
-            StatusMessage = $"Scan stopped. {_accumulatedPoints:N0} points accumulated.";
+            AppendStatus($"Scan stopped. {_accumulatedPoints:N0} points accumulated.");
+        }
+
+        private void SimulateScan()
+        {
+            ApplyFiltersToSubsystem();
+            _subsystem.SimPitchDeg = SimPitchDeg;
+            _subsystem.SimRollDeg  = SimRollDeg;
+            _subsystem.SimNoiseMm  = SimNoiseMm;
+            _subsystem.StartSimulation();
+            _simulationInProgress = true;
+            AppendStatus($"Simulating helideck scan (pitch={SimPitchDeg:F1}°, roll={SimRollDeg:F1}°)...");
+            _lastFit = null;
+            RefreshFitDisplay();
         }
 
         private void FitPlane()
         {
-            StatusMessage = "Fitting plane...";
+            AppendStatus("Fitting plane...");
             _lastFit = _subsystem.FitPlane();
 
             if (_lastFit == null || !_lastFit.IsValid)
             {
-                StatusMessage = "Fit failed — not enough points or degenerate surface.";
+                AppendStatus("Fit failed — not enough points or degenerate surface.");
                 RefreshFitDisplay();
                 return;
             }
 
             RefreshFitDisplay();
-            StatusMessage = $"Fit OK — RMSE {_lastFit.FitRmse:F1} mm  ({_lastFit.PointCount:N0} pts)";
+            AppendStatus($"Fit OK — RMSE {_lastFit.FitRmse:F1} mm  ({_lastFit.PointCount:N0} pts)");
             OnPropertyChanged(nameof(HasFitResult));
 
             FitResultReady?.Invoke(_lastFit);
@@ -222,19 +268,22 @@ namespace MVS
                               _lastFit.HeadingDeg, _lastFit.FitRmse, _lastFit.PointCount);
 
             PersistCorrection();
-            StatusMessage = "Correction applied to Reference MRU.";
+            AppendStatus("Correction applied to Reference MRU.");
         }
 
         private void ClearCorrection()
         {
             _correction.Clear();
             PersistCorrection();
-            StatusMessage = "Correction cleared.";
+            AppendStatus("Correction cleared.");
         }
 
         // ── Fit result event (for 3D view) ────────────────────────────────────
 
         public event Action<LivoxLidarPlaneFitResult> FitResultReady;
+
+        public List<(float x, float y, float z)> GetPointCloudSnapshot()
+            => _subsystem.GetPointCloudSnapshot();
 
         // ── Subsystem event handlers ──────────────────────────────────────────
 
@@ -243,6 +292,11 @@ namespace MVS
             Application.Current?.Dispatcher.BeginInvoke(DispatcherPriority.Normal, new Action(() =>
             {
                 SdkStatus = status.ToString();
+                if (_simulationInProgress && status == LivoxLidarSubsystem.Status.Disconnected)
+                {
+                    _simulationInProgress = false;
+                    AppendStatus($"Simulation complete. {_accumulatedPoints:N0} points accumulated.");
+                }
                 RefreshCommandStates();
             }));
         }
@@ -281,6 +335,7 @@ namespace MVS
             OnPropertyChanged(nameof(CanDisconnect));
             OnPropertyChanged(nameof(CanScan));
             OnPropertyChanged(nameof(IsScanning));
+            OnPropertyChanged(nameof(CanSimulate));
         }
 
         private void ApplyFiltersToSubsystem()
