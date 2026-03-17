@@ -829,6 +829,10 @@ namespace MVS
                 cfg.CorrectionRoll    = Get("CorrectionRoll")     ?? cfg.CorrectionRoll;
                 cfg.CorrectionHeading = Get("CorrectionHeading")  ?? cfg.CorrectionHeading;
                 cfg.CorrectionTimestamp = Get("CorrectionTimestamp") ?? cfg.CorrectionTimestamp;
+                cfg.SimPitchDeg     = Get("SimPitchDeg")     ?? cfg.SimPitchDeg;
+                cfg.SimRollDeg      = Get("SimRollDeg")      ?? cfg.SimRollDeg;
+                cfg.SimNoiseMm      = Get("SimNoiseMm")      ?? cfg.SimNoiseMm;
+                cfg.SimLidarYawDeg  = Get("SimLidarYawDeg")  ?? cfg.SimLidarYawDeg;
 
                 return cfg;
             }
@@ -860,6 +864,10 @@ namespace MVS
                 Set("CorrectionRoll",       cfg.CorrectionRoll);
                 Set("CorrectionHeading",    cfg.CorrectionHeading);
                 Set("CorrectionTimestamp",  cfg.CorrectionTimestamp);
+                Set("SimPitchDeg",          cfg.SimPitchDeg);
+                Set("SimRollDeg",           cfg.SimRollDeg);
+                Set("SimNoiseMm",           cfg.SimNoiseMm);
+                Set("SimLidarYawDeg",       cfg.SimLidarYawDeg);
 
                 appConfig.Save(ConfigurationSaveMode.Modified);
             }

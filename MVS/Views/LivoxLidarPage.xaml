@@ -15,8 +15,19 @@
             <ColumnDefinition Width="*"   />
         </Grid.ColumnDefinitions>
 
-        <!-- ═══════════════════════════════════════════════════ Column 0: Connection + Filters -->
-        <StackPanel Grid.Column="0" Margin="8,8,4,8">
+        <!-- ═══════════════════════════════════════════════════ Columns 0-1: Controls + Status -->
+        <Grid Grid.Column="0" Grid.ColumnSpan="2">
+            <Grid.RowDefinitions>
+                <RowDefinition Height="*" />
+                <RowDefinition Height="300" />
+            </Grid.RowDefinitions>
+            <Grid.ColumnDefinitions>
+                <ColumnDefinition Width="360" />
+                <ColumnDefinition Width="360" />
+            </Grid.ColumnDefinitions>
+
+            <!-- ═══════════════════════════════════════════════════ Column 0: Connection + Filters -->
+            <StackPanel Grid.Column="0" Margin="8,8,4,8">
 
             <!-- Connection -->
             <telerik:GroupBox Header="Connection" Margin="0,0,0,8">
@@ -101,10 +112,15 @@
                                ToolTip="Helideck roll to embed in the synthetic point cloud (port-up positive)"/>
                         <TextBox Text="{Binding SimRollDeg, UpdateSourceTrigger=LostFocus}" />
                     </DockPanel>
-                    <DockPanel Margin="0,0,0,8">
+                    <DockPanel Margin="0,0,0,4">
                         <Label Width="130" Content="Noise (mm σ)" VerticalAlignment="Center"
                                ToolTip="Gaussian noise standard deviation added to each simulated point"/>
                         <TextBox Text="{Binding SimNoiseMm, UpdateSourceTrigger=LostFocus}" />
+                    </DockPanel>
+                    <DockPanel Margin="0,0,0,8">
+                        <Label Width="130" Content="LiDAR Yaw (°)" VerticalAlignment="Center"
+                               ToolTip="Rotation of the LiDAR sensor relative to the deck heading (clockwise positive)"/>
+                        <TextBox Text="{Binding SimLidarYawDeg, UpdateSourceTrigger=LostFocus}" />
                     </DockPanel>
 
                     <telerik:RadButton Command="{Binding SimulateScanCommand}"
@@ -217,17 +233,22 @@
                 </StackPanel>
             </telerik:GroupBox>
 
-            <!-- Status Bar -->
-            <TextBox Name="tbStatus"
-                     Text="{Binding StatusMessage, Mode=OneWay}"
-                     IsReadOnly="True"
-                     TextWrapping="Wrap"
-                     Height="120"
-                     VerticalScrollBarVisibility="Auto"
-                     HorizontalScrollBarVisibility="Disabled"
-                     Margin="0,0,0,0" />
-
         </StackPanel>
+
+            <!-- ═══════════════════════════════════════════════════ Row 1: Status -->
+            <telerik:GroupBox Grid.Row="1" Grid.Column="0" Grid.ColumnSpan="2"
+                              Header="Status" Margin="8,4,8,8">
+                <TextBox Name="tbStatus"
+                         Text="{Binding StatusMessage, Mode=OneWay}"
+                         IsReadOnly="True"
+                         TextWrapping="Wrap"
+                         VerticalScrollBarVisibility="Auto"
+                         HorizontalScrollBarVisibility="Disabled"
+                         VerticalContentAlignment="Top"
+                         HorizontalContentAlignment="Left" />
+            </telerik:GroupBox>
+
+        </Grid>
 
         <!-- ═══════════════════════════════════════════════════ Column 2: 3D Viewport -->
         <Grid Grid.Column="2" Margin="4,8,8,8">
@@ -271,20 +292,30 @@
                         <!-- Plane normal arrow — populated from code-behind -->
                         <ModelVisual3D x:Name="normalArrowVisual" />
 
+                        <!-- LiDAR forward vector (purple) — populated from code-behind -->
+                        <ModelVisual3D x:Name="lidarForwardArrowVisual" />
+
                     </Viewport3D>
 
                     <!-- Overlay hint -->
                     <TextBlock HorizontalAlignment="Left" VerticalAlignment="Bottom"
-                               Margin="8" Opacity="0.6" FontSize="11"
+                               Margin="8" Opacity="1" FontSize="11"
                                Text="Drag to rotate  •  Scroll to zoom" />
 
-                    <!-- Reset View button -->
-                    <telerik:RadButton HorizontalAlignment="Right" VerticalAlignment="Top"
-                                       Margin="8" Width="110" Opacity="0.8"
-                                       Click="ResetCamera_Click"
-                                       ToolTip="Reset camera to default view">
-                        Reset View
-                    </telerik:RadButton>
+                    <!-- View control buttons -->
+                    <StackPanel HorizontalAlignment="Right" VerticalAlignment="Top"
+                                Orientation="Horizontal" Margin="8">
+                        <telerik:RadButton Width="110" Opacity="1" Margin="0,0,4,0"
+                                           Click="TopDownCamera_Click"
+                                           ToolTip="View along the fitted plane normal (top-down)">
+                            Top Down
+                        </telerik:RadButton>
+                        <telerik:RadButton Width="110" Opacity="0.8"
+                                           Click="ResetCamera_Click"
+                                           ToolTip="Reset camera to default view">
+                            Reset View
+                        </telerik:RadButton>
+                    </StackPanel>
 
                 </Grid>
             </telerik:GroupBox>

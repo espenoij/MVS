@@ -116,21 +116,28 @@ namespace MVS
         public double SimPitchDeg
         {
             get { return _simPitchDeg; }
-            set { _simPitchDeg = value; OnPropertyChanged(); }
+            set { _simPitchDeg = value; OnPropertyChanged(); SaveConfig(); }
         }
 
         private double _simRollDeg = 1.5;
         public double SimRollDeg
         {
             get { return _simRollDeg; }
-            set { _simRollDeg = value; OnPropertyChanged(); }
+            set { _simRollDeg = value; OnPropertyChanged(); SaveConfig(); }
         }
 
         private double _simNoiseMm = 10.0;
         public double SimNoiseMm
         {
             get { return _simNoiseMm; }
-            set { _simNoiseMm = value; OnPropertyChanged(); }
+            set { _simNoiseMm = value; OnPropertyChanged(); SaveConfig(); }
+        }
+
+        private double _simLidarYawDeg = 0.0;
+        public double SimLidarYawDeg
+        {
+            get { return _simLidarYawDeg; }
+            set { _simLidarYawDeg = value; OnPropertyChanged(); SaveConfig(); }
         }
 
         // Status / readouts
@@ -231,12 +238,13 @@ namespace MVS
         private void SimulateScan()
         {
             ApplyFiltersToSubsystem();
-            _subsystem.SimPitchDeg = SimPitchDeg;
-            _subsystem.SimRollDeg  = SimRollDeg;
-            _subsystem.SimNoiseMm  = SimNoiseMm;
+            _subsystem.SimPitchDeg    = SimPitchDeg;
+            _subsystem.SimRollDeg     = SimRollDeg;
+            _subsystem.SimNoiseMm     = SimNoiseMm;
+            _subsystem.SimLidarYawDeg = SimLidarYawDeg;
             _subsystem.StartSimulation();
             _simulationInProgress = true;
-            AppendStatus($"Simulating helideck scan (pitch={SimPitchDeg:F1}°, roll={SimRollDeg:F1}°)...");
+            AppendStatus($"Simulating helideck scan (pitch={SimPitchDeg:F1}°, roll={SimRollDeg:F1}°, lidar yaw={SimLidarYawDeg:F1}°)...");
             _lastFit = null;
             RefreshFitDisplay();
         }
@@ -368,6 +376,16 @@ namespace MVS
                 if (float.TryParse(cfg.ElevationMinDeg, out v)) ElevationMinDeg = v;
                 if (float.TryParse(cfg.ElevationMaxDeg, out v)) ElevationMaxDeg = v;
 
+                double d;
+                if (double.TryParse(cfg.SimPitchDeg,    System.Globalization.NumberStyles.Any,
+                                    System.Globalization.CultureInfo.InvariantCulture, out d)) _simPitchDeg    = d;
+                if (double.TryParse(cfg.SimRollDeg,     System.Globalization.NumberStyles.Any,
+                                    System.Globalization.CultureInfo.InvariantCulture, out d)) _simRollDeg     = d;
+                if (double.TryParse(cfg.SimNoiseMm,     System.Globalization.NumberStyles.Any,
+                                    System.Globalization.CultureInfo.InvariantCulture, out d)) _simNoiseMm     = d;
+                if (double.TryParse(cfg.SimLidarYawDeg, System.Globalization.NumberStyles.Any,
+                                    System.Globalization.CultureInfo.InvariantCulture, out d)) _simLidarYawDeg = d;
+
                 // Restore persisted correction
                 if (bool.TryParse(cfg.CorrectionActive, out bool active) && active)
                 {
@@ -430,6 +448,10 @@ namespace MVS
                 AzimuthMaxDeg   = AzimuthMaxDeg.ToString(System.Globalization.CultureInfo.InvariantCulture),
                 ElevationMinDeg = ElevationMinDeg.ToString(System.Globalization.CultureInfo.InvariantCulture),
                 ElevationMaxDeg = ElevationMaxDeg.ToString(System.Globalization.CultureInfo.InvariantCulture),
+                SimPitchDeg     = SimPitchDeg.ToString("R", System.Globalization.CultureInfo.InvariantCulture),
+                SimRollDeg      = SimRollDeg.ToString("R",  System.Globalization.CultureInfo.InvariantCulture),
+                SimNoiseMm      = SimNoiseMm.ToString("R",  System.Globalization.CultureInfo.InvariantCulture),
+                SimLidarYawDeg  = SimLidarYawDeg.ToString("R", System.Globalization.CultureInfo.InvariantCulture),
             };
             return cfg;
         }

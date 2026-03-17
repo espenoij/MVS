@@ -26,13 +26,21 @@ namespace MVS
         public double NormalY      { get; set; }
         public double NormalZ      { get; set; }
         /// <summary>Primary in-plane axis (bow–stern direction, unit vector).</summary>
-        public double AxisX        { get; set; }
-        public double AxisY        { get; set; }
-        public double AxisZ        { get; set; }
+        public double VesselForwardX { get; set; }
+        public double VesselForwardY { get; set; }
+        public double VesselForwardZ { get; set; }
         /// <summary>Half-extent of the point cloud along the primary axis (mm).</summary>
         public double ExtentPrimary   { get; set; }
         /// <summary>Half-extent of the point cloud along the secondary axis (mm).</summary>
         public double ExtentSecondary { get; set; }
+        /// <summary>Signed extent along vessel forward from centroid — stern side (mm, ≤ 0).</summary>
+        public double FwdExtentMin    { get; set; }
+        /// <summary>Signed extent along vessel forward from centroid — bow side (mm, ≥ 0).</summary>
+        public double FwdExtentMax    { get; set; }
+        /// <summary>Signed extent along the lateral axis from centroid — port side (mm, ≤ 0).</summary>
+        public double LatExtentMin    { get; set; }
+        /// <summary>Signed extent along the lateral axis from centroid — starboard side (mm, ≥ 0).</summary>
+        public double LatExtentMax    { get; set; }
     }
 
     /// <summary>
@@ -89,44 +97,122 @@ namespace MVS
             // Sort ascending so column 0 = smallest eigenvalue (normal)
             SortColumns(ref eigenvalues, ref V);
 
-            // ── Step 4: Normal and primary axis ──────────────────────────────
+            // ── Step 4: Plane normal ──────────────────────────────────────────
             double nx = V[0, 0], ny = V[1, 0], nz = V[2, 0];
-            double ax = V[0, 2], ay = V[1, 2], az = V[2, 2];
 
             // Ensure normal points toward the sensor (positive Z when sensor is above helideck)
             if (nz < 0) { nx = -nx; ny = -ny; nz = -nz; }
 
-            // Ensure primary axis is in the positive-X half-space (consistent heading)
-            if (ax < 0) { ax = -ax; ay = -ay; az = -az; }
+            // ── Step 5: In-plane frame aligned with LiDAR +X ─────────────────
+            // U = projection of sensor +X onto the fitted plane, normalised
+            double uDotN = nx; // (1,0,0)·N = nx
+            double ux = 1.0 - uDotN*nx, uy = -uDotN*ny, uz = -uDotN*nz;
+            double uLen = Math.Sqrt(ux*ux + uy*uy + uz*uz);
+            if (uLen < 1e-6) { ux = 0; uy = 1; uz = 0; } // fallback: +X ∥ N
+            else { ux /= uLen; uy /= uLen; uz /= uLen; }
+            // W = N × U (second in-plane basis vector, 90° left of U)
+            double wx = ny*uz - nz*uy, wy = nz*ux - nx*uz, wz = nx*uy - ny*ux;
 
-            // ── Step 5: Extract angles ────────────────────────────────────────
+            // Project all centroid-relative points onto (U, W)
+            var pu = new double[n];
+            var pw = new double[n];
+            for (int i = 0; i < n; i++)
+            {
+                double dx = points[i].x - cx, dy = points[i].y - cy, dz = points[i].z - cz;
+                pu[i] = dx*ux + dy*uy + dz*uz;
+                pw[i] = dx*wx + dy*wy + dz*wz;
+            }
+
+            // ── Step 6: Vessel forward — bow-edge line fit ───────────────────
+            // The edge directly in front of the sensor is always perpendicular to
+            // vessel forward.  Collect all points in the top 15 % of the U range
+            // (the bow-edge region), fit a line via 2-D PCA, and take the smallest
+            // eigenvector (= bow-edge normal) as vessel forward.  Using every point
+            // in the frontier band — rather than one max-U sample per lateral bin —
+            // gives a well-conditioned covariance and is robust to surface outliers.
+            double uMin = double.MaxValue, uMax = double.MinValue;
+            for (int i = 0; i < n; i++)
+            {
+                if (pu[i] < uMin) uMin = pu[i];
+                if (pu[i] > uMax) uMax = pu[i];
+            }
+            double uRange = uMax - uMin;
+            if (uRange < 1.0) uRange = 1.0;
+            double uCutoff = uMax - 0.15 * uRange;
+
+            double bSumU = 0.0, bSumW = 0.0;
+            int    bN    = 0;
+            for (int i = 0; i < n; i++)
+            {
+                if (pu[i] >= uCutoff) { bSumU += pu[i]; bSumW += pw[i]; bN++; }
+            }
+
+            double evU, evW;
+            if (bN >= 3)
+            {
+                double muBU = bSumU / bN, muBW = bSumW / bN;
+                double bSuu = 0.0, bSww = 0.0, bSuw = 0.0;
+                for (int i = 0; i < n; i++)
+                {
+                    if (pu[i] < uCutoff) continue;
+                    double du = pu[i] - muBU, dw = pw[i] - muBW;
+                    bSuu += du * du;  bSww += dw * dw;  bSuw += du * dw;
+                }
+
+                // Smallest eigenvector = bow-edge normal = vessel forward
+                // λ_small = ( (a+c) − sqrt((a−c)² + 4b²) ) / 2,  eigenvector = (b, λ_small − a)
+                double bDisc     = Math.Sqrt(Math.Max(0.0, (bSuu - bSww) * (bSuu - bSww) + 4.0 * bSuw * bSuw));
+                double bLamSmall = (bSuu + bSww - bDisc) * 0.5;
+                evU = bSuw;  evW = bLamSmall - bSuu;
+                double evLen = Math.Sqrt(evU * evU + evW * evW);
+                if (evLen < 1e-12) { evU = 1.0; evW = 0.0; }
+                else { evU /= evLen; evW /= evLen; }
+                if (evU < 0) { evU = -evU; evW = -evW; } // keep in +U (sensor-forward) half-space
+            }
+            else
+            {
+                evU = 1.0; evW = 0.0; // fallback: vessel forward ≈ sensor +X projected
+            }
+
+            // Vessel forward in 3-D
+            double ax = evU * ux + evW * wx;
+            double ay = evU * uy + evW * wy;
+            double az = evU * uz + evW * wz;
+            if (ax < 0) { ax = -ax; ay = -ay; az = -az; } // guarantee +X half-space
+
+            // ── Step 7: Extract angles ────────────────────────────────────────
             result.PitchDeg   = Math.Atan2(nx, nz) * Rad2Deg;
             result.RollDeg    = Math.Atan2(ny, nz) * Rad2Deg;
             result.HeadingDeg = Math.Atan2(ay, ax) * Rad2Deg;
 
-            // ── Step 6: Clearance = n · centroid (signed distance from origin to plane)
-            result.ClearanceMm = nx * cx + ny * cy + nz * cz;
+            // ── Step 8: Clearance = perpendicular distance from sensor origin to plane.
+            // dot(n, centroid) is negative when the normal points toward the sensor,
+            // so negate it to obtain a positive distance value.
+            result.ClearanceMm = -(nx * cx + ny * cy + nz * cz);
 
-            // ── Step 7: RMSE = sqrt(smallest eigenvalue) ─────────────────────
+            // ── Step 9: RMSE = sqrt(smallest eigenvalue) ──────────────────────
             result.FitRmse = Math.Sqrt(Math.Max(0.0, eigenvalues[0]));
 
-            // ── Step 8: Extents (for plane visualisation rectangle) ───────────
-            double secX = V[0, 1], secY = V[1, 1], secZ = V[2, 1];
-            double maxPri = 0, maxSec = 0;
+            // ── Step 10: Extents — project all points onto vessel forward / lateral ─
+            // Lateral = N × VesselForward (in-plane port-starboard direction)
+            double latX = ny*az - nz*ay, latY = nz*ax - nx*az, latZ = nx*ay - ny*ax;
+            double fwdMax = 0, fwdMin = 0, latMax = 0, latMin = 0;
             foreach (var p in points)
             {
                 double dx = p.x - cx, dy = p.y - cy, dz = p.z - cz;
-                double projPri = Math.Abs(dx * ax + dy * ay + dz * az);
-                double projSec = Math.Abs(dx * secX + dy * secY + dz * secZ);
-                if (projPri > maxPri) maxPri = projPri;
-                if (projSec > maxSec) maxSec = projSec;
+                double pf = dx*ax + dy*ay + dz*az;
+                double pl = dx*latX + dy*latY + dz*latZ;
+                if (pf > fwdMax) fwdMax = pf; if (pf < fwdMin) fwdMin = pf;
+                if (pl > latMax) latMax = pl; if (pl < latMin) latMin = pl;
             }
-            result.ExtentPrimary   = maxPri;
-            result.ExtentSecondary = maxSec;
+            result.ExtentPrimary   = Math.Max(fwdMax, -fwdMin);
+            result.ExtentSecondary = Math.Max(latMax, -latMin);
+            result.FwdExtentMin = fwdMin; result.FwdExtentMax = fwdMax;
+            result.LatExtentMin = latMin; result.LatExtentMax = latMax;
 
             result.CentroidX = cx; result.CentroidY = cy; result.CentroidZ = cz;
-            result.NormalX = nx;   result.NormalY = ny;   result.NormalZ = nz;
-            result.AxisX   = ax;   result.AxisY   = ay;   result.AxisZ   = az;
+            result.NormalX = nx;           result.NormalY = ny;           result.NormalZ = nz;
+            result.VesselForwardX = ax;   result.VesselForwardY = ay;   result.VesselForwardZ = az;
             result.PointCount = n;
             result.IsValid    = true;
 

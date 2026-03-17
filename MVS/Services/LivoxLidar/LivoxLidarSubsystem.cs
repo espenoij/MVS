@@ -69,10 +69,11 @@ namespace MVS
 
         // ── Simulation settings ──────────────────────────────────────────────
 
-        public double SimPitchDeg   { get; set; } = 2.0;
-        public double SimRollDeg    { get; set; } = 1.5;
-        public double SimNoiseMm    { get; set; } = 10.0;
-        public int    SimPointCount { get; set; } = 50_000;
+        public double SimPitchDeg    { get; set; } = 2.0;
+        public double SimRollDeg     { get; set; } = 1.5;
+        public double SimNoiseMm     { get; set; } = 10.0;
+        public double SimLidarYawDeg { get; set; } = 0.0;
+        public int    SimPointCount  { get; set; } = 50_000;
 
         private Thread        _simThread;
         private volatile bool _simRunning;
@@ -230,8 +231,11 @@ namespace MVS
         private void SimulationWorker()
         {
             var    rng      = new Random();
-            double pitchRad = SimPitchDeg * Math.PI / 180.0;
-            double rollRad  = SimRollDeg  * Math.PI / 180.0;
+            double pitchRad = SimPitchDeg    * Math.PI / 180.0;
+            double rollRad  = SimRollDeg     * Math.PI / 180.0;
+            double yawRad   = SimLidarYawDeg * Math.PI / 180.0;
+            double cosYaw   = Math.Cos(yawRad);
+            double sinYaw   = Math.Sin(yawRad);
 
             const int BatchSize = 500;
             int batches = Math.Max(1, SimPointCount / BatchSize);
@@ -256,7 +260,11 @@ namespace MVS
                                      + x * Math.Tan(pitchRad)
                                      + y * Math.Tan(rollRad)
                                      + NextGaussian(rng, SimNoiseMm));
-                    batch.Add((x, y, z));
+
+                    // Rotate the point into the LiDAR frame (yaw of sensor relative to deck)
+                    float xr = (float)(x * cosYaw - y * sinYaw);
+                    float yr = (float)(x * sinYaw + y * cosYaw);
+                    batch.Add((xr, yr, z));
                 }
 
                 var filtered = new List<(float, float, float)>(batch.Count);
@@ -271,7 +279,7 @@ namespace MVS
                     if (azDeg < AzimuthMinDeg || azDeg > AzimuthMaxDeg)    continue;
                     if (elDeg < ElevationMinDeg || elDeg > ElevationMaxDeg) continue;
 
-                    filtered.Add((x, y, z));
+                    filtered.Add((x, y, -z));
                 }
 
                 if (filtered.Count > 0)
@@ -372,7 +380,10 @@ namespace MVS
                     if (azDeg < AzimuthMinDeg || azDeg > AzimuthMaxDeg)     continue;
                     if (elDeg < ElevationMinDeg || elDeg > ElevationMaxDeg)  continue;
 
-                    batch.Add((x, y, z));
+                    // Negate Z: LiDAR is mounted upside-down, so raw +Z points toward the
+                    // helideck. Flipping Z puts the helideck at negative Z and the sensor
+                    // origin above it, which is the physically correct orientation.
+                    batch.Add((x, y, -z));
                 }
 
                 if (batch.Count > 0)

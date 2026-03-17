@@ -107,5 +107,35 @@ namespace MVS
             get { return (string)this["correctionTimestamp"]; }
             set { this["correctionTimestamp"] = value; }
         }
+
+        // ── Simulation settings ───────────────────────────────────────────────
+
+        [ConfigurationProperty("simPitchDeg", DefaultValue = "2")]
+        public string SimPitchDeg
+        {
+            get { return (string)this["simPitchDeg"]; }
+            set { this["simPitchDeg"] = value; }
+        }
+
+        [ConfigurationProperty("simRollDeg", DefaultValue = "1.5")]
+        public string SimRollDeg
+        {
+            get { return (string)this["simRollDeg"]; }
+            set { this["simRollDeg"] = value; }
+        }
+
+        [ConfigurationProperty("simNoiseMm", DefaultValue = "10")]
+        public string SimNoiseMm
+        {
+            get { return (string)this["simNoiseMm"]; }
+            set { this["simNoiseMm"] = value; }
+        }
+
+        [ConfigurationProperty("simLidarYawDeg", DefaultValue = "0")]
+        public string SimLidarYawDeg
+        {
+            get { return (string)this["simLidarYawDeg"]; }
+            set { this["simLidarYawDeg"] = value; }
+        }
     }
 }
