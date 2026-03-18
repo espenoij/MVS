@@ -34,8 +34,11 @@ namespace MVS
         private readonly ModelVisual3D _forwardArrowVisual      = new ModelVisual3D();
         private readonly ModelVisual3D _normalArrowVisual       = new ModelVisual3D();
         private readonly ModelVisual3D _lidarForwardArrowVisual = new ModelVisual3D();
-        private readonly ModelVisual3D _marBoxVisual            = new ModelVisual3D();
-        private readonly ModelVisual3D _helideckOutlineVisual   = new ModelVisual3D();
+
+        // Deck edge visuals
+        private readonly ModelVisual3D _deckEdgeLineVisual   = new ModelVisual3D();
+        private readonly ModelVisual3D _deckEdgePointsVisual = new ModelVisual3D();
+        private readonly ModelVisual3D _deckEdgeFwdVisual    = new ModelVisual3D();
 
         public LivoxLidarPage()
         {
@@ -47,6 +50,7 @@ namespace MVS
             _vm = vm;
             DataContext = vm;
             vm.FitResultReady += OnFitResultReady;
+            vm.DeckEdgeResultReady += OnDeckEdgeResultReady;
             vm.PropertyChanged += (s, e) =>
             {
                 if (e.PropertyName == nameof(LivoxLidarVM.StatusMessage))
@@ -55,8 +59,9 @@ namespace MVS
             viewport3D.Children.Add(_forwardArrowVisual);
             viewport3D.Children.Add(_normalArrowVisual);
             viewport3D.Children.Add(_lidarForwardArrowVisual);
-            viewport3D.Children.Add(_marBoxVisual);
-            viewport3D.Children.Add(_helideckOutlineVisual);
+            viewport3D.Children.Add(_deckEdgeLineVisual);
+            viewport3D.Children.Add(_deckEdgePointsVisual);
+            viewport3D.Children.Add(_deckEdgeFwdVisual);
         }
 
         // ── Fit result → 3D scene update ─────────────────────────────────────
@@ -77,10 +82,13 @@ namespace MVS
         private void UpdateScene(LivoxLidarPlaneFitResult fit, List<(float x, float y, float z)> points)
         {
             UpdatePlaneMesh(fit);
-            UpdateMarBox(fit);
-            UpdateHelideckOutline(fit, points);
             UpdateArrows(fit);
             UpdateCamera(fit);
+
+            // Clear previous deck edge visuals (will be re-drawn on next FindDeckEdge)
+            _deckEdgeLineVisual.Content   = null;
+            _deckEdgePointsVisual.Content = null;
+            _deckEdgeFwdVisual.Content    = null;
         }
 
         /// <summary>
@@ -160,6 +168,78 @@ namespace MVS
             // EmissiveMaterial renders at full texture brightness regardless of scene lighting
             var material = new EmissiveMaterial(brush);
             pointCloudVisual.Content = new GeometryModel3D(mesh, material);
+        }
+
+        // ── Deck edge result → 3D scene update ───────────────────────────────
+
+        private void OnDeckEdgeResultReady(LivoxLidarDeckEdgeResult edge)
+        {
+            if (!edge.IsValid) return;
+            Dispatcher.BeginInvoke(System.Windows.Threading.DispatcherPriority.Normal,
+                new Action(() => UpdateDeckEdge(edge)));
+        }
+
+        private void UpdateDeckEdge(LivoxLidarDeckEdgeResult edge)
+        {
+            var midpoint = new Point3D(edge.MidpointX, edge.MidpointY, edge.MidpointZ);
+            var edgeDir  = new Vector3D(edge.DirectionX, edge.DirectionY, edge.DirectionZ);
+            var fwdDir   = new Vector3D(edge.VesselForwardX, edge.VesselForwardY, edge.VesselForwardZ);
+
+            double arrowLength = Math.Max(edge.HalfLength * 2.0, 4000.0);
+            double shaftRadius = arrowLength * 0.015;
+
+            // Edge line: arrow along the edge direction from one end to the other
+            var edgeStart = new Point3D(
+                edge.MidpointX - edge.HalfLength * edge.DirectionX,
+                edge.MidpointY - edge.HalfLength * edge.DirectionY,
+                edge.MidpointZ - edge.HalfLength * edge.DirectionZ);
+            var edgeMesh = BuildArrowMesh(edgeStart, edgeDir, edge.HalfLength * 2.0, shaftRadius);
+            var edgeMat  = MakeArrowMaterial(Color.FromRgb(255, 140, 0));   // orange
+            _deckEdgeLineVisual.Content = new GeometryModel3D { Geometry = edgeMesh, Material = edgeMat, BackMaterial = edgeMat };
+
+            // Vessel forward from edge midpoint
+            double fwdLen = Math.Max(arrowLength * 0.4, 3000.0);
+            var fwdMesh = BuildArrowMesh(midpoint, fwdDir, fwdLen, shaftRadius);
+            var fwdMat  = MakeArrowMaterial(Color.FromRgb(0, 220, 130));    // green
+            _deckEdgeFwdVisual.Content = new GeometryModel3D { Geometry = fwdMesh, Material = fwdMat, BackMaterial = fwdMat };
+
+            // Highlight edge points
+            UpdateEdgePointsMesh(edge.EdgePoints);
+        }
+
+        private void UpdateEdgePointsMesh(List<(float x, float y, float z)> points)
+        {
+            if (points == null || points.Count == 0)
+            {
+                _deckEdgePointsVisual.Content = null;
+                return;
+            }
+
+            const int MaxDisplay = 5000;
+            int step = Math.Max(1, points.Count / MaxDisplay);
+
+            var positions = new Point3DCollection();
+            var indices   = new Int32Collection();
+            float quadHalfSize = 50f;
+
+            int idx = 0;
+            for (int i = 0; i < points.Count; i += step)
+            {
+                var (x, y, z) = points[i];
+                positions.Add(new Point3D(x - quadHalfSize, y - quadHalfSize, z));
+                positions.Add(new Point3D(x + quadHalfSize, y - quadHalfSize, z));
+                positions.Add(new Point3D(x + quadHalfSize, y + quadHalfSize, z));
+                positions.Add(new Point3D(x - quadHalfSize, y + quadHalfSize, z));
+
+                indices.Add(idx);     indices.Add(idx + 1); indices.Add(idx + 2);
+                indices.Add(idx);     indices.Add(idx + 2); indices.Add(idx + 3);
+                idx += 4;
+            }
+
+            var mesh = new MeshGeometry3D { Positions = positions, TriangleIndices = indices };
+            var brush = new SolidColorBrush(Color.FromRgb(255, 140, 0));
+            brush.Freeze();
+            _deckEdgePointsVisual.Content = new GeometryModel3D(mesh, new EmissiveMaterial(brush));
         }
 
         private void UpdatePlaneMesh(LivoxLidarPlaneFitResult fit)
@@ -306,205 +386,6 @@ namespace MVS
         }
 
         private static Point3D P(double x, double y, double z) => new Point3D(x, y, z);
-
-        /// <summary>
-        /// Draws thin black lines tracing the convex-hull outline of the point cloud projected
-        /// onto the fitted plane.  The hull is lifted 150 mm along the plane normal so the tubes
-        /// sit above the coplanar plane mesh and point-cloud quads (prevents z-fighting).
-        /// </summary>
-        private void UpdateHelideckOutline(LivoxLidarPlaneFitResult fit, List<(float x, float y, float z)> points)
-        {
-            if (points == null || points.Count == 0)
-            {
-                _helideckOutlineVisual.Content = null;
-                return;
-            }
-
-            double cx = fit.CentroidX, cy = fit.CentroidY, cz = fit.CentroidZ;
-            double ax = fit.VesselForwardX, ay = fit.VesselForwardY, az = fit.VesselForwardZ;
-            double nx = fit.NormalX, ny = fit.NormalY, nz = fit.NormalZ;
-            double lx = ny*az - nz*ay, ly = nz*ax - nx*az, lz = nx*ay - ny*ax;
-            double llen = Math.Sqrt(lx*lx + ly*ly + lz*lz);
-            if (llen > 1e-9) { lx /= llen; ly /= llen; lz /= llen; }
-
-            // Project every point onto the plane's 2-D (forward u, lateral v) coordinates.
-            // Downsample to at most 5 000 points — the hull only needs boundary samples.
-            int step = Math.Max(1, points.Count / 5000);
-            var pts2d = new List<(double u, double v)>(points.Count / step + 1);
-            for (int i = 0; i < points.Count; i += step)
-            {
-                var (px, py, pz) = points[i];
-                double dx = px - cx, dy = py - cy, dz = pz - cz;
-                pts2d.Add((dx*ax + dy*ay + dz*az, dx*lx + dy*ly + dz*lz));
-            }
-
-            var hull = ConvexHull2D(pts2d);
-            if (hull.Count < 3) { _helideckOutlineVisual.Content = null; return; }
-
-            // Lift along the normal to clear z-fighting with the plane and point-cloud surfaces.
-            const double NormalOffset = 150.0;
-            double ox = cx + nx * NormalOffset;
-            double oy = cy + ny * NormalOffset;
-            double oz = cz + nz * NormalOffset;
-
-            double maxExtent  = Math.Max(fit.ExtentPrimary, fit.ExtentSecondary);
-            double tubeRadius = Math.Max(maxExtent * 0.008, 50.0);
-
-            var brush = new SolidColorBrush(Colors.Black);
-            brush.Freeze();
-            var mat = new MaterialGroup();
-            mat.Children.Add(new DiffuseMaterial(brush));
-            mat.Children.Add(new EmissiveMaterial(new SolidColorBrush(Color.FromRgb(20, 20, 20))));
-
-            var group = new Model3DGroup();
-            for (int i = 0; i < hull.Count; i++)
-            {
-                var (u0, v0) = hull[i];
-                var (u1, v1) = hull[(i + 1) % hull.Count];
-                var p0 = P(ox + ax*u0 + lx*v0, oy + ay*u0 + ly*v0, oz + az*u0 + lz*v0);
-                var p1 = P(ox + ax*u1 + lx*v1, oy + ay*u1 + ly*v1, oz + az*u1 + lz*v1);
-                group.Children.Add(new GeometryModel3D(BuildTubeMesh(p0, p1, tubeRadius), mat) { BackMaterial = mat });
-            }
-
-            _helideckOutlineVisual.Content = group;
-        }
-
-        /// <summary>
-        /// Computes the 2-D convex hull of <paramref name="pts"/> using the Graham scan.
-        /// Returns vertices in counter-clockwise order.
-        /// </summary>
-        private static List<(double u, double v)> ConvexHull2D(List<(double u, double v)> pts)
-        {
-            if (pts.Count < 3) return new List<(double, double)>(pts);
-
-            // Pivot: lowest v, leftmost u on tie
-            int pivotIdx = 0;
-            for (int i = 1; i < pts.Count; i++)
-            {
-                if (pts[i].v < pts[pivotIdx].v ||
-                   (pts[i].v == pts[pivotIdx].v && pts[i].u < pts[pivotIdx].u))
-                    pivotIdx = i;
-            }
-            var pivot = pts[pivotIdx];
-
-            // Sort remaining points by polar angle from pivot; break ties by keeping farthest
-            var others = new List<(double u, double v)>(pts.Count - 1);
-            for (int i = 0; i < pts.Count; i++)
-                if (i != pivotIdx) others.Add(pts[i]);
-
-            others.Sort((a, b) =>
-            {
-                double cross = (a.u - pivot.u) * (b.v - pivot.v) - (a.v - pivot.v) * (b.u - pivot.u);
-                if (Math.Abs(cross) > 1e-9) return cross > 0 ? -1 : 1;
-                double da = (a.u - pivot.u)*(a.u - pivot.u) + (a.v - pivot.v)*(a.v - pivot.v);
-                double db = (b.u - pivot.u)*(b.u - pivot.u) + (b.v - pivot.v)*(b.v - pivot.v);
-                return db.CompareTo(da); // farthest first — prunes collinear near-points
-            });
-
-            var stack = new List<(double u, double v)> { pivot };
-            foreach (var pt in others)
-            {
-                while (stack.Count > 1 &&
-                       Hull2DCross(stack[stack.Count - 2], stack[stack.Count - 1], pt) <= 0)
-                    stack.RemoveAt(stack.Count - 1);
-                stack.Add(pt);
-            }
-            return stack;
-        }
-
-        private static double Hull2DCross((double u, double v) o, (double u, double v) a, (double u, double v) b)
-            => (a.u - o.u) * (b.v - o.v) - (a.v - o.v) * (b.u - o.u);
-
-        /// <summary>
-        /// Draws the four edges of the minimum-area bounding rectangle (MAR) that was used to
-        /// determine the vessel forward direction.
-        /// rectangle is clearly visible; the purple VesselForward arrow lies parallel to the two
-        /// longer (port / starboard) sides.
-        /// </summary>
-        private void UpdateMarBox(LivoxLidarPlaneFitResult fit)
-        {
-            double cx = fit.CentroidX, cy = fit.CentroidY, cz = fit.CentroidZ;
-
-            // Vessel forward axis (unit vector in the fitted plane)
-            double ax = fit.VesselForwardX, ay = fit.VesselForwardY, az = fit.VesselForwardZ;
-
-            // Lateral axis = N × forward  (same convention as UpdatePlaneMesh)
-            double nx = fit.NormalX, ny = fit.NormalY, nz = fit.NormalZ;
-            double lx = ny*az - nz*ay, ly = nz*ax - nx*az, lz = nx*ay - ny*ax;
-            double llen = Math.Sqrt(lx*lx + ly*ly + lz*lz);
-            if (llen > 1e-9) { lx /= llen; ly /= llen; lz /= llen; }
-
-            // Signed MAR extents along the post-flip forward / lateral axes
-            double fmin = fit.FwdExtentMin, fmax = fit.FwdExtentMax;
-            double smin = fit.LatExtentMin, smax = fit.LatExtentMax;
-
-            // Four corners of the MAR bounding rectangle (stern-port → bow-port → bow-stbd → stern-stbd)
-            Point3D c0 = P(cx + ax*fmin + lx*smin, cy + ay*fmin + ly*smin, cz + az*fmin + lz*smin);
-            Point3D c1 = P(cx + ax*fmax + lx*smin, cy + ay*fmax + ly*smin, cz + az*fmax + lz*smin);
-            Point3D c2 = P(cx + ax*fmax + lx*smax, cy + ay*fmax + ly*smax, cz + az*fmax + lz*smax);
-            Point3D c3 = P(cx + ax*fmin + lx*smax, cy + ay*fmin + ly*smax, cz + az*fmin + lz*smax);
-
-            double maxExtent  = Math.Max(fit.ExtentPrimary, fit.ExtentSecondary);
-            double tubeRadius = Math.Max(maxExtent * 0.008, 60.0);
-
-            // Port / starboard edges (parallel to VesselForward) — slightly thicker to emphasise alignment
-            var matFwd  = MakeArrowMaterial(Color.FromRgb(255, 195,   0));  // amber
-            var matStern = MakeArrowMaterial(Color.FromRgb(200, 150,  0));  // darker amber
-            var matBow  = MakeArrowMaterial(Color.FromRgb(160,  32, 240));  // purple — matches VesselForward arrow
-
-            var group = new Model3DGroup();
-            // Port side (c0 → c1) and starboard side (c3 → c2): parallel to forward
-            group.Children.Add(new GeometryModel3D(BuildTubeMesh(c0, c1, tubeRadius * 1.3), matFwd)   { BackMaterial = matFwd });
-            group.Children.Add(new GeometryModel3D(BuildTubeMesh(c3, c2, tubeRadius * 1.3), matFwd)   { BackMaterial = matFwd });
-            // Stern edge (c0 → c3): darker amber
-            group.Children.Add(new GeometryModel3D(BuildTubeMesh(c0, c3, tubeRadius), matStern) { BackMaterial = matStern });
-            // Bow edge (c1 → c2): purple — the transverse edge that determines the forward direction
-            group.Children.Add(new GeometryModel3D(BuildTubeMesh(c1, c2, tubeRadius * 1.3), matBow)   { BackMaterial = matBow });
-
-            _marBoxVisual.Content = group;
-        }
-
-        /// <summary>
-        /// Builds a plain cylinder mesh from <paramref name="from"/> to <paramref name="to"/>
-        /// with the given cross-section <paramref name="radius"/>.
-        /// </summary>
-        private static MeshGeometry3D BuildTubeMesh(Point3D from, Point3D to, double radius)
-        {
-            var dir = to - from;
-            double length = dir.Length;
-            if (length < 1e-6) return new MeshGeometry3D();
-            dir.Normalize();
-
-            Vector3D refVec = Math.Abs(dir.Z) < 0.9 ? new Vector3D(0, 0, 1) : new Vector3D(1, 0, 0);
-            Vector3D perp1  = Vector3D.CrossProduct(dir, refVec);
-            perp1.Normalize();
-            Vector3D perp2 = Vector3D.CrossProduct(perp1, dir); // already unit-length
-
-            const int N         = 8;
-            double    angleStep = 2.0 * Math.PI / N;
-
-            var positions = new Point3DCollection();
-            var indices   = new Int32Collection();
-
-            for (int pass = 0; pass < 2; pass++)
-            {
-                Point3D centre = pass == 0 ? from : to;
-                for (int i = 0; i < N; i++)
-                {
-                    double a = i * angleStep;
-                    positions.Add(centre + radius * (Math.Cos(a) * perp1 + Math.Sin(a) * perp2));
-                }
-            }
-
-            for (int i = 0; i < N; i++)
-            {
-                int next = (i + 1) % N;
-                indices.Add(i);        indices.Add(i + N);    indices.Add(next + N);
-                indices.Add(i);        indices.Add(next + N); indices.Add(next);
-            }
-
-            return new MeshGeometry3D { Positions = positions, TriangleIndices = indices };
-        }
 
         private void UpdateCamera(LivoxLidarPlaneFitResult fit)
         {

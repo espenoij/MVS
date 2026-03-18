@@ -153,8 +153,13 @@
                     </StackPanel>
 
                     <telerik:RadButton Command="{Binding FitPlaneCommand}"
-                                       HorizontalAlignment="Right"
-                                       Width="228" Margin="0,8,0,0">Fit Plane</telerik:RadButton>
+                                        HorizontalAlignment="Right"
+                                        Width="228" Margin="0,8,0,0">Fit Plane</telerik:RadButton>
+
+                    <telerik:RadButton Command="{Binding FindDeckEdgeCommand}"
+                                        HorizontalAlignment="Right"
+                                        Width="228" Margin="0,4,0,0"
+                                        ToolTip="Detect the deck edge in front of the LiDAR and infer vessel forward">Find Deck Edge</telerik:RadButton>
 
                 </StackPanel>
             </telerik:GroupBox>
@@ -192,6 +197,33 @@
                             Apply Correction
                         </telerik:RadButton>
                     </StackPanel>
+
+                </StackPanel>
+            </telerik:GroupBox>
+
+            <!-- Deck Edge Result -->
+            <telerik:GroupBox Header="Deck Edge Result" Margin="0,0,0,8">
+                <StackPanel Margin="8">
+
+                    <DockPanel Margin="0,0,0,4">
+                        <Label Width="150" Content="Edge Angle" VerticalAlignment="Center"
+                               ToolTip="Angle of the edge direction relative to the LiDAR forward axis in the deck plane"/>
+                        <Label Content="{Binding EdgeAngle}" FontWeight="Bold"/>
+                    </DockPanel>
+                    <DockPanel Margin="0,0,0,4">
+                        <Label Width="150" Content="Vessel Forward" VerticalAlignment="Center"
+                               ToolTip="Heading of the inferred vessel forward direction (degrees from sensor +X)"/>
+                        <Label Content="{Binding EdgeForwardAngle}" FontWeight="Bold"/>
+                    </DockPanel>
+                    <Separator Margin="0,4,0,4"/>
+                    <DockPanel Margin="0,0,0,4">
+                        <Label Width="150" Content="Edge Direction" VerticalAlignment="Center"/>
+                        <Label Content="{Binding EdgeDirection}"/>
+                    </DockPanel>
+                    <DockPanel Margin="0,0,0,4">
+                        <Label Width="150" Content="Edge Points" VerticalAlignment="Center"/>
+                        <Label Content="{Binding EdgePointsStr}"/>
+                    </DockPanel>
 
                 </StackPanel>
             </telerik:GroupBox>

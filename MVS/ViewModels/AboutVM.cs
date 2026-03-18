@@ -20,10 +20,10 @@ namespace MVS
                 Constants.SoftwareVersionPostfix);
 
             // About Support
-            aboutSupport = string.Format("For support and other inquiries, please contact Swire Energy Services - Aviation.");
+            aboutSupport = string.Format("For support and other inquiries, please contact SES Energy.");
 
             // About Copyright
-            aboutCopyright = string.Format("Copyright © 2022-{0} Swire Energy Services.", DateTime.UtcNow.Year);
+            aboutCopyright = string.Format("Copyright © 2022-{0} SES Energy.", DateTime.UtcNow.Year);
         }
 
         /////////////////////////////////////////////////////////////////////////////

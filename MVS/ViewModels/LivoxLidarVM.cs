@@ -20,6 +20,9 @@ namespace MVS
         // Last fit result — shown in the UI before the user decides to apply
         private LivoxLidarPlaneFitResult _lastFit;
 
+        // Last deck edge result
+        private LivoxLidarDeckEdgeResult _lastEdge;
+
         private bool _simulationInProgress;
 
         public LivoxLidarVM(LivoxLidarSubsystem subsystem, LivoxLidarCorrection correction,
@@ -50,6 +53,7 @@ namespace MVS
             ApplyCorrectionCommand  = new RelayCommand(_ => ApplyCorrection(), _ => HasFitResult);
             ClearCorrectionCommand  = new RelayCommand(_ => ClearCorrection());
             SimulateScanCommand     = new RelayCommand(_ => SimulateScan(),    _ => CanSimulate);
+            FindDeckEdgeCommand     = new RelayCommand(_ => FindDeckEdge(),    _ => CanFit);
         }
 
         // ── Bound properties ─────────────────────────────────────────────────
@@ -60,84 +64,84 @@ namespace MVS
         public string ConfigFilePath
         {
             get { return _configFilePath; }
-            set { _configFilePath = value; OnPropertyChanged(); SaveConfig(); }
+            set { _configFilePath = value; OnPropertyChanged(); _config.Write(ConfigKey.LivoxConfigFilePath, value ?? ""); }
         }
 
         private string _ipAddress;
         public string IpAddress
         {
             get { return _ipAddress; }
-            set { _ipAddress = value; OnPropertyChanged(); SaveConfig(); }
+            set { _ipAddress = value; OnPropertyChanged(); _config.Write(ConfigKey.LivoxIpAddress, value ?? ""); }
         }
 
         private float _rangeMinMm = 500f;
         public float RangeMinMm
         {
             get { return _rangeMinMm; }
-            set { _rangeMinMm = value; OnPropertyChanged(); SaveConfig(); }
+            set { _rangeMinMm = value; OnPropertyChanged(); _config.Write(ConfigKey.LivoxRangeMinMm, value.ToString()); }
         }
 
         private float _rangeMaxMm = 30000f;
         public float RangeMaxMm
         {
             get { return _rangeMaxMm; }
-            set { _rangeMaxMm = value; OnPropertyChanged(); SaveConfig(); }
+            set { _rangeMaxMm = value; OnPropertyChanged(); _config.Write(ConfigKey.LivoxRangeMaxMm, value.ToString()); }
         }
 
         private float _azimuthMinDeg = -180f;
         public float AzimuthMinDeg
         {
             get { return _azimuthMinDeg; }
-            set { _azimuthMinDeg = value; OnPropertyChanged(); SaveConfig(); }
+            set { _azimuthMinDeg = value; OnPropertyChanged(); _config.Write(ConfigKey.LivoxAzimuthMinDeg, value.ToString()); }
         }
 
         private float _azimuthMaxDeg = 180f;
         public float AzimuthMaxDeg
         {
             get { return _azimuthMaxDeg; }
-            set { _azimuthMaxDeg = value; OnPropertyChanged(); SaveConfig(); }
+            set { _azimuthMaxDeg = value; OnPropertyChanged(); _config.Write(ConfigKey.LivoxAzimuthMaxDeg, value.ToString()); }
         }
 
         private float _elevationMinDeg = -90f;
         public float ElevationMinDeg
         {
             get { return _elevationMinDeg; }
-            set { _elevationMinDeg = value; OnPropertyChanged(); SaveConfig(); }
+            set { _elevationMinDeg = value; OnPropertyChanged(); _config.Write(ConfigKey.LivoxElevationMinDeg, value.ToString()); }
         }
 
         private float _elevationMaxDeg = 90f;
         public float ElevationMaxDeg
         {
             get { return _elevationMaxDeg; }
-            set { _elevationMaxDeg = value; OnPropertyChanged(); SaveConfig(); }
+            set { _elevationMaxDeg = value; OnPropertyChanged(); _config.Write(ConfigKey.LivoxElevationMaxDeg, value.ToString()); }
         }
 
         private double _simPitchDeg = 2.0;
         public double SimPitchDeg
         {
             get { return _simPitchDeg; }
-            set { _simPitchDeg = value; OnPropertyChanged(); SaveConfig(); }
+            set { _simPitchDeg = value; OnPropertyChanged(); _config.Write(ConfigKey.LivoxSimPitchDeg, value.ToString()); }
         }
 
         private double _simRollDeg = 1.5;
         public double SimRollDeg
         {
             get { return _simRollDeg; }
-            set { _simRollDeg = value; OnPropertyChanged(); SaveConfig(); }
+            set { _simRollDeg = value; OnPropertyChanged(); _config.Write(ConfigKey.LivoxSimRollDeg, value.ToString()); }
         }
 
         private double _simNoiseMm = 10.0;
         public double SimNoiseMm
         {
             get { return _simNoiseMm; }
-            set { _simNoiseMm = value; OnPropertyChanged(); SaveConfig(); }
+            set { _simNoiseMm = value; OnPropertyChanged(); _config.Write(ConfigKey.LivoxSimNoiseMm, value.ToString()); }
         }
 
         private double _simLidarYawDeg = 0.0;
         public double SimLidarYawDeg
         {
             get { return _simLidarYawDeg; }
-            set { _simLidarYawDeg = value; OnPropertyChanged(); SaveConfig(); }
+            set { _simLidarYawDeg = value; OnPropertyChanged(); _config.Write(ConfigKey.LivoxSimLidarYawDeg, value.ToString()); }
         }
 
         // Status / readouts
@@ -183,6 +187,19 @@ namespace MVS
         private string _fitPoints = "—";
         public string FitPoints { get { return _fitPoints; } set { _fitPoints = value; OnPropertyChanged(); } }
 
+        // Deck edge result display
+        private string _edgeDirection = "—";
+        public string EdgeDirection { get { return _edgeDirection; } set { _edgeDirection = value; OnPropertyChanged(); } }
+
+        private string _edgeAngle = "—";
+        public string EdgeAngle { get { return _edgeAngle; } set { _edgeAngle = value; OnPropertyChanged(); } }
+
+        private string _edgeForwardAngle = "—";
+        public string EdgeForwardAngle { get { return _edgeForwardAngle; } set { _edgeForwardAngle = value; OnPropertyChanged(); } }
+
+        private string _edgePointsStr = "—";
+        public string EdgePointsStr { get { return _edgePointsStr; } set { _edgePointsStr = value; OnPropertyChanged(); } }
+
         // State flags for button enable logic
         public bool CanConnect    => _subsystem.CurrentStatus == LivoxLidarSubsystem.Status.Disconnected;
         public bool CanDisconnect => _subsystem.CurrentStatus != LivoxLidarSubsystem.Status.Disconnected;
@@ -190,6 +207,7 @@ namespace MVS
         public bool IsScanning    => _subsystem.CurrentStatus == LivoxLidarSubsystem.Status.Scanning;
         public bool CanFit        => _accumulatedPoints >= 20;
         public bool HasFitResult  => _lastFit != null && _lastFit.IsValid;
+        public bool HasEdgeResult => _lastEdge != null && _lastEdge.IsValid;
         public bool CanSimulate   => _subsystem.CurrentStatus == LivoxLidarSubsystem.Status.Disconnected ||
                                      _subsystem.CurrentStatus == LivoxLidarSubsystem.Status.Connected;
 
@@ -203,6 +221,7 @@ namespace MVS
         public ICommand ApplyCorrectionCommand { get; }
         public ICommand ClearCorrectionCommand { get; }
         public ICommand SimulateScanCommand    { get; }
+        public ICommand FindDeckEdgeCommand    { get; }
 
         // ── Command implementations ───────────────────────────────────────────
 
@@ -225,7 +244,9 @@ namespace MVS
             _subsystem.StartScan();
             AppendStatus("Scanning...");
             _lastFit = null;
+            _lastEdge = null;
             RefreshFitDisplay();
+            RefreshEdgeDisplay();
         }
 
         private void StopScan()
@@ -246,7 +267,9 @@ namespace MVS
             _simulationInProgress = true;
             AppendStatus($"Simulating helideck scan (pitch={SimPitchDeg:F1}°, roll={SimRollDeg:F1}°, lidar yaw={SimLidarYawDeg:F1}°)...");
             _lastFit = null;
+            _lastEdge = null;
             RefreshFitDisplay();
+            RefreshEdgeDisplay();
         }
 
         private void FitPlane()
@@ -286,9 +309,32 @@ namespace MVS
             AppendStatus("Correction cleared.");
         }
 
+        private void FindDeckEdge()
+        {
+            AppendStatus("Detecting deck edge...");
+            var snapshot = _subsystem.GetPointCloudSnapshot();
+            _lastEdge = LivoxLidarDeckEdgeFinder.FindEdge(snapshot);
+
+            if (_lastEdge == null || !_lastEdge.IsValid)
+            {
+                AppendStatus("Edge detection failed — not enough forward deck points or degenerate geometry.");
+                RefreshEdgeDisplay();
+                return;
+            }
+
+            RefreshEdgeDisplay();
+            AppendStatus($"Edge OK — {_lastEdge.EdgePointCount:N0} edge pts, angle {_lastEdge.EdgeAngleDeg:F1}°, " +
+                         $"vessel fwd {_lastEdge.VesselForwardAngleDeg:F1}° " +
+                         $"({_lastEdge.DeckInlierCount:N0} deck inliers, hull {_lastEdge.HullVertexCount} vertices)");
+            OnPropertyChanged(nameof(HasEdgeResult));
+
+            DeckEdgeResultReady?.Invoke(_lastEdge);
+        }
+
         // ── Fit result event (for 3D view) ────────────────────────────────────
 
         public event Action<LivoxLidarPlaneFitResult> FitResultReady;
+        public event Action<LivoxLidarDeckEdgeResult> DeckEdgeResultReady;
 
         public List<(float x, float y, float z)> GetPointCloudSnapshot()
             => _subsystem.GetPointCloudSnapshot();
@@ -337,6 +383,22 @@ namespace MVS
             OnPropertyChanged(nameof(HasFitResult));
         }
 
+        private void RefreshEdgeDisplay()
+        {
+            if (_lastEdge != null && _lastEdge.IsValid)
+            {
+                EdgeDirection    = $"({_lastEdge.DirectionX:F3}, {_lastEdge.DirectionY:F3}, {_lastEdge.DirectionZ:F3})";
+                EdgeAngle        = $"{_lastEdge.EdgeAngleDeg:F1}°";
+                EdgeForwardAngle = $"{_lastEdge.VesselForwardAngleDeg:F1}°";
+                EdgePointsStr    = _lastEdge.EdgePointCount.ToString("N0");
+            }
+            else
+            {
+                EdgeDirection = EdgeAngle = EdgeForwardAngle = EdgePointsStr = "—";
+            }
+            OnPropertyChanged(nameof(HasEdgeResult));
+        }
+
         private void RefreshCommandStates()
         {
             OnPropertyChanged(nameof(CanConnect));
@@ -360,100 +422,40 @@ namespace MVS
 
         private void LoadConfig()
         {
-            try
+            ConfigFilePath  = _config.ReadWithDefault(ConfigKey.LivoxConfigFilePath, @"Config\LivoxLidar\mid360_config.json");
+            IpAddress       = _config.ReadWithDefault(ConfigKey.LivoxIpAddress,      "192.168.1.3");
+
+            RangeMinMm      = (float)_config.ReadWithDefault(ConfigKey.LivoxRangeMinMm,      500.0);
+            RangeMaxMm      = (float)_config.ReadWithDefault(ConfigKey.LivoxRangeMaxMm,      30000.0);
+            AzimuthMinDeg   = (float)_config.ReadWithDefault(ConfigKey.LivoxAzimuthMinDeg,   -180.0);
+            AzimuthMaxDeg   = (float)_config.ReadWithDefault(ConfigKey.LivoxAzimuthMaxDeg,   180.0);
+            ElevationMinDeg = (float)_config.ReadWithDefault(ConfigKey.LivoxElevationMinDeg, -90.0);
+            ElevationMaxDeg = (float)_config.ReadWithDefault(ConfigKey.LivoxElevationMaxDeg, 90.0);
+
+            SimPitchDeg    = _config.ReadWithDefault(ConfigKey.LivoxSimPitchDeg,    2.0);
+            SimRollDeg     = _config.ReadWithDefault(ConfigKey.LivoxSimRollDeg,     1.5);
+            SimNoiseMm     = _config.ReadWithDefault(ConfigKey.LivoxSimNoiseMm,     10.0);
+            SimLidarYawDeg = _config.ReadWithDefault(ConfigKey.LivoxSimLidarYawDeg, 0.0);
+
+            // Restore persisted correction
+            if (bool.TryParse(_config.Read(ConfigKey.LivoxCorrectionActive), out bool active) && active)
             {
-                var cfg = _config.GetLivoxLidarSystemConfig();
-                if (cfg == null) { SetDefaults(); return; }
-
-                ConfigFilePath  = cfg.ConfigFilePath;
-                IpAddress       = cfg.IpAddress;
-
-                float v;
-                if (float.TryParse(cfg.RangeMinMm,      out v)) RangeMinMm      = v;
-                if (float.TryParse(cfg.RangeMaxMm,      out v)) RangeMaxMm      = v;
-                if (float.TryParse(cfg.AzimuthMinDeg,   out v)) AzimuthMinDeg   = v;
-                if (float.TryParse(cfg.AzimuthMaxDeg,   out v)) AzimuthMaxDeg   = v;
-                if (float.TryParse(cfg.ElevationMinDeg, out v)) ElevationMinDeg = v;
-                if (float.TryParse(cfg.ElevationMaxDeg, out v)) ElevationMaxDeg = v;
-
-                double d;
-                if (double.TryParse(cfg.SimPitchDeg,    System.Globalization.NumberStyles.Any,
-                                    System.Globalization.CultureInfo.InvariantCulture, out d)) _simPitchDeg    = d;
-                if (double.TryParse(cfg.SimRollDeg,     System.Globalization.NumberStyles.Any,
-                                    System.Globalization.CultureInfo.InvariantCulture, out d)) _simRollDeg     = d;
-                if (double.TryParse(cfg.SimNoiseMm,     System.Globalization.NumberStyles.Any,
-                                    System.Globalization.CultureInfo.InvariantCulture, out d)) _simNoiseMm     = d;
-                if (double.TryParse(cfg.SimLidarYawDeg, System.Globalization.NumberStyles.Any,
-                                    System.Globalization.CultureInfo.InvariantCulture, out d)) _simLidarYawDeg = d;
-
-                // Restore persisted correction
-                if (bool.TryParse(cfg.CorrectionActive, out bool active) && active)
-                {
-                    double p, r, h;
-                    if (double.TryParse(cfg.CorrectionPitch,   System.Globalization.NumberStyles.Any,
-                                        System.Globalization.CultureInfo.InvariantCulture, out p) &&
-                        double.TryParse(cfg.CorrectionRoll,    System.Globalization.NumberStyles.Any,
-                                        System.Globalization.CultureInfo.InvariantCulture, out r) &&
-                        double.TryParse(cfg.CorrectionHeading, System.Globalization.NumberStyles.Any,
-                                        System.Globalization.CultureInfo.InvariantCulture, out h))
-                    {
-                        _correction.Apply(p, r, h, 0, 0);
-                        if (DateTime.TryParse(cfg.CorrectionTimestamp, out DateTime ts))
-                            _correction.Timestamp = ts;
-                    }
-                }
+                double p = _config.ReadWithDefault(ConfigKey.LivoxCorrectionPitch,   0.0);
+                double r = _config.ReadWithDefault(ConfigKey.LivoxCorrectionRoll,    0.0);
+                double h = _config.ReadWithDefault(ConfigKey.LivoxCorrectionHeading, 0.0);
+                _correction.Apply(p, r, h, 0, 0);
+                if (DateTime.TryParse(_config.Read(ConfigKey.LivoxCorrectionTimestamp), out DateTime ts))
+                    _correction.Timestamp = ts;
             }
-            catch { SetDefaults(); }
-        }
-
-        private void SetDefaults()
-        {
-            ConfigFilePath = @"Config\LivoxLidar\mid360_config.json";
-            IpAddress      = "192.168.1.3";
-        }
-
-        private void SaveConfig()
-        {
-            try { _config.SetLivoxLidarSystemConfig(BuildConfigObj()); }
-            catch { }
         }
 
         private void PersistCorrection()
         {
-            try
-            {
-                var cfg = BuildConfigObj();
-                cfg.CorrectionActive    = _correction.IsActive.ToString();
-                cfg.CorrectionPitch     = _correction.PitchOffset.ToString("R",
-                    System.Globalization.CultureInfo.InvariantCulture);
-                cfg.CorrectionRoll      = _correction.RollOffset.ToString("R",
-                    System.Globalization.CultureInfo.InvariantCulture);
-                cfg.CorrectionHeading   = _correction.HeadingOffset.ToString("R",
-                    System.Globalization.CultureInfo.InvariantCulture);
-                cfg.CorrectionTimestamp = _correction.Timestamp.ToString("O");
-                _config.SetLivoxLidarSystemConfig(cfg);
-            }
-            catch { }
-        }
-
-        private LivoxLidarSystemConfig BuildConfigObj()
-        {
-            var cfg = new LivoxLidarSystemConfig
-            {
-                ConfigFilePath  = ConfigFilePath ?? "",
-                IpAddress       = IpAddress ?? "",
-                RangeMinMm      = RangeMinMm.ToString(System.Globalization.CultureInfo.InvariantCulture),
-                RangeMaxMm      = RangeMaxMm.ToString(System.Globalization.CultureInfo.InvariantCulture),
-                AzimuthMinDeg   = AzimuthMinDeg.ToString(System.Globalization.CultureInfo.InvariantCulture),
-                AzimuthMaxDeg   = AzimuthMaxDeg.ToString(System.Globalization.CultureInfo.InvariantCulture),
-                ElevationMinDeg = ElevationMinDeg.ToString(System.Globalization.CultureInfo.InvariantCulture),
-                ElevationMaxDeg = ElevationMaxDeg.ToString(System.Globalization.CultureInfo.InvariantCulture),
-                SimPitchDeg     = SimPitchDeg.ToString("R", System.Globalization.CultureInfo.InvariantCulture),
-                SimRollDeg      = SimRollDeg.ToString("R",  System.Globalization.CultureInfo.InvariantCulture),
-                SimNoiseMm      = SimNoiseMm.ToString("R",  System.Globalization.CultureInfo.InvariantCulture),
-                SimLidarYawDeg  = SimLidarYawDeg.ToString("R", System.Globalization.CultureInfo.InvariantCulture),
-            };
-            return cfg;
+            _config.Write(ConfigKey.LivoxCorrectionActive,    _correction.IsActive.ToString());
+            _config.Write(ConfigKey.LivoxCorrectionPitch,     _correction.PitchOffset.ToString());
+            _config.Write(ConfigKey.LivoxCorrectionRoll,      _correction.RollOffset.ToString());
+            _config.Write(ConfigKey.LivoxCorrectionHeading,   _correction.HeadingOffset.ToString());
+            _config.Write(ConfigKey.LivoxCorrectionTimestamp, _correction.IsActive ? _correction.Timestamp.ToString("O") : "");
         }
 
         protected virtual void OnPropertyChanged([CallerMemberName] string name = null)

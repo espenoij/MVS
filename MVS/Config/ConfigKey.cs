@@ -173,4 +173,23 @@
 
     // Server Data: Sensor Data
     public const string SensorSectionData = "SensorData";
+
+    // Livox LiDAR
+    public const string LivoxIpAddress           = "LivoxIpAddress";
+    public const string LivoxConfigFilePath      = "LivoxConfigFilePath";
+    public const string LivoxRangeMinMm          = "LivoxRangeMinMm";
+    public const string LivoxRangeMaxMm          = "LivoxRangeMaxMm";
+    public const string LivoxAzimuthMinDeg       = "LivoxAzimuthMinDeg";
+    public const string LivoxAzimuthMaxDeg       = "LivoxAzimuthMaxDeg";
+    public const string LivoxElevationMinDeg     = "LivoxElevationMinDeg";
+    public const string LivoxElevationMaxDeg     = "LivoxElevationMaxDeg";
+    public const string LivoxCorrectionActive    = "LivoxCorrectionActive";
+    public const string LivoxCorrectionPitch     = "LivoxCorrectionPitch";
+    public const string LivoxCorrectionRoll      = "LivoxCorrectionRoll";
+    public const string LivoxCorrectionHeading   = "LivoxCorrectionHeading";
+    public const string LivoxCorrectionTimestamp = "LivoxCorrectionTimestamp";
+    public const string LivoxSimPitchDeg         = "LivoxSimPitchDeg";
+    public const string LivoxSimRollDeg          = "LivoxSimRollDeg";
+    public const string LivoxSimNoiseMm          = "LivoxSimNoiseMm";
+    public const string LivoxSimLidarYawDeg      = "LivoxSimLidarYawDeg";
 }

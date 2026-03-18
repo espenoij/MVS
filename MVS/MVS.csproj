@@ -137,7 +137,6 @@
       <Generator>MSBuild:Compile</Generator>
       <SubType>Designer</SubType>
     </ApplicationDefinition>
-    <Compile Include="Config\LivoxLidarSystemConfig.cs" />
     <Compile Include="Config\ReferenceDataConfig.cs" />
     <Compile Include="Config\TestDataConfig.cs" />
     <Compile Include="Config\ReferenceDataConfigCollection.cs" />
@@ -175,6 +174,7 @@
     <Compile Include="Models\WindVector.cs" />
     <Compile Include="Services\LivoxLidar\LivoxLidarApi.cs" />
     <Compile Include="Services\LivoxLidar\LivoxLidarCorrection.cs" />
+    <Compile Include="Services\LivoxLidar\LivoxLidarDeckEdgeFinder.cs" />
     <Compile Include="Services\LivoxLidar\LivoxLidarPlaneFitter.cs" />
     <Compile Include="Services\LivoxLidar\LivoxLidarSubsystem.cs" />
     <Compile Include="Services\ScreenCapture.cs" />

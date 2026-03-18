@@ -20,13 +20,12 @@ namespace MVS
 
             // App config (standard fil)
             ExeConfigurationFileMap appConfigMap = new ExeConfigurationFileMap();
-            appConfigMap.ExeConfigFilename = Path.Combine(Environment.GetFolderPath(Environment.SpecialFolder.ApplicationData), "Swire Energy Services\\MVS\\MVS.config");
+            appConfigMap.ExeConfigFilename = Path.Combine(Environment.GetFolderPath(Environment.SpecialFolder.ApplicationData), "SES Energy\\MVS\\MVS.config");
             appConfig = ConfigurationManager.OpenMappedExeConfiguration(appConfigMap, ConfigurationUserLevel.None);
 
             // Data config (egen fil)
-            // Lokasjon installert: C:\Users\<username>\AppData\Local\VirtualStore\Program files (x86)\Swire Energy Services\HMS Server
             ExeConfigurationFileMap configMap = new ExeConfigurationFileMap();
-            configMap.ExeConfigFilename = Path.Combine(Environment.GetFolderPath(Environment.SpecialFolder.ApplicationData), "Swire Energy Services\\MVS\\SensorData.config");
+            configMap.ExeConfigFilename = Path.Combine(Environment.GetFolderPath(Environment.SpecialFolder.ApplicationData), "SES Energy\\MVS\\SensorData.config");
             dataConfig = ConfigurationManager.OpenMappedExeConfiguration(configMap, ConfigurationUserLevel.None);
         }
 
@@ -803,84 +802,9 @@ namespace MVS
             return null;
         }
 
-        // ── Livox LiDAR subsystem config ─────────────────────────────────────
-
-        private const string LivoxKeyPrefix = "LivoxLidar_";
-
-        public LivoxLidarSystemConfig GetLivoxLidarSystemConfig()
-        {
-            try
-            {
-                var cfg = new LivoxLidarSystemConfig();
-                var s = appConfig.AppSettings.Settings;
-
-                string Get(string key) => s[LivoxKeyPrefix + key]?.Value;
-
-                cfg.IpAddress         = Get("IpAddress")         ?? cfg.IpAddress;
-                cfg.ConfigFilePath    = Get("ConfigFilePath")     ?? cfg.ConfigFilePath;
-                cfg.RangeMinMm        = Get("RangeMinMm")         ?? cfg.RangeMinMm;
-                cfg.RangeMaxMm        = Get("RangeMaxMm")         ?? cfg.RangeMaxMm;
-                cfg.AzimuthMinDeg     = Get("AzimuthMinDeg")      ?? cfg.AzimuthMinDeg;
-                cfg.AzimuthMaxDeg     = Get("AzimuthMaxDeg")      ?? cfg.AzimuthMaxDeg;
-                cfg.ElevationMinDeg   = Get("ElevationMinDeg")    ?? cfg.ElevationMinDeg;
-                cfg.ElevationMaxDeg   = Get("ElevationMaxDeg")    ?? cfg.ElevationMaxDeg;
-                cfg.CorrectionActive  = Get("CorrectionActive")   ?? cfg.CorrectionActive;
-                cfg.CorrectionPitch   = Get("CorrectionPitch")    ?? cfg.CorrectionPitch;
-                cfg.CorrectionRoll    = Get("CorrectionRoll")     ?? cfg.CorrectionRoll;
-                cfg.CorrectionHeading = Get("CorrectionHeading")  ?? cfg.CorrectionHeading;
-                cfg.CorrectionTimestamp = Get("CorrectionTimestamp") ?? cfg.CorrectionTimestamp;
-                cfg.SimPitchDeg     = Get("SimPitchDeg")     ?? cfg.SimPitchDeg;
-                cfg.SimRollDeg      = Get("SimRollDeg")      ?? cfg.SimRollDeg;
-                cfg.SimNoiseMm      = Get("SimNoiseMm")      ?? cfg.SimNoiseMm;
-                cfg.SimLidarYawDeg  = Get("SimLidarYawDeg")  ?? cfg.SimLidarYawDeg;
-
-                return cfg;
-            }
-            catch { return new LivoxLidarSystemConfig(); }
         }
 
-        public void SetLivoxLidarSystemConfig(LivoxLidarSystemConfig cfg)
-        {
-            try
-            {
-                void Set(string key, string value)
-                {
-                    string fullKey = LivoxKeyPrefix + key;
-                    var s = appConfig.AppSettings.Settings;
-                    if (s[fullKey] != null) s[fullKey].Value = value;
-                    else                   s.Add(fullKey, value);
-                }
-
-                Set("IpAddress",           cfg.IpAddress);
-                Set("ConfigFilePath",       cfg.ConfigFilePath);
-                Set("RangeMinMm",           cfg.RangeMinMm);
-                Set("RangeMaxMm",           cfg.RangeMaxMm);
-                Set("AzimuthMinDeg",        cfg.AzimuthMinDeg);
-                Set("AzimuthMaxDeg",        cfg.AzimuthMaxDeg);
-                Set("ElevationMinDeg",      cfg.ElevationMinDeg);
-                Set("ElevationMaxDeg",      cfg.ElevationMaxDeg);
-                Set("CorrectionActive",     cfg.CorrectionActive);
-                Set("CorrectionPitch",      cfg.CorrectionPitch);
-                Set("CorrectionRoll",       cfg.CorrectionRoll);
-                Set("CorrectionHeading",    cfg.CorrectionHeading);
-                Set("CorrectionTimestamp",  cfg.CorrectionTimestamp);
-                Set("SimPitchDeg",          cfg.SimPitchDeg);
-                Set("SimRollDeg",           cfg.SimRollDeg);
-                Set("SimNoiseMm",           cfg.SimNoiseMm);
-                Set("SimLidarYawDeg",       cfg.SimLidarYawDeg);
-
-                appConfig.Save(ConfigurationSaveMode.Modified);
-            }
-            catch (Exception ex)
-            {
-                errorHandler?.Insert(new ErrorMessage(
-                    DateTime.UtcNow, ErrorMessageType.Config, ErrorMessageCategory.AdminUser,
-                    $"Config (SetLivoxLidarSystemConfig): {ex.Message}"));
-            }
-        }
-    }
-
-    public class ConfigSection
+        public class ConfigSection
     {
         // App: Serial Port Configuration
         public const string SerialPortConfig = "SerialPortConfig";

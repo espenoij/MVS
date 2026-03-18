@@ -8,10 +8,10 @@ using System.Windows;
 [assembly: AssemblyTitle("HMS Server")]
 [assembly: AssemblyDescription("Helideck Monitoring System")]
 [assembly: AssemblyConfiguration("")]
-[assembly: AssemblyCompany("Swire Energy Services Aviation")]
+[assembly: AssemblyCompany("SES Energy")]
 [assembly: AssemblyProduct("HMS Server")]
 [assembly: AssemblyCopyright("Copyright © 2023")]
-[assembly: AssemblyTrademark("Swire Energy Services")]
+[assembly: AssemblyTrademark("SES Energy")]
 [assembly: AssemblyCulture("")]
 
 // Setting ComVisible to false makes the types in this assembly not visible
