@@ -49,6 +49,10 @@ namespace MVS
         public int    HullVertexCount   { get; set; }
         public int    EdgePointCount    { get; set; }
         public double FitRmseMm         { get; set; }
+
+        /// <summary>Estimated 3-D positions of the 6 hexagon deck vertices.</summary>
+        public List<(double X, double Y, double Z)> HexVertices3D { get; set; }
+            = new List<(double, double, double)>();
     }
 
     /// <summary>
@@ -176,106 +180,103 @@ namespace MVS
             double lidarU = -cx * ux - cy * uy - cz * uz;
             double lidarW = -cx * wx - cy * wy - cz * wz;
 
-            // ── Step 4: Convex hull of the deck boundary ─────────────────────
-            var hull = ConvexHull(proj);
-            result.HullVertexCount = hull.Count;
-            if (hull.Count < 3) return result;
-
-            // ── Step 5: Closest hull segment to LiDAR projection ─────────────
-            int    bestSeg  = 0;
-            double bestDist = double.MaxValue;
-            for (int i = 0; i < hull.Count; i++)
-            {
-                int j = (i + 1) % hull.Count;
-                double d = PointToSegmentDist(lidarU, lidarW,
-                               proj[hull[i]].u, proj[hull[i]].w,
-                               proj[hull[j]].u, proj[hull[j]].w);
-                if (d < bestDist) { bestDist = d; bestSeg = i; }
-            }
-
-            int hA = hull[bestSeg], hB = hull[(bestSeg + 1) % hull.Count];
-            double eu = proj[hB].u - proj[hA].u, ew = proj[hB].w - proj[hA].w;
-            double eLen = Math.Sqrt(eu * eu + ew * ew);
-            if (eLen < 1e-6) return result;
-
-            // Edge-line normal pointing inward (toward deck centroid at origin)
-            double enu = -ew / eLen, enw = eu / eLen;
-            if (enu * (0 - proj[hA].u) + enw * (0 - proj[hA].w) < 0) { enu = -enu; enw = -enw; }
-
-            // Collect all inlier points within the perpendicular band of the edge line
-            var edgeIdx = new List<int>();
+            // ── Step 4: Detect all 6 hex vertex candidates ───────────────────
+            // Each vertex of a flat-side regular hexagon is the unique maximiser
+            // of a linear objective oriented in that vertex's outward direction
+            // θk = 30° + k·60°.  A single pass over all projected inliers
+            // evaluates all 6 objectives simultaneously.
+            double sq3h = Math.Sqrt(3.0) * 0.5;          // ≈ 0.866
+            //                              k= 0     1      2      3      4      5
+            double[] cosK = {  sq3h,  0.0, -sq3h, -sq3h,  0.0,  sq3h }; // cos θk
+            double[] sinK = {   0.5,  1.0,   0.5,  -0.5, -1.0,  -0.5 }; // sin θk
+            int[]    vIdx = new int[6];
+            double[] vBest = { double.MinValue, double.MinValue, double.MinValue,
+                               double.MinValue, double.MinValue, double.MinValue };
             for (int i = 0; i < n; i++)
             {
-                double perpDist = Math.Abs(enu * (proj[i].u - proj[hA].u) + enw * (proj[i].w - proj[hA].w));
-                if (perpDist <= EdgeBandMm)
-                    edgeIdx.Add(i);
+                double ui = proj[i].u, wi = proj[i].w;
+                for (int k = 0; k < 6; k++)
+                {
+                    double s = ui * cosK[k] + wi * sinK[k];
+                    if (s > vBest[k]) { vBest[k] = s; vIdx[k] = i; }
+                }
             }
-            result.EdgePointCount = edgeIdx.Count;
-            if (edgeIdx.Count < 3) return result;
 
-            // ── Step 6: PCA line fit on edge points (2-D) ────────────────────
-            double muU = 0, muW = 0;
-            foreach (int idx in edgeIdx) { muU += proj[idx].u; muW += proj[idx].w; }
-            muU /= edgeIdx.Count; muW /= edgeIdx.Count;
-
-            double suu = 0, sww = 0, suw = 0;
-            foreach (int idx in edgeIdx)
+            // ── Step 5: Identify the bow edge from the 6 detected vertices ───
+            // The bow side is the adjacent vertex pair (k, k+1 mod 6) whose
+            // combined forward component is greatest — i.e. the side most
+            // directly facing the sensor.
+            int    bowK     = 0;
+            double bowScore = double.MinValue;
+            for (int k = 0; k < 6; k++)
             {
-                double du = proj[idx].u - muU, dw = proj[idx].w - muW;
-                suu += du * du; sww += dw * dw; suw += du * dw;
+                double score = proj[vIdx[k]].u + proj[vIdx[(k + 1) % 6]].u;
+                if (score > bowScore) { bowScore = score; bowK = k; }
             }
+            // Assign port (higher W) / stbd (lower W) to the two bow-edge vertices
+            int idxA = vIdx[bowK], idxB = vIdx[(bowK + 1) % 6];
+            if (proj[idxA].w < proj[idxB].w) { int tmp = idxA; idxA = idxB; idxB = tmp; }
+            double pu = proj[idxA].u, pw = proj[idxA].w;  // bow-port corner (2-D)
+            double su = proj[idxB].u, sw = proj[idxB].w;  // bow-stbd corner (2-D)
 
-            // Largest eigenvector of the 2×2 covariance = edge direction
-            double disc = Math.Sqrt(Math.Max(0.0, (suu - sww) * (suu - sww) + 4.0 * suw * suw));
-            double lamL = (suu + sww + disc) * 0.5;
-            double dirU, dirW;
-            if (Math.Abs(suw) > 1e-12)
-            {
-                dirU = suw;  dirW = lamL - suu;
-            }
-            else
-            {
-                dirU = suu >= sww ? 1.0 : 0.0;
-                dirW = suu >= sww ? 0.0 : 1.0;
-            }
-            double dL = Math.Sqrt(dirU * dirU + dirW * dirW);
-            if (dL < 1e-12) { dirU = 0; dirW = 1; } else { dirU /= dL; dirW /= dL; }
+            // ── Step 6: Bow edge geometry + vessel forward ────────────────────
+            double muU  = (pu + su) * 0.5;
+            double muW  = (pw + sw) * 0.5;
+            double dirU = pu - su, dirW = pw - sw;
+            double dL   = Math.Sqrt(dirU * dirU + dirW * dirW);
+            if (dL < 1.0) return result;               // degenerate: corners coincide
+            dirU /= dL; dirW /= dL;
+            double halfLen = dL * 0.5;
 
-            // Convert edge direction to 3-D
             double d3x = dirU * ux + dirW * wx, d3y = dirU * uy + dirW * wy, d3z = dirU * uz + dirW * wz;
             double d3L = Math.Sqrt(d3x * d3x + d3y * d3y + d3z * d3z);
             if (d3L > 1e-10) { d3x /= d3L; d3y /= d3L; d3z /= d3L; }
 
-            // Edge midpoint in 3-D (centroid of edge-band points)
             double mx = cx + muU * ux + muW * wx;
             double my = cy + muU * uy + muW * wy;
             double mz = cz + muU * uz + muW * wz;
 
-            // Half-length from PCA edge centroid
-            double eMin = 0, eMax = 0;
-            foreach (int idx in edgeIdx)
-            {
-                double t = (proj[idx].u - muU) * dirU + (proj[idx].w - muW) * dirW;
-                if (t < eMin) eMin = t; if (t > eMax) eMax = t;
-            }
-
-            // Vessel forward = perpendicular to edge in the plane, pointing from LiDAR toward edge
+            // Vessel forward: perpendicular to edge in the deck plane, toward sensor
             double fU = -dirW, fW = dirU;
             if (fU * (muU - lidarU) + fW * (muW - lidarW) < 0) { fU = -fU; fW = -fW; }
-
             double f3x = fU * ux + fW * wx, f3y = fU * uy + fW * wy, f3z = fU * uz + fW * wz;
-            double fL = Math.Sqrt(f3x * f3x + f3y * f3y + f3z * f3z);
+            double fL  = Math.Sqrt(f3x * f3x + f3y * f3y + f3z * f3z);
             if (fL > 1e-10) { f3x /= fL; f3y /= fL; f3z /= fL; }
 
-            // Angles
-            double edgeAngle = Math.Atan2(dirW, dirU) * Rad2Deg;
-            double fwdAngle  = Math.Atan2(f3y, f3x)  * Rad2Deg;
+            // ── Step 7: Complete the hexagon — derive all 6 vertex positions ──
+            // The two bow corners are detected from data; the remaining 4 are
+            // derived from regular-hexagon geometry.
+            // Circumradius r = 2·halfLen, apothem = halfLen·√3,
+            // hex centre = bow-edge midpoint shifted one apothem toward stern.
+            double hexR   = halfLen * 2.0;
+            double hexApo = halfLen * Math.Sqrt(3.0);
+            double hcX    = mx - hexApo * f3x;
+            double hcY    = my - hexApo * f3y;
+            double hcZ    = mz - hexApo * f3z;
+            var hexVerts = new List<(double X, double Y, double Z)>
+            {
+                HexVert(hcX, hcY, hcZ, hexR,  sq3h, +0.5, d3x, d3y, d3z, f3x, f3y, f3z), // bow-port   (detected)
+                HexVert(hcX, hcY, hcZ, hexR,  0.0,  +1.0, d3x, d3y, d3z, f3x, f3y, f3z), // port       (derived)
+                HexVert(hcX, hcY, hcZ, hexR, -sq3h, +0.5, d3x, d3y, d3z, f3x, f3y, f3z), // stern-port (derived)
+                HexVert(hcX, hcY, hcZ, hexR, -sq3h, -0.5, d3x, d3y, d3z, f3x, f3y, f3z), // stern-stbd (derived)
+                HexVert(hcX, hcY, hcZ, hexR,  0.0,  -1.0, d3x, d3y, d3z, f3x, f3y, f3z), // stbd       (derived)
+                HexVert(hcX, hcY, hcZ, hexR,  sq3h, -0.5, d3x, d3y, d3z, f3x, f3y, f3z), // bow-stbd   (detected)
+            };
 
-            // Collect 3-D edge points
+            // ── Step 8: Collect edge-band points for visualisation ────────────
+            double uFront = Math.Max(pu, su);
+            var edgeIdx = new List<int>();
+            for (int i = 0; i < n; i++)
+                if (proj[i].u >= uFront - EdgeBandMm)
+                    edgeIdx.Add(i);
+            result.EdgePointCount = edgeIdx.Count;
             var edgePts = new List<(float x, float y, float z)>(edgeIdx.Count);
             foreach (int idx in edgeIdx) edgePts.Add(inliers[idx]);
 
-            // ── Step 7: Populate result ──────────────────────────────────────
+            double edgeAngle = Math.Atan2(dirW, dirU) * Rad2Deg;
+            double fwdAngle  = Math.Atan2(f3y, f3x)  * Rad2Deg;
+
+            // ── Step 9: Populate result ──────────────────────────────────────
             result.IsValid               = true;
             result.DirectionX            = d3x;
             result.DirectionY            = d3y;
@@ -288,74 +289,11 @@ namespace MVS
             result.MidpointX             = mx;
             result.MidpointY             = my;
             result.MidpointZ             = mz;
-            result.HalfLength            = Math.Max(eMax, -eMin);
+            result.HalfLength            = halfLen;
+            result.HexVertices3D         = hexVerts;
             result.EdgePoints            = edgePts;
 
             return result;
-        }
-
-        // ── Convex hull — Andrew's monotone chain ────────────────────────────
-        // Returns indices into the input array forming the hull in CCW order.
-
-        private static List<int> ConvexHull((double u, double w)[] pts)
-        {
-            int n = pts.Length;
-            if (n < 3) return new List<int>();
-
-            var sorted = new int[n];
-            for (int i = 0; i < n; i++) sorted[i] = i;
-            Array.Sort(sorted, (a, b) =>
-            {
-                int c = pts[a].u.CompareTo(pts[b].u);
-                return c != 0 ? c : pts[a].w.CompareTo(pts[b].w);
-            });
-
-            var hull = new int[2 * n];
-            int k = 0;
-
-            // Lower hull
-            for (int i = 0; i < n; i++)
-            {
-                while (k >= 2 && Cross2D(pts[hull[k - 2]], pts[hull[k - 1]], pts[sorted[i]]) <= 0)
-                    k--;
-                hull[k++] = sorted[i];
-            }
-
-            // Upper hull
-            int lower = k + 1;
-            for (int i = n - 2; i >= 0; i--)
-            {
-                while (k >= lower && Cross2D(pts[hull[k - 2]], pts[hull[k - 1]], pts[sorted[i]]) <= 0)
-                    k--;
-                hull[k++] = sorted[i];
-            }
-
-            // k-1 because the last vertex duplicates the first
-            var res = new List<int>(k - 1);
-            for (int i = 0; i < k - 1; i++) res.Add(hull[i]);
-            return res;
-        }
-
-        private static double Cross2D((double u, double w) O,
-                                      (double u, double w) A,
-                                      (double u, double w) B)
-        {
-            return (A.u - O.u) * (B.w - O.w) - (A.w - O.w) * (B.u - O.u);
-        }
-
-        // ── Point-to-segment distance (2-D) ─────────────────────────────────
-
-        private static double PointToSegmentDist(double px, double py,
-            double ax, double ay, double bx, double by)
-        {
-            double dx = bx - ax, dy = by - ay;
-            double lenSq = dx * dx + dy * dy;
-            if (lenSq < 1e-20)
-                return Math.Sqrt((px - ax) * (px - ax) + (py - ay) * (py - ay));
-
-            double t = Math.Max(0.0, Math.Min(1.0, ((px - ax) * dx + (py - ay) * dy) / lenSq));
-            double cx = ax + t * dx, cy = ay + t * dy;
-            return Math.Sqrt((px - cx) * (px - cx) + (py - cy) * (py - cy));
         }
 
         // ── Jacobi cyclic eigendecomposition for real symmetric 3×3 ─────────
@@ -414,5 +352,16 @@ namespace MVS
                         }
                     }
         }
+
+        // Returns the 3-D position of one hex vertex.
+        // fwdComp / edgeComp are the coefficients along the vessel-forward and edge-direction axes.
+        private static (double X, double Y, double Z) HexVert(
+            double cx, double cy, double cz, double r,
+            double fwdComp, double edgeComp,
+            double d3x, double d3y, double d3z,
+            double f3x, double f3y, double f3z)
+            => (cx + r * (fwdComp * f3x + edgeComp * d3x),
+                cy + r * (fwdComp * f3y + edgeComp * d3y),
+                cz + r * (fwdComp * f3z + edgeComp * d3z));
     }
 }

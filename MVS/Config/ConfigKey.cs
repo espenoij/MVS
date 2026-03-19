@@ -192,4 +192,5 @@
     public const string LivoxSimRollDeg          = "LivoxSimRollDeg";
     public const string LivoxSimNoiseMm          = "LivoxSimNoiseMm";
     public const string LivoxSimLidarYawDeg      = "LivoxSimLidarYawDeg";
+    public const string LivoxSimPointCount       = "LivoxSimPointCount";
 }

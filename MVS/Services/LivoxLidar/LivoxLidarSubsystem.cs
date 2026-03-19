@@ -246,7 +246,9 @@ namespace MVS
                 for (int i = 0; i < BatchSize; i++)
                 {
                     // Rejection-sample within a regular hexagonal helideck boundary.
-                    // Circumradius 12 000 mm → flat-top hexagon 24 000 mm wide, ~20 785 mm tall.
+                    // Circumradius 12 000 mm → flat-side hexagon ~20 785 mm wide, 24 000 mm tall.
+                    // The bow edge (flat side facing sensor +X) sits at x = ±apothem ≈ ±10 392 mm,
+                    // runs in Y from −6 000 mm to +6 000 mm, and has length = 12 000 mm.
                     const float HexRadius = 12_000f;
                     float x, y;
                     do
@@ -308,16 +310,18 @@ namespace MVS
         }
 
         /// <summary>
-        /// Returns true when (x, y) lies inside a flat-top regular hexagon
+        /// Returns true when (x, y) lies inside a flat-side regular hexagon
         /// centred at the origin with circumradius <paramref name="r"/>.
-        /// Conditions: |y| ≤ r·√3/2  AND  |x| + |y|/√3 ≤ r
+        /// The flat sides face the sensor ±X direction (the bow/stern edges),
+        /// running in Y at x = ±r·√3/2 (the apothem ≈ 10 392 mm for r = 12 000 mm).
+        /// Conditions: |x| ≤ r·√3/2  AND  |y| + |x|/√3 ≤ r
         /// </summary>
         private static bool IsInsideHexagon(float x, float y, float r)
         {
             float ax = Math.Abs(x);
             float ay = Math.Abs(y);
-            return ay <= r * 0.866025f          // r · √3/2
-                && ax + ay * 0.577350f <= r;    // |x| + |y|/√3 ≤ r
+            return ax <= r * 0.866025f          // |x| ≤ r·√3/2  (apothem = flat-side extent)
+                && ay + ax * 0.577350f <= r;    // |y| + |x|/√3 ≤ r
         }
 
         // ── SDK callbacks ────────────────────────────────────────────────────

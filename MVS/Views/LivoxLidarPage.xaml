@@ -123,6 +123,12 @@
                         <TextBox Text="{Binding SimLidarYawDeg, UpdateSourceTrigger=LostFocus}" />
                     </DockPanel>
 
+                    <DockPanel Margin="0,0,0,8">
+                        <Label Width="130" Content="Points" VerticalAlignment="Center"
+                               ToolTip="Total number of points to generate in the simulation"/>
+                        <TextBox Text="{Binding SimPointCount, UpdateSourceTrigger=LostFocus}" />
+                    </DockPanel>
+
                     <telerik:RadButton Command="{Binding SimulateScanCommand}"
                                        HorizontalAlignment="Right" Width="228">
                         Simulate Scan
@@ -152,14 +158,10 @@
                                            Width="110">Stop Scan</telerik:RadButton>
                     </StackPanel>
 
-                    <telerik:RadButton Command="{Binding FitPlaneCommand}"
+                    <telerik:RadButton Command="{Binding AnalyseCommand}"
                                         HorizontalAlignment="Right"
-                                        Width="228" Margin="0,8,0,0">Fit Plane</telerik:RadButton>
-
-                    <telerik:RadButton Command="{Binding FindDeckEdgeCommand}"
-                                        HorizontalAlignment="Right"
-                                        Width="228" Margin="0,4,0,0"
-                                        ToolTip="Detect the deck edge in front of the LiDAR and infer vessel forward">Find Deck Edge</telerik:RadButton>
+                                        Width="228" Margin="0,8,0,0"
+                                        ToolTip="Fit the deck plane and detect the bow edge">Analyse</telerik:RadButton>
 
                 </StackPanel>
             </telerik:GroupBox>

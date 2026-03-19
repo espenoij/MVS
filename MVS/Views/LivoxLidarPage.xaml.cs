@@ -31,14 +31,14 @@ namespace MVS
         private double _vesselFwdZ = 0.0;
 
         // Arrow visuals — added programmatically to avoid XAML codegen dependency
-        private readonly ModelVisual3D _forwardArrowVisual      = new ModelVisual3D();
-        private readonly ModelVisual3D _normalArrowVisual       = new ModelVisual3D();
-        private readonly ModelVisual3D _lidarForwardArrowVisual = new ModelVisual3D();
+        private readonly ModelVisual3D _forwardArrowVisual = new ModelVisual3D();
+        private readonly ModelVisual3D _normalArrowVisual  = new ModelVisual3D();
+        private readonly ModelVisual3D _bowArrowVisual     = new ModelVisual3D();
 
         // Deck edge visuals
         private readonly ModelVisual3D _deckEdgeLineVisual   = new ModelVisual3D();
         private readonly ModelVisual3D _deckEdgePointsVisual = new ModelVisual3D();
-        private readonly ModelVisual3D _deckEdgeFwdVisual    = new ModelVisual3D();
+        private readonly ModelVisual3D _hexVerticesVisual    = new ModelVisual3D();
 
         public LivoxLidarPage()
         {
@@ -58,10 +58,10 @@ namespace MVS
             };
             viewport3D.Children.Add(_forwardArrowVisual);
             viewport3D.Children.Add(_normalArrowVisual);
-            viewport3D.Children.Add(_lidarForwardArrowVisual);
+            viewport3D.Children.Add(_bowArrowVisual);
             viewport3D.Children.Add(_deckEdgeLineVisual);
             viewport3D.Children.Add(_deckEdgePointsVisual);
-            viewport3D.Children.Add(_deckEdgeFwdVisual);
+            viewport3D.Children.Add(_hexVerticesVisual);
         }
 
         // ── Fit result → 3D scene update ─────────────────────────────────────
@@ -86,9 +86,10 @@ namespace MVS
             UpdateCamera(fit);
 
             // Clear previous deck edge visuals (will be re-drawn on next FindDeckEdge)
+            _bowArrowVisual.Content       = null;
             _deckEdgeLineVisual.Content   = null;
             _deckEdgePointsVisual.Content = null;
-            _deckEdgeFwdVisual.Content    = null;
+            _hexVerticesVisual.Content    = null;
         }
 
         /// <summary>
@@ -181,27 +182,76 @@ namespace MVS
 
         private void UpdateDeckEdge(LivoxLidarDeckEdgeResult edge)
         {
-            var midpoint = new Point3D(edge.MidpointX, edge.MidpointY, edge.MidpointZ);
-            var edgeDir  = new Vector3D(edge.DirectionX, edge.DirectionY, edge.DirectionZ);
-            var fwdDir   = new Vector3D(edge.VesselForwardX, edge.VesselForwardY, edge.VesselForwardZ);
+            _hexVerticesVisual.Content = null;
 
-            double arrowLength = Math.Max(edge.HalfLength * 2.0, 4000.0);
-            double shaftRadius = arrowLength * 0.015;
-
-            // Edge line: arrow along the edge direction from one end to the other
+            // Edge line: plain tube (no arrowhead) along the bow edge
+            double shaftRadius = Math.Max(edge.HalfLength * 2.0, 4000.0) * 0.015;
             var edgeStart = new Point3D(
                 edge.MidpointX - edge.HalfLength * edge.DirectionX,
                 edge.MidpointY - edge.HalfLength * edge.DirectionY,
                 edge.MidpointZ - edge.HalfLength * edge.DirectionZ);
-            var edgeMesh = BuildArrowMesh(edgeStart, edgeDir, edge.HalfLength * 2.0, shaftRadius);
-            var edgeMat  = MakeArrowMaterial(Color.FromRgb(255, 140, 0));   // orange
+            var edgeEnd = new Point3D(
+                edge.MidpointX + edge.HalfLength * edge.DirectionX,
+                edge.MidpointY + edge.HalfLength * edge.DirectionY,
+                edge.MidpointZ + edge.HalfLength * edge.DirectionZ);
+            var edgeMesh = BuildTubeMesh(edgeStart, edgeEnd, shaftRadius);
+            var edgeMat  = MakeArrowMaterial(Color.FromRgb(0, 200, 80));
             _deckEdgeLineVisual.Content = new GeometryModel3D { Geometry = edgeMesh, Material = edgeMat, BackMaterial = edgeMat };
 
-            // Vessel forward from edge midpoint
-            double fwdLen = Math.Max(arrowLength * 0.4, 3000.0);
-            var fwdMesh = BuildArrowMesh(midpoint, fwdDir, fwdLen, shaftRadius);
-            var fwdMat  = MakeArrowMaterial(Color.FromRgb(0, 220, 130));    // green
-            _deckEdgeFwdVisual.Content = new GeometryModel3D { Geometry = fwdMesh, Material = fwdMat, BackMaterial = fwdMat };
+            // Hex vertex markers — bright yellow cubes at each of the 6 estimated vertices
+            if (edge.HexVertices3D != null && edge.HexVertices3D.Count == 6)
+            {
+                double h         = Math.Max(edge.HalfLength * 0.04, 150.0);
+                var    positions = new Point3DCollection();
+                var    indices   = new Int32Collection();
+
+                foreach (var v in edge.HexVertices3D)
+                {
+                    int    b  = positions.Count;
+                    double vx = v.X, vy = v.Y, vz = v.Z;
+                    positions.Add(new Point3D(vx - h, vy - h, vz - h)); // b+0
+                    positions.Add(new Point3D(vx + h, vy - h, vz - h)); // b+1
+                    positions.Add(new Point3D(vx + h, vy + h, vz - h)); // b+2
+                    positions.Add(new Point3D(vx - h, vy + h, vz - h)); // b+3
+                    positions.Add(new Point3D(vx - h, vy - h, vz + h)); // b+4
+                    positions.Add(new Point3D(vx + h, vy - h, vz + h)); // b+5
+                    positions.Add(new Point3D(vx + h, vy + h, vz + h)); // b+6
+                    positions.Add(new Point3D(vx - h, vy + h, vz + h)); // b+7
+                    // bottom (z-)
+                    indices.Add(b);   indices.Add(b+1); indices.Add(b+2);
+                    indices.Add(b);   indices.Add(b+2); indices.Add(b+3);
+                    // top (z+)
+                    indices.Add(b+4); indices.Add(b+6); indices.Add(b+5);
+                    indices.Add(b+4); indices.Add(b+7); indices.Add(b+6);
+                    // front (y-)
+                    indices.Add(b);   indices.Add(b+5); indices.Add(b+1);
+                    indices.Add(b);   indices.Add(b+4); indices.Add(b+5);
+                    // back (y+)
+                    indices.Add(b+2); indices.Add(b+7); indices.Add(b+3);
+                    indices.Add(b+2); indices.Add(b+6); indices.Add(b+7);
+                    // left (x-)
+                    indices.Add(b);   indices.Add(b+3); indices.Add(b+7);
+                    indices.Add(b);   indices.Add(b+7); indices.Add(b+4);
+                    // right (x+)
+                    indices.Add(b+1); indices.Add(b+6); indices.Add(b+2);
+                    indices.Add(b+1); indices.Add(b+5); indices.Add(b+6);
+                }
+
+                var markerMesh  = new MeshGeometry3D { Positions = positions, TriangleIndices = indices };
+                var markerBrush = new SolidColorBrush(Color.FromRgb(0, 110, 40));
+                markerBrush.Freeze();
+                var markerMat = new EmissiveMaterial(markerBrush);
+                _hexVerticesVisual.Content = new GeometryModel3D { Geometry = markerMesh, Material = markerMat, BackMaterial = markerMat };
+            }
+
+            // Bow direction arrow: from lidar origin toward the bow
+            double bowArrowLen    = Math.Max(edge.HalfLength * 0.8, 4000.0);
+            double bowShaftRadius = bowArrowLen * 0.02;
+            var bowMesh = BuildArrowMesh(new Point3D(0, 0, 0),
+                new Vector3D(edge.VesselForwardX, edge.VesselForwardY, edge.VesselForwardZ),
+                bowArrowLen, bowShaftRadius);
+            var bowMat = MakeArrowMaterial(Color.FromRgb(0, 200, 80));
+            _bowArrowVisual.Content = new GeometryModel3D { Geometry = bowMesh, Material = bowMat, BackMaterial = bowMat };
 
             // Highlight edge points
             UpdateEdgePointsMesh(edge.EdgePoints);
@@ -237,7 +287,7 @@ namespace MVS
             }
 
             var mesh = new MeshGeometry3D { Positions = positions, TriangleIndices = indices };
-            var brush = new SolidColorBrush(Color.FromRgb(255, 140, 0));
+            var brush = new SolidColorBrush(Color.FromRgb(0, 200, 80));
             brush.Freeze();
             _deckEdgePointsVisual.Content = new GeometryModel3D(mesh, new EmissiveMaterial(brush));
         }
@@ -294,12 +344,7 @@ namespace MVS
             var normalMat  = MakeArrowMaterial(Color.FromRgb(0, 120, 255));
             _normalArrowVisual.Content = new GeometryModel3D { Geometry = normalMesh, Material = normalMat, BackMaterial = normalMat };
 
-            // LiDAR forward: bow–stern heading axis as computed by the plane fit
-            var lidarFwdMesh = BuildArrowMesh(origin,
-                new Vector3D(fit.VesselForwardX, fit.VesselForwardY, fit.VesselForwardZ), arrowLength, shaftRadius);
-            var lidarFwdMat  = MakeArrowMaterial(Color.FromRgb(160, 32, 240));
-            _lidarForwardArrowVisual.Content = new GeometryModel3D { Geometry = lidarFwdMesh, Material = lidarFwdMat, BackMaterial = lidarFwdMat };
-        }
+            }
 
         private static Material MakeArrowMaterial(Color color)
         {
@@ -380,6 +425,41 @@ namespace MVS
             for (int i = 1; i < N - 1; i++)
             {
                 indices.Add(headStart); indices.Add(headStart + i); indices.Add(headStart + i + 1);
+            }
+
+            return new MeshGeometry3D { Positions = positions, TriangleIndices = indices };
+        }
+
+        private static MeshGeometry3D BuildTubeMesh(Point3D from, Point3D to, double radius)
+        {
+            var dir = to - from;
+            if (dir.Length < 1e-10) return new MeshGeometry3D();
+            dir.Normalize();
+
+            Vector3D refVec = Math.Abs(dir.Z) < 0.9 ? new Vector3D(0, 0, 1) : new Vector3D(1, 0, 0);
+            Vector3D perp1  = Vector3D.CrossProduct(dir, refVec); perp1.Normalize();
+            Vector3D perp2  = Vector3D.CrossProduct(perp1, dir);
+
+            const int N         = 10;
+            double    angleStep = 2.0 * Math.PI / N;
+            var positions = new Point3DCollection();
+            var indices   = new Int32Collection();
+
+            for (int pass = 0; pass < 2; pass++)
+            {
+                Point3D centre = pass == 0 ? from : to;
+                for (int i = 0; i < N; i++)
+                {
+                    double a = i * angleStep;
+                    positions.Add(centre + radius * (Math.Cos(a) * perp1 + Math.Sin(a) * perp2));
+                }
+            }
+
+            for (int i = 0; i < N; i++)
+            {
+                int next = (i + 1) % N;
+                indices.Add(i);       indices.Add(i + N);    indices.Add(next + N);
+                indices.Add(i);       indices.Add(next + N); indices.Add(next);
             }
 
             return new MeshGeometry3D { Positions = positions, TriangleIndices = indices };

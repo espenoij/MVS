@@ -53,7 +53,7 @@ namespace MVS
             ApplyCorrectionCommand  = new RelayCommand(_ => ApplyCorrection(), _ => HasFitResult);
             ClearCorrectionCommand  = new RelayCommand(_ => ClearCorrection());
             SimulateScanCommand     = new RelayCommand(_ => SimulateScan(),    _ => CanSimulate);
-            FindDeckEdgeCommand     = new RelayCommand(_ => FindDeckEdge(),    _ => CanFit);
+            AnalyseCommand          = new RelayCommand(_ => Analyse(),         _ => CanFit);
         }
 
         // ── Bound properties ─────────────────────────────────────────────────
@@ -144,6 +144,13 @@ namespace MVS
             set { _simLidarYawDeg = value; OnPropertyChanged(); _config.Write(ConfigKey.LivoxSimLidarYawDeg, value.ToString()); }
         }
 
+        private int _simPointCount = 50000;
+        public int SimPointCount
+        {
+            get { return _simPointCount; }
+            set { _simPointCount = value; OnPropertyChanged(); _config.Write(ConfigKey.LivoxSimPointCount, value.ToString()); }
+        }
+
         // Status / readouts
         private readonly System.Text.StringBuilder _statusLog = new System.Text.StringBuilder();
         public string StatusMessage => _statusLog.ToString();
@@ -221,7 +228,7 @@ namespace MVS
         public ICommand ApplyCorrectionCommand { get; }
         public ICommand ClearCorrectionCommand { get; }
         public ICommand SimulateScanCommand    { get; }
-        public ICommand FindDeckEdgeCommand    { get; }
+        public ICommand AnalyseCommand         { get; }
 
         // ── Command implementations ───────────────────────────────────────────
 
@@ -263,6 +270,7 @@ namespace MVS
             _subsystem.SimRollDeg     = SimRollDeg;
             _subsystem.SimNoiseMm     = SimNoiseMm;
             _subsystem.SimLidarYawDeg = SimLidarYawDeg;
+            _subsystem.SimPointCount  = SimPointCount;
             _subsystem.StartSimulation();
             _simulationInProgress = true;
             AppendStatus($"Simulating helideck scan (pitch={SimPitchDeg:F1}°, roll={SimRollDeg:F1}°, lidar yaw={SimLidarYawDeg:F1}°)...");
@@ -307,6 +315,13 @@ namespace MVS
             _correction.Clear();
             PersistCorrection();
             AppendStatus("Correction cleared.");
+        }
+
+        private void Analyse()
+        {
+            FitPlane();
+            if (_lastFit == null || !_lastFit.IsValid) return;
+            FindDeckEdge();
         }
 
         private void FindDeckEdge()
@@ -436,6 +451,7 @@ namespace MVS
             SimRollDeg     = _config.ReadWithDefault(ConfigKey.LivoxSimRollDeg,     1.5);
             SimNoiseMm     = _config.ReadWithDefault(ConfigKey.LivoxSimNoiseMm,     10.0);
             SimLidarYawDeg = _config.ReadWithDefault(ConfigKey.LivoxSimLidarYawDeg, 0.0);
+            SimPointCount  = _config.ReadWithDefault(ConfigKey.LivoxSimPointCount,  50000);
 
             // Restore persisted correction
             if (bool.TryParse(_config.Read(ConfigKey.LivoxCorrectionActive), out bool active) && active)
