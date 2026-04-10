@@ -185,9 +185,6 @@ namespace MVS
         private string _fitRoll = "—";
         public string FitRoll  { get { return _fitRoll;  } set { _fitRoll  = value; OnPropertyChanged(); } }
 
-        private string _fitHeading = "—";
-        public string FitHeading { get { return _fitHeading; } set { _fitHeading = value; OnPropertyChanged(); } }
-
         private string _fitRmse = "—";
         public string FitRmse  { get { return _fitRmse;  } set { _fitRmse  = value; OnPropertyChanged(); } }
 
@@ -303,8 +300,11 @@ namespace MVS
         {
             if (_lastFit == null || !_lastFit.IsValid) return;
 
+            double heading = _lastEdge != null && _lastEdge.IsValid
+                           ? _lastEdge.VesselForwardAngleDeg
+                           : 0.0;
             _correction.Apply(_lastFit.PitchDeg, _lastFit.RollDeg,
-                              _lastFit.HeadingDeg, _lastFit.FitRmse, _lastFit.PointCount);
+                              heading, _lastFit.FitRmse, _lastFit.PointCount);
 
             PersistCorrection();
             AppendStatus("Correction applied to Reference MRU.");
@@ -387,13 +387,12 @@ namespace MVS
             {
                 FitPitch   = $"{_lastFit.PitchDeg:F3}°";
                 FitRoll    = $"{_lastFit.RollDeg:F3}°";
-                FitHeading = $"{_lastFit.HeadingDeg:F1}°";
                 FitRmse    = $"{_lastFit.FitRmse:F1} mm";
                 FitPoints  = _lastFit.PointCount.ToString("N0");
             }
             else
             {
-                FitPitch = FitRoll = FitHeading = FitRmse = FitPoints = "—";
+                FitPitch = FitRoll = FitRmse = FitPoints = "—";
             }
             OnPropertyChanged(nameof(HasFitResult));
         }

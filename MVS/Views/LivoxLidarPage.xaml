@@ -178,10 +178,6 @@
                         <Label Width="150" Content="Roll" VerticalAlignment="Center"/>
                         <Label Content="{Binding FitRoll}" FontWeight="Bold"/>
                     </DockPanel>
-                    <DockPanel Margin="0,0,0,4">
-                        <Label Width="150" Content="Heading" VerticalAlignment="Center"/>
-                        <Label Content="{Binding FitHeading}" FontWeight="Bold"/>
-                    </DockPanel>
                     <Separator Margin="0,4,0,4"/>
                     <DockPanel Margin="0,0,0,4">
                         <Label Width="150" Content="Fit RMSE" VerticalAlignment="Center"/>
@@ -191,14 +187,6 @@
                         <Label Width="150" Content="Points used" VerticalAlignment="Center"/>
                         <Label Content="{Binding FitPoints}"/>
                     </DockPanel>
-
-                    <StackPanel Orientation="Horizontal" HorizontalAlignment="Right" Margin="0,8,0,0">
-                        <telerik:RadButton Command="{Binding ApplyCorrectionCommand}"
-                                           Width="150" Margin="0,0,8,0"
-                                           ToolTip="Apply this fit as the Reference MRU correction">
-                            Apply Correction
-                        </telerik:RadButton>
-                    </StackPanel>
 
                 </StackPanel>
             </telerik:GroupBox>
@@ -223,7 +211,8 @@
                         <Label Content="{Binding EdgeDirection}"/>
                     </DockPanel>
                     <DockPanel Margin="0,0,0,4">
-                        <Label Width="150" Content="Edge Points" VerticalAlignment="Center"/>
+                        <Label Width="150" Content="Edge Points" VerticalAlignment="Center"
+                               ToolTip="Number of deck-plane inlier points within the edge band (400 mm from the bow boundary), used for edge-line fitting and visualisation"/>
                         <Label Content="{Binding EdgePointsStr}"/>
                     </DockPanel>
 
@@ -259,10 +248,17 @@
                         <Label Content="{Binding Correction.TimestampString}"/>
                     </DockPanel>
 
-                    <telerik:RadButton Command="{Binding ClearCorrectionCommand}"
-                                       HorizontalAlignment="Right" Width="228">
-                        Clear Correction
-                    </telerik:RadButton>
+                    <StackPanel Orientation="Horizontal" HorizontalAlignment="Right">
+                        <telerik:RadButton Command="{Binding ApplyCorrectionCommand}"
+                                           Width="150" Margin="0,0,8,0"
+                                           ToolTip="Apply this fit as the Reference MRU correction">
+                            Apply Correction
+                        </telerik:RadButton>
+                        <telerik:RadButton Command="{Binding ClearCorrectionCommand}"
+                                           Width="150">
+                            Clear Correction
+                        </telerik:RadButton>
+                    </StackPanel>
 
                 </StackPanel>
             </telerik:GroupBox>

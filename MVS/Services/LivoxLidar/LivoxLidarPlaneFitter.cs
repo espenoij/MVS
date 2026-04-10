@@ -10,8 +10,6 @@ namespace MVS
         public double PitchDeg     { get; set; }
         /// <summary>Roll of helideck plane (degrees). Positive = starboard up when LiDAR +Y points right.</summary>
         public double RollDeg      { get; set; }
-        /// <summary>Heading of the bow–stern axis in the LiDAR XY plane (degrees).</summary>
-        public double HeadingDeg   { get; set; }
         /// <summary>RMSE of the fit in millimetres (= sqrt of smallest eigenvalue).</summary>
         public double FitRmse      { get; set; }
         /// <summary>Mean perpendicular distance from the sensor origin to the fitted plane (mm).</summary>
@@ -183,7 +181,6 @@ namespace MVS
             // ── Step 7: Extract angles ────────────────────────────────────────
             result.PitchDeg   = Math.Atan2(nx, nz) * Rad2Deg;
             result.RollDeg    = Math.Atan2(ny, nz) * Rad2Deg;
-            result.HeadingDeg = Math.Atan2(ay, ax) * Rad2Deg;
 
             // ── Step 8: Clearance = perpendicular distance from sensor origin to plane.
             // dot(n, centroid) is negative when the normal points toward the sensor,
