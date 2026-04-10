@@ -12,14 +12,14 @@
         <Grid.ColumnDefinitions>
             <ColumnDefinition Width="360" />
             <ColumnDefinition Width="360" />
-            <ColumnDefinition Width="*"   />
+            <ColumnDefinition Width="*" MinWidth="200"   />
         </Grid.ColumnDefinitions>
 
         <!-- ═══════════════════════════════════════════════════ Columns 0-1: Controls + Status -->
         <Grid Grid.Column="0" Grid.ColumnSpan="2">
             <Grid.RowDefinitions>
                 <RowDefinition Height="*" />
-                <RowDefinition Height="300" />
+                <RowDefinition Height="200" />
             </Grid.RowDefinitions>
             <Grid.ColumnDefinitions>
                 <ColumnDefinition Width="360" />
@@ -27,7 +27,10 @@
             </Grid.ColumnDefinitions>
 
             <!-- ═══════════════════════════════════════════════════ Column 0: Connection + Filters -->
-            <StackPanel Grid.Column="0" Margin="8,8,4,8">
+            <ScrollViewer Grid.Column="0" Margin="8,8,4,8"
+                          VerticalScrollBarVisibility="Auto"
+                          HorizontalScrollBarVisibility="Disabled">
+            <StackPanel>
 
             <!-- Connection -->
             <telerik:GroupBox Header="Connection" Margin="0,0,0,8">
@@ -138,9 +141,13 @@
             </telerik:GroupBox>
 
         </StackPanel>
+            </ScrollViewer>
 
         <!-- ═══════════════════════════════════════════════════ Column 1: Scan + Fit + Correction -->
-        <StackPanel Grid.Column="1" Margin="4,8,4,8">
+            <ScrollViewer Grid.Column="1" Margin="4,8,4,8"
+                          VerticalScrollBarVisibility="Auto"
+                          HorizontalScrollBarVisibility="Disabled">
+            <StackPanel>
 
             <!-- Scan Control -->
             <telerik:GroupBox Header="Scan Control" Margin="0,0,0,8">
@@ -264,6 +271,7 @@
             </telerik:GroupBox>
 
         </StackPanel>
+            </ScrollViewer>
 
             <!-- ═══════════════════════════════════════════════════ Row 1: Status -->
             <telerik:GroupBox Grid.Row="1" Grid.Column="0" Grid.ColumnSpan="2"
@@ -272,7 +280,7 @@
                          Text="{Binding StatusMessage, Mode=OneWay}"
                          IsReadOnly="True"
                          TextWrapping="Wrap"
-                         VerticalScrollBarVisibility="Auto"
+                         VerticalScrollBarVisibility="Visible"
                          HorizontalScrollBarVisibility="Disabled"
                          VerticalContentAlignment="Top"
                          HorizontalContentAlignment="Left" />
