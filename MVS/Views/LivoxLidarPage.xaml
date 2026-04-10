@@ -19,7 +19,7 @@
         <Grid Grid.Column="0" Grid.ColumnSpan="2">
             <Grid.RowDefinitions>
                 <RowDefinition Height="*" />
-                <RowDefinition Height="Auto" MaxHeight="300" MinHeight="80" />
+                <RowDefinition Height="200" />
             </Grid.RowDefinitions>
             <Grid.ColumnDefinitions>
                 <ColumnDefinition Width="360" />
@@ -284,7 +284,7 @@
                          Text="{Binding StatusMessage, Mode=OneWay}"
                          IsReadOnly="True"
                          TextWrapping="Wrap"
-                         VerticalScrollBarVisibility="Auto"
+                         VerticalScrollBarVisibility="Visible"
                          HorizontalScrollBarVisibility="Disabled"
                          VerticalContentAlignment="Top"
                          HorizontalContentAlignment="Left" />
