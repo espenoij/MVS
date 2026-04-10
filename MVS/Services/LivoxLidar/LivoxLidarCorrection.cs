@@ -42,7 +42,7 @@ namespace MVS
             get { return _headingOffset; }
             set { _headingOffset = value; OnPropertyChanged(); OnPropertyChanged(nameof(HeadingOffsetString)); }
         }
-        public string HeadingOffsetString => IsActive ? $"{_headingOffset:F1}°" : "—";
+        public string HeadingOffsetString => IsActive ? $"{_headingOffset:F3}°" : "—";
 
         // ── Fit quality metadata ─────────────────────────────────────────────
 

@@ -402,8 +402,8 @@ namespace MVS
             if (_lastEdge != null && _lastEdge.IsValid)
             {
                 EdgeDirection    = $"({_lastEdge.DirectionX:F3}, {_lastEdge.DirectionY:F3}, {_lastEdge.DirectionZ:F3})";
-                EdgeAngle        = $"{_lastEdge.EdgeAngleDeg:F1}°";
-                EdgeForwardAngle = $"{_lastEdge.VesselForwardAngleDeg:F1}°";
+                EdgeAngle        = $"{_lastEdge.EdgeAngleDeg:F3}°";
+                EdgeForwardAngle = $"{_lastEdge.VesselForwardAngleDeg:F3}°";
                 EdgePointsStr    = _lastEdge.EdgePointCount.ToString("N0");
             }
             else
@@ -452,16 +452,7 @@ namespace MVS
             SimLidarYawDeg = _config.ReadWithDefault(ConfigKey.LivoxSimLidarYawDeg, 0.0);
             SimPointCount  = _config.ReadWithDefault(ConfigKey.LivoxSimPointCount,  50000);
 
-            // Restore persisted correction
-            if (bool.TryParse(_config.Read(ConfigKey.LivoxCorrectionActive), out bool active) && active)
-            {
-                double p = _config.ReadWithDefault(ConfigKey.LivoxCorrectionPitch,   0.0);
-                double r = _config.ReadWithDefault(ConfigKey.LivoxCorrectionRoll,    0.0);
-                double h = _config.ReadWithDefault(ConfigKey.LivoxCorrectionHeading, 0.0);
-                _correction.Apply(p, r, h, 0, 0);
-                if (DateTime.TryParse(_config.Read(ConfigKey.LivoxCorrectionTimestamp), out DateTime ts))
-                    _correction.Timestamp = ts;
-            }
+            // Do not restore persisted correction on startup — start with a clean state.
         }
 
         private void PersistCorrection()

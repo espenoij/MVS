@@ -1,4 +1,4 @@
-﻿<UserControl
+﻿ <UserControl
     x:Class="MVS.LivoxLidarPage"
     xmlns="http://schemas.microsoft.com/winfx/2006/xaml/presentation"
     xmlns:x="http://schemas.microsoft.com/winfx/2006/xaml"
@@ -205,7 +205,7 @@
                     <DockPanel Margin="0,0,0,4">
                         <Label Width="150" Content="Edge Angle" VerticalAlignment="Center"
                                ToolTip="Angle of the edge direction relative to the LiDAR forward axis in the deck plane"/>
-                        <Label Content="{Binding EdgeAngle}" FontWeight="Bold"/>
+                        <Label Content="{Binding EdgeAngle}"/>
                     </DockPanel>
                     <DockPanel Margin="0,0,0,4">
                         <Label Width="150" Content="Vessel Forward" VerticalAlignment="Center"
@@ -236,15 +236,15 @@
                     </DockPanel>
                     <DockPanel Margin="0,0,0,4">
                         <Label Width="150" Content="Pitch Offset" VerticalAlignment="Center"/>
-                        <Label Content="{Binding Correction.PitchOffsetString}"/>
+                        <Label Content="{Binding Correction.PitchOffsetString}" FontWeight="Bold"/>
                     </DockPanel>
                     <DockPanel Margin="0,0,0,4">
                         <Label Width="150" Content="Roll Offset" VerticalAlignment="Center"/>
-                        <Label Content="{Binding Correction.RollOffsetString}"/>
+                        <Label Content="{Binding Correction.RollOffsetString}" FontWeight="Bold"/>
                     </DockPanel>
                     <DockPanel Margin="0,0,0,4">
                         <Label Width="150" Content="Heading Offset" VerticalAlignment="Center"/>
-                        <Label Content="{Binding Correction.HeadingOffsetString}"/>
+                        <Label Content="{Binding Correction.HeadingOffsetString}" FontWeight="Bold"/>
                     </DockPanel>
                     <DockPanel Margin="0,0,0,4">
                         <Label Width="150" Content="Fit RMSE" VerticalAlignment="Center"/>
