@@ -66,6 +66,7 @@ namespace MVS
         public float AzimuthMaxDeg { get; set; } =  180f;
         public float ElevationMinDeg { get; set; } = -90f;
         public float ElevationMaxDeg { get; set; } =  90f;
+        public int   MaxBufferPoints  { get; set; } = 500_000;
 
         // ── Simulation settings ──────────────────────────────────────────────
 
@@ -228,45 +229,112 @@ namespace MVS
             _simThread.Start();
         }
 
-        private void SimulationWorker()
+        private void SimulationWorker()  
         {
             var    rng      = new Random();
-            double pitchRad = SimPitchDeg    * Math.PI / 180.0;
+            double pitchRad = SimPitchDeg    * Math.PI / 180.0; 
             double rollRad  = SimRollDeg     * Math.PI / 180.0;
             double yawRad   = SimLidarYawDeg * Math.PI / 180.0;
             double cosYaw   = Math.Cos(yawRad);
             double sinYaw   = Math.Sin(yawRad);
 
-            const int BatchSize = 500;
+             const int BatchSize = 500;
             int batches = Math.Max(1, SimPointCount / BatchSize);
+
+            // Cube sitting on the helideck: 2 m side, positioned near the bow edge.
+            // In deck coordinates the cube base centre is at (7800, 0, deckZ).
+            const double CubeHalf   = 1000.0; // 2 m side → 1000 mm half
+            const double CubeCentreX = -7800.0;
+            const double CubeCentreY = 0.0;
+
+            // Second smaller cube: 0.5 m side, placed beside the first one.
+            const double Cube2Half    = 250.0;  // 0.5 m side → 250 mm half
+            const double Cube2CentreX = -7800.0;
+            const double Cube2CentreY = 1500.0;
+
+            // Fraction of points allocated to cube surfaces (~10% total, split between cubes)
+            const double CubeFraction  = 0.08;
+            const double Cube2Fraction = 0.04;
 
             for (int b = 0; b < batches && _simRunning; b++)
             {
                 var batch = new List<(float, float, float)>(BatchSize);
                 for (int i = 0; i < BatchSize; i++)
                 {
+                    double px, py, pz;
+
+                    double roll = rng.NextDouble();
+                    if (roll < CubeFraction)
+                    {
+                        // Generate a point on cube 1
+                        if (!GenerateCubePoint(rng, CubeCentreX, CubeCentreY, CubeHalf,
+                                pitchRad, rollRad, SimNoiseMm, out px, out py, out pz))
+                        { i--; continue; }
+                    }
+                    else if (roll < CubeFraction + Cube2Fraction)
+                    {
+                        // Generate a point on cube 2
+                        if (!GenerateCubePoint(rng, Cube2CentreX, Cube2CentreY, Cube2Half,
+                                pitchRad, rollRad, SimNoiseMm, out px, out py, out pz))
+                        { i--; continue; }
+                    }
+                    else
+                    {
                     // Rejection-sample within a regular hexagonal helideck boundary.
                     // Circumradius 12 000 mm → flat-side hexagon ~20 785 mm wide, 24 000 mm tall.
                     // The bow edge (flat side facing sensor +X) sits at x = ±apothem ≈ ±10 392 mm,
                     // runs in Y from −6 000 mm to +6 000 mm, and has length = 12 000 mm.
                     const float HexRadius = 12_000f;
-                    float x, y;
+                    float hx, hy;
                     do
                     {
-                        x = (float)((rng.NextDouble() * 2.0 - 1.0) * HexRadius);
-                        y = (float)((rng.NextDouble() * 2.0 - 1.0) * HexRadius);
+                        hx = (float)((rng.NextDouble() * 2.0 - 1.0) * HexRadius);
+                        hy = (float)((rng.NextDouble() * 2.0 - 1.0) * HexRadius);
                     }
-                    while (!IsInsideHexagon(x, y, HexRadius));
+                    while (!IsInsideHexagon(hx, hy, HexRadius));
 
-                    float z = (float)(800.0
-                                     + x * Math.Tan(pitchRad)
-                                     + y * Math.Tan(rollRad)
-                                     + NextGaussian(rng, SimNoiseMm));
+                    // Skip deck points that fall inside either cube footprint
+                    if ((hx >= CubeCentreX - CubeHalf && hx <= CubeCentreX + CubeHalf &&
+                         hy >= CubeCentreY - CubeHalf && hy <= CubeCentreY + CubeHalf) ||
+                        (hx >= Cube2CentreX - Cube2Half && hx <= Cube2CentreX + Cube2Half &&
+                         hy >= Cube2CentreY - Cube2Half && hy <= Cube2CentreY + Cube2Half))
+                    {
+                        i--;
+                        continue;
+                    }
+
+                    px = hx;
+                    py = hy;
+                    pz = 800.0
+                       + px * Math.Tan(pitchRad)
+                       + py * Math.Tan(rollRad)
+                       + NextGaussian(rng, SimNoiseMm);
+
+                    // Occlusion: discard deck points whose line-of-sight is blocked by either cube.
+                    double deckZ1 = 800.0
+                                  + CubeCentreX * Math.Tan(pitchRad)
+                                  + CubeCentreY * Math.Tan(rollRad);
+                    double deckZ2 = 800.0
+                                  + Cube2CentreX * Math.Tan(pitchRad)
+                                  + Cube2CentreY * Math.Tan(rollRad);
+                    if (RayHitsAABB(
+                            px, py, pz,
+                            CubeCentreX - CubeHalf, CubeCentreY - CubeHalf, deckZ1 - 2.0 * CubeHalf,
+                            CubeCentreX + CubeHalf, CubeCentreY + CubeHalf, deckZ1) ||
+                        RayHitsAABB(
+                            px, py, pz,
+                            Cube2CentreX - Cube2Half, Cube2CentreY - Cube2Half, deckZ2 - 2.0 * Cube2Half,
+                            Cube2CentreX + Cube2Half, Cube2CentreY + Cube2Half, deckZ2))
+                    {
+                        i--;
+                        continue;
+                    }
+                    }
 
                     // Rotate the point into the LiDAR frame (yaw of sensor relative to deck)
-                    float xr = (float)(x * cosYaw - y * sinYaw);
-                    float yr = (float)(x * sinYaw + y * cosYaw);
-                    batch.Add((xr, yr, z));
+                    float xr = (float)(px * cosYaw - py * sinYaw);
+                    float yr = (float)(px * sinYaw + py * cosYaw);
+                    batch.Add((xr, yr, (float)pz));
                 }
 
                 var filtered = new List<(float, float, float)>(batch.Count);
@@ -289,6 +357,9 @@ namespace MVS
                     lock (_bufferLock)
                     {
                         _buffer.AddRange(filtered);
+                        int max = MaxBufferPoints;
+                        if (max > 0 && _buffer.Count > max)
+                            _buffer.RemoveRange(0, _buffer.Count - max);
                         Interlocked.Exchange(ref _accumulatedPoints, _buffer.Count);
                     }
                     PointCountUpdated?.Invoke(_accumulatedPoints);
@@ -300,6 +371,57 @@ namespace MVS
             _scanning   = false;
             _simRunning = false;
             CurrentStatus = _sdkInitialised ? Status.Connected : Status.Disconnected;
+        }
+
+        /// <summary>
+        /// Generates a random point on a visible face of a cube sitting on the tilted deck.
+        /// Returns false if no face is visible (caller should retry).
+        /// </summary>
+        private static bool GenerateCubePoint(
+            Random rng, double cx, double cy, double half,
+            double pitchRad, double rollRad, double noiseSigma,
+            out double px, out double py, out double pz)
+        {
+            px = py = pz = 0;
+
+            double deckZ = 800.0 + cx * Math.Tan(pitchRad) + cy * Math.Tan(rollRad);
+            double zCentre = deckZ - half;
+
+            // Back-face culling
+            bool[] vis = new bool[6];
+            vis[0] = -(cx + half) > 0;
+            vis[1] =  (cx - half) > 0;
+            vis[2] = -(cy + half) > 0;
+            vis[3] =  (cy - half) > 0;
+            vis[4] = -deckZ > 0;
+            vis[5] =  (deckZ - 2.0 * half) > 0;
+
+            int visCount = 0;
+            for (int f = 0; f < 6; f++) if (vis[f]) visCount++;
+            if (visCount == 0) return false;
+
+            int pick = rng.Next(visCount);
+            int face = -1;
+            for (int f = 0; f < 6; f++)
+            {
+                if (!vis[f]) continue;
+                if (pick == 0) { face = f; break; }
+                pick--;
+            }
+
+            double u = (rng.NextDouble() * 2.0 - 1.0) * half;
+            double v = (rng.NextDouble() * 2.0 - 1.0) * half;
+            switch (face)
+            {
+                case 0: px = cx + half; py = cy + u;    pz = zCentre + v; break;
+                case 1: px = cx - half; py = cy + u;    pz = zCentre + v; break;
+                case 2: px = cx + u;    py = cy + half;  pz = zCentre + v; break;
+                case 3: px = cx + u;    py = cy - half;  pz = zCentre + v; break;
+                case 4: px = cx + u;    py = cy + v;     pz = deckZ;       break;
+                default:px = cx + u;    py = cy + v;     pz = deckZ - 2.0 * half; break;
+            }
+            pz += NextGaussian(rng, noiseSigma);
+            return true;
         }
 
         private static double NextGaussian(Random rng, double sigma)
@@ -316,6 +438,60 @@ namespace MVS
         /// running in Y at x = ±r·√3/2 (the apothem ≈ 10 392 mm for r = 12 000 mm).
         /// Conditions: |x| ≤ r·√3/2  AND  |y| + |x|/√3 ≤ r
         /// </summary>
+        /// <summary>
+        /// Slab-method ray-AABB intersection test.  Ray goes from the origin (0,0,0)
+        /// to point (px,py,pz).  Returns true when the ray hits the box at t &lt; 1
+        /// (i.e. the box occludes the point from the sensor's perspective).
+        /// </summary>
+        private static bool RayHitsAABB(
+            double px, double py, double pz,
+            double bMinX, double bMinY, double bMinZ,
+            double bMaxX, double bMaxY, double bMaxZ)
+        {
+            double tMin = double.MinValue;
+            double tMax = double.MaxValue;
+
+            // X slab
+            if (Math.Abs(px) > 1e-12)
+            {
+                double t1 = bMinX / px;
+                double t2 = bMaxX / px;
+                if (t1 > t2) { double tmp = t1; t1 = t2; t2 = tmp; }
+                if (t1 > tMin) tMin = t1;
+                if (t2 < tMax) tMax = t2;
+                if (tMin > tMax) return false;
+            }
+            else if (0 < bMinX || 0 > bMaxX) return false;
+
+            // Y slab
+            if (Math.Abs(py) > 1e-12)
+            {
+                double t1 = bMinY / py;
+                double t2 = bMaxY / py;
+                if (t1 > t2) { double tmp = t1; t1 = t2; t2 = tmp; }
+                if (t1 > tMin) tMin = t1;
+                if (t2 < tMax) tMax = t2;
+                if (tMin > tMax) return false;
+            }
+            else if (0 < bMinY || 0 > bMaxY) return false;
+
+            // Z slab
+            if (Math.Abs(pz) > 1e-12)
+            {
+                double t1 = bMinZ / pz;
+                double t2 = bMaxZ / pz;
+                if (t1 > t2) { double tmp = t1; t1 = t2; t2 = tmp; }
+                if (t1 > tMin) tMin = t1;
+                if (t2 < tMax) tMax = t2;
+                if (tMin > tMax) return false;
+            }
+            else if (0 < bMinZ || 0 > bMaxZ) return false;
+
+            // Hit counts only if the entry point is before the target (t < 1)
+            // and the exit point is in front of the origin (tMax > 0).
+            return tMin < 1.0 && tMax > 0.0;
+        }
+
         private static bool IsInsideHexagon(float x, float y, float r)
         {
             float ax = Math.Abs(x);
@@ -395,6 +571,9 @@ namespace MVS
                     lock (_bufferLock)
                     {
                         _buffer.AddRange(batch);
+                        int max = MaxBufferPoints;
+                        if (max > 0 && _buffer.Count > max)
+                            _buffer.RemoveRange(0, _buffer.Count - max);
                         Interlocked.Exchange(ref _accumulatedPoints, _buffer.Count);
                     }
                     PointCountUpdated?.Invoke(_accumulatedPoints);

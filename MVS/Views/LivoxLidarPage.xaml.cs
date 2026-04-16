@@ -14,14 +14,17 @@ namespace MVS
         // ── Trackball state ───────────────────────────────────────────────────
         private bool   _isDragging;
         private Point  _lastMousePos;
-        private double _rotX = 20.0;   // degrees around X-axis
-        private double _rotY = 0.0;    // degrees around Y-axis
+        private double _rotX = 0.0;   // degrees around X-axis
+        private double _rotY = 0.0;  // degrees around Y-axis
         private double _zoom = 15000.0; // camera distance
 
         // Last fit centroid, normal and zoom - used by Reset View / Top Down
         private double _centroidX;
         private double _centroidY;
         private double _centroidZ;
+        private double _lookAtX;
+        private double _lookAtY;
+        private double _lookAtZ;
         private double _defaultZoom = 15000.0;
         private double _fitNormalX = 0.0;
         private double _fitNormalY = 0.0;
@@ -40,6 +43,8 @@ namespace MVS
         private readonly ModelVisual3D _deckEdgePointsVisual = new ModelVisual3D();
         private readonly ModelVisual3D _hexVerticesVisual    = new ModelVisual3D();
 
+        private bool _cameraFitted;
+
         public LivoxLidarPage()
         {
             InitializeComponent();
@@ -51,6 +56,8 @@ namespace MVS
             DataContext = vm;
             vm.FitResultReady += OnFitResultReady;
             vm.DeckEdgeResultReady += OnDeckEdgeResultReady;
+            vm.ScanCleared += OnScanCleared;
+            vm.PointCloudUpdated += points => UpdatePointCloud(points);
             vm.PropertyChanged += (s, e) =>
             {
                 if (e.PropertyName == nameof(LivoxLidarVM.StatusMessage))
@@ -62,9 +69,39 @@ namespace MVS
             viewport3D.Children.Add(_deckEdgeLineVisual);
             viewport3D.Children.Add(_deckEdgePointsVisual);
             viewport3D.Children.Add(_hexVerticesVisual);
+
+            // Explicitly set the camera
+            // is fully initialised before the first scan renders any points.
+            ApplyCameraTransform(0, 0, 0);
         }
 
         // ── Fit result → 3D scene update ─────────────────────────────────────
+
+        private void OnScanCleared()
+        {
+            if (Dispatcher.CheckAccess())
+            {
+                ClearScene();
+            }
+            else
+            {
+                Dispatcher.BeginInvoke(System.Windows.Threading.DispatcherPriority.Normal,
+                    new Action(ClearScene));
+            }
+        }
+
+        private void ClearScene()
+        {
+            _cameraFitted = false;
+            pointCloudVisual.Content      = null;
+            planeVisual.Content           = null;
+            _forwardArrowVisual.Content   = null;
+            _normalArrowVisual.Content    = null;
+            _bowArrowVisual.Content       = null;
+            _deckEdgeLineVisual.Content   = null;
+            _deckEdgePointsVisual.Content = null;
+            _hexVerticesVisual.Content    = null;
+        }
 
         private void OnFitResultReady(LivoxLidarPlaneFitResult fit)
         {
@@ -85,7 +122,7 @@ namespace MVS
             UpdateArrows(fit);
             UpdateCamera(fit);
 
-            // Clear previous deck edge visuals (will be re-drawn on next FindDeckEdge)
+            // Clear previous deck edge visuals
             _bowArrowVisual.Content       = null;
             _deckEdgeLineVisual.Content   = null;
             _deckEdgePointsVisual.Content = null;
@@ -104,15 +141,18 @@ namespace MVS
                 return;
             }
 
-            // Downsample to at most 20 000 points for display performance
-            const int MaxDisplay = 20_000;
-            int step = Math.Max(1, points.Count / MaxDisplay);
+            // Downsample to at most MaxDisplayPoints for display performance.
+            // Use a floating-point stride so the displayed count stays close to
+            // the limit and doesn't jump when the total crosses a threshold.
+            int maxDisplay = _vm != null ? Math.Max(_vm.MaxDisplayPoints, 100) : 20_000;
+            int displayCount = Math.Min(points.Count, maxDisplay);
+            double stride = points.Count / (double)displayCount;
 
             // Find Z range across displayed points for heat-map normalisation
             float zMin = float.MaxValue, zMax = float.MinValue;
-            for (int i = 0; i < points.Count; i += step)
+            for (int s = 0; s < displayCount; s++)
             {
-                float z = points[i].z;
+                float z = points[(int)(s * stride)].z;
                 if (z < zMin) zMin = z;
                 if (z > zMax) zMax = z;
             }
@@ -126,9 +166,9 @@ namespace MVS
             float quadHalfSize = 30f; // mm — display size of each point marker
 
             int idx = 0;
-            for (int i = 0; i < points.Count; i += step)
+            for (int s = 0; s < displayCount; s++)
             {
-                var (x, y, z) = points[i];
+                var (x, y, z) = points[(int)(s * stride)];
 
                 // U = normalised height: 0 = lowest (blue), 1 = highest (red)
                 double u = (z - zMin) / zRange;
@@ -166,9 +206,42 @@ namespace MVS
             brush.GradientStops.Add(new GradientStop(Colors.Red,    1.00));
             brush.Freeze();
 
-            // EmissiveMaterial renders at full texture brightness regardless of scene lighting
-            var material = new EmissiveMaterial(brush);
-            pointCloudVisual.Content = new GeometryModel3D(mesh, material);
+            // MaterialGroup: DiffuseMaterial gives WPF 3D a renderable surface,
+            // EmissiveMaterial ensures full-brightness colours regardless of lighting.
+            var matGroup = new MaterialGroup();
+            matGroup.Children.Add(new DiffuseMaterial(brush));
+            matGroup.Children.Add(new EmissiveMaterial(brush));
+            pointCloudVisual.Content = new GeometryModel3D(mesh, matGroup) { BackMaterial = matGroup };
+
+            // Auto-fit the camera the first time points are shown so the cloud is visible
+            // before the user runs Analyse (which calls UpdateCamera).
+            if (!_cameraFitted)
+            {
+                float cx = 0, cy = 0, cz = 0;
+                int n = 0;
+                for (int j = 0; j < displayCount; j++) { var p = points[(int)(j * stride)]; cx += p.x; cy += p.y; cz += p.z; n++; }
+                if (n > 0) { cx /= n; cy /= n; cz /= n; }
+
+                float maxHalf = 0;
+                for (int j = 0; j < displayCount; j++)
+                {
+                    var p = points[(int)(j * stride)];
+                    float dx2 = Math.Abs(p.x - cx);
+                    float dy2 = Math.Abs(p.y - cy);
+                    if (dx2 > maxHalf) maxHalf = dx2;
+                    if (dy2 > maxHalf) maxHalf = dy2;
+                }
+
+                _centroidX = cx;
+                _centroidY = cy;
+                _centroidZ = cz;
+                _defaultZoom = Math.Max(maxHalf + 200, 1000) / Math.Tan(22.5 * Math.PI / 180.0) * 1.2;
+                _zoom = _defaultZoom;
+                _rotX = 60.0;
+                _rotY = 0.0;
+                ApplyCameraTransform(_centroidX, _centroidY, _centroidZ);
+                _cameraFitted = true;
+            }
         }
 
         // ── Deck edge result → 3D scene update ───────────────────────────────
@@ -487,14 +560,15 @@ namespace MVS
             _vesselFwdZ = fit.VesselForwardZ;
             _zoom = _defaultZoom;
             ApplyCameraTransform(_centroidX, _centroidY, _centroidZ);
+            _cameraFitted = true;
         }
 
-        // ── Trackball mouse handlers ──────────────────────────────────────────
+        // ── Trackball mouse handlers
 
         private void ResetCamera_Click(object sender, RoutedEventArgs e)
         {
-            _rotX = 20.0;
-            _rotY = 0.0;
+            _rotX = 45.0;
+            _rotY = -45.0;
             _zoom = _defaultZoom;
             camera.UpDirection = new Vector3D(0, 1, 0);
             ApplyCameraTransform(_centroidX, _centroidY, _centroidZ);
@@ -531,21 +605,21 @@ namespace MVS
         private void Viewport_MouseLeftButtonDown(object sender, MouseButtonEventArgs e)
         {
             _isDragging  = true;
-            _lastMousePos = e.GetPosition(viewport3D);
-            viewport3D.CaptureMouse();
+            _lastMousePos = e.GetPosition((IInputElement)sender);
+            ((IInputElement)sender).CaptureMouse();
         }
 
         private void Viewport_MouseLeftButtonUp(object sender, MouseButtonEventArgs e)
         {
             _isDragging = false;
-            viewport3D.ReleaseMouseCapture();
+            ((IInputElement)sender).ReleaseMouseCapture();
         }
 
         private void Viewport_MouseMove(object sender, MouseEventArgs e)
         {
             if (!_isDragging) return;
 
-            var pos   = e.GetPosition(viewport3D);
+            var pos   = e.GetPosition((IInputElement)sender);
             double dx = pos.X - _lastMousePos.X;
             double dy = pos.Y - _lastMousePos.Y;
             _lastMousePos = pos;
@@ -554,14 +628,14 @@ namespace MVS
             _rotX -= dy * 0.5;
             _rotX  = Math.Max(-89, Math.Min(89, _rotX));
 
-            ApplyCameraTransform(0, 0, 0);
+            ApplyCameraTransform(_lookAtX, _lookAtY, _lookAtZ);
         }
 
         private void Viewport_MouseWheel(object sender, MouseWheelEventArgs e)
         {
             _zoom *= e.Delta > 0 ? 1.1 : 0.9;
             _zoom  = Math.Max(100, _zoom);
-            ApplyCameraTransform(0, 0, 0);
+            ApplyCameraTransform(_lookAtX, _lookAtY, _lookAtZ);
         }
 
         private void ApplyCameraTransform(double cx, double cy, double cz)
@@ -572,6 +646,10 @@ namespace MVS
             double camX = cx + _zoom * Math.Sin(radY) * Math.Cos(radX);
             double camY = cy - _zoom * Math.Sin(radX);
             double camZ = cz + _zoom * Math.Cos(radY) * Math.Cos(radX);
+
+            _lookAtX = cx;
+            _lookAtY = cy;
+            _lookAtZ = cz;
 
             camera.Position      = new Point3D(camX, camY, camZ);
             camera.LookDirection = new Vector3D(cx - camX, cy - camY, cz - camZ);

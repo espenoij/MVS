@@ -102,6 +102,7 @@ namespace MVS
         public void Apply(double pitchOffset, double rollOffset, double headingOffset,
                           double fitRmse, int pointCount)
         {
+            _isActive     = true;
             PitchOffset   = pitchOffset;
             RollOffset    = rollOffset;
             HeadingOffset = headingOffset;

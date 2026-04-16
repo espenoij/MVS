@@ -116,6 +116,20 @@ namespace MVS
             set { _elevationMaxDeg = value; OnPropertyChanged(); _config.Write(ConfigKey.LivoxElevationMaxDeg, value.ToString()); }
         }
 
+        private int _maxBufferPoints = 500000;
+        public int MaxBufferPoints
+        {
+            get { return _maxBufferPoints; }
+            set { _maxBufferPoints = value; OnPropertyChanged(); _config.Write(ConfigKey.LivoxMaxBufferPoints, value.ToString()); }
+        }
+
+        private int _maxDisplayPoints = 20000;
+        public int MaxDisplayPoints
+        {
+            get { return _maxDisplayPoints; }
+            set { _maxDisplayPoints = value; OnPropertyChanged(); _config.Write(ConfigKey.LivoxMaxDisplayPoints, value.ToString()); }
+        }
+
         private double _simPitchDeg = 2.0;
         public double SimPitchDeg
         {
@@ -262,6 +276,17 @@ namespace MVS
 
         private void SimulateScan()
         {
+            // Clear all previous scan data
+            _lastPointCloudUpdate = DateTime.MinValue;
+            AccumulatedPoints = 0;
+            _lastFit  = null;
+            _lastEdge = null;
+            _statusLog.Clear();
+            OnPropertyChanged(nameof(StatusMessage));
+            RefreshFitDisplay();
+            RefreshEdgeDisplay();
+            ScanCleared?.Invoke();
+
             ApplyFiltersToSubsystem();
             _subsystem.SimPitchDeg    = SimPitchDeg;
             _subsystem.SimRollDeg     = SimRollDeg;
@@ -271,10 +296,6 @@ namespace MVS
             _subsystem.StartSimulation();
             _simulationInProgress = true;
             AppendStatus($"Simulating helideck scan (pitch={SimPitchDeg:F1}°, roll={SimRollDeg:F1}°, lidar yaw={SimLidarYawDeg:F1}°)...");
-            _lastFit = null;
-            _lastEdge = null;
-            RefreshFitDisplay();
-            RefreshEdgeDisplay();
         }
 
         private void FitPlane()
@@ -350,6 +371,11 @@ namespace MVS
 
         public event Action<LivoxLidarPlaneFitResult> FitResultReady;
         public event Action<LivoxLidarDeckEdgeResult> DeckEdgeResultReady;
+        public event Action ScanCleared;
+        public event Action<List<(float x, float y, float z)>> PointCloudUpdated;
+
+        private DateTime _lastPointCloudUpdate = DateTime.MinValue;
+        private static readonly TimeSpan PointCloudUpdateInterval = TimeSpan.FromMilliseconds(500);
 
         public List<(float x, float y, float z)> GetPointCloudSnapshot()
             => _subsystem.GetPointCloudSnapshot();
@@ -361,21 +387,36 @@ namespace MVS
             Application.Current?.Dispatcher.BeginInvoke(DispatcherPriority.Normal, new Action(() =>
             {
                 SdkStatus = status.ToString();
-                if (_simulationInProgress && status == LivoxLidarSubsystem.Status.Disconnected)
-                {
-                    _simulationInProgress = false;
-                    AppendStatus($"Simulation complete. {_accumulatedPoints:N0} points accumulated.");
-                }
-                RefreshCommandStates();
+                    if (_simulationInProgress && status == LivoxLidarSubsystem.Status.Disconnected)
+                    {
+                        _simulationInProgress = false;
+                        AppendStatus($"Simulation complete. {_accumulatedPoints:N0} points accumulated.");
+
+                        // Force a final point-cloud update so the 3D view always
+                        // reflects the complete scan, even if the throttle skipped
+                        // the last batch during simulation.
+                        var finalSnapshot = _subsystem.GetPointCloudSnapshot();
+                        if (finalSnapshot != null && finalSnapshot.Count > 0)
+                            PointCloudUpdated?.Invoke(finalSnapshot);
+                    }
+                    RefreshCommandStates();
             }));
         }
 
         private void OnPointCountUpdated(int count)
         {
+            var now = DateTime.UtcNow;
+            bool fireUpdate = (now - _lastPointCloudUpdate) >= PointCloudUpdateInterval;
+            if (fireUpdate) _lastPointCloudUpdate = now;
+
+            List<(float x, float y, float z)> snapshot = fireUpdate ? _subsystem.GetPointCloudSnapshot() : null;
+
             Application.Current?.Dispatcher.BeginInvoke(DispatcherPriority.Normal, new Action(() =>
             {
                 AccumulatedPoints = count;
                 OnPropertyChanged(nameof(CanFit));
+                if (snapshot != null)
+                    PointCloudUpdated?.Invoke(snapshot);
             }));
         }
 
@@ -430,6 +471,7 @@ namespace MVS
             _subsystem.AzimuthMaxDeg   = AzimuthMaxDeg;
             _subsystem.ElevationMinDeg = ElevationMinDeg;
             _subsystem.ElevationMaxDeg = ElevationMaxDeg;
+            _subsystem.MaxBufferPoints = MaxBufferPoints;
         }
 
         // ── Config persistence ────────────────────────────────────────────────
@@ -445,12 +487,14 @@ namespace MVS
             AzimuthMaxDeg   = (float)_config.ReadWithDefault(ConfigKey.LivoxAzimuthMaxDeg,   180.0);
             ElevationMinDeg = (float)_config.ReadWithDefault(ConfigKey.LivoxElevationMinDeg, -90.0);
             ElevationMaxDeg = (float)_config.ReadWithDefault(ConfigKey.LivoxElevationMaxDeg, 90.0);
+            MaxBufferPoints = _config.ReadWithDefault(ConfigKey.LivoxMaxBufferPoints, 500000);
 
             SimPitchDeg    = _config.ReadWithDefault(ConfigKey.LivoxSimPitchDeg,    2.0);
             SimRollDeg     = _config.ReadWithDefault(ConfigKey.LivoxSimRollDeg,     1.5);
             SimNoiseMm     = _config.ReadWithDefault(ConfigKey.LivoxSimNoiseMm,     10.0);
             SimLidarYawDeg = _config.ReadWithDefault(ConfigKey.LivoxSimLidarYawDeg, 0.0);
             SimPointCount  = _config.ReadWithDefault(ConfigKey.LivoxSimPointCount,  50000);
+            MaxDisplayPoints = _config.ReadWithDefault(ConfigKey.LivoxMaxDisplayPoints, 20000);
 
             // Do not restore persisted correction on startup — start with a clean state.
         }

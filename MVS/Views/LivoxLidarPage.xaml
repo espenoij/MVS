@@ -93,6 +93,25 @@
                         <Label Width="130" Content="Elevation Max (°)" VerticalAlignment="Center"/>
                         <TextBox Text="{Binding ElevationMaxDeg, UpdateSourceTrigger=LostFocus}" />
                     </DockPanel>
+                    <Separator Margin="0,4,0,4"/>
+                    <DockPanel Margin="0,0,0,4">
+                        <Label Width="130" Content="Max Points" VerticalAlignment="Center"
+                               ToolTip="Maximum number of points to keep in the buffer. When exceeded, oldest points are replaced by newer ones."/>
+                        <TextBox Text="{Binding MaxBufferPoints, UpdateSourceTrigger=LostFocus}" />
+                    </DockPanel>
+
+                </StackPanel>
+            </telerik:GroupBox>
+
+            <!-- Display Filters -->
+            <telerik:GroupBox Header="Display Filters" Margin="0,0,0,8">
+                <StackPanel Margin="8">
+
+                    <DockPanel Margin="0,0,0,4">
+                        <Label Width="130" Content="Max Display Points" VerticalAlignment="Center"
+                               ToolTip="Maximum number of points rendered in the 3D viewport (downsampled for performance)"/>
+                        <TextBox Text="{Binding MaxDisplayPoints, UpdateSourceTrigger=LostFocus}" />
+                    </DockPanel>
 
                 </StackPanel>
             </telerik:GroupBox>
@@ -294,12 +313,13 @@
             <telerik:GroupBox Header="Point Cloud — 3D View">
                 <Grid>
 
-                    <!-- 3D Viewport -->
-                    <Viewport3D Name="viewport3D" ClipToBounds="True"
-                                MouseLeftButtonDown="Viewport_MouseLeftButtonDown"
-                                MouseLeftButtonUp="Viewport_MouseLeftButtonUp"
-                                MouseMove="Viewport_MouseMove"
-                                MouseWheel="Viewport_MouseWheel">
+                    <!-- 3D Viewport wrapped in Border for full-area mouse hit-testing -->
+                    <Border Background="Transparent"
+                            MouseLeftButtonDown="Viewport_MouseLeftButtonDown"
+                            MouseLeftButtonUp="Viewport_MouseLeftButtonUp"
+                            MouseMove="Viewport_MouseMove"
+                            MouseWheel="Viewport_MouseWheel">
+                    <Viewport3D Name="viewport3D" ClipToBounds="True">
 
                         <Viewport3D.Camera>
                             <PerspectiveCamera x:Name="camera"
@@ -334,6 +354,7 @@
                         <ModelVisual3D x:Name="lidarForwardArrowVisual" />
 
                     </Viewport3D>
+                    </Border>
 
                     <!-- Overlay hint -->
                     <TextBlock HorizontalAlignment="Left" VerticalAlignment="Bottom"
