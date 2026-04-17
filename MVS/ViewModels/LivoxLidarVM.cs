@@ -391,6 +391,8 @@ namespace MVS
                     {
                         _simulationInProgress = false;
                         AppendStatus($"Simulation complete. {_accumulatedPoints:N0} points accumulated.");
+                        if (!string.IsNullOrEmpty(_subsystem.LastSimulationDiagnostics))
+                            AppendStatus($"  Face distribution: {_subsystem.LastSimulationDiagnostics}");
 
                         // Force a final point-cloud update so the 3D view always
                         // reflects the complete scan, even if the throttle skipped

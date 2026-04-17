@@ -79,6 +79,11 @@ namespace MVS
         private Thread        _simThread;
         private volatile bool _simRunning;
 
+        /// <summary>
+        /// Diagnostic summary of the last simulation run (face distribution per cube).
+        /// </summary>
+        public string LastSimulationDiagnostics { get; private set; }
+
         // ── Public operations ────────────────────────────────────────────────
 
         public bool Connect(string configFilePath, ErrorHandler errorHandler)
@@ -184,7 +189,8 @@ namespace MVS
             lock (_bufferLock)
                 snapshot = new List<(float, float, float)>(_buffer);
 
-            return LivoxLidarPlaneFitter.Fit(snapshot);
+            var filtered = LivoxLidarPlaneFitter.FilterPlaneInliers(snapshot);
+            return LivoxLidarPlaneFitter.Fit(filtered);
         }
 
         public void ClearBuffer()
@@ -242,19 +248,35 @@ namespace MVS
             int batches = Math.Max(1, SimPointCount / BatchSize);
 
             // Cube sitting on the helideck: 2 m side, positioned near the bow edge.
-            // In deck coordinates the cube base centre is at (7800, 0, deckZ).
-            const double CubeHalf   = 1000.0; // 2 m side → 1000 mm half
-            const double CubeCentreX = -7800.0;
+            // Rotated 30° so two side faces are visible from the sensor.
+            const double CubeHalf    = 1000.0; // 2 m side → 1000 mm half
+            const double CubeCentreX = 7800.0;
             const double CubeCentreY = 0.0;
+            const double CubeYawDeg  = 30.0;
+            double       cubeYawRad  = CubeYawDeg * Math.PI / 180.0;
 
-            // Second smaller cube: 0.5 m side, placed beside the first one.
+            // Second smaller cube: 0.5 m side, placed on the stern-side of the helideck.
+            // Kept closer to the centre than cube 1 so its top face remains visible
+            // for pitch values up to ~8° (at x = −7800 even 3° hid the top).
             const double Cube2Half    = 250.0;  // 0.5 m side → 250 mm half
-            const double Cube2CentreX = -7800.0;
-            const double Cube2CentreY = 1500.0;
+            const double Cube2CentreX = -3500.0;
+            const double Cube2CentreY = 2000.0;
 
-            // Fraction of points allocated to cube surfaces (~10% total, split between cubes)
+            // Pre-compute cos/sin for cube 1 yaw (used for rotated footprint & occlusion checks).
+            double cosC1 = Math.Cos(cubeYawRad);
+            double sinC1 = Math.Sin(cubeYawRad);
+
+            // Fraction of points allocated to cube surfaces
             const double CubeFraction  = 0.08;
-            const double Cube2Fraction = 0.04;
+            const double Cube2Fraction = 0.10;
+
+            int dbgCube1 = 0, dbgCube2F0 = 0, dbgCube2F3 = 0, dbgCube2F5 = 0, dbgDeck = 0;
+
+            // Diagnostic: compute cube2 visibility exactly as GenerateCubePoint does
+            double dbgDeckZ2 = 800.0 + Cube2CentreX * Math.Tan(pitchRad) + Cube2CentreY * Math.Tan(rollRad);
+            bool   dbgVis5   = (dbgDeckZ2 - 2.0 * Cube2Half) > 0;
+            string dbgVis    = $"Cube2 deckZ={dbgDeckZ2:F2}, top={dbgDeckZ2 - 2.0 * Cube2Half:F2}, vis5={dbgVis5}, " +
+                               $"pitch={SimPitchDeg:F3}°({pitchRad:F6}), roll={SimRollDeg:F3}°({rollRad:F6})";
 
             for (int b = 0; b < batches && _simRunning; b++)
             {
@@ -266,17 +288,22 @@ namespace MVS
                     double roll = rng.NextDouble();
                     if (roll < CubeFraction)
                     {
-                        // Generate a point on cube 1
+                        // Generate a point on cube 1 (rotated)
                         if (!GenerateCubePoint(rng, CubeCentreX, CubeCentreY, CubeHalf,
-                                pitchRad, rollRad, SimNoiseMm, out px, out py, out pz))
+                                pitchRad, rollRad, SimNoiseMm, cubeYawRad, out px, out py, out pz))
                         { i--; continue; }
+                        dbgCube1++;
                     }
                     else if (roll < CubeFraction + Cube2Fraction)
                     {
-                        // Generate a point on cube 2
+                        // Generate a point on cube 2 (axis-aligned)
                         if (!GenerateCubePoint(rng, Cube2CentreX, Cube2CentreY, Cube2Half,
-                                pitchRad, rollRad, SimNoiseMm, out px, out py, out pz))
+                                pitchRad, rollRad, SimNoiseMm, 0.0, out px, out py, out pz))
                         { i--; continue; }
+                        // Classify face by coordinate proximity
+                        if (Math.Abs(px - (Cube2CentreX + Cube2Half)) < 1.0) dbgCube2F0++;
+                        else if (Math.Abs(py - (Cube2CentreY - Cube2Half)) < 1.0) dbgCube2F3++;
+                        else dbgCube2F5++;
                     }
                     else
                     {
@@ -293,9 +320,13 @@ namespace MVS
                     }
                     while (!IsInsideHexagon(hx, hy, HexRadius));
 
-                    // Skip deck points that fall inside either cube footprint
-                    if ((hx >= CubeCentreX - CubeHalf && hx <= CubeCentreX + CubeHalf &&
-                         hy >= CubeCentreY - CubeHalf && hy <= CubeCentreY + CubeHalf) ||
+                    // Skip deck points that fall inside either cube footprint.
+                    // Cube 1: rotate point into cube-local frame and check ±half.
+                    double dx1 = hx - CubeCentreX;
+                    double dy1 = hy - CubeCentreY;
+                    double lx1 =  dx1 * cosC1 + dy1 * sinC1;
+                    double ly1 = -dx1 * sinC1 + dy1 * cosC1;
+                    if ((Math.Abs(lx1) <= CubeHalf && Math.Abs(ly1) <= CubeHalf) ||
                         (hx >= Cube2CentreX - Cube2Half && hx <= Cube2CentreX + Cube2Half &&
                          hy >= Cube2CentreY - Cube2Half && hy <= Cube2CentreY + Cube2Half))
                     {
@@ -303,6 +334,7 @@ namespace MVS
                         continue;
                     }
 
+                     dbgDeck++;
                     px = hx;
                     py = hy;
                     pz = 800.0
@@ -317,10 +349,18 @@ namespace MVS
                     double deckZ2 = 800.0
                                   + Cube2CentreX * Math.Tan(pitchRad)
                                   + Cube2CentreY * Math.Tan(rollRad);
-                    if (RayHitsAABB(
-                            px, py, pz,
-                            CubeCentreX - CubeHalf, CubeCentreY - CubeHalf, deckZ1 - 2.0 * CubeHalf,
-                            CubeCentreX + CubeHalf, CubeCentreY + CubeHalf, deckZ1) ||
+                    // Occlusion: transform ray (origin→point) into cube 1 local frame.
+                    // Sensor origin in cube-local XY: rotate(-yaw) * (0 - cubeCentre)
+                    double sox1 =  -CubeCentreX * cosC1 - CubeCentreY * sinC1;
+                    double soy1 =   CubeCentreX * sinC1 - CubeCentreY * cosC1;
+                    // Deck point in cube-local XY: rotate(-yaw) * (P - cubeCentre)
+                    double spx1 =  (px - CubeCentreX) * cosC1 + (py - CubeCentreY) * sinC1;
+                    double spy1 = -(px - CubeCentreX) * sinC1 + (py - CubeCentreY) * cosC1;
+                    // Ray direction in local frame
+                    double rdx1 = spx1 - sox1, rdy1 = spy1 - soy1, rdz1 = pz; // pz - 0
+                    if (RayHitsOBB(sox1, soy1, 0, rdx1, rdy1, rdz1,
+                            -CubeHalf, -CubeHalf, deckZ1 - 2.0 * CubeHalf,
+                             CubeHalf,  CubeHalf, deckZ1) ||
                         RayHitsAABB(
                             px, py, pz,
                             Cube2CentreX - Cube2Half, Cube2CentreY - Cube2Half, deckZ2 - 2.0 * Cube2Half,
@@ -368,6 +408,9 @@ namespace MVS
                 Thread.Sleep(50);
             }
 
+            LastSimulationDiagnostics =
+                $"Cube1: {dbgCube1}  |  Cube2 +X: {dbgCube2F0}, -Y: {dbgCube2F3}, Top: {dbgCube2F5}  |  Deck: {dbgDeck}\n{dbgVis}";
+
             _scanning   = false;
             _simRunning = false;
             CurrentStatus = _sdkInitialised ? Status.Connected : Status.Disconnected;
@@ -375,26 +418,35 @@ namespace MVS
 
         /// <summary>
         /// Generates a random point on a visible face of a cube sitting on the tilted deck.
+        /// The cube may be yaw-rotated around its vertical axis by <paramref name="cubeYawRad"/>.
         /// Returns false if no face is visible (caller should retry).
         /// </summary>
         private static bool GenerateCubePoint(
             Random rng, double cx, double cy, double half,
             double pitchRad, double rollRad, double noiseSigma,
+            double cubeYawRad,
             out double px, out double py, out double pz)
         {
             px = py = pz = 0;
 
+            double cosR = Math.Cos(cubeYawRad);
+            double sinR = Math.Sin(cubeYawRad);
+
             double deckZ = 800.0 + cx * Math.Tan(pitchRad) + cy * Math.Tan(rollRad);
             double zCentre = deckZ - half;
 
-            // Back-face culling
+            // Back-face culling with rotated face normals.
+            // Each horizontal face normal is rotated by cubeYawRad; the dot product
+            // of the rotated normal with (sensor − face_centre) determines visibility.
+            double cxr = cx * cosR + cy * sinR;   // cx projected onto rotated +X axis
+            double cyr = -cx * sinR + cy * cosR;   // cx projected onto rotated +Y axis
             bool[] vis = new bool[6];
-            vis[0] = -(cx + half) > 0;
-            vis[1] =  (cx - half) > 0;
-            vis[2] = -(cy + half) > 0;
-            vis[3] =  (cy - half) > 0;
-            vis[4] = -deckZ > 0;
-            vis[5] =  (deckZ - 2.0 * half) > 0;
+            vis[0] = -(cxr + half) > 0;             // rotated +X face
+            vis[1] =  (cxr - half) > 0;             // rotated −X face
+            vis[2] = -(cyr + half) > 0;             // rotated +Y face
+            vis[3] =  (cyr - half) > 0;             // rotated −Y face
+            vis[4] = -deckZ > 0;                    // bottom (on deck)
+            vis[5] =  (deckZ - 2.0 * half) > 0;    // top (toward sensor)
 
             int visCount = 0;
             for (int f = 0; f < 6; f++) if (vis[f]) visCount++;
@@ -409,17 +461,23 @@ namespace MVS
                 pick--;
             }
 
-            double u = (rng.NextDouble() * 2.0 - 1.0) * half;
-            double v = (rng.NextDouble() * 2.0 - 1.0) * half;
+            // Generate point in local (unrotated) cube coords, then rotate into world.
+            double u  = (rng.NextDouble() * 2.0 - 1.0) * half;
+            double v  = (rng.NextDouble() * 2.0 - 1.0) * half;
+            double lx = 0, ly = 0;
             switch (face)
             {
-                case 0: px = cx + half; py = cy + u;    pz = zCentre + v; break;
-                case 1: px = cx - half; py = cy + u;    pz = zCentre + v; break;
-                case 2: px = cx + u;    py = cy + half;  pz = zCentre + v; break;
-                case 3: px = cx + u;    py = cy - half;  pz = zCentre + v; break;
-                case 4: px = cx + u;    py = cy + v;     pz = deckZ;       break;
-                default:px = cx + u;    py = cy + v;     pz = deckZ - 2.0 * half; break;
+                case 0: lx =  half; ly = u;  pz = zCentre + v;          break;
+                case 1: lx = -half; ly = u;  pz = zCentre + v;          break;
+                case 2: lx = u;     ly =  half; pz = zCentre + v;       break;
+                case 3: lx = u;     ly = -half; pz = zCentre + v;       break;
+                case 4: lx = u;     ly = v;  pz = deckZ;                break;
+                default:lx = u;     ly = v;  pz = deckZ - 2.0 * half;   break;
             }
+
+            // Rotate local XY offset into world frame
+            px = cx + lx * cosR - ly * sinR;
+            py = cy + lx * sinR + ly * cosR;
             pz += NextGaussian(rng, noiseSigma);
             return true;
         }
@@ -489,6 +547,58 @@ namespace MVS
 
             // Hit counts only if the entry point is before the target (t < 1)
             // and the exit point is in front of the origin (tMax > 0).
+            return tMin < 1.0 && tMax > 0.0;
+        }
+
+        /// <summary>
+        /// Slab-method ray-AABB intersection with an arbitrary ray origin.
+        /// Ray: O + t*D for t in [0,1].  Returns true when the ray hits the box at t &lt; 1.
+        /// </summary>
+        private static bool RayHitsOBB(
+            double ox, double oy, double oz,
+            double dx, double dy, double dz,
+            double bMinX, double bMinY, double bMinZ,
+            double bMaxX, double bMaxY, double bMaxZ)
+        {
+            double tMin = double.MinValue;
+            double tMax = double.MaxValue;
+
+            // X slab
+            if (Math.Abs(dx) > 1e-12)
+            {
+                double t1 = (bMinX - ox) / dx;
+                double t2 = (bMaxX - ox) / dx;
+                if (t1 > t2) { double tmp = t1; t1 = t2; t2 = tmp; }
+                if (t1 > tMin) tMin = t1;
+                if (t2 < tMax) tMax = t2;
+                if (tMin > tMax) return false;
+            }
+            else if (ox < bMinX || ox > bMaxX) return false;
+
+            // Y slab
+            if (Math.Abs(dy) > 1e-12)
+            {
+                double t1 = (bMinY - oy) / dy;
+                double t2 = (bMaxY - oy) / dy;
+                if (t1 > t2) { double tmp = t1; t1 = t2; t2 = tmp; }
+                if (t1 > tMin) tMin = t1;
+                if (t2 < tMax) tMax = t2;
+                if (tMin > tMax) return false;
+            }
+            else if (oy < bMinY || oy > bMaxY) return false;
+
+            // Z slab
+            if (Math.Abs(dz) > 1e-12)
+            {
+                double t1 = (bMinZ - oz) / dz;
+                double t2 = (bMaxZ - oz) / dz;
+                if (t1 > t2) { double tmp = t1; t1 = t2; t2 = tmp; }
+                if (t1 > tMin) tMin = t1;
+                if (t2 < tMax) tMax = t2;
+                if (tMin > tMax) return false;
+            }
+            else if (oz < bMinZ || oz > bMaxZ) return false;
+
             return tMin < 1.0 && tMax > 0.0;
         }
 

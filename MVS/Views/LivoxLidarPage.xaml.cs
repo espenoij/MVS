@@ -311,9 +311,7 @@ namespace MVS
                 }
 
                 var markerMesh  = new MeshGeometry3D { Positions = positions, TriangleIndices = indices };
-                var markerBrush = new SolidColorBrush(Color.FromRgb(0, 110, 40));
-                markerBrush.Freeze();
-                var markerMat = new EmissiveMaterial(markerBrush);
+                var markerMat = MakeArrowMaterial(Color.FromRgb(255, 0, 255));
                 _hexVerticesVisual.Content = new GeometryModel3D { Geometry = markerMesh, Material = markerMat, BackMaterial = markerMat };
             }
 

@@ -53,7 +53,95 @@ namespace MVS
         private const double Tolerance = 1e-14;
         private const int    MinPoints = 20;
 
+        private const int    FilterIterations = 3;
+        private const double FilterMadScale   = 6.0; // keep points within median ± 6·MAD
+        private const double FilterMinThreshold = 100.0; // mm — floor so thin-noise clouds aren't over-trimmed
+
         // ── Public API ───────────────────────────────────────────────────────
+
+        /// <summary>
+        /// Iteratively removes non-planar outliers (e.g. obstacle walls/tops)
+        /// by fitting a quick PCA plane, computing the median absolute deviation
+        /// of signed distances, and discarding points beyond median ± k·MAD.
+        /// The median-based threshold is robust to the ~10–15 % cube contamination
+        /// that would otherwise skew a mean-based or fixed threshold.
+        /// </summary>
+        public static List<(float x, float y, float z)> FilterPlaneInliers(
+            List<(float x, float y, float z)> points)
+        {
+            var current = points;
+
+            for (int iter = 0; iter < FilterIterations; iter++)
+            {
+                int n = current.Count;
+                if (n < MinPoints) return current;
+
+                // Centroid
+                double sx = 0, sy = 0, sz = 0;
+                foreach (var p in current) { sx += p.x; sy += p.y; sz += p.z; }
+                double cx = sx / n, cy = sy / n, cz = sz / n;
+
+                // 3×3 covariance
+                double sxx = 0, syy = 0, szz = 0, sxy = 0, sxz = 0, syz = 0;
+                foreach (var p in current)
+                {
+                    double dx = p.x - cx, dy = p.y - cy, dz = p.z - cz;
+                    sxx += dx * dx; syy += dy * dy; szz += dz * dz;
+                    sxy += dx * dy; sxz += dx * dz; syz += dy * dz;
+                }
+                double[,] M =
+                {
+                    { sxx / n, sxy / n, sxz / n },
+                    { sxy / n, syy / n, syz / n },
+                    { sxz / n, syz / n, szz / n }
+                };
+
+                double[] ev; double[,] V;
+                Jacobi3x3(M, out ev, out V);
+                SortColumns(ref ev, ref V);
+
+                // Normal = smallest eigenvector
+                double nx = V[0, 0], ny = V[1, 0], nz = V[2, 0];
+                double len = Math.Sqrt(nx * nx + ny * ny + nz * nz);
+                if (len < 1e-12) return current;
+                nx /= len; ny /= len; nz /= len;
+
+                // Signed distance from each point to the fitted plane
+                double d = -(nx * cx + ny * cy + nz * cz);
+                var dists = new double[n];
+                for (int i = 0; i < n; i++)
+                {
+                    var p = current[i];
+                    dists[i] = nx * p.x + ny * p.y + nz * p.z + d;
+                }
+
+                // Robust threshold: median ± k·MAD
+                var sorted = (double[])dists.Clone();
+                Array.Sort(sorted);
+                double median = sorted[n / 2];
+
+                var absDev = new double[n];
+                for (int i = 0; i < n; i++)
+                    absDev[i] = Math.Abs(dists[i] - median);
+                Array.Sort(absDev);
+                double mad = absDev[n / 2];
+
+                double threshold = Math.Max(FilterMinThreshold, FilterMadScale * mad);
+
+                // Keep only inliers
+                var inliers = new List<(float, float, float)>(n);
+                for (int i = 0; i < n; i++)
+                {
+                    if (Math.Abs(dists[i] - median) <= threshold)
+                        inliers.Add(current[i]);
+                }
+
+                if (inliers.Count < MinPoints) return current;
+                current = inliers;
+            }
+
+            return current;
+        }
 
         public static LivoxLidarPlaneFitResult Fit(List<(float x, float y, float z)> points)
         {
