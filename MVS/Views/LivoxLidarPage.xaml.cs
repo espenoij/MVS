@@ -57,6 +57,11 @@ namespace MVS
             vm.FitResultReady += OnFitResultReady;
             vm.DeckEdgeResultReady += OnDeckEdgeResultReady;
             vm.ScanCleared += OnScanCleared;
+            vm.SimulationStarted += () => Dispatcher.BeginInvoke(new Action(() =>
+            {
+                var tc = FindName("tabControl") as Telerik.Windows.Controls.RadTabControl;
+                if (tc != null) tc.SelectedIndex = 1;
+            }));
             vm.PointCloudUpdated += points => UpdatePointCloud(points);
             vm.PropertyChanged += (s, e) =>
             {
@@ -222,24 +227,21 @@ namespace MVS
                 for (int j = 0; j < displayCount; j++) { var p = points[(int)(j * stride)]; cx += p.x; cy += p.y; cz += p.z; n++; }
                 if (n > 0) { cx /= n; cy /= n; cz /= n; }
 
-                float maxHalf = 0;
+                float maxHalfX = 0, maxHalfY = 0;
                 for (int j = 0; j < displayCount; j++)
                 {
                     var p = points[(int)(j * stride)];
                     float dx2 = Math.Abs(p.x - cx);
                     float dy2 = Math.Abs(p.y - cy);
-                    if (dx2 > maxHalf) maxHalf = dx2;
-                    if (dy2 > maxHalf) maxHalf = dy2;
+                    if (dx2 > maxHalfX) maxHalfX = dx2;
+                    if (dy2 > maxHalfY) maxHalfY = dy2;
                 }
 
                 _centroidX = cx;
                 _centroidY = cy;
                 _centroidZ = cz;
-                _defaultZoom = Math.Max(maxHalf + 200, 1000) / Math.Tan(22.5 * Math.PI / 180.0) * 1.2;
-                _zoom = _defaultZoom;
-                _rotX = 60.0;
-                _rotY = 0.0;
-                ApplyCameraTransform(_centroidX, _centroidY, _centroidZ);
+                _defaultZoom = ComputeFitZoom(Math.Max(maxHalfX + 200, 1000), Math.Max(maxHalfY + 200, 1000));
+                ApplyTopDownView();
                 _cameraFitted = true;
             }
         }
@@ -271,14 +273,14 @@ namespace MVS
             var edgeMat  = MakeArrowMaterial(Color.FromRgb(0, 200, 80));
             _deckEdgeLineVisual.Content = new GeometryModel3D { Geometry = edgeMesh, Material = edgeMat, BackMaterial = edgeMat };
 
-            // Hex vertex markers — bright yellow cubes at each of the 6 estimated vertices
-            if (edge.HexVertices3D != null && edge.HexVertices3D.Count == 6)
+            // Hull vertex markers — bright magenta cubes at each estimated boundary vertex
+            if (edge.HullVertices3D != null && edge.HullVertices3D.Count >= 1)
             {
                 double h         = Math.Max(edge.HalfLength * 0.04, 150.0);
                 var    positions = new Point3DCollection();
                 var    indices   = new Int32Collection();
 
-                foreach (var v in edge.HexVertices3D)
+                foreach (var v in edge.HullVertices3D)
                 {
                     int    b  = positions.Count;
                     double vx = v.X, vy = v.Y, vz = v.Z;
@@ -316,8 +318,8 @@ namespace MVS
             }
 
             // Bow direction arrow: from lidar origin toward the bow
-            double bowArrowLen    = Math.Max(edge.HalfLength * 0.8, 4000.0);
-            double bowShaftRadius = bowArrowLen * 0.02;
+            double bowArrowLen    = Math.Max(edge.HalfLength * 1.2, 6000.0);
+            double bowShaftRadius = bowArrowLen * 0.025;
             var bowMesh = BuildArrowMesh(new Point3D(0, 0, 0),
                 new Vector3D(edge.VesselForwardX, edge.VesselForwardY, edge.VesselForwardZ),
                 bowArrowLen, bowShaftRadius);
@@ -401,7 +403,7 @@ namespace MVS
             var origin = new Point3D(0, 0, 0);
 
             double maxExtent   = Math.Max(fit.ExtentPrimary, fit.ExtentSecondary);
-            double arrowLength = Math.Max(maxExtent * 0.6, 4000.0);
+            double arrowLength = Math.Max(maxExtent * 0.3, 2000.0);
             double shaftRadius = arrowLength * 0.02;
 
             // Vessel forward: +X in sensor coordinate system (Mid-360: +X = forward)
@@ -540,12 +542,11 @@ namespace MVS
 
         private void UpdateCamera(LivoxLidarPlaneFitResult fit)
         {
-            // Derive zoom from the plane's extents so the whole surface fills the view.
-            // PerspectiveCamera FOV=45° (horizontal) → half-FOV=22.5°.
-            // zoom = maxHalfExtent / tan(22.5°) × 1.2 (20% margin)
+            // Derive zoom from the plane's extents so the whole surface fills the view,
+            // accounting for both horizontal and vertical FOV based on viewport aspect ratio.
             double ep = fit.ExtentPrimary   + 200.0;
             double es = fit.ExtentSecondary + 200.0;
-            _defaultZoom = Math.Max(ep, es) / Math.Tan(22.5 * Math.PI / 180.0) * 1.2;
+            _defaultZoom = ComputeFitZoom(ep, es);
             if (_defaultZoom < 1000) _defaultZoom = 1000;
             _centroidX = fit.CentroidX;
             _centroidY = fit.CentroidY;
@@ -556,46 +557,49 @@ namespace MVS
             _vesselFwdX = fit.VesselForwardX;
             _vesselFwdY = fit.VesselForwardY;
             _vesselFwdZ = fit.VesselForwardZ;
-            _zoom = _defaultZoom;
-            ApplyCameraTransform(_centroidX, _centroidY, _centroidZ);
+            ApplyTopDownView();
             _cameraFitted = true;
         }
 
-        // ── Trackball mouse handlers
-
-        private void ResetCamera_Click(object sender, RoutedEventArgs e)
+        private double ComputeFitZoom(double halfExtentH, double halfExtentV)
         {
-            _rotX = 45.0;
-            _rotY = -45.0;
-            _zoom = _defaultZoom;
-            camera.UpDirection = new Vector3D(0, 1, 0);
-            ApplyCameraTransform(_centroidX, _centroidY, _centroidZ);
+            // FieldOfView is the horizontal FOV in WPF's PerspectiveCamera.
+            double hFovRad = camera.FieldOfView * Math.PI / 360.0; // half horizontal FOV
+
+            // Derive vertical half-FOV from viewport aspect ratio
+            double aspect = viewport3D.ActualWidth / Math.Max(viewport3D.ActualHeight, 1.0);
+            if (aspect < 0.01) aspect = 1.0; // guard before layout
+            double vFovRad = Math.Atan(Math.Tan(hFovRad) / aspect);
+
+            // Zoom needed so each extent fits within the corresponding FOV half-angle
+            double zoomH = halfExtentH / Math.Tan(hFovRad);
+            double zoomV = halfExtentV / Math.Tan(vFovRad);
+
+            return Math.Max(zoomH, zoomV) * 1.2; // 20% margin
         }
 
-        private void TopDownCamera_Click(object sender, RoutedEventArgs e)
+        private void ApplyTopDownView()
         {
-            // Place the camera along the fitted plane normal looking at the centroid.
-            // Derive equivalent trackball angles so mouse-drag continues to work.
             double nx = _fitNormalX, ny = _fitNormalY, nz = _fitNormalZ;
             double len = Math.Sqrt(nx * nx + ny * ny + nz * nz);
             if (len > 1e-6) { nx /= len; ny /= len; nz /= len; }
-            else             { nx = 0; ny = 0; nz = 1; }
+            else { nx = 0; ny = 0; nz = 1; }
 
-            // ApplyCameraTransform positions the camera at:
-            //   camX = cx + zoom * sin(radY) * cos(radX)
-            //   camY = cy - zoom * sin(radX)
-            //   camZ = cz + zoom * cos(radY) * cos(radX)
-            // Solving for rotX/rotY that place the camera along (nx,ny,nz):
             _rotX = -Math.Asin(Math.Max(-1.0, Math.Min(1.0, ny))) * 180.0 / Math.PI;
             double cosX = Math.Cos(_rotX * Math.PI / 180.0);
             if (cosX < 1e-6) cosX = 1e-6;
             _rotY = Math.Atan2(nx / cosX, nz / cosX) * 180.0 / Math.PI;
             _zoom = _defaultZoom;
 
-            // Orient "up" on screen to match the vessel forward direction
             camera.UpDirection = new Vector3D(_vesselFwdX, _vesselFwdY, _vesselFwdZ);
-
             ApplyCameraTransform(_centroidX, _centroidY, _centroidZ);
+        }
+
+        // ── Trackball mouse handlers
+
+        private void ResetCamera_Click(object sender, RoutedEventArgs e)
+        {
+            ApplyTopDownView();
         }
 
         // -- Trackball mouse handlers ------------------------------------------
@@ -622,11 +626,36 @@ namespace MVS
             double dy = pos.Y - _lastMousePos.Y;
             _lastMousePos = pos;
 
-            _rotY -= dx * 0.5;
-            _rotX -= dy * 0.5;
-            _rotX  = Math.Max(-89, Math.Min(89, _rotX));
+            // Rotate the camera around the look-at point using screen-space axes
+            var lookAt = new Point3D(_lookAtX, _lookAtY, _lookAtZ);
+            Vector3D offset = camera.Position - lookAt;
 
-            ApplyCameraTransform(_lookAtX, _lookAtY, _lookAtZ);
+            // Screen-right = cross(LookDirection, UpDirection)
+            Vector3D lookDir = camera.LookDirection;
+            Vector3D up = camera.UpDirection;
+            Vector3D right = Vector3D.CrossProduct(lookDir, up);
+            if (right.Length > 1e-10) right.Normalize(); else return;
+
+            // Clean up perpendicular to both look and right
+            up = Vector3D.CrossProduct(right, lookDir);
+            if (up.Length > 1e-10) up.Normalize(); else return;
+
+            double angleH = -dx * 0.5;
+            double angleV = -dy * 0.5;
+
+            offset = RotateVector(offset, up, angleH);
+            offset = RotateVector(offset, right, angleV);
+
+            camera.Position = lookAt + offset;
+            camera.LookDirection = new Vector3D(-offset.X, -offset.Y, -offset.Z);
+
+            // Rotate the up direction to stay consistent
+            var newUp = RotateVector(camera.UpDirection, up, angleH);
+            newUp = RotateVector(newUp, right, angleV);
+            camera.UpDirection = newUp;
+
+            // Back-compute _rotX/_rotY/_zoom so zoom and presets still work
+            SyncTrackballAnglesFromCamera();
         }
 
         private void Viewport_MouseWheel(object sender, MouseWheelEventArgs e)
@@ -634,6 +663,30 @@ namespace MVS
             _zoom *= e.Delta > 0 ? 1.1 : 0.9;
             _zoom  = Math.Max(100, _zoom);
             ApplyCameraTransform(_lookAtX, _lookAtY, _lookAtZ);
+        }
+
+        private static Vector3D RotateVector(Vector3D v, Vector3D axis, double angleDeg)
+        {
+            double rad = angleDeg * Math.PI / 180.0;
+            double cos = Math.Cos(rad);
+            double sin = Math.Sin(rad);
+            double dot = Vector3D.DotProduct(v, axis);
+            Vector3D cross = Vector3D.CrossProduct(axis, v);
+            return v * cos + cross * sin + axis * dot * (1 - cos);
+        }
+
+        private void SyncTrackballAnglesFromCamera()
+        {
+            Vector3D offset = camera.Position - new Point3D(_lookAtX, _lookAtY, _lookAtZ);
+            _zoom = offset.Length;
+            if (_zoom < 1e-10) return;
+            double nx = offset.X / _zoom;
+            double ny = offset.Y / _zoom;
+            double nz = offset.Z / _zoom;
+            _rotX = -Math.Asin(Math.Max(-1.0, Math.Min(1.0, -ny))) * 180.0 / Math.PI;
+            double cosX = Math.Cos(_rotX * Math.PI / 180.0);
+            if (Math.Abs(cosX) > 1e-6)
+                _rotY = Math.Atan2(nx / cosX, nz / cosX) * 180.0 / Math.PI;
         }
 
         private void ApplyCameraTransform(double cx, double cy, double cz)

@@ -2,6 +2,7 @@ using System;
 using System.Collections.Generic;
 using System.ComponentModel;
 using System.Runtime.CompilerServices;
+using System.Threading.Tasks;
 using System.Windows;
 using System.Windows.Input;
 using System.Windows.Threading;
@@ -165,6 +166,86 @@ namespace MVS
             set { _simPointCount = value; OnPropertyChanged(); _config.Write(ConfigKey.LivoxSimPointCount, value.ToString()); }
         }
 
+        private bool _simShowCube1 = true;
+        public bool SimShowCube1
+        {
+            get { return _simShowCube1; }
+            set { _simShowCube1 = value; OnPropertyChanged(); _config.Write(ConfigKey.LivoxSimShowCube1, value.ToString()); }
+        }
+
+        private bool _simShowCube2 = true;
+        public bool SimShowCube2
+        {
+            get { return _simShowCube2; }
+            set { _simShowCube2 = value; OnPropertyChanged(); _config.Write(ConfigKey.LivoxSimShowCube2, value.ToString()); }
+        }
+
+        private HelideckShape _simHelideckShape = HelideckShape.Hexagon;
+        public HelideckShape SimHelideckShape
+        {
+            get { return _simHelideckShape; }
+            set { _simHelideckShape = value; OnPropertyChanged(); _config.Write(ConfigKey.LivoxSimHelideckShape, value.ToString()); }
+        }
+
+        private HelideckShape _helideckShape = HelideckShape.Hexagon;
+        public HelideckShape HelideckShape
+        {
+            get { return _helideckShape; }
+            set { _helideckShape = value; OnPropertyChanged(); _config.Write(ConfigKey.LivoxHelideckShape, value.ToString()); }
+        }
+
+        public IEnumerable<HelideckShape> HelideckShapeOptions => (HelideckShape[])Enum.GetValues(typeof(HelideckShape));
+
+        // Vessel Forward method
+        private VesselForwardMethod _vesselFwdMethod = VesselForwardMethod.Automatic;
+        public VesselForwardMethod VesselFwdMethod
+        {
+            get { return _vesselFwdMethod; }
+            set { _vesselFwdMethod = value; OnPropertyChanged(); OnPropertyChanged(nameof(IsManualVesselFwd)); _config.Write(ConfigKey.LivoxVesselFwdMethod, value.ToString()); }
+        }
+
+        public IEnumerable<VesselForwardMethod> VesselForwardMethodOptions => (VesselForwardMethod[])Enum.GetValues(typeof(VesselForwardMethod));
+
+        public bool IsManualVesselFwd => _vesselFwdMethod == VesselForwardMethod.Manual;
+
+        private double _vesselFwdManualDeg = 0.0;
+        public double VesselFwdManualDeg
+        {
+            get { return _vesselFwdManualDeg; }
+            set { _vesselFwdManualDeg = value; OnPropertyChanged(); _config.Write(ConfigKey.LivoxVesselFwdManualDeg, value.ToString()); }
+        }
+
+        // Resolved vessel forward angle (read-only, for display)
+        private string _resolvedVesselFwd = "—";
+        public string ResolvedVesselFwd
+        {
+            get { return _resolvedVesselFwd; }
+            private set { _resolvedVesselFwd = value; OnPropertyChanged(); }
+        }
+
+        // Analysis busy flag
+        private bool _isAnalysing;
+        public bool IsAnalysing
+        {
+            get { return _isAnalysing; }
+            private set { _isAnalysing = value; OnPropertyChanged(); }
+        }
+
+        private int _analyseProgress;
+        public int AnalyseProgress
+        {
+            get { return _analyseProgress; }
+            private set { _analyseProgress = value; OnPropertyChanged(); OnPropertyChanged(nameof(AnalyseProgressText)); }
+        }
+        public string AnalyseProgressText => $"{_analyseProgress} %";
+
+        private string _analyseStepText = "";
+        public string AnalyseStepText
+        {
+            get { return _analyseStepText; }
+            private set { _analyseStepText = value; OnPropertyChanged(); }
+        }
+
         // Status / readouts
         private readonly System.Text.StringBuilder _statusLog = new System.Text.StringBuilder();
         public string StatusMessage => _statusLog.ToString();
@@ -218,6 +299,9 @@ namespace MVS
         private string _edgePointsStr = "—";
         public string EdgePointsStr { get { return _edgePointsStr; } set { _edgePointsStr = value; OnPropertyChanged(); } }
 
+        private string _edgeMethod = "—";
+        public string EdgeMethod { get { return _edgeMethod; } set { _edgeMethod = value; OnPropertyChanged(); } }
+
         // State flags for button enable logic
         public bool CanConnect    => _subsystem.CurrentStatus == LivoxLidarSubsystem.Status.Disconnected;
         public bool CanDisconnect => _subsystem.CurrentStatus != LivoxLidarSubsystem.Status.Disconnected;
@@ -228,6 +312,7 @@ namespace MVS
         public bool HasEdgeResult => _lastEdge != null && _lastEdge.IsValid;
         public bool CanSimulate   => _subsystem.CurrentStatus == LivoxLidarSubsystem.Status.Disconnected ||
                                      _subsystem.CurrentStatus == LivoxLidarSubsystem.Status.Connected;
+        public bool IsScanActive  => IsScanning || _simulationInProgress;
 
         // ── Commands ─────────────────────────────────────────────────────────
 
@@ -270,6 +355,7 @@ namespace MVS
         private void StopScan()
         {
             _simulationInProgress = false;
+            OnPropertyChanged(nameof(IsScanActive));
             _subsystem.StopScan();
             AppendStatus($"Scan stopped. {_accumulatedPoints:N0} points accumulated.");
         }
@@ -293,8 +379,13 @@ namespace MVS
             _subsystem.SimNoiseMm     = SimNoiseMm;
             _subsystem.SimLidarYawDeg = SimLidarYawDeg;
             _subsystem.SimPointCount  = SimPointCount;
+            _subsystem.SimShowCube1   = SimShowCube1;
+            _subsystem.SimShowCube2   = SimShowCube2;
+            _subsystem.SimHelideckShape = SimHelideckShape;
             _subsystem.StartSimulation();
             _simulationInProgress = true;
+            OnPropertyChanged(nameof(IsScanActive));
+            SimulationStarted?.Invoke();
             AppendStatus($"Simulating helideck scan (pitch={SimPitchDeg:F1}°, roll={SimRollDeg:F1}°, lidar yaw={SimLidarYawDeg:F1}°)...");
         }
 
@@ -321,9 +412,7 @@ namespace MVS
         {
             if (_lastFit == null || !_lastFit.IsValid) return;
 
-            double heading = _lastEdge != null && _lastEdge.IsValid
-                           ? _lastEdge.VesselForwardAngleDeg
-                           : 0.0;
+            double heading = ResolveVesselForwardAngle();
             _correction.Apply(_lastFit.PitchDeg, _lastFit.RollDeg,
                               heading, _lastFit.FitRmse, _lastFit.PointCount);
 
@@ -338,18 +427,48 @@ namespace MVS
             AppendStatus("Correction cleared.");
         }
 
-        private void Analyse()
+        private async void Analyse()
         {
-            FitPlane();
-            if (_lastFit == null || !_lastFit.IsValid) return;
-            FindDeckEdge();
+            IsAnalysing = true;
+            AnalyseProgress = 0;
+            AnalyseStepText = $"Fitting plane to {_accumulatedPoints:N0} points…";
+            try
+            {
+                // Yield to let the UI render the busy overlay before blocking
+                await Application.Current.Dispatcher.InvokeAsync(() => { }, DispatcherPriority.ApplicationIdle);
+
+                FitPlane();
+                AnalyseProgress = 50;
+                if (_lastFit == null || !_lastFit.IsValid) return;
+
+                if (_vesselFwdMethod == VesselForwardMethod.Automatic)
+                {
+                    AnalyseStepText = "Detecting deck edge…";
+                    // Yield again so the UI can update between steps
+                    await Application.Current.Dispatcher.InvokeAsync(() => { }, DispatcherPriority.ApplicationIdle);
+
+                    FindDeckEdge();
+                }
+                else
+                {
+                    // Not automatic — clear edge results and refresh display
+                    _lastEdge = null;
+                    RefreshEdgeDisplay();
+                    AppendStatus($"Vessel forward method is {_vesselFwdMethod} — skipping edge detection.");
+                }
+                AnalyseProgress = 100;
+            }
+            finally
+            {
+                IsAnalysing = false;
+            }
         }
 
         private void FindDeckEdge()
         {
             AppendStatus("Detecting deck edge...");
             var snapshot = _subsystem.GetPointCloudSnapshot();
-            _lastEdge = LivoxLidarDeckEdgeFinder.FindEdge(snapshot);
+            _lastEdge = LivoxLidarDeckEdgeFinder.FindEdge(snapshot, HelideckShape);
 
             if (_lastEdge == null || !_lastEdge.IsValid)
             {
@@ -372,6 +491,7 @@ namespace MVS
         public event Action<LivoxLidarPlaneFitResult> FitResultReady;
         public event Action<LivoxLidarDeckEdgeResult> DeckEdgeResultReady;
         public event Action ScanCleared;
+        public event Action SimulationStarted;
         public event Action<List<(float x, float y, float z)>> PointCloudUpdated;
 
         private DateTime _lastPointCloudUpdate = DateTime.MinValue;
@@ -428,9 +548,9 @@ namespace MVS
         {
             if (_lastFit != null && _lastFit.IsValid)
             {
-                FitPitch   = $"{_lastFit.PitchDeg:F3}°";
-                FitRoll    = $"{_lastFit.RollDeg:F3}°";
-                FitRmse    = $"{_lastFit.FitRmse:F1} mm";
+                FitPitch   = string.Format(System.Globalization.CultureInfo.InvariantCulture, "{0:F3}°", _lastFit.PitchDeg);
+                FitRoll    = string.Format(System.Globalization.CultureInfo.InvariantCulture, "{0:F3}°", _lastFit.RollDeg);
+                FitRmse    = string.Format(System.Globalization.CultureInfo.InvariantCulture, "{0:F1} mm", _lastFit.FitRmse);
                 FitPoints  = _lastFit.PointCount.ToString("N0");
             }
             else
@@ -444,16 +564,52 @@ namespace MVS
         {
             if (_lastEdge != null && _lastEdge.IsValid)
             {
-                EdgeDirection    = $"({_lastEdge.DirectionX:F3}, {_lastEdge.DirectionY:F3}, {_lastEdge.DirectionZ:F3})";
-                EdgeAngle        = $"{_lastEdge.EdgeAngleDeg:F3}°";
-                EdgeForwardAngle = $"{_lastEdge.VesselForwardAngleDeg:F3}°";
+                EdgeDirection    = string.Format(System.Globalization.CultureInfo.InvariantCulture, "({0:F3}, {1:F3}, {2:F3})", _lastEdge.DirectionX, _lastEdge.DirectionY, _lastEdge.DirectionZ);
+                EdgeAngle        = string.Format(System.Globalization.CultureInfo.InvariantCulture, "{0:F3}°", _lastEdge.EdgeAngleDeg);
+                EdgeForwardAngle = string.Format(System.Globalization.CultureInfo.InvariantCulture, "{0:F3}°", _lastEdge.VesselForwardAngleDeg);
                 EdgePointsStr    = _lastEdge.EdgePointCount.ToString("N0");
+                EdgeMethod       = _lastEdge.DetectionMethod;
             }
             else
             {
-                EdgeDirection = EdgeAngle = EdgeForwardAngle = EdgePointsStr = "—";
+                EdgeDirection = EdgeAngle = EdgeForwardAngle = EdgePointsStr = EdgeMethod = "—";
             }
             OnPropertyChanged(nameof(HasEdgeResult));
+            RefreshResolvedVesselFwd();
+        }
+
+        private double ResolveVesselForwardAngle()
+        {
+            switch (_vesselFwdMethod)
+            {
+                case VesselForwardMethod.LidarForward:
+                    return 0.0;
+                case VesselForwardMethod.Manual:
+                    return _vesselFwdManualDeg;
+                default: // Automatic
+                    return _lastEdge != null && _lastEdge.IsValid
+                        ? _lastEdge.VesselForwardAngleDeg
+                        : 0.0;
+            }
+        }
+
+        private void RefreshResolvedVesselFwd()
+        {
+            double angle = ResolveVesselForwardAngle();
+            string source;
+            switch (_vesselFwdMethod)
+            {
+                case VesselForwardMethod.LidarForward:
+                    source = "lidar fwd";
+                    break;
+                case VesselForwardMethod.Manual:
+                    source = "manual";
+                    break;
+                default:
+                    source = _lastEdge != null && _lastEdge.IsValid ? "auto" : "default";
+                    break;
+            }
+            ResolvedVesselFwd = string.Format(System.Globalization.CultureInfo.InvariantCulture, "{0:F1}° ({1})", angle, source);
         }
 
         private void RefreshCommandStates()
@@ -463,6 +619,7 @@ namespace MVS
             OnPropertyChanged(nameof(CanScan));
             OnPropertyChanged(nameof(IsScanning));
             OnPropertyChanged(nameof(CanSimulate));
+            OnPropertyChanged(nameof(IsScanActive));
         }
 
         private void ApplyFiltersToSubsystem()
@@ -496,7 +653,22 @@ namespace MVS
             SimNoiseMm     = _config.ReadWithDefault(ConfigKey.LivoxSimNoiseMm,     10.0);
             SimLidarYawDeg = _config.ReadWithDefault(ConfigKey.LivoxSimLidarYawDeg, 0.0);
             SimPointCount  = _config.ReadWithDefault(ConfigKey.LivoxSimPointCount,  50000);
+            bool cube1;
+            SimShowCube1   = bool.TryParse(_config.ReadWithDefault(ConfigKey.LivoxSimShowCube1, "True"), out cube1) ? cube1 : true;
+            bool cube2;
+            SimShowCube2   = bool.TryParse(_config.ReadWithDefault(ConfigKey.LivoxSimShowCube2, "True"), out cube2) ? cube2 : true;
+            var shapeStr   = _config.ReadWithDefault(ConfigKey.LivoxSimHelideckShape, "Hexagon");
+            HelideckShape parsedShape;
+            SimHelideckShape = Enum.TryParse(shapeStr, out parsedShape) ? parsedShape : HelideckShape.Hexagon;
             MaxDisplayPoints = _config.ReadWithDefault(ConfigKey.LivoxMaxDisplayPoints, 20000);
+            var deckShapeStr = _config.ReadWithDefault(ConfigKey.LivoxHelideckShape, "Hexagon");
+            HelideckShape parsedDeckShape;
+            HelideckShape = Enum.TryParse(deckShapeStr, out parsedDeckShape) ? parsedDeckShape : HelideckShape.Hexagon;
+
+            var fwdMethodStr = _config.ReadWithDefault(ConfigKey.LivoxVesselFwdMethod, "Automatic");
+            VesselForwardMethod parsedFwdMethod;
+            VesselFwdMethod = Enum.TryParse(fwdMethodStr, out parsedFwdMethod) ? parsedFwdMethod : VesselForwardMethod.Automatic;
+            VesselFwdManualDeg = _config.ReadWithDefault(ConfigKey.LivoxVesselFwdManualDeg, 0.0);
 
             // Do not restore persisted correction on startup — start with a clean state.
         }

@@ -193,6 +193,12 @@
     public const string LivoxSimNoiseMm          = "LivoxSimNoiseMm";
     public const string LivoxSimLidarYawDeg      = "LivoxSimLidarYawDeg";
     public const string LivoxSimPointCount       = "LivoxSimPointCount";
+    public const string LivoxSimShowCube1        = "LivoxSimShowCube1";
+    public const string LivoxSimShowCube2        = "LivoxSimShowCube2";
+    public const string LivoxSimHelideckShape    = "LivoxSimHelideckShape";
     public const string LivoxMaxBufferPoints      = "LivoxMaxBufferPoints";
     public const string LivoxMaxDisplayPoints     = "LivoxMaxDisplayPoints";
+    public const string LivoxHelideckShape        = "LivoxHelideckShape";
+    public const string LivoxVesselFwdMethod      = "LivoxVesselFwdMethod";
+    public const string LivoxVesselFwdManualDeg   = "LivoxVesselFwdManualDeg";
 }

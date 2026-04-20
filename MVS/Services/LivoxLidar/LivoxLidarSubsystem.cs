@@ -75,6 +75,9 @@ namespace MVS
         public double SimNoiseMm     { get; set; } = 10.0;
         public double SimLidarYawDeg { get; set; } = 0.0;
         public int    SimPointCount  { get; set; } = 50_000;
+        public bool   SimShowCube1   { get; set; } = true;
+        public bool   SimShowCube2   { get; set; } = true;
+        public HelideckShape SimHelideckShape { get; set; } = HelideckShape.Hexagon;
 
         private Thread        _simThread;
         private volatile bool _simRunning;
@@ -270,6 +273,10 @@ namespace MVS
             const double CubeFraction  = 0.08;
             const double Cube2Fraction = 0.10;
 
+            bool showCube1 = SimShowCube1;
+            bool showCube2 = SimShowCube2;
+            HelideckShape deckShape = SimHelideckShape;
+
             int dbgCube1 = 0, dbgCube2F0 = 0, dbgCube2F3 = 0, dbgCube2F5 = 0, dbgDeck = 0;
 
             // Diagnostic: compute cube2 visibility exactly as GenerateCubePoint does
@@ -286,7 +293,7 @@ namespace MVS
                     double px, py, pz;
 
                     double roll = rng.NextDouble();
-                    if (roll < CubeFraction)
+                    if (showCube1 && roll < CubeFraction)
                     {
                         // Generate a point on cube 1 (rotated)
                         if (!GenerateCubePoint(rng, CubeCentreX, CubeCentreY, CubeHalf,
@@ -294,7 +301,7 @@ namespace MVS
                         { i--; continue; }
                         dbgCube1++;
                     }
-                    else if (roll < CubeFraction + Cube2Fraction)
+                    else if (showCube2 && roll < CubeFraction + Cube2Fraction)
                     {
                         // Generate a point on cube 2 (axis-aligned)
                         if (!GenerateCubePoint(rng, Cube2CentreX, Cube2CentreY, Cube2Half,
@@ -307,27 +314,35 @@ namespace MVS
                     }
                     else
                     {
-                    // Rejection-sample within a regular hexagonal helideck boundary.
-                    // Circumradius 12 000 mm → flat-side hexagon ~20 785 mm wide, 24 000 mm tall.
-                    // The bow edge (flat side facing sensor +X) sits at x = ±apothem ≈ ±10 392 mm,
-                    // runs in Y from −6 000 mm to +6 000 mm, and has length = 12 000 mm.
+                    // Rejection-sample within the chosen helideck boundary.
                     const float HexRadius = 12_000f;
+
+                    // Shapes with semicircular caps extend beyond ±r along X.
+                    float xMin, xMax;
+                    if (deckShape == HelideckShape.SquareRoundedBowAft)
+                    { xMin = -2f * HexRadius; xMax = 2f * HexRadius; }
+                    else if (deckShape == HelideckShape.SquareRoundedBow)
+                    { xMin = -HexRadius; xMax = 2f * HexRadius; }
+                    else
+                    { xMin = -HexRadius; xMax = HexRadius; }
+
                     float hx, hy;
                     do
                     {
-                        hx = (float)((rng.NextDouble() * 2.0 - 1.0) * HexRadius);
+                        hx = (float)(xMin + rng.NextDouble() * (xMax - xMin));
                         hy = (float)((rng.NextDouble() * 2.0 - 1.0) * HexRadius);
                     }
-                    while (!IsInsideHexagon(hx, hy, HexRadius));
+                    while (!IsInsideDeck(hx, hy, HexRadius, deckShape));
 
-                    // Skip deck points that fall inside either cube footprint.
+                    // Skip deck points that fall inside enabled cube footprints.
                     // Cube 1: rotate point into cube-local frame and check ±half.
                     double dx1 = hx - CubeCentreX;
                     double dy1 = hy - CubeCentreY;
                     double lx1 =  dx1 * cosC1 + dy1 * sinC1;
                     double ly1 = -dx1 * sinC1 + dy1 * cosC1;
-                    if ((Math.Abs(lx1) <= CubeHalf && Math.Abs(ly1) <= CubeHalf) ||
-                        (hx >= Cube2CentreX - Cube2Half && hx <= Cube2CentreX + Cube2Half &&
+                    if ((showCube1 && Math.Abs(lx1) <= CubeHalf && Math.Abs(ly1) <= CubeHalf) ||
+                        (showCube2 &&
+                         hx >= Cube2CentreX - Cube2Half && hx <= Cube2CentreX + Cube2Half &&
                          hy >= Cube2CentreY - Cube2Half && hy <= Cube2CentreY + Cube2Half))
                     {
                         i--;
@@ -342,29 +357,34 @@ namespace MVS
                        + py * Math.Tan(rollRad)
                        + NextGaussian(rng, SimNoiseMm);
 
-                    // Occlusion: discard deck points whose line-of-sight is blocked by either cube.
+                    // Occlusion: discard deck points whose line-of-sight is blocked by enabled cubes.
                     double deckZ1 = 800.0
                                   + CubeCentreX * Math.Tan(pitchRad)
                                   + CubeCentreY * Math.Tan(rollRad);
                     double deckZ2 = 800.0
                                   + Cube2CentreX * Math.Tan(pitchRad)
                                   + Cube2CentreY * Math.Tan(rollRad);
-                    // Occlusion: transform ray (origin→point) into cube 1 local frame.
-                    // Sensor origin in cube-local XY: rotate(-yaw) * (0 - cubeCentre)
-                    double sox1 =  -CubeCentreX * cosC1 - CubeCentreY * sinC1;
-                    double soy1 =   CubeCentreX * sinC1 - CubeCentreY * cosC1;
-                    // Deck point in cube-local XY: rotate(-yaw) * (P - cubeCentre)
-                    double spx1 =  (px - CubeCentreX) * cosC1 + (py - CubeCentreY) * sinC1;
-                    double spy1 = -(px - CubeCentreX) * sinC1 + (py - CubeCentreY) * cosC1;
-                    // Ray direction in local frame
-                    double rdx1 = spx1 - sox1, rdy1 = spy1 - soy1, rdz1 = pz; // pz - 0
-                    if (RayHitsOBB(sox1, soy1, 0, rdx1, rdy1, rdz1,
-                            -CubeHalf, -CubeHalf, deckZ1 - 2.0 * CubeHalf,
-                             CubeHalf,  CubeHalf, deckZ1) ||
-                        RayHitsAABB(
+                    bool occluded = false;
+                    if (showCube1)
+                    {
+                        // Occlusion: transform ray (origin→point) into cube 1 local frame.
+                        double sox1 =  -CubeCentreX * cosC1 - CubeCentreY * sinC1;
+                        double soy1 =   CubeCentreX * sinC1 - CubeCentreY * cosC1;
+                        double spx1 =  (px - CubeCentreX) * cosC1 + (py - CubeCentreY) * sinC1;
+                        double spy1 = -(px - CubeCentreX) * sinC1 + (py - CubeCentreY) * cosC1;
+                        double rdx1 = spx1 - sox1, rdy1 = spy1 - soy1, rdz1 = pz;
+                        occluded = RayHitsOBB(sox1, soy1, 0, rdx1, rdy1, rdz1,
+                                -CubeHalf, -CubeHalf, deckZ1 - 2.0 * CubeHalf,
+                                 CubeHalf,  CubeHalf, deckZ1);
+                    }
+                    if (!occluded && showCube2)
+                    {
+                        occluded = RayHitsAABB(
                             px, py, pz,
                             Cube2CentreX - Cube2Half, Cube2CentreY - Cube2Half, deckZ2 - 2.0 * Cube2Half,
-                            Cube2CentreX + Cube2Half, Cube2CentreY + Cube2Half, deckZ2))
+                            Cube2CentreX + Cube2Half, Cube2CentreY + Cube2Half, deckZ2);
+                    }
+                    if (occluded)
                     {
                         i--;
                         continue;
@@ -608,6 +628,30 @@ namespace MVS
             float ay = Math.Abs(y);
             return ax <= r * 0.866025f          // |x| ≤ r·√3/2  (apothem = flat-side extent)
                 && ay + ax * 0.577350f <= r;    // |y| + |x|/√3 ≤ r
+        }
+
+        private static bool IsInsideDeck(float x, float y, float r, HelideckShape shape)
+        {
+            switch (shape)
+            {
+                case HelideckShape.Square:
+                    return Math.Abs(x) <= r && Math.Abs(y) <= r;
+                case HelideckShape.Round:
+                    return (x * x + y * y) <= r * r;
+                case HelideckShape.SquareRoundedBow:
+                    // Square on three sides; the bow (+X) edge is a semicircular arc.
+                    if (Math.Abs(y) > r || x < -r) return false;
+                    return x <= 0 || (x * x + y * y) <= r * r;
+                case HelideckShape.SquareRoundedBowAft:
+                    // Stadium: straight port/starboard sides at |y|=r, semicircular caps at ±X.
+                    if (Math.Abs(y) > r) return false;
+                    if (Math.Abs(x) <= r) return true;            // inside the straight section
+                    // In the semicircular cap: shift origin to the cap centre (±r, 0)
+                    double dx = Math.Abs(x) - r;
+                    return (dx * dx + y * y) <= r * r;
+                default: // Hexagon
+                    return IsInsideHexagon(x, y, r);
+            }
         }
 
         // ── SDK callbacks ────────────────────────────────────────────────────

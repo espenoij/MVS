@@ -21,7 +21,7 @@ namespace MVS
             get { return _pitchOffset; }
             set { _pitchOffset = value; OnPropertyChanged(); OnPropertyChanged(nameof(PitchOffsetString)); }
         }
-        public string PitchOffsetString => IsActive ? $"{_pitchOffset:F3}°" : "—";
+        public string PitchOffsetString => IsActive ? string.Format(System.Globalization.CultureInfo.InvariantCulture, "{0:F3}°", _pitchOffset) : "—";
 
         private double _rollOffset;
         /// <summary>Roll offset to subtract from the corrected Reference MRU (degrees).</summary>
@@ -30,7 +30,7 @@ namespace MVS
             get { return _rollOffset; }
             set { _rollOffset = value; OnPropertyChanged(); OnPropertyChanged(nameof(RollOffsetString)); }
         }
-        public string RollOffsetString => IsActive ? $"{_rollOffset:F3}°" : "—";
+        public string RollOffsetString => IsActive ? string.Format(System.Globalization.CultureInfo.InvariantCulture, "{0:F3}°", _rollOffset) : "—";
 
         private double _headingOffset;
         /// <summary>
@@ -42,7 +42,7 @@ namespace MVS
             get { return _headingOffset; }
             set { _headingOffset = value; OnPropertyChanged(); OnPropertyChanged(nameof(HeadingOffsetString)); }
         }
-        public string HeadingOffsetString => IsActive ? $"{_headingOffset:F3}°" : "—";
+        public string HeadingOffsetString => IsActive ? string.Format(System.Globalization.CultureInfo.InvariantCulture, "{0:F3}°", _headingOffset) : "—";
 
         // ── Fit quality metadata ─────────────────────────────────────────────
 
@@ -53,7 +53,7 @@ namespace MVS
             get { return _fitRmse; }
             set { _fitRmse = value; OnPropertyChanged(); OnPropertyChanged(nameof(FitRmseString)); }
         }
-        public string FitRmseString => IsActive ? $"{_fitRmse:F1} mm" : "—";
+        public string FitRmseString => IsActive ? string.Format(System.Globalization.CultureInfo.InvariantCulture, "{0:F1} mm", _fitRmse) : "—";
 
         private int _pointCount;
         /// <summary>Number of points used in the fit.</summary>

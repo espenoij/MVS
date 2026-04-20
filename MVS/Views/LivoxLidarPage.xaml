@@ -8,293 +8,356 @@
     mc:Ignorable="d"
     d:DesignHeight="900" d:DesignWidth="1400">
 
+    <UserControl.Resources>
+        <BooleanToVisibilityConverter x:Key="BoolToVis" />
+    </UserControl.Resources>
+
     <Grid>
         <Grid.ColumnDefinitions>
-            <ColumnDefinition Width="360" />
-            <ColumnDefinition Width="360" />
-            <ColumnDefinition Width="*" MinWidth="200"   />
+            <ColumnDefinition Width="500" />
+            <ColumnDefinition Width="*" MinWidth="200" />
         </Grid.ColumnDefinitions>
 
         <!-- ═══════════════════════════════════════════════════ Columns 0-1: Controls + Status -->
-        <Grid Grid.Column="0" Grid.ColumnSpan="2">
+        <Grid Grid.Column="0">
             <Grid.RowDefinitions>
                 <RowDefinition Height="*" />
                 <RowDefinition Height="200" />
             </Grid.RowDefinitions>
-            <Grid.ColumnDefinitions>
-                <ColumnDefinition Width="360" />
-                <ColumnDefinition Width="360" />
-            </Grid.ColumnDefinitions>
 
-            <!-- ═══════════════════════════════════════════════════ Column 0: Connection + Filters -->
-            <ScrollViewer Grid.Column="0" Margin="8,8,4,8"
-                          VerticalScrollBarVisibility="Auto"
-                          HorizontalScrollBarVisibility="Disabled">
-            <StackPanel>
+            <!-- Tabbed Controls -->
+            <telerik:RadTabControl Name="tabControl" Margin="8,8,8,4">
 
-            <!-- Connection -->
-            <telerik:GroupBox Header="Connection" Margin="0,0,0,8">
-                <StackPanel Margin="8">
+                <!-- ═══════════════════ Setup Tab ═══════════════════ -->
+                <telerik:RadTabItem Header="Setup">
+                    <ScrollViewer VerticalScrollBarVisibility="Auto"
+                                  HorizontalScrollBarVisibility="Disabled">
+                        <StackPanel Margin="8">
 
-                    <DockPanel Margin="0,0,0,4">
-                        <Label Width="130" Content="SDK Config File" VerticalAlignment="Center"/>
-                        <TextBox Name="tbConfigFilePath"
-                                 Text="{Binding ConfigFilePath, UpdateSourceTrigger=LostFocus}"
-                                 ToolTip="Path to mid360_config.json" />
-                    </DockPanel>
+                            <!-- Connection -->
+                            <telerik:GroupBox Header="Connection" Margin="0,0,0,8">
+                                <StackPanel Margin="8">
 
-                    <DockPanel Margin="0,0,0,4">
-                        <Label Width="130" Content="LiDAR IP" VerticalAlignment="Center"/>
-                        <TextBox Text="{Binding IpAddress, UpdateSourceTrigger=LostFocus}" />
-                    </DockPanel>
+                                    <DockPanel Margin="0,0,0,4">
+                                        <Label Width="150" Content="SDK Config File" VerticalAlignment="Center"/>
+                                        <TextBox Name="tbConfigFilePath"
+                                                 Text="{Binding ConfigFilePath, UpdateSourceTrigger=LostFocus}"
+                                                 ToolTip="Path to mid360_config.json" />
+                                    </DockPanel>
 
-                    <DockPanel Margin="0,0,0,4">
-                        <Label Width="130" Content="SDK Status" VerticalAlignment="Center"/>
-                        <Label Content="{Binding SdkStatus}" />
-                    </DockPanel>
+                                    <DockPanel Margin="0,0,0,4">
+                                        <Label Width="150" Content="LiDAR IP" VerticalAlignment="Center"/>
+                                        <TextBox Text="{Binding IpAddress, UpdateSourceTrigger=LostFocus}" />
+                                    </DockPanel>
 
-                    <StackPanel Orientation="Horizontal" HorizontalAlignment="Right" Margin="0,8,0,0">
-                        <telerik:RadButton Command="{Binding ConnectCommand}"
-                                           Width="100" Margin="0,0,8,0">Connect</telerik:RadButton>
-                        <telerik:RadButton Command="{Binding DisconnectCommand}"
-                                           Width="100">Disconnect</telerik:RadButton>
-                    </StackPanel>
+                                    <DockPanel Margin="0,0,0,4">
+                                        <Label Width="150" Content="SDK Status" VerticalAlignment="Center"/>
+                                        <Label Content="{Binding SdkStatus}" />
+                                    </DockPanel>
 
-                </StackPanel>
-            </telerik:GroupBox>
+                                    <StackPanel Orientation="Horizontal" HorizontalAlignment="Right" Margin="0,8,0,0">
+                                        <telerik:RadButton Command="{Binding ConnectCommand}"
+                                                           Width="100" Margin="0,0,8,0">Connect</telerik:RadButton>
+                                        <telerik:RadButton Command="{Binding DisconnectCommand}"
+                                                           Width="100">Disconnect</telerik:RadButton>
+                                    </StackPanel>
 
-            <!-- Point Cloud Filters -->
-            <telerik:GroupBox Header="Point Cloud Filters" Margin="0,0,0,8">
-                <StackPanel Margin="8">
+                                </StackPanel>
+                            </telerik:GroupBox>
 
-                    <DockPanel Margin="0,0,0,4">
-                        <Label Width="130" Content="Range Min (mm)" VerticalAlignment="Center"/>
-                        <TextBox Text="{Binding RangeMinMm, UpdateSourceTrigger=LostFocus}" />
-                    </DockPanel>
-                    <DockPanel Margin="0,0,0,4">
-                        <Label Width="130" Content="Range Max (mm)" VerticalAlignment="Center"/>
-                        <TextBox Text="{Binding RangeMaxMm, UpdateSourceTrigger=LostFocus}" />
-                    </DockPanel>
-                    <Separator Margin="0,4,0,4"/>
-                    <DockPanel Margin="0,0,0,4">
-                        <Label Width="130" Content="Azimuth Min (°)" VerticalAlignment="Center"/>
-                        <TextBox Text="{Binding AzimuthMinDeg, UpdateSourceTrigger=LostFocus}" />
-                    </DockPanel>
-                    <DockPanel Margin="0,0,0,4">
-                        <Label Width="130" Content="Azimuth Max (°)" VerticalAlignment="Center"/>
-                        <TextBox Text="{Binding AzimuthMaxDeg, UpdateSourceTrigger=LostFocus}" />
-                    </DockPanel>
-                    <Separator Margin="0,4,0,4"/>
-                    <DockPanel Margin="0,0,0,4">
-                        <Label Width="130" Content="Elevation Min (°)" VerticalAlignment="Center"/>
-                        <TextBox Text="{Binding ElevationMinDeg, UpdateSourceTrigger=LostFocus}" />
-                    </DockPanel>
-                    <DockPanel Margin="0,0,0,4">
-                        <Label Width="130" Content="Elevation Max (°)" VerticalAlignment="Center"/>
-                        <TextBox Text="{Binding ElevationMaxDeg, UpdateSourceTrigger=LostFocus}" />
-                    </DockPanel>
-                    <Separator Margin="0,4,0,4"/>
-                    <DockPanel Margin="0,0,0,4">
-                        <Label Width="130" Content="Max Points" VerticalAlignment="Center"
-                               ToolTip="Maximum number of points to keep in the buffer. When exceeded, oldest points are replaced by newer ones."/>
-                        <TextBox Text="{Binding MaxBufferPoints, UpdateSourceTrigger=LostFocus}" />
-                    </DockPanel>
+                            <!-- Helideck -->
+                            <telerik:GroupBox Header="Helideck" Margin="0,0,0,8">
+                                <StackPanel Margin="8">
 
-                </StackPanel>
-            </telerik:GroupBox>
+                                    <DockPanel Margin="0,0,0,4">
+                                        <Label Width="150" Content="Helideck Shape" VerticalAlignment="Center"
+                                               ToolTip="Shape of the helideck — used by the edge detection analysis to prioritise straight edges"/>
+                                        <telerik:RadComboBox ItemsSource="{Binding HelideckShapeOptions}"
+                                                             SelectedItem="{Binding HelideckShape}"
+                                                             Width="150" HorizontalAlignment="Left" />
+                                    </DockPanel>
 
-            <!-- Display Filters -->
-            <telerik:GroupBox Header="Display Filters" Margin="0,0,0,8">
-                <StackPanel Margin="8">
+                                </StackPanel>
+                            </telerik:GroupBox>
 
-                    <DockPanel Margin="0,0,0,4">
-                        <Label Width="130" Content="Max Display Points" VerticalAlignment="Center"
-                               ToolTip="Maximum number of points rendered in the 3D viewport (downsampled for performance)"/>
-                        <TextBox Text="{Binding MaxDisplayPoints, UpdateSourceTrigger=LostFocus}" />
-                    </DockPanel>
+                            <!-- Point Cloud Filters -->
+                            <telerik:GroupBox Header="Point Cloud Filters" Margin="0,0,0,8">
+                                <StackPanel Margin="8">
 
-                </StackPanel>
-            </telerik:GroupBox>
+                                    <DockPanel Margin="0,0,0,4">
+                                        <Label Width="150" Content="Range Min (mm)" VerticalAlignment="Center"/>
+                                        <TextBox Text="{Binding RangeMinMm, UpdateSourceTrigger=LostFocus}" />
+                                    </DockPanel>
+                                    <DockPanel Margin="0,0,0,4">
+                                        <Label Width="150" Content="Range Max (mm)" VerticalAlignment="Center"/>
+                                        <TextBox Text="{Binding RangeMaxMm, UpdateSourceTrigger=LostFocus}" />
+                                    </DockPanel>
+                                    <Separator Margin="0,4,0,4"/>
+                                    <DockPanel Margin="0,0,0,4">
+                                        <Label Width="150" Content="Azimuth Min (°)" VerticalAlignment="Center"/>
+                                        <TextBox Text="{Binding AzimuthMinDeg, UpdateSourceTrigger=LostFocus}" />
+                                    </DockPanel>
+                                    <DockPanel Margin="0,0,0,4">
+                                        <Label Width="150" Content="Azimuth Max (°)" VerticalAlignment="Center"/>
+                                        <TextBox Text="{Binding AzimuthMaxDeg, UpdateSourceTrigger=LostFocus}" />
+                                    </DockPanel>
+                                    <Separator Margin="0,4,0,4"/>
+                                    <DockPanel Margin="0,0,0,4">
+                                        <Label Width="150" Content="Elevation Min (°)" VerticalAlignment="Center"/>
+                                        <TextBox Text="{Binding ElevationMinDeg, UpdateSourceTrigger=LostFocus}" />
+                                    </DockPanel>
+                                    <DockPanel Margin="0,0,0,4">
+                                        <Label Width="150" Content="Elevation Max (°)" VerticalAlignment="Center"/>
+                                        <TextBox Text="{Binding ElevationMaxDeg, UpdateSourceTrigger=LostFocus}" />
+                                    </DockPanel>
+                                    <Separator Margin="0,4,0,4"/>
+                                    <DockPanel Margin="0,0,0,4">
+                                        <Label Width="150" Content="Max Points" VerticalAlignment="Center"
+                                               ToolTip="Maximum number of points to keep in the buffer. When exceeded, oldest points are replaced by newer ones."/>
+                                        <TextBox Text="{Binding MaxBufferPoints, UpdateSourceTrigger=LostFocus}" />
+                                    </DockPanel>
 
-            <!-- Simulation Mode -->
-            <telerik:GroupBox Header="Simulation Mode" Margin="0,0,0,8">
-                <StackPanel Margin="8">
+                                </StackPanel>
+                            </telerik:GroupBox>
 
-                    <TextBlock TextWrapping="Wrap" Margin="0,0,0,8"
-                               Foreground="Gray" FontStyle="Italic"
-                               Text="Generate a synthetic helideck scan without hardware. Uses the same filter, fit and correction pipeline as a real scan." />
+                            <!-- Display Filters -->
+                            <telerik:GroupBox Header="Display Filters" Margin="0,0,0,8">
+                                <StackPanel Margin="8">
 
-                    <DockPanel Margin="0,0,0,4">
-                        <Label Width="130" Content="Sim Pitch (°)" VerticalAlignment="Center"
-                               ToolTip="Helideck pitch to embed in the synthetic point cloud (bow-up positive)"/>
-                        <TextBox Text="{Binding SimPitchDeg, UpdateSourceTrigger=LostFocus}" />
-                    </DockPanel>
-                    <DockPanel Margin="0,0,0,4">
-                        <Label Width="130" Content="Sim Roll (°)" VerticalAlignment="Center"
-                               ToolTip="Helideck roll to embed in the synthetic point cloud (port-up positive)"/>
-                        <TextBox Text="{Binding SimRollDeg, UpdateSourceTrigger=LostFocus}" />
-                    </DockPanel>
-                    <DockPanel Margin="0,0,0,4">
-                        <Label Width="130" Content="Noise (mm σ)" VerticalAlignment="Center"
-                               ToolTip="Gaussian noise standard deviation added to each simulated point"/>
-                        <TextBox Text="{Binding SimNoiseMm, UpdateSourceTrigger=LostFocus}" />
-                    </DockPanel>
-                    <DockPanel Margin="0,0,0,8">
-                        <Label Width="130" Content="LiDAR Yaw (°)" VerticalAlignment="Center"
-                               ToolTip="Rotation of the LiDAR sensor relative to the deck heading (clockwise positive)"/>
-                        <TextBox Text="{Binding SimLidarYawDeg, UpdateSourceTrigger=LostFocus}" />
-                    </DockPanel>
+                                    <DockPanel Margin="0,0,0,4">
+                                        <Label Width="150" Content="Max Display Points" VerticalAlignment="Center"
+                                               ToolTip="Maximum number of points rendered in the 3D viewport (downsampled for performance)"/>
+                                        <TextBox Text="{Binding MaxDisplayPoints, UpdateSourceTrigger=LostFocus}" />
+                                    </DockPanel>
 
-                    <DockPanel Margin="0,0,0,8">
-                        <Label Width="130" Content="Points" VerticalAlignment="Center"
-                               ToolTip="Total number of points to generate in the simulation"/>
-                        <TextBox Text="{Binding SimPointCount, UpdateSourceTrigger=LostFocus}" />
-                    </DockPanel>
+                                </StackPanel>
+                            </telerik:GroupBox>
 
-                    <telerik:RadButton Command="{Binding SimulateScanCommand}"
-                                       HorizontalAlignment="Right" Width="228">
-                        Simulate Scan
-                    </telerik:RadButton>
+                        </StackPanel>
+                    </ScrollViewer>
+                </telerik:RadTabItem>
 
-                </StackPanel>
-            </telerik:GroupBox>
+                <!-- Scan Tab -->
+                <telerik:RadTabItem Header="Vessel Forward">
+                    <ScrollViewer VerticalScrollBarVisibility="Auto"
+                                  HorizontalScrollBarVisibility="Disabled">
+                        <StackPanel Margin="8">
 
-        </StackPanel>
-            </ScrollViewer>
+                            <!-- Scan Control -->
+                            <telerik:GroupBox Header="Scan Control" Margin="0,0,0,8">
+                                <StackPanel Margin="8">
 
-        <!-- ═══════════════════════════════════════════════════ Column 1: Scan + Fit + Correction -->
-            <ScrollViewer Grid.Column="1" Margin="4,8,4,8"
-                          VerticalScrollBarVisibility="Auto"
-                          HorizontalScrollBarVisibility="Disabled">
-            <StackPanel>
+                                    <DockPanel Margin="0,0,0,8">
+                                        <Label Width="150" Content="Accumulated Points" VerticalAlignment="Center"/>
+                                        <Label Content="{Binding AccumulatedPointsString}" FontWeight="Bold"/>
+                                    </DockPanel>
 
-            <!-- Scan Control -->
-            <telerik:GroupBox Header="Scan Control" Margin="0,0,0,8">
-                <StackPanel Margin="8">
+                                    <StackPanel Orientation="Horizontal" HorizontalAlignment="Right">
+                                        <telerik:RadButton Command="{Binding StartScanCommand}"
+                                                           Width="110" Margin="0,0,8,0">Start Scan</telerik:RadButton>
+                                        <telerik:RadButton Command="{Binding StopScanCommand}"
+                                                           Width="110">Stop Scan</telerik:RadButton>
+                                    </StackPanel>
 
-                    <DockPanel Margin="0,0,0,8">
-                        <Label Width="150" Content="Accumulated Points" VerticalAlignment="Center"/>
-                        <Label Content="{Binding AccumulatedPointsString}" FontWeight="Bold"/>
-                    </DockPanel>
+                                    <telerik:RadButton Command="{Binding AnalyseCommand}"
+                                                        HorizontalAlignment="Right"
+                                                        Width="228" Margin="0,8,0,0"
+                                                        ToolTip="Fit the deck plane and detect the bow edge">Analyse</telerik:RadButton>
 
-                    <StackPanel Orientation="Horizontal" HorizontalAlignment="Right">
-                        <telerik:RadButton Command="{Binding StartScanCommand}"
-                                           Width="110" Margin="0,0,8,0">Start Scan</telerik:RadButton>
-                        <telerik:RadButton Command="{Binding StopScanCommand}"
-                                           Width="110">Stop Scan</telerik:RadButton>
-                    </StackPanel>
+                                </StackPanel>
+                            </telerik:GroupBox>
 
-                    <telerik:RadButton Command="{Binding AnalyseCommand}"
-                                        HorizontalAlignment="Right"
-                                        Width="228" Margin="0,8,0,0"
-                                        ToolTip="Fit the deck plane and detect the bow edge">Analyse</telerik:RadButton>
+                            <!-- Plane Fit -->
+                            <telerik:GroupBox Header="Plane Fit" Margin="0,0,0,8">
+                                <StackPanel Margin="8">
 
-                </StackPanel>
-            </telerik:GroupBox>
+                                    <DockPanel Margin="0,0,0,4">
+                                        <Label Width="150" Content="Pitch" VerticalAlignment="Center"/>
+                                        <Label Content="{Binding FitPitch}" FontWeight="Bold"/>
+                                    </DockPanel>
+                                    <DockPanel Margin="0,0,0,4">
+                                        <Label Width="150" Content="Roll" VerticalAlignment="Center"/>
+                                        <Label Content="{Binding FitRoll}" FontWeight="Bold"/>
+                                    </DockPanel>
+                                    <Separator Margin="0,4,0,4"/>
+                                    <DockPanel Margin="0,0,0,4">
+                                        <Label Width="150" Content="Fit RMSE" VerticalAlignment="Center"/>
+                                        <Label Content="{Binding FitRmse}"/>
+                                    </DockPanel>
+                                    <DockPanel Margin="0,0,0,4">
+                                        <Label Width="150" Content="Points used" VerticalAlignment="Center"/>
+                                        <Label Content="{Binding FitPoints}"/>
+                                    </DockPanel>
 
-            <!-- Fit Result -->
-            <telerik:GroupBox Header="Plane Fit Result" Margin="0,0,0,8">
-                <StackPanel Margin="8">
+                                </StackPanel>
+                            </telerik:GroupBox>
 
-                    <DockPanel Margin="0,0,0,4">
-                        <Label Width="150" Content="Pitch" VerticalAlignment="Center"/>
-                        <Label Content="{Binding FitPitch}" FontWeight="Bold"/>
-                    </DockPanel>
-                    <DockPanel Margin="0,0,0,4">
-                        <Label Width="150" Content="Roll" VerticalAlignment="Center"/>
-                        <Label Content="{Binding FitRoll}" FontWeight="Bold"/>
-                    </DockPanel>
-                    <Separator Margin="0,4,0,4"/>
-                    <DockPanel Margin="0,0,0,4">
-                        <Label Width="150" Content="Fit RMSE" VerticalAlignment="Center"/>
-                        <Label Content="{Binding FitRmse}"/>
-                    </DockPanel>
-                    <DockPanel Margin="0,0,0,4">
-                        <Label Width="150" Content="Points used" VerticalAlignment="Center"/>
-                        <Label Content="{Binding FitPoints}"/>
-                    </DockPanel>
+                            <!-- Vessel Forward -->
+                            <telerik:GroupBox Header="Vessel Forward" Margin="0,0,0,8">
+                                <StackPanel Margin="8">
 
-                </StackPanel>
-            </telerik:GroupBox>
+                                    <DockPanel Margin="0,0,0,4">
+                                        <Label Width="150" Content="Method" VerticalAlignment="Center"
+                                               ToolTip="Automatic: use edge detection result. LidarForward: assume sensor +X is vessel forward (0°). Manual: user-specified angle."/>
+                                        <telerik:RadComboBox ItemsSource="{Binding VesselForwardMethodOptions}"
+                                                             SelectedItem="{Binding VesselFwdMethod}"
+                                                             Width="150" HorizontalAlignment="Left" />
+                                    </DockPanel>
 
-            <!-- Deck Edge Result -->
-            <telerik:GroupBox Header="Deck Edge Result" Margin="0,0,0,8">
-                <StackPanel Margin="8">
+                                    <DockPanel Margin="0,0,0,4"
+                                               Visibility="{Binding IsManualVesselFwd, Converter={StaticResource BoolToVis}}">
+                                        <Label Width="150" Content="Manual Heading (°)" VerticalAlignment="Center"
+                                               ToolTip="Vessel forward heading in degrees from sensor +X axis"/>
+                                        <TextBox Text="{Binding VesselFwdManualDeg, UpdateSourceTrigger=LostFocus}" />
+                                    </DockPanel>
 
-                    <DockPanel Margin="0,0,0,4">
-                        <Label Width="150" Content="Edge Angle" VerticalAlignment="Center"
-                               ToolTip="Angle of the edge direction relative to the LiDAR forward axis in the deck plane"/>
-                        <Label Content="{Binding EdgeAngle}"/>
-                    </DockPanel>
-                    <DockPanel Margin="0,0,0,4">
-                        <Label Width="150" Content="Vessel Forward" VerticalAlignment="Center"
-                               ToolTip="Heading of the inferred vessel forward direction (degrees from sensor +X)"/>
-                        <Label Content="{Binding EdgeForwardAngle}" FontWeight="Bold"/>
-                    </DockPanel>
-                    <Separator Margin="0,4,0,4"/>
-                    <DockPanel Margin="0,0,0,4">
-                        <Label Width="150" Content="Edge Direction" VerticalAlignment="Center"/>
-                        <Label Content="{Binding EdgeDirection}"/>
-                    </DockPanel>
-                    <DockPanel Margin="0,0,0,4">
-                        <Label Width="150" Content="Edge Points" VerticalAlignment="Center"
-                               ToolTip="Number of deck-plane inlier points within the edge band (400 mm from the bow boundary), used for edge-line fitting and visualisation"/>
-                        <Label Content="{Binding EdgePointsStr}"/>
-                    </DockPanel>
+                                    <DockPanel Margin="0,0,0,4">
+                                        <Label Width="150" Content="Edge Angle"
+                                               ToolTip="Angle of the edge direction relative to the LiDAR forward axis in the deck plane"/>
+                                        <Label Content="{Binding EdgeAngle}"/>
+                                    </DockPanel>
+                                    <DockPanel Margin="0,0,0,4">
+                                        <Label Width="150" Content="Edge Direction" VerticalAlignment="Center"/>
+                                        <Label Content="{Binding EdgeDirection}"/>
+                                    </DockPanel>
+                                    <DockPanel Margin="0,0,0,4">
+                                        <Label Width="150" Content="Edge Points" VerticalAlignment="Center"
+                                               ToolTip="Number of deck-plane inlier points within the edge band (400 mm from the bow boundary), used for edge-line fitting and visualisation"/>
+                                        <Label Content="{Binding EdgePointsStr}"/>
+                                    </DockPanel>
+                                    <DockPanel Margin="0,0,0,4">
+                                        <Label Width="150" Content="Detection Method" VerticalAlignment="Center"
+                                               ToolTip="Which deck edge was used to infer the vessel forward direction (bow → aft → side edges)"/>
+                                        <Label Content="{Binding EdgeMethod}" FontWeight="Bold"/>
+                                    </DockPanel>
 
-                </StackPanel>
-            </telerik:GroupBox>
+                                    <DockPanel Margin="0,0,0,4">
+                                        <Label Width="150" Content="Resolved Forward"
+                                               ToolTip="The vessel forward angle that will be used when applying correction"/>
+                                        <Label Content="{Binding ResolvedVesselFwd}" FontWeight="Bold"/>
+                                    </DockPanel>
 
-            <!-- Active Correction -->
-            <telerik:GroupBox Header="Active Correction (Reference MRU)" Margin="0,0,0,8">
-                <StackPanel Margin="8">
+                                </StackPanel>
+                            </telerik:GroupBox>
 
-                    <DockPanel Margin="0,0,0,4">
-                        <Label Width="150" Content="Status" VerticalAlignment="Center"/>
-                        <Label Content="{Binding Correction.StatusString}" FontWeight="Bold"/>
-                    </DockPanel>
-                    <DockPanel Margin="0,0,0,4">
-                        <Label Width="150" Content="Pitch Offset" VerticalAlignment="Center"/>
-                        <Label Content="{Binding Correction.PitchOffsetString}" FontWeight="Bold"/>
-                    </DockPanel>
-                    <DockPanel Margin="0,0,0,4">
-                        <Label Width="150" Content="Roll Offset" VerticalAlignment="Center"/>
-                        <Label Content="{Binding Correction.RollOffsetString}" FontWeight="Bold"/>
-                    </DockPanel>
-                    <DockPanel Margin="0,0,0,4">
-                        <Label Width="150" Content="Heading Offset" VerticalAlignment="Center"/>
-                        <Label Content="{Binding Correction.HeadingOffsetString}" FontWeight="Bold"/>
-                    </DockPanel>
-                    <DockPanel Margin="0,0,0,4">
-                        <Label Width="150" Content="Fit RMSE" VerticalAlignment="Center"/>
-                        <Label Content="{Binding Correction.FitRmseString}"/>
-                    </DockPanel>
-                    <DockPanel Margin="0,0,0,8">
-                        <Label Width="150" Content="Applied" VerticalAlignment="Center"/>
-                        <Label Content="{Binding Correction.TimestampString}"/>
-                    </DockPanel>
+                            <!-- Active Correction -->
+                            <telerik:GroupBox Header="Active Correction (Reference MRU)" Margin="0,0,0,8">
+                                <StackPanel Margin="8">
 
-                    <StackPanel Orientation="Horizontal" HorizontalAlignment="Right">
-                        <telerik:RadButton Command="{Binding ApplyCorrectionCommand}"
-                                           Width="150" Margin="0,0,8,0"
-                                           ToolTip="Apply this fit as the Reference MRU correction">
-                            Apply Correction
-                        </telerik:RadButton>
-                        <telerik:RadButton Command="{Binding ClearCorrectionCommand}"
-                                           Width="150">
-                            Clear Correction
-                        </telerik:RadButton>
-                    </StackPanel>
+                                    <DockPanel Margin="0,0,0,4">
+                                        <Label Width="150" Content="Status" VerticalAlignment="Center"/>
+                                        <Label Content="{Binding Correction.StatusString}" FontWeight="Bold"/>
+                                    </DockPanel>
+                                    <DockPanel Margin="0,0,0,4">
+                                        <Label Width="150" Content="Pitch Offset" VerticalAlignment="Center"/>
+                                        <Label Content="{Binding Correction.PitchOffsetString}" FontWeight="Bold"/>
+                                    </DockPanel>
+                                    <DockPanel Margin="0,0,0,4">
+                                        <Label Width="150" Content="Roll Offset" VerticalAlignment="Center"/>
+                                        <Label Content="{Binding Correction.RollOffsetString}" FontWeight="Bold"/>
+                                    </DockPanel>
+                                    <DockPanel Margin="0,0,0,4">
+                                        <Label Width="150" Content="Heading Offset" VerticalAlignment="Center"/>
+                                        <Label Content="{Binding Correction.HeadingOffsetString}" FontWeight="Bold"/>
+                                    </DockPanel>
+                                    <DockPanel Margin="0,0,0,4">
+                                        <Label Width="150" Content="Fit RMSE" VerticalAlignment="Center"/>
+                                        <Label Content="{Binding Correction.FitRmseString}"/>
+                                    </DockPanel>
+                                    <DockPanel Margin="0,0,0,8">
+                                        <Label Width="150" Content="Applied" VerticalAlignment="Center"/>
+                                        <Label Content="{Binding Correction.TimestampString}"/>
+                                    </DockPanel>
 
-                </StackPanel>
-            </telerik:GroupBox>
+                                    <StackPanel Orientation="Horizontal" HorizontalAlignment="Right">
+                                        <telerik:RadButton Command="{Binding ApplyCorrectionCommand}"
+                                                           Width="150" Margin="0,0,8,0"
+                                                           ToolTip="Apply this fit as the Reference MRU correction">
+                                            Apply Correction
+                                        </telerik:RadButton>
+                                        <telerik:RadButton Command="{Binding ClearCorrectionCommand}"
+                                                           Width="150">
+                                            Clear Correction
+                                        </telerik:RadButton>
+                                    </StackPanel>
 
-        </StackPanel>
-            </ScrollViewer>
+                                </StackPanel>
+                            </telerik:GroupBox>
+
+                        </StackPanel>
+                    </ScrollViewer>
+                </telerik:RadTabItem>
+
+                <!-- Simulation Tab -->
+                <telerik:RadTabItem Header="Simulation">
+                    <ScrollViewer VerticalScrollBarVisibility="Auto"
+                                  HorizontalScrollBarVisibility="Disabled">
+                        <StackPanel Margin="8">
+
+                            <TextBlock TextWrapping="Wrap" Margin="0,0,0,8"
+                                       Foreground="Gray" FontStyle="Italic"
+                                       Text="Generate a synthetic helideck scan without hardware. Uses the same filter, fit and correction pipeline as a real scan." />
+
+                            <DockPanel Margin="0,0,0,4">
+                                <Label Width="150" Content="Sim Pitch (°)" VerticalAlignment="Center"
+                                       ToolTip="Helideck pitch to embed in the synthetic point cloud (bow-up positive)"/>
+                                <TextBox Text="{Binding SimPitchDeg, UpdateSourceTrigger=LostFocus}" />
+                            </DockPanel>
+                            <DockPanel Margin="0,0,0,4">
+                                <Label Width="150" Content="Sim Roll (°)" VerticalAlignment="Center"
+                                       ToolTip="Helideck roll to embed in the synthetic point cloud (port-up positive)"/>
+                                <TextBox Text="{Binding SimRollDeg, UpdateSourceTrigger=LostFocus}" />
+                            </DockPanel>
+                            <DockPanel Margin="0,0,0,4">
+                                <Label Width="150" Content="Noise (mm σ)" VerticalAlignment="Center"
+                                       ToolTip="Gaussian noise standard deviation added to each simulated point"/>
+                                <TextBox Text="{Binding SimNoiseMm, UpdateSourceTrigger=LostFocus}" />
+                            </DockPanel>
+                            <DockPanel Margin="0,0,0,8">
+                                <Label Width="150" Content="LiDAR Yaw (°)" VerticalAlignment="Center"
+                                       ToolTip="Rotation of the LiDAR sensor relative to the deck heading (clockwise positive)"/>
+                                <TextBox Text="{Binding SimLidarYawDeg, UpdateSourceTrigger=LostFocus}" />
+                            </DockPanel>
+
+                            <DockPanel Margin="0,0,0,8">
+                                <Label Width="150" Content="Points" VerticalAlignment="Center"
+                                       ToolTip="Total number of points to generate in the simulation"/>
+                                <TextBox Text="{Binding SimPointCount, UpdateSourceTrigger=LostFocus}" />
+                            </DockPanel>
+
+                            <Separator Margin="0,4,0,8"/>
+
+                            <DockPanel Margin="0,0,0,4">
+                                <Label Width="150" Content="Helideck Shape" VerticalAlignment="Center"
+                                       ToolTip="Shape of the helideck boundary used in simulation"/>
+                                <telerik:RadComboBox ItemsSource="{Binding HelideckShapeOptions}"
+                                                     SelectedItem="{Binding SimHelideckShape}" />
+                            </DockPanel>
+
+                            <DockPanel Margin="0,0,0,4">
+                                <Label Width="150" Content="Show Cube 1" VerticalAlignment="Center"
+                                       ToolTip="Include the large bow-side cube (2 m) in the simulation"/>
+                                <telerik:RadToggleSwitchButton IsChecked="{Binding SimShowCube1}" VerticalAlignment="Center"/>
+                            </DockPanel>
+                            <DockPanel Margin="0,0,0,8">
+                                <Label Width="150" Content="Show Cube 2" VerticalAlignment="Center"
+                                       ToolTip="Include the small stern-side cube (0.5 m) in the simulation"/>
+                                <telerik:RadToggleSwitchButton IsChecked="{Binding SimShowCube2}" VerticalAlignment="Center"/>
+                            </DockPanel>
+
+                            <telerik:RadButton Command="{Binding SimulateScanCommand}"
+                                               HorizontalAlignment="Right" Width="228">
+                                Simulate Scan
+                            </telerik:RadButton>
+
+                        </StackPanel>
+                    </ScrollViewer>
+                </telerik:RadTabItem>
+
+            </telerik:RadTabControl>
 
             <!-- ═══════════════════════════════════════════════════ Row 1: Status -->
-            <telerik:GroupBox Grid.Row="1" Grid.Column="0" Grid.ColumnSpan="2"
-                              Header="Status" Margin="8,4,8,8">
+            <telerik:GroupBox Grid.Row="1" Header="Status" Margin="8,4,8,8">
                 <TextBox Name="tbStatus"
                          Text="{Binding StatusMessage, Mode=OneWay}"
                          IsReadOnly="True"
@@ -308,7 +371,7 @@
         </Grid>
 
         <!-- ═══════════════════════════════════════════════════ Column 2: 3D Viewport -->
-        <Grid Grid.Column="2" Margin="4,8,8,8">
+        <Grid Grid.Column="1" Margin="4,8,8,8">
 
             <telerik:GroupBox Header="Point Cloud — 3D View">
                 <Grid>
@@ -356,22 +419,91 @@
                     </Viewport3D>
                     </Border>
 
+                    <!-- Scanning indicator -->
+                    <Border HorizontalAlignment="Center" VerticalAlignment="Top"
+                            Margin="0,8,0,0" Padding="12,4" CornerRadius="4"
+                            Background="#DD2E7D32"
+                            Visibility="{Binding IsScanActive, Converter={StaticResource BoolToVis}}">
+                        <StackPanel Orientation="Horizontal">
+                            <Ellipse Width="10" Height="10" Fill="#88FF88" Margin="0,0,6,0" VerticalAlignment="Center">
+                                <Ellipse.Triggers>
+                                    <EventTrigger RoutedEvent="Loaded">
+                                        <BeginStoryboard>
+                                            <Storyboard RepeatBehavior="Forever">
+                                                <DoubleAnimation Storyboard.TargetProperty="Opacity"
+                                                                 From="1.0" To="0.3" Duration="0:0:0.6"
+                                                                 AutoReverse="True" />
+                                            </Storyboard>
+                                        </BeginStoryboard>
+                                    </EventTrigger>
+                                </Ellipse.Triggers>
+                            </Ellipse>
+                            <TextBlock Text="SCANNING" FontSize="12" FontWeight="Bold"
+                                       Foreground="White" VerticalAlignment="Center" />
+                        </StackPanel>
+                    </Border>
+
                     <!-- Overlay hint -->
                     <TextBlock HorizontalAlignment="Left" VerticalAlignment="Bottom"
                                Margin="8" Opacity="1" FontSize="11"
                                Text="Drag to rotate  •  Scroll to zoom" />
 
+                    <!-- Legend -->
+                    <Border HorizontalAlignment="Right" VerticalAlignment="Bottom"
+                            Margin="8" Padding="6" CornerRadius="4"
+                            Background="#CCF0F0F0"
+                            BorderBrush="#CCCCCC" BorderThickness="1">
+                        <StackPanel>
+                            <TextBlock Text="Legend" FontWeight="Bold" FontSize="11"
+                                       Foreground="#333333" Margin="0,0,0,4"/>
+
+                            <!-- Heat-map bar -->
+                            <DockPanel Margin="0,0,0,3">
+                                <TextBlock DockPanel.Dock="Left" Text="Low Z " FontSize="10" Foreground="#2255CC" VerticalAlignment="Center"/>
+                                <TextBlock DockPanel.Dock="Right" Text=" High Z" FontSize="10" Foreground="#CC2222" VerticalAlignment="Center"/>
+                                <Border Height="10" CornerRadius="2">
+                                    <Border.Background>
+                                        <LinearGradientBrush StartPoint="0,0.5" EndPoint="1,0.5">
+                                            <GradientStop Color="Blue"   Offset="0.00"/>
+                                            <GradientStop Color="Cyan"   Offset="0.25"/>
+                                            <GradientStop Color="Lime"   Offset="0.50"/>
+                                            <GradientStop Color="Yellow" Offset="0.75"/>
+                                            <GradientStop Color="Red"    Offset="1.00"/>
+                                        </LinearGradientBrush>
+                                    </Border.Background>
+                                </Border>
+                            </DockPanel>
+
+                            <StackPanel Orientation="Horizontal" Margin="0,1,0,1">
+                                <Border Width="12" Height="12" Background="Red" CornerRadius="2" Margin="0,0,4,0"/>
+                                <TextBlock Text="LiDAR Forward (+X)" FontSize="10" Foreground="#333333" VerticalAlignment="Center"/>
+                            </StackPanel>
+                            <StackPanel Orientation="Horizontal" Margin="0,1,0,1">
+                                <Border Width="12" Height="12" Background="#0078FF" CornerRadius="2" Margin="0,0,4,0"/>
+                                <TextBlock Text="Plane Normal" FontSize="10" Foreground="#333333" VerticalAlignment="Center"/>
+                            </StackPanel>
+                            <StackPanel Orientation="Horizontal" Margin="0,1,0,1">
+                                <Border Width="12" Height="12" Background="#00C850" CornerRadius="2" Margin="0,0,4,0"/>
+                                <TextBlock Text="Bow Direction / Deck Edge" FontSize="10" Foreground="#333333" VerticalAlignment="Center"/>
+                            </StackPanel>
+                            <StackPanel Orientation="Horizontal" Margin="0,1,0,1">
+                                <Border Width="12" Height="12" Background="#FF00FF" CornerRadius="2" Margin="0,0,4,0"/>
+                                <TextBlock Text="Hex Vertices" FontSize="10" Foreground="#333333" VerticalAlignment="Center"/>
+                            </StackPanel>
+                            <StackPanel Orientation="Horizontal" Margin="0,1,0,1">
+                                <Border Width="12" Height="12" Background="#50000000" CornerRadius="2" Margin="0,0,4,0"
+                                        BorderBrush="#888" BorderThickness="1"/>
+                                <TextBlock Text="Fitted Plane" FontSize="10" Foreground="#333333" VerticalAlignment="Center"/>
+                            </StackPanel>
+                        </StackPanel>
+                    </Border>
+
                     <!-- View control buttons -->
                     <StackPanel HorizontalAlignment="Right" VerticalAlignment="Top"
                                 Orientation="Horizontal" Margin="8">
-                        <telerik:RadButton Width="110" Opacity="1" Margin="0,0,4,0"
-                                           Click="TopDownCamera_Click"
-                                           ToolTip="View along the fitted plane normal (top-down)">
-                            Top Down
-                        </telerik:RadButton>
                         <telerik:RadButton Width="110" Opacity="0.8"
                                            Click="ResetCamera_Click"
-                                           ToolTip="Reset camera to default view">
+                                           ToolTip="Reset camera to default top-down view">
                             Reset View
                         </telerik:RadButton>
                     </StackPanel>
@@ -380,6 +512,42 @@
             </telerik:GroupBox>
 
         </Grid>
+
+        <!-- Analysis progress overlay -->
+        <Border Grid.ColumnSpan="2"
+                Background="#88000000"
+                Visibility="{Binding IsAnalysing, Converter={StaticResource BoolToVis}}">
+            <Border HorizontalAlignment="Center" VerticalAlignment="Center"
+                    Background="#F0F5F5F5"
+                    BorderBrush="#CCCCCC" BorderThickness="1"
+                    CornerRadius="8"
+                    Padding="32,24"
+                    MinWidth="320">
+                <Border.Effect>
+                    <DropShadowEffect BlurRadius="20" ShadowDepth="4" Opacity="0.3" />
+                </Border.Effect>
+                <StackPanel HorizontalAlignment="Center">
+                    <Grid Margin="0,0,0,16">
+                        <telerik:RadProgressBar Minimum="0" Maximum="100"
+                                                    Value="{Binding AnalyseProgress, Mode=OneWay}"
+                                                    Width="260" Height="24"
+                                                Foreground="#2E7D32" />
+                        <TextBlock Text="{Binding AnalyseProgressText}"
+                                   HorizontalAlignment="Center" VerticalAlignment="Center"
+                                   FontSize="12" FontWeight="Bold" Foreground="#222222" />
+                    </Grid>
+                    <TextBlock Text="Analysing point cloud…"
+                               FontSize="16" FontWeight="SemiBold"
+                               Foreground="#222222"
+                               HorizontalAlignment="Center" />
+                    <TextBlock Text="{Binding AnalyseStepText}"
+                               FontSize="12"
+                               Foreground="#666666"
+                               HorizontalAlignment="Center"
+                               Margin="0,6,0,0" />
+                </StackPanel>
+            </Border>
+        </Border>
 
     </Grid>
 

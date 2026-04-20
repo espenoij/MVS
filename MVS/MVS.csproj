@@ -172,11 +172,13 @@
     <Compile Include="Services\FixedValue\FixedValueDataRetrieval.cs" />
     <Compile Include="Services\FixedValue\FixedValueSetup.cs" />
     <Compile Include="Models\WindVector.cs" />
+    <Compile Include="Services\LivoxLidar\HelideckShape.cs" />
     <Compile Include="Services\LivoxLidar\LivoxLidarApi.cs" />
     <Compile Include="Services\LivoxLidar\LivoxLidarCorrection.cs" />
     <Compile Include="Services\LivoxLidar\LivoxLidarDeckEdgeFinder.cs" />
     <Compile Include="Services\LivoxLidar\LivoxLidarPlaneFitter.cs" />
     <Compile Include="Services\LivoxLidar\LivoxLidarSubsystem.cs" />
+    <Compile Include="Services\LivoxLidar\VesselForwardMethod.cs" />
     <Compile Include="Services\ScreenCapture.cs" />
     <Compile Include="ViewModels\ImportVM.cs" />
     <Compile Include="ViewModels\AboutVM.cs" />
