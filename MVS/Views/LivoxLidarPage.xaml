@@ -448,6 +448,37 @@
                                Margin="8" Opacity="1" FontSize="11"
                                Text="Drag to rotate  •  Scroll to zoom" />
 
+                    <!-- 3D Axis Indicator - positioned above legend -->
+                    <Border x:Name="axisIndicatorBorder" 
+                            HorizontalAlignment="Right" VerticalAlignment="Bottom"
+                            Margin="8,8,8,230" Padding="0" CornerRadius="4"
+                            Background="#CCF0F0F0"
+                            BorderBrush="#CCCCCC" BorderThickness="1"
+                            Width="110" Height="110">
+                        <Viewport3D x:Name="axisViewport" ClipToBounds="True">
+                            <Viewport3D.Camera>
+                                <PerspectiveCamera x:Name="axisCamera"
+                                                   Position="0,0,3000"
+                                                   LookDirection="0,0,-1"
+                                                   UpDirection="0,1,0"
+                                                   FieldOfView="45" />
+                            </Viewport3D.Camera>
+
+                            <ModelVisual3D>
+                                <ModelVisual3D.Content>
+                                    <Model3DGroup>
+                                        <AmbientLight Color="#FFFFFF" />
+                                    </Model3DGroup>
+                                </ModelVisual3D.Content>
+                            </ModelVisual3D>
+
+                            <!-- Axis arrows - populated from code-behind -->
+                            <ModelVisual3D x:Name="axisXVisual" />
+                            <ModelVisual3D x:Name="axisYVisual" />
+                            <ModelVisual3D x:Name="axisZVisual" />
+                        </Viewport3D>
+                    </Border>
+
                     <!-- Legend -->
                     <Border HorizontalAlignment="Right" VerticalAlignment="Bottom"
                             Margin="8" Padding="6" CornerRadius="4"
@@ -503,8 +534,14 @@
                                 Orientation="Horizontal" Margin="8">
                         <telerik:RadButton Width="110" Opacity="0.8"
                                            Click="ResetCamera_Click"
-                                           ToolTip="Reset camera to default top-down view">
-                            Reset View
+                                           ToolTip="Reset camera to default top-down view"
+                                           Margin="0,0,4,0">
+                            Top View
+                        </telerik:RadButton>
+                        <telerik:RadButton Width="110" Opacity="0.8"
+                                           Click="PerspectiveView_Click"
+                                           ToolTip="View helideck from an angled 3D perspective">
+                            Perspective View
                         </telerik:RadButton>
                     </StackPanel>
 

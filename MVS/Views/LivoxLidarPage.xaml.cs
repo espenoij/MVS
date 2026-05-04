@@ -75,6 +75,9 @@ namespace MVS
             viewport3D.Children.Add(_deckEdgePointsVisual);
             viewport3D.Children.Add(_hexVerticesVisual);
 
+            // Initialize the 3D axis indicators in their separate viewport
+            InitializeAxisIndicators();
+
             // Explicitly set the camera
             // is fully initialised before the first scan renders any points.
             ApplyCameraTransform(0, 0, 0);
@@ -106,6 +109,7 @@ namespace MVS
             _deckEdgeLineVisual.Content   = null;
             _deckEdgePointsVisual.Content = null;
             _hexVerticesVisual.Content    = null;
+            // Axis indicators remain visible in their separate viewport
         }
 
         private void OnFitResultReady(LivoxLidarPlaneFitResult fit)
@@ -416,8 +420,38 @@ namespace MVS
                 new Vector3D(fit.NormalX, fit.NormalY, fit.NormalZ), arrowLength, shaftRadius);
             var normalMat  = MakeArrowMaterial(Color.FromRgb(0, 120, 255));
             _normalArrowVisual.Content = new GeometryModel3D { Geometry = normalMesh, Material = normalMat, BackMaterial = normalMat };
+        }
 
-            }
+        private void InitializeAxisIndicators()
+        {
+            // Create small 3D axis arrows at the origin for the separate axis viewport
+            // These will rotate with the main camera but stay in a fixed screen position
+            const double axisLength = 600.0;  // Arrow length for the indicator viewport
+            const double axisRadius = 25.0;   // Shaft radius
+            var origin = new Point3D(0, 0, 0);
+
+            // Get the axis visuals from XAML
+            var xVisual = FindName("axisXVisual") as ModelVisual3D;
+            var yVisual = FindName("axisYVisual") as ModelVisual3D;
+            var zVisual = FindName("axisZVisual") as ModelVisual3D;
+
+            if (xVisual == null || yVisual == null || zVisual == null) return;
+
+            // X-axis: Red, pointing right (forward/bow direction)
+            var xMesh = BuildArrowMesh(origin, new Vector3D(1, 0, 0), axisLength, axisRadius);
+            var xMat = MakeArrowMaterial(Colors.Red);
+            xVisual.Content = new GeometryModel3D { Geometry = xMesh, Material = xMat, BackMaterial = xMat };
+
+            // Y-axis: Green, pointing away (starboard direction)
+            var yMesh = BuildArrowMesh(origin, new Vector3D(0, 1, 0), axisLength, axisRadius);
+            var yMat = MakeArrowMaterial(Colors.Green);
+            yVisual.Content = new GeometryModel3D { Geometry = yMesh, Material = yMat, BackMaterial = yMat };
+
+            // Z-axis: Blue, pointing up
+            var zMesh = BuildArrowMesh(origin, new Vector3D(0, 0, 1), axisLength, axisRadius);
+            var zMat = MakeArrowMaterial(Color.FromRgb(0, 120, 255));
+            zVisual.Content = new GeometryModel3D { Geometry = zMesh, Material = zMat, BackMaterial = zMat };
+        }
 
         private static Material MakeArrowMaterial(Color color)
         {
@@ -595,11 +629,28 @@ namespace MVS
             ApplyCameraTransform(_centroidX, _centroidY, _centroidZ);
         }
 
+        private void ApplyPerspectiveView()
+        {
+            // Perspective view: 35-degree elevation, 30-degree horizontal rotation
+            // This provides a nice 3D angled view of the helideck
+            _rotX = 35.0;   // elevation angle (looking down from above at an angle)
+            _rotY = 30.0;   // horizontal rotation angle
+            _zoom = _defaultZoom;
+
+            camera.UpDirection = new Vector3D(_vesselFwdX, _vesselFwdY, _vesselFwdZ);
+            ApplyCameraTransform(_centroidX, _centroidY, _centroidZ);
+        }
+
         // ── Trackball mouse handlers
 
         private void ResetCamera_Click(object sender, RoutedEventArgs e)
         {
             ApplyTopDownView();
+        }
+
+        private void PerspectiveView_Click(object sender, RoutedEventArgs e)
+        {
+            ApplyPerspectiveView();
         }
 
         // -- Trackball mouse handlers ------------------------------------------
@@ -656,6 +707,9 @@ namespace MVS
 
             // Back-compute _rotX/_rotY/_zoom so zoom and presets still work
             SyncTrackballAnglesFromCamera();
+
+            // Update the axis indicator to match the new rotation
+            UpdateAxisCamera();
         }
 
         private void Viewport_MouseWheel(object sender, MouseWheelEventArgs e)
@@ -704,6 +758,33 @@ namespace MVS
 
             camera.Position      = new Point3D(camX, camY, camZ);
             camera.LookDirection = new Vector3D(cx - camX, cy - camY, cz - camZ);
+
+            // Update the axis indicator camera to match the main camera rotation
+            UpdateAxisCamera();
+        }
+
+        private void UpdateAxisCamera()
+        {
+            // Synchronize the axis viewport camera with the main camera's exact orientation
+            // The axis camera looks at the origin from the same direction as the main camera
+            var axisCamera = FindName("axisCamera") as PerspectiveCamera;
+            if (axisCamera == null) return;
+
+            // Get the main camera's look direction (normalized)
+            Vector3D lookDir = camera.LookDirection;
+            lookDir.Normalize();
+
+            // Position the axis camera at a fixed distance from the origin,
+            // in the opposite direction of where the main camera is looking
+            const double axisCamDist = 3000.0;
+            Point3D axisCamPos = new Point3D(-lookDir.X * axisCamDist, 
+                                             -lookDir.Y * axisCamDist, 
+                                             -lookDir.Z * axisCamDist);
+
+            // The axis camera looks back toward the origin with the same orientation
+            axisCamera.Position = axisCamPos;
+            axisCamera.LookDirection = new Vector3D(lookDir.X, lookDir.Y, lookDir.Z);
+            axisCamera.UpDirection = camera.UpDirection;
         }
     }
 }
