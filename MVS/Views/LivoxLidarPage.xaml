@@ -138,7 +138,7 @@
                 </telerik:RadTabItem>
 
                 <!-- Scan Tab -->
-                <telerik:RadTabItem Header="Vessel Forward">
+                <telerik:RadTabItem Header="Scan">
                     <ScrollViewer VerticalScrollBarVisibility="Auto"
                                   HorizontalScrollBarVisibility="Disabled">
                         <StackPanel Margin="8">
@@ -454,29 +454,56 @@
                             Margin="8,8,8,230" Padding="0" CornerRadius="4"
                             Background="#CCF0F0F0"
                             BorderBrush="#CCCCCC" BorderThickness="1"
-                            Width="110" Height="110">
-                        <Viewport3D x:Name="axisViewport" ClipToBounds="True">
-                            <Viewport3D.Camera>
-                                <PerspectiveCamera x:Name="axisCamera"
-                                                   Position="0,0,3000"
-                                                   LookDirection="0,0,-1"
-                                                   UpDirection="0,1,0"
-                                                   FieldOfView="45" />
-                            </Viewport3D.Camera>
+                            Width="110" Height="138">
+                        <Grid>
+                            <Grid.RowDefinitions>
+                                <RowDefinition Height="*" />
+                                <RowDefinition Height="Auto" />
+                            </Grid.RowDefinitions>
 
-                            <ModelVisual3D>
-                                <ModelVisual3D.Content>
-                                    <Model3DGroup>
-                                        <AmbientLight Color="#FFFFFF" />
-                                    </Model3DGroup>
-                                </ModelVisual3D.Content>
-                            </ModelVisual3D>
+                            <Viewport3D x:Name="axisViewport" Grid.Row="0" ClipToBounds="True">
+                                <Viewport3D.Camera>
+                                    <PerspectiveCamera x:Name="axisCamera"
+                                                       Position="0,0,3000"
+                                                       LookDirection="0,0,-1"
+                                                       UpDirection="0,1,0"
+                                                       FieldOfView="45" />
+                                </Viewport3D.Camera>
 
-                            <!-- Axis arrows - populated from code-behind -->
-                            <ModelVisual3D x:Name="axisXVisual" />
-                            <ModelVisual3D x:Name="axisYVisual" />
-                            <ModelVisual3D x:Name="axisZVisual" />
-                        </Viewport3D>
+                                <ModelVisual3D>
+                                    <ModelVisual3D.Content>
+                                        <Model3DGroup>
+                                            <AmbientLight Color="#FFFFFF" />
+                                        </Model3DGroup>
+                                    </ModelVisual3D.Content>
+                                </ModelVisual3D>
+
+                                <!-- Axis arrows - populated from code-behind -->
+                                <ModelVisual3D x:Name="axisXVisual" />
+                                <ModelVisual3D x:Name="axisYVisual" />
+                                <ModelVisual3D x:Name="axisZVisual" />
+                            </Viewport3D>
+
+                            <!-- Rotation readout -->
+                            <Border Grid.Row="1" Background="#EEE8E8E8"
+                                    BorderBrush="#CCCCCC" BorderThickness="0,1,0,0"
+                                    Padding="4,3">
+                                <StackPanel>
+                                    <DockPanel>
+                                        <TextBlock DockPanel.Dock="Left" Text="X " FontSize="10" Foreground="#CC2222"/>
+                                        <TextBlock x:Name="tbRotX" FontSize="10" Foreground="#222222" FontWeight="Bold" HorizontalAlignment="Right"/>
+                                    </DockPanel>
+                                    <DockPanel>
+                                        <TextBlock DockPanel.Dock="Left" Text="Y " FontSize="10" Foreground="#007700"/>
+                                        <TextBlock x:Name="tbRotY" FontSize="10" Foreground="#222222" FontWeight="Bold" HorizontalAlignment="Right"/>
+                                    </DockPanel>
+                                    <DockPanel>
+                                        <TextBlock DockPanel.Dock="Left" Text="Z " FontSize="10" Foreground="#003CB4"/>
+                                        <TextBlock x:Name="tbRotZ" FontSize="10" Foreground="#222222" FontWeight="Bold" HorizontalAlignment="Right"/>
+                                    </DockPanel>
+                                </StackPanel>
+                            </Border>
+                        </Grid>
                     </Border>
 
                     <!-- Legend -->
@@ -514,7 +541,7 @@
                                 <TextBlock Text="Plane Normal" FontSize="10" Foreground="#333333" VerticalAlignment="Center"/>
                             </StackPanel>
                             <StackPanel Orientation="Horizontal" Margin="0,1,0,1">
-                                <Border Width="12" Height="12" Background="#00C850" CornerRadius="2" Margin="0,0,4,0"/>
+                                <Border Width="12" Height="12" Background="#CC6200" CornerRadius="2" Margin="0,0,4,0"/>
                                 <TextBlock Text="Bow Direction / Deck Edge" FontSize="10" Foreground="#333333" VerticalAlignment="Center"/>
                             </StackPanel>
                             <StackPanel Orientation="Horizontal" Margin="0,1,0,1">

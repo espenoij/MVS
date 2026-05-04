@@ -274,7 +274,7 @@ namespace MVS
                 edge.MidpointY + edge.HalfLength * edge.DirectionY,
                 edge.MidpointZ + edge.HalfLength * edge.DirectionZ);
             var edgeMesh = BuildTubeMesh(edgeStart, edgeEnd, shaftRadius);
-            var edgeMat  = MakeArrowMaterial(Color.FromRgb(0, 200, 80));
+            var edgeMat  = MakeArrowMaterial(Color.FromRgb(204, 98, 0));
             _deckEdgeLineVisual.Content = new GeometryModel3D { Geometry = edgeMesh, Material = edgeMat, BackMaterial = edgeMat };
 
             // Hull vertex markers — bright magenta cubes at each estimated boundary vertex
@@ -327,7 +327,7 @@ namespace MVS
             var bowMesh = BuildArrowMesh(new Point3D(0, 0, 0),
                 new Vector3D(edge.VesselForwardX, edge.VesselForwardY, edge.VesselForwardZ),
                 bowArrowLen, bowShaftRadius);
-            var bowMat = MakeArrowMaterial(Color.FromRgb(0, 200, 80));
+            var bowMat = MakeArrowMaterial(Color.FromRgb(204, 98, 0));
             _bowArrowVisual.Content = new GeometryModel3D { Geometry = bowMesh, Material = bowMat, BackMaterial = bowMat };
 
             // Highlight edge points
@@ -426,7 +426,7 @@ namespace MVS
         {
             // Create small 3D axis arrows at the origin for the separate axis viewport
             // These will rotate with the main camera but stay in a fixed screen position
-            const double axisLength = 600.0;  // Arrow length for the indicator viewport
+            const double axisLength = 900.0;  // Arrow length for the indicator viewport
             const double axisRadius = 25.0;   // Shaft radius
             var origin = new Point3D(0, 0, 0);
 
@@ -447,9 +447,9 @@ namespace MVS
             var yMat = MakeArrowMaterial(Colors.Green);
             yVisual.Content = new GeometryModel3D { Geometry = yMesh, Material = yMat, BackMaterial = yMat };
 
-            // Z-axis: Blue, pointing up
+            // Z-axis: Dark blue, pointing up
             var zMesh = BuildArrowMesh(origin, new Vector3D(0, 0, 1), axisLength, axisRadius);
-            var zMat = MakeArrowMaterial(Color.FromRgb(0, 120, 255));
+            var zMat = MakeArrowMaterial(Color.FromRgb(0, 60, 180));
             zVisual.Content = new GeometryModel3D { Geometry = zMesh, Material = zMat, BackMaterial = zMat };
         }
 
@@ -631,14 +631,35 @@ namespace MVS
 
         private void ApplyPerspectiveView()
         {
-            // Perspective view: 35-degree elevation, 30-degree horizontal rotation
-            // This provides a nice 3D angled view of the helideck
-            _rotX = 35.0;   // elevation angle (looking down from above at an angle)
-            _rotY = 30.0;   // horizontal rotation angle
+            // Start from the top-down orientation (aligned to fit normal),
+            // then apply H = -45 deg (around Y axis) and V = +45 deg (tilt down from top)
+            double nx = _fitNormalX, ny = _fitNormalY, nz = _fitNormalZ;
+            double len = Math.Sqrt(nx * nx + ny * ny + nz * nz);
+            if (len > 1e-6) { nx /= len; ny /= len; nz /= len; }
+            else { nx = 0; ny = 0; nz = 1; }
+
+            _rotX = -Math.Asin(Math.Max(-1.0, Math.Min(1.0, ny))) * 180.0 / Math.PI;
+            _rotX += 0.0;   // V: no tilt from top-down
+            double cosX = Math.Cos(_rotX * Math.PI / 180.0);
+            if (cosX < 1e-6) cosX = 1e-6;
+            _rotY = Math.Atan2(nx / cosX, nz / cosX) * 180.0 / Math.PI;
+            _rotY -= 60.0;  // H: rotate -60 degrees around the Y axis
             _zoom = _defaultZoom;
 
             camera.UpDirection = new Vector3D(_vesselFwdX, _vesselFwdY, _vesselFwdZ);
             ApplyCameraTransform(_centroidX, _centroidY, _centroidZ);
+
+            // Z roll = 0: set UpDirection to world Z projected perp to look direction (the natural zero).
+            Vector3D ld = camera.LookDirection;
+            ld.Normalize();
+            Vector3D worldZ = new Vector3D(0, 0, 1);
+            Vector3D refUp = worldZ - Vector3D.DotProduct(worldZ, ld) * ld;
+            double refLen = refUp.Length;
+            if (refLen > 1e-6)
+            {
+                camera.UpDirection = new Vector3D(refUp.X / refLen, refUp.Y / refLen, refUp.Z / refLen);
+            }
+            UpdateAxisCamera();
         }
 
         // ── Trackball mouse handlers
@@ -785,6 +806,34 @@ namespace MVS
             axisCamera.Position = axisCamPos;
             axisCamera.LookDirection = new Vector3D(lookDir.X, lookDir.Y, lookDir.Z);
             axisCamera.UpDirection = camera.UpDirection;
+
+            // Update rotation readout
+            var tbRotX = FindName("tbRotX") as System.Windows.Controls.TextBlock;
+            var tbRotY = FindName("tbRotY") as System.Windows.Controls.TextBlock;
+            var tbRotZ = FindName("tbRotZ") as System.Windows.Controls.TextBlock;
+            if (tbRotX != null) tbRotX.Text = $"{_rotX:+0.0;-0.0;0.0}°";
+            if (tbRotY != null) tbRotY.Text = $"{_rotY:+0.0;-0.0;0.0}°";
+            if (tbRotZ != null)
+            {
+                Vector3D ld = camera.LookDirection;
+                ld.Normalize();
+                Vector3D worldZ = new Vector3D(0, 0, 1);
+                Vector3D refUp = worldZ - Vector3D.DotProduct(worldZ, ld) * ld;
+                double refLen = refUp.Length;
+                double rotZ = 0.0;
+                if (refLen > 1e-6)
+                {
+                    refUp /= refLen;
+                    Vector3D actualUp = camera.UpDirection;
+                    actualUp.Normalize();
+                    double dot = Math.Max(-1.0, Math.Min(1.0, Vector3D.DotProduct(refUp, actualUp)));
+                    double angle = Math.Acos(dot) * 180.0 / Math.PI;
+                    Vector3D cross = Vector3D.CrossProduct(refUp, actualUp);
+                    if (Vector3D.DotProduct(cross, ld) < 0) angle = -angle;
+                    rotZ = angle;
+                }
+                tbRotZ.Text = $"{rotZ:+0.0;-0.0;0.0}°";
+            }
         }
     }
 }
