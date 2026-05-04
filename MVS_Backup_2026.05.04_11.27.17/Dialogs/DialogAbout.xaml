@@ -1,0 +1,149 @@
+﻿<telerik:RadWindow
+    x:Class="MVS.DialogAbout"
+    xmlns="http://schemas.microsoft.com/winfx/2006/xaml/presentation"
+    xmlns:x="http://schemas.microsoft.com/winfx/2006/xaml"
+    xmlns:d="http://schemas.microsoft.com/expression/blend/2008"
+    xmlns:telerik="http://schemas.telerik.com/2008/xaml/presentation"
+    xmlns:mc="http://schemas.openxmlformats.org/markup-compatibility/2006"
+    mc:Ignorable="d"
+    xmlns:local="clr-namespace:MVS"
+    telerik:Header="About"
+    WindowStartupLocation="CenterScreen"
+    Height="620"
+    Width="700"
+    telerik:StyleManager.Theme="Material">
+
+    <telerik:RadWindow.Icon>
+        <Image
+            Height="32"
+            Source="../Icons/mvs_windows_icon.ico" />
+    </telerik:RadWindow.Icon>
+
+    <telerik:RadWindow.Resources>
+        <ResourceDictionary>
+            <Style
+                TargetType="local:DialogAbout"
+                BasedOn="{StaticResource RadWindowStyle}" />
+        </ResourceDictionary>
+    </telerik:RadWindow.Resources>
+
+    <DockPanel>
+
+        <StackPanel
+            DockPanel.Dock="Bottom">
+
+            <telerik:Label
+                HorizontalAlignment="Center"
+                Content="{Binding Path=aboutCopyright}" />
+
+            <Button
+                Margin="8"
+                Width="150"
+                HorizontalAlignment="Center"
+                Content="Close"
+                Click="btnActivate_Click" />
+
+        </StackPanel>
+
+        <StackPanel>
+
+            <StackPanel
+                Background="{StaticResource ColorAboutBackground}">
+
+                <Image
+                    DockPanel.Dock="Top"
+                    HorizontalAlignment="Center"
+                    Margin="0,20,0,0"
+                    Width="50"
+                    Source="../Icons/mvs_windows_icon.ico" />
+
+                <telerik:Label
+                    DockPanel.Dock="Top"
+                    HorizontalAlignment="Center"
+                    FontSize="30"
+                    FontFamily="Candera"
+                    Foreground="White"
+                    Content="MVS" />
+
+                <Separator
+                    VerticalAlignment="Bottom"
+                    Background="White"
+                    Width="400" />
+
+                <telerik:Label
+                    HorizontalAlignment="Center"
+                    FontSize="16"
+                    Foreground="White"
+                    DockPanel.Dock="Top"
+                    Margin="0,0,0,20"
+                    Content="Motion Verification System" />
+
+            </StackPanel>
+
+            <Image
+                DockPanel.Dock="Top"
+                HorizontalAlignment="Center"
+                Margin="10"
+                Width="250"
+                Source="../Icons/ses_logo.png" />
+
+            <!--SOFTWARE-->
+            <telerik:GroupBox
+                Header="Software"
+                DockPanel.Dock="Top"
+                Margin="8">
+
+                <StackPanel>
+
+                    <!--Software Name-->
+                    <DockPanel>
+
+                        <telerik:Label
+                            Width="200"
+                            Content="Name" />
+
+                        <telerik:Label
+                            Content="{Binding Path=softwareName}" />
+
+                    </DockPanel>
+
+                    <!--Software Version-->
+                    <DockPanel>
+
+                        <telerik:Label
+                            Width="200"
+                            Content="Version" />
+
+                        <telerik:Label
+                            Content="{Binding Path=softwareVersion}" />
+
+                    </DockPanel>
+
+                </StackPanel>
+
+            </telerik:GroupBox>
+
+            <!--Support-->
+            <telerik:GroupBox
+                Header="Support"
+                Margin="8">
+
+                <StackPanel>
+
+                    <!--Info-->
+                    <DockPanel>
+
+                        <telerik:Label
+                            Content="{Binding Path=aboutSupport}" />
+
+                    </DockPanel>
+
+                </StackPanel>
+
+            </telerik:GroupBox>
+
+        </StackPanel>
+
+    </DockPanel>
+
+</telerik:RadWindow>
