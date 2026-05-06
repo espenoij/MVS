@@ -82,6 +82,8 @@ namespace MVS
         private const double MaxEdgeDeviationFrac = 0.06;
         private const int    MaxJacobiSweeps   = 50;
         private const double JacobiTolerance   = 1e-14;
+        private const int    EdgeRefineIterations = 5;
+        private const double EdgeRefineConvergeDeg = 0.001; // stop when angle change < 0.001°
 
         // ── Public API ───────────────────────────────────────────────────────
 
@@ -93,7 +95,8 @@ namespace MVS
         /// </summary>
         public static LivoxLidarDeckEdgeResult FindEdge(
             List<(float x, float y, float z)> allPoints,
-            HelideckShape deckShape = HelideckShape.Hexagon)
+            HelideckShape deckShape = HelideckShape.Hexagon,
+            int minEdgePoints = MinPoints)
         {
             var result = new LivoxLidarDeckEdgeResult();
             if (allPoints == null || allPoints.Count < MinPoints)
@@ -197,12 +200,12 @@ namespace MVS
 
             // ── Step 4+: Shape-dependent edge detection ─────────────────────
             if (deckShape == HelideckShape.Hexagon)
-                return FindEdgeHexagon(result, inliers, proj, n, cx, cy, cz, ux, uy, uz, wx, wy, wz);
+                return FindEdgeHexagon(result, inliers, proj, n, cx, cy, cz, ux, uy, uz, wx, wy, wz, minEdgePoints);
             else if (deckShape == HelideckShape.Square
                   || deckShape == HelideckShape.SquareRoundedBow)
-                return FindEdgeSquare(result, inliers, proj, n, cx, cy, cz, ux, uy, uz, wx, wy, wz, deckShape);
+                return FindEdgeSquare(result, inliers, proj, n, cx, cy, cz, ux, uy, uz, wx, wy, wz, deckShape, minEdgePoints);
             else
-                return FindEdgeConvexHull(result, inliers, proj, n, cx, cy, cz, ux, uy, uz, wx, wy, wz, deckShape);
+                return FindEdgeConvexHull(result, inliers, proj, n, cx, cy, cz, ux, uy, uz, wx, wy, wz, deckShape, minEdgePoints);
         }
 
         // ── Hexagon-specific edge detection (6-vertex extremal model) ────────
@@ -213,7 +216,8 @@ namespace MVS
             (double u, double w)[] proj, int n,
             double cx, double cy, double cz,
             double ux, double uy, double uz,
-            double wx, double wy, double wz)
+            double wx, double wy, double wz,
+            int minEdgePoints)
         {
             // 6 extremal directions at θk = 30° + k×60°
             double sq3h = Math.Sqrt(3.0) * 0.5;
@@ -320,6 +324,7 @@ namespace MVS
                 }
 
                 // Straightness validation
+                if (edgeIdx.Count < minEdgePoints) continue;
                 if (edgeIdx.Count >= 3)
                 {
                     double sumSq = 0;
@@ -335,6 +340,28 @@ namespace MVS
                 }
 
                 // ── Valid edge found ─────────────────────────────────────────
+
+                // Iteratively refine: resample band from updated normal, re-PCA, repeat.
+                // This removes the systematic bias introduced by the fixed extremal-vertex
+                // seed, driving vessel-forward error well below 0.1°.
+                if (!RefineEdgeIterative(proj, n, ref dirU, ref dirW, ref muU, ref muW,
+                        maxExt, minEdgePoints, out var refinedEdgeIdx))
+                    continue;
+                edgeIdx = refinedEdgeIdx;
+
+                // Re-derive outward normal and vessel forward from refined direction.
+                {
+                    double nU = -dirW, nW = dirU;
+                    if (nU * muU + nW * muW < 0) { nU = -nU; nW = -nW; }
+                    if (fU * nU + fW * nW < 0) { fU = -fU; fW = -fW; }
+                    fU = nU; fW = nW;
+                }
+                halfLen = 0; // recomputed from spread along refined direction below
+                foreach (int i in edgeIdx)
+                {
+                    double along = (proj[i].u - muU) * dirU + (proj[i].w - muW) * dirW;
+                    if (Math.Abs(along) > halfLen) halfLen = Math.Abs(along);
+                }
 
                 double d3x = dirU * ux + dirW * wx, d3y = dirU * uy + dirW * wy, d3z = dirU * uz + dirW * wz;
                 double d3L = Math.Sqrt(d3x * d3x + d3y * d3y + d3z * d3z);
@@ -390,7 +417,8 @@ namespace MVS
             double cx, double cy, double cz,
             double ux, double uy, double uz,
             double wx, double wy, double wz,
-            HelideckShape deckShape)
+            HelideckShape deckShape,
+            int minEdgePoints)
         {
             // 4 extremal directions at θk = 45° + k×90°  →  finds the 4 corners
             double sq2h = Math.Sqrt(2.0) * 0.5;
@@ -576,6 +604,26 @@ namespace MVS
 
                 // ── Valid edge found ─────────────────────────────────────────
 
+                // Iteratively refine edge direction.
+                if (!RefineEdgeIterative(proj, n, ref dirU, ref dirW, ref muU, ref muW,
+                        maxExt, minEdgePoints, out var refinedEdgeIdx2))
+                    continue;
+                edgeIdx = refinedEdgeIdx2;
+
+                // Re-derive outward normal; keep fU/fW pointing outward (bow-forward).
+                {
+                    double nU = -dirW, nW = dirU;
+                    if (nU * muU + nW * muW < 0) { nU = -nU; nW = -nW; }
+                    if (fU * nU + fW * nW < 0) { fU = -fU; fW = -fW; }
+                    fU = nU; fW = nW;
+                }
+                halfLen = 0;
+                foreach (int i in edgeIdx)
+                {
+                    double along = (proj[i].u - muU) * dirU + (proj[i].w - muW) * dirW;
+                    if (Math.Abs(along) > halfLen) halfLen = Math.Abs(along);
+                }
+
                 double d3x = dirU * ux + dirW * wx, d3y = dirU * uy + dirW * wy, d3z = dirU * uz + dirW * wz;
                 double d3L = Math.Sqrt(d3x * d3x + d3y * d3y + d3z * d3z);
                 if (d3L > 1e-10) { d3x /= d3L; d3y /= d3L; d3z /= d3L; }
@@ -628,7 +676,8 @@ namespace MVS
             double cx, double cy, double cz,
             double ux, double uy, double uz,
             double wx, double wy, double wz,
-            HelideckShape deckShape)
+            HelideckShape deckShape,
+            int minEdgePoints)
         {
             // ── Convex hull of 2-D projected inliers ─────────────────────────
             var hull = ConvexHull2D(proj);
@@ -728,6 +777,22 @@ namespace MVS
                 }
 
                 // ── Valid edge found ─────────────────────────────────────────
+
+                // Iteratively refine edge direction.
+                if (!RefineEdgeIterative(proj, n, ref dirU, ref dirW, ref muU, ref muW,
+                        maxExt, minEdgePoints, out var refinedEdgeIdxH))
+                    continue;
+                edgeIdx = refinedEdgeIdxH;
+
+                // Recompute outward normal from refined direction.
+                outU = -dirW; outW = dirU;
+                if (outU * muU + outW * muW < 0) { outU = -outU; outW = -outW; }
+                halfLen = 0;
+                foreach (int i in edgeIdx)
+                {
+                    double along = (proj[i].u - muU) * dirU + (proj[i].w - muW) * dirW;
+                    if (Math.Abs(along) > halfLen) halfLen = Math.Abs(along);
+                }
 
                 double d3x = dirU * ux + dirW * wx, d3y = dirU * uy + dirW * wy, d3z = dirU * uz + dirW * wz;
                 double d3L = Math.Sqrt(d3x * d3x + d3y * d3y + d3z * d3z);
@@ -859,6 +924,115 @@ namespace MVS
 
         private static double Cross((double u, double w) o, (double u, double w) a, (double u, double w) b)
             => (a.u - o.u) * (b.w - o.w) - (a.w - o.w) * (b.u - o.u);
+
+        /// <summary>
+        /// Iteratively refines an edge direction estimate by alternating between:
+        ///   1. Resampling the edge band using the current outward normal.
+        ///   2. Running PCA on the band to get a better direction.
+        /// Stops when the direction change per iteration is below
+        /// <see cref="EdgeRefineConvergeDeg"/> or after <see cref="EdgeRefineIterations"/> passes.
+        /// Returns false if the band ever drops below <paramref name="minPoints"/>.
+        /// </summary>
+        private static bool RefineEdgeIterative(
+            (double u, double w)[] proj, int n,
+            ref double dirU, ref double dirW,
+            ref double muU,  ref double muW,
+            double maxExt, int minPoints,
+            out List<int> finalEdgeIdx)
+        {
+            finalEdgeIdx = null;
+
+            for (int iter = 0; iter < EdgeRefineIterations; iter++)
+            {
+                // Outward normal derived from current direction estimate
+                double outU = -dirW, outW = dirU;
+                if (outU * muU + outW * muW < 0) { outU = -outU; outW = -outW; }
+
+                // Resample band against the refined normal
+                // Use the current projection of maxExt along the new normal direction
+                double projMax = double.MinValue;
+                for (int i = 0; i < n; i++)
+                {
+                    double ext = proj[i].u * outU + proj[i].w * outW;
+                    if (ext > projMax) projMax = ext;
+                }
+
+                var edgeIdx = new List<int>();
+                for (int i = 0; i < n; i++)
+                {
+                    double ext = proj[i].u * outU + proj[i].w * outW;
+                    if (ext >= projMax - EdgeBandMm)
+                        edgeIdx.Add(i);
+                }
+
+                if (edgeIdx.Count < minPoints) return false;
+
+                double prevDirU = dirU, prevDirW = dirW;
+                PcaEdgeDirection2D(proj, edgeIdx, ref dirU, ref dirW, ref muU, ref muW);
+
+                // Keep sign consistent with outward-normal direction
+                outU = -dirW; outW = dirU;
+                if (outU * muU + outW * muW < 0) { outU = -outU; outW = -outW; }
+
+                finalEdgeIdx = edgeIdx;
+
+                // Convergence check
+                double dot = prevDirU * dirU + prevDirW * dirW;
+                dot = Math.Max(-1.0, Math.Min(1.0, dot));
+                double changeDeg = Math.Acos(dot) * Rad2Deg;
+                if (changeDeg < EdgeRefineConvergeDeg) break;
+            }
+
+            return finalEdgeIdx != null && finalEdgeIdx.Count >= minPoints;
+        }
+
+        /// <summary>
+        /// Refines the 2-D edge direction (dirU, dirW) using PCA over all
+        /// edge-band point projections, and updates the edge midpoint (muU, muW).
+        /// Returns false if fewer than 2 points are provided.
+        /// </summary>
+        private static bool PcaEdgeDirection2D(
+            (double u, double w)[] proj, List<int> edgeIdx,
+            ref double dirU, ref double dirW,
+            ref double muU,  ref double muW)
+        {
+            int m = edgeIdx.Count;
+            if (m < 2) return false;
+
+            double su = 0, sw = 0;
+            foreach (int i in edgeIdx) { su += proj[i].u; sw += proj[i].w; }
+            muU = su / m;
+            muW = sw / m;
+
+            double cuu = 0, cww = 0, cuw = 0;
+            foreach (int i in edgeIdx)
+            {
+                double du = proj[i].u - muU, dw = proj[i].w - muW;
+                cuu += du * du; cww += dw * dw; cuw += du * dw;
+            }
+
+            // 2×2 symmetric eigen: principal eigenvector of [[cuu,cuw],[cuw,cww]]
+            double diff = cuu - cww;
+            double disc = Math.Sqrt(diff * diff + 4.0 * cuw * cuw);
+            // Largest eigenvalue's eigenvector
+            double e1uu = cuw, e1ww = (disc - diff) * 0.5;
+            double eL   = Math.Sqrt(e1uu * e1uu + e1ww * e1ww);
+
+            if (eL < 1e-14)
+            {
+                // Degenerate — keep existing direction
+                return true;
+            }
+
+            double newDirU = e1uu / eL;
+            double newDirW = e1ww / eL;
+
+            // Keep the same sign convention as the original direction
+            if (newDirU * dirU + newDirW * dirW < 0) { newDirU = -newDirU; newDirW = -newDirW; }
+            dirU = newDirU;
+            dirW = newDirW;
+            return true;
+        }
 
         // ── Jacobi cyclic eigendecomposition for real symmetric 3×3 ─────────
         // (Duplicated from LivoxLidarPlaneFitter to keep this class self-contained.)

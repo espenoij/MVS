@@ -72,25 +72,38 @@
                             Width="210"
                             Content="Read Messages From Database"
                             VerticalAlignment="Center" />
-                        <Button
+                        <telerik:RadButton
                             Name="btnReadDB"
                             Click="btnReadDB_Click"
                             Width="100"
                             HorizontalAlignment="Right"
-                            Margin="5">Read</Button>
+                            Margin="5">Read</telerik:RadButton>
                     </DockPanel>
 
                     <DockPanel>
                         <Label
                             Width="210"
-                            Content="Clear Messages Display"
+                            Content="Clear All Messages"
                             VerticalAlignment="Center" />
-                        <Button
+                        <telerik:RadButton
                             Name="btnClearDisplay"
                             Click="btnClearDisplay_Click"
                             Width="100"
                             HorizontalAlignment="Right"
-                            Margin="5">Clear</Button>
+                            Margin="5">Clear</telerik:RadButton>
+                    </DockPanel>
+
+                    <DockPanel>
+                        <Label
+                            Width="210"
+                            Content="Copy to Clipboard"
+                            VerticalAlignment="Center" />
+                        <telerik:RadButton
+                            Name="btnCopyToClipboard"
+                            Click="btnCopyToClipboard_Click"
+                            Width="100"
+                            HorizontalAlignment="Right"
+                            Margin="5">Copy</telerik:RadButton>
                     </DockPanel>
 
                 </StackPanel>
@@ -107,11 +120,11 @@
                             Width="180"
                             Content="Delete All Error Messages"
                             VerticalAlignment="Center" />
-                        <Button
+                        <telerik:RadButton
                             Click="btnDeleteAllErrorMessages_Click"
                             Width="80"
                             HorizontalAlignment="Right"
-                            Margin="5,10,5,5">Delete</Button>
+                            Margin="5,10,5,5">Delete</telerik:RadButton>
                     </DockPanel>
 
                 </StackPanel>

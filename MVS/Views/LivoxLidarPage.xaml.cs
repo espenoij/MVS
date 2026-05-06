@@ -63,11 +63,6 @@ namespace MVS
                 if (tc != null) tc.SelectedIndex = 1;
             }));
             vm.PointCloudUpdated += points => UpdatePointCloud(points);
-            vm.PropertyChanged += (s, e) =>
-            {
-                if (e.PropertyName == nameof(LivoxLidarVM.StatusMessage))
-                    tbStatus.ScrollToEnd();
-            };
             viewport3D.Children.Add(_forwardArrowVisual);
             viewport3D.Children.Add(_normalArrowVisual);
             viewport3D.Children.Add(_bowArrowVisual);
@@ -122,6 +117,7 @@ namespace MVS
                 {
                     UpdatePointCloud(snapshot);
                     UpdateScene(fit, snapshot);
+                    _vm.AppendStatus($"Plane fit — Pitch: {fit.PitchDeg:+0.00;-0.00;0.00}°  Roll: {fit.RollDeg:+0.00;-0.00;0.00}°  RMSE: {fit.FitRmse:0.0} mm  Points: {fit.PointCount:N0}");
                 }));
         }
 

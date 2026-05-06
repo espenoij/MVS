@@ -22,11 +22,10 @@
         <Grid Grid.Column="0">
             <Grid.RowDefinitions>
                 <RowDefinition Height="*" />
-                <RowDefinition Height="200" />
             </Grid.RowDefinitions>
 
             <!-- Tabbed Controls -->
-            <telerik:RadTabControl Name="tabControl" Margin="8,8,8,4">
+            <telerik:RadTabControl Name="tabControl" Margin="8,8,8,8">
 
                 <!-- ═══════════════════ Setup Tab ═══════════════════ -->
                 <telerik:RadTabItem Header="Setup">
@@ -75,6 +74,21 @@
                                         <telerik:RadComboBox ItemsSource="{Binding HelideckShapeOptions}"
                                                              SelectedItem="{Binding HelideckShape}"
                                                              Width="150" HorizontalAlignment="Left" />
+                                    </DockPanel>
+
+                                    <DockPanel Margin="0,0,0,4">
+                                        <Label Width="150" Content="Vessel Fwd Method" VerticalAlignment="Center"
+                                               ToolTip="Automatic: use edge detection result. LidarForward: assume sensor +X is vessel forward (0°). Manual: user-specified angle."/>
+                                        <telerik:RadComboBox ItemsSource="{Binding VesselForwardMethodOptions}"
+                                                             SelectedItem="{Binding VesselFwdMethod}"
+                                                             Width="150" HorizontalAlignment="Left" />
+                                    </DockPanel>
+
+                                    <DockPanel Margin="0,0,0,4"
+                                               IsEnabled="{Binding IsManualVesselFwd}">
+                                        <Label Width="150" Content="Manual Heading (°)" VerticalAlignment="Center"
+                                               ToolTip="Vessel forward heading in degrees from sensor +X axis"/>
+                                        <TextBox Text="{Binding VesselFwdManualDeg, UpdateSourceTrigger=LostFocus}" />
                                     </DockPanel>
 
                                 </StackPanel>
@@ -128,6 +142,24 @@
                                         <Label Width="150" Content="Max Display Points" VerticalAlignment="Center"
                                                ToolTip="Maximum number of points rendered in the 3D viewport (downsampled for performance)"/>
                                         <TextBox Text="{Binding MaxDisplayPoints, UpdateSourceTrigger=LostFocus}" />
+                                    </DockPanel>
+
+                                </StackPanel>
+                            </telerik:GroupBox>
+
+                            <!-- Calculation Minimums -->
+                            <telerik:GroupBox Header="Calculation Minimums" Margin="0,0,0,8">
+                                <StackPanel Margin="8">
+
+                                    <DockPanel Margin="0,0,0,4">
+                                        <Label Width="150" Content="Min Fit Points" VerticalAlignment="Center"
+                                               ToolTip="Minimum number of inlier points required to run the plane fit. The fit is rejected and an error dialog is shown if the count is below this threshold."/>
+                                        <TextBox Text="{Binding MinFitPoints, UpdateSourceTrigger=LostFocus}" />
+                                    </DockPanel>
+                                    <DockPanel Margin="0,0,0,4">
+                                        <Label Width="150" Content="Min Edge Points" VerticalAlignment="Center"
+                                               ToolTip="Minimum number of edge-band points required to accept the deck-edge detection. Detection is rejected and an error dialog is shown if the count is below this threshold."/>
+                                        <TextBox Text="{Binding MinEdgePoints, UpdateSourceTrigger=LostFocus}" />
                                     </DockPanel>
 
                                 </StackPanel>
@@ -197,28 +229,9 @@
                                 <StackPanel Margin="8">
 
                                     <DockPanel Margin="0,0,0,4">
-                                        <Label Width="150" Content="Method" VerticalAlignment="Center"
-                                               ToolTip="Automatic: use edge detection result. LidarForward: assume sensor +X is vessel forward (0°). Manual: user-specified angle."/>
-                                        <telerik:RadComboBox ItemsSource="{Binding VesselForwardMethodOptions}"
-                                                             SelectedItem="{Binding VesselFwdMethod}"
-                                                             Width="150" HorizontalAlignment="Left" />
-                                    </DockPanel>
-
-                                    <DockPanel Margin="0,0,0,4"
-                                               Visibility="{Binding IsManualVesselFwd, Converter={StaticResource BoolToVis}}">
-                                        <Label Width="150" Content="Manual Heading (°)" VerticalAlignment="Center"
-                                               ToolTip="Vessel forward heading in degrees from sensor +X axis"/>
-                                        <TextBox Text="{Binding VesselFwdManualDeg, UpdateSourceTrigger=LostFocus}" />
-                                    </DockPanel>
-
-                                    <DockPanel Margin="0,0,0,4">
                                         <Label Width="150" Content="Edge Angle"
                                                ToolTip="Angle of the edge direction relative to the LiDAR forward axis in the deck plane"/>
                                         <Label Content="{Binding EdgeAngle}"/>
-                                    </DockPanel>
-                                    <DockPanel Margin="0,0,0,4">
-                                        <Label Width="150" Content="Edge Direction" VerticalAlignment="Center"/>
-                                        <Label Content="{Binding EdgeDirection}"/>
                                     </DockPanel>
                                     <DockPanel Margin="0,0,0,4">
                                         <Label Width="150" Content="Edge Points" VerticalAlignment="Center"
@@ -356,21 +369,9 @@
 
             </telerik:RadTabControl>
 
-            <!-- ═══════════════════════════════════════════════════ Row 1: Status -->
-            <telerik:GroupBox Grid.Row="1" Header="Status" Margin="8,4,8,8">
-                <TextBox Name="tbStatus"
-                         Text="{Binding StatusMessage, Mode=OneWay}"
-                         IsReadOnly="True"
-                         TextWrapping="Wrap"
-                         VerticalScrollBarVisibility="Visible"
-                         HorizontalScrollBarVisibility="Disabled"
-                         VerticalContentAlignment="Top"
-                         HorizontalContentAlignment="Left" />
-            </telerik:GroupBox>
+            </Grid>
 
-        </Grid>
-
-        <!-- ═══════════════════════════════════════════════════ Column 2: 3D Viewport -->
+            <!-- ═══════════════════════════════════════════════════ Column 2: 3D Viewport -->
         <Grid Grid.Column="1" Margin="4,8,8,8">
 
             <telerik:GroupBox Header="Point Cloud — 3D View">

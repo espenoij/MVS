@@ -201,4 +201,6 @@
     public const string LivoxHelideckShape        = "LivoxHelideckShape";
     public const string LivoxVesselFwdMethod      = "LivoxVesselFwdMethod";
     public const string LivoxVesselFwdManualDeg   = "LivoxVesselFwdManualDeg";
+    public const string LivoxMinFitPoints         = "LivoxMinFitPoints";
+    public const string LivoxMinEdgePoints        = "LivoxMinEdgePoints";
 }

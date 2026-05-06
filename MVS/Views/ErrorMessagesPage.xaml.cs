@@ -208,5 +208,16 @@ namespace MVS
             errorHandler.ClearAllMessages();
             errorMessageDisplayList.Clear();
         }
+
+        private void btnCopyToClipboard_Click(object sender, RoutedEventArgs e)
+        {
+            if (errorMessageDisplayList.Count == 0) return;
+
+            var sb = new System.Text.StringBuilder();
+            foreach (var msg in errorMessageDisplayList)
+                sb.AppendLine($"{msg.timestampString}\t{msg.typeString}\t{msg.message}");
+
+            Clipboard.SetText(sb.ToString());
+        }
     }
 }

@@ -215,6 +215,21 @@ namespace MVS
             set { _vesselFwdManualDeg = value; OnPropertyChanged(); _config.Write(ConfigKey.LivoxVesselFwdManualDeg, value.ToString()); }
         }
 
+        // Minimum requirements for calculations
+        private int _minFitPoints = 1000;
+        public int MinFitPoints
+        {
+            get { return _minFitPoints; }
+            set { _minFitPoints = value; OnPropertyChanged(); _config.Write(ConfigKey.LivoxMinFitPoints, value.ToString()); }
+        }
+
+        private int _minEdgePoints = 200;
+        public int MinEdgePoints
+        {
+            get { return _minEdgePoints; }
+            set { _minEdgePoints = value; OnPropertyChanged(); _config.Write(ConfigKey.LivoxMinEdgePoints, value.ToString()); }
+        }
+
         // Resolved vessel forward angle (read-only, for display)
         private string _resolvedVesselFwd = "—";
         public string ResolvedVesselFwd
@@ -246,16 +261,13 @@ namespace MVS
             private set { _analyseStepText = value; OnPropertyChanged(); }
         }
 
-        // Status / readouts
-        private readonly System.Text.StringBuilder _statusLog = new System.Text.StringBuilder();
-        public string StatusMessage => _statusLog.ToString();
-
-        private void AppendStatus(string msg)
+        public void AppendStatus(string msg)
         {
-            string line = $"[{DateTime.Now:HH:mm:ss}] {msg}";
-            if (_statusLog.Length > 0) _statusLog.AppendLine();
-            _statusLog.Append(line);
-            OnPropertyChanged(nameof(StatusMessage));
+            _errorHandler.Insert(new ErrorMessage(
+                DateTime.Now,
+                ErrorMessageType.LivoxLidar,
+                ErrorMessageCategory.None,
+                msg));
         }
 
         private string _sdkStatus = "Disconnected";
@@ -367,8 +379,6 @@ namespace MVS
             AccumulatedPoints = 0;
             _lastFit  = null;
             _lastEdge = null;
-            _statusLog.Clear();
-            OnPropertyChanged(nameof(StatusMessage));
             RefreshFitDisplay();
             RefreshEdgeDisplay();
             ScanCleared?.Invoke();
@@ -386,18 +396,54 @@ namespace MVS
             _simulationInProgress = true;
             OnPropertyChanged(nameof(IsScanActive));
             SimulationStarted?.Invoke();
-            AppendStatus($"Simulating helideck scan (pitch={SimPitchDeg:F1}°, roll={SimRollDeg:F1}°, lidar yaw={SimLidarYawDeg:F1}°)...");
+            AppendStatus($"Simulating helideck scan (pitch={SimPitchDeg:F3}°, roll={SimRollDeg:F3}°, lidar yaw={SimLidarYawDeg:F3}°)...");
         }
 
         private void FitPlane()
         {
+            if (_accumulatedPoints < _minFitPoints)
+            {
+                string msg = $"Insufficient point cloud: {_accumulatedPoints:N0} pts accumulated, minimum required is {_minFitPoints:N0} pts.\n\nContinue scanning and try again.";
+                AppendStatus($"Fit aborted — {_accumulatedPoints:N0} pts, need ≥ {_minFitPoints:N0}.");
+                // Clear any prior result so stale values are not shown and Analyse() aborts.
+                _lastFit  = null;
+                _lastEdge = null;
+                RefreshFitDisplay();
+                RefreshEdgeDisplay();
+                Application.Current.Dispatcher.BeginInvoke(System.Windows.Threading.DispatcherPriority.Normal, new Action(() =>
+                    Telerik.Windows.Controls.RadWindow.Alert(msg)));
+                return;
+            }
+
             AppendStatus("Fitting plane...");
             _lastFit = _subsystem.FitPlane();
 
             if (_lastFit == null || !_lastFit.IsValid)
             {
                 AppendStatus("Fit failed — not enough points or degenerate surface.");
+                _lastFit  = null;
+                _lastEdge = null;
                 RefreshFitDisplay();
+                RefreshEdgeDisplay();
+                string msg = "Plane fit failed — not enough points or degenerate surface.\n\nTry scanning longer or adjusting filters.";
+                Application.Current.Dispatcher.BeginInvoke(System.Windows.Threading.DispatcherPriority.Normal, new Action(() =>
+                    Telerik.Windows.Controls.RadWindow.Alert(msg)));
+                return;
+            }
+
+            // Validate the post-filter point count against the user-defined minimum.
+            // FilterPlaneInliers may discard outliers, dropping the fitted count below the threshold
+            // even when the raw accumulated count was sufficient.
+            if (_lastFit.PointCount < _minFitPoints)
+            {
+                string msg = $"Insufficient inlier points after filtering: {_lastFit.PointCount:N0} pts used, minimum required is {_minFitPoints:N0} pts.\n\nContinue scanning and try again.";
+                AppendStatus($"Fit rejected — {_lastFit.PointCount:N0} inlier pts, need ≥ {_minFitPoints:N0}.");
+                _lastFit  = null;
+                _lastEdge = null;
+                RefreshFitDisplay();
+                RefreshEdgeDisplay();
+                Application.Current.Dispatcher.BeginInvoke(System.Windows.Threading.DispatcherPriority.Normal, new Action(() =>
+                    Telerik.Windows.Controls.RadWindow.Alert(msg)));
                 return;
             }
 
@@ -468,20 +514,74 @@ namespace MVS
         {
             AppendStatus("Detecting deck edge...");
             var snapshot = _subsystem.GetPointCloudSnapshot();
-            _lastEdge = LivoxLidarDeckEdgeFinder.FindEdge(snapshot, HelideckShape);
+            int snapshotCount = snapshot != null ? snapshot.Count : 0;
+
+            // Early gate: the snapshot itself must hold at least the user-defined
+            // minimum number of points before edge detection is feasible.
+            if (snapshotCount < _minEdgePoints)
+            {
+                string msg = $"Insufficient point cloud for edge detection: {snapshotCount:N0} pts available, minimum required is {_minEdgePoints:N0} pts.\n\nContinue scanning and try again.";
+                AppendStatus($"Edge detection aborted — {snapshotCount:N0} pts, need ≥ {_minEdgePoints:N0}.");
+                _lastEdge = null;
+                RefreshEdgeDisplay();
+                Application.Current.Dispatcher.BeginInvoke(System.Windows.Threading.DispatcherPriority.Normal, new Action(() =>
+                    Telerik.Windows.Controls.RadWindow.Alert(msg)));
+                return;
+            }
+
+            _lastEdge = LivoxLidarDeckEdgeFinder.FindEdge(snapshot, HelideckShape, _minEdgePoints);
 
             if (_lastEdge == null || !_lastEdge.IsValid)
             {
+                string msg = $"Edge detection failed — not enough edge points.";
+                if (_lastEdge != null)
+                    msg = $"Edge detection failed: only {_lastEdge.EdgePointCount:N0} edge pts found, minimum required is {_minEdgePoints:N0}.\n\nTry scanning closer to the deck edge or increasing scan duration.";
                 AppendStatus("Edge detection failed — not enough forward deck points or degenerate geometry.");
+                _lastEdge = null;
+                RefreshEdgeDisplay();
+                Application.Current.Dispatcher.BeginInvoke(System.Windows.Threading.DispatcherPriority.Normal, new Action(() =>
+                    Telerik.Windows.Controls.RadWindow.Alert(msg)));
+                return;
+            }
+
+            if (_lastEdge.EdgePointCount < _minEdgePoints)
+            {
+                string msg = $"Edge detection rejected: only {_lastEdge.EdgePointCount:N0} edge pts found, minimum required is {_minEdgePoints:N0}.\n\nTry scanning closer to the deck edge or increasing scan duration.";
+                AppendStatus($"Edge rejected — {_lastEdge.EdgePointCount:N0} edge pts, need ≥ {_minEdgePoints:N0}.");
+                Application.Current.Dispatcher.BeginInvoke(System.Windows.Threading.DispatcherPriority.Normal, new Action(() =>
+                    Telerik.Windows.Controls.RadWindow.Alert(msg)));
+                _lastEdge = null;
                 RefreshEdgeDisplay();
                 return;
             }
 
             RefreshEdgeDisplay();
-            AppendStatus($"Edge OK — {_lastEdge.EdgePointCount:N0} edge pts, angle {_lastEdge.EdgeAngleDeg:F1}°, " +
-                         $"vessel fwd {_lastEdge.VesselForwardAngleDeg:F1}° " +
+            AppendStatus($"Edge OK — {_lastEdge.EdgePointCount:N0} edge pts, angle {_lastEdge.EdgeAngleDeg:F3}°, " +
+                         $"vessel fwd {_lastEdge.VesselForwardAngleDeg:F3}° " +
                          $"({_lastEdge.DeckInlierCount:N0} deck inliers, hull {_lastEdge.HullVertexCount} vertices)");
             OnPropertyChanged(nameof(HasEdgeResult));
+
+            // Refine pitch/roll using the edge detector's more accurate vessel forward.
+            // The plane fitter's internal bow-edge PCA can be imprecise; the deck edge
+            // finder uses RANSAC + convex hull and produces a better yaw estimate.
+            if (_lastFit != null && _lastFit.IsValid)
+            {
+                double fwdX = _lastEdge.VesselForwardX;
+                double fwdY = _lastEdge.VesselForwardY;
+                double fhLen = Math.Sqrt(fwdX * fwdX + fwdY * fwdY);
+                if (fhLen > 1e-6)
+                {
+                    double fhx = fwdX / fhLen, fhy = fwdY / fhLen;
+                    double lhx = -fhy, lhy = fhx; // horizontal lateral (90° CCW of forward)
+                    double nx = _lastFit.NormalX, ny = _lastFit.NormalY, nz = _lastFit.NormalZ;
+                    const double R2D = 180.0 / Math.PI;
+                    _lastFit.PitchDeg = Math.Atan2(nx * fhx + ny * fhy, nz) * R2D;
+                    _lastFit.RollDeg  = Math.Atan2(nx * lhx + ny * lhy, nz) * R2D;
+                    RefreshFitDisplay();
+                    AppendStatus($"Plane fit (refined) — Pitch: {_lastFit.PitchDeg:+0.000;-0.000;0.000}°" +
+                                 $"  Roll: {_lastFit.RollDeg:+0.000;-0.000;0.000}°");
+                }
+            }
 
             DeckEdgeResultReady?.Invoke(_lastEdge);
         }
@@ -609,7 +709,7 @@ namespace MVS
                     source = _lastEdge != null && _lastEdge.IsValid ? "auto" : "default";
                     break;
             }
-            ResolvedVesselFwd = string.Format(System.Globalization.CultureInfo.InvariantCulture, "{0:F1}° ({1})", angle, source);
+            ResolvedVesselFwd = string.Format(System.Globalization.CultureInfo.InvariantCulture, "{0:F3}° ({1})", angle, source);
         }
 
         private void RefreshCommandStates()
@@ -669,6 +769,8 @@ namespace MVS
             VesselForwardMethod parsedFwdMethod;
             VesselFwdMethod = Enum.TryParse(fwdMethodStr, out parsedFwdMethod) ? parsedFwdMethod : VesselForwardMethod.Automatic;
             VesselFwdManualDeg = _config.ReadWithDefault(ConfigKey.LivoxVesselFwdManualDeg, 0.0);
+            MinFitPoints  = _config.ReadWithDefault(ConfigKey.LivoxMinFitPoints,  1000);
+            MinEdgePoints = _config.ReadWithDefault(ConfigKey.LivoxMinEdgePoints, 200);
 
             // Do not restore persisted correction on startup — start with a clean state.
         }

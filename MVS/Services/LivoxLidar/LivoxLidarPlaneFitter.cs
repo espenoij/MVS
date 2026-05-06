@@ -267,8 +267,16 @@ namespace MVS
             if (ax < 0) { ax = -ax; ay = -ay; az = -az; } // guarantee +X half-space
 
             // ── Step 7: Extract angles ────────────────────────────────────────
-            result.PitchDeg   = Math.Atan2(nx, nz) * Rad2Deg;
-            result.RollDeg    = Math.Atan2(ny, nz) * Rad2Deg;
+            // Project normal onto vessel axes rather than fixed LiDAR axes so that
+            // pitch/roll are correct even when the LiDAR is yawed relative to the deck.
+            // Use the horizontal projection of vessel forward so the result is
+            // independent of the in-plane tilt of the forward vector itself.
+            double fhLen = Math.Sqrt(ax * ax + ay * ay);
+            if (fhLen < 1e-6) fhLen = 1.0; // fallback: forward nearly vertical
+            double fhx = ax / fhLen, fhy = ay / fhLen; // unit horizontal forward
+            double lhx = -fhy,       lhy = fhx;        // unit horizontal lateral (90° CCW of forward)
+            result.PitchDeg = Math.Atan2(nx * fhx + ny * fhy, nz) * Rad2Deg;
+            result.RollDeg  = Math.Atan2(nx * lhx + ny * lhy, nz) * Rad2Deg;
 
             // ── Step 8: Clearance = perpendicular distance from sensor origin to plane.
             // dot(n, centroid) is negative when the normal points toward the sensor,
