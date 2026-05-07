@@ -396,8 +396,8 @@
                         <ModelVisual3D>
                             <ModelVisual3D.Content>
                                 <Model3DGroup>
-                                    <AmbientLight Color="#888888" />
-                                    <DirectionalLight Color="White" Direction="-1,-1,-2" />
+                                    <AmbientLight Color="#E0E0E0" />
+                                    <DirectionalLight Color="#404040" Direction="0,0,-1" />
                                 </Model3DGroup>
                             </ModelVisual3D.Content>
                         </ModelVisual3D>
@@ -455,7 +455,7 @@
                             Margin="8,8,8,230" Padding="0" CornerRadius="4"
                             Background="#CCF0F0F0"
                             BorderBrush="#CCCCCC" BorderThickness="1"
-                            Width="110" Height="138">
+                            Width="150" Height="180">
                         <Grid>
                             <Grid.RowDefinitions>
                                 <RowDefinition Height="*" />
@@ -488,19 +488,19 @@
                             <!-- Rotation readout -->
                             <Border Grid.Row="1" Background="#EEE8E8E8"
                                     BorderBrush="#CCCCCC" BorderThickness="0,1,0,0"
-                                    Padding="4,3">
+                                    Padding="6,4">
                                 <StackPanel>
                                     <DockPanel>
-                                        <TextBlock DockPanel.Dock="Left" Text="X " FontSize="10" Foreground="#CC2222"/>
-                                        <TextBlock x:Name="tbRotX" FontSize="10" Foreground="#222222" FontWeight="Bold" HorizontalAlignment="Right"/>
+                                        <TextBlock DockPanel.Dock="Left" Text="X " FontSize="13" Foreground="#CC2222"/>
+                                        <TextBlock x:Name="tbRotX" FontSize="13" Foreground="#222222" FontWeight="Bold" HorizontalAlignment="Right"/>
                                     </DockPanel>
                                     <DockPanel>
-                                        <TextBlock DockPanel.Dock="Left" Text="Y " FontSize="10" Foreground="#007700"/>
-                                        <TextBlock x:Name="tbRotY" FontSize="10" Foreground="#222222" FontWeight="Bold" HorizontalAlignment="Right"/>
+                                        <TextBlock DockPanel.Dock="Left" Text="Y " FontSize="13" Foreground="#007700"/>
+                                        <TextBlock x:Name="tbRotY" FontSize="13" Foreground="#222222" FontWeight="Bold" HorizontalAlignment="Right"/>
                                     </DockPanel>
                                     <DockPanel>
-                                        <TextBlock DockPanel.Dock="Left" Text="Z " FontSize="10" Foreground="#003CB4"/>
-                                        <TextBlock x:Name="tbRotZ" FontSize="10" Foreground="#222222" FontWeight="Bold" HorizontalAlignment="Right"/>
+                                        <TextBlock DockPanel.Dock="Left" Text="Z " FontSize="13" Foreground="#003CB4"/>
+                                        <TextBlock x:Name="tbRotZ" FontSize="13" Foreground="#222222" FontWeight="Bold" HorizontalAlignment="Right"/>
                                     </DockPanel>
                                 </StackPanel>
                             </Border>
@@ -509,18 +509,18 @@
 
                     <!-- Legend -->
                     <Border HorizontalAlignment="Right" VerticalAlignment="Bottom"
-                            Margin="8" Padding="6" CornerRadius="4"
+                            Margin="8" Padding="10" CornerRadius="4"
                             Background="#CCF0F0F0"
                             BorderBrush="#CCCCCC" BorderThickness="1">
                         <StackPanel>
-                            <TextBlock Text="Legend" FontWeight="Bold" FontSize="11"
-                                       Foreground="#333333" Margin="0,0,0,4"/>
+                            <TextBlock Text="Legend" FontWeight="Bold" FontSize="14"
+                                       Foreground="#333333" Margin="0,0,0,6"/>
 
                             <!-- Heat-map bar -->
-                            <DockPanel Margin="0,0,0,3">
-                                <TextBlock DockPanel.Dock="Left" Text="Low Z " FontSize="10" Foreground="#2255CC" VerticalAlignment="Center"/>
-                                <TextBlock DockPanel.Dock="Right" Text=" High Z" FontSize="10" Foreground="#CC2222" VerticalAlignment="Center"/>
-                                <Border Height="10" CornerRadius="2">
+                            <DockPanel Margin="0,0,0,4">
+                                <TextBlock DockPanel.Dock="Left" Text="Low Z " FontSize="12" Foreground="#2255CC" VerticalAlignment="Center"/>
+                                <TextBlock DockPanel.Dock="Right" Text=" High Z" FontSize="12" Foreground="#CC2222" VerticalAlignment="Center"/>
+                                <Border Height="12" CornerRadius="2">
                                     <Border.Background>
                                         <LinearGradientBrush StartPoint="0,0.5" EndPoint="1,0.5">
                                             <GradientStop Color="Blue"   Offset="0.00"/>
@@ -533,26 +533,26 @@
                                 </Border>
                             </DockPanel>
 
-                            <StackPanel Orientation="Horizontal" Margin="0,1,0,1">
-                                <Border Width="12" Height="12" Background="Red" CornerRadius="2" Margin="0,0,4,0"/>
-                                <TextBlock Text="LiDAR Forward (+X)" FontSize="10" Foreground="#333333" VerticalAlignment="Center"/>
+                            <StackPanel Orientation="Horizontal" Margin="0,2,0,2">
+                                <Border Width="16" Height="16" Background="Red" CornerRadius="2" Margin="0,0,6,0"/>
+                                <TextBlock Text="LiDAR Forward (+X)" FontSize="12" Foreground="#333333" VerticalAlignment="Center"/>
                             </StackPanel>
-                            <StackPanel Orientation="Horizontal" Margin="0,1,0,1">
-                                <Border Width="12" Height="12" Background="#0078FF" CornerRadius="2" Margin="0,0,4,0"/>
-                                <TextBlock Text="Plane Normal" FontSize="10" Foreground="#333333" VerticalAlignment="Center"/>
+                            <StackPanel Orientation="Horizontal" Margin="0,2,0,2">
+                                <Border Width="16" Height="16" Background="#0078FF" CornerRadius="2" Margin="0,0,6,0"/>
+                                <TextBlock Text="Plane Normal" FontSize="12" Foreground="#333333" VerticalAlignment="Center"/>
                             </StackPanel>
-                            <StackPanel Orientation="Horizontal" Margin="0,1,0,1">
-                                <Border Width="12" Height="12" Background="#CC6200" CornerRadius="2" Margin="0,0,4,0"/>
-                                <TextBlock Text="Bow Direction / Deck Edge" FontSize="10" Foreground="#333333" VerticalAlignment="Center"/>
+                            <StackPanel Orientation="Horizontal" Margin="0,2,0,2">
+                                <Border Width="16" Height="16" Background="#CC6200" CornerRadius="2" Margin="0,0,6,0"/>
+                                <TextBlock Text="Bow Direction / Deck Edge" FontSize="12" Foreground="#333333" VerticalAlignment="Center"/>
                             </StackPanel>
-                            <StackPanel Orientation="Horizontal" Margin="0,1,0,1">
-                                <Border Width="12" Height="12" Background="#FF00FF" CornerRadius="2" Margin="0,0,4,0"/>
-                                <TextBlock Text="Hex Vertices" FontSize="10" Foreground="#333333" VerticalAlignment="Center"/>
+                            <StackPanel Orientation="Horizontal" Margin="0,2,0,2">
+                                <Border Width="16" Height="16" Background="#FF00FF" CornerRadius="2" Margin="0,0,6,0"/>
+                                <TextBlock Text="Hex Vertices" FontSize="12" Foreground="#333333" VerticalAlignment="Center"/>
                             </StackPanel>
-                            <StackPanel Orientation="Horizontal" Margin="0,1,0,1">
-                                <Border Width="12" Height="12" Background="#50000000" CornerRadius="2" Margin="0,0,4,0"
+                            <StackPanel Orientation="Horizontal" Margin="0,2,0,2">
+                                <Border Width="16" Height="16" Background="#50000000" CornerRadius="2" Margin="0,0,6,0"
                                         BorderBrush="#888" BorderThickness="1"/>
-                                <TextBlock Text="Fitted Plane" FontSize="10" Foreground="#333333" VerticalAlignment="Center"/>
+                                <TextBlock Text="Fitted Plane" FontSize="12" Foreground="#333333" VerticalAlignment="Center"/>
                             </StackPanel>
                         </StackPanel>
                     </Border>
