@@ -190,8 +190,12 @@
     public const string LivoxCorrectionTimestamp = "LivoxCorrectionTimestamp";
     public const string LivoxSimPitchDeg         = "LivoxSimPitchDeg";
     public const string LivoxSimRollDeg          = "LivoxSimRollDeg";
+    public const string LivoxSimDeckSlantDeg     = "LivoxSimDeckSlantDeg";
+    public const string LivoxSimDeckSlantDirDeg  = "LivoxSimDeckSlantDirDeg";
+    public const string LivoxSimDeckSlantType    = "LivoxSimDeckSlantType";
     public const string LivoxSimNoiseMm          = "LivoxSimNoiseMm";
     public const string LivoxSimLidarYawDeg      = "LivoxSimLidarYawDeg";
+    public const string LivoxSimLidarHeightM     = "LivoxSimLidarHeightM";
     public const string LivoxSimPointCount       = "LivoxSimPointCount";
     public const string LivoxSimShowCube1        = "LivoxSimShowCube1";
     public const string LivoxSimShowCube2        = "LivoxSimShowCube2";
@@ -203,4 +207,8 @@
     public const string LivoxVesselFwdManualDeg   = "LivoxVesselFwdManualDeg";
     public const string LivoxMinFitPoints         = "LivoxMinFitPoints";
     public const string LivoxMinEdgePoints        = "LivoxMinEdgePoints";
+    public const string LivoxPerspectiveRotX      = "LivoxPerspectiveRotX";
+    public const string LivoxPerspectiveRotY      = "LivoxPerspectiveRotY";
+    public const string LivoxPerspectiveRotZ      = "LivoxPerspectiveRotZ";
+    public const string LivoxEnableEmissiveColors = "LivoxEnableEmissiveColors";
 }

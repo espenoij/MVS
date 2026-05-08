@@ -45,6 +45,13 @@ namespace MVS
 
         private bool _cameraFitted;
 
+        // Store the last point cloud for re-rendering when settings change
+        private List<(float x, float y, float z)> _lastPointCloud;
+
+        // Store last fit and edge results for re-rendering when settings change
+        private LivoxLidarPlaneFitResult _lastFitResult;
+        private LivoxLidarDeckEdgeResult _lastEdgeResult;
+
         public LivoxLidarPage()
         {
             InitializeComponent();
@@ -63,6 +70,37 @@ namespace MVS
                 if (tc != null) tc.SelectedIndex = 1;
             }));
             vm.PointCloudUpdated += points => UpdatePointCloud(points);
+            vm.PropertyChanged += (s, e) =>
+            {
+                if (e.PropertyName == nameof(vm.EnableEmissiveColors))
+                {
+                    Dispatcher.BeginInvoke(System.Windows.Threading.DispatcherPriority.Normal,
+                        new Action(() =>
+                        {
+                            // Re-render point cloud
+                            if (_lastPointCloud != null)
+                            {
+                                UpdatePointCloud(_lastPointCloud);
+                            }
+
+                            // Re-render fit visuals (plane and arrows)
+                            if (_lastFitResult != null && _lastFitResult.IsValid)
+                            {
+                                UpdatePlaneMesh(_lastFitResult);
+                                UpdateArrows(_lastFitResult);
+                            }
+
+                            // Re-render edge visuals
+                            if (_lastEdgeResult != null && _lastEdgeResult.IsValid)
+                            {
+                                UpdateDeckEdge(_lastEdgeResult);
+                            }
+
+                            // Re-render axis indicators
+                            InitializeAxisIndicators();
+                        }));
+                }
+            };
             viewport3D.Children.Add(_forwardArrowVisual);
             viewport3D.Children.Add(_normalArrowVisual);
             viewport3D.Children.Add(_bowArrowVisual);
@@ -96,6 +134,9 @@ namespace MVS
         private void ClearScene()
         {
             _cameraFitted = false;
+            _lastPointCloud = null;
+            _lastFitResult = null;
+            _lastEdgeResult = null;
             pointCloudVisual.Content      = null;
             planeVisual.Content           = null;
             _forwardArrowVisual.Content   = null;
@@ -123,6 +164,7 @@ namespace MVS
 
         private void UpdateScene(LivoxLidarPlaneFitResult fit, List<(float x, float y, float z)> points)
         {
+            _lastFitResult = fit;
             UpdatePlaneMesh(fit);
             UpdateArrows(fit);
             UpdateCamera(fit);
@@ -143,8 +185,12 @@ namespace MVS
             if (points == null || points.Count == 0)
             {
                 pointCloudVisual.Content = null;
+                _lastPointCloud = null;
                 return;
             }
+
+            // Store the points for re-rendering when settings change
+            _lastPointCloud = points;
 
             // Downsample to at most MaxDisplayPoints for display performance.
             // Use a floating-point stride so the displayed count stays close to
@@ -215,7 +261,10 @@ namespace MVS
             // EmissiveMaterial ensures full-brightness colours regardless of lighting.
             var matGroup = new MaterialGroup();
             matGroup.Children.Add(new DiffuseMaterial(brush));
-            matGroup.Children.Add(new EmissiveMaterial(brush));
+            if (_vm.EnableEmissiveColors)
+            {
+                matGroup.Children.Add(new EmissiveMaterial(brush));
+            }
             pointCloudVisual.Content = new GeometryModel3D(mesh, matGroup) { BackMaterial = matGroup };
 
             // Auto-fit the camera the first time points are shown so the cloud is visible
@@ -257,10 +306,11 @@ namespace MVS
 
         private void UpdateDeckEdge(LivoxLidarDeckEdgeResult edge)
         {
+            _lastEdgeResult = edge;
             _hexVerticesVisual.Content = null;
 
             // Edge line: plain tube (no arrowhead) along the bow edge
-            double shaftRadius = Math.Max(edge.HalfLength * 2.0, 4000.0) * 0.015;
+            double shaftRadius = Math.Max(edge.HalfLength * 2.0, 4000.0) * 0.01;
             var edgeStart = new Point3D(
                 edge.MidpointX - edge.HalfLength * edge.DirectionX,
                 edge.MidpointY - edge.HalfLength * edge.DirectionY,
@@ -270,7 +320,7 @@ namespace MVS
                 edge.MidpointY + edge.HalfLength * edge.DirectionY,
                 edge.MidpointZ + edge.HalfLength * edge.DirectionZ);
             var edgeMesh = BuildTubeMesh(edgeStart, edgeEnd, shaftRadius);
-            var edgeMat  = MakeArrowMaterial(Color.FromRgb(204, 98, 0));
+            var edgeMat  = MakeArrowMaterial(Color.FromRgb(255, 140, 0));
             _deckEdgeLineVisual.Content = new GeometryModel3D { Geometry = edgeMesh, Material = edgeMat, BackMaterial = edgeMat };
 
             // Hull vertex markers — bright magenta cubes at each estimated boundary vertex
@@ -319,11 +369,11 @@ namespace MVS
 
             // Bow direction arrow: from lidar origin toward the bow
             double bowArrowLen    = Math.Max(edge.HalfLength * 1.2, 6000.0);
-            double bowShaftRadius = bowArrowLen * 0.025;
+            double bowShaftRadius = bowArrowLen * 0.01;
             var bowMesh = BuildArrowMesh(new Point3D(0, 0, 0),
                 new Vector3D(edge.VesselForwardX, edge.VesselForwardY, edge.VesselForwardZ),
                 bowArrowLen, bowShaftRadius);
-            var bowMat = MakeArrowMaterial(Color.FromRgb(204, 98, 0));
+            var bowMat = MakeArrowMaterial(Color.FromRgb(255, 140, 0));
             _bowArrowVisual.Content = new GeometryModel3D { Geometry = bowMesh, Material = bowMat, BackMaterial = bowMat };
 
             // Highlight edge points
@@ -362,7 +412,14 @@ namespace MVS
             var mesh = new MeshGeometry3D { Positions = positions, TriangleIndices = indices };
             var brush = new SolidColorBrush(Color.FromRgb(0, 200, 80));
             brush.Freeze();
-            _deckEdgePointsVisual.Content = new GeometryModel3D(mesh, new EmissiveMaterial(brush));
+
+            var matGroup = new MaterialGroup();
+            matGroup.Children.Add(new DiffuseMaterial(brush));
+            if (_vm != null && _vm.EnableEmissiveColors)
+            {
+                matGroup.Children.Add(new EmissiveMaterial(brush));
+            }
+            _deckEdgePointsVisual.Content = new GeometryModel3D(mesh, matGroup);
         }
 
         private void UpdatePlaneMesh(LivoxLidarPlaneFitResult fit)
@@ -393,7 +450,7 @@ namespace MVS
                 TriangleIndices = new Int32Collection { 0, 1, 2, 0, 2, 3, 0, 2, 1, 0, 3, 2 }
             };
 
-            var brush   = new SolidColorBrush(Color.FromArgb(80, 0, 0, 0)); // semi-transparent black
+            var brush   = new SolidColorBrush(Color.FromArgb(40, 0, 0, 0)); // semi-transparent black
             var material = new DiffuseMaterial(brush);
             planeVisual.Content = new GeometryModel3D(mesh, material);
         }
@@ -449,12 +506,15 @@ namespace MVS
             zVisual.Content = new GeometryModel3D { Geometry = zMesh, Material = zMat, BackMaterial = zMat };
         }
 
-        private static Material MakeArrowMaterial(Color color)
+        private Material MakeArrowMaterial(Color color)
         {
             var brush = new SolidColorBrush(color);
             var group = new MaterialGroup();
             group.Children.Add(new DiffuseMaterial(brush));
-            group.Children.Add(new EmissiveMaterial(brush));
+            if (_vm != null && _vm.EnableEmissiveColors)
+            {
+                group.Children.Add(new EmissiveMaterial(brush));
+            }
             return group;
         }
 
@@ -587,7 +647,7 @@ namespace MVS
             _vesselFwdX = fit.VesselForwardX;
             _vesselFwdY = fit.VesselForwardY;
             _vesselFwdZ = fit.VesselForwardZ;
-            ApplyTopDownView();
+            ApplyPerspectiveView();
             _cameraFitted = true;
         }
 
@@ -628,18 +688,18 @@ namespace MVS
         private void ApplyPerspectiveView()
         {
             // Start from the top-down orientation (aligned to fit normal),
-            // then apply H = -45 deg (around Y axis) and V = +45 deg (tilt down from top)
+            // then apply configurable H and V rotations
             double nx = _fitNormalX, ny = _fitNormalY, nz = _fitNormalZ;
             double len = Math.Sqrt(nx * nx + ny * ny + nz * nz);
             if (len > 1e-6) { nx /= len; ny /= len; nz /= len; }
             else { nx = 0; ny = 0; nz = 1; }
 
             _rotX = -Math.Asin(Math.Max(-1.0, Math.Min(1.0, ny))) * 180.0 / Math.PI;
-            _rotX += 0.0;   // V: no tilt from top-down
+            _rotX += _vm.PerspectiveRotX;   // V: configurable vertical tilt
             double cosX = Math.Cos(_rotX * Math.PI / 180.0);
             if (cosX < 1e-6) cosX = 1e-6;
             _rotY = Math.Atan2(nx / cosX, nz / cosX) * 180.0 / Math.PI;
-            _rotY -= 60.0;  // H: rotate -60 degrees around the Y axis
+            _rotY += _vm.PerspectiveRotY;  // H: configurable horizontal rotation
             _zoom = _defaultZoom;
 
             camera.UpDirection = new Vector3D(_vesselFwdX, _vesselFwdY, _vesselFwdZ);

@@ -144,14 +144,16 @@ namespace MVS
 
             if (bestCnt < MinPoints) return result;
 
+            // Initial inliers from RANSAC
             var inliers = new List<(float x, float y, float z)>(bestCnt * 2);
             foreach (var p in allPoints)
                 if (Math.Abs(bNx * p.x + bNy * p.y + bNz * p.z + bD) < RansacThresholdMm)
                     inliers.Add(p);
+
             result.DeckInlierCount = inliers.Count;
             if (inliers.Count < MinPoints) return result;
 
-            // Refit plane with PCA on all inliers for a refined normal
+            // ── Step 2.5: Refit plane via PCA on RANSAC inliers ──────────────
             int    n  = inliers.Count;
             double cx = 0, cy = 0, cz = 0;
             foreach (var p in inliers) { cx += p.x; cy += p.y; cz += p.z; }
@@ -177,21 +179,56 @@ namespace MVS
             if (pnz < 0) { pnx = -pnx; pny = -pny; pnz = -pnz; }
             result.FitRmseMm = Math.Sqrt(Math.Max(0.0, evals[0]));
 
-            // ── Step 3: Project inliers onto 2-D deck plane ──────────────────
-            // U = projection of sensor +X onto the fitted plane, normalised
-            double uDotN = pnx;
-            double ux = 1.0 - uDotN * pnx, uy = -uDotN * pny, uz = -uDotN * pnz;
-            double uL = Math.Sqrt(ux * ux + uy * uy + uz * uz);
-            if (uL < 1e-6) { ux = 0; uy = 1; uz = 0; }
-            else            { ux /= uL; uy /= uL; uz /= uL; }
-            // W = N × U (second in-plane basis vector)
-            double wx = pny * uz - pnz * uy, wy = pnz * ux - pnx * uz, wz = pnx * uy - pny * ux;
+            // Plane offset for projection
+            double pD = -(pnx * cx + pny * cy + pnz * cz);
+
+            // ── Step 3: Project ALL points onto the fitted plane ─────────────
+            // For each point P, subtract its perpendicular distance to the plane
+            // along the plane normal. This forces every point to lie EXACTLY on the
+            // fitted plane, eliminating ridges, bumps and out-of-plane structures.
+            //
+            // Why this works for ridge rejection:
+            //   - Ridge points keep their X,Y footprint (which is INSIDE the deck)
+            //   - Their elevation is removed → they no longer extend "up" the normal
+            //   - Corner detection sees only the 2D footprint of the deck
+            //   - The convex hull/extremal vertices are determined purely by the
+            //     deck boundary, not by elevated structures.
+
+            var projected = new List<(float x, float y, float z)>(n);
+            for (int i = 0; i < n; i++)
+            {
+                double dist = pnx * inliers[i].x + pny * inliers[i].y + pnz * inliers[i].z + pD;
+                double px = inliers[i].x - dist * pnx;
+                double py = inliers[i].y - dist * pny;
+                double pz = inliers[i].z - dist * pnz;
+                projected.Add(((float)px, (float)py, (float)pz));
+            }
+
+            // ── Step 3.5: Build rotation that aligns plane normal with +Z ────
+            // After this rotation, all projected points have Z ≈ 0 (the plane is horizontal).
+            double[,] R = BuildRotationToAlignWithZ(pnx, pny, pnz);
+
+            // Transform projected points to normalized (flat horizontal) frame
+            var normalized = new List<(float x, float y, float z)>(n);
+            for (int i = 0; i < n; i++)
+            {
+                double dx = projected[i].x - cx, dy = projected[i].y - cy, dz = projected[i].z - cz;
+                double nx = R[0, 0] * dx + R[0, 1] * dy + R[0, 2] * dz;
+                double ny = R[1, 0] * dx + R[1, 1] * dy + R[1, 2] * dz;
+                double nz = R[2, 0] * dx + R[2, 1] * dy + R[2, 2] * dz; // ≈ 0 by construction
+                normalized.Add(((float)nx, (float)ny, (float)nz));
+            }
+
+            // ── Step 4: Project normalized points onto 2-D plane ─────────────
+            // The plane is now horizontal in the normalized frame, so 2-D coords
+            // are simply the X,Y components.
+            double ux = 1.0, uy = 0.0, uz = 0.0;
+            double wx = 0.0, wy = 1.0, wz = 0.0;
 
             var proj = new (double u, double w)[n];
             for (int i = 0; i < n; i++)
             {
-                double dx = inliers[i].x - cx, dy = inliers[i].y - cy, dz = inliers[i].z - cz;
-                proj[i] = (dx * ux + dy * uy + dz * uz, dx * wx + dy * wy + dz * wz);
+                proj[i] = (normalized[i].x, normalized[i].y);
             }
 
             // LiDAR origin (0,0,0) projected onto the plane's 2-D frame
@@ -200,12 +237,12 @@ namespace MVS
 
             // ── Step 4+: Shape-dependent edge detection ─────────────────────
             if (deckShape == HelideckShape.Hexagon)
-                return FindEdgeHexagon(result, inliers, proj, n, cx, cy, cz, ux, uy, uz, wx, wy, wz, minEdgePoints);
+                return FindEdgeHexagon(result, inliers, normalized, proj, n, cx, cy, cz, ux, uy, uz, wx, wy, wz, R, minEdgePoints);
             else if (deckShape == HelideckShape.Square
                   || deckShape == HelideckShape.SquareRoundedBow)
-                return FindEdgeSquare(result, inliers, proj, n, cx, cy, cz, ux, uy, uz, wx, wy, wz, deckShape, minEdgePoints);
+                return FindEdgeSquare(result, inliers, normalized, proj, n, cx, cy, cz, ux, uy, uz, wx, wy, wz, R, deckShape, minEdgePoints);
             else
-                return FindEdgeConvexHull(result, inliers, proj, n, cx, cy, cz, ux, uy, uz, wx, wy, wz, deckShape, minEdgePoints);
+                return FindEdgeConvexHull(result, inliers, normalized, proj, n, cx, cy, cz, ux, uy, uz, wx, wy, wz, R, deckShape, minEdgePoints);
         }
 
         // ── Hexagon-specific edge detection (6-vertex extremal model) ────────
@@ -213,10 +250,12 @@ namespace MVS
         private static LivoxLidarDeckEdgeResult FindEdgeHexagon(
             LivoxLidarDeckEdgeResult result,
             List<(float x, float y, float z)> inliers,
+            List<(float x, float y, float z)> normalized,
             (double u, double w)[] proj, int n,
             double cx, double cy, double cz,
             double ux, double uy, double uz,
             double wx, double wy, double wz,
+            double[,] R,
             int minEdgePoints)
         {
             // 6 extremal directions at θk = 30° + k×60°
@@ -240,13 +279,18 @@ namespace MVS
             result.HullVertexCount = 6;
 
             // Build 6 hex vertices in 3-D for visualisation
+            // Transform from normalized space back to original space
             var hexVerts3D = new List<(double X, double Y, double Z)>(6);
             for (int k = 0; k < 6; k++)
             {
-                double hu = proj[vIdx[k]].u, hw = proj[vIdx[k]].w;
-                hexVerts3D.Add((cx + hu * ux + hw * wx,
-                                cy + hu * uy + hw * wy,
-                                cz + hu * uz + hw * wz));
+                double nu = proj[vIdx[k]].u, nw = proj[vIdx[k]].w;
+                // Use normalized point's Z coordinate (should be near zero)
+                double nz = normalized[vIdx[k]].z;
+                // Transform back: apply inverse rotation and add centroid
+                double ox = R[0, 0] * nu + R[1, 0] * nw + R[2, 0] * nz;
+                double oy = R[0, 1] * nu + R[1, 1] * nw + R[2, 1] * nz;
+                double oz = R[0, 2] * nu + R[1, 2] * nw + R[2, 2] * nz;
+                hexVerts3D.Add((cx + ox, cy + oy, cz + oz));
             }
 
             // Identify bow side: the hex side whose midpoint has the highest
@@ -363,16 +407,30 @@ namespace MVS
                     if (Math.Abs(along) > halfLen) halfLen = Math.Abs(along);
                 }
 
-                double d3x = dirU * ux + dirW * wx, d3y = dirU * uy + dirW * wy, d3z = dirU * uz + dirW * wz;
+                // Transform edge direction and midpoint back to original 3D space
+                double d3x = R[0, 0] * dirU + R[1, 0] * dirW;
+                double d3y = R[0, 1] * dirU + R[1, 1] * dirW;
+                double d3z = R[0, 2] * dirU + R[1, 2] * dirW;
                 double d3L = Math.Sqrt(d3x * d3x + d3y * d3y + d3z * d3z);
                 if (d3L > 1e-10) { d3x /= d3L; d3y /= d3L; d3z /= d3L; }
 
-                double mx = cx + muU * ux + muW * wx;
-                double my = cy + muU * uy + muW * wy;
-                double mz = cz + muU * uz + muW * wz;
+                // Compute average Z in normalized space for edge points
+                double avgNz = 0;
+                foreach (int i in edgeIdx) avgNz += normalized[i].z;
+                avgNz /= edgeIdx.Count;
 
-                // Vessel forward: outward normal of the bow side (perpendicular by construction)
-                double f3x = fU * ux + fW * wx, f3y = fU * uy + fW * wy, f3z = fU * uz + fW * wz;
+                // Transform midpoint back to original space
+                double ox = R[0, 0] * muU + R[1, 0] * muW + R[2, 0] * avgNz;
+                double oy = R[0, 1] * muU + R[1, 1] * muW + R[2, 1] * avgNz;
+                double oz = R[0, 2] * muU + R[1, 2] * muW + R[2, 2] * avgNz;
+                double mx = cx + ox;
+                double my = cy + oy;
+                double mz = cz + oz;
+
+                // Vessel forward: transform outward normal back to 3D
+                double f3x = R[0, 0] * fU + R[1, 0] * fW;
+                double f3y = R[0, 1] * fU + R[1, 1] * fW;
+                double f3z = R[0, 2] * fU + R[1, 2] * fW;
                 double fL  = Math.Sqrt(f3x * f3x + f3y * f3y + f3z * f3z);
                 if (fL > 1e-10) { f3x /= fL; f3y /= fL; f3z /= fL; }
 
@@ -413,10 +471,12 @@ namespace MVS
         private static LivoxLidarDeckEdgeResult FindEdgeSquare(
             LivoxLidarDeckEdgeResult result,
             List<(float x, float y, float z)> inliers,
+            List<(float x, float y, float z)> normalized,
             (double u, double w)[] proj, int n,
             double cx, double cy, double cz,
             double ux, double uy, double uz,
             double wx, double wy, double wz,
+            double[,] R,
             HelideckShape deckShape,
             int minEdgePoints)
         {
@@ -459,12 +519,16 @@ namespace MVS
                 // Only the 2 aft corners are sharp
                 int aftSide = (bowK + 2) % 4;
                 int c0 = vIdx[aftSide], c1 = vIdx[(aftSide + 1) % 4];
-                squareVerts3D.Add((cx + proj[c0].u * ux + proj[c0].w * wx,
-                                   cy + proj[c0].u * uy + proj[c0].w * wy,
-                                   cz + proj[c0].u * uz + proj[c0].w * wz));
-                squareVerts3D.Add((cx + proj[c1].u * ux + proj[c1].w * wx,
-                                   cy + proj[c1].u * uy + proj[c1].w * wy,
-                                   cz + proj[c1].u * uz + proj[c1].w * wz));
+                // Transform corners back to original space
+                double nz0 = normalized[c0].z, nz1 = normalized[c1].z;
+                double ox0 = R[0, 0] * proj[c0].u + R[1, 0] * proj[c0].w + R[2, 0] * nz0;
+                double oy0 = R[0, 1] * proj[c0].u + R[1, 1] * proj[c0].w + R[2, 1] * nz0;
+                double oz0 = R[0, 2] * proj[c0].u + R[1, 2] * proj[c0].w + R[2, 2] * nz0;
+                double ox1 = R[0, 0] * proj[c1].u + R[1, 0] * proj[c1].w + R[2, 0] * nz1;
+                double oy1 = R[0, 1] * proj[c1].u + R[1, 1] * proj[c1].w + R[2, 1] * nz1;
+                double oz1 = R[0, 2] * proj[c1].u + R[1, 2] * proj[c1].w + R[2, 2] * nz1;
+                squareVerts3D.Add((cx + ox0, cy + oy0, cz + oz0));
+                squareVerts3D.Add((cx + ox1, cy + oy1, cz + oz1));
                 result.HullVertexCount = 2;
             }
             else if (deckShape == HelideckShape.SquareRoundedBowAft)
@@ -477,10 +541,12 @@ namespace MVS
                 // Square: all 4 corners are sharp
                 for (int k = 0; k < 4; k++)
                 {
-                    double hu = proj[vIdx[k]].u, hw = proj[vIdx[k]].w;
-                    squareVerts3D.Add((cx + hu * ux + hw * wx,
-                                       cy + hu * uy + hw * wy,
-                                       cz + hu * uz + hw * wz));
+                    double nu = proj[vIdx[k]].u, nw = proj[vIdx[k]].w;
+                    double nz = normalized[vIdx[k]].z;
+                    double ox = R[0, 0] * nu + R[1, 0] * nw + R[2, 0] * nz;
+                    double oy = R[0, 1] * nu + R[1, 1] * nw + R[2, 1] * nz;
+                    double oz = R[0, 2] * nu + R[1, 2] * nw + R[2, 2] * nz;
+                    squareVerts3D.Add((cx + ox, cy + oy, cz + oz));
                 }
             }
 
@@ -624,16 +690,30 @@ namespace MVS
                     if (Math.Abs(along) > halfLen) halfLen = Math.Abs(along);
                 }
 
-                double d3x = dirU * ux + dirW * wx, d3y = dirU * uy + dirW * wy, d3z = dirU * uz + dirW * wz;
+                // Transform edge direction and midpoint back to original 3D space
+                double d3x = R[0, 0] * dirU + R[1, 0] * dirW;
+                double d3y = R[0, 1] * dirU + R[1, 1] * dirW;
+                double d3z = R[0, 2] * dirU + R[1, 2] * dirW;
                 double d3L = Math.Sqrt(d3x * d3x + d3y * d3y + d3z * d3z);
                 if (d3L > 1e-10) { d3x /= d3L; d3y /= d3L; d3z /= d3L; }
 
-                double mx = cx + muU * ux + muW * wx;
-                double my = cy + muU * uy + muW * wy;
-                double mz = cz + muU * uz + muW * wz;
+                // Compute average Z in normalized space for edge points
+                double avgNz = 0;
+                foreach (int i in edgeIdx) avgNz += normalized[i].z;
+                avgNz /= edgeIdx.Count;
 
-                // Vessel forward: outward normal of the bow side (perpendicular by construction)
-                double f3x = fU * ux + fW * wx, f3y = fU * uy + fW * wy, f3z = fU * uz + fW * wz;
+                // Transform midpoint back to original space
+                double ox = R[0, 0] * muU + R[1, 0] * muW + R[2, 0] * avgNz;
+                double oy = R[0, 1] * muU + R[1, 1] * muW + R[2, 1] * avgNz;
+                double oz = R[0, 2] * muU + R[1, 2] * muW + R[2, 2] * avgNz;
+                double mx = cx + ox;
+                double my = cy + oy;
+                double mz = cz + oz;
+
+                // Vessel forward: transform outward normal back to 3D
+                double f3x = R[0, 0] * fU + R[1, 0] * fW;
+                double f3y = R[0, 1] * fU + R[1, 1] * fW;
+                double f3z = R[0, 2] * fU + R[1, 2] * fW;
                 double fL  = Math.Sqrt(f3x * f3x + f3y * f3y + f3z * f3z);
                 if (fL > 1e-10) { f3x /= fL; f3y /= fL; f3z /= fL; }
 
@@ -672,10 +752,12 @@ namespace MVS
         private static LivoxLidarDeckEdgeResult FindEdgeConvexHull(
             LivoxLidarDeckEdgeResult result,
             List<(float x, float y, float z)> inliers,
+            List<(float x, float y, float z)> normalized,
             (double u, double w)[] proj, int n,
             double cx, double cy, double cz,
             double ux, double uy, double uz,
             double wx, double wy, double wz,
+            double[,] R,
             HelideckShape deckShape,
             int minEdgePoints)
         {
@@ -687,10 +769,12 @@ namespace MVS
             var hullVerts3D = new List<(double X, double Y, double Z)>(hull.Count);
             foreach (int hi in hull)
             {
-                double hu = proj[hi].u, hw = proj[hi].w;
-                hullVerts3D.Add((cx + hu * ux + hw * wx,
-                                 cy + hu * uy + hw * wy,
-                                 cz + hu * uz + hw * wz));
+                double nu = proj[hi].u, nw = proj[hi].w;
+                double nz = normalized[hi].z;
+                double ox = R[0, 0] * nu + R[1, 0] * nw + R[2, 0] * nz;
+                double oy = R[0, 1] * nu + R[1, 1] * nw + R[2, 1] * nz;
+                double oz = R[0, 2] * nu + R[1, 2] * nw + R[2, 2] * nz;
+                hullVerts3D.Add((cx + ox, cy + oy, cz + oz));
             }
 
             // ── Build candidate edge segments from hull ──────────────────────
@@ -794,13 +878,25 @@ namespace MVS
                     if (Math.Abs(along) > halfLen) halfLen = Math.Abs(along);
                 }
 
-                double d3x = dirU * ux + dirW * wx, d3y = dirU * uy + dirW * wy, d3z = dirU * uz + dirW * wz;
+                // Transform edge direction and midpoint back to original 3D space
+                double d3x = R[0, 0] * dirU + R[1, 0] * dirW;
+                double d3y = R[0, 1] * dirU + R[1, 1] * dirW;
+                double d3z = R[0, 2] * dirU + R[1, 2] * dirW;
                 double d3L = Math.Sqrt(d3x * d3x + d3y * d3y + d3z * d3z);
                 if (d3L > 1e-10) { d3x /= d3L; d3y /= d3L; d3z /= d3L; }
 
-                double mx = cx + muU * ux + muW * wx;
-                double my = cy + muU * uy + muW * wy;
-                double mz = cz + muU * uz + muW * wz;
+                // Compute average Z in normalized space for edge points
+                double avgNz = 0;
+                foreach (int i in edgeIdx) avgNz += normalized[i].z;
+                avgNz /= edgeIdx.Count;
+
+                // Transform midpoint back to original space
+                double ox = R[0, 0] * muU + R[1, 0] * muW + R[2, 0] * avgNz;
+                double oy = R[0, 1] * muU + R[1, 1] * muW + R[2, 1] * avgNz;
+                double oz = R[0, 2] * muU + R[1, 2] * muW + R[2, 2] * avgNz;
+                double mx = cx + ox;
+                double my = cy + oy;
+                double mz = cz + oz;
 
                 // Vessel forward direction depends on shape and which edge was found.
                 double fU, fW;
@@ -832,7 +928,10 @@ namespace MVS
                     else              { fU /= fDist; fW /= fDist; }
                 }
 
-                double f3x = fU * ux + fW * wx, f3y = fU * uy + fW * wy, f3z = fU * uz + fW * wz;
+                // Transform vessel forward back to original 3D space
+                double f3x = R[0, 0] * fU + R[1, 0] * fW;
+                double f3y = R[0, 1] * fU + R[1, 1] * fW;
+                double f3z = R[0, 2] * fU + R[1, 2] * fW;
                 double fL  = Math.Sqrt(f3x * f3x + f3y * f3y + f3z * f3z);
                 if (fL > 1e-10) { f3x /= fL; f3y /= fL; f3z /= fL; }
 
@@ -1089,6 +1188,52 @@ namespace MVS
                             tmp = vecs[k, i]; vecs[k, i] = vecs[k, j]; vecs[k, j] = tmp;
                         }
                     }
+        }
+
+        /// <summary>
+        /// Builds a 3x3 rotation matrix that transforms coordinates so that
+        /// the vector (nx, ny, nz) becomes aligned with the +Z axis (0, 0, 1).
+        /// Uses Rodrigues' rotation formula.
+        /// Returns R where R * (nx, ny, nz) ≈ (0, 0, 1) and R^T transforms back.
+        /// </summary>
+        private static double[,] BuildRotationToAlignWithZ(double nx, double ny, double nz)
+        {
+            // Target direction (Z-axis)
+            double tx = 0, ty = 0, tz = 1;
+
+            // Check if already aligned
+            double dot = nx * tx + ny * ty + nz * tz;
+            if (dot > 0.9999)
+            {
+                // Already aligned with +Z, return identity
+                return new double[,] { { 1, 0, 0 }, { 0, 1, 0 }, { 0, 0, 1 } };
+            }
+            else if (dot < -0.9999)
+            {
+                // Aligned with -Z, rotate 180° around X-axis
+                return new double[,] { { 1, 0, 0 }, { 0, -1, 0 }, { 0, 0, -1 } };
+            }
+
+            // Rotation axis: k = n × target
+            double kx = ny * tz - nz * ty;
+            double ky = nz * tx - nx * tz;
+            double kz = nx * ty - ny * tx;
+            double klen = Math.Sqrt(kx * kx + ky * ky + kz * kz);
+            kx /= klen; ky /= klen; kz /= klen;
+
+            // Rotation angle
+            double angle = Math.Acos(Math.Max(-1.0, Math.Min(1.0, dot)));
+            double c = Math.Cos(angle);
+            double s = Math.Sin(angle);
+            double t = 1.0 - c;
+
+            // Rodrigues' rotation matrix
+            return new double[,]
+            {
+                { t*kx*kx + c,    t*kx*ky - s*kz, t*kx*kz + s*ky },
+                { t*kx*ky + s*kz, t*ky*ky + c,    t*ky*kz - s*kx },
+                { t*kx*kz - s*ky, t*ky*kz + s*kx, t*kz*kz + c    }
+            };
         }
     }
 }

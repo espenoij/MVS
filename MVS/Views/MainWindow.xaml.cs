@@ -8,6 +8,7 @@ using System.Windows.Controls;
 using System.Windows.Threading;
 using Telerik.Windows.Controls;
 using Telerik.Windows.Data;
+using Forms = System.Windows.Forms;
 
 namespace MVS
 {
@@ -80,6 +81,9 @@ namespace MVS
         public MainWindow()
         {
             InitializeComponent();
+
+            // Position window on second monitor if available
+            PositionOnSecondMonitor();
 
             // Config
             config = new Config();
@@ -237,6 +241,28 @@ namespace MVS
             tabInput_SerialData.Visibility = Visibility.Visible;
             tabInput_FileReader.Visibility = Visibility.Visible;
             tabInput_FixedValue.Visibility = Visibility.Visible;
+        }
+
+        private void PositionOnSecondMonitor()
+        {
+            // Check if there are multiple monitors
+            if (Forms.Screen.AllScreens.Length > 1)
+            {
+                // Get the second monitor (index 1)
+                var secondScreen = Forms.Screen.AllScreens[1];
+
+                // Set window position to the second monitor's working area
+                this.WindowStartupLocation = WindowStartupLocation.Manual;
+                this.WindowState = WindowState.Normal;
+                this.Left = secondScreen.WorkingArea.Left;
+                this.Top = secondScreen.WorkingArea.Top;
+                this.Width = secondScreen.WorkingArea.Width;
+                this.Height = secondScreen.WorkingArea.Height;
+
+                // Maximize on the second monitor
+                this.WindowState = WindowState.Maximized;
+            }
+            // If only one monitor, default behavior will apply (maximize on primary)
         }
 
         private void InitViewModel()

@@ -32,7 +32,7 @@
     <UseApplicationTrust>false</UseApplicationTrust>
     <PublishWizardCompleted>true</PublishWizardCompleted>
     <BootstrapperEnabled>true</BootstrapperEnabled>
-    <AssemblyVersion>1.1.0.988</AssemblyVersion>
+    <AssemblyVersion>1.1.0.1013</AssemblyVersion>
   </PropertyGroup>
   <PropertyGroup Condition=" '$(Configuration)|$(Platform)' == 'Debug|AnyCPU' ">
     <PlatformTarget>AnyCPU</PlatformTarget>
@@ -187,6 +187,7 @@
     <Compile Include="Services\FixedValue\FixedValueDataRetrieval.cs" />
     <Compile Include="Services\FixedValue\FixedValueSetup.cs" />
     <Compile Include="Models\WindVector.cs" />
+    <Compile Include="Services\LivoxLidar\DeckSlantType.cs" />
     <Compile Include="Services\LivoxLidar\HelideckShape.cs" />
     <Compile Include="Services\LivoxLidar\LivoxLidarApi.cs" />
     <Compile Include="Services\LivoxLidar\LivoxLidarCorrection.cs" />

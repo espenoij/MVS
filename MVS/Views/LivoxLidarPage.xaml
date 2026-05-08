@@ -134,19 +134,6 @@
                                 </StackPanel>
                             </telerik:GroupBox>
 
-                            <!-- Display Filters -->
-                            <telerik:GroupBox Header="Display Filters" Margin="0,0,0,8">
-                                <StackPanel Margin="8">
-
-                                    <DockPanel Margin="0,0,0,4">
-                                        <Label Width="150" Content="Max Display Points" VerticalAlignment="Center"
-                                               ToolTip="Maximum number of points rendered in the 3D viewport (downsampled for performance)"/>
-                                        <TextBox Text="{Binding MaxDisplayPoints, UpdateSourceTrigger=LostFocus}" />
-                                    </DockPanel>
-
-                                </StackPanel>
-                            </telerik:GroupBox>
-
                             <!-- Calculation Minimums -->
                             <telerik:GroupBox Header="Calculation Minimums" Margin="0,0,0,8">
                                 <StackPanel Margin="8">
@@ -311,57 +298,175 @@
                                        Foreground="Gray" FontStyle="Italic"
                                        Text="Generate a synthetic helideck scan without hardware. Uses the same filter, fit and correction pipeline as a real scan." />
 
-                            <DockPanel Margin="0,0,0,4">
-                                <Label Width="150" Content="Sim Pitch (°)" VerticalAlignment="Center"
-                                       ToolTip="Helideck pitch to embed in the synthetic point cloud (bow-up positive)"/>
-                                <TextBox Text="{Binding SimPitchDeg, UpdateSourceTrigger=LostFocus}" />
-                            </DockPanel>
-                            <DockPanel Margin="0,0,0,4">
-                                <Label Width="150" Content="Sim Roll (°)" VerticalAlignment="Center"
-                                       ToolTip="Helideck roll to embed in the synthetic point cloud (port-up positive)"/>
-                                <TextBox Text="{Binding SimRollDeg, UpdateSourceTrigger=LostFocus}" />
-                            </DockPanel>
-                            <DockPanel Margin="0,0,0,4">
-                                <Label Width="150" Content="Noise (mm σ)" VerticalAlignment="Center"
-                                       ToolTip="Gaussian noise standard deviation added to each simulated point"/>
-                                <TextBox Text="{Binding SimNoiseMm, UpdateSourceTrigger=LostFocus}" />
-                            </DockPanel>
-                            <DockPanel Margin="0,0,0,8">
-                                <Label Width="150" Content="LiDAR Yaw (°)" VerticalAlignment="Center"
-                                       ToolTip="Rotation of the LiDAR sensor relative to the deck heading (clockwise positive)"/>
-                                <TextBox Text="{Binding SimLidarYawDeg, UpdateSourceTrigger=LostFocus}" />
-                            </DockPanel>
+                            <!-- LiDAR Sensor Configuration -->
+                            <telerik:GroupBox Header="LiDAR Sensor Configuration" Margin="0,0,0,8">
+                                <StackPanel Margin="8">
+                                    <DockPanel Margin="0,0,0,4">
+                                        <Label Width="150" Content="Height (m)" VerticalAlignment="Center"
+                                               ToolTip="Height of the LiDAR sensor above the deck surface in meters (default: 0.8 m)"/>
+                                        <TextBox Text="{Binding SimLidarHeightM, UpdateSourceTrigger=LostFocus}" />
+                                    </DockPanel>
+                                    <DockPanel Margin="0,0,0,4">
+                                        <Label Width="150" Content="Yaw (°)" VerticalAlignment="Center"
+                                               ToolTip="Rotation of the LiDAR sensor relative to the deck heading (clockwise positive)"/>
+                                        <TextBox Text="{Binding SimLidarYawDeg, UpdateSourceTrigger=LostFocus}" />
+                                    </DockPanel>
+                                    <DockPanel Margin="0,0,0,4">
+                                        <Label Width="150" Content="Pitch (°)" VerticalAlignment="Center"
+                                               ToolTip="LiDAR mounting pitch relative to deck (bow-up positive) - represents sensor misalignment"/>
+                                        <TextBox Text="{Binding SimPitchDeg, UpdateSourceTrigger=LostFocus}" />
+                                    </DockPanel>
+                                    <DockPanel Margin="0,0,0,4">
+                                        <Label Width="150" Content="Roll (°)" VerticalAlignment="Center"
+                                               ToolTip="LiDAR mounting roll relative to deck (port-up positive) - represents sensor misalignment"/>
+                                        <TextBox Text="{Binding SimRollDeg, UpdateSourceTrigger=LostFocus}" />
+                                    </DockPanel>
+                                </StackPanel>
+                            </telerik:GroupBox>
 
-                            <DockPanel Margin="0,0,0,8">
-                                <Label Width="150" Content="Points" VerticalAlignment="Center"
-                                       ToolTip="Total number of points to generate in the simulation"/>
-                                <TextBox Text="{Binding SimPointCount, UpdateSourceTrigger=LostFocus}" />
-                            </DockPanel>
+                            <!-- Deck Inclination -->
+                            <telerik:GroupBox Header="Deck Inclination" Margin="0,0,0,8">
+                                <StackPanel Margin="8">
+                                    <DockPanel Margin="0,0,0,4">
+                                        <Label Width="150" Content="Slant Type" VerticalAlignment="Center"
+                                               ToolTip="Type of deck slant: Flat (single direction), Ridge (center high, slopes to two sides), CenterHigh (dome - slopes to all sides)"/>
+                                        <telerik:RadComboBox ItemsSource="{Binding DeckSlantTypeOptions}"
+                                                             SelectedItem="{Binding SimDeckSlantType}"
+                                                             Width="150" HorizontalAlignment="Left" />
+                                    </DockPanel>
+                                    <DockPanel Margin="0,0,0,4">
+                                        <Label Width="150" Content="Slant Angle (°)" VerticalAlignment="Center"
+                                               ToolTip="Overall inclination angle of the deck in degrees (0° = level deck)"/>
+                                        <TextBox Text="{Binding SimDeckSlantDeg, UpdateSourceTrigger=LostFocus}" />
+                                    </DockPanel>
+                                    <DockPanel Margin="0,0,0,4"
+                                               Visibility="{Binding IsFlatSlant, Converter={StaticResource BoolToVis}}">
+                                        <Label Width="150" Content="Slant Direction (°)" VerticalAlignment="Center"
+                                               ToolTip="Direction of the deck slant: 0° = bow-up, 90° = port-up, 180° = stern-up, 270° = starboard-up"/>
+                                        <TextBox Text="{Binding SimDeckSlantDirDeg, UpdateSourceTrigger=LostFocus}" />
+                                    </DockPanel>
+                                </StackPanel>
+                            </telerik:GroupBox>
 
-                            <Separator Margin="0,4,0,8"/>
+                            <!-- Effective Angles -->
+                            <telerik:GroupBox Header="Effective Angles (LiDAR + Deck)" Margin="0,0,0,8">
+                                <StackPanel Margin="8">
+                                    <DockPanel Margin="0,0,0,4">
+                                        <Label Width="150" Content="Total Pitch (°)" VerticalAlignment="Center"
+                                               ToolTip="Combined pitch from LiDAR mounting and deck inclination"/>
+                                        <Label Content="{Binding EffectivePitchDeg, StringFormat={}{0:F3}°}" FontWeight="SemiBold"/>
+                                    </DockPanel>
+                                    <DockPanel Margin="0,0,0,4">
+                                        <Label Width="150" Content="Total Roll (°)" VerticalAlignment="Center"
+                                               ToolTip="Combined roll from LiDAR mounting and deck inclination"/>
+                                        <Label Content="{Binding EffectiveRollDeg, StringFormat={}{0:F3}°}" FontWeight="SemiBold"/>
+                                    </DockPanel>
+                                </StackPanel>
+                            </telerik:GroupBox>
 
-                            <DockPanel Margin="0,0,0,4">
-                                <Label Width="150" Content="Helideck Shape" VerticalAlignment="Center"
-                                       ToolTip="Shape of the helideck boundary used in simulation"/>
-                                <telerik:RadComboBox ItemsSource="{Binding HelideckShapeOptions}"
-                                                     SelectedItem="{Binding SimHelideckShape}" />
-                            </DockPanel>
+                            <!-- Point Cloud Settings -->
+                            <telerik:GroupBox Header="Point Cloud Settings" Margin="0,0,0,8">
+                                <StackPanel Margin="8">
+                                    <DockPanel Margin="0,0,0,4">
+                                        <Label Width="150" Content="Noise (mm σ)" VerticalAlignment="Center"
+                                               ToolTip="Gaussian noise standard deviation added to each simulated point"/>
+                                        <TextBox Text="{Binding SimNoiseMm, UpdateSourceTrigger=LostFocus}" />
+                                    </DockPanel>
+                                    <DockPanel Margin="0,0,0,4">
+                                        <Label Width="150" Content="Points" VerticalAlignment="Center"
+                                               ToolTip="Total number of points to generate in the simulation"/>
+                                        <TextBox Text="{Binding SimPointCount, UpdateSourceTrigger=LostFocus}" />
+                                    </DockPanel>
+                                </StackPanel>
+                            </telerik:GroupBox>
 
-                            <DockPanel Margin="0,0,0,4">
-                                <Label Width="150" Content="Show Cube 1" VerticalAlignment="Center"
-                                       ToolTip="Include the large bow-side cube (2 m) in the simulation"/>
-                                <telerik:RadToggleSwitchButton IsChecked="{Binding SimShowCube1}" VerticalAlignment="Center"/>
-                            </DockPanel>
-                            <DockPanel Margin="0,0,0,8">
-                                <Label Width="150" Content="Show Cube 2" VerticalAlignment="Center"
-                                       ToolTip="Include the small stern-side cube (0.5 m) in the simulation"/>
-                                <telerik:RadToggleSwitchButton IsChecked="{Binding SimShowCube2}" VerticalAlignment="Center"/>
-                            </DockPanel>
+                            <!-- Helideck Geometry -->
+                            <telerik:GroupBox Header="Helideck Geometry" Margin="0,0,0,8">
+                                <StackPanel Margin="8">
+                                    <DockPanel Margin="0,0,0,4">
+                                        <Label Width="150" Content="Helideck Shape" VerticalAlignment="Center"
+                                               ToolTip="Shape of the helideck boundary used in simulation"/>
+                                        <telerik:RadComboBox ItemsSource="{Binding HelideckShapeOptions}"
+                                                             SelectedItem="{Binding SimHelideckShape}" />
+                                    </DockPanel>
+                                    <DockPanel Margin="0,0,0,4">
+                                        <Label Width="150" Content="Show Cube 1" VerticalAlignment="Center"
+                                               ToolTip="Include the large bow-side cube (2 m) in the simulation"/>
+                                        <telerik:RadToggleSwitchButton IsChecked="{Binding SimShowCube1}" VerticalAlignment="Center"/>
+                                    </DockPanel>
+                                    <DockPanel Margin="0,0,0,4">
+                                        <Label Width="150" Content="Show Cube 2" VerticalAlignment="Center"
+                                               ToolTip="Include the small stern-side cube (0.5 m) in the simulation"/>
+                                        <telerik:RadToggleSwitchButton IsChecked="{Binding SimShowCube2}" VerticalAlignment="Center"/>
+                                    </DockPanel>
+                                </StackPanel>
+                            </telerik:GroupBox>
 
                             <telerik:RadButton Command="{Binding SimulateScanCommand}"
                                                HorizontalAlignment="Right" Width="228">
                                 Simulate Scan
                             </telerik:RadButton>
+
+                        </StackPanel>
+                    </ScrollViewer>
+                </telerik:RadTabItem>
+
+                <!-- 3D View Tab -->
+                <telerik:RadTabItem Header="3D View">
+                    <ScrollViewer VerticalScrollBarVisibility="Auto"
+                                  HorizontalScrollBarVisibility="Disabled">
+                        <StackPanel Margin="8">
+
+                            <!-- Display Filters -->
+                            <telerik:GroupBox Header="Display Filters" Margin="0,0,0,8">
+                                <StackPanel Margin="8">
+
+                                    <DockPanel Margin="0,0,0,4">
+                                        <Label Width="150" Content="Max Display Points" VerticalAlignment="Center"
+                                               ToolTip="Maximum number of points rendered in the 3D viewport (downsampled for performance)"/>
+                                        <TextBox Text="{Binding MaxDisplayPoints, UpdateSourceTrigger=LostFocus}" />
+                                    </DockPanel>
+
+                                </StackPanel>
+                            </telerik:GroupBox>
+
+                            <!-- Perspective View -->
+                            <telerik:GroupBox Header="Perspective View" Margin="0,0,0,8">
+                                <StackPanel Margin="8">
+
+                                    <DockPanel Margin="0,0,0,4">
+                                        <Label Width="150" Content="Rotation X (°)" VerticalAlignment="Center"
+                                               ToolTip="Vertical tilt angle for perspective view (default: -45)"/>
+                                        <TextBox Text="{Binding PerspectiveRotX, UpdateSourceTrigger=LostFocus}" />
+                                    </DockPanel>
+
+                                    <DockPanel Margin="0,0,0,4">
+                                        <Label Width="150" Content="Rotation Y (°)" VerticalAlignment="Center"
+                                               ToolTip="Horizontal rotation angle for perspective view (default: -45)"/>
+                                        <TextBox Text="{Binding PerspectiveRotY, UpdateSourceTrigger=LostFocus}" />
+                                    </DockPanel>
+
+                                    <DockPanel Margin="0,0,0,4">
+                                        <Label Width="150" Content="Rotation Z (°)" VerticalAlignment="Center"
+                                               ToolTip="Roll angle for perspective view (default: 0)"/>
+                                        <TextBox Text="{Binding PerspectiveRotZ, UpdateSourceTrigger=LostFocus}" />
+                                    </DockPanel>
+
+                                </StackPanel>
+                            </telerik:GroupBox>
+
+                            <!-- Emissive Colors -->
+                            <telerik:GroupBox Header="Colors" Margin="0,0,0,8">
+                                <StackPanel Margin="8">
+
+                                    <DockPanel Margin="0,0,0,4">
+                                        <Label Width="150" Content="Enable Emissive" VerticalAlignment="Center"
+                                               ToolTip="Enable emissive colors for point cloud rendering to make colors appear brighter and more vibrant"/>
+                                        <telerik:RadToggleSwitchButton IsChecked="{Binding EnableEmissiveColors}" VerticalAlignment="Center"/>
+                                    </DockPanel>
+
+                                </StackPanel>
+                            </telerik:GroupBox>
 
                         </StackPanel>
                     </ScrollViewer>
@@ -542,7 +647,7 @@
                                 <TextBlock Text="Plane Normal" FontSize="12" Foreground="#333333" VerticalAlignment="Center"/>
                             </StackPanel>
                             <StackPanel Orientation="Horizontal" Margin="0,2,0,2">
-                                <Border Width="16" Height="16" Background="#CC6200" CornerRadius="2" Margin="0,0,6,0"/>
+                                <Border Width="16" Height="16" Background="#FF8C00" CornerRadius="2" Margin="0,0,6,0"/>
                                 <TextBlock Text="Bow Direction / Deck Edge" FontSize="12" Foreground="#333333" VerticalAlignment="Center"/>
                             </StackPanel>
                             <StackPanel Orientation="Horizontal" Margin="0,2,0,2">

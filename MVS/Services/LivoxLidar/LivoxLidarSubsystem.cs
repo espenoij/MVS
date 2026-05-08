@@ -72,8 +72,12 @@ namespace MVS
 
         public double SimPitchDeg    { get; set; } = 2.0;
         public double SimRollDeg     { get; set; } = 1.5;
+        public double SimDeckSlantDeg { get; set; } = 0.0;
+        public double SimDeckSlantDirDeg { get; set; } = 0.0;
+        public DeckSlantType SimDeckSlantType { get; set; } = DeckSlantType.Flat;
         public double SimNoiseMm     { get; set; } = 10.0;
         public double SimLidarYawDeg { get; set; } = 0.0;
+        public double SimLidarHeightMm { get; set; } = 800.0;
         public int    SimPointCount  { get; set; } = 50_000;
         public bool   SimShowCube1   { get; set; } = true;
         public bool   SimShowCube2   { get; set; } = true;
@@ -246,6 +250,12 @@ namespace MVS
             double yawRad   = SimLidarYawDeg * Math.PI / 180.0;
             double cosYaw   = Math.Cos(yawRad);
             double sinYaw   = Math.Sin(yawRad);
+            double deckHeightMm = SimLidarHeightMm;
+
+            // Deck slant parameters
+            double deckSlantDeg = SimDeckSlantDeg;
+            double deckSlantDirRad = SimDeckSlantDirDeg * Math.PI / 180.0;
+            DeckSlantType slantType = SimDeckSlantType;
 
              const int BatchSize = 500;
             int batches = Math.Max(1, SimPointCount / BatchSize);
@@ -280,7 +290,8 @@ namespace MVS
             int dbgCube1 = 0, dbgCube2F0 = 0, dbgCube2F3 = 0, dbgCube2F5 = 0, dbgDeck = 0;
 
             // Diagnostic: compute cube2 visibility exactly as GenerateCubePoint does
-            double dbgDeckZ2 = 800.0 + Cube2CentreX * Math.Tan(pitchRad) + Cube2CentreY * Math.Tan(rollRad);
+            double dbgDeckZ2 = CalculateDeckZ(Cube2CentreX, Cube2CentreY, deckHeightMm, pitchRad, rollRad,
+                                             slantType, deckSlantDeg, deckSlantDirRad);
             bool   dbgVis5   = (dbgDeckZ2 - 2.0 * Cube2Half) > 0;
             string dbgVis    = $"Cube2 deckZ={dbgDeckZ2:F2}, top={dbgDeckZ2 - 2.0 * Cube2Half:F2}, vis5={dbgVis5}, " +
                                $"pitch={SimPitchDeg:F3}°({pitchRad:F6}), roll={SimRollDeg:F3}°({rollRad:F6})";
@@ -297,7 +308,8 @@ namespace MVS
                     {
                         // Generate a point on cube 1 (rotated)
                         if (!GenerateCubePoint(rng, CubeCentreX, CubeCentreY, CubeHalf,
-                                pitchRad, rollRad, SimNoiseMm, cubeYawRad, out px, out py, out pz))
+                                pitchRad, rollRad, SimNoiseMm, cubeYawRad, deckHeightMm, 
+                                slantType, deckSlantDeg, deckSlantDirRad, out px, out py, out pz))
                         { i--; continue; }
                         dbgCube1++;
                     }
@@ -305,7 +317,8 @@ namespace MVS
                     {
                         // Generate a point on cube 2 (axis-aligned)
                         if (!GenerateCubePoint(rng, Cube2CentreX, Cube2CentreY, Cube2Half,
-                                pitchRad, rollRad, SimNoiseMm, 0.0, out px, out py, out pz))
+                                pitchRad, rollRad, SimNoiseMm, 0.0, deckHeightMm,
+                                slantType, deckSlantDeg, deckSlantDirRad, out px, out py, out pz))
                         { i--; continue; }
                         // Classify face by coordinate proximity
                         if (Math.Abs(px - (Cube2CentreX + Cube2Half)) < 1.0) dbgCube2F0++;
@@ -352,18 +365,17 @@ namespace MVS
                      dbgDeck++;
                     px = hx;
                     py = hy;
-                    pz = 800.0
-                       + px * Math.Tan(pitchRad)
-                       + py * Math.Tan(rollRad)
+
+                    // Calculate deck Z position based on slant type
+                    pz = CalculateDeckZ(px, py, deckHeightMm, pitchRad, rollRad, 
+                                       slantType, deckSlantDeg, deckSlantDirRad)
                        + NextGaussian(rng, SimNoiseMm);
 
                     // Occlusion: discard deck points whose line-of-sight is blocked by enabled cubes.
-                    double deckZ1 = 800.0
-                                  + CubeCentreX * Math.Tan(pitchRad)
-                                  + CubeCentreY * Math.Tan(rollRad);
-                    double deckZ2 = 800.0
-                                  + Cube2CentreX * Math.Tan(pitchRad)
-                                  + Cube2CentreY * Math.Tan(rollRad);
+                    double deckZ1 = CalculateDeckZ(CubeCentreX, CubeCentreY, deckHeightMm, pitchRad, rollRad,
+                                                  slantType, deckSlantDeg, deckSlantDirRad);
+                    double deckZ2 = CalculateDeckZ(Cube2CentreX, Cube2CentreY, deckHeightMm, pitchRad, rollRad,
+                                                  slantType, deckSlantDeg, deckSlantDirRad);
                     bool occluded = false;
                     if (showCube1)
                     {
@@ -437,6 +449,48 @@ namespace MVS
         }
 
         /// <summary>
+        /// Calculates the deck Z position at a given (X, Y) coordinate, including:
+        /// 1. Base deck height
+        /// 2. LiDAR sensor mounting orientation (pitch/roll)
+        /// 3. Deck slant based on selected slant type
+        /// </summary>
+        private static double CalculateDeckZ(double x, double y, double deckHeightMm,
+            double pitchRad, double rollRad,
+            DeckSlantType slantType, double deckSlantDeg, double deckSlantDirRad)
+        {
+            // Start with base height plus LiDAR mounting orientation
+            double z = deckHeightMm + x * Math.Tan(pitchRad) + y * Math.Tan(rollRad);
+
+            // Add deck slant based on type
+            double slantRad = deckSlantDeg * Math.PI / 180.0;
+
+            switch (slantType)
+            {
+                case DeckSlantType.Flat:
+                    // Single slant from one side to the other
+                    // Project (x,y) onto the slant direction
+                    double distAlongSlant = x * Math.Cos(deckSlantDirRad) + y * Math.Sin(deckSlantDirRad);
+                    z += distAlongSlant * Math.Tan(slantRad);
+                    break;
+
+                case DeckSlantType.Ridge:
+                    // Ridge in center, slanting down to two sides
+                    // The perpendicular distance from the slant direction determines height
+                    double perpDist = Math.Abs(-x * Math.Sin(deckSlantDirRad) + y * Math.Cos(deckSlantDirRad));
+                    z -= perpDist * Math.Tan(slantRad);
+                    break;
+
+                case DeckSlantType.CenterHigh:
+                    // Center high point, slanting down to all sides (dome)
+                    double radialDist = Math.Sqrt(x * x + y * y);
+                    z -= radialDist * Math.Tan(slantRad);
+                    break;
+            }
+
+            return z;
+        }
+
+        /// <summary>
         /// Generates a random point on a visible face of a cube sitting on the tilted deck.
         /// The cube may be yaw-rotated around its vertical axis by <paramref name="cubeYawRad"/>.
         /// Returns false if no face is visible (caller should retry).
@@ -444,7 +498,8 @@ namespace MVS
         private static bool GenerateCubePoint(
             Random rng, double cx, double cy, double half,
             double pitchRad, double rollRad, double noiseSigma,
-            double cubeYawRad,
+            double cubeYawRad, double deckHeightMm,
+            DeckSlantType slantType, double deckSlantDeg, double deckSlantDirRad,
             out double px, out double py, out double pz)
         {
             px = py = pz = 0;
@@ -452,7 +507,8 @@ namespace MVS
             double cosR = Math.Cos(cubeYawRad);
             double sinR = Math.Sin(cubeYawRad);
 
-            double deckZ = 800.0 + cx * Math.Tan(pitchRad) + cy * Math.Tan(rollRad);
+            double deckZ = CalculateDeckZ(cx, cy, deckHeightMm, pitchRad, rollRad, 
+                                         slantType, deckSlantDeg, deckSlantDirRad);
             double zCentre = deckZ - half;
 
             // Back-face culling with rotated face normals.

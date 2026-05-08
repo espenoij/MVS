@@ -135,14 +135,112 @@ namespace MVS
         public double SimPitchDeg
         {
             get { return _simPitchDeg; }
-            set { _simPitchDeg = value; OnPropertyChanged(); _config.Write(ConfigKey.LivoxSimPitchDeg, value.ToString()); }
+            set 
+            { 
+                _simPitchDeg = value; 
+                OnPropertyChanged(); 
+                OnPropertyChanged(nameof(EffectivePitchDeg));
+                _config.Write(ConfigKey.LivoxSimPitchDeg, value.ToString()); 
+            }
         }
 
         private double _simRollDeg = 1.5;
         public double SimRollDeg
         {
             get { return _simRollDeg; }
-            set { _simRollDeg = value; OnPropertyChanged(); _config.Write(ConfigKey.LivoxSimRollDeg, value.ToString()); }
+            set 
+            { 
+                _simRollDeg = value; 
+                OnPropertyChanged(); 
+                OnPropertyChanged(nameof(EffectiveRollDeg));
+                _config.Write(ConfigKey.LivoxSimRollDeg, value.ToString()); 
+            }
+        }
+
+        private double _simDeckSlantDeg = 0.0;
+        public double SimDeckSlantDeg
+        {
+            get { return _simDeckSlantDeg; }
+            set 
+            { 
+                _simDeckSlantDeg = value; 
+                OnPropertyChanged(); 
+                OnPropertyChanged(nameof(EffectivePitchDeg));
+                OnPropertyChanged(nameof(EffectiveRollDeg));
+                _config.Write(ConfigKey.LivoxSimDeckSlantDeg, value.ToString());
+            }
+        }
+
+        private double _simDeckSlantDirDeg = 0.0;
+        public double SimDeckSlantDirDeg
+        {
+            get { return _simDeckSlantDirDeg; }
+            set 
+            { 
+                _simDeckSlantDirDeg = value; 
+                OnPropertyChanged(); 
+                OnPropertyChanged(nameof(EffectivePitchDeg));
+                OnPropertyChanged(nameof(EffectiveRollDeg));
+                _config.Write(ConfigKey.LivoxSimDeckSlantDirDeg, value.ToString());
+            }
+        }
+
+        private DeckSlantType _simDeckSlantType = DeckSlantType.Flat;
+        public DeckSlantType SimDeckSlantType
+        {
+            get { return _simDeckSlantType; }
+            set
+            {
+                _simDeckSlantType = value;
+                OnPropertyChanged();
+                OnPropertyChanged(nameof(IsFlatSlant));
+                OnPropertyChanged(nameof(EffectivePitchDeg));
+                OnPropertyChanged(nameof(EffectiveRollDeg));
+                _config.Write(ConfigKey.LivoxSimDeckSlantType, value.ToString());
+            }
+        }
+
+        public IEnumerable<DeckSlantType> DeckSlantTypeOptions => (DeckSlantType[])Enum.GetValues(typeof(DeckSlantType));
+
+        public bool IsFlatSlant => _simDeckSlantType == DeckSlantType.Flat;
+
+        // Computed effective angles combining lidar orientation and deck slant
+        public double EffectivePitchDeg
+        {
+            get
+            {
+                double result = _simPitchDeg;
+
+                if (_simDeckSlantType == DeckSlantType.Flat)
+                {
+                    // Flat slant: use direction to compute pitch component
+                    double dirRad = _simDeckSlantDirDeg * Math.PI / 180.0;
+                    result += _simDeckSlantDeg * Math.Cos(dirRad);
+                }
+                // For Ridge and CenterHigh, the slant varies across the deck,
+                // so we don't add a constant pitch offset here
+
+                return Math.Round(result, 3);
+            }
+        }
+
+        public double EffectiveRollDeg
+        {
+            get
+            {
+                double result = _simRollDeg;
+
+                if (_simDeckSlantType == DeckSlantType.Flat)
+                {
+                    // Flat slant: use direction to compute roll component
+                    double dirRad = _simDeckSlantDirDeg * Math.PI / 180.0;
+                    result += _simDeckSlantDeg * Math.Sin(dirRad);
+                }
+                // For Ridge and CenterHigh, the slant varies across the deck,
+                // so we don't add a constant roll offset here
+
+                return Math.Round(result, 3);
+            }
         }
 
         private double _simNoiseMm = 10.0;
@@ -157,6 +255,13 @@ namespace MVS
         {
             get { return _simLidarYawDeg; }
             set { _simLidarYawDeg = value; OnPropertyChanged(); _config.Write(ConfigKey.LivoxSimLidarYawDeg, value.ToString()); }
+        }
+
+        private double _simLidarHeightM = 0.8;
+        public double SimLidarHeightM
+        {
+            get { return _simLidarHeightM; }
+            set { _simLidarHeightM = value; OnPropertyChanged(); _config.Write(ConfigKey.LivoxSimLidarHeightM, value.ToString()); }
         }
 
         private int _simPointCount = 50000;
@@ -228,6 +333,35 @@ namespace MVS
         {
             get { return _minEdgePoints; }
             set { _minEdgePoints = value; OnPropertyChanged(); _config.Write(ConfigKey.LivoxMinEdgePoints, value.ToString()); }
+        }
+
+        // Perspective view rotation angles
+        private double _perspectiveRotX = -45.0;
+        public double PerspectiveRotX
+        {
+            get { return _perspectiveRotX; }
+            set { _perspectiveRotX = value; OnPropertyChanged(); _config.Write(ConfigKey.LivoxPerspectiveRotX, value.ToString()); }
+        }
+
+        private double _perspectiveRotY = -45.0;
+        public double PerspectiveRotY
+        {
+            get { return _perspectiveRotY; }
+            set { _perspectiveRotY = value; OnPropertyChanged(); _config.Write(ConfigKey.LivoxPerspectiveRotY, value.ToString()); }
+        }
+
+        private double _perspectiveRotZ = 0.0;
+        public double PerspectiveRotZ
+        {
+            get { return _perspectiveRotZ; }
+            set { _perspectiveRotZ = value; OnPropertyChanged(); _config.Write(ConfigKey.LivoxPerspectiveRotZ, value.ToString()); }
+        }
+
+        private bool _enableEmissiveColors = false;
+        public bool EnableEmissiveColors
+        {
+            get { return _enableEmissiveColors; }
+            set { _enableEmissiveColors = value; OnPropertyChanged(); _config.Write(ConfigKey.LivoxEnableEmissiveColors, value.ToString()); }
         }
 
         // Resolved vessel forward angle (read-only, for display)
@@ -384,10 +518,14 @@ namespace MVS
             ScanCleared?.Invoke();
 
             ApplyFiltersToSubsystem();
-            _subsystem.SimPitchDeg    = SimPitchDeg;
-            _subsystem.SimRollDeg     = SimRollDeg;
+            _subsystem.SimPitchDeg    = EffectivePitchDeg;
+            _subsystem.SimRollDeg     = EffectiveRollDeg;
+            _subsystem.SimDeckSlantDeg = SimDeckSlantDeg;
+            _subsystem.SimDeckSlantDirDeg = SimDeckSlantDirDeg;
+            _subsystem.SimDeckSlantType = SimDeckSlantType;
             _subsystem.SimNoiseMm     = SimNoiseMm;
             _subsystem.SimLidarYawDeg = SimLidarYawDeg;
+            _subsystem.SimLidarHeightMm = SimLidarHeightM * 1000.0; // Convert meters to millimeters
             _subsystem.SimPointCount  = SimPointCount;
             _subsystem.SimShowCube1   = SimShowCube1;
             _subsystem.SimShowCube2   = SimShowCube2;
@@ -750,8 +888,14 @@ namespace MVS
 
             SimPitchDeg    = _config.ReadWithDefault(ConfigKey.LivoxSimPitchDeg,    2.0);
             SimRollDeg     = _config.ReadWithDefault(ConfigKey.LivoxSimRollDeg,     1.5);
+            SimDeckSlantDeg = _config.ReadWithDefault(ConfigKey.LivoxSimDeckSlantDeg, 0.0);
+            SimDeckSlantDirDeg = _config.ReadWithDefault(ConfigKey.LivoxSimDeckSlantDirDeg, 0.0);
+            var slantTypeStr = _config.ReadWithDefault(ConfigKey.LivoxSimDeckSlantType, "Flat");
+            DeckSlantType parsedSlantType;
+            SimDeckSlantType = Enum.TryParse(slantTypeStr, out parsedSlantType) ? parsedSlantType : DeckSlantType.Flat;
             SimNoiseMm     = _config.ReadWithDefault(ConfigKey.LivoxSimNoiseMm,     10.0);
             SimLidarYawDeg = _config.ReadWithDefault(ConfigKey.LivoxSimLidarYawDeg, 0.0);
+            SimLidarHeightM = _config.ReadWithDefault(ConfigKey.LivoxSimLidarHeightM, 0.8);
             SimPointCount  = _config.ReadWithDefault(ConfigKey.LivoxSimPointCount,  50000);
             bool cube1;
             SimShowCube1   = bool.TryParse(_config.ReadWithDefault(ConfigKey.LivoxSimShowCube1, "True"), out cube1) ? cube1 : true;
@@ -771,6 +915,11 @@ namespace MVS
             VesselFwdManualDeg = _config.ReadWithDefault(ConfigKey.LivoxVesselFwdManualDeg, 0.0);
             MinFitPoints  = _config.ReadWithDefault(ConfigKey.LivoxMinFitPoints,  1000);
             MinEdgePoints = _config.ReadWithDefault(ConfigKey.LivoxMinEdgePoints, 200);
+            PerspectiveRotX = _config.ReadWithDefault(ConfigKey.LivoxPerspectiveRotX, -45.0);
+            PerspectiveRotY = _config.ReadWithDefault(ConfigKey.LivoxPerspectiveRotY, -45.0);
+            PerspectiveRotZ = _config.ReadWithDefault(ConfigKey.LivoxPerspectiveRotZ, 0.0);
+            bool emissive;
+            EnableEmissiveColors = bool.TryParse(_config.ReadWithDefault(ConfigKey.LivoxEnableEmissiveColors, "False"), out emissive) ? emissive : false;
 
             // Do not restore persisted correction on startup — start with a clean state.
         }
