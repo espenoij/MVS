@@ -75,7 +75,10 @@ namespace MVS
     {
         private const double Rad2Deg           = 180.0 / Math.PI;
         private const int    RansacIterations  = 300;
-        private const double RansacThresholdMm = 50.0;
+        private const double RansacThresholdMm = 50.0;     // tight band for finding the plane
+        private const double DeckInlierBandMm  = 2000.0;   // wide band for collecting deck points
+                                                           // (must be > corner sag on a folded deck:
+                                                           //  e.g. 20 m deck × tan(5°) ≈ 875 mm)
         private const double MinNormalZ        = 0.7;
         private const int    MinPoints         = 50;
         private const double EdgeBandMm        = 400.0;
@@ -144,10 +147,14 @@ namespace MVS
 
             if (bestCnt < MinPoints) return result;
 
-            // Initial inliers from RANSAC
+            // Initial inliers: collect ALL points within DeckInlierBandMm of the
+            // RANSAC plane (NOT the tight RANSAC threshold). On a folded/ridged
+            // deck the corners can sit hundreds of mm from the average plane,
+            // and using the tight band would drop them — leaving the convex hull
+            // (and the MABR computed from it) bounded by the ridge alone.
             var inliers = new List<(float x, float y, float z)>(bestCnt * 2);
             foreach (var p in allPoints)
-                if (Math.Abs(bNx * p.x + bNy * p.y + bNz * p.z + bD) < RansacThresholdMm)
+                if (Math.Abs(bNx * p.x + bNy * p.y + bNz * p.z + bD) < DeckInlierBandMm)
                     inliers.Add(p);
 
             result.DeckInlierCount = inliers.Count;
@@ -182,18 +189,19 @@ namespace MVS
             // Plane offset for projection
             double pD = -(pnx * cx + pny * cy + pnz * cz);
 
-            // ── Step 3: Project ALL points onto the fitted plane ─────────────
-            // For each point P, subtract its perpendicular distance to the plane
-            // along the plane normal. This forces every point to lie EXACTLY on the
-            // fitted plane, eliminating ridges, bumps and out-of-plane structures.
+            // ── Step 3: Project all RANSAC inliers onto the fitted plane ─────
+            // No height-based outlier filtering here. With a folded/ridged deck
+            // the plane fits the AVERAGE height; ridge points sit above and the
+            // four corners sit below. Any height filter (MAD, sigma, percentile)
+            // would throw away the corners along with the ridge — leaving only a
+            // thin horizontal strip that bounds nothing useful.
             //
-            // Why this works for ridge rejection:
-            //   - Ridge points keep their X,Y footprint (which is INSIDE the deck)
-            //   - Their elevation is removed → they no longer extend "up" the normal
-            //   - Corner detection sees only the 2D footprint of the deck
-            //   - The convex hull/extremal vertices are determined purely by the
-            //     deck boundary, not by elevated structures.
-
+            // The robust property we exploit instead: the deck's 2-D footprint
+            // (X,Y on the plane) is invariant to vertical folds. Ridge points
+            // share their X,Y with the deck point directly underneath them, so
+            // they lie INSIDE the deck's 2-D footprint and cannot affect the
+            // convex hull or its minimum-area bounding rectangle. Corners
+            // remain on the hull and are captured cleanly.
             var projected = new List<(float x, float y, float z)>(n);
             for (int i = 0; i < n; i++)
             {
@@ -280,12 +288,12 @@ namespace MVS
 
             // Build 6 hex vertices in 3-D for visualisation
             // Transform from normalized space back to original space
+            // Use Z=0 to place corners exactly on the fitted plane (consistent with vessel forward)
             var hexVerts3D = new List<(double X, double Y, double Z)>(6);
             for (int k = 0; k < 6; k++)
             {
                 double nu = proj[vIdx[k]].u, nw = proj[vIdx[k]].w;
-                // Use normalized point's Z coordinate (should be near zero)
-                double nz = normalized[vIdx[k]].z;
+                double nz = 0.0;  // Force Z=0 to place corners on the fitted plane
                 // Transform back: apply inverse rotation and add centroid
                 double ox = R[0, 0] * nu + R[1, 0] * nw + R[2, 0] * nz;
                 double oy = R[0, 1] * nu + R[1, 1] * nw + R[2, 1] * nz;
@@ -480,23 +488,32 @@ namespace MVS
             HelideckShape deckShape,
             int minEdgePoints)
         {
-            // 4 extremal directions at θk = 45° + k×90°  →  finds the 4 corners
-            double sq2h = Math.Sqrt(2.0) * 0.5;
-            double[] cosK = {  sq2h, -sq2h, -sq2h,  sq2h };
-            double[] sinK = {  sq2h,  sq2h, -sq2h, -sq2h };
+            // ── Compute corners as the Minimum-Area Bounding Rectangle (MABR)
+            //    of the convex hull of the projected points.
+            //
+            // Why MABR instead of "4 fixed extremal vertex searches at ±45°":
+            //   • MABR is rotation-invariant — works regardless of how the deck
+            //     is rotated in the LiDAR frame.
+            //   • The 4 corners are *computed* (rectangle vertices), not picked
+            //     from the cloud, so a single ridge point that survives RANSAC
+            //     cannot become a "corner".
+            //   • MABR is global: it minimizes total enclosing area over all
+            //     hull points, so isolated outliers contribute negligibly.
+            //   • Ridge points in the deck interior are not on the convex hull,
+            //     so they cannot affect the rectangle at all.
+            var hull = ConvexHull2D(proj);
+            if (hull.Count < 3) return result;
 
-            int[] vIdx = new int[4];
-            double[] vBest = new double[4];
-            for (int k = 0; k < 4; k++) vBest[k] = double.MinValue;
+            (double u, double w)[] mabrCorners = ComputeMinAreaRectangle(proj, hull);
+            if (mabrCorners == null) return result;
 
-            for (int i = 0; i < n; i++)
-            {
-                for (int k = 0; k < 4; k++)
-                {
-                    double dot = proj[i].u * cosK[k] + proj[i].w * sinK[k];
-                    if (dot > vBest[k]) { vBest[k] = dot; vIdx[k] = i; }
-                }
-            }
+            // Build "vIdx-equivalent" data: synthesize 4 corner positions in
+            // 2-D and define helpers to fetch them. Downstream code uses
+            // proj[vIdx[k]].u / .w; we route those through a small adapter.
+            (double u, double w)[] vPos = mabrCorners;
+
+            // Helpers that mimic the original proj[vIdx[k]] indexing
+            (double u, double w) V(int k) => vPos[k];
 
             result.HullVertexCount = 4;
 
@@ -510,7 +527,7 @@ namespace MVS
             for (int k = 0; k < 4; k++)
             {
                 int k2 = (k + 1) % 4;
-                double midU = (proj[vIdx[k]].u + proj[vIdx[k2]].u) * 0.5;
+                double midU = (V(k).u + V(k2).u) * 0.5;
                 if (midU > bestScore) { bestScore = midU; bowK = k; }
             }
 
@@ -518,15 +535,15 @@ namespace MVS
             {
                 // Only the 2 aft corners are sharp
                 int aftSide = (bowK + 2) % 4;
-                int c0 = vIdx[aftSide], c1 = vIdx[(aftSide + 1) % 4];
-                // Transform corners back to original space
-                double nz0 = normalized[c0].z, nz1 = normalized[c1].z;
-                double ox0 = R[0, 0] * proj[c0].u + R[1, 0] * proj[c0].w + R[2, 0] * nz0;
-                double oy0 = R[0, 1] * proj[c0].u + R[1, 1] * proj[c0].w + R[2, 1] * nz0;
-                double oz0 = R[0, 2] * proj[c0].u + R[1, 2] * proj[c0].w + R[2, 2] * nz0;
-                double ox1 = R[0, 0] * proj[c1].u + R[1, 0] * proj[c1].w + R[2, 0] * nz1;
-                double oy1 = R[0, 1] * proj[c1].u + R[1, 1] * proj[c1].w + R[2, 1] * nz1;
-                double oz1 = R[0, 2] * proj[c1].u + R[1, 2] * proj[c1].w + R[2, 2] * nz1;
+                var c0 = V(aftSide); var c1 = V((aftSide + 1) % 4);
+                // Transform corners back to original space (Z=0 → exactly on fitted plane)
+                double nz0 = 0.0, nz1 = 0.0;
+                double ox0 = R[0, 0] * c0.u + R[1, 0] * c0.w + R[2, 0] * nz0;
+                double oy0 = R[0, 1] * c0.u + R[1, 1] * c0.w + R[2, 1] * nz0;
+                double oz0 = R[0, 2] * c0.u + R[1, 2] * c0.w + R[2, 2] * nz0;
+                double ox1 = R[0, 0] * c1.u + R[1, 0] * c1.w + R[2, 0] * nz1;
+                double oy1 = R[0, 1] * c1.u + R[1, 1] * c1.w + R[2, 1] * nz1;
+                double oz1 = R[0, 2] * c1.u + R[1, 2] * c1.w + R[2, 2] * nz1;
                 squareVerts3D.Add((cx + ox0, cy + oy0, cz + oz0));
                 squareVerts3D.Add((cx + ox1, cy + oy1, cz + oz1));
                 result.HullVertexCount = 2;
@@ -541,11 +558,11 @@ namespace MVS
                 // Square: all 4 corners are sharp
                 for (int k = 0; k < 4; k++)
                 {
-                    double nu = proj[vIdx[k]].u, nw = proj[vIdx[k]].w;
-                    double nz = normalized[vIdx[k]].z;
-                    double ox = R[0, 0] * nu + R[1, 0] * nw + R[2, 0] * nz;
-                    double oy = R[0, 1] * nu + R[1, 1] * nw + R[2, 1] * nz;
-                    double oz = R[0, 2] * nu + R[1, 2] * nw + R[2, 2] * nz;
+                    var c = V(k);
+                    double nz = 0.0;  // Force Z=0 to place corners on the fitted plane
+                    double ox = R[0, 0] * c.u + R[1, 0] * c.w + R[2, 0] * nz;
+                    double oy = R[0, 1] * c.u + R[1, 1] * c.w + R[2, 1] * nz;
+                    double oz = R[0, 2] * c.u + R[1, 2] * c.w + R[2, 2] * nz;
                     squareVerts3D.Add((cx + ox, cy + oy, cz + oz));
                 }
             }
@@ -578,8 +595,8 @@ namespace MVS
 
             double fU, fW;
             {
-                int rA = vIdx[refK], rB = vIdx[(refK + 1) % 4];
-                double rdU = proj[rA].u - proj[rB].u, rdW = proj[rA].w - proj[rB].w;
+                var rA = V(refK); var rB = V((refK + 1) % 4);
+                double rdU = rA.u - rB.u, rdW = rA.w - rB.w;
                 double rL = Math.Sqrt(rdU * rdU + rdW * rdW);
                 if (rL < 1e-6) { fU = 1.0; fW = 0.0; }
                 else
@@ -587,8 +604,8 @@ namespace MVS
                     rdU /= rL; rdW /= rL;
                     // Outward normal of this reference edge
                     double nU = -rdW, nW = rdU;
-                    double rmU = (proj[rA].u + proj[rB].u) * 0.5;
-                    double rmW = (proj[rA].w + proj[rB].w) * 0.5;
+                    double rmU = (rA.u + rB.u) * 0.5;
+                    double rmW = (rA.w + rB.w) * 0.5;
                     if (nU * rmU + nW * rmW < 0) { nU = -nU; nW = -nW; }
 
                     if (negateNormal)
@@ -622,12 +639,12 @@ namespace MVS
             {
                 int k = trialOrder[trial];
                 int k2 = (k + 1) % 4;
-                int idxA = vIdx[k], idxB = vIdx[k2];
+                var cA = V(k); var cB = V(k2);
 
                 // Ensure consistent winding (port vertex first)
-                if (proj[idxA].w < proj[idxB].w) { int tmp = idxA; idxA = idxB; idxB = tmp; }
-                double pu = proj[idxA].u, pw = proj[idxA].w;
-                double su = proj[idxB].u, sw = proj[idxB].w;
+                if (cA.w < cB.w) { var tmp = cA; cA = cB; cB = tmp; }
+                double pu = cA.u, pw = cA.w;
+                double su = cB.u, sw = cB.w;
 
                 double muU  = (pu + su) * 0.5;
                 double muW  = (pw + sw) * 0.5;
@@ -641,9 +658,10 @@ namespace MVS
                 double outU = -dirW, outW = dirU;
                 if (outU * muU + outW * muW < 0) { outU = -outU; outW = -outW; }
 
-                // Edge band
-                double extA = proj[idxA].u * outU + proj[idxA].w * outW;
-                double extB = proj[idxB].u * outU + proj[idxB].w * outW;
+                // Edge band — anchored at the MABR corner positions, not at
+                // single cloud points, so a stray ridge inlier cannot bias the band.
+                double extA = cA.u * outU + cA.w * outW;
+                double extB = cB.u * outU + cB.w * outW;
                 double maxExt = Math.Max(extA, extB);
                 var edgeIdx = new List<int>();
                 for (int i = 0; i < n; i++)
@@ -770,7 +788,7 @@ namespace MVS
             foreach (int hi in hull)
             {
                 double nu = proj[hi].u, nw = proj[hi].w;
-                double nz = normalized[hi].z;
+                double nz = 0.0;  // Force Z=0 to place hull vertices on the fitted plane
                 double ox = R[0, 0] * nu + R[1, 0] * nw + R[2, 0] * nz;
                 double oy = R[0, 1] * nu + R[1, 1] * nw + R[2, 1] * nz;
                 double oz = R[0, 2] * nu + R[1, 2] * nw + R[2, 2] * nz;
@@ -1023,6 +1041,65 @@ namespace MVS
 
         private static double Cross((double u, double w) o, (double u, double w) a, (double u, double w) b)
             => (a.u - o.u) * (b.w - o.w) - (a.w - o.w) * (b.u - o.u);
+
+        /// <summary>
+        /// Computes the Minimum-Area Bounding Rectangle (MABR) of the supplied
+        /// 2-D point set, using the Rotating Calipers theorem on the convex hull:
+        /// the optimal rectangle has at least one side collinear with a hull edge.
+        ///
+        /// Returns 4 corners in counter-clockwise order, or null if the hull is
+        /// degenerate. Corners are computed (synthesized) from the hull bounds —
+        /// they are NOT picked from the input cloud, which is exactly what makes
+        /// the result robust against ridge points or other isolated outliers.
+        /// </summary>
+        private static (double u, double w)[] ComputeMinAreaRectangle(
+            (double u, double w)[] pts, List<int> hull)
+        {
+            int h = hull.Count;
+            if (h < 3) return null;
+
+            double bestArea = double.MaxValue;
+            (double u, double w)[] best = null;
+
+            for (int i = 0; i < h; i++)
+            {
+                var a = pts[hull[i]];
+                var b = pts[hull[(i + 1) % h]];
+
+                double ex = b.u - a.u, ey = b.w - a.w;
+                double eL = Math.Sqrt(ex * ex + ey * ey);
+                if (eL < 1e-9) continue;
+                ex /= eL; ey /= eL;             // edge direction
+                double nx = -ey, ny = ex;       // perpendicular
+
+                double minE = double.MaxValue, maxE = double.MinValue;
+                double minN = double.MaxValue, maxN = double.MinValue;
+                for (int j = 0; j < h; j++)
+                {
+                    var p = pts[hull[j]];
+                    double pe = p.u * ex + p.w * ey;
+                    double pn = p.u * nx + p.w * ny;
+                    if (pe < minE) minE = pe;
+                    if (pe > maxE) maxE = pe;
+                    if (pn < minN) minN = pn;
+                    if (pn > maxN) maxN = pn;
+                }
+
+                double area = (maxE - minE) * (maxN - minN);
+                if (area < bestArea)
+                {
+                    bestArea = area;
+                    // Build 4 corners CCW: (minE,minN) (maxE,minN) (maxE,maxN) (minE,maxN)
+                    best = new (double u, double w)[4];
+                    best[0] = (minE * ex + minN * nx, minE * ey + minN * ny);
+                    best[1] = (maxE * ex + minN * nx, maxE * ey + minN * ny);
+                    best[2] = (maxE * ex + maxN * nx, maxE * ey + maxN * ny);
+                    best[3] = (minE * ex + maxN * nx, minE * ey + maxN * ny);
+                }
+            }
+
+            return best;
+        }
 
         /// <summary>
         /// Iteratively refines an edge direction estimate by alternating between:

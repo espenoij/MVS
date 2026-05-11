@@ -310,7 +310,7 @@ namespace MVS
             _hexVerticesVisual.Content = null;
 
             // Edge line: plain tube (no arrowhead) along the bow edge
-            double shaftRadius = Math.Max(edge.HalfLength * 2.0, 4000.0) * 0.01;
+            double shaftRadius = Math.Max(edge.HalfLength * 2.0, 4000.0) * 0.02;
             var edgeStart = new Point3D(
                 edge.MidpointX - edge.HalfLength * edge.DirectionX,
                 edge.MidpointY - edge.HalfLength * edge.DirectionY,
@@ -369,7 +369,7 @@ namespace MVS
 
             // Bow direction arrow: from lidar origin toward the bow
             double bowArrowLen    = Math.Max(edge.HalfLength * 1.2, 6000.0);
-            double bowShaftRadius = bowArrowLen * 0.01;
+            double bowShaftRadius = bowArrowLen * 0.02;
             var bowMesh = BuildArrowMesh(new Point3D(0, 0, 0),
                 new Vector3D(edge.VesselForwardX, edge.VesselForwardY, edge.VesselForwardZ),
                 bowArrowLen, bowShaftRadius);
