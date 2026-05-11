@@ -1,5 +1,8 @@
 using System;
 using System.Collections.Generic;
+using MathNet.Numerics.LinearAlgebra;
+using MathNet.Numerics.LinearAlgebra.Double;
+using MathNet.Numerics.LinearAlgebra.Factorization;
 
 namespace MVS
 {
@@ -43,14 +46,12 @@ namespace MVS
 
     /// <summary>
     /// Fits a plane to a 3-D point cloud using PCA on the 3×3 covariance matrix.
-    /// The eigendecomposition is solved analytically via the cyclic Jacobi method —
-    /// no external libraries required.
+    /// The eigendecomposition is delegated to the Math.NET Numerics library
+    /// (well-tested, production-grade implementation).
     /// </summary>
     public static class LivoxLidarPlaneFitter
     {
         private const double Rad2Deg = 180.0 / Math.PI;
-        private const int    MaxSweeps = 50;
-        private const double Tolerance = 1e-14;
         private const int    MinPoints = 20;
 
         private const int    FilterIterations = 3;
@@ -96,9 +97,7 @@ namespace MVS
                     { sxz / n, syz / n, szz / n }
                 };
 
-                double[] ev; double[,] V;
-                Jacobi3x3(M, out ev, out V);
-                SortColumns(ref ev, ref V);
+                EigenDecomposeAscending(M, out double[] ev, out double[,] V);
 
                 // Normal = smallest eigenvector
                 double nx = V[0, 0], ny = V[1, 0], nz = V[2, 0];
@@ -175,13 +174,9 @@ namespace MVS
                 { sxz / n, syz / n, szz / n }
             };
 
-            // ── Step 3: Jacobi eigendecomposition ────────────────────────────
-            double[] eigenvalues;
-            double[,] V;
-            Jacobi3x3(M, out eigenvalues, out V);
-
-            // Sort ascending so column 0 = smallest eigenvalue (normal)
-            SortColumns(ref eigenvalues, ref V);
+            // ── Step 3: Eigendecomposition (Math.NET Numerics) ───────────────
+            // Sorted ascending so column 0 = smallest eigenvalue (plane normal).
+            EigenDecomposeAscending(M, out double[] eigenvalues, out double[,] V);
 
             // ── Step 4: Plane normal ──────────────────────────────────────────
             double nx = V[0, 0], ny = V[1, 0], nz = V[2, 0];
@@ -312,70 +307,27 @@ namespace MVS
             return result;
         }
 
-        // ── Jacobi cyclic algorithm for real symmetric 3×3 ──────────────────
-        // V columns are the eigenvectors; eigenvalues correspond to the diagonal of A after convergence.
-        private static void Jacobi3x3(double[,] A, out double[] eigenvalues, out double[,] V)
+        // ── Symmetric eigendecomposition via Math.NET Numerics ──────────────
+        // Wraps the well-tested Math.NET Evd routine and returns eigenvalues
+        // sorted ascending with eigenvector columns aligned, matching the
+        // calling convention previously satisfied by the in-house Jacobi solver.
+        private static void EigenDecomposeAscending(double[,] A, out double[] eigenvalues, out double[,] V)
         {
-            double[,] a = (double[,])A.Clone();
-            V = new double[3, 3] { { 1, 0, 0 }, { 0, 1, 0 }, { 0, 0, 1 } };
+            var m = DenseMatrix.OfArray(A);
+            var evd = m.Evd(Symmetricity.Symmetric);
 
-            for (int sweep = 0; sweep < MaxSweeps; sweep++)
+            // Math.NET returns eigenvalues already sorted ascending for symmetric input,
+            // and EigenVectors columns aligned to those eigenvalues.
+            var evVec = evd.EigenValues;
+            var V_m   = evd.EigenVectors;
+
+            eigenvalues = new double[3];
+            V           = new double[3, 3];
+            for (int i = 0; i < 3; i++)
             {
-                // Off-diagonal Frobenius norm — stop when negligible
-                double off = a[0,1]*a[0,1] + a[0,2]*a[0,2] + a[1,2]*a[1,2];
-                if (off < Tolerance) break;
-
-                // Cycle over all three off-diagonal pairs
-                for (int p = 0; p < 2; p++)
-                for (int q = p + 1; q < 3; q++)
-                {
-                    double apq = a[p, q];
-                    if (Math.Abs(apq) < 1e-30) continue;
-
-                    // Givens rotation angle to zero a[p,q]
-                    double theta = 0.5 * Math.Atan2(2.0 * apq, a[q, q] - a[p, p]);
-                    double c = Math.Cos(theta);
-                    double s = Math.Sin(theta);
-
-                    // Save values before overwrite
-                    double app = a[p, p], aqq = a[q, q];
-                    int r = 3 - p - q;             // third index: 0+1+2=3
-                    double arp = a[r, p], arq = a[r, q];
-
-                    // Apply similarity transform G^T * a * G
-                    a[p, p] = c*c*app - 2*s*c*apq + s*s*aqq;
-                    a[q, q] = s*s*app + 2*s*c*apq + c*c*aqq;
-                    a[p, q] = a[q, p] = 0.0;
-                    a[r, p] = a[p, r] = c*arp - s*arq;
-                    a[r, q] = a[q, r] = s*arp + c*arq;
-
-                    // Accumulate rotation: V ← V * G
-                    for (int i = 0; i < 3; i++)
-                    {
-                        double vip = V[i, p], viq = V[i, q];
-                        V[i, p] = c*vip - s*viq;
-                        V[i, q] = s*vip + c*viq;
-                    }
-                }
-            }
-
-            eigenvalues = new double[] { a[0, 0], a[1, 1], a[2, 2] };
-        }
-
-        // Sort eigenvalues ascending, keeping eigenvector columns aligned
-        private static void SortColumns(ref double[] vals, ref double[,] vecs)
-        {
-            for (int i = 0; i < 2; i++)
-            for (int j = i + 1; j < 3; j++)
-            {
-                if (vals[j] < vals[i])
-                {
-                    double tmp = vals[i]; vals[i] = vals[j]; vals[j] = tmp;
-                    for (int k = 0; k < 3; k++)
-                    {
-                        tmp = vecs[k, i]; vecs[k, i] = vecs[k, j]; vecs[k, j] = tmp;
-                    }
-                }
+                eigenvalues[i] = evVec[i].Real;
+                for (int r = 0; r < 3; r++)
+                    V[r, i] = V_m[r, i];
             }
         }
     }

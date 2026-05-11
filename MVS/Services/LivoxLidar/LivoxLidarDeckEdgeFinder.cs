@@ -1,5 +1,8 @@
 using System;
 using System.Collections.Generic;
+using MathNet.Numerics.LinearAlgebra;
+using MathNet.Numerics.LinearAlgebra.Double;
+using MathNet.Numerics.LinearAlgebra.Factorization;
 
 namespace MVS
 {
@@ -83,8 +86,6 @@ namespace MVS
         private const int    MinPoints         = 50;
         private const double EdgeBandMm        = 400.0;
         private const double MaxEdgeDeviationFrac = 0.06;
-        private const int    MaxJacobiSweeps   = 50;
-        private const double JacobiTolerance   = 1e-14;
         private const int    EdgeRefineIterations = 5;
         private const double EdgeRefineConvergeDeg = 0.001; // stop when angle change < 0.001°
 
@@ -180,7 +181,6 @@ namespace MVS
                 { sxz / n, syz / n, szz / n }
             };
             Jacobi3x3(cov, out double[] evals, out double[,] V);
-            SortColumns(ref evals, ref V);
 
             double pnx = V[0, 0], pny = V[1, 0], pnz = V[2, 0];
             if (pnz < 0) { pnx = -pnx; pny = -pny; pnz = -pnz; }
@@ -1210,61 +1210,21 @@ namespace MVS
             return true;
         }
 
-        // ── Jacobi cyclic eigendecomposition for real symmetric 3×3 ─────────
-        // (Duplicated from LivoxLidarPlaneFitter to keep this class self-contained.)
-
+        // ── Symmetric 3×3 eigendecomposition via Math.NET Numerics ──────────
+        // Returns eigenvalues sorted ascending with eigenvector columns aligned.
         private static void Jacobi3x3(double[,] A, out double[] eigenvalues, out double[,] V)
         {
-            double[,] a = (double[,])A.Clone();
-            V = new double[3, 3] { { 1, 0, 0 }, { 0, 1, 0 }, { 0, 0, 1 } };
+            var m   = DenseMatrix.OfArray(A);
+            var evd = m.Evd(Symmetricity.Symmetric);
 
-            for (int sweep = 0; sweep < MaxJacobiSweeps; sweep++)
+            eigenvalues = new double[3];
+            V           = new double[3, 3];
+            for (int i = 0; i < 3; i++)
             {
-                double off = a[0, 1] * a[0, 1] + a[0, 2] * a[0, 2] + a[1, 2] * a[1, 2];
-                if (off < JacobiTolerance) break;
-
-                for (int p = 0; p < 2; p++)
-                    for (int q = p + 1; q < 3; q++)
-                    {
-                        double apq = a[p, q];
-                        if (Math.Abs(apq) < 1e-30) continue;
-
-                        double theta = 0.5 * Math.Atan2(2.0 * apq, a[q, q] - a[p, p]);
-                        double c = Math.Cos(theta), s = Math.Sin(theta);
-                        double app = a[p, p], aqq = a[q, q];
-                        int r = 3 - p - q;
-                        double arp = a[r, p], arq = a[r, q];
-
-                        a[p, p] = c * c * app - 2 * s * c * apq + s * s * aqq;
-                        a[q, q] = s * s * app + 2 * s * c * apq + c * c * aqq;
-                        a[p, q] = a[q, p] = 0.0;
-                        a[r, p] = a[p, r] = c * arp - s * arq;
-                        a[r, q] = a[q, r] = s * arp + c * arq;
-
-                        for (int i = 0; i < 3; i++)
-                        {
-                            double vip = V[i, p], viq = V[i, q];
-                            V[i, p] = c * vip - s * viq;
-                            V[i, q] = s * vip + c * viq;
-                        }
-                    }
+                eigenvalues[i] = evd.EigenValues[i].Real;
+                for (int r = 0; r < 3; r++)
+                    V[r, i] = evd.EigenVectors[r, i];
             }
-
-            eigenvalues = new double[] { a[0, 0], a[1, 1], a[2, 2] };
-        }
-
-        private static void SortColumns(ref double[] vals, ref double[,] vecs)
-        {
-            for (int i = 0; i < 2; i++)
-                for (int j = i + 1; j < 3; j++)
-                    if (vals[j] < vals[i])
-                    {
-                        double tmp = vals[i]; vals[i] = vals[j]; vals[j] = tmp;
-                        for (int k = 0; k < 3; k++)
-                        {
-                            tmp = vecs[k, i]; vecs[k, i] = vecs[k, j]; vecs[k, j] = tmp;
-                        }
-                    }
         }
 
         /// <summary>
