@@ -295,6 +295,36 @@ namespace MVS
             }
         }
 
+        // ── Shared arrow sizing ──────────────────────────────────────────────
+        // All arrows in the main viewport derive their length and shaft radius
+        // from a single source so they look visually consistent. The edge
+        // indicator tube keeps its real physical length (2 × HalfLength) but
+        // adopts the shared shaft radius.
+        private const double ArrowShaftRadiusFraction = 0.02; // shaft radius / length
+
+        private void GetArrowDimensions(out double length, out double shaftRadius)
+        {
+            // Prefer the plane fit extent (stable scene size). Fall back to the
+            // edge half-length if no fit is available yet, then to a constant.
+            double baseSize;
+            if (_lastFitResult != null && _lastFitResult.IsValid)
+            {
+                double maxExtent = Math.Max(_lastFitResult.ExtentPrimary, _lastFitResult.ExtentSecondary);
+                baseSize = maxExtent * 0.3;
+            }
+            else if (_lastEdgeResult != null && _lastEdgeResult.IsValid)
+            {
+                baseSize = _lastEdgeResult.HalfLength * 1.2;
+            }
+            else
+            {
+                baseSize = 6000.0;
+            }
+
+            length      = Math.Max(baseSize, 6000.0);
+            shaftRadius = length * ArrowShaftRadiusFraction;
+        }
+
         // ── Deck edge result → 3D scene update ───────────────────────────────
 
         private void OnDeckEdgeResultReady(LivoxLidarDeckEdgeResult edge)
@@ -309,8 +339,11 @@ namespace MVS
             _lastEdgeResult = edge;
             _hexVerticesVisual.Content = null;
 
-            // Edge line: plain tube (no arrowhead) along the bow edge
-            double shaftRadius = Math.Max(edge.HalfLength * 2.0, 4000.0) * 0.02;
+            // Shared arrow dimensions — same length & thickness as the other arrows
+            GetArrowDimensions(out double arrowLength, out double shaftRadius);
+
+            // Edge line: plain tube (no arrowhead) along the bow edge.
+            // Length is the real physical edge segment; thickness is shared.
             var edgeStart = new Point3D(
                 edge.MidpointX - edge.HalfLength * edge.DirectionX,
                 edge.MidpointY - edge.HalfLength * edge.DirectionY,
@@ -326,7 +359,7 @@ namespace MVS
             // Hull vertex markers — bright magenta cubes at each estimated boundary vertex
             if (edge.HullVertices3D != null && edge.HullVertices3D.Count >= 1)
             {
-                double h         = Math.Max(edge.HalfLength * 0.04, 150.0);
+                double h         = Math.Max(edge.HalfLength * 0.02, 75.0);
                 var    positions = new Point3DCollection();
                 var    indices   = new Int32Collection();
 
@@ -367,12 +400,10 @@ namespace MVS
                 _hexVerticesVisual.Content = new GeometryModel3D { Geometry = markerMesh, Material = markerMat, BackMaterial = markerMat };
             }
 
-            // Bow direction arrow: from lidar origin toward the bow
-            double bowArrowLen    = Math.Max(edge.HalfLength * 1.2, 6000.0);
-            double bowShaftRadius = bowArrowLen * 0.02;
+            // Bow direction arrow: same length & thickness as the other arrows
             var bowMesh = BuildArrowMesh(new Point3D(0, 0, 0),
                 new Vector3D(edge.VesselForwardX, edge.VesselForwardY, edge.VesselForwardZ),
-                bowArrowLen, bowShaftRadius);
+                arrowLength, shaftRadius);
             var bowMat = MakeArrowMaterial(Color.FromRgb(255, 140, 0));
             _bowArrowVisual.Content = new GeometryModel3D { Geometry = bowMesh, Material = bowMat, BackMaterial = bowMat };
 
@@ -457,11 +488,11 @@ namespace MVS
 
         private void UpdateArrows(LivoxLidarPlaneFitResult fit)
         {
+            _lastFitResult = fit;
             var origin = new Point3D(0, 0, 0);
 
-            double maxExtent   = Math.Max(fit.ExtentPrimary, fit.ExtentSecondary);
-            double arrowLength = Math.Max(maxExtent * 0.3, 2000.0);
-            double shaftRadius = arrowLength * 0.02;
+            // Shared arrow dimensions — used by every arrow in the main viewport
+            GetArrowDimensions(out double arrowLength, out double shaftRadius);
 
             // Vessel forward: +X in sensor coordinate system (Mid-360: +X = forward)
             var forwardMesh = BuildArrowMesh(origin, new Vector3D(1, 0, 0), arrowLength, shaftRadius);
