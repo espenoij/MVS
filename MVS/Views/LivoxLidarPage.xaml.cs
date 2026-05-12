@@ -2,7 +2,6 @@ using System;
 using System.Collections.Generic;
 using System.Windows;
 using System.Windows.Input;
-using System.Windows.Media.Media3D;
 
 namespace MVS
 {
@@ -35,16 +34,15 @@ namespace MVS
             // Renderer owns the 3D visuals and exposes high-level Render* methods.
             _scene = new LidarSceneRenderer(pointCloudVisual, planeVisual, materials);
             _scene.AttachToViewport(viewport3D);
-            _scene.SetAxisIndicatorVisuals(
-                FindName("axisXVisual") as ModelVisual3D,
-                FindName("axisYVisual") as ModelVisual3D,
-                FindName("axisZVisual") as ModelVisual3D);
+            _scene.SetAxisIndicatorVisuals(axisXVisual, axisYVisual, axisZVisual);
 
             // Trackball controller drives the main camera and (optionally) the axis camera.
             _trackball = new TrackballCameraController(camera,
                 () => viewport3D.ActualWidth / Math.Max(viewport3D.ActualHeight, 1.0));
-            _trackball.AttachAxisCamera(FindName("axisCamera") as PerspectiveCamera);
-            _trackball.SetRotationChangedCallback(UpdateRotationReadout);
+            _trackball.AttachAxisCamera(axisCamera);
+
+            var readout = new RotationReadout(tbRotX, tbRotY, tbRotZ);
+            _trackball.SetRotationChangedCallback(readout.Update);
 
             // Coordinator wires VM events to the renderer / trackball.
             _coordinator = new LidarSceneCoordinator(vm, _scene, _trackball, materials, Dispatcher,
@@ -69,8 +67,7 @@ namespace MVS
 
         private void SwitchToSimulationTab()
         {
-            var tc = FindName("tabControl") as Telerik.Windows.Controls.RadTabControl;
-            if (tc != null) tc.SelectedIndex = 1;
+            tabControl.SelectedIndex = 1;
         }
 
         // ── Trackball mouse handlers
@@ -105,16 +102,6 @@ namespace MVS
         private void Viewport_MouseWheel(object sender, MouseWheelEventArgs e)
         {
             _trackball.OnMouseWheel(e);
-        }
-
-        private void UpdateRotationReadout(double rotX, double rotY, double rotZ)
-        {
-            var tbRotX = FindName("tbRotX") as System.Windows.Controls.TextBlock;
-            var tbRotY = FindName("tbRotY") as System.Windows.Controls.TextBlock;
-            var tbRotZ = FindName("tbRotZ") as System.Windows.Controls.TextBlock;
-            if (tbRotX != null) tbRotX.Text = $"{rotX:+0.0;-0.0;0.0}°";
-            if (tbRotY != null) tbRotY.Text = $"{rotY:+0.0;-0.0;0.0}°";
-            if (tbRotZ != null) tbRotZ.Text = $"{rotZ:+0.0;-0.0;0.0}°";
         }
     }
 }
