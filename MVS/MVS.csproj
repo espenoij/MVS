@@ -32,7 +32,7 @@
     <UseApplicationTrust>false</UseApplicationTrust>
     <PublishWizardCompleted>true</PublishWizardCompleted>
     <BootstrapperEnabled>true</BootstrapperEnabled>
-    <AssemblyVersion>1.1.0.1037</AssemblyVersion>
+    <AssemblyVersion>1.1.0.1039</AssemblyVersion>
   </PropertyGroup>
   <PropertyGroup Condition=" '$(Configuration)|$(Platform)' == 'Debug|AnyCPU' ">
     <PlatformTarget>AnyCPU</PlatformTarget>
@@ -198,6 +198,7 @@
     <Compile Include="Services\LivoxLidar\Rendering\CameraMath.cs" />
     <Compile Include="Services\LivoxLidar\Rendering\EdgePointsMeshBuilder.cs" />
     <Compile Include="Services\LivoxLidar\Rendering\HullMarkerMeshBuilder.cs" />
+    <Compile Include="Services\LivoxLidar\Rendering\LidarSceneCoordinator.cs" />
     <Compile Include="Services\LivoxLidar\Rendering\LidarSceneRenderer.cs" />
     <Compile Include="Services\LivoxLidar\Rendering\MaterialFactory.cs" />
     <Compile Include="Services\LivoxLidar\Rendering\PlaneMeshBuilder.cs" />
