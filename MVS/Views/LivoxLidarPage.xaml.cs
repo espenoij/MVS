@@ -52,6 +52,9 @@ namespace MVS
         private LivoxLidarPlaneFitResult _lastFitResult;
         private LivoxLidarDeckEdgeResult _lastEdgeResult;
 
+        // Cached brushes/materials. Rebuilt when EnableEmissiveColors changes.
+        private MaterialFactory _materials = new MaterialFactory(emissiveEnabled: false);
+
         public LivoxLidarPage()
         {
             InitializeComponent();
@@ -77,6 +80,8 @@ namespace MVS
                     Dispatcher.BeginInvoke(System.Windows.Threading.DispatcherPriority.Normal,
                         new Action(() =>
                         {
+                            // Rebuild the material cache so subsequent renders pick up the new flag.
+                            _materials = new MaterialFactory(vm.EnableEmissiveColors);
                             // Re-render point cloud
                             if (_lastPointCloud != null)
                             {
@@ -107,6 +112,9 @@ namespace MVS
             viewport3D.Children.Add(_deckEdgeLineVisual);
             viewport3D.Children.Add(_deckEdgePointsVisual);
             viewport3D.Children.Add(_hexVerticesVisual);
+
+            // Initialise the cached materials from the current VM setting.
+            _materials = new MaterialFactory(vm.EnableEmissiveColors);
 
             // Initialize the 3D axis indicators in their separate viewport
             InitializeAxisIndicators();
@@ -192,100 +200,28 @@ namespace MVS
             // Store the points for re-rendering when settings change
             _lastPointCloud = points;
 
-            // Downsample to at most MaxDisplayPoints for display performance.
-            // Use a floating-point stride so the displayed count stays close to
-            // the limit and doesn't jump when the total crosses a threshold.
+            // Build a downsampled quad-per-point mesh with height-based UVs.
             int maxDisplay = _vm != null ? Math.Max(_vm.MaxDisplayPoints, 100) : 20_000;
-            int displayCount = Math.Min(points.Count, maxDisplay);
-            double stride = points.Count / (double)displayCount;
-
-            // Find Z range across displayed points for heat-map normalisation
-            float zMin = float.MaxValue, zMax = float.MinValue;
-            for (int s = 0; s < displayCount; s++)
+            var meshResult = PointCloudMeshBuilder.Build(points, maxDisplay);
+            if (meshResult == null)
             {
-                float z = points[(int)(s * stride)].z;
-                if (z < zMin) zMin = z;
-                if (z > zMax) zMax = z;
+                pointCloudVisual.Content = null;
+                return;
             }
-            float zRange = zMax - zMin;
-            if (zRange < 1f) zRange = 1f; // guard: prevent divide-by-zero on flat scan
+            var mesh = meshResult.Mesh;
+            int displayCount = meshResult.DisplayedPointCount;
 
-            var positions     = new Point3DCollection();
-            var indices       = new Int32Collection();
-            var texCoords     = new PointCollection();
-
-            float quadHalfSize = 30f; // mm — display size of each point marker
-
-            int idx = 0;
-            for (int s = 0; s < displayCount; s++)
-            {
-                var (x, y, z) = points[(int)(s * stride)];
-
-                // U = normalised height: 0 = lowest (blue), 1 = highest (red)
-                double u = (z - zMin) / zRange;
-                var uv = new Point(u, 0.5);
-
-                // Each point = two triangles forming a small square in the XY plane
-                positions.Add(new Point3D(x - quadHalfSize, y - quadHalfSize, z));
-                positions.Add(new Point3D(x + quadHalfSize, y - quadHalfSize, z));
-                positions.Add(new Point3D(x + quadHalfSize, y + quadHalfSize, z));
-                positions.Add(new Point3D(x - quadHalfSize, y + quadHalfSize, z));
-
-                texCoords.Add(uv); texCoords.Add(uv);
-                texCoords.Add(uv); texCoords.Add(uv);
-
-                indices.Add(idx);     indices.Add(idx + 1); indices.Add(idx + 2);
-                indices.Add(idx);     indices.Add(idx + 2); indices.Add(idx + 3);
-                idx += 4;
-            }
-
-            var mesh = new MeshGeometry3D
-            {
-                Positions          = positions,
-                TextureCoordinates = texCoords,
-                TriangleIndices    = indices
-            };
-
-            // Heat-map gradient: blue (low Z) → cyan → green → yellow → red (high Z)
-            var brush = new LinearGradientBrush();
-            brush.StartPoint = new Point(0, 0.5);
-            brush.EndPoint   = new Point(1, 0.5);
-            brush.GradientStops.Add(new GradientStop(Colors.Blue,    0.00));
-            brush.GradientStops.Add(new GradientStop(Colors.Cyan,   0.25));
-            brush.GradientStops.Add(new GradientStop(Colors.Lime,   0.50));
-            brush.GradientStops.Add(new GradientStop(Colors.Yellow, 0.75));
-            brush.GradientStops.Add(new GradientStop(Colors.Red,    1.00));
-            brush.Freeze();
-
-            // MaterialGroup: DiffuseMaterial gives WPF 3D a renderable surface,
-            // EmissiveMaterial ensures full-brightness colours regardless of lighting.
-            var matGroup = new MaterialGroup();
-            matGroup.Children.Add(new DiffuseMaterial(brush));
-            if (_vm.EnableEmissiveColors)
-            {
-                matGroup.Children.Add(new EmissiveMaterial(brush));
-            }
-            pointCloudVisual.Content = new GeometryModel3D(mesh, matGroup) { BackMaterial = matGroup };
+            // Heat-map material (cached, frozen) shaded by the per-vertex U coordinate.
+            var heatmapMat = _materials.HeatmapMaterial;
+            pointCloudVisual.Content = new GeometryModel3D(mesh, heatmapMat) { BackMaterial = heatmapMat };
 
             // Auto-fit the camera the first time points are shown so the cloud is visible
             // before the user runs Analyse (which calls UpdateCamera).
-            if (!_cameraFitted)
+            if (!_cameraFitted &&
+                PointCloudMeshBuilder.TryComputeFitBounds(points, maxDisplay,
+                    out float cx, out float cy, out float cz,
+                    out float maxHalfX, out float maxHalfY))
             {
-                float cx = 0, cy = 0, cz = 0;
-                int n = 0;
-                for (int j = 0; j < displayCount; j++) { var p = points[(int)(j * stride)]; cx += p.x; cy += p.y; cz += p.z; n++; }
-                if (n > 0) { cx /= n; cy /= n; cz /= n; }
-
-                float maxHalfX = 0, maxHalfY = 0;
-                for (int j = 0; j < displayCount; j++)
-                {
-                    var p = points[(int)(j * stride)];
-                    float dx2 = Math.Abs(p.x - cx);
-                    float dy2 = Math.Abs(p.y - cy);
-                    if (dx2 > maxHalfX) maxHalfX = dx2;
-                    if (dy2 > maxHalfY) maxHalfY = dy2;
-                }
-
                 _centroidX = cx;
                 _centroidY = cy;
                 _centroidZ = cz;
@@ -352,59 +288,24 @@ namespace MVS
                 edge.MidpointX + edge.HalfLength * edge.DirectionX,
                 edge.MidpointY + edge.HalfLength * edge.DirectionY,
                 edge.MidpointZ + edge.HalfLength * edge.DirectionZ);
-            var edgeMesh = BuildTubeMesh(edgeStart, edgeEnd, shaftRadius);
-            var edgeMat  = MakeArrowMaterial(Color.FromRgb(255, 140, 0));
+            var edgeMesh = TubeMeshBuilder.Build(edgeStart, edgeEnd, shaftRadius);
+            var edgeMat  = _materials.SolidMaterial(Color.FromRgb(255, 140, 0));
             _deckEdgeLineVisual.Content = new GeometryModel3D { Geometry = edgeMesh, Material = edgeMat, BackMaterial = edgeMat };
 
             // Hull vertex markers — bright magenta cubes at each estimated boundary vertex
-            if (edge.HullVertices3D != null && edge.HullVertices3D.Count >= 1)
+            double markerHalf = Math.Max(edge.HalfLength * 0.02, 75.0);
+            var markerMesh = HullMarkerMeshBuilder.Build(edge.HullVertices3D, markerHalf);
+            if (markerMesh != null)
             {
-                double h         = Math.Max(edge.HalfLength * 0.02, 75.0);
-                var    positions = new Point3DCollection();
-                var    indices   = new Int32Collection();
-
-                foreach (var v in edge.HullVertices3D)
-                {
-                    int    b  = positions.Count;
-                    double vx = v.X, vy = v.Y, vz = v.Z;
-                    positions.Add(new Point3D(vx - h, vy - h, vz - h)); // b+0
-                    positions.Add(new Point3D(vx + h, vy - h, vz - h)); // b+1
-                    positions.Add(new Point3D(vx + h, vy + h, vz - h)); // b+2
-                    positions.Add(new Point3D(vx - h, vy + h, vz - h)); // b+3
-                    positions.Add(new Point3D(vx - h, vy - h, vz + h)); // b+4
-                    positions.Add(new Point3D(vx + h, vy - h, vz + h)); // b+5
-                    positions.Add(new Point3D(vx + h, vy + h, vz + h)); // b+6
-                    positions.Add(new Point3D(vx - h, vy + h, vz + h)); // b+7
-                    // bottom (z-)
-                    indices.Add(b);   indices.Add(b+1); indices.Add(b+2);
-                    indices.Add(b);   indices.Add(b+2); indices.Add(b+3);
-                    // top (z+)
-                    indices.Add(b+4); indices.Add(b+6); indices.Add(b+5);
-                    indices.Add(b+4); indices.Add(b+7); indices.Add(b+6);
-                    // front (y-)
-                    indices.Add(b);   indices.Add(b+5); indices.Add(b+1);
-                    indices.Add(b);   indices.Add(b+4); indices.Add(b+5);
-                    // back (y+)
-                    indices.Add(b+2); indices.Add(b+7); indices.Add(b+3);
-                    indices.Add(b+2); indices.Add(b+6); indices.Add(b+7);
-                    // left (x-)
-                    indices.Add(b);   indices.Add(b+3); indices.Add(b+7);
-                    indices.Add(b);   indices.Add(b+7); indices.Add(b+4);
-                    // right (x+)
-                    indices.Add(b+1); indices.Add(b+6); indices.Add(b+2);
-                    indices.Add(b+1); indices.Add(b+5); indices.Add(b+6);
-                }
-
-                var markerMesh  = new MeshGeometry3D { Positions = positions, TriangleIndices = indices };
-                var markerMat = MakeArrowMaterial(Color.FromRgb(255, 0, 255));
+                var markerMat = _materials.SolidMaterial(Color.FromRgb(255, 0, 255));
                 _hexVerticesVisual.Content = new GeometryModel3D { Geometry = markerMesh, Material = markerMat, BackMaterial = markerMat };
             }
 
             // Bow direction arrow: same length & thickness as the other arrows
-            var bowMesh = BuildArrowMesh(new Point3D(0, 0, 0),
+            var bowMesh = ArrowMeshBuilder.Build(new Point3D(0, 0, 0),
                 new Vector3D(edge.VesselForwardX, edge.VesselForwardY, edge.VesselForwardZ),
                 arrowLength, shaftRadius);
-            var bowMat = MakeArrowMaterial(Color.FromRgb(255, 140, 0));
+            var bowMat = _materials.SolidMaterial(Color.FromRgb(255, 140, 0));
             _bowArrowVisual.Content = new GeometryModel3D { Geometry = bowMesh, Material = bowMat, BackMaterial = bowMat };
 
             // Highlight edge points
@@ -413,76 +314,23 @@ namespace MVS
 
         private void UpdateEdgePointsMesh(List<(float x, float y, float z)> points)
         {
-            if (points == null || points.Count == 0)
+            var mesh = EdgePointsMeshBuilder.Build(points);
+            if (mesh == null)
             {
                 _deckEdgePointsVisual.Content = null;
                 return;
             }
 
-            const int MaxDisplay = 5000;
-            int step = Math.Max(1, points.Count / MaxDisplay);
-
-            var positions = new Point3DCollection();
-            var indices   = new Int32Collection();
-            float quadHalfSize = 50f;
-
-            int idx = 0;
-            for (int i = 0; i < points.Count; i += step)
-            {
-                var (x, y, z) = points[i];
-                positions.Add(new Point3D(x - quadHalfSize, y - quadHalfSize, z));
-                positions.Add(new Point3D(x + quadHalfSize, y - quadHalfSize, z));
-                positions.Add(new Point3D(x + quadHalfSize, y + quadHalfSize, z));
-                positions.Add(new Point3D(x - quadHalfSize, y + quadHalfSize, z));
-
-                indices.Add(idx);     indices.Add(idx + 1); indices.Add(idx + 2);
-                indices.Add(idx);     indices.Add(idx + 2); indices.Add(idx + 3);
-                idx += 4;
-            }
-
-            var mesh = new MeshGeometry3D { Positions = positions, TriangleIndices = indices };
-            var brush = new SolidColorBrush(Color.FromRgb(0, 200, 80));
-            brush.Freeze();
-
-            var matGroup = new MaterialGroup();
-            matGroup.Children.Add(new DiffuseMaterial(brush));
-            if (_vm != null && _vm.EnableEmissiveColors)
-            {
-                matGroup.Children.Add(new EmissiveMaterial(brush));
-            }
-            _deckEdgePointsVisual.Content = new GeometryModel3D(mesh, matGroup);
+            var mat = _materials.SolidMaterial(Color.FromRgb(0, 200, 80));
+            _deckEdgePointsVisual.Content = new GeometryModel3D(mesh, mat);
         }
 
         private void UpdatePlaneMesh(LivoxLidarPlaneFitResult fit)
         {
-            // Build a rectangle in the fitted plane, centred on the centroid
-            double cx = fit.CentroidX, cy = fit.CentroidY, cz = fit.CentroidZ;
-
-            // Primary and secondary axes of the plane
-            double ax = fit.VesselForwardX, ay = fit.VesselForwardY, az = fit.VesselForwardZ;
-
-            // Secondary axis = cross product of normal × primary
-            double nx = fit.NormalX, ny = fit.NormalY, nz = fit.NormalZ;
-            double sx = ny*az - nz*ay, sy = nz*ax - nx*az, sz = nx*ay - ny*ax;
-            double slen = Math.Sqrt(sx*sx + sy*sy + sz*sz);
-            if (slen > 0) { sx /= slen; sy /= slen; sz /= slen; }
-
-            double ep = fit.ExtentPrimary   + 200;  // add 200mm margin
-            double es = fit.ExtentSecondary + 200;
-
-            Point3D p0 = P(cx - ax*ep - sx*es, cy - ay*ep - sy*es, cz - az*ep - sz*es);
-            Point3D p1 = P(cx + ax*ep - sx*es, cy + ay*ep - sy*es, cz + az*ep - sz*es);
-            Point3D p2 = P(cx + ax*ep + sx*es, cy + ay*ep + sy*es, cz + az*ep + sz*es);
-            Point3D p3 = P(cx - ax*ep + sx*es, cy - ay*ep + sy*es, cz - az*ep + sz*es);
-
-            var mesh = new MeshGeometry3D
-            {
-                Positions = new Point3DCollection { p0, p1, p2, p3 },
-                TriangleIndices = new Int32Collection { 0, 1, 2, 0, 2, 3, 0, 2, 1, 0, 3, 2 }
-            };
-
-            var brush   = new SolidColorBrush(Color.FromArgb(40, 0, 0, 0)); // semi-transparent black
-            var material = new DiffuseMaterial(brush);
+            var mesh = PlaneMeshBuilder.Build(fit);
+            // Semi-transparent black is not cached because the alpha channel is intentional;
+            // it is built once per fit and there is only ever one plane in the scene.
+            var material = new DiffuseMaterial(new SolidColorBrush(Color.FromArgb(40, 0, 0, 0)));
             planeVisual.Content = new GeometryModel3D(mesh, material);
         }
 
@@ -495,14 +343,14 @@ namespace MVS
             GetArrowDimensions(out double arrowLength, out double shaftRadius);
 
             // Vessel forward: +X in sensor coordinate system (Mid-360: +X = forward)
-            var forwardMesh = BuildArrowMesh(origin, new Vector3D(1, 0, 0), arrowLength, shaftRadius);
-            var forwardMat  = MakeArrowMaterial(Colors.Red);
+            var forwardMesh = ArrowMeshBuilder.Build(origin, new Vector3D(1, 0, 0), arrowLength, shaftRadius);
+            var forwardMat  = _materials.SolidMaterial(Colors.Red);
             _forwardArrowVisual.Content = new GeometryModel3D { Geometry = forwardMesh, Material = forwardMat, BackMaterial = forwardMat };
 
             // Plane normal
-            var normalMesh = BuildArrowMesh(origin,
+            var normalMesh = ArrowMeshBuilder.Build(origin,
                 new Vector3D(fit.NormalX, fit.NormalY, fit.NormalZ), arrowLength, shaftRadius);
-            var normalMat  = MakeArrowMaterial(Color.FromRgb(0, 120, 255));
+            var normalMat  = _materials.SolidMaterial(Color.FromRgb(0, 120, 255));
             _normalArrowVisual.Content = new GeometryModel3D { Geometry = normalMesh, Material = normalMat, BackMaterial = normalMat };
         }
 
@@ -522,144 +370,21 @@ namespace MVS
             if (xVisual == null || yVisual == null || zVisual == null) return;
 
             // X-axis: Red, pointing right (forward/bow direction)
-            var xMesh = BuildArrowMesh(origin, new Vector3D(1, 0, 0), axisLength, axisRadius);
-            var xMat = MakeArrowMaterial(Colors.Red);
+            var xMesh = ArrowMeshBuilder.Build(origin, new Vector3D(1, 0, 0), axisLength, axisRadius);
+            var xMat = _materials.SolidMaterial(Colors.Red);
             xVisual.Content = new GeometryModel3D { Geometry = xMesh, Material = xMat, BackMaterial = xMat };
 
             // Y-axis: Green, pointing away (starboard direction)
-            var yMesh = BuildArrowMesh(origin, new Vector3D(0, 1, 0), axisLength, axisRadius);
-            var yMat = MakeArrowMaterial(Colors.Green);
+            var yMesh = ArrowMeshBuilder.Build(origin, new Vector3D(0, 1, 0), axisLength, axisRadius);
+            var yMat = _materials.SolidMaterial(Colors.Green);
             yVisual.Content = new GeometryModel3D { Geometry = yMesh, Material = yMat, BackMaterial = yMat };
 
             // Z-axis: Dark blue, pointing up
-            var zMesh = BuildArrowMesh(origin, new Vector3D(0, 0, 1), axisLength, axisRadius);
-            var zMat = MakeArrowMaterial(Color.FromRgb(0, 60, 180));
+            var zMesh = ArrowMeshBuilder.Build(origin, new Vector3D(0, 0, 1), axisLength, axisRadius);
+            var zMat = _materials.SolidMaterial(Color.FromRgb(0, 60, 180));
             zVisual.Content = new GeometryModel3D { Geometry = zMesh, Material = zMat, BackMaterial = zMat };
         }
 
-        private Material MakeArrowMaterial(Color color)
-        {
-            var brush = new SolidColorBrush(color);
-            var group = new MaterialGroup();
-            group.Children.Add(new DiffuseMaterial(brush));
-            if (_vm != null && _vm.EnableEmissiveColors)
-            {
-                group.Children.Add(new EmissiveMaterial(brush));
-            }
-            return group;
-        }
-
-        private static MeshGeometry3D BuildArrowMesh(Point3D origin, Vector3D dir, double length, double shaftRadius)
-        {
-            dir.Normalize();
-
-            // Perpendicular basis around the arrow axis
-            Vector3D refVec = Math.Abs(dir.Z) < 0.9 ? new Vector3D(0, 0, 1) : new Vector3D(1, 0, 0);
-            Vector3D perp1  = Vector3D.CrossProduct(dir, refVec);
-            perp1.Normalize();
-            Vector3D perp2 = Vector3D.CrossProduct(perp1, dir); // already unit-length
-
-            double shaftLen   = length * 0.75;
-            double headRadius = shaftRadius * 2.5;
-
-            const int N         = 10;
-            double    angleStep = 2.0 * Math.PI / N;
-
-            var positions = new Point3DCollection();
-            var indices   = new Int32Collection();
-
-            Point3D shaftBase = origin;
-            Point3D shaftTop  = origin + dir * shaftLen;
-            Point3D headBase  = shaftTop;
-            Point3D tip       = origin + dir * length;
-
-            // Shaft cylinder — bottom ring (0..N-1), top ring (N..2N-1)
-            for (int pass = 0; pass < 2; pass++)
-            {
-                Point3D centre = pass == 0 ? shaftBase : shaftTop;
-                for (int i = 0; i < N; i++)
-                {
-                    double a = i * angleStep;
-                    positions.Add(centre + shaftRadius * (Math.Cos(a) * perp1 + Math.Sin(a) * perp2));
-                }
-            }
-
-            // Shaft side faces
-            for (int i = 0; i < N; i++)
-            {
-                int next = (i + 1) % N;
-                indices.Add(i);      indices.Add(i + N);    indices.Add(next + N);
-                indices.Add(i);      indices.Add(next + N); indices.Add(next);
-            }
-
-            // Shaft bottom cap (fan from vertex 0)
-            for (int i = 1; i < N - 1; i++)
-            {
-                indices.Add(0); indices.Add(i + 1); indices.Add(i);
-            }
-
-            // Cone head — base ring (2N..3N-1), tip (3N)
-            int headStart = positions.Count;
-            for (int i = 0; i < N; i++)
-            {
-                double a = i * angleStep;
-                positions.Add(headBase + headRadius * (Math.Cos(a) * perp1 + Math.Sin(a) * perp2));
-            }
-            int tipIdx = positions.Count;
-            positions.Add(tip);
-
-            // Cone side faces
-            for (int i = 0; i < N; i++)
-            {
-                int next = (i + 1) % N;
-                indices.Add(headStart + i); indices.Add(tipIdx); indices.Add(headStart + next);
-            }
-
-            // Cone base cap (fan from headStart)
-            for (int i = 1; i < N - 1; i++)
-            {
-                indices.Add(headStart); indices.Add(headStart + i); indices.Add(headStart + i + 1);
-            }
-
-            return new MeshGeometry3D { Positions = positions, TriangleIndices = indices };
-        }
-
-        private static MeshGeometry3D BuildTubeMesh(Point3D from, Point3D to, double radius)
-        {
-            var dir = to - from;
-            if (dir.Length < 1e-10) return new MeshGeometry3D();
-            dir.Normalize();
-
-            Vector3D refVec = Math.Abs(dir.Z) < 0.9 ? new Vector3D(0, 0, 1) : new Vector3D(1, 0, 0);
-            Vector3D perp1  = Vector3D.CrossProduct(dir, refVec); perp1.Normalize();
-            Vector3D perp2  = Vector3D.CrossProduct(perp1, dir);
-
-            const int N         = 10;
-            double    angleStep = 2.0 * Math.PI / N;
-            var positions = new Point3DCollection();
-            var indices   = new Int32Collection();
-
-            for (int pass = 0; pass < 2; pass++)
-            {
-                Point3D centre = pass == 0 ? from : to;
-                for (int i = 0; i < N; i++)
-                {
-                    double a = i * angleStep;
-                    positions.Add(centre + radius * (Math.Cos(a) * perp1 + Math.Sin(a) * perp2));
-                }
-            }
-
-            for (int i = 0; i < N; i++)
-            {
-                int next = (i + 1) % N;
-                indices.Add(i);       indices.Add(i + N);    indices.Add(next + N);
-                indices.Add(i);       indices.Add(next + N); indices.Add(next);
-            }
-
-            return new MeshGeometry3D { Positions = positions, TriangleIndices = indices };
-        }
-
-        private static Point3D P(double x, double y, double z) => new Point3D(x, y, z);
 
         private void UpdateCamera(LivoxLidarPlaneFitResult fit)
         {

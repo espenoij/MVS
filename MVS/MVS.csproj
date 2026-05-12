@@ -1,4 +1,4 @@
-﻿<?xml version="1.0" encoding="utf-8"?>
+<?xml version="1.0" encoding="utf-8"?>
 <Project ToolsVersion="15.0" xmlns="http://schemas.microsoft.com/developer/msbuild/2003">
   <Import Project="$(MSBuildExtensionsPath)\$(MSBuildToolsVersion)\Microsoft.Common.props" Condition="Exists('$(MSBuildExtensionsPath)\$(MSBuildToolsVersion)\Microsoft.Common.props')" />
   <PropertyGroup>
@@ -32,7 +32,7 @@
     <UseApplicationTrust>false</UseApplicationTrust>
     <PublishWizardCompleted>true</PublishWizardCompleted>
     <BootstrapperEnabled>true</BootstrapperEnabled>
-    <AssemblyVersion>1.1.0.1028</AssemblyVersion>
+    <AssemblyVersion>1.1.0.1034</AssemblyVersion>
   </PropertyGroup>
   <PropertyGroup Condition=" '$(Configuration)|$(Platform)' == 'Debug|AnyCPU' ">
     <PlatformTarget>AnyCPU</PlatformTarget>
@@ -194,6 +194,13 @@
     <Compile Include="Services\LivoxLidar\LivoxLidarDeckEdgeFinder.cs" />
     <Compile Include="Services\LivoxLidar\LivoxLidarPlaneFitter.cs" />
     <Compile Include="Services\LivoxLidar\LivoxLidarSubsystem.cs" />
+    <Compile Include="Services\LivoxLidar\Rendering\ArrowMeshBuilder.cs" />
+    <Compile Include="Services\LivoxLidar\Rendering\EdgePointsMeshBuilder.cs" />
+    <Compile Include="Services\LivoxLidar\Rendering\HullMarkerMeshBuilder.cs" />
+    <Compile Include="Services\LivoxLidar\Rendering\MaterialFactory.cs" />
+    <Compile Include="Services\LivoxLidar\Rendering\PlaneMeshBuilder.cs" />
+    <Compile Include="Services\LivoxLidar\Rendering\PointCloudMeshBuilder.cs" />
+    <Compile Include="Services\LivoxLidar\Rendering\TubeMeshBuilder.cs" />
     <Compile Include="Services\LivoxLidar\VesselForwardMethod.cs" />
     <Compile Include="Services\ScreenCapture.cs" />
     <Compile Include="ViewModels\ImportVM.cs" />
