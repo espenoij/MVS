@@ -11,27 +11,8 @@ namespace MVS
     {
         private LivoxLidarVM _vm;
 
-        // ── Trackball state ───────────────────────────────────────────────────
-        private bool   _isDragging;
-        private Point  _lastMousePos;
-        private double _rotX = 0.0;   // degrees around X-axis
-        private double _rotY = 0.0;  // degrees around Y-axis
-        private double _zoom = 15000.0; // camera distance
-
-        // Last fit centroid, normal and zoom - used by Reset View / Top Down
-        private double _centroidX;
-        private double _centroidY;
-        private double _centroidZ;
-        private double _lookAtX;
-        private double _lookAtY;
-        private double _lookAtZ;
-        private double _defaultZoom = 15000.0;
-        private double _fitNormalX = 0.0;
-        private double _fitNormalY = 0.0;
-        private double _fitNormalZ = 1.0;
-        private double _vesselFwdX = 1.0;
-        private double _vesselFwdY = 0.0;
-        private double _vesselFwdZ = 0.0;
+        // Camera + trackball: all state lives inside the controller.
+        private TrackballCameraController _trackball;
 
         // Arrow visuals — added programmatically to avoid XAML codegen dependency
         private readonly ModelVisual3D _forwardArrowVisual = new ModelVisual3D();
@@ -116,12 +97,18 @@ namespace MVS
             // Initialise the cached materials from the current VM setting.
             _materials = new MaterialFactory(vm.EnableEmissiveColors);
 
+            // Trackball controller drives the main camera and (optionally) the axis camera.
+            _trackball = new TrackballCameraController(camera,
+                () => viewport3D.ActualWidth / Math.Max(viewport3D.ActualHeight, 1.0));
+            _trackball.AttachAxisCamera(FindName("axisCamera") as PerspectiveCamera);
+            _trackball.SetRotationChangedCallback(UpdateRotationReadout);
+
             // Initialize the 3D axis indicators in their separate viewport
             InitializeAxisIndicators();
 
             // Explicitly set the camera
             // is fully initialised before the first scan renders any points.
-            ApplyCameraTransform(0, 0, 0);
+            _trackball.ApplyCameraTransform(0, 0, 0);
         }
 
         // ── Fit result → 3D scene update ─────────────────────────────────────
@@ -222,11 +209,10 @@ namespace MVS
                     out float cx, out float cy, out float cz,
                     out float maxHalfX, out float maxHalfY))
             {
-                _centroidX = cx;
-                _centroidY = cy;
-                _centroidZ = cz;
-                _defaultZoom = ComputeFitZoom(Math.Max(maxHalfX + 200, 1000), Math.Max(maxHalfY + 200, 1000));
-                ApplyTopDownView();
+                _trackball.SetCentroid(cx, cy, cz);
+                _trackball.SetDefaultZoom(
+                    _trackball.ComputeFitZoom(Math.Max(maxHalfX + 200, 1000), Math.Max(maxHalfY + 200, 1000)));
+                _trackball.ApplyTopDownView();
                 _cameraFitted = true;
             }
         }
@@ -392,260 +378,61 @@ namespace MVS
             // accounting for both horizontal and vertical FOV based on viewport aspect ratio.
             double ep = fit.ExtentPrimary   + 200.0;
             double es = fit.ExtentSecondary + 200.0;
-            _defaultZoom = ComputeFitZoom(ep, es);
-            if (_defaultZoom < 1000) _defaultZoom = 1000;
-            _centroidX = fit.CentroidX;
-            _centroidY = fit.CentroidY;
-            _centroidZ = fit.CentroidZ;
-            _fitNormalX = fit.NormalX;
-            _fitNormalY = fit.NormalY;
-            _fitNormalZ = fit.NormalZ;
-            _vesselFwdX = fit.VesselForwardX;
-            _vesselFwdY = fit.VesselForwardY;
-            _vesselFwdZ = fit.VesselForwardZ;
-            ApplyPerspectiveView();
+            double defaultZoom = _trackball.ComputeFitZoom(ep, es);
+            if (defaultZoom < 1000) defaultZoom = 1000;
+
+            _trackball.SetFitContext(
+                fit.CentroidX, fit.CentroidY, fit.CentroidZ,
+                fit.NormalX, fit.NormalY, fit.NormalZ,
+                fit.VesselForwardX, fit.VesselForwardY, fit.VesselForwardZ,
+                defaultZoom);
+
+            _trackball.ApplyPerspectiveView(_vm.PerspectiveRotX, _vm.PerspectiveRotY);
             _cameraFitted = true;
-        }
-
-        private double ComputeFitZoom(double halfExtentH, double halfExtentV)
-        {
-            // FieldOfView is the horizontal FOV in WPF's PerspectiveCamera.
-            double hFovRad = camera.FieldOfView * Math.PI / 360.0; // half horizontal FOV
-
-            // Derive vertical half-FOV from viewport aspect ratio
-            double aspect = viewport3D.ActualWidth / Math.Max(viewport3D.ActualHeight, 1.0);
-            if (aspect < 0.01) aspect = 1.0; // guard before layout
-            double vFovRad = Math.Atan(Math.Tan(hFovRad) / aspect);
-
-            // Zoom needed so each extent fits within the corresponding FOV half-angle
-            double zoomH = halfExtentH / Math.Tan(hFovRad);
-            double zoomV = halfExtentV / Math.Tan(vFovRad);
-
-            return Math.Max(zoomH, zoomV) * 1.2; // 20% margin
-        }
-
-        private void ApplyTopDownView()
-        {
-            double nx = _fitNormalX, ny = _fitNormalY, nz = _fitNormalZ;
-            double len = Math.Sqrt(nx * nx + ny * ny + nz * nz);
-            if (len > 1e-6) { nx /= len; ny /= len; nz /= len; }
-            else { nx = 0; ny = 0; nz = 1; }
-
-            _rotX = -Math.Asin(Math.Max(-1.0, Math.Min(1.0, ny))) * 180.0 / Math.PI;
-            double cosX = Math.Cos(_rotX * Math.PI / 180.0);
-            if (cosX < 1e-6) cosX = 1e-6;
-            _rotY = Math.Atan2(nx / cosX, nz / cosX) * 180.0 / Math.PI;
-            _zoom = _defaultZoom;
-
-            camera.UpDirection = new Vector3D(_vesselFwdX, _vesselFwdY, _vesselFwdZ);
-            ApplyCameraTransform(_centroidX, _centroidY, _centroidZ);
-        }
-
-        private void ApplyPerspectiveView()
-        {
-            // Start from the top-down orientation (aligned to fit normal),
-            // then apply configurable H and V rotations
-            double nx = _fitNormalX, ny = _fitNormalY, nz = _fitNormalZ;
-            double len = Math.Sqrt(nx * nx + ny * ny + nz * nz);
-            if (len > 1e-6) { nx /= len; ny /= len; nz /= len; }
-            else { nx = 0; ny = 0; nz = 1; }
-
-            _rotX = -Math.Asin(Math.Max(-1.0, Math.Min(1.0, ny))) * 180.0 / Math.PI;
-            _rotX += _vm.PerspectiveRotX;   // V: configurable vertical tilt
-            double cosX = Math.Cos(_rotX * Math.PI / 180.0);
-            if (cosX < 1e-6) cosX = 1e-6;
-            _rotY = Math.Atan2(nx / cosX, nz / cosX) * 180.0 / Math.PI;
-            _rotY += _vm.PerspectiveRotY;  // H: configurable horizontal rotation
-            _zoom = _defaultZoom;
-
-            camera.UpDirection = new Vector3D(_vesselFwdX, _vesselFwdY, _vesselFwdZ);
-            ApplyCameraTransform(_centroidX, _centroidY, _centroidZ);
-
-            // Z roll = 0: set UpDirection to world Z projected perp to look direction (the natural zero).
-            Vector3D ld = camera.LookDirection;
-            ld.Normalize();
-            Vector3D worldZ = new Vector3D(0, 0, 1);
-            Vector3D refUp = worldZ - Vector3D.DotProduct(worldZ, ld) * ld;
-            double refLen = refUp.Length;
-            if (refLen > 1e-6)
-            {
-                camera.UpDirection = new Vector3D(refUp.X / refLen, refUp.Y / refLen, refUp.Z / refLen);
-            }
-            UpdateAxisCamera();
         }
 
         // ── Trackball mouse handlers
 
         private void ResetCamera_Click(object sender, RoutedEventArgs e)
         {
-            ApplyTopDownView();
+            _trackball.ApplyTopDownView();
         }
 
         private void PerspectiveView_Click(object sender, RoutedEventArgs e)
         {
-            ApplyPerspectiveView();
+            _trackball.ApplyPerspectiveView(_vm.PerspectiveRotX, _vm.PerspectiveRotY);
         }
 
         // -- Trackball mouse handlers ------------------------------------------
 
         private void Viewport_MouseLeftButtonDown(object sender, MouseButtonEventArgs e)
         {
-            _isDragging  = true;
-            _lastMousePos = e.GetPosition((IInputElement)sender);
-            ((IInputElement)sender).CaptureMouse();
+            _trackball.OnMouseLeftButtonDown((IInputElement)sender, e);
         }
 
         private void Viewport_MouseLeftButtonUp(object sender, MouseButtonEventArgs e)
         {
-            _isDragging = false;
-            ((IInputElement)sender).ReleaseMouseCapture();
+            _trackball.OnMouseLeftButtonUp((IInputElement)sender, e);
         }
 
         private void Viewport_MouseMove(object sender, MouseEventArgs e)
         {
-            if (!_isDragging) return;
-
-            var pos   = e.GetPosition((IInputElement)sender);
-            double dx = pos.X - _lastMousePos.X;
-            double dy = pos.Y - _lastMousePos.Y;
-            _lastMousePos = pos;
-
-            // Rotate the camera around the look-at point using screen-space axes
-            var lookAt = new Point3D(_lookAtX, _lookAtY, _lookAtZ);
-            Vector3D offset = camera.Position - lookAt;
-
-            // Screen-right = cross(LookDirection, UpDirection)
-            Vector3D lookDir = camera.LookDirection;
-            Vector3D up = camera.UpDirection;
-            Vector3D right = Vector3D.CrossProduct(lookDir, up);
-            if (right.Length > 1e-10) right.Normalize(); else return;
-
-            // Clean up perpendicular to both look and right
-            up = Vector3D.CrossProduct(right, lookDir);
-            if (up.Length > 1e-10) up.Normalize(); else return;
-
-            double angleH = -dx * 0.5;
-            double angleV = -dy * 0.5;
-
-            offset = RotateVector(offset, up, angleH);
-            offset = RotateVector(offset, right, angleV);
-
-            camera.Position = lookAt + offset;
-            camera.LookDirection = new Vector3D(-offset.X, -offset.Y, -offset.Z);
-
-            // Rotate the up direction to stay consistent
-            var newUp = RotateVector(camera.UpDirection, up, angleH);
-            newUp = RotateVector(newUp, right, angleV);
-            camera.UpDirection = newUp;
-
-            // Back-compute _rotX/_rotY/_zoom so zoom and presets still work
-            SyncTrackballAnglesFromCamera();
-
-            // Update the axis indicator to match the new rotation
-            UpdateAxisCamera();
+            _trackball.OnMouseMove((IInputElement)sender, e);
         }
 
         private void Viewport_MouseWheel(object sender, MouseWheelEventArgs e)
         {
-            _zoom *= e.Delta > 0 ? 1.1 : 0.9;
-            _zoom  = Math.Max(100, _zoom);
-            ApplyCameraTransform(_lookAtX, _lookAtY, _lookAtZ);
+            _trackball.OnMouseWheel(e);
         }
 
-        private static Vector3D RotateVector(Vector3D v, Vector3D axis, double angleDeg)
+        private void UpdateRotationReadout(double rotX, double rotY, double rotZ)
         {
-            double rad = angleDeg * Math.PI / 180.0;
-            double cos = Math.Cos(rad);
-            double sin = Math.Sin(rad);
-            double dot = Vector3D.DotProduct(v, axis);
-            Vector3D cross = Vector3D.CrossProduct(axis, v);
-            return v * cos + cross * sin + axis * dot * (1 - cos);
-        }
-
-        private void SyncTrackballAnglesFromCamera()
-        {
-            Vector3D offset = camera.Position - new Point3D(_lookAtX, _lookAtY, _lookAtZ);
-            _zoom = offset.Length;
-            if (_zoom < 1e-10) return;
-            double nx = offset.X / _zoom;
-            double ny = offset.Y / _zoom;
-            double nz = offset.Z / _zoom;
-            _rotX = -Math.Asin(Math.Max(-1.0, Math.Min(1.0, -ny))) * 180.0 / Math.PI;
-            double cosX = Math.Cos(_rotX * Math.PI / 180.0);
-            if (Math.Abs(cosX) > 1e-6)
-                _rotY = Math.Atan2(nx / cosX, nz / cosX) * 180.0 / Math.PI;
-        }
-
-        private void ApplyCameraTransform(double cx, double cy, double cz)
-        {
-            double radX = _rotX * Math.PI / 180.0;
-            double radY = _rotY * Math.PI / 180.0;
-
-            double camX = cx + _zoom * Math.Sin(radY) * Math.Cos(radX);
-            double camY = cy - _zoom * Math.Sin(radX);
-            double camZ = cz + _zoom * Math.Cos(radY) * Math.Cos(radX);
-
-            _lookAtX = cx;
-            _lookAtY = cy;
-            _lookAtZ = cz;
-
-            camera.Position      = new Point3D(camX, camY, camZ);
-            camera.LookDirection = new Vector3D(cx - camX, cy - camY, cz - camZ);
-
-            // Update the axis indicator camera to match the main camera rotation
-            UpdateAxisCamera();
-        }
-
-        private void UpdateAxisCamera()
-        {
-            // Synchronize the axis viewport camera with the main camera's exact orientation
-            // The axis camera looks at the origin from the same direction as the main camera
-            var axisCamera = FindName("axisCamera") as PerspectiveCamera;
-            if (axisCamera == null) return;
-
-            // Get the main camera's look direction (normalized)
-            Vector3D lookDir = camera.LookDirection;
-            lookDir.Normalize();
-
-            // Position the axis camera at a fixed distance from the origin,
-            // in the opposite direction of where the main camera is looking
-            const double axisCamDist = 3000.0;
-            Point3D axisCamPos = new Point3D(-lookDir.X * axisCamDist, 
-                                             -lookDir.Y * axisCamDist, 
-                                             -lookDir.Z * axisCamDist);
-
-            // The axis camera looks back toward the origin with the same orientation
-            axisCamera.Position = axisCamPos;
-            axisCamera.LookDirection = new Vector3D(lookDir.X, lookDir.Y, lookDir.Z);
-            axisCamera.UpDirection = camera.UpDirection;
-
-            // Update rotation readout
             var tbRotX = FindName("tbRotX") as System.Windows.Controls.TextBlock;
             var tbRotY = FindName("tbRotY") as System.Windows.Controls.TextBlock;
             var tbRotZ = FindName("tbRotZ") as System.Windows.Controls.TextBlock;
-            if (tbRotX != null) tbRotX.Text = $"{_rotX:+0.0;-0.0;0.0}°";
-            if (tbRotY != null) tbRotY.Text = $"{_rotY:+0.0;-0.0;0.0}°";
-            if (tbRotZ != null)
-            {
-                Vector3D ld = camera.LookDirection;
-                ld.Normalize();
-                Vector3D worldZ = new Vector3D(0, 0, 1);
-                Vector3D refUp = worldZ - Vector3D.DotProduct(worldZ, ld) * ld;
-                double refLen = refUp.Length;
-                double rotZ = 0.0;
-                if (refLen > 1e-6)
-                {
-                    refUp /= refLen;
-                    Vector3D actualUp = camera.UpDirection;
-                    actualUp.Normalize();
-                    double dot = Math.Max(-1.0, Math.Min(1.0, Vector3D.DotProduct(refUp, actualUp)));
-                    double angle = Math.Acos(dot) * 180.0 / Math.PI;
-                    Vector3D cross = Vector3D.CrossProduct(refUp, actualUp);
-                    if (Vector3D.DotProduct(cross, ld) < 0) angle = -angle;
-                    rotZ = angle;
-                }
-                tbRotZ.Text = $"{rotZ:+0.0;-0.0;0.0}°";
-            }
+            if (tbRotX != null) tbRotX.Text = $"{rotX:+0.0;-0.0;0.0}°";
+            if (tbRotY != null) tbRotY.Text = $"{rotY:+0.0;-0.0;0.0}°";
+            if (tbRotZ != null) tbRotZ.Text = $"{rotZ:+0.0;-0.0;0.0}°";
         }
     }
 }
