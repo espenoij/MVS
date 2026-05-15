@@ -1,0 +1,5 @@
+# 03-retarget-and-packages: Retarget to net10.0-windows and update packages
+
+Set ``<TargetFramework>net10.0-windows</TargetFramework>``, enable ``<UseWPF>true</UseWPF>`` and ``<UseWindowsForms>true</UseWindowsForms>`` on both projects. Remove the 46 NuGet packages now provided by the framework reference (mostly `System.*` 4.3.x and `NETStandard.Library`). Replace the incompatible `Microsoft.Xaml.Behaviors.Wpf` with a version compatible with .NET 10. Replace deprecated `Microsoft.ApplicationInsights` 2.22.0 (or remove if telemetry is not used). Bump recommended packages (`System.Collections.Immutable`, `System.Configuration.ConfigurationManager`, `System.Diagnostics.DiagnosticSource`, `System.IO.Pipelines`, `System.Reflection.Metadata`, `System.Runtime.CompilerServices.Unsafe`, `System.Text.Json`) to versions aligned with .NET 10. Verify Telerik UI for WPF packages support `net10.0-windows`.
+
+**Done when**: Both projects target `net10.0-windows`, package list is clean (no framework-redundant packages, no deprecated/incompatible packages), and `dotnet restore` succeeds for the solution.
