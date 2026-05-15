@@ -11,47 +11,14 @@
     <RollForward>LatestMajor</RollForward>
   </PropertyGroup>
 
+  <!--
+    Telerik UI for WPF (NoXaml) – consumed via the official Telerik NuGet
+    meta-package which delivers the net8.0-windows assemblies that are
+    binary-compatible with .NET 10. The package is resolved from the local
+    Telerik installer feed configured in NuGet.config.
+  -->
   <ItemGroup>
-    <Reference Include="Telerik.Licensing.Runtime">
-      <HintPath>..\lib\RCWPF\2026.1.415.462.NoXaml\Telerik.Licensing.Runtime.dll</HintPath>
-      <Private>True</Private>
-    </Reference>
-    <Reference Include="Telerik.Windows.Controls">
-      <HintPath>..\lib\RCWPF\2026.1.415.462.NoXaml\Telerik.Windows.Controls.dll</HintPath>
-      <Private>True</Private>
-    </Reference>
-    <Reference Include="Telerik.Windows.Controls.Chart">
-      <HintPath>..\lib\RCWPF\2026.1.415.462.NoXaml\Telerik.Windows.Controls.Chart.dll</HintPath>
-      <Private>True</Private>
-    </Reference>
-    <Reference Include="Telerik.Windows.Controls.Data">
-      <HintPath>..\lib\RCWPF\2026.1.415.462.NoXaml\Telerik.Windows.Controls.Data.dll</HintPath>
-      <Private>True</Private>
-    </Reference>
-    <Reference Include="Telerik.Windows.Controls.Docking">
-      <HintPath>..\lib\RCWPF\2026.1.415.462.NoXaml\Telerik.Windows.Controls.Docking.dll</HintPath>
-      <Private>True</Private>
-    </Reference>
-    <Reference Include="Telerik.Windows.Controls.GridView">
-      <HintPath>..\lib\RCWPF\2026.1.415.462.NoXaml\Telerik.Windows.Controls.GridView.dll</HintPath>
-      <Private>True</Private>
-    </Reference>
-    <Reference Include="Telerik.Windows.Controls.Input">
-      <HintPath>..\lib\RCWPF\2026.1.415.462.NoXaml\Telerik.Windows.Controls.Input.dll</HintPath>
-      <Private>True</Private>
-    </Reference>
-    <Reference Include="Telerik.Windows.Controls.Navigation">
-      <HintPath>..\lib\RCWPF\2026.1.415.462.NoXaml\Telerik.Windows.Controls.Navigation.dll</HintPath>
-      <Private>True</Private>
-    </Reference>
-    <Reference Include="Telerik.Windows.Data">
-      <HintPath>..\lib\RCWPF\2026.1.415.462.NoXaml\Telerik.Windows.Data.dll</HintPath>
-      <Private>True</Private>
-    </Reference>
-    <Reference Include="Telerik.Windows.Themes.Material">
-      <HintPath>..\lib\RCWPF\2026.1.415.462.NoXaml\Telerik.Windows.Themes.Material.dll</HintPath>
-      <Private>True</Private>
-    </Reference>
+    <PackageReference Include="Telerik.UI.for.Wpf.80" Version="2026.1.415" />
   </ItemGroup>
 
   <ItemGroup>

@@ -28,3 +28,8 @@ Cleaned up legacy app.config files. MVS/App.config: removed obsolete <startup> (
 
 Test suite passes 100%: 112/112 tests passed, 0 failed, 0 skipped, completed in 2.8 sec on .NET 10. No behavioral regressions introduced by the framework upgrade. No test code changes required.
 
+
+## [2026-05-15 13:24] 07-final-validation
+
+Final validation passed. Clean build: 0 errors, 56 benign warnings (mostly CA1416 platform-compat noise on a Windows-only TFM). Test suite: 112/112 pass in 1.5 sec. All changes committed atomically as 689a4cd on the upgrade-to-NET10 branch per the Single-Commit-At-End strategy. Note: the MVS_Setup VDPROJ installer project was left untouched throughout — it cannot be SDK-converted or upgraded to .NET 10 and needs separate replacement (WiX/MSIX) in a future effort.
+
