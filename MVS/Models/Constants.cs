@@ -54,7 +54,6 @@ class Constants
     // Nummer stil og kultur-avhengig notasjon
     public static NumberStyles numberStyle = NumberStyles.Any;
     public static CultureInfo cultureInfo = CultureInfo.CurrentCulture;
-    //public static CultureInfo cultureInfo = new CultureInfo("en-US");
 
     // Sensor ID not set
     public const int SensorIDNotSet = -1;
@@ -80,10 +79,6 @@ class Constants
 
     // TCP/IP Socket
     public const string EOF = "<EOF>";
-    //public const string CommandGetDataUpdate = "<get_data_update>";
-    //public const string CommandGetSensorStatus = "<get_sensor_status>";
-    //public const string CommandSetUserInputs = "<set_user_inputs>";
-    //public const string CommandGetUserInputs = "<get_user_inputs>";
 
     // Socket Timeout
     public const int SocketTimeout = 1000;
@@ -230,11 +225,6 @@ class Constants
     // 3 hours in seconds
     public const int Hours3 = 10800;
 
-    // Data Calculations Buffer størrelse
-    //public const double Minutes20Buffer = 5;
-    //public const double Minutes30Buffer = 6;
-    //public const double Hours3Buffer = 20;
-
     // MSI / WSI Max
     public const double MSIMax = 91;  // CAP
     public const double WSIMax = 100; // CAP
@@ -269,12 +259,8 @@ class Constants
     public const double MeanAdiabaticLapseRate = 0.0065;
 
     // Filer og kataloger
-    //public const string HelideckReportFolder = "Helideck Report";
-    //public const string HelideckReportFilename = "helideck_report";
-    //public const string HelideckReportName = "Helidekkrapport";
     public const string ScreenCaptureFilename = "mvs_screencapture";
     public const string ScreenCaptureFolder = "ScreenCaptures";
-    //public const string OffshoreWeatherReportFilename = "offshore_weather_report";
 
     // Email
     public const int DefaultSMTPPort = 25;
@@ -302,11 +288,6 @@ class Constants
                                                                 // På skjerm med 3840 pixel bredde er linjen ca 1000 pixler bred
                                                                 // På 1920 skjerm vil den være ca 500 pixler bred
                                                                 // Opplever "flicker" på trend linjen med for høy oppløsning, satt ned til 300
-
-    // Graph Accuracy (brukes til CAP)
-    //public const double GraphCullFrequency20m = 4000;           // 4 sek
-    //public const double GraphCullFrequency30m = 6000;           // 6 sek
-    //public const double GraphCullFrequency3h = 30000;           // 30 sek
 
     // Korreksjoner for DateTimeContinuousAxis
     // Disse korreksjonene legges inn for å få tidspunkt-label på X aksen til å vises korrekt

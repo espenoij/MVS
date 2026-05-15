@@ -1,4 +1,4 @@
-﻿using MVS.Services;
+using MVS.Services;
 using System;
 using System.ComponentModel;
 using System.IO;
@@ -17,17 +17,11 @@ namespace MVS
     /// </summary>
     public partial class MainWindow : RadWindow
     {
-        //// TEST
-        //int counter1 = 0;
-        //int counter2 = 0;
-
         private RadObservableCollection<SensorData> statusDisplayList = new RadObservableCollection<SensorData>();
         private RadObservableCollection<SensorData> sensorDataDisplayList = new RadObservableCollection<SensorData>();
         private RadObservableCollection<SerialPortData> serialPortDataDisplayList = new RadObservableCollection<SerialPortData>();
         private RadObservableCollection<FileReaderSetup> fileReaderDataDisplayList = new RadObservableCollection<FileReaderSetup>();
         private RadObservableCollection<FixedValueSetup> fixedValueDataDisplayList = new RadObservableCollection<FixedValueSetup>();
-
-        //private SensorData sensorDataSelected = new SensorData();
 
         // Database
         private DatabaseHandler database;
@@ -49,7 +43,6 @@ namespace MVS
         private MVSDataCollection mvsOutputData;
         private MVSDatabase mvsDatabase;
         private DispatcherTimer mvsProcessingTimer = new DispatcherTimer();
-        //private DispatcherTimer mvsDatabaseTimer = new DispatcherTimer();
 
         // View Models
         private AdminSettingsVM adminSettingsVM = new AdminSettingsVM();
@@ -166,32 +159,6 @@ namespace MVS
 
             // Init MVS Data Flow
             InitMVSProcessing();
-
-            //// Opprette database tabeller
-            //// Sjekker først om bruker og passord for databasen er satt (ikke satt rett etter installasjon)
-            //if (!string.IsNullOrEmpty(config.Read(ConfigKey.DatabaseUserID)) &&
-            //    !string.IsNullOrEmpty(config.Read(ConfigKey.DatabasePassword)))
-            //{
-            //    try
-            //    {
-            //        // CreateTables gjør selv sjekk på om tabell finnes fra før eller må opprettes
-            //        database.CreateTables(sensorDataRetrieval.GetSensorDataList());
-
-            //        errorHandler.ResetDatabaseError(ErrorHandler.DatabaseErrorType.CreateTablesSensorData2);
-            //        errorHandler.ResetDatabaseError(ErrorHandler.DatabaseErrorType.CreateTablesSensorData1);
-            //    }
-            //    catch (Exception ex)
-            //    {
-            //        errorHandler.Insert(
-            //             new ErrorMessage(
-            //                 DateTime.UtcNow,
-            //                 ErrorMessageType.Database,
-            //                 ErrorMessageCategory.None,
-            //                 string.Format("Database Error (CreateTables 1)\n\nSystem Message:\n{0}", ex.Message)));
-
-            //        errorHandler.SetDatabaseError(ErrorHandler.DatabaseErrorType.CreateTablesSensorData2);
-            //    }
-            //}
 
             // Database Status Check
             DispatcherTimer databaseStatusCheck = new DispatcherTimer();
@@ -467,57 +434,7 @@ namespace MVS
                             string.Format("Server Update Error (runHMSUpdate)\n\nSystem Message:\n{0}", ex.Message)));
                 }
             }
-
-            //// Dispatcher som lagrerer MVS data til databasen
-            //mvsDatabaseTimer.Interval = TimeSpan.FromMilliseconds(config.ReadWithDefault(ConfigKey.DatabaseSaveFrequency, Constants.DatabaseSaveFreqDefault));
-            //mvsDatabaseTimer.Tick += runSaveMVSData;
-
-            //void runSaveMVSData(object sender, EventArgs e)
-            //{
-            //    try
-            //    {
-            //        Thread thread = new Thread(() => SaveMVSData_Thread());
-            //        thread.IsBackground = true;
-            //        thread.Start();
-
-            //        void SaveMVSData_Thread()
-            //        {
-            //            // Lagre data i databasen
-            //            if (mainWindowVM.StoreToDatabase())
-            //                mvsDatabase.Insert(mainWindowVM.SelectedSession, mvsOutputData);
-            //        }
-            //    }
-            //    catch (Exception ex)
-            //    {
-            //        errorHandler.Insert(
-            //            new ErrorMessage(
-            //                DateTime.UtcNow,
-            //                ErrorMessageType.Database,
-            //                ErrorMessageCategory.Admin,
-            //                string.Format("Database Insert Error (runSaveHMSData)\n\nSystem Message:\n{0}", ex.Message)));
-            //    }
-            //}
         }
-
-        //private void SetDatabaseStatus(MVSDataCollection hmsInputData)
-        //{
-        //    // Finne match i mottaker data listen
-        //    var dbStatus = hmsInputData.GetData(ValueType.Database);
-
-        //    if (dbStatus != null)
-        //    {
-        //        if (errorHandler.IsDatabaseError())
-        //        {
-        //            dbStatus.status = DataStatus.TIMEOUT_ERROR;
-        //            dbStatus.timestamp = DateTime.MinValue;
-        //        }
-        //        else
-        //        {
-        //            dbStatus.status = DataStatus.OK;
-        //            dbStatus.timestamp = DateTime.UtcNow;
-        //        }
-        //    }
-        //}
 
         private void btnStart_Click(object sender, RoutedEventArgs e)
         {
@@ -603,7 +520,6 @@ namespace MVS
 
                 // MVS prosessering updater
                 mvsProcessingTimer.Start();
-                //mvsDatabaseTimer.Start();
 
                 // Sensor Setup
                 ucSensorSetupPage.ServerStartedCheck(true);
@@ -671,7 +587,6 @@ namespace MVS
 
             // MVS prosessering updater
             mvsProcessingTimer.Stop();
-            //mvsDatabaseTimer.Stop();
 
             ucSensorSetupPage.ServerStartedCheck(false);
             ucMVSInputSetup.Stop();
@@ -728,7 +643,6 @@ namespace MVS
 
         private void gvSensorDataDisplay_SelectionChanged(object sender, SelectionChangeEventArgs e)
         {
-            //sensorDataSelected = (sender as RadGridView).SelectedItem as SensorData;
         }
 
         private void tcMainMenu_SelectionChanged(object sender, RadSelectionChangedEventArgs e)

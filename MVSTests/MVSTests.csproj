@@ -25,7 +25,7 @@
     <EnableMSTestRunner>false</EnableMSTestRunner>
     <NuGetPackageImportStamp>
     </NuGetPackageImportStamp>
-    <AssemblyVersion>0.0.0.210</AssemblyVersion>
+    <AssemblyVersion>0.0.0.216</AssemblyVersion>
   </PropertyGroup>
   <PropertyGroup Condition=" '$(Configuration)|$(Platform)' == 'Debug|AnyCPU' ">
     <DebugSymbols>true</DebugSymbols>
@@ -137,7 +137,6 @@
     <Compile Include="Services\DataCalculationsTests.cs" />
     <Compile Include="Services\LivoxLidarCorrectionTests.cs" />
     <Compile Include="Services\ModbusHelperTests.cs" />
-    <Compile Include="Services\WeatherTests.cs" />
     <Compile Include="TestInfrastructure\StaTestHelper.cs" />
   </ItemGroup>
   <ItemGroup>

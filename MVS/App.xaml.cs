@@ -28,15 +28,6 @@ namespace MVS
                    new FrameworkPropertyMetadata(
                        XmlLanguage.GetLanguage(CultureInfo.CurrentCulture.IetfLanguageTag)));
 
-            // Generell exception handler
-            //Dispatcher.UnhandledException += OnDispatcherUnhandledException;
-        }
-
-        // Generell exception handler
-        void OnDispatcherUnhandledException(object sender, System.Windows.Threading.DispatcherUnhandledExceptionEventArgs e)
-        {
-            //RadWindow.Alert(string.Format("(HMS Server) An unhandled general exception occurred:\n\n{0}", TextHelper.Wrap(e.Exception.Message)));
-            e.Handled = true;
         }
 
         protected override void OnStartup(StartupEventArgs e)
@@ -106,11 +97,5 @@ namespace MVS
             MaterialPalette.Palette.DividerOpacity = 0.38;
         }
 
-        //protected override void OnClosed(EventArgs e)
-        //{
-        //    base.OnClosed(e);
-
-        //    Application.Current.Shutdown();
-        //}
     }
 }

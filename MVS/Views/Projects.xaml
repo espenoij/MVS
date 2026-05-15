@@ -6,7 +6,6 @@
     xmlns:d="http://schemas.microsoft.com/expression/blend/2008"
     xmlns:telerik="http://schemas.telerik.com/2008/xaml/presentation"
     mc:Ignorable="d"
-    xmlns:mvs="clr-namespace:MVS.Helpers"
     d:DesignHeight="1100"
     d:DesignWidth="1400">
 

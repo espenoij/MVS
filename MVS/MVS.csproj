@@ -32,7 +32,7 @@
     <UseApplicationTrust>false</UseApplicationTrust>
     <PublishWizardCompleted>true</PublishWizardCompleted>
     <BootstrapperEnabled>true</BootstrapperEnabled>
-    <AssemblyVersion>1.1.0.1094</AssemblyVersion>
+    <AssemblyVersion>1.1.0.1106</AssemblyVersion>
   </PropertyGroup>
   <PropertyGroup Condition=" '$(Configuration)|$(Platform)' == 'Debug|AnyCPU' ">
     <PlatformTarget>AnyCPU</PlatformTarget>
@@ -175,7 +175,6 @@
     <Compile Include="Dialogs\DialogScreenCapture.xaml.cs">
       <DependentUpon>DialogScreenCapture.xaml</DependentUpon>
     </Compile>
-    <Compile Include="Helpers\Crc32.cs" />
     <Compile Include="Helpers\DisplayList.cs" />
     <Compile Include="Helpers\GraphBuffer.cs" />
     <Compile Include="Helpers\LabelAbsConverter.cs" />
@@ -296,10 +295,8 @@
     <Compile Include="ViewModels\FileReaderWindowVM.cs" />
     <Compile Include="ViewModels\ModbusSetupWindowVM.cs" />
     <Compile Include="ViewModels\SerialPortSetupWindowVM.cs" />
-    <Compile Include="Helpers\Settings.cs" />
     <Compile Include="Helpers\SortAdorner.cs" />
     <Compile Include="Helpers\TextHelper.cs" />
-    <Compile Include="Services\Weather.cs" />
     <Compile Include="Views\DataAnalysis.xaml.cs">
       <DependentUpon>DataAnalysis.xaml</DependentUpon>
     </Compile>
@@ -395,11 +392,6 @@
       <AutoGen>True</AutoGen>
       <DesignTime>True</DesignTime>
       <DependentUpon>Resources.resx</DependentUpon>
-    </Compile>
-    <Compile Include="Properties\Settings.Designer.cs">
-      <AutoGen>True</AutoGen>
-      <DependentUpon>Settings.settings</DependentUpon>
-      <DesignTimeSharedInput>True</DesignTimeSharedInput>
     </Compile>
     <EmbeddedResource Include="Properties\Resources.resx">
       <Generator>ResXFileCodeGenerator</Generator>
