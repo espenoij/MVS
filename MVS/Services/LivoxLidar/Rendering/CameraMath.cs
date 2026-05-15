@@ -24,7 +24,7 @@ namespace MVS
         {
             if (aspectRatio < 0.01) aspectRatio = 1.0;
 
-            double hFovRad = horizontalFovDeg * Math.PI / 360.0; // half horizontal FOV
+            double hFovRad = horizontalFovDeg * Math.PI / 180.0 / 2.0; // half horizontal FOV
             double vFovRad = Math.Atan(Math.Tan(hFovRad) / aspectRatio);
 
             double zoomH = halfExtentH / Math.Tan(hFovRad);
@@ -90,7 +90,7 @@ namespace MVS
             double nx = offset.X / zoom;
             double ny = offset.Y / zoom;
             double nz = offset.Z / zoom;
-            rotXDeg = -Math.Asin(Math.Max(-1.0, Math.Min(1.0, -ny))) * 180.0 / Math.PI;
+            rotXDeg = Math.Asin(Math.Max(-1.0, Math.Min(1.0, -ny))) * 180.0 / Math.PI;
             double cosX = Math.Cos(rotXDeg * Math.PI / 180.0);
             if (Math.Abs(cosX) > 1e-6)
                 rotYDeg = Math.Atan2(nx / cosX, nz / cosX) * 180.0 / Math.PI;
