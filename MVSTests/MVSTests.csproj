@@ -1,4 +1,4 @@
-﻿<?xml version="1.0" encoding="utf-8"?>
+<?xml version="1.0" encoding="utf-8"?>
 <Project ToolsVersion="15.0" DefaultTargets="Build" xmlns="http://schemas.microsoft.com/developer/msbuild/2003">
   <Import Project="..\packages\MSTest.TestAdapter.3.7.3\build\net462\MSTest.TestAdapter.props" Condition="Exists('..\packages\MSTest.TestAdapter.3.7.3\build\net462\MSTest.TestAdapter.props')" />
   <Import Project="..\packages\Microsoft.Testing.Extensions.Telemetry.1.5.3\build\netstandard2.0\Microsoft.Testing.Extensions.Telemetry.props" Condition="Exists('..\packages\Microsoft.Testing.Extensions.Telemetry.1.5.3\build\netstandard2.0\Microsoft.Testing.Extensions.Telemetry.props')" />
@@ -25,7 +25,7 @@
     <EnableMSTestRunner>false</EnableMSTestRunner>
     <NuGetPackageImportStamp>
     </NuGetPackageImportStamp>
-    <AssemblyVersion>0.0.0.205</AssemblyVersion>
+    <AssemblyVersion>0.0.0.210</AssemblyVersion>
   </PropertyGroup>
   <PropertyGroup Condition=" '$(Configuration)|$(Platform)' == 'Debug|AnyCPU' ">
     <DebugSymbols>true</DebugSymbols>
@@ -122,12 +122,23 @@
     </Reference>
   </ItemGroup>
   <ItemGroup>
+    <Compile Include="Helpers\HMSCalcTests.cs" />
+    <Compile Include="Helpers\LabelAbsConverterTests.cs" />
+    <Compile Include="Helpers\TextHelperTests.cs" />
     <Compile Include="LivoxLidar\CameraMathTests.cs" />
+    <Compile Include="LivoxLidar\LivoxLidarDeckEdgeFinderTests.cs" />
+    <Compile Include="LivoxLidar\LivoxLidarPlaneFitterTests.cs" />
     <Compile Include="LivoxLidar\MaterialFactoryTests.cs" />
     <Compile Include="LivoxLidar\MeshBuilderTests.cs" />
     <Compile Include="LivoxLidar\PointCloudMeshBuilderTests.cs" />
     <Compile Include="LivoxLidar\RotationReadoutTests.cs" />
+    <Compile Include="LivoxLidar\TrackballCameraControllerTests.cs" />
     <Compile Include="Properties\AssemblyInfo.cs" />
+    <Compile Include="Services\DataCalculationsTests.cs" />
+    <Compile Include="Services\LivoxLidarCorrectionTests.cs" />
+    <Compile Include="Services\ModbusHelperTests.cs" />
+    <Compile Include="Services\WeatherTests.cs" />
+    <Compile Include="TestInfrastructure\StaTestHelper.cs" />
   </ItemGroup>
   <ItemGroup>
     <ProjectReference Include="..\MVS\MVS.csproj">
