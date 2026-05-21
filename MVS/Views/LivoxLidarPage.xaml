@@ -200,6 +200,17 @@
                                     </DockPanel>
                                     <Separator Margin="0,4,0,4"/>
                                     <DockPanel Margin="0,0,0,4">
+                                        <Label Width="150" Content="Slant Type" VerticalAlignment="Center"
+                                               ToolTip="Detected helideck slant geometry (Flat / Ridge / CenterHigh)"/>
+                                        <Label Content="{Binding FitSlantType}"/>
+                                    </DockPanel>
+                                    <DockPanel Margin="0,0,0,4">
+                                        <Label Width="150" Content="Slant Angle" VerticalAlignment="Center"
+                                               ToolTip="Magnitude of the detected slant in degrees"/>
+                                        <Label Content="{Binding FitSlantAngle}"/>
+                                    </DockPanel>
+                                    <Separator Margin="0,4,0,4"/>
+                                    <DockPanel Margin="0,0,0,4">
                                         <Label Width="150" Content="Fit RMSE" VerticalAlignment="Center"/>
                                         <Label Content="{Binding FitRmse}"/>
                                     </DockPanel>
@@ -652,7 +663,7 @@
                             </StackPanel>
                             <StackPanel Orientation="Horizontal" Margin="0,2,0,2">
                                 <Border Width="16" Height="16" Background="#FF00FF" CornerRadius="2" Margin="0,0,6,0"/>
-                                <TextBlock Text="Hex Vertices" FontSize="12" Foreground="#333333" VerticalAlignment="Center"/>
+                                <TextBlock Text="Corners" FontSize="12" Foreground="#333333" VerticalAlignment="Center"/>
                             </StackPanel>
                             <StackPanel Orientation="Horizontal" Margin="0,2,0,2">
                                 <Border Width="16" Height="16" Background="#50000000" CornerRadius="2" Margin="0,0,6,0"

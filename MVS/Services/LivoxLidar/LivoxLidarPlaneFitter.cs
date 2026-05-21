@@ -42,6 +42,10 @@ namespace MVS
         public double LatExtentMin    { get; set; }
         /// <summary>Signed extent along the lateral axis from centroid — starboard side (mm, ≥ 0).</summary>
         public double LatExtentMax    { get; set; }
+        /// <summary>Detected deck slant type (Flat / Ridge / CenterHigh) based on residual analysis.</summary>
+        public DeckSlantType DetectedSlantType { get; set; }
+        /// <summary>Magnitude of the detected slant in degrees (0 for a perfectly flat deck).</summary>
+        public double DetectedSlantDeg { get; set; }
     }
 
     /// <summary>
@@ -285,18 +289,40 @@ namespace MVS
             // Lateral = N × VesselForward (in-plane port-starboard direction)
             double latX = ny*az - nz*ay, latY = nz*ax - nx*az, latZ = nx*ay - ny*ax;
             double fwdMax = 0, fwdMin = 0, latMax = 0, latMin = 0;
-            foreach (var p in points)
+            // Residuals (signed perpendicular distance to fitted plane) and the in-plane
+            // |lateral| / radial coordinates needed for slant-type classification.
+            var residuals = new double[n];
+            var absLat    = new double[n];
+            var radial    = new double[n];
+            for (int i = 0; i < n; i++)
             {
+                var p = points[i];
                 double dx = p.x - cx, dy = p.y - cy, dz = p.z - cz;
                 double pf = dx*ax + dy*ay + dz*az;
                 double pl = dx*latX + dy*latY + dz*latZ;
                 if (pf > fwdMax) fwdMax = pf; if (pf < fwdMin) fwdMin = pf;
                 if (pl > latMax) latMax = pl; if (pl < latMin) latMin = pl;
+                residuals[i] = nx * dx + ny * dy + nz * dz; // signed dist to plane
+                absLat[i]    = Math.Abs(pl);
+                radial[i]    = Math.Sqrt(pf * pf + pl * pl);
             }
             result.ExtentPrimary   = Math.Max(fwdMax, -fwdMin);
             result.ExtentSecondary = Math.Max(latMax, -latMin);
             result.FwdExtentMin = fwdMin; result.FwdExtentMax = fwdMax;
             result.LatExtentMin = latMin; result.LatExtentMax = latMax;
+
+            // ── Step 11: Slant-type classification ──────────────────────────
+            // The plane fit captures any single-direction (Flat) tilt in pitch/roll,
+            // so residuals are ~noise for a Flat deck. A Ridge produces residuals that
+            // correlate linearly with |lateral|; a CenterHigh dome produces residuals
+            // that correlate linearly with the in-plane radius. Fit both candidate
+            // models by least-squares regression of residual vs. predictor, compute
+            // the resulting sum-of-squared errors (SSE), and pick whichever model
+            // explains the most variance — provided the improvement vs. Flat is
+            // significant and the recovered slope exceeds a small threshold.
+            ClassifySlant(residuals, absLat, radial, out var slantType, out double slantDeg);
+            result.DetectedSlantType = slantType;
+            result.DetectedSlantDeg  = slantDeg;
 
             result.CentroidX = cx; result.CentroidY = cy; result.CentroidZ = cz;
             result.NormalX = nx;           result.NormalY = ny;           result.NormalZ = nz;
@@ -305,6 +331,106 @@ namespace MVS
             result.IsValid    = true;
 
             return result;
+        }
+
+        // ── Slant-type classification ───────────────────────────────────────
+        // After the plane fit, residuals along the plane normal encode any remaining
+        // deviation from flatness. A Ridge (peak along vessel forward) makes residuals
+        // decrease linearly with |lateral|; a CenterHigh dome makes them decrease
+        // linearly with the in-plane radius. We fit residual = a + b·predictor by
+        // least squares for both predictors and accept the better-fitting non-Flat
+        // model only when the improvement in SSE vs. Flat is significant.
+        private const double SlantMinAngleDeg = 0.5;     // ignore sub-half-degree slants
+        private const double SlantSseImprovementRatio = 0.5; // model must cut SSE by ≥ 50 %
+
+        private static void ClassifySlant(
+            double[] residuals, double[] absLat, double[] radial,
+            out DeckSlantType type, out double slantDeg)
+        {
+            type = DeckSlantType.Flat;
+            slantDeg = 0.0;
+
+            int n = residuals.Length;
+            if (n < MinPoints) return;
+
+            // Mean residual (should be ~0 by construction, but compute defensively)
+            double meanR = 0;
+            for (int i = 0; i < n; i++) meanR += residuals[i];
+            meanR /= n;
+
+            // SSE for the Flat hypothesis (residual ≈ constant)
+            double sseFlat = 0;
+            for (int i = 0; i < n; i++)
+            {
+                double d = residuals[i] - meanR;
+                sseFlat += d * d;
+            }
+            if (sseFlat < 1e-9) return;
+
+            // Linear fit residual = a + b·x for a given predictor x
+            FitLine(residuals, absLat, out double bRidge,  out double sseRidge);
+            FitLine(residuals, radial, out double bDome,   out double sseDome);
+
+            // Ridge and CenterHigh both push the centre up relative to the edges,
+            // so the slope must be negative (residual falls as |lat| / radius grows).
+            bool ridgeOk = bRidge < 0 && sseRidge < sseFlat * SlantSseImprovementRatio;
+            bool domeOk  = bDome  < 0 && sseDome  < sseFlat * SlantSseImprovementRatio;
+
+            if (!ridgeOk && !domeOk) return;
+
+            // Pick the model with the lower SSE
+            if (domeOk && (!ridgeOk || sseDome <= sseRidge))
+            {
+                type = DeckSlantType.CenterHigh;
+                slantDeg = Math.Atan(-bDome) * Rad2Deg;
+            }
+            else
+            {
+                type = DeckSlantType.Ridge;
+                slantDeg = Math.Atan(-bRidge) * Rad2Deg;
+            }
+
+            if (slantDeg < SlantMinAngleDeg)
+            {
+                type = DeckSlantType.Flat;
+                slantDeg = 0.0;
+            }
+        }
+
+        // Ordinary least-squares fit of y = a + b·x; returns the slope b and the
+        // residual sum of squares (SSE) of the fit. Falls back to a constant model
+        // (SSE = total variance, slope = 0) when x has zero spread.
+        private static void FitLine(double[] y, double[] x, out double b, out double sse)
+        {
+            int n = y.Length;
+            double sx = 0, sy = 0;
+            for (int i = 0; i < n; i++) { sx += x[i]; sy += y[i]; }
+            double mx = sx / n, my = sy / n;
+
+            double sxx = 0, sxy = 0;
+            for (int i = 0; i < n; i++)
+            {
+                double dx = x[i] - mx;
+                sxx += dx * dx;
+                sxy += dx * (y[i] - my);
+            }
+
+            if (sxx < 1e-12)
+            {
+                b = 0;
+                sse = 0;
+                for (int i = 0; i < n; i++) { double d = y[i] - my; sse += d * d; }
+                return;
+            }
+
+            b = sxy / sxx;
+            double a = my - b * mx;
+            sse = 0;
+            for (int i = 0; i < n; i++)
+            {
+                double r = y[i] - (a + b * x[i]);
+                sse += r * r;
+            }
         }
 
         // ── Symmetric eigendecomposition via Math.NET Numerics ──────────────

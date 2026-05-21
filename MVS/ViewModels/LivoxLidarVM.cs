@@ -432,6 +432,12 @@ namespace MVS
         private string _fitPoints = "—";
         public string FitPoints { get { return _fitPoints; } set { _fitPoints = value; OnPropertyChanged(); } }
 
+        private string _fitSlantType = "—";
+        public string FitSlantType { get { return _fitSlantType; } set { _fitSlantType = value; OnPropertyChanged(); } }
+
+        private string _fitSlantAngle = "—";
+        public string FitSlantAngle { get { return _fitSlantAngle; } set { _fitSlantAngle = value; OnPropertyChanged(); } }
+
         // Deck edge result display
         private string _edgeDirection = "—";
         public string EdgeDirection { get { return _edgeDirection; } set { _edgeDirection = value; OnPropertyChanged(); } }
@@ -790,12 +796,21 @@ namespace MVS
                 FitRoll    = string.Format(System.Globalization.CultureInfo.InvariantCulture, "{0:F3}°", _lastFit.RollDeg);
                 FitRmse    = string.Format(System.Globalization.CultureInfo.InvariantCulture, "{0:F1} mm", _lastFit.FitRmse);
                 FitPoints  = _lastFit.PointCount.ToString("N0");
+                FitSlantType = _lastFit.DetectedSlantType.ToString();
+                FitSlantAngle = _lastFit.DetectedSlantType == DeckSlantType.Flat
+                    ? "—"
+                    : string.Format(System.Globalization.CultureInfo.InvariantCulture, "{0:F3}°", _lastFit.DetectedSlantDeg);
             }
             else
             {
                 FitPitch = FitRoll = FitRmse = FitPoints = "—";
+                FitSlantType = FitSlantAngle = "—";
             }
             OnPropertyChanged(nameof(HasFitResult));
+            // CommandManager.RequerySuggested only fires on UI focus changes, so commands
+            // bound via HasFitResult (Apply Correction) wouldn't re-evaluate after Analyse
+            // completes until the user interacts with the window. Force a requery here.
+            CommandManager.InvalidateRequerySuggested();
         }
 
         private void RefreshEdgeDisplay()
