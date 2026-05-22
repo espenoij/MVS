@@ -5,11 +5,13 @@
     xmlns:telerik="http://schemas.telerik.com/2008/xaml/presentation"
     xmlns:mc="http://schemas.openxmlformats.org/markup-compatibility/2006"
     xmlns:d="http://schemas.microsoft.com/expression/blend/2008"
+    xmlns:mvs="clr-namespace:MVS"
     mc:Ignorable="d"
     d:DesignHeight="900" d:DesignWidth="1400">
 
     <UserControl.Resources>
         <BooleanToVisibilityConverter x:Key="BoolToVis" />
+        <mvs:FitRmseQualityBrushConverter x:Key="FitRmseQualityBrush" />
     </UserControl.Resources>
 
     <Grid>
@@ -200,8 +202,26 @@
                                     </DockPanel>
                                     <Separator Margin="0,4,0,4"/>
                                     <DockPanel Margin="0,0,0,4">
+                                        <Label Width="150" Content="Slant Type" VerticalAlignment="Center"
+                                               ToolTip="Detected helideck slant geometry (Flat / Ridge / CenterHigh)"/>
+                                        <Label Content="{Binding FitSlantType}"/>
+                                    </DockPanel>
+                                    <DockPanel Margin="0,0,0,4">
+                                        <Label Width="150" Content="Slant Angle" VerticalAlignment="Center"
+                                               ToolTip="Magnitude of the detected slant in degrees"/>
+                                        <Label Content="{Binding FitSlantAngle}"/>
+                                    </DockPanel>
+                                    <Separator Margin="0,4,0,4"/>
+                                    <DockPanel Margin="0,0,0,4">
                                         <Label Width="150" Content="Fit RMSE" VerticalAlignment="Center"/>
-                                        <Label Content="{Binding FitRmse}"/>
+                                        <Label Content="{Binding FitRmseQualityString}"
+                                               FontWeight="Bold"
+                                               Foreground="{Binding FitRmseQualityString, Converter={StaticResource FitRmseQualityBrush}}"
+                                               ToolTip="{Binding FitRmseQualityTooltip}"
+                                               DockPanel.Dock="Right"
+                                               Margin="8,0,0,0"/>
+                                        <Label Content="{Binding FitRmse}"
+                                               ToolTip="{Binding FitRmseQualityTooltip}"/>
                                     </DockPanel>
                                     <DockPanel Margin="0,0,0,4">
                                         <Label Width="150" Content="Points used" VerticalAlignment="Center"/>
@@ -262,7 +282,14 @@
                                     </DockPanel>
                                     <DockPanel Margin="0,0,0,4">
                                         <Label Width="150" Content="Fit RMSE" VerticalAlignment="Center"/>
-                                        <Label Content="{Binding Correction.FitRmseString}"/>
+                                        <Label Content="{Binding Correction.FitRmseQualityString}"
+                                               FontWeight="Bold"
+                                               Foreground="{Binding Correction.FitRmseQuality, Converter={StaticResource FitRmseQualityBrush}}"
+                                               ToolTip="{Binding FitRmseQualityTooltip}"
+                                               DockPanel.Dock="Right"
+                                               Margin="8,0,0,0"/>
+                                        <Label Content="{Binding Correction.FitRmseString}"
+                                               ToolTip="{Binding FitRmseQualityTooltip}"/>
                                     </DockPanel>
                                     <DockPanel Margin="0,0,0,8">
                                         <Label Width="150" Content="Applied" VerticalAlignment="Center"/>
@@ -652,7 +679,7 @@
                             </StackPanel>
                             <StackPanel Orientation="Horizontal" Margin="0,2,0,2">
                                 <Border Width="16" Height="16" Background="#FF00FF" CornerRadius="2" Margin="0,0,6,0"/>
-                                <TextBlock Text="Hex Vertices" FontSize="12" Foreground="#333333" VerticalAlignment="Center"/>
+                                <TextBlock Text="Corners" FontSize="12" Foreground="#333333" VerticalAlignment="Center"/>
                             </StackPanel>
                             <StackPanel Orientation="Horizontal" Margin="0,2,0,2">
                                 <Border Width="16" Height="16" Background="#50000000" CornerRadius="2" Margin="0,0,6,0"

@@ -146,5 +146,54 @@ namespace MVSTests.LivoxLidar
             Assert.IsTrue(filtered.Count >= 600,
                 "Filter should retain (most of) the 625 deck inliers.");
         }
+
+        // Build a Ridge deck: z = offsetZ - |y| · tan(slantDeg). Ridge runs along
+        // the X axis so |lateral| ≡ |y|. No sensor noise added — any residual
+        // against a flat plane is entirely the deck geometry.
+        private static List<(float x, float y, float z)> BuildRidgeDeck(
+            double slantDeg = 2.0,
+            int gridSize = 25,
+            double extentMm = 5000,
+            double offsetZ = -1500)
+        {
+            var pts = new List<(float, float, float)>(gridSize * gridSize);
+            double tan = Math.Tan(slantDeg * Math.PI / 180.0);
+            for (int i = 0; i < gridSize; i++)
+            {
+                for (int j = 0; j < gridSize; j++)
+                {
+                    double x = -extentMm + 2 * extentMm * i / (gridSize - 1);
+                    double y = -extentMm + 2 * extentMm * j / (gridSize - 1);
+                    double z = offsetZ - Math.Abs(y) * tan;
+                    pts.Add(((float)x, (float)y, (float)z));
+                }
+            }
+            return pts;
+        }
+
+        [TestMethod]
+        public void Fit_RidgeDeck_SurfaceRmseMuchSmallerThanFlatRmse()
+        {
+            // 2° ridge over a 10 m-wide deck produces a flat-plane RMSE on the order
+            // of ~100 mm purely from geometry. SurfaceRmse should subtract the slant
+            // contribution and come out close to zero (noise-free synthetic input).
+            var r = LivoxLidarPlaneFitter.Fit(BuildRidgeDeck(slantDeg: 2.0));
+            Assert.IsTrue(r.IsValid);
+            Assert.AreEqual(DeckSlantType.Ridge, r.DetectedSlantType);
+            Assert.IsTrue(r.FitRmse > 50.0,
+                $"Flat-plane RMSE should be inflated by the ridge geometry, was {r.FitRmse:F1} mm.");
+            Assert.IsTrue(r.SurfaceRmse < r.FitRmse * 0.25,
+                $"SurfaceRmse ({r.SurfaceRmse:F1} mm) should be much smaller than FitRmse ({r.FitRmse:F1} mm) once the slant is removed.");
+        }
+
+        [TestMethod]
+        public void Fit_FlatDeck_SurfaceRmseEqualsFitRmse()
+        {
+            var r = LivoxLidarPlaneFitter.Fit(BuildDeck());
+            Assert.IsTrue(r.IsValid);
+            Assert.AreEqual(DeckSlantType.Flat, r.DetectedSlantType);
+            Assert.AreEqual(r.FitRmse, r.SurfaceRmse, 1e-6,
+                "For a Flat deck, SurfaceRmse must equal FitRmse.");
+        }
     }
 }

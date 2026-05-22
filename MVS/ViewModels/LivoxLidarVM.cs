@@ -429,8 +429,23 @@ namespace MVS
         private string _fitRmse = "—";
         public string FitRmse  { get { return _fitRmse;  } set { _fitRmse  = value; OnPropertyChanged(); } }
 
+        private string _fitRmseQualityString = "—";
+        public string FitRmseQualityString
+        {
+            get { return _fitRmseQualityString; }
+            set { _fitRmseQualityString = value; OnPropertyChanged(); }
+        }
+
+        public string FitRmseQualityTooltip => LivoxLidarFitQuality.ThresholdDescription;
+
         private string _fitPoints = "—";
         public string FitPoints { get { return _fitPoints; } set { _fitPoints = value; OnPropertyChanged(); } }
+
+        private string _fitSlantType = "—";
+        public string FitSlantType { get { return _fitSlantType; } set { _fitSlantType = value; OnPropertyChanged(); } }
+
+        private string _fitSlantAngle = "—";
+        public string FitSlantAngle { get { return _fitSlantAngle; } set { _fitSlantAngle = value; OnPropertyChanged(); } }
 
         // Deck edge result display
         private string _edgeDirection = "—";
@@ -586,7 +601,7 @@ namespace MVS
             }
 
             RefreshFitDisplay();
-            AppendStatus($"Fit OK — RMSE {_lastFit.FitRmse:F1} mm  ({_lastFit.PointCount:N0} pts)");
+            AppendStatus($"Fit OK — RMSE {_lastFit.SurfaceRmse:F1} mm  ({_lastFit.PointCount:N0} pts)");
             OnPropertyChanged(nameof(HasFitResult));
 
             FitResultReady?.Invoke(_lastFit);
@@ -598,7 +613,7 @@ namespace MVS
 
             double heading = ResolveVesselForwardAngle();
             _correction.Apply(_lastFit.PitchDeg, _lastFit.RollDeg,
-                              heading, _lastFit.FitRmse, _lastFit.PointCount);
+                              heading, _lastFit.SurfaceRmse, _lastFit.PointCount);
 
             PersistCorrection();
             AppendStatus("Correction applied to Reference MRU.");
@@ -788,14 +803,25 @@ namespace MVS
             {
                 FitPitch   = string.Format(System.Globalization.CultureInfo.InvariantCulture, "{0:F3}°", _lastFit.PitchDeg);
                 FitRoll    = string.Format(System.Globalization.CultureInfo.InvariantCulture, "{0:F3}°", _lastFit.RollDeg);
-                FitRmse    = string.Format(System.Globalization.CultureInfo.InvariantCulture, "{0:F1} mm", _lastFit.FitRmse);
+                FitRmse    = string.Format(System.Globalization.CultureInfo.InvariantCulture, "{0:F1} mm", _lastFit.SurfaceRmse);
                 FitPoints  = _lastFit.PointCount.ToString("N0");
+                FitRmseQualityString = LivoxLidarFitQuality.Label(LivoxLidarFitQuality.Classify(_lastFit.SurfaceRmse));
+                FitSlantType = _lastFit.DetectedSlantType.ToString();
+                FitSlantAngle = _lastFit.DetectedSlantType == DeckSlantType.Flat
+                    ? "—"
+                    : string.Format(System.Globalization.CultureInfo.InvariantCulture, "{0:F3}°", _lastFit.DetectedSlantDeg);
             }
             else
             {
                 FitPitch = FitRoll = FitRmse = FitPoints = "—";
+                FitSlantType = FitSlantAngle = "—";
+                FitRmseQualityString = "—";
             }
             OnPropertyChanged(nameof(HasFitResult));
+            // CommandManager.RequerySuggested only fires on UI focus changes, so commands
+            // bound via HasFitResult (Apply Correction) wouldn't re-evaluate after Analyse
+            // completes until the user interacts with the window. Force a requery here.
+            CommandManager.InvalidateRequerySuggested();
         }
 
         private void RefreshEdgeDisplay()
