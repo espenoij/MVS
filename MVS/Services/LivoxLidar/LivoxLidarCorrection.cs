@@ -51,9 +51,20 @@ namespace MVS
         public double FitRmse
         {
             get { return _fitRmse; }
-            set { _fitRmse = value; OnPropertyChanged(); OnPropertyChanged(nameof(FitRmseString)); }
+            set
+            {
+                _fitRmse = value;
+                OnPropertyChanged();
+                OnPropertyChanged(nameof(FitRmseString));
+                OnPropertyChanged(nameof(FitRmseQuality));
+                OnPropertyChanged(nameof(FitRmseQualityString));
+            }
         }
         public string FitRmseString => IsActive ? string.Format(System.Globalization.CultureInfo.InvariantCulture, "{0:F1} mm", _fitRmse) : "—";
+
+        /// <summary>Qualitative rating of <see cref="FitRmse"/> (Good / Acceptable / Marginal / Bad).</summary>
+        public FitRmseQuality FitRmseQuality => IsActive ? LivoxLidarFitQuality.Classify(_fitRmse) : MVS.FitRmseQuality.Unknown;
+        public string FitRmseQualityString => LivoxLidarFitQuality.Label(FitRmseQuality);
 
         private int _pointCount;
         /// <summary>Number of points used in the fit.</summary>
@@ -80,6 +91,8 @@ namespace MVS
                 OnPropertyChanged(nameof(RollOffsetString));
                 OnPropertyChanged(nameof(HeadingOffsetString));
                 OnPropertyChanged(nameof(FitRmseString));
+                OnPropertyChanged(nameof(FitRmseQuality));
+                OnPropertyChanged(nameof(FitRmseQualityString));
                 OnPropertyChanged(nameof(PointCountString));
                 OnPropertyChanged(nameof(TimestampString));
             }

@@ -15,6 +15,13 @@ namespace MVS
         public double RollDeg      { get; set; }
         /// <summary>RMSE of the fit in millimetres (= sqrt of smallest eigenvalue).</summary>
         public double FitRmse      { get; set; }
+        /// <summary>
+        /// RMSE in millimetres against the detected surface shape (flat / ridge / dome).
+        /// Equals <see cref="FitRmse"/> for a Flat deck; for Ridge/CenterHigh decks
+        /// it removes the variance explained by the slant, so it reflects sensor
+        /// noise and residual clutter rather than deck geometry.
+        /// </summary>
+        public double SurfaceRmse  { get; set; }
         /// <summary>Mean perpendicular distance from the sensor origin to the fitted plane (mm).</summary>
         public double ClearanceMm  { get; set; }
         public int    PointCount   { get; set; }
@@ -320,9 +327,15 @@ namespace MVS
             // the resulting sum-of-squared errors (SSE), and pick whichever model
             // explains the most variance — provided the improvement vs. Flat is
             // significant and the recovered slope exceeds a small threshold.
-            ClassifySlant(residuals, absLat, radial, out var slantType, out double slantDeg);
+            ClassifySlant(residuals, absLat, radial, out var slantType, out double slantDeg, out double surfaceSse);
             result.DetectedSlantType = slantType;
             result.DetectedSlantDeg  = slantDeg;
+
+            // Slant-aware RMSE — residual against the detected surface model.
+            // For a Flat deck this equals FitRmse; for Ridge / CenterHigh it
+            // removes the deck geometry's contribution so the operator sees a
+            // pure noise/clutter quality figure.
+            result.SurfaceRmse = Math.Sqrt(Math.Max(0.0, surfaceSse / n));
 
             result.CentroidX = cx; result.CentroidY = cy; result.CentroidZ = cz;
             result.NormalX = nx;           result.NormalY = ny;           result.NormalZ = nz;
@@ -345,10 +358,11 @@ namespace MVS
 
         private static void ClassifySlant(
             double[] residuals, double[] absLat, double[] radial,
-            out DeckSlantType type, out double slantDeg)
+            out DeckSlantType type, out double slantDeg, out double surfaceSse)
         {
             type = DeckSlantType.Flat;
             slantDeg = 0.0;
+            surfaceSse = 0.0;
 
             int n = residuals.Length;
             if (n < MinPoints) return;
@@ -365,6 +379,7 @@ namespace MVS
                 double d = residuals[i] - meanR;
                 sseFlat += d * d;
             }
+            surfaceSse = sseFlat;
             if (sseFlat < 1e-9) return;
 
             // Linear fit residual = a + b·x for a given predictor x
@@ -383,17 +398,20 @@ namespace MVS
             {
                 type = DeckSlantType.CenterHigh;
                 slantDeg = Math.Atan(-bDome) * Rad2Deg;
+                surfaceSse = sseDome;
             }
             else
             {
                 type = DeckSlantType.Ridge;
                 slantDeg = Math.Atan(-bRidge) * Rad2Deg;
+                surfaceSse = sseRidge;
             }
 
             if (slantDeg < SlantMinAngleDeg)
             {
                 type = DeckSlantType.Flat;
                 slantDeg = 0.0;
+                surfaceSse = sseFlat;
             }
         }
 
