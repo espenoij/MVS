@@ -115,27 +115,17 @@
                                     Height="1*" />
                             </Grid.RowDefinitions>
 
-                            <Viewbox
+                            <TextBlock
                                 Grid.Row="1"
-                                StretchDirection="Both"
-                                Stretch="Uniform"
-                                VerticalAlignment="Center">
+                                Text="U"
+                                VerticalAlignment="Center"
+                                HorizontalAlignment="Center" />
 
-                                <TextBlock
-                                    Text="U" />
-
-                            </Viewbox>
-
-                            <Viewbox
+                            <TextBlock
                                 Grid.Row="3"
-                                StretchDirection="Both"
-                                Stretch="Uniform"
-                                VerticalAlignment="Center">
-
-                                <TextBlock
-                                    Text="D" />
-
-                            </Viewbox>
+                                Text="D"
+                                VerticalAlignment="Center"
+                                HorizontalAlignment="Center" />
 
                         </Grid>
 
@@ -262,64 +252,34 @@
                                 Width="*" />
                         </Grid.ColumnDefinitions>
 
-                        <Viewbox
+                        <Label
                             Grid.Column="0"
                             Grid.ColumnSpan="2"
-                            StretchDirection="Both"
-                            Stretch="Uniform"
-                            HorizontalAlignment="Left">
+                            Content="-20 mins"
+                            HorizontalAlignment="Left" />
 
-                            <Label
-                                Content="-20 mins" />
-
-                        </Viewbox>
-
-                        <Viewbox
+                        <Label
                             Grid.Column="1"
                             Grid.ColumnSpan="2"
-                            StretchDirection="Both"
-                            Stretch="Uniform"
-                            HorizontalAlignment="Center">
+                            Content="-15"
+                            HorizontalAlignment="Center" />
 
-                            <Label
-                                Content="-15" />
-
-                        </Viewbox>
-
-                        <Viewbox
+                        <Label
                             Grid.Column="3"
                             Grid.ColumnSpan="2"
-                            StretchDirection="Both"
-                            Stretch="Uniform"
-                            HorizontalAlignment="Center">
+                            Content="-10"
+                            HorizontalAlignment="Center" />
 
-                            <Label
-                                Content="-10" />
-
-                        </Viewbox>
-
-                        <Viewbox
+                        <Label
                             Grid.Column="5"
                             Grid.ColumnSpan="2"
-                            StretchDirection="Both"
-                            Stretch="Uniform"
-                            HorizontalAlignment="Center">
+                            Content="-5"
+                            HorizontalAlignment="Center" />
 
-                            <Label
-                                Content="-5" />
-
-                        </Viewbox>
-
-                        <Viewbox
+                        <Label
                             Grid.Column="10"
-                            StretchDirection="Both"
-                            Stretch="Uniform"
-                            HorizontalAlignment="Right">
-
-                            <Label
-                                Content="0" />
-
-                        </Viewbox>
+                            Content="0"
+                            HorizontalAlignment="Right" />
 
                     </Grid>
 
@@ -376,27 +336,17 @@
                                     Height="1*" />
                             </Grid.RowDefinitions>
 
-                            <Viewbox
+                            <TextBlock
                                 Grid.Row="1"
-                                StretchDirection="Both"
-                                Stretch="Uniform"
-                                VerticalAlignment="Center">
+                                Text="U"
+                                VerticalAlignment="Center"
+                                HorizontalAlignment="Center" />
 
-                                <TextBlock
-                                    Text="U" />
-
-                            </Viewbox>
-
-                            <Viewbox
+                            <TextBlock
                                 Grid.Row="3"
-                                StretchDirection="Both"
-                                Stretch="Uniform"
-                                VerticalAlignment="Center">
-
-                                <TextBlock
-                                    Text="D" />
-
-                            </Viewbox>
+                                Text="D"
+                                VerticalAlignment="Center"
+                                HorizontalAlignment="Center" />
 
                         </Grid>
 
@@ -523,64 +473,34 @@
                                 Width="*" />
                         </Grid.ColumnDefinitions>
 
-                        <Viewbox
+                        <Label
                             Grid.Column="0"
                             Grid.ColumnSpan="2"
-                            StretchDirection="Both"
-                            Stretch="Uniform"
-                            HorizontalAlignment="Left">
+                            Content="-20 mins"
+                            HorizontalAlignment="Left" />
 
-                            <Label
-                                Content="-20 mins" />
-
-                        </Viewbox>
-
-                        <Viewbox
+                        <Label
                             Grid.Column="1"
                             Grid.ColumnSpan="2"
-                            StretchDirection="Both"
-                            Stretch="Uniform"
-                            HorizontalAlignment="Center">
+                            Content="-15"
+                            HorizontalAlignment="Center" />
 
-                            <Label
-                                Content="-15" />
-
-                        </Viewbox>
-
-                        <Viewbox
+                        <Label
                             Grid.Column="3"
                             Grid.ColumnSpan="2"
-                            StretchDirection="Both"
-                            Stretch="Uniform"
-                            HorizontalAlignment="Center">
+                            Content="-10"
+                            HorizontalAlignment="Center" />
 
-                            <Label
-                                Content="-10" />
-
-                        </Viewbox>
-
-                        <Viewbox
+                        <Label
                             Grid.Column="5"
                             Grid.ColumnSpan="2"
-                            StretchDirection="Both"
-                            Stretch="Uniform"
-                            HorizontalAlignment="Center">
+                            Content="-5"
+                            HorizontalAlignment="Center" />
 
-                            <Label
-                                Content="-5" />
-
-                        </Viewbox>
-
-                        <Viewbox
+                        <Label
                             Grid.Column="10"
-                            StretchDirection="Both"
-                            Stretch="Uniform"
-                            HorizontalAlignment="Right">
-
-                            <Label
-                                Content="0" />
-
-                        </Viewbox>
+                            Content="0"
+                            HorizontalAlignment="Right" />
 
                     </Grid>
 
@@ -637,27 +557,17 @@
                                     Height="1*" />
                             </Grid.RowDefinitions>
 
-                            <Viewbox
+                            <TextBlock
                                 Grid.Row="1"
-                                StretchDirection="Both"
-                                Stretch="Uniform"
-                                VerticalAlignment="Center">
+                                Text="U"
+                                VerticalAlignment="Center"
+                                HorizontalAlignment="Center" />
 
-                                <TextBlock
-                                    Text="U" />
-
-                            </Viewbox>
-
-                            <Viewbox
+                            <TextBlock
                                 Grid.Row="3"
-                                StretchDirection="Both"
-                                Stretch="Uniform"
-                                VerticalAlignment="Center">
-
-                                <TextBlock
-                                    Text="D" />
-
-                            </Viewbox>
+                                Text="D"
+                                VerticalAlignment="Center"
+                                HorizontalAlignment="Center" />
 
                         </Grid>
 
@@ -770,64 +680,34 @@
                                 Width="*" />
                         </Grid.ColumnDefinitions>
 
-                        <Viewbox
+                        <Label
                             Grid.Column="0"
                             Grid.ColumnSpan="2"
-                            StretchDirection="Both"
-                            Stretch="Uniform"
-                            HorizontalAlignment="Left">
+                            Content="-20 mins"
+                            HorizontalAlignment="Left" />
 
-                            <Label
-                                Content="-20 mins" />
-
-                        </Viewbox>
-
-                        <Viewbox
+                        <Label
                             Grid.Column="1"
                             Grid.ColumnSpan="2"
-                            StretchDirection="Both"
-                            Stretch="Uniform"
-                            HorizontalAlignment="Center">
+                            Content="-15"
+                            HorizontalAlignment="Center" />
 
-                            <Label
-                                Content="-15" />
-
-                        </Viewbox>
-
-                        <Viewbox
+                        <Label
                             Grid.Column="3"
                             Grid.ColumnSpan="2"
-                            StretchDirection="Both"
-                            Stretch="Uniform"
-                            HorizontalAlignment="Center">
+                            Content="-10"
+                            HorizontalAlignment="Center" />
 
-                            <Label
-                                Content="-10" />
-
-                        </Viewbox>
-
-                        <Viewbox
+                        <Label
                             Grid.Column="5"
                             Grid.ColumnSpan="2"
-                            StretchDirection="Both"
-                            Stretch="Uniform"
-                            HorizontalAlignment="Center">
+                            Content="-5"
+                            HorizontalAlignment="Center" />
 
-                            <Label
-                                Content="-5" />
-
-                        </Viewbox>
-
-                        <Viewbox
+                        <Label
                             Grid.Column="10"
-                            StretchDirection="Both"
-                            Stretch="Uniform"
-                            HorizontalAlignment="Right">
-
-                            <Label
-                                Content="0" />
-
-                        </Viewbox>
+                            Content="0"
+                            HorizontalAlignment="Right" />
 
                     </Grid>
 
@@ -877,69 +757,41 @@
                     </Grid.ColumnDefinitions>
 
                     <!--Pitch Line Legend-->
-                    <Viewbox
+                    <Rectangle
                         Grid.Row="2"
                         Grid.Column="1"
-                        StretchDirection="Both"
-                        Stretch="Uniform"
-                        HorizontalAlignment="Center">
+                        Margin="1"
+                        Width="{StaticResource lineLegendWidth}"
+                        Height="{StaticResource lineLegendHeight}"
+                        Fill="{StaticResource ColorGraphLineRef}"
+                        HorizontalAlignment="Center" />
 
-                        <Rectangle
-                            Margin="1"
-                            Width="{StaticResource lineLegendWidth}"
-                            Height="{StaticResource lineLegendHeight}"
-                            Fill="{StaticResource ColorGraphLineRef}" />
-
-                    </Viewbox>
-
-                    <Viewbox
+                    <Rectangle
                         Grid.Row="2"
                         Grid.Column="2"
-                        StretchDirection="Both"
-                        Stretch="Uniform"
-                        HorizontalAlignment="Center">
+                        Margin="1"
+                        Width="{StaticResource lineLegendWidth}"
+                        Height="{StaticResource lineLegendHeight}"
+                        Fill="{StaticResource ColorGraphLineTest}"
+                        HorizontalAlignment="Center" />
 
-                        <Rectangle
-                            Margin="1"
-                            Width="{StaticResource lineLegendWidth}"
-                            Height="{StaticResource lineLegendHeight}"
-                            Fill="{StaticResource ColorGraphLineTest}" />
-
-                    </Viewbox>
-
-                    <Viewbox
+                    <Rectangle
                         Grid.Row="2"
                         Grid.Column="3"
-                        StretchDirection="Both"
-                        Stretch="Uniform"
-                        HorizontalAlignment="Center">
-
-                        <Rectangle
-                            Margin="1"
-                            Width="{StaticResource lineLegendWidth}"
-                            Height="{StaticResource lineLegendHeight}"
-                            Fill="{StaticResource ColorGraphLineDev}" />
-
-                    </Viewbox>
+                        Margin="1"
+                        Width="{StaticResource lineLegendWidth}"
+                        Height="{StaticResource lineLegendHeight}"
+                        Fill="{StaticResource ColorGraphLineDev}"
+                        HorizontalAlignment="Center" />
 
                     <!--Pitch Title-->
-                    <Grid
+                    <TextBlock
                         Grid.Row="2"
                         Grid.RowSpan="2"
-                        Grid.Column="0">
-
-                        <Viewbox
-                            Grid.Column="1"
-                            StretchDirection="Both"
-                            Stretch="Uniform"
-                            HorizontalAlignment="Left">
-
-                            <TextBlock
-                                Text="Pitch" />
-
-                        </Viewbox>
-
-                    </Grid>
+                        Grid.Column="0"
+                        Text="Pitch"
+                        HorizontalAlignment="Left"
+                        VerticalAlignment="Center" />
 
                     <!--Pitch Labels-->
                     <Separator
@@ -948,176 +800,111 @@
                         Grid.ColumnSpan="4"
                         VerticalAlignment="Bottom" />
 
-                    <Viewbox
+                    <TextBlock
                         Grid.Row="3"
                         Grid.Column="1"
-                        StretchDirection="Both"
-                        Stretch="Uniform"
-                        HorizontalAlignment="Center">
+                        Text="Ref"
+                        HorizontalAlignment="Center"
+                        VerticalAlignment="Center" />
 
-                        <TextBlock
-                            Text="Ref" />
-
-                    </Viewbox>
-
-                    <Viewbox
+                    <TextBlock
                         Grid.Row="3"
                         Grid.Column="2"
-                        StretchDirection="Both"
-                        Stretch="Uniform"
-                        HorizontalAlignment="Center">
+                        Text="Test"
+                        HorizontalAlignment="Center"
+                        VerticalAlignment="Center" />
 
-                        <TextBlock
-                            Text="Test" />
-
-                    </Viewbox>
-
-                    <Viewbox
+                    <TextBlock
                         Grid.Row="3"
                         Grid.Column="3"
-                        StretchDirection="Both"
-                        Stretch="Uniform"
-                        HorizontalAlignment="Center">
-
-                        <TextBlock
-                            Text="Deviation" />
-
-                    </Viewbox>
+                        Text="Deviation"
+                        HorizontalAlignment="Center"
+                        VerticalAlignment="Center" />
 
                     <!--Max Pitch up-->
-                    <Viewbox
+                    <TextBlock
                         Grid.Row="4"
                         Grid.Column="0"
-                        StretchDirection="Both"
-                        Stretch="Uniform"
-                        HorizontalAlignment="Left">
+                        Text="Max"
+                        HorizontalAlignment="Left"
+                        VerticalAlignment="Center" />
 
-                        <TextBlock
-                            Text="Max" />
-
-                    </Viewbox>
-
-                    <Viewbox
+                    <TextBlock
                         Grid.Row="4"
                         Grid.Column="1"
-                        StretchDirection="Both"
-                        Stretch="Uniform"
-                        HorizontalAlignment="Center">
+                        Text="{Binding Path=refPitchMaxUpString}"
+                        FontSize="{StaticResource fontSizeData}"
+                        HorizontalAlignment="Center"
+                        VerticalAlignment="Center" />
 
-                        <TextBlock
-                            Text="{Binding Path=refPitchMaxUpString}"
-                            FontSize="{StaticResource fontSizeData}" />
-
-                    </Viewbox>
-
-                    <Viewbox
+                    <TextBlock
                         Grid.Row="4"
                         Grid.Column="2"
-                        StretchDirection="Both"
-                        Stretch="Uniform"
-                        HorizontalAlignment="Center">
-
-                        <TextBlock
-                            Text="{Binding Path=testPitchMaxUpString}"
-                            FontSize="{StaticResource fontSizeData}" />
-
-                    </Viewbox>
+                        Text="{Binding Path=testPitchMaxUpString}"
+                        FontSize="{StaticResource fontSizeData}"
+                        HorizontalAlignment="Center"
+                        VerticalAlignment="Center" />
 
                     <!--Max Pitch Down-->
-                    <Viewbox
+                    <TextBlock
                         Grid.Row="5"
                         Grid.Column="1"
-                        StretchDirection="Both"
-                        Stretch="Uniform"
-                        HorizontalAlignment="Center">
+                        Text="{Binding Path=refPitchMaxDownString}"
+                        FontSize="{StaticResource fontSizeData}"
+                        HorizontalAlignment="Center"
+                        VerticalAlignment="Center" />
 
-                        <TextBlock
-                            Text="{Binding Path=refPitchMaxDownString}"
-                            FontSize="{StaticResource fontSizeData}" />
-
-                    </Viewbox>
-
-                    <Viewbox
+                    <TextBlock
                         Grid.Row="5"
                         Grid.Column="2"
-                        StretchDirection="Both"
-                        Stretch="Uniform"
-                        HorizontalAlignment="Center">
-
-                        <TextBlock
-                            Text="{Binding Path=testPitchMaxDownString}"
-                            FontSize="{StaticResource fontSizeData}" />
-
-                    </Viewbox>
+                        Text="{Binding Path=testPitchMaxDownString}"
+                        FontSize="{StaticResource fontSizeData}"
+                        HorizontalAlignment="Center"
+                        VerticalAlignment="Center" />
 
                     <!--Max Pitch Deviation-->
-                    <Viewbox
+                    <TextBlock
                         Grid.Row="4"
                         Grid.Column="3"
-                        StretchDirection="Both"
-                        Stretch="Uniform"
-                        HorizontalAlignment="Center">
-
-                        <TextBlock
-                            Text="{Binding Path=devPitchMaxString}"
-                            FontSize="{StaticResource fontSizeData}" />
-
-                    </Viewbox>
+                        Text="{Binding Path=devPitchMaxString}"
+                        FontSize="{StaticResource fontSizeData}"
+                        HorizontalAlignment="Center"
+                        VerticalAlignment="Center" />
 
                     <!--Mean Pitch-->
-                    <Viewbox
+                    <TextBlock
                         Grid.Row="7"
                         Grid.Column="0"
-                        StretchDirection="Both"
-                        Stretch="Uniform"
-                        HorizontalAlignment="Left">
+                        Text="Mean"
+                        HorizontalAlignment="Left"
+                        VerticalAlignment="Center" />
 
-                        <TextBlock
-                            Text="Mean" />
-
-                    </Viewbox>
-
-                    <Viewbox
+                    <TextBlock
                         Grid.Row="7"
                         Grid.Column="1"
-                        StretchDirection="Both"
-                        Stretch="Uniform"
-                        HorizontalAlignment="Center">
+                        Text="{Binding Path=refPitchMeanDataString}"
+                        FontSize="{StaticResource fontSizeData}"
+                        HorizontalAlignment="Center"
+                        VerticalAlignment="Center" />
 
-                        <TextBlock
-                            Text="{Binding Path=refPitchMeanDataString}"
-                            FontSize="{StaticResource fontSizeData}" />
-
-                    </Viewbox>
-
-                    <Viewbox
+                    <TextBlock
                         Grid.Row="7"
                         Grid.Column="2"
-                        StretchDirection="Both"
-                        Stretch="Uniform"
-                        HorizontalAlignment="Center">
-
-                        <TextBlock
-                            Text="{Binding Path=testPitchMeanDataString}"
-                            FontSize="{StaticResource fontSizeData}" />
-
-                    </Viewbox>
+                        Text="{Binding Path=testPitchMeanDataString}"
+                        FontSize="{StaticResource fontSizeData}"
+                        HorizontalAlignment="Center"
+                        VerticalAlignment="Center" />
 
                     <!--Mean Pitch Deviation-->
                     <Grid
                         Grid.Row="7"
                         Grid.Column="3">
 
-                        <Viewbox
-                            StretchDirection="Both"
-                            Stretch="Uniform"
-                            HorizontalAlignment="Center">
-
-                            <TextBlock
-                                Text="{Binding Path=devPitchMeanString}"
-                                FontSize="{StaticResource fontSizeData}" />
-
-                        </Viewbox>
+                        <TextBlock
+                            Text="{Binding Path=devPitchMeanString}"
+                            FontSize="{StaticResource fontSizeData}"
+                            HorizontalAlignment="Center"
+                            VerticalAlignment="Center" />
 
                     </Grid>
 
@@ -1128,16 +915,11 @@
                         Grid.ColumnSpan="4"
                         Background="{StaticResource ColorBackgroundSeparatorDark}">
 
-                        <Viewbox
-                            StretchDirection="Both"
-                            Stretch="Uniform"
-                            HorizontalAlignment="Left">
+                        <TextBlock
+                            Text="Correction"
+                            HorizontalAlignment="Left"
+                            VerticalAlignment="Center" />
 
-                            <TextBlock
-                                Text="Correction" />
-
-                        </Viewbox>
-                        
                     </Grid>
 
                     <Grid
@@ -1145,16 +927,11 @@
                         Grid.Column="3"
                         Background="{StaticResource ColorBackgroundSeparatorDark}">
 
-                        <Viewbox
-                            StretchDirection="Both"
-                            Stretch="Uniform"
-                            HorizontalAlignment="Center">
-
-                            <TextBlock
-                                Text="{Binding Path=corrPitchString}"
-                                FontSize="{StaticResource fontSizeData}" />
-
-                        </Viewbox>
+                        <TextBlock
+                            Text="{Binding Path=corrPitchString}"
+                            FontSize="{StaticResource fontSizeData}"
+                            HorizontalAlignment="Center"
+                            VerticalAlignment="Center" />
 
                     </Grid>
 
@@ -1238,27 +1015,17 @@
                                     Height="1*" />
                             </Grid.RowDefinitions>
 
-                            <Viewbox
+                            <TextBlock
                                 Grid.Row="1"
-                                StretchDirection="Both"
-                                Stretch="Uniform"
-                                VerticalAlignment="Center">
+                                Text="L"
+                                VerticalAlignment="Center"
+                                HorizontalAlignment="Center" />
 
-                                <TextBlock
-                                    Text="L" />
-
-                            </Viewbox>
-
-                            <Viewbox
+                            <TextBlock
                                 Grid.Row="3"
-                                StretchDirection="Both"
-                                Stretch="Uniform"
-                                VerticalAlignment="Center">
-
-                                <TextBlock
-                                    Text="R" />
-
-                            </Viewbox>
+                                Text="R"
+                                VerticalAlignment="Center"
+                                HorizontalAlignment="Center" />
 
                         </Grid>
 
@@ -1386,64 +1153,34 @@
                                 Width="*" />
                         </Grid.ColumnDefinitions>
 
-                        <Viewbox
+                        <Label
                             Grid.Column="0"
                             Grid.ColumnSpan="2"
-                            StretchDirection="Both"
-                            Stretch="Uniform"
-                            HorizontalAlignment="Left">
+                            Content="-20 mins"
+                            HorizontalAlignment="Left" />
 
-                            <Label
-                                Content="-20 mins" />
-
-                        </Viewbox>
-
-                        <Viewbox
+                        <Label
                             Grid.Column="1"
                             Grid.ColumnSpan="2"
-                            StretchDirection="Both"
-                            Stretch="Uniform"
-                            HorizontalAlignment="Center">
+                            Content="-15"
+                            HorizontalAlignment="Center" />
 
-                            <Label
-                                Content="-15" />
-
-                        </Viewbox>
-
-                        <Viewbox
+                        <Label
                             Grid.Column="3"
                             Grid.ColumnSpan="2"
-                            StretchDirection="Both"
-                            Stretch="Uniform"
-                            HorizontalAlignment="Center">
+                            Content="-10"
+                            HorizontalAlignment="Center" />
 
-                            <Label
-                                Content="-10" />
-
-                        </Viewbox>
-
-                        <Viewbox
+                        <Label
                             Grid.Column="5"
                             Grid.ColumnSpan="2"
-                            StretchDirection="Both"
-                            Stretch="Uniform"
-                            HorizontalAlignment="Center">
+                            Content="-5"
+                            HorizontalAlignment="Center" />
 
-                            <Label
-                                Content="-5" />
-
-                        </Viewbox>
-
-                        <Viewbox
+                        <Label
                             Grid.Column="10"
-                            StretchDirection="Both"
-                            Stretch="Uniform"
-                            HorizontalAlignment="Right">
-
-                            <Label
-                                Content="0" />
-
-                        </Viewbox>
+                            Content="0"
+                            HorizontalAlignment="Right" />
 
                     </Grid>
 
@@ -1501,27 +1238,17 @@
                                     Height="1*" />
                             </Grid.RowDefinitions>
 
-                            <Viewbox
+                            <TextBlock
                                 Grid.Row="1"
-                                StretchDirection="Both"
-                                Stretch="Uniform"
-                                VerticalAlignment="Center">
+                                Text="L"
+                                VerticalAlignment="Center"
+                                HorizontalAlignment="Center" />
 
-                                <TextBlock
-                                    Text="L" />
-
-                            </Viewbox>
-
-                            <Viewbox
+                            <TextBlock
                                 Grid.Row="3"
-                                StretchDirection="Both"
-                                Stretch="Uniform"
-                                VerticalAlignment="Center">
-
-                                <TextBlock
-                                    Text="R" />
-
-                            </Viewbox>
+                                Text="R"
+                                VerticalAlignment="Center"
+                                HorizontalAlignment="Center" />
 
                         </Grid>
 
@@ -1683,64 +1410,34 @@
                                 Width="*" />
                         </Grid.ColumnDefinitions>
 
-                        <Viewbox
+                        <Label
                             Grid.Column="0"
                             Grid.ColumnSpan="2"
-                            StretchDirection="Both"
-                            Stretch="Uniform"
-                            HorizontalAlignment="Left">
+                            Content="-20 mins"
+                            HorizontalAlignment="Left" />
 
-                            <Label
-                                Content="-20 mins" />
-
-                        </Viewbox>
-
-                        <Viewbox
+                        <Label
                             Grid.Column="1"
                             Grid.ColumnSpan="2"
-                            StretchDirection="Both"
-                            Stretch="Uniform"
-                            HorizontalAlignment="Center">
+                            Content="-15"
+                            HorizontalAlignment="Center" />
 
-                            <Label
-                                Content="-15" />
-
-                        </Viewbox>
-
-                        <Viewbox
+                        <Label
                             Grid.Column="3"
                             Grid.ColumnSpan="2"
-                            StretchDirection="Both"
-                            Stretch="Uniform"
-                            HorizontalAlignment="Center">
+                            Content="-10"
+                            HorizontalAlignment="Center" />
 
-                            <Label
-                                Content="-10" />
-
-                        </Viewbox>
-
-                        <Viewbox
+                        <Label
                             Grid.Column="5"
                             Grid.ColumnSpan="2"
-                            StretchDirection="Both"
-                            Stretch="Uniform"
-                            HorizontalAlignment="Center">
+                            Content="-5"
+                            HorizontalAlignment="Center" />
 
-                            <Label
-                                Content="-5" />
-
-                        </Viewbox>
-
-                        <Viewbox
+                        <Label
                             Grid.Column="10"
-                            StretchDirection="Both"
-                            Stretch="Uniform"
-                            HorizontalAlignment="Right">
-
-                            <Label
-                                Content="0" />
-
-                        </Viewbox>
+                            Content="0"
+                            HorizontalAlignment="Right" />
 
                     </Grid>
 
@@ -1798,27 +1495,17 @@
                                     Height="1*" />
                             </Grid.RowDefinitions>
 
-                            <Viewbox
+                            <TextBlock
                                 Grid.Row="1"
-                                StretchDirection="Both"
-                                Stretch="Uniform"
-                                VerticalAlignment="Center">
+                                Text="L"
+                                VerticalAlignment="Center"
+                                HorizontalAlignment="Center" />
 
-                                <TextBlock
-                                    Text="L" />
-
-                            </Viewbox>
-
-                            <Viewbox
+                            <TextBlock
                                 Grid.Row="3"
-                                StretchDirection="Both"
-                                Stretch="Uniform"
-                                VerticalAlignment="Center">
-
-                                <TextBlock
-                                    Text="R" />
-
-                            </Viewbox>
+                                Text="R"
+                                VerticalAlignment="Center"
+                                HorizontalAlignment="Center" />
 
                         </Grid>
 
@@ -1966,64 +1653,34 @@
                                 Width="*" />
                         </Grid.ColumnDefinitions>
 
-                        <Viewbox
+                        <Label
                             Grid.Column="0"
                             Grid.ColumnSpan="2"
-                            StretchDirection="Both"
-                            Stretch="Uniform"
-                            HorizontalAlignment="Left">
+                            Content="-20 mins"
+                            HorizontalAlignment="Left" />
 
-                            <Label
-                                Content="-20 mins" />
-
-                        </Viewbox>
-
-                        <Viewbox
+                        <Label
                             Grid.Column="1"
                             Grid.ColumnSpan="2"
-                            StretchDirection="Both"
-                            Stretch="Uniform"
-                            HorizontalAlignment="Center">
+                            Content="-15"
+                            HorizontalAlignment="Center" />
 
-                            <Label
-                                Content="-15" />
-
-                        </Viewbox>
-
-                        <Viewbox
+                        <Label
                             Grid.Column="3"
                             Grid.ColumnSpan="2"
-                            StretchDirection="Both"
-                            Stretch="Uniform"
-                            HorizontalAlignment="Center">
+                            Content="-10"
+                            HorizontalAlignment="Center" />
 
-                            <Label
-                                Content="-10" />
-
-                        </Viewbox>
-
-                        <Viewbox
+                        <Label
                             Grid.Column="5"
                             Grid.ColumnSpan="2"
-                            StretchDirection="Both"
-                            Stretch="Uniform"
-                            HorizontalAlignment="Center">
+                            Content="-5"
+                            HorizontalAlignment="Center" />
 
-                            <Label
-                                Content="-5" />
-
-                        </Viewbox>
-
-                        <Viewbox
+                        <Label
                             Grid.Column="10"
-                            StretchDirection="Both"
-                            Stretch="Uniform"
-                            HorizontalAlignment="Right">
-
-                            <Label
-                                Content="0" />
-
-                        </Viewbox>
+                            Content="0"
+                            HorizontalAlignment="Right" />
 
                     </Grid>
 
@@ -2073,64 +1730,41 @@
                     </Grid.ColumnDefinitions>
 
                     <!--Roll Line Legend-->
-                    <Viewbox
+                    <Rectangle
                         Grid.Row="2"
                         Grid.Column="1"
-                        StretchDirection="Both"
-                        Stretch="Uniform"
-                        HorizontalAlignment="Center">
+                        Margin="1"
+                        Width="{StaticResource lineLegendWidth}"
+                        Height="{StaticResource lineLegendHeight}"
+                        Fill="{StaticResource ColorGraphLineRef}"
+                        HorizontalAlignment="Center" />
 
-                        <Rectangle
-                            Margin="1"
-                            Width="{StaticResource lineLegendWidth}"
-                            Height="{StaticResource lineLegendHeight}"
-                            Fill="{StaticResource ColorGraphLineRef}" />
-
-                    </Viewbox>
-
-                    <Viewbox
+                    <Rectangle
                         Grid.Row="2"
                         Grid.Column="2"
-                        StretchDirection="Both"
-                        Stretch="Uniform"
-                        HorizontalAlignment="Center">
+                        Margin="1"
+                        Width="{StaticResource lineLegendWidth}"
+                        Height="{StaticResource lineLegendHeight}"
+                        Fill="{StaticResource ColorGraphLineTest}"
+                        HorizontalAlignment="Center" />
 
-                        <Rectangle
-                            Margin="1"
-                            Width="{StaticResource lineLegendWidth}"
-                            Height="{StaticResource lineLegendHeight}"
-                            Fill="{StaticResource ColorGraphLineTest}" />
-
-                    </Viewbox>
-
-                    <Viewbox
+                    <Rectangle
                         Grid.Row="2"
                         Grid.Column="3"
-                        StretchDirection="Both"
-                        Stretch="Uniform"
-                        HorizontalAlignment="Center">
-
-                        <Rectangle
-                            Margin="1"
-                            Width="{StaticResource lineLegendWidth}"
-                            Height="{StaticResource lineLegendHeight}"
-                            Fill="{StaticResource ColorGraphLineDev}" />
-
-                    </Viewbox>
+                        Margin="1"
+                        Width="{StaticResource lineLegendWidth}"
+                        Height="{StaticResource lineLegendHeight}"
+                        Fill="{StaticResource ColorGraphLineDev}"
+                        HorizontalAlignment="Center" />
 
                     <!--Roll Title-->
-                    <Viewbox
+                    <TextBlock
                         Grid.Row="2"
                         Grid.RowSpan="2"
                         Grid.Column="0"
-                        StretchDirection="Both"
-                        Stretch="Uniform"
-                        HorizontalAlignment="Left">
-
-                        <TextBlock
-                            Text="Roll" />
-
-                    </Viewbox>
+                        Text="Roll"
+                        HorizontalAlignment="Left"
+                        VerticalAlignment="Center" />
 
                     <!--Roll Labels-->
                     <Separator
@@ -2139,178 +1773,113 @@
                         Grid.ColumnSpan="4"
                         VerticalAlignment="Bottom" />
 
-                    <Viewbox
+                    <TextBlock
                         Grid.Row="3"
                         Grid.Column="1"
-                        StretchDirection="Both"
-                        Stretch="Uniform"
-                        HorizontalAlignment="Center">
+                        Text="Ref"
+                        HorizontalAlignment="Center"
+                        VerticalAlignment="Center" />
 
-                        <TextBlock
-                            Text="Ref" />
-
-                    </Viewbox>
-
-                    <Viewbox
+                    <TextBlock
                         Grid.Row="3"
                         Grid.Column="2"
-                        StretchDirection="Both"
-                        Stretch="Uniform"
-                        HorizontalAlignment="Center">
+                        Text="Test"
+                        HorizontalAlignment="Center"
+                        VerticalAlignment="Center" />
 
-                        <TextBlock
-                            Text="Test" />
-
-                    </Viewbox>
-
-                    <Viewbox
+                    <TextBlock
                         Grid.Row="3"
                         Grid.Column="3"
-                        StretchDirection="Both"
-                        Stretch="Uniform"
-                        HorizontalAlignment="Center">
-
-                        <TextBlock
-                            Text="Deviation" />
-
-                    </Viewbox>
+                        Text="Deviation"
+                        HorizontalAlignment="Center"
+                        VerticalAlignment="Center" />
 
                     <!--Max Roll Left-->
-                    <Viewbox
+                    <TextBlock
                         Grid.Row="4"
                         Grid.Column="0"
-                        StretchDirection="Both"
-                        Stretch="Uniform"
-                        HorizontalAlignment="Left">
+                        Text="Max"
+                        HorizontalAlignment="Left"
+                        VerticalAlignment="Center" />
 
-                        <TextBlock
-                            Text="Max" />
-
-                    </Viewbox>
-
-                    <Viewbox
+                    <TextBlock
                         Grid.Row="4"
                         Grid.Column="1"
-                        StretchDirection="Both"
-                        Stretch="Uniform"
-                        HorizontalAlignment="Center">
+                        Text="{Binding Path=refRollMaxLeftString}"
+                        FontSize="{StaticResource fontSizeData}"
+                        HorizontalAlignment="Center"
+                        VerticalAlignment="Center" />
 
-                        <TextBlock
-                            Text="{Binding Path=refRollMaxLeftString}"
-                            FontSize="{StaticResource fontSizeData}" />
-
-                    </Viewbox>
-
-                    <Viewbox
+                    <TextBlock
                         Grid.Row="4"
                         Grid.Column="2"
-                        StretchDirection="Both"
-                        Stretch="Uniform"
-                        HorizontalAlignment="Center">
-
-                        <TextBlock
-                            Text="{Binding Path=testRollMaxLeftString}"
-                            FontSize="{StaticResource fontSizeData}" />
-
-                    </Viewbox>
+                        Text="{Binding Path=testRollMaxLeftString}"
+                        FontSize="{StaticResource fontSizeData}"
+                        HorizontalAlignment="Center"
+                        VerticalAlignment="Center" />
 
                     <!--Max Roll Right-->
-                    <Viewbox
+                    <TextBlock
                         Grid.Row="5"
                         Grid.Column="1"
-                        StretchDirection="Both"
-                        Stretch="Uniform"
-                        HorizontalAlignment="Center">
+                        Text="{Binding Path=refRollMaxRightString}"
+                        FontSize="{StaticResource fontSizeData}"
+                        HorizontalAlignment="Center"
+                        VerticalAlignment="Center" />
 
-                        <TextBlock
-                            Text="{Binding Path=refRollMaxRightString}"
-                            FontSize="{StaticResource fontSizeData}" />
-
-                    </Viewbox>
-
-                    <Viewbox
+                    <TextBlock
                         Grid.Row="5"
                         Grid.Column="2"
-                        StretchDirection="Both"
-                        Stretch="Uniform"
-                        HorizontalAlignment="Center">
-
-                        <TextBlock
-                            Text="{Binding Path=testRollMaxRightString}"
-                            FontSize="{StaticResource fontSizeData}" />
-
-                    </Viewbox>
+                        Text="{Binding Path=testRollMaxRightString}"
+                        FontSize="{StaticResource fontSizeData}"
+                        HorizontalAlignment="Center"
+                        VerticalAlignment="Center" />
 
                     <!--Max Roll Deviation-->
-                    <Viewbox
+                    <TextBlock
                         Grid.Row="4"
                         Grid.Column="3"
-                        StretchDirection="Both"
-                        Stretch="Uniform"
-                        HorizontalAlignment="Center">
-
-                        <TextBlock
-                            Text="{Binding Path=devRollMaxString}"
-                            FontSize="{StaticResource fontSizeData}" />
-
-                    </Viewbox>
+                        Text="{Binding Path=devRollMaxString}"
+                        FontSize="{StaticResource fontSizeData}"
+                        HorizontalAlignment="Center"
+                        VerticalAlignment="Center" />
 
                     <!--Mean Roll-->
-                    <Viewbox
+                    <TextBlock
                         Grid.Row="7"
                         Grid.Column="0"
-                        StretchDirection="Both"
-                        Stretch="Uniform"
-                        HorizontalAlignment="Left">
+                        Text="Mean"
+                        HorizontalAlignment="Left"
+                        VerticalAlignment="Center" />
 
-                        <TextBlock
-                            Text="Mean" />
-
-                    </Viewbox>
-
-                    <Viewbox
+                    <TextBlock
                         Grid.Row="7"
                         Grid.Column="1"
-                        StretchDirection="Both"
-                        Stretch="Uniform"
-                        HorizontalAlignment="Center">
+                        Text="{Binding Path=refRollMeanDataString}"
+                        FontSize="{StaticResource fontSizeData}"
+                        HorizontalAlignment="Center"
+                        VerticalAlignment="Center" />
 
-                        <TextBlock
-                            Text="{Binding Path=refRollMeanDataString}"
-                            FontSize="{StaticResource fontSizeData}" />
-
-                    </Viewbox>
-
-                    <Viewbox
+                    <TextBlock
                         Grid.Row="7"
                         Grid.Column="2"
-                        StretchDirection="Both"
-                        Stretch="Uniform"
-                        HorizontalAlignment="Center">
-
-                        <TextBlock
-                            Text="{Binding Path=testRollMeanDataString}"
-                            FontSize="{StaticResource fontSizeData}" />
-
-                    </Viewbox>
+                        Text="{Binding Path=testRollMeanDataString}"
+                        FontSize="{StaticResource fontSizeData}"
+                        HorizontalAlignment="Center"
+                        VerticalAlignment="Center" />
 
                     <!--Mean Roll Deviation-->
                     <Grid
                         Grid.Row="7"
                         Grid.Column="3">
 
-                        <Viewbox
+                        <TextBlock
                             Grid.ColumnSpan="2"
-                            StretchDirection="Both"
-                            Stretch="Uniform"
-                            HorizontalAlignment="Center">
+                            Text="{Binding Path=devRollMeanString}"
+                            FontSize="{StaticResource fontSizeData}"
+                            HorizontalAlignment="Center"
+                            VerticalAlignment="Center" />
 
-                            <TextBlock
-                                Text="{Binding Path=devRollMeanString}"
-                                FontSize="{StaticResource fontSizeData}" />
-
-                        </Viewbox>
-                        
                     </Grid>
 
                     <!--Roll Correction-->
@@ -2320,15 +1889,10 @@
                         Grid.ColumnSpan="4"
                         Background="{StaticResource ColorBackgroundSeparatorDark}">
 
-                        <Viewbox
-                            StretchDirection="Both"
-                            Stretch="Uniform"
-                            HorizontalAlignment="Left">
-
-                            <TextBlock
-                                Text="Correction" />
-
-                        </Viewbox>
+                        <TextBlock
+                            Text="Correction"
+                            HorizontalAlignment="Left"
+                            VerticalAlignment="Center" />
 
                     </Grid>
 
@@ -2337,16 +1901,11 @@
                         Grid.Column="3"
                         Background="{StaticResource ColorBackgroundSeparatorDark}">
 
-                        <Viewbox
-                            StretchDirection="Both"
-                            Stretch="Uniform"
-                            HorizontalAlignment="Center">
-
-                            <TextBlock
-                                Text="{Binding Path=corrRollString}"
-                                FontSize="{StaticResource fontSizeData}" />
-
-                        </Viewbox>
+                        <TextBlock
+                            Text="{Binding Path=corrRollString}"
+                            FontSize="{StaticResource fontSizeData}"
+                            HorizontalAlignment="Center"
+                            VerticalAlignment="Center" />
 
                     </Grid>
 
@@ -2430,27 +1989,17 @@
                                     Height="1*" />
                             </Grid.RowDefinitions>
 
-                            <Viewbox
+                            <TextBlock
                                 Grid.Row="1"
-                                StretchDirection="Both"
-                                Stretch="Uniform"
-                                VerticalAlignment="Center">
+                                Text="U"
+                                VerticalAlignment="Center"
+                                HorizontalAlignment="Center" />
 
-                                <TextBlock
-                                    Text="U" />
-
-                            </Viewbox>
-
-                            <Viewbox
+                            <TextBlock
                                 Grid.Row="3"
-                                StretchDirection="Both"
-                                Stretch="Uniform"
-                                VerticalAlignment="Center">
-
-                                <TextBlock
-                                    Text="D" />
-
-                            </Viewbox>
+                                Text="D"
+                                VerticalAlignment="Center"
+                                HorizontalAlignment="Center" />
 
                         </Grid>
 
@@ -2584,64 +2133,34 @@
                                 Width="*" />
                         </Grid.ColumnDefinitions>
 
-                        <Viewbox
+                        <Label
                             Grid.Column="0"
                             Grid.ColumnSpan="2"
-                            StretchDirection="Both"
-                            Stretch="Uniform"
-                            HorizontalAlignment="Left">
+                            Content="-20 mins"
+                            HorizontalAlignment="Left" />
 
-                            <Label
-                                Content="-20 mins" />
-
-                        </Viewbox>
-
-                        <Viewbox
+                        <Label
                             Grid.Column="1"
                             Grid.ColumnSpan="2"
-                            StretchDirection="Both"
-                            Stretch="Uniform"
-                            HorizontalAlignment="Center">
+                            Content="-15"
+                            HorizontalAlignment="Center" />
 
-                            <Label
-                                Content="-15" />
-
-                        </Viewbox>
-
-                        <Viewbox
+                        <Label
                             Grid.Column="3"
                             Grid.ColumnSpan="2"
-                            StretchDirection="Both"
-                            Stretch="Uniform"
-                            HorizontalAlignment="Center">
+                            Content="-10"
+                            HorizontalAlignment="Center" />
 
-                            <Label
-                                Content="-10" />
-
-                        </Viewbox>
-
-                        <Viewbox
+                        <Label
                             Grid.Column="5"
                             Grid.ColumnSpan="2"
-                            StretchDirection="Both"
-                            Stretch="Uniform"
-                            HorizontalAlignment="Center">
+                            Content="-5"
+                            HorizontalAlignment="Center" />
 
-                            <Label
-                                Content="-5" />
-
-                        </Viewbox>
-
-                        <Viewbox
+                        <Label
                             Grid.Column="10"
-                            StretchDirection="Both"
-                            Stretch="Uniform"
-                            HorizontalAlignment="Right">
-
-                            <Label
-                                Content="0" />
-
-                        </Viewbox>
+                            Content="0"
+                            HorizontalAlignment="Right" />
 
                     </Grid>
 
@@ -2696,27 +2215,17 @@
                                     Height="1*" />
                             </Grid.RowDefinitions>
 
-                            <Viewbox
+                            <TextBlock
                                 Grid.Row="1"
-                                StretchDirection="Both"
-                                Stretch="Uniform"
-                                VerticalAlignment="Center">
+                                Text="U"
+                                VerticalAlignment="Center"
+                                HorizontalAlignment="Center" />
 
-                                <TextBlock
-                                    Text="U" />
-
-                            </Viewbox>
-
-                            <Viewbox
+                            <TextBlock
                                 Grid.Row="3"
-                                StretchDirection="Both"
-                                Stretch="Uniform"
-                                VerticalAlignment="Center">
-
-                                <TextBlock
-                                    Text="D" />
-
-                            </Viewbox>
+                                Text="D"
+                                VerticalAlignment="Center"
+                                HorizontalAlignment="Center" />
 
                         </Grid>
 
@@ -2833,64 +2342,34 @@
                                 Width="*" />
                         </Grid.ColumnDefinitions>
 
-                        <Viewbox
+                        <Label
                             Grid.Column="0"
                             Grid.ColumnSpan="2"
-                            StretchDirection="Both"
-                            Stretch="Uniform"
-                            HorizontalAlignment="Left">
+                            Content="-20 mins"
+                            HorizontalAlignment="Left" />
 
-                            <Label
-                                Content="-20 mins" />
-
-                        </Viewbox>
-
-                        <Viewbox
+                        <Label
                             Grid.Column="1"
                             Grid.ColumnSpan="2"
-                            StretchDirection="Both"
-                            Stretch="Uniform"
-                            HorizontalAlignment="Center">
+                            Content="-15"
+                            HorizontalAlignment="Center" />
 
-                            <Label
-                                Content="-15" />
-
-                        </Viewbox>
-
-                        <Viewbox
+                        <Label
                             Grid.Column="3"
                             Grid.ColumnSpan="2"
-                            StretchDirection="Both"
-                            Stretch="Uniform"
-                            HorizontalAlignment="Center">
+                            Content="-10"
+                            HorizontalAlignment="Center" />
 
-                            <Label
-                                Content="-10" />
-
-                        </Viewbox>
-
-                        <Viewbox
+                        <Label
                             Grid.Column="5"
                             Grid.ColumnSpan="2"
-                            StretchDirection="Both"
-                            Stretch="Uniform"
-                            HorizontalAlignment="Center">
+                            Content="-5"
+                            HorizontalAlignment="Center" />
 
-                            <Label
-                                Content="-5" />
-
-                        </Viewbox>
-
-                        <Viewbox
+                        <Label
                             Grid.Column="10"
-                            StretchDirection="Both"
-                            Stretch="Uniform"
-                            HorizontalAlignment="Right">
-
-                            <Label
-                                Content="0" />
-
-                        </Viewbox>
+                            Content="0"
+                            HorizontalAlignment="Right" />
 
                     </Grid>
 
@@ -2945,27 +2424,17 @@
                                     Height="1*" />
                             </Grid.RowDefinitions>
 
-                            <Viewbox
+                            <TextBlock
                                 Grid.Row="1"
-                                StretchDirection="Both"
-                                Stretch="Uniform"
-                                VerticalAlignment="Center">
+                                Text="U"
+                                VerticalAlignment="Center"
+                                HorizontalAlignment="Center" />
 
-                                <TextBlock
-                                    Text="U" />
-
-                            </Viewbox>
-
-                            <Viewbox
+                            <TextBlock
                                 Grid.Row="3"
-                                StretchDirection="Both"
-                                Stretch="Uniform"
-                                VerticalAlignment="Center">
-
-                                <TextBlock
-                                    Text="D" />
-
-                            </Viewbox>
+                                Text="D"
+                                VerticalAlignment="Center"
+                                HorizontalAlignment="Center" />
 
                         </Grid>
 
@@ -3068,64 +2537,34 @@
                                 Width="*" />
                         </Grid.ColumnDefinitions>
 
-                        <Viewbox
+                        <Label
                             Grid.Column="0"
                             Grid.ColumnSpan="2"
-                            StretchDirection="Both"
-                            Stretch="Uniform"
-                            HorizontalAlignment="Left">
+                            Content="-20 mins"
+                            HorizontalAlignment="Left" />
 
-                            <Label
-                                Content="-20 mins" />
-
-                        </Viewbox>
-
-                        <Viewbox
+                        <Label
                             Grid.Column="1"
                             Grid.ColumnSpan="2"
-                            StretchDirection="Both"
-                            Stretch="Uniform"
-                            HorizontalAlignment="Center">
+                            Content="-15"
+                            HorizontalAlignment="Center" />
 
-                            <Label
-                                Content="-15" />
-
-                        </Viewbox>
-
-                        <Viewbox
+                        <Label
                             Grid.Column="3"
                             Grid.ColumnSpan="2"
-                            StretchDirection="Both"
-                            Stretch="Uniform"
-                            HorizontalAlignment="Center">
+                            Content="-10"
+                            HorizontalAlignment="Center" />
 
-                            <Label
-                                Content="-10" />
-
-                        </Viewbox>
-
-                        <Viewbox
+                        <Label
                             Grid.Column="5"
                             Grid.ColumnSpan="2"
-                            StretchDirection="Both"
-                            Stretch="Uniform"
-                            HorizontalAlignment="Center">
+                            Content="-5"
+                            HorizontalAlignment="Center" />
 
-                            <Label
-                                Content="-5" />
-
-                        </Viewbox>
-
-                        <Viewbox
+                        <Label
                             Grid.Column="10"
-                            StretchDirection="Both"
-                            Stretch="Uniform"
-                            HorizontalAlignment="Right">
-
-                            <Label
-                                Content="0" />
-
-                        </Viewbox>
+                            Content="0"
+                            HorizontalAlignment="Right" />
 
                     </Grid>
 
@@ -3173,64 +2612,41 @@
                     </Grid.ColumnDefinitions>
 
                     <!--Heave Line Legend-->
-                    <Viewbox
+                    <Rectangle
                         Grid.Row="2"
                         Grid.Column="1"
-                        StretchDirection="Both"
-                        Stretch="Uniform"
-                        HorizontalAlignment="Center">
+                        Margin="1"
+                        Width="{StaticResource lineLegendWidth}"
+                        Height="{StaticResource lineLegendHeight}"
+                        Fill="{StaticResource ColorGraphLineRef}"
+                        HorizontalAlignment="Center" />
 
-                        <Rectangle
-                            Margin="1"
-                            Width="{StaticResource lineLegendWidth}"
-                            Height="{StaticResource lineLegendHeight}"
-                            Fill="{StaticResource ColorGraphLineRef}" />
-
-                    </Viewbox>
-
-                    <Viewbox
+                    <Rectangle
                         Grid.Row="2"
                         Grid.Column="2"
-                        StretchDirection="Both"
-                        Stretch="Uniform"
-                        HorizontalAlignment="Center">
+                        Margin="1"
+                        Width="{StaticResource lineLegendWidth}"
+                        Height="{StaticResource lineLegendHeight}"
+                        Fill="{StaticResource ColorGraphLineTest}"
+                        HorizontalAlignment="Center" />
 
-                        <Rectangle
-                            Margin="1"
-                            Width="{StaticResource lineLegendWidth}"
-                            Height="{StaticResource lineLegendHeight}"
-                            Fill="{StaticResource ColorGraphLineTest}" />
-
-                    </Viewbox>
-
-                    <Viewbox
+                    <Rectangle
                         Grid.Row="2"
                         Grid.Column="3"
-                        StretchDirection="Both"
-                        Stretch="Uniform"
-                        HorizontalAlignment="Center">
-
-                        <Rectangle
-                            Margin="1"
-                            Width="{StaticResource lineLegendWidth}"
-                            Height="{StaticResource lineLegendHeight}"
-                            Fill="{StaticResource ColorGraphLineDev}" />
-
-                    </Viewbox>
+                        Margin="1"
+                        Width="{StaticResource lineLegendWidth}"
+                        Height="{StaticResource lineLegendHeight}"
+                        Fill="{StaticResource ColorGraphLineDev}"
+                        HorizontalAlignment="Center" />
 
                     <!--Heave Title-->
-                    <Viewbox
+                    <TextBlock
                         Grid.Row="2"
                         Grid.RowSpan="2"
                         Grid.Column="0"
-                        StretchDirection="Both"
-                        Stretch="Uniform"
-                        HorizontalAlignment="Left">
-
-                        <TextBlock
-                            Text="Heave" />
-
-                    </Viewbox>
+                        Text="Heave"
+                        HorizontalAlignment="Left"
+                        VerticalAlignment="Center" />
 
                     <!--Heave Labels-->
                     <Separator
@@ -3239,148 +2655,93 @@
                         Grid.ColumnSpan="4"
                         VerticalAlignment="Bottom" />
 
-                    <Viewbox
+                    <TextBlock
                         Grid.Row="3"
                         Grid.Column="1"
-                        StretchDirection="Both"
-                        Stretch="Uniform"
-                        HorizontalAlignment="Center">
+                        Text="Ref"
+                        HorizontalAlignment="Center"
+                        VerticalAlignment="Center" />
 
-                        <TextBlock
-                            Text="Ref" />
-
-                    </Viewbox>
-
-                    <Viewbox
+                    <TextBlock
                         Grid.Row="3"
                         Grid.Column="2"
-                        StretchDirection="Both"
-                        Stretch="Uniform"
-                        HorizontalAlignment="Center">
+                        Text="Test"
+                        HorizontalAlignment="Center"
+                        VerticalAlignment="Center" />
 
-                        <TextBlock
-                            Text="Test" />
-
-                    </Viewbox>
-
-                    <Viewbox
+                    <TextBlock
                         Grid.Row="3"
                         Grid.Column="3"
-                        StretchDirection="Both"
-                        Stretch="Uniform"
-                        HorizontalAlignment="Center">
-
-                        <TextBlock
-                            Text="Deviation" />
-
-                    </Viewbox>
+                        Text="Deviation"
+                        HorizontalAlignment="Center"
+                        VerticalAlignment="Center" />
 
                     <!--Max Heave-->
-                    <Viewbox
+                    <TextBlock
                         Grid.Row="4"
                         Grid.Column="0"
-                        StretchDirection="Both"
-                        Stretch="Uniform"
-                        HorizontalAlignment="Left">
+                        Text="Max"
+                        HorizontalAlignment="Left"
+                        VerticalAlignment="Center" />
 
-                        <TextBlock
-                            Text="Max" />
-
-                    </Viewbox>
-
-                    <Viewbox
+                    <TextBlock
                         Grid.Row="4"
                         Grid.Column="1"
-                        StretchDirection="Both"
-                        Stretch="Uniform"
-                        HorizontalAlignment="Center">
+                        Text="{Binding Path=refHeaveMaxString}"
+                        FontSize="{StaticResource fontSizeData}"
+                        HorizontalAlignment="Center"
+                        VerticalAlignment="Center" />
 
-                        <TextBlock
-                            Text="{Binding Path=refHeaveMaxString}"
-                            FontSize="{StaticResource fontSizeData}" />
-
-                    </Viewbox>
-
-                    <Viewbox
+                    <TextBlock
                         Grid.Row="4"
                         Grid.Column="2"
-                        StretchDirection="Both"
-                        Stretch="Uniform"
-                        HorizontalAlignment="Center">
-
-                        <TextBlock
-                            Text="{Binding Path=testHeaveMaxString}"
-                            FontSize="{StaticResource fontSizeData}" />
-
-                    </Viewbox>
+                        Text="{Binding Path=testHeaveMaxString}"
+                        FontSize="{StaticResource fontSizeData}"
+                        HorizontalAlignment="Center"
+                        VerticalAlignment="Center" />
 
                     <!--Max Heave Deviation-->
-                    <Viewbox
+                    <TextBlock
                         Grid.Row="4"
                         Grid.Column="3"
-                        StretchDirection="Both"
-                        Stretch="Uniform"
-                        HorizontalAlignment="Center">
-
-                        <TextBlock
-                            Text="{Binding Path=devHeaveMaxString}"
-                            FontSize="{StaticResource fontSizeData}" />
-
-                    </Viewbox>
+                        Text="{Binding Path=devHeaveMaxString}"
+                        FontSize="{StaticResource fontSizeData}"
+                        HorizontalAlignment="Center"
+                        VerticalAlignment="Center" />
 
                     <!--Mean Heave-->
-                    <Viewbox
+                    <TextBlock
                         Grid.Row="7"
                         Grid.Column="0"
-                        StretchDirection="Both"
-                        Stretch="Uniform"
-                        HorizontalAlignment="Left">
+                        Text="Mean"
+                        HorizontalAlignment="Left"
+                        VerticalAlignment="Center" />
 
-                        <TextBlock
-                            Text="Mean" />
-
-                    </Viewbox>
-
-                    <Viewbox
+                    <TextBlock
                         Grid.Row="7"
                         Grid.Column="1"
-                        StretchDirection="Both"
-                        Stretch="Uniform"
-                        HorizontalAlignment="Center">
+                        Text="{Binding Path=refHeaveMeanString}"
+                        FontSize="{StaticResource fontSizeData}"
+                        HorizontalAlignment="Center"
+                        VerticalAlignment="Center" />
 
-                        <TextBlock
-                            Text="{Binding Path=refHeaveMeanString}"
-                            FontSize="{StaticResource fontSizeData}" />
-
-                    </Viewbox>
-
-                    <Viewbox
+                    <TextBlock
                         Grid.Row="7"
                         Grid.Column="2"
-                        StretchDirection="Both"
-                        Stretch="Uniform"
-                        HorizontalAlignment="Center">
-
-                        <TextBlock
-                            Text="{Binding Path=testHeaveMeanString}"
-                            FontSize="{StaticResource fontSizeData}" />
-
-                    </Viewbox>
+                        Text="{Binding Path=testHeaveMeanString}"
+                        FontSize="{StaticResource fontSizeData}"
+                        HorizontalAlignment="Center"
+                        VerticalAlignment="Center" />
 
                     <Grid
                         Grid.Row="7"
                         Grid.Column="3">
-                        <Viewbox
+                        <TextBlock
                             Grid.ColumnSpan="2"
-                            StretchDirection="Both"
-                            Stretch="Uniform"
-                            HorizontalAlignment="Center">
-
-                            <TextBlock
-                                Text="{Binding Path=devHeaveMeanString}"
-                                FontSize="{StaticResource fontSizeData}" />
-
-                        </Viewbox>
+                            Text="{Binding Path=devHeaveMeanString}"
+                            FontSize="{StaticResource fontSizeData}"
+                            HorizontalAlignment="Center"
+                            VerticalAlignment="Center" />
                     </Grid>
 
                     <!--Heave Correction-->
@@ -3390,15 +2751,10 @@
                         Grid.ColumnSpan="4"
                         Background="{StaticResource ColorBackgroundSeparatorDark}">
 
-                        <Viewbox
-                            StretchDirection="Both"
-                            Stretch="Uniform"
-                            HorizontalAlignment="Left">
-
-                            <TextBlock
-                                Text="Correction" />
-
-                        </Viewbox>
+                        <TextBlock
+                            Text="Correction"
+                            HorizontalAlignment="Left"
+                            VerticalAlignment="Center" />
 
                     </Grid>
 
@@ -3407,16 +2763,11 @@
                         Grid.Column="3"
                         Background="{StaticResource ColorBackgroundSeparatorDark}">
 
-                        <Viewbox
-                            StretchDirection="Both"
-                            Stretch="Uniform"
-                            HorizontalAlignment="Center">
-
-                            <TextBlock
-                                Text="{Binding Path=corrHeaveString}"
-                                FontSize="{StaticResource fontSizeData}" />
-
-                        </Viewbox>
+                        <TextBlock
+                            Text="{Binding Path=corrHeaveString}"
+                            FontSize="{StaticResource fontSizeData}"
+                            HorizontalAlignment="Center"
+                            VerticalAlignment="Center" />
 
                     </Grid>
 

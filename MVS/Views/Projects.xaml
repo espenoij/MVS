@@ -167,111 +167,98 @@
 
             </telerik:RadGridView>
 
-            <telerik:GroupBox
+            <ScrollViewer
                 Grid.Column="1"
                 Grid.Row="0"
-                Header="Project Details"
-                Margin="8">
+                VerticalScrollBarVisibility="Auto"
+                HorizontalScrollBarVisibility="Disabled">
 
-                <Grid>
+                <telerik:GroupBox
+                    Header="Project Details"
+                    Margin="8">
 
-                    <Grid.ColumnDefinitions>
-                        <ColumnDefinition
-                            Width="2*" />
-                        <ColumnDefinition
-                            Width="5*" />
-                    </Grid.ColumnDefinitions>
+                    <Grid>
 
-                    <Grid.RowDefinitions>
-                        <RowDefinition
-                            Height="*" />
-                        <RowDefinition
-                            Height="*" />
-                        <RowDefinition
-                            Height="*" />
-                        <RowDefinition
-                            Height="*" />
-                        <RowDefinition
-                            Height="*" />
-                        <RowDefinition
-                            Height="*" />
-                        <RowDefinition
-                            Height="*" />
-                        <RowDefinition
-                            Height="*" />
-                        <RowDefinition
-                            Height="*" />
-                        <RowDefinition
-                            Height="*" />
-                        <RowDefinition
-                            Height="3*" />
-                    </Grid.RowDefinitions>
+                        <Grid.ColumnDefinitions>
+                            <ColumnDefinition
+                                Width="2*" />
+                            <ColumnDefinition
+                                Width="5*" />
+                        </Grid.ColumnDefinitions>
 
-                    <!--ID-->
-                    <Viewbox
-                        Grid.Row="0"
-                        Grid.Column="0"
-                        StretchDirection="Both"
-                        Stretch="Uniform"
-                        HorizontalAlignment="Left">
+                        <Grid.RowDefinitions>
+                            <RowDefinition
+                                Height="*"
+                                MinHeight="28" />
+                            <RowDefinition
+                                Height="*"
+                                MinHeight="28" />
+                            <RowDefinition
+                                Height="*"
+                                MinHeight="28" />
+                            <RowDefinition
+                                Height="*"
+                                MinHeight="28" />
+                            <RowDefinition
+                                Height="*"
+                                MinHeight="28" />
+                            <RowDefinition
+                                Height="*"
+                                MinHeight="28" />
+                            <RowDefinition
+                                Height="*"
+                                MinHeight="28" />
+                            <RowDefinition
+                                Height="*"
+                                MinHeight="28" />
+                            <RowDefinition
+                                Height="*"
+                                MinHeight="28" />
+                            <RowDefinition
+                                Height="*"
+                                MinHeight="28" />
+                            <RowDefinition
+                                Height="3*"
+                                MinHeight="80" />
+                        </Grid.RowDefinitions>
+
+                        <!--ID-->
                         <telerik:Label
+                            Grid.Row="0"
                             Grid.Column="0"
-                            Content="ID" />
-                    </Viewbox>
+                            Content="ID"
+                            VerticalAlignment="Center" />
 
-                    <Viewbox
-                        Grid.Row="0"
-                        Grid.Column="1"
-                        StretchDirection="Both"
-                        Stretch="Uniform"
-                        HorizontalAlignment="Left">
                         <telerik:Label
-                            Name="lbDataSetID" />
-                    </Viewbox>
+                            Grid.Row="0"
+                            Grid.Column="1"
+                            Name="lbDataSetID"
+                            VerticalAlignment="Center" />
 
-                    <Viewbox
-                        Grid.Row="1"
-                        Grid.Column="0"
-                        StretchDirection="Both"
-                        Stretch="Uniform"
-                        HorizontalAlignment="Left">
                         <telerik:Label
+                            Grid.Row="1"
+                            Grid.Column="0"
                             Content="Name"
                             VerticalAlignment="Center" />
-                    </Viewbox>
 
-                    <Viewbox
-                        Grid.Row="1"
-                        Grid.Column="1"
-                        StretchDirection="Both"
-                        Stretch="Uniform"
-                        HorizontalAlignment="Left">
-                        
                         <TextBox
                             Grid.Row="1"
                             Grid.Column="1"
                             FontSize="{StaticResource fontSizeProjectDetails}"
-                            Width="600"
                             Name="tbDataSetName"
+                            VerticalAlignment="Center"
                             LostFocus="tbDataSetName_LostFocus"
                             KeyDown="tbDataSetName_KeyDown" />
-                    </Viewbox>
-
-                    <Viewbox
-                        Grid.Row="1"
-                        Grid.Column="1"
-                        StretchDirection="Both"
-                        Stretch="Uniform"
-                        HorizontalAlignment="Left">
 
                         <TextBlock
+                            Grid.Row="1"
+                            Grid.Column="1"
                             Margin="10,0,0,0"
                             FontSize="{StaticResource fontSizeProjectDetails}"
-                            Width="600"
                             IsHitTestVisible="False"
                             Text="Enter a name here"
-                            Foreground="DarkGray">
-
+                            Foreground="DarkGray"
+                            VerticalAlignment="Center">
                             <TextBlock.Style>
                                 <Style
                                     TargetType="{x:Type TextBlock}">
@@ -290,50 +277,32 @@
                                 </Style>
                             </TextBlock.Style>
                         </TextBlock>
-                    </Viewbox>
 
-                    <Viewbox
-                        Grid.Row="2"
-                        Grid.Column="0"
-                        StretchDirection="Both"
-                        Stretch="Uniform"
-                        HorizontalAlignment="Left">
                         <telerik:Label
-                            Content="Comments" />
-                    </Viewbox>
-
-                    <Viewbox
-                        Grid.Row="2"
-                        Grid.Column="1"
-                        StretchDirection="Both"
-                        Stretch="Uniform"
-                        HorizontalAlignment="Left">
+                            Grid.Row="2"
+                            Grid.Column="0"
+                            Content="Comments"
+                            VerticalAlignment="Center" />
 
                         <TextBox
+                            Grid.Row="2"
+                            Grid.Column="1"
                             Name="tbDataSetComments"
                             FontSize="{StaticResource fontSizeProjectDetails}"
-                            Width="600"
+                            VerticalAlignment="Center"
                             LostFocus="tbDataSetDescription_LostFocus"
                             KeyDown="tbDataSetDescription_KeyDown"
                             TextWrapping="Wrap" />
 
-                    </Viewbox>
-
-                    <Viewbox
-                        Grid.Row="2"
-                        Grid.Column="1"
-                        StretchDirection="Both"
-                        Stretch="Uniform"
-                        HorizontalAlignment="Left">
-
                         <TextBlock
+                            Grid.Row="2"
+                            Grid.Column="1"
                             Margin="10,0,0,0"
-                            Width="600"
                             FontSize="{StaticResource fontSizeProjectDetails}"
                             IsHitTestVisible="False"
                             Text="Enter comments here"
-                            Foreground="DarkGray">
-
+                            Foreground="DarkGray"
+                            VerticalAlignment="Center">
                             <TextBlock.Style>
                                 <Style
                                     TargetType="{x:Type TextBlock}">
@@ -352,143 +321,88 @@
                                 </Style>
                             </TextBlock.Style>
                         </TextBlock>
-                    </Viewbox>
 
-                    <Viewbox
-                        Grid.Row="3"
-                        Grid.Column="0"
-                        StretchDirection="Both"
-                        Stretch="Uniform"
-                        HorizontalAlignment="Left">
                         <telerik:Label
+                            Grid.Row="3"
+                            Grid.Column="0"
                             Content="Input MRUs"
                             VerticalAlignment="Center" />
-                    </Viewbox>
 
-                    <Viewbox
-                        Grid.Row="3"
-                        Grid.Column="1"
-                        StretchDirection="Both"
-                        Stretch="Uniform"
-                        HorizontalAlignment="Left">
                         <telerik:RadComboBox
+                            Grid.Row="3"
+                            Grid.Column="1"
                             Name="cboInputMRUs"
+                            VerticalAlignment="Center"
                             DropDownClosed="cboInputMRUs_DropDownClosed" />
-                    </Viewbox>
 
-                    <Viewbox
-                        Grid.Row="4"
-                        Grid.Column="0"
-                        StretchDirection="Both"
-                        Stretch="Uniform"
-                        HorizontalAlignment="Left">
                         <telerik:Label
-                            Content="Date" />
-                    </Viewbox>
+                            Grid.Row="4"
+                            Grid.Column="0"
+                            Content="Date"
+                            VerticalAlignment="Center" />
 
-                    <Viewbox
-                        Grid.Row="4"
-                        Grid.Column="1"
-                        StretchDirection="Both"
-                        Stretch="Uniform"
-                        HorizontalAlignment="Left">
                         <telerik:Label
-                            Name="lbDataSetDate" />
-                    </Viewbox>
+                            Grid.Row="4"
+                            Grid.Column="1"
+                            Name="lbDataSetDate"
+                            VerticalAlignment="Center" />
 
-                    <Viewbox
-                        Grid.Row="5"
-                        Grid.Column="0"
-                        StretchDirection="Both"
-                        Stretch="Uniform"
-                        HorizontalAlignment="Left">
                         <telerik:Label
-                            Content="Start Time" />
-                    </Viewbox>
+                            Grid.Row="5"
+                            Grid.Column="0"
+                            Content="Start Time"
+                            VerticalAlignment="Center" />
 
-                    <Viewbox
-                        Grid.Row="5"
-                        Grid.Column="1"
-                        StretchDirection="Both"
-                        Stretch="Uniform"
-                        HorizontalAlignment="Left">
                         <telerik:Label
-                            Name="lbDataSetStartTime" />
-                    </Viewbox>
+                            Grid.Row="5"
+                            Grid.Column="1"
+                            Name="lbDataSetStartTime"
+                            VerticalAlignment="Center" />
 
-                    <Viewbox
-                        Grid.Row="6"
-                        Grid.Column="0"
-                        StretchDirection="Both"
-                        Stretch="Uniform"
-                        HorizontalAlignment="Left">
                         <telerik:Label
-                            Content="End Time" />
-                    </Viewbox>
+                            Grid.Row="6"
+                            Grid.Column="0"
+                            Content="End Time"
+                            VerticalAlignment="Center" />
 
-                    <Viewbox
-                        Grid.Row="6"
-                        Grid.Column="1"
-                        StretchDirection="Both"
-                        Stretch="Uniform"
-                        HorizontalAlignment="Left">
                         <telerik:Label
-                            Name="lbDataSetEndTime" />
-                    </Viewbox>
+                            Grid.Row="6"
+                            Grid.Column="1"
+                            Name="lbDataSetEndTime"
+                            VerticalAlignment="Center" />
 
-                    <Viewbox
-                        Grid.Row="7"
-                        Grid.Column="0"
-                        StretchDirection="Both"
-                        Stretch="Uniform"
-                        HorizontalAlignment="Left">
                         <telerik:Label
-                            Content="Duration" />
-                    </Viewbox>
+                            Grid.Row="7"
+                            Grid.Column="0"
+                            Content="Duration"
+                            VerticalAlignment="Center" />
 
-                    <Viewbox
-                        Grid.Row="7"
-                        Grid.Column="1"
-                        StretchDirection="Both"
-                        Stretch="Uniform"
-                        HorizontalAlignment="Left">
                         <telerik:Label
-                            Name="lbDataSetDuration" />
-                    </Viewbox>
+                            Grid.Row="7"
+                            Grid.Column="1"
+                            Name="lbDataSetDuration"
+                            VerticalAlignment="Center" />
 
-                    <Viewbox
-                        Grid.Row="8"
-                        Grid.Column="0"
-                        StretchDirection="Both"
-                        Stretch="Uniform"
-                        HorizontalAlignment="Left">
                         <telerik:Label
+                            Grid.Row="8"
+                            Grid.Column="0"
                             Name="lbImport"
                             Content="Import Test Data"
                             VerticalAlignment="Center" />
-                    </Viewbox>
 
-                    <Viewbox
-                        Grid.Row="8"
-                        Grid.Column="1"
-                        StretchDirection="Both"
-                        Stretch="Uniform"
-                        HorizontalAlignment="Right">
                         <Button
+                            Grid.Row="8"
+                            Grid.Column="1"
+                            HorizontalAlignment="Right"
                             Name="btnImport"
                             Click="btnImport_Click"
                             Width="140">Import</Button>
-                    </Viewbox>
 
-                    <Viewbox
-                        Grid.Row="9"
-                        Grid.Column="0"
-                        Grid.ColumnSpan="2"
-                        Margin="8"
-                        StretchDirection="Both"
-                        Stretch="Uniform"
-                        HorizontalAlignment="Left">
                         <TextBlock
+                            Grid.Row="9"
+                            Grid.Column="0"
+                            Grid.ColumnSpan="2"
+                            Margin="8"
                             HorizontalAlignment="Left"
                             Name="tbDurationWarning"
                             Visibility="Collapsed"
@@ -496,11 +410,12 @@
                             TextWrapping="Wrap"
                             Text="Warning: Data recording duration is to short. 20 minutes minimum. 40+ minutes is best."
                             VerticalAlignment="Center" />
-                    </Viewbox>
 
-                </Grid>
+                    </Grid>
 
-            </telerik:GroupBox>
+                </telerik:GroupBox>
+
+            </ScrollViewer>
 
             <Grid
                 Grid.Column="0"
@@ -544,39 +459,26 @@
                         </Grid.ColumnDefinitions>
 
                         <!--Pitch Title-->
-                        <Viewbox
+                        <telerik:Label
                             Grid.Row="0"
                             Grid.Column="1"
-                            StretchDirection="Both"
-                            Stretch="Uniform"
-                            HorizontalAlignment="Center">
-                            <telerik:Label
-                                Content="Reference" />
-                        </Viewbox>
+                            Content="Reference"
+                            HorizontalAlignment="Center"
+                            VerticalAlignment="Center" />
 
-                        <Viewbox
+                        <telerik:Label
                             Grid.Row="0"
                             Grid.Column="2"
-                            StretchDirection="Both"
-                            Stretch="Uniform"
-                            HorizontalAlignment="Center">
-                            <telerik:Label
-                                Grid.Row="0"
-                                Grid.Column="2"
-                                Content="Test" />
-                        </Viewbox>
+                            Content="Test"
+                            HorizontalAlignment="Center"
+                            VerticalAlignment="Center" />
 
-                        <Viewbox
+                        <telerik:Label
                             Grid.Row="0"
                             Grid.Column="3"
-                            StretchDirection="Both"
-                            Stretch="Uniform"
-                            HorizontalAlignment="Center">
-                            <telerik:Label
-                                Grid.Row="0"
-                                Grid.Column="3"
-                                Content="Deviation" />
-                        </Viewbox>
+                            Content="Deviation"
+                            HorizontalAlignment="Center"
+                            VerticalAlignment="Center" />
 
                         <!--Pitch Separator-->
                         <Separator
@@ -586,49 +488,37 @@
                             VerticalAlignment="Bottom" />
 
                         <!--Mean Pitch-->
-                        <Viewbox
+                        <telerik:Label
                             Grid.Row="1"
                             Grid.Column="0"
-                            StretchDirection="Both"
-                            Stretch="Uniform"
-                            HorizontalAlignment="Left">
-                            <telerik:Label
-                                Content="Mean" />
-                        </Viewbox>
+                            Content="Mean"
+                            HorizontalAlignment="Left"
+                            VerticalAlignment="Center" />
 
-                        <Viewbox
+                        <telerik:Label
                             Grid.Row="1"
                             Grid.Column="1"
-                            StretchDirection="Both"
-                            Stretch="Uniform"
-                            HorizontalAlignment="Center">
-                            <telerik:Label
-                                Content="{Binding Path=refPitchMeanDataString}"
-                                FontSize="{StaticResource fontSizeData}" />
-                        </Viewbox>
+                            Content="{Binding Path=refPitchMeanDataString}"
+                            FontSize="{StaticResource fontSizeData}"
+                            HorizontalAlignment="Center"
+                            VerticalAlignment="Center" />
 
-                        <Viewbox
+                        <telerik:Label
                             Grid.Row="1"
                             Grid.Column="2"
-                            StretchDirection="Both"
-                            Stretch="Uniform"
-                            HorizontalAlignment="Center">
-                            <telerik:Label
-                                Content="{Binding Path=testPitchMeanDataString}"
-                                FontSize="{StaticResource fontSizeData}" />
-                        </Viewbox>
+                            Content="{Binding Path=testPitchMeanDataString}"
+                            FontSize="{StaticResource fontSizeData}"
+                            HorizontalAlignment="Center"
+                            VerticalAlignment="Center" />
 
                         <!--Mean Pitch Deviation-->
-                        <Viewbox
+                        <telerik:Label
                             Grid.Row="1"
                             Grid.Column="3"
-                            StretchDirection="Both"
-                            Stretch="Uniform"
-                            HorizontalAlignment="Center">
-                            <telerik:Label
-                                Content="{Binding Path=devPitchMeanString}"
-                                FontSize="{StaticResource fontSizeData}" />
-                        </Viewbox>
+                            Content="{Binding Path=devPitchMeanString}"
+                            FontSize="{StaticResource fontSizeData}"
+                            HorizontalAlignment="Center"
+                            VerticalAlignment="Center" />
 
                         <!--Pitch Correction-->
                         <Grid
@@ -638,26 +528,20 @@
                             Background="{StaticResource ColorBackgroundSeparatorDark}">
                         </Grid>
 
-                        <Viewbox
+                        <telerik:Label
                             Grid.Row="2"
                             Grid.Column="0"
-                            StretchDirection="Both"
-                            Stretch="Uniform"
-                            HorizontalAlignment="Left">
-                            <telerik:Label
-                                Content="Correction" />
-                        </Viewbox>
+                            Content="Correction"
+                            HorizontalAlignment="Left"
+                            VerticalAlignment="Center" />
 
-                        <Viewbox
+                        <telerik:Label
                             Grid.Row="2"
                             Grid.Column="3"
-                            StretchDirection="Both"
-                            Stretch="Uniform"
-                            HorizontalAlignment="Center">
-                            <telerik:Label
-                                Content="{Binding Path=corrPitchString}"
-                                FontSize="{StaticResource fontSizeData}" />
-                        </Viewbox>
+                            Content="{Binding Path=corrPitchString}"
+                            FontSize="{StaticResource fontSizeData}"
+                            HorizontalAlignment="Center"
+                            VerticalAlignment="Center" />
 
                     </Grid>
 
@@ -691,39 +575,26 @@
                         </Grid.ColumnDefinitions>
 
                         <!--Roll Title-->
-                        <Viewbox
+                        <telerik:Label
                             Grid.Row="0"
                             Grid.Column="1"
-                            StretchDirection="Both"
-                            Stretch="Uniform"
-                            HorizontalAlignment="Center">
-                            <telerik:Label
-                                Content="Reference" />
-                        </Viewbox>
+                            Content="Reference"
+                            HorizontalAlignment="Center"
+                            VerticalAlignment="Center" />
 
-                        <Viewbox
+                        <telerik:Label
                             Grid.Row="0"
                             Grid.Column="2"
-                            StretchDirection="Both"
-                            Stretch="Uniform"
-                            HorizontalAlignment="Center">
-                            <telerik:Label
-                                Grid.Row="0"
-                                Grid.Column="2"
-                                Content="Test" />
-                        </Viewbox>
+                            Content="Test"
+                            HorizontalAlignment="Center"
+                            VerticalAlignment="Center" />
 
-                        <Viewbox
+                        <telerik:Label
                             Grid.Row="0"
                             Grid.Column="3"
-                            StretchDirection="Both"
-                            Stretch="Uniform"
-                            HorizontalAlignment="Center">
-                            <telerik:Label
-                                Grid.Row="0"
-                                Grid.Column="3"
-                                Content="Deviation" />
-                        </Viewbox>
+                            Content="Deviation"
+                            HorizontalAlignment="Center"
+                            VerticalAlignment="Center" />
 
                         <!--Roll Separator-->
                         <Separator
@@ -733,49 +604,37 @@
                             VerticalAlignment="Bottom" />
 
                         <!--Mean Roll-->
-                        <Viewbox
+                        <telerik:Label
                             Grid.Row="1"
                             Grid.Column="0"
-                            StretchDirection="Both"
-                            Stretch="Uniform"
-                            HorizontalAlignment="Left">
-                            <telerik:Label
-                                Content="Mean" />
-                        </Viewbox>
+                            Content="Mean"
+                            HorizontalAlignment="Left"
+                            VerticalAlignment="Center" />
 
-                        <Viewbox
+                        <telerik:Label
                             Grid.Row="1"
                             Grid.Column="1"
-                            StretchDirection="Both"
-                            Stretch="Uniform"
-                            HorizontalAlignment="Center">
-                            <telerik:Label
-                                Content="{Binding Path=refRollMeanDataString}"
-                                FontSize="{StaticResource fontSizeData}" />
-                        </Viewbox>
+                            Content="{Binding Path=refRollMeanDataString}"
+                            FontSize="{StaticResource fontSizeData}"
+                            HorizontalAlignment="Center"
+                            VerticalAlignment="Center" />
 
-                        <Viewbox
+                        <telerik:Label
                             Grid.Row="1"
                             Grid.Column="2"
-                            StretchDirection="Both"
-                            Stretch="Uniform"
-                            HorizontalAlignment="Center">
-                            <telerik:Label
-                                Content="{Binding Path=testRollMeanDataString}"
-                                FontSize="{StaticResource fontSizeData}" />
-                        </Viewbox>
+                            Content="{Binding Path=testRollMeanDataString}"
+                            FontSize="{StaticResource fontSizeData}"
+                            HorizontalAlignment="Center"
+                            VerticalAlignment="Center" />
 
                         <!--Mean Roll Deviation-->
-                        <Viewbox
+                        <telerik:Label
                             Grid.Row="1"
                             Grid.Column="3"
-                            StretchDirection="Both"
-                            Stretch="Uniform"
-                            HorizontalAlignment="Center">
-                            <telerik:Label
-                                Content="{Binding Path=devRollMeanString}"
-                                FontSize="{StaticResource fontSizeData}" />
-                        </Viewbox>
+                            Content="{Binding Path=devRollMeanString}"
+                            FontSize="{StaticResource fontSizeData}"
+                            HorizontalAlignment="Center"
+                            VerticalAlignment="Center" />
 
                         <!--Roll Correction-->
                         <Grid
@@ -785,26 +644,20 @@
                             Background="{StaticResource ColorBackgroundSeparatorDark}">
                         </Grid>
 
-                        <Viewbox
+                        <telerik:Label
                             Grid.Row="2"
                             Grid.Column="0"
-                            StretchDirection="Both"
-                            Stretch="Uniform"
-                            HorizontalAlignment="Left">
-                            <telerik:Label
-                                Content="Correction" />
-                        </Viewbox>
+                            Content="Correction"
+                            HorizontalAlignment="Left"
+                            VerticalAlignment="Center" />
 
-                        <Viewbox
+                        <telerik:Label
                             Grid.Row="2"
                             Grid.Column="3"
-                            StretchDirection="Both"
-                            Stretch="Uniform"
-                            HorizontalAlignment="Center">
-                            <telerik:Label
-                                Content="{Binding Path=corrRollString}"
-                                FontSize="{StaticResource fontSizeData}" />
-                        </Viewbox>
+                            Content="{Binding Path=corrRollString}"
+                            FontSize="{StaticResource fontSizeData}"
+                            HorizontalAlignment="Center"
+                            VerticalAlignment="Center" />
 
                     </Grid>
 
@@ -838,39 +691,26 @@
                         </Grid.ColumnDefinitions>
 
                         <!--Heave Title-->
-                        <Viewbox
+                        <telerik:Label
                             Grid.Row="0"
                             Grid.Column="1"
-                            StretchDirection="Both"
-                            Stretch="Uniform"
-                            HorizontalAlignment="Center">
-                            <telerik:Label
-                                Content="Reference" />
-                        </Viewbox>
+                            Content="Reference"
+                            HorizontalAlignment="Center"
+                            VerticalAlignment="Center" />
 
-                        <Viewbox
+                        <telerik:Label
                             Grid.Row="0"
                             Grid.Column="2"
-                            StretchDirection="Both"
-                            Stretch="Uniform"
-                            HorizontalAlignment="Center">
-                            <telerik:Label
-                                Grid.Row="0"
-                                Grid.Column="2"
-                                Content="Test" />
-                        </Viewbox>
+                            Content="Test"
+                            HorizontalAlignment="Center"
+                            VerticalAlignment="Center" />
 
-                        <Viewbox
+                        <telerik:Label
                             Grid.Row="0"
                             Grid.Column="3"
-                            StretchDirection="Both"
-                            Stretch="Uniform"
-                            HorizontalAlignment="Center">
-                            <telerik:Label
-                                Grid.Row="0"
-                                Grid.Column="3"
-                                Content="Deviation" />
-                        </Viewbox>
+                            Content="Deviation"
+                            HorizontalAlignment="Center"
+                            VerticalAlignment="Center" />
 
                         <!--Heave Separator-->
                         <Separator
@@ -880,49 +720,37 @@
                             VerticalAlignment="Bottom" />
 
                         <!--Mean Heave-->
-                        <Viewbox
+                        <telerik:Label
                             Grid.Row="1"
                             Grid.Column="0"
-                            StretchDirection="Both"
-                            Stretch="Uniform"
-                            HorizontalAlignment="Left">
-                            <telerik:Label
-                                Content="Mean" />
-                        </Viewbox>
+                            Content="Mean"
+                            HorizontalAlignment="Left"
+                            VerticalAlignment="Center" />
 
-                        <Viewbox
+                        <telerik:Label
                             Grid.Row="1"
                             Grid.Column="1"
-                            StretchDirection="Both"
-                            Stretch="Uniform"
-                            HorizontalAlignment="Center">
-                            <telerik:Label
-                                Content="{Binding Path=refHeaveMeanString}"
-                                FontSize="{StaticResource fontSizeData}" />
-                        </Viewbox>
+                            Content="{Binding Path=refHeaveMeanString}"
+                            FontSize="{StaticResource fontSizeData}"
+                            HorizontalAlignment="Center"
+                            VerticalAlignment="Center" />
 
-                        <Viewbox
+                        <telerik:Label
                             Grid.Row="1"
                             Grid.Column="2"
-                            StretchDirection="Both"
-                            Stretch="Uniform"
-                            HorizontalAlignment="Center">
-                            <telerik:Label
-                                Content="{Binding Path=testHeaveMeanString}"
-                                FontSize="{StaticResource fontSizeData}" />
-                        </Viewbox>
+                            Content="{Binding Path=testHeaveMeanString}"
+                            FontSize="{StaticResource fontSizeData}"
+                            HorizontalAlignment="Center"
+                            VerticalAlignment="Center" />
 
                         <!--Mean Heave Deviation-->
-                        <Viewbox
+                        <telerik:Label
                             Grid.Row="1"
                             Grid.Column="3"
-                            StretchDirection="Both"
-                            Stretch="Uniform"
-                            HorizontalAlignment="Center">
-                            <telerik:Label
-                                Content="{Binding Path=devHeaveMeanString}"
-                                FontSize="{StaticResource fontSizeData}" />
-                        </Viewbox>
+                            Content="{Binding Path=devHeaveMeanString}"
+                            FontSize="{StaticResource fontSizeData}"
+                            HorizontalAlignment="Center"
+                            VerticalAlignment="Center" />
 
                         <!--Heave Correction-->
                         <Grid
@@ -932,26 +760,20 @@
                             Background="{StaticResource ColorBackgroundSeparatorDark}">
                         </Grid>
 
-                        <Viewbox
+                        <telerik:Label
                             Grid.Row="2"
                             Grid.Column="0"
-                            StretchDirection="Both"
-                            Stretch="Uniform"
-                            HorizontalAlignment="Left">
-                            <telerik:Label
-                                Content="Correction" />
-                        </Viewbox>
+                            Content="Correction"
+                            HorizontalAlignment="Left"
+                            VerticalAlignment="Center" />
 
-                        <Viewbox
+                        <telerik:Label
                             Grid.Row="2"
                             Grid.Column="3"
-                            StretchDirection="Both"
-                            Stretch="Uniform"
-                            HorizontalAlignment="Center">
-                            <telerik:Label
-                                Content="{Binding Path=corrHeaveString}"
-                                FontSize="{StaticResource fontSizeData}" />
-                        </Viewbox>
+                            Content="{Binding Path=corrHeaveString}"
+                            FontSize="{StaticResource fontSizeData}"
+                            HorizontalAlignment="Center"
+                            VerticalAlignment="Center" />
 
                     </Grid>
 

@@ -82,32 +82,22 @@
                                     Width="*" />
                             </Grid.ColumnDefinitions>
 
-                            <Viewbox
+                            <telerik:Label
                                 Grid.Column="0"
-                                StretchDirection="Both"
-                                Stretch="Uniform"
-                                HorizontalAlignment="Left">
+                                Content="Address"
+                                VerticalAlignment="Center"
+                                HorizontalAlignment="Left" />
 
-                                <telerik:Label
-                                    Content="Address"
-                                    VerticalAlignment="Center" />
-                            </Viewbox>
-
-                            <Viewbox
+                            <TextBox
                                 Grid.Column="1"
-                                StretchDirection="Both"
-                                Stretch="Uniform"
-                                HorizontalAlignment="Right">
-
-                                <TextBox
-                                    Name="tbSettingsDatabaseAddress"
-                                    Width="110"
-                                    HorizontalContentAlignment="Left"
-                                    HorizontalAlignment="Right"
-                                    Text="{Binding Path=databaseAddress}"
-                                    LostFocus="tbSettingsDatabaseAddress_LostFocus"
-                                    KeyDown="tbSettingsDatabaseAddress_KeyDown" />
-                            </Viewbox>
+                                Name="tbSettingsDatabaseAddress"
+                                Width="110"
+                                HorizontalContentAlignment="Left"
+                                HorizontalAlignment="Right"
+                                VerticalAlignment="Center"
+                                Text="{Binding Path=databaseAddress}"
+                                LostFocus="tbSettingsDatabaseAddress_LostFocus"
+                                KeyDown="tbSettingsDatabaseAddress_KeyDown" />
                         </Grid>
 
                         <!--Port-->
@@ -121,32 +111,22 @@
                                     Width="*" />
                             </Grid.ColumnDefinitions>
 
-                            <Viewbox
+                            <telerik:Label
                                 Grid.Column="0"
-                                StretchDirection="Both"
-                                Stretch="Uniform"
-                                HorizontalAlignment="Left">
+                                Content="Port"
+                                VerticalAlignment="Center"
+                                HorizontalAlignment="Left" />
 
-                                <telerik:Label
-                                    Content="Port"
-                                    VerticalAlignment="Center" />
-                            </Viewbox>
-
-                            <Viewbox
+                            <TextBox
                                 Grid.Column="1"
-                                StretchDirection="Both"
-                                Stretch="Uniform"
-                                HorizontalAlignment="Right">
-
-                                <TextBox
-                                    Name="tbSettingsDatabasePort"
-                                    Width="110"
-                                    HorizontalAlignment="Right"
-                                    HorizontalContentAlignment="Left"
-                                    Text="{Binding Path=databasePort}"
-                                    LostFocus="tbSettingsDatabasePort_LostFocus"
-                                    KeyDown="tbSettingsDatabasePort_KeyDown" />
-                            </Viewbox>
+                                Name="tbSettingsDatabasePort"
+                                Width="110"
+                                HorizontalAlignment="Right"
+                                HorizontalContentAlignment="Left"
+                                VerticalAlignment="Center"
+                                Text="{Binding Path=databasePort}"
+                                LostFocus="tbSettingsDatabasePort_LostFocus"
+                                KeyDown="tbSettingsDatabasePort_KeyDown" />
                         </Grid>
 
                         <!--Name-->
@@ -160,31 +140,21 @@
                                     Width="*" />
                             </Grid.ColumnDefinitions>
 
-                            <Viewbox
+                            <telerik:Label
                                 Grid.Column="0"
-                                StretchDirection="Both"
-                                Stretch="Uniform"
-                                HorizontalAlignment="Left">
+                                Content="Name"
+                                VerticalAlignment="Center"
+                                HorizontalAlignment="Left" />
 
-                                <telerik:Label
-                                    Content="Name"
-                                    VerticalAlignment="Center" />
-                            </Viewbox>
-
-                            <Viewbox
+                            <TextBox
                                 Grid.Column="1"
-                                StretchDirection="Both"
-                                Stretch="Uniform"
-                                HorizontalAlignment="Right">
-
-                                <TextBox
-                                    Name="tbSettingsDatabaseName"
-                                    Width="110"
-                                    HorizontalAlignment="Right"
-                                    Text="{Binding Path=databaseName}"
-                                    LostFocus="tbSettingsDatabaseName_LostFocus"
-                                    KeyDown="tbSettingsDatabaseName_KeyDown" />
-                            </Viewbox>
+                                Name="tbSettingsDatabaseName"
+                                Width="110"
+                                HorizontalAlignment="Right"
+                                VerticalAlignment="Center"
+                                Text="{Binding Path=databaseName}"
+                                LostFocus="tbSettingsDatabaseName_LostFocus"
+                                KeyDown="tbSettingsDatabaseName_KeyDown" />
                         </Grid>
 
                         <!--User ID-->
@@ -198,30 +168,20 @@
                                     Width="*" />
                             </Grid.ColumnDefinitions>
 
-                            <Viewbox
+                            <telerik:Label
                                 Grid.Column="0"
-                                StretchDirection="Both"
-                                Stretch="Uniform"
-                                HorizontalAlignment="Left">
+                                Content="User ID"
+                                VerticalAlignment="Center"
+                                HorizontalAlignment="Left" />
 
-                                <telerik:Label
-                                    Content="User ID"
-                                    VerticalAlignment="Center" />
-                            </Viewbox>
-
-                            <Viewbox
+                            <TextBox
                                 Grid.Column="1"
-                                StretchDirection="Both"
-                                Stretch="Uniform"
-                                HorizontalAlignment="Right">
-
-                                <TextBox
-                                    Name="tbSettingsDatabaseUserID"
-                                    Width="110"
-                                    HorizontalAlignment="Right"
-                                    LostFocus="tbSettingsDatabaseUserID_LostFocus"
-                                    KeyDown="tbSettingsDatabaseUserID_KeyDown" />
-                            </Viewbox>
+                                Name="tbSettingsDatabaseUserID"
+                                Width="110"
+                                HorizontalAlignment="Right"
+                                VerticalAlignment="Center"
+                                LostFocus="tbSettingsDatabaseUserID_LostFocus"
+                                KeyDown="tbSettingsDatabaseUserID_KeyDown" />
                         </Grid>
 
                         <!--Password-->
@@ -235,30 +195,20 @@
                                     Width="*" />
                             </Grid.ColumnDefinitions>
 
-                            <Viewbox
+                            <telerik:Label
                                 Grid.Column="0"
-                                StretchDirection="Both"
-                                Stretch="Uniform"
-                                HorizontalAlignment="Left">
+                                Content="Password"
+                                VerticalAlignment="Center"
+                                HorizontalAlignment="Left" />
 
-                                <telerik:Label
-                                    Content="Password"
-                                    VerticalAlignment="Center" />
-                            </Viewbox>
-
-                            <Viewbox
+                            <TextBox
                                 Grid.Column="1"
-                                StretchDirection="Both"
-                                Stretch="Uniform"
-                                HorizontalAlignment="Right">
-
-                                <TextBox
-                                    Name="tbSettingsDatabasePassword"
-                                    Width="110"
-                                    HorizontalAlignment="Right"
-                                    LostFocus="tbSettingsDatabasePassword_LostFocus"
-                                    KeyDown="tbSettingsDatabasePassword_KeyDown" />
-                            </Viewbox>
+                                Name="tbSettingsDatabasePassword"
+                                Width="110"
+                                HorizontalAlignment="Right"
+                                VerticalAlignment="Center"
+                                LostFocus="tbSettingsDatabasePassword_LostFocus"
+                                KeyDown="tbSettingsDatabasePassword_KeyDown" />
                         </Grid>
 
                         <!--Messages Storage Time-->
@@ -272,31 +222,21 @@
                                     Width="*" />
                             </Grid.ColumnDefinitions>
 
-                            <Viewbox
+                            <telerik:Label
                                 Grid.Column="0"
-                                StretchDirection="Both"
-                                Stretch="Uniform"
-                                HorizontalAlignment="Left">
+                                Content="Messages Storage Time"
+                                VerticalAlignment="Center"
+                                HorizontalAlignment="Left" />
 
-                                <telerik:Label
-                                    Content="Messages Storage Time"
-                                    VerticalAlignment="Center" />
-                            </Viewbox>
-
-                            <Viewbox
+                            <TextBox
                                 Grid.Column="1"
-                                StretchDirection="Both"
-                                Stretch="Uniform"
-                                HorizontalAlignment="Right">
-
-                                <TextBox
-                                    Name="tbSettingsDatabaseErrorMessagesStorageTime"
-                                    Width="110"
-                                    HorizontalAlignment="Right"
-                                    Text="{Binding Path=databaseErrorMessageStorageTime}"
-                                    LostFocus="tbSettingsDatabaseErrorMessagesStorageTime_LostFocus"
-                                    KeyDown="tbSettingsDatabaseErrorMessagesStorageTime_KeyDown" />
-                            </Viewbox>
+                                Name="tbSettingsDatabaseErrorMessagesStorageTime"
+                                Width="110"
+                                HorizontalAlignment="Right"
+                                VerticalAlignment="Center"
+                                Text="{Binding Path=databaseErrorMessageStorageTime}"
+                                LostFocus="tbSettingsDatabaseErrorMessagesStorageTime_LostFocus"
+                                KeyDown="tbSettingsDatabaseErrorMessagesStorageTime_KeyDown" />
                         </Grid>
 
                         <!--Empty All Database Tables-->
@@ -379,31 +319,21 @@
                                     Width="*" />
                             </Grid.ColumnDefinitions>
 
-                            <Viewbox
+                            <telerik:Label
                                 Grid.Column="0"
-                                StretchDirection="Both"
-                                Stretch="Uniform"
-                                HorizontalAlignment="Left">
+                                Content="Setup UI Data Limit (ms)"
+                                VerticalAlignment="Center"
+                                HorizontalAlignment="Left" />
 
-                                <telerik:Label
-                                    Content="Setup UI Data Limit (ms)"
-                                    VerticalAlignment="Center" />
-                            </Viewbox>
-
-                            <Viewbox
+                            <TextBox
                                 Grid.Column="1"
-                                StretchDirection="Both"
-                                Stretch="Uniform"
-                                HorizontalAlignment="Right">
-
-                                <TextBox
-                                    Name="tbSettingsGUIDataLimit"
-                                    Width="110"
-                                    HorizontalAlignment="Right"
-                                    Text="{Binding Path=setupGUIDataLimit}"
-                                    LostFocus="tbSettingsGUIDataLimit_LostFocus"
-                                    KeyDown="tbSettingsGUIDataLimit_KeyDown" />
-                            </Viewbox>
+                                Name="tbSettingsGUIDataLimit"
+                                Width="110"
+                                HorizontalAlignment="Right"
+                                VerticalAlignment="Center"
+                                Text="{Binding Path=setupGUIDataLimit}"
+                                LostFocus="tbSettingsGUIDataLimit_LostFocus"
+                                KeyDown="tbSettingsGUIDataLimit_KeyDown" />
                         </Grid>
 
                         <!--Server UI Update Frequency-->
@@ -417,31 +347,21 @@
                                     Width="*" />
                             </Grid.ColumnDefinitions>
 
-                            <Viewbox
+                            <telerik:Label
                                 Grid.Column="0"
-                                StretchDirection="Both"
-                                Stretch="Uniform"
-                                HorizontalAlignment="Left">
+                                Content="Server UI Update Frequency"
+                                VerticalAlignment="Center"
+                                HorizontalAlignment="Left" />
 
-                                <telerik:Label
-                                    Content="Server UI Update Frequency"
-                                    VerticalAlignment="Center" />
-                            </Viewbox>
-
-                            <Viewbox
+                            <TextBox
                                 Grid.Column="1"
-                                StretchDirection="Both"
-                                Stretch="Uniform"
-                                HorizontalAlignment="Right">
-
-                                <TextBox
-                                    Name="tbSettingsServerUIFrequency"
-                                    Width="110"
-                                    HorizontalAlignment="Right"
-                                    Text="{Binding Path=serverUIUpdateFrequency}"
-                                    LostFocus="tbSettingsServerUIFrequency_LostFocus"
-                                    KeyDown="tbSettingsServerUIFrequency_KeyDown" />
-                            </Viewbox>
+                                Name="tbSettingsServerUIFrequency"
+                                Width="110"
+                                HorizontalAlignment="Right"
+                                VerticalAlignment="Center"
+                                Text="{Binding Path=serverUIUpdateFrequency}"
+                                LostFocus="tbSettingsServerUIFrequency_LostFocus"
+                                KeyDown="tbSettingsServerUIFrequency_KeyDown" />
                         </Grid>
 
                         <!--Database Save Frequency-->
@@ -455,31 +375,21 @@
                                     Width="*" />
                             </Grid.ColumnDefinitions>
 
-                            <Viewbox
+                            <telerik:Label
                                 Grid.Column="0"
-                                StretchDirection="Both"
-                                Stretch="Uniform"
-                                HorizontalAlignment="Left">
+                                Content="Database Save Frequency"
+                                VerticalAlignment="Center"
+                                HorizontalAlignment="Left" />
 
-                                <telerik:Label
-                                    Content="Database Save Frequency"
-                                    VerticalAlignment="Center" />
-                            </Viewbox>
-
-                            <Viewbox
+                            <TextBox
                                 Grid.Column="1"
-                                StretchDirection="Both"
-                                Stretch="Uniform"
-                                HorizontalAlignment="Right">
-
-                                <TextBox
-                                    Name="tbSettingsDatabaseSaveFrequency"
-                                    Width="110"
-                                    HorizontalAlignment="Right"
-                                    Text="{Binding Path=databaseSaveFrequency}"
-                                    LostFocus="tbSettingsDatabaseSaveFrequency_LostFocus"
-                                    KeyDown="tbSettingsDatabaseSaveFrequency_KeyDown" />
-                            </Viewbox>
+                                Name="tbSettingsDatabaseSaveFrequency"
+                                Width="110"
+                                HorizontalAlignment="Right"
+                                VerticalAlignment="Center"
+                                Text="{Binding Path=databaseSaveFrequency}"
+                                LostFocus="tbSettingsDatabaseSaveFrequency_LostFocus"
+                                KeyDown="tbSettingsDatabaseSaveFrequency_KeyDown" />
                         </Grid>
 
                         <!--Sensor Data Timeout-->
@@ -493,31 +403,21 @@
                                     Width="*" />
                             </Grid.ColumnDefinitions>
 
-                            <Viewbox
+                            <telerik:Label
                                 Grid.Column="0"
-                                StretchDirection="Both"
-                                Stretch="Uniform"
-                                HorizontalAlignment="Left">
+                                Content="Sensor Data Timeout"
+                                VerticalAlignment="Center"
+                                HorizontalAlignment="Left" />
 
-                                <telerik:Label
-                                    Content="Sensor Data Timeout"
-                                    VerticalAlignment="Center" />
-                            </Viewbox>
-
-                            <Viewbox
+                            <TextBox
                                 Grid.Column="1"
-                                StretchDirection="Both"
-                                Stretch="Uniform"
-                                HorizontalAlignment="Right">
-
-                                <TextBox
-                                    Name="tbSettingsDataTimeOut"
-                                    Width="110"
-                                    HorizontalAlignment="Right"
-                                    Text="{Binding Path=dataTimeout}"
-                                    LostFocus="tbSettingsDataTimeOut_LostFocus"
-                                    KeyDown="tbSettingsDataTimeOut_KeyDown" />
-                            </Viewbox>
+                                Name="tbSettingsDataTimeOut"
+                                Width="110"
+                                HorizontalAlignment="Right"
+                                VerticalAlignment="Center"
+                                Text="{Binding Path=dataTimeout}"
+                                LostFocus="tbSettingsDataTimeOut_LostFocus"
+                                KeyDown="tbSettingsDataTimeOut_KeyDown" />
                         </Grid>
 
                         <!--HMS Processing Frequency-->
@@ -531,31 +431,21 @@
                                     Width="*" />
                             </Grid.ColumnDefinitions>
 
-                            <Viewbox
+                            <telerik:Label
                                 Grid.Column="0"
-                                StretchDirection="Both"
-                                Stretch="Uniform"
-                                HorizontalAlignment="Left">
+                                Content="HMS Processing Frequency"
+                                VerticalAlignment="Center"
+                                HorizontalAlignment="Left" />
 
-                                <telerik:Label
-                                    Content="HMS Processing Frequency"
-                                    VerticalAlignment="Center" />
-                            </Viewbox>
-
-                            <Viewbox
+                            <TextBox
                                 Grid.Column="1"
-                                StretchDirection="Both"
-                                Stretch="Uniform"
-                                HorizontalAlignment="Right">
-
-                                <TextBox
-                                    Name="tbSettingsHMSProcessingFrequency"
-                                    Width="110"
-                                    HorizontalAlignment="Right"
-                                    Text="{Binding Path=hmsProcessingFrequency}"
-                                    LostFocus="tbSettingsHMSProcessingFrequency_LostFocus"
-                                    KeyDown="tbSettingsHMSProcessingFrequency_KeyDown" />
-                            </Viewbox>
+                                Name="tbSettingsHMSProcessingFrequency"
+                                Width="110"
+                                HorizontalAlignment="Right"
+                                VerticalAlignment="Center"
+                                Text="{Binding Path=hmsProcessingFrequency}"
+                                LostFocus="tbSettingsHMSProcessingFrequency_LostFocus"
+                                KeyDown="tbSettingsHMSProcessingFrequency_KeyDown" />
 
                         </Grid>
 
@@ -601,30 +491,21 @@
                                     Width="2*" />
                             </Grid.ColumnDefinitions>
 
-                            <Viewbox
+                            <telerik:Label
                                 Grid.Column="0"
-                                StretchDirection="Both"
-                                Stretch="Uniform"
-                                HorizontalAlignment="Left">
+                                Content="Wave Height Cut-Off"
+                                VerticalAlignment="Center"
+                                HorizontalAlignment="Left" />
 
-                                <telerik:Label
-                                    Content="Wave Height Cut-Off" />
-                            </Viewbox>
-
-                            <Viewbox
+                            <TextBox
                                 Grid.Column="1"
-                                StretchDirection="Both"
-                                Stretch="Uniform"
-                                HorizontalAlignment="Right">
-
-                                <TextBox
-                                    Name="tbWaveHeightCutoff"
-                                    Width="110"
-                                    HorizontalAlignment="Right"
-                                    Text="{Binding Path=waveHeightCutoff}"
-                                    LostFocus="tbWaveHeightCutoff_LostFocus"
-                                    KeyDown="tbWaveHeightCutoff_KeyDown" />
-                            </Viewbox>
+                                Name="tbWaveHeightCutoff"
+                                Width="110"
+                                HorizontalAlignment="Right"
+                                VerticalAlignment="Center"
+                                Text="{Binding Path=waveHeightCutoff}"
+                                LostFocus="tbWaveHeightCutoff_LostFocus"
+                                KeyDown="tbWaveHeightCutoff_KeyDown" />
                         </Grid>
 
                     </Grid>
