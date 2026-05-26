@@ -100,7 +100,8 @@ namespace MVS
         public static LivoxLidarDeckEdgeResult FindEdge(
             List<(float x, float y, float z)> allPoints,
             HelideckShape deckShape = HelideckShape.Hexagon,
-            int minEdgePoints = MinPoints)
+            int minEdgePoints = MinPoints,
+            Action<int> progress = null)
         {
             var result = new LivoxLidarDeckEdgeResult();
             if (allPoints == null || allPoints.Count < MinPoints)
@@ -110,6 +111,7 @@ namespace MVS
             var fwd = new List<(float x, float y, float z)>(allPoints.Count / 2);
             foreach (var p in allPoints)
                 if (p.x > 0) fwd.Add(p);
+            progress?.Invoke(allPoints.Count);
             result.ForwardPointCount = fwd.Count;
             if (fwd.Count < MinPoints) return result;
 
@@ -142,6 +144,7 @@ namespace MVS
                 for (int i = 0; i < fwd.Count; i++)
                     if (Math.Abs(nx * fwd[i].x + ny * fwd[i].y + nz * fwd[i].z + d) < RansacThresholdMm)
                         cnt++;
+                progress?.Invoke(fwd.Count);
 
                 if (cnt > bestCnt) { bestCnt = cnt; bNx = nx; bNy = ny; bNz = nz; bD = d; }
             }
@@ -157,6 +160,7 @@ namespace MVS
             foreach (var p in allPoints)
                 if (Math.Abs(bNx * p.x + bNy * p.y + bNz * p.z + bD) < DeckInlierBandMm)
                     inliers.Add(p);
+            progress?.Invoke(allPoints.Count);
 
             result.DeckInlierCount = inliers.Count;
             if (inliers.Count < MinPoints) return result;
@@ -165,6 +169,7 @@ namespace MVS
             int    n  = inliers.Count;
             double cx = 0, cy = 0, cz = 0;
             foreach (var p in inliers) { cx += p.x; cy += p.y; cz += p.z; }
+            progress?.Invoke(n);
             cx /= n; cy /= n; cz /= n;
 
             double sxx = 0, syy = 0, szz = 0, sxy = 0, sxz = 0, syz = 0;
@@ -174,6 +179,7 @@ namespace MVS
                 sxx += dx * dx; syy += dy * dy; szz += dz * dz;
                 sxy += dx * dy; sxz += dx * dz; syz += dy * dz;
             }
+            progress?.Invoke(n);
             double[,] cov =
             {
                 { sxx / n, sxy / n, sxz / n },
@@ -211,6 +217,7 @@ namespace MVS
                 double pz = inliers[i].z - dist * pnz;
                 projected.Add(((float)px, (float)py, (float)pz));
             }
+            progress?.Invoke(n);
 
             // ── Step 3.5: Build rotation that aligns plane normal with +Z ────
             // After this rotation, all projected points have Z ≈ 0 (the plane is horizontal).
@@ -226,6 +233,7 @@ namespace MVS
                 double nz = R[2, 0] * dx + R[2, 1] * dy + R[2, 2] * dz; // ≈ 0 by construction
                 normalized.Add(((float)nx, (float)ny, (float)nz));
             }
+            progress?.Invoke(n);
 
             // ── Step 4: Project normalized points onto 2-D plane ─────────────
             // The plane is now horizontal in the normalized frame, so 2-D coords
@@ -238,6 +246,7 @@ namespace MVS
             {
                 proj[i] = (normalized[i].x, normalized[i].y);
             }
+            progress?.Invoke(n);
 
             // LiDAR origin (0,0,0) projected onto the plane's 2-D frame
             double lidarU = -cx * ux - cy * uy - cz * uz;
@@ -245,12 +254,12 @@ namespace MVS
 
             // ── Step 4+: Shape-dependent edge detection ─────────────────────
             if (deckShape == HelideckShape.Hexagon)
-                return FindEdgeHexagon(result, inliers, normalized, proj, n, cx, cy, cz, ux, uy, uz, wx, wy, wz, R, minEdgePoints);
+                return FindEdgeHexagon(result, inliers, normalized, proj, n, cx, cy, cz, ux, uy, uz, wx, wy, wz, R, minEdgePoints, progress);
             else if (deckShape == HelideckShape.Square
                   || deckShape == HelideckShape.SquareRoundedBow)
-                return FindEdgeSquare(result, inliers, normalized, proj, n, cx, cy, cz, ux, uy, uz, wx, wy, wz, R, deckShape, minEdgePoints);
+                return FindEdgeSquare(result, inliers, normalized, proj, n, cx, cy, cz, ux, uy, uz, wx, wy, wz, R, deckShape, minEdgePoints, progress);
             else
-                return FindEdgeConvexHull(result, inliers, normalized, proj, n, cx, cy, cz, ux, uy, uz, wx, wy, wz, R, deckShape, minEdgePoints);
+                return FindEdgeConvexHull(result, inliers, normalized, proj, n, cx, cy, cz, ux, uy, uz, wx, wy, wz, R, deckShape, minEdgePoints, progress);
         }
 
         // ── Hexagon-specific edge detection (6-vertex extremal model) ────────
@@ -264,7 +273,8 @@ namespace MVS
             double ux, double uy, double uz,
             double wx, double wy, double wz,
             double[,] R,
-            int minEdgePoints)
+            int minEdgePoints,
+            Action<int> progress)
         {
             // 6 extremal directions at θk = 30° + k×60°
             double sq3h = Math.Sqrt(3.0) * 0.5;
@@ -283,6 +293,7 @@ namespace MVS
                     if (dot > vBest[k]) { vBest[k] = dot; vIdx[k] = i; }
                 }
             }
+            progress?.Invoke(n);
 
             result.HullVertexCount = 6;
 
@@ -486,7 +497,8 @@ namespace MVS
             double wx, double wy, double wz,
             double[,] R,
             HelideckShape deckShape,
-            int minEdgePoints)
+            int minEdgePoints,
+            Action<int> progress)
         {
             // ── Compute corners as the Minimum-Area Bounding Rectangle (MABR)
             //    of the convex hull of the projected points.
@@ -502,9 +514,11 @@ namespace MVS
             //   • Ridge points in the deck interior are not on the convex hull,
             //     so they cannot affect the rectangle at all.
             var hull = ConvexHull2D(proj);
+            progress?.Invoke(n);
             if (hull.Count < 3) return result;
 
             (double u, double w)[] mabrCorners = ComputeMinAreaRectangle(proj, hull);
+            progress?.Invoke(n);
             if (mabrCorners == null) return result;
 
             // Build "vIdx-equivalent" data: synthesize 4 corner positions in
@@ -777,10 +791,12 @@ namespace MVS
             double wx, double wy, double wz,
             double[,] R,
             HelideckShape deckShape,
-            int minEdgePoints)
+            int minEdgePoints,
+            Action<int> progress)
         {
             // ── Convex hull of 2-D projected inliers ─────────────────────────
             var hull = ConvexHull2D(proj);
+            progress?.Invoke(n);
             result.HullVertexCount = hull.Count;
             if (hull.Count < 3) return result;
 

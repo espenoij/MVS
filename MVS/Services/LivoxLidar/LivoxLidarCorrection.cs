@@ -107,7 +107,7 @@ namespace MVS
         }
         public string TimestampString =>
             (_isActive && _timestamp != DateTime.MinValue)
-                ? _timestamp.ToString(Constants.TimestampFormat, Constants.cultureInfo)
+                ? _timestamp.ToString("yyyy-MM-dd HH:mm:ss", Constants.cultureInfo)
                 : "—";
 
         // ── Mutators ─────────────────────────────────────────────────────────

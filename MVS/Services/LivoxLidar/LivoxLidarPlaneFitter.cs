@@ -79,7 +79,8 @@ namespace MVS
         /// that would otherwise skew a mean-based or fixed threshold.
         /// </summary>
         public static List<(float x, float y, float z)> FilterPlaneInliers(
-            List<(float x, float y, float z)> points)
+            List<(float x, float y, float z)> points,
+            Action<int> progress = null)
         {
             var current = points;
 
@@ -91,6 +92,7 @@ namespace MVS
                 // Centroid
                 double sx = 0, sy = 0, sz = 0;
                 foreach (var p in current) { sx += p.x; sy += p.y; sz += p.z; }
+                progress?.Invoke(n);
                 double cx = sx / n, cy = sy / n, cz = sz / n;
 
                 // 3×3 covariance
@@ -101,6 +103,7 @@ namespace MVS
                     sxx += dx * dx; syy += dy * dy; szz += dz * dz;
                     sxy += dx * dy; sxz += dx * dz; syz += dy * dz;
                 }
+                progress?.Invoke(n);
                 double[,] M =
                 {
                     { sxx / n, sxy / n, sxz / n },
@@ -124,6 +127,7 @@ namespace MVS
                     var p = current[i];
                     dists[i] = nx * p.x + ny * p.y + nz * p.z + d;
                 }
+                progress?.Invoke(n);
 
                 // Robust threshold: median ± k·MAD
                 var sorted = (double[])dists.Clone();
@@ -133,6 +137,7 @@ namespace MVS
                 var absDev = new double[n];
                 for (int i = 0; i < n; i++)
                     absDev[i] = Math.Abs(dists[i] - median);
+                progress?.Invoke(n);
                 Array.Sort(absDev);
                 double mad = absDev[n / 2];
 
@@ -145,6 +150,7 @@ namespace MVS
                     if (Math.Abs(dists[i] - median) <= threshold)
                         inliers.Add(current[i]);
                 }
+                progress?.Invoke(n);
 
                 if (inliers.Count < MinPoints) return current;
                 current = inliers;
@@ -153,7 +159,9 @@ namespace MVS
             return current;
         }
 
-        public static LivoxLidarPlaneFitResult Fit(List<(float x, float y, float z)> points)
+        public static LivoxLidarPlaneFitResult Fit(
+            List<(float x, float y, float z)> points,
+            Action<int> progress = null)
         {
             var result = new LivoxLidarPlaneFitResult();
             int n = points.Count;
@@ -167,6 +175,7 @@ namespace MVS
             // ── Step 1: centroid ─────────────────────────────────────────────
             double sx = 0, sy = 0, sz = 0;
             foreach (var p in points) { sx += p.x; sy += p.y; sz += p.z; }
+            progress?.Invoke(n);
             double cx = sx / n, cy = sy / n, cz = sz / n;
 
             // ── Step 2: 3×3 covariance matrix (6 unique entries) ─────────────
@@ -177,6 +186,7 @@ namespace MVS
                 sxx += dx * dx;  syy += dy * dy;  szz += dz * dz;
                 sxy += dx * dy;  sxz += dx * dz;  syz += dy * dz;
             }
+            progress?.Invoke(n);
 
             double[,] M =
             {
@@ -214,6 +224,7 @@ namespace MVS
                 pu[i] = dx*ux + dy*uy + dz*uz;
                 pw[i] = dx*wx + dy*wy + dz*wz;
             }
+            progress?.Invoke(n);
 
             // ── Step 6: Vessel forward — bow-edge line fit ───────────────────
             // The edge directly in front of the sensor is always perpendicular to
@@ -228,6 +239,7 @@ namespace MVS
                 if (pu[i] < uMin) uMin = pu[i];
                 if (pu[i] > uMax) uMax = pu[i];
             }
+            progress?.Invoke(n);
             double uRange = uMax - uMin;
             if (uRange < 1.0) uRange = 1.0;
             double uCutoff = uMax - 0.15 * uRange;
@@ -238,6 +250,7 @@ namespace MVS
             {
                 if (pu[i] >= uCutoff) { bSumU += pu[i]; bSumW += pw[i]; bN++; }
             }
+            progress?.Invoke(n);
 
             double evU, evW;
             if (bN >= 3)
@@ -250,6 +263,7 @@ namespace MVS
                     double du = pu[i] - muBU, dw = pw[i] - muBW;
                     bSuu += du * du;  bSww += dw * dw;  bSuw += du * dw;
                 }
+                progress?.Invoke(n);
 
                 // Smallest eigenvector = bow-edge normal = vessel forward
                 // λ_small = ( (a+c) − sqrt((a−c)² + 4b²) ) / 2,  eigenvector = (b, λ_small − a)
@@ -313,6 +327,7 @@ namespace MVS
                 absLat[i]    = Math.Abs(pl);
                 radial[i]    = Math.Sqrt(pf * pf + pl * pl);
             }
+            progress?.Invoke(n);
             result.ExtentPrimary   = Math.Max(fwdMax, -fwdMin);
             result.ExtentSecondary = Math.Max(latMax, -latMin);
             result.FwdExtentMin = fwdMin; result.FwdExtentMax = fwdMax;

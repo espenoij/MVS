@@ -190,14 +190,15 @@ namespace MVS
         /// Runs the plane fit on the accumulated point cloud.
         /// Returns null if fewer than 20 points are available.
         /// </summary>
-        public LivoxLidarPlaneFitResult FitPlane()
+        public LivoxLidarPlaneFitResult FitPlane(Action<int> progress = null)
         {
             List<(float, float, float)> snapshot;
             lock (_bufferLock)
                 snapshot = new List<(float, float, float)>(_buffer);
 
-            var filtered = LivoxLidarPlaneFitter.FilterPlaneInliers(snapshot);
-            return LivoxLidarPlaneFitter.Fit(filtered);
+            progress?.Invoke(snapshot.Count);
+            var filtered = LivoxLidarPlaneFitter.FilterPlaneInliers(snapshot, progress);
+            return LivoxLidarPlaneFitter.Fit(filtered, progress);
         }
 
         public void ClearBuffer()

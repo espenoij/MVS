@@ -388,6 +388,13 @@ namespace MVS
         }
         public string AnalyseProgressText => $"{_analyseProgress} %";
 
+        private string _analysePointProgressText = "";
+        public string AnalysePointProgressText
+        {
+            get { return _analysePointProgressText; }
+            private set { _analysePointProgressText = value; OnPropertyChanged(); OnPropertyChanged(nameof(AnalyseProgressText)); }
+        }
+
         private string _analyseStepText = "";
         public string AnalyseStepText
         {
@@ -552,7 +559,7 @@ namespace MVS
             AppendStatus($"Simulating helideck scan (pitch={SimPitchDeg:F3}°, roll={SimRollDeg:F3}°, lidar yaw={SimLidarYawDeg:F3}°)...");
         }
 
-        private void FitPlane()
+        private void FitPlane(Action<int> progress = null)
         {
             if (_accumulatedPoints < _minFitPoints)
             {
@@ -569,7 +576,7 @@ namespace MVS
             }
 
             AppendStatus("Fitting plane...");
-            _lastFit = _subsystem.FitPlane();
+            _lastFit = _subsystem.FitPlane(progress);
 
             if (_lastFit == null || !_lastFit.IsValid)
             {
@@ -630,14 +637,15 @@ namespace MVS
         {
             IsAnalysing = true;
             AnalyseProgress = 0;
+            AnalysePointProgressText = "";
             AnalyseStepText = $"Fitting plane to {_accumulatedPoints:N0} points…";
             try
             {
                 // Yield to let the UI render the busy overlay before blocking
                 await Application.Current.Dispatcher.InvokeAsync(() => { }, DispatcherPriority.ApplicationIdle);
 
-                FitPlane();
-                AnalyseProgress = 50;
+                await Task.Run(() => FitPlane(CreateAnalysisProgressReporter("Fitting plane", 0, 50, _accumulatedPoints)));
+                SetAnalysisProgress(50, _accumulatedPoints, _accumulatedPoints, "Fitting plane");
                 if (_lastFit == null || !_lastFit.IsValid) return;
 
                 if (_vesselFwdMethod == VesselForwardMethod.Automatic)
@@ -646,7 +654,7 @@ namespace MVS
                     // Yield again so the UI can update between steps
                     await Application.Current.Dispatcher.InvokeAsync(() => { }, DispatcherPriority.ApplicationIdle);
 
-                    FindDeckEdge();
+                    await Task.Run(() => FindDeckEdge(CreateAnalysisProgressReporter("Detecting deck edge", 50, 50, _accumulatedPoints)));
                 }
                 else
                 {
@@ -656,14 +664,42 @@ namespace MVS
                     AppendStatus($"Vessel forward method is {_vesselFwdMethod} — skipping edge detection.");
                 }
                 AnalyseProgress = 100;
+                AnalysePointProgressText = $"{_accumulatedPoints:N0} of {_accumulatedPoints:N0} points";
             }
             finally
             {
                 IsAnalysing = false;
+                RefreshFitDisplay();
+                RefreshEdgeDisplay();
+                RefreshCommandStates();
             }
         }
 
-        private void FindDeckEdge()
+        private Action<int> CreateAnalysisProgressReporter(string stepName, int baseProgress, int progressRange, int totalPoints)
+        {
+            int processedPoints = 0;
+            int expectedPoints = Math.Max(totalPoints, 1) * Math.Max(progressRange, 1);
+
+            return pointsProcessed =>
+            {
+                int points = Math.Max(0, pointsProcessed);
+                processedPoints += points;
+                int displayProcessed = Math.Min(processedPoints, Math.Max(totalPoints, 1));
+                int percent = baseProgress + Math.Min(progressRange, (processedPoints * progressRange) / expectedPoints);
+
+                Application.Current?.Dispatcher.BeginInvoke(DispatcherPriority.Background, new Action(() =>
+                    SetAnalysisProgress(percent, displayProcessed, totalPoints, stepName)));
+            };
+        }
+
+        private void SetAnalysisProgress(int percent, int processedPoints, int totalPoints, string stepName)
+        {
+            AnalyseProgress = Math.Max(0, Math.Min(100, percent));
+            AnalysePointProgressText = $"{processedPoints:N0} of {Math.Max(totalPoints, 0):N0} points";
+            AnalyseStepText = $"{stepName} — {AnalysePointProgressText}";
+        }
+
+        private void FindDeckEdge(Action<int> progress = null)
         {
             AppendStatus("Detecting deck edge...");
             var snapshot = _subsystem.GetPointCloudSnapshot();
@@ -682,7 +718,7 @@ namespace MVS
                 return;
             }
 
-            _lastEdge = LivoxLidarDeckEdgeFinder.FindEdge(snapshot, HelideckShape, _minEdgePoints);
+            _lastEdge = LivoxLidarDeckEdgeFinder.FindEdge(snapshot, HelideckShape, _minEdgePoints, progress);
 
             if (_lastEdge == null || !_lastEdge.IsValid)
             {
@@ -881,9 +917,13 @@ namespace MVS
             OnPropertyChanged(nameof(CanConnect));
             OnPropertyChanged(nameof(CanDisconnect));
             OnPropertyChanged(nameof(CanScan));
+            OnPropertyChanged(nameof(CanFit));
             OnPropertyChanged(nameof(IsScanning));
             OnPropertyChanged(nameof(CanSimulate));
             OnPropertyChanged(nameof(IsScanActive));
+            OnPropertyChanged(nameof(HasFitResult));
+            OnPropertyChanged(nameof(HasEdgeResult));
+            CommandManager.InvalidateRequerySuggested();
         }
 
         private void ApplyFiltersToSubsystem()

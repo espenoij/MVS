@@ -248,7 +248,7 @@
                                     <DockPanel Margin="0,0,0,4">
                                         <Label Width="150" Content="Detection Method" VerticalAlignment="Center"
                                                ToolTip="Which deck edge was used to infer the vessel forward direction (bow → aft → side edges)"/>
-                                        <Label Content="{Binding EdgeMethod}" FontWeight="Bold"/>
+                                         <Label Content="{Binding EdgeMethod}"/>
                                     </DockPanel>
 
                                     <DockPanel Margin="0,0,0,4">
@@ -726,9 +726,9 @@
                 <StackPanel HorizontalAlignment="Center">
                     <Grid Margin="0,0,0,16">
                         <telerik:RadProgressBar Minimum="0" Maximum="100"
-                                                    Value="{Binding AnalyseProgress, Mode=OneWay}"
-                                                    Width="260" Height="24"
-                                                Foreground="#2E7D32" />
+                                             Value="{Binding AnalyseProgress, Mode=OneWay}"
+                                             Width="360" Height="24"
+                                             Foreground="#2E7D32" />
                         <TextBlock Text="{Binding AnalyseProgressText}"
                                    HorizontalAlignment="Center" VerticalAlignment="Center"
                                    FontSize="12" FontWeight="Bold" Foreground="#222222" />
@@ -741,6 +741,9 @@
                                FontSize="12"
                                Foreground="#666666"
                                HorizontalAlignment="Center"
+                               TextWrapping="Wrap"
+                               TextAlignment="Center"
+                               MaxWidth="360"
                                Margin="0,6,0,0" />
                 </StackPanel>
             </Border>
