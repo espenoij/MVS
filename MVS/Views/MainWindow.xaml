@@ -17,6 +17,8 @@
     </telerik:RadWindow.Icon>
 
     <telerik:RadWindow.Resources>
+        <BooleanToVisibilityConverter x:Key="BoolToVis" />
+
         <Style
             x:Key="SensorDataColorCode"
             TargetType="telerik:GridViewRow"
@@ -109,17 +111,42 @@
                 HeaderBackground="{StaticResource ColorVerticalBarBackground}"
                 SelectionChanged="tcMainMenu_SelectionChanged">
 
+                <telerik:RadTabControl.ItemContainerStyle>
+                    <Style TargetType="telerik:RadTabItem" BasedOn="{StaticResource RadTabItemStyle}">
+                        <Setter Property="HorizontalContentAlignment" Value="Stretch" />
+                    </Style>
+                </telerik:RadTabControl.ItemContainerStyle>
+
 
                 <!--==============================================================-->
                 <!--Side Menu: Projects-->
                 <!--==============================================================-->
-                <telerik:RadTabItem>
+                <telerik:RadTabItem
+                    Header="Projects">
 
-                    <telerik:RadTabItem.Header>
-                        <Image
-                            Width="36"
-                            Source="../Icons/outline_addchart_white_48dp.png" />
-                    </telerik:RadTabItem.Header>
+                    <telerik:RadTabItem.HeaderTemplate>
+                        <DataTemplate>
+                            <Grid>
+                                <Grid.ColumnDefinitions>
+                                    <ColumnDefinition Width="36" />
+                                    <ColumnDefinition Width="*" />
+                                </Grid.ColumnDefinitions>
+                                <Image
+                                    Grid.Column="0"
+                                    Width="36"
+                                    HorizontalAlignment="Right"
+                                    Source="../Icons/outline_addchart_white_48dp.png" />
+                                <TextBlock
+                                    Grid.Column="1"
+                                    Text="{Binding}"
+                                    Foreground="White"
+                                    HorizontalAlignment="Left"
+                                    VerticalAlignment="Center"
+                                    Margin="8,0,0,0"
+                                    Visibility="{Binding Source={x:Static uc:MenuStateVM.Instance}, Path=showMenuLabels, Converter={StaticResource BoolToVis}}" />
+                            </Grid>
+                        </DataTemplate>
+                    </telerik:RadTabItem.HeaderTemplate>
 
                     <DockPanel>
 
@@ -266,13 +293,32 @@
                 <!--Side Menu: Sensor Input-->
                 <!--==============================================================-->
                 <telerik:RadTabItem
-                    Name="tabInput">
+                    Name="tabInput"
+                    Header="Input">
 
-                    <telerik:RadTabItem.Header>
-                        <Image
-                            Width="36"
-                            Source="../Icons/input_white_36dp.png" />
-                    </telerik:RadTabItem.Header>
+                    <telerik:RadTabItem.HeaderTemplate>
+                        <DataTemplate>
+                            <Grid>
+                                <Grid.ColumnDefinitions>
+                                    <ColumnDefinition Width="36" />
+                                    <ColumnDefinition Width="*" />
+                                </Grid.ColumnDefinitions>
+                                <Image
+                                    Grid.Column="0"
+                                    Width="36"
+                                    HorizontalAlignment="Right"
+                                    Source="../Icons/input_white_36dp.png" />
+                                <TextBlock
+                                    Grid.Column="1"
+                                    Text="{Binding}"
+                                    Foreground="White"
+                                    HorizontalAlignment="Left"
+                                    VerticalAlignment="Center"
+                                    Margin="8,0,0,0"
+                                    Visibility="{Binding Source={x:Static uc:MenuStateVM.Instance}, Path=showMenuLabels, Converter={StaticResource BoolToVis}}" />
+                            </Grid>
+                        </DataTemplate>
+                    </telerik:RadTabItem.HeaderTemplate>
 
                     <DockPanel>
 
@@ -604,13 +650,32 @@
                 <!--Side Menu: LiDAR Helideck Calibration-->
                 <!--==============================================================-->
                 <telerik:RadTabItem
-                    Name="tabLivoxLidar">
+                    Name="tabLivoxLidar"
+                    Header="LiDAR">
 
-                    <telerik:RadTabItem.Header>
-                        <Image
-                            Width="36"
-                            Source="../Icons/detector_white_36dp.png" />
-                    </telerik:RadTabItem.Header>
+                    <telerik:RadTabItem.HeaderTemplate>
+                        <DataTemplate>
+                            <Grid>
+                                <Grid.ColumnDefinitions>
+                                    <ColumnDefinition Width="36" />
+                                    <ColumnDefinition Width="*" />
+                                </Grid.ColumnDefinitions>
+                                <Image
+                                    Grid.Column="0"
+                                    Width="36"
+                                    HorizontalAlignment="Right"
+                                    Source="../Icons/detector_white_36dp.png" />
+                                <TextBlock
+                                    Grid.Column="1"
+                                    Text="{Binding}"
+                                    Foreground="White"
+                                    HorizontalAlignment="Left"
+                                    VerticalAlignment="Center"
+                                    Margin="8,0,0,0"
+                                    Visibility="{Binding Source={x:Static uc:MenuStateVM.Instance}, Path=showMenuLabels, Converter={StaticResource BoolToVis}}" />
+                            </Grid>
+                        </DataTemplate>
+                    </telerik:RadTabItem.HeaderTemplate>
 
                     <uc:LivoxLidarPage
                         x:Name="ucLivoxLidarPage" />
@@ -622,13 +687,32 @@
                 <!--==============================================================-->
                 <telerik:RadTabItem
                     Name="tabInputSetup"
-                    Visibility="Collapsed">
+                    Visibility="Collapsed"
+                    Header="Setup">
 
-                    <telerik:RadTabItem.Header>
-                        <Image
-                            Width="36"
-                            Source="../Icons/input_edit_white_36dp.png" />
-                    </telerik:RadTabItem.Header>
+                    <telerik:RadTabItem.HeaderTemplate>
+                        <DataTemplate>
+                            <Grid>
+                                <Grid.ColumnDefinitions>
+                                    <ColumnDefinition Width="36" />
+                                    <ColumnDefinition Width="*" />
+                                </Grid.ColumnDefinitions>
+                                <Image
+                                    Grid.Column="0"
+                                    Width="36"
+                                    HorizontalAlignment="Right"
+                                    Source="../Icons/input_edit_white_36dp.png" />
+                                <TextBlock
+                                    Grid.Column="1"
+                                    Text="{Binding}"
+                                    Foreground="White"
+                                    HorizontalAlignment="Left"
+                                    VerticalAlignment="Center"
+                                    Margin="8,0,0,0"
+                                    Visibility="{Binding Source={x:Static uc:MenuStateVM.Instance}, Path=showMenuLabels, Converter={StaticResource BoolToVis}}" />
+                            </Grid>
+                        </DataTemplate>
+                    </telerik:RadTabItem.HeaderTemplate>
 
                     <DockPanel>
 
@@ -771,13 +855,32 @@
                 <!--==============================================================-->
                 <telerik:RadTabItem
                     Name="tabAdminSettings"
-                    Visibility="Collapsed">
+                    Visibility="Collapsed"
+                    Header="Admin">
 
-                    <telerik:RadTabItem.Header>
-                        <Image
-                            Width="36"
-                            Source="../Icons/outline_admin_panel_settings_white_36dp.png" />
-                    </telerik:RadTabItem.Header>
+                    <telerik:RadTabItem.HeaderTemplate>
+                        <DataTemplate>
+                            <Grid>
+                                <Grid.ColumnDefinitions>
+                                    <ColumnDefinition Width="36" />
+                                    <ColumnDefinition Width="*" />
+                                </Grid.ColumnDefinitions>
+                                <Image
+                                    Grid.Column="0"
+                                    Width="36"
+                                    HorizontalAlignment="Right"
+                                    Source="../Icons/outline_admin_panel_settings_white_36dp.png" />
+                                <TextBlock
+                                    Grid.Column="1"
+                                    Text="{Binding}"
+                                    Foreground="White"
+                                    HorizontalAlignment="Left"
+                                    VerticalAlignment="Center"
+                                    Margin="8,0,0,0"
+                                    Visibility="{Binding Source={x:Static uc:MenuStateVM.Instance}, Path=showMenuLabels, Converter={StaticResource BoolToVis}}" />
+                            </Grid>
+                        </DataTemplate>
+                    </telerik:RadTabItem.HeaderTemplate>
 
                     <uc:AdminSettings
                         x:Name="ucAdminSettings" />
@@ -789,13 +892,32 @@
                 <!--==============================================================-->
                 <telerik:RadTabItem
                     Name="tabErrorMessages"
-                    Visibility="Collapsed">
+                    Visibility="Collapsed"
+                    Header="Messages">
 
-                    <telerik:RadTabItem.Header>
-                        <Image
-                            Width="36"
-                            Source="../Icons/outline_announcement_white_36dp.png" />
-                    </telerik:RadTabItem.Header>
+                    <telerik:RadTabItem.HeaderTemplate>
+                        <DataTemplate>
+                            <Grid>
+                                <Grid.ColumnDefinitions>
+                                    <ColumnDefinition Width="36" />
+                                    <ColumnDefinition Width="*" />
+                                </Grid.ColumnDefinitions>
+                                <Image
+                                    Grid.Column="0"
+                                    Width="36"
+                                    HorizontalAlignment="Right"
+                                    Source="../Icons/outline_announcement_white_36dp.png" />
+                                <TextBlock
+                                    Grid.Column="1"
+                                    Text="{Binding}"
+                                    Foreground="White"
+                                    HorizontalAlignment="Left"
+                                    VerticalAlignment="Center"
+                                    Margin="8,0,0,0"
+                                    Visibility="{Binding Source={x:Static uc:MenuStateVM.Instance}, Path=showMenuLabels, Converter={StaticResource BoolToVis}}" />
+                            </Grid>
+                        </DataTemplate>
+                    </telerik:RadTabItem.HeaderTemplate>
 
                     <uc:ErrorMessagesPage
                         x:Name="ucErrorMessagesPage" />
@@ -810,8 +932,7 @@
             HorizontalAlignment="Left"
             VerticalAlignment="Bottom">
 
-            <!--Screen Capture button-->
-            <Button
+            <!--Screen Capture button-->            <Button
                 x:Name="btnScreenCapture"
                 HorizontalAlignment="Center"
                 Background="Transparent"
@@ -909,6 +1030,37 @@
                         Source="..\Icons\information-outline.png" />
 
                 </StackPanel>
+
+            </Button>
+
+            <!--Collapse/expand menu labels button-->
+            <Button
+                x:Name="btnToggleMenuLabels"
+                Margin="8"
+                HorizontalAlignment="Left"
+                VerticalAlignment="Bottom"
+                Background="Transparent"
+                BorderBrush="Transparent"
+                ToolTip="Show/hide menu labels"
+                Click="btnToggleMenuLabels_Click">
+
+                <Grid>
+                    <Grid.ColumnDefinitions>
+                        <ColumnDefinition Width="36" />
+                        <ColumnDefinition Width="*" />
+                    </Grid.ColumnDefinitions>
+                    <TextBlock
+                        Grid.Column="0"
+                        Grid.ColumnSpan="2"
+                        x:Name="tbToggleMenuLabelsGlyph"
+                        Text="&#xAB;"
+                        FontSize="22"
+                        FontWeight="Bold"
+                        Foreground="White"
+                        HorizontalAlignment="Center"
+                        TextAlignment="Center"
+                        VerticalAlignment="Center" />
+                </Grid>
 
             </Button>
 

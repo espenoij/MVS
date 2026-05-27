@@ -260,6 +260,10 @@ namespace MVS
             // Div UI init
             SetOperationsMode(OperationsMode.Stop);
 
+            // Restore menu labels visibility state
+            MenuStateVM.Instance.showMenuLabels = config.ReadWithDefault(ConfigKey.ShowMenuLabels, "1") == "1";
+            UpdateMenuLabelsToggleGlyph();
+
             // Oppdatering av UI elementer
             DispatcherTimer uiTimer = new DispatcherTimer();
             uiTimer.Interval = TimeSpan.FromMilliseconds(config.ReadWithDefault(ConfigKey.ServerUIUpdateFrequency, Constants.ServerUIUpdateFrequencyDefault));
@@ -707,6 +711,20 @@ namespace MVS
 
             ScreenCapture screenCapture = new ScreenCapture();
             screenCapture.Capture(screenCaptureFolder, screenCaptureFile);
+        }
+
+        private void btnToggleMenuLabels_Click(object sender, RoutedEventArgs e)
+        {
+            bool newValue = !MenuStateVM.Instance.showMenuLabels;
+            MenuStateVM.Instance.showMenuLabels = newValue;
+            config?.Write(ConfigKey.ShowMenuLabels, newValue ? "1" : "0");
+            UpdateMenuLabelsToggleGlyph();
+        }
+
+        private void UpdateMenuLabelsToggleGlyph()
+        {
+            // « when expanded (click to collapse), » when collapsed (click to expand)
+            tbToggleMenuLabelsGlyph.Text = MenuStateVM.Instance.showMenuLabels ? "\u00AB" : "\u00BB";
         }
     }
 }
