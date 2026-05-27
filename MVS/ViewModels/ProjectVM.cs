@@ -4,6 +4,7 @@ using System.ComponentModel;
 using System.Linq;
 using System.Runtime.CompilerServices;
 using System.Windows.Threading;
+using MVS.Models;
 using Telerik.Windows.Data;
 using static MVS.DialogImport;
 
@@ -466,6 +467,126 @@ namespace MVS
                 alignmentTime = projectsDataList.Last().timestamp;
             else
                 alignmentTime = DateTime.UtcNow;
+
+            // Beregne utvidet statistikk for verifikasjons-wizard.
+            ComputeExtendedStatistics();
+        }
+
+        // Per-axis extended statistics for reference, test and deviation series.
+        // These back the new wizard's "Review" step and the redesigned report.
+        private AxisStatistics _refPitchStats = AxisStatistics.Empty;
+        public AxisStatistics RefPitchStats { get { return _refPitchStats; } private set { _refPitchStats = value; OnPropertyChanged(); } }
+        private AxisStatistics _refRollStats = AxisStatistics.Empty;
+        public AxisStatistics RefRollStats { get { return _refRollStats; } private set { _refRollStats = value; OnPropertyChanged(); } }
+        private AxisStatistics _refHeaveStats = AxisStatistics.Empty;
+        public AxisStatistics RefHeaveStats { get { return _refHeaveStats; } private set { _refHeaveStats = value; OnPropertyChanged(); } }
+
+        private AxisStatistics _testPitchStats = AxisStatistics.Empty;
+        public AxisStatistics TestPitchStats { get { return _testPitchStats; } private set { _testPitchStats = value; OnPropertyChanged(); } }
+        private AxisStatistics _testRollStats = AxisStatistics.Empty;
+        public AxisStatistics TestRollStats { get { return _testRollStats; } private set { _testRollStats = value; OnPropertyChanged(); } }
+        private AxisStatistics _testHeaveStats = AxisStatistics.Empty;
+        public AxisStatistics TestHeaveStats { get { return _testHeaveStats; } private set { _testHeaveStats = value; OnPropertyChanged(); } }
+
+        private AxisStatistics _devPitchStats = AxisStatistics.Empty;
+        public AxisStatistics DevPitchStats { get { return _devPitchStats; } private set { _devPitchStats = value; OnPropertyChanged(); } }
+        private AxisStatistics _devRollStats = AxisStatistics.Empty;
+        public AxisStatistics DevRollStats { get { return _devRollStats; } private set { _devRollStats = value; OnPropertyChanged(); } }
+        private AxisStatistics _devHeaveStats = AxisStatistics.Empty;
+        public AxisStatistics DevHeaveStats { get { return _devHeaveStats; } private set { _devHeaveStats = value; OnPropertyChanged(); } }
+
+        // Recommended corrections (the deviation means that the wizard suggests
+        // applying to the Test MRU to "zero it out").
+        public double RecommendedCorrectionPitch
+        {
+            get { return double.IsNaN(_devPitchStats.Mean) ? 0d : _devPitchStats.Mean; }
+        }
+        public double RecommendedCorrectionRoll
+        {
+            get { return double.IsNaN(_devRollStats.Mean) ? 0d : _devRollStats.Mean; }
+        }
+        public double RecommendedCorrectionHeave
+        {
+            get { return double.IsNaN(_devHeaveStats.Mean) ? 0d : _devHeaveStats.Mean; }
+        }
+
+        public void ComputeExtendedStatistics()
+        {
+            var data = projectsDataList.ToList();
+
+            RefPitchStats = AxisStatistics.Compute(data.Select(d => d.refPitch));
+            RefRollStats = AxisStatistics.Compute(data.Select(d => d.refRoll));
+            RefHeaveStats = AxisStatistics.Compute(data.Select(d => d.refHeave));
+
+            TestPitchStats = AxisStatistics.Compute(data.Select(d => d.testPitch));
+            TestRollStats = AxisStatistics.Compute(data.Select(d => d.testRoll));
+            TestHeaveStats = AxisStatistics.Compute(data.Select(d => d.testHeave));
+
+            // Deviation = test - ref, sample-by-sample.
+            DevPitchStats = AxisStatistics.Compute(data.Select(d => d.testPitch - d.refPitch));
+            DevRollStats = AxisStatistics.Compute(data.Select(d => d.testRoll - d.refRoll));
+            DevHeaveStats = AxisStatistics.Compute(data.Select(d => d.testHeave - d.refHeave));
+
+            OnPropertyChanged(nameof(RecommendedCorrectionPitch));
+            OnPropertyChanged(nameof(RecommendedCorrectionRoll));
+            OnPropertyChanged(nameof(RecommendedCorrectionHeave));
+            OnPropertyChanged(nameof(HasSufficientData));
+            OnPropertyChanged(nameof(IsAnalysisAvailable));
+        }
+
+        // Whether the captured data spans enough time for meaningful verification.
+        // A 40+ minute capture is preferred; 20+ minutes is acceptable.
+        public bool HasSufficientData
+        {
+            get
+            {
+                var project = mainWindowVM?.SelectedProject;
+                if (project == null || !project.DataSetHasData())
+                    return false;
+                TimeSpan duration = project.EndTime - project.StartTime;
+                return duration.TotalMinutes >= 20;
+            }
+        }
+
+        public bool IsAnalysisAvailable
+        {
+            get { return projectsDataList.Count > 0; }
+        }
+
+        // Wizard navigation state. The new Projects page uses a RadWizard, but the
+        // current selection still drives which step is active.
+        private int _currentWizardStep;
+        public int CurrentWizardStep
+        {
+            get { return _currentWizardStep; }
+            set
+            {
+                _currentWizardStep = value;
+                OnPropertyChanged();
+            }
+        }
+
+        // Apply the recommended corrections (deviation means) to the supplied
+        // project, persisting them via the database wrapper.
+        public void ApplyRecommendedCorrection(MVSDatabase database, Project project)
+        {
+            if (database == null || project == null)
+                return;
+
+            database.SaveCorrection(
+                project,
+                RecommendedCorrectionPitch,
+                RecommendedCorrectionRoll,
+                RecommendedCorrectionHeave);
+        }
+
+        // Clear any applied correction for the project, both in memory and in the database.
+        public void ResetAppliedCorrection(MVSDatabase database, Project project)
+        {
+            if (database == null || project == null)
+                return;
+
+            database.ResetCorrection(project);
         }
 
         public void ClearDisplayData()

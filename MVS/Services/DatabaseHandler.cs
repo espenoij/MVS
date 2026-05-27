@@ -20,6 +20,10 @@ namespace MVS
         private const string columnMVSName = "name";
         private const string columnMVSComments = "comments";
         private const string columnMVSInputSetup = "input_setup";
+        private const string columnMVSCorrPitch = "corr_pitch";
+        private const string columnMVSCorrRoll = "corr_roll";
+        private const string columnMVSCorrHeave = "corr_heave";
+        private const string columnMVSCorrAppliedAt = "corr_applied_at";
 
         // MVS Data tabeller
         private const string tableNameMVSDataPrefix = "mvs_data_";
@@ -127,13 +131,23 @@ namespace MVS
                     connection.Open();
 
                     // Opprette nytt database table
-                    cmd.CommandText = string.Format(@"CREATE TABLE IF NOT EXISTS {0}(id INTEGER PRIMARY KEY AUTO_INCREMENT, {1} TEXT, {2} TEXT, {3} INTEGER)",
+                    cmd.CommandText = string.Format(@"CREATE TABLE IF NOT EXISTS {0}(id INTEGER PRIMARY KEY AUTO_INCREMENT, {1} TEXT, {2} TEXT, {3} INTEGER, {4} DOUBLE NULL, {5} DOUBLE NULL, {6} DOUBLE NULL, {7} DATETIME(3) NULL)",
                         tableNameMVSDataSets,
                         columnMVSName,
                         columnMVSComments,
-                        columnMVSInputSetup);
+                        columnMVSInputSetup,
+                        columnMVSCorrPitch,
+                        columnMVSCorrRoll,
+                        columnMVSCorrHeave,
+                        columnMVSCorrAppliedAt);
 
                     cmd.ExecuteNonQuery();
+
+                    // Migration: add correction columns if missing on legacy installations.
+                    EnsureColumnExists(cmd, tableNameMVSDataSets, columnMVSCorrPitch, "DOUBLE NULL");
+                    EnsureColumnExists(cmd, tableNameMVSDataSets, columnMVSCorrRoll, "DOUBLE NULL");
+                    EnsureColumnExists(cmd, tableNameMVSDataSets, columnMVSCorrHeave, "DOUBLE NULL");
+                    EnsureColumnExists(cmd, tableNameMVSDataSets, columnMVSCorrAppliedAt, "DATETIME(3) NULL");
 
                     connection.Close();
 
@@ -177,6 +191,22 @@ namespace MVS
 
                 // Sendes videre oppover fordi vi ikke kan lagre feilmeldinger herfra
                 throw;
+            }
+        }
+
+        // Helper for additive schema migrations on the session table.
+        private static void EnsureColumnExists(MySqlCommand cmd, string table, string column, string definition)
+        {
+            cmd.Parameters.Clear();
+            cmd.CommandText = "SELECT COUNT(*) FROM INFORMATION_SCHEMA.COLUMNS WHERE TABLE_SCHEMA = DATABASE() AND TABLE_NAME = @t AND COLUMN_NAME = @c";
+            cmd.Parameters.AddWithValue("@t", table);
+            cmd.Parameters.AddWithValue("@c", column);
+            int count = Convert.ToInt32(cmd.ExecuteScalar());
+            cmd.Parameters.Clear();
+            if (count == 0)
+            {
+                cmd.CommandText = string.Format("ALTER TABLE {0} ADD COLUMN {1} {2}", table, column, definition);
+                cmd.ExecuteNonQuery();
             }
         }
 
@@ -330,16 +360,24 @@ namespace MVS
                         cmd.Connection = connection;
 
                         // Insert kommando
-                        cmd.CommandText = string.Format("INSERT INTO {0}({1}, {2}, {3}) VALUES(@Name, @Comments, @InputSetup)",
+                        cmd.CommandText = string.Format("INSERT INTO {0}({1}, {2}, {3}, {4}, {5}, {6}, {7}) VALUES(@Name, @Comments, @InputSetup, @CorrPitch, @CorrRoll, @CorrHeave, @CorrAppliedAt)",
                             tableNameMVSDataSets,
                             columnMVSName,
                             columnMVSComments,
-                            columnMVSInputSetup);
+                            columnMVSInputSetup,
+                            columnMVSCorrPitch,
+                            columnMVSCorrRoll,
+                            columnMVSCorrHeave,
+                            columnMVSCorrAppliedAt);
 
                         // Insert parametre
                         cmd.Parameters.AddWithValue("@Name", dataSet.Name);
                         cmd.Parameters.AddWithValue("@Comments", dataSet.Comments);
                         cmd.Parameters.AddWithValue("@InputSetup", (int)dataSet.InputMRUs);
+                        cmd.Parameters.AddWithValue("@CorrPitch", dataSet.HasCorrectionApplied ? (object)dataSet.AppliedCorrectionPitch : DBNull.Value);
+                        cmd.Parameters.AddWithValue("@CorrRoll", dataSet.HasCorrectionApplied ? (object)dataSet.AppliedCorrectionRoll : DBNull.Value);
+                        cmd.Parameters.AddWithValue("@CorrHeave", dataSet.HasCorrectionApplied ? (object)dataSet.AppliedCorrectionHeave : DBNull.Value);
+                        cmd.Parameters.AddWithValue("@CorrAppliedAt", dataSet.CorrectionAppliedAt.HasValue ? (object)dataSet.CorrectionAppliedAt.Value : DBNull.Value);
 
                         // Åpne database connection
                         connection.Open();
@@ -376,17 +414,25 @@ namespace MVS
                         cmd.Connection = connection;
 
                         // Insert kommando
-                        cmd.CommandText = string.Format("UPDATE {0} SET {1}=@Name, {2}=@Comments, {3}=@InputSetup WHERE id={4}",
+                        cmd.CommandText = string.Format("UPDATE {0} SET {1}=@Name, {2}=@Comments, {3}=@InputSetup, {4}=@CorrPitch, {5}=@CorrRoll, {6}=@CorrHeave, {7}=@CorrAppliedAt WHERE id={8}",
                             tableNameMVSDataSets,
                             columnMVSName,
                             columnMVSComments,
                             columnMVSInputSetup,
+                            columnMVSCorrPitch,
+                            columnMVSCorrRoll,
+                            columnMVSCorrHeave,
+                            columnMVSCorrAppliedAt,
                             dataSet.Id);
 
                         // Update parametre
                         cmd.Parameters.AddWithValue("@Name", dataSet.Name);
                         cmd.Parameters.AddWithValue("@Comments", dataSet.Comments);
                         cmd.Parameters.AddWithValue("@InputSetup", (int)dataSet.InputMRUs);
+                        cmd.Parameters.AddWithValue("@CorrPitch", dataSet.HasCorrectionApplied ? (object)dataSet.AppliedCorrectionPitch : DBNull.Value);
+                        cmd.Parameters.AddWithValue("@CorrRoll", dataSet.HasCorrectionApplied ? (object)dataSet.AppliedCorrectionRoll : DBNull.Value);
+                        cmd.Parameters.AddWithValue("@CorrHeave", dataSet.HasCorrectionApplied ? (object)dataSet.AppliedCorrectionHeave : DBNull.Value);
+                        cmd.Parameters.AddWithValue("@CorrAppliedAt", dataSet.CorrectionAppliedAt.HasValue ? (object)dataSet.CorrectionAppliedAt.Value : DBNull.Value);
 
                         // Åpne database connection
                         connection.Open();
@@ -481,7 +527,14 @@ namespace MVS
                         // SQL kommando
                         var cmd = new MySqlCommand();
                         cmd.Connection = connection;
-                        cmd.CommandText = string.Format("SELECT * FROM {0} ORDER BY id",
+                        cmd.CommandText = string.Format("SELECT id, {0}, {1}, {2}, {3}, {4}, {5}, {6} FROM {7} ORDER BY id",
+                            columnMVSName,
+                            columnMVSComments,
+                            columnMVSInputSetup,
+                            columnMVSCorrPitch,
+                            columnMVSCorrRoll,
+                            columnMVSCorrHeave,
+                            columnMVSCorrAppliedAt,
                             tableNameMVSDataSets);
 
                         // Åpne database connection
@@ -493,11 +546,22 @@ namespace MVS
                         // Lese ut data
                         while (reader.Read())
                         {
-                            dataSets.Add(new Project(
+                            var project = new Project(
                                 reader.GetInt32(0),
                                 reader.GetString(1),
                                 reader.GetString(2),
-                                (InputMRUType)reader.GetInt32(3)));
+                                (InputMRUType)reader.GetInt32(3));
+
+                            if (!reader.IsDBNull(4))
+                                project.AppliedCorrectionPitch = reader.GetDouble(4);
+                            if (!reader.IsDBNull(5))
+                                project.AppliedCorrectionRoll = reader.GetDouble(5);
+                            if (!reader.IsDBNull(6))
+                                project.AppliedCorrectionHeave = reader.GetDouble(6);
+                            if (!reader.IsDBNull(7))
+                                project.CorrectionAppliedAt = reader.GetDateTime(7);
+
+                            dataSets.Add(project);
                         }
 
                         // Lukke database connection
@@ -903,6 +967,88 @@ namespace MVS
             }
 
             return errorMessages;
+        }
+
+        // Persist applied corrections for a project. Sets CorrectionAppliedAt to now (UTC).
+        public void SaveCorrection(Project dataSet, double pitch, double roll, double heave)
+        {
+            try
+            {
+                if (isDatabaseConnectionOK)
+                {
+                    DateTime appliedAt = DateTime.UtcNow;
+
+                    using (var connection = new MySqlConnection(connectionString))
+                    {
+                        var cmd = new MySqlCommand();
+                        cmd.Connection = connection;
+
+                        cmd.CommandText = string.Format("UPDATE {0} SET {1}=@CorrPitch, {2}=@CorrRoll, {3}=@CorrHeave, {4}=@CorrAppliedAt WHERE id=@Id",
+                            tableNameMVSDataSets,
+                            columnMVSCorrPitch,
+                            columnMVSCorrRoll,
+                            columnMVSCorrHeave,
+                            columnMVSCorrAppliedAt);
+
+                        cmd.Parameters.AddWithValue("@CorrPitch", pitch);
+                        cmd.Parameters.AddWithValue("@CorrRoll", roll);
+                        cmd.Parameters.AddWithValue("@CorrHeave", heave);
+                        cmd.Parameters.AddWithValue("@CorrAppliedAt", appliedAt);
+                        cmd.Parameters.AddWithValue("@Id", dataSet.Id);
+
+                        connection.Open();
+                        cmd.ExecuteNonQuery();
+                        connection.Close();
+                    }
+
+                    dataSet.AppliedCorrectionPitch = pitch;
+                    dataSet.AppliedCorrectionRoll = roll;
+                    dataSet.AppliedCorrectionHeave = heave;
+                    dataSet.CorrectionAppliedAt = appliedAt;
+                }
+            }
+            catch (Exception)
+            {
+                throw;
+            }
+        }
+
+        // Clear any stored correction for a project.
+        public void ResetCorrection(Project dataSet)
+        {
+            try
+            {
+                if (isDatabaseConnectionOK)
+                {
+                    using (var connection = new MySqlConnection(connectionString))
+                    {
+                        var cmd = new MySqlCommand();
+                        cmd.Connection = connection;
+
+                        cmd.CommandText = string.Format("UPDATE {0} SET {1}=NULL, {2}=NULL, {3}=NULL, {4}=NULL WHERE id=@Id",
+                            tableNameMVSDataSets,
+                            columnMVSCorrPitch,
+                            columnMVSCorrRoll,
+                            columnMVSCorrHeave,
+                            columnMVSCorrAppliedAt);
+
+                        cmd.Parameters.AddWithValue("@Id", dataSet.Id);
+
+                        connection.Open();
+                        cmd.ExecuteNonQuery();
+                        connection.Close();
+                    }
+
+                    dataSet.AppliedCorrectionPitch = 0;
+                    dataSet.AppliedCorrectionRoll = 0;
+                    dataSet.AppliedCorrectionHeave = 0;
+                    dataSet.CorrectionAppliedAt = null;
+                }
+            }
+            catch (Exception)
+            {
+                throw;
+            }
         }
 
         public void DeleteErrorMessageData()

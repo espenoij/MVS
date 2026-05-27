@@ -304,5 +304,47 @@ namespace MVS
 
             return result;
         }
+
+        public void SaveCorrection(Project project, double pitch, double roll, double heave)
+        {
+            try
+            {
+                database.SaveCorrection(project, pitch, roll, heave);
+
+                errorHandler.ResetDatabaseError(ErrorHandler.DatabaseErrorType.UpdateMVSDataSet);
+            }
+            catch (Exception ex)
+            {
+                errorHandler.Insert(
+                    new ErrorMessage(
+                        DateTime.UtcNow,
+                        ErrorMessageType.Database,
+                        ErrorMessageCategory.None,
+                        string.Format("Database Error (SaveCorrection)\n\nSystem Message:\n{0}", ex.Message)));
+
+                errorHandler.SetDatabaseError(ErrorHandler.DatabaseErrorType.UpdateMVSDataSet);
+            }
+        }
+
+        public void ResetCorrection(Project project)
+        {
+            try
+            {
+                database.ResetCorrection(project);
+
+                errorHandler.ResetDatabaseError(ErrorHandler.DatabaseErrorType.UpdateMVSDataSet);
+            }
+            catch (Exception ex)
+            {
+                errorHandler.Insert(
+                    new ErrorMessage(
+                        DateTime.UtcNow,
+                        ErrorMessageType.Database,
+                        ErrorMessageCategory.None,
+                        string.Format("Database Error (ResetCorrection)\n\nSystem Message:\n{0}", ex.Message)));
+
+                errorHandler.SetDatabaseError(ErrorHandler.DatabaseErrorType.UpdateMVSDataSet);
+            }
+        }
     }
 }

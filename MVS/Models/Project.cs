@@ -273,11 +273,111 @@ namespace MVS
             }
         }
 
-        // Variabel oppdatert
-        // Dersom navn ikke settes brukes kallende medlem sitt navn
+        // High-level lifecycle status for the verification workflow.
+        // Drives the wizard, status badges and project list column.
+        public ProjectDataStatus DataStatus
+        {
+            get
+            {
+                if (!DataSetHasData())
+                    return ProjectDataStatus.None;
+
+                if (HasCorrectionApplied)
+                    return ProjectDataStatus.Analysed;
+
+                return ProjectDataStatus.Captured;
+            }
+        }
+
+        // Applied corrections persisted per project. These are the deviation
+        // values that have been written back to the Test MRU to "zero it out".
+        private double _appliedCorrectionPitch;
+        public double AppliedCorrectionPitch
+        {
+            get { return _appliedCorrectionPitch; }
+            set
+            {
+                _appliedCorrectionPitch = value;
+                OnPropertyChanged();
+                OnPropertyChanged(nameof(HasCorrectionApplied));
+                OnPropertyChanged(nameof(DataStatus));
+            }
+        }
+
+        private double _appliedCorrectionRoll;
+        public double AppliedCorrectionRoll
+        {
+            get { return _appliedCorrectionRoll; }
+            set
+            {
+                _appliedCorrectionRoll = value;
+                OnPropertyChanged();
+                OnPropertyChanged(nameof(HasCorrectionApplied));
+                OnPropertyChanged(nameof(DataStatus));
+            }
+        }
+
+        private double _appliedCorrectionHeave;
+        public double AppliedCorrectionHeave
+        {
+            get { return _appliedCorrectionHeave; }
+            set
+            {
+                _appliedCorrectionHeave = value;
+                OnPropertyChanged();
+                OnPropertyChanged(nameof(HasCorrectionApplied));
+                OnPropertyChanged(nameof(DataStatus));
+            }
+        }
+
+        private DateTime? _correctionAppliedAt;
+        public DateTime? CorrectionAppliedAt
+        {
+            get { return _correctionAppliedAt; }
+            set
+            {
+                _correctionAppliedAt = value;
+                OnPropertyChanged();
+                OnPropertyChanged(nameof(CorrectionAppliedAtString));
+                OnPropertyChanged(nameof(HasCorrectionApplied));
+            }
+        }
+
+        public string CorrectionAppliedAtString
+        {
+            get
+            {
+                if (!_correctionAppliedAt.HasValue)
+                    return Constants.NotAvailable;
+                return _correctionAppliedAt.Value.ToString("yyyy-MM-dd HH:mm:ss") + " (UTC)";
+            }
+        }
+
+        public bool HasCorrectionApplied
+        {
+            get
+            {
+                return _correctionAppliedAt.HasValue ||
+                       _appliedCorrectionPitch != 0d ||
+                       _appliedCorrectionRoll != 0d ||
+                       _appliedCorrectionHeave != 0d;
+            }
+        }
+
+        // Property change notification. If no name is supplied the calling
+        // member name is used (CallerMemberName).
         protected virtual void OnPropertyChanged([CallerMemberName] string name = null)
         {
             PropertyChanged?.Invoke(this, new PropertyChangedEventArgs(name));
         }
+    }
+
+    // Lifecycle state of a project's verification data.
+    public enum ProjectDataStatus
+    {
+        None,       // No recording yet
+        Recording,  // Currently being recorded
+        Captured,   // Has data, not yet analysed/applied
+        Analysed    // Corrections have been applied
     }
 }
