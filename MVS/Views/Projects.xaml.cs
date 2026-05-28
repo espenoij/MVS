@@ -35,6 +35,9 @@ namespace MVS
         private readonly BackgroundWorker dataViewWorker = new BackgroundWorker();
 
         private MainWindow.UpdateUIButtonsCallback updateUIButtonsCallback;
+        private Action startRecordingCallback;
+        private Action stopRecordingCallback;
+        private Action testRunCallback;
 
         // Progress dialog
         DialogDataAnalysisProgress progressDlg = new DialogDataAnalysisProgress();
@@ -46,7 +49,7 @@ namespace MVS
             importVM = new ImportVM();
         }
 
-        public void Init(MainWindowVM mainWindowVM, ProjectVM projectVM, Config config, MVSDatabase mvsDatabase, UpdateUIButtonsCallback updateUIButtonsCallback)
+        public void Init(MainWindowVM mainWindowVM, ProjectVM projectVM, Config config, MVSDatabase mvsDatabase, UpdateUIButtonsCallback updateUIButtonsCallback, Action startRecordingCallback, Action stopRecordingCallback, Action testRunCallback)
         {
             // Database
             this.mvsDatabase = mvsDatabase;
@@ -60,6 +63,12 @@ namespace MVS
             this.projectVM = projectVM;
 
             this.updateUIButtonsCallback = updateUIButtonsCallback;
+            this.startRecordingCallback = startRecordingCallback;
+            this.stopRecordingCallback = stopRecordingCallback;
+            this.testRunCallback = testRunCallback;
+
+            // Wire the MainWindowVM bridge so recording-button bindings resolve.
+            mainWindowVMBridge.DataContext = mainWindowVM;
 
             InitUI();
         }
@@ -67,6 +76,9 @@ namespace MVS
         public void InitUI()
         {
             importVM.Init(config);
+
+            // Wire up the embedded Data Analysis charts (Step 3).
+            ucDataAnalysis.Init(projectVM);
 
             // Liste med sensor verdier
             gvProjects.ItemsSource = mvsProjectList;
@@ -251,6 +263,21 @@ namespace MVS
 
             // Laster items data på nytt ettersom de kan ha blitt endret under import over
             LoadSelectedItemsDetails();
+        }
+
+        private void btnStartRecording_Click(object sender, RoutedEventArgs e)
+        {
+            startRecordingCallback?.Invoke();
+        }
+
+        private void btnStopRecording_Click(object sender, RoutedEventArgs e)
+        {
+            stopRecordingCallback?.Invoke();
+        }
+
+        private void btnTestRun_Click(object sender, RoutedEventArgs e)
+        {
+            testRunCallback?.Invoke();
         }
 
         private void gvProjects_SelectionChanged(object sender, SelectionChangeEventArgs e)
@@ -457,9 +484,23 @@ namespace MVS
             var project = mainWindowVM?.SelectedProject;
             bool hasData = project != null && project.DataSetHasData();
 
-            // Allow forward navigation from step 1/2 always (so the user can preview
-            // the workflow), but require captured data before step 3 actually shows results.
-            btnNext.IsEnabled = currentStep < 4;
+            // Step 1 requires a selected project before the user can proceed.
+            // For all other steps allow forward navigation freely up to step 4.
+            if (currentStep == 1)
+                btnNext.IsEnabled = project != null;
+            else
+                btnNext.IsEnabled = currentStep < 4;
+
+            // Show the selected project name in the wizard header (steps 2-4).
+            if (project != null && currentStep > 1)
+            {
+                tbWizardProjectName.Text = project.Name;
+                tbWizardProjectName.Visibility = Visibility.Visible;
+            }
+            else
+            {
+                tbWizardProjectName.Visibility = Visibility.Collapsed;
+            }
 
             if (currentStep == 2)
             {

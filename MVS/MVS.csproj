@@ -9,6 +9,9 @@
     <GenerateAssemblyInfo>false</GenerateAssemblyInfo>
     <ApplicationIcon>mvs_windows_icon.ico</ApplicationIcon>
     <RollForward>LatestMajor</RollForward>
+    <!-- Declare this app as Windows-only so the platform-compat analyzer
+         (CA1416) stops warning about every WPF / Telerik call site. -->
+    <SupportedOSPlatformVersion>7.0</SupportedOSPlatformVersion>
   </PropertyGroup>
 
   <!--

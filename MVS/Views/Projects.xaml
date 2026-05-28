@@ -6,6 +6,7 @@
     xmlns:d="http://schemas.microsoft.com/expression/blend/2008"
     xmlns:telerik="http://schemas.telerik.com/2008/xaml/presentation"
     xmlns:controls="clr-namespace:MVS.Views.Controls"
+    xmlns:local="clr-namespace:MVS"
     mc:Ignorable="d"
     d:DesignHeight="1100"
     d:DesignWidth="1400">
@@ -33,91 +34,12 @@
     </UserControl.Resources>
 
     <Grid Margin="8">
-        <Grid.ColumnDefinitions>
-            <!-- Left: project list -->
-            <ColumnDefinition Width="500" />
-            <!-- Right: verification wizard -->
-            <ColumnDefinition Width="*" />
-        </Grid.ColumnDefinitions>
 
-        <!-- ===== LEFT: project list ===== -->
-        <Border Grid.Column="0"
-                BorderBrush="#D0D7DE" BorderThickness="1"
-                CornerRadius="4" Background="White"
-                Margin="0,0,8,0">
-            <Grid Margin="8">
-                <Grid.RowDefinitions>
-                    <RowDefinition Height="Auto"/>
-                    <RowDefinition Height="Auto"/>
-                    <RowDefinition Height="*"/>
-                </Grid.RowDefinitions>
+        <!-- Bridge element: DataContext is set to MainWindowVM in code-behind so Step 2 buttons can bind to it. -->
+        <FrameworkElement x:Name="mainWindowVMBridge" Visibility="Collapsed"/>
 
-                <TextBlock Grid.Row="0"
-                           Text="Projects"
-                           FontSize="16" FontWeight="Bold"
-                           Margin="2,2,0,8"/>
-
-                <StackPanel Grid.Row="1"
-                            Orientation="Horizontal"
-                            Margin="0,0,0,8">
-                    <telerik:RadButton Name="btnNew"
-                                       Click="btnNew_Click"
-                                       Content="New"
-                                       Width="110"/>
-                    <telerik:RadButton Name="btnDelete"
-                                       Click="btnDelete_Click"
-                                       Content="Delete"
-                                       Width="110"
-                                       Margin="8,0,0,0"/>
-                </StackPanel>
-
-                <telerik:RadGridView Grid.Row="2"
-                                     Name="gvProjects"
-                                     ItemsSource="{Binding Project}"
-                                     IsReadOnly="True"
-                                     IsManipulationEnabled="True"
-                                     CanUserSortColumns="True"
-                                     ShowGroupPanel="False"
-                                     CanUserReorderColumns="False"
-                                     CanUserDeleteRows="True"
-                                     RowIndicatorVisibility="Collapsed"
-                                     SelectionMode="Single"
-                                     AutoGenerateColumns="False"
-                                     SelectionChanged="gvProjects_SelectionChanged">
-                    <telerik:RadGridView.Columns>
-                        <telerik:GridViewDataColumn Width="40"
-                                                    Header="ID"
-                                                    DataMemberBinding="{Binding Id}" />
-                        <telerik:GridViewDataColumn Width="2*"
-                                                    Header="Name"
-                                                    DataMemberBinding="{Binding Name}" />
-                        <telerik:GridViewDataColumn Width="*"
-                                                    Header="Date"
-                                                    DataMemberBinding="{Binding DateString}" />
-                        <telerik:GridViewDataColumn Width="80" Header="Status">
-                            <telerik:GridViewDataColumn.CellTemplate>
-                                <DataTemplate>
-                                    <StackPanel Orientation="Horizontal"
-                                                HorizontalAlignment="Center">
-                                        <Ellipse Width="12" Height="12"
-                                                 Style="{StaticResource ProjectStatusColor}"
-                                                 VerticalAlignment="Center"/>
-                                        <TextBlock Text="{Binding DataStatus}"
-                                                   FontSize="10"
-                                                   VerticalAlignment="Center"
-                                                   Margin="6,0,0,0"/>
-                                    </StackPanel>
-                                </DataTemplate>
-                            </telerik:GridViewDataColumn.CellTemplate>
-                        </telerik:GridViewDataColumn>
-                    </telerik:RadGridView.Columns>
-                </telerik:RadGridView>
-            </Grid>
-        </Border>
-
-        <!-- ===== RIGHT: wizard ===== -->
-        <Border Grid.Column="1"
-                BorderBrush="#D0D7DE" BorderThickness="1"
+        <!-- ===== WIZARD (full width) ===== -->
+        <Border BorderBrush="#D0D7DE" BorderThickness="1"
                 CornerRadius="4" Background="White">
             <Grid Margin="12">
                 <Grid.RowDefinitions>
@@ -128,15 +50,24 @@
                 </Grid.RowDefinitions>
 
                 <!-- Header -->
-                <StackPanel Grid.Row="0" Orientation="Horizontal" Margin="0,0,0,8">
-                    <TextBlock Text="Motion Unit Verification"
-                               FontSize="18" FontWeight="Bold"/>
-                    <TextBlock Text=" — guided workflow"
+                <Grid Grid.Row="0" Margin="0,0,0,8">
+                    <StackPanel Orientation="Horizontal">
+                        <TextBlock Text="Motion Unit Verification"
+                                   FontSize="18" FontWeight="Bold"/>
+                        <TextBlock Text=" — guided workflow"
+                                   FontSize="14"
+                                   Foreground="#57606A"
+                                   VerticalAlignment="Center"
+                                   Margin="6,2,0,0"/>
+                    </StackPanel>
+                    <TextBlock x:Name="tbWizardProjectName"
                                FontSize="14"
-                               Foreground="#57606A"
+                               FontWeight="SemiBold"
+                               Foreground="#0969DA"
+                               HorizontalAlignment="Center"
                                VerticalAlignment="Center"
-                               Margin="6,2,0,0"/>
-                </StackPanel>
+                               Visibility="Collapsed"/>
+                </Grid>
 
                 <!-- Step indicator -->
                 <Border Grid.Row="1"
@@ -160,60 +91,138 @@
                 <Grid Grid.Row="2">
 
                     <!-- ===== STEP 1: SETUP ===== -->
-                    <ScrollViewer x:Name="panelStep1" VerticalScrollBarVisibility="Auto">
-                        <StackPanel>
+                    <Grid x:Name="panelStep1">
+                        <Grid.ColumnDefinitions>
+                            <ColumnDefinition Width="420"/>
+                            <ColumnDefinition Width="*"/>
+                        </Grid.ColumnDefinitions>
 
-                            <TextBlock Text="Step 1 — Project setup"
+                        <!-- Projects list (left half of Step 1) -->
+                        <Grid Grid.Column="0" Margin="0,0,8,0">
+                            <Grid.RowDefinitions>
+                                <RowDefinition Height="Auto"/>
+                                <RowDefinition Height="Auto"/>
+                                <RowDefinition Height="*"/>
+                            </Grid.RowDefinitions>
+
+                            <TextBlock Grid.Row="0"
+                                       Text="Projects"
                                        FontSize="14" FontWeight="SemiBold"
-                                       Margin="0,0,0,6"/>
-                            <TextBlock TextWrapping="Wrap"
-                                       Foreground="#57606A"
-                                       Margin="0,0,0,12"
-                                       Text="Create or select a project, then describe the verification and pick the MRU input setup. The Test MRU is verified against the Reference MRU."/>
+                                       Margin="0,0,0,8"/>
 
-                            <telerik:GroupBox Header="Project Details" Margin="0,0,0,8">
-                                <Grid Margin="8">
-                                    <Grid.ColumnDefinitions>
-                                        <ColumnDefinition Width="170"/>
-                                        <ColumnDefinition Width="*"/>
-                                    </Grid.ColumnDefinitions>
-                                    <Grid.RowDefinitions>
-                                        <RowDefinition Height="32"/>
-                                        <RowDefinition Height="32"/>
-                                        <RowDefinition Height="Auto"/>
-                                        <RowDefinition Height="32"/>
-                                    </Grid.RowDefinitions>
+                            <StackPanel Grid.Row="1"
+                                        Orientation="Horizontal"
+                                        Margin="0,0,0,8">
+                                <telerik:RadButton Name="btnNew"
+                                                   Click="btnNew_Click"
+                                                   Content="New"
+                                                   Width="110"/>
+                                <telerik:RadButton Name="btnDelete"
+                                                   Click="btnDelete_Click"
+                                                   Content="Delete"
+                                                   Width="110"
+                                                   Margin="8,0,0,0"/>
+                            </StackPanel>
 
-                                    <TextBlock Grid.Row="0" Grid.Column="0" Text="ID" VerticalAlignment="Center" Foreground="#57606A"/>
-                                    <Label Grid.Row="0" Grid.Column="1" Name="lbDataSetID" VerticalAlignment="Center"/>
+                            <telerik:RadGridView Grid.Row="2"
+                                                 Name="gvProjects"
+                                                 ItemsSource="{Binding Project}"
+                                                 IsReadOnly="True"
+                                                 IsManipulationEnabled="True"
+                                                 CanUserSortColumns="True"
+                                                 ShowGroupPanel="False"
+                                                 CanUserReorderColumns="False"
+                                                 CanUserDeleteRows="True"
+                                                 RowIndicatorVisibility="Collapsed"
+                                                 SelectionMode="Single"
+                                                 AutoGenerateColumns="False"
+                                                 SelectionChanged="gvProjects_SelectionChanged">
+                                <telerik:RadGridView.Columns>
+                                    <telerik:GridViewDataColumn Width="40"
+                                                                Header="ID"
+                                                                DataMemberBinding="{Binding Id}" />
+                                    <telerik:GridViewDataColumn Width="2*"
+                                                                Header="Name"
+                                                                DataMemberBinding="{Binding Name}" />
+                                    <telerik:GridViewDataColumn Width="*"
+                                                                Header="Date"
+                                                                DataMemberBinding="{Binding DateString}" />
+                                    <telerik:GridViewDataColumn Width="80" Header="Status">
+                                        <telerik:GridViewDataColumn.CellTemplate>
+                                            <DataTemplate>
+                                                <StackPanel Orientation="Horizontal"
+                                                            HorizontalAlignment="Center">
+                                                    <Ellipse Width="12" Height="12"
+                                                             Style="{StaticResource ProjectStatusColor}"
+                                                             VerticalAlignment="Center"/>
+                                                    <TextBlock Text="{Binding DataStatus}"
+                                                               FontSize="10"
+                                                               VerticalAlignment="Center"
+                                                               Margin="6,0,0,0"/>
+                                                </StackPanel>
+                                            </DataTemplate>
+                                        </telerik:GridViewDataColumn.CellTemplate>
+                                    </telerik:GridViewDataColumn>
+                                </telerik:RadGridView.Columns>
+                            </telerik:RadGridView>
+                        </Grid>
 
-                                    <TextBlock Grid.Row="1" Grid.Column="0" Text="Name" VerticalAlignment="Center" Foreground="#57606A"/>
-                                    <TextBox Grid.Row="1" Grid.Column="1"
-                                             Name="tbDataSetName"
-                                             VerticalContentAlignment="Center"
-                                             LostFocus="tbDataSetName_LostFocus"
-                                             KeyDown="tbDataSetName_KeyDown"/>
+                        <!-- Project details (right half of Step 1) -->
+                        <ScrollViewer Grid.Column="1" VerticalScrollBarVisibility="Auto">
+                            <StackPanel>
 
-                                    <TextBlock Grid.Row="2" Grid.Column="0" Text="Comments" Margin="0,8,0,0" Foreground="#57606A"/>
-                                    <TextBox Grid.Row="2" Grid.Column="1"
-                                             Name="tbDataSetComments"
-                                             AcceptsReturn="True"
-                                             TextWrapping="Wrap"
-                                             Height="60"
-                                             Margin="0,4,0,0"
-                                             LostFocus="tbDataSetDescription_LostFocus"
-                                             KeyDown="tbDataSetDescription_KeyDown"/>
+                                <TextBlock Text="Step 1 — Project setup"
+                                           FontSize="14" FontWeight="SemiBold"
+                                           Margin="0,0,0,6"/>
+                                <TextBlock TextWrapping="Wrap"
+                                           Foreground="#57606A"
+                                           Margin="0,0,0,12"
+                                           Text="Create or select a project, then describe the verification and pick the MRU input setup. The Test MRU is verified against the Reference MRU."/>
 
-                                    <TextBlock Grid.Row="3" Grid.Column="0" Text="Input MRUs" VerticalAlignment="Center" Foreground="#57606A"/>
-                                    <telerik:RadComboBox Grid.Row="3" Grid.Column="1"
-                                                         Name="cboInputMRUs"
-                                                         VerticalAlignment="Center"
-                                                         DropDownClosed="cboInputMRUs_DropDownClosed"/>
-                                </Grid>
-                            </telerik:GroupBox>
+                                <telerik:GroupBox Header="Project Details" Margin="0,0,0,8">
+                                    <Grid Margin="8">
+                                        <Grid.ColumnDefinitions>
+                                            <ColumnDefinition Width="170"/>
+                                            <ColumnDefinition Width="*"/>
+                                        </Grid.ColumnDefinitions>
+                                        <Grid.RowDefinitions>
+                                            <RowDefinition Height="32"/>
+                                            <RowDefinition Height="32"/>
+                                            <RowDefinition Height="Auto"/>
+                                            <RowDefinition Height="32"/>
+                                        </Grid.RowDefinitions>
 
-                        </StackPanel>
-                    </ScrollViewer>
+                                        <TextBlock Grid.Row="0" Grid.Column="0" Text="ID" VerticalAlignment="Center" Foreground="#57606A"/>
+                                        <Label Grid.Row="0" Grid.Column="1" Name="lbDataSetID" VerticalAlignment="Center"/>
+
+                                        <TextBlock Grid.Row="1" Grid.Column="0" Text="Name" VerticalAlignment="Center" Foreground="#57606A"/>
+                                        <TextBox Grid.Row="1" Grid.Column="1"
+                                                 Name="tbDataSetName"
+                                                 VerticalContentAlignment="Center"
+                                                 LostFocus="tbDataSetName_LostFocus"
+                                                 KeyDown="tbDataSetName_KeyDown"/>
+
+                                        <TextBlock Grid.Row="2" Grid.Column="0" Text="Comments" Margin="0,8,0,0" Foreground="#57606A"/>
+                                        <TextBox Grid.Row="2" Grid.Column="1"
+                                                 Name="tbDataSetComments"
+                                                 AcceptsReturn="True"
+                                                 TextWrapping="Wrap"
+                                                 Height="60"
+                                                 Margin="0,4,0,0"
+                                                 LostFocus="tbDataSetDescription_LostFocus"
+                                                 KeyDown="tbDataSetDescription_KeyDown"/>
+
+                                        <TextBlock Grid.Row="3" Grid.Column="0" Text="Input MRUs" VerticalAlignment="Center" Foreground="#57606A"/>
+                                        <telerik:RadComboBox Grid.Row="3" Grid.Column="1"
+                                                             Name="cboInputMRUs"
+                                                             VerticalAlignment="Center"
+                                                             DropDownClosed="cboInputMRUs_DropDownClosed"/>
+                                    </Grid>
+                                </telerik:GroupBox>
+
+                            </StackPanel>
+                        </ScrollViewer>
+                    </Grid>
 
                     <!-- ===== STEP 2: CAPTURE ===== -->
                     <ScrollViewer x:Name="panelStep2" VerticalScrollBarVisibility="Auto" Visibility="Collapsed">
@@ -260,6 +269,44 @@
                                                Margin="0,6,0,0"
                                                Visibility="Collapsed"/>
                                 </Grid>
+                            </telerik:GroupBox>
+
+                            <!-- Recording controls, bound to MainWindowVM via bridge element -->
+                            <telerik:GroupBox Header="Recording" Margin="0,0,0,8">
+                                <StackPanel Margin="8" Orientation="Vertical">
+
+                                    <StackPanel Orientation="Horizontal" Margin="0,0,0,8">
+                                        <telerik:RadButton x:Name="btnStartRecording"
+                                                           Click="btnStartRecording_Click"
+                                                           IsEnabled="{Binding DataContext.StartButtonEnabled, ElementName=mainWindowVMBridge}"
+                                                           Content="Start Recording"
+                                                           Width="160"
+                                                           Margin="0,0,10,0"/>
+                                        <telerik:RadButton x:Name="btnStopRecording"
+                                                           Click="btnStopRecording_Click"
+                                                           IsEnabled="{Binding DataContext.StopButtonEnabled, ElementName=mainWindowVMBridge}"
+                                                           Content="Stop"
+                                                           Width="120"
+                                                           Margin="0,0,10,0"/>
+                                        <telerik:RadButton x:Name="btnTestRun"
+                                                           Click="btnTestRun_Click"
+                                                           IsEnabled="{Binding DataContext.StartButtonEnabled, ElementName=mainWindowVMBridge}"
+                                                           Content="Test Run"
+                                                           Width="120"/>
+                                    </StackPanel>
+
+                                    <StackPanel Orientation="Horizontal" VerticalAlignment="Center">
+                                        <Ellipse Width="16" Height="16"
+                                                 Fill="{StaticResource ColorRed}"
+                                                 VerticalAlignment="Center"
+                                                 Visibility="{Binding DataContext.RecordingSymbolVisibility, ElementName=mainWindowVMBridge}"
+                                                 Margin="0,0,8,0"/>
+                                        <TextBlock Text="{Binding DataContext.OperationsModeString, ElementName=mainWindowVMBridge}"
+                                                   Foreground="#57606A"
+                                                   VerticalAlignment="Center"/>
+                                    </StackPanel>
+
+                                </StackPanel>
                             </telerik:GroupBox>
 
                             <StackPanel Orientation="Horizontal" Margin="0,4,0,0">
@@ -314,6 +361,19 @@
                                                              CopyRequested="cardHeave_CopyRequested"
                                                              ApplyRequested="cardHeave_ApplyRequested"
                                                              ResetRequested="cardHeave_ResetRequested"/>
+
+                            <!-- Detailed data-analysis charts -->
+                            <Expander x:Name="expDataAnalysis"
+                                      Header="Detailed charts"
+                                      IsExpanded="True"
+                                      Margin="0,12,0,0">
+                                <Border BorderBrush="#D0D7DE" BorderThickness="1"
+                                        CornerRadius="4" Background="White"
+                                        Margin="0,6,0,0">
+                                    <local:DataAnalysis x:Name="ucDataAnalysis"
+                                                        Height="1200"/>
+                                </Border>
+                            </Expander>
 
                         </StackPanel>
                     </ScrollViewer>

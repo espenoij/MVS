@@ -132,11 +132,8 @@ namespace MVS
             projectVM = new ProjectVM();
             projectVM.Init(mainWindowVM, mvsProcessing, mvsInputData, mvsOutputData);
 
-            // Recordings page
-            ucProjects.Init(mainWindowVM, projectVM, config, mvsDatabase, updateUIButtonsCallback);
-
-            // Recordings Data page
-            ucDataAnalysis.Init(projectVM);
+            // Recordings page (also hosts the embedded Data Analysis view in wizard step 3)
+            ucProjects.Init(mainWindowVM, projectVM, config, mvsDatabase, updateUIButtonsCallback, StartRecording, Stop, StartTest);
 
             // Sensor Input Setup
             ucSensorSetupPage.Init(config, errorHandler, adminSettingsVM);
@@ -542,8 +539,7 @@ namespace MVS
 
                 projectVM.StartRecording();
 
-                // Gå til Analyse tab
-                tabDataAnalysis.IsSelected = true;
+                // Data Analysis is now embedded in the Projects wizard (Step 3 — Review).
             }
         }
 
@@ -697,10 +693,6 @@ namespace MVS
             aboutDlg.Owner = App.Current.MainWindow;
             aboutDlg.Init(aboutVM);
             aboutDlg.ShowDialog();
-        }
-
-        private void tcProjects_SelectionChanged(object sender, RadSelectionChangedEventArgs e)
-        {
         }
 
         private void btnScreenCapture_Click(object sender, RoutedEventArgs e)
