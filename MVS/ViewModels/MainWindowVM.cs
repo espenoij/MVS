@@ -14,40 +14,23 @@ namespace MVS
 
         // Reader timer
         private DispatcherTimer timer;
-        private DispatcherTimer timerBlink;
 
         public MainWindowVM()
         {
-            RecordingSymbolVisibility = Visibility.Collapsed;
+            IsRecording = false;
             DataViewTabEnabled = false;
 
             // Starttime Init
             StartTime = System.Data.SqlTypes.SqlDateTime.MinValue.Value;
 
-            // Timer
+            // Timer — fires 4×/s to keep elapsed-time labels fresh.
             timer = new DispatcherTimer();
-
-            // Timer parametre
             timer.Interval = TimeSpan.FromMilliseconds(250);
-            timer.Tick += runTimer;
-
-            void runTimer(Object source, EventArgs e)
+            timer.Tick += (s, e) =>
             {
-                OnPropertyChanged(nameof(OperationsModeString));
                 OnPropertyChanged(nameof(projectRecordingStatus));
-            }
-
-            // Timer 2
-            timerBlink = new DispatcherTimer();
-
-            // Timer 2 parametre
-            timerBlink.Interval = TimeSpan.FromMilliseconds(100);
-            timerBlink.Tick += runTimerBlink;
-
-            void runTimerBlink(Object source, EventArgs e)
-            {
-                OnPropertyChanged(nameof(RecordingSymbolVisibility));
-            }
+                OnPropertyChanged(nameof(OperationsModeString));
+            };
         }
 
         /////////////////////////////////////////////////////////////////////////////
@@ -55,25 +38,16 @@ namespace MVS
         /////////////////////////////////////////////////////////////////////////////
         public void StartTimer()
         {
-            // Sette start tid
-            // Start tid sette 40 minutter frem i tid slik at vi har
-            // 20 min snitt før vi begynner målinger og 20 min med måling
-            StartTime = DateTime.UtcNow.AddMinutes(40);
-
-            // Starte timer
+            StartTime = DateTime.UtcNow;
+            IsRecording = true;
             timer.Start();
-            timerBlink.Start();
         }
 
         public void StopTimer()
         {
-            // Sette start tid
             StartTime = System.Data.SqlTypes.SqlDateTime.MinValue.Value;
-
-            // Starte timer
+            IsRecording = false;
             timer.Stop();
-            timerBlink.Stop();
-
             OnPropertyChanged(nameof(projectRecordingStatus));
         }
 
@@ -126,22 +100,15 @@ namespace MVS
                 {
                     return ProjectStatusType.OFF;
                 }
-                else 
-                {
-                    if (_startTime < DateTime.UtcNow)
-                    {
-                        return ProjectStatusType.GREEN;
-                    }
-                    else
-                    if (_startTime.AddMinutes(-20) < DateTime.UtcNow)
-                    {
-                        return ProjectStatusType.AMBER;
-                    }
-                    else
-                    {
-                        return ProjectStatusType.RED;
-                    }
-                }
+
+                double elapsed = (DateTime.UtcNow - _startTime).TotalMinutes;
+
+                if (elapsed >= 40.0)
+                    return ProjectStatusType.GREEN;
+                else if (elapsed >= 20.0)
+                    return ProjectStatusType.AMBER;
+                else
+                    return ProjectStatusType.RED;
             }
         }
 
@@ -192,11 +159,9 @@ namespace MVS
 
                         if (_startTime != System.Data.SqlTypes.SqlDateTime.MinValue.Value)
                         {
-                            string sign = string.Empty;
-                            if ((DateTime.UtcNow - _startTime).TotalSeconds < 0)
-                                sign = "-";
-
-                            return string.Format("{0}{1} {2}", sign, (DateTime.UtcNow - _startTime).ToString(@"hh\:mm\:ss"), modeText);
+                            TimeSpan elapsed = DateTime.UtcNow - _startTime;
+                            if (elapsed.TotalSeconds < 0) elapsed = TimeSpan.Zero;
+                            return string.Format("{0} {1}", elapsed.ToString(@"hh\:mm\:ss"), modeText).TrimEnd();
                         }
                         else
                         {
@@ -245,28 +210,15 @@ namespace MVS
         }
 
         /////////////////////////////////////////////////////////////////////////////
-        // Recording Symbol
+        // Recording state (drives the animated indicator in the UI)
         /////////////////////////////////////////////////////////////////////////////
-        private Visibility _recordingSymbolVisibility { get; set; }
-        public Visibility RecordingSymbolVisibility
+        private bool _isRecording;
+        public bool IsRecording
         {
-            get
-            {
-                if (_recordingSymbolVisibility == Visibility.Visible)
-                {
-                    if (DateTime.Now.Millisecond < 500)
-                        return Visibility.Visible;
-                    else
-                        return Visibility.Collapsed;
-                }
-                else
-                {
-                    return Visibility.Collapsed;
-                }
-            }   
+            get => _isRecording;
             set
             {
-                _recordingSymbolVisibility = value;
+                _isRecording = value;
                 OnPropertyChanged();
             }
         }

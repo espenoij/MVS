@@ -33,21 +33,16 @@
 
     </UserControl.Resources>
 
-    <Grid Margin="8">
-
-        <!-- Bridge element: DataContext is set to MainWindowVM in code-behind so Step 2 buttons can bind to it. -->
-        <FrameworkElement x:Name="mainWindowVMBridge" Visibility="Collapsed"/>
-
-        <!-- ===== WIZARD (full width) ===== -->
-        <Border BorderBrush="#D0D7DE" BorderThickness="1"
-                CornerRadius="4" Background="White">
-            <Grid Margin="12">
+    <Grid Margin="12">
                 <Grid.RowDefinitions>
                     <RowDefinition Height="Auto"/>
                     <RowDefinition Height="Auto"/>
                     <RowDefinition Height="*"/>
                     <RowDefinition Height="Auto"/>
                 </Grid.RowDefinitions>
+
+        <!-- Bridge element: DataContext is set to MainWindowVM in code-behind so Step 2 buttons can bind to it. -->
+        <FrameworkElement x:Name="mainWindowVMBridge" Visibility="Collapsed"/>
 
                 <!-- Header -->
                 <Grid Grid.Row="0" Margin="0,0,0,8">
@@ -79,16 +74,38 @@
                     <StackPanel Orientation="Horizontal">
                         <TextBlock x:Name="tbStep1" Text="1. Setup" FontWeight="Bold" Foreground="#0969DA"/>
                         <TextBlock Text="  ›  " Foreground="#57606A"/>
-                        <TextBlock x:Name="tbStep2" Text="2. Capture" Foreground="#57606A"/>
+                        <TextBlock x:Name="tbStep2" Text="2. LiDAR" Foreground="#57606A"/>
                         <TextBlock Text="  ›  " Foreground="#57606A"/>
-                        <TextBlock x:Name="tbStep3" Text="3. Review" Foreground="#57606A"/>
+                        <TextBlock x:Name="tbStep3" Text="3. Capture" Foreground="#57606A"/>
                         <TextBlock Text="  ›  " Foreground="#57606A"/>
-                        <TextBlock x:Name="tbStep4" Text="4. Apply &amp; Report" Foreground="#57606A"/>
+                        <TextBlock x:Name="tbStep4" Text="4. Review" Foreground="#57606A"/>
+                        <TextBlock Text="  ›  " Foreground="#57606A"/>
+                        <TextBlock x:Name="tbStep5" Text="5. Report" Foreground="#57606A"/>
                     </StackPanel>
                 </Border>
 
-                <!-- Body: the four step panels stacked, only one visible at a time -->
+                <!-- Body: requirements banner + the four step panels stacked, only one visible at a time -->
                 <Grid Grid.Row="2">
+                    <Grid.RowDefinitions>
+                        <RowDefinition Height="Auto"/>
+                        <RowDefinition Height="*"/>
+                    </Grid.RowDefinitions>
+
+                    <!-- Requirements banner: tells the user what is needed before they can proceed -->
+                    <Border Grid.Row="0"
+                            x:Name="requirementsBanner"
+                            BorderThickness="1"
+                            CornerRadius="4"
+                            Padding="10,6"
+                            Margin="0,0,0,8"
+                            Visibility="Collapsed">
+                        <TextBlock x:Name="tbRequirements"
+                                   TextWrapping="Wrap"
+                                   FontSize="12"/>
+                    </Border>
+
+                    <!-- Step panels -->
+                    <Grid Grid.Row="1">
 
                     <!-- ===== STEP 1: SETUP ===== -->
                     <Grid x:Name="panelStep1">
@@ -224,11 +241,31 @@
                         </ScrollViewer>
                     </Grid>
 
-                    <!-- ===== STEP 2: CAPTURE ===== -->
-                    <ScrollViewer x:Name="panelStep2" VerticalScrollBarVisibility="Auto" Visibility="Collapsed">
+                    <!-- ===== STEP 2: LIDAR CORRECTION ===== -->
+                    <Grid x:Name="panelStep2" Visibility="Collapsed">
+                        <Grid.RowDefinitions>
+                            <RowDefinition Height="Auto"/>
+                            <RowDefinition Height="*"/>
+                        </Grid.RowDefinitions>
+
+                        <StackPanel Grid.Row="0" Margin="0,0,0,6">
+                            <TextBlock Text="Step 2 — LiDAR correction for Reference MRU"
+                                       FontSize="14" FontWeight="SemiBold"
+                                       Margin="0,0,0,6"/>
+                            <TextBlock TextWrapping="Wrap"
+                                       Foreground="#57606A"
+                                       Margin="0,0,0,8"
+                                       Text="Use the LiDAR scan to derive pitch/roll/heading offsets for the Reference MRU. Apply the correction before capturing motion data."/>
+                        </StackPanel>
+
+                        <local:LivoxLidarPage Grid.Row="1" x:Name="ucWizardLivoxLidarPage"/>
+                    </Grid>
+
+                    <!-- ===== STEP 3: CAPTURE ===== -->
+                    <ScrollViewer x:Name="panelStep3" VerticalScrollBarVisibility="Auto" Visibility="Collapsed">
                         <StackPanel>
 
-                            <TextBlock Text="Step 2 — Capture motion data"
+                            <TextBlock Text="Step 3 — Capture motion data"
                                        FontSize="14" FontWeight="SemiBold"
                                        Margin="0,0,0,6"/>
                             <TextBlock TextWrapping="Wrap"
@@ -275,7 +312,7 @@
                             <telerik:GroupBox Header="Recording" Margin="0,0,0,8">
                                 <StackPanel Margin="8" Orientation="Vertical">
 
-                                    <StackPanel Orientation="Horizontal" Margin="0,0,0,8">
+                                    <StackPanel Orientation="Horizontal">
                                         <telerik:RadButton x:Name="btnStartRecording"
                                                            Click="btnStartRecording_Click"
                                                            IsEnabled="{Binding DataContext.StartButtonEnabled, ElementName=mainWindowVMBridge}"
@@ -293,17 +330,6 @@
                                                            IsEnabled="{Binding DataContext.StartButtonEnabled, ElementName=mainWindowVMBridge}"
                                                            Content="Test Run"
                                                            Width="120"/>
-                                    </StackPanel>
-
-                                    <StackPanel Orientation="Horizontal" VerticalAlignment="Center">
-                                        <Ellipse Width="16" Height="16"
-                                                 Fill="{StaticResource ColorRed}"
-                                                 VerticalAlignment="Center"
-                                                 Visibility="{Binding DataContext.RecordingSymbolVisibility, ElementName=mainWindowVMBridge}"
-                                                 Margin="0,0,8,0"/>
-                                        <TextBlock Text="{Binding DataContext.OperationsModeString, ElementName=mainWindowVMBridge}"
-                                                   Foreground="#57606A"
-                                                   VerticalAlignment="Center"/>
                                     </StackPanel>
 
                                 </StackPanel>
@@ -324,11 +350,11 @@
                         </StackPanel>
                     </ScrollViewer>
 
-                    <!-- ===== STEP 3: REVIEW ===== -->
-                    <ScrollViewer x:Name="panelStep3" VerticalScrollBarVisibility="Auto" Visibility="Collapsed">
+                    <!-- ===== STEP 4: REVIEW ===== -->
+                    <ScrollViewer x:Name="panelStep4" VerticalScrollBarVisibility="Auto" Visibility="Collapsed">
                         <StackPanel>
 
-                            <TextBlock Text="Step 3 — Review per-axis results"
+                            <TextBlock Text="Step 4 — Review per-axis results"
                                        FontSize="14" FontWeight="SemiBold"
                                        Margin="0,0,0,6"/>
                             <TextBlock TextWrapping="Wrap"
@@ -378,17 +404,17 @@
                         </StackPanel>
                     </ScrollViewer>
 
-                    <!-- ===== STEP 4: APPLY & REPORT ===== -->
-                    <ScrollViewer x:Name="panelStep4" VerticalScrollBarVisibility="Auto" Visibility="Collapsed">
+                    <!-- ===== STEP 5: APPLY & REPORT ===== -->
+                    <ScrollViewer x:Name="panelStep5" VerticalScrollBarVisibility="Auto" Visibility="Collapsed">
                         <StackPanel>
 
-                            <TextBlock Text="Step 4 — Apply and report"
+                            <TextBlock Text="Step 5 — Apply and report"
                                        FontSize="14" FontWeight="SemiBold"
                                        Margin="0,0,0,6"/>
                             <TextBlock TextWrapping="Wrap"
                                        Foreground="#57606A"
                                        Margin="0,0,0,12"
-                                       Text="Apply all recommended corrections at once, reset existing corrections, or export a verification report (CSV)."/>
+                                       Text="Export a verification report (CSV)."/>
 
                             <telerik:GroupBox Header="Applied Corrections" Margin="0,0,0,8">
                                 <Grid Margin="8">
@@ -414,24 +440,15 @@
                             </telerik:GroupBox>
 
                             <StackPanel Orientation="Horizontal" Margin="0,4,0,0">
-                                <telerik:RadButton x:Name="btnApplyAll"
-                                                   Click="btnApplyAll_Click"
-                                                   Content="Apply all recommended"
-                                                   Width="190"/>
-                                <telerik:RadButton x:Name="btnResetAll"
-                                                   Click="btnResetAll_Click"
-                                                   Content="Reset corrections"
-                                                   Width="160"
-                                                   Margin="8,0,0,0"/>
                                 <telerik:RadButton x:Name="btnExportReport"
                                                    Click="btnExportReport_Click"
                                                    Content="Export report (CSV)..."
-                                                   Width="190"
-                                                   Margin="8,0,0,0"/>
+                                                   Width="190"/>
                             </StackPanel>
 
                         </StackPanel>
                     </ScrollViewer>
+                    </Grid>
                 </Grid>
 
                 <!-- Wizard navigation footer -->
@@ -464,7 +481,5 @@
                                            Margin="8,0,0,0"/>
                     </Grid>
                 </Border>
-            </Grid>
-        </Border>
     </Grid>
 </UserControl>

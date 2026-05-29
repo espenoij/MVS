@@ -138,9 +138,9 @@ namespace MVS
             // Sensor Input Setup
             ucSensorSetupPage.Init(config, errorHandler, adminSettingsVM);
 
-            // Livox LiDAR calibration page
+            // Livox LiDAR calibration page (embedded in Projects wizard step 2)
             var livoxVM = new LivoxLidarVM(livoxSubsystem, livoxCorrection, errorHandler, config);
-            ucLivoxLidarPage.Init(livoxVM);
+            ucProjects.InitLidar(livoxVM);
 
             // Error Message
             ucErrorMessagesPage.Init(config, errorHandler);
@@ -534,9 +534,6 @@ namespace MVS
                 // Start elapsed time
                 mainWindowVM.StartTimer();
 
-                // Vise recording symbol
-                mainWindowVM.RecordingSymbolVisibility = Visibility.Visible;
-
                 projectVM.StartRecording();
 
                 // Data Analysis is now embedded in the Projects wizard (Step 3 — Review).
@@ -600,9 +597,6 @@ namespace MVS
 
             // Stoppe elapsed time
             mainWindowVM.StopTimer();
-
-            // Skjule recording symbol
-            mainWindowVM.RecordingSymbolVisibility = Visibility.Collapsed;
 
             projectVM.StopRecording();
         }

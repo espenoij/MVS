@@ -102,6 +102,60 @@
 
             </DockPanel>
 
+            <!--Recording Status Bar: app-level, always visible while recording-->
+            <Border DockPanel.Dock="Top"
+                    Background="#2B1416"
+                    BorderBrush="#E03131"
+                    BorderThickness="0,0,0,2"
+                    Padding="12,5">
+                <Border.Style>
+                    <Style TargetType="Border">
+                        <Setter Property="Visibility" Value="Collapsed"/>
+                        <Style.Triggers>
+                            <DataTrigger Binding="{Binding IsRecording}" Value="True">
+                                <Setter Property="Visibility" Value="Visible"/>
+                            </DataTrigger>
+                        </Style.Triggers>
+                    </Style>
+                </Border.Style>
+
+                <StackPanel Orientation="Horizontal" HorizontalAlignment="Center">
+
+                    <!-- Pulsing indicator -->
+                    <Ellipse Width="12" Height="12" Fill="#E03131" VerticalAlignment="Center">
+                        <Ellipse.Style>
+                            <Style TargetType="Ellipse">
+                                <Style.Triggers>
+                                    <DataTrigger Binding="{Binding IsRecording}" Value="True">
+                                        <DataTrigger.EnterActions>
+                                            <BeginStoryboard>
+                                                <Storyboard RepeatBehavior="Forever" AutoReverse="True">
+                                                    <DoubleAnimation Storyboard.TargetProperty="Opacity" From="1.0" To="0.15" Duration="0:0:1"/>
+                                                </Storyboard>
+                                            </BeginStoryboard>
+                                        </DataTrigger.EnterActions>
+                                    </DataTrigger>
+                                </Style.Triggers>
+                            </Style>
+                        </Ellipse.Style>
+                    </Ellipse>
+
+                    <TextBlock Text="Recording"
+                               Foreground="White"
+                               FontWeight="SemiBold"
+                               VerticalAlignment="Center"
+                               Margin="8,0,0,0"/>
+
+                    <!-- Elapsed time / operations mode -->
+                    <TextBlock Text="{Binding OperationsModeString}"
+                               Foreground="#FFC9C9"
+                               FontWeight="SemiBold"
+                               VerticalAlignment="Center"
+                               Margin="10,0,0,0"/>
+
+                </StackPanel>
+            </Border>
+
             <telerik:RadTabControl
                 DockPanel.Dock="Top"
                 Name="tcMainMenu"
@@ -148,13 +202,8 @@
                         </DataTemplate>
                     </telerik:RadTabItem.HeaderTemplate>
 
-                    <DockPanel>
-
-                        <uc:Projects
-                            x:Name="ucProjects"
-                            Margin="8,8,8,8"/>
-
-                    </DockPanel>
+                    <uc:Projects
+                        x:Name="ucProjects" />
 
                 </telerik:RadTabItem>
 
@@ -229,35 +278,6 @@
                                     IsEnabled="{Binding StopButtonEnabled}"
                                     Width="140"
                                     VerticalAlignment="Top">Stop</telerik:RadButton>
-
-                                <Grid
-                                    Width="300">
-
-                                    <Grid.ColumnDefinitions>
-                                        <ColumnDefinition
-                                            Width="*" />
-                                        <ColumnDefinition
-                                            Width="3*" />
-                                    </Grid.ColumnDefinitions>
-
-                                    <!--Recording Time-->
-                                    <Ellipse
-                                        Grid.Column="0"
-                                        VerticalAlignment="Center"
-                                        HorizontalAlignment="Center"
-                                        Visibility="{Binding RecordingSymbolVisibility}"
-                                        Width="20"
-                                        Height="20"
-                                        Fill="{StaticResource ColorRed}" />
-
-                                    <!--Operations Mode Info String-->
-                                    <Label
-                                        Grid.Column="1"
-                                        VerticalAlignment="Center"
-                                        FontSize="{StaticResource fontSizeTimer}"
-                                        Content="{Binding OperationsModeString}" />
-
-                                </Grid>
 
                             </StackPanel>
 
@@ -516,8 +536,9 @@
                 </telerik:RadTabItem>
 
                 <!--==============================================================-->
-                <!--Side Menu: LiDAR Helideck Calibration-->
+                <!--Side Menu: LiDAR Helideck Calibration (moved into Projects wizard step 2)-->
                 <!--==============================================================-->
+                <!--
                 <telerik:RadTabItem
                     Name="tabLivoxLidar"
                     Header="LiDAR">
@@ -550,6 +571,7 @@
                         x:Name="ucLivoxLidarPage" />
 
                 </telerik:RadTabItem>
+                -->
 
                 <!--==============================================================-->
                 <!--Side Menu: Input Setup-->
@@ -622,35 +644,6 @@
                                     IsEnabled="{Binding StopButtonEnabled}"
                                     Width="140"
                                     VerticalAlignment="Top">Stop</telerik:RadButton>
-
-                                <Grid
-                                    Width="300">
-
-                                    <Grid.ColumnDefinitions>
-                                        <ColumnDefinition
-                                            Width="*" />
-                                        <ColumnDefinition
-                                            Width="3*" />
-                                    </Grid.ColumnDefinitions>
-
-                                    <!--Recording Time-->
-                                    <Ellipse
-                                        Grid.Column="0"
-                                        VerticalAlignment="Center"
-                                        HorizontalAlignment="Center"
-                                        Visibility="{Binding RecordingSymbolVisibility}"
-                                        Width="20"
-                                        Height="20"
-                                        Fill="{StaticResource ColorRed}" />
-
-                                    <!--Operations Mode Info String-->
-                                    <Label
-                                        Grid.Column="1"
-                                        VerticalAlignment="Center"
-                                        FontSize="{StaticResource fontSizeTimer}"
-                                        Content="{Binding OperationsModeString}" />
-
-                                </Grid>
 
                             </StackPanel>
 

@@ -6,6 +6,7 @@ using System.Text;
 using System.Windows;
 using System.Windows.Controls;
 using System.Windows.Input;
+using System.Windows.Threading;
 using Microsoft.Win32;
 using MVS.Models;
 using MVS.Views.Controls;
@@ -31,6 +32,12 @@ namespace MVS
         private ImportVM importVM;
         private ProjectVM projectVM;
 
+        // LiDAR wizard view model (Step 2). Used to gate wizard navigation on correction state.
+        private LivoxLidarVM _livoxVM;
+
+        // Currently subscribed project (for live wizard re-evaluation on Name/InputMRUs changes).
+        private Project _subscribedProject;
+
         // Data View worker
         private readonly BackgroundWorker dataViewWorker = new BackgroundWorker();
 
@@ -42,11 +49,18 @@ namespace MVS
         // Progress dialog
         DialogDataAnalysisProgress progressDlg = new DialogDataAnalysisProgress();
 
+        // Live-update timer for the duration banner while recording is active.
+        private readonly DispatcherTimer _recordingBannerTimer;
+        private DateTime _recordingStartTime;
+
         public Projects()
         {
             InitializeComponent();
 
             importVM = new ImportVM();
+
+            _recordingBannerTimer = new DispatcherTimer { Interval = TimeSpan.FromSeconds(1) };
+            _recordingBannerTimer.Tick += (s, e) => durationBanner.UpdateLive(_recordingStartTime);
         }
 
         public void Init(MainWindowVM mainWindowVM, ProjectVM projectVM, Config config, MVSDatabase mvsDatabase, UpdateUIButtonsCallback updateUIButtonsCallback, Action startRecordingCallback, Action stopRecordingCallback, Action testRunCallback)
@@ -111,6 +125,24 @@ namespace MVS
 
             // Set initial wizard step.
             SetWizardStep(1);
+            UpdateWizardNavigation();
+        }
+
+        /// <summary>
+        /// Wires the embedded Livox LiDAR wizard page (wizard step 2) to its view model.
+        /// Called from MainWindow after the LivoxLidarVM has been constructed.
+        /// </summary>
+        public void InitLidar(LivoxLidarVM livoxVM)
+        {
+            _livoxVM = livoxVM;
+
+            // Re-evaluate wizard navigation whenever the LiDAR correction state changes
+            // (e.g. when the user applies or clears the correction in Step 2).
+            if (livoxVM?.Correction != null)
+                livoxVM.Correction.PropertyChanged += (s, e) => Dispatcher.Invoke(UpdateWizardNavigation);
+
+            ucWizardLivoxLidarPage.Init(livoxVM);
+
             UpdateWizardNavigation();
         }
 
@@ -191,10 +223,18 @@ namespace MVS
         public void Start()
         {
             UpdateUIStates(true);
+
+            // Start live banner updates.
+            _recordingStartTime = DateTime.UtcNow;
+            durationBanner.UpdateLive(_recordingStartTime);
+            _recordingBannerTimer.Start();
         }
 
         public void Stop(OperationsMode mode)
         {
+            // Stop live banner updates.
+            _recordingBannerTimer.Stop();
+
             if (mode != OperationsMode.Test)
             {
                 // Laste timestamps på data set
@@ -337,6 +377,34 @@ namespace MVS
             durationBanner.Update(mainWindowVM.SelectedProject);
             RefreshResultCards();
             RefreshAppliedCorrectionPanel();
+
+            // Subscribe to the selected project so Step 1 gating reacts live to
+            // Name / Input MRU changes.
+            SubscribeToProject(mainWindowVM.SelectedProject);
+
+            UpdateWizardNavigation();
+        }
+
+        /// <summary>
+        /// Subscribes to the selected project's PropertyChanged so the wizard navigation
+        /// (and requirements banner) re-evaluate live as the user edits Name / Input MRUs.
+        /// </summary>
+        private void SubscribeToProject(Project project)
+        {
+            if (ReferenceEquals(_subscribedProject, project))
+                return;
+
+            if (_subscribedProject != null)
+                _subscribedProject.PropertyChanged -= SelectedProject_PropertyChanged;
+
+            _subscribedProject = project;
+
+            if (_subscribedProject != null)
+                _subscribedProject.PropertyChanged += SelectedProject_PropertyChanged;
+        }
+
+        private void SelectedProject_PropertyChanged(object sender, PropertyChangedEventArgs e)
+        {
             UpdateWizardNavigation();
         }
 
@@ -438,6 +506,11 @@ namespace MVS
 
             progressDlg.Close();
 
+            // Automatically apply the recommended corrections found during capture.
+            var project = mainWindowVM?.SelectedProject;
+            if (project != null && projectVM != null)
+                projectVM.ApplyRecommendedCorrection(mvsDatabase, project);
+
             // Refresh result cards with newly computed statistics.
             RefreshResultCards();
             RefreshAppliedCorrectionPanel();
@@ -453,23 +526,26 @@ namespace MVS
         private void SetWizardStep(int step)
         {
             if (step < 1) step = 1;
-            if (step > 4) step = 4;
+            if (step > 5) step = 5;
             currentStep = step;
 
             panelStep1.Visibility = step == 1 ? Visibility.Visible : Visibility.Collapsed;
             panelStep2.Visibility = step == 2 ? Visibility.Visible : Visibility.Collapsed;
             panelStep3.Visibility = step == 3 ? Visibility.Visible : Visibility.Collapsed;
             panelStep4.Visibility = step == 4 ? Visibility.Visible : Visibility.Collapsed;
+            panelStep5.Visibility = step == 5 ? Visibility.Visible : Visibility.Collapsed;
 
             tbStep1.Foreground = step == 1 ? System.Windows.Media.Brushes.SteelBlue : System.Windows.Media.Brushes.DimGray;
             tbStep2.Foreground = step == 2 ? System.Windows.Media.Brushes.SteelBlue : System.Windows.Media.Brushes.DimGray;
             tbStep3.Foreground = step == 3 ? System.Windows.Media.Brushes.SteelBlue : System.Windows.Media.Brushes.DimGray;
             tbStep4.Foreground = step == 4 ? System.Windows.Media.Brushes.SteelBlue : System.Windows.Media.Brushes.DimGray;
+            tbStep5.Foreground = step == 5 ? System.Windows.Media.Brushes.SteelBlue : System.Windows.Media.Brushes.DimGray;
 
             tbStep1.FontWeight = step == 1 ? FontWeights.Bold : FontWeights.Normal;
             tbStep2.FontWeight = step == 2 ? FontWeights.Bold : FontWeights.Normal;
             tbStep3.FontWeight = step == 3 ? FontWeights.Bold : FontWeights.Normal;
             tbStep4.FontWeight = step == 4 ? FontWeights.Bold : FontWeights.Normal;
+            tbStep5.FontWeight = step == 5 ? FontWeights.Bold : FontWeights.Normal;
 
             if (projectVM != null)
                 projectVM.CurrentWizardStep = step;
@@ -483,15 +559,101 @@ namespace MVS
 
             var project = mainWindowVM?.SelectedProject;
             bool hasData = project != null && project.DataSetHasData();
+            bool lidarApplied = _livoxVM?.Correction != null && _livoxVM.Correction.IsActive;
 
-            // Step 1 requires a selected project before the user can proceed.
-            // For all other steps allow forward navigation freely up to step 4.
-            if (currentStep == 1)
-                btnNext.IsEnabled = project != null;
+            // Evaluate the minimum requirements for the current step. The user may only
+            // proceed to the next step once these are met.
+            bool canProceed;
+            string requirementsText;
+            bool requirementsMet;
+
+            switch (currentStep)
+            {
+                case 1:
+                    // Step 1 — Setup: project selected, named, and input MRUs chosen.
+                    bool hasProject = project != null;
+                    bool hasName = project != null && !string.IsNullOrWhiteSpace(project.Name);
+                    bool hasInputMRUs = project != null && project.InputMRUs != InputMRUType.None;
+                    canProceed = hasProject && hasName && hasInputMRUs;
+                    requirementsMet = canProceed;
+                    requirementsText = canProceed
+                        ? "Step 1 complete — project setup is ready. Click Next to continue to LiDAR correction."
+                        : "To continue you must:  " +
+                          (hasProject ? "\u2713 Select a project" : "\u2717 Select a project") + "    " +
+                          (hasName ? "\u2713 Enter a project name" : "\u2717 Enter a project name") + "    " +
+                          (hasInputMRUs ? "\u2713 Choose the Input MRUs" : "\u2717 Choose the Input MRUs");
+                    break;
+
+                case 2:
+                    // Step 2 — LiDAR correction: a correction must be applied to the Reference MRU.
+                    canProceed = lidarApplied;
+                    requirementsMet = canProceed;
+                    requirementsText = canProceed
+                        ? "Step 2 complete — the LiDAR correction is applied to the Reference MRU. Click Next to continue to capture."
+                        : "To continue you must:  \u2717 Apply the LiDAR-derived correction to the Reference MRU (use Apply in the panel below).";
+                    break;
+
+                case 3:
+                    // Step 3 — Capture: the project must contain recorded or imported data.
+                    canProceed = hasData;
+                    requirementsMet = canProceed;
+                    requirementsText = canProceed
+                        ? "Step 3 complete — motion data captured. Click Next to review the results."
+                        : "To continue you must:  \u2717 Record live motion data or import an existing HMS recording for this project.";
+                    break;
+
+                case 4:
+                    // Step 4 — Review: at least one correction must be applied to the project.
+                    canProceed = project != null && project.HasCorrectionApplied;
+                    requirementsMet = canProceed;
+                    requirementsText = canProceed
+                        ? "Step 4 complete — a correction has been applied. Click Next to apply and report."
+                        : "To continue you must:  \u2717 Apply at least one recommended correction (use Apply on a result card below).";
+                    break;
+
+                default:
+                    // Step 5 — Apply & Report: final step, no further navigation.
+                    canProceed = false;
+                    requirementsMet = true;
+                    requirementsText = string.Empty;
+                    break;
+            }
+
+            btnNext.IsEnabled = canProceed;
+
+            // Update the requirements banner with success / outstanding-requirement feedback.
+            if (currentStep >= 5 || string.IsNullOrEmpty(requirementsText))
+            {
+                requirementsBanner.Visibility = Visibility.Collapsed;
+            }
             else
-                btnNext.IsEnabled = currentStep < 4;
+            {
+                requirementsBanner.Visibility = Visibility.Visible;
+                tbRequirements.Text = requirementsText;
 
-            // Show the selected project name in the wizard header (steps 2-4).
+                if (requirementsMet)
+                {
+                    // Green — requirements met.
+                    requirementsBanner.Background = new System.Windows.Media.SolidColorBrush(
+                        System.Windows.Media.Color.FromRgb(0xD1, 0xE7, 0xDD));
+                    requirementsBanner.BorderBrush = new System.Windows.Media.SolidColorBrush(
+                        System.Windows.Media.Color.FromRgb(0xA3, 0xCF, 0xBB));
+                    tbRequirements.Foreground = new System.Windows.Media.SolidColorBrush(
+                        System.Windows.Media.Color.FromRgb(0x0A, 0x36, 0x22));
+                }
+                else
+                {
+                    // Amber — requirements outstanding.
+                    requirementsBanner.Background = new System.Windows.Media.SolidColorBrush(
+                        System.Windows.Media.Color.FromRgb(0xFF, 0xF3, 0xCD));
+                    requirementsBanner.BorderBrush = new System.Windows.Media.SolidColorBrush(
+                        System.Windows.Media.Color.FromRgb(0xFF, 0xE6, 0x9C));
+                    tbRequirements.Foreground = new System.Windows.Media.SolidColorBrush(
+                        System.Windows.Media.Color.FromRgb(0x66, 0x4D, 0x03));
+                }
+            }
+
+            // Show the selected project name in the wizard header (steps 2-5).
             if (project != null && currentStep > 1)
             {
                 tbWizardProjectName.Text = project.Name;
@@ -504,17 +666,23 @@ namespace MVS
 
             if (currentStep == 2)
             {
+                tbAnalysisStatus.Text = lidarApplied
+                    ? "LiDAR correction applied to the Reference MRU."
+                    : "Apply the LiDAR-derived correction to the Reference MRU before capturing data.";
+            }
+            else if (currentStep == 3)
+            {
                 tbAnalysisStatus.Text = hasData
                     ? "Data captured. Continue to review."
                     : "No data captured yet. Record or import HMS data.";
             }
-            else if (currentStep == 3)
+            else if (currentStep == 4)
             {
                 tbAnalysisStatus.Text = hasData
                     ? "Showing per-axis statistics for the selected project."
                     : "Capture data before reviewing.";
             }
-            else if (currentStep == 4)
+            else if (currentStep == 5)
             {
                 tbAnalysisStatus.Text = project != null && project.HasCorrectionApplied
                     ? "Corrections applied for this project."
@@ -523,7 +691,7 @@ namespace MVS
             else
             {
                 tbAnalysisStatus.Text = project != null
-                    ? "Project selected. Continue to capture."
+                    ? "Project selected. Continue to LiDAR correction."
                     : "Select or create a project to begin.";
             }
         }
@@ -674,38 +842,8 @@ namespace MVS
         }
 
         // ============================================================
-        // Apply / Reset all + Export
+        // Export
         // ============================================================
-
-        private void btnApplyAll_Click(object sender, RoutedEventArgs e)
-        {
-            var project = mainWindowVM?.SelectedProject;
-            if (project == null || projectVM == null) return;
-
-            projectVM.ApplyRecommendedCorrection(mvsDatabase, project);
-            RefreshResultCards();
-            RefreshAppliedCorrectionPanel();
-            UpdateWizardNavigation();
-        }
-
-        private void btnResetAll_Click(object sender, RoutedEventArgs e)
-        {
-            var project = mainWindowVM?.SelectedProject;
-            if (project == null || projectVM == null) return;
-
-            RadWindow.Confirm("Clear the applied corrections for this project?", OnClosed);
-
-            void OnClosed(object _, WindowClosedEventArgs ea)
-            {
-                if ((bool)ea.DialogResult == true)
-                {
-                    projectVM.ResetAppliedCorrection(mvsDatabase, project);
-                    RefreshResultCards();
-                    RefreshAppliedCorrectionPanel();
-                    UpdateWizardNavigation();
-                }
-            }
-        }
 
         private void btnExportReport_Click(object sender, RoutedEventArgs e)
         {

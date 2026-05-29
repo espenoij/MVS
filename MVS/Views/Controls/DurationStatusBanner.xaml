@@ -5,10 +5,12 @@
              mc:Ignorable="d"
              xmlns:d="http://schemas.microsoft.com/expression/blend/2008"
              xmlns:mc="http://schemas.openxmlformats.org/markup-compatibility/2006"
-             d:DesignWidth="600" d:DesignHeight="70">
-    <Border BorderBrush="#D0D7DE" BorderThickness="1" CornerRadius="4" Background="#F6F8FA" Padding="12,8">
+             d:DesignWidth="700" d:DesignHeight="120">
+    <Border x:Name="outerBorder" BorderBrush="#D0D7DE" BorderThickness="1" CornerRadius="4" Background="#F6F8FA" Padding="12,10">
         <Grid>
             <Grid.RowDefinitions>
+                <RowDefinition Height="Auto"/>
+                <RowDefinition Height="Auto"/>
                 <RowDefinition Height="Auto"/>
                 <RowDefinition Height="Auto"/>
                 <RowDefinition Height="Auto"/>
@@ -18,6 +20,7 @@
                 <ColumnDefinition Width="Auto"/>
             </Grid.ColumnDefinitions>
 
+            <!-- Header row: label + elapsed time -->
             <TextBlock Grid.Row="0" Grid.Column="0"
                        Text="Recording Duration"
                        FontWeight="SemiBold"/>
@@ -28,18 +31,57 @@
                        FontWeight="SemiBold"
                        Margin="8,0,0,0"/>
 
+            <!-- Progress bar -->
             <telerik:RadProgressBar Grid.Row="1" Grid.ColumnSpan="2"
                                     x:Name="pbDuration"
-                                    Height="6"
+                                    Height="10"
                                     Minimum="0"
                                     Maximum="100"
                                     Value="0"
-                                    Margin="0,6,0,4"/>
+                                    Margin="0,6,0,2"/>
 
-            <TextBlock Grid.Row="2" Grid.ColumnSpan="2"
+            <!-- Milestone tick labels below the bar -->
+            <Grid Grid.Row="2" Grid.ColumnSpan="2" Margin="0,0,0,6">
+                <TextBlock Text="0"        FontSize="10" Foreground="#57606A" HorizontalAlignment="Left"/>
+                <TextBlock Text="20 min"   FontSize="10" Foreground="#57606A" HorizontalAlignment="Left" Margin="0,0,0,0"/>
+                <TextBlock x:Name="tbMilestone20"
+                           Text="▲ 20 min" FontSize="10" Foreground="#9A6700"
+                           HorizontalAlignment="Left" Margin="0,0,0,0"
+                           RenderTransformOrigin="0,0">
+                    <TextBlock.RenderTransform>
+                        <TranslateTransform x:Name="ttMilestone20"/>
+                    </TextBlock.RenderTransform>
+                </TextBlock>
+                <TextBlock x:Name="tbMilestone40"
+                           Text="▲ 40 min ✓" FontSize="10" Foreground="#1A7F37"
+                           HorizontalAlignment="Left"
+                           RenderTransformOrigin="0,0">
+                    <TextBlock.RenderTransform>
+                        <TranslateTransform x:Name="ttMilestone40"/>
+                    </TextBlock.RenderTransform>
+                </TextBlock>
+            </Grid>
+
+            <!-- Quality badge -->
+            <Border Grid.Row="3" Grid.ColumnSpan="2"
+                    x:Name="qualityBadge"
+                    CornerRadius="3"
+                    Padding="8,4"
+                    Margin="0,0,0,6"
+                    Background="#EFF2F5">
+                <TextBlock x:Name="tbQualityLabel"
+                           Text="No recording active"
+                           FontWeight="SemiBold"
+                           FontSize="12"
+                           Foreground="#57606A"/>
+            </Border>
+
+            <!-- Guidance message -->
+            <TextBlock Grid.Row="4" Grid.ColumnSpan="2"
                        x:Name="tbStatusMessage"
-                       Text="No data recorded yet."
+                       Text="Start a recording or import a data set to begin."
                        Foreground="#57606A"
+                       TextWrapping="Wrap"
                        FontSize="11"/>
         </Grid>
     </Border>
