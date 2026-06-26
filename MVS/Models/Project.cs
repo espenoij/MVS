@@ -290,7 +290,7 @@ namespace MVS
         }
 
         // Applied corrections persisted per project. These are the deviation
-        // values that have been written back to the Test MRU to "zero it out".
+        // values that have been written back to the Vessel MRU to "zero it out".
         private double _appliedCorrectionPitch;
         public double AppliedCorrectionPitch
         {

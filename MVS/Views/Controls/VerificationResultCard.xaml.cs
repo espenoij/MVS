@@ -8,8 +8,7 @@ namespace MVS.Views.Controls
 {
     /// <summary>
     /// Card showing reference, test, and deviation statistics for a single axis
-    /// (pitch, roll or heave). Provides Copy/Apply/Reset actions for the
-    /// recommended correction.
+    /// (pitch, roll or heave).
     /// </summary>
     public partial class VerificationResultCard : UserControl
     {
@@ -41,11 +40,11 @@ namespace MVS.Views.Controls
 
         public static readonly DependencyProperty AppliedCorrectionProperty =
             DependencyProperty.Register(nameof(AppliedCorrection), typeof(double), typeof(VerificationResultCard),
-                new PropertyMetadata(0d, OnSimpleChanged));
+                new PropertyMetadata(0d));
 
         public static readonly DependencyProperty HasCorrectionAppliedProperty =
             DependencyProperty.Register(nameof(HasCorrectionApplied), typeof(bool), typeof(VerificationResultCard),
-                new PropertyMetadata(false, OnSimpleChanged));
+                new PropertyMetadata(false));
 
         // Reference scale for the magnitude bar (e.g., 1.0 degree or meter).
         public static readonly DependencyProperty MagnitudeScaleProperty =
@@ -61,30 +60,6 @@ namespace MVS.Views.Controls
         public bool HasCorrectionApplied { get { return (bool)GetValue(HasCorrectionAppliedProperty); } set { SetValue(HasCorrectionAppliedProperty, value); } }
         public double MagnitudeScale { get { return (double)GetValue(MagnitudeScaleProperty); } set { SetValue(MagnitudeScaleProperty, value); } }
 
-        // Routed events for the three actions, so the host page can wire DB calls.
-        public static readonly RoutedEvent CopyRequestedEvent = EventManager.RegisterRoutedEvent(
-            nameof(CopyRequested), RoutingStrategy.Bubble, typeof(RoutedEventHandler), typeof(VerificationResultCard));
-        public static readonly RoutedEvent ApplyRequestedEvent = EventManager.RegisterRoutedEvent(
-            nameof(ApplyRequested), RoutingStrategy.Bubble, typeof(RoutedEventHandler), typeof(VerificationResultCard));
-        public static readonly RoutedEvent ResetRequestedEvent = EventManager.RegisterRoutedEvent(
-            nameof(ResetRequested), RoutingStrategy.Bubble, typeof(RoutedEventHandler), typeof(VerificationResultCard));
-
-        public event RoutedEventHandler CopyRequested
-        {
-            add { AddHandler(CopyRequestedEvent, value); }
-            remove { RemoveHandler(CopyRequestedEvent, value); }
-        }
-        public event RoutedEventHandler ApplyRequested
-        {
-            add { AddHandler(ApplyRequestedEvent, value); }
-            remove { RemoveHandler(ApplyRequestedEvent, value); }
-        }
-        public event RoutedEventHandler ResetRequested
-        {
-            add { AddHandler(ResetRequestedEvent, value); }
-            remove { RemoveHandler(ResetRequestedEvent, value); }
-        }
-
         private static void OnSimpleChanged(DependencyObject d, DependencyPropertyChangedEventArgs e)
         {
             ((VerificationResultCard)d).Refresh();
@@ -98,15 +73,6 @@ namespace MVS.Views.Controls
             FillStats(RefStats, tbRefMean, tbRefStdDev, tbRefMinMax, tbRefRms, includeOutliers: false);
             FillStats(TestStats, tbTestMean, tbTestStdDev, tbTestMinMax, tbTestRms, includeOutliers: false);
             FillDeviation(DevStats);
-
-            if (HasCorrectionApplied)
-            {
-                tbAppliedCorrection.Text = string.Format(CultureInfo.CurrentCulture, "{0:F4} {1}", AppliedCorrection, Unit).Trim();
-            }
-            else
-            {
-                tbAppliedCorrection.Text = "(none)";
-            }
         }
 
         private void FillStats(AxisStatistics s, TextBlock mean, TextBlock std, TextBlock minMax, TextBlock rms, bool includeOutliers)
@@ -146,21 +112,6 @@ namespace MVS.Views.Controls
             double scale = MagnitudeScale <= 0 ? 1.0 : MagnitudeScale;
             double pct = Math.Min(100.0, (Math.Abs(s.Mean) / scale) * 100.0);
             pbDeviationMagnitude.Value = pct;
-        }
-
-        private void btnCopy_Click(object sender, RoutedEventArgs e)
-        {
-            RaiseEvent(new RoutedEventArgs(CopyRequestedEvent, this));
-        }
-
-        private void btnApply_Click(object sender, RoutedEventArgs e)
-        {
-            RaiseEvent(new RoutedEventArgs(ApplyRequestedEvent, this));
-        }
-
-        private void btnReset_Click(object sender, RoutedEventArgs e)
-        {
-            RaiseEvent(new RoutedEventArgs(ResetRequestedEvent, this));
         }
     }
 }

@@ -496,7 +496,7 @@ namespace MVS
         public AxisStatistics DevHeaveStats { get { return _devHeaveStats; } private set { _devHeaveStats = value; OnPropertyChanged(); } }
 
         // Recommended corrections (the deviation means that the wizard suggests
-        // applying to the Test MRU to "zero it out").
+        // applying to the Vessel MRU to "zero it out").
         public double RecommendedCorrectionPitch
         {
             get { return double.IsNaN(_devPitchStats.Mean) ? 0d : _devPitchStats.Mean; }
@@ -587,6 +587,25 @@ namespace MVS
                 return;
 
             database.ResetCorrection(project);
+        }
+
+        /// <summary>
+        /// Resets all analysis results (loaded sample data, display output values and
+        /// the extended per-axis statistics) so that data from a previously selected
+        /// project does not carry over when a new project is created or selected.
+        /// </summary>
+        public void ResetAnalysisResults()
+        {
+            // Drop any loaded sample data and the underlying calculation buffers.
+            projectsDataList.Clear();
+            ResetDataCalculations();
+
+            // Clear the display output fields and the graph/buffer lists.
+            ClearDisplayData();
+
+            // Recompute statistics over the now-empty data set so the Review and
+            // Report cards fall back to their empty state.
+            ComputeExtendedStatistics();
         }
 
         public void ClearDisplayData()

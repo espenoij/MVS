@@ -155,6 +155,7 @@ namespace MVS
                 btnDelete.IsEnabled = false;
                 btnImport.IsEnabled = false;
                 lbImport.IsEnabled = false;
+                btnClearRecording.IsEnabled = false;
 
                 gvProjects.IsEnabled = false;
             }
@@ -168,6 +169,7 @@ namespace MVS
                     btnDelete.IsEnabled = false;
                     btnImport.IsEnabled = false;
                     lbImport.IsEnabled = false;
+                    btnClearRecording.IsEnabled = false;
                 }
                 else
                 {
@@ -177,11 +179,13 @@ namespace MVS
                     {
                         btnImport.IsEnabled = false;
                         lbImport.IsEnabled = false;
+                        btnClearRecording.IsEnabled = false;
                     }
                     else
                     {
                         btnImport.IsEnabled = true;
                         lbImport.IsEnabled = true;
+                        btnClearRecording.IsEnabled = true;
                     }
                 }
 
@@ -248,6 +252,17 @@ namespace MVS
 
             // Legge data i UI
             LoadSelectedItemsDetails();
+
+            // Load and analyse the freshly-recorded session data so the Review
+            // step shows current statistics as soon as the user navigates there.
+            if (mode == OperationsMode.Recording &&
+                mainWindowVM.SelectedProject != null &&
+                mainWindowVM.SelectedProject.DataSetHasData())
+            {
+                dataViewWorker.RunWorkerAsync();
+                progressDlg.Start(mainWindowVM);
+                progressDlg.ShowDialog();
+            }
         }
 
         private void btnNew_Click(object sender, RoutedEventArgs e)
@@ -320,9 +335,34 @@ namespace MVS
             testRunCallback?.Invoke();
         }
 
+        private void btnClearRecording_Click(object sender, RoutedEventArgs e)
+        {
+            var project = mainWindowVM?.SelectedProject;
+            if (project == null || !project.DataSetHasData())
+                return;
+
+            RadWindow.Confirm("This will permanently delete all recorded motion data for this project.\n\nThis action cannot be undone.", OnClosed);
+
+            void OnClosed(object sendero, WindowClosedEventArgs ea)
+            {
+                if ((bool)ea.DialogResult == true)
+                {
+                    mvsDatabase.DeleteData(project);
+                    project.ClearTimestamps();
+                    projectVM?.ResetAnalysisResults();
+                    LoadSelectedItemsDetails();
+                }
+            }
+        }
+
         private void gvProjects_SelectionChanged(object sender, SelectionChangeEventArgs e)
         {
             mainWindowVM.SelectedProject = (sender as RadGridView).SelectedItem as Project;
+
+            // Reset all downstream wizard data (LiDAR correction, analysis results and
+            // the wizard step) so nothing from the previously selected project carries
+            // over to the newly created or selected one.
+            ResetDownstreamData();
 
             LoadSelectedItemsDetails();
             UpdateUIStates(false);
@@ -330,9 +370,6 @@ namespace MVS
             if (mainWindowVM.SelectedProject != null &&
                 mainWindowVM.SelectedProject.DataSetHasData())
             {
-                // Clear display data
-                projectVM.ClearDisplayData();
-
                 // Starte data analyse
                 dataViewWorker.RunWorkerAsync();
 
@@ -342,6 +379,24 @@ namespace MVS
             }
 
             updateUIButtonsCallback();
+        }
+
+        /// <summary>
+        /// Resets all downstream wizard data so that state from a previously selected
+        /// project does not carry over when a new project is created or selected.
+        /// Clears the shared LiDAR correction (step 2), the captured/analysis results
+        /// (steps 3-4) and returns the wizard to the first step.
+        /// </summary>
+        private void ResetDownstreamData()
+        {
+            // Step 2 — clear the shared in-memory LiDAR correction state.
+            _livoxVM?.ResetCorrection();
+
+            // Steps 3-4 — clear analysis data and statistics from the previous project.
+            projectVM?.ResetAnalysisResults();
+
+            // Return the wizard to the first step.
+            SetWizardStep(1);
         }
 
         private void LoadSelectedItemsDetails()
@@ -376,7 +431,6 @@ namespace MVS
             // Refresh the wizard widgets (duration banner, cards, step-4 labels).
             durationBanner.Update(mainWindowVM.SelectedProject);
             RefreshResultCards();
-            RefreshAppliedCorrectionPanel();
 
             // Subscribe to the selected project so Step 1 gating reacts live to
             // Name / Input MRU changes.
@@ -513,8 +567,14 @@ namespace MVS
 
             // Refresh result cards with newly computed statistics.
             RefreshResultCards();
-            RefreshAppliedCorrectionPanel();
-            UpdateWizardNavigation();
+
+            // Advance the wizard to the step that best reflects the loaded project's state
+            // so the user can move freely through steps 2 and 3 without being blocked.
+            var loadedProject = mainWindowVM?.SelectedProject;
+            if (loadedProject != null && loadedProject.DataSetHasData())
+                SetWizardStep(loadedProject.HasCorrectionApplied ? 4 : 3);
+            else
+                UpdateWizardNavigation();
         }
 
         // ============================================================
@@ -585,12 +645,22 @@ namespace MVS
                     break;
 
                 case 2:
-                    // Step 2 — LiDAR correction: a correction must be applied to the Reference MRU.
-                    canProceed = lidarApplied;
+                    // Step 2 — LiDAR correction: work through all four sub-steps then apply.
+                    // Also satisfied when the project already has captured data (correction was applied during the original capture session).
+                    bool lidarSetup    = _livoxVM != null && (_livoxVM.CanDisconnect || _livoxVM.CanFit);
+                    bool lidarScanned  = _livoxVM?.CanFit == true;
+                    bool lidarAnalysed = _livoxVM?.HasFitResult == true;
+                    canProceed = lidarApplied || hasData;
                     requirementsMet = canProceed;
-                    requirementsText = canProceed
+                    requirementsText = lidarApplied
                         ? "Step 2 complete — the LiDAR correction is applied to the Reference MRU. Click Next to continue to capture."
-                        : "To continue you must:  \u2717 Apply the LiDAR-derived correction to the Reference MRU (use Apply in the panel below).";
+                        : hasData
+                            ? "Step 2 — project already has captured data. Click Next to continue."
+                            : "To continue you must:  " +
+                              (lidarSetup    ? "\u2713 1: Set up the LiDAR"    : "\u2717 1: Set up the LiDAR")    + "    " +
+                              (lidarScanned  ? "\u2713 2: Perform a scan"       : "\u2717 2: Perform a scan")       + "    " +
+                              (lidarAnalysed ? "\u2713 3: Analyse"              : "\u2717 3: Analyse")              + "    " +
+                              (lidarApplied  ? "\u2713 4: Apply the correction" : "\u2717 4: Apply the correction");
                     break;
 
                 case 3:
@@ -735,110 +805,6 @@ namespace MVS
             cardHeave.DevStats = projectVM.DevHeaveStats;
             cardHeave.AppliedCorrection = project?.AppliedCorrectionHeave ?? 0d;
             cardHeave.HasCorrectionApplied = hasCorrection;
-        }
-
-        private void RefreshAppliedCorrectionPanel()
-        {
-            var project = mainWindowVM?.SelectedProject;
-            if (project == null || !project.HasCorrectionApplied)
-            {
-                lbAppliedPitch.Content = Constants.NotAvailable;
-                lbAppliedRoll.Content = Constants.NotAvailable;
-                lbAppliedHeave.Content = Constants.NotAvailable;
-                lbAppliedAt.Content = Constants.NotAvailable;
-                return;
-            }
-
-            lbAppliedPitch.Content = project.AppliedCorrectionPitch.ToString("F4") + " °";
-            lbAppliedRoll.Content = project.AppliedCorrectionRoll.ToString("F4") + " °";
-            lbAppliedHeave.Content = project.AppliedCorrectionHeave.ToString("F4") + " m";
-            lbAppliedAt.Content = project.CorrectionAppliedAtString;
-        }
-
-        private void cardPitch_CopyRequested(object sender, RoutedEventArgs e)
-        {
-            CopyValueToClipboard(projectVM?.RecommendedCorrectionPitch ?? 0d);
-        }
-        private void cardRoll_CopyRequested(object sender, RoutedEventArgs e)
-        {
-            CopyValueToClipboard(projectVM?.RecommendedCorrectionRoll ?? 0d);
-        }
-        private void cardHeave_CopyRequested(object sender, RoutedEventArgs e)
-        {
-            CopyValueToClipboard(projectVM?.RecommendedCorrectionHeave ?? 0d);
-        }
-
-        private static void CopyValueToClipboard(double value)
-        {
-            try
-            {
-                Clipboard.SetText(value.ToString("F6", System.Globalization.CultureInfo.InvariantCulture));
-            }
-            catch
-            {
-                // Clipboard access can fail intermittently; ignore.
-            }
-        }
-
-        private void cardPitch_ApplyRequested(object sender, RoutedEventArgs e)
-        {
-            ApplySingleAxis(axisPitch: true, axisRoll: false, axisHeave: false);
-        }
-        private void cardRoll_ApplyRequested(object sender, RoutedEventArgs e)
-        {
-            ApplySingleAxis(axisPitch: false, axisRoll: true, axisHeave: false);
-        }
-        private void cardHeave_ApplyRequested(object sender, RoutedEventArgs e)
-        {
-            ApplySingleAxis(axisPitch: false, axisRoll: false, axisHeave: true);
-        }
-
-        private void ApplySingleAxis(bool axisPitch, bool axisRoll, bool axisHeave)
-        {
-            var project = mainWindowVM?.SelectedProject;
-            if (project == null || projectVM == null) return;
-
-            double pitch = axisPitch ? projectVM.RecommendedCorrectionPitch : project.AppliedCorrectionPitch;
-            double roll = axisRoll ? projectVM.RecommendedCorrectionRoll : project.AppliedCorrectionRoll;
-            double heave = axisHeave ? projectVM.RecommendedCorrectionHeave : project.AppliedCorrectionHeave;
-
-            mvsDatabase.SaveCorrection(project, pitch, roll, heave);
-            RefreshResultCards();
-            RefreshAppliedCorrectionPanel();
-            UpdateWizardNavigation();
-        }
-
-        private void cardPitch_ResetRequested(object sender, RoutedEventArgs e)
-        {
-            ResetSingleAxis(true, false, false);
-        }
-        private void cardRoll_ResetRequested(object sender, RoutedEventArgs e)
-        {
-            ResetSingleAxis(false, true, false);
-        }
-        private void cardHeave_ResetRequested(object sender, RoutedEventArgs e)
-        {
-            ResetSingleAxis(false, false, true);
-        }
-
-        private void ResetSingleAxis(bool axisPitch, bool axisRoll, bool axisHeave)
-        {
-            var project = mainWindowVM?.SelectedProject;
-            if (project == null) return;
-
-            double pitch = axisPitch ? 0d : project.AppliedCorrectionPitch;
-            double roll = axisRoll ? 0d : project.AppliedCorrectionRoll;
-            double heave = axisHeave ? 0d : project.AppliedCorrectionHeave;
-
-            // If all three would now be zero, treat as a full reset.
-            if (pitch == 0d && roll == 0d && heave == 0d)
-                mvsDatabase.ResetCorrection(project);
-            else
-                mvsDatabase.SaveCorrection(project, pitch, roll, heave);
-
-            RefreshResultCards();
-            RefreshAppliedCorrectionPanel();
-            UpdateWizardNavigation();
         }
 
         // ============================================================

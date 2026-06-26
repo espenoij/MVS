@@ -28,6 +28,16 @@
         <local:LabelAbsConverter
             x:Key="LabelAbsConverter" />
 
+        <!-- Match font appearances to the Projects.xaml page style -->
+        <Style TargetType="TextBlock">
+            <Setter Property="Foreground" Value="#57606A"/>
+            <Setter Property="FontSize" Value="12"/>
+        </Style>
+        <Style TargetType="Label">
+            <Setter Property="Foreground" Value="#57606A"/>
+            <Setter Property="FontSize" Value="11"/>
+        </Style>
+
     </UserControl.Resources>
 
     <Grid>
@@ -1876,33 +1886,6 @@
                         <TextBlock
                             Grid.ColumnSpan="2"
                             Text="{Binding Path=devRollMeanString}"
-                            FontSize="{StaticResource fontSizeData}"
-                            HorizontalAlignment="Center"
-                            VerticalAlignment="Center" />
-
-                    </Grid>
-
-                    <!--Roll Correction-->
-                    <Grid
-                        Grid.Row="9"
-                        Grid.Column="0"
-                        Grid.ColumnSpan="4"
-                        Background="{StaticResource ColorBackgroundSeparatorDark}">
-
-                        <TextBlock
-                            Text="Correction"
-                            HorizontalAlignment="Left"
-                            VerticalAlignment="Center" />
-
-                    </Grid>
-
-                    <Grid
-                        Grid.Row="9"
-                        Grid.Column="3"
-                        Background="{StaticResource ColorBackgroundSeparatorDark}">
-
-                        <TextBlock
-                            Text="{Binding Path=corrRollString}"
                             FontSize="{StaticResource fontSizeData}"
                             HorizontalAlignment="Center"
                             VerticalAlignment="Center" />

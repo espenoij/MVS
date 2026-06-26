@@ -49,7 +49,7 @@
                     <StackPanel Orientation="Horizontal">
                         <TextBlock Text="Motion Unit Verification"
                                    FontSize="18" FontWeight="Bold"/>
-                        <TextBlock Text=" — guided workflow"
+                        <TextBlock Text=" — Guided workflow"
                                    FontSize="14"
                                    Foreground="#57606A"
                                    VerticalAlignment="Center"
@@ -71,17 +71,36 @@
                         CornerRadius="4"
                         Padding="10,6"
                         Margin="0,0,0,8">
-                    <StackPanel Orientation="Horizontal">
-                        <TextBlock x:Name="tbStep1" Text="1. Setup" FontWeight="Bold" Foreground="#0969DA"/>
-                        <TextBlock Text="  ›  " Foreground="#57606A"/>
-                        <TextBlock x:Name="tbStep2" Text="2. LiDAR" Foreground="#57606A"/>
-                        <TextBlock Text="  ›  " Foreground="#57606A"/>
-                        <TextBlock x:Name="tbStep3" Text="3. Capture" Foreground="#57606A"/>
-                        <TextBlock Text="  ›  " Foreground="#57606A"/>
-                        <TextBlock x:Name="tbStep4" Text="4. Review" Foreground="#57606A"/>
-                        <TextBlock Text="  ›  " Foreground="#57606A"/>
-                        <TextBlock x:Name="tbStep5" Text="5. Report" Foreground="#57606A"/>
-                    </StackPanel>
+                    <Grid>
+                        <Grid.ColumnDefinitions>
+                            <ColumnDefinition Width="*"/>
+                            <ColumnDefinition Width="Auto"/>
+                        </Grid.ColumnDefinitions>
+
+                        <StackPanel Grid.Column="0" Orientation="Horizontal" VerticalAlignment="Center">
+                            <TextBlock x:Name="tbStep1" Text="1. Setup" FontWeight="Bold" Foreground="#0969DA"/>
+                            <TextBlock Text="  ›  " Foreground="#57606A"/>
+                            <TextBlock x:Name="tbStep2" Text="2. LiDAR" Foreground="#57606A"/>
+                            <TextBlock Text="  ›  " Foreground="#57606A"/>
+                            <TextBlock x:Name="tbStep3" Text="3. Capture" Foreground="#57606A"/>
+                            <TextBlock Text="  ›  " Foreground="#57606A"/>
+                            <TextBlock x:Name="tbStep4" Text="4. Review" Foreground="#57606A"/>
+                            <TextBlock Text="  ›  " Foreground="#57606A"/>
+                            <TextBlock x:Name="tbStep5" Text="5. Report" Foreground="#57606A"/>
+                        </StackPanel>
+
+                        <StackPanel Grid.Column="1" Orientation="Horizontal" VerticalAlignment="Center">
+                            <telerik:RadButton x:Name="btnPrev"
+                                             Click="btnPrev_Click"
+                                             Content="Back"
+                                             Width="100"/>
+                            <telerik:RadButton x:Name="btnNext"
+                                             Click="btnNext_Click"
+                                             Content="Next"
+                                             Width="100"
+                                             Margin="8,0,0,0"/>
+                        </StackPanel>
+                    </Grid>
                 </Border>
 
                 <!-- Body: requirements banner + the four step panels stacked, only one visible at a time -->
@@ -194,7 +213,7 @@
                                 <TextBlock TextWrapping="Wrap"
                                            Foreground="#57606A"
                                            Margin="0,0,0,12"
-                                           Text="Create or select a project, then describe the verification and pick the MRU input setup. The Test MRU is verified against the Reference MRU."/>
+                                           Text="Create or select a project, then describe the verification and pick the MRU input setup. The Vessel MRU is verified against the Reference MRU."/>
 
                                 <telerik:GroupBox Header="Project Details" Margin="0,0,0,8">
                                     <Grid Margin="8">
@@ -204,7 +223,7 @@
                                         </Grid.ColumnDefinitions>
                                         <Grid.RowDefinitions>
                                             <RowDefinition Height="32"/>
-                                            <RowDefinition Height="32"/>
+                                            <RowDefinition Height="Auto"/>
                                             <RowDefinition Height="Auto"/>
                                             <RowDefinition Height="32"/>
                                         </Grid.RowDefinitions>
@@ -212,10 +231,13 @@
                                         <TextBlock Grid.Row="0" Grid.Column="0" Text="ID" VerticalAlignment="Center" Foreground="#57606A"/>
                                         <Label Grid.Row="0" Grid.Column="1" Name="lbDataSetID" VerticalAlignment="Center"/>
 
-                                        <TextBlock Grid.Row="1" Grid.Column="0" Text="Name" VerticalAlignment="Center" Foreground="#57606A"/>
+                                        <TextBlock Grid.Row="1" Grid.Column="0" Text="Name" VerticalAlignment="Top" Margin="0,8,0,0" Foreground="#57606A"/>
                                         <TextBox Grid.Row="1" Grid.Column="1"
                                                  Name="tbDataSetName"
-                                                 VerticalContentAlignment="Center"
+                                                 MinHeight="32"
+                                                 TextWrapping="Wrap"
+                                                 VerticalContentAlignment="Top"
+                                                 Margin="0,4,0,0"
                                                  LostFocus="tbDataSetName_LostFocus"
                                                  KeyDown="tbDataSetName_KeyDown"/>
 
@@ -255,7 +277,7 @@
                             <TextBlock TextWrapping="Wrap"
                                        Foreground="#57606A"
                                        Margin="0,0,0,8"
-                                       Text="Use the LiDAR scan to derive pitch/roll/heading offsets for the Reference MRU. Apply the correction before capturing motion data."/>
+                                       Text="1: Set up the LiDAR sensor. 2: Perform a scan. 3: Analyse the scan to derive pitch/roll/heading offsets. 4: Apply the correction to the Reference MRU before capturing motion data."/>
                         </StackPanel>
 
                         <local:LivoxLidarPage Grid.Row="1" x:Name="ucWizardLivoxLidarPage"/>
@@ -329,7 +351,13 @@
                                                            Click="btnTestRun_Click"
                                                            IsEnabled="{Binding DataContext.StartButtonEnabled, ElementName=mainWindowVMBridge}"
                                                            Content="Test Run"
-                                                           Width="120"/>
+                                                           Width="120"
+                                                           Margin="0,0,10,0"/>
+                                        <telerik:RadButton x:Name="btnClearRecording"
+                                                           Click="btnClearRecording_Click"
+                                                           Content="Clear Recording"
+                                                           Width="160"
+                                                           IsEnabled="False"/>
                                     </StackPanel>
 
                                 </StackPanel>
@@ -366,27 +394,18 @@
                                                              AxisTitle="Pitch"
                                                              Unit="°"
                                                              MagnitudeScale="1.0"
-                                                             Margin="0,0,0,8"
-                                                             CopyRequested="cardPitch_CopyRequested"
-                                                             ApplyRequested="cardPitch_ApplyRequested"
-                                                             ResetRequested="cardPitch_ResetRequested"/>
+                                                             Margin="0,0,0,8"/>
 
                             <controls:VerificationResultCard x:Name="cardRoll"
                                                              AxisTitle="Roll"
                                                              Unit="°"
                                                              MagnitudeScale="1.0"
-                                                             Margin="0,0,0,8"
-                                                             CopyRequested="cardRoll_CopyRequested"
-                                                             ApplyRequested="cardRoll_ApplyRequested"
-                                                             ResetRequested="cardRoll_ResetRequested"/>
+                                                             Margin="0,0,0,8"/>
 
                             <controls:VerificationResultCard x:Name="cardHeave"
                                                              AxisTitle="Heave"
                                                              Unit="m"
-                                                             MagnitudeScale="0.5"
-                                                             CopyRequested="cardHeave_CopyRequested"
-                                                             ApplyRequested="cardHeave_ApplyRequested"
-                                                             ResetRequested="cardHeave_ResetRequested"/>
+                                                             MagnitudeScale="0.5"/>
 
                             <!-- Detailed data-analysis charts -->
                             <Expander x:Name="expDataAnalysis"
@@ -416,29 +435,6 @@
                                        Margin="0,0,0,12"
                                        Text="Export a verification report (CSV)."/>
 
-                            <telerik:GroupBox Header="Applied Corrections" Margin="0,0,0,8">
-                                <Grid Margin="8">
-                                    <Grid.ColumnDefinitions>
-                                        <ColumnDefinition Width="170"/>
-                                        <ColumnDefinition Width="*"/>
-                                    </Grid.ColumnDefinitions>
-                                    <Grid.RowDefinitions>
-                                        <RowDefinition Height="26"/>
-                                        <RowDefinition Height="26"/>
-                                        <RowDefinition Height="26"/>
-                                        <RowDefinition Height="26"/>
-                                    </Grid.RowDefinitions>
-                                    <TextBlock Grid.Row="0" Grid.Column="0" Text="Pitch correction"   Foreground="#57606A" VerticalAlignment="Center"/>
-                                    <Label     Grid.Row="0" Grid.Column="1" x:Name="lbAppliedPitch"   VerticalAlignment="Center"/>
-                                    <TextBlock Grid.Row="1" Grid.Column="0" Text="Roll correction"    Foreground="#57606A" VerticalAlignment="Center"/>
-                                    <Label     Grid.Row="1" Grid.Column="1" x:Name="lbAppliedRoll"    VerticalAlignment="Center"/>
-                                    <TextBlock Grid.Row="2" Grid.Column="0" Text="Heave correction"   Foreground="#57606A" VerticalAlignment="Center"/>
-                                    <Label     Grid.Row="2" Grid.Column="1" x:Name="lbAppliedHeave"   VerticalAlignment="Center"/>
-                                    <TextBlock Grid.Row="3" Grid.Column="0" Text="Applied at (UTC)"   Foreground="#57606A" VerticalAlignment="Center"/>
-                                    <Label     Grid.Row="3" Grid.Column="1" x:Name="lbAppliedAt"      VerticalAlignment="Center"/>
-                                </Grid>
-                            </telerik:GroupBox>
-
                             <StackPanel Orientation="Horizontal" Margin="0,4,0,0">
                                 <telerik:RadButton x:Name="btnExportReport"
                                                    Click="btnExportReport_Click"
@@ -451,35 +447,14 @@
                     </Grid>
                 </Grid>
 
-                <!-- Wizard navigation footer -->
+                <!-- Status footer -->
                 <Border Grid.Row="3"
                         BorderBrush="#D0D7DE" BorderThickness="0,1,0,0"
                         Padding="0,8,0,0" Margin="0,8,0,0">
-                    <Grid>
-                        <Grid.ColumnDefinitions>
-                            <ColumnDefinition Width="Auto"/>
-                            <ColumnDefinition Width="*"/>
-                            <ColumnDefinition Width="Auto"/>
-                            <ColumnDefinition Width="Auto"/>
-                        </Grid.ColumnDefinitions>
-
-                        <TextBlock x:Name="tbAnalysisStatus"
-                                   VerticalAlignment="Center"
-                                   Foreground="#57606A"
-                                   Text=""/>
-
-                        <telerik:RadButton Grid.Column="2"
-                                           x:Name="btnPrev"
-                                           Click="btnPrev_Click"
-                                           Content="Back"
-                                           Width="100"/>
-                        <telerik:RadButton Grid.Column="3"
-                                           x:Name="btnNext"
-                                           Click="btnNext_Click"
-                                           Content="Next"
-                                           Width="100"
-                                           Margin="8,0,0,0"/>
-                    </Grid>
+                    <TextBlock x:Name="tbAnalysisStatus"
+                               VerticalAlignment="Center"
+                               Foreground="#57606A"
+                               Text=""/>
                 </Border>
     </Grid>
 </UserControl>

@@ -633,6 +633,17 @@ namespace MVS
             AppendStatus("Correction cleared.");
         }
 
+        /// <summary>
+        /// Resets the shared LiDAR correction state. Called when a new project is
+        /// created or selected so a correction derived for a previous project does
+        /// not carry over to the new one.
+        /// </summary>
+        public void ResetCorrection()
+        {
+            _correction.Clear();
+            PersistCorrection();
+        }
+
         private async void Analyse()
         {
             IsAnalysing = true;

@@ -294,7 +294,7 @@ public enum MRUType
     None,
     [Description("Reference MRU")]
     ReferenceMRU,
-    [Description("Test MRU")]
+    [Description("Vessel MRU")]
     TestMRU
 }
 
@@ -304,9 +304,9 @@ public enum InputMRUType
     None,
     [Description("Reference MRU")]
     ReferenceMRU,
-    [Description("Test MRU")]
+    [Description("Vessel MRU")]
     TestMRU,
-    [Description("Reference MRU + Test MRU")]
+    [Description("Reference MRU + Vessel MRU")]
     ReferenceMRU_TestMRU,
 }
 
