@@ -1892,6 +1892,33 @@
 
                     </Grid>
 
+                    <!--Roll Correction-->
+                    <Grid
+                        Grid.Row="9"
+                        Grid.Column="0"
+                        Grid.ColumnSpan="4"
+                        Background="{StaticResource ColorBackgroundSeparatorDark}">
+
+                        <TextBlock
+                            Text="Correction"
+                            HorizontalAlignment="Left"
+                            VerticalAlignment="Center" />
+
+                    </Grid>
+
+                    <Grid
+                        Grid.Row="9"
+                        Grid.Column="3"
+                        Background="{StaticResource ColorBackgroundSeparatorDark}">
+
+                        <TextBlock
+                            Text="{Binding Path=corrRollString}"
+                            FontSize="{StaticResource fontSizeData}"
+                            HorizontalAlignment="Center"
+                            VerticalAlignment="Center" />
+
+                    </Grid>
+
                 </Grid>
 
             </Grid>

@@ -379,36 +379,56 @@
                     </ScrollViewer>
 
                     <!-- ===== STEP 4: REVIEW ===== -->
-                    <ScrollViewer x:Name="panelStep4" VerticalScrollBarVisibility="Auto" Visibility="Collapsed">
-                        <StackPanel>
+                    <ScrollViewer x:Name="panelStep4"
+                                  VerticalScrollBarVisibility="Auto"
+                                  HorizontalScrollBarVisibility="Disabled"
+                                  Visibility="Collapsed">
+                        <Grid>
+                            <Grid.RowDefinitions>
+                                <RowDefinition Height="Auto"/>
+                                <RowDefinition Height="Auto"/>
+                                <RowDefinition Height="Auto"/>
+                                <RowDefinition Height="Auto"/>
+                                <RowDefinition Height="Auto"/>
+                                <RowDefinition Height="Auto"/>
+                            </Grid.RowDefinitions>
 
-                            <TextBlock Text="Step 4 — Review per-axis results"
+                            <TextBlock Grid.Row="0"
+                                       Text="Step 4 — Review per-axis results"
                                        FontSize="14" FontWeight="SemiBold"
                                        Margin="0,0,0,6"/>
-                            <TextBlock TextWrapping="Wrap"
+                            <TextBlock Grid.Row="1"
+                                       TextWrapping="Wrap"
                                        Foreground="#57606A"
                                        Margin="0,0,0,12"
-                                       Text="Inspect reference, test and deviation statistics for each axis. Use Apply to save the recommended correction for this project."/>
+                                       Text="Inspect reference, test and deviation statistics for each axis. The deviation is the value this tool calculates; each card instead grades the quality of the captured input data &#8212; samples, vessel motion and noise &#8212; to tell you whether that calculated deviation can be trusted. Press the ? button on a card for a full explanation. This page is for review only; use Apply to save the recommended correction for this project."/>
 
-                            <controls:VerificationResultCard x:Name="cardPitch"
+                            <controls:VerificationResultCard Grid.Row="2"
+                                                             x:Name="cardPitch"
                                                              AxisTitle="Pitch"
                                                              Unit="°"
+                                                             AxisKind="Pitch"
                                                              MagnitudeScale="1.0"
                                                              Margin="0,0,0,8"/>
 
-                            <controls:VerificationResultCard x:Name="cardRoll"
+                            <controls:VerificationResultCard Grid.Row="3"
+                                                             x:Name="cardRoll"
                                                              AxisTitle="Roll"
                                                              Unit="°"
+                                                             AxisKind="Roll"
                                                              MagnitudeScale="1.0"
                                                              Margin="0,0,0,8"/>
 
-                            <controls:VerificationResultCard x:Name="cardHeave"
+                            <controls:VerificationResultCard Grid.Row="4"
+                                                             x:Name="cardHeave"
                                                              AxisTitle="Heave"
                                                              Unit="m"
+                                                             AxisKind="Heave"
                                                              MagnitudeScale="0.5"/>
 
                             <!-- Detailed data-analysis charts -->
-                            <Expander x:Name="expDataAnalysis"
+                            <Expander Grid.Row="5"
+                                      x:Name="expDataAnalysis"
                                       Header="Detailed charts"
                                       IsExpanded="True"
                                       Margin="0,12,0,0">
@@ -420,7 +440,7 @@
                                 </Border>
                             </Expander>
 
-                        </StackPanel>
+                        </Grid>
                     </ScrollViewer>
 
                     <!-- ===== STEP 5: APPLY & REPORT ===== -->

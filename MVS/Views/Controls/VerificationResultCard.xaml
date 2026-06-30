@@ -16,9 +16,11 @@
                 <RowDefinition Height="Auto"/>
             </Grid.RowDefinitions>
 
-            <!-- Header: axis title -->
+            <!-- Header: axis title + acceptance status badge -->
             <Grid Grid.Row="0">
                 <Grid.ColumnDefinitions>
+                    <ColumnDefinition Width="Auto"/>
+                    <ColumnDefinition Width="Auto"/>
                     <ColumnDefinition Width="*"/>
                     <ColumnDefinition Width="Auto"/>
                 </Grid.ColumnDefinitions>
@@ -32,13 +34,27 @@
                            Foreground="#57606A"
                            VerticalAlignment="Bottom"
                            Margin="6,0,0,2"/>
+                <Border x:Name="statusBadge"
+                        Grid.Column="3"
+                        CornerRadius="10"
+                        Padding="10,2"
+                        VerticalAlignment="Center"
+                        HorizontalAlignment="Right"
+                        Background="#EFF2F5">
+                    <TextBlock x:Name="tbStatusLabel"
+                               Text="No data"
+                               FontSize="11"
+                               FontWeight="SemiBold"
+                               Foreground="#57606A"/>
+                </Border>
             </Grid>
 
             <Rectangle Grid.Row="1" Height="1" Fill="#E1E4E8" Margin="0,8"/>
 
-            <!-- Stat columns: Reference / Test / Deviation -->
+            <!-- Stat columns: Reference / Test / Deviation / Correction -->
             <Grid Grid.Row="2" Margin="0,4,0,0">
                 <Grid.ColumnDefinitions>
+                    <ColumnDefinition Width="*"/>
                     <ColumnDefinition Width="*"/>
                     <ColumnDefinition Width="*"/>
                     <ColumnDefinition Width="*"/>
@@ -70,6 +86,12 @@
                     <TextBlock x:Name="tbDevOutliers" Text="outliers —" Foreground="#57606A" FontSize="11"/>
                     <TextBlock x:Name="tbDevSamples" Text="samples —" Foreground="#57606A" FontSize="11"/>
                 </StackPanel>
+
+                <!-- Correction -->
+                <StackPanel Grid.Column="3">
+                    <TextBlock Text="Correction" FontWeight="SemiBold" Foreground="#57606A"/>
+                    <TextBlock x:Name="tbCorrection" Text="—" FontSize="20" FontWeight="Bold" Foreground="#1A7F37" Margin="0,2,0,0"/>
+                </StackPanel>
             </Grid>
 
             <!-- Magnitude bar for deviation -->
@@ -79,6 +101,45 @@
                                     Minimum="0" Maximum="100"
                                     Value="0"
                                     Margin="0,8,0,0"/>
+
+            <!-- Plain-language assessment + glossary -->
+            <Border Grid.Row="4"
+                    x:Name="assessmentPanel"
+                    CornerRadius="4"
+                    BorderThickness="1"
+                    Background="#EFF2F5"
+                    BorderBrush="#D0D7DE"
+                    Padding="8,6"
+                    Margin="0,8,0,0">
+                <Grid>
+                    <Grid.ColumnDefinitions>
+                        <ColumnDefinition Width="*"/>
+                        <ColumnDefinition Width="Auto"/>
+                    </Grid.ColumnDefinitions>
+                    <TextBlock x:Name="tbAssessment"
+                               Text="Not enough captured data to assess this axis yet."
+                               TextWrapping="Wrap"
+                               FontSize="11"
+                               Foreground="#57606A"
+                               VerticalAlignment="Center"/>
+                    <telerik:RadButton x:Name="btnInfo"
+                                       Grid.Column="1"
+                                       Content="?"
+                                       Width="24"
+                                       Height="24"
+                                       Margin="8,0,0,0"
+                                       VerticalAlignment="Top"
+                                       FontWeight="Bold"
+                                       FontSize="14"
+                                       Foreground="#57606A"
+                                       Background="#EFF2F5"
+                                       BorderBrush="#D0D7DE"
+                                       BorderThickness="1"
+                                       CornerRadius="12"
+                                       Padding="0"
+                                       ToolTip="What do these numbers mean?"/>
+                </Grid>
+            </Border>
 
 
         </Grid>

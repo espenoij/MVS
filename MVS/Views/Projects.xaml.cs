@@ -673,12 +673,10 @@ namespace MVS
                     break;
 
                 case 4:
-                    // Step 4 — Review: at least one correction must be applied to the project.
-                    canProceed = project != null && project.HasCorrectionApplied;
-                    requirementsMet = canProceed;
-                    requirementsText = canProceed
-                        ? "Step 4 complete — a correction has been applied. Click Next to apply and report."
-                        : "To continue you must:  \u2717 Apply at least one recommended correction (use Apply on a result card below).";
+                    // Step 4 — Review: informational only; the user may always continue to reporting.
+                    canProceed = true;
+                    requirementsMet = true;
+                    requirementsText = "Step 4 — review the results if needed, then click Next to continue to reporting.";
                     break;
 
                 default:
