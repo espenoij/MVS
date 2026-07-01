@@ -9,6 +9,8 @@
                 <ResourceDictionary Source="/Telerik.Windows.Themes.Material;component/Themes/Telerik.Windows.Controls.Docking.xaml" />
                 <ResourceDictionary Source="/Telerik.Windows.Themes.Material;component/Themes/Telerik.Windows.Controls.Input.xaml" />
                 <ResourceDictionary Source="/Telerik.Windows.Themes.Material;component/Themes/Telerik.Windows.Controls.GridView.xaml" />
+                <ResourceDictionary Source="/Telerik.Windows.Themes.Material;component/Themes/Telerik.Windows.Controls.FixedDocumentViewers.xaml" />
+                <ResourceDictionary Source="/Telerik.Windows.Themes.Material;component/Themes/Telerik.Windows.Controls.FixedDocumentViewersUI.xaml" />
             </ResourceDictionary.MergedDictionaries>
             
             <SolidColorBrush x:Key="ColorSelected">#FFE0E0E0</SolidColorBrush>

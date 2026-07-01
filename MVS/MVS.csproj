@@ -22,6 +22,12 @@
   -->
   <ItemGroup>
     <PackageReference Include="Telerik.UI.for.Wpf.80" Version="2026.1.415" />
+    <!--
+      Telerik RadPdfProcessing (Telerik.Windows.Documents.Fixed) depends on
+      System.IO.Hashing at export time but does not bundle it, so reference it
+      explicitly to ensure the assembly is restored and copied to the output.
+    -->
+    <PackageReference Include="System.IO.Hashing" Version="8.0.0" />
   </ItemGroup>
 
   <ItemGroup>

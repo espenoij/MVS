@@ -3,6 +3,7 @@ using System.Collections.Generic;
 using System.ComponentModel;
 using System.IO;
 using System.Text;
+using System.Threading.Tasks;
 using System.Windows;
 using System.Windows.Controls;
 using System.Windows.Input;
@@ -12,6 +13,7 @@ using MVS.Models;
 using MVS.Views.Controls;
 using Telerik.Windows.Controls;
 using Telerik.Windows.Data;
+using Telerik.Windows.Documents.Fixed;
 using static MVS.MainWindow;
 
 namespace MVS
@@ -48,6 +50,17 @@ namespace MVS
 
         // Progress dialog
         DialogDataAnalysisProgress progressDlg = new DialogDataAnalysisProgress();
+
+        // ---- Step 5 report generation / preview state ----
+        // The generated PDF is cached in-memory so navigating back to Step 5 and
+        // saving to disc do not trigger a fresh (potentially slow) generation.
+        private byte[] _reportPdfBytes;
+        // The stream backing the on-screen preview; kept alive for the viewer's lifetime.
+        private MemoryStream _reportPreviewStream;
+        // Id of the project the cached report belongs to (used to detect staleness).
+        private int? _reportProjectId;
+        // Guards against concurrent/re-entrant generation while a report is building.
+        private bool _reportGenerating;
 
         // Live-update timer for the duration banner while recording is active.
         private readonly DispatcherTimer _recordingBannerTimer;
@@ -395,6 +408,9 @@ namespace MVS
             // Steps 3-4 — clear analysis data and statistics from the previous project.
             projectVM?.ResetAnalysisResults();
 
+            // Step 5 — drop any cached report so it regenerates for the new project.
+            InvalidateReportCache();
+
             // Return the wizard to the first step.
             SetWizardStep(1);
         }
@@ -459,6 +475,14 @@ namespace MVS
 
         private void SelectedProject_PropertyChanged(object sender, PropertyChangedEventArgs e)
         {
+            // If the applied corrections change, the cached report no longer matches
+            // the project state, so drop it and let Step 5 regenerate on next visit.
+            if (e.PropertyName == nameof(Project.HasCorrectionApplied) ||
+                (e.PropertyName != null && e.PropertyName.StartsWith("AppliedCorrection", StringComparison.Ordinal)))
+            {
+                InvalidateReportCache();
+            }
+
             UpdateWizardNavigation();
         }
 
@@ -611,6 +635,14 @@ namespace MVS
                 projectVM.CurrentWizardStep = step;
 
             UpdateWizardNavigation();
+
+            // On entering the report step, show the cached report if one is already
+            // available for this project; otherwise prompt the user to generate it.
+            // Generation itself is triggered explicitly via the Generate Report button.
+            if (step == 5)
+            {
+                RefreshReportPreviewState();
+            }
         }
 
         private void UpdateWizardNavigation()
@@ -806,18 +838,197 @@ namespace MVS
         }
 
         // ============================================================
+        // Report generation & preview (Step 5)
+        // ============================================================
+
+        /// <summary>
+        /// Updates the report area when entering Step 5 without triggering generation.
+        /// If a valid report is already cached for the current project it is shown;
+        /// otherwise the user is prompted to click Generate Report.
+        /// </summary>
+        private void RefreshReportPreviewState()
+        {
+            var project = mainWindowVM?.SelectedProject;
+
+            if (project == null || projectVM == null)
+            {
+                btnGenerateReport.IsEnabled = false;
+                ShowReportPreviewEmpty("Select a project to generate its report.");
+                return;
+            }
+
+            btnGenerateReport.IsEnabled = true;
+
+            if (_reportPdfBytes != null && _reportProjectId == project.Id)
+            {
+                ApplyReportPreview(_reportPdfBytes);
+            }
+            else
+            {
+                ShowReportPreviewEmpty("Click Generate Report to build the verification report.");
+            }
+        }
+
+        /// <summary>
+        /// Ensures a report exists for the current project and shows it in the
+        /// on-screen preview. Generation runs on a background thread behind a modal
+        /// progress dialog. A cached report for the same project is reused so the
+        /// (potentially slow) generation only happens once per project/data change.
+        /// </summary>
+        private async Task EnsureReportPreviewAsync()
+        {
+            var project = mainWindowVM?.SelectedProject;
+            if (project == null || projectVM == null)
+            {
+                ShowReportPreviewEmpty("Select a project to generate its report.");
+                return;
+            }
+
+            // Reuse a valid cached report for this project.
+            if (_reportPdfBytes != null && _reportProjectId == project.Id)
+            {
+                ApplyReportPreview(_reportPdfBytes);
+                return;
+            }
+
+            // Guard against re-entrancy (e.g. rapid step navigation).
+            if (_reportGenerating)
+                return;
+
+            _reportGenerating = true;
+            btnGenerateReport.IsEnabled = false;
+            btnSaveReportToDisc.IsEnabled = false;
+            btnOpenPdfReport.IsEnabled = false;
+
+            var progress = new DialogReportProgress();
+
+            try
+            {
+                // Build the report model on the UI thread — it reads view-model state.
+                projectVM.ComputeExtendedStatistics();
+                var model = Services.Reporting.VerificationReportModel.FromProject(project, projectVM);
+
+                progress.Show();
+
+                // The heavy work (chart rendering + PDF build) only touches the model
+                // POCO and Telerik document objects, so it is safe off the UI thread.
+                byte[] bytes = await Task.Run(() => GenerateReportBytes(model));
+
+                _reportPdfBytes = bytes;
+                _reportProjectId = project.Id;
+
+                ApplyReportPreview(bytes);
+            }
+            catch (Exception ex)
+            {
+                _reportPdfBytes = null;
+                _reportProjectId = null;
+                ShowReportPreviewEmpty("The report could not be generated.");
+                RadWindow.Alert("Failed to generate the report:\n" + ex.Message);
+            }
+            finally
+            {
+                progress.Close();
+                _reportGenerating = false;
+                btnGenerateReport.IsEnabled = mainWindowVM?.SelectedProject != null && projectVM != null;
+            }
+        }
+
+        private async void btnGenerateReport_Click(object sender, RoutedEventArgs e)
+        {
+            await EnsureReportPreviewAsync();
+        }
+
+        /// <summary>
+        /// Renders the result charts and exports the report to PDF bytes.
+        /// Runs on a background thread; must not touch WPF UI objects.
+        /// </summary>
+        private static byte[] GenerateReportBytes(Services.Reporting.VerificationReportModel model)
+        {
+            if (model.HasData)
+            {
+                model.DeviationChartPng = Services.Reporting.ReportChartRenderer.RenderDeviationChart(model);
+                model.MeansChartPng = Services.Reporting.ReportChartRenderer.RenderMeansChart(model);
+            }
+
+            using (var ms = new MemoryStream())
+            {
+                Services.Reporting.VerificationPdfReportExporter.Export(ms, model);
+                return ms.ToArray();
+            }
+        }
+
+        /// <summary>
+        /// Loads the given PDF bytes into the on-screen preview and enables saving.
+        /// </summary>
+        private void ApplyReportPreview(byte[] pdfBytes)
+        {
+            // Replace the previous preview stream (the viewer keeps it open).
+            _reportPreviewStream?.Dispose();
+            _reportPreviewStream = new MemoryStream(pdfBytes, writable: false);
+
+            pdfReportPreview.DocumentSource = new PdfDocumentSource(_reportPreviewStream);
+            pdfReportPreview.Visibility = Visibility.Visible;
+            tbReportPreviewEmpty.Visibility = Visibility.Collapsed;
+
+            btnSaveReportToDisc.IsEnabled = true;
+            btnOpenPdfReport.IsEnabled = true;
+        }
+
+        /// <summary>
+        /// Hides the preview and shows an empty-state message.
+        /// </summary>
+        private void ShowReportPreviewEmpty(string message)
+        {
+            pdfReportPreview.DocumentSource = null;
+            pdfReportPreview.Visibility = Visibility.Collapsed;
+            tbReportPreviewEmpty.Text = message;
+            tbReportPreviewEmpty.Visibility = Visibility.Visible;
+            btnSaveReportToDisc.IsEnabled = false;
+            btnOpenPdfReport.IsEnabled = false;
+        }
+
+        /// <summary>
+        /// Discards any cached report so the next visit to Step 5 regenerates it.
+        /// Call when the selected project or its corrections change.
+        /// </summary>
+        private void InvalidateReportCache()
+        {
+            _reportPdfBytes = null;
+            _reportProjectId = null;
+        }
+
+        // ============================================================
         // Export
         // ============================================================
 
-        private void btnExportReport_Click(object sender, RoutedEventArgs e)
+        private void btnSaveReportToDisc_Click(object sender, RoutedEventArgs e)
         {
             var project = mainWindowVM?.SelectedProject;
             if (project == null || projectVM == null) return;
 
+            // The report is generated on entering Step 5; if for some reason it is
+            // not available, fall back to generating it synchronously here.
+            if (_reportPdfBytes == null || _reportProjectId != project.Id)
+            {
+                try
+                {
+                    projectVM.ComputeExtendedStatistics();
+                    var model = Services.Reporting.VerificationReportModel.FromProject(project, projectVM);
+                    _reportPdfBytes = GenerateReportBytes(model);
+                    _reportProjectId = project.Id;
+                }
+                catch (Exception ex)
+                {
+                    RadWindow.Alert("Failed to generate the report:\n" + ex.Message);
+                    return;
+                }
+            }
+
             var dlg = new SaveFileDialog
             {
-                Filter = "CSV file (*.csv)|*.csv",
-                FileName = string.Format("verification_{0}_{1:yyyyMMdd_HHmmss}.csv",
+                Filter = "PDF file (*.pdf)|*.pdf",
+                FileName = string.Format("verification_{0}_{1:yyyyMMdd_HHmmss}.pdf",
                     string.IsNullOrEmpty(project.Name) ? "project" : project.Name,
                     DateTime.UtcNow)
             };
@@ -826,14 +1037,58 @@ namespace MVS
             {
                 try
                 {
-                    var report = new Services.VerificationReportExporter();
-                    report.ExportCsv(dlg.FileName, project, projectVM);
-                    RadWindow.Alert("Report exported successfully.");
+                    File.WriteAllBytes(dlg.FileName, _reportPdfBytes);
+                    RadWindow.Alert("PDF report saved successfully.");
                 }
                 catch (Exception ex)
                 {
-                    RadWindow.Alert("Failed to export report:\n" + ex.Message);
+                    RadWindow.Alert("Failed to save PDF report:\n" + ex.Message);
                 }
+            }
+        }
+
+        private void btnOpenPdfReport_Click(object sender, RoutedEventArgs e)
+        {
+            var project = mainWindowVM?.SelectedProject;
+            if (project == null || projectVM == null) return;
+
+            // The report is generated on entering Step 5; if for some reason it is
+            // not available, fall back to generating it synchronously here.
+            if (_reportPdfBytes == null || _reportProjectId != project.Id)
+            {
+                try
+                {
+                    projectVM.ComputeExtendedStatistics();
+                    var model = Services.Reporting.VerificationReportModel.FromProject(project, projectVM);
+                    _reportPdfBytes = GenerateReportBytes(model);
+                    _reportProjectId = project.Id;
+                }
+                catch (Exception ex)
+                {
+                    RadWindow.Alert("Failed to generate the report:\n" + ex.Message);
+                    return;
+                }
+            }
+
+            try
+            {
+                // Write the report to a temp file and open it with the system's
+                // default PDF viewer.
+                string fileName = string.Format("verification_{0}_{1:yyyyMMdd_HHmmss}.pdf",
+                    string.IsNullOrEmpty(project.Name) ? "project" : project.Name,
+                    DateTime.UtcNow);
+                string path = Path.Combine(Path.GetTempPath(), fileName);
+                File.WriteAllBytes(path, _reportPdfBytes);
+
+                System.Diagnostics.Process.Start(new System.Diagnostics.ProcessStartInfo
+                {
+                    FileName = path,
+                    UseShellExecute = true
+                });
+            }
+            catch (Exception ex)
+            {
+                RadWindow.Alert("Failed to open PDF report:\n" + ex.Message);
             }
         }
     }

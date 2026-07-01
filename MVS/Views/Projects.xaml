@@ -444,26 +444,60 @@
                     </ScrollViewer>
 
                     <!-- ===== STEP 5: APPLY & REPORT ===== -->
-                    <ScrollViewer x:Name="panelStep5" VerticalScrollBarVisibility="Auto" Visibility="Collapsed">
-                        <StackPanel>
+                    <Grid x:Name="panelStep5" Visibility="Collapsed">
+                        <Grid.RowDefinitions>
+                            <RowDefinition Height="Auto"/>
+                            <RowDefinition Height="Auto"/>
+                            <RowDefinition Height="Auto"/>
+                            <RowDefinition Height="*"/>
+                        </Grid.RowDefinitions>
 
-                            <TextBlock Text="Step 5 — Apply and report"
-                                       FontSize="14" FontWeight="SemiBold"
-                                       Margin="0,0,0,6"/>
-                            <TextBlock TextWrapping="Wrap"
-                                       Foreground="#57606A"
-                                       Margin="0,0,0,12"
-                                       Text="Export a verification report (CSV)."/>
+                        <TextBlock Grid.Row="0"
+                                   Text="Step 5 — Apply and report"
+                                   FontSize="14" FontWeight="SemiBold"
+                                   Margin="0,0,0,6"/>
+                        <TextBlock Grid.Row="1"
+                                   TextWrapping="Wrap"
+                                   Foreground="#57606A"
+                                   Margin="0,0,0,12"
+                                   Text="A comprehensive verification report — covering the captured data, the calculated statistics and the final orientation corrections, written in plain business language with result charts — can be generated and previewed below. Click Generate Report to build it, then save it as a PDF to share, or export the raw data as CSV for further analysis."/>
 
-                            <StackPanel Orientation="Horizontal" Margin="0,4,0,0">
-                                <telerik:RadButton x:Name="btnExportReport"
-                                                   Click="btnExportReport_Click"
-                                                   Content="Export report (CSV)..."
-                                                   Width="190"/>
-                            </StackPanel>
-
+                        <StackPanel Grid.Row="2" Orientation="Horizontal" Margin="0,0,0,10">
+                            <telerik:RadButton x:Name="btnGenerateReport"
+                                               Click="btnGenerateReport_Click"
+                                               Content="Generate Report"
+                                               Width="190"/>
+                            <telerik:RadButton x:Name="btnSaveReportToDisc"
+                                               Click="btnSaveReportToDisc_Click"
+                                               Content="Save Report"
+                                               IsEnabled="False"
+                                               Width="190"
+                                               Margin="8,0,0,0"/>
+                            <telerik:RadButton x:Name="btnOpenPdfReport"
+                                               Click="btnOpenPdfReport_Click"
+                                               Content="Open PDF Report"
+                                               IsEnabled="False"
+                                               Width="190"
+                                               Margin="8,0,0,0"/>
                         </StackPanel>
-                    </ScrollViewer>
+
+                        <Border Grid.Row="3"
+                                BorderBrush="#D0D7DE" BorderThickness="1"
+                                CornerRadius="4" Background="#F6F8FA">
+                            <Grid>
+                                <TextBlock x:Name="tbReportPreviewEmpty"
+                                           HorizontalAlignment="Center"
+                                           VerticalAlignment="Center"
+                                           Foreground="#57606A"
+                                           TextWrapping="Wrap"
+                                           TextAlignment="Center"
+                                           Text="The report preview will appear here."/>
+                                <telerik:RadPdfViewer x:Name="pdfReportPreview"
+                                                      Visibility="Collapsed"
+                                                      Background="#F6F8FA"/>
+                            </Grid>
+                        </Border>
+                    </Grid>
                     </Grid>
                 </Grid>
 
