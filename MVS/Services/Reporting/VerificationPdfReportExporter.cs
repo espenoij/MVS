@@ -118,6 +118,9 @@ namespace MVS.Services.Reporting
             var rows = new List<KeyValuePair<string, string>>
             {
                 new KeyValuePair<string, string>("Project", model.ProjectName),
+                new KeyValuePair<string, string>("Operator", Dash(model.Operator)),
+                new KeyValuePair<string, string>("Vessel", Dash(model.VesselName)),
+                new KeyValuePair<string, string>("Location", Dash(model.Location)),
                 new KeyValuePair<string, string>("Sensor setup", string.IsNullOrWhiteSpace(model.InputSetup) ? "-" : model.InputSetup),
                 new KeyValuePair<string, string>("Capture start", Dash(model.StartTime)),
                 new KeyValuePair<string, string>("Capture end", Dash(model.EndTime)),

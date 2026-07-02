@@ -53,7 +53,7 @@ using System.Windows;
 //
 // You can specify all the values or you can default the Build and Revision Numbers
 // by using the '*' as shown below:
-[assembly: AssemblyVersion("1.1.0.1214")]
+[assembly: AssemblyVersion("1.1.0.1222")]
 [assembly: AssemblyFileVersion("1.1.0.1105")]
 [assembly: AssemblyInformationalVersion("1.1.0.1106")]
 [assembly: InternalsVisibleTo("MVSTests")]

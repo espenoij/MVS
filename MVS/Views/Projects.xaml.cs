@@ -1,4 +1,4 @@
-﻿using System;
+﻿ using System;
 using System.Collections.Generic;
 using System.ComponentModel;
 using System.IO;
@@ -61,6 +61,12 @@ namespace MVS
         private int? _reportProjectId;
         // Guards against concurrent/re-entrant generation while a report is building.
         private bool _reportGenerating;
+        // Tracks whether a report has been generated for the current project session.
+        private bool _reportGenerated;
+        // Tracks whether input fields changed after the last report generation.
+        private bool _reportNeedsUpdate;
+        // Guards TextChanged handlers during LoadSelectedItemsDetails.
+        private bool _loadingDetails;
 
         // Live-update timer for the duration banner while recording is active.
         private readonly DispatcherTimer _recordingBannerTimer;
@@ -206,17 +212,25 @@ namespace MVS
             }
 
             if (mainWindowVM.SelectedProject != null)
-            {
-                tbDataSetName.IsEnabled = true;
-                tbDataSetComments.IsEnabled = true;
-                cboInputMRUs.IsEnabled = true;
-            }
-            else
-            {
-                tbDataSetName.IsEnabled = false;
-                tbDataSetComments.IsEnabled = false;
-                cboInputMRUs.IsEnabled = false;
-            }
+                {
+                    tbDataSetName.IsEnabled = true;
+                    tbDataSetComments.IsEnabled = true;
+                    tbOperator.IsEnabled = true;
+                    tbVesselName.IsEnabled = true;
+                    tbLocation.IsEnabled = true;
+                    chkCorrectionApplied.IsEnabled = true;
+                    cboInputMRUs.IsEnabled = true;
+                }
+                else
+                {
+                    tbDataSetName.IsEnabled = false;
+                    tbDataSetComments.IsEnabled = false;
+                    tbOperator.IsEnabled = false;
+                    tbVesselName.IsEnabled = false;
+                    tbLocation.IsEnabled = false;
+                    chkCorrectionApplied.IsEnabled = false;
+                    cboInputMRUs.IsEnabled = false;
+                }
         }
 
         private void LoadProjects()
@@ -408,7 +422,9 @@ namespace MVS
             // Steps 3-4 — clear analysis data and statistics from the previous project.
             projectVM?.ResetAnalysisResults();
 
-            // Step 5 — drop any cached report so it regenerates for the new project.
+            // Step 5 — drop any cached report and reset generation state for the new project.
+            _reportGenerated = false;
+            _reportNeedsUpdate = false;
             InvalidateReportCache();
 
             // Return the wizard to the first step.
@@ -417,11 +433,16 @@ namespace MVS
 
         private void LoadSelectedItemsDetails()
         {
+            _loadingDetails = true;
             if (mainWindowVM.SelectedProject != null)
             {
                 lbDataSetID.Content = mainWindowVM.SelectedProject.Id.ToString();
                 tbDataSetName.Text = mainWindowVM.SelectedProject.Name;
                 tbDataSetComments.Text = mainWindowVM.SelectedProject.Comments;
+                tbOperator.Text = mainWindowVM.SelectedProject.Operator;
+                tbVesselName.Text = mainWindowVM.SelectedProject.VesselName;
+                tbLocation.Text = mainWindowVM.SelectedProject.Location;
+                SetCorrectionCheckbox(mainWindowVM.SelectedProject.HasCorrectionApplied);
                 cboInputMRUs.Text = mainWindowVM.SelectedProject.InputMRUs.GetDescription();
                 lbDataSetDate.Content = mainWindowVM.SelectedProject.DateString;
                 lbDataSetStartTime.Content = mainWindowVM.SelectedProject.StartTimeString2;
@@ -435,6 +456,10 @@ namespace MVS
                 lbDataSetID.Content = string.Empty;
                 tbDataSetName.Text = string.Empty;
                 tbDataSetComments.Text = string.Empty;
+                tbOperator.Text = string.Empty;
+                tbVesselName.Text = string.Empty;
+                tbLocation.Text = string.Empty;
+                SetCorrectionCheckbox(false);
                 cboInputMRUs.Text = InputMRUType.None.GetDescription();
                 lbDataSetDate.Content = string.Empty;
                 lbDataSetStartTime.Content = string.Empty;
@@ -453,6 +478,7 @@ namespace MVS
             SubscribeToProject(mainWindowVM.SelectedProject);
 
             UpdateWizardNavigation();
+            _loadingDetails = false;
         }
 
         /// <summary>
@@ -481,6 +507,11 @@ namespace MVS
                 (e.PropertyName != null && e.PropertyName.StartsWith("AppliedCorrection", StringComparison.Ordinal)))
             {
                 InvalidateReportCache();
+
+                // Keep the checkbox on Step 5 in sync with the project's correction state.
+                var project = mainWindowVM?.SelectedProject;
+                if (project != null)
+                    SetCorrectionCheckbox(project.HasCorrectionApplied);
             }
 
             UpdateWizardNavigation();
@@ -536,6 +567,104 @@ namespace MVS
                 // Oppdatere database
                 mvsDatabase.Update(mainWindowVM.SelectedProject);
             }
+        }
+
+        private void tbOperator_LostFocus(object sender, RoutedEventArgs e)
+        {
+            tbOperator_Update(sender);
+        }
+
+        private void tbOperator_KeyDown(object sender, KeyEventArgs e)
+        {
+            if (e.Key == Key.Return)
+            {
+                tbOperator_Update(sender);
+                Keyboard.ClearFocus();
+            }
+        }
+
+        private void tbOperator_Update(object sender)
+        {
+            if (mainWindowVM.SelectedProject != null)
+            {
+                mainWindowVM.SelectedProject.Operator = (sender as TextBox).Text;
+                mvsDatabase.Update(mainWindowVM.SelectedProject);
+                InvalidateReportCache();
+            }
+        }
+
+        private void tbVesselName_LostFocus(object sender, RoutedEventArgs e)
+        {
+            tbVesselName_Update(sender);
+        }
+
+        private void tbVesselName_KeyDown(object sender, KeyEventArgs e)
+        {
+            if (e.Key == Key.Return)
+            {
+                tbVesselName_Update(sender);
+                Keyboard.ClearFocus();
+            }
+        }
+
+        private void tbVesselName_Update(object sender)
+        {
+            if (mainWindowVM.SelectedProject != null)
+            {
+                mainWindowVM.SelectedProject.VesselName = (sender as TextBox).Text;
+                mvsDatabase.Update(mainWindowVM.SelectedProject);
+                InvalidateReportCache();
+            }
+        }
+
+        private void tbLocation_LostFocus(object sender, RoutedEventArgs e)
+        {
+            tbLocation_Update(sender);
+        }
+
+        private void tbLocation_KeyDown(object sender, KeyEventArgs e)
+        {
+            if (e.Key == Key.Return)
+            {
+                tbLocation_Update(sender);
+                Keyboard.ClearFocus();
+            }
+        }
+
+        private void tbLocation_Update(object sender)
+        {
+            if (mainWindowVM.SelectedProject != null)
+            {
+                mainWindowVM.SelectedProject.Location = (sender as TextBox).Text;
+                mvsDatabase.Update(mainWindowVM.SelectedProject);
+                InvalidateReportCache();
+            }
+        }
+
+        private void SetCorrectionCheckbox(bool isChecked)
+        {
+            chkCorrectionApplied.Checked -= chkCorrectionApplied_Changed;
+            chkCorrectionApplied.Unchecked -= chkCorrectionApplied_Changed;
+            chkCorrectionApplied.IsChecked = isChecked;
+            chkCorrectionApplied.Checked += chkCorrectionApplied_Changed;
+            chkCorrectionApplied.Unchecked += chkCorrectionApplied_Changed;
+        }
+
+        private void chkCorrectionApplied_Changed(object sender, RoutedEventArgs e)
+        {
+            var project = mainWindowVM?.SelectedProject;
+            if (project == null || projectVM == null)
+                return;
+
+            bool apply = chkCorrectionApplied.IsChecked == true;
+
+            if (apply)
+                projectVM.ApplyRecommendedCorrection(mvsDatabase, project);
+            else
+                projectVM.ResetAppliedCorrection(mvsDatabase, project);
+
+            RefreshResultCards();
+            InvalidateReportCache();
         }
 
         private void cboInputMRUs_DropDownClosed(object sender, EventArgs e)
@@ -853,11 +982,13 @@ namespace MVS
             if (project == null || projectVM == null)
             {
                 btnGenerateReport.IsEnabled = false;
+                btnUpdateReport.IsEnabled = false;
+                btnUpdateReport.Visibility = Visibility.Collapsed;
                 ShowReportPreviewEmpty("Select a project to generate its report.");
                 return;
             }
 
-            btnGenerateReport.IsEnabled = true;
+            UpdateReportButtonState();
 
             if (_reportPdfBytes != null && _reportProjectId == project.Id)
             {
@@ -865,7 +996,9 @@ namespace MVS
             }
             else
             {
-                ShowReportPreviewEmpty("Click Generate Report to build the verification report.");
+                ShowReportPreviewEmpty(_reportGenerated && _reportNeedsUpdate
+                    ? "Input data has changed — click Update Report to refresh the preview."
+                    : "Click Generate Report to build the verification report.");
             }
         }
 
@@ -916,6 +1049,8 @@ namespace MVS
 
                 _reportPdfBytes = bytes;
                 _reportProjectId = project.Id;
+                _reportGenerated = true;
+                _reportNeedsUpdate = false;
 
                 ApplyReportPreview(bytes);
             }
@@ -930,7 +1065,7 @@ namespace MVS
             {
                 progress.Close();
                 _reportGenerating = false;
-                btnGenerateReport.IsEnabled = mainWindowVM?.SelectedProject != null && projectVM != null;
+                UpdateReportButtonState();
             }
         }
 
@@ -996,6 +1131,36 @@ namespace MVS
         {
             _reportPdfBytes = null;
             _reportProjectId = null;
+
+            if (_reportGenerated)
+                _reportNeedsUpdate = true;
+
+            UpdateReportButtonState();
+        }
+
+        private bool IsInputValid()
+        {
+            var project = mainWindowVM?.SelectedProject;
+            return project != null && projectVM != null &&
+                   !string.IsNullOrWhiteSpace(tbOperator.Text) &&
+                   !string.IsNullOrWhiteSpace(tbVesselName.Text) &&
+                   !string.IsNullOrWhiteSpace(tbLocation.Text);
+        }
+
+        private void UpdateReportButtonState()
+        {
+            bool valid = IsInputValid();
+            btnGenerateReport.IsEnabled = valid;
+            btnUpdateReport.IsEnabled = valid;
+            btnUpdateReport.Visibility = (_reportGenerated && _reportNeedsUpdate)
+                ? Visibility.Visible
+                : Visibility.Collapsed;
+        }
+
+        private void tbReportField_TextChanged(object sender, TextChangedEventArgs e)
+        {
+            if (_loadingDetails) return;
+            UpdateReportButtonState();
         }
 
         // ============================================================

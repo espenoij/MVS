@@ -17,6 +17,9 @@ namespace MVS.Services.Reporting
         // ----- Project / session metadata (already formatted for display) -----
         public string ProjectName { get; set; }
         public string Comments { get; set; }
+        public string Operator { get; set; }
+        public string VesselName { get; set; }
+        public string Location { get; set; }
         public string InputSetup { get; set; }
         public string StartTime { get; set; }
         public string EndTime { get; set; }
@@ -78,6 +81,9 @@ namespace MVS.Services.Reporting
             {
                 ProjectName = string.IsNullOrWhiteSpace(project.Name) ? "(unnamed project)" : project.Name,
                 Comments = project.Comments,
+                Operator = project.Operator,
+                VesselName = project.VesselName,
+                Location = project.Location,
                 InputSetup = project.InputMRUs.GetDescription(),
                 StartTime = project.StartTimeString2,
                 EndTime = project.EndTimeString2,

@@ -18,6 +18,9 @@ namespace MVS
         {
             Name = string.Empty;
             Comments = string.Empty;
+            Operator = string.Empty;
+            VesselName = string.Empty;
+            Location = string.Empty;
             StartTime = System.Data.SqlTypes.SqlDateTime.MinValue.Value;
             EndTime = System.Data.SqlTypes.SqlDateTime.MinValue.Value;
             InputMRUs = InputMRUType.ReferenceMRU_TestMRU;
@@ -29,6 +32,9 @@ namespace MVS
             Name = name;
             Comments = comments;
             InputMRUs = inputMRUs;
+            Operator = string.Empty;
+            VesselName = string.Empty;
+            Location = string.Empty;
         }
 
         public Project(Project session)
@@ -46,6 +52,9 @@ namespace MVS
                 StartTime = session.StartTime;
                 EndTime = session.EndTime;
                 InputMRUs = session.InputMRUs;
+                Operator = session.Operator;
+                VesselName = session.VesselName;
+                Location = session.Location;
             }
         }
 
@@ -89,6 +98,27 @@ namespace MVS
                 _comments = value;
                 OnPropertyChanged();
             }
+        }
+
+        private string _operator { get; set; }
+        public string Operator
+        {
+            get { return _operator; }
+            set { _operator = value; OnPropertyChanged(); }
+        }
+
+        private string _vesselName { get; set; }
+        public string VesselName
+        {
+            get { return _vesselName; }
+            set { _vesselName = value; OnPropertyChanged(); }
+        }
+
+        private string _location { get; set; }
+        public string Location
+        {
+            get { return _location; }
+            set { _location = value; OnPropertyChanged(); }
         }
 
         private DateTime _startTime { get; set; }

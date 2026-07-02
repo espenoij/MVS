@@ -24,6 +24,9 @@ namespace MVS
         private const string columnMVSCorrRoll = "corr_roll";
         private const string columnMVSCorrHeave = "corr_heave";
         private const string columnMVSCorrAppliedAt = "corr_applied_at";
+        private const string columnMVSOperator = "operator_name";
+        private const string columnMVSVesselName = "vessel_name";
+        private const string columnMVSLocation = "location";
 
         // MVS Data tabeller
         private const string tableNameMVSDataPrefix = "mvs_data_";
@@ -148,6 +151,9 @@ namespace MVS
                     EnsureColumnExists(cmd, tableNameMVSDataSets, columnMVSCorrRoll, "DOUBLE NULL");
                     EnsureColumnExists(cmd, tableNameMVSDataSets, columnMVSCorrHeave, "DOUBLE NULL");
                     EnsureColumnExists(cmd, tableNameMVSDataSets, columnMVSCorrAppliedAt, "DATETIME(3) NULL");
+                    EnsureColumnExists(cmd, tableNameMVSDataSets, columnMVSOperator, "TEXT");
+                    EnsureColumnExists(cmd, tableNameMVSDataSets, columnMVSVesselName, "TEXT");
+                    EnsureColumnExists(cmd, tableNameMVSDataSets, columnMVSLocation, "TEXT");
 
                     connection.Close();
 
@@ -360,7 +366,7 @@ namespace MVS
                         cmd.Connection = connection;
 
                         // Insert kommando
-                        cmd.CommandText = string.Format("INSERT INTO {0}({1}, {2}, {3}, {4}, {5}, {6}, {7}) VALUES(@Name, @Comments, @InputSetup, @CorrPitch, @CorrRoll, @CorrHeave, @CorrAppliedAt)",
+                        cmd.CommandText = string.Format("INSERT INTO {0}({1}, {2}, {3}, {4}, {5}, {6}, {7}, {8}, {9}, {10}) VALUES(@Name, @Comments, @InputSetup, @CorrPitch, @CorrRoll, @CorrHeave, @CorrAppliedAt, @Operator, @VesselName, @Location)",
                             tableNameMVSDataSets,
                             columnMVSName,
                             columnMVSComments,
@@ -368,7 +374,10 @@ namespace MVS
                             columnMVSCorrPitch,
                             columnMVSCorrRoll,
                             columnMVSCorrHeave,
-                            columnMVSCorrAppliedAt);
+                            columnMVSCorrAppliedAt,
+                            columnMVSOperator,
+                            columnMVSVesselName,
+                            columnMVSLocation);
 
                         // Insert parametre
                         cmd.Parameters.AddWithValue("@Name", dataSet.Name);
@@ -378,6 +387,9 @@ namespace MVS
                         cmd.Parameters.AddWithValue("@CorrRoll", dataSet.HasCorrectionApplied ? (object)dataSet.AppliedCorrectionRoll : DBNull.Value);
                         cmd.Parameters.AddWithValue("@CorrHeave", dataSet.HasCorrectionApplied ? (object)dataSet.AppliedCorrectionHeave : DBNull.Value);
                         cmd.Parameters.AddWithValue("@CorrAppliedAt", dataSet.CorrectionAppliedAt.HasValue ? (object)dataSet.CorrectionAppliedAt.Value : DBNull.Value);
+                        cmd.Parameters.AddWithValue("@Operator", dataSet.Operator ?? string.Empty);
+                        cmd.Parameters.AddWithValue("@VesselName", dataSet.VesselName ?? string.Empty);
+                        cmd.Parameters.AddWithValue("@Location", dataSet.Location ?? string.Empty);
 
                         // Åpne database connection
                         connection.Open();
@@ -414,7 +426,7 @@ namespace MVS
                         cmd.Connection = connection;
 
                         // Insert kommando
-                        cmd.CommandText = string.Format("UPDATE {0} SET {1}=@Name, {2}=@Comments, {3}=@InputSetup, {4}=@CorrPitch, {5}=@CorrRoll, {6}=@CorrHeave, {7}=@CorrAppliedAt WHERE id={8}",
+                        cmd.CommandText = string.Format("UPDATE {0} SET {1}=@Name, {2}=@Comments, {3}=@InputSetup, {4}=@CorrPitch, {5}=@CorrRoll, {6}=@CorrHeave, {7}=@CorrAppliedAt, {8}=@Operator, {9}=@VesselName, {10}=@Location WHERE id={11}",
                             tableNameMVSDataSets,
                             columnMVSName,
                             columnMVSComments,
@@ -423,6 +435,9 @@ namespace MVS
                             columnMVSCorrRoll,
                             columnMVSCorrHeave,
                             columnMVSCorrAppliedAt,
+                            columnMVSOperator,
+                            columnMVSVesselName,
+                            columnMVSLocation,
                             dataSet.Id);
 
                         // Update parametre
@@ -433,6 +448,9 @@ namespace MVS
                         cmd.Parameters.AddWithValue("@CorrRoll", dataSet.HasCorrectionApplied ? (object)dataSet.AppliedCorrectionRoll : DBNull.Value);
                         cmd.Parameters.AddWithValue("@CorrHeave", dataSet.HasCorrectionApplied ? (object)dataSet.AppliedCorrectionHeave : DBNull.Value);
                         cmd.Parameters.AddWithValue("@CorrAppliedAt", dataSet.CorrectionAppliedAt.HasValue ? (object)dataSet.CorrectionAppliedAt.Value : DBNull.Value);
+                        cmd.Parameters.AddWithValue("@Operator", dataSet.Operator ?? string.Empty);
+                        cmd.Parameters.AddWithValue("@VesselName", dataSet.VesselName ?? string.Empty);
+                        cmd.Parameters.AddWithValue("@Location", dataSet.Location ?? string.Empty);
 
                         // Åpne database connection
                         connection.Open();
@@ -527,7 +545,7 @@ namespace MVS
                         // SQL kommando
                         var cmd = new MySqlCommand();
                         cmd.Connection = connection;
-                        cmd.CommandText = string.Format("SELECT id, {0}, {1}, {2}, {3}, {4}, {5}, {6} FROM {7} ORDER BY id",
+                        cmd.CommandText = string.Format("SELECT id, {0}, {1}, {2}, {3}, {4}, {5}, {6}, {7}, {8}, {9} FROM {10} ORDER BY id",
                             columnMVSName,
                             columnMVSComments,
                             columnMVSInputSetup,
@@ -535,6 +553,9 @@ namespace MVS
                             columnMVSCorrRoll,
                             columnMVSCorrHeave,
                             columnMVSCorrAppliedAt,
+                            columnMVSOperator,
+                            columnMVSVesselName,
+                            columnMVSLocation,
                             tableNameMVSDataSets);
 
                         // Åpne database connection
@@ -560,6 +581,12 @@ namespace MVS
                                 project.AppliedCorrectionHeave = reader.GetDouble(6);
                             if (!reader.IsDBNull(7))
                                 project.CorrectionAppliedAt = reader.GetDateTime(7);
+                            if (!reader.IsDBNull(8))
+                                project.Operator = reader.GetString(8);
+                            if (!reader.IsDBNull(9))
+                                project.VesselName = reader.GetString(9);
+                            if (!reader.IsDBNull(10))
+                                project.Location = reader.GetString(10);
 
                             dataSets.Add(project);
                         }
