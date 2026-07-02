@@ -27,6 +27,7 @@ namespace MVS
         private const string columnMVSOperator = "operator_name";
         private const string columnMVSVesselName = "vessel_name";
         private const string columnMVSLocation = "location";
+        private const string columnMVSReportMetadata = "report_metadata";
 
         // MVS Data tabeller
         private const string tableNameMVSDataPrefix = "mvs_data_";
@@ -154,6 +155,7 @@ namespace MVS
                     EnsureColumnExists(cmd, tableNameMVSDataSets, columnMVSOperator, "TEXT");
                     EnsureColumnExists(cmd, tableNameMVSDataSets, columnMVSVesselName, "TEXT");
                     EnsureColumnExists(cmd, tableNameMVSDataSets, columnMVSLocation, "TEXT");
+                    EnsureColumnExists(cmd, tableNameMVSDataSets, columnMVSReportMetadata, "LONGTEXT");
 
                     connection.Close();
 
@@ -366,7 +368,7 @@ namespace MVS
                         cmd.Connection = connection;
 
                         // Insert kommando
-                        cmd.CommandText = string.Format("INSERT INTO {0}({1}, {2}, {3}, {4}, {5}, {6}, {7}, {8}, {9}, {10}) VALUES(@Name, @Comments, @InputSetup, @CorrPitch, @CorrRoll, @CorrHeave, @CorrAppliedAt, @Operator, @VesselName, @Location)",
+                        cmd.CommandText = string.Format("INSERT INTO {0}({1}, {2}, {3}, {4}, {5}, {6}, {7}, {8}, {9}, {10}, {11}) VALUES(@Name, @Comments, @InputSetup, @CorrPitch, @CorrRoll, @CorrHeave, @CorrAppliedAt, @Operator, @VesselName, @Location, @ReportMetadata)",
                             tableNameMVSDataSets,
                             columnMVSName,
                             columnMVSComments,
@@ -377,7 +379,8 @@ namespace MVS
                             columnMVSCorrAppliedAt,
                             columnMVSOperator,
                             columnMVSVesselName,
-                            columnMVSLocation);
+                            columnMVSLocation,
+                            columnMVSReportMetadata);
 
                         // Insert parametre
                         cmd.Parameters.AddWithValue("@Name", dataSet.Name);
@@ -390,6 +393,7 @@ namespace MVS
                         cmd.Parameters.AddWithValue("@Operator", dataSet.Operator ?? string.Empty);
                         cmd.Parameters.AddWithValue("@VesselName", dataSet.VesselName ?? string.Empty);
                         cmd.Parameters.AddWithValue("@Location", dataSet.Location ?? string.Empty);
+                        cmd.Parameters.AddWithValue("@ReportMetadata", dataSet.ReportMetadataJson ?? string.Empty);
 
                         // Åpne database connection
                         connection.Open();
@@ -426,7 +430,7 @@ namespace MVS
                         cmd.Connection = connection;
 
                         // Insert kommando
-                        cmd.CommandText = string.Format("UPDATE {0} SET {1}=@Name, {2}=@Comments, {3}=@InputSetup, {4}=@CorrPitch, {5}=@CorrRoll, {6}=@CorrHeave, {7}=@CorrAppliedAt, {8}=@Operator, {9}=@VesselName, {10}=@Location WHERE id={11}",
+                        cmd.CommandText = string.Format("UPDATE {0} SET {1}=@Name, {2}=@Comments, {3}=@InputSetup, {4}=@CorrPitch, {5}=@CorrRoll, {6}=@CorrHeave, {7}=@CorrAppliedAt, {8}=@Operator, {9}=@VesselName, {10}=@Location, {11}=@ReportMetadata WHERE id={12}",
                             tableNameMVSDataSets,
                             columnMVSName,
                             columnMVSComments,
@@ -438,6 +442,7 @@ namespace MVS
                             columnMVSOperator,
                             columnMVSVesselName,
                             columnMVSLocation,
+                            columnMVSReportMetadata,
                             dataSet.Id);
 
                         // Update parametre
@@ -451,6 +456,7 @@ namespace MVS
                         cmd.Parameters.AddWithValue("@Operator", dataSet.Operator ?? string.Empty);
                         cmd.Parameters.AddWithValue("@VesselName", dataSet.VesselName ?? string.Empty);
                         cmd.Parameters.AddWithValue("@Location", dataSet.Location ?? string.Empty);
+                        cmd.Parameters.AddWithValue("@ReportMetadata", dataSet.ReportMetadataJson ?? string.Empty);
 
                         // Åpne database connection
                         connection.Open();
@@ -545,7 +551,7 @@ namespace MVS
                         // SQL kommando
                         var cmd = new MySqlCommand();
                         cmd.Connection = connection;
-                        cmd.CommandText = string.Format("SELECT id, {0}, {1}, {2}, {3}, {4}, {5}, {6}, {7}, {8}, {9} FROM {10} ORDER BY id",
+                        cmd.CommandText = string.Format("SELECT id, {0}, {1}, {2}, {3}, {4}, {5}, {6}, {7}, {8}, {9}, {10} FROM {11} ORDER BY id",
                             columnMVSName,
                             columnMVSComments,
                             columnMVSInputSetup,
@@ -556,6 +562,7 @@ namespace MVS
                             columnMVSOperator,
                             columnMVSVesselName,
                             columnMVSLocation,
+                            columnMVSReportMetadata,
                             tableNameMVSDataSets);
 
                         // Åpne database connection
@@ -587,6 +594,8 @@ namespace MVS
                                 project.VesselName = reader.GetString(9);
                             if (!reader.IsDBNull(10))
                                 project.Location = reader.GetString(10);
+                            if (!reader.IsDBNull(11))
+                                project.ReportMetadataJson = reader.GetString(11);
 
                             dataSets.Add(project);
                         }

@@ -220,6 +220,7 @@ namespace MVS
                     tbLocation.IsEnabled = true;
                     chkCorrectionApplied.IsEnabled = true;
                     cboInputMRUs.IsEnabled = true;
+                    ucReportMetadata.IsEnabled = true;
                 }
                 else
                 {
@@ -230,6 +231,7 @@ namespace MVS
                     tbLocation.IsEnabled = false;
                     chkCorrectionApplied.IsEnabled = false;
                     cboInputMRUs.IsEnabled = false;
+                    ucReportMetadata.IsEnabled = false;
                 }
         }
 
@@ -450,6 +452,8 @@ namespace MVS
                 lbDataSetDuration.Content = mainWindowVM.SelectedProject.DurationString;
 
                 tbDurationWarning.Visibility = mainWindowVM.SelectedProject.DurationWarning();
+
+                ucReportMetadata.Metadata = mainWindowVM.SelectedProject.ReportMetadata;
             }
             else
             {
@@ -467,6 +471,8 @@ namespace MVS
                 lbDataSetDuration.Content = string.Empty;
 
                 tbDurationWarning.Visibility = Visibility.Collapsed;
+
+                ucReportMetadata.Metadata = null;
             }
 
             // Refresh the wizard widgets (duration banner, cards, step-4 labels).
@@ -612,6 +618,16 @@ namespace MVS
             if (mainWindowVM.SelectedProject != null)
             {
                 mainWindowVM.SelectedProject.VesselName = (sender as TextBox).Text;
+                mvsDatabase.Update(mainWindowVM.SelectedProject);
+                InvalidateReportCache();
+            }
+        }
+
+        // Persist the extended report metadata whenever a field is committed.
+        private void ucReportMetadata_MetadataChanged(object sender, EventArgs e)
+        {
+            if (mainWindowVM.SelectedProject != null)
+            {
                 mvsDatabase.Update(mainWindowVM.SelectedProject);
                 InvalidateReportCache();
             }

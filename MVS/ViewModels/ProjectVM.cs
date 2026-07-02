@@ -1,5 +1,6 @@
 ﻿using Org.BouncyCastle.Ocsp;
 using System;
+using System.Collections.Generic;
 using System.ComponentModel;
 using System.Linq;
 using System.Runtime.CompilerServices;
@@ -495,6 +496,15 @@ namespace MVS
         private AxisStatistics _devHeaveStats = AxisStatistics.Empty;
         public AxisStatistics DevHeaveStats { get { return _devHeaveStats; } private set { _devHeaveStats = value; OnPropertyChanged(); } }
 
+        // Pairwise reference-vs-test statistics (Pearson correlation and
+        // estimated latency) per axis, used by the detailed verification report.
+        private PairedSeriesStatistics _pitchPairStats = PairedSeriesStatistics.Empty;
+        public PairedSeriesStatistics PitchPairStats { get { return _pitchPairStats; } private set { _pitchPairStats = value; OnPropertyChanged(); } }
+        private PairedSeriesStatistics _rollPairStats = PairedSeriesStatistics.Empty;
+        public PairedSeriesStatistics RollPairStats { get { return _rollPairStats; } private set { _rollPairStats = value; OnPropertyChanged(); } }
+        private PairedSeriesStatistics _heavePairStats = PairedSeriesStatistics.Empty;
+        public PairedSeriesStatistics HeavePairStats { get { return _heavePairStats; } private set { _heavePairStats = value; OnPropertyChanged(); } }
+
         // Recommended corrections (the deviation means that the wizard suggests
         // applying to the Vessel MRU to "zero it out").
         public double RecommendedCorrectionPitch
@@ -527,11 +537,43 @@ namespace MVS
             DevRollStats = AxisStatistics.Compute(data.Select(d => d.testRoll - d.refRoll));
             DevHeaveStats = AxisStatistics.Compute(data.Select(d => d.testHeave - d.refHeave));
 
+            // Correlation and estimated latency between the reference and test
+            // series on each axis (needs the paired samples and a sample rate).
+            double sampleInterval = EstimateSampleIntervalSeconds(data);
+            PitchPairStats = PairedSeriesStatistics.Compute(data.Select(d => d.refPitch), data.Select(d => d.testPitch), sampleInterval);
+            RollPairStats = PairedSeriesStatistics.Compute(data.Select(d => d.refRoll), data.Select(d => d.testRoll), sampleInterval);
+            HeavePairStats = PairedSeriesStatistics.Compute(data.Select(d => d.refHeave), data.Select(d => d.testHeave), sampleInterval);
+
             OnPropertyChanged(nameof(RecommendedCorrectionPitch));
             OnPropertyChanged(nameof(RecommendedCorrectionRoll));
             OnPropertyChanged(nameof(RecommendedCorrectionHeave));
             OnPropertyChanged(nameof(HasSufficientData));
             OnPropertyChanged(nameof(IsAnalysisAvailable));
+        }
+
+        // Median time between consecutive samples (seconds), used to convert the
+        // latency lag (in samples) into seconds. Returns 0 when undeterminable.
+        private static double EstimateSampleIntervalSeconds(List<ProjectData> data)
+        {
+            if (data == null || data.Count < 2)
+                return 0d;
+
+            var deltas = new List<double>(data.Count - 1);
+            for (int i = 1; i < data.Count; i++)
+            {
+                double dt = (data[i].timestamp - data[i - 1].timestamp).TotalSeconds;
+                if (dt > 0 && !double.IsNaN(dt) && !double.IsInfinity(dt))
+                    deltas.Add(dt);
+            }
+
+            if (deltas.Count == 0)
+                return 0d;
+
+            deltas.Sort();
+            int mid = deltas.Count / 2;
+            return (deltas.Count % 2 == 1)
+                ? deltas[mid]
+                : (deltas[mid - 1] + deltas[mid]) / 2.0;
         }
 
         // Whether the captured data spans enough time for meaningful verification.

@@ -1,6 +1,7 @@
 ﻿using System;
 using System.ComponentModel;
 using System.Runtime.CompilerServices;
+using System.Text.Json;
 using System.Windows;
 
 namespace MVS
@@ -55,6 +56,9 @@ namespace MVS
                 Operator = session.Operator;
                 VesselName = session.VesselName;
                 Location = session.Location;
+                ReportMetadata = session.ReportMetadata != null
+                    ? session.ReportMetadata.Clone()
+                    : new MruReportMetadata();
             }
         }
 
@@ -119,6 +123,44 @@ namespace MVS
         {
             get { return _location; }
             set { _location = value; OnPropertyChanged(); }
+        }
+
+        // Operator-supplied descriptive metadata for the detailed verification
+        // report (equipment, test setup, conditions, acceptance criteria, etc.).
+        private MruReportMetadata _reportMetadata = new MruReportMetadata();
+        public MruReportMetadata ReportMetadata
+        {
+            get { return _reportMetadata; }
+            set
+            {
+                _reportMetadata = value ?? new MruReportMetadata();
+                OnPropertyChanged();
+            }
+        }
+
+        // Serialised form of ReportMetadata, persisted in a single JSON database
+        // column. Null-safe: an empty or malformed payload yields a fresh
+        // metadata object rather than throwing.
+        public string ReportMetadataJson
+        {
+            get { return JsonSerializer.Serialize(_reportMetadata); }
+            set
+            {
+                if (string.IsNullOrWhiteSpace(value))
+                {
+                    ReportMetadata = new MruReportMetadata();
+                    return;
+                }
+
+                try
+                {
+                    ReportMetadata = JsonSerializer.Deserialize<MruReportMetadata>(value) ?? new MruReportMetadata();
+                }
+                catch (JsonException)
+                {
+                    ReportMetadata = new MruReportMetadata();
+                }
+            }
         }
 
         private DateTime _startTime { get; set; }

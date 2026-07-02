@@ -444,7 +444,7 @@
                             <Grid.RowDefinitions>
                                 <RowDefinition Height="Auto"/>
                                 <RowDefinition Height="Auto"/>
-                                <RowDefinition Height="Auto"/>
+                                <RowDefinition Height="*"/>
                                 <RowDefinition Height="Auto"/>
                             </Grid.RowDefinitions>
 
@@ -458,8 +458,10 @@
                                        Margin="0,0,0,12"
                                        Text="Fill in all required fields (*), then click Generate Report. The report can be previewed on the right, saved as PDF, or opened directly."/>
 
-                            <!-- Project details for the report -->
-                            <telerik:GroupBox Grid.Row="2" Header="Project Details" Margin="0,0,0,10">
+                            <!-- Project details + report metadata for the report -->
+                            <ScrollViewer Grid.Row="2" VerticalScrollBarVisibility="Auto" Padding="0,0,8,0">
+                              <StackPanel>
+                            <telerik:GroupBox Header="Project Details" Margin="0,0,0,10">
                                 <Grid Margin="8">
                                     <Grid.ColumnDefinitions>
                                         <ColumnDefinition Width="130"/>
@@ -525,8 +527,17 @@
                                 </Grid>
                             </telerik:GroupBox>
 
+                            <!-- Extended report metadata (equipment, setup, conditions, criteria, notes) -->
+                            <telerik:GroupBox Header="Report Details" Margin="0,0,0,10">
+                                <controls:ReportMetadataEditor x:Name="ucReportMetadata"
+                                                               MetadataChanged="ucReportMetadata_MetadataChanged"
+                                                               Margin="8"/>
+                            </telerik:GroupBox>
+                              </StackPanel>
+                            </ScrollViewer>
+
                             <!-- Action buttons -->
-                            <StackPanel Grid.Row="3">
+                            <StackPanel Grid.Row="3" Margin="0,10,0,0">
                                 <StackPanel Orientation="Horizontal" Margin="0,0,0,6">
                                     <telerik:RadButton x:Name="btnGenerateReport"
                                                        Click="btnGenerateReport_Click"

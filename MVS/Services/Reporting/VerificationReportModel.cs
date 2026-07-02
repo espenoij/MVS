@@ -50,6 +50,15 @@ namespace MVS.Services.Reporting
         public double AppliedCorrectionRoll { get; set; }
         public double AppliedCorrectionHeave { get; set; }
 
+        // ----- Operator-supplied report metadata (equipment, setup, conditions,
+        //       acceptance criteria, observations, recommendations) -----
+        public MruReportMetadata Metadata { get; set; } = new MruReportMetadata();
+
+        // ----- Pairwise correlation and estimated latency per axis -----
+        public PairedSeriesStatistics PitchPair { get; set; } = PairedSeriesStatistics.Empty;
+        public PairedSeriesStatistics RollPair { get; set; } = PairedSeriesStatistics.Empty;
+        public PairedSeriesStatistics HeavePair { get; set; } = PairedSeriesStatistics.Empty;
+
         // ----- Optional graphics (PNG bytes). Rendered on the UI thread. -----
         public byte[] DeviationChartPng { get; set; }
         public byte[] MeansChartPng { get; set; }
@@ -111,6 +120,12 @@ namespace MVS.Services.Reporting
                 AppliedCorrectionPitch = project.AppliedCorrectionPitch,
                 AppliedCorrectionRoll = project.AppliedCorrectionRoll,
                 AppliedCorrectionHeave = project.AppliedCorrectionHeave,
+
+                Metadata = project.ReportMetadata ?? new MruReportMetadata(),
+
+                PitchPair = vm.PitchPairStats ?? PairedSeriesStatistics.Empty,
+                RollPair = vm.RollPairStats ?? PairedSeriesStatistics.Empty,
+                HeavePair = vm.HeavePairStats ?? PairedSeriesStatistics.Empty,
             };
         }
 
@@ -190,6 +205,40 @@ namespace MVS.Services.Reporting
                 case VerificationAxisKind.Roll: return AppliedCorrectionRoll;
                 default: return AppliedCorrectionHeave;
             }
+        }
+
+        public PairedSeriesStatistics PairStats(VerificationAxisKind axis)
+        {
+            switch (axis)
+            {
+                case VerificationAxisKind.Pitch: return PitchPair;
+                case VerificationAxisKind.Roll: return RollPair;
+                default: return HeavePair;
+            }
+        }
+
+        /// <summary>
+        /// Operator-entered maximum allowable mean deviation for this axis, or
+        /// null when no acceptance criterion was supplied.
+        /// </summary>
+        public double? AcceptanceThreshold(VerificationAxisKind axis)
+        {
+            switch (axis)
+            {
+                case VerificationAxisKind.Pitch: return Metadata?.AcceptanceCriteriaPitch;
+                case VerificationAxisKind.Roll: return Metadata?.AcceptanceCriteriaRoll;
+                default: return Metadata?.AcceptanceCriteriaHeave;
+            }
+        }
+
+        /// <summary>
+        /// Compliance verdict for this axis: the mean deviation graded against
+        /// the acceptance criterion.
+        /// </summary>
+        public ComplianceResult Compliance(VerificationAxisKind axis)
+        {
+            double mean = DevStats(axis)?.Mean ?? double.NaN;
+            return VerificationAssessment.EvaluateCompliance(mean, AcceptanceThreshold(axis));
         }
     }
 }

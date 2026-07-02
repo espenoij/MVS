@@ -28,6 +28,18 @@ namespace MVS.Services
     }
 
     /// <summary>
+    /// Outcome of comparing a measured axis deviation against an operator-entered
+    /// acceptance threshold (Section 11 of the verification report).
+    /// </summary>
+    public enum ComplianceResult
+    {
+        NotAssessed,
+        Pass,
+        Conditional,
+        Fail
+    }
+
+    /// <summary>
     /// Judges whether the per-axis deviation produced on the Review step can be
     /// trusted, based on the quality of the input data used to calculate it.
     ///
@@ -116,6 +128,47 @@ namespace MVS.Services
                 case VerificationStatus.Acceptable: return "Data usable";
                 case VerificationStatus.NeedsAttention: return "Data weak";
                 default: return "No data";
+            }
+        }
+
+        // A deviation within the threshold passes; within 1.5x the threshold is a
+        // conditional (marginal) pass; anything larger fails.
+        private const double ConditionalToleranceFactor = 1.5;
+
+        /// <summary>
+        /// Grades a measured mean deviation against an acceptance threshold
+        /// (same unit as the deviation). Returns <see cref="ComplianceResult.NotAssessed"/>
+        /// when no positive threshold was supplied or the deviation is unavailable.
+        /// </summary>
+        public static ComplianceResult EvaluateCompliance(double meanDeviation, double? acceptanceThreshold)
+        {
+            if (!acceptanceThreshold.HasValue ||
+                double.IsNaN(acceptanceThreshold.Value) ||
+                acceptanceThreshold.Value <= 0 ||
+                double.IsNaN(meanDeviation))
+            {
+                return ComplianceResult.NotAssessed;
+            }
+
+            double magnitude = Math.Abs(meanDeviation);
+            double threshold = acceptanceThreshold.Value;
+
+            if (magnitude <= threshold)
+                return ComplianceResult.Pass;
+            if (magnitude <= threshold * ConditionalToleranceFactor)
+                return ComplianceResult.Conditional;
+            return ComplianceResult.Fail;
+        }
+
+        /// <summary>Short report label for a compliance result.</summary>
+        public static string ComplianceLabel(ComplianceResult result)
+        {
+            switch (result)
+            {
+                case ComplianceResult.Pass: return "Pass";
+                case ComplianceResult.Conditional: return "Conditional Pass";
+                case ComplianceResult.Fail: return "Fail";
+                default: return "Not assessed";
             }
         }
 

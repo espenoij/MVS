@@ -1,6 +1,7 @@
 using System;
 using System.IO;
 using Microsoft.VisualStudio.TestTools.UnitTesting;
+using MVS;
 using MVS.Models;
 using MVS.Services;
 using MVS.Services.Reporting;
@@ -35,6 +36,24 @@ namespace MVSTests.Services
                 AppliedCorrectionPitch = 0.42,
                 AppliedCorrectionRoll = -0.15,
                 AppliedCorrectionHeave = 0.03,
+                Metadata = new MruReportMetadata
+                {
+                    TestObjective = "Verify vessel MRU against calibrated reference.",
+                    DutManufacturer = "Acme",
+                    DutModel = "MRU-100",
+                    ReferenceManufacturer = "Ref Co",
+                    ReferenceModel = "GoldStd-9",
+                    ReferenceCalibrationDate = new DateTime(2024, 12, 1),
+                    SampleRateHz = 10.0,
+                    AcceptanceCriteriaPitch = 0.5,
+                    AcceptanceCriteriaRoll = 0.1,
+                    AcceptanceCriteriaHeave = 0.05,
+                    Observations = "Calm conditions throughout.",
+                    Recommendations = "Apply corrections and re-verify.",
+                },
+                PitchPair = new PairedSeriesStatistics { SampleCount = 400, Correlation = 0.98, EstimatedLatencySeconds = 0.10 },
+                RollPair = new PairedSeriesStatistics { SampleCount = 400, Correlation = 0.95, EstimatedLatencySeconds = 0.0 },
+                HeavePair = new PairedSeriesStatistics { SampleCount = 400, Correlation = 0.90, EstimatedLatencySeconds = -0.05 },
             };
 
             if (withData)
@@ -83,6 +102,48 @@ namespace MVSTests.Services
 
             Assert.AreEqual(0.42, model.RecommendedCorrection(VerificationAxisKind.Pitch), 1e-9);
             Assert.AreEqual(-0.15, model.AppliedCorrection(VerificationAxisKind.Roll), 1e-9);
+        }
+
+        [TestMethod]
+        public void Model_PairStats_MapToCorrectAxis()
+        {
+            var model = SampleModel();
+
+            Assert.AreEqual(model.PitchPair, model.PairStats(VerificationAxisKind.Pitch));
+            Assert.AreEqual(model.RollPair, model.PairStats(VerificationAxisKind.Roll));
+            Assert.AreEqual(model.HeavePair, model.PairStats(VerificationAxisKind.Heave));
+        }
+
+        [TestMethod]
+        public void Model_AcceptanceThreshold_ReadsFromMetadata()
+        {
+            var model = SampleModel();
+
+            Assert.AreEqual(0.5, model.AcceptanceThreshold(VerificationAxisKind.Pitch));
+            Assert.AreEqual(0.1, model.AcceptanceThreshold(VerificationAxisKind.Roll));
+            Assert.AreEqual(0.05, model.AcceptanceThreshold(VerificationAxisKind.Heave));
+        }
+
+        [TestMethod]
+        public void Model_Compliance_GradesMeanDeviationAgainstCriteria()
+        {
+            var model = SampleModel();
+
+            // Pitch mean 0.42 vs criterion 0.5 -> Pass.
+            Assert.AreEqual(ComplianceResult.Pass, model.Compliance(VerificationAxisKind.Pitch));
+            // Roll mean -0.15 (|0.15|) vs criterion 0.1 -> within 1.5x (0.15) -> Conditional.
+            Assert.AreEqual(ComplianceResult.Conditional, model.Compliance(VerificationAxisKind.Roll));
+            // Heave mean 0.03 vs criterion 0.05 -> Pass.
+            Assert.AreEqual(ComplianceResult.Pass, model.Compliance(VerificationAxisKind.Heave));
+        }
+
+        [TestMethod]
+        public void Model_Compliance_NotAssessed_WhenNoCriterion()
+        {
+            var model = SampleModel();
+            model.Metadata.AcceptanceCriteriaPitch = null;
+
+            Assert.AreEqual(ComplianceResult.NotAssessed, model.Compliance(VerificationAxisKind.Pitch));
         }
 
         [TestMethod]

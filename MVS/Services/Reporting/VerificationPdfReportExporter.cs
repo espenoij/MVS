@@ -79,12 +79,40 @@ namespace MVS.Services.Reporting
             editor.SectionProperties.PageSize = new Size(793, 1122);
             editor.SectionProperties.PageMargins = new TelerikPadding(56);
 
+            // 1. Title / identification
             WriteTitle(editor, model);
+            // 2. Scope and objective
+            WriteScope(editor, model);
+            // 3. Equipment
+            WriteEquipment(editor, model);
+            // 4. Test setup
+            WriteTestSetup(editor, model);
+            // 5. Test conditions
+            WriteTestConditions(editor, model);
+            // 6. Data processing methodology
+            WriteMethodology(editor, model);
+            // 7. Executive summary + capture overview
             WriteOverview(editor, model);
+            // 8. Results - recommended/applied corrections
             WriteFinalResults(editor, model);
+            // 8b. Correlation and latency
+            WriteCorrelationAndLatency(editor, model);
+            // 8c. Result graphics
             WriteCharts(editor, model);
+            // 9. Supporting per-axis statistics
             WriteAxisDetails(editor, model);
+            // 10. Observations
+            WriteObservations(editor, model);
+            // 11. Compliance assessment
+            WriteCompliance(editor, model);
+            // 12. Conclusion
+            WriteConclusion(editor, model);
+            // 13. Recommendations
+            WriteRecommendations(editor, model);
+            // 14. Appendices / glossary
+            WriteAppendices(editor, model);
             WriteGlossary(editor, model);
+
             WriteFooter(editor, model);
 
             return document;
@@ -99,7 +127,7 @@ namespace MVS.Services.Reporting
             SetText(editor, FontsRepository.HelveticaBold, 22, ColorHeading);
             editor.ParagraphProperties.SpacingAfter = 2;
             editor.InsertParagraph();
-            editor.InsertRun("Motion Verification Report");
+            editor.InsertRun("Motion Reference Unit Verification Report");
 
             SetText(editor, FontsRepository.Helvetica, 12, ColorMuted);
             editor.ParagraphProperties.SpacingAfter = 12;
@@ -107,11 +135,151 @@ namespace MVS.Services.Reporting
             editor.InsertRun(model.ProjectName);
 
             HorizontalRule(editor);
+
+            var rows = new List<KeyValuePair<string, string>>
+            {
+                new KeyValuePair<string, string>("Project / reference", Dash(model.ProjectName)),
+                new KeyValuePair<string, string>("Vessel", Dash(model.VesselName)),
+                new KeyValuePair<string, string>("Operator / surveyor", Dash(model.Operator)),
+                new KeyValuePair<string, string>("Location", Dash(model.Location)),
+                new KeyValuePair<string, string>("Report generated", model.GeneratedUtc.ToLocalTime().ToString("yyyy-MM-dd HH:mm", Ci)),
+            };
+            InsertKeyValueTable(editor, rows);
+        }
+
+        private static void WriteScope(RadFixedDocumentEditor editor, VerificationReportModel model)
+        {
+            Heading(editor, "1. Scope and Objective");
+
+            MruReportMetadata m = model.Metadata;
+            Paragraph(editor,
+                string.IsNullOrWhiteSpace(m?.TestObjective)
+                    ? "This report documents the verification of a vessel-installed Motion Reference Unit (MRU) " +
+                      "against a calibrated reference MRU. The objective is to quantify the agreement between the " +
+                      "two units in pitch, roll and heave, and to determine any orientation corrections required " +
+                      "for the vessel unit."
+                    : m.TestObjective,
+                11, ColorText, spacingAfter: 8);
+
+            if (!string.IsNullOrWhiteSpace(m?.ApplicableStandards))
+            {
+                Paragraph(editor, "Applicable standards and references", 11, ColorHeading, spacingBefore: 4, spacingAfter: 2, bold: true);
+                Paragraph(editor, m.ApplicableStandards, 10.5, ColorText, spacingAfter: 6);
+            }
+        }
+
+        private static void WriteEquipment(RadFixedDocumentEditor editor, VerificationReportModel model)
+        {
+            Heading(editor, "2. Equipment");
+            MruReportMetadata m = model.Metadata ?? new MruReportMetadata();
+
+            Paragraph(editor, "MRU under test (vessel-installed)", 12, ColorHeading, spacingBefore: 2, spacingAfter: 4, bold: true);
+            InsertKeyValueTable(editor, new List<KeyValuePair<string, string>>
+            {
+                new KeyValuePair<string, string>("Manufacturer", Dash(m.DutManufacturer)),
+                new KeyValuePair<string, string>("Model", Dash(m.DutModel)),
+                new KeyValuePair<string, string>("Serial number", Dash(m.DutSerialNumber)),
+                new KeyValuePair<string, string>("Firmware version", Dash(m.DutFirmwareVersion)),
+            });
+
+            Paragraph(editor, "Reference MRU", 12, ColorHeading, spacingBefore: 10, spacingAfter: 4, bold: true);
+            InsertKeyValueTable(editor, new List<KeyValuePair<string, string>>
+            {
+                new KeyValuePair<string, string>("Manufacturer", Dash(m.ReferenceManufacturer)),
+                new KeyValuePair<string, string>("Model", Dash(m.ReferenceModel)),
+                new KeyValuePair<string, string>("Serial number", Dash(m.ReferenceSerialNumber)),
+                new KeyValuePair<string, string>("Firmware version", Dash(m.ReferenceFirmwareVersion)),
+                new KeyValuePair<string, string>("Calibration date", m.ReferenceCalibrationDate.HasValue
+                    ? m.ReferenceCalibrationDate.Value.ToString("yyyy-MM-dd", Ci) : "-"),
+                new KeyValuePair<string, string>("Calibration certificate", Dash(m.ReferenceCalibrationCertificateNumber)),
+            });
+
+            if (!string.IsNullOrWhiteSpace(m.AdditionalEquipment))
+            {
+                Paragraph(editor, "Additional equipment", 11, ColorHeading, spacingBefore: 10, spacingAfter: 2, bold: true);
+                Paragraph(editor, m.AdditionalEquipment, 10.5, ColorText, spacingAfter: 6);
+            }
+        }
+
+        private static void WriteTestSetup(RadFixedDocumentEditor editor, VerificationReportModel model)
+        {
+            Heading(editor, "3. Test Setup");
+            MruReportMetadata m = model.Metadata ?? new MruReportMetadata();
+
+            InsertKeyValueTable(editor, new List<KeyValuePair<string, string>>
+            {
+                new KeyValuePair<string, string>("DUT installation location", Dash(m.DutInstallationLocation)),
+                new KeyValuePair<string, string>("Reference installation location", Dash(m.ReferenceInstallationLocation)),
+                new KeyValuePair<string, string>("Mounting arrangement", Dash(m.MountingArrangement)),
+                new KeyValuePair<string, string>("Coordinate system", Dash(m.CoordinateSystem)),
+                new KeyValuePair<string, string>("Sensor separation", Dash(m.SensorSeparation)),
+                new KeyValuePair<string, string>("Data acquisition method", Dash(m.DataAcquisitionMethod)),
+                new KeyValuePair<string, string>("Synchronization method", Dash(m.SynchronizationMethod)),
+                new KeyValuePair<string, string>("Sample rate", m.SampleRateHz.HasValue
+                    ? string.Format(Ci, "{0:0.###} Hz", m.SampleRateHz.Value) : "-"),
+                new KeyValuePair<string, string>("Logging configuration", Dash(m.LoggingConfiguration)),
+                new KeyValuePair<string, string>("Sensor setup (logged)", string.IsNullOrWhiteSpace(model.InputSetup) ? "-" : model.InputSetup),
+            });
+        }
+
+        private static void WriteTestConditions(RadFixedDocumentEditor editor, VerificationReportModel model)
+        {
+            Heading(editor, "4. Test Conditions");
+            MruReportMetadata m = model.Metadata ?? new MruReportMetadata();
+
+            InsertKeyValueTable(editor, new List<KeyValuePair<string, string>>
+            {
+                new KeyValuePair<string, string>("Loading condition", Dash(m.LoadingCondition)),
+                new KeyValuePair<string, string>("Vessel speed", Dash(m.VesselSpeed)),
+                new KeyValuePair<string, string>("Operational mode", Dash(m.OperationalMode)),
+                new KeyValuePair<string, string>("Sea state", Dash(m.SeaState)),
+                new KeyValuePair<string, string>("Wind conditions", Dash(m.WindConditions)),
+                new KeyValuePair<string, string>("Wave conditions", Dash(m.WaveConditions)),
+                new KeyValuePair<string, string>("Current conditions", Dash(m.CurrentConditions)),
+            });
+
+            if (!string.IsNullOrWhiteSpace(m.EnvironmentalNotes))
+            {
+                Paragraph(editor, "Environmental notes", 11, ColorHeading, spacingBefore: 10, spacingAfter: 2, bold: true);
+                Paragraph(editor, m.EnvironmentalNotes, 10.5, ColorText, spacingAfter: 6);
+            }
+        }
+
+        private static void WriteMethodology(RadFixedDocumentEditor editor, VerificationReportModel model)
+        {
+            Heading(editor, "5. Data Processing Methodology");
+
+            Paragraph(editor,
+                "Reference and vessel motion channels are logged simultaneously and time-aligned sample-by-sample. " +
+                "For each axis the deviation (vessel minus reference) is computed per sample, and descriptive " +
+                "statistics (mean, standard deviation, minimum, maximum and RMS) are calculated over the capture. " +
+                "The mean deviation on each axis is taken as the recommended orientation correction for the vessel unit. " +
+                "Agreement between the two units is additionally quantified by the Pearson correlation coefficient, and " +
+                "the relative timing is estimated by cross-correlation (see Correlation and Latency).",
+                10.5, ColorText, spacingAfter: 6);
+
+            MruReportMetadata m = model.Metadata;
+            if (!string.IsNullOrWhiteSpace(m?.TimeSynchronizationNotes))
+            {
+                Paragraph(editor, "Time synchronization", 11, ColorHeading, spacingBefore: 4, spacingAfter: 2, bold: true);
+                Paragraph(editor, m.TimeSynchronizationNotes, 10.5, ColorText, spacingAfter: 6);
+            }
+            if (!string.IsNullOrWhiteSpace(m?.FilteringNotes))
+            {
+                Paragraph(editor, "Filtering", 11, ColorHeading, spacingBefore: 4, spacingAfter: 2, bold: true);
+                Paragraph(editor, m.FilteringNotes, 10.5, ColorText, spacingAfter: 6);
+            }
+            if (!string.IsNullOrWhiteSpace(m?.DataProcessingNotes))
+            {
+                Paragraph(editor, "Additional processing notes", 11, ColorHeading, spacingBefore: 4, spacingAfter: 2, bold: true);
+                Paragraph(editor, m.DataProcessingNotes, 10.5, ColorText, spacingAfter: 6);
+            }
         }
 
         private static void WriteOverview(RadFixedDocumentEditor editor, VerificationReportModel model)
         {
-            Heading(editor, "Summary");
+            editor.InsertPageBreak();
+            Heading(editor, "6. Executive Summary");
 
             Paragraph(editor, OverviewSentence(model), 11, ColorText, spacingAfter: 10);
 
@@ -142,7 +310,7 @@ namespace MVS.Services.Reporting
 
         private static void WriteFinalResults(RadFixedDocumentEditor editor, VerificationReportModel model)
         {
-            Heading(editor, "Final results - recommended corrections");
+            Heading(editor, "7. Results - Recommended Corrections");
 
             Paragraph(editor,
                 "These are the orientation corrections the verification calculated for the vessel unit. " +
@@ -177,7 +345,7 @@ namespace MVS.Services.Reporting
             if (model.DeviationChartPng == null && model.MeansChartPng == null)
                 return;
 
-            Heading(editor, "Result graphics");
+            Heading(editor, "Result Graphics");
 
             if (model.DeviationChartPng != null)
             {
@@ -199,7 +367,7 @@ namespace MVS.Services.Reporting
         private static void WriteAxisDetails(RadFixedDocumentEditor editor, VerificationReportModel model)
         {
             editor.InsertPageBreak();
-            Heading(editor, "Supporting detail per axis");
+            Heading(editor, "8. Supporting Detail per Axis");
 
             foreach (VerificationAxisKind axis in AllAxes())
             {
@@ -233,9 +401,122 @@ namespace MVS.Services.Reporting
             }
         }
 
+        private static void WriteCorrelationAndLatency(RadFixedDocumentEditor editor, VerificationReportModel model)
+        {
+            if (!model.HasData)
+                return;
+
+            Heading(editor, "Correlation and Latency");
+            Paragraph(editor,
+                "Correlation measures how closely the vessel unit tracks the reference over time (1.00 = perfect " +
+                "agreement). Estimated latency is the time shift that best aligns the two signals; a positive value " +
+                "means the vessel unit lags the reference.",
+                10.5, ColorText, spacingAfter: 8);
+
+            var table = NewTable();
+            AddHeaderRow(table, "Axis", "Correlation", "Estimated latency");
+
+            int index = 0;
+            foreach (VerificationAxisKind axis in AllAxes())
+            {
+                PairedSeriesStatistics pair = model.PairStats(axis);
+                AddBodyRow(table, index++,
+                    model.AxisTitle(axis),
+                    Correlation(pair?.Correlation),
+                    Latency(pair?.EstimatedLatencySeconds));
+            }
+
+            editor.InsertTable(table);
+        }
+
+        private static void WriteObservations(RadFixedDocumentEditor editor, VerificationReportModel model)
+        {
+            editor.InsertPageBreak();
+            Heading(editor, "9. Observations");
+
+            string observations = model.Metadata?.Observations;
+            Paragraph(editor,
+                string.IsNullOrWhiteSpace(observations)
+                    ? "No specific observations were recorded during the verification."
+                    : observations,
+                10.5, ColorText, spacingAfter: 6);
+        }
+
+        private static void WriteCompliance(RadFixedDocumentEditor editor, VerificationReportModel model)
+        {
+            Heading(editor, "10. Compliance Assessment");
+
+            Paragraph(editor,
+                "The mean deviation on each axis is compared against the acceptance criterion entered for this " +
+                "verification. A deviation within the criterion is a Pass; up to 1.5x the criterion is a Conditional " +
+                "Pass; anything larger is a Fail. Axes without an entered criterion are reported as \"Not assessed\".",
+                10.5, ColorText, spacingAfter: 8);
+
+            var table = NewTable();
+            AddHeaderRow(table, "Axis", "Mean deviation", "Acceptance criterion", "Verdict");
+
+            int index = 0;
+            foreach (VerificationAxisKind axis in AllAxes())
+            {
+                string unit = model.Unit(axis);
+                double mean = model.DevStats(axis)?.Mean ?? double.NaN;
+                double? threshold = model.AcceptanceThreshold(axis);
+                ComplianceResult result = model.Compliance(axis);
+
+                AddBodyRow(table, index++,
+                    model.AxisTitle(axis),
+                    Stat(double.IsNaN(mean) ? (double?)null : mean, unit),
+                    threshold.HasValue ? Stat(threshold, unit) : "-",
+                    VerificationAssessment.ComplianceLabel(result));
+            }
+
+            editor.InsertTable(table);
+
+            string specs = model.Metadata?.ManufacturerSpecifications;
+            if (!string.IsNullOrWhiteSpace(specs))
+            {
+                Paragraph(editor, "Manufacturer specifications", 11, ColorHeading, spacingBefore: 10, spacingAfter: 2, bold: true);
+                Paragraph(editor, specs, 10.5, ColorText, spacingAfter: 6);
+            }
+        }
+
+        private static void WriteConclusion(RadFixedDocumentEditor editor, VerificationReportModel model)
+        {
+            Heading(editor, "11. Conclusion");
+            Paragraph(editor, ConclusionSentence(model), 10.5, ColorText, spacingAfter: 6);
+        }
+
+        private static void WriteRecommendations(RadFixedDocumentEditor editor, VerificationReportModel model)
+        {
+            Heading(editor, "12. Recommendations");
+
+            string recommendations = model.Metadata?.Recommendations;
+            Paragraph(editor,
+                string.IsNullOrWhiteSpace(recommendations)
+                    ? (model.HasCorrectionApplied
+                        ? "Apply and retain the corrections listed in this report. Re-verify periodically and after any " +
+                          "change to the installation or firmware."
+                        : "Apply the recommended corrections listed in this report to the vessel unit, then re-verify to " +
+                          "confirm agreement with the reference.")
+                    : recommendations,
+                10.5, ColorText, spacingAfter: 6);
+        }
+
+        private static void WriteAppendices(RadFixedDocumentEditor editor, VerificationReportModel model)
+        {
+            Heading(editor, "13. Appendices");
+
+            string notes = model.Metadata?.AppendixNotes;
+            Paragraph(editor,
+                string.IsNullOrWhiteSpace(notes)
+                    ? "No additional appendix material was provided."
+                    : notes,
+                10.5, ColorText, spacingAfter: 6);
+        }
+
         private static void WriteGlossary(RadFixedDocumentEditor editor, VerificationReportModel model)
         {
-            Heading(editor, "What the numbers mean");
+            Heading(editor, "What the Numbers Mean");
             Paragraph(editor, VerificationAssessment.Glossary(VerificationAxisKind.Pitch), 9.5, ColorText, spacingAfter: 6);
         }
 
@@ -277,6 +558,57 @@ namespace MVS.Services.Reporting
                 model.SampleCount,
                 string.IsNullOrWhiteSpace(model.Duration) ? "completed" : model.Duration,
                 applied);
+        }
+
+        private static string ConclusionSentence(VerificationReportModel model)
+        {
+            if (!model.HasData)
+            {
+                return "No measurement data was available, so no verification conclusion can be drawn. " +
+                       "Capture reference and vessel motion data and regenerate the report.";
+            }
+
+            int assessed = 0, passed = 0, conditional = 0, failed = 0;
+            foreach (VerificationAxisKind axis in AllAxes())
+            {
+                switch (model.Compliance(axis))
+                {
+                    case ComplianceResult.Pass: assessed++; passed++; break;
+                    case ComplianceResult.Conditional: assessed++; conditional++; break;
+                    case ComplianceResult.Fail: assessed++; failed++; break;
+                }
+            }
+
+            string verdict;
+            if (assessed == 0)
+            {
+                verdict = "No acceptance criteria were entered, so a formal pass/fail verdict is not stated; the " +
+                          "measured deviations and recommended corrections are reported for engineering review.";
+            }
+            else if (failed > 0)
+            {
+                verdict = string.Format(Ci,
+                    "{0} of {1} assessed axes did not meet the acceptance criteria. Apply the recommended corrections " +
+                    "and re-verify before relying on the vessel unit.", failed, assessed);
+            }
+            else if (conditional > 0)
+            {
+                verdict = string.Format(Ci,
+                    "All {0} assessed axes met the acceptance criteria, with {1} within the conditional margin. " +
+                    "Applying the recommended corrections is advised.", assessed, conditional);
+            }
+            else
+            {
+                verdict = string.Format(Ci,
+                    "All {0} assessed axes met the acceptance criteria. The vessel unit agrees with the reference " +
+                    "within the stated limits.", assessed);
+            }
+
+            string correction = model.HasCorrectionApplied
+                ? " The recommended corrections have been applied to the vessel unit."
+                : " The recommended corrections have not yet been applied.";
+
+            return verdict + correction;
         }
 
         private static void Heading(RadFixedDocumentEditor editor, string text)
@@ -426,6 +758,19 @@ namespace MVS.Services.Reporting
         {
             if (value == null || double.IsNaN(value.Value)) return "-";
             return string.Format(Ci, "{0:0.0} %", value.Value);
+        }
+
+        private static string Correlation(double? value)
+        {
+            if (value == null || double.IsNaN(value.Value)) return "-";
+            return string.Format(Ci, "{0:0.000}", value.Value);
+        }
+
+        private static string Latency(double? seconds)
+        {
+            if (seconds == null || double.IsNaN(seconds.Value)) return "-";
+            double ms = seconds.Value * 1000.0;
+            return string.Format(Ci, "{0:+0;-0;0} ms", ms);
         }
     }
 }
