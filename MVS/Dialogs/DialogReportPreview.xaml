@@ -1,0 +1,50 @@
+<telerik:RadWindow
+    x:Class="MVS.DialogReportPreview"
+    xmlns="http://schemas.microsoft.com/winfx/2006/xaml/presentation"
+    xmlns:x="http://schemas.microsoft.com/winfx/2006/xaml"
+    xmlns:d="http://schemas.microsoft.com/expression/blend/2008"
+    xmlns:telerik="http://schemas.telerik.com/2008/xaml/presentation"
+    xmlns:mc="http://schemas.openxmlformats.org/markup-compatibility/2006"
+    mc:Ignorable="d"
+    xmlns:local="clr-namespace:MVS"
+    telerik:Header="Report Preview"
+    WindowStartupLocation="CenterScreen"
+    Height="1000"
+    Width="850"
+    telerik:StyleManager.Theme="Material">
+
+    <telerik:RadWindow.Icon>
+        <Image
+            Height="32"
+            Source="../Icons/mvs_windows_icon.ico" />
+    </telerik:RadWindow.Icon>
+
+    <telerik:RadWindow.Resources>
+        <ResourceDictionary>
+            <Style
+                TargetType="local:DialogReportPreview"
+                BasedOn="{StaticResource RadWindowStyle}" />
+        </ResourceDictionary>
+    </telerik:RadWindow.Resources>
+
+    <Grid Margin="8">
+        <Grid.RowDefinitions>
+            <RowDefinition Height="*" />
+            <RowDefinition Height="Auto" />
+        </Grid.RowDefinitions>
+
+        <telerik:RadPdfViewer
+            x:Name="pdfReportPreview"
+            Grid.Row="0"
+            Background="#F6F8FA" />
+
+        <telerik:RadButton
+            Grid.Row="1"
+            Content="Close"
+            Width="110"
+            HorizontalAlignment="Right"
+            Margin="0,8,0,0"
+            Click="btnClose_Click" />
+    </Grid>
+
+</telerik:RadWindow>

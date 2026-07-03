@@ -13,7 +13,6 @@ using MVS.Models;
 using MVS.Views.Controls;
 using Telerik.Windows.Controls;
 using Telerik.Windows.Data;
-using Telerik.Windows.Documents.Fixed;
 using static MVS.MainWindow;
 
 namespace MVS
@@ -55,8 +54,6 @@ namespace MVS
         // The generated PDF is cached in-memory so navigating back to Step 5 and
         // saving to disc do not trigger a fresh (potentially slow) generation.
         private byte[] _reportPdfBytes;
-        // The stream backing the on-screen preview; kept alive for the viewer's lifetime.
-        private MemoryStream _reportPreviewStream;
         // Id of the project the cached report belongs to (used to detect staleness).
         private int? _reportProjectId;
         // Guards against concurrent/re-entrant generation while a report is building.
@@ -177,13 +174,23 @@ namespace MVS
                 btnClearRecording.IsEnabled = false;
 
                 gvProjects.IsEnabled = false;
+
+                // Disable report fields when server is running
+                tbDataSetName.IsEnabled = false;
+                tbDataSetComments.IsEnabled = false;
+                tbOperator.IsEnabled = false;
+                tbVesselName.IsEnabled = false;
+                tbLocation.IsEnabled = false;
+                chkCorrectionApplied.IsEnabled = false;
+                cboInputMRUs.IsEnabled = false;
+                ucReportMetadata.IsEnabled = false;
             }
             else
             {
                 btnNew.IsEnabled = true;
 
                 // Er et data sett valgt?
-                if (mainWindowVM.SelectedProject == null)
+                if (mainWindowVM?.SelectedProject == null)
                 {
                     btnDelete.IsEnabled = false;
                     btnImport.IsEnabled = false;
@@ -209,9 +216,9 @@ namespace MVS
                 }
 
                 gvProjects.IsEnabled = true;
-            }
 
-            if (mainWindowVM.SelectedProject != null)
+                // Enable/disable report fields based on project selection
+                if (mainWindowVM?.SelectedProject != null)
                 {
                     tbDataSetName.IsEnabled = true;
                     tbDataSetComments.IsEnabled = true;
@@ -233,6 +240,7 @@ namespace MVS
                     cboInputMRUs.IsEnabled = false;
                     ucReportMetadata.IsEnabled = false;
                 }
+            }
         }
 
         private void LoadProjects()
@@ -633,6 +641,27 @@ namespace MVS
             }
         }
 
+        // Fill any empty Report Details fields with the standard default text.
+        private void btnInsertDefaultText_Click(object sender, RoutedEventArgs e)
+        {
+            var project = mainWindowVM?.SelectedProject;
+            if (project == null)
+                return;
+
+            // Only populates blank fields, so existing operator input is preserved.
+            if (!project.ReportMetadata.ApplyDefaultsToEmptyFields())
+                return;
+
+            // MruReportMetadata does not raise change notifications, so re-bind the
+            // editor to refresh the fields with the newly inserted default text.
+            ucReportMetadata.Metadata = null;
+            ucReportMetadata.Metadata = project.ReportMetadata;
+
+            // Persist and invalidate the cached report (mirrors a manual edit).
+            mvsDatabase.Update(project);
+            InvalidateReportCache();
+        }
+
         private void tbLocation_LostFocus(object sender, RoutedEventArgs e)
         {
             tbLocation_Update(sender);
@@ -987,9 +1016,10 @@ namespace MVS
         // ============================================================
 
         /// <summary>
-        /// Updates the report area when entering Step 5 without triggering generation.
-        /// If a valid report is already cached for the current project it is shown;
-        /// otherwise the user is prompted to click Generate Report.
+        /// Updates the report action buttons when entering Step 5 without triggering
+        /// generation. If a valid report is already cached for the current project the
+        /// preview/save/open actions are enabled; otherwise the user is prompted to
+        /// click Generate Report.
         /// </summary>
         private void RefreshReportPreviewState()
         {
@@ -1000,7 +1030,7 @@ namespace MVS
                 btnGenerateReport.IsEnabled = false;
                 btnUpdateReport.IsEnabled = false;
                 btnUpdateReport.Visibility = Visibility.Collapsed;
-                ShowReportPreviewEmpty("Select a project to generate its report.");
+                MarkReportUnavailable();
                 return;
             }
 
@@ -1008,44 +1038,43 @@ namespace MVS
 
             if (_reportPdfBytes != null && _reportProjectId == project.Id)
             {
-                ApplyReportPreview(_reportPdfBytes);
+                MarkReportAvailable();
             }
             else
             {
-                ShowReportPreviewEmpty(_reportGenerated && _reportNeedsUpdate
-                    ? "Input data has changed — click Update Report to refresh the preview."
-                    : "Click Generate Report to build the verification report.");
+                MarkReportUnavailable();
             }
         }
 
         /// <summary>
-        /// Ensures a report exists for the current project and shows it in the
-        /// on-screen preview. Generation runs on a background thread behind a modal
-        /// progress dialog. A cached report for the same project is reused so the
-        /// (potentially slow) generation only happens once per project/data change.
+        /// Ensures a report exists for the current project. Generation runs on a
+        /// background thread behind a modal progress dialog. A cached report for the
+        /// same project is reused so the (potentially slow) generation only happens
+        /// once per project/data change. Returns true when a report is available.
         /// </summary>
-        private async Task EnsureReportPreviewAsync()
+        private async Task<bool> EnsureReportAsync()
         {
             var project = mainWindowVM?.SelectedProject;
             if (project == null || projectVM == null)
             {
-                ShowReportPreviewEmpty("Select a project to generate its report.");
-                return;
+                MarkReportUnavailable();
+                return false;
             }
 
             // Reuse a valid cached report for this project.
             if (_reportPdfBytes != null && _reportProjectId == project.Id)
             {
-                ApplyReportPreview(_reportPdfBytes);
-                return;
+                MarkReportAvailable();
+                return true;
             }
 
             // Guard against re-entrancy (e.g. rapid step navigation).
             if (_reportGenerating)
-                return;
+                return false;
 
             _reportGenerating = true;
             btnGenerateReport.IsEnabled = false;
+            btnPreviewReport.IsEnabled = false;
             btnSaveReportToDisc.IsEnabled = false;
             btnOpenPdfReport.IsEnabled = false;
 
@@ -1068,14 +1097,16 @@ namespace MVS
                 _reportGenerated = true;
                 _reportNeedsUpdate = false;
 
-                ApplyReportPreview(bytes);
+                MarkReportAvailable();
+                return true;
             }
             catch (Exception ex)
             {
                 _reportPdfBytes = null;
                 _reportProjectId = null;
-                ShowReportPreviewEmpty("The report could not be generated.");
+                MarkReportUnavailable();
                 RadWindow.Alert("Failed to generate the report:\n" + ex.Message);
+                return false;
             }
             finally
             {
@@ -1087,7 +1118,23 @@ namespace MVS
 
         private async void btnGenerateReport_Click(object sender, RoutedEventArgs e)
         {
-            await EnsureReportPreviewAsync();
+            await EnsureReportAsync();
+        }
+
+        /// <summary>
+        /// Generates the report if needed and opens it in a popup preview window.
+        /// </summary>
+        private async void btnPreviewReport_Click(object sender, RoutedEventArgs e)
+        {
+            if (!await EnsureReportAsync())
+                return;
+
+            if (_reportPdfBytes == null)
+                return;
+
+            var preview = new DialogReportPreview();
+            preview.LoadReport(_reportPdfBytes);
+            preview.ShowDialog();
         }
 
         /// <summary>
@@ -1110,31 +1157,21 @@ namespace MVS
         }
 
         /// <summary>
-        /// Loads the given PDF bytes into the on-screen preview and enables saving.
+        /// Enables the actions that require a generated report (preview/save/open).
         /// </summary>
-        private void ApplyReportPreview(byte[] pdfBytes)
+        private void MarkReportAvailable()
         {
-            // Replace the previous preview stream (the viewer keeps it open).
-            _reportPreviewStream?.Dispose();
-            _reportPreviewStream = new MemoryStream(pdfBytes, writable: false);
-
-            pdfReportPreview.DocumentSource = new PdfDocumentSource(_reportPreviewStream);
-            pdfReportPreview.Visibility = Visibility.Visible;
-            tbReportPreviewEmpty.Visibility = Visibility.Collapsed;
-
+            btnPreviewReport.IsEnabled = true;
             btnSaveReportToDisc.IsEnabled = true;
             btnOpenPdfReport.IsEnabled = true;
         }
 
         /// <summary>
-        /// Hides the preview and shows an empty-state message.
+        /// Disables the actions that require a generated report (preview/save/open).
         /// </summary>
-        private void ShowReportPreviewEmpty(string message)
+        private void MarkReportUnavailable()
         {
-            pdfReportPreview.DocumentSource = null;
-            pdfReportPreview.Visibility = Visibility.Collapsed;
-            tbReportPreviewEmpty.Text = message;
-            tbReportPreviewEmpty.Visibility = Visibility.Visible;
+            btnPreviewReport.IsEnabled = false;
             btnSaveReportToDisc.IsEnabled = false;
             btnOpenPdfReport.IsEnabled = false;
         }

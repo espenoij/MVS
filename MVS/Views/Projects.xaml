@@ -93,11 +93,11 @@
                             <telerik:RadButton x:Name="btnPrev"
                                              Click="btnPrev_Click"
                                              Content="Back"
-                                             Width="100"/>
+                                             MinWidth="90"/>
                             <telerik:RadButton x:Name="btnNext"
                                              Click="btnNext_Click"
                                              Content="Next"
-                                             Width="100"
+                                             MinWidth="90"
                                              Margin="8,0,0,0"/>
                         </StackPanel>
                     </Grid>
@@ -129,8 +129,8 @@
                     <!-- ===== STEP 1: SETUP ===== -->
                     <Grid x:Name="panelStep1">
                         <Grid.ColumnDefinitions>
-                            <ColumnDefinition Width="420"/>
-                            <ColumnDefinition Width="*"/>
+                            <ColumnDefinition Width="2*" MinWidth="350" MaxWidth="450"/>
+                            <ColumnDefinition Width="3*"/>
                         </Grid.ColumnDefinitions>
 
                         <!-- Projects list (left half of Step 1) -->
@@ -152,11 +152,11 @@
                                 <telerik:RadButton Name="btnNew"
                                                    Click="btnNew_Click"
                                                    Content="New"
-                                                   Width="110"/>
+                                                   MinWidth="100"/>
                                 <telerik:RadButton Name="btnDelete"
                                                    Click="btnDelete_Click"
                                                    Content="Delete"
-                                                   Width="110"
+                                                   MinWidth="100"
                                                    Margin="8,0,0,0"/>
                             </StackPanel>
 
@@ -204,7 +204,7 @@
                         </Grid>
 
                         <!-- Project details (right half of Step 1) -->
-                        <ScrollViewer Grid.Column="1" VerticalScrollBarVisibility="Auto">
+                        <ScrollViewer Grid.Column="1" VerticalScrollBarVisibility="Auto" HorizontalScrollBarVisibility="Disabled">
                             <StackPanel>
 
                                 <TextBlock Text="Step 1 — Project setup"
@@ -218,7 +218,7 @@
                                 <telerik:GroupBox Header="Project Details" Margin="0,0,0,8">
                                     <Grid Margin="8">
                                         <Grid.ColumnDefinitions>
-                                            <ColumnDefinition Width="170"/>
+                                            <ColumnDefinition Width="Auto" MinWidth="120" MaxWidth="180"/>
                                             <ColumnDefinition Width="*"/>
                                         </Grid.ColumnDefinitions>
                                         <Grid.RowDefinitions>
@@ -273,7 +273,7 @@
                     </Grid>
 
                     <!-- ===== STEP 3: CAPTURE ===== -->
-                    <ScrollViewer x:Name="panelStep3" VerticalScrollBarVisibility="Auto" Visibility="Collapsed">
+                    <ScrollViewer x:Name="panelStep3" VerticalScrollBarVisibility="Auto" HorizontalScrollBarVisibility="Disabled" Visibility="Collapsed">
                         <StackPanel>
 
                             <TextBlock Text="Step 3 — Capture motion data"
@@ -289,7 +289,7 @@
                             <telerik:GroupBox Header="Date / Duration" Margin="0,0,0,8">
                                 <Grid Margin="8">
                                     <Grid.ColumnDefinitions>
-                                        <ColumnDefinition Width="170"/>
+                                        <ColumnDefinition Width="Auto" MinWidth="120" MaxWidth="180"/>
                                         <ColumnDefinition Width="*"/>
                                     </Grid.ColumnDefinitions>
                                     <Grid.RowDefinitions>
@@ -328,24 +328,24 @@
                                                            Click="btnStartRecording_Click"
                                                            IsEnabled="{Binding DataContext.StartButtonEnabled, ElementName=mainWindowVMBridge}"
                                                            Content="Start Recording"
-                                                           Width="160"
+                                                           MinWidth="140"
                                                            Margin="0,0,10,0"/>
                                         <telerik:RadButton x:Name="btnStopRecording"
                                                            Click="btnStopRecording_Click"
                                                            IsEnabled="{Binding DataContext.StopButtonEnabled, ElementName=mainWindowVMBridge}"
                                                            Content="Stop"
-                                                           Width="120"
+                                                           MinWidth="100"
                                                            Margin="0,0,10,0"/>
                                         <telerik:RadButton x:Name="btnTestRun"
                                                            Click="btnTestRun_Click"
                                                            IsEnabled="{Binding DataContext.StartButtonEnabled, ElementName=mainWindowVMBridge}"
                                                            Content="Test Run"
-                                                           Width="120"
+                                                           MinWidth="100"
                                                            Margin="0,0,10,0"/>
                                         <telerik:RadButton x:Name="btnClearRecording"
                                                            Click="btnClearRecording_Click"
                                                            Content="Clear Recording"
-                                                           Width="160"
+                                                           MinWidth="140"
                                                            IsEnabled="False"/>
                                     </StackPanel>
 
@@ -356,7 +356,7 @@
                                 <telerik:RadButton Name="btnImport"
                                                    Click="btnImport_Click"
                                                    Content="Import HMS data..."
-                                                   Width="170"/>
+                                                   MinWidth="150"/>
                                 <Label Name="lbImport"
                                        Content="Imports motion data from an existing HMS recording."
                                        Foreground="#57606A"
@@ -434,14 +434,10 @@
 
                     <!-- ===== STEP 5: APPLY & REPORT ===== -->
                     <Grid x:Name="panelStep5" Visibility="Collapsed">
-                        <Grid.ColumnDefinitions>
-                            <ColumnDefinition Width="380"/>
-                            <ColumnDefinition Width="*"/>
-                        </Grid.ColumnDefinitions>
 
-                        <!-- Left: project details + action buttons -->
-                        <Grid Grid.Column="0" Margin="0,0,10,0">
-                            <Grid.RowDefinitions>
+                       <!-- Report inputs + action buttons (full page width) -->
+                       <Grid>
+                           <Grid.RowDefinitions>
                                 <RowDefinition Height="Auto"/>
                                 <RowDefinition Height="Auto"/>
                                 <RowDefinition Height="*"/>
@@ -456,14 +452,16 @@
                                        TextWrapping="Wrap"
                                        Foreground="#57606A"
                                        Margin="0,0,0,12"
-                                       Text="Fill in all required fields (*), then click Generate Report. The report can be previewed on the right, saved as PDF, or opened directly."/>
+                                       Text="Fill in all required fields (*), then click Generate Report. Use Preview Report to view it in a popup window, save it as PDF, or open it directly."/>
 
                             <!-- Project details + report metadata for the report -->
-                            <ScrollViewer Grid.Row="2" VerticalScrollBarVisibility="Auto" Padding="0,0,8,0">
+                            <ScrollViewer Grid.Row="2" VerticalScrollBarVisibility="Auto" HorizontalScrollBarVisibility="Disabled" Padding="0,0,8,0">
                               <StackPanel>
                             <telerik:GroupBox Header="Project Details" Margin="0,0,0,10">
                                 <Grid Margin="8">
                                     <Grid.ColumnDefinitions>
+                                        <ColumnDefinition Width="130"/>
+                                        <ColumnDefinition Width="*"/>
                                         <ColumnDefinition Width="130"/>
                                         <ColumnDefinition Width="*"/>
                                     </Grid.ColumnDefinitions>
@@ -471,23 +469,25 @@
                                         <RowDefinition Height="Auto"/>
                                         <RowDefinition Height="Auto"/>
                                         <RowDefinition Height="Auto"/>
-                                        <RowDefinition Height="Auto"/>
-                                        <RowDefinition Height="Auto"/>
                                     </Grid.RowDefinitions>
 
-                                    <TextBlock Grid.Row="0" Grid.Column="0" Text="Comments" Margin="0,0,0,4" VerticalAlignment="Top" Foreground="#57606A"/>
-                                    <telerik:RadWatermarkTextBox Grid.Row="0" Grid.Column="1"
+                                    <TextBlock Grid.Row="2" Grid.Column="0" Text="Comments" Margin="0,4,0,0" VerticalAlignment="Top" Foreground="#57606A"/>
+                                    <telerik:RadWatermarkTextBox Grid.Row="2" Grid.Column="1" Grid.ColumnSpan="3"
                                              Name="tbDataSetComments"
                                              AcceptsReturn="True"
                                              TextWrapping="Wrap"
+                                             VerticalScrollBarVisibility="Auto"
+                                             VerticalContentAlignment="Top"
                                              Height="60"
+                                             MinHeight="60"
+                                             MaxHeight="120"
                                              Margin="0,0,0,6"
                                              WatermarkContent="Optional"
                                              LostFocus="tbDataSetDescription_LostFocus"
                                              KeyDown="tbDataSetDescription_KeyDown"/>
 
-                                    <TextBlock Grid.Row="1" Grid.Column="0" Text="Operator *" VerticalAlignment="Center" Margin="0,4,0,0" Foreground="#57606A"/>
-                                    <telerik:RadWatermarkTextBox Grid.Row="1" Grid.Column="1"
+                                    <TextBlock Grid.Row="0" Grid.Column="0" Text="Operator *" VerticalAlignment="Center" Margin="0,4,0,0" Foreground="#57606A"/>
+                                    <telerik:RadWatermarkTextBox Grid.Row="0" Grid.Column="1"
                                              Name="tbOperator"
                                              VerticalContentAlignment="Center"
                                              Margin="0,4,0,0"
@@ -496,8 +496,8 @@
                                              KeyDown="tbOperator_KeyDown"
                                              TextChanged="tbReportField_TextChanged"/>
 
-                                    <TextBlock Grid.Row="2" Grid.Column="0" Text="Vessel *" VerticalAlignment="Center" Margin="0,4,0,0" Foreground="#57606A"/>
-                                    <telerik:RadWatermarkTextBox Grid.Row="2" Grid.Column="1"
+                                    <TextBlock Grid.Row="0" Grid.Column="2" Text="Vessel *" VerticalAlignment="Center" Margin="16,4,0,0" Foreground="#57606A"/>
+                                    <telerik:RadWatermarkTextBox Grid.Row="0" Grid.Column="3"
                                              Name="tbVesselName"
                                              VerticalContentAlignment="Center"
                                              Margin="0,4,0,0"
@@ -506,8 +506,8 @@
                                              KeyDown="tbVesselName_KeyDown"
                                              TextChanged="tbReportField_TextChanged"/>
 
-                                    <TextBlock Grid.Row="3" Grid.Column="0" Text="Location *" VerticalAlignment="Center" Margin="0,4,0,0" Foreground="#57606A"/>
-                                    <telerik:RadWatermarkTextBox Grid.Row="3" Grid.Column="1"
+                                    <TextBlock Grid.Row="1" Grid.Column="0" Text="Location *" VerticalAlignment="Center" Margin="0,4,0,0" Foreground="#57606A"/>
+                                    <telerik:RadWatermarkTextBox Grid.Row="1" Grid.Column="1"
                                              Name="tbLocation"
                                              VerticalContentAlignment="Center"
                                              Margin="0,4,0,0"
@@ -516,8 +516,8 @@
                                              KeyDown="tbLocation_KeyDown"
                                              TextChanged="tbReportField_TextChanged"/>
 
-                                    <TextBlock Grid.Row="4" Grid.Column="0" Text="Correction Applied" VerticalAlignment="Center" Margin="0,4,0,0" Foreground="#57606A"/>
-                                    <CheckBox Grid.Row="4" Grid.Column="1"
+                                    <TextBlock Grid.Row="1" Grid.Column="2" Text="Correction Applied" VerticalAlignment="Center" Margin="16,4,0,0" Foreground="#57606A"/>
+                                    <CheckBox Grid.Row="1" Grid.Column="3"
                                               x:Name="chkCorrectionApplied"
                                               HorizontalAlignment="Left"
                                               VerticalAlignment="Center"
@@ -529,9 +529,16 @@
 
                             <!-- Extended report metadata (equipment, setup, conditions, criteria, notes) -->
                             <telerik:GroupBox Header="Report Details" Margin="0,0,0,10">
-                                <controls:ReportMetadataEditor x:Name="ucReportMetadata"
-                                                               MetadataChanged="ucReportMetadata_MetadataChanged"
-                                                               Margin="8"/>
+                                <StackPanel Margin="8">
+                                    <telerik:RadButton x:Name="btnInsertDefaultText"
+                                                       Click="btnInsertDefaultText_Click"
+                                                       Content="Insert Default Text"
+                                                       HorizontalAlignment="Left"
+                                                       Margin="0,0,0,8"
+                                                       IsEnabled="{Binding IsEnabled, ElementName=ucReportMetadata}"/>
+                                    <controls:ReportMetadataEditor x:Name="ucReportMetadata"
+                                                                   MetadataChanged="ucReportMetadata_MetadataChanged"/>
+                                </StackPanel>
                             </telerik:GroupBox>
                               </StackPanel>
                             </ScrollViewer>
@@ -542,47 +549,35 @@
                                     <telerik:RadButton x:Name="btnGenerateReport"
                                                        Click="btnGenerateReport_Click"
                                                        Content="Generate Report"
-                                                       Width="170"/>
+                                                       MinWidth="150"/>
                                     <telerik:RadButton x:Name="btnUpdateReport"
                                                        Click="btnGenerateReport_Click"
                                                        Content="Update Report"
                                                        Visibility="Collapsed"
-                                                       Width="170"
+                                                       MinWidth="150"
                                                        Margin="8,0,0,0"/>
                                 </StackPanel>
                                 <StackPanel Orientation="Horizontal">
+                                    <telerik:RadButton x:Name="btnPreviewReport"
+                                                       Click="btnPreviewReport_Click"
+                                                       Content="Preview Report"
+                                                       IsEnabled="False"
+                                                       MinWidth="140"
+                                                       Margin="0,0,8,0"/>
                                     <telerik:RadButton x:Name="btnSaveReportToDisc"
                                                        Click="btnSaveReportToDisc_Click"
                                                        Content="Save Report"
                                                        IsEnabled="False"
-                                                       Width="170"/>
+                                                       MinWidth="120"/>
                                     <telerik:RadButton x:Name="btnOpenPdfReport"
                                                        Click="btnOpenPdfReport_Click"
                                                        Content="Open PDF Report"
                                                        IsEnabled="False"
-                                                       Width="170"
+                                                       MinWidth="140"
                                                        Margin="8,0,0,0"/>
                                 </StackPanel>
                             </StackPanel>
                         </Grid>
-
-                        <!-- Right: report preview -->
-                        <Border Grid.Column="1"
-                                BorderBrush="#D0D7DE" BorderThickness="1"
-                                CornerRadius="4" Background="#F6F8FA">
-                            <Grid>
-                                <TextBlock x:Name="tbReportPreviewEmpty"
-                                           HorizontalAlignment="Center"
-                                           VerticalAlignment="Center"
-                                           Foreground="#57606A"
-                                           TextWrapping="Wrap"
-                                           TextAlignment="Center"
-                                           Text="The report preview will appear here."/>
-                                <telerik:RadPdfViewer x:Name="pdfReportPreview"
-                                                      Visibility="Collapsed"
-                                                      Background="#F6F8FA"/>
-                            </Grid>
-                        </Border>
                     </Grid>
                     </Grid>
                 </Grid>

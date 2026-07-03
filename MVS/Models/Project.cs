@@ -58,7 +58,7 @@ namespace MVS
                 Location = session.Location;
                 ReportMetadata = session.ReportMetadata != null
                     ? session.ReportMetadata.Clone()
-                    : new MruReportMetadata();
+                    : MruReportMetadata.CreateDefault();
             }
         }
 
@@ -127,13 +127,15 @@ namespace MVS
 
         // Operator-supplied descriptive metadata for the detailed verification
         // report (equipment, test setup, conditions, acceptance criteria, etc.).
-        private MruReportMetadata _reportMetadata = new MruReportMetadata();
+        // New projects start from the default boilerplate so the report step's
+        // input fields are pre-filled with editable standard text.
+        private MruReportMetadata _reportMetadata = MruReportMetadata.CreateDefault();
         public MruReportMetadata ReportMetadata
         {
             get { return _reportMetadata; }
             set
             {
-                _reportMetadata = value ?? new MruReportMetadata();
+                _reportMetadata = value ?? MruReportMetadata.CreateDefault();
                 OnPropertyChanged();
             }
         }
@@ -148,17 +150,17 @@ namespace MVS
             {
                 if (string.IsNullOrWhiteSpace(value))
                 {
-                    ReportMetadata = new MruReportMetadata();
+                    ReportMetadata = MruReportMetadata.CreateDefault();
                     return;
                 }
 
                 try
                 {
-                    ReportMetadata = JsonSerializer.Deserialize<MruReportMetadata>(value) ?? new MruReportMetadata();
+                    ReportMetadata = JsonSerializer.Deserialize<MruReportMetadata>(value) ?? MruReportMetadata.CreateDefault();
                 }
                 catch (JsonException)
                 {
-                    ReportMetadata = new MruReportMetadata();
+                    ReportMetadata = MruReportMetadata.CreateDefault();
                 }
             }
         }
