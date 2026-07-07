@@ -1,0 +1,107 @@
+<ResourceDictionary
+    xmlns="http://schemas.microsoft.com/winfx/2006/xaml/presentation"
+    xmlns:x="http://schemas.microsoft.com/winfx/2006/xaml"
+    xmlns:sys="clr-namespace:System;assembly=mscorlib">
+
+    <!--
+        SES Energy Brand Toolkit — Typography
+        =====================================
+        Primary font:  Roboto Condensed
+        Fallback font: Arial (used automatically if Roboto Condensed is unavailable)
+
+        Hierarchy is created through size and weight, never through additional
+        font families. Titles use Bold + UPPERCASE, headers Bold, body Regular.
+        Colour tokens are resolved with DynamicResource so this dictionary stays
+        self-contained and safe to merge in any order.
+    -->
+
+    <!--#region Font families -->
+    <!--
+        Roboto Condensed is bundled as application resources in MVS/Fonts/ so it
+        works on every machine without requiring system installation.
+        The pack URI '/MVS;component/Fonts/#Roboto Condensed' tells WPF to scan
+        all Resource-marked files in that folder and resolve by the internal
+        family name.  The trailing Arial ensures a safe fallback.
+    -->
+    <FontFamily x:Key="SesFontFamily">/MVS;component/Fonts/#Roboto Condensed</FontFamily>
+    <FontFamily x:Key="SesFontFamilyFallback">Arial</FontFamily>
+    <!--#endregion-->
+
+    <!--#region SES font-size scale -->
+    <sys:Double x:Key="SesFontSizePageTitle">28</sys:Double>
+    <sys:Double x:Key="SesFontSizeSectionHeader">20</sys:Double>
+    <sys:Double x:Key="SesFontSizeSubHeader">16</sys:Double>
+    <sys:Double x:Key="SesFontSizeBody">14</sys:Double>
+    <sys:Double x:Key="SesFontSizeCaption">12</sys:Double>
+    <!--#endregion-->
+
+    <!--#region Existing font-size keys (preserved for current views) -->
+    <sys:Double x:Key="fontSizeTab">16</sys:Double>
+    <sys:Double x:Key="fontSizeData">18</sys:Double>
+    <sys:Double x:Key="fontSizeTimer">22</sys:Double>
+    <sys:Double x:Key="fontSizeProject">20</sys:Double>
+    <sys:Double x:Key="fontSizeProjectDetails">16</sys:Double>
+    <!--#endregion-->
+
+    <!--#region Global implicit font styles -->
+    <!--
+        These keyless styles cascade to every TextBlock and Label in the app,
+        giving them the SES brand font (Roboto Condensed, Arial fallback) without
+        needing to set FontFamily on each individual element.
+        Only FontFamily is set here; size, weight, and colour remain at the
+        element or named-style level so nothing is over-constrained.
+    -->
+    <Style TargetType="TextBlock">
+        <Setter Property="FontFamily" Value="{StaticResource SesFontFamily}" />
+    </Style>
+
+    <Style TargetType="Label">
+        <Setter Property="FontFamily" Value="{StaticResource SesFontFamily}" />
+    </Style>
+    <!--#endregion-->
+
+    <!--#region Named text styles (TextBlock) -->
+    <!-- Main page titles: Roboto Condensed Bold, prominent. Apply UPPERCASE text at usage. -->
+    <Style x:Key="SesPageTitleTextBlockStyle" TargetType="TextBlock">
+        <Setter Property="FontFamily" Value="{StaticResource SesFontFamily}" />
+        <Setter Property="FontSize" Value="{StaticResource SesFontSizePageTitle}" />
+        <Setter Property="FontWeight" Value="Bold" />
+        <Setter Property="Foreground" Value="{DynamicResource SesTextPrimaryBrush}" />
+        <Setter Property="TextTrimming" Value="CharacterEllipsis" />
+    </Style>
+
+    <!-- Section headers: Roboto Condensed Bold. -->
+    <Style x:Key="SesSectionHeaderTextBlockStyle" TargetType="TextBlock">
+        <Setter Property="FontFamily" Value="{StaticResource SesFontFamily}" />
+        <Setter Property="FontSize" Value="{StaticResource SesFontSizeSectionHeader}" />
+        <Setter Property="FontWeight" Value="Bold" />
+        <Setter Property="Foreground" Value="{DynamicResource SesTextPrimaryBrush}" />
+    </Style>
+
+    <!-- Subheaders: Roboto Condensed Regular, sentence case. -->
+    <Style x:Key="SesSubHeaderTextBlockStyle" TargetType="TextBlock">
+        <Setter Property="FontFamily" Value="{StaticResource SesFontFamily}" />
+        <Setter Property="FontSize" Value="{StaticResource SesFontSizeSubHeader}" />
+        <Setter Property="FontWeight" Value="Normal" />
+        <Setter Property="Foreground" Value="{DynamicResource SesTextPrimaryBrush}" />
+    </Style>
+
+    <!-- Body text: Roboto Condensed Regular, sentence case. -->
+    <Style x:Key="SesBodyTextBlockStyle" TargetType="TextBlock">
+        <Setter Property="FontFamily" Value="{StaticResource SesFontFamily}" />
+        <Setter Property="FontSize" Value="{StaticResource SesFontSizeBody}" />
+        <Setter Property="FontWeight" Value="Normal" />
+        <Setter Property="Foreground" Value="{DynamicResource SesTextPrimaryBrush}" />
+        <Setter Property="TextWrapping" Value="Wrap" />
+    </Style>
+
+    <!-- Caption / secondary text. -->
+    <Style x:Key="SesCaptionTextBlockStyle" TargetType="TextBlock">
+        <Setter Property="FontFamily" Value="{StaticResource SesFontFamily}" />
+        <Setter Property="FontSize" Value="{StaticResource SesFontSizeCaption}" />
+        <Setter Property="FontWeight" Value="Normal" />
+        <Setter Property="Foreground" Value="{DynamicResource SesTextSecondaryBrush}" />
+    </Style>
+    <!--#endregion-->
+
+</ResourceDictionary>

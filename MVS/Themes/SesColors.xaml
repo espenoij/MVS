@@ -1,0 +1,121 @@
+<ResourceDictionary
+    xmlns="http://schemas.microsoft.com/winfx/2006/xaml/presentation"
+    xmlns:x="http://schemas.microsoft.com/winfx/2006/xaml">
+
+    <!--
+        SES Energy Brand Toolkit — Colour System
+        =========================================
+        Primary:    Energy Green #3DE6A9, Dark Blue Grey #334A5C
+        Supporting: Black #000000, White #FFFFFF
+
+        Usage rules honoured here:
+        - Dark Blue Grey for chrome / navigation / headers / labels / structure.
+        - Energy Green for primary actions, highlights, active/selected states, success.
+        - Subtle tints of the primaries for surfaces, hovers and selections.
+        - Accessible, professional status colours (amber warning, red error).
+        Never hardcode colours in views — always reference these tokens.
+    -->
+
+    <!--#region Core brand colours -->
+    <Color x:Key="SesEnergyGreenColor">#FF3DE6A9</Color>
+    <Color x:Key="SesDarkBlueGreyColor">#FF334A5C</Color>
+    <Color x:Key="SesBlackColor">#FF000000</Color>
+    <Color x:Key="SesWhiteColor">#FFFFFFFF</Color>
+    <!--#endregion-->
+
+    <!--#region Derived Energy Green shades / tints -->
+    <!-- Darker greens for hover / pressed and for accessible green text on light surfaces. -->
+    <Color x:Key="SesEnergyGreenHoverColor">#FF2FCF97</Color>
+    <Color x:Key="SesEnergyGreenPressedColor">#FF17A377</Color>
+    <Color x:Key="SesEnergyGreenTextColor">#FF12805B</Color>
+    <!-- Very light green tint for selection backgrounds and success surfaces. -->
+    <Color x:Key="SesEnergyGreenTintColor">#FFE4FBF3</Color>
+    <!--#endregion-->
+
+    <!--#region Derived Dark Blue Grey shades / tints -->
+    <Color x:Key="SesDarkBlueGreyHoverColor">#FF3F5A6C</Color>
+    <Color x:Key="SesDarkBlueGreyPressedColor">#FF263A48</Color>
+    <Color x:Key="SesDarkBlueGreyLightColor">#FF4E6B80</Color>
+    <!-- Very light blue-grey tint for structural feature areas. -->
+    <Color x:Key="SesDarkBlueGreyTintColor">#FFEBEFF2</Color>
+    <!--#endregion-->
+
+    <!--#region Neutral / surface / border (derived from the primaries) -->
+    <Color x:Key="SesSurfaceColor">#FFF5F8FA</Color>
+    <Color x:Key="SesSurfaceAltColor">#FFEAEFF2</Color>
+    <Color x:Key="SesBorderColor">#FFD5DDE2</Color>
+    <Color x:Key="SesTextPrimaryColor">#FF334A5C</Color>
+    <Color x:Key="SesTextSecondaryColor">#FF566672</Color>
+    <Color x:Key="SesNeutralColor">#FF6B7A85</Color>
+    <!--#endregion-->
+
+    <!--#region Semantic status colours -->
+    <Color x:Key="SesSuccessColor">#FF3DE6A9</Color>
+    <Color x:Key="SesInfoColor">#FF334A5C</Color>
+    <Color x:Key="SesWarningColor">#FFEBBA47</Color>
+    <Color x:Key="SesWarningTextColor">#FF8A6100</Color>
+    <Color x:Key="SesErrorColor">#FFD5303E</Color>
+    <!--#endregion-->
+
+    <!--#region Core brand brushes -->
+    <SolidColorBrush x:Key="SesEnergyGreenBrush" Color="{StaticResource SesEnergyGreenColor}" />
+    <SolidColorBrush x:Key="SesEnergyGreenHoverBrush" Color="{StaticResource SesEnergyGreenHoverColor}" />
+    <SolidColorBrush x:Key="SesEnergyGreenPressedBrush" Color="{StaticResource SesEnergyGreenPressedColor}" />
+    <SolidColorBrush x:Key="SesEnergyGreenTextBrush" Color="{StaticResource SesEnergyGreenTextColor}" />
+    <SolidColorBrush x:Key="SesEnergyGreenTintBrush" Color="{StaticResource SesEnergyGreenTintColor}" />
+
+    <SolidColorBrush x:Key="SesDarkBlueGreyBrush" Color="{StaticResource SesDarkBlueGreyColor}" />
+    <SolidColorBrush x:Key="SesDarkBlueGreyHoverBrush" Color="{StaticResource SesDarkBlueGreyHoverColor}" />
+    <SolidColorBrush x:Key="SesDarkBlueGreyPressedBrush" Color="{StaticResource SesDarkBlueGreyPressedColor}" />
+    <SolidColorBrush x:Key="SesDarkBlueGreyLightBrush" Color="{StaticResource SesDarkBlueGreyLightColor}" />
+    <SolidColorBrush x:Key="SesDarkBlueGreyTintBrush" Color="{StaticResource SesDarkBlueGreyTintColor}" />
+
+    <SolidColorBrush x:Key="SesBlackBrush" Color="{StaticResource SesBlackColor}" />
+    <SolidColorBrush x:Key="SesWhiteBrush" Color="{StaticResource SesWhiteColor}" />
+    <!--#endregion-->
+
+    <!--#region Neutral / surface / text brushes -->
+    <SolidColorBrush x:Key="SesSurfaceBrush" Color="{StaticResource SesSurfaceColor}" />
+    <SolidColorBrush x:Key="SesSurfaceAltBrush" Color="{StaticResource SesSurfaceAltColor}" />
+    <SolidColorBrush x:Key="SesBorderBrush" Color="{StaticResource SesBorderColor}" />
+    <SolidColorBrush x:Key="SesTextPrimaryBrush" Color="{StaticResource SesTextPrimaryColor}" />
+    <SolidColorBrush x:Key="SesTextSecondaryBrush" Color="{StaticResource SesTextSecondaryColor}" />
+    <SolidColorBrush x:Key="SesNeutralBrush" Color="{StaticResource SesNeutralColor}" />
+    <!--#endregion-->
+
+    <!--#region Semantic status brushes -->
+    <SolidColorBrush x:Key="SesSuccessBrush" Color="{StaticResource SesSuccessColor}" />
+    <SolidColorBrush x:Key="SesInfoBrush" Color="{StaticResource SesInfoColor}" />
+    <SolidColorBrush x:Key="SesWarningBrush" Color="{StaticResource SesWarningColor}" />
+    <SolidColorBrush x:Key="SesWarningTextBrush" Color="{StaticResource SesWarningTextColor}" />
+    <SolidColorBrush x:Key="SesErrorBrush" Color="{StaticResource SesErrorColor}" />
+    <!--#endregion-->
+
+    <!--
+        Backward-compatible keys
+        ========================
+        These keys are referenced throughout the existing views. They are
+        preserved (same names) but re-pointed to SES brand values so the whole
+        application rebrands without touching every view.
+    -->
+    <SolidColorBrush x:Key="ColorSelected" Color="{StaticResource SesEnergyGreenTintColor}" />
+    <SolidColorBrush x:Key="ColorMouseOver" Color="{StaticResource SesSurfaceAltColor}" />
+    <SolidColorBrush x:Key="ColorGreen" Color="{StaticResource SesEnergyGreenColor}" />
+    <SolidColorBrush x:Key="ColorAmber" Color="{StaticResource SesWarningColor}" />
+    <SolidColorBrush x:Key="ColorRed" Color="{StaticResource SesErrorColor}" />
+    <SolidColorBrush x:Key="ColorBlue">#FF6495ED</SolidColorBrush>
+    <SolidColorBrush x:Key="ColorYellow">#FFECF05C</SolidColorBrush>
+    <SolidColorBrush x:Key="ColorWhite" Color="{StaticResource SesWhiteColor}" />
+    <SolidColorBrush x:Key="ColorHorizontalBarBackground" Color="{StaticResource SesDarkBlueGreyLightColor}" />
+    <SolidColorBrush x:Key="ColorVerticalBarBackground" Color="{StaticResource SesDarkBlueGreyColor}" />
+    <SolidColorBrush x:Key="ColorBackgroundSeparator" Color="{StaticResource SesSurfaceColor}" />
+    <SolidColorBrush x:Key="ColorBackgroundSeparatorDark" Color="{StaticResource SesBorderColor}" />
+    <SolidColorBrush x:Key="ColorAboutBackground" Color="{StaticResource SesDarkBlueGreyColor}" />
+
+    <!-- Graph line colours: kept functionally distinct for chart legibility, brand-aligned where possible. -->
+    <SolidColorBrush x:Key="ColorGraphLine" Color="{StaticResource SesDarkBlueGreyColor}" />
+    <SolidColorBrush x:Key="ColorGraphLineTest" Color="{StaticResource SesErrorColor}" />
+    <SolidColorBrush x:Key="ColorGraphLineRef" Color="{StaticResource SesEnergyGreenColor}" />
+    <SolidColorBrush x:Key="ColorGraphLineDev">#FF0099FF</SolidColorBrush>
+
+</ResourceDictionary>

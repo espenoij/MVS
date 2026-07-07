@@ -1,0 +1,109 @@
+<ResourceDictionary
+    xmlns="http://schemas.microsoft.com/winfx/2006/xaml/presentation"
+    xmlns:x="http://schemas.microsoft.com/winfx/2006/xaml"
+    xmlns:telerik="http://schemas.telerik.com/2008/xaml/presentation">
+
+    <!--
+        SES Energy Brand Toolkit — Master Dictionary
+        ============================================
+        Single entry point for the entire SES brand system. Merge THIS file into
+        App.xaml (after the Telerik Material NoXaml dictionaries) to apply the
+        full brand: colours, spacing, typography, buttons, forms and data grids.
+
+        Order matters: colours and spacing first (foundation tokens), then
+        typography, then component styles that depend on those tokens.
+    -->
+
+    <ResourceDictionary.MergedDictionaries>
+        <ResourceDictionary Source="/MVS;component/Themes/SesColors.xaml" />
+        <ResourceDictionary Source="/MVS;component/Themes/SesSpacing.xaml" />
+        <ResourceDictionary Source="/MVS;component/Themes/SesTypography.xaml" />
+        <ResourceDictionary Source="/MVS;component/Themes/SesButtons.xaml" />
+        <ResourceDictionary Source="/MVS;component/Themes/SesForms.xaml" />
+        <ResourceDictionary Source="/MVS;component/Themes/SesDataGrids.xaml" />
+    </ResourceDictionary.MergedDictionaries>
+
+    <!--
+        Navigation styles
+        =================
+        Dark Blue Grey navigation surface with Energy Green active indication,
+        optimised for enterprise productivity. Kept in the master dictionary
+        because it depends on tokens from several merged dictionaries above.
+    -->
+
+    <!-- Side navigation tab item (vertical main menu) -->
+    <Style x:Key="SesNavigationTabItemStyle" TargetType="telerik:RadTabItem" BasedOn="{StaticResource RadTabItemStyle}">
+        <Setter Property="Background" Value="{DynamicResource SesDarkBlueGreyBrush}" />
+        <Setter Property="Foreground" Value="{DynamicResource SesWhiteBrush}" />
+        <Setter Property="FontFamily" Value="{DynamicResource SesFontFamily}" />
+        <Setter Property="FontSize" Value="{DynamicResource SesFontSizeSubHeader}" />
+        <Setter Property="HorizontalContentAlignment" Value="Stretch" />
+        <Setter Property="Padding" Value="12,10" />
+        <Style.Triggers>
+            <Trigger Property="IsSelected" Value="True">
+                <Setter Property="Background" Value="{DynamicResource SesDarkBlueGreyPressedBrush}" />
+                <Setter Property="Foreground" Value="{DynamicResource SesEnergyGreenBrush}" />
+                <Setter Property="FontWeight" Value="SemiBold" />
+            </Trigger>
+            <Trigger Property="IsMouseOver" Value="True">
+                <Setter Property="Background" Value="{DynamicResource SesDarkBlueGreyHoverBrush}" />
+            </Trigger>
+        </Style.Triggers>
+    </Style>
+
+    <!-- Content-area horizontal tab item (sub-navigation) -->
+    <Style x:Key="SesSubTabItemStyle" TargetType="telerik:RadTabItem" BasedOn="{StaticResource RadTabItemStyle}">
+        <Setter Property="Background" Value="{DynamicResource SesDarkBlueGreyLightBrush}" />
+        <Setter Property="Foreground" Value="{DynamicResource SesWhiteBrush}" />
+        <Setter Property="FontFamily" Value="{DynamicResource SesFontFamily}" />
+        <Setter Property="FontSize" Value="{DynamicResource SesFontSizeBody}" />
+        <Setter Property="Padding" Value="12,8" />
+        <Style.Triggers>
+            <Trigger Property="IsSelected" Value="True">
+                <Setter Property="Foreground" Value="{DynamicResource SesEnergyGreenBrush}" />
+                <Setter Property="FontWeight" Value="SemiBold" />
+            </Trigger>
+        </Style.Triggers>
+    </Style>
+
+    <!--
+        Structural / surface styles
+        ===========================
+        Reusable card, section header and status-banner surfaces built from brand
+        tokens so screens share consistent geometry and whitespace.
+    -->
+
+    <!-- Content card / panel surface -->
+    <Style x:Key="SesCardBorderStyle" TargetType="Border">
+        <Setter Property="Background" Value="{DynamicResource SesWhiteBrush}" />
+        <Setter Property="BorderBrush" Value="{DynamicResource SesBorderBrush}" />
+        <Setter Property="BorderThickness" Value="1" />
+        <Setter Property="CornerRadius" Value="{DynamicResource SesCornerRadius}" />
+        <Setter Property="Padding" Value="{DynamicResource SesCardPadding}" />
+    </Style>
+
+    <!-- Dark Blue Grey feature / header surface -->
+    <Style x:Key="SesFeatureBorderStyle" TargetType="Border">
+        <Setter Property="Background" Value="{DynamicResource SesDarkBlueGreyBrush}" />
+        <Setter Property="CornerRadius" Value="{DynamicResource SesCornerRadius}" />
+        <Setter Property="Padding" Value="{DynamicResource SesSectionPadding}" />
+    </Style>
+
+    <!-- Success / info / warning / error banner surfaces -->
+    <Style x:Key="SesSuccessBadgeBorderStyle" TargetType="Border">
+        <Setter Property="Background" Value="{DynamicResource SesEnergyGreenTintBrush}" />
+        <Setter Property="BorderBrush" Value="{DynamicResource SesEnergyGreenBrush}" />
+        <Setter Property="BorderThickness" Value="1" />
+        <Setter Property="CornerRadius" Value="{DynamicResource SesCornerRadius}" />
+        <Setter Property="Padding" Value="8,4" />
+    </Style>
+
+    <Style x:Key="SesInfoBadgeBorderStyle" TargetType="Border">
+        <Setter Property="Background" Value="{DynamicResource SesDarkBlueGreyTintBrush}" />
+        <Setter Property="BorderBrush" Value="{DynamicResource SesDarkBlueGreyBrush}" />
+        <Setter Property="BorderThickness" Value="1" />
+        <Setter Property="CornerRadius" Value="{DynamicResource SesCornerRadius}" />
+        <Setter Property="Padding" Value="8,4" />
+    </Style>
+
+</ResourceDictionary>

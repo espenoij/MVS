@@ -36,14 +36,14 @@
 
         <!-- Recording status bar (moved here from the main window top bar) -->
         <Border Grid.Row="0"
-                Background="#2B1416"
-                BorderBrush="#E03131"
+                Background="{StaticResource SesDarkBlueGreyBrush}"
+                BorderBrush="{StaticResource SesErrorBrush}"
                 BorderThickness="0,0,0,2"
                 Padding="12,6">
             <StackPanel Orientation="Horizontal" HorizontalAlignment="Center">
 
                 <!-- Pulsing indicator -->
-                <Ellipse Width="12" Height="12" Fill="#E03131" VerticalAlignment="Center">
+                <Ellipse Width="12" Height="12" Fill="{StaticResource SesErrorBrush}" VerticalAlignment="Center">
                     <Ellipse.Triggers>
                         <EventTrigger RoutedEvent="FrameworkElement.Loaded">
                             <BeginStoryboard>
@@ -56,7 +56,7 @@
                 </Ellipse>
 
                 <TextBlock Text="Recording"
-                           Foreground="White"
+                           Foreground="{StaticResource SesWhiteBrush}"
                            FontWeight="SemiBold"
                            VerticalAlignment="Center"
                            Margin="8,0,0,0" />

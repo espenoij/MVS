@@ -1,0 +1,70 @@
+<ResourceDictionary
+    xmlns="http://schemas.microsoft.com/winfx/2006/xaml/presentation"
+    xmlns:x="http://schemas.microsoft.com/winfx/2006/xaml"
+    xmlns:telerik="http://schemas.telerik.com/2008/xaml/presentation">
+
+    <!--
+        SES Energy Brand Toolkit — Buttons
+        ==================================
+        Primary   : Energy Green background, Dark Blue Grey text (best contrast).
+        Secondary : Dark Blue Grey background, White text.
+        Tertiary  : Outlined, Dark Blue Grey border + text.
+
+        Styles are BasedOn the Telerik Material default (RadButtonStyle) so the
+        control template, ripple and focus behaviour are preserved; only brand
+        surface, text, font, radius and spacing are applied. No gradients, gloss
+        or bevels. Brand tokens are resolved with DynamicResource.
+    -->
+
+    <!-- Primary action button -->
+    <Style x:Key="SesPrimaryButtonStyle" TargetType="telerik:RadButton" BasedOn="{StaticResource RadButtonStyle}">
+        <Setter Property="Background" Value="{DynamicResource SesEnergyGreenBrush}" />
+        <Setter Property="Foreground" Value="{DynamicResource SesDarkBlueGreyBrush}" />
+        <Setter Property="BorderBrush" Value="{DynamicResource SesEnergyGreenBrush}" />
+        <Setter Property="BorderThickness" Value="1" />
+        <Setter Property="FontFamily" Value="{DynamicResource SesFontFamily}" />
+        <Setter Property="FontWeight" Value="SemiBold" />
+        <Setter Property="FontSize" Value="{DynamicResource SesFontSizeBody}" />
+        <Setter Property="Padding" Value="{DynamicResource SesButtonPadding}" />
+        <Setter Property="MinHeight" Value="{DynamicResource SesControlMinHeight}" />
+        <Setter Property="MinWidth" Value="{DynamicResource SesButtonMinWidth}" />
+        <Setter Property="Cursor" Value="Hand" />
+        <Setter Property="HorizontalContentAlignment" Value="Center" />
+        <Setter Property="VerticalContentAlignment" Value="Center" />
+    </Style>
+
+    <!-- Secondary action button -->
+    <Style x:Key="SesSecondaryButtonStyle" TargetType="telerik:RadButton" BasedOn="{StaticResource RadButtonStyle}">
+        <Setter Property="Background" Value="{DynamicResource SesDarkBlueGreyBrush}" />
+        <Setter Property="Foreground" Value="{DynamicResource SesWhiteBrush}" />
+        <Setter Property="BorderBrush" Value="{DynamicResource SesDarkBlueGreyBrush}" />
+        <Setter Property="BorderThickness" Value="1" />
+        <Setter Property="FontFamily" Value="{DynamicResource SesFontFamily}" />
+        <Setter Property="FontWeight" Value="SemiBold" />
+        <Setter Property="FontSize" Value="{DynamicResource SesFontSizeBody}" />
+        <Setter Property="Padding" Value="{DynamicResource SesButtonPadding}" />
+        <Setter Property="MinHeight" Value="{DynamicResource SesControlMinHeight}" />
+        <Setter Property="MinWidth" Value="{DynamicResource SesButtonMinWidth}" />
+        <Setter Property="Cursor" Value="Hand" />
+        <Setter Property="HorizontalContentAlignment" Value="Center" />
+        <Setter Property="VerticalContentAlignment" Value="Center" />
+    </Style>
+
+    <!-- Tertiary / outlined button -->
+    <Style x:Key="SesTertiaryButtonStyle" TargetType="telerik:RadButton" BasedOn="{StaticResource RadButtonStyle}">
+        <Setter Property="Background" Value="Transparent" />
+        <Setter Property="Foreground" Value="{DynamicResource SesDarkBlueGreyBrush}" />
+        <Setter Property="BorderBrush" Value="{DynamicResource SesDarkBlueGreyBrush}" />
+        <Setter Property="BorderThickness" Value="1" />
+        <Setter Property="FontFamily" Value="{DynamicResource SesFontFamily}" />
+        <Setter Property="FontWeight" Value="SemiBold" />
+        <Setter Property="FontSize" Value="{DynamicResource SesFontSizeBody}" />
+        <Setter Property="Padding" Value="{DynamicResource SesButtonPadding}" />
+        <Setter Property="MinHeight" Value="{DynamicResource SesControlMinHeight}" />
+        <Setter Property="MinWidth" Value="{DynamicResource SesButtonMinWidth}" />
+        <Setter Property="Cursor" Value="Hand" />
+        <Setter Property="HorizontalContentAlignment" Value="Center" />
+        <Setter Property="VerticalContentAlignment" Value="Center" />
+    </Style>
+
+</ResourceDictionary>

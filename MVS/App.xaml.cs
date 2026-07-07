@@ -60,36 +60,50 @@ namespace MVS
             //////////////////////////////////////////////////////
             ///
 
-            // Accent (tab indicator, etc)
-            MaterialPalette.Palette.AccentNormalColor = (Color)ColorConverter.ConvertFromString("#FFFFFF");
-            MaterialPalette.Palette.AccentHoverColor = (Color)ColorConverter.ConvertFromString("#ff818181");
-            MaterialPalette.Palette.AccentPressedColor = (Color)ColorConverter.ConvertFromString("#FFD3F069");
+            // Theme Colors — SES Energy Brand Toolkit
+            //////////////////////////////////////////////////////
+            // Primary brand:  Energy Green #3DE6A9, Dark Blue Grey #334A5C
+            // Accent = Energy Green (active/selected/highlight states).
+            // Primary = Dark Blue Grey (application chrome, navigation, interactive surfaces).
 
-            // Divider & inputfelt understrek
-            MaterialPalette.Palette.DividerColor = (Color)ColorConverter.ConvertFromString("#44000000");
+            // Global brand font: Roboto Condensed embedded in the assembly.
+            // The pack URI points to the Fonts/ folder of Resource TTF files.
+            MaterialPalette.Palette.FontFamily = new FontFamily("pack://application:,,,/MVS;component/Fonts/#Roboto Condensed");
 
-            MaterialPalette.Palette.IconColor = (Color)ColorConverter.ConvertFromString("#FF000000");
-            MaterialPalette.Palette.MainColor = (Color)ColorConverter.ConvertFromString("#FFFFFFFF");
-            MaterialPalette.Palette.MarkerColor = (Color)ColorConverter.ConvertFromString("#FF000000");
-            MaterialPalette.Palette.ValidationColor = (Color)ColorConverter.ConvertFromString("#FFD50000");
-            MaterialPalette.Palette.ComplementaryColor = (Color)ColorConverter.ConvertFromString("#FFE0E0E0");
-            MaterialPalette.Palette.AlternativeColor = (Color)ColorConverter.ConvertFromString("#FFF5F5F5");
-            MaterialPalette.Palette.MarkerInvertedColor = (Color)ColorConverter.ConvertFromString("#FFFFFFFF");
-            MaterialPalette.Palette.PrimaryColor = (Color)ColorConverter.ConvertFromString("#FFFAFAFA");
+            // Accent (tab indicator, selection, highlights) — Energy Green + accessible darker states
+            MaterialPalette.Palette.AccentNormalColor = (Color)ColorConverter.ConvertFromString("#3DE6A9");
+            MaterialPalette.Palette.AccentHoverColor = (Color)ColorConverter.ConvertFromString("#2FCF97");
+            MaterialPalette.Palette.AccentPressedColor = (Color)ColorConverter.ConvertFromString("#17A377");
 
-            // Window Bar
-            MaterialPalette.Palette.PrimaryNormalColor = (Color)ColorConverter.ConvertFromString("#FF000000");
+            // Divider & input underline
+            MaterialPalette.Palette.DividerColor = (Color)ColorConverter.ConvertFromString("#33334A5C");
 
-            // Focus
-            MaterialPalette.Palette.PrimaryFocusColor = (Color)ColorConverter.ConvertFromString("#ff999999");
+            // Icons & markers use Dark Blue Grey brand colour
+            MaterialPalette.Palette.IconColor = (Color)ColorConverter.ConvertFromString("#334A5C");
+            MaterialPalette.Palette.MainColor = (Color)ColorConverter.ConvertFromString("#FFFFFF");
+            MaterialPalette.Palette.MarkerColor = (Color)ColorConverter.ConvertFromString("#334A5C");
 
-            // Tab hover
-            MaterialPalette.Palette.PrimaryHoverColor = (Color)ColorConverter.ConvertFromString("#FF797979");
+            // Validation — professional SES error red
+            MaterialPalette.Palette.ValidationColor = (Color)ColorConverter.ConvertFromString("#D5303E");
 
-            MaterialPalette.Palette.PrimaryPressedColor = (Color)ColorConverter.ConvertFromString("#FF263238");
-            MaterialPalette.Palette.RippleColor = (Color)ColorConverter.ConvertFromString("#FFFFFFFF");
+            MaterialPalette.Palette.ComplementaryColor = (Color)ColorConverter.ConvertFromString("#EAEFF2");
+            MaterialPalette.Palette.AlternativeColor = (Color)ColorConverter.ConvertFromString("#F5F8FA");
+            MaterialPalette.Palette.MarkerInvertedColor = (Color)ColorConverter.ConvertFromString("#FFFFFF");
+            MaterialPalette.Palette.PrimaryColor = (Color)ColorConverter.ConvertFromString("#F5F8FA");
+
+            // Window Bar / navigation surface — Dark Blue Grey
+            MaterialPalette.Palette.PrimaryNormalColor = (Color)ColorConverter.ConvertFromString("#334A5C");
+
+            // Focus — Energy Green
+            MaterialPalette.Palette.PrimaryFocusColor = (Color)ColorConverter.ConvertFromString("#3DE6A9");
+
+            // Tab / interactive hover — brand hover shades
+            MaterialPalette.Palette.PrimaryHoverColor = (Color)ColorConverter.ConvertFromString("#3F5A6C");
+
+            MaterialPalette.Palette.PrimaryPressedColor = (Color)ColorConverter.ConvertFromString("#263A48");
+            MaterialPalette.Palette.RippleColor = (Color)ColorConverter.ConvertFromString("#FFFFFF");
             MaterialPalette.Palette.ReadOnlyBackgroundColor = (Color)ColorConverter.ConvertFromString("#00FFFFFF");
-            MaterialPalette.Palette.ReadOnlyBorderColor = (Color)ColorConverter.ConvertFromString("#FFABABAB");
+            MaterialPalette.Palette.ReadOnlyBorderColor = (Color)ColorConverter.ConvertFromString("#D5DDE2");
 
             MaterialPalette.Palette.PrimaryOpacity = 0.87;
             MaterialPalette.Palette.SecondaryOpacity = 0.54;

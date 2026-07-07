@@ -16,21 +16,21 @@ namespace MVS.Views.Controls
         private const double RecommendedMinutes = 40.0;
         private const double AcceptableMinutes  = 20.0;
 
-        // Colours for quality tiers.
-        private static readonly Color ColourTooShort   = Color.FromRgb(0xFF, 0xF3, 0xCD); // amber bg
-        private static readonly Color ColourAcceptable = Color.FromRgb(0xD1, 0xEC, 0xF1); // blue/teal bg
-        private static readonly Color ColourGood       = Color.FromRgb(0xD1, 0xE7, 0xDD); // green bg
-        private static readonly Color ColourIdle       = Color.FromRgb(0xEF, 0xF2, 0xF5); // grey bg
+        // Colours for quality tiers — SES Energy Brand Toolkit.
+        private static readonly Color ColourTooShort   = Color.FromRgb(0xFF, 0xF4, 0xD6); // warning amber bg
+        private static readonly Color ColourAcceptable = Color.FromRgb(0xDD, 0xE6, 0xEB); // Dark Blue Grey info bg
+        private static readonly Color ColourGood       = Color.FromRgb(0xD9, 0xFA, 0xEE); // Energy Green bg
+        private static readonly Color ColourIdle       = Color.FromRgb(0xEA, 0xEF, 0xF2); // neutral bg
 
-        private static readonly Color ColourTooShortFg   = Color.FromRgb(0x66, 0x4D, 0x03);
-        private static readonly Color ColourAcceptableFg = Color.FromRgb(0x0C, 0x54, 0x6E);
-        private static readonly Color ColourGoodFg       = Color.FromRgb(0x0A, 0x36, 0x22);
-        private static readonly Color ColourIdleFg       = Color.FromRgb(0x57, 0x60, 0x6A);
+        private static readonly Color ColourTooShortFg   = Color.FromRgb(0x8A, 0x5D, 0x00);
+        private static readonly Color ColourAcceptableFg = Color.FromRgb(0x33, 0x4A, 0x5C); // Dark Blue Grey
+        private static readonly Color ColourGoodFg       = Color.FromRgb(0x17, 0xA3, 0x77); // accessible Energy Green
+        private static readonly Color ColourIdleFg       = Color.FromRgb(0x33, 0x4A, 0x5C);
 
         // Progress-bar colours.
-        private static readonly Color PbTooShort   = Color.FromRgb(0xFF, 0xC1, 0x07);
-        private static readonly Color PbAcceptable = Color.FromRgb(0x17, 0xA2, 0xB8);
-        private static readonly Color PbGood       = Color.FromRgb(0x28, 0xA7, 0x45);
+        private static readonly Color PbTooShort   = Color.FromRgb(0xE6, 0xC2, 0x6A); // amber
+        private static readonly Color PbAcceptable = Color.FromRgb(0x33, 0x4A, 0x5C); // Dark Blue Grey
+        private static readonly Color PbGood       = Color.FromRgb(0x3D, 0xE6, 0xA9); // Energy Green
 
         public DurationStatusBanner()
         {
@@ -186,8 +186,8 @@ namespace MVS.Views.Controls
             tbQualityLabel.Foreground  = new SolidColorBrush(ColourIdleFg);
             tbStatusMessage.Foreground = new SolidColorBrush(ColourIdleFg);
 
-            pbDuration.Foreground = new SolidColorBrush(Color.FromRgb(0xCC, 0xCC, 0xCC));
-            outerBorder.BorderBrush = new SolidColorBrush(Color.FromRgb(0xD0, 0xD7, 0xDE));
+            pbDuration.Foreground = new SolidColorBrush(Color.FromRgb(0xC3, 0xCD, 0xD4));
+            outerBorder.BorderBrush = new SolidColorBrush(Color.FromRgb(0xD5, 0xDD, 0xE2));
         }
     }
 }

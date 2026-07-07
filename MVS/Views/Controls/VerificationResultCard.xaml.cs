@@ -148,28 +148,32 @@ namespace MVS.Views.Controls
             switch (status)
             {
                 case VerificationStatus.Good:
-                    badge = Color.FromRgb(0xDA, 0xFB, 0xE1);
-                    badgeText = Color.FromRgb(0x1A, 0x7F, 0x37);
-                    panelBg = Color.FromRgb(0xF0, 0xFB, 0xF3);
-                    panelBorder = Color.FromRgb(0xAC, 0xEE, 0xBB);
+                    // Success — SES Energy Green
+                    badge = Color.FromRgb(0xD9, 0xFA, 0xEE);
+                    badgeText = Color.FromRgb(0x17, 0xA3, 0x77);
+                    panelBg = Color.FromRgb(0xEC, 0xFB, 0xF5);
+                    panelBorder = Color.FromRgb(0x3D, 0xE6, 0xA9);
                     break;
                 case VerificationStatus.Acceptable:
-                    badge = Color.FromRgb(0xFF, 0xF8, 0xC5);
-                    badgeText = Color.FromRgb(0x9A, 0x67, 0x00);
-                    panelBg = Color.FromRgb(0xFF, 0xFC, 0xE8);
-                    panelBorder = Color.FromRgb(0xF0, 0xDA, 0x7A);
+                    // Caution — accessible, professional amber
+                    badge = Color.FromRgb(0xFF, 0xF4, 0xD6);
+                    badgeText = Color.FromRgb(0x8A, 0x5D, 0x00);
+                    panelBg = Color.FromRgb(0xFF, 0xFB, 0xEE);
+                    panelBorder = Color.FromRgb(0xE6, 0xC2, 0x6A);
                     break;
                 case VerificationStatus.NeedsAttention:
-                    badge = Color.FromRgb(0xFF, 0xEB, 0xE9);
-                    badgeText = Color.FromRgb(0xCF, 0x22, 0x2E);
-                    panelBg = Color.FromRgb(0xFF, 0xF4, 0xF3);
-                    panelBorder = Color.FromRgb(0xFF, 0xC1, 0xBC);
+                    // Error — accessible, professional red
+                    badge = Color.FromRgb(0xFB, 0xE1, 0xE3);
+                    badgeText = Color.FromRgb(0xB3, 0x28, 0x33);
+                    panelBg = Color.FromRgb(0xFD, 0xF0, 0xF1);
+                    panelBorder = Color.FromRgb(0xD5, 0x30, 0x3E);
                     break;
                 default:
-                    badge = Color.FromRgb(0xEF, 0xF2, 0xF5);
-                    badgeText = Color.FromRgb(0x57, 0x60, 0x6A);
-                    panelBg = Color.FromRgb(0xEF, 0xF2, 0xF5);
-                    panelBorder = Color.FromRgb(0xD0, 0xD7, 0xDE);
+                    // Neutral / information — derived from SES Dark Blue Grey
+                    badge = Color.FromRgb(0xEA, 0xEF, 0xF2);
+                    badgeText = Color.FromRgb(0x33, 0x4A, 0x5C);
+                    panelBg = Color.FromRgb(0xF5, 0xF8, 0xFA);
+                    panelBorder = Color.FromRgb(0xD5, 0xDD, 0xE2);
                     break;
             }
 

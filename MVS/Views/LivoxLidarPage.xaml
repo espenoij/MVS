@@ -581,10 +581,10 @@
                     <!-- Scanning indicator -->
                     <Border HorizontalAlignment="Center" VerticalAlignment="Top"
                             Margin="0,8,0,0" Padding="12,4" CornerRadius="4"
-                            Background="#DD2E7D32"
+                            Background="{StaticResource SesEnergyGreenBrush}"
                             Visibility="{Binding IsScanActive, Converter={StaticResource BoolToVis}}">
                         <StackPanel Orientation="Horizontal">
-                            <Ellipse Width="10" Height="10" Fill="#88FF88" Margin="0,0,6,0" VerticalAlignment="Center">
+                            <Ellipse Width="10" Height="10" Fill="{StaticResource SesWhiteBrush}" Margin="0,0,6,0" VerticalAlignment="Center">
                                 <Ellipse.Triggers>
                                     <EventTrigger RoutedEvent="Loaded">
                                         <BeginStoryboard>
@@ -611,8 +611,8 @@
                     <Border x:Name="axisIndicatorBorder" 
                             HorizontalAlignment="Right" VerticalAlignment="Bottom"
                             Margin="8,8,8,230" Padding="0" CornerRadius="4"
-                            Background="#CCF0F0F0"
-                            BorderBrush="#CCCCCC" BorderThickness="1"
+                            Background="{StaticResource SesSurfaceBrush}"
+                            BorderBrush="{StaticResource SesBorderBrush}" BorderThickness="1"
                             Width="150" Height="180">
                         <Grid>
                             <Grid.RowDefinitions>
@@ -644,21 +644,21 @@
                             </Viewport3D>
 
                             <!-- Rotation readout -->
-                            <Border Grid.Row="1" Background="#EEE8E8E8"
-                                    BorderBrush="#CCCCCC" BorderThickness="0,1,0,0"
+                            <Border Grid.Row="1" Background="{StaticResource SesSurfaceAltBrush}"
+                                    BorderBrush="{StaticResource SesBorderBrush}" BorderThickness="0,1,0,0"
                                     Padding="6,4">
                                 <StackPanel>
                                     <DockPanel>
                                         <TextBlock DockPanel.Dock="Left" Text="X " FontSize="13" Foreground="#CC2222"/>
-                                        <TextBlock x:Name="tbRotX" FontSize="13" Foreground="#222222" FontWeight="Bold" HorizontalAlignment="Right"/>
+                                        <TextBlock x:Name="tbRotX" FontSize="13" Foreground="{StaticResource SesTextPrimaryBrush}" FontWeight="Bold" HorizontalAlignment="Right"/>
                                     </DockPanel>
                                     <DockPanel>
                                         <TextBlock DockPanel.Dock="Left" Text="Y " FontSize="13" Foreground="#007700"/>
-                                        <TextBlock x:Name="tbRotY" FontSize="13" Foreground="#222222" FontWeight="Bold" HorizontalAlignment="Right"/>
+                                        <TextBlock x:Name="tbRotY" FontSize="13" Foreground="{StaticResource SesTextPrimaryBrush}" FontWeight="Bold" HorizontalAlignment="Right"/>
                                     </DockPanel>
                                     <DockPanel>
                                         <TextBlock DockPanel.Dock="Left" Text="Z " FontSize="13" Foreground="#003CB4"/>
-                                        <TextBlock x:Name="tbRotZ" FontSize="13" Foreground="#222222" FontWeight="Bold" HorizontalAlignment="Right"/>
+                                        <TextBlock x:Name="tbRotZ" FontSize="13" Foreground="{StaticResource SesTextPrimaryBrush}" FontWeight="Bold" HorizontalAlignment="Right"/>
                                     </DockPanel>
                                 </StackPanel>
                             </Border>
@@ -668,11 +668,11 @@
                     <!-- Legend -->
                     <Border HorizontalAlignment="Right" VerticalAlignment="Bottom"
                             Margin="8" Padding="10" CornerRadius="4"
-                            Background="#CCF0F0F0"
-                            BorderBrush="#CCCCCC" BorderThickness="1">
+                            Background="{StaticResource SesSurfaceBrush}"
+                            BorderBrush="{StaticResource SesBorderBrush}" BorderThickness="1">
                         <StackPanel>
                             <TextBlock Text="Legend" FontWeight="Bold" FontSize="14"
-                                       Foreground="#333333" Margin="0,0,0,6"/>
+                                       Foreground="{StaticResource SesTextPrimaryBrush}" Margin="0,0,0,6"/>
 
                             <!-- Heat-map bar -->
                             <DockPanel Margin="0,0,0,4">
@@ -693,24 +693,24 @@
 
                             <StackPanel Orientation="Horizontal" Margin="0,2,0,2">
                                 <Border Width="16" Height="16" Background="Red" CornerRadius="2" Margin="0,0,6,0"/>
-                                <TextBlock Text="LiDAR Forward (+X)" FontSize="12" Foreground="#333333" VerticalAlignment="Center"/>
+                                <TextBlock Text="LiDAR Forward (+X)" FontSize="12" Foreground="{StaticResource SesTextPrimaryBrush}" VerticalAlignment="Center"/>
                             </StackPanel>
                             <StackPanel Orientation="Horizontal" Margin="0,2,0,2">
                                 <Border Width="16" Height="16" Background="#0078FF" CornerRadius="2" Margin="0,0,6,0"/>
-                                <TextBlock Text="Plane Normal" FontSize="12" Foreground="#333333" VerticalAlignment="Center"/>
+                                <TextBlock Text="Plane Normal" FontSize="12" Foreground="{StaticResource SesTextPrimaryBrush}" VerticalAlignment="Center"/>
                             </StackPanel>
                             <StackPanel Orientation="Horizontal" Margin="0,2,0,2">
                                 <Border Width="16" Height="16" Background="#FF8C00" CornerRadius="2" Margin="0,0,6,0"/>
-                                <TextBlock Text="Bow Direction / Deck Edge" FontSize="12" Foreground="#333333" VerticalAlignment="Center"/>
+                                <TextBlock Text="Bow Direction / Deck Edge" FontSize="12" Foreground="{StaticResource SesTextPrimaryBrush}" VerticalAlignment="Center"/>
                             </StackPanel>
                             <StackPanel Orientation="Horizontal" Margin="0,2,0,2">
                                 <Border Width="16" Height="16" Background="#FF00FF" CornerRadius="2" Margin="0,0,6,0"/>
-                                <TextBlock Text="Corners" FontSize="12" Foreground="#333333" VerticalAlignment="Center"/>
+                                <TextBlock Text="Corners" FontSize="12" Foreground="{StaticResource SesTextPrimaryBrush}" VerticalAlignment="Center"/>
                             </StackPanel>
                             <StackPanel Orientation="Horizontal" Margin="0,2,0,2">
                                 <Border Width="16" Height="16" Background="#50000000" CornerRadius="2" Margin="0,0,6,0"
-                                        BorderBrush="#888" BorderThickness="1"/>
-                                <TextBlock Text="Fitted Plane" FontSize="12" Foreground="#333333" VerticalAlignment="Center"/>
+                                        BorderBrush="{StaticResource SesBorderBrush}" BorderThickness="1"/>
+                                <TextBlock Text="Fitted Plane" FontSize="12" Foreground="{StaticResource SesTextPrimaryBrush}" VerticalAlignment="Center"/>
                             </StackPanel>
                         </StackPanel>
                     </Border>
@@ -741,8 +741,8 @@
                 Background="#88000000"
                 Visibility="{Binding IsAnalysing, Converter={StaticResource BoolToVis}}">
             <Border HorizontalAlignment="Center" VerticalAlignment="Center"
-                    Background="#F0F5F5F5"
-                    BorderBrush="#CCCCCC" BorderThickness="1"
+                    Background="{StaticResource SesSurfaceBrush}"
+                    BorderBrush="{StaticResource SesBorderBrush}" BorderThickness="1"
                     CornerRadius="8"
                     Padding="32,24"
                     MinWidth="320">
@@ -754,18 +754,18 @@
                         <telerik:RadProgressBar Minimum="0" Maximum="100"
                                              Value="{Binding AnalyseProgress, Mode=OneWay}"
                                              Width="360" Height="24"
-                                             Foreground="#2E7D32" />
+                                             Foreground="{StaticResource SesEnergyGreenBrush}" />
                         <TextBlock Text="{Binding AnalyseProgressText}"
                                    HorizontalAlignment="Center" VerticalAlignment="Center"
-                                   FontSize="12" FontWeight="Bold" Foreground="#222222" />
+                                   FontSize="12" FontWeight="Bold" Foreground="{StaticResource SesTextPrimaryBrush}" />
                     </Grid>
                     <TextBlock Text="Analysing point cloud…"
                                FontSize="16" FontWeight="SemiBold"
-                               Foreground="#222222"
+                               Foreground="{StaticResource SesTextPrimaryBrush}"
                                HorizontalAlignment="Center" />
                     <TextBlock Text="{Binding AnalyseStepText}"
                                FontSize="12"
-                               Foreground="#666666"
+                               Foreground="{StaticResource SesTextSecondaryBrush}"
                                HorizontalAlignment="Center"
                                TextWrapping="Wrap"
                                TextAlignment="Center"

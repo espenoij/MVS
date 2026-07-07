@@ -46,7 +46,7 @@
 
         <telerik:Label
             Content="This can take a moment for larger data sets."
-            Foreground="#57606A"
+            Foreground="{StaticResource SesTextSecondaryBrush}"
             Margin="0,8,0,0" />
 
     </StackPanel>

@@ -61,6 +61,13 @@
     <Resource Include="Icons\detector_white_36dp.png" />
     <Resource Include="mvs_windows_icon.ico" />
     <Resource Include="swire_flag.ico" />
+    <!-- SES brand fonts — embedded as application resources so Roboto Condensed
+         is available on every machine without requiring system installation. -->
+    <Resource Include="Fonts\RobotoCondensed-Light.ttf" />
+    <Resource Include="Fonts\RobotoCondensed-Regular.ttf" />
+    <Resource Include="Fonts\RobotoCondensed-Bold.ttf" />
+    <Resource Include="Fonts\RobotoCondensed-Italic.ttf" />
+    <Resource Include="Fonts\RobotoCondensed-BoldItalic.ttf" />
   </ItemGroup>
 
   <ItemGroup>

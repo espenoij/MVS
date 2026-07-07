@@ -823,6 +823,16 @@ namespace MVS
 
         private int currentStep = 1;
 
+        // SES brand colours for the wizard step indicator: active = Energy Green,
+        // inactive = Dark Blue Grey. Resolved from application resources with a safe fallback.
+        private System.Windows.Media.Brush WizardActiveStepBrush =>
+            (TryFindResource("SesEnergyGreenTextBrush") as System.Windows.Media.Brush)
+            ?? new System.Windows.Media.SolidColorBrush(System.Windows.Media.Color.FromRgb(0x17, 0xA3, 0x77));
+
+        private System.Windows.Media.Brush WizardInactiveStepBrush =>
+            (TryFindResource("SesTextSecondaryBrush") as System.Windows.Media.Brush)
+            ?? new System.Windows.Media.SolidColorBrush(System.Windows.Media.Color.FromRgb(0x33, 0x4A, 0x5C));
+
         private void SetWizardStep(int step)
         {
             if (step < 1) step = 1;
@@ -835,11 +845,11 @@ namespace MVS
             panelStep4.Visibility = step == 4 ? Visibility.Visible : Visibility.Collapsed;
             panelStep5.Visibility = step == 5 ? Visibility.Visible : Visibility.Collapsed;
 
-            tbStep1.Foreground = step == 1 ? System.Windows.Media.Brushes.SteelBlue : System.Windows.Media.Brushes.DimGray;
-            tbStep2.Foreground = step == 2 ? System.Windows.Media.Brushes.SteelBlue : System.Windows.Media.Brushes.DimGray;
-            tbStep3.Foreground = step == 3 ? System.Windows.Media.Brushes.SteelBlue : System.Windows.Media.Brushes.DimGray;
-            tbStep4.Foreground = step == 4 ? System.Windows.Media.Brushes.SteelBlue : System.Windows.Media.Brushes.DimGray;
-            tbStep5.Foreground = step == 5 ? System.Windows.Media.Brushes.SteelBlue : System.Windows.Media.Brushes.DimGray;
+            tbStep1.Foreground = step == 1 ? WizardActiveStepBrush : WizardInactiveStepBrush;
+            tbStep2.Foreground = step == 2 ? WizardActiveStepBrush : WizardInactiveStepBrush;
+            tbStep3.Foreground = step == 3 ? WizardActiveStepBrush : WizardInactiveStepBrush;
+            tbStep4.Foreground = step == 4 ? WizardActiveStepBrush : WizardInactiveStepBrush;
+            tbStep5.Foreground = step == 5 ? WizardActiveStepBrush : WizardInactiveStepBrush;
 
             tbStep1.FontWeight = step == 1 ? FontWeights.Bold : FontWeights.Normal;
             tbStep2.FontWeight = step == 2 ? FontWeights.Bold : FontWeights.Normal;

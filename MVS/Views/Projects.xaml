@@ -48,17 +48,19 @@
                 <Grid Grid.Row="0" Margin="0,0,0,8">
                     <StackPanel Orientation="Horizontal">
                         <TextBlock Text="Motion Unit Verification"
-                                   FontSize="18" FontWeight="Bold"/>
+                                   FontFamily="{StaticResource SesFontFamily}"
+                                   FontSize="18" FontWeight="Bold"
+                                   Foreground="{StaticResource SesTextPrimaryBrush}"/>
                         <TextBlock Text=" — Guided workflow"
                                    FontSize="14"
-                                   Foreground="#57606A"
+                                   Foreground="{StaticResource SesTextSecondaryBrush}"
                                    VerticalAlignment="Center"
                                    Margin="6,2,0,0"/>
                     </StackPanel>
                     <TextBlock x:Name="tbWizardProjectName"
                                FontSize="14"
                                FontWeight="SemiBold"
-                               Foreground="#0969DA"
+                               Foreground="{StaticResource SesEnergyGreenTextBrush}"
                                HorizontalAlignment="Center"
                                VerticalAlignment="Center"
                                Visibility="Collapsed"/>
@@ -66,9 +68,9 @@
 
                 <!-- Step indicator -->
                 <Border Grid.Row="1"
-                        Background="#F6F8FA"
-                        BorderBrush="#D0D7DE" BorderThickness="1"
-                        CornerRadius="4"
+                        Background="{StaticResource SesSurfaceBrush}"
+                        BorderBrush="{StaticResource SesBorderBrush}" BorderThickness="1"
+                        CornerRadius="{StaticResource SesCornerRadius}"
                         Padding="10,6"
                         Margin="0,0,0,8">
                     <Grid>
@@ -78,15 +80,15 @@
                         </Grid.ColumnDefinitions>
 
                         <StackPanel Grid.Column="0" Orientation="Horizontal" VerticalAlignment="Center">
-                            <TextBlock x:Name="tbStep1" Text="1. Setup" FontWeight="Bold" Foreground="#0969DA"/>
-                            <TextBlock Text="  ›  " Foreground="#57606A"/>
-                            <TextBlock x:Name="tbStep2" Text="2. LiDAR" Foreground="#57606A"/>
-                            <TextBlock Text="  ›  " Foreground="#57606A"/>
-                            <TextBlock x:Name="tbStep3" Text="3. Capture" Foreground="#57606A"/>
-                            <TextBlock Text="  ›  " Foreground="#57606A"/>
-                            <TextBlock x:Name="tbStep4" Text="4. Review" Foreground="#57606A"/>
-                            <TextBlock Text="  ›  " Foreground="#57606A"/>
-                            <TextBlock x:Name="tbStep5" Text="5. Report" Foreground="#57606A"/>
+                            <TextBlock x:Name="tbStep1" Text="1. Setup" FontWeight="Bold" Foreground="{StaticResource SesEnergyGreenTextBrush}"/>
+                            <TextBlock Text="  ›  " Foreground="{StaticResource SesTextSecondaryBrush}"/>
+                            <TextBlock x:Name="tbStep2" Text="2. LiDAR" Foreground="{StaticResource SesTextSecondaryBrush}"/>
+                            <TextBlock Text="  ›  " Foreground="{StaticResource SesTextSecondaryBrush}"/>
+                            <TextBlock x:Name="tbStep3" Text="3. Capture" Foreground="{StaticResource SesTextSecondaryBrush}"/>
+                            <TextBlock Text="  ›  " Foreground="{StaticResource SesTextSecondaryBrush}"/>
+                            <TextBlock x:Name="tbStep4" Text="4. Review" Foreground="{StaticResource SesTextSecondaryBrush}"/>
+                            <TextBlock Text="  ›  " Foreground="{StaticResource SesTextSecondaryBrush}"/>
+                            <TextBlock x:Name="tbStep5" Text="5. Report" Foreground="{StaticResource SesTextSecondaryBrush}"/>
                         </StackPanel>
 
                         <StackPanel Grid.Column="1" Orientation="Horizontal" VerticalAlignment="Center">
@@ -211,7 +213,7 @@
                                            FontSize="14" FontWeight="SemiBold"
                                            Margin="0,0,0,6"/>
                                 <TextBlock TextWrapping="Wrap"
-                                           Foreground="#57606A"
+                                           Foreground="{StaticResource SesTextSecondaryBrush}"
                                            Margin="0,0,0,12"
                                            Text="Create or select a project, then describe the verification and pick the MRU input setup. The Vessel MRU is verified against the Reference MRU."/>
 
@@ -227,10 +229,10 @@
                                             <RowDefinition Height="32"/>
                                         </Grid.RowDefinitions>
 
-                                        <TextBlock Grid.Row="0" Grid.Column="0" Text="ID" VerticalAlignment="Center" Foreground="#57606A"/>
+                                        <TextBlock Grid.Row="0" Grid.Column="0" Text="ID" VerticalAlignment="Center" Foreground="{StaticResource SesTextSecondaryBrush}"/>
                                         <Label Grid.Row="0" Grid.Column="1" Name="lbDataSetID" VerticalAlignment="Center"/>
 
-                                        <TextBlock Grid.Row="1" Grid.Column="0" Text="Name" VerticalAlignment="Top" Margin="0,8,0,0" Foreground="#57606A"/>
+                                        <TextBlock Grid.Row="1" Grid.Column="0" Text="Name" VerticalAlignment="Top" Margin="0,8,0,0" Foreground="{StaticResource SesTextSecondaryBrush}"/>
                                         <TextBox Grid.Row="1" Grid.Column="1"
                                                  Name="tbDataSetName"
                                                  MinHeight="32"
@@ -240,7 +242,7 @@
                                                  LostFocus="tbDataSetName_LostFocus"
                                                  KeyDown="tbDataSetName_KeyDown"/>
 
-                                        <TextBlock Grid.Row="2" Grid.Column="0" Text="Input MRUs" VerticalAlignment="Center" Foreground="#57606A"/>
+                                        <TextBlock Grid.Row="2" Grid.Column="0" Text="Input MRUs" VerticalAlignment="Center" Foreground="{StaticResource SesTextSecondaryBrush}"/>
                                         <telerik:RadComboBox Grid.Row="2" Grid.Column="1"
                                                              Name="cboInputMRUs"
                                                              VerticalAlignment="Center"
@@ -264,7 +266,7 @@
                                        FontSize="14" FontWeight="SemiBold"
                                        Margin="0,0,0,6"/>
                             <TextBlock TextWrapping="Wrap"
-                                       Foreground="#57606A"
+                                       Foreground="{StaticResource SesTextSecondaryBrush}"
                                        Margin="0,0,0,8"
                                        Text="1: Set up the LiDAR sensor. 2: Perform a scan. 3: Analyse the scan to derive pitch/roll/heading offsets. 4: Apply the correction to the Reference MRU before capturing motion data."/>
                         </StackPanel>
@@ -280,7 +282,7 @@
                                        FontSize="14" FontWeight="SemiBold"
                                        Margin="0,0,0,6"/>
                             <TextBlock TextWrapping="Wrap"
-                                       Foreground="#57606A"
+                                       Foreground="{StaticResource SesTextSecondaryBrush}"
                                        Margin="0,0,0,12"
                                        Text="Record live motion data, or import an existing HMS recording for this project. The recommended verification window is 40 minutes."/>
 
@@ -300,19 +302,19 @@
                                         <RowDefinition Height="Auto"/>
                                     </Grid.RowDefinitions>
 
-                                    <TextBlock Grid.Row="0" Grid.Column="0" Text="Date"      Foreground="#57606A" VerticalAlignment="Center"/>
+                                    <TextBlock Grid.Row="0" Grid.Column="0" Text="Date"      Foreground="{StaticResource SesTextSecondaryBrush}" VerticalAlignment="Center"/>
                                     <Label     Grid.Row="0" Grid.Column="1" Name="lbDataSetDate"      VerticalAlignment="Center"/>
-                                    <TextBlock Grid.Row="1" Grid.Column="0" Text="Start"     Foreground="#57606A" VerticalAlignment="Center"/>
+                                    <TextBlock Grid.Row="1" Grid.Column="0" Text="Start"     Foreground="{StaticResource SesTextSecondaryBrush}" VerticalAlignment="Center"/>
                                     <Label     Grid.Row="1" Grid.Column="1" Name="lbDataSetStartTime" VerticalAlignment="Center"/>
-                                    <TextBlock Grid.Row="2" Grid.Column="0" Text="End"       Foreground="#57606A" VerticalAlignment="Center"/>
+                                    <TextBlock Grid.Row="2" Grid.Column="0" Text="End"       Foreground="{StaticResource SesTextSecondaryBrush}" VerticalAlignment="Center"/>
                                     <Label     Grid.Row="2" Grid.Column="1" Name="lbDataSetEndTime"   VerticalAlignment="Center"/>
-                                    <TextBlock Grid.Row="3" Grid.Column="0" Text="Duration"  Foreground="#57606A" VerticalAlignment="Center"/>
+                                    <TextBlock Grid.Row="3" Grid.Column="0" Text="Duration"  Foreground="{StaticResource SesTextSecondaryBrush}" VerticalAlignment="Center"/>
                                     <Label     Grid.Row="3" Grid.Column="1" Name="lbDataSetDuration"  VerticalAlignment="Center"/>
 
                                     <TextBlock Grid.Row="4" Grid.ColumnSpan="2"
                                                Name="tbDurationWarning"
                                                Text="Short recording — at least 20 minutes is recommended before analysis."
-                                               Foreground="#9A6700"
+                                               Foreground="{StaticResource SesWarningTextBrush}"
                                                TextWrapping="Wrap"
                                                Margin="0,6,0,0"
                                                Visibility="Collapsed"/>
@@ -359,7 +361,7 @@
                                                    MinWidth="150"/>
                                 <Label Name="lbImport"
                                        Content="Imports motion data from an existing HMS recording."
-                                       Foreground="#57606A"
+                                       Foreground="{StaticResource SesTextSecondaryBrush}"
                                        VerticalAlignment="Center"
                                        Margin="10,0,0,0"/>
                             </StackPanel>
@@ -388,7 +390,7 @@
                                        Margin="0,0,0,6"/>
                             <TextBlock Grid.Row="1"
                                        TextWrapping="Wrap"
-                                       Foreground="#57606A"
+                                       Foreground="{StaticResource SesTextSecondaryBrush}"
                                        Margin="0,0,0,12"
                                        Text="Inspect reference, test and deviation statistics for each axis. The deviation is the value this tool calculates; each card instead grades the quality of the captured input data &#8212; samples, vessel motion and noise &#8212; to tell you whether that calculated deviation can be trusted. Press the ? button on a card for a full explanation. This page is for review only; use Apply to save the recommended correction for this project."/>
 
@@ -421,7 +423,7 @@
                                       Header="Detailed charts"
                                       IsExpanded="True"
                                       Margin="0,12,0,0">
-                                <Border BorderBrush="#D0D7DE" BorderThickness="1"
+                                <Border BorderBrush="{StaticResource SesBorderBrush}" BorderThickness="1"
                                         CornerRadius="4" Background="White"
                                         Margin="0,6,0,0">
                                     <local:DataAnalysis x:Name="ucDataAnalysis"
@@ -450,7 +452,7 @@
                                        Margin="0,0,0,6"/>
                             <TextBlock Grid.Row="1"
                                        TextWrapping="Wrap"
-                                       Foreground="#57606A"
+                                       Foreground="{StaticResource SesTextSecondaryBrush}"
                                        Margin="0,0,0,12"
                                        Text="Fill in all required fields (*), then click Generate Report. Use Preview Report to view it in a popup window, save it as PDF, or open it directly."/>
 
@@ -471,7 +473,7 @@
                                         <RowDefinition Height="Auto"/>
                                     </Grid.RowDefinitions>
 
-                                    <TextBlock Grid.Row="2" Grid.Column="0" Text="Comments" Margin="0,4,0,0" VerticalAlignment="Top" Foreground="#57606A"/>
+                                    <TextBlock Grid.Row="2" Grid.Column="0" Text="Comments" Margin="0,4,0,0" VerticalAlignment="Top" Foreground="{StaticResource SesTextSecondaryBrush}"/>
                                     <telerik:RadWatermarkTextBox Grid.Row="2" Grid.Column="1" Grid.ColumnSpan="3"
                                              Name="tbDataSetComments"
                                              AcceptsReturn="True"
@@ -486,7 +488,7 @@
                                              LostFocus="tbDataSetDescription_LostFocus"
                                              KeyDown="tbDataSetDescription_KeyDown"/>
 
-                                    <TextBlock Grid.Row="0" Grid.Column="0" Text="Operator *" VerticalAlignment="Center" Margin="0,4,0,0" Foreground="#57606A"/>
+                                    <TextBlock Grid.Row="0" Grid.Column="0" Text="Operator *" VerticalAlignment="Center" Margin="0,4,0,0" Foreground="{StaticResource SesTextSecondaryBrush}"/>
                                     <telerik:RadWatermarkTextBox Grid.Row="0" Grid.Column="1"
                                              Name="tbOperator"
                                              VerticalContentAlignment="Center"
@@ -496,7 +498,7 @@
                                              KeyDown="tbOperator_KeyDown"
                                              TextChanged="tbReportField_TextChanged"/>
 
-                                    <TextBlock Grid.Row="0" Grid.Column="2" Text="Vessel *" VerticalAlignment="Center" Margin="16,4,0,0" Foreground="#57606A"/>
+                                    <TextBlock Grid.Row="0" Grid.Column="2" Text="Vessel *" VerticalAlignment="Center" Margin="16,4,0,0" Foreground="{StaticResource SesTextSecondaryBrush}"/>
                                     <telerik:RadWatermarkTextBox Grid.Row="0" Grid.Column="3"
                                              Name="tbVesselName"
                                              VerticalContentAlignment="Center"
@@ -506,7 +508,7 @@
                                              KeyDown="tbVesselName_KeyDown"
                                              TextChanged="tbReportField_TextChanged"/>
 
-                                    <TextBlock Grid.Row="1" Grid.Column="0" Text="Location *" VerticalAlignment="Center" Margin="0,4,0,0" Foreground="#57606A"/>
+                                    <TextBlock Grid.Row="1" Grid.Column="0" Text="Location *" VerticalAlignment="Center" Margin="0,4,0,0" Foreground="{StaticResource SesTextSecondaryBrush}"/>
                                     <telerik:RadWatermarkTextBox Grid.Row="1" Grid.Column="1"
                                              Name="tbLocation"
                                              VerticalContentAlignment="Center"
@@ -516,7 +518,7 @@
                                              KeyDown="tbLocation_KeyDown"
                                              TextChanged="tbReportField_TextChanged"/>
 
-                                    <TextBlock Grid.Row="1" Grid.Column="2" Text="Correction Applied" VerticalAlignment="Center" Margin="16,4,0,0" Foreground="#57606A"/>
+                                    <TextBlock Grid.Row="1" Grid.Column="2" Text="Correction Applied" VerticalAlignment="Center" Margin="16,4,0,0" Foreground="{StaticResource SesTextSecondaryBrush}"/>
                                     <CheckBox Grid.Row="1" Grid.Column="3"
                                               x:Name="chkCorrectionApplied"
                                               HorizontalAlignment="Left"
@@ -584,11 +586,11 @@
 
                 <!-- Status footer -->
                 <Border Grid.Row="3"
-                        BorderBrush="#D0D7DE" BorderThickness="0,1,0,0"
+                        BorderBrush="{StaticResource SesBorderBrush}" BorderThickness="0,1,0,0"
                         Padding="0,8,0,0" Margin="0,8,0,0">
                     <TextBlock x:Name="tbAnalysisStatus"
                                VerticalAlignment="Center"
-                               Foreground="#57606A"
+                               Foreground="{StaticResource SesTextSecondaryBrush}"
                                Text=""/>
                 </Border>
     </Grid>

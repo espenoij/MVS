@@ -29,63 +29,83 @@
 
     <DockPanel>
 
-        <StackPanel
+        <Grid
             DockPanel.Dock="Bottom">
+            <Grid.ColumnDefinitions>
+                <ColumnDefinition Width="*" />
+                <ColumnDefinition Width="Auto" />
+            </Grid.ColumnDefinitions>
 
-            <telerik:Label
-                HorizontalAlignment="Center"
-                Content="{Binding Path=aboutCopyright}" />
+            <StackPanel
+                Grid.Column="0"
+                Grid.ColumnSpan="2"
+                HorizontalAlignment="Center">
 
-            <Button
-                Margin="8"
-                Width="150"
-                HorizontalAlignment="Center"
-                Content="Close"
-                Click="btnActivate_Click" />
+                <telerik:Label
+                    HorizontalAlignment="Center"
+                    FontFamily="{StaticResource SesFontFamily}"
+                    Foreground="{StaticResource SesTextSecondaryBrush}"
+                    Content="{Binding Path=aboutCopyright}" />
 
-        </StackPanel>
+                <telerik:RadButton
+                    Margin="8"
+                    Width="150"
+                    HorizontalAlignment="Center"
+                    Style="{StaticResource SesSecondaryButtonStyle}"
+                    Content="Close"
+                    Click="btnActivate_Click" />
+
+            </StackPanel>
+
+            <!--About/version screen: logo bottom-right-->
+            <Image
+                Grid.Column="1"
+                Source="../Icons/ses_logo.png"
+                Height="28"
+                MinWidth="72"
+                HorizontalAlignment="Right"
+                VerticalAlignment="Bottom"
+                Margin="16,0,16,12"
+                RenderOptions.BitmapScalingMode="HighQuality" />
+
+        </Grid>
 
         <StackPanel>
 
             <StackPanel
-                Background="{StaticResource ColorAboutBackground}">
+                Background="{StaticResource SesDarkBlueGreyBrush}">
 
                 <Image
                     DockPanel.Dock="Top"
                     HorizontalAlignment="Center"
-                    Margin="0,20,0,0"
+                    Margin="0,24,0,0"
                     Width="50"
                     Source="../Icons/mvs_windows_icon.ico" />
 
                 <telerik:Label
                     DockPanel.Dock="Top"
                     HorizontalAlignment="Center"
-                    FontSize="30"
-                    FontFamily="Candera"
-                    Foreground="White"
+                    FontSize="{StaticResource SesFontSizePageTitle}"
+                    FontFamily="{StaticResource SesFontFamily}"
+                    FontWeight="Bold"
+                    Foreground="{StaticResource SesWhiteBrush}"
                     Content="MVS" />
 
                 <Separator
                     VerticalAlignment="Bottom"
-                    Background="White"
+                    Background="{StaticResource SesEnergyGreenBrush}"
                     Width="400" />
 
                 <telerik:Label
                     HorizontalAlignment="Center"
-                    FontSize="16"
-                    Foreground="White"
+                    FontSize="{StaticResource SesFontSizeSubHeader}"
+                    FontFamily="{StaticResource SesFontFamily}"
+                    Foreground="{StaticResource SesWhiteBrush}"
                     DockPanel.Dock="Top"
-                    Margin="0,0,0,20"
+                    Margin="0,0,0,24"
                     Content="Motion Verification System" />
 
             </StackPanel>
-
-            <Image
-                DockPanel.Dock="Top"
-                HorizontalAlignment="Center"
-                Margin="10"
-                Width="250"
-                Source="../Icons/ses_logo.png" />
 
             <!--SOFTWARE-->
             <telerik:GroupBox

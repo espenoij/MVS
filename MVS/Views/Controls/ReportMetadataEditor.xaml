@@ -8,7 +8,8 @@
              d:DesignWidth="360">
     <UserControl.Resources>
         <Style TargetType="TextBlock" x:Key="FieldLabel">
-            <Setter Property="Foreground" Value="#57606A"/>
+            <Setter Property="FontFamily" Value="{StaticResource SesFontFamily}"/>
+            <Setter Property="Foreground" Value="{StaticResource SesTextSecondaryBrush}"/>
             <Setter Property="VerticalAlignment" Value="Center"/>
             <Setter Property="Margin" Value="0,4,8,0"/>
         </Style>
