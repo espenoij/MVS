@@ -141,7 +141,7 @@ namespace MVS.Views.Controls
                 int remaining = (int)Math.Ceiling(RecommendedMinutes - totalMin);
                 quality  = "◑  Acceptable — keep going for best results";
                 message  = isLive
-                    ? string.Format("Good progress! About {0} more minute(s) to reach the recommended 40-minute window. Keep the vessel in representative sea-state.", remaining)
+                    ? string.Format("Good progress! About {0} more minute(s) to reach the recommended 40-minute window.", remaining)
                     : string.Format("Acceptable for analysis. About {0} more minute(s) to reach the recommended 40-minute window.", remaining);
                 bgColour = ColourAcceptable;
                 fgColour = ColourAcceptableFg;
@@ -152,7 +152,7 @@ namespace MVS.Views.Controls
                 int remaining = (int)Math.Ceiling(AcceptableMinutes - totalMin);
                 quality  = isLive ? "● Recording…" : "⚠  Short recording";
                 message  = isLive
-                    ? string.Format("Recording in progress. About {0} more minute(s) before analysis becomes meaningful (20-minute minimum). Ensure vessel motion is representative.", remaining)
+                    ? string.Format("Recording in progress. About {0} more minute(s) before analysis becomes meaningful (20-minute minimum).", remaining)
                     : string.Format("Short recording. At least 20 minutes of data are needed before analysis is meaningful ({0} more minute(s) required).", remaining);
                 bgColour = isLive ? ColourIdle : ColourTooShort;
                 fgColour = isLive ? ColourIdleFg : ColourTooShortFg;

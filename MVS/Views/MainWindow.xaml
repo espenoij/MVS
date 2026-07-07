@@ -102,60 +102,6 @@
 
             </DockPanel>
 
-            <!--Recording Status Bar: app-level, always visible while recording-->
-            <Border DockPanel.Dock="Top"
-                    Background="#2B1416"
-                    BorderBrush="#E03131"
-                    BorderThickness="0,0,0,2"
-                    Padding="12,5">
-                <Border.Style>
-                    <Style TargetType="Border">
-                        <Setter Property="Visibility" Value="Collapsed"/>
-                        <Style.Triggers>
-                            <DataTrigger Binding="{Binding IsRecording}" Value="True">
-                                <Setter Property="Visibility" Value="Visible"/>
-                            </DataTrigger>
-                        </Style.Triggers>
-                    </Style>
-                </Border.Style>
-
-                <StackPanel Orientation="Horizontal" HorizontalAlignment="Center">
-
-                    <!-- Pulsing indicator -->
-                    <Ellipse Width="12" Height="12" Fill="#E03131" VerticalAlignment="Center">
-                        <Ellipse.Style>
-                            <Style TargetType="Ellipse">
-                                <Style.Triggers>
-                                    <DataTrigger Binding="{Binding IsRecording}" Value="True">
-                                        <DataTrigger.EnterActions>
-                                            <BeginStoryboard>
-                                                <Storyboard RepeatBehavior="Forever" AutoReverse="True">
-                                                    <DoubleAnimation Storyboard.TargetProperty="Opacity" From="1.0" To="0.15" Duration="0:0:1"/>
-                                                </Storyboard>
-                                            </BeginStoryboard>
-                                        </DataTrigger.EnterActions>
-                                    </DataTrigger>
-                                </Style.Triggers>
-                            </Style>
-                        </Ellipse.Style>
-                    </Ellipse>
-
-                    <TextBlock Text="Recording"
-                               Foreground="White"
-                               FontWeight="SemiBold"
-                               VerticalAlignment="Center"
-                               Margin="8,0,0,0"/>
-
-                    <!-- Elapsed time / operations mode -->
-                    <TextBlock Text="{Binding OperationsModeString}"
-                               Foreground="#FFC9C9"
-                               FontWeight="SemiBold"
-                               VerticalAlignment="Center"
-                               Margin="10,0,0,0"/>
-
-                </StackPanel>
-            </Border>
-
             <telerik:RadTabControl
                 DockPanel.Dock="Top"
                 Name="tcMainMenu"
@@ -242,7 +188,7 @@
 
                         <Grid
                             DockPanel.Dock="Top">
-                            
+
                             <Grid.ColumnDefinitions>
                                 <ColumnDefinition
                                     Width="*" />
@@ -271,13 +217,7 @@
                                     Click="btnStart_Click"
                                     IsEnabled="{Binding StartButtonEnabled}"
                                     Width="140"
-                                    Margin="0,0,10,0">Start Recording</telerik:RadButton>
-
-                                <telerik:RadButton
-                                    Click="btnStop_Click"
-                                    IsEnabled="{Binding StopButtonEnabled}"
-                                    Width="140"
-                                    VerticalAlignment="Top">Stop</telerik:RadButton>
+                                    VerticalAlignment="Top">Start Recording</telerik:RadButton>
 
                             </StackPanel>
 
@@ -637,13 +577,7 @@
                                     Click="btnStart_Click"
                                     IsEnabled="{Binding StartButtonEnabled}"
                                     Width="140"
-                                    Margin="0,0,10,0">Start Recording</telerik:RadButton>
-
-                                <telerik:RadButton
-                                    Click="btnStop_Click"
-                                    IsEnabled="{Binding StopButtonEnabled}"
-                                    Width="140"
-                                    VerticalAlignment="Top">Stop</telerik:RadButton>
+                                    VerticalAlignment="Top">Start Recording</telerik:RadButton>
 
                             </StackPanel>
 

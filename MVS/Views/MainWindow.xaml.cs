@@ -442,11 +442,6 @@ namespace MVS
             StartRecording();
         }
 
-        private void btnStop_Click(object sender, RoutedEventArgs e)
-        {
-            Stop();
-        }
-
         private void btnTest_Click(object sender, RoutedEventArgs e)
         {
             StartTest();

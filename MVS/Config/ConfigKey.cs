@@ -211,6 +211,8 @@
     public const string LivoxPerspectiveRotY      = "LivoxPerspectiveRotY";
     public const string LivoxPerspectiveRotZ      = "LivoxPerspectiveRotZ";
     public const string LivoxEnableEmissiveColors = "LivoxEnableEmissiveColors";
+    public const string LivoxAutoAnalyseAfterScan = "LivoxAutoAnalyseAfterScan";
+    public const string LivoxAutoApplyCorrectionAfterAnalysis = "LivoxAutoApplyCorrectionAfterAnalysis";
 
     // UI
     public const string ShowMenuLabels = "ShowMenuLabels";

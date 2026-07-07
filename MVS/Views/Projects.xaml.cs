@@ -69,6 +69,9 @@ namespace MVS
         private readonly DispatcherTimer _recordingBannerTimer;
         private DateTime _recordingStartTime;
 
+        // Live popup shown while a recording session is active.
+        private DialogRecordingActive _recordingDialog;
+
         public Projects()
         {
             InitializeComponent();
@@ -269,10 +272,16 @@ namespace MVS
             _recordingStartTime = DateTime.UtcNow;
             durationBanner.UpdateLive(_recordingStartTime);
             _recordingBannerTimer.Start();
+
+            // Show a live popup while a recording session is active.
+            ShowRecordingDialog();
         }
 
         public void Stop(OperationsMode mode)
         {
+            // Close the live recording popup.
+            CloseRecordingDialog();
+
             // Stop live banner updates.
             _recordingBannerTimer.Stop();
 
@@ -300,6 +309,39 @@ namespace MVS
                 progressDlg.Start(mainWindowVM);
                 progressDlg.ShowDialog();
             }
+        }
+
+        // ============================================================
+        // Live recording popup
+        // ============================================================
+
+        private void ShowRecordingDialog()
+        {
+            // Only a real recording session gets the popup. A Test run does not
+            // persist data and therefore is not treated as an active recording.
+            if (mainWindowVM?.OperationsMode != OperationsMode.Recording)
+                return;
+
+            CloseRecordingDialog();
+
+            _recordingDialog = new DialogRecordingActive
+            {
+                Owner = App.Current.MainWindow
+            };
+            _recordingDialog.StartSession(_recordingStartTime, () => stopRecordingCallback?.Invoke());
+            _recordingDialog.Show();
+        }
+
+        private void CloseRecordingDialog()
+        {
+            if (_recordingDialog == null)
+                return;
+
+            // Detach first so the programmatic close does not re-enter this method
+            // via the dialog's stop callback.
+            var dialog = _recordingDialog;
+            _recordingDialog = null;
+            dialog.CloseSession();
         }
 
         private void btnNew_Click(object sender, RoutedEventArgs e)

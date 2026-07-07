@@ -79,14 +79,43 @@ namespace MVS
         public float RangeMinMm
         {
             get { return _rangeMinMm; }
-            set { _rangeMinMm = value; OnPropertyChanged(); _config.Write(ConfigKey.LivoxRangeMinMm, value.ToString()); }
+            set { _rangeMinMm = value; OnPropertyChanged(); OnPropertyChanged(nameof(RangeMinM)); _config.Write(ConfigKey.LivoxRangeMinMm, value.ToString()); }
         }
 
         private float _rangeMaxMm = 30000f;
         public float RangeMaxMm
         {
             get { return _rangeMaxMm; }
-            set { _rangeMaxMm = value; OnPropertyChanged(); _config.Write(ConfigKey.LivoxRangeMaxMm, value.ToString()); }
+            set { _rangeMaxMm = value; OnPropertyChanged(); OnPropertyChanged(nameof(RangeMaxM)); _config.Write(ConfigKey.LivoxRangeMaxMm, value.ToString()); }
+        }
+
+        // UI properties for range in meters (converted from internal mm storage)
+        public float RangeMinM
+        {
+            get { return _rangeMinMm / 1000f; }
+            set
+            {
+                float newMm = value * 1000f;
+                if (Math.Abs(_rangeMinMm - newMm) > 0.01f)
+                {
+                    RangeMinMm = newMm;
+                    OnPropertyChanged();
+                }
+            }
+        }
+
+        public float RangeMaxM
+        {
+            get { return _rangeMaxMm / 1000f; }
+            set
+            {
+                float newMm = value * 1000f;
+                if (Math.Abs(_rangeMaxMm - newMm) > 0.01f)
+                {
+                    RangeMaxMm = newMm;
+                    OnPropertyChanged();
+                }
+            }
         }
 
         private float _azimuthMinDeg = -180f;
@@ -364,6 +393,20 @@ namespace MVS
             set { _enableEmissiveColors = value; OnPropertyChanged(); _config.Write(ConfigKey.LivoxEnableEmissiveColors, value.ToString()); }
         }
 
+        private bool _autoAnalyseAfterScan = true;
+        public bool AutoAnalyseAfterScan
+        {
+            get { return _autoAnalyseAfterScan; }
+            set { _autoAnalyseAfterScan = value; OnPropertyChanged(); _config.Write(ConfigKey.LivoxAutoAnalyseAfterScan, value.ToString()); }
+        }
+
+        private bool _autoApplyCorrectionAfterAnalysis = true;
+        public bool AutoApplyCorrectionAfterAnalysis
+        {
+            get { return _autoApplyCorrectionAfterAnalysis; }
+            set { _autoApplyCorrectionAfterAnalysis = value; OnPropertyChanged(); _config.Write(ConfigKey.LivoxAutoApplyCorrectionAfterAnalysis, value.ToString()); }
+        }
+
         // Resolved vessel forward angle (read-only, for display)
         private string _resolvedVesselFwd = "—";
         public string ResolvedVesselFwd
@@ -526,6 +569,13 @@ namespace MVS
             OnPropertyChanged(nameof(IsScanActive));
             _subsystem.StopScan();
             AppendStatus($"Scan stopped. {_accumulatedPoints:N0} points accumulated.");
+
+            // Auto-analyse if enabled and we have enough points
+            if (_autoAnalyseAfterScan && CanFit)
+            {
+                AppendStatus("Auto-analysis starting...");
+                Application.Current?.Dispatcher.BeginInvoke(DispatcherPriority.Background, new Action(() => Analyse()));
+            }
         }
 
         private void SimulateScan()
@@ -676,6 +726,13 @@ namespace MVS
                 }
                 AnalyseProgress = 100;
                 AnalysePointProgressText = $"{_accumulatedPoints:N0} of {_accumulatedPoints:N0} points";
+
+                // Auto-apply correction if enabled and analysis succeeded
+                if (_autoApplyCorrectionAfterAnalysis && HasFitResult)
+                {
+                    AppendStatus("Auto-applying correction to Reference MRU...");
+                    Application.Current?.Dispatcher.BeginInvoke(DispatcherPriority.Background, new Action(() => ApplyCorrection()));
+                }
             }
             finally
             {
@@ -820,6 +877,13 @@ namespace MVS
                         var finalSnapshot = _subsystem.GetPointCloudSnapshot();
                         if (finalSnapshot != null && finalSnapshot.Count > 0)
                             PointCloudUpdated?.Invoke(finalSnapshot);
+
+                        // Auto-analyse if enabled and we have enough points
+                        if (_autoAnalyseAfterScan && CanFit)
+                        {
+                            AppendStatus("Auto-analysis starting...");
+                            Application.Current?.Dispatcher.BeginInvoke(DispatcherPriority.Background, new Action(() => Analyse()));
+                        }
                     }
                     RefreshCommandStates();
             }));
@@ -997,6 +1061,10 @@ namespace MVS
             PerspectiveRotZ = _config.ReadWithDefault(ConfigKey.LivoxPerspectiveRotZ, 0.0);
             bool emissive;
             EnableEmissiveColors = bool.TryParse(_config.ReadWithDefault(ConfigKey.LivoxEnableEmissiveColors, "False"), out emissive) ? emissive : false;
+            bool autoAnalyse;
+            AutoAnalyseAfterScan = bool.TryParse(_config.ReadWithDefault(ConfigKey.LivoxAutoAnalyseAfterScan, "True"), out autoAnalyse) ? autoAnalyse : true;
+            bool autoApply;
+            AutoApplyCorrectionAfterAnalysis = bool.TryParse(_config.ReadWithDefault(ConfigKey.LivoxAutoApplyCorrectionAfterAnalysis, "True"), out autoApply) ? autoApply : true;
 
             // Do not restore persisted correction on startup — start with a clean state.
         }

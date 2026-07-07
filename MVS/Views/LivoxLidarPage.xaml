@@ -101,12 +101,12 @@
                                 <StackPanel Margin="8">
 
                                     <DockPanel Margin="0,0,0,4">
-                                        <Label Width="150" Content="Range Min (mm)" VerticalAlignment="Center"/>
-                                        <TextBox Text="{Binding RangeMinMm, UpdateSourceTrigger=LostFocus}" />
+                                        <Label Width="150" Content="Range Min (m)" VerticalAlignment="Center"/>
+                                        <TextBox Text="{Binding RangeMinM, UpdateSourceTrigger=LostFocus}" />
                                     </DockPanel>
                                     <DockPanel Margin="0,0,0,4">
-                                        <Label Width="150" Content="Range Max (mm)" VerticalAlignment="Center"/>
-                                        <TextBox Text="{Binding RangeMaxMm, UpdateSourceTrigger=LostFocus}" />
+                                        <Label Width="150" Content="Range Max (m)" VerticalAlignment="Center"/>
+                                        <TextBox Text="{Binding RangeMaxM, UpdateSourceTrigger=LostFocus}" />
                                     </DockPanel>
                                     <Separator Margin="0,4,0,4"/>
                                     <DockPanel Margin="0,0,0,4">
@@ -184,6 +184,20 @@
                                                         HorizontalAlignment="Right"
                                                         Width="228" Margin="0,8,0,0"
                                                         ToolTip="Fit the deck plane and detect the bow edge">Analyse</telerik:RadButton>
+
+                                    <DockPanel Margin="0,12,0,4">
+                                        <Label Content="Auto-Analyse After Scan" VerticalAlignment="Center"
+                                               ToolTip="Automatically start analysis when scan completes"/>
+                                        <telerik:RadToggleSwitchButton IsChecked="{Binding AutoAnalyseAfterScan}"
+                                                                       HorizontalAlignment="Right" />
+                                    </DockPanel>
+
+                                    <DockPanel Margin="0,0,0,0">
+                                        <Label Content="Auto-Apply After Analysis" VerticalAlignment="Center"
+                                               ToolTip="Automatically apply correction to Reference MRU when analysis completes successfully"/>
+                                        <telerik:RadToggleSwitchButton IsChecked="{Binding AutoApplyCorrectionAfterAnalysis}"
+                                                                       HorizontalAlignment="Right" />
+                                    </DockPanel>
 
                                 </StackPanel>
                             </telerik:GroupBox>
@@ -325,6 +339,23 @@
                                        Foreground="Gray" FontStyle="Italic"
                                        Text="Generate a synthetic helideck scan without hardware. Uses the same filter, fit and correction pipeline as a real scan." />
 
+                            <!-- Scan Control -->
+                            <telerik:GroupBox Header="Scan Control" Margin="0,0,0,8">
+                                <StackPanel Margin="8">
+
+                                    <DockPanel Margin="0,0,0,8">
+                                        <Label Width="150" Content="Accumulated Points" VerticalAlignment="Center"/>
+                                        <Label Content="{Binding AccumulatedPointsString}" FontWeight="Bold"/>
+                                    </DockPanel>
+
+                                    <telerik:RadButton Command="{Binding SimulateScanCommand}"
+                                                        HorizontalAlignment="Right"
+                                                        Width="228"
+                                                        ToolTip="Generate a synthetic helideck scan">Simulate Scan</telerik:RadButton>
+
+                                </StackPanel>
+                            </telerik:GroupBox>
+
                             <!-- LiDAR Sensor Configuration -->
                             <telerik:GroupBox Header="LiDAR Sensor Configuration" Margin="0,0,0,8">
                                 <StackPanel Margin="8">
@@ -428,11 +459,6 @@
                                     </DockPanel>
                                 </StackPanel>
                             </telerik:GroupBox>
-
-                            <telerik:RadButton Command="{Binding SimulateScanCommand}"
-                                               HorizontalAlignment="Right" Width="228">
-                                Simulate Scan
-                            </telerik:RadButton>
 
                         </StackPanel>
                     </ScrollViewer>
