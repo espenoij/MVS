@@ -1,4 +1,4 @@
-using System;
+﻿using System;
 using MVS.Models;
 
 namespace MVS.Services.Reporting
@@ -70,11 +70,49 @@ namespace MVS.Services.Reporting
             get { return DevPitch?.SampleCount ?? 0; }
         }
 
+        /// <summary>
+        /// Worst (highest) outlier percentage observed across all reference and
+        /// test axes. Used by the PDF compliance section to compare against the
+        /// operator's max-outlier acceptance criterion.
+        /// </summary>
+        public double WorstOutlierPercent
+        {
+            get
+            {
+                double worst = double.NaN;
+                foreach (var s in new[] { RefPitch, TestPitch, RefRoll, TestRoll, RefHeave, TestHeave })
+                {
+                    if (s == null || s.SampleCount == 0 || double.IsNaN(s.OutlierPercent))
+                        continue;
+                    worst = double.IsNaN(worst) ? s.OutlierPercent : Math.Max(worst, s.OutlierPercent);
+                }
+                return worst;
+            }
+        }
+
         /// <summary>True when there is captured data to report on.</summary>
         public bool HasData
         {
             get { return SampleCount > 0; }
         }
+
+        /// <summary>
+        /// Generates a plain-language default assessment text for the Acceptance
+        /// Criteria discussion field, based on the captured numbers.  Only call
+        /// this when the operator has not yet written their own narrative.
+        /// </summary>
+        public string GenerateDefaultDiscussion()
+        {
+            double actualMin = 0;
+            if (!string.IsNullOrWhiteSpace(Duration) && TimeSpan.TryParse(Duration, out TimeSpan ts))
+                actualMin = ts.TotalMinutes;
+
+            return VerificationAssessment.GenerateAssessmentText(SampleCount, actualMin, WorstOutlierPercent);
+        }
+
+        // Duration thresholds - kept for backward compatibility; canonical values now live on VerificationAssessment.
+        private const double MinDurationAcceptableMinutes  = VerificationAssessment.MinDurationAcceptableMinutes;
+        private const double MinDurationRecommendedMinutes = VerificationAssessment.MinDurationRecommendedMinutes;
 
         /// <summary>
         /// Builds a report model from the live project and its view model. Run
@@ -218,22 +256,16 @@ namespace MVS.Services.Reporting
         }
 
         /// <summary>
-        /// Operator-entered maximum allowable mean deviation for this axis, or
-        /// null when no acceptance criterion was supplied.
+        /// Per-axis deviation acceptance thresholds are no longer user-entered;
+        /// always returns null. Kept for backward compatibility with
+        /// <see cref="Compliance"/> and <see cref="Services.VerificationAssessment.ConclusionSentence"/>.
         /// </summary>
-        public double? AcceptanceThreshold(VerificationAxisKind axis)
-        {
-            switch (axis)
-            {
-                case VerificationAxisKind.Pitch: return Metadata?.AcceptanceCriteriaPitch;
-                case VerificationAxisKind.Roll: return Metadata?.AcceptanceCriteriaRoll;
-                default: return Metadata?.AcceptanceCriteriaHeave;
-            }
-        }
+        public double? AcceptanceThreshold(VerificationAxisKind axis) => null;
 
         /// <summary>
-        /// Compliance verdict for this axis: the mean deviation graded against
-        /// the acceptance criterion.
+        /// Always returns <see cref="ComplianceResult.NotAssessed"/> because
+        /// per-axis deviation thresholds are no longer operator-configured.
+        /// Data quality compliance is evaluated separately in the PDF exporter.
         /// </summary>
         public ComplianceResult Compliance(VerificationAxisKind axis)
         {

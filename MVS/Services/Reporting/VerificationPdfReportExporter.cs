@@ -41,6 +41,10 @@ namespace MVS.Services.Reporting
         private static readonly RgbColor ColorRowAlt = new RgbColor(242, 246, 250);
         private static readonly RgbColor ColorBorder = new RgbColor(210, 210, 210);
 
+        // Capture-duration quality thresholds (minutes) — matches DurationStatusBanner.
+        private const double MinDurationAcceptableMinutes  = 20.0;
+        private const double MinDurationRecommendedMinutes = 40.0;
+
         /// <summary>Exports the report to a file on disk.</summary>
         public static void Export(string path, VerificationReportModel model)
         {
@@ -447,30 +451,74 @@ namespace MVS.Services.Reporting
             Heading(editor, "10. Compliance Assessment");
 
             Paragraph(editor,
-                "The mean deviation on each axis is compared against the acceptance criterion entered for this " +
-                "verification. A deviation within the criterion is a Pass; up to 1.5x the criterion is a Conditional " +
-                "Pass; anything larger is a Fail. Axes without an entered criterion are reported as \"Not assessed\".",
+                "The table below compares the quality of the captured verification data against the " +
+                "built-in thresholds. \u2018Acceptable\u2019 is the minimum required for reliable analysis; " +
+                "\u2018Good\u2019 indicates the recommended level for high-confidence results.",
                 10.5, ColorText, spacingAfter: 8);
 
             var table = NewTable();
-            AddHeaderRow(table, "Axis", "Mean deviation", "Acceptance criterion", "Verdict");
+            AddHeaderRow(table, "Criterion", "Acceptable (min)", "Good (target)", "Measured", "Status");
 
             int index = 0;
-            foreach (VerificationAxisKind axis in AllAxes())
-            {
-                string unit = model.Unit(axis);
-                double mean = model.DevStats(axis)?.Mean ?? double.NaN;
-                double? threshold = model.AcceptanceThreshold(axis);
-                ComplianceResult result = model.Compliance(axis);
 
+            // Samples
+            {
+                int samples = model.SampleCount;
+                string status =
+                    samples >= VerificationAssessment.MinSamplesGood       ? "Good" :
+                    samples >= VerificationAssessment.MinSamplesAcceptable ? "Acceptable" :
+                    samples > 0                                            ? "Insufficient" : "No data";
                 AddBodyRow(table, index++,
-                    model.AxisTitle(axis),
-                    Stat(double.IsNaN(mean) ? (double?)null : mean, unit),
-                    threshold.HasValue ? Stat(threshold, unit) : "-",
-                    VerificationAssessment.ComplianceLabel(result));
+                    "Samples",
+                    string.Format(Ci, "\u2265\u00A0{0:N0}", VerificationAssessment.MinSamplesAcceptable),
+                    string.Format(Ci, "\u2265\u00A0{0:N0}", VerificationAssessment.MinSamplesGood),
+                    samples > 0 ? samples.ToString("N0", Ci) : "-",
+                    status);
+            }
+
+            // Capture duration
+            {
+                double actualMin = 0;
+                if (!string.IsNullOrWhiteSpace(model.Duration) &&
+                    TimeSpan.TryParse(model.Duration, out TimeSpan ts))
+                    actualMin = ts.TotalMinutes;
+                string status =
+                    actualMin >= MinDurationRecommendedMinutes ? "Good" :
+                    actualMin >= MinDurationAcceptableMinutes  ? "Acceptable" :
+                    actualMin > 0                             ? "Insufficient" : "No data";
+                AddBodyRow(table, index++,
+                    "Capture duration",
+                    string.Format(Ci, "\u2265\u00A0{0:F0} min", MinDurationAcceptableMinutes),
+                    string.Format(Ci, "\u2265\u00A0{0:F0} min", MinDurationRecommendedMinutes),
+                    actualMin > 0 ? string.Format(Ci, "{0:F1} min", actualMin) : "-",
+                    status);
+            }
+
+            // Max outlier
+            {
+                double worst = model.WorstOutlierPercent;
+                string status =
+                    double.IsNaN(worst)                                         ? "No data" :
+                    worst <= VerificationAssessment.OutlierAcceptablePercent    ? "Good" :
+                    worst <= VerificationAssessment.OutlierAttentionPercent     ? "Acceptable" :
+                                                                                  "Too noisy";
+                AddBodyRow(table, index++,
+                    "Max outlier",
+                    string.Format(Ci, "\u2264\u00A0{0:F0}\u00A0%", VerificationAssessment.OutlierAttentionPercent),
+                    string.Format(Ci, "\u2264\u00A0{0:F0}\u00A0%", VerificationAssessment.OutlierAcceptablePercent),
+                    !double.IsNaN(worst) ? string.Format(Ci, "{0:F1}\u00A0%", worst) : "-",
+                    status);
             }
 
             editor.InsertTable(table);
+
+            // Operator discussion / assessment narrative.
+            string discussion = model.Metadata?.AcceptanceCriteriaDiscussion;
+            if (!string.IsNullOrWhiteSpace(discussion))
+            {
+                Paragraph(editor, "Assessment", 11, ColorHeading, spacingBefore: 10, spacingAfter: 2, bold: true);
+                Paragraph(editor, discussion, 10.5, ColorText, spacingAfter: 6);
+            }
 
             string specs = model.Metadata?.ManufacturerSpecifications;
             if (!string.IsNullOrWhiteSpace(specs))

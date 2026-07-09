@@ -21,8 +21,9 @@
         <Style TargetType="telerik:RadWatermarkTextBox" x:Key="MultiLineFieldBox" BasedOn="{StaticResource FieldBox}">
             <Setter Property="AcceptsReturn" Value="True"/>
             <Setter Property="TextWrapping" Value="Wrap"/>
-            <Setter Property="VerticalScrollBarVisibility" Value="Auto"/>
+            <Setter Property="VerticalScrollBarVisibility" Value="Disabled"/>
             <Setter Property="VerticalContentAlignment" Value="Top"/>
+            <Setter Property="TextAlignment" Value="Left"/>
         </Style>
     </UserControl.Resources>
 
@@ -34,11 +35,12 @@
             <StackPanel Margin="8">
                 <TextBlock Text="Test objective" Style="{StaticResource FieldLabel}"/>
                 <telerik:RadWatermarkTextBox Text="{Binding TestObjective, UpdateSourceTrigger=LostFocus}"
-                                             Height="60" MinHeight="48" MaxHeight="120"
+                                             MinHeight="48"
                                              Style="{StaticResource MultiLineFieldBox}" LostFocus="Field_LostFocus"/>
                 <TextBlock Text="Applicable standards" Style="{StaticResource FieldLabel}"/>
                 <telerik:RadWatermarkTextBox Text="{Binding ApplicableStandards, UpdateSourceTrigger=LostFocus}"
-                                             Style="{StaticResource FieldBox}" LostFocus="Field_LostFocus"/>
+                                             MinHeight="40"
+                                             Style="{StaticResource MultiLineFieldBox}" LostFocus="Field_LostFocus"/>
             </StackPanel>
         </telerik:GroupBox>
 
@@ -47,16 +49,20 @@
             <StackPanel Margin="8">
                 <TextBlock Text="Manufacturer" Style="{StaticResource FieldLabel}"/>
                 <telerik:RadWatermarkTextBox Text="{Binding DutManufacturer, UpdateSourceTrigger=LostFocus}"
-                                             Style="{StaticResource FieldBox}" LostFocus="Field_LostFocus"/>
+                                             MinHeight="32"
+                                             Style="{StaticResource MultiLineFieldBox}" LostFocus="Field_LostFocus"/>
                 <TextBlock Text="Model" Style="{StaticResource FieldLabel}"/>
                 <telerik:RadWatermarkTextBox Text="{Binding DutModel, UpdateSourceTrigger=LostFocus}"
-                                             Style="{StaticResource FieldBox}" LostFocus="Field_LostFocus"/>
+                                             MinHeight="32"
+                                             Style="{StaticResource MultiLineFieldBox}" LostFocus="Field_LostFocus"/>
                 <TextBlock Text="Serial number" Style="{StaticResource FieldLabel}"/>
                 <telerik:RadWatermarkTextBox Text="{Binding DutSerialNumber, UpdateSourceTrigger=LostFocus}"
-                                             Style="{StaticResource FieldBox}" LostFocus="Field_LostFocus"/>
+                                             MinHeight="32"
+                                             Style="{StaticResource MultiLineFieldBox}" LostFocus="Field_LostFocus"/>
                 <TextBlock Text="Firmware version" Style="{StaticResource FieldLabel}"/>
                 <telerik:RadWatermarkTextBox Text="{Binding DutFirmwareVersion, UpdateSourceTrigger=LostFocus}"
-                                             Style="{StaticResource FieldBox}" LostFocus="Field_LostFocus"/>
+                                             MinHeight="32"
+                                             Style="{StaticResource MultiLineFieldBox}" LostFocus="Field_LostFocus"/>
             </StackPanel>
         </telerik:GroupBox>
 
@@ -65,25 +71,30 @@
             <StackPanel Margin="8">
                 <TextBlock Text="Manufacturer" Style="{StaticResource FieldLabel}"/>
                 <telerik:RadWatermarkTextBox Text="{Binding ReferenceManufacturer, UpdateSourceTrigger=LostFocus}"
-                                             Style="{StaticResource FieldBox}" LostFocus="Field_LostFocus"/>
+                                             MinHeight="32"
+                                             Style="{StaticResource MultiLineFieldBox}" LostFocus="Field_LostFocus"/>
                 <TextBlock Text="Model" Style="{StaticResource FieldLabel}"/>
                 <telerik:RadWatermarkTextBox Text="{Binding ReferenceModel, UpdateSourceTrigger=LostFocus}"
-                                             Style="{StaticResource FieldBox}" LostFocus="Field_LostFocus"/>
+                                             MinHeight="32"
+                                             Style="{StaticResource MultiLineFieldBox}" LostFocus="Field_LostFocus"/>
                 <TextBlock Text="Serial number" Style="{StaticResource FieldLabel}"/>
                 <telerik:RadWatermarkTextBox Text="{Binding ReferenceSerialNumber, UpdateSourceTrigger=LostFocus}"
-                                             Style="{StaticResource FieldBox}" LostFocus="Field_LostFocus"/>
+                                             MinHeight="32"
+                                             Style="{StaticResource MultiLineFieldBox}" LostFocus="Field_LostFocus"/>
                 <TextBlock Text="Firmware version" Style="{StaticResource FieldLabel}"/>
                 <telerik:RadWatermarkTextBox Text="{Binding ReferenceFirmwareVersion, UpdateSourceTrigger=LostFocus}"
-                                             Style="{StaticResource FieldBox}" LostFocus="Field_LostFocus"/>
+                                             MinHeight="32"
+                                             Style="{StaticResource MultiLineFieldBox}" LostFocus="Field_LostFocus"/>
                 <TextBlock Text="Calibration date" Style="{StaticResource FieldLabel}"/>
                 <telerik:RadDatePicker SelectedValue="{Binding ReferenceCalibrationDate, UpdateSourceTrigger=LostFocus}"
                                        Margin="0,4,0,0" LostFocus="Field_LostFocus"/>
                 <TextBlock Text="Calibration certificate no." Style="{StaticResource FieldLabel}"/>
                 <telerik:RadWatermarkTextBox Text="{Binding ReferenceCalibrationCertificateNumber, UpdateSourceTrigger=LostFocus}"
-                                             Style="{StaticResource FieldBox}" LostFocus="Field_LostFocus"/>
+                                             MinHeight="32"
+                                             Style="{StaticResource MultiLineFieldBox}" LostFocus="Field_LostFocus"/>
                 <TextBlock Text="Additional equipment" Style="{StaticResource FieldLabel}"/>
                 <telerik:RadWatermarkTextBox Text="{Binding AdditionalEquipment, UpdateSourceTrigger=LostFocus}"
-                                             Height="60" MinHeight="40" MaxHeight="100"
+                                             MinHeight="40"
                                              Style="{StaticResource MultiLineFieldBox}" LostFocus="Field_LostFocus"/>
             </StackPanel>
         </telerik:GroupBox>
@@ -95,33 +106,40 @@
             <StackPanel Margin="8">
                 <TextBlock Text="DUT installation location" Style="{StaticResource FieldLabel}"/>
                 <telerik:RadWatermarkTextBox Text="{Binding DutInstallationLocation, UpdateSourceTrigger=LostFocus}"
-                                             Style="{StaticResource FieldBox}" LostFocus="Field_LostFocus"/>
+                                             MinHeight="32"
+                                             Style="{StaticResource MultiLineFieldBox}" LostFocus="Field_LostFocus"/>
                 <TextBlock Text="Reference installation location" Style="{StaticResource FieldLabel}"/>
                 <telerik:RadWatermarkTextBox Text="{Binding ReferenceInstallationLocation, UpdateSourceTrigger=LostFocus}"
-                                             Style="{StaticResource FieldBox}" LostFocus="Field_LostFocus"/>
+                                             MinHeight="32"
+                                             Style="{StaticResource MultiLineFieldBox}" LostFocus="Field_LostFocus"/>
                 <TextBlock Text="Mounting arrangement" Style="{StaticResource FieldLabel}"/>
                 <telerik:RadWatermarkTextBox Text="{Binding MountingArrangement, UpdateSourceTrigger=LostFocus}"
-                                             Height="60" MinHeight="40" MaxHeight="100"
+                                             MinHeight="40"
                                              Style="{StaticResource MultiLineFieldBox}" LostFocus="Field_LostFocus"/>
                 <TextBlock Text="Coordinate system" Style="{StaticResource FieldLabel}"/>
                 <telerik:RadWatermarkTextBox Text="{Binding CoordinateSystem, UpdateSourceTrigger=LostFocus}"
-                                             Style="{StaticResource FieldBox}" LostFocus="Field_LostFocus"/>
+                                             MinHeight="32"
+                                             Style="{StaticResource MultiLineFieldBox}" LostFocus="Field_LostFocus"/>
                 <TextBlock Text="Sensor separation" Style="{StaticResource FieldLabel}"/>
                 <telerik:RadWatermarkTextBox Text="{Binding SensorSeparation, UpdateSourceTrigger=LostFocus}"
-                                             Style="{StaticResource FieldBox}" LostFocus="Field_LostFocus"/>
+                                             MinHeight="32"
+                                             Style="{StaticResource MultiLineFieldBox}" LostFocus="Field_LostFocus"/>
                 <TextBlock Text="Data acquisition method" Style="{StaticResource FieldLabel}"/>
                 <telerik:RadWatermarkTextBox Text="{Binding DataAcquisitionMethod, UpdateSourceTrigger=LostFocus}"
-                                             Style="{StaticResource FieldBox}" LostFocus="Field_LostFocus"/>
+                                             MinHeight="32"
+                                             Style="{StaticResource MultiLineFieldBox}" LostFocus="Field_LostFocus"/>
                 <TextBlock Text="Synchronization method" Style="{StaticResource FieldLabel}"/>
                 <telerik:RadWatermarkTextBox Text="{Binding SynchronizationMethod, UpdateSourceTrigger=LostFocus}"
-                                             Style="{StaticResource FieldBox}" LostFocus="Field_LostFocus"/>
+                                             MinHeight="32"
+                                             Style="{StaticResource MultiLineFieldBox}" LostFocus="Field_LostFocus"/>
                 <TextBlock Text="Sample rate (Hz)" Style="{StaticResource FieldLabel}"/>
                 <telerik:RadNumericUpDown Value="{Binding SampleRateHz, UpdateSourceTrigger=LostFocus}"
                                           Minimum="0" Maximum="10000" IsInteger="False"
                                           Margin="0,4,0,0" LostFocus="Field_LostFocus"/>
                 <TextBlock Text="Logging configuration" Style="{StaticResource FieldLabel}"/>
                 <telerik:RadWatermarkTextBox Text="{Binding LoggingConfiguration, UpdateSourceTrigger=LostFocus}"
-                                             Style="{StaticResource FieldBox}" LostFocus="Field_LostFocus"/>
+                                             MinHeight="32"
+                                             Style="{StaticResource MultiLineFieldBox}" LostFocus="Field_LostFocus"/>
             </StackPanel>
         </telerik:GroupBox>
 
@@ -130,28 +148,35 @@
             <StackPanel Margin="8">
                 <TextBlock Text="Loading condition" Style="{StaticResource FieldLabel}"/>
                 <telerik:RadWatermarkTextBox Text="{Binding LoadingCondition, UpdateSourceTrigger=LostFocus}"
-                                             Style="{StaticResource FieldBox}" LostFocus="Field_LostFocus"/>
+                                             MinHeight="32"
+                                             Style="{StaticResource MultiLineFieldBox}" LostFocus="Field_LostFocus"/>
                 <TextBlock Text="Vessel speed" Style="{StaticResource FieldLabel}"/>
                 <telerik:RadWatermarkTextBox Text="{Binding VesselSpeed, UpdateSourceTrigger=LostFocus}"
-                                             Style="{StaticResource FieldBox}" LostFocus="Field_LostFocus"/>
+                                             MinHeight="32"
+                                             Style="{StaticResource MultiLineFieldBox}" LostFocus="Field_LostFocus"/>
                 <TextBlock Text="Operational mode" Style="{StaticResource FieldLabel}"/>
                 <telerik:RadWatermarkTextBox Text="{Binding OperationalMode, UpdateSourceTrigger=LostFocus}"
-                                             Style="{StaticResource FieldBox}" LostFocus="Field_LostFocus"/>
+                                             MinHeight="32"
+                                             Style="{StaticResource MultiLineFieldBox}" LostFocus="Field_LostFocus"/>
                 <TextBlock Text="Sea state" Style="{StaticResource FieldLabel}"/>
                 <telerik:RadWatermarkTextBox Text="{Binding SeaState, UpdateSourceTrigger=LostFocus}"
-                                             Style="{StaticResource FieldBox}" LostFocus="Field_LostFocus"/>
+                                             MinHeight="32"
+                                             Style="{StaticResource MultiLineFieldBox}" LostFocus="Field_LostFocus"/>
                 <TextBlock Text="Wind conditions" Style="{StaticResource FieldLabel}"/>
                 <telerik:RadWatermarkTextBox Text="{Binding WindConditions, UpdateSourceTrigger=LostFocus}"
-                                             Style="{StaticResource FieldBox}" LostFocus="Field_LostFocus"/>
+                                             MinHeight="32"
+                                             Style="{StaticResource MultiLineFieldBox}" LostFocus="Field_LostFocus"/>
                 <TextBlock Text="Wave conditions" Style="{StaticResource FieldLabel}"/>
                 <telerik:RadWatermarkTextBox Text="{Binding WaveConditions, UpdateSourceTrigger=LostFocus}"
-                                             Style="{StaticResource FieldBox}" LostFocus="Field_LostFocus"/>
+                                             MinHeight="32"
+                                             Style="{StaticResource MultiLineFieldBox}" LostFocus="Field_LostFocus"/>
                 <TextBlock Text="Current conditions" Style="{StaticResource FieldLabel}"/>
                 <telerik:RadWatermarkTextBox Text="{Binding CurrentConditions, UpdateSourceTrigger=LostFocus}"
-                                             Style="{StaticResource FieldBox}" LostFocus="Field_LostFocus"/>
+                                             MinHeight="32"
+                                             Style="{StaticResource MultiLineFieldBox}" LostFocus="Field_LostFocus"/>
                 <TextBlock Text="Environmental notes" Style="{StaticResource FieldLabel}"/>
                 <telerik:RadWatermarkTextBox Text="{Binding EnvironmentalNotes, UpdateSourceTrigger=LostFocus}"
-                                             Height="60" MinHeight="40" MaxHeight="120"
+                                             MinHeight="40"
                                              Style="{StaticResource MultiLineFieldBox}" LostFocus="Field_LostFocus"/>
             </StackPanel>
         </telerik:GroupBox>
@@ -161,15 +186,15 @@
             <StackPanel Margin="8">
                 <TextBlock Text="Time synchronization notes" Style="{StaticResource FieldLabel}"/>
                 <telerik:RadWatermarkTextBox Text="{Binding TimeSynchronizationNotes, UpdateSourceTrigger=LostFocus}"
-                                             Height="60" MinHeight="40" MaxHeight="120"
+                                             MinHeight="40"
                                              Style="{StaticResource MultiLineFieldBox}" LostFocus="Field_LostFocus"/>
                 <TextBlock Text="Filtering notes" Style="{StaticResource FieldLabel}"/>
                 <telerik:RadWatermarkTextBox Text="{Binding FilteringNotes, UpdateSourceTrigger=LostFocus}"
-                                             Height="60" MinHeight="40" MaxHeight="120"
+                                             MinHeight="40"
                                              Style="{StaticResource MultiLineFieldBox}" LostFocus="Field_LostFocus"/>
                 <TextBlock Text="Data processing notes" Style="{StaticResource FieldLabel}"/>
                 <telerik:RadWatermarkTextBox Text="{Binding DataProcessingNotes, UpdateSourceTrigger=LostFocus}"
-                                             Height="60" MinHeight="40" MaxHeight="120"
+                                             MinHeight="40"
                                              Style="{StaticResource MultiLineFieldBox}" LostFocus="Field_LostFocus"/>
             </StackPanel>
         </telerik:GroupBox>
@@ -177,23 +202,86 @@
         <!-- Column 3: Criteria, Observations & Appendices -->
 
         <!-- Section 11: Acceptance criteria -->
-        <telerik:GroupBox Header="Acceptance Criteria (max mean deviation)" Margin="0,0,0,10">
+        <telerik:GroupBox Header="Acceptance Criteria" Margin="0,0,0,10">
             <StackPanel Margin="8">
-                <TextBlock Text="Pitch (&#xB0;)" Style="{StaticResource FieldLabel}"/>
-                <telerik:RadNumericUpDown Value="{Binding AcceptanceCriteriaPitch, UpdateSourceTrigger=LostFocus}"
-                                          Minimum="0" Maximum="180" IsInteger="False"
-                                          Margin="0,4,0,0" LostFocus="Field_LostFocus"/>
-                <TextBlock Text="Roll (&#xB0;)" Style="{StaticResource FieldLabel}"/>
-                <telerik:RadNumericUpDown Value="{Binding AcceptanceCriteriaRoll, UpdateSourceTrigger=LostFocus}"
-                                          Minimum="0" Maximum="180" IsInteger="False"
-                                          Margin="0,4,0,0" LostFocus="Field_LostFocus"/>
-                <TextBlock Text="Heave (m)" Style="{StaticResource FieldLabel}"/>
-                <telerik:RadNumericUpDown Value="{Binding AcceptanceCriteriaHeave, UpdateSourceTrigger=LostFocus}"
-                                          Minimum="0" Maximum="100" IsInteger="False"
-                                          Margin="0,4,0,0" LostFocus="Field_LostFocus"/>
-                <TextBlock Text="Manufacturer specifications" Style="{StaticResource FieldLabel}"/>
-                <telerik:RadWatermarkTextBox Text="{Binding ManufacturerSpecifications, UpdateSourceTrigger=LostFocus}"
-                                             Height="60" MinHeight="40" MaxHeight="100"
+
+                <!-- Read-only compliance table: thresholds vs measured value and status -->
+                <Grid>
+                    <Grid.ColumnDefinitions>
+                        <ColumnDefinition Width="*"/>
+                        <ColumnDefinition Width="*"/>
+                        <ColumnDefinition Width="*"/>
+                        <ColumnDefinition Width="*"/>
+                        <ColumnDefinition Width="*"/>
+                    </Grid.ColumnDefinitions>
+                    <Grid.RowDefinitions>
+                        <RowDefinition Height="Auto"/>
+                        <RowDefinition Height="Auto"/>
+                        <RowDefinition Height="Auto"/>
+                        <RowDefinition Height="Auto"/>
+                    </Grid.RowDefinitions>
+
+                    <!-- Header row -->
+                    <TextBlock Grid.Row="0" Grid.Column="0" Text="Criterion"
+                               Style="{StaticResource FieldLabel}" FontWeight="SemiBold"/>
+                    <TextBlock Grid.Row="0" Grid.Column="1" Text="Acceptable"
+                               Style="{StaticResource FieldLabel}" FontWeight="SemiBold" TextAlignment="Right" Margin="10,0,0,0"/>
+                    <TextBlock Grid.Row="0" Grid.Column="2" Text="Good"
+                               Style="{StaticResource FieldLabel}" FontWeight="SemiBold" TextAlignment="Right" Margin="10,0,0,0"/>
+                    <TextBlock Grid.Row="0" Grid.Column="3" Text="Measured"
+                               Style="{StaticResource FieldLabel}" FontWeight="SemiBold" TextAlignment="Right" Margin="10,0,0,0"/>
+                    <TextBlock Grid.Row="0" Grid.Column="4" Text="Status"
+                               Style="{StaticResource FieldLabel}" FontWeight="SemiBold" TextAlignment="Right" Margin="10,0,0,0"/>
+
+                    <!-- Samples -->
+                    <TextBlock Grid.Row="1" Grid.Column="0" Text="Samples"
+                               Style="{StaticResource FieldLabel}"/>
+                    <TextBlock Grid.Row="1" Grid.Column="1" Text="&#x2265; 300"
+                               Style="{StaticResource FieldLabel}" TextAlignment="Right" Margin="10,0,0,0"/>
+                    <TextBlock Grid.Row="1" Grid.Column="2" Text="&#x2265; 1&#x202F;500"
+                               Style="{StaticResource FieldLabel}" TextAlignment="Right" Margin="10,0,0,0"/>
+                    <TextBlock Grid.Row="1" Grid.Column="3" TextAlignment="Right" Margin="10,0,0,0"
+                               Style="{StaticResource FieldLabel}"
+                               Text="{Binding ActualSampleCountText, RelativeSource={RelativeSource AncestorType=UserControl}}"/>
+                    <TextBlock Grid.Row="1" Grid.Column="4" TextAlignment="Right" Margin="10,0,0,0"
+                               Style="{StaticResource FieldLabel}"
+                               Text="{Binding SampleStatusText, RelativeSource={RelativeSource AncestorType=UserControl}}"/>
+
+                    <!-- Duration -->
+                    <TextBlock Grid.Row="2" Grid.Column="0" Text="Capture duration"
+                               Style="{StaticResource FieldLabel}"/>
+                    <TextBlock Grid.Row="2" Grid.Column="1" Text="&#x2265; 20 min"
+                               Style="{StaticResource FieldLabel}" TextAlignment="Right" Margin="10,0,0,0"/>
+                    <TextBlock Grid.Row="2" Grid.Column="2" Text="&#x2265; 40 min"
+                               Style="{StaticResource FieldLabel}" TextAlignment="Right" Margin="10,0,0,0"/>
+                    <TextBlock Grid.Row="2" Grid.Column="3" TextAlignment="Right" Margin="10,0,0,0"
+                               Style="{StaticResource FieldLabel}"
+                               Text="{Binding ActualDurationText, RelativeSource={RelativeSource AncestorType=UserControl}}"/>
+                    <TextBlock Grid.Row="2" Grid.Column="4" TextAlignment="Right" Margin="10,0,0,0"
+                               Style="{StaticResource FieldLabel}"
+                               Text="{Binding DurationStatusText, RelativeSource={RelativeSource AncestorType=UserControl}}"/>
+
+                    <!-- Outlier -->
+                    <TextBlock Grid.Row="3" Grid.Column="0" Text="Max outlier"
+                               Style="{StaticResource FieldLabel}"/>
+                    <TextBlock Grid.Row="3" Grid.Column="1" Text="&#x2264; 15 %"
+                               Style="{StaticResource FieldLabel}" TextAlignment="Right" Margin="10,0,0,0"/>
+                    <TextBlock Grid.Row="3" Grid.Column="2" Text="&#x2264; 5 %"
+                               Style="{StaticResource FieldLabel}" TextAlignment="Right" Margin="10,0,0,0"/>
+                    <TextBlock Grid.Row="3" Grid.Column="3" TextAlignment="Right" Margin="10,0,0,0"
+                               Style="{StaticResource FieldLabel}"
+                               Text="{Binding ActualWorstOutlierText, RelativeSource={RelativeSource AncestorType=UserControl}}"/>
+                    <TextBlock Grid.Row="3" Grid.Column="4" TextAlignment="Right" Margin="10,0,0,0"
+                               Style="{StaticResource FieldLabel}"
+                               Text="{Binding OutlierStatusText, RelativeSource={RelativeSource AncestorType=UserControl}}"/>
+                </Grid>
+
+                <!-- Business-language assessment -->
+                <TextBlock Text="Assessment" Style="{StaticResource FieldLabel}" Margin="0,10,8,0"/>
+                <telerik:RadWatermarkTextBox x:Name="txtAssessment"
+                                             Text="{Binding AcceptanceCriteriaDiscussion, UpdateSourceTrigger=LostFocus}"
+                                             MinHeight="64"
+                                             WatermarkContent="Describe the data quality and overall assessment in plain language."
                                              Style="{StaticResource MultiLineFieldBox}" LostFocus="Field_LostFocus"/>
             </StackPanel>
         </telerik:GroupBox>
@@ -203,11 +291,11 @@
             <StackPanel Margin="8">
                 <TextBlock Text="Observations" Style="{StaticResource FieldLabel}"/>
                 <telerik:RadWatermarkTextBox Text="{Binding Observations, UpdateSourceTrigger=LostFocus}"
-                                             Height="80" MinHeight="60" MaxHeight="150"
+                                             MinHeight="60"
                                              Style="{StaticResource MultiLineFieldBox}" LostFocus="Field_LostFocus"/>
                 <TextBlock Text="Recommendations" Style="{StaticResource FieldLabel}"/>
                 <telerik:RadWatermarkTextBox Text="{Binding Recommendations, UpdateSourceTrigger=LostFocus}"
-                                             Height="80" MinHeight="60" MaxHeight="150"
+                                             MinHeight="60"
                                              Style="{StaticResource MultiLineFieldBox}" LostFocus="Field_LostFocus"/>
             </StackPanel>
         </telerik:GroupBox>
@@ -217,7 +305,7 @@
             <StackPanel Margin="8">
                 <TextBlock Text="Appendix notes" Style="{StaticResource FieldLabel}"/>
                 <telerik:RadWatermarkTextBox Text="{Binding AppendixNotes, UpdateSourceTrigger=LostFocus}"
-                                             Height="80" MinHeight="60" MaxHeight="150"
+                                             MinHeight="60"
                                              Style="{StaticResource MultiLineFieldBox}" LostFocus="Field_LostFocus"/>
             </StackPanel>
         </telerik:GroupBox>

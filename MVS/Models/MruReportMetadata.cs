@@ -64,12 +64,11 @@ namespace MVS
         public string DataProcessingNotes { get; set; } = string.Empty;
 
         // ---- Section 11: Compliance assessment / acceptance criteria ----
-        // Maximum allowable mean deviation for a "Pass" verdict. Angles are in
-        // degrees, heave in metres. Null means "no criterion entered" and the
-        // axis is reported as "Not assessed".
-        public double? AcceptanceCriteriaPitch { get; set; }
-        public double? AcceptanceCriteriaRoll { get; set; }
-        public double? AcceptanceCriteriaHeave { get; set; }
+        // Operator narrative discussing the verification data quality and results
+        // in business language. The criteria thresholds and measured values are
+        // derived automatically from the verification process.
+        public string AcceptanceCriteriaDiscussion { get; set; } = string.Empty;
+
         public string ManufacturerSpecifications { get; set; } = string.Empty;
 
         // ---- Sections 9 & 13: Observations and recommendations ----
@@ -119,7 +118,7 @@ namespace MVS
                 SynchronizationMethod =
                     "Both units synchronised to a common time reference prior to logging.",
                 LoggingConfiguration =
-                    "Continuous logging of all motion channels at the configured sample rate.",
+                    "Continuous logging of all motion channels at the configured sample rate (2Hz).",
 
                 // ---- Section 6: Data processing methodology ----
                 TimeSynchronizationNotes =
@@ -208,9 +207,7 @@ namespace MVS
                 FilteringNotes = FilteringNotes,
                 DataProcessingNotes = DataProcessingNotes,
 
-                AcceptanceCriteriaPitch = AcceptanceCriteriaPitch,
-                AcceptanceCriteriaRoll = AcceptanceCriteriaRoll,
-                AcceptanceCriteriaHeave = AcceptanceCriteriaHeave,
+                AcceptanceCriteriaDiscussion = AcceptanceCriteriaDiscussion,
                 ManufacturerSpecifications = ManufacturerSpecifications,
 
                 Observations = Observations,

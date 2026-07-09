@@ -45,9 +45,7 @@ namespace MVSTests.Services
                     ReferenceModel = "GoldStd-9",
                     ReferenceCalibrationDate = new DateTime(2024, 12, 1),
                     SampleRateHz = 10.0,
-                    AcceptanceCriteriaPitch = 0.5,
-                    AcceptanceCriteriaRoll = 0.1,
-                    AcceptanceCriteriaHeave = 0.05,
+                    AcceptanceCriteriaDiscussion = "Data quality was good throughout the capture window.",
                     Observations = "Calm conditions throughout.",
                     Recommendations = "Apply corrections and re-verify.",
                 },
@@ -115,35 +113,23 @@ namespace MVSTests.Services
         }
 
         [TestMethod]
-        public void Model_AcceptanceThreshold_ReadsFromMetadata()
+        public void Model_AcceptanceThreshold_AlwaysReturnsNull()
         {
+            // Per-axis deviation thresholds are no longer user-configured.
             var model = SampleModel();
-
-            Assert.AreEqual(0.5, model.AcceptanceThreshold(VerificationAxisKind.Pitch));
-            Assert.AreEqual(0.1, model.AcceptanceThreshold(VerificationAxisKind.Roll));
-            Assert.AreEqual(0.05, model.AcceptanceThreshold(VerificationAxisKind.Heave));
+            Assert.IsNull(model.AcceptanceThreshold(VerificationAxisKind.Pitch));
+            Assert.IsNull(model.AcceptanceThreshold(VerificationAxisKind.Roll));
+            Assert.IsNull(model.AcceptanceThreshold(VerificationAxisKind.Heave));
         }
 
         [TestMethod]
-        public void Model_Compliance_GradesMeanDeviationAgainstCriteria()
+        public void Model_Compliance_AlwaysNotAssessed()
         {
+            // Compliance is NotAssessed for all axes because no per-axis thresholds are configured.
             var model = SampleModel();
-
-            // Pitch mean 0.42 vs criterion 0.5 -> Pass.
-            Assert.AreEqual(ComplianceResult.Pass, model.Compliance(VerificationAxisKind.Pitch));
-            // Roll mean -0.15 (|0.15|) vs criterion 0.1 -> within 1.5x (0.15) -> Conditional.
-            Assert.AreEqual(ComplianceResult.Conditional, model.Compliance(VerificationAxisKind.Roll));
-            // Heave mean 0.03 vs criterion 0.05 -> Pass.
-            Assert.AreEqual(ComplianceResult.Pass, model.Compliance(VerificationAxisKind.Heave));
-        }
-
-        [TestMethod]
-        public void Model_Compliance_NotAssessed_WhenNoCriterion()
-        {
-            var model = SampleModel();
-            model.Metadata.AcceptanceCriteriaPitch = null;
-
             Assert.AreEqual(ComplianceResult.NotAssessed, model.Compliance(VerificationAxisKind.Pitch));
+            Assert.AreEqual(ComplianceResult.NotAssessed, model.Compliance(VerificationAxisKind.Roll));
+            Assert.AreEqual(ComplianceResult.NotAssessed, model.Compliance(VerificationAxisKind.Heave));
         }
 
         [TestMethod]

@@ -67,6 +67,129 @@ namespace MVS.Services
         public const double OutlierAcceptablePercent = 5.0;
         public const double OutlierAttentionPercent = 15.0;
 
+        // ── Capture duration quality thresholds (minutes). Must stay in sync
+        //    with DurationStatusBanner and the PDF exporter.
+        public const double MinDurationAcceptableMinutes = 20.0;
+        public const double MinDurationRecommendedMinutes = 40.0;
+
+        /// <summary>
+        /// Builds a plain-language, business-oriented assessment of the captured
+        /// verification data from the three data-quality inputs: the averaged
+        /// sample count, the capture duration in minutes, and the worst outlier
+        /// percentage across all axes. Shared by the on-screen Acceptance Criteria
+        /// card and the PDF report so both read identically.
+        /// </summary>
+        /// <param name="sampleCount">Number of averaged deviation samples.</param>
+        /// <param name="durationMinutes">Total capture duration in minutes (0 if unknown).</param>
+        /// <param name="worstOutlierPercent">
+        /// Highest outlier percentage across all reference and test axes, or
+        /// <see cref="double.NaN"/> when no data is available.
+        /// </param>
+        public static string GenerateAssessmentText(int sampleCount, double durationMinutes, double worstOutlierPercent)
+        {
+            if (sampleCount <= 0)
+                return "No verification data was captured for this project. " +
+                       "Ensure that the reference and vessel units are connected and that a " +
+                       "capture run has been completed before generating the report.";
+
+            // ── Sample count ──────────────────────────────────────────────────
+            string sampleVerdict;
+            string sampleDetail;
+            if (sampleCount >= MinSamplesGood)
+            {
+                sampleVerdict = "good";
+                sampleDetail  = $"The capture produced {sampleCount:N0} averaged samples, " +
+                                $"well above the recommended minimum of {MinSamplesGood:N0}. " +
+                                "This provides a statistically robust basis for the calculated deviations.";
+            }
+            else if (sampleCount >= MinSamplesAcceptable)
+            {
+                sampleVerdict = "acceptable";
+                sampleDetail  = $"The capture produced {sampleCount:N0} averaged samples. " +
+                                $"This meets the minimum acceptable threshold of {MinSamplesAcceptable:N0} " +
+                                $"but is below the recommended {MinSamplesGood:N0}. " +
+                                "Results are usable; a longer capture would improve confidence.";
+            }
+            else
+            {
+                sampleVerdict = "insufficient";
+                sampleDetail  = $"Only {sampleCount:N0} averaged samples were captured, " +
+                                $"below the minimum of {MinSamplesAcceptable:N0} required for reliable analysis. " +
+                                "The deviations should be treated with caution. Consider re-capturing with a longer session.";
+            }
+
+            // ── Capture duration ──────────────────────────────────────────────
+            string durationDetail;
+            if (durationMinutes >= MinDurationRecommendedMinutes)
+            {
+                durationDetail = $"The capture duration of {durationMinutes:F1} minutes " +
+                                 $"meets the recommended target of {MinDurationRecommendedMinutes:F0} minutes or more, " +
+                                 "providing good temporal coverage of the vessel's motion.";
+            }
+            else if (durationMinutes >= MinDurationAcceptableMinutes)
+            {
+                durationDetail = $"The capture duration of {durationMinutes:F1} minutes " +
+                                 $"meets the acceptable minimum of {MinDurationAcceptableMinutes:F0} minutes " +
+                                 $"but is below the recommended {MinDurationRecommendedMinutes:F0} minutes. " +
+                                 "A longer capture would improve result stability.";
+            }
+            else if (durationMinutes > 0)
+            {
+                durationDetail = $"The capture duration of {durationMinutes:F1} minutes " +
+                                 $"is below the minimum acceptable threshold of {MinDurationAcceptableMinutes:F0} minutes. " +
+                                 "The results may not be representative of the vessel's typical motion; a re-capture is recommended.";
+            }
+            else
+            {
+                durationDetail = "Capture duration could not be determined from the available data.";
+            }
+
+            // ── Outlier / noise ───────────────────────────────────────────────
+            string outlierDetail;
+            if (double.IsNaN(worstOutlierPercent))
+            {
+                outlierDetail = "Outlier data was not available for this capture.";
+            }
+            else if (worstOutlierPercent <= OutlierAcceptablePercent)
+            {
+                outlierDetail = $"Signal quality was good, with a maximum outlier share of {worstOutlierPercent:F1}% " +
+                                $"across all axes and within the {OutlierAcceptablePercent:F0}% target. " +
+                                "The input data can be considered clean and reliable.";
+            }
+            else if (worstOutlierPercent <= OutlierAttentionPercent)
+            {
+                outlierDetail = $"The maximum outlier share was {worstOutlierPercent:F1}%, " +
+                                $"above the {OutlierAcceptablePercent:F0}% target but within the " +
+                                $"{OutlierAttentionPercent:F0}% acceptable limit. " +
+                                "Some noise was present in the data but the results remain usable.";
+            }
+            else
+            {
+                outlierDetail = $"The maximum outlier share was {worstOutlierPercent:F1}%, " +
+                                $"exceeding the {OutlierAttentionPercent:F0}% attention threshold. " +
+                                "The captured signal was noisy; the calculated deviations should be interpreted carefully " +
+                                "and a re-capture under calmer conditions is recommended.";
+            }
+
+            // ── Overall summary sentence ──────────────────────────────────────
+            bool allGood = sampleVerdict == "good" &&
+                           durationMinutes >= MinDurationRecommendedMinutes &&
+                           !double.IsNaN(worstOutlierPercent) &&
+                           worstOutlierPercent <= OutlierAcceptablePercent;
+
+            bool anyCritical = sampleVerdict == "insufficient" ||
+                               (durationMinutes > 0 && durationMinutes < MinDurationAcceptableMinutes) ||
+                               (!double.IsNaN(worstOutlierPercent) && worstOutlierPercent > OutlierAttentionPercent);
+
+            string overall = allGood
+                ? "Overall, the data quality is good and the results are considered reliable."
+                : anyCritical
+                    ? "One or more data-quality criteria were not met. Review the findings below before applying corrections."
+                    : "Data quality is acceptable. Results can be used but consider re-capturing for higher confidence.";
+
+            return $"{overall}\n\n{sampleDetail}\n\n{durationDetail}\n\n{outlierDetail}";
+        }
+
         public static string Unit(VerificationAxisKind axis)
         {
             return axis == VerificationAxisKind.Heave ? "m" : "\u00B0";

@@ -1061,6 +1061,32 @@ namespace MVS
             cardHeave.DevStats = projectVM.DevHeaveStats;
             cardHeave.AppliedCorrection = project?.AppliedCorrectionHeave ?? 0d;
             cardHeave.HasCorrectionApplied = hasCorrection;
+
+            // Push actual verification values into the acceptance criteria display.
+            int sampleCount = projectVM.DevPitchStats?.SampleCount ?? 0;
+
+            double durationMinutes = 0;
+            var sqlMin = System.Data.SqlTypes.SqlDateTime.MinValue.Value;
+            if (project != null &&
+                project.StartTime != sqlMin &&
+                project.EndTime != sqlMin)
+            {
+                durationMinutes = (project.EndTime - project.StartTime).TotalMinutes;
+            }
+
+            double worstOutlier = double.NaN;
+            foreach (var s in new[]
+            {
+                projectVM.RefPitchStats, projectVM.TestPitchStats,
+                projectVM.RefRollStats,  projectVM.TestRollStats,
+                projectVM.RefHeaveStats, projectVM.TestHeaveStats,
+            })
+            {
+                if (s != null && s.SampleCount > 0 && !double.IsNaN(s.OutlierPercent))
+                    worstOutlier = double.IsNaN(worstOutlier) ? s.OutlierPercent : Math.Max(worstOutlier, s.OutlierPercent);
+            }
+
+            ucReportMetadata.UpdateVerificationData(sampleCount, durationMinutes, worstOutlier);
         }
 
         // ============================================================
@@ -1137,6 +1163,16 @@ namespace MVS
                 // Build the report model on the UI thread — it reads view-model state.
                 projectVM.ComputeExtendedStatistics();
                 var model = Services.Reporting.VerificationReportModel.FromProject(project, projectVM);
+
+                // Auto-fill the discussion field when the operator has not written one yet,
+                // and persist it back so the editor shows the generated text.
+                if (string.IsNullOrWhiteSpace(model.Metadata?.AcceptanceCriteriaDiscussion))
+                {
+                    string generated = model.GenerateDefaultDiscussion();
+                    if (model.Metadata != null)
+                        model.Metadata.AcceptanceCriteriaDiscussion = generated;
+                    ucReportMetadata.Metadata = model.Metadata;
+                }
 
                 progress.Show();
 
