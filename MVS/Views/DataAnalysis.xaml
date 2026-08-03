@@ -7,6 +7,7 @@
     xmlns:telerik="http://schemas.telerik.com/2008/xaml/presentation"
     xmlns:sys="clr-namespace:System;assembly=mscorlib"
     xmlns:local="clr-namespace:MVS"
+    xmlns:controls="clr-namespace:MVS.Views.Controls"
     mc:Ignorable="d"
     d:DesignHeight="1280"
     d:DesignWidth="1920">
@@ -70,6 +71,24 @@
                 <Grid.ColumnDefinitions>
                     <ColumnDefinition
                         Width="*" />
+                    <ColumnDefinition
+                        Width="Auto" />
+                </Grid.ColumnDefinitions>
+
+                <controls:VerificationResultCard
+                    Grid.Column="1"
+                    x:Name="cardPitch"
+                    Width="380"
+                    VerticalAlignment="Stretch"
+                    AxisTitle="Pitch"
+                    Unit="°"
+                    AxisKind="Pitch"
+                    MagnitudeScale="1.0"
+                    Margin="8,0,0,0" />
+
+            <Grid Grid.Column="0">
+
+                <Grid.ColumnDefinitions>
                     <ColumnDefinition
                         Width="*" />
                     <ColumnDefinition
@@ -723,241 +742,19 @@
 
                     </Grid>
 
-                </Grid>
+                         </Grid>
 
-                <!--Pitch Data Readouts-->
-                <Grid
-                    Grid.Column="3"
-                    Margin="8">
-
-                    <Grid.RowDefinitions>
-                        <RowDefinition
-                            Height="2*" />
-                        <RowDefinition
-                            Height="*" />
-                        <RowDefinition
-                            Height="*" />
-                        <RowDefinition
-                            Height="*" />
-                        <RowDefinition
-                            Height="*" />
-                        <RowDefinition
-                            Height="*" />
-                        <RowDefinition
-                            Height="*" />
-                        <RowDefinition
-                            Height="*" />
-                        <RowDefinition
-                            Height="*" />
-                        <RowDefinition
-                            Height="*" />
-                        <RowDefinition
-                            Height="*" />
-                        <RowDefinition
-                            Height="*" />
-                    </Grid.RowDefinitions>
-
-                    <Grid.ColumnDefinitions>
-                        <ColumnDefinition
-                            Width="3*" />
-                        <ColumnDefinition
-                            Width="2*" />
-                        <ColumnDefinition
-                            Width="2*" />
-                        <ColumnDefinition
-                            Width="2*" />
-                    </Grid.ColumnDefinitions>
-
-                    <!--Pitch Line Legend-->
-                    <Rectangle
-                        Grid.Row="2"
-                        Grid.Column="1"
-                        Margin="1"
-                        Width="{StaticResource lineLegendWidth}"
-                        Height="{StaticResource lineLegendHeight}"
-                        Fill="{StaticResource ColorGraphLineRef}"
-                        HorizontalAlignment="Center" />
-
-                    <Rectangle
-                        Grid.Row="2"
-                        Grid.Column="2"
-                        Margin="1"
-                        Width="{StaticResource lineLegendWidth}"
-                        Height="{StaticResource lineLegendHeight}"
-                        Fill="{StaticResource ColorGraphLineTest}"
-                        HorizontalAlignment="Center" />
-
-                    <Rectangle
-                        Grid.Row="2"
-                        Grid.Column="3"
-                        Margin="1"
-                        Width="{StaticResource lineLegendWidth}"
-                        Height="{StaticResource lineLegendHeight}"
-                        Fill="{StaticResource ColorGraphLineDev}"
-                        HorizontalAlignment="Center" />
-
-                    <!--Pitch Title-->
-                    <TextBlock
-                        Grid.Row="2"
-                        Grid.RowSpan="2"
-                        Grid.Column="0"
-                        Text="Pitch"
-                        HorizontalAlignment="Left"
-                        VerticalAlignment="Center" />
-
-                    <!--Pitch Labels-->
-                    <Separator
-                        Grid.Row="3"
-                        Grid.Column="0"
-                        Grid.ColumnSpan="4"
-                        VerticalAlignment="Bottom" />
-
-                    <TextBlock
-                        Grid.Row="3"
-                        Grid.Column="1"
-                        Text="Ref"
-                        HorizontalAlignment="Center"
-                        VerticalAlignment="Center" />
-
-                    <TextBlock
-                        Grid.Row="3"
-                        Grid.Column="2"
-                        Text="Test"
-                        HorizontalAlignment="Center"
-                        VerticalAlignment="Center" />
-
-                    <TextBlock
-                        Grid.Row="3"
-                        Grid.Column="3"
-                        Text="Deviation"
-                        HorizontalAlignment="Center"
-                        VerticalAlignment="Center" />
-
-                    <!--Max Pitch up-->
-                    <TextBlock
-                        Grid.Row="4"
-                        Grid.Column="0"
-                        Text="Max"
-                        HorizontalAlignment="Left"
-                        VerticalAlignment="Center" />
-
-                    <TextBlock
-                        Grid.Row="4"
-                        Grid.Column="1"
-                        Text="{Binding Path=refPitchMaxUpString}"
-                        FontSize="{StaticResource fontSizeData}"
-                        HorizontalAlignment="Center"
-                        VerticalAlignment="Center" />
-
-                    <TextBlock
-                        Grid.Row="4"
-                        Grid.Column="2"
-                        Text="{Binding Path=testPitchMaxUpString}"
-                        FontSize="{StaticResource fontSizeData}"
-                        HorizontalAlignment="Center"
-                        VerticalAlignment="Center" />
-
-                    <!--Max Pitch Down-->
-                    <TextBlock
-                        Grid.Row="5"
-                        Grid.Column="1"
-                        Text="{Binding Path=refPitchMaxDownString}"
-                        FontSize="{StaticResource fontSizeData}"
-                        HorizontalAlignment="Center"
-                        VerticalAlignment="Center" />
-
-                    <TextBlock
-                        Grid.Row="5"
-                        Grid.Column="2"
-                        Text="{Binding Path=testPitchMaxDownString}"
-                        FontSize="{StaticResource fontSizeData}"
-                        HorizontalAlignment="Center"
-                        VerticalAlignment="Center" />
-
-                    <!--Max Pitch Deviation-->
-                    <TextBlock
-                        Grid.Row="4"
-                        Grid.Column="3"
-                        Text="{Binding Path=devPitchMaxString}"
-                        FontSize="{StaticResource fontSizeData}"
-                        HorizontalAlignment="Center"
-                        VerticalAlignment="Center" />
-
-                    <!--Mean Pitch-->
-                    <TextBlock
-                        Grid.Row="7"
-                        Grid.Column="0"
-                        Text="Mean"
-                        HorizontalAlignment="Left"
-                        VerticalAlignment="Center" />
-
-                    <TextBlock
-                        Grid.Row="7"
-                        Grid.Column="1"
-                        Text="{Binding Path=refPitchMeanDataString}"
-                        FontSize="{StaticResource fontSizeData}"
-                        HorizontalAlignment="Center"
-                        VerticalAlignment="Center" />
-
-                    <TextBlock
-                        Grid.Row="7"
-                        Grid.Column="2"
-                        Text="{Binding Path=testPitchMeanDataString}"
-                        FontSize="{StaticResource fontSizeData}"
-                        HorizontalAlignment="Center"
-                        VerticalAlignment="Center" />
-
-                    <!--Mean Pitch Deviation-->
-                    <Grid
-                        Grid.Row="7"
-                        Grid.Column="3">
-
-                        <TextBlock
-                            Text="{Binding Path=devPitchMeanString}"
-                            FontSize="{StaticResource fontSizeData}"
-                            HorizontalAlignment="Center"
-                            VerticalAlignment="Center" />
+                        </Grid>
 
                     </Grid>
 
-                    <!--Pitch Correction-->
-                    <Grid
-                        Grid.Row="9"
-                        Grid.Column="0"
-                        Grid.ColumnSpan="4"
-                        Background="{StaticResource ColorBackgroundSeparatorDark}">
-
-                        <TextBlock
-                            Text="Correction"
-                            HorizontalAlignment="Left"
-                            VerticalAlignment="Center" />
-
-                    </Grid>
-
-                    <Grid
-                        Grid.Row="9"
-                        Grid.Column="3"
-                        Background="{StaticResource ColorBackgroundSeparatorDark}">
-
-                        <TextBlock
-                            Text="{Binding Path=corrPitchString}"
-                            FontSize="{StaticResource fontSizeData}"
-                            HorizontalAlignment="Center"
-                            VerticalAlignment="Center" />
-
-                    </Grid>
-
-                </Grid>
-
-            </Grid>
-
-        </telerik:GroupBox>
+                </telerik:GroupBox>
 
 
-        <!--===========================================================-->
-        <!--===========================================================-->
-        <!--===========================================================-->
-        <!--ROLL-->
+                <!--===========================================================-->
+                <!--===========================================================-->
+                <!--===========================================================-->
+                <!--ROLL-->
         <!--===========================================================-->
         <!--===========================================================-->
         <!--===========================================================-->
@@ -971,6 +768,24 @@
                 <Grid.ColumnDefinitions>
                     <ColumnDefinition
                         Width="*" />
+                    <ColumnDefinition
+                        Width="Auto" />
+                </Grid.ColumnDefinitions>
+
+                <controls:VerificationResultCard
+                    Grid.Column="1"
+                    x:Name="cardRoll"
+                    Width="380"
+                    VerticalAlignment="Stretch"
+                    AxisTitle="Roll"
+                    Unit="°"
+                    AxisKind="Roll"
+                    MagnitudeScale="1.0"
+                    Margin="8,0,0,0" />
+
+            <Grid Grid.Column="0">
+
+                <Grid.ColumnDefinitions>
                     <ColumnDefinition
                         Width="*" />
                     <ColumnDefinition
@@ -1694,243 +1509,20 @@
                             Content="0"
                             HorizontalAlignment="Right" />
 
-                    </Grid>
+                             </Grid>
 
-                </Grid>
+                        </Grid>
 
-                <!--ROLL DATA READOUTS-->
-                <Grid
-                    Grid.Column="3"
-                    Margin="8">
+                                 </Grid>
 
-                    <Grid.RowDefinitions>
-                        <RowDefinition
-                            Height="2*" />
-                        <RowDefinition
-                            Height="*" />
-                        <RowDefinition
-                            Height="*" />
-                        <RowDefinition
-                            Height="*" />
-                        <RowDefinition
-                            Height="*" />
-                        <RowDefinition
-                            Height="*" />
-                        <RowDefinition
-                            Height="*" />
-                        <RowDefinition
-                            Height="*" />
-                        <RowDefinition
-                            Height="*" />
-                        <RowDefinition
-                            Height="*" />
-                        <RowDefinition
-                            Height="*" />
-                        <RowDefinition
-                            Height="*" />
-                    </Grid.RowDefinitions>
+                                </Grid>
 
-                    <Grid.ColumnDefinitions>
-                        <ColumnDefinition
-                            Width="3*" />
-                        <ColumnDefinition
-                            Width="2*" />
-                        <ColumnDefinition
-                            Width="2*" />
-                        <ColumnDefinition
-                            Width="2*" />
-                    </Grid.ColumnDefinitions>
+                    </telerik:GroupBox>
 
-                    <!--Roll Line Legend-->
-                    <Rectangle
-                        Grid.Row="2"
-                        Grid.Column="1"
-                        Margin="1"
-                        Width="{StaticResource lineLegendWidth}"
-                        Height="{StaticResource lineLegendHeight}"
-                        Fill="{StaticResource ColorGraphLineRef}"
-                        HorizontalAlignment="Center" />
-
-                    <Rectangle
-                        Grid.Row="2"
-                        Grid.Column="2"
-                        Margin="1"
-                        Width="{StaticResource lineLegendWidth}"
-                        Height="{StaticResource lineLegendHeight}"
-                        Fill="{StaticResource ColorGraphLineTest}"
-                        HorizontalAlignment="Center" />
-
-                    <Rectangle
-                        Grid.Row="2"
-                        Grid.Column="3"
-                        Margin="1"
-                        Width="{StaticResource lineLegendWidth}"
-                        Height="{StaticResource lineLegendHeight}"
-                        Fill="{StaticResource ColorGraphLineDev}"
-                        HorizontalAlignment="Center" />
-
-                    <!--Roll Title-->
-                    <TextBlock
-                        Grid.Row="2"
-                        Grid.RowSpan="2"
-                        Grid.Column="0"
-                        Text="Roll"
-                        HorizontalAlignment="Left"
-                        VerticalAlignment="Center" />
-
-                    <!--Roll Labels-->
-                    <Separator
-                        Grid.Column="0"
-                        Grid.Row="3"
-                        Grid.ColumnSpan="4"
-                        VerticalAlignment="Bottom" />
-
-                    <TextBlock
-                        Grid.Row="3"
-                        Grid.Column="1"
-                        Text="Ref"
-                        HorizontalAlignment="Center"
-                        VerticalAlignment="Center" />
-
-                    <TextBlock
-                        Grid.Row="3"
-                        Grid.Column="2"
-                        Text="Test"
-                        HorizontalAlignment="Center"
-                        VerticalAlignment="Center" />
-
-                    <TextBlock
-                        Grid.Row="3"
-                        Grid.Column="3"
-                        Text="Deviation"
-                        HorizontalAlignment="Center"
-                        VerticalAlignment="Center" />
-
-                    <!--Max Roll Left-->
-                    <TextBlock
-                        Grid.Row="4"
-                        Grid.Column="0"
-                        Text="Max"
-                        HorizontalAlignment="Left"
-                        VerticalAlignment="Center" />
-
-                    <TextBlock
-                        Grid.Row="4"
-                        Grid.Column="1"
-                        Text="{Binding Path=refRollMaxLeftString}"
-                        FontSize="{StaticResource fontSizeData}"
-                        HorizontalAlignment="Center"
-                        VerticalAlignment="Center" />
-
-                    <TextBlock
-                        Grid.Row="4"
-                        Grid.Column="2"
-                        Text="{Binding Path=testRollMaxLeftString}"
-                        FontSize="{StaticResource fontSizeData}"
-                        HorizontalAlignment="Center"
-                        VerticalAlignment="Center" />
-
-                    <!--Max Roll Right-->
-                    <TextBlock
-                        Grid.Row="5"
-                        Grid.Column="1"
-                        Text="{Binding Path=refRollMaxRightString}"
-                        FontSize="{StaticResource fontSizeData}"
-                        HorizontalAlignment="Center"
-                        VerticalAlignment="Center" />
-
-                    <TextBlock
-                        Grid.Row="5"
-                        Grid.Column="2"
-                        Text="{Binding Path=testRollMaxRightString}"
-                        FontSize="{StaticResource fontSizeData}"
-                        HorizontalAlignment="Center"
-                        VerticalAlignment="Center" />
-
-                    <!--Max Roll Deviation-->
-                    <TextBlock
-                        Grid.Row="4"
-                        Grid.Column="3"
-                        Text="{Binding Path=devRollMaxString}"
-                        FontSize="{StaticResource fontSizeData}"
-                        HorizontalAlignment="Center"
-                        VerticalAlignment="Center" />
-
-                    <!--Mean Roll-->
-                    <TextBlock
-                        Grid.Row="7"
-                        Grid.Column="0"
-                        Text="Mean"
-                        HorizontalAlignment="Left"
-                        VerticalAlignment="Center" />
-
-                    <TextBlock
-                        Grid.Row="7"
-                        Grid.Column="1"
-                        Text="{Binding Path=refRollMeanDataString}"
-                        FontSize="{StaticResource fontSizeData}"
-                        HorizontalAlignment="Center"
-                        VerticalAlignment="Center" />
-
-                    <TextBlock
-                        Grid.Row="7"
-                        Grid.Column="2"
-                        Text="{Binding Path=testRollMeanDataString}"
-                        FontSize="{StaticResource fontSizeData}"
-                        HorizontalAlignment="Center"
-                        VerticalAlignment="Center" />
-
-                    <!--Mean Roll Deviation-->
-                    <Grid
-                        Grid.Row="7"
-                        Grid.Column="3">
-
-                        <TextBlock
-                            Grid.ColumnSpan="2"
-                            Text="{Binding Path=devRollMeanString}"
-                            FontSize="{StaticResource fontSizeData}"
-                            HorizontalAlignment="Center"
-                            VerticalAlignment="Center" />
-
-                    </Grid>
-
-                    <!--Roll Correction-->
-                    <Grid
-                        Grid.Row="9"
-                        Grid.Column="0"
-                        Grid.ColumnSpan="4"
-                        Background="{StaticResource ColorBackgroundSeparatorDark}">
-
-                        <TextBlock
-                            Text="Correction"
-                            HorizontalAlignment="Left"
-                            VerticalAlignment="Center" />
-
-                    </Grid>
-
-                    <Grid
-                        Grid.Row="9"
-                        Grid.Column="3"
-                        Background="{StaticResource ColorBackgroundSeparatorDark}">
-
-                        <TextBlock
-                            Text="{Binding Path=corrRollString}"
-                            FontSize="{StaticResource fontSizeData}"
-                            HorizontalAlignment="Center"
-                            VerticalAlignment="Center" />
-
-                    </Grid>
-
-                </Grid>
-
-            </Grid>
-
-        </telerik:GroupBox>
-
-        <!--===========================================================-->
-        <!--===========================================================-->
-        <!--===========================================================-->
-        <!--HEAVE-->
+                    <!--===========================================================-->
+                    <!--===========================================================-->
+                    <!--===========================================================-->
+                    <!--HEAVE-->
         <!--===========================================================-->
         <!--===========================================================-->
         <!--===========================================================-->
@@ -1944,6 +1536,24 @@
                 <Grid.ColumnDefinitions>
                     <ColumnDefinition
                         Width="*" />
+                    <ColumnDefinition
+                        Width="Auto" />
+                </Grid.ColumnDefinitions>
+
+                <controls:VerificationResultCard
+                    Grid.Column="1"
+                    x:Name="cardHeave"
+                    Width="380"
+                    VerticalAlignment="Stretch"
+                    AxisTitle="Heave"
+                    Unit="m"
+                    AxisKind="Heave"
+                    MagnitudeScale="0.5"
+                    Margin="8,0,0,0" />
+
+            <Grid Grid.Column="0">
+
+                <Grid.ColumnDefinitions>
                     <ColumnDefinition
                         Width="*" />
                     <ColumnDefinition
@@ -2578,217 +2188,16 @@
                             Content="0"
                             HorizontalAlignment="Right" />
 
-                    </Grid>
+                                         </Grid>
 
-                </Grid>
+                                    </Grid>
 
-                <!--Heave Data Readout-->
-                <Grid
-                    Grid.Column="3"
-                    Margin="8">
+                                            </Grid>
 
-                    <Grid.RowDefinitions>
-                        <RowDefinition
-                            Height="2*" />
-                        <RowDefinition
-                            Height="*" />
-                        <RowDefinition
-                            Height="*" />
-                        <RowDefinition
-                            Height="*" />
-                        <RowDefinition
-                            Height="*" />
-                        <RowDefinition
-                            Height="*" />
-                        <RowDefinition
-                            Height="*" />
-                        <RowDefinition
-                            Height="*" />
-                        <RowDefinition
-                            Height="*" />
-                        <RowDefinition
-                            Height="*" />
-                        <RowDefinition
-                            Height="2*" />
-                    </Grid.RowDefinitions>
+                                            </Grid>
 
-                    <Grid.ColumnDefinitions>
-                        <ColumnDefinition
-                            Width="3*" />
-                        <ColumnDefinition
-                            Width="2*" />
-                        <ColumnDefinition
-                            Width="2*" />
-                        <ColumnDefinition
-                            Width="2*" />
-                    </Grid.ColumnDefinitions>
+                                        </telerik:GroupBox>
 
-                    <!--Heave Line Legend-->
-                    <Rectangle
-                        Grid.Row="2"
-                        Grid.Column="1"
-                        Margin="1"
-                        Width="{StaticResource lineLegendWidth}"
-                        Height="{StaticResource lineLegendHeight}"
-                        Fill="{StaticResource ColorGraphLineRef}"
-                        HorizontalAlignment="Center" />
+                                    </Grid>
 
-                    <Rectangle
-                        Grid.Row="2"
-                        Grid.Column="2"
-                        Margin="1"
-                        Width="{StaticResource lineLegendWidth}"
-                        Height="{StaticResource lineLegendHeight}"
-                        Fill="{StaticResource ColorGraphLineTest}"
-                        HorizontalAlignment="Center" />
-
-                    <Rectangle
-                        Grid.Row="2"
-                        Grid.Column="3"
-                        Margin="1"
-                        Width="{StaticResource lineLegendWidth}"
-                        Height="{StaticResource lineLegendHeight}"
-                        Fill="{StaticResource ColorGraphLineDev}"
-                        HorizontalAlignment="Center" />
-
-                    <!--Heave Title-->
-                    <TextBlock
-                        Grid.Row="2"
-                        Grid.RowSpan="2"
-                        Grid.Column="0"
-                        Text="Heave"
-                        HorizontalAlignment="Left"
-                        VerticalAlignment="Center" />
-
-                    <!--Heave Labels-->
-                    <Separator
-                        Grid.Row="3"
-                        Grid.Column="0"
-                        Grid.ColumnSpan="4"
-                        VerticalAlignment="Bottom" />
-
-                    <TextBlock
-                        Grid.Row="3"
-                        Grid.Column="1"
-                        Text="Ref"
-                        HorizontalAlignment="Center"
-                        VerticalAlignment="Center" />
-
-                    <TextBlock
-                        Grid.Row="3"
-                        Grid.Column="2"
-                        Text="Test"
-                        HorizontalAlignment="Center"
-                        VerticalAlignment="Center" />
-
-                    <TextBlock
-                        Grid.Row="3"
-                        Grid.Column="3"
-                        Text="Deviation"
-                        HorizontalAlignment="Center"
-                        VerticalAlignment="Center" />
-
-                    <!--Max Heave-->
-                    <TextBlock
-                        Grid.Row="4"
-                        Grid.Column="0"
-                        Text="Max"
-                        HorizontalAlignment="Left"
-                        VerticalAlignment="Center" />
-
-                    <TextBlock
-                        Grid.Row="4"
-                        Grid.Column="1"
-                        Text="{Binding Path=refHeaveMaxString}"
-                        FontSize="{StaticResource fontSizeData}"
-                        HorizontalAlignment="Center"
-                        VerticalAlignment="Center" />
-
-                    <TextBlock
-                        Grid.Row="4"
-                        Grid.Column="2"
-                        Text="{Binding Path=testHeaveMaxString}"
-                        FontSize="{StaticResource fontSizeData}"
-                        HorizontalAlignment="Center"
-                        VerticalAlignment="Center" />
-
-                    <!--Max Heave Deviation-->
-                    <TextBlock
-                        Grid.Row="4"
-                        Grid.Column="3"
-                        Text="{Binding Path=devHeaveMaxString}"
-                        FontSize="{StaticResource fontSizeData}"
-                        HorizontalAlignment="Center"
-                        VerticalAlignment="Center" />
-
-                    <!--Mean Heave-->
-                    <TextBlock
-                        Grid.Row="7"
-                        Grid.Column="0"
-                        Text="Mean"
-                        HorizontalAlignment="Left"
-                        VerticalAlignment="Center" />
-
-                    <TextBlock
-                        Grid.Row="7"
-                        Grid.Column="1"
-                        Text="{Binding Path=refHeaveMeanString}"
-                        FontSize="{StaticResource fontSizeData}"
-                        HorizontalAlignment="Center"
-                        VerticalAlignment="Center" />
-
-                    <TextBlock
-                        Grid.Row="7"
-                        Grid.Column="2"
-                        Text="{Binding Path=testHeaveMeanString}"
-                        FontSize="{StaticResource fontSizeData}"
-                        HorizontalAlignment="Center"
-                        VerticalAlignment="Center" />
-
-                    <Grid
-                        Grid.Row="7"
-                        Grid.Column="3">
-                        <TextBlock
-                            Grid.ColumnSpan="2"
-                            Text="{Binding Path=devHeaveMeanString}"
-                            FontSize="{StaticResource fontSizeData}"
-                            HorizontalAlignment="Center"
-                            VerticalAlignment="Center" />
-                    </Grid>
-
-                    <!--Heave Correction-->
-                    <Grid
-                        Grid.Row="9"
-                        Grid.Column="0"
-                        Grid.ColumnSpan="4"
-                        Background="{StaticResource ColorBackgroundSeparatorDark}">
-
-                        <TextBlock
-                            Text="Correction"
-                            HorizontalAlignment="Left"
-                            VerticalAlignment="Center" />
-
-                    </Grid>
-
-                    <Grid
-                        Grid.Row="9"
-                        Grid.Column="3"
-                        Background="{StaticResource ColorBackgroundSeparatorDark}">
-
-                        <TextBlock
-                            Text="{Binding Path=corrHeaveString}"
-                            FontSize="{StaticResource fontSizeData}"
-                            HorizontalAlignment="Center"
-                            VerticalAlignment="Center" />
-
-                    </Grid>
-
-                </Grid>
-
-            </Grid>
-
-        </telerik:GroupBox>
-
-    </Grid>
-
-</UserControl>
+                                </UserControl>

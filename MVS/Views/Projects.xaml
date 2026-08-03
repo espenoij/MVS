@@ -379,9 +379,6 @@
                                 <RowDefinition Height="Auto"/>
                                 <RowDefinition Height="Auto"/>
                                 <RowDefinition Height="Auto"/>
-                                <RowDefinition Height="Auto"/>
-                                <RowDefinition Height="Auto"/>
-                                <RowDefinition Height="Auto"/>
                             </Grid.RowDefinitions>
 
                             <TextBlock Grid.Row="0"
@@ -392,44 +389,12 @@
                                        TextWrapping="Wrap"
                                        Foreground="{StaticResource SesTextSecondaryBrush}"
                                        Margin="0,0,0,12"
-                                       Text="Inspect reference, test and deviation statistics for each axis. The deviation is the value this tool calculates; each card instead grades the quality of the captured input data &#8212; samples, vessel motion and noise &#8212; to tell you whether that calculated deviation can be trusted. Press the ? button on a card for a full explanation. This page is for review only; use Apply to save the recommended correction for this project."/>
+                                       Text="Inspect reference, test and deviation statistics for each axis alongside the captured data charts. The deviation is the value this tool calculates; each card instead grades the quality of the captured input data &#8212; samples, vessel motion and noise &#8212; to tell you whether that calculated deviation can be trusted. Press the ? button on a card for a full explanation. This page is for review only; use Apply to save the recommended correction for this project."/>
 
-                            <controls:VerificationResultCard Grid.Row="2"
-                                                             x:Name="cardPitch"
-                                                             AxisTitle="Pitch"
-                                                             Unit="°"
-                                                             AxisKind="Pitch"
-                                                             MagnitudeScale="1.0"
-                                                             Margin="0,0,0,8"/>
-
-                            <controls:VerificationResultCard Grid.Row="3"
-                                                             x:Name="cardRoll"
-                                                             AxisTitle="Roll"
-                                                             Unit="°"
-                                                             AxisKind="Roll"
-                                                             MagnitudeScale="1.0"
-                                                             Margin="0,0,0,8"/>
-
-                            <controls:VerificationResultCard Grid.Row="4"
-                                                             x:Name="cardHeave"
-                                                             AxisTitle="Heave"
-                                                             Unit="m"
-                                                             AxisKind="Heave"
-                                                             MagnitudeScale="0.5"/>
-
-                            <!-- Detailed data-analysis charts -->
-                            <Expander Grid.Row="5"
-                                      x:Name="expDataAnalysis"
-                                      Header="Detailed charts"
-                                      IsExpanded="True"
-                                      Margin="0,12,0,0">
-                                <Border BorderBrush="{StaticResource SesBorderBrush}" BorderThickness="1"
-                                        CornerRadius="4" Background="White"
-                                        Margin="0,6,0,0">
-                                    <local:DataAnalysis x:Name="ucDataAnalysis"
-                                                        Height="1200"/>
-                                </Border>
-                            </Expander>
+                            <!-- Per-axis result cards combined with their detailed charts -->
+                            <local:DataAnalysis Grid.Row="2"
+                                                x:Name="ucDataAnalysis"
+                                                Height="1400"/>
 
                         </Grid>
                     </ScrollViewer>

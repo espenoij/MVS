@@ -81,27 +81,29 @@ namespace MVS.Views.Controls
             tbAxisTitle.Text = AxisTitle ?? string.Empty;
             tbAxisUnit.Text = string.IsNullOrEmpty(Unit) ? string.Empty : "(" + Unit + ")";
 
-            FillStats(RefStats, tbRefMean, tbRefStdDev, tbRefMinMax, tbRefRms, includeOutliers: false);
-            FillStats(TestStats, tbTestMean, tbTestStdDev, tbTestMinMax, tbTestRms, includeOutliers: false);
+            FillStats(RefStats, tbRefMean, tbRefMin, tbRefMax, tbRefStdDev, tbRefRms);
+            FillStats(TestStats, tbTestMean, tbTestMin, tbTestMax, tbTestStdDev, tbTestRms);
             FillDeviation(DevStats);
             FillAssessment();
         }
 
-        private void FillStats(AxisStatistics s, TextBlock mean, TextBlock std, TextBlock minMax, TextBlock rms, bool includeOutliers)
+        private void FillStats(AxisStatistics s, TextBlock mean, TextBlock min, TextBlock max, TextBlock std, TextBlock rms)
         {
             if (s == null || s.SampleCount == 0)
             {
                 mean.Text = "—";
-                std.Text = "σ —";
-                minMax.Text = "min/max —";
-                rms.Text = "RMS —";
+                min.Text = "—";
+                max.Text = "—";
+                std.Text = "—";
+                rms.Text = "—";
                 return;
             }
 
             mean.Text = string.Format(CultureInfo.CurrentCulture, "{0:F4}", s.Mean);
-            std.Text = string.Format(CultureInfo.CurrentCulture, "σ {0:F4}", s.StdDev);
-            minMax.Text = string.Format(CultureInfo.CurrentCulture, "min/max {0:F3} / {1:F3}", s.Min, s.Max);
-            rms.Text = string.Format(CultureInfo.CurrentCulture, "RMS {0:F4}", s.Rms);
+            min.Text = string.Format(CultureInfo.CurrentCulture, "{0:F3}", s.Min);
+            max.Text = string.Format(CultureInfo.CurrentCulture, "{0:F3}", s.Max);
+            std.Text = string.Format(CultureInfo.CurrentCulture, "{0:F4}", s.StdDev);
+            rms.Text = string.Format(CultureInfo.CurrentCulture, "{0:F4}", s.Rms);
         }
 
         private void FillDeviation(AxisStatistics s)
@@ -109,18 +111,18 @@ namespace MVS.Views.Controls
             if (s == null || s.SampleCount == 0)
             {
                 tbDevMean.Text = "—";
-                tbDevStdDev.Text = "σ —";
-                tbDevOutliers.Text = "outliers —";
-                tbDevSamples.Text = "samples —";
+                tbDevStdDev.Text = "—";
+                tbDevOutliers.Text = "—";
+                tbDevSamples.Text = "—";
                 tbCorrection.Text = "—";
                 pbDeviationMagnitude.Value = 0;
                 return;
             }
 
             tbDevMean.Text = string.Format(CultureInfo.CurrentCulture, "{0:F4}", s.Mean);
-            tbDevStdDev.Text = string.Format(CultureInfo.CurrentCulture, "σ {0:F4}", s.StdDev);
-            tbDevOutliers.Text = string.Format(CultureInfo.CurrentCulture, "outliers {0:F1} %", s.OutlierPercent);
-            tbDevSamples.Text = string.Format(CultureInfo.CurrentCulture, "samples {0}", s.SampleCount);
+            tbDevStdDev.Text = string.Format(CultureInfo.CurrentCulture, "{0:F4}", s.StdDev);
+            tbDevOutliers.Text = string.Format(CultureInfo.CurrentCulture, "{0:F1} %", s.OutlierPercent);
+            tbDevSamples.Text = string.Format(CultureInfo.CurrentCulture, "{0}", s.SampleCount);
 
             // Correction is the negative of deviation, rounded to 1 decimal place
             double correction = Math.Round(-s.Mean, 1, MidpointRounding.AwayFromZero);

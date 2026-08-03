@@ -1044,23 +1044,7 @@ namespace MVS
             var project = mainWindowVM?.SelectedProject;
             bool hasCorrection = project != null && project.HasCorrectionApplied;
 
-            cardPitch.RefStats = projectVM.RefPitchStats;
-            cardPitch.TestStats = projectVM.TestPitchStats;
-            cardPitch.DevStats = projectVM.DevPitchStats;
-            cardPitch.AppliedCorrection = project?.AppliedCorrectionPitch ?? 0d;
-            cardPitch.HasCorrectionApplied = hasCorrection;
-
-            cardRoll.RefStats = projectVM.RefRollStats;
-            cardRoll.TestStats = projectVM.TestRollStats;
-            cardRoll.DevStats = projectVM.DevRollStats;
-            cardRoll.AppliedCorrection = project?.AppliedCorrectionRoll ?? 0d;
-            cardRoll.HasCorrectionApplied = hasCorrection;
-
-            cardHeave.RefStats = projectVM.RefHeaveStats;
-            cardHeave.TestStats = projectVM.TestHeaveStats;
-            cardHeave.DevStats = projectVM.DevHeaveStats;
-            cardHeave.AppliedCorrection = project?.AppliedCorrectionHeave ?? 0d;
-            cardHeave.HasCorrectionApplied = hasCorrection;
+            ucDataAnalysis.SetResults(projectVM, project, hasCorrection);
 
             // Push actual verification values into the acceptance criteria display.
             int sampleCount = projectVM.DevPitchStats?.SampleCount ?? 0;

@@ -41,5 +41,32 @@ namespace MVS
             chartRoll3.Series[0].ItemsSource = projectVM.devRollMeanList;
             chartHeave3.Series[0].ItemsSource = projectVM.devHeaveMeanList;
         }
+
+        /// <summary>
+        /// Populates the per-axis result cards shown above each axis' charts.
+        /// </summary>
+        public void SetResults(ProjectVM projectVM, Project project, bool hasCorrection)
+        {
+            if (projectVM == null)
+                return;
+
+            cardPitch.RefStats = projectVM.RefPitchStats;
+            cardPitch.TestStats = projectVM.TestPitchStats;
+            cardPitch.DevStats = projectVM.DevPitchStats;
+            cardPitch.AppliedCorrection = project?.AppliedCorrectionPitch ?? 0d;
+            cardPitch.HasCorrectionApplied = hasCorrection;
+
+            cardRoll.RefStats = projectVM.RefRollStats;
+            cardRoll.TestStats = projectVM.TestRollStats;
+            cardRoll.DevStats = projectVM.DevRollStats;
+            cardRoll.AppliedCorrection = project?.AppliedCorrectionRoll ?? 0d;
+            cardRoll.HasCorrectionApplied = hasCorrection;
+
+            cardHeave.RefStats = projectVM.RefHeaveStats;
+            cardHeave.TestStats = projectVM.TestHeaveStats;
+            cardHeave.DevStats = projectVM.DevHeaveStats;
+            cardHeave.AppliedCorrection = project?.AppliedCorrectionHeave ?? 0d;
+            cardHeave.HasCorrectionApplied = hasCorrection;
+        }
     }
 }
