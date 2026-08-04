@@ -572,6 +572,10 @@ namespace MVS
 
         private void Stop()
         {
+            // Stoppe chart update timer før dataViewWorker starter for å unngå
+            // race condition mellom ChartDataUpdate og AnalyseProjectData på buffer-kolleksjonene.
+            projectVM.StopRecording();
+
             // Sette operasjonsmodus
             SetOperationsMode(OperationsMode.Stop);
 
@@ -592,8 +596,6 @@ namespace MVS
 
             // Stoppe elapsed time
             mainWindowVM.StopTimer();
-
-            projectVM.StopRecording();
         }
 
         private void DoDatabaseMaintenance()

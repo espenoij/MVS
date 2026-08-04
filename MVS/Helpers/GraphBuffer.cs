@@ -16,15 +16,19 @@ namespace MVS
             // Grunnen til at vi buffrer data først er pga ytelsesproblemer dersom vi kjører data rett ut i grafene på skjerm.
             // Det takler ikke grafene fra Telerik. Buffrer data først og så oppdaterer vi grafene med jevne passende mellomrom.
 
-            if (data?.status == DataStatus.OK)
+            // Lock ensures Add is mutually exclusive with Transfer's snapshot+clear.
+            lock (buffer)
             {
-                // Lagre data i buffer
-                buffer.Add(new HMSData(data));
-            }
-            else
-            {
-                // Lagre 0 data
-                buffer.Add(new HMSData() { data = 0, timestamp = DateTime.UtcNow });
+                if (data?.status == DataStatus.OK)
+                {
+                    // Lagre data i buffer
+                    buffer.Add(new HMSData(data));
+                }
+                else
+                {
+                    // Lagre 0 data
+                    buffer.Add(new HMSData() { data = 0, timestamp = DateTime.UtcNow });
+                }
             }
         }
 
@@ -34,8 +38,16 @@ namespace MVS
             if (buffer != null &&
                 dataList != null)
             {
-                dataList.AddRange(buffer);
-                buffer.Clear();
+                // Snapshot the buffer under a lock so a concurrent background Add cannot
+                // modify it while we enumerate, then add the plain List to dataList on
+                // the UI thread where no further race is possible.
+                List<HMSData> snapshot;
+                lock (buffer)
+                {
+                    snapshot = new List<HMSData>(buffer);
+                    buffer.Clear();
+                }
+                dataList.AddRange(snapshot);
             }
         }
 

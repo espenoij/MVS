@@ -54,84 +54,66 @@
 
 		<Rectangle Grid.Row="1" Height="1" Fill="{StaticResource SesBorderBrush}" Margin="0,8"/>
 
-		<!-- Reference / Vessel measurement table + Deviation table -->
-		<StackPanel Grid.Row="2" Margin="0,4,0,0">
-			<Grid>
-				<Grid.ColumnDefinitions>
-					<ColumnDefinition Width="Auto"/>
-					<ColumnDefinition Width="Auto"/>
-					<ColumnDefinition Width="24"/>
-					<ColumnDefinition Width="Auto"/>
-					<ColumnDefinition Width="Auto"/>
-					<ColumnDefinition Width="Auto"/>
-					<ColumnDefinition Width="Auto"/>
-				</Grid.ColumnDefinitions>
-				<Grid.RowDefinitions>
-					<RowDefinition Height="Auto"/>
-					<RowDefinition Height="Auto"/>
-					<RowDefinition Height="Auto"/>
-				</Grid.RowDefinitions>
+		<!-- Reference / Vessel / Analysis / Correction table -->
+		<Grid Grid.Row="2" Margin="0,4,0,0">
+			<Grid.ColumnDefinitions>
+				<ColumnDefinition Width="Auto"/>
+				<ColumnDefinition Width="Auto"/>
+				<ColumnDefinition Width="24"/>
+				<ColumnDefinition Width="Auto"/>
+				<ColumnDefinition Width="Auto"/>
+				<ColumnDefinition Width="Auto"/>
+				<ColumnDefinition Width="Auto"/>
+			</Grid.ColumnDefinitions>
+			<Grid.RowDefinitions>
+				<RowDefinition Height="Auto"/>
+				<RowDefinition Height="Auto"/>
+				<RowDefinition Height="Auto"/>
+				<RowDefinition Height="Auto"/>
+				<RowDefinition Height="Auto"/>
+				<RowDefinition Height="Auto"/>
+			</Grid.RowDefinitions>
 
-				<!-- Header row -->
-				<TextBlock Grid.Row="0" Grid.Column="3" Text="Min" FontWeight="SemiBold" Foreground="{StaticResource SesTextSecondaryBrush}" FontSize="11" HorizontalAlignment="Right" Margin="0,0,16,4"/>
-				<TextBlock Grid.Row="0" Grid.Column="4" Text="Max" FontWeight="SemiBold" Foreground="{StaticResource SesTextSecondaryBrush}" FontSize="11" HorizontalAlignment="Right" Margin="0,0,16,4"/>
-				<TextBlock Grid.Row="0" Grid.Column="5" Text="σ" FontWeight="SemiBold" Foreground="{StaticResource SesTextSecondaryBrush}" FontSize="11" HorizontalAlignment="Right" Margin="0,0,16,4"/>
-				<TextBlock Grid.Row="0" Grid.Column="6" Text="RMS" FontWeight="SemiBold" Foreground="{StaticResource SesTextSecondaryBrush}" FontSize="11" HorizontalAlignment="Right" Margin="0,0,0,4"/>
+			<!-- Header row -->
+			<TextBlock Grid.Row="0" Grid.Column="1" Text="Mean" FontWeight="SemiBold" Foreground="{StaticResource SesTextSecondaryBrush}" FontSize="11" HorizontalAlignment="Right" Margin="0,0,0,4"/>
+			<TextBlock Grid.Row="0" Grid.Column="3" Text="Min" FontWeight="SemiBold" Foreground="{StaticResource SesTextSecondaryBrush}" FontSize="11" HorizontalAlignment="Right" Margin="0,0,16,4"/>
+			<TextBlock Grid.Row="0" Grid.Column="4" Text="Max" FontWeight="SemiBold" Foreground="{StaticResource SesTextSecondaryBrush}" FontSize="11" HorizontalAlignment="Right" Margin="0,0,16,4"/>
+			<TextBlock Grid.Row="0" Grid.Column="5" Text="Std Dev" FontWeight="SemiBold" Foreground="{StaticResource SesTextSecondaryBrush}" FontSize="11" HorizontalAlignment="Right" Margin="0,0,16,4"/>
+			<TextBlock Grid.Row="0" Grid.Column="6" Text="RMS" FontWeight="SemiBold" Foreground="{StaticResource SesTextSecondaryBrush}" FontSize="11" HorizontalAlignment="Right" Margin="0,0,0,4"/>
 
-				<!-- Reference -->
-				<TextBlock Grid.Row="1" Grid.Column="0" Text="Reference MRU" FontWeight="SemiBold" Foreground="{StaticResource SesTextSecondaryBrush}" VerticalAlignment="Center" Margin="0,0,16,8"/>
-				<TextBlock Grid.Row="1" Grid.Column="1" x:Name="tbRefMean" Text="—" FontSize="14" Foreground="{StaticResource SesTextPrimaryBrush}" VerticalAlignment="Center" HorizontalAlignment="Right" Margin="0,0,0,8"/>
-				<TextBlock Grid.Row="1" Grid.Column="3" x:Name="tbRefMin" Text="—" FontSize="14" Foreground="{StaticResource SesTextSecondaryBrush}" VerticalAlignment="Center" HorizontalAlignment="Right" Margin="0,0,16,8"/>
-				<TextBlock Grid.Row="1" Grid.Column="4" x:Name="tbRefMax" Text="—" FontSize="14" Foreground="{StaticResource SesTextSecondaryBrush}" VerticalAlignment="Center" HorizontalAlignment="Right" Margin="0,0,16,8"/>
-				<TextBlock Grid.Row="1" Grid.Column="5" x:Name="tbRefStdDev" Text="—" FontSize="14" Foreground="{StaticResource SesTextSecondaryBrush}" VerticalAlignment="Center" HorizontalAlignment="Right" Margin="0,0,16,8"/>
-				<TextBlock Grid.Row="1" Grid.Column="6" x:Name="tbRefRms" Text="—" FontSize="14" Foreground="{StaticResource SesTextSecondaryBrush}" VerticalAlignment="Center" HorizontalAlignment="Right" Margin="0,0,0,8"/>
+			<!-- Reference -->
+			<TextBlock Grid.Row="1" Grid.Column="0" Text="Reference MRU" FontWeight="SemiBold" Foreground="{StaticResource SesTextSecondaryBrush}" VerticalAlignment="Center" Margin="0,0,16,8"/>
+			<TextBlock Grid.Row="1" Grid.Column="1" x:Name="tbRefMean" Text="—" FontSize="14" Foreground="{StaticResource SesTextPrimaryBrush}" VerticalAlignment="Center" HorizontalAlignment="Right" Margin="0,0,0,8"/>
+			<TextBlock Grid.Row="1" Grid.Column="3" x:Name="tbRefMin" Text="—" FontSize="14" Foreground="{StaticResource SesTextSecondaryBrush}" VerticalAlignment="Center" HorizontalAlignment="Right" Margin="0,0,16,8"/>
+			<TextBlock Grid.Row="1" Grid.Column="4" x:Name="tbRefMax" Text="—" FontSize="14" Foreground="{StaticResource SesTextSecondaryBrush}" VerticalAlignment="Center" HorizontalAlignment="Right" Margin="0,0,16,8"/>
+			<TextBlock Grid.Row="1" Grid.Column="5" x:Name="tbRefStdDev" Text="—" FontSize="14" Foreground="{StaticResource SesTextSecondaryBrush}" VerticalAlignment="Center" HorizontalAlignment="Right" Margin="0,0,16,8"/>
+			<TextBlock Grid.Row="1" Grid.Column="6" x:Name="tbRefRms" Text="—" FontSize="14" Foreground="{StaticResource SesTextSecondaryBrush}" VerticalAlignment="Center" HorizontalAlignment="Right" Margin="0,0,0,8"/>
 
-				<!-- Test -->
-				<TextBlock Grid.Row="2" Grid.Column="0" Text="Vessel MRU" FontWeight="SemiBold" Foreground="{StaticResource SesTextSecondaryBrush}" VerticalAlignment="Center" Margin="0,0,16,0"/>
-				<TextBlock Grid.Row="2" Grid.Column="1" x:Name="tbTestMean" Text="—" FontSize="14" Foreground="{StaticResource SesTextPrimaryBrush}" VerticalAlignment="Center" HorizontalAlignment="Right" Margin="0,0,0,0"/>
-				<TextBlock Grid.Row="2" Grid.Column="3" x:Name="tbTestMin" Text="—" FontSize="14" Foreground="{StaticResource SesTextSecondaryBrush}" VerticalAlignment="Center" HorizontalAlignment="Right" Margin="0,0,16,0"/>
-				<TextBlock Grid.Row="2" Grid.Column="4" x:Name="tbTestMax" Text="—" FontSize="14" Foreground="{StaticResource SesTextSecondaryBrush}" VerticalAlignment="Center" HorizontalAlignment="Right" Margin="0,0,16,0"/>
-				<TextBlock Grid.Row="2" Grid.Column="5" x:Name="tbTestStdDev" Text="—" FontSize="14" Foreground="{StaticResource SesTextSecondaryBrush}" VerticalAlignment="Center" HorizontalAlignment="Right" Margin="0,0,16,0"/>
-				<TextBlock Grid.Row="2" Grid.Column="6" x:Name="tbTestRms" Text="—" FontSize="14" Foreground="{StaticResource SesTextSecondaryBrush}" VerticalAlignment="Center" HorizontalAlignment="Right" Margin="0,0,0,0"/>
-			</Grid>
+			<!-- Vessel MRU -->
+			<TextBlock Grid.Row="2" Grid.Column="0" Text="Vessel MRU" FontWeight="SemiBold" Foreground="{StaticResource SesTextSecondaryBrush}" VerticalAlignment="Center" Margin="0,0,16,16"/>
+			<TextBlock Grid.Row="2" Grid.Column="1" x:Name="tbTestMean" Text="—" FontSize="14" Foreground="{StaticResource SesTextPrimaryBrush}" VerticalAlignment="Center" HorizontalAlignment="Right" Margin="0,0,0,16"/>
+			<TextBlock Grid.Row="2" Grid.Column="3" x:Name="tbTestMin" Text="—" FontSize="14" Foreground="{StaticResource SesTextSecondaryBrush}" VerticalAlignment="Center" HorizontalAlignment="Right" Margin="0,0,16,16"/>
+			<TextBlock Grid.Row="2" Grid.Column="4" x:Name="tbTestMax" Text="—" FontSize="14" Foreground="{StaticResource SesTextSecondaryBrush}" VerticalAlignment="Center" HorizontalAlignment="Right" Margin="0,0,16,16"/>
+			<TextBlock Grid.Row="2" Grid.Column="5" x:Name="tbTestStdDev" Text="—" FontSize="14" Foreground="{StaticResource SesTextSecondaryBrush}" VerticalAlignment="Center" HorizontalAlignment="Right" Margin="0,0,16,16"/>
+			<TextBlock Grid.Row="2" Grid.Column="6" x:Name="tbTestRms" Text="—" FontSize="14" Foreground="{StaticResource SesTextSecondaryBrush}" VerticalAlignment="Center" HorizontalAlignment="Right" Margin="0,0,0,16"/>
 
-			<!-- Deviation table -->
-			<Grid Margin="0,12,0,0">
-				<Grid.ColumnDefinitions>
-					<ColumnDefinition Width="Auto"/>
-					<ColumnDefinition Width="24"/>
-					<ColumnDefinition Width="Auto"/>
-					<ColumnDefinition Width="Auto"/>
-					<ColumnDefinition Width="Auto"/>
-				</Grid.ColumnDefinitions>
-				<Grid.RowDefinitions>
-					<RowDefinition Height="Auto"/>
-					<RowDefinition Height="Auto"/>
-				</Grid.RowDefinitions>
+			<!-- Analysis header labels -->
+			<TextBlock Grid.Row="3" Grid.Column="1" Text="Deviation" FontWeight="SemiBold" Foreground="{StaticResource SesTextSecondaryBrush}" FontSize="11" HorizontalAlignment="Right" Margin="0,0,0,4"/>
+			<TextBlock Grid.Row="3" Grid.Column="3" Text="Samples" FontWeight="SemiBold" Foreground="{StaticResource SesTextSecondaryBrush}" FontSize="11" HorizontalAlignment="Right" Margin="0,0,16,4"/>
+			<TextBlock Grid.Row="3" Grid.Column="4" Text="Outliers" FontWeight="SemiBold" Foreground="{StaticResource SesTextSecondaryBrush}" FontSize="11" HorizontalAlignment="Right" Margin="0,0,16,4"/>
+			<TextBlock Grid.Row="3" Grid.Column="5" Text="Std Dev" FontWeight="SemiBold" Foreground="{StaticResource SesTextSecondaryBrush}" FontSize="11" HorizontalAlignment="Right" Margin="0,0,16,4"/>
 
-				<!-- Header row -->
-				<TextBlock Grid.Row="0" Grid.Column="0" Text="Deviation" FontWeight="SemiBold" Foreground="{StaticResource SesTextSecondaryBrush}" FontSize="11" HorizontalAlignment="Right" Margin="0,0,16,4"/>
-				<TextBlock Grid.Row="0" Grid.Column="2" Text="Std Dev" FontWeight="SemiBold" Foreground="{StaticResource SesTextSecondaryBrush}" FontSize="11" HorizontalAlignment="Right" Margin="0,0,16,4"/>
-				<TextBlock Grid.Row="0" Grid.Column="3" Text="Outliers" FontWeight="SemiBold" Foreground="{StaticResource SesTextSecondaryBrush}" FontSize="11" HorizontalAlignment="Right" Margin="0,0,16,4"/>
-				<TextBlock Grid.Row="0" Grid.Column="4" Text="Samples" FontWeight="SemiBold" Foreground="{StaticResource SesTextSecondaryBrush}" FontSize="11" HorizontalAlignment="Right" Margin="0,0,0,4"/>
+			<!-- Analysis values -->
+			<TextBlock Grid.Row="4" Grid.Column="0" Text="Analysis" FontWeight="SemiBold" Foreground="{StaticResource SesTextSecondaryBrush}" VerticalAlignment="Center" Margin="0,0,16,0"/>
+			<TextBlock Grid.Row="4" Grid.Column="1" x:Name="tbDevMean" Text="—" FontSize="14" Foreground="{StaticResource SesInfoBrush}" VerticalAlignment="Center" HorizontalAlignment="Right" Margin="0,0,0,0"/>
+			<TextBlock Grid.Row="4" Grid.Column="3" x:Name="tbDevSamples" Text="—" FontSize="14" Foreground="{StaticResource SesTextSecondaryBrush}" VerticalAlignment="Center" HorizontalAlignment="Right" Margin="0,0,16,0"/>
+			<TextBlock Grid.Row="4" Grid.Column="4" x:Name="tbDevOutliers" Text="—" FontSize="14" Foreground="{StaticResource SesTextSecondaryBrush}" VerticalAlignment="Center" HorizontalAlignment="Right" Margin="0,0,16,0"/>
+			<TextBlock Grid.Row="4" Grid.Column="5" x:Name="tbDevStdDev" Text="—" FontSize="14" Foreground="{StaticResource SesTextSecondaryBrush}" VerticalAlignment="Center" HorizontalAlignment="Right" Margin="0,0,16,0"/>
 
-				<!-- Value row -->
-				<TextBlock Grid.Row="1" Grid.Column="0" x:Name="tbDevMean" Text="—" FontSize="14" Foreground="{StaticResource SesInfoBrush}" VerticalAlignment="Center" HorizontalAlignment="Right" Margin="0,0,16,0"/>
-				<TextBlock Grid.Row="1" Grid.Column="2" x:Name="tbDevStdDev" Text="—" FontSize="14" Foreground="{StaticResource SesTextSecondaryBrush}" VerticalAlignment="Center" HorizontalAlignment="Right" Margin="0,0,16,0"/>
-				<TextBlock Grid.Row="1" Grid.Column="3" x:Name="tbDevOutliers" Text="—" FontSize="14" Foreground="{StaticResource SesTextSecondaryBrush}" VerticalAlignment="Center" HorizontalAlignment="Right" Margin="0,0,16,0"/>
-				<TextBlock Grid.Row="1" Grid.Column="4" x:Name="tbDevSamples" Text="—" FontSize="14" Foreground="{StaticResource SesTextSecondaryBrush}" VerticalAlignment="Center" HorizontalAlignment="Right" Margin="0,0,0,0"/>
-			</Grid>
-
-			<!-- Correction -->
-			<Grid Margin="0,12,0,0">
-				<Grid.ColumnDefinitions>
-					<ColumnDefinition Width="Auto"/>
-					<ColumnDefinition Width="Auto"/>
-				</Grid.ColumnDefinitions>
-				<TextBlock Grid.Column="0" Text="Correction" FontWeight="SemiBold" Foreground="{StaticResource SesTextSecondaryBrush}" VerticalAlignment="Center" Margin="0,0,16,0"/>
-				<TextBlock Grid.Column="1" x:Name="tbCorrection" Text="—" FontSize="14" Foreground="{StaticResource SesEnergyGreenTextBrush}" VerticalAlignment="Center" HorizontalAlignment="Right" Margin="0,0,0,0"/>
-			</Grid>
-		</StackPanel>
+			<!-- Correction: label in col 0, value in col 1 aligned with means above -->
+			<TextBlock Grid.Row="5" Grid.Column="0" Text="Correction" FontWeight="SemiBold" Foreground="{StaticResource SesTextSecondaryBrush}" VerticalAlignment="Center" Margin="0,8,16,0"/>
+			<TextBlock Grid.Row="5" Grid.Column="1" x:Name="tbCorrection" Text="—" FontSize="22" FontWeight="Bold" Foreground="{StaticResource SesEnergyGreenTextBrush}" VerticalAlignment="Center" HorizontalAlignment="Right" Margin="0,8,0,0"/>
+		</Grid>
 
 		<!-- Magnitude bar for deviation -->
 		<telerik:RadProgressBar Grid.Row="3"

@@ -374,11 +374,17 @@
                                   VerticalScrollBarVisibility="Auto"
                                   HorizontalScrollBarVisibility="Disabled"
                                   Visibility="Collapsed">
-                        <Grid>
+                        <!--
+                            MinHeight is bound to the ScrollViewer's own ActualHeight so the
+                            inner Grid always fills the viewport. The * row then distributes the
+                            remaining space to DataAnalysis. The scrollbar only appears when
+                            DataAnalysis's MinHeight forces the grid taller than the viewport.
+                        -->
+                        <Grid MinHeight="{Binding ActualHeight, RelativeSource={RelativeSource AncestorType=ScrollViewer}}">
                             <Grid.RowDefinitions>
                                 <RowDefinition Height="Auto"/>
                                 <RowDefinition Height="Auto"/>
-                                <RowDefinition Height="Auto"/>
+                                <RowDefinition Height="*"/>
                             </Grid.RowDefinitions>
 
                             <TextBlock Grid.Row="0"
@@ -394,7 +400,7 @@
                             <!-- Per-axis result cards combined with their detailed charts -->
                             <local:DataAnalysis Grid.Row="2"
                                                 x:Name="ucDataAnalysis"
-                                                Height="1400"/>
+                                                MinHeight="600"/>
 
                         </Grid>
                     </ScrollViewer>

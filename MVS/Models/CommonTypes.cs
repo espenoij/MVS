@@ -156,14 +156,17 @@ public enum ValueType
 
     Dev_Pitch,
     Dev_PitchMean,
+    Dev_PitchMeanMax,
     Dev_PitchMax,
 
     Dev_Roll,
     Dev_RollMean,
+    Dev_RollMeanMax,
     Dev_RollMax,
 
     Dev_Heave,
     Dev_HeaveMean,
+    Dev_HeaveMeanMax,
     Dev_HeaveMax,
 
     // Motion Limits

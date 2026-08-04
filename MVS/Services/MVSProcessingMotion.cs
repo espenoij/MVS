@@ -34,6 +34,7 @@ namespace MVS
 
         private HMSData devPitchData = new HMSData();
         private HMSData devPitchMeanData = new HMSData();
+        private HMSData devPitchMeanMaxData = new HMSData();
         private HMSData devPitchMaxData = new HMSData();
 
         // Roll
@@ -53,6 +54,7 @@ namespace MVS
 
         private HMSData devRollData = new HMSData();
         private HMSData devRollMeanData = new HMSData();
+        private HMSData devRollMeanMaxData = new HMSData();
         private HMSData devRollMaxData = new HMSData();
 
         // Heave
@@ -72,6 +74,7 @@ namespace MVS
 
         private HMSData devHeaveData = new HMSData();
         private HMSData devHeaveMeanData = new HMSData();
+        private HMSData devHeaveMeanMaxData = new HMSData();
         private HMSData devHeaveMaxData = new HMSData();
 
         // Admin Settings
@@ -136,14 +139,17 @@ namespace MVS
             // Deviation
             hmsOutputDataList.Add(devPitchData);
             hmsOutputDataList.Add(devPitchMeanData);
+            hmsOutputDataList.Add(devPitchMeanMaxData);
             hmsOutputDataList.Add(devPitchMaxData);
-            
+
             hmsOutputDataList.Add(devRollData);
             hmsOutputDataList.Add(devRollMeanData);
+            hmsOutputDataList.Add(devRollMeanMaxData);
             hmsOutputDataList.Add(devRollMaxData);
-            
+
             hmsOutputDataList.Add(devHeaveData);
             hmsOutputDataList.Add(devHeaveMeanData);
+            hmsOutputDataList.Add(devHeaveMeanMaxData);
             hmsOutputDataList.Add(devHeaveMaxData);
 
             // Legge på litt informasjon på de variablene som ikke får dette automatisk fra sensor input data
@@ -314,6 +320,11 @@ namespace MVS
             devPitchMeanData.InitProcessing(errorHandler, ErrorMessageCategory.AdminUser, adminSettingsVM);
             devPitchMeanData.AddProcessing(CalculationType.TimeAverage, Constants.Minutes20);
 
+            devPitchMeanMaxData.id = (int)ValueType.Dev_PitchMeanMax;
+            devPitchMeanMaxData.name = "Deviation: Pitch Mean Max";
+            devPitchMeanMaxData.InitProcessing(errorHandler, ErrorMessageCategory.AdminUser, adminSettingsVM);
+            devPitchMeanMaxData.AddProcessing(CalculationType.TimeMaxAbsolute, Constants.Minutes20);
+
             devPitchMaxData.id = (int)ValueType.Dev_PitchMax;
             devPitchMaxData.name = "Deviation: Pitch Max";
             devPitchMaxData.InitProcessing(errorHandler, ErrorMessageCategory.AdminUser, adminSettingsVM);
@@ -328,6 +339,11 @@ namespace MVS
             devRollMeanData.InitProcessing(errorHandler, ErrorMessageCategory.AdminUser, adminSettingsVM);
             devRollMeanData.AddProcessing(CalculationType.TimeAverage, Constants.Minutes20);
 
+            devRollMeanMaxData.id = (int)ValueType.Dev_RollMeanMax;
+            devRollMeanMaxData.name = "Deviation: Roll Mean Max";
+            devRollMeanMaxData.InitProcessing(errorHandler, ErrorMessageCategory.AdminUser, adminSettingsVM);
+            devRollMeanMaxData.AddProcessing(CalculationType.TimeMaxAbsolute, Constants.Minutes20);
+
             devRollMaxData.id = (int)ValueType.Dev_RollMax;
             devRollMaxData.name = "Deviation: Roll Max";
             devRollMaxData.InitProcessing(errorHandler, ErrorMessageCategory.AdminUser, adminSettingsVM);
@@ -341,6 +357,11 @@ namespace MVS
             devHeaveMeanData.name = "Deviation: Heave Mean";
             devHeaveMeanData.InitProcessing(errorHandler, ErrorMessageCategory.AdminUser, adminSettingsVM);
             devHeaveMeanData.AddProcessing(CalculationType.TimeAverage, Constants.Minutes20);
+
+            devHeaveMeanMaxData.id = (int)ValueType.Dev_HeaveMeanMax;
+            devHeaveMeanMaxData.name = "Deviation: Heave Mean Max";
+            devHeaveMeanMaxData.InitProcessing(errorHandler, ErrorMessageCategory.AdminUser, adminSettingsVM);
+            devHeaveMeanMaxData.AddProcessing(CalculationType.TimeMaxAbsolute, Constants.Minutes20);
 
             devHeaveMaxData.id = (int)ValueType.Dev_HeaveMax;
             devHeaveMaxData.name = "Deviation: Heave Max";
@@ -611,6 +632,7 @@ namespace MVS
             }
 
             devPitchMeanData.DoProcessing(devPitchData);
+            devPitchMeanMaxData.DoProcessing(devPitchMeanData);
             devPitchMaxData.DoProcessing(devPitchData);
 
             // Roll
@@ -628,6 +650,7 @@ namespace MVS
             }
 
             devRollMeanData.DoProcessing(devRollData);
+            devRollMeanMaxData.DoProcessing(devRollMeanData);
             devRollMaxData.DoProcessing(devRollData);
 
             // Heave
@@ -645,6 +668,7 @@ namespace MVS
             }
 
             devHeaveMeanData.DoProcessing(devHeaveData);
+            devHeaveMeanMaxData.DoProcessing(devHeaveMeanData);
             devHeaveMaxData.DoProcessing(devHeaveData);
         }
 
@@ -689,12 +713,15 @@ namespace MVS
             testHeaveMeanMaxData.ResetDataCalculations();
 
             devPitchMeanData.ResetDataCalculations();
+            devPitchMeanMaxData.ResetDataCalculations();
             devPitchMaxData.ResetDataCalculations();
 
-            devRollMaxData.ResetDataCalculations();
             devRollMeanData.ResetDataCalculations();
+            devRollMeanMaxData.ResetDataCalculations();
+            devRollMaxData.ResetDataCalculations();
 
             devHeaveMeanData.ResetDataCalculations();
+            devHeaveMeanMaxData.ResetDataCalculations();
             devHeaveMaxData.ResetDataCalculations();
         }
     }

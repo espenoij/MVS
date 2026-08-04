@@ -196,14 +196,17 @@ namespace MVS
             // Oppdatere deviation verdier
             devPitchData = mvsDataCollection.GetData(ValueType.Dev_Pitch);
             devPitchMeanData = mvsDataCollection.GetData(ValueType.Dev_PitchMean);
+            devPitchMeanMaxData = mvsDataCollection.GetData(ValueType.Dev_PitchMeanMax);
             devPitchMaxData = mvsDataCollection.GetData(ValueType.Dev_PitchMax);
 
             devRollData = mvsDataCollection.GetData(ValueType.Dev_Roll);
             devRollMeanData = mvsDataCollection.GetData(ValueType.Dev_RollMean);
+            devRollMeanMaxData = mvsDataCollection.GetData(ValueType.Dev_RollMeanMax);
             devRollMaxData = mvsDataCollection.GetData(ValueType.Dev_RollMax);
 
             devHeaveData = mvsDataCollection.GetData(ValueType.Dev_Heave);
             devHeaveMeanData = mvsDataCollection.GetData(ValueType.Dev_HeaveMean);
+            devHeaveMeanMaxData = mvsDataCollection.GetData(ValueType.Dev_HeaveMeanMax);
             devHeaveMaxData = mvsDataCollection.GetData(ValueType.Dev_HeaveMax);
         }
 
@@ -440,8 +443,11 @@ namespace MVS
                 testHeaveMaxData = mvsOutputData.GetData(ValueType.Test_HeaveMax);
 
                 devPitchMaxData = mvsOutputData.GetData(ValueType.Dev_PitchMax);
+                devPitchMeanMaxData = mvsOutputData.GetData(ValueType.Dev_PitchMeanMax);
                 devRollMaxData = mvsOutputData.GetData(ValueType.Dev_RollMax);
+                devRollMeanMaxData = mvsOutputData.GetData(ValueType.Dev_RollMeanMax);
                 devHeaveMaxData = mvsOutputData.GetData(ValueType.Dev_HeaveMax);
+                devHeaveMeanMaxData = mvsOutputData.GetData(ValueType.Dev_HeaveMeanMax);
 
                 // Hente mean verdier
                 refPitchMeanData = mvsOutputData.GetData(ValueType.Ref_PitchMean);
@@ -669,28 +675,31 @@ namespace MVS
             testPitchMeanData = noData;
 
             devPitchMaxData = noData;
+            devPitchMeanMaxData = noData;
             devPitchMeanData = noData;
 
             // Roll
             refRollMaxLeftData = noData;
             refRollMaxRightData = noData;
             refRollMeanData = noData;
-            
+
             testRollMaxLeftData = noData;
             testRollMaxRightData = noData;
             testRollMeanData = noData;
 
             devRollMaxData = noData;
+            devRollMeanMaxData = noData;
             devRollMeanData = noData;
 
             // Heave
             refHeaveMaxData = noData;
             refHeaveMeanData = noData;
-            
+
             testHeaveMaxData = noData;
             testHeaveMeanData = noData;
 
             devHeaveMaxData = noData;
+            devHeaveMeanMaxData = noData;
             devHeaveMeanData = noData;
 
             // Slette gamle data i buffer lister
@@ -828,6 +837,7 @@ namespace MVS
             testPitchMeanMaxData = noData;
 
             devPitchMaxData = noData;
+            devPitchMeanMaxData = noData;
 
             refPitchBuffer.Clear();
             refPitchMeanBuffer.Clear();
@@ -1233,9 +1243,26 @@ namespace MVS
                 {
                     _devPitchMaxData.Set(value);
 
+                    OnPropertyChanged(nameof(devPitchMaxString));
+                }
+            }
+        }
+
+        private HMSData _devPitchMeanMaxData { get; set; } = new HMSData();
+        public HMSData devPitchMeanMaxData
+        {
+            get
+            {
+                return _devPitchMeanMaxData;
+            }
+            set
+            {
+                if (value != null)
+                {
+                    _devPitchMeanMaxData.Set(value);
+
                     OnPropertyChanged(nameof(devPitchChartAxisMax));
                     OnPropertyChanged(nameof(devPitchChartAxisMin));
-                    OnPropertyChanged(nameof(devPitchMaxString));
                 }
             }
         }
@@ -1323,6 +1350,9 @@ namespace MVS
             testRollMaxRightData = noData;
             testRollMeanData = noData;
             testRollMeanMaxData = noData;
+
+            devRollMaxData = noData;
+            devRollMeanMaxData = noData;
 
             refRollBuffer.Clear();
             refRollMeanBuffer.Clear();
@@ -1729,9 +1759,26 @@ namespace MVS
                 {
                     _devRollMaxData.Set(value);
 
+                    OnPropertyChanged(nameof(devRollMaxString));
+                }
+            }
+        }
+
+        private HMSData _devRollMeanMaxData { get; set; } = new HMSData();
+        public HMSData devRollMeanMaxData
+        {
+            get
+            {
+                return _devRollMeanMaxData;
+            }
+            set
+            {
+                if (value != null)
+                {
+                    _devRollMeanMaxData.Set(value);
+
                     OnPropertyChanged(nameof(devRollChartAxisMax));
                     OnPropertyChanged(nameof(devRollChartAxisMin));
-                    OnPropertyChanged(nameof(devRollMaxString));
                 }
             }
         }
@@ -1818,6 +1865,9 @@ namespace MVS
             testHeaveMaxData = noData;
             testHeaveMeanData = noData;
             testHeaveMeanMaxData = noData;
+
+            devHeaveMaxData = noData;
+            devHeaveMeanMaxData = noData;
 
             refHeaveBuffer.Clear();
             refHeaveMeanBuffer.Clear();
@@ -2096,9 +2146,26 @@ namespace MVS
                 {
                     _devHeaveMaxData.Set(value);
 
+                    OnPropertyChanged(nameof(devHeaveMaxString));
+                }
+            }
+        }
+
+        private HMSData _devHeaveMeanMaxData { get; set; } = new HMSData();
+        public HMSData devHeaveMeanMaxData
+        {
+            get
+            {
+                return _devHeaveMeanMaxData;
+            }
+            set
+            {
+                if (value != null)
+                {
+                    _devHeaveMeanMaxData.Set(value);
+
                     OnPropertyChanged(nameof(devHeaveChartAxisMax));
                     OnPropertyChanged(nameof(devHeaveChartAxisMin));
-                    OnPropertyChanged(nameof(devHeaveMaxString));
                 }
             }
         }
@@ -2250,7 +2317,7 @@ namespace MVS
         {
             get
             {
-                return ChartAxisMax(_devPitchMaxData.data, Constants.InputAxisMargin, Constants.InputAxisDefault);
+                return ChartAxisMax(_devPitchMeanMaxData.data, Constants.MeanAxisMargin, Constants.MeanAxisDefault);
             }
         }
 
@@ -2300,7 +2367,7 @@ namespace MVS
         {
             get
             {
-                return ChartAxisMax(_devRollMaxData.data, Constants.InputAxisMargin, Constants.InputAxisDefault);
+                return ChartAxisMax(_devRollMeanMaxData.data, Constants.MeanAxisMargin, Constants.MeanAxisDefault);
             }
         }
 
@@ -2350,7 +2417,7 @@ namespace MVS
         {
             get
             {
-                return ChartAxisMax(_devHeaveMaxData.data, Constants.InputAxisMargin, Constants.InputAxisDefault);
+                return ChartAxisMax(_devHeaveMeanMaxData.data, Constants.MeanAxisMargin, Constants.MeanAxisDefault);
             }
         }
 
@@ -2371,39 +2438,40 @@ namespace MVS
 
         private double ChartAxisMax(HMSData refData, HMSData testData, double margin, double defaultValue, int decimals)
         {
+            double absMax = double.NaN;
             if (!double.IsNaN(refData.data) && !double.IsNaN(testData.data))
-            {
-                if (Math.Abs(refData.data) > Math.Abs(testData.data))
-                    return (double)(Math.Round(((Math.Round(Math.Abs(refData.data) * (1 / margin), MidpointRounding.AwayFromZero) / (1 / margin)) + margin), decimals, MidpointRounding.AwayFromZero));
-                else
-                    return (double)(Math.Round(((Math.Round(Math.Abs(testData.data) * (1 / margin), MidpointRounding.AwayFromZero) / (1 / margin)) + margin), decimals, MidpointRounding.AwayFromZero));
-            }
-            else
-            if (!double.IsNaN(refData.data))
-            {
-                return (double)(Math.Round(((Math.Round(Math.Abs(refData.data) * (1 / margin), MidpointRounding.AwayFromZero) / (1 / margin)) + margin), decimals, MidpointRounding.AwayFromZero));
-            }
-            else
-            if (!double.IsNaN(testData.data))
-            {
-                return (double)(Math.Round(((Math.Round(Math.Abs(testData.data) * (1 / margin), MidpointRounding.AwayFromZero) / (1 / margin)) + margin), decimals, MidpointRounding.AwayFromZero));
-            }
-            else
-            {
-                return defaultValue;
-            }
+                absMax = Math.Max(Math.Abs(refData.data), Math.Abs(testData.data));
+            else if (!double.IsNaN(refData.data))
+                absMax = Math.Abs(refData.data);
+            else if (!double.IsNaN(testData.data))
+                absMax = Math.Abs(testData.data);
+
+            return double.IsNaN(absMax) ? defaultValue : NiceAxisMax(absMax, defaultValue);
         }
 
         private double ChartAxisMax(double inputData, double margin, double defaultValue)
         {
-            if (!double.IsNaN(inputData))
-            {
-                return (double)((Math.Round(Math.Abs(inputData) * (1 / margin), MidpointRounding.AwayFromZero) / (1 / margin)) + margin);
-            }
-            else
-            {
+            return !double.IsNaN(inputData) ? NiceAxisMax(Math.Abs(inputData), defaultValue) : defaultValue;
+        }
+
+        // Computes a rounded axis maximum that scales adaptively with the data magnitude.
+        // Picks a step size based on the order of magnitude, rounds the value up to the
+        // next whole step, then adds one further step as padding so data never touches the axis edge.
+        private double NiceAxisMax(double absMax, double defaultValue)
+        {
+            if (absMax <= 0)
                 return defaultValue;
-            }
+
+            double magnitude = Math.Pow(10, Math.Floor(Math.Log10(absMax)));
+            double normalized = absMax / magnitude;
+
+            double step;
+            if (normalized <= 1.0)      step = 0.2 * magnitude;
+            else if (normalized <= 2.0) step = 0.5 * magnitude;
+            else if (normalized <= 5.0) step = 1.0 * magnitude;
+            else                        step = 2.0 * magnitude;
+
+            return Math.Ceiling(absMax / step) * step + step;
         }
 
         public void ResetDataCalculations()

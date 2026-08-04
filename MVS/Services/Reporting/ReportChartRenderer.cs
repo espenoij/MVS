@@ -21,14 +21,17 @@ namespace MVS.Services.Reporting
     {
         private static readonly CultureInfo Ci = CultureInfo.CurrentCulture;
 
-        // Brand-neutral palette consistent with the on-screen review cards.
+        // Palette mirrors the on-screen SesColors.xaml graph line tokens exactly.
+        // Reference MRU : steel blue  #1A6EBF — calm, authoritative baseline
+        // Vessel MRU     : burnt orange #E07B10 — warm, distinct, no error connotation
+        // Mean/Deviation : violet       #8040B0 — derived/computed third dimension
         private static readonly Color ColorBackground = Color.White;
         private static readonly Color ColorAxis = Color.FromArgb(120, 120, 120);
         private static readonly Color ColorGrid = Color.FromArgb(230, 230, 230);
         private static readonly Color ColorText = Color.FromArgb(40, 40, 40);
-        private static readonly Color ColorReference = Color.FromArgb(0, 122, 204);   // blue
-        private static readonly Color ColorVessel = Color.FromArgb(0, 153, 102);      // green
-        private static readonly Color ColorDeviation = Color.FromArgb(216, 120, 0);   // amber
+        private static readonly Color ColorReference = Color.FromArgb(0x1A, 0x6E, 0xBF); // steel blue
+        private static readonly Color ColorVessel = Color.FromArgb(0xE0, 0x7B, 0x10);    // burnt orange
+        private static readonly Color ColorDeviation = Color.FromArgb(0x80, 0x40, 0xB0); // violet
 
         /// <summary>
         /// Horizontal bar chart of the calculated mean deviation per axis (the
