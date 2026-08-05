@@ -722,12 +722,12 @@
                                            Click="ResetCamera_Click"
                                            ToolTip="Reset camera to default top-down view"
                                            Margin="0,0,4,0">
-                            Top View
+                            Top
                         </telerik:RadButton>
                         <telerik:RadButton Width="110" Opacity="0.8"
                                            Click="PerspectiveView_Click"
                                            ToolTip="View helideck from an angled 3D perspective">
-                            Perspective View
+                            Perspective
                         </telerik:RadButton>
                     </StackPanel>
 
