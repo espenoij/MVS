@@ -211,6 +211,25 @@ namespace MVS
             PointCountUpdated?.Invoke(0);
         }
 
+        /// <summary>
+        /// Replaces the accumulated point-cloud buffer with the supplied points.
+        /// Used to restore a previously persisted scan when a project is re-opened.
+        /// A null or empty list clears the buffer.
+        /// </summary>
+        public void LoadBuffer(List<(float x, float y, float z)> points)
+        {
+            int count;
+            lock (_bufferLock)
+            {
+                _buffer.Clear();
+                if (points != null && points.Count > 0)
+                    _buffer.AddRange(points);
+                _accumulatedPoints = _buffer.Count;
+                count = _accumulatedPoints;
+            }
+            PointCountUpdated?.Invoke(count);
+        }
+
         public List<(float x, float y, float z)> GetPointCloudSnapshot()
         {
             lock (_bufferLock)

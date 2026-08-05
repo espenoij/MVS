@@ -360,6 +360,9 @@ namespace MVS
                 {
                     if ((bool)ea.DialogResult == true)
                     {
+                        // Slette lagret LiDAR scan for prosjektet
+                        _livoxVM?.DeleteScanForProject(mainWindowVM.SelectedProject.Id);
+
                         // Slette fra database
                         mvsDatabase.Remove(mainWindowVM.SelectedProject);
 
@@ -413,6 +416,10 @@ namespace MVS
             // the wizard step) so nothing from the previously selected project carries
             // over to the newly created or selected one.
             ResetDownstreamData();
+
+            // Restore any LiDAR scan (point cloud + fit + edge) previously captured
+            // for the selected project so Step 2 shows the stored data.
+            _livoxVM?.SetCurrentProject(mainWindowVM.SelectedProject?.Id ?? 0);
 
             LoadSelectedItemsDetails();
             UpdateUIStates(false);

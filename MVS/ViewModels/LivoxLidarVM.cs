@@ -24,6 +24,10 @@ namespace MVS
         // Last deck edge result
         private LivoxLidarDeckEdgeResult _lastEdge;
 
+        // Id of the project whose scan data is currently loaded (0 = none).
+        // Used to persist and restore the point cloud / fit / edge per project.
+        private int _currentProjectId;
+
         private bool _simulationInProgress;
 
         public LivoxLidarVM(LivoxLidarSubsystem subsystem, LivoxLidarCorrection correction,
@@ -674,6 +678,9 @@ namespace MVS
 
             PersistCorrection();
             AppendStatus("Correction applied to Reference MRU.");
+
+            // Re-save so the persisted scan reflects the applied correction state.
+            SaveCurrentScan();
         }
 
         private void ClearCorrection()
@@ -692,6 +699,119 @@ namespace MVS
         {
             _correction.Clear();
             PersistCorrection();
+        }
+
+        // ── Per-project scan persistence ─────────────────────────────────────
+
+        /// <summary>
+        /// Sets the project whose LiDAR scan data should be active and restores
+        /// any previously persisted scan (point cloud + fit + edge) for it. Call
+        /// this whenever the selected project changes so Step 2 reflects the data
+        /// captured for that project. Passing 0 clears the scan state.
+        /// </summary>
+        public void SetCurrentProject(int projectId)
+        {
+            _currentProjectId = projectId;
+
+            List<(float x, float y, float z)> points = null;
+            LivoxLidarPlaneFitResult fit = null;
+            LivoxLidarDeckEdgeResult edge = null;
+
+            try
+            {
+                LidarScanStore.Load(projectId, out points, out fit, out edge);
+            }
+            catch (Exception ex)
+            {
+                AppendStatus($"Failed to load stored LiDAR scan: {ex.Message}");
+                points = null;
+                fit = null;
+                edge = null;
+            }
+
+            RestoreScan(points, fit, edge);
+        }
+
+        /// <summary>
+        /// Restores the given scan data into the subsystem and view model and
+        /// refreshes the 3D scene and stat labels. Runs on the UI dispatcher.
+        /// </summary>
+        private void RestoreScan(List<(float x, float y, float z)> points,
+                                 LivoxLidarPlaneFitResult fit,
+                                 LivoxLidarDeckEdgeResult edge)
+        {
+            void Apply()
+            {
+                _subsystem.LoadBuffer(points);
+                AccumulatedPoints = points != null ? points.Count : 0;
+
+                _lastFit = fit != null && fit.IsValid ? fit : null;
+                _lastEdge = edge != null && edge.IsValid ? edge : null;
+
+                RefreshFitDisplay();
+                RefreshEdgeDisplay();
+
+                var snapshot = _subsystem.GetPointCloudSnapshot();
+                if (snapshot != null && snapshot.Count > 0)
+                    PointCloudUpdated?.Invoke(snapshot);
+                else
+                    ScanCleared?.Invoke();
+
+                if (_lastFit != null)
+                    FitResultReady?.Invoke(_lastFit);
+                if (_lastEdge != null)
+                    DeckEdgeResultReady?.Invoke(_lastEdge);
+
+                RefreshCommandStates();
+
+                // Re-run analysis on the restored point cloud when auto-analyse is
+                // enabled. Analyse() itself auto-applies the correction when the
+                // AutoApplyCorrectionAfterAnalysis option is set.
+                if (_autoAnalyseAfterScan && CanFit)
+                {
+                    AppendStatus("Auto-analysis of restored scan starting...");
+                    Application.Current?.Dispatcher.BeginInvoke(DispatcherPriority.Background, new Action(() => Analyse()));
+                }
+            }
+
+            var dispatcher = Application.Current?.Dispatcher;
+            if (dispatcher != null && !dispatcher.CheckAccess())
+                dispatcher.BeginInvoke(DispatcherPriority.Normal, new Action(Apply));
+            else
+                Apply();
+        }
+
+        /// <summary>
+        /// Persists the current scan (point cloud + fit + edge) for the active
+        /// project. No-op when no project is active or no valid fit exists.
+        /// </summary>
+        public void SaveCurrentScan()
+        {
+            if (_currentProjectId <= 0 || _lastFit == null || !_lastFit.IsValid)
+                return;
+
+            try
+            {
+                var points = _subsystem.GetPointCloudSnapshot();
+                LidarScanStore.Save(_currentProjectId, points, _lastFit, _lastEdge);
+            }
+            catch (Exception ex)
+            {
+                AppendStatus($"Failed to save LiDAR scan: {ex.Message}");
+            }
+        }
+
+        /// <summary>Removes any persisted scan file for the given project.</summary>
+        public void DeleteScanForProject(int projectId)
+        {
+            try
+            {
+                LidarScanStore.Delete(projectId);
+            }
+            catch (Exception ex)
+            {
+                AppendStatus($"Failed to delete stored LiDAR scan: {ex.Message}");
+            }
         }
 
         private async void Analyse()
@@ -740,6 +860,11 @@ namespace MVS
                 RefreshFitDisplay();
                 RefreshEdgeDisplay();
                 RefreshCommandStates();
+
+                // Persist the completed scan so it can be restored when the
+                // project is re-opened (Step 2 would otherwise show no data).
+                if (_lastFit != null && _lastFit.IsValid)
+                    SaveCurrentScan();
             }
         }
 
