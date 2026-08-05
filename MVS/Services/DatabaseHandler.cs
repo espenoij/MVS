@@ -267,7 +267,7 @@ namespace MVS
             }
         }
 
-        public void Insert(Project dataSet, MVSDataCollection mvsDataCollection)
+        public void Insert(Project dataSet, MVSDataCollection mvsDataCollection, DateTime sampleTimestamp)
         {
             try
             {
@@ -319,7 +319,7 @@ namespace MVS
                         i = 1;
 
                         // Først legge inn timestamp
-                        cmd.Parameters.AddWithValue(string.Format("@{0}", i++), DateTime.UtcNow);
+                        cmd.Parameters.AddWithValue(string.Format("@{0}", i++), sampleTimestamp);
 
                         foreach (var hmsData in mvsDataCollection.GetDataList().ToList())
                         {

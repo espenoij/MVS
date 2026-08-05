@@ -257,8 +257,20 @@ namespace MVS
         {
             double progressCount = 0;
 
+            // Timestamp of the first record, used to suppress the rolling-mean
+            // warm-up period from the charts (the mean window fills from empty,
+            // producing a misleading convergence ramp otherwise).
+            DateTime? firstTimestamp = null;
+
             foreach (ProjectData sessionData in projectsDataList.ToList())
             {
+                if (firstTimestamp == null)
+                    firstTimestamp = sessionData.timestamp;
+
+                // Mean values are only meaningful once the rolling window is fully
+                // populated. Skip plotting them during the warm-up period.
+                bool meanWindowFull = (sessionData.timestamp - firstTimestamp.Value).TotalSeconds >= Constants.Minutes3;
+
                 // Overføre database data til MVS input
                 mvsInputData.TransferData(sessionData);
 
@@ -276,7 +288,7 @@ namespace MVS
                     });
                 }
 
-                if (mvsOutputData.GetData(ValueType.Ref_PitchMean)?.status == DataStatus.OK)
+                if (meanWindowFull && mvsOutputData.GetData(ValueType.Ref_PitchMean)?.status == DataStatus.OK)
                 {
                     refPitchMeanBuffer.Add(new HMSData()
                     {
@@ -296,7 +308,7 @@ namespace MVS
                     });
                 }
 
-                if (mvsOutputData.GetData(ValueType.Test_PitchMean)?.status == DataStatus.OK)
+                if (meanWindowFull && mvsOutputData.GetData(ValueType.Test_PitchMean)?.status == DataStatus.OK)
                 {
                     testPitchMeanBuffer.Add(new HMSData()
                     {
@@ -306,7 +318,7 @@ namespace MVS
                     });
                 }
 
-                if (mvsOutputData.GetData(ValueType.Dev_PitchMean)?.status == DataStatus.OK)
+                if (meanWindowFull && mvsOutputData.GetData(ValueType.Dev_PitchMean)?.status == DataStatus.OK)
                 {
                     devPitchMeanBuffer.Add(new HMSData()
                     {
@@ -327,7 +339,7 @@ namespace MVS
                     });
                 }
 
-                if (mvsOutputData.GetData(ValueType.Ref_RollMean)?.status == DataStatus.OK)
+                if (meanWindowFull && mvsOutputData.GetData(ValueType.Ref_RollMean)?.status == DataStatus.OK)
                 {
                     refRollMeanBuffer.Add(new HMSData()
                     {
@@ -347,7 +359,7 @@ namespace MVS
                     });
                 }
 
-                if (mvsOutputData.GetData(ValueType.Test_RollMean)?.status == DataStatus.OK)
+                if (meanWindowFull && mvsOutputData.GetData(ValueType.Test_RollMean)?.status == DataStatus.OK)
                 {
                     testRollMeanBuffer.Add(new HMSData()
                     {
@@ -357,7 +369,7 @@ namespace MVS
                     });
                 }
 
-                if (mvsOutputData.GetData(ValueType.Dev_RollMean)?.status == DataStatus.OK)
+                if (meanWindowFull && mvsOutputData.GetData(ValueType.Dev_RollMean)?.status == DataStatus.OK)
                 {
                     devRollMeanBuffer.Add(new HMSData()
                     {
@@ -378,7 +390,7 @@ namespace MVS
                     });
                 }
 
-                if (mvsOutputData.GetData(ValueType.Ref_HeaveMean)?.status == DataStatus.OK)
+                if (meanWindowFull && mvsOutputData.GetData(ValueType.Ref_HeaveMean)?.status == DataStatus.OK)
                 {
                     refHeaveMeanBuffer.Add(new HMSData()
                     {
@@ -398,7 +410,7 @@ namespace MVS
                     });
                 }
 
-                if (mvsOutputData.GetData(ValueType.Test_HeaveMean)?.status == DataStatus.OK)
+                if (meanWindowFull && mvsOutputData.GetData(ValueType.Test_HeaveMean)?.status == DataStatus.OK)
                 {
                     testHeaveMeanBuffer.Add(new HMSData()
                     {
@@ -408,7 +420,7 @@ namespace MVS
                     });
                 }
 
-                if (mvsOutputData.GetData(ValueType.Dev_HeaveMean)?.status == DataStatus.OK)
+                if (meanWindowFull && mvsOutputData.GetData(ValueType.Dev_HeaveMean)?.status == DataStatus.OK)
                 {
                     devHeaveMeanBuffer.Add(new HMSData()
                     {

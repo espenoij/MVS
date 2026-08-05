@@ -84,11 +84,11 @@ namespace MVS
             }
         }
 
-        public void Insert(Project dataSet, MVSDataCollection hmsDataCollection)
+        public void Insert(Project dataSet, MVSDataCollection hmsDataCollection, DateTime sampleTimestamp)
         {
             try
             {
-                database.Insert(dataSet, hmsDataCollection);
+                database.Insert(dataSet, hmsDataCollection, sampleTimestamp);
 
                 errorHandler.ResetDatabaseError(ErrorHandler.DatabaseErrorType.Insert3);
             }

@@ -1,4 +1,4 @@
-using MVS.Services;
+﻿using MVS.Services;
 using System;
 using System.ComponentModel;
 using System.IO;
@@ -43,6 +43,7 @@ namespace MVS
         private MVSDataCollection mvsOutputData;
         private MVSDatabase mvsDatabase;
         private DispatcherTimer mvsProcessingTimer = new DispatcherTimer();
+        private int mvsProcessingRunning = 0; // re-entrancy guard (0 = idle, 1 = running)
 
         // View Models
         private AdminSettingsVM adminSettingsVM = new AdminSettingsVM();
@@ -383,14 +384,24 @@ namespace MVS
 
             void runMVSProcessing(object sender, EventArgs e)
             {
+                // Skip tick if previous processing is still running
+                if (Interlocked.CompareExchange(ref mvsProcessingRunning, 1, 0) != 0)
+                    return;
+
+                // Capture sample timestamp here, before the thread starts, so all
+                // data written this tick is stamped at actual sample time.
+                DateTime sampleTimestamp = DateTime.UtcNow;
+
                 try
                 {
-                    Thread thread = new Thread(() => UpdateHMS_Thread());
+                    Thread thread = new Thread(() => UpdateHMS_Thread(sampleTimestamp));
                     thread.IsBackground = true;
                     thread.Start();
 
-                    void UpdateHMS_Thread()
+                    void UpdateHMS_Thread(DateTime timestamp)
                     {
+                        try
+                        {
                         // MVS Update
                         /////////////////////////////////////////////////////////////////////////////////////////////////////
 
@@ -405,8 +416,8 @@ namespace MVS
 
                         // MVS: Lagre data i databasen
                         /////////////////////////////////////////////////////////////////////////////////////////////////////
-                        if (databaseTablesCreated)
-                            mvsDatabase.Insert(mainWindowVM.SelectedProject, mvsOutputData);
+                        if (databaseTablesCreated && serverStarted)
+                            mvsDatabase.Insert(mainWindowVM.SelectedProject, mvsOutputData, timestamp);
 
                         // Utfører første en sjekk på om database tabellene er opprettet.
                         // Grunnen til at dette gjøres her, så sent etter init, er at output listen (med dbColumnNames) fylles av 
@@ -421,10 +432,25 @@ namespace MVS
                             // Kjør vedlikehold en gang ved oppstart
                             DoDatabaseMaintenance();
                         }
+                        }
+                        catch (Exception ex)
+                        {
+                            errorHandler.Insert(
+                                new ErrorMessage(
+                                    DateTime.UtcNow,
+                                    ErrorMessageType.Database,
+                                    ErrorMessageCategory.Admin,
+                                    string.Format("Thread Error (UpdateHMS_Thread)\n\nSystem Message:\n{0}", ex.Message)));
+                        }
+                        finally
+                        {
+                            System.Threading.Interlocked.Exchange(ref mvsProcessingRunning, 0);
+                        }
                     }
                 }
                 catch (Exception ex)
                 {
+                    System.Threading.Interlocked.Exchange(ref mvsProcessingRunning, 0);
                     errorHandler.Insert(
                         new ErrorMessage(
                             DateTime.UtcNow,
@@ -530,6 +556,10 @@ namespace MVS
 
         private void Stop()
         {
+            // Stop the processing timer first so no new tick can fire
+            // after sensors have been shut down.
+            mvsProcessingTimer.Stop();
+
             // Stoppe chart update timer før dataViewWorker starter for å unngå
             // race condition mellom ChartDataUpdate og AnalyseProjectData på buffer-kolleksjonene.
             projectVM.StopRecording();
@@ -537,17 +567,14 @@ namespace MVS
             // Sette operasjonsmodus
             SetOperationsMode(OperationsMode.Stop);
 
-            sensorDataRetrieval.SensorDataRetrieval_Stop();
+            // Server startet
+            serverStarted = false;
 
-            // MVS prosessering updater
-            mvsProcessingTimer.Stop();
+            sensorDataRetrieval.SensorDataRetrieval_Stop();
 
             ucSensorSetupPage.ServerStartedCheck(false);
             ucMVSInputSetup.Stop();
             ucMVSOutput.Stop();
-
-            // Server startet
-            serverStarted = false;
 
             // Resette sjekk på om database tabeller er opprettet
             databaseTablesCreated = false;
