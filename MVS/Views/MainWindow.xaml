@@ -221,21 +221,6 @@
 
                             </StackPanel>
 
-                            <!--Test-->
-                            <StackPanel
-                                Grid.Row="0"
-                                Grid.Column="2"
-                                Orientation="Horizontal"
-                                HorizontalAlignment="Right"
-                                Margin="8">
-
-                                <Button
-                                    IsEnabled="{Binding StartButtonEnabled}"
-                                    Click="btnTest_Click"
-                                    Width="140">Test Run</Button>
-
-                            </StackPanel>
-
                         </Grid>
 
                         <telerik:RadTabControl
@@ -578,21 +563,6 @@
                                     IsEnabled="{Binding StartButtonEnabled}"
                                     Width="140"
                                     VerticalAlignment="Top">Start Recording</telerik:RadButton>
-
-                            </StackPanel>
-
-                            <!--Test-->
-                            <StackPanel
-                                Grid.Row="0"
-                                Grid.Column="2"
-                                Orientation="Horizontal"
-                                HorizontalAlignment="Right"
-                                Margin="8">
-
-                                <Button
-                                    IsEnabled="{Binding StartButtonEnabled}"
-                                    Click="btnTest_Click"
-                                    Width="140">Test Run</Button>
 
                             </StackPanel>
 

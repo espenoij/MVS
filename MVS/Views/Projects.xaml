@@ -338,12 +338,6 @@
                                                            Content="Stop"
                                                            MinWidth="100"
                                                            Margin="0,0,10,0"/>
-                                        <telerik:RadButton x:Name="btnTestRun"
-                                                           Click="btnTestRun_Click"
-                                                           IsEnabled="{Binding DataContext.StartButtonEnabled, ElementName=mainWindowVMBridge}"
-                                                           Content="Test Run"
-                                                           MinWidth="100"
-                                                           Margin="0,0,10,0"/>
                                         <telerik:RadButton x:Name="btnClearRecording"
                                                            Click="btnClearRecording_Click"
                                                            Content="Clear Recording"

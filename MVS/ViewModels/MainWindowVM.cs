@@ -150,18 +150,13 @@ namespace MVS
             {
                 switch (OperationsMode)
                 {
-                    case OperationsMode.Test:
                     case OperationsMode.Recording:
-
-                        string modeText = string.Empty;
-                        if (OperationsMode == OperationsMode.Test)
-                            modeText = "(Test Run)";
 
                         if (_startTime != System.Data.SqlTypes.SqlDateTime.MinValue.Value)
                         {
                             TimeSpan elapsed = DateTime.UtcNow - _startTime;
                             if (elapsed.TotalSeconds < 0) elapsed = TimeSpan.Zero;
-                            return string.Format("{0} {1}", elapsed.ToString(@"hh\:mm\:ss"), modeText).TrimEnd();
+                            return elapsed.ToString(@"hh\:mm\:ss");
                         }
                         else
                         {

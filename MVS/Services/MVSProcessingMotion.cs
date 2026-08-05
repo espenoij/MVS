@@ -399,7 +399,6 @@ namespace MVS
             // Reference MRU
             //////////////////////////////////////////////////////////////////
             if ((mainWindowVM.OperationsMode == OperationsMode.Recording || 
-                 mainWindowVM.OperationsMode == OperationsMode.Test ||
                  mainWindowVM.OperationsMode == OperationsMode.ViewData) &&
                 (mainWindowVM.SelectedProject?.InputMRUs == InputMRUType.ReferenceMRU ||
                  mainWindowVM.SelectedProject?.InputMRUs == InputMRUType.ReferenceMRU_TestMRU) &&
@@ -508,7 +507,6 @@ namespace MVS
             // Tested MRU
             //////////////////////////////////////////////////////////////////
             if ((mainWindowVM.OperationsMode == OperationsMode.Recording ||
-                 mainWindowVM.OperationsMode == OperationsMode.Test ||
                  mainWindowVM.OperationsMode == OperationsMode.ViewData) &&
                 (mainWindowVM.SelectedProject?.InputMRUs == InputMRUType.TestMRU ||
                  mainWindowVM.SelectedProject?.InputMRUs == InputMRUType.ReferenceMRU_TestMRU) &&

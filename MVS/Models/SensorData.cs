@@ -556,8 +556,7 @@ namespace MVS
         // Funksjon som avgjør om sensoren skal brukes ut i fra MRU type og valgt MRU session input.
         public bool UseThisSensor(MainWindowVM mainWindowVM)
         {
-            if (mainWindowVM.OperationsMode == OperationsMode.Test ||
-                (mainWindowVM.SelectedProject?.InputMRUs == InputMRUType.ReferenceMRU && mruType == MRUType.ReferenceMRU) ||
+            if ((mainWindowVM.SelectedProject?.InputMRUs == InputMRUType.ReferenceMRU && mruType == MRUType.ReferenceMRU) ||
                 (mainWindowVM.SelectedProject?.InputMRUs == InputMRUType.ReferenceMRU_TestMRU && mruType == MRUType.ReferenceMRU) ||
                 (mainWindowVM.SelectedProject?.InputMRUs == InputMRUType.TestMRU && mruType == MRUType.TestMRU) ||
                 (mainWindowVM.SelectedProject?.InputMRUs == InputMRUType.ReferenceMRU_TestMRU && mruType == MRUType.TestMRU))

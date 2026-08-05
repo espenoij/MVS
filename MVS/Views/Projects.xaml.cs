@@ -44,8 +44,6 @@ namespace MVS
         private MainWindow.UpdateUIButtonsCallback updateUIButtonsCallback;
         private Action startRecordingCallback;
         private Action stopRecordingCallback;
-        private Action testRunCallback;
-
         // Progress dialog
         DialogDataAnalysisProgress progressDlg = new DialogDataAnalysisProgress();
 
@@ -79,7 +77,7 @@ namespace MVS
             _recordingBannerTimer.Tick += (s, e) => durationBanner.UpdateLive(_recordingStartTime);
         }
 
-        public void Init(MainWindowVM mainWindowVM, ProjectVM projectVM, Config config, MVSDatabase mvsDatabase, UpdateUIButtonsCallback updateUIButtonsCallback, Action startRecordingCallback, Action stopRecordingCallback, Action testRunCallback)
+        public void Init(MainWindowVM mainWindowVM, ProjectVM projectVM, Config config, MVSDatabase mvsDatabase, UpdateUIButtonsCallback updateUIButtonsCallback, Action startRecordingCallback, Action stopRecordingCallback)
         {
             // Database
             this.mvsDatabase = mvsDatabase;
@@ -94,9 +92,8 @@ namespace MVS
             this.updateUIButtonsCallback = updateUIButtonsCallback;
             this.startRecordingCallback = startRecordingCallback;
             this.stopRecordingCallback = stopRecordingCallback;
-            this.testRunCallback = testRunCallback;
 
-            // Wire the MainWindowVM bridge BEFORE setting DataContext so that
+            // Wire the MainWindowVM bridge
             // recording-button bindings (StartButtonEnabled / StopButtonEnabled)
             // resolve to MainWindowVM and never briefly inherit ProjectVM.
             mainWindowVMBridge.DataContext = mainWindowVM;
@@ -280,14 +277,11 @@ namespace MVS
             // Stop live banner updates.
             _recordingBannerTimer.Stop();
 
-            if (mode != OperationsMode.Test)
-            {
-                // Laste timestamps på data set
-                mvsDatabase.LoadTimestamps(mainWindowVM.SelectedProject);
+            // Laste timestamps på data set
+            mvsDatabase.LoadTimestamps(mainWindowVM.SelectedProject);
 
-                // Oppdatere databasen
-                mvsDatabase.Update(mainWindowVM.SelectedProject);
-            }
+            // Oppdatere databasen
+            mvsDatabase.Update(mainWindowVM.SelectedProject);
 
             UpdateUIStates(false);
 
@@ -312,8 +306,7 @@ namespace MVS
 
         private void ShowRecordingDialog()
         {
-            // Only a real recording session gets the popup. A Test run does not
-            // persist data and therefore is not treated as an active recording.
+            // Only a real recording session gets the popup.
             if (mainWindowVM?.OperationsMode != OperationsMode.Recording)
                 return;
 
@@ -390,11 +383,6 @@ namespace MVS
         private void btnStopRecording_Click(object sender, RoutedEventArgs e)
         {
             stopRecordingCallback?.Invoke();
-        }
-
-        private void btnTestRun_Click(object sender, RoutedEventArgs e)
-        {
-            testRunCallback?.Invoke();
         }
 
         private void btnClearRecording_Click(object sender, RoutedEventArgs e)

@@ -256,7 +256,6 @@ public enum RegulationStandard
 public enum OperationsMode
 {
     Recording,
-    Test,
     Stop,
     ViewData
 }

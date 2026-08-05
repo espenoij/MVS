@@ -133,7 +133,7 @@ namespace MVS
             projectVM.Init(mainWindowVM, mvsProcessing, mvsInputData, mvsOutputData);
 
             // Recordings page (also hosts the embedded Data Analysis view in wizard step 3)
-            ucProjects.Init(mainWindowVM, projectVM, config, mvsDatabase, updateUIButtonsCallback, StartRecording, Stop, StartTest);
+            ucProjects.Init(mainWindowVM, projectVM, config, mvsDatabase, updateUIButtonsCallback, StartRecording, Stop);
 
             // Sensor Input Setup
             ucSensorSetupPage.Init(config, errorHandler, adminSettingsVM);
@@ -276,8 +276,7 @@ namespace MVS
         {
             // Stopper verfication session
             if ((mainWindowVM.OperationsMode == OperationsMode.Recording ||
-                 mainWindowVM.OperationsMode == OperationsMode.ViewData ||
-                 mainWindowVM.OperationsMode == OperationsMode.Test) &&
+                 mainWindowVM.OperationsMode == OperationsMode.ViewData) &&
                 mode == OperationsMode.Stop)
             {
                 ucProjects.Stop(mainWindowVM.OperationsMode);
@@ -292,7 +291,6 @@ namespace MVS
             switch (mainWindowVM.OperationsMode)
             {
                 case OperationsMode.Recording:
-                case OperationsMode.Test:
                     mainWindowVM.StartButtonEnabled = false;
                     mainWindowVM.StopButtonEnabled = true;
                     break;
@@ -414,7 +412,7 @@ namespace MVS
                         // Grunnen til at dette gjøres her, så sent etter init, er at output listen (med dbColumnNames) fylles av 
                         // inidividuelle sub-rutiner rundt omkring.
                         // Output listen er derfor ikke komplett før en update (hmsProcessing.Update ovenfor) er utført.
-                        if (!databaseTablesCreated && mainWindowVM.OperationsMode != OperationsMode.Test)
+                        if (!databaseTablesCreated)
                         {
                             mvsDatabase.CreateDataTables(mainWindowVM.SelectedProject, mvsOutputData);
 
@@ -440,11 +438,6 @@ namespace MVS
         private void btnStart_Click(object sender, RoutedEventArgs e)
         {
             StartRecording();
-        }
-
-        private void btnTest_Click(object sender, RoutedEventArgs e)
-        {
-            StartTest();
         }
 
         private void StartRecording()
@@ -533,41 +526,6 @@ namespace MVS
 
                 // Data Analysis is now embedded in the Projects wizard (Step 3 — Review).
             }
-        }
-
-        private void StartTest()
-        {
-            // Sette operasjonsmodus
-            SetOperationsMode(OperationsMode.Test);
-
-            // Resetter data listene i dataCalculations
-            mvsProcessing.ResetDataCalculations();
-
-            // Clear output data
-            mvsOutputData.ClearData();
-
-            // Laste sensor data setups fra fil
-            sensorDataRetrieval.LoadSensors(mainWindowVM);
-
-            // Starter data-innhenting 
-            sensorDataRetrieval.SensorDataRetrieval_Start();
-
-            // MVS prosessering updater
-            mvsProcessingTimer.Start();
-
-            // Sensor Setup
-            ucSensorSetupPage.ServerStartedCheck(true);
-            ucMVSInputSetup.Start();
-            ucMVSOutput.Start();
-            ucProjects.Start();
-
-            // Server startet
-            serverStarted = true;
-
-            // Start elapsed time
-            mainWindowVM.StartTimer();
-
-            projectVM.StartRecording();
         }
 
         private void Stop()
