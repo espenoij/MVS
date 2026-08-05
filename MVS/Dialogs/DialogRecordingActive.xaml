@@ -34,32 +34,30 @@
             <RowDefinition Height="Auto" />
         </Grid.RowDefinitions>
 
-        <!-- Recording status bar (moved here from the main window top bar) -->
+        <!-- Recording status indicator (styled to match the LiDAR scanning badge) -->
         <Border Grid.Row="0"
-                Background="{StaticResource SesDarkBlueGreyBrush}"
-                BorderBrush="{StaticResource SesErrorBrush}"
-                BorderThickness="0,0,0,2"
-                Padding="12,6">
-            <StackPanel Orientation="Horizontal" HorizontalAlignment="Center">
+                HorizontalAlignment="Center" VerticalAlignment="Top"
+                Margin="0,8,0,0" Padding="12,4" CornerRadius="4"
+                Background="{StaticResource SesErrorBrush}">
+            <StackPanel Orientation="Horizontal">
 
                 <!-- Pulsing indicator -->
-                <Ellipse Width="12" Height="12" Fill="{StaticResource SesErrorBrush}" VerticalAlignment="Center">
+                <Ellipse Width="10" Height="10" Fill="{StaticResource SesWhiteBrush}" Margin="0,0,6,0" VerticalAlignment="Center">
                     <Ellipse.Triggers>
-                        <EventTrigger RoutedEvent="FrameworkElement.Loaded">
+                        <EventTrigger RoutedEvent="Loaded">
                             <BeginStoryboard>
-                                <Storyboard RepeatBehavior="Forever" AutoReverse="True">
-                                    <DoubleAnimation Storyboard.TargetProperty="Opacity" From="1.0" To="0.15" Duration="0:0:1" />
+                                <Storyboard RepeatBehavior="Forever">
+                                    <DoubleAnimation Storyboard.TargetProperty="Opacity"
+                                                     From="1.0" To="0.3" Duration="0:0:0.6"
+                                                     AutoReverse="True" />
                                 </Storyboard>
                             </BeginStoryboard>
                         </EventTrigger>
                     </Ellipse.Triggers>
                 </Ellipse>
 
-                <TextBlock Text="Recording"
-                           Foreground="{StaticResource SesWhiteBrush}"
-                           FontWeight="SemiBold"
-                           VerticalAlignment="Center"
-                           Margin="8,0,0,0" />
+                <TextBlock Text="RECORDING" FontSize="12" FontWeight="Bold"
+                           Foreground="White" VerticalAlignment="Center" />
 
             </StackPanel>
         </Border>
