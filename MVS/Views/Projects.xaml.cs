@@ -998,6 +998,8 @@ namespace MVS
                     ? "Project selected. Continue to LiDAR correction."
                     : "Select or create a project to begin.";
             }
+
+            UpdateWizardStepHeaders();
         }
 
         private void btnPrev_Click(object sender, RoutedEventArgs e)
@@ -1008,6 +1010,76 @@ namespace MVS
         private void btnNext_Click(object sender, RoutedEventArgs e)
         {
             SetWizardStep(currentStep + 1);
+        }
+
+        /// <summary>
+        /// Evaluates whether the wizard may advance from the given step to the next one,
+        /// mirroring the gating used by the Next button. Used to determine which step
+        /// headers the user is allowed to jump to directly.
+        /// </summary>
+        private bool CanProceedFromStep(int step)
+        {
+            var project = mainWindowVM?.SelectedProject;
+            bool hasData = project != null && project.DataSetHasData();
+            bool lidarApplied = _livoxVM?.Correction != null && _livoxVM.Correction.IsActive;
+
+            switch (step)
+            {
+                case 1:
+                    bool hasProject = project != null;
+                    bool hasName = project != null && !string.IsNullOrWhiteSpace(project.Name);
+                    bool hasInputMRUs = project != null && project.InputMRUs != InputMRUType.None;
+                    return hasProject && hasName && hasInputMRUs;
+                case 2:
+                    return lidarApplied || hasData;
+                case 3:
+                    return hasData;
+                case 4:
+                    return true;
+                default:
+                    return false;
+            }
+        }
+
+        /// <summary>
+        /// Returns the furthest wizard step the user is currently allowed to reach,
+        /// walking forward from step 1 while each step's requirements are satisfied.
+        /// Any step less than or equal to this value is navigable (backward navigation
+        /// is always permitted).
+        /// </summary>
+        private int MaxReachableStep()
+        {
+            int reachable = 1;
+            while (reachable < 5 && CanProceedFromStep(reachable))
+                reachable++;
+            return reachable;
+        }
+
+        /// <summary>
+        /// Updates the wizard step headers so that reachable steps appear clickable
+        /// (hand cursor) while unreachable steps do not.
+        /// </summary>
+        private void UpdateWizardStepHeaders()
+        {
+            int maxReachable = MaxReachableStep();
+            var headers = new[] { tbStep1, tbStep2, tbStep3, tbStep4, tbStep5 };
+            for (int i = 0; i < headers.Length; i++)
+            {
+                headers[i].Cursor = (i + 1) <= maxReachable ? Cursors.Hand : Cursors.Arrow;
+            }
+        }
+
+        /// <summary>
+        /// Handles a click on a wizard step header, jumping directly to that step
+        /// when it is currently reachable.
+        /// </summary>
+        private void WizardStep_Click(object sender, MouseButtonEventArgs e)
+        {
+            if (sender is FrameworkElement fe && fe.Tag is string tag && int.TryParse(tag, out int step))
+            {
+                if (step <= MaxReachableStep())
+                    SetWizardStep(step);
+            }
         }
 
         // ============================================================
