@@ -53,7 +53,6 @@ namespace MVS
             CreateTablesMVSDataSet,
             LoadTimestamps,
             LoadSessionData,
-            ImportHMSData,
             SaveMVSData,
             CreateErrorMessagesTables,
             GetAllMVSData,

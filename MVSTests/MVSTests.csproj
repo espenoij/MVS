@@ -8,6 +8,8 @@
     <AssemblyVersion>0.0.0.216</AssemblyVersion>
     <GenerateAssemblyInfo>false</GenerateAssemblyInfo>
     <RollForward>LatestMajor</RollForward>
+    <!-- Declare this test assembly as Windows-only to suppress CA1416 warnings. -->
+    <SupportedOSPlatformVersion>7.0</SupportedOSPlatformVersion>
   </PropertyGroup>
 
   <ItemGroup>

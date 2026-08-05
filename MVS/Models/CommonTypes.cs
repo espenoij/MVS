@@ -7,6 +7,8 @@ class CommonTypes
 {
 }
 
+public delegate void ReportProgressDelegate(int progress);
+
 public enum HelicopterCategory
 {
     Medium,
@@ -313,13 +315,6 @@ public enum InputMRUType
     ReferenceMRU_TestMRU,
 }
 
-public enum ImportResultCode
-{
-    OK,
-    DatabaseError,
-    ConnectionToMVSDatabaseFailed,
-    NoDataFoundForSelectedTimeframe
-}
 public enum ProcessingType
 {
     LIVE_DATA,

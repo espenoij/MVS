@@ -231,10 +231,10 @@
                             Name="chartPitch1"
                             Margin="10,0,0,0">
 
-                            <!--Pitch Input Test-->
+                            <!--Pitch Input Ref-->
                             <telerik:LineSeries
-                                ZIndex="201"
-                                Stroke="{StaticResource ColorGraphLineTest}"
+                                ZIndex="200"
+                                Stroke="{StaticResource ColorGraphLineRef}"
                                 CategoryBinding="timestamp"
                                 ValueBinding="graphData">
 
@@ -245,10 +245,10 @@
 
                             </telerik:LineSeries>
 
-                            <!--Pitch Input Ref-->
+                            <!--Pitch Input Test-->
                             <telerik:LineSeries
                                 ZIndex="200"
-                                Stroke="{StaticResource ColorGraphLineRef}"
+                                Stroke="{StaticResource ColorGraphLineTest}"
                                 CategoryBinding="timestamp"
                                 ValueBinding="graphData">
 
@@ -452,10 +452,10 @@
                             Name="chartPitch2"
                             Margin="10,0,0,0">
 
-                            <!--Pitch Mean Test-->
+                            <!--Pitch Mean Ref-->
                             <telerik:LineSeries
                                 ZIndex="200"
-                                Stroke="{StaticResource ColorGraphLineTest}"
+                                Stroke="{StaticResource ColorGraphLineRef}"
                                 CategoryBinding="timestamp"
                                 ValueBinding="graphData">
 
@@ -466,10 +466,10 @@
 
                             </telerik:LineSeries>
 
-                            <!--Pitch Mean Ref-->
+                            <!--Pitch Mean Test-->
                             <telerik:LineSeries
                                 ZIndex="200"
-                                Stroke="{StaticResource ColorGraphLineRef}"
+                                Stroke="{StaticResource ColorGraphLineTest}"
                                 CategoryBinding="timestamp"
                                 ValueBinding="graphData">
 
@@ -927,10 +927,10 @@
                             Name="chartRoll1"
                             Margin="10,0,0,0">
 
-                            <!--Roll Input Test-->
+                            <!--Roll Input Ref-->
                             <telerik:LineSeries
                                 ZIndex="200"
-                                Stroke="{StaticResource ColorGraphLineTest}"
+                                Stroke="{StaticResource ColorGraphLineRef}"
                                 CategoryBinding="timestamp"
                                 ValueBinding="graphData">
 
@@ -941,10 +941,10 @@
 
                             </telerik:LineSeries>
 
-                            <!--Roll Input Ref-->
+                            <!--Roll Input Test-->
                             <telerik:LineSeries
                                 ZIndex="200"
-                                Stroke="{StaticResource ColorGraphLineRef}"
+                                Stroke="{StaticResource ColorGraphLineTest}"
                                 CategoryBinding="timestamp"
                                 ValueBinding="graphData">
 
@@ -1150,10 +1150,10 @@
                             Name="chartRoll2"
                             Margin="10,0,0,0">
 
-                            <!--Roll Mean Test-->
+                            <!--Roll Mean Ref-->
                             <telerik:LineSeries
                                 ZIndex="200"
-                                Stroke="{StaticResource ColorGraphLineTest}"
+                                Stroke="{StaticResource ColorGraphLineRef}"
                                 CategoryBinding="timestamp"
                                 ValueBinding="graphData">
 
@@ -1164,10 +1164,10 @@
 
                             </telerik:LineSeries>
 
-                            <!--Roll Mean Ref-->
+                            <!--Roll Mean Test-->
                             <telerik:LineSeries
                                 ZIndex="200"
-                                Stroke="{StaticResource ColorGraphLineRef}"
+                                Stroke="{StaticResource ColorGraphLineTest}"
                                 CategoryBinding="timestamp"
                                 ValueBinding="graphData">
 
@@ -1712,10 +1712,10 @@
                             Name="chartHeave1"
                             Margin="0,0,0,0">
 
-                            <!--Heave Input Test-->
+                            <!--Heave Input Ref-->
                             <telerik:LineSeries
                                 ZIndex="200"
-                                Stroke="{StaticResource ColorGraphLineTest}"
+                                Stroke="{StaticResource ColorGraphLineRef}"
                                 CategoryBinding="timestamp"
                                 ValueBinding="graphData">
 
@@ -1726,10 +1726,10 @@
 
                             </telerik:LineSeries>
 
-                            <!--Heave Input Ref-->
+                            <!--Heave Input Test-->
                             <telerik:LineSeries
                                 ZIndex="200"
-                                Stroke="{StaticResource ColorGraphLineRef}"
+                                Stroke="{StaticResource ColorGraphLineTest}"
                                 CategoryBinding="timestamp"
                                 ValueBinding="graphData">
 
@@ -1922,10 +1922,10 @@
                             Margin="0,0,0,0"
                             Name="chartHeave2">
 
-                            <!--Heave Mean Test-->
+                            <!--Heave Mean Ref-->
                             <telerik:LineSeries
                                 ZIndex="200"
-                                Stroke="{StaticResource ColorGraphLineTest}"
+                                Stroke="{StaticResource ColorGraphLineRef}"
                                 CategoryBinding="timestamp"
                                 ValueBinding="graphData">
 
@@ -1936,10 +1936,10 @@
 
                             </telerik:LineSeries>
 
-                            <!--Heave Mean Ref-->
+                            <!--Heave Mean Test-->
                             <telerik:LineSeries
                                 ZIndex="200"
-                                Stroke="{StaticResource ColorGraphLineRef}"
+                                Stroke="{StaticResource ColorGraphLineTest}"
                                 CategoryBinding="timestamp"
                                 ValueBinding="graphData">
 

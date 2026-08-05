@@ -257,11 +257,6 @@ namespace MVS
             }
         }
 
-        /////////////////////////////////////////////////////////////////////////////
-        // Import Result
-        /////////////////////////////////////////////////////////////////////////////
-        public ImportResult Result { get; set; } = new ImportResult();
-
         // Variabel oppdatert
         // Dersom navn ikke er satt brukes kallende medlem sitt navn
         protected virtual void OnPropertyChanged([CallerMemberName] string name = null)

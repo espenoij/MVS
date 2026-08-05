@@ -180,7 +180,7 @@ namespace MVS.Views.Controls
             tbDurationValue.Text   = "--:--:--";
             pbDuration.Value       = 0;
             tbQualityLabel.Text    = "No recording active";
-            tbStatusMessage.Text   = "Start a recording or import a data set to begin.";
+            tbStatusMessage.Text   = "Start a recording to begin.";
 
             qualityBadge.Background    = new SolidColorBrush(ColourIdle);
             tbQualityLabel.Foreground  = new SolidColorBrush(ColourIdleFg);

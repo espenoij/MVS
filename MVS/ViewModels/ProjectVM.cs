@@ -7,7 +7,6 @@ using System.Runtime.CompilerServices;
 using System.Windows.Threading;
 using MVS.Models;
 using Telerik.Windows.Data;
-using static MVS.DialogImport;
 
 namespace MVS
 {

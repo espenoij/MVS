@@ -1,11 +1,10 @@
-﻿using System;
+using System;
 using System.Collections.Generic;
 using System.Linq;
 using System.Security;
 using Telerik.Windows.Data;
 using MySqlConnector;
 using System.Windows.Markup;
-using static MVS.DialogImport;
 using MVS.Models;
 
 namespace MVS
@@ -733,145 +732,6 @@ namespace MVS
             {
                 throw;
             }
-        }
-
-        public ImportResult ImportHMSData(Project selectedSession, ReportProgressDelegate reportProgress)
-        {
-            ImportResult result = new ImportResult();
-
-            try
-            {
-                if (isDatabaseConnectionOK)
-                {
-                    RadObservableCollection<ProjectData> dataList = new RadObservableCollection<ProjectData>();
-
-                    string hmsDBaddress = config.ReadWithDefault(ConfigKey.HMSDatabaseAddress, Constants.DefaultHMSDatabaseAddress);
-                    string hmsDBport = config.ReadWithDefault(ConfigKey.HMSDatabasePort, Constants.DefaultHMSDatabasePort).ToString();
-                    string hmsDBdatabase = config.ReadWithDefault(ConfigKey.HMSDatabaseName, Constants.DefaultHMSDatabaseName);
-                    string hmsDBdatabaseTable = config.ReadWithDefault(ConfigKey.HMSDatabaseTable, Constants.DefaultHMSDatabaseTable);
-
-                    // Database login
-                    SecureString hmsDBuserid = Encryption.DecryptString(config.Read(ConfigKey.HMSDatabaseUserID));
-                    SecureString hmsDBpassword = Encryption.DecryptString(config.Read(ConfigKey.HMSDatabasePassword));
-
-                    string hmsDBconnectionString = string.Format(@"server={0};port={1};userid={2};password={3};database={4};sslmode=none",
-                        hmsDBaddress,
-                        hmsDBport,
-                        Encryption.ToInsecureString(hmsDBuserid),
-                        Encryption.ToInsecureString(hmsDBpassword),
-                        hmsDBdatabase);
-
-                    // Leser først fra HMS database
-                    using (var connection = new MySqlConnection(hmsDBconnectionString))
-                    {
-                        // SQL kommando
-                        var cmd = new MySqlCommand();
-                        cmd.Connection = connection;
-
-                        // Åpne database connection
-                        connection.Open();
-
-                        // SQL
-                        cmd.CommandText = string.Format("SELECT {0}, {1}, {2}, {3}, {4} FROM {5} WHERE {6} BETWEEN @StartTime AND @EndTime",
-                            "id",
-                            columnTimestamp,
-                            "pitch",
-                            "roll",
-                            "heave",
-                            hmsDBdatabaseTable,
-                            columnTimestamp);
-
-                        // Update parametre
-                        cmd.Parameters.AddWithValue("@StartTime", selectedSession.StartTime);
-                        cmd.Parameters.AddWithValue("@EndTime", selectedSession.EndTime);
-
-                        // Hente data
-                        MySqlDataReader dbReader = cmd.ExecuteReader();
-
-                        // Lagre data
-                        while (dbReader.Read())
-                        {
-                            ProjectData data = new ProjectData();
-
-                            data.id = dbReader.GetInt32(0);
-                            data.timestamp = dbReader.GetDateTime(1);
-
-                            data.testPitch = Convert.ToDouble(dbReader.GetString(2));
-
-                            // I data fra sensor er positive tall roll til høyre.
-                            // Internt er positive tall roll til venstre. Venstre er høyest på grafen. Dette er standard i CAP.
-                            data.testRoll = Convert.ToDouble(dbReader.GetString(3)) * -1;
-                            
-                            data.testHeave = Convert.ToDouble(dbReader.GetString(4));
-
-                            dataList.Add(data);
-                        }
-
-                        // Lukke leser
-                        dbReader.Close();
-
-                        // Lukke database connection
-                        connection.Close();
-                    }
-
-                    // Så lagrer vi data i MVS database
-                    if (dataList.Count > 0)
-                    {
-                        using (var connection = new MySqlConnection(connectionString))
-                        {
-                            // SQL kommando
-                            var cmd = new MySqlCommand();
-                            cmd.Connection = connection;
-
-                            // Åpne database connection
-                            connection.Open();
-
-                            cmd.CommandText = string.Format("UPDATE {0} SET {1}=@testPitch, {2}=@testRoll, {3}=@testHeave WHERE {4} = (SELECT {4} FROM {0} ORDER BY ABS(TIMEDIFF({4}, @timestamp)) LIMIT 1)",
-                                tableNameMVSDataPrefix + selectedSession.Id,
-                                columnTestPitch,
-                                columnTestRoll,
-                                columnTestHeave,
-                                columnTimestamp);
-
-                            double progressCount = 0;
-
-                            foreach (var data in dataList)
-                            {
-                                cmd.Parameters.Clear();
-
-                                // Update parametre
-                                cmd.Parameters.AddWithValue("@timestamp", data.timestamp);
-                                cmd.Parameters.AddWithValue("@testPitch", data.testPitch.ToString());
-                                cmd.Parameters.AddWithValue("@testRoll", data.testRoll.ToString());
-                                cmd.Parameters.AddWithValue("@testHeave", data.testHeave.ToString());
-
-                                // Execute
-                                cmd.ExecuteNonQuery();
-
-                                // Progress oppdatering
-                                reportProgress((int)((progressCount++ / dataList.Count) * 100));
-                            }
-
-                            // Lukke database connection
-                            connection.Close();
-                        }
-                    }
-                    else
-                    {
-                        result.code = ImportResultCode.NoDataFoundForSelectedTimeframe;
-                    }
-                }
-                else
-                {
-                    result.code = ImportResultCode.ConnectionToMVSDatabaseFailed;
-                }
-            }
-            catch (Exception)
-            {
-                throw;
-            }
-
-            return result;
         }
 
         // Method to get the first entry in the database

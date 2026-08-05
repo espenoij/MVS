@@ -81,7 +81,7 @@
             <!-- Guidance message -->
             <TextBlock Grid.Row="4" Grid.ColumnSpan="2"
                        x:Name="tbStatusMessage"
-                       Text="Start a recording or import a data set to begin."
+                       Text="Start a recording to begin."
                        Foreground="{StaticResource SesTextSecondaryBrush}"
                        TextWrapping="Wrap"
                        FontSize="11"/>

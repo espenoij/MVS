@@ -1,6 +1,9 @@
 using System.Reflection;
 using System.Runtime.CompilerServices;
 using System.Runtime.InteropServices;
+using System.Runtime.Versioning;
+
+[assembly: SupportedOSPlatform("windows7.0")]
 
 [assembly: AssemblyTitle("MVSTests")]
 [assembly: AssemblyDescription("")]
@@ -16,7 +19,7 @@ using System.Runtime.InteropServices;
 [assembly: Guid("e6f00179-535b-4d38-b9ad-0bdbd2c00867")]
 
 // [assembly: AssemblyVersion("1.0.*")]
-[assembly: AssemblyVersion("1.0.0.332")]
-[assembly: AssemblyFileVersion("1.0.0.295")]
+[assembly: AssemblyVersion("1.0.0.335")]
+[assembly: AssemblyFileVersion("1.0.0.298")]
 
 [assembly: AssemblyInformationalVersion("0.0.0.216")]

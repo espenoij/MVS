@@ -284,7 +284,7 @@
                             <TextBlock TextWrapping="Wrap"
                                        Foreground="{StaticResource SesTextSecondaryBrush}"
                                        Margin="0,0,0,12"
-                                       Text="Record live motion data, or import an existing HMS recording for this project. The recommended verification window is 40 minutes."/>
+                                       Text="Record live motion data for this project. The recommended verification window is 40 minutes."/>
 
                             <controls:DurationStatusBanner x:Name="durationBanner" Margin="0,0,0,12"/>
 
@@ -354,19 +354,7 @@
                                 </StackPanel>
                             </telerik:GroupBox>
 
-                            <StackPanel Orientation="Horizontal" Margin="0,4,0,0">
-                                <telerik:RadButton Name="btnImport"
-                                                   Click="btnImport_Click"
-                                                   Content="Import HMS data..."
-                                                   MinWidth="150"/>
-                                <Label Name="lbImport"
-                                       Content="Imports motion data from an existing HMS recording."
-                                       Foreground="{StaticResource SesTextSecondaryBrush}"
-                                       VerticalAlignment="Center"
-                                       Margin="10,0,0,0"/>
                             </StackPanel>
-
-                        </StackPanel>
                     </ScrollViewer>
 
                     <!-- ===== STEP 4: REVIEW ===== -->

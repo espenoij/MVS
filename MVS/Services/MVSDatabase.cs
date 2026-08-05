@@ -4,7 +4,6 @@ using System.Collections.Generic;
 using System.Data;
 using Telerik.Charting;
 using Telerik.Windows.Data;
-using static MVS.DialogImport;
 
 namespace MVS
 {
@@ -274,35 +273,6 @@ namespace MVS
 
                 errorHandler.SetDatabaseError(ErrorHandler.DatabaseErrorType.LoadSessionData);
             }
-        }
-
-        public ImportResult ImportHMSData(Project selectedSession, ReportProgressDelegate reportProgress)
-        {
-            ImportResult result = new ImportResult();
-
-            try
-            {
-                result = database.ImportHMSData(selectedSession, reportProgress);
-
-                errorHandler.ResetDatabaseError(ErrorHandler.DatabaseErrorType.ImportHMSData);
-            }
-            catch (Exception ex)
-            {
-                errorHandler.Insert(
-                    new ErrorMessage(
-                        DateTime.UtcNow,
-                        ErrorMessageType.Database,
-                        ErrorMessageCategory.None,
-                        string.Format("Database Error (ImportHMSData)\n\nSystem Message:\n{0}", ex.Message)));
-
-                errorHandler.SetDatabaseError(ErrorHandler.DatabaseErrorType.ImportHMSData);
-
-                // Sende feilmelding videre
-                result.code = ImportResultCode.DatabaseError;
-                result.message = ex.Message;
-            }
-
-            return result;
         }
 
         public void SaveCorrection(Project project, double pitch, double roll, double heave)

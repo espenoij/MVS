@@ -30,7 +30,6 @@ namespace MVS
 
         private MainWindowVM mainWindowVM;
         private Config config;
-        private ImportVM importVM;
         private ProjectVM projectVM;
 
         // LiDAR wizard view model (Step 2). Used to gate wizard navigation on correction state.
@@ -76,8 +75,6 @@ namespace MVS
         {
             InitializeComponent();
 
-            importVM = new ImportVM();
-
             _recordingBannerTimer = new DispatcherTimer { Interval = TimeSpan.FromSeconds(1) };
             _recordingBannerTimer.Tick += (s, e) => durationBanner.UpdateLive(_recordingStartTime);
         }
@@ -91,7 +88,6 @@ namespace MVS
             this.config = config;
 
             // VM
-            DataContext = projectVM;
             this.mainWindowVM = mainWindowVM;
             this.projectVM = projectVM;
 
@@ -100,16 +96,18 @@ namespace MVS
             this.stopRecordingCallback = stopRecordingCallback;
             this.testRunCallback = testRunCallback;
 
-            // Wire the MainWindowVM bridge so recording-button bindings resolve.
+            // Wire the MainWindowVM bridge BEFORE setting DataContext so that
+            // recording-button bindings (StartButtonEnabled / StopButtonEnabled)
+            // resolve to MainWindowVM and never briefly inherit ProjectVM.
             mainWindowVMBridge.DataContext = mainWindowVM;
+
+            DataContext = projectVM;
 
             InitUI();
         }
 
         public void InitUI()
         {
-            importVM.Init(config);
-
             // Wire up the embedded Data Analysis charts (Step 3).
             ucDataAnalysis.Init(projectVM);
 
@@ -139,6 +137,11 @@ namespace MVS
             //    mainWindowVM.SelectedSession = (MotionDataSet)gvProjects.Items[0];
             //    LoadSelectedItemsDetails();
             //}
+
+            // Explicitly clear the report metadata editor's DataContext so it does
+            // not inherit ProjectVM and fire spurious binding errors before a project
+            // is selected (Metadata = null sets DataContext = null, overriding inheritance).
+            ucReportMetadata.Metadata = null;
 
             UpdateUIStates(false);
 
@@ -172,8 +175,6 @@ namespace MVS
             {
                 btnNew.IsEnabled = false;
                 btnDelete.IsEnabled = false;
-                btnImport.IsEnabled = false;
-                lbImport.IsEnabled = false;
                 btnClearRecording.IsEnabled = false;
 
                 gvProjects.IsEnabled = false;
@@ -196,8 +197,6 @@ namespace MVS
                 if (mainWindowVM?.SelectedProject == null)
                 {
                     btnDelete.IsEnabled = false;
-                    btnImport.IsEnabled = false;
-                    lbImport.IsEnabled = false;
                     btnClearRecording.IsEnabled = false;
                 }
                 else
@@ -206,14 +205,10 @@ namespace MVS
 
                     if (mainWindowVM.SelectedProject.StartTime == System.Data.SqlTypes.SqlDateTime.MinValue.Value)
                     {
-                        btnImport.IsEnabled = false;
-                        lbImport.IsEnabled = false;
                         btnClearRecording.IsEnabled = false;
                     }
                     else
                     {
-                        btnImport.IsEnabled = true;
-                        lbImport.IsEnabled = true;
                         btnClearRecording.IsEnabled = true;
                     }
                 }
@@ -385,18 +380,6 @@ namespace MVS
             }
 
             updateUIButtonsCallback();
-        }
-
-        private void btnImport_Click(object sender, RoutedEventArgs e)
-        {
-            // Åpne HMS data import dialog vindu
-            DialogImport importDlg = new DialogImport();
-            importDlg.Owner = App.Current.MainWindow;
-            importDlg.Init(importVM, config, mainWindowVM.SelectedProject, mvsDatabase, mainWindowVM);
-            importDlg.ShowDialog();
-
-            // Laster items data på nytt ettersom de kan ha blitt endret under import over
-            LoadSelectedItemsDetails();
         }
 
         private void btnStartRecording_Click(object sender, RoutedEventArgs e)
@@ -922,12 +905,12 @@ namespace MVS
                     break;
 
                 case 3:
-                    // Step 3 — Capture: the project must contain recorded or imported data.
+                    // Step 3 — Capture: the project must contain recorded data.
                     canProceed = hasData;
                     requirementsMet = canProceed;
                     requirementsText = canProceed
                         ? "Step 3 complete — motion data captured. Click Next to review the results."
-                        : "To continue you must:  \u2717 Record live motion data or import an existing HMS recording for this project.";
+                        : "To continue you must:  \u2717 Record live motion data for this project.";
                     break;
 
                 case 4:
