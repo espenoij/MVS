@@ -174,7 +174,7 @@ namespace MVS
             refPitchMeanData.id = (int)ValueType.Ref_PitchMean;
             refPitchMeanData.name = "Ref MRU: Pitch Mean";
             refPitchMeanData.InitProcessing(errorHandler, ErrorMessageCategory.AdminUser, adminSettingsVM);
-            refPitchMeanData.AddProcessing(CalculationType.TimeAverage, Constants.Minutes3);
+            refPitchMeanData.AddProcessing(CalculationType.TimeAverage, Constants.Minutes20);
 
             refPitchMeanMaxData.id = (int)ValueType.Ref_PitchMeanMax;
             refPitchMeanMaxData.name = "Ref MRU: Pitch Mean Max";
@@ -200,7 +200,7 @@ namespace MVS
             refRollMeanData.id = (int)ValueType.Ref_RollMean;
             refRollMeanData.name = "Ref MRU: Roll Mean";
             refRollMeanData.InitProcessing(errorHandler, ErrorMessageCategory.AdminUser, adminSettingsVM);
-            refRollMeanData.AddProcessing(CalculationType.TimeAverage, Constants.Minutes3);
+            refRollMeanData.AddProcessing(CalculationType.TimeAverage, Constants.Minutes20);
 
             refRollMeanMaxData.id = (int)ValueType.Ref_RollMeanMax;
             refRollMeanMaxData.name = "Ref MRU: Roll Mean Max";
@@ -226,7 +226,7 @@ namespace MVS
             refHeaveMeanData.id = (int)ValueType.Ref_HeaveMean;
             refHeaveMeanData.name = "Ref MRU: Heave Mean";
             refHeaveMeanData.InitProcessing(errorHandler, ErrorMessageCategory.AdminUser, adminSettingsVM);
-            refHeaveMeanData.AddProcessing(CalculationType.TimeAverage, Constants.Minutes3);
+            refHeaveMeanData.AddProcessing(CalculationType.TimeAverage, Constants.Minutes20);
 
             refHeaveMeanMaxData.id = (int)ValueType.Ref_HeaveMeanMax;
             refHeaveMeanMaxData.name = "Ref MRU: Heave Mean Max";
@@ -252,7 +252,7 @@ namespace MVS
             testPitchMeanData.id = (int)ValueType.Test_PitchMean;
             testPitchMeanData.name = "Vessel MRU: Pitch Mean";
             testPitchMeanData.InitProcessing(errorHandler, ErrorMessageCategory.AdminUser, adminSettingsVM);
-            testPitchMeanData.AddProcessing(CalculationType.TimeAverage, Constants.Minutes3);
+            testPitchMeanData.AddProcessing(CalculationType.TimeAverage, Constants.Minutes20);
 
             testPitchMeanMaxData.id = (int)ValueType.Test_PitchMeanMax;
             testPitchMeanMaxData.name = "Vessel MRU: Pitch Mean Max";
@@ -278,7 +278,7 @@ namespace MVS
             testRollMeanData.id = (int)ValueType.Test_RollMean;
             testRollMeanData.name = "Vessel MRU: Roll Mean";
             testRollMeanData.InitProcessing(errorHandler, ErrorMessageCategory.AdminUser, adminSettingsVM);
-            testRollMeanData.AddProcessing(CalculationType.TimeAverage, Constants.Minutes3);
+            testRollMeanData.AddProcessing(CalculationType.TimeAverage, Constants.Minutes20);
 
             testRollMeanMaxData.id = (int)ValueType.Test_RollMeanMax;
             testRollMeanMaxData.name = "Vessel MRU: Roll Mean Max";
@@ -304,7 +304,7 @@ namespace MVS
             testHeaveMeanData.id = (int)ValueType.Test_HeaveMean;
             testHeaveMeanData.name = "Vessel MRU: Heave Amplitude Mean";
             testHeaveMeanData.InitProcessing(errorHandler, ErrorMessageCategory.AdminUser, adminSettingsVM);
-            testHeaveMeanData.AddProcessing(CalculationType.TimeAverage, Constants.Minutes3);
+            testHeaveMeanData.AddProcessing(CalculationType.TimeAverage, Constants.Minutes20);
 
             testHeaveMeanMaxData.id = (int)ValueType.Test_HeaveMeanMax;
             testHeaveMeanMaxData.name = "Vessel MRU: Heave Amplitude Mean Max";

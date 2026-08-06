@@ -218,14 +218,11 @@ class Constants
     public const double HelicopterWSIMax = 100;
     public const double HelicopterWSIDefault = 43;
 
-    // 3 minutes in seconds (rolling mean window — short enough to converge well within a 20-min capture)
-    public const int Minutes3 = 180;
-    // 20 minutes in seconds
-    public const int Minutes20 = 1200;
-    // 30 minutes in seconds
-    public const int Minutes30 = 1800;
-    // 3 hours in seconds
-    public const int Hours3 = 10800;
+    // Time windows for rolling calculations
+    public const int Minutes3 = 180;   // 3 minutes in seconds
+    public const int Minutes20 = 1200; // 20 minutes in seconds (rolling mean window for MRU verification)
+    public const int Minutes30 = 1800; // 30 minutes in seconds
+    public const int Hours3 = 10800;   // 3 hours in seconds
 
     // MSI / WSI Max
     public const double MSIMax = 91;  // CAP
