@@ -19,10 +19,15 @@ namespace MVS
             // Lock ensures Add is mutually exclusive with Transfer's snapshot+clear.
             lock (buffer)
             {
+                // NB! Alle grafpunkt tidsstemples med samme klokke (UtcNow) som x-aksen
+                // (alignmentTime) bruker. Kildens timestamp kan stå stille mellom
+                // bufferoppdateringer eller ligge bak veggklokka, noe som gir like eller
+                // ikke-monotone x-verdier. Da tegner Telerik-grafen en linje fra siste
+                // til første datapunkt. Konsekvent UtcNow gir strengt økende x-verdier.
                 if (data?.status == DataStatus.OK)
                 {
                     // Lagre data i buffer
-                    buffer.Add(new HMSData(data));
+                    buffer.Add(new HMSData(data) { timestamp = DateTime.UtcNow });
                 }
                 else
                 {
@@ -53,13 +58,35 @@ namespace MVS
 
         public static void RemoveOldData(RadObservableCollection<HMSData> dataList, double timeInterval)
         {
-            if (dataList != null)
+            if (dataList == null || dataList.Count == 0)
+                return;
+
+            DateTime cutoff = DateTime.UtcNow.AddSeconds(-timeInterval);
+
+            // Finn alle gamle datapunkter som skal fjernes.
+            List<HMSData> oldData = new List<HMSData>();
+            foreach (HMSData item in dataList)
             {
-                for (int i = 0; i < dataList.Count && dataList.Count > 0; i++)
-                {
-                    if (dataList[i]?.timestamp < DateTime.UtcNow.AddSeconds(-timeInterval))
-                        dataList.RemoveAt(i--);
-                }
+                if (item?.timestamp < cutoff)
+                    oldData.Add(item);
+            }
+
+            if (oldData.Count == 0)
+                return;
+
+            // Fjerne alle gamle datapunkter i én batch-operasjon.
+            // Ved å bruke Suspend/ResumeNotifications sendes kun én collection-changed
+            // hendelse til grafen. Dersom vi i stedet fjerner ett og ett punkt vil
+            // Telerik-grafen midlertidig tegne en linje fra siste til første datapunkt.
+            dataList.SuspendNotifications();
+            try
+            {
+                foreach (HMSData item in oldData)
+                    dataList.Remove(item);
+            }
+            finally
+            {
+                dataList.ResumeNotifications();
             }
         }
     }

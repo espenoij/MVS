@@ -13,6 +13,8 @@
 
     <UserControl.Resources>
 
+        <BooleanToVisibilityConverter x:Key="BoolToVis" />
+
         <!-- Status indicator color for the project list "Status" column. -->
         <Style x:Key="ProjectStatusColor" TargetType="Ellipse">
             <Style.Triggers>
@@ -215,7 +217,7 @@
                                 <TextBlock TextWrapping="Wrap"
                                            Foreground="{StaticResource SesTextSecondaryBrush}"
                                            Margin="0,0,0,12"
-                                           Text="Create or select a project, then describe the verification and pick the MRU input setup. The Vessel MRU is verified against the Reference MRU."/>
+                                           Text="Create or select a project, then describe the verification. The Vessel MRU is verified against the Reference MRU."/>
 
                                 <telerik:GroupBox Header="Project Details" Margin="0,0,0,8">
                                     <Grid Margin="8">
@@ -224,10 +226,9 @@
                                             <ColumnDefinition Width="*"/>
                                         </Grid.ColumnDefinitions>
                                         <Grid.RowDefinitions>
-                                            <RowDefinition Height="32"/>
-                                            <RowDefinition Height="Auto"/>
-                                            <RowDefinition Height="32"/>
-                                        </Grid.RowDefinitions>
+                                                <RowDefinition Height="32"/>
+                                                <RowDefinition Height="Auto"/>
+                                            </Grid.RowDefinitions>
 
                                         <TextBlock Grid.Row="0" Grid.Column="0" Text="ID" VerticalAlignment="Center" Foreground="{StaticResource SesTextSecondaryBrush}"/>
                                         <Label Grid.Row="0" Grid.Column="1" Name="lbDataSetID" VerticalAlignment="Center"/>
@@ -239,15 +240,9 @@
                                                  TextWrapping="Wrap"
                                                  VerticalContentAlignment="Top"
                                                  Margin="0,4,0,0"
-                                                 LostFocus="tbDataSetName_LostFocus"
-                                                 KeyDown="tbDataSetName_KeyDown"/>
-
-                                        <TextBlock Grid.Row="2" Grid.Column="0" Text="Input MRUs" VerticalAlignment="Center" Foreground="{StaticResource SesTextSecondaryBrush}"/>
-                                        <telerik:RadComboBox Grid.Row="2" Grid.Column="1"
-                                                             Name="cboInputMRUs"
-                                                             VerticalAlignment="Center"
-                                                             DropDownClosed="cboInputMRUs_DropDownClosed"/>
-                                    </Grid>
+                                                              LostFocus="tbDataSetName_LostFocus"
+                                                              KeyDown="tbDataSetName_KeyDown"/>
+                                                 </Grid>
                                 </telerik:GroupBox>
 
                             </StackPanel>
@@ -275,7 +270,17 @@
                     </Grid>
 
                     <!-- ===== STEP 3: CAPTURE ===== -->
-                    <ScrollViewer x:Name="panelStep3" VerticalScrollBarVisibility="Auto" HorizontalScrollBarVisibility="Disabled" Visibility="Collapsed">
+                    <Grid x:Name="panelStep3" Visibility="Collapsed">
+                        <Grid.ColumnDefinitions>
+                            <ColumnDefinition Width="2*" MinWidth="320"/>
+                            <ColumnDefinition Width="3*" MinWidth="360"/>
+                        </Grid.ColumnDefinitions>
+
+                        <!-- ===== LEFT: existing capture controls ===== -->
+                        <ScrollViewer Grid.Column="0"
+                                      VerticalScrollBarVisibility="Auto"
+                                      HorizontalScrollBarVisibility="Disabled"
+                                      Margin="0,0,12,0">
                         <StackPanel>
 
                             <TextBlock Text="Step 3 — Capture motion data"
@@ -349,7 +354,14 @@
                             </telerik:GroupBox>
 
                             </StackPanel>
-                    </ScrollViewer>
+                        </ScrollViewer>
+
+                        <!-- ===== RIGHT: live input charts (Pitch / Roll / Heave) ===== -->
+                        <telerik:GroupBox Grid.Column="1" Header="Live Input">
+                            <local:CaptureCharts x:Name="ucCaptureCharts"
+                                                 Margin="8"/>
+                        </telerik:GroupBox>
+                    </Grid>
 
                     <!-- ===== STEP 4: REVIEW ===== -->
                     <ScrollViewer x:Name="panelStep4"

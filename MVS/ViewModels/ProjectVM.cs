@@ -16,6 +16,8 @@ namespace MVS
         public event PropertyChangedEventHandler PropertyChanged;
 
         private MainWindowVM mainWindowVM;
+        public MainWindowVM MainWindowVM => mainWindowVM;
+
         private MVSProcessing mvsProcessing;
         private MVSDataCollection mvsInputData;
         private MVSDataCollection mvsOutputData;
@@ -36,8 +38,8 @@ namespace MVS
         private RadObservableCollection<HMSData> testHeaveBuffer = new RadObservableCollection<HMSData>();
 
         public RadObservableCollection<HMSData> testPitchList = new RadObservableCollection<HMSData>();
-        public RadObservableCollection<HMSData> testRollList = new RadObservableCollection<HMSData>();
-        public RadObservableCollection<HMSData> testHeaveList = new RadObservableCollection<HMSData>();
+            public RadObservableCollection<HMSData> testRollList = new RadObservableCollection<HMSData>();
+            public RadObservableCollection<HMSData> testHeaveList = new RadObservableCollection<HMSData>();
 
         // Mean
         private RadObservableCollection<HMSData> refPitchMeanBuffer = new RadObservableCollection<HMSData>();
@@ -138,21 +140,34 @@ namespace MVS
             GraphBuffer.Update(mvsDataCollection.GetData(ValueType.Ref_Roll), refRollBuffer);
             GraphBuffer.Update(mvsDataCollection.GetData(ValueType.Ref_Heave), refHeaveBuffer);
 
-            GraphBuffer.Update(mvsDataCollection.GetData(ValueType.Ref_PitchMean), refPitchMeanBuffer);
-            GraphBuffer.Update(mvsDataCollection.GetData(ValueType.Ref_RollMean), refRollMeanBuffer);
-            GraphBuffer.Update(mvsDataCollection.GetData(ValueType.Ref_HeaveMean), refHeaveMeanBuffer);
+            // Rullerende middelverdi er kun meningsfull når vindet (Minutes3) er fylt opp.
+            // I warm-up perioden fylles middel-vindet fra tomt, noe som gir en villedende
+            // konvergens-rampe (ekstra linje) i grafene. Vi hopper derfor over å plotte
+            // middel- og avviksverdiene inntil vindet er fullt, på samme måte som ved
+            // innlasting av eksisterende prosjekt (AnalyseProjectData).
+            if (_liveCaptureFirstTimestamp == null)
+                _liveCaptureFirstTimestamp = DateTime.UtcNow;
+
+            bool meanWindowFull = (DateTime.UtcNow - _liveCaptureFirstTimestamp.Value).TotalSeconds >= Constants.Minutes3;
+
+            if (meanWindowFull)
+            {
+                GraphBuffer.Update(mvsDataCollection.GetData(ValueType.Ref_PitchMean), refPitchMeanBuffer);
+                GraphBuffer.Update(mvsDataCollection.GetData(ValueType.Ref_RollMean), refRollMeanBuffer);
+                GraphBuffer.Update(mvsDataCollection.GetData(ValueType.Ref_HeaveMean), refHeaveMeanBuffer);
+
+                GraphBuffer.Update(mvsDataCollection.GetData(ValueType.Test_PitchMean), testPitchMeanBuffer);
+                GraphBuffer.Update(mvsDataCollection.GetData(ValueType.Test_RollMean), testRollMeanBuffer);
+                GraphBuffer.Update(mvsDataCollection.GetData(ValueType.Test_HeaveMean), testHeaveMeanBuffer);
+
+                GraphBuffer.Update(mvsDataCollection.GetData(ValueType.Dev_PitchMean), devPitchMeanBuffer);
+                GraphBuffer.Update(mvsDataCollection.GetData(ValueType.Dev_RollMean), devRollMeanBuffer);
+                GraphBuffer.Update(mvsDataCollection.GetData(ValueType.Dev_HeaveMean), devHeaveMeanBuffer);
+            }
 
             GraphBuffer.Update(mvsDataCollection.GetData(ValueType.Test_Pitch), testPitchBuffer);
             GraphBuffer.Update(mvsDataCollection.GetData(ValueType.Test_Roll), testRollBuffer);
             GraphBuffer.Update(mvsDataCollection.GetData(ValueType.Test_Heave), testHeaveBuffer);
-
-            GraphBuffer.Update(mvsDataCollection.GetData(ValueType.Test_PitchMean), testPitchMeanBuffer);
-            GraphBuffer.Update(mvsDataCollection.GetData(ValueType.Test_RollMean), testRollMeanBuffer);
-            GraphBuffer.Update(mvsDataCollection.GetData(ValueType.Test_HeaveMean), testHeaveMeanBuffer);
-
-            GraphBuffer.Update(mvsDataCollection.GetData(ValueType.Dev_PitchMean), devPitchMeanBuffer);
-            GraphBuffer.Update(mvsDataCollection.GetData(ValueType.Dev_RollMean), devRollMeanBuffer);
-            GraphBuffer.Update(mvsDataCollection.GetData(ValueType.Dev_HeaveMean), devHeaveMeanBuffer);
 
             // Oppdatere max verdier
             refPitchMaxData = mvsDataCollection.GetData(ValueType.Ref_PitchMax);
@@ -239,11 +254,21 @@ namespace MVS
             OnPropertyChanged(nameof(devHeaveChartAxisMin));
         }
 
+        // Timestamp of the first live sample in the current capture session.
+        // Used to suppress the rolling-mean warm-up period from the charts, the same
+        // way AnalyseProjectData does for loaded projects. Without this, the mean/
+        // deviation series plot the convergence ramp while the mean window fills from
+        // empty, drawing a misleading extra line across the charts.
+        private DateTime? _liveCaptureFirstTimestamp = null;
+
         public void StartRecording()
         {
             ClearPitchData();
             ClearRollData();
             ClearHeaveData();
+
+            // Nullstille warm-up markøren for ny opptaksøkt.
+            _liveCaptureFirstTimestamp = null;
 
             chartUpdateTimer.Start();
         }
@@ -256,6 +281,15 @@ namespace MVS
         public void AnalyseProjectData(ReportProgressDelegate reportProgress)
         {
             double progressCount = 0;
+
+            // Tømme graf-bufferne før vi bygger opp datasettet på nytt.
+            // Etter et opptak kan bufferne fortsatt inneholde noen få punkter fra
+            // live-innsamlingen (tidsstemplet med UtcNow rundt stopp-tidspunktet).
+            // Uten denne tømmingen legges hele sesjonen (tidsstemplet fra opptakets
+            // start) BAK disse restpunktene, slik at det første punktet ligger helt
+            // til høyre og det neste hopper tilbake til venstre. Da tegner
+            // Telerik-grafen en ekstra linje tvers over grafen (fra slutt til start).
+            ClearGraphBuffers();
 
             // Timestamp of the first record, used to suppress the rolling-mean
             // warm-up period from the charts (the mean window fills from empty,
@@ -778,6 +812,39 @@ namespace MVS
                 return true;
             else
                 return false;
+        }
+
+        /// <summary>
+        /// Tømmer alle graf-buffere. Bufferne er ikke bundet direkte til UI, så dette
+        /// er trygt å kalle fra bakgrunnstråden (i motsetning til graf-listene).
+        /// </summary>
+        private void ClearGraphBuffers()
+        {
+            void ClearBuffer(RadObservableCollection<HMSData> buffer)
+            {
+                lock (buffer)
+                {
+                    buffer.Clear();
+                }
+            }
+
+            ClearBuffer(refPitchBuffer);
+            ClearBuffer(refPitchMeanBuffer);
+            ClearBuffer(testPitchBuffer);
+            ClearBuffer(testPitchMeanBuffer);
+            ClearBuffer(devPitchMeanBuffer);
+
+            ClearBuffer(refRollBuffer);
+            ClearBuffer(refRollMeanBuffer);
+            ClearBuffer(testRollBuffer);
+            ClearBuffer(testRollMeanBuffer);
+            ClearBuffer(devRollMeanBuffer);
+
+            ClearBuffer(refHeaveBuffer);
+            ClearBuffer(refHeaveMeanBuffer);
+            ClearBuffer(testHeaveBuffer);
+            ClearBuffer(testHeaveMeanBuffer);
+            ClearBuffer(devHeaveMeanBuffer);
         }
 
         public void TransferToDisplay()

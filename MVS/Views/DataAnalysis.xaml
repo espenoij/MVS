@@ -245,7 +245,7 @@
 
                             </telerik:LineSeries>
 
-                            <!--Pitch Input Test-->
+                            <!--Pitch Input Vessel-->
                             <telerik:LineSeries
                                 ZIndex="200"
                                 Stroke="{StaticResource ColorGraphLineTest}"
@@ -466,7 +466,7 @@
 
                             </telerik:LineSeries>
 
-                            <!--Pitch Mean Test-->
+                            <!--Pitch Mean Vessel-->
                             <telerik:LineSeries
                                 ZIndex="200"
                                 Stroke="{StaticResource ColorGraphLineTest}"
@@ -941,7 +941,7 @@
 
                             </telerik:LineSeries>
 
-                            <!--Roll Input Test-->
+                            <!--Roll Input Vessel-->
                             <telerik:LineSeries
                                 ZIndex="200"
                                 Stroke="{StaticResource ColorGraphLineTest}"
@@ -1164,7 +1164,7 @@
 
                             </telerik:LineSeries>
 
-                            <!--Roll Mean Test-->
+                            <!--Roll Mean Vessel-->
                             <telerik:LineSeries
                                 ZIndex="200"
                                 Stroke="{StaticResource ColorGraphLineTest}"
@@ -1726,7 +1726,7 @@
 
                             </telerik:LineSeries>
 
-                            <!--Heave Input Test-->
+                            <!--Heave Input Vessel-->
                             <telerik:LineSeries
                                 ZIndex="200"
                                 Stroke="{StaticResource ColorGraphLineTest}"
@@ -1936,7 +1936,7 @@
 
                             </telerik:LineSeries>
 
-                            <!--Heave Mean Test-->
+                            <!--Heave Mean Vessel-->
                             <telerik:LineSeries
                                 ZIndex="200"
                                 Stroke="{StaticResource ColorGraphLineTest}"

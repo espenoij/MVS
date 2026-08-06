@@ -1,0 +1,318 @@
+<UserControl
+    x:Class="MVS.CaptureCharts"
+    xmlns="http://schemas.microsoft.com/winfx/2006/xaml/presentation"
+    xmlns:x="http://schemas.microsoft.com/winfx/2006/xaml"
+    xmlns:mc="http://schemas.openxmlformats.org/markup-compatibility/2006"
+    xmlns:d="http://schemas.microsoft.com/expression/blend/2008"
+    xmlns:telerik="http://schemas.telerik.com/2008/xaml/presentation"
+    xmlns:local="clr-namespace:MVS"
+    mc:Ignorable="d"
+    d:DesignHeight="700"
+    d:DesignWidth="900">
+
+    <UserControl.Resources>
+        <BooleanToVisibilityConverter x:Key="BoolToVis" />
+        <local:LabelAbsConverter
+            x:Key="LabelAbsConverter" />
+    </UserControl.Resources>
+
+    <Grid>
+        <Grid.RowDefinitions>
+            <RowDefinition Height="Auto" />
+            <RowDefinition Height="*" />
+            <RowDefinition Height="*" />
+            <RowDefinition Height="*" />
+        </Grid.RowDefinitions>
+
+        <!-- Legend explaining the graph line colors -->
+        <Border
+            Grid.Row="0"
+            Margin="0,0,0,8"
+            Padding="12,6"
+            Background="{StaticResource SesSurfaceAltBrush}"
+            BorderBrush="{StaticResource SesBorderBrush}"
+            BorderThickness="1"
+            CornerRadius="3">
+            <Grid>
+                <StackPanel Orientation="Horizontal" HorizontalAlignment="Left">
+
+                    <!-- Reference MRU -->
+                    <Rectangle Width="28" Height="3"
+                               Fill="{StaticResource ColorGraphLineRef}"
+                               VerticalAlignment="Center"
+                               Margin="0,0,6,0" />
+                    <TextBlock Text="Reference MRU"
+                               VerticalAlignment="Center"
+                               Margin="0,0,24,0" />
+
+                    <!-- Vessel MRU -->
+                    <Rectangle Width="28" Height="3"
+                               Fill="{StaticResource ColorGraphLineTest}"
+                               VerticalAlignment="Center"
+                               Margin="0,0,6,0" />
+                    <TextBlock Text="Vessel MRU"
+                               VerticalAlignment="Center" />
+
+                </StackPanel>
+
+                <!-- Pulsing recording status badge; visible only while a recording session is active. -->
+                <Border HorizontalAlignment="Center" VerticalAlignment="Center"
+                        Padding="12,4" CornerRadius="4"
+                        Background="{StaticResource SesErrorBrush}"
+                        Visibility="{Binding MainWindowVM.IsRecording, Converter={StaticResource BoolToVis}}">
+                    <StackPanel Orientation="Horizontal">
+                        <Ellipse Width="10" Height="10" Fill="{StaticResource SesWhiteBrush}" Margin="0,0,6,0" VerticalAlignment="Center">
+                            <Ellipse.Triggers>
+                                <EventTrigger RoutedEvent="Loaded">
+                                    <BeginStoryboard>
+                                        <Storyboard RepeatBehavior="Forever">
+                                            <DoubleAnimation Storyboard.TargetProperty="Opacity"
+                                                             From="1.0" To="0.3" Duration="0:0:0.6"
+                                                             AutoReverse="True" />
+                                        </Storyboard>
+                                    </BeginStoryboard>
+                                </EventTrigger>
+                            </Ellipse.Triggers>
+                        </Ellipse>
+                        <TextBlock Text="RECORDING" FontSize="12" FontWeight="Bold"
+                                   Foreground="White" VerticalAlignment="Center" />
+                    </StackPanel>
+                </Border>
+            </Grid>
+        </Border>
+
+        <!-- ===== PITCH INPUT ===== -->
+        <Grid Grid.Row="1" Margin="0,0,0,8">
+            <Grid.RowDefinitions>
+                <RowDefinition Height="Auto" />
+                <RowDefinition Height="*" />
+            </Grid.RowDefinitions>
+
+            <TextBlock
+                Text="Pitch Input"
+                HorizontalAlignment="Center" />
+
+            <telerik:RadCartesianChart
+                Grid.Row="1"
+                Name="chartPitch"
+                MinHeight="180"
+                Margin="10,0,0,0">
+
+                <!-- Ref -->
+                <telerik:LineSeries
+                    ZIndex="200"
+                    Stroke="{StaticResource ColorGraphLineRef}"
+                    CategoryBinding="timestamp"
+                    ValueBinding="graphData">
+                    <telerik:LineSeries.RenderOptions>
+                        <telerik:XamlRenderOptions DefaultVisualsRenderMode="Batch" />
+                    </telerik:LineSeries.RenderOptions>
+                </telerik:LineSeries>
+
+                <!-- Vessel -->
+                <telerik:LineSeries
+                    ZIndex="200"
+                    Stroke="{StaticResource ColorGraphLineTest}"
+                    CategoryBinding="timestamp"
+                    ValueBinding="graphData">
+                    <telerik:LineSeries.RenderOptions>
+                        <telerik:XamlRenderOptions DefaultVisualsRenderMode="Batch" />
+                    </telerik:LineSeries.RenderOptions>
+                </telerik:LineSeries>
+
+                <telerik:RadCartesianChart.HorizontalAxis>
+                    <telerik:DateTimeContinuousAxis
+                        MajorStepUnit="Minute"
+                        MajorStep="5"
+                        ShowLabels="False"
+                        PlotMode="OnTicks"
+                        TickOrigin="{Binding alignmentTime}"
+                        Minimum="{Binding alignmentTimeMin}"
+                        Maximum="{Binding alignmentTimeMax}" />
+                </telerik:RadCartesianChart.HorizontalAxis>
+
+                <telerik:RadCartesianChart.VerticalAxis>
+                    <telerik:LinearAxis
+                        x:Name="chartPitchVerticalAxis"
+                        Maximum="{Binding pitchChartAxisMax}"
+                        Minimum="{Binding pitchChartAxisMin}">
+                        <telerik:LinearAxis.LabelTemplate>
+                            <DataTemplate>
+                                <TextBlock Text="{Binding Converter={StaticResource LabelAbsConverter}}" />
+                            </DataTemplate>
+                        </telerik:LinearAxis.LabelTemplate>
+                    </telerik:LinearAxis>
+                </telerik:RadCartesianChart.VerticalAxis>
+
+                <telerik:RadCartesianChart.Grid>
+                    <telerik:CartesianChartGrid MajorLinesVisibility="XY" />
+                </telerik:RadCartesianChart.Grid>
+
+                <telerik:RadCartesianChart.Annotations>
+                    <telerik:CartesianGridLineAnnotation
+                        Axis="{Binding ElementName=chartPitchVerticalAxis}"
+                        Value="0"
+                        Stroke="Black"
+                        StrokeThickness="2" />
+                </telerik:RadCartesianChart.Annotations>
+
+            </telerik:RadCartesianChart>
+        </Grid>
+
+        <!-- ===== ROLL INPUT ===== -->
+        <Grid Grid.Row="2" Margin="0,0,0,8">
+            <Grid.RowDefinitions>
+                <RowDefinition Height="Auto" />
+                <RowDefinition Height="*" />
+            </Grid.RowDefinitions>
+
+            <TextBlock
+                Text="Roll Input"
+                HorizontalAlignment="Center" />
+
+            <telerik:RadCartesianChart
+                Grid.Row="1"
+                Name="chartRoll"
+                MinHeight="180"
+                Margin="10,0,0,0">
+
+                <!-- Ref -->
+                <telerik:LineSeries
+                    ZIndex="200"
+                    Stroke="{StaticResource ColorGraphLineRef}"
+                    CategoryBinding="timestamp"
+                    ValueBinding="graphData">
+                    <telerik:LineSeries.RenderOptions>
+                        <telerik:XamlRenderOptions DefaultVisualsRenderMode="Batch" />
+                    </telerik:LineSeries.RenderOptions>
+                </telerik:LineSeries>
+
+                <!-- Vessel -->
+                <telerik:LineSeries
+                    ZIndex="200"
+                    Stroke="{StaticResource ColorGraphLineTest}"
+                    CategoryBinding="timestamp"
+                    ValueBinding="graphData">
+                    <telerik:LineSeries.RenderOptions>
+                        <telerik:XamlRenderOptions DefaultVisualsRenderMode="Batch" />
+                    </telerik:LineSeries.RenderOptions>
+                </telerik:LineSeries>
+
+                <telerik:RadCartesianChart.HorizontalAxis>
+                    <telerik:DateTimeContinuousAxis
+                        MajorStepUnit="Minute"
+                        MajorStep="5"
+                        ShowLabels="False"
+                        PlotMode="OnTicks"
+                        TickOrigin="{Binding alignmentTime}"
+                        Minimum="{Binding alignmentTimeMin}"
+                        Maximum="{Binding alignmentTimeMax}" />
+                </telerik:RadCartesianChart.HorizontalAxis>
+
+                <telerik:RadCartesianChart.VerticalAxis>
+                    <telerik:LinearAxis
+                        x:Name="chartRollVerticalAxis"
+                        Maximum="{Binding rollChartAxisMax}"
+                        Minimum="{Binding rollChartAxisMin}">
+                        <telerik:LinearAxis.LabelTemplate>
+                            <DataTemplate>
+                                <TextBlock Text="{Binding Converter={StaticResource LabelAbsConverter}}" />
+                            </DataTemplate>
+                        </telerik:LinearAxis.LabelTemplate>
+                    </telerik:LinearAxis>
+                </telerik:RadCartesianChart.VerticalAxis>
+
+                <telerik:RadCartesianChart.Grid>
+                    <telerik:CartesianChartGrid MajorLinesVisibility="XY" />
+                </telerik:RadCartesianChart.Grid>
+
+                <telerik:RadCartesianChart.Annotations>
+                    <telerik:CartesianGridLineAnnotation
+                        Axis="{Binding ElementName=chartRollVerticalAxis}"
+                        Value="0"
+                        Stroke="Black"
+                        StrokeThickness="2" />
+                </telerik:RadCartesianChart.Annotations>
+
+            </telerik:RadCartesianChart>
+        </Grid>
+
+        <!-- ===== HEAVE INPUT ===== -->
+        <Grid Grid.Row="3">
+            <Grid.RowDefinitions>
+                <RowDefinition Height="Auto" />
+                <RowDefinition Height="*" />
+            </Grid.RowDefinitions>
+
+            <TextBlock
+                Text="Heave Input"
+                HorizontalAlignment="Center" />
+
+            <telerik:RadCartesianChart
+                Grid.Row="1"
+                Name="chartHeave"
+                MinHeight="180"
+                Margin="10,0,0,0">
+
+                <!-- Ref -->
+                <telerik:LineSeries
+                    ZIndex="200"
+                    Stroke="{StaticResource ColorGraphLineRef}"
+                    CategoryBinding="timestamp"
+                    ValueBinding="graphData">
+                    <telerik:LineSeries.RenderOptions>
+                        <telerik:XamlRenderOptions DefaultVisualsRenderMode="Batch" />
+                    </telerik:LineSeries.RenderOptions>
+                </telerik:LineSeries>
+
+                <!-- Vessel -->
+                <telerik:LineSeries
+                    ZIndex="200"
+                    Stroke="{StaticResource ColorGraphLineTest}"
+                    CategoryBinding="timestamp"
+                    ValueBinding="graphData">
+                    <telerik:LineSeries.RenderOptions>
+                        <telerik:XamlRenderOptions DefaultVisualsRenderMode="Batch" />
+                    </telerik:LineSeries.RenderOptions>
+                </telerik:LineSeries>
+
+                <telerik:RadCartesianChart.HorizontalAxis>
+                    <telerik:DateTimeContinuousAxis
+                        MajorStepUnit="Minute"
+                        MajorStep="5"
+                        ShowLabels="False"
+                        PlotMode="OnTicks"
+                        TickOrigin="{Binding alignmentTime}"
+                        Minimum="{Binding alignmentTimeMin}"
+                        Maximum="{Binding alignmentTimeMax}" />
+                </telerik:RadCartesianChart.HorizontalAxis>
+
+                <telerik:RadCartesianChart.VerticalAxis>
+                    <telerik:LinearAxis
+                        x:Name="chartHeaveVerticalAxis"
+                        Maximum="{Binding heaveChartAxisMax}"
+                        Minimum="{Binding heaveChartAxisMin}">
+                        <telerik:LinearAxis.LabelTemplate>
+                            <DataTemplate>
+                                <TextBlock Text="{Binding Converter={StaticResource LabelAbsConverter}}" />
+                            </DataTemplate>
+                        </telerik:LinearAxis.LabelTemplate>
+                    </telerik:LinearAxis>
+                </telerik:RadCartesianChart.VerticalAxis>
+
+                <telerik:RadCartesianChart.Grid>
+                    <telerik:CartesianChartGrid MajorLinesVisibility="XY" />
+                </telerik:RadCartesianChart.Grid>
+
+                <telerik:RadCartesianChart.Annotations>
+                    <telerik:CartesianGridLineAnnotation
+                        Axis="{Binding ElementName=chartHeaveVerticalAxis}"
+                        Value="0"
+                        Stroke="Black"
+                        StrokeThickness="2" />
+                </telerik:RadCartesianChart.Annotations>
+
+            </telerik:RadCartesianChart>
+        </Grid>
+    </Grid>
+</UserControl>

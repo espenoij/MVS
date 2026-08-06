@@ -62,12 +62,15 @@ namespace MVS
         // Guards TextChanged handlers during LoadSelectedItemsDetails.
         private bool _loadingDetails;
 
+        // Tracks whether the review (Step 4) charts have been populated from the full
+        // database session for the current project. Live capture does not set this;
+        // the review charts are (re)built from the database only when the user enters
+        // Step 4, so review graphs update only after capture is complete.
+        private bool _reviewDataLoaded;
+
         // Live-update timer for the duration banner while recording is active.
         private readonly DispatcherTimer _recordingBannerTimer;
         private DateTime _recordingStartTime;
-
-        // Live popup shown while a recording session is active.
-        private DialogRecordingActive _recordingDialog;
 
         public Projects()
         {
@@ -105,18 +108,14 @@ namespace MVS
 
         public void InitUI()
         {
-            // Wire up the embedded Data Analysis charts (Step 3).
+            // Wire up the embedded Data Analysis charts (Step 4 — Review).
             ucDataAnalysis.Init(projectVM);
+
+            // Wire up the live input charts shown during capture (Step 3).
+            ucCaptureCharts.Init(projectVM);
 
             // Liste med sensor verdier
             gvProjects.ItemsSource = mvsProjectList;
-
-            // Fylle input setup combobox
-            cboInputMRUs.Items.Add(InputMRUType.ReferenceMRU_TestMRU.GetDescription());
-            cboInputMRUs.Items.Add(InputMRUType.ReferenceMRU.GetDescription());
-
-            // Sette default verdi
-            cboInputMRUs.Text = cboInputMRUs.Items[0].ToString();
 
             // Analysis init
             InitDataViewWorker();
@@ -183,7 +182,6 @@ namespace MVS
                 tbVesselName.IsEnabled = false;
                 tbLocation.IsEnabled = false;
                 chkCorrectionApplied.IsEnabled = false;
-                cboInputMRUs.IsEnabled = false;
                 ucReportMetadata.IsEnabled = false;
             }
             else
@@ -221,7 +219,6 @@ namespace MVS
                     tbVesselName.IsEnabled = true;
                     tbLocation.IsEnabled = true;
                     chkCorrectionApplied.IsEnabled = true;
-                    cboInputMRUs.IsEnabled = true;
                     ucReportMetadata.IsEnabled = true;
                 }
                 else
@@ -232,7 +229,6 @@ namespace MVS
                     tbVesselName.IsEnabled = false;
                     tbLocation.IsEnabled = false;
                     chkCorrectionApplied.IsEnabled = false;
-                    cboInputMRUs.IsEnabled = false;
                     ucReportMetadata.IsEnabled = false;
                 }
             }
@@ -260,20 +256,15 @@ namespace MVS
         {
             UpdateUIStates(true);
 
-            // Start live banner updates.
+            // Start live banner updates. Recording status is shown in-page via the
+            // duration banner; no separate popup dialog is used.
             _recordingStartTime = DateTime.UtcNow;
             durationBanner.UpdateLive(_recordingStartTime);
             _recordingBannerTimer.Start();
-
-            // Show a live popup while a recording session is active.
-            ShowRecordingDialog();
         }
 
         public void Stop(OperationsMode mode)
         {
-            // Close the live recording popup.
-            CloseRecordingDialog();
-
             // Stop live banner updates.
             _recordingBannerTimer.Stop();
 
@@ -288,48 +279,15 @@ namespace MVS
             // Legge data i UI
             LoadSelectedItemsDetails();
 
-            // Load and analyse the freshly-recorded session data so the Review
-            // step shows current statistics as soon as the user navigates there.
+            // The Review (Step 4) charts are intentionally NOT loaded here. They are
+            // (re)built from the full database session only when the user navigates to
+            // the review step, so review graphs update only after capture is complete.
             if (mode == OperationsMode.Recording &&
                 mainWindowVM.SelectedProject != null &&
                 mainWindowVM.SelectedProject.DataSetHasData())
             {
-                dataViewWorker.RunWorkerAsync();
-                progressDlg.Start(mainWindowVM);
-                progressDlg.ShowDialog();
+                _reviewDataLoaded = false;
             }
-        }
-
-        // ============================================================
-        // Live recording popup
-        // ============================================================
-
-        private void ShowRecordingDialog()
-        {
-            // Only a real recording session gets the popup.
-            if (mainWindowVM?.OperationsMode != OperationsMode.Recording)
-                return;
-
-            CloseRecordingDialog();
-
-            _recordingDialog = new DialogRecordingActive
-            {
-                Owner = App.Current.MainWindow
-            };
-            _recordingDialog.StartSession(_recordingStartTime, () => stopRecordingCallback?.Invoke());
-            _recordingDialog.Show();
-        }
-
-        private void CloseRecordingDialog()
-        {
-            if (_recordingDialog == null)
-                return;
-
-            // Detach first so the programmatic close does not re-enter this method
-            // via the dialog's stop callback.
-            var dialog = _recordingDialog;
-            _recordingDialog = null;
-            dialog.CloseSession();
         }
 
         private void btnNew_Click(object sender, RoutedEventArgs e)
@@ -403,6 +361,7 @@ namespace MVS
                     mvsDatabase.DeleteData(project);
                     project.ClearTimestamps();
                     projectVM?.ResetAnalysisResults();
+                    _reviewDataLoaded = false;
                     LoadSelectedItemsDetails();
                 }
             }
@@ -427,6 +386,9 @@ namespace MVS
             if (mainWindowVM.SelectedProject != null &&
                 mainWindowVM.SelectedProject.DataSetHasData())
             {
+                // Existing project with data: load and display the full session now.
+                _reviewDataLoaded = true;
+
                 // Starte data analyse
                 dataViewWorker.RunWorkerAsync();
 
@@ -452,6 +414,9 @@ namespace MVS
             // Steps 3-4 — clear analysis data and statistics from the previous project.
             projectVM?.ResetAnalysisResults();
 
+            // Review charts must be re-loaded from the database for the new project.
+            _reviewDataLoaded = false;
+
             // Step 5 — drop any cached report and reset generation state for the new project.
             _reportGenerated = false;
             _reportNeedsUpdate = false;
@@ -473,7 +438,13 @@ namespace MVS
                 tbVesselName.Text = mainWindowVM.SelectedProject.VesselName;
                 tbLocation.Text = mainWindowVM.SelectedProject.Location;
                 SetCorrectionCheckbox(mainWindowVM.SelectedProject.HasCorrectionApplied);
-                cboInputMRUs.Text = mainWindowVM.SelectedProject.InputMRUs.GetDescription();
+
+                // Application always uses Reference MRU + Vessel MRU.
+                if (mainWindowVM.SelectedProject.InputMRUs != InputMRUType.ReferenceMRU_TestMRU)
+                {
+                    mainWindowVM.SelectedProject.InputMRUs = InputMRUType.ReferenceMRU_TestMRU;
+                    mvsDatabase.Update(mainWindowVM.SelectedProject);
+                }
                 lbDataSetDate.Content = mainWindowVM.SelectedProject.DateString;
                 lbDataSetStartTime.Content = mainWindowVM.SelectedProject.StartTimeString2;
                 lbDataSetEndTime.Content = mainWindowVM.SelectedProject.EndTimeString2;
@@ -492,7 +463,6 @@ namespace MVS
                 tbVesselName.Text = string.Empty;
                 tbLocation.Text = string.Empty;
                 SetCorrectionCheckbox(false);
-                cboInputMRUs.Text = InputMRUType.None.GetDescription();
                 lbDataSetDate.Content = string.Empty;
                 lbDataSetStartTime.Content = string.Empty;
                 lbDataSetEndTime.Content = string.Empty;
@@ -732,24 +702,40 @@ namespace MVS
             InvalidateReportCache();
         }
 
-        private void cboInputMRUs_DropDownClosed(object sender, EventArgs e)
-        {
-            if (mainWindowVM.SelectedProject != null)
-            {
-                // Ny valgt MRU type
-                mainWindowVM.SelectedProject.InputMRUs = EnumExtension.GetEnumValueFromDescription<InputMRUType>((sender as RadComboBox).Text);
-
-                // Oppdatere database
-                mvsDatabase.Update(mainWindowVM.SelectedProject);
-            }
-        }
-
         private void InitDataViewWorker()
         {
             dataViewWorker.DoWork += dataViewWorker_DoWork;
             dataViewWorker.ProgressChanged += importWorker_ProgressChanged;
             dataViewWorker.RunWorkerCompleted += dataViewWorker_RunWorkerCompleted;
             dataViewWorker.WorkerReportsProgress = true;
+        }
+
+        /// <summary>
+        /// Loads the full recorded session from the database and rebuilds the review
+        /// (Step 4) charts, but only the first time the review step is entered for the
+        /// current project. During live capture the review charts are left untouched;
+        /// they are populated on demand here so review graphs reflect the complete
+        /// captured dataset only after recording is done.
+        /// </summary>
+        private void EnsureReviewDataLoaded()
+        {
+            if (_reviewDataLoaded)
+                return;
+
+            var project = mainWindowVM?.SelectedProject;
+            if (project == null || !project.DataSetHasData())
+                return;
+
+            // Avoid launching a second worker while one is already running.
+            if (dataViewWorker.IsBusy)
+                return;
+
+            _reviewDataLoaded = true;
+
+            dataViewWorker.RunWorkerAsync();
+
+            progressDlg.Start(mainWindowVM);
+            progressDlg.ShowDialog();
         }
 
         private void dataViewWorker_DoWork(object sender, DoWorkEventArgs e)
@@ -839,6 +825,15 @@ namespace MVS
                 projectVM.CurrentWizardStep = step;
 
             UpdateWizardNavigation();
+
+            // On entering the review step, (re)build the review charts from the full
+            // database session so they reflect the complete captured dataset rather than
+            // the live rolling window. This is done only once per project session; the
+            // review graphs therefore update only after capture is complete.
+            if (step == 4)
+            {
+                EnsureReviewDataLoaded();
+            }
 
             // On entering the report step, show the cached report if one is already
             // available for this project; otherwise prompt the user to generate it.
