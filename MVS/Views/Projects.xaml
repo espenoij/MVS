@@ -228,6 +228,9 @@
                                         <Grid.RowDefinitions>
                                                 <RowDefinition Height="32"/>
                                                 <RowDefinition Height="Auto"/>
+                                                <RowDefinition Height="32"/>
+                                                <RowDefinition Height="32"/>
+                                                <RowDefinition Height="32"/>
                                             </Grid.RowDefinitions>
 
                                         <TextBlock Grid.Row="0" Grid.Column="0" Text="ID" VerticalAlignment="Center" Foreground="{StaticResource SesTextSecondaryBrush}"/>
@@ -242,6 +245,36 @@
                                                  Margin="0,4,0,0"
                                                               LostFocus="tbDataSetName_LostFocus"
                                                               KeyDown="tbDataSetName_KeyDown"/>
+
+                                        <TextBlock Grid.Row="2" Grid.Column="0" Text="Operator *" VerticalAlignment="Center" Margin="0,4,0,0" Foreground="{StaticResource SesTextSecondaryBrush}"/>
+                                        <telerik:RadWatermarkTextBox Grid.Row="2" Grid.Column="1"
+                                                 Name="tbOperator"
+                                                 VerticalContentAlignment="Center"
+                                                 Margin="0,4,0,0"
+                                                 WatermarkContent="Required"
+                                                 LostFocus="tbOperator_LostFocus"
+                                                 KeyDown="tbOperator_KeyDown"
+                                                 TextChanged="tbReportField_TextChanged"/>
+
+                                        <TextBlock Grid.Row="3" Grid.Column="0" Text="Vessel *" VerticalAlignment="Center" Margin="0,4,0,0" Foreground="{StaticResource SesTextSecondaryBrush}"/>
+                                        <telerik:RadWatermarkTextBox Grid.Row="3" Grid.Column="1"
+                                                 Name="tbVesselName"
+                                                 VerticalContentAlignment="Center"
+                                                 Margin="0,4,0,0"
+                                                 WatermarkContent="Required"
+                                                 LostFocus="tbVesselName_LostFocus"
+                                                 KeyDown="tbVesselName_KeyDown"
+                                                 TextChanged="tbReportField_TextChanged"/>
+
+                                        <TextBlock Grid.Row="4" Grid.Column="0" Text="Location *" VerticalAlignment="Center" Margin="0,4,0,0" Foreground="{StaticResource SesTextSecondaryBrush}"/>
+                                        <telerik:RadWatermarkTextBox Grid.Row="4" Grid.Column="1"
+                                                 Name="tbLocation"
+                                                 VerticalContentAlignment="Center"
+                                                 Margin="0,4,0,0"
+                                                 WatermarkContent="Required"
+                                                 LostFocus="tbLocation_LostFocus"
+                                                 KeyDown="tbLocation_KeyDown"
+                                                 TextChanged="tbReportField_TextChanged"/>
                                                  </Grid>
                                 </telerik:GroupBox>
 
@@ -427,19 +460,16 @@
                             <telerik:GroupBox Header="Project Details" Margin="0,0,0,10">
                                 <Grid Margin="8">
                                     <Grid.ColumnDefinitions>
-                                        <ColumnDefinition Width="130"/>
-                                        <ColumnDefinition Width="*"/>
-                                        <ColumnDefinition Width="130"/>
+                                        <ColumnDefinition Width="Auto" MinWidth="100"/>
                                         <ColumnDefinition Width="*"/>
                                     </Grid.ColumnDefinitions>
                                     <Grid.RowDefinitions>
                                         <RowDefinition Height="Auto"/>
-                                        <RowDefinition Height="Auto"/>
-                                        <RowDefinition Height="Auto"/>
+                                        <RowDefinition Height="32"/>
                                     </Grid.RowDefinitions>
 
-                                    <TextBlock Grid.Row="2" Grid.Column="0" Text="Comments" Margin="0,4,0,0" VerticalAlignment="Top" Foreground="{StaticResource SesTextSecondaryBrush}"/>
-                                    <telerik:RadWatermarkTextBox Grid.Row="2" Grid.Column="1" Grid.ColumnSpan="3"
+                                    <TextBlock Grid.Row="0" Grid.Column="0" Text="Comments" Margin="0,4,8,0" VerticalAlignment="Top" Foreground="{StaticResource SesTextSecondaryBrush}"/>
+                                    <telerik:RadWatermarkTextBox Grid.Row="0" Grid.Column="1"
                                              Name="tbDataSetComments"
                                              AcceptsReturn="True"
                                              TextWrapping="Wrap"
@@ -453,38 +483,8 @@
                                              LostFocus="tbDataSetDescription_LostFocus"
                                              KeyDown="tbDataSetDescription_KeyDown"/>
 
-                                    <TextBlock Grid.Row="0" Grid.Column="0" Text="Operator *" VerticalAlignment="Center" Margin="0,4,0,0" Foreground="{StaticResource SesTextSecondaryBrush}"/>
-                                    <telerik:RadWatermarkTextBox Grid.Row="0" Grid.Column="1"
-                                             Name="tbOperator"
-                                             VerticalContentAlignment="Center"
-                                             Margin="0,4,0,0"
-                                             WatermarkContent="Required"
-                                             LostFocus="tbOperator_LostFocus"
-                                             KeyDown="tbOperator_KeyDown"
-                                             TextChanged="tbReportField_TextChanged"/>
-
-                                    <TextBlock Grid.Row="0" Grid.Column="2" Text="Vessel *" VerticalAlignment="Center" Margin="16,4,0,0" Foreground="{StaticResource SesTextSecondaryBrush}"/>
-                                    <telerik:RadWatermarkTextBox Grid.Row="0" Grid.Column="3"
-                                             Name="tbVesselName"
-                                             VerticalContentAlignment="Center"
-                                             Margin="0,4,0,0"
-                                             WatermarkContent="Required"
-                                             LostFocus="tbVesselName_LostFocus"
-                                             KeyDown="tbVesselName_KeyDown"
-                                             TextChanged="tbReportField_TextChanged"/>
-
-                                    <TextBlock Grid.Row="1" Grid.Column="0" Text="Location *" VerticalAlignment="Center" Margin="0,4,0,0" Foreground="{StaticResource SesTextSecondaryBrush}"/>
-                                    <telerik:RadWatermarkTextBox Grid.Row="1" Grid.Column="1"
-                                             Name="tbLocation"
-                                             VerticalContentAlignment="Center"
-                                             Margin="0,4,0,0"
-                                             WatermarkContent="Required"
-                                             LostFocus="tbLocation_LostFocus"
-                                             KeyDown="tbLocation_KeyDown"
-                                             TextChanged="tbReportField_TextChanged"/>
-
-                                    <TextBlock Grid.Row="1" Grid.Column="2" Text="Correction Applied" VerticalAlignment="Center" Margin="16,4,0,0" Foreground="{StaticResource SesTextSecondaryBrush}"/>
-                                    <CheckBox Grid.Row="1" Grid.Column="3"
+                                    <TextBlock Grid.Row="1" Grid.Column="0" Text="Correction Applied" VerticalAlignment="Center" Margin="0,4,8,0" Foreground="{StaticResource SesTextSecondaryBrush}"/>
+                                    <CheckBox Grid.Row="1" Grid.Column="1"
                                               x:Name="chkCorrectionApplied"
                                               HorizontalAlignment="Left"
                                               VerticalAlignment="Center"
