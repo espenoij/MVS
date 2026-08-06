@@ -228,9 +228,9 @@
                                         <Grid.RowDefinitions>
                                                 <RowDefinition Height="32"/>
                                                 <RowDefinition Height="Auto"/>
-                                                <RowDefinition Height="32"/>
-                                                <RowDefinition Height="32"/>
-                                                <RowDefinition Height="32"/>
+                                                <RowDefinition Height="Auto"/>
+                                                <RowDefinition Height="Auto"/>
+                                                <RowDefinition Height="Auto"/>
                                             </Grid.RowDefinitions>
 
                                         <TextBlock Grid.Row="0" Grid.Column="0" Text="ID" VerticalAlignment="Center" Foreground="{StaticResource SesTextSecondaryBrush}"/>
@@ -246,9 +246,10 @@
                                                               LostFocus="tbDataSetName_LostFocus"
                                                               KeyDown="tbDataSetName_KeyDown"/>
 
-                                        <TextBlock Grid.Row="2" Grid.Column="0" Text="Operator *" VerticalAlignment="Center" Margin="0,4,0,0" Foreground="{StaticResource SesTextSecondaryBrush}"/>
+                                        <TextBlock Grid.Row="2" Grid.Column="0" Text="Operator" VerticalAlignment="Center" Margin="0,4,0,0" Foreground="{StaticResource SesTextSecondaryBrush}"/>
                                         <telerik:RadWatermarkTextBox Grid.Row="2" Grid.Column="1"
                                                  Name="tbOperator"
+                                                 MinHeight="32"
                                                  VerticalContentAlignment="Center"
                                                  Margin="0,4,0,0"
                                                  WatermarkContent="Required"
@@ -256,9 +257,10 @@
                                                  KeyDown="tbOperator_KeyDown"
                                                  TextChanged="tbReportField_TextChanged"/>
 
-                                        <TextBlock Grid.Row="3" Grid.Column="0" Text="Vessel *" VerticalAlignment="Center" Margin="0,4,0,0" Foreground="{StaticResource SesTextSecondaryBrush}"/>
+                                        <TextBlock Grid.Row="3" Grid.Column="0" Text="Vessel" VerticalAlignment="Center" Margin="0,4,0,0" Foreground="{StaticResource SesTextSecondaryBrush}"/>
                                         <telerik:RadWatermarkTextBox Grid.Row="3" Grid.Column="1"
                                                  Name="tbVesselName"
+                                                 MinHeight="32"
                                                  VerticalContentAlignment="Center"
                                                  Margin="0,4,0,0"
                                                  WatermarkContent="Required"
@@ -266,9 +268,10 @@
                                                  KeyDown="tbVesselName_KeyDown"
                                                  TextChanged="tbReportField_TextChanged"/>
 
-                                        <TextBlock Grid.Row="4" Grid.Column="0" Text="Location *" VerticalAlignment="Center" Margin="0,4,0,0" Foreground="{StaticResource SesTextSecondaryBrush}"/>
+                                        <TextBlock Grid.Row="4" Grid.Column="0" Text="Location" VerticalAlignment="Center" Margin="0,4,0,0" Foreground="{StaticResource SesTextSecondaryBrush}"/>
                                         <telerik:RadWatermarkTextBox Grid.Row="4" Grid.Column="1"
                                                  Name="tbLocation"
+                                                 MinHeight="32"
                                                  VerticalContentAlignment="Center"
                                                  Margin="0,4,0,0"
                                                  WatermarkContent="Required"

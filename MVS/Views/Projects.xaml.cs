@@ -865,14 +865,20 @@ namespace MVS
                     bool hasProject = project != null;
                     bool hasName = project != null && !string.IsNullOrWhiteSpace(project.Name);
                     bool hasInputMRUs = project != null && project.InputMRUs != InputMRUType.None;
-                    canProceed = hasProject && hasName && hasInputMRUs;
+                    bool hasOperator = project != null && !string.IsNullOrWhiteSpace(project.Operator);
+                    bool hasVesselName = project != null && !string.IsNullOrWhiteSpace(project.VesselName);
+                    bool hasLocation = project != null && !string.IsNullOrWhiteSpace(project.Location);
+                    canProceed = hasProject && hasName && hasInputMRUs && hasOperator && hasVesselName && hasLocation;
                     requirementsMet = canProceed;
                     requirementsText = canProceed
                         ? "Step 1 complete — project setup is ready. Click Next to continue to LiDAR correction."
                         : "To continue you must:  " +
                           (hasProject ? "\u2713 Select a project" : "\u2717 Select a project") + "    " +
                           (hasName ? "\u2713 Enter a project name" : "\u2717 Enter a project name") + "    " +
-                          (hasInputMRUs ? "\u2713 Choose the Input MRUs" : "\u2717 Choose the Input MRUs");
+                          (hasInputMRUs ? "\u2713 Choose the Input MRUs" : "\u2717 Choose the Input MRUs") + "    " +
+                          (hasOperator ? "\u2713 Enter operator" : "\u2717 Enter operator") + "    " +
+                          (hasVesselName ? "\u2713 Enter vessel name" : "\u2717 Enter vessel name") + "    " +
+                          (hasLocation ? "\u2713 Enter location" : "\u2717 Enter location");
                     break;
 
                 case 2:
@@ -1024,7 +1030,10 @@ namespace MVS
                     bool hasProject = project != null;
                     bool hasName = project != null && !string.IsNullOrWhiteSpace(project.Name);
                     bool hasInputMRUs = project != null && project.InputMRUs != InputMRUType.None;
-                    return hasProject && hasName && hasInputMRUs;
+                    bool hasOperator = project != null && !string.IsNullOrWhiteSpace(project.Operator);
+                    bool hasVesselName = project != null && !string.IsNullOrWhiteSpace(project.VesselName);
+                    bool hasLocation = project != null && !string.IsNullOrWhiteSpace(project.Location);
+                    return hasProject && hasName && hasInputMRUs && hasOperator && hasVesselName && hasLocation;
                 case 2:
                     return lidarApplied || hasData;
                 case 3:
