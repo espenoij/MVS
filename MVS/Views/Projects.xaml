@@ -133,7 +133,7 @@
                     <!-- ===== STEP 1: SETUP ===== -->
                     <Grid x:Name="panelStep1">
                         <Grid.ColumnDefinitions>
-                            <ColumnDefinition Width="2*" MinWidth="350" MaxWidth="450"/>
+                            <ColumnDefinition Width="2*" MinWidth="350"/>
                             <ColumnDefinition Width="3*"/>
                         </Grid.ColumnDefinitions>
 
@@ -236,7 +236,7 @@
                                         <TextBlock Grid.Row="0" Grid.Column="0" Text="ID" VerticalAlignment="Center" Foreground="{StaticResource SesTextSecondaryBrush}"/>
                                         <Label Grid.Row="0" Grid.Column="1" Name="lbDataSetID" VerticalAlignment="Center"/>
 
-                                        <TextBlock Grid.Row="1" Grid.Column="0" Text="Name" VerticalAlignment="Top" Margin="0,8,0,0" Foreground="{StaticResource SesTextSecondaryBrush}"/>
+                                        <TextBlock Grid.Row="1" Grid.Column="0" Text="Project Name" VerticalAlignment="Center" Margin="0,4,0,0" Foreground="{StaticResource SesTextSecondaryBrush}"/>
                                         <TextBox Grid.Row="1" Grid.Column="1"
                                                  Name="tbDataSetName"
                                                  MinHeight="32"
@@ -325,7 +325,7 @@
                             <TextBlock TextWrapping="Wrap"
                                        Foreground="{StaticResource SesTextSecondaryBrush}"
                                        Margin="0,0,0,12"
-                                       Text="Record live motion data for this project. The recommended verification window is 40 minutes."/>
+                                       Text="Record live motion data for this project. The recommended verification window is at least 40 minutes."/>
 
                             <controls:DurationStatusBanner x:Name="durationBanner" Margin="0,0,0,12"/>
 
