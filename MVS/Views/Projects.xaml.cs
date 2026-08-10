@@ -772,13 +772,9 @@ namespace MVS
             // Refresh result cards with newly computed statistics.
             RefreshResultCards();
 
-            // Advance the wizard to the step that best reflects the loaded project's state
-            // so the user can move freely through steps 2 and 3 without being blocked.
-            var loadedProject = mainWindowVM?.SelectedProject;
-            if (loadedProject != null && loadedProject.DataSetHasData())
-                SetWizardStep(loadedProject.HasCorrectionApplied ? 4 : 3);
-            else
-                UpdateWizardNavigation();
+            // Keep the wizard on the setup page when loading an existing project.
+            // The user can manually navigate to other steps as needed.
+            UpdateWizardNavigation();
         }
 
         // ============================================================
