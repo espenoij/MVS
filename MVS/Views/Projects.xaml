@@ -306,18 +306,17 @@
                     </Grid>
 
                     <!-- ===== STEP 3: CAPTURE ===== -->
-                    <Grid x:Name="panelStep3" Visibility="Collapsed">
+                    <ScrollViewer x:Name="panelStep3" Visibility="Collapsed"
+                                  VerticalScrollBarVisibility="Auto"
+                                  HorizontalScrollBarVisibility="Disabled">
+                    <Grid>
                         <Grid.ColumnDefinitions>
                             <ColumnDefinition Width="2*" MinWidth="320"/>
                             <ColumnDefinition Width="3*" MinWidth="360"/>
                         </Grid.ColumnDefinitions>
 
                         <!-- ===== LEFT: existing capture controls ===== -->
-                        <ScrollViewer Grid.Column="0"
-                                      VerticalScrollBarVisibility="Auto"
-                                      HorizontalScrollBarVisibility="Disabled"
-                                      Margin="0,0,12,0">
-                        <StackPanel>
+                        <StackPanel Grid.Column="0" Margin="0,0,12,0">
 
                             <TextBlock Text="Step 3 — Capture motion data"
                                        FontSize="14" FontWeight="SemiBold"
@@ -390,14 +389,15 @@
                             </telerik:GroupBox>
 
                             </StackPanel>
-                        </ScrollViewer>
 
                         <!-- ===== RIGHT: live input charts (Pitch / Roll / Heave) ===== -->
                         <telerik:GroupBox Grid.Column="1" Header="Live Input">
                             <local:CaptureCharts x:Name="ucCaptureCharts"
+                                                 MinHeight="600"
                                                  Margin="8"/>
                         </telerik:GroupBox>
                     </Grid>
+                    </ScrollViewer>
 
                     <!-- ===== STEP 4: REVIEW ===== -->
                     <ScrollViewer x:Name="panelStep4"
