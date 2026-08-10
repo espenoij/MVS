@@ -95,4 +95,14 @@
   <ItemGroup Label="Compile items now included by globbing that were not in the original project file">
     <Compile Remove="Services\HMSSensorStatus.cs" />
   </ItemGroup>
+
+  <!-- Copy native x64 DLLs (e.g. livox_lidar_sdk_shared.dll) flat into the output
+       directory root so the P/Invoke loader can resolve them. -->
+  <ItemGroup>
+    <Content Include="native\x64\*.dll">
+      <Link>%(Filename)%(Extension)</Link>
+      <CopyToOutputDirectory>PreserveNewest</CopyToOutputDirectory>
+    </Content>
+  </ItemGroup>
+
 </Project>

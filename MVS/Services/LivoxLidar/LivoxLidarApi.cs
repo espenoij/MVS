@@ -13,7 +13,7 @@ namespace MVS
         [return: MarshalAs(UnmanagedType.I1)]
         public static extern bool LivoxLidarSdkInit(
             [MarshalAs(UnmanagedType.LPStr)] string path,
-            IntPtr host_ip,
+            [MarshalAs(UnmanagedType.LPStr)] string host_ip,
             IntPtr log_cfg_info);
 
         // Uninitialize the SDK and release all resources.

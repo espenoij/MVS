@@ -1,6 +1,11 @@
 using System;
 using System.Collections.Generic;
+using System.IO;
+using System.Linq;
+using System.Net;
+using System.Net.NetworkInformation;
 using System.Runtime.InteropServices;
+using System.Text.Json;
 using System.Threading;
 
 namespace MVS
@@ -102,6 +107,19 @@ namespace MVS
 
             try
             {
+                // Preflight: verify the config file exists and its host_ip matches a local NIC.
+                // If not, the native SDK's socket bind would fail (and may crash the process),
+                // so return a clean error before touching native code.
+                if (!TryValidateConfig(configFilePath, out string preflightError))
+                {
+                    CurrentStatus = Status.Error;
+                    errorHandler?.Insert(new ErrorMessage(
+                        DateTime.UtcNow, ErrorMessageType.LivoxLidar,
+                        ErrorMessageCategory.AdminUser,
+                        preflightError));
+                    return false;
+                }
+
                 _pointCloudDelegate = OnPointCloud;
                 _infoChangeDelegate = OnInfoChange;
                 _pointCloudHandle   = GCHandle.Alloc(_pointCloudDelegate);
@@ -109,7 +127,7 @@ namespace MVS
 
                 CurrentStatus = Status.Connecting;
 
-                bool ok = LivoxLidarApi.LivoxLidarSdkInit(configFilePath, IntPtr.Zero, IntPtr.Zero);
+                bool ok = LivoxLidarApi.LivoxLidarSdkInit(configFilePath, "", IntPtr.Zero);
                 if (!ok)
                 {
                     CurrentStatus = Status.Error;
@@ -142,6 +160,80 @@ namespace MVS
                 ErrorOccurred?.Invoke(ex.Message);
                 return false;
             }
+        }
+
+        /// <summary>
+        /// Verifies the SDK config file exists and its host_ip matches one of the local
+        /// network interfaces. Returns false with a user-friendly message otherwise, so
+        /// callers can avoid handing an unbindable IP to the native SDK (which may crash
+        /// the process before returning).
+        /// </summary>
+        private static bool TryValidateConfig(string configFilePath, out string errorMessage)
+        {
+            if (!File.Exists(configFilePath))
+            {
+                errorMessage = $"Livox config file not found: {configFilePath}";
+                return false;
+            }
+
+            string hostIp;
+            try
+            {
+                using var stream = File.OpenRead(configFilePath);
+                using var doc = JsonDocument.Parse(stream);
+
+                // Locate the first top-level lidar section (e.g. "MID360") and read
+                // host_net_info[0].host_ip. The exact section name is model-dependent.
+                JsonElement? hostNetInfo = null;
+                foreach (JsonProperty prop in doc.RootElement.EnumerateObject())
+                {
+                    if (prop.Value.ValueKind == JsonValueKind.Object &&
+                        prop.Value.TryGetProperty("host_net_info", out JsonElement info))
+                    {
+                        hostNetInfo = info;
+                        break;
+                    }
+                }
+
+                if (hostNetInfo is null ||
+                    hostNetInfo.Value.ValueKind != JsonValueKind.Array ||
+                    hostNetInfo.Value.GetArrayLength() == 0 ||
+                    !hostNetInfo.Value[0].TryGetProperty("host_ip", out JsonElement hostIpEl))
+                {
+                    errorMessage = $"Livox config is missing host_net_info.host_ip: {configFilePath}";
+                    return false;
+                }
+
+                hostIp = hostIpEl.GetString();
+            }
+            catch (Exception ex)
+            {
+                errorMessage = $"Failed to parse Livox config file '{configFilePath}': {ex.Message}";
+                return false;
+            }
+
+            if (string.IsNullOrWhiteSpace(hostIp) || !IPAddress.TryParse(hostIp, out IPAddress parsed))
+            {
+                errorMessage = $"Livox config host_ip is not a valid IP address: '{hostIp}'";
+                return false;
+            }
+
+            bool hostIpFound = NetworkInterface.GetAllNetworkInterfaces()
+                .Where(n => n.OperationalStatus == OperationalStatus.Up)
+                .SelectMany(n => n.GetIPProperties().UnicastAddresses)
+                .Any(u => u.Address.Equals(parsed));
+
+            if (!hostIpFound)
+            {
+                errorMessage =
+                    $"No network adapter on this machine has IP {hostIp} (configured in {configFilePath}). " +
+                    "Connect a Livox lidar and set the NIC's IPv4 address to match the config, " +
+                    "or edit the config file to match a NIC on this machine.";
+                return false;
+            }
+
+            errorMessage = null;
+            return true;
         }
 
         public void Disconnect()

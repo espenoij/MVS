@@ -176,7 +176,6 @@
 
     // Livox LiDAR
     public const string LivoxIpAddress           = "LivoxIpAddress";
-    public const string LivoxConfigFilePath      = "LivoxConfigFilePath";
     public const string LivoxRangeMinMm          = "LivoxRangeMinMm";
     public const string LivoxRangeMaxMm          = "LivoxRangeMaxMm";
     public const string LivoxAzimuthMinDeg       = "LivoxAzimuthMinDeg";

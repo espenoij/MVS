@@ -40,13 +40,6 @@
                                 <StackPanel Margin="8">
 
                                     <DockPanel Margin="0,0,0,4">
-                                        <Label Width="150" Content="SDK Config File" VerticalAlignment="Center"/>
-                                        <TextBox Name="tbConfigFilePath"
-                                                 Text="{Binding ConfigFilePath, UpdateSourceTrigger=LostFocus}"
-                                                 ToolTip="Path to mid360_config.json" />
-                                    </DockPanel>
-
-                                    <DockPanel Margin="0,0,0,4">
                                         <Label Width="150" Content="LiDAR IP" VerticalAlignment="Center"/>
                                         <TextBox Text="{Binding IpAddress, UpdateSourceTrigger=LostFocus}" />
                                     </DockPanel>

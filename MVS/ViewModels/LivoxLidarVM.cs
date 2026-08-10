@@ -1,5 +1,6 @@
 using System;
 using System.Collections.Generic;
+using System.IO;
 using System.ComponentModel;
 using System.Runtime.CompilerServices;
 using System.Threading.Tasks;
@@ -64,13 +65,6 @@ namespace MVS
         // ── Bound properties ─────────────────────────────────────────────────
 
         public LivoxLidarCorrection Correction { get; }
-
-        private string _configFilePath;
-        public string ConfigFilePath
-        {
-            get { return _configFilePath; }
-            set { _configFilePath = value; OnPropertyChanged(); _config.Write(ConfigKey.LivoxConfigFilePath, value ?? ""); }
-        }
 
         private string _ipAddress;
         public string IpAddress
@@ -547,7 +541,8 @@ namespace MVS
         {
             ApplyFiltersToSubsystem();
             AppendStatus("Connecting...");
-            _subsystem.Connect(ConfigFilePath, _errorHandler);
+            var configFilePath = Path.Combine(Environment.GetFolderPath(Environment.SpecialFolder.ApplicationData), @"SES Energy\MVS\mid360_config.json");
+            _subsystem.Connect(configFilePath, _errorHandler);
         }
 
         private void Disconnect()
@@ -1141,7 +1136,6 @@ namespace MVS
 
         private void LoadConfig()
         {
-            ConfigFilePath  = _config.ReadWithDefault(ConfigKey.LivoxConfigFilePath, @"Config\LivoxLidar\mid360_config.json");
             IpAddress       = _config.ReadWithDefault(ConfigKey.LivoxIpAddress,      "192.168.1.3");
 
             RangeMinMm      = (float)_config.ReadWithDefault(ConfigKey.LivoxRangeMinMm,      500.0);
