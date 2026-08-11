@@ -39,15 +39,46 @@
                             <telerik:GroupBox Header="Connection" Margin="0,0,0,8">
                                 <StackPanel Margin="8">
 
+                                    <DockPanel
+                                        Margin="0,0,0,4">
+                                        <Label
+                                            Width="150"
+                                            Content="Status"
+                                            VerticalAlignment="Center" />
+                                        <Label
+                                            Content="{Binding SdkStatus}" />
+                                    </DockPanel>
+
+                                    <DockPanel Margin="0,0,0,4">
+                                        <Label Width="150" Content="Host IP" VerticalAlignment="Center"/>
+                                        <telerik:RadButton Command="{Binding DetectHostIpCommand}"
+                                                           DockPanel.Dock="Right" Width="Auto" Margin="8,0,0,0"
+                                                           ToolTip="Detect the network adapter on the same subnet as the LiDAR IP">Detect</telerik:RadButton>
+                                        <TextBox Text="{Binding HostIp, UpdateSourceTrigger=LostFocus}"
+                                                 ToolTip="IP address of the network adapter connected to the LiDAR (host_net_info.host_ip in mid360_config.json)" />
+                                    </DockPanel>
+
                                     <DockPanel Margin="0,0,0,4">
                                         <Label Width="150" Content="LiDAR IP" VerticalAlignment="Center"/>
                                         <TextBox Text="{Binding IpAddress, UpdateSourceTrigger=LostFocus}" />
                                     </DockPanel>
 
-                                    <DockPanel Margin="0,0,0,4">
-                                        <Label Width="150" Content="SDK Status" VerticalAlignment="Center"/>
-                                        <Label Content="{Binding SdkStatus}" />
-                                    </DockPanel>
+                                    <telerik:RadExpander Header="Advanced Port Settings" IsExpanded="False" Margin="0,4,8,4">
+                                        <StackPanel Margin="0,8,0,0">
+                                            <Label Content="LiDAR Ports" FontWeight="SemiBold" Margin="0,0,0,4" ToolTip="Ports on the LiDAR device (lidar_net_info). Rarely need changing."/>
+                                            <DockPanel Margin="0,0,0,2"><Label Width="150" Content="Cmd Data Port"  VerticalAlignment="Center"/><TextBox Text="{Binding LidarCmdDataPort,   UpdateSourceTrigger=LostFocus}"/></DockPanel>
+                                            <DockPanel Margin="0,0,0,2"><Label Width="150" Content="Push Msg Port"  VerticalAlignment="Center"/><TextBox Text="{Binding LidarPushMsgPort,   UpdateSourceTrigger=LostFocus}"/></DockPanel>
+                                            <DockPanel Margin="0,0,0,2"><Label Width="150" Content="Point Data Port" VerticalAlignment="Center"/><TextBox Text="{Binding LidarPointDataPort, UpdateSourceTrigger=LostFocus}"/></DockPanel>
+                                            <DockPanel Margin="0,0,0,2"><Label Width="150" Content="IMU Data Port"  VerticalAlignment="Center"/><TextBox Text="{Binding LidarImuDataPort,   UpdateSourceTrigger=LostFocus}"/></DockPanel>
+                                            <DockPanel Margin="0,0,0,8"><Label Width="150" Content="Log Data Port"  VerticalAlignment="Center"/><TextBox Text="{Binding LidarLogDataPort,   UpdateSourceTrigger=LostFocus}"/></DockPanel>
+                                            <Label Content="Host Ports" FontWeight="SemiBold" Margin="0,0,0,4" ToolTip="Ports on this PC used to receive data (host_net_info). Rarely need changing."/>
+                                            <DockPanel Margin="0,0,0,2"><Label Width="150" Content="Cmd Data Port"  VerticalAlignment="Center"/><TextBox Text="{Binding HostCmdDataPort,   UpdateSourceTrigger=LostFocus}"/></DockPanel>
+                                            <DockPanel Margin="0,0,0,2"><Label Width="150" Content="Push Msg Port"  VerticalAlignment="Center"/><TextBox Text="{Binding HostPushMsgPort,   UpdateSourceTrigger=LostFocus}"/></DockPanel>
+                                            <DockPanel Margin="0,0,0,2"><Label Width="150" Content="Point Data Port" VerticalAlignment="Center"/><TextBox Text="{Binding HostPointDataPort, UpdateSourceTrigger=LostFocus}"/></DockPanel>
+                                            <DockPanel Margin="0,0,0,2"><Label Width="150" Content="IMU Data Port"  VerticalAlignment="Center"/><TextBox Text="{Binding HostImuDataPort,   UpdateSourceTrigger=LostFocus}"/></DockPanel>
+                                            <DockPanel>              <Label Width="150" Content="Log Data Port"  VerticalAlignment="Center"/><TextBox Text="{Binding HostLogDataPort,   UpdateSourceTrigger=LostFocus}"/></DockPanel>
+                                        </StackPanel>
+                                    </telerik:RadExpander>
 
                                     <StackPanel Orientation="Horizontal" HorizontalAlignment="Right" Margin="0,8,0,0">
                                         <telerik:RadButton Command="{Binding ConnectCommand}"

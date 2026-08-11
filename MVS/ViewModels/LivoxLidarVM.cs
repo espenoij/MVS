@@ -1,6 +1,12 @@
-using System;
+﻿using System;
 using System.Collections.Generic;
 using System.IO;
+using System.Linq;
+using System.Net;
+using System.Net.NetworkInformation;
+using System.Net.Sockets;
+using System.Text.Json;
+using System.Text.Json.Nodes;
 using System.ComponentModel;
 using System.Runtime.CompilerServices;
 using System.Threading.Tasks;
@@ -60,6 +66,7 @@ namespace MVS
             ClearCorrectionCommand  = new RelayCommand(_ => ClearCorrection());
             SimulateScanCommand     = new RelayCommand(_ => SimulateScan(),    _ => CanSimulate);
             AnalyseCommand          = new RelayCommand(_ => Analyse(),         _ => CanFit);
+            DetectHostIpCommand     = new RelayCommand(_ => DetectHostIp());
         }
 
         // ── Bound properties ─────────────────────────────────────────────────
@@ -72,6 +79,37 @@ namespace MVS
             get { return _ipAddress; }
             set { _ipAddress = value; OnPropertyChanged(); _config.Write(ConfigKey.LivoxIpAddress, value ?? ""); }
         }
+
+        private string _hostIp;
+        public string HostIp
+        {
+            get { return _hostIp; }
+            set { _hostIp = value; OnPropertyChanged(); WriteConfigFile(); }
+        }
+
+        // LiDAR-side ports (lidar_net_info)
+        private int _lidarCmdDataPort   = 56100;
+        private int _lidarPushMsgPort   = 56200;
+        private int _lidarPointDataPort = 56300;
+        private int _lidarImuDataPort   = 56400;
+        private int _lidarLogDataPort   = 56500;
+        public int LidarCmdDataPort   { get => _lidarCmdDataPort;   set { _lidarCmdDataPort   = value; OnPropertyChanged(); WriteConfigFile(); } }
+        public int LidarPushMsgPort   { get => _lidarPushMsgPort;   set { _lidarPushMsgPort   = value; OnPropertyChanged(); WriteConfigFile(); } }
+        public int LidarPointDataPort { get => _lidarPointDataPort; set { _lidarPointDataPort = value; OnPropertyChanged(); WriteConfigFile(); } }
+        public int LidarImuDataPort   { get => _lidarImuDataPort;   set { _lidarImuDataPort   = value; OnPropertyChanged(); WriteConfigFile(); } }
+        public int LidarLogDataPort   { get => _lidarLogDataPort;   set { _lidarLogDataPort   = value; OnPropertyChanged(); WriteConfigFile(); } }
+
+        // Host-side ports (host_net_info[0])
+        private int _hostCmdDataPort   = 56101;
+        private int _hostPushMsgPort   = 56201;
+        private int _hostPointDataPort = 56301;
+        private int _hostImuDataPort   = 56401;
+        private int _hostLogDataPort   = 56501;
+        public int HostCmdDataPort   { get => _hostCmdDataPort;   set { _hostCmdDataPort   = value; OnPropertyChanged(); WriteConfigFile(); } }
+        public int HostPushMsgPort   { get => _hostPushMsgPort;   set { _hostPushMsgPort   = value; OnPropertyChanged(); WriteConfigFile(); } }
+        public int HostPointDataPort { get => _hostPointDataPort; set { _hostPointDataPort = value; OnPropertyChanged(); WriteConfigFile(); } }
+        public int HostImuDataPort   { get => _hostImuDataPort;   set { _hostImuDataPort   = value; OnPropertyChanged(); WriteConfigFile(); } }
+        public int HostLogDataPort   { get => _hostLogDataPort;   set { _hostLogDataPort   = value; OnPropertyChanged(); WriteConfigFile(); } }
 
         private float _rangeMinMm = 500f;
         public float RangeMinMm
@@ -534,6 +572,7 @@ namespace MVS
         public ICommand ClearCorrectionCommand { get; }
         public ICommand SimulateScanCommand    { get; }
         public ICommand AnalyseCommand         { get; }
+        public ICommand DetectHostIpCommand    { get; }
 
         // ── Command implementations ───────────────────────────────────────────
 
@@ -541,8 +580,48 @@ namespace MVS
         {
             ApplyFiltersToSubsystem();
             AppendStatus("Connecting...");
-            var configFilePath = Path.Combine(Environment.GetFolderPath(Environment.SpecialFolder.ApplicationData), @"SES Energy\MVS\mid360_config.json");
-            _subsystem.Connect(configFilePath, _errorHandler);
+            _subsystem.Connect(LivoxConfigFilePath(), _errorHandler);
+        }
+
+        private void DetectHostIp()
+        {
+            if (!IPAddress.TryParse(_ipAddress, out var lidarIp))
+            {
+                AppendStatus("Cannot detect Host IP: LiDAR IP is not a valid address.");
+                return;
+            }
+
+            var lidarBytes = lidarIp.GetAddressBytes();
+
+            foreach (var nic in NetworkInterface.GetAllNetworkInterfaces()
+                         .Where(n => n.OperationalStatus == OperationalStatus.Up))
+            {
+                foreach (var uni in nic.GetIPProperties().UnicastAddresses
+                             .Where(u => u.Address.AddressFamily == AddressFamily.InterNetwork))
+                {
+                    var nicBytes  = uni.Address.GetAddressBytes();
+                    var maskBytes = uni.IPv4Mask.GetAddressBytes();
+
+                    bool sameSubnet = true;
+                    for (int i = 0; i < 4; i++)
+                    {
+                        if ((lidarBytes[i] & maskBytes[i]) != (nicBytes[i] & maskBytes[i]))
+                        {
+                            sameSubnet = false;
+                            break;
+                        }
+                    }
+
+                    if (sameSubnet)
+                    {
+                        HostIp = uni.Address.ToString();
+                        AppendStatus($"Host IP detected: {HostIp}");
+                        return;
+                    }
+                }
+            }
+
+            AppendStatus("No network adapter found on the same subnet as the LiDAR IP.");
         }
 
         private void Disconnect()
@@ -1137,6 +1216,7 @@ namespace MVS
         private void LoadConfig()
         {
             IpAddress       = _config.ReadWithDefault(ConfigKey.LivoxIpAddress,      "192.168.1.3");
+            LoadFromConfigFile();
 
             RangeMinMm      = (float)_config.ReadWithDefault(ConfigKey.LivoxRangeMinMm,      500.0);
             RangeMaxMm      = (float)_config.ReadWithDefault(ConfigKey.LivoxRangeMaxMm,      30000.0);
@@ -1195,6 +1275,76 @@ namespace MVS
             _config.Write(ConfigKey.LivoxCorrectionRoll,      _correction.RollOffset.ToString());
             _config.Write(ConfigKey.LivoxCorrectionHeading,   _correction.HeadingOffset.ToString());
             _config.Write(ConfigKey.LivoxCorrectionTimestamp, _correction.IsActive ? _correction.Timestamp.ToString("O") : "");
+        }
+
+        private static string LivoxConfigFilePath()
+            => Path.Combine(Environment.GetFolderPath(Environment.SpecialFolder.ApplicationData), @"SES Energy\MVS\mid360_config.json");
+
+        private void LoadFromConfigFile()
+        {
+            try
+            {
+                var path = LivoxConfigFilePath();
+                if (!File.Exists(path)) return;
+                var root = JsonNode.Parse(File.ReadAllText(path));
+                foreach (var section in root.AsObject())
+                {
+                    var lidarNet = section.Value?["lidar_net_info"];
+                    if (lidarNet != null)
+                    {
+                        _lidarCmdDataPort   = lidarNet["cmd_data_port"]?.GetValue<int>()   ?? _lidarCmdDataPort;
+                        _lidarPushMsgPort   = lidarNet["push_msg_port"]?.GetValue<int>()   ?? _lidarPushMsgPort;
+                        _lidarPointDataPort = lidarNet["point_data_port"]?.GetValue<int>() ?? _lidarPointDataPort;
+                        _lidarImuDataPort   = lidarNet["imu_data_port"]?.GetValue<int>()   ?? _lidarImuDataPort;
+                        _lidarLogDataPort   = lidarNet["log_data_port"]?.GetValue<int>()   ?? _lidarLogDataPort;
+                    }
+                    var hostNetInfo = section.Value?["host_net_info"];
+                    if (hostNetInfo is JsonArray arr && arr.Count > 0)
+                    {
+                        _hostIp            = arr[0]?["host_ip"]?.GetValue<string>()        ?? _hostIp;
+                        _hostCmdDataPort   = arr[0]?["cmd_data_port"]?.GetValue<int>()   ?? _hostCmdDataPort;
+                        _hostPushMsgPort   = arr[0]?["push_msg_port"]?.GetValue<int>()   ?? _hostPushMsgPort;
+                        _hostPointDataPort = arr[0]?["point_data_port"]?.GetValue<int>() ?? _hostPointDataPort;
+                        _hostImuDataPort   = arr[0]?["imu_data_port"]?.GetValue<int>()   ?? _hostImuDataPort;
+                        _hostLogDataPort   = arr[0]?["log_data_port"]?.GetValue<int>()   ?? _hostLogDataPort;
+                    }
+                }
+            }
+            catch { }
+        }
+
+        private void WriteConfigFile()
+        {
+            try
+            {
+                var path = LivoxConfigFilePath();
+                if (!File.Exists(path)) return;
+                var root = JsonNode.Parse(File.ReadAllText(path));
+                foreach (var section in root.AsObject())
+                {
+                    var lidarNet = section.Value?["lidar_net_info"];
+                    if (lidarNet != null)
+                    {
+                        lidarNet["cmd_data_port"]   = _lidarCmdDataPort;
+                        lidarNet["push_msg_port"]   = _lidarPushMsgPort;
+                        lidarNet["point_data_port"] = _lidarPointDataPort;
+                        lidarNet["imu_data_port"]   = _lidarImuDataPort;
+                        lidarNet["log_data_port"]   = _lidarLogDataPort;
+                    }
+                    var hostNetInfo = section.Value?["host_net_info"];
+                    if (hostNetInfo is JsonArray arr && arr.Count > 0)
+                    {
+                        arr[0]["host_ip"]           = _hostIp;
+                        arr[0]["cmd_data_port"]     = _hostCmdDataPort;
+                        arr[0]["push_msg_port"]     = _hostPushMsgPort;
+                        arr[0]["point_data_port"]   = _hostPointDataPort;
+                        arr[0]["imu_data_port"]     = _hostImuDataPort;
+                        arr[0]["log_data_port"]     = _hostLogDataPort;
+                    }
+                }
+                File.WriteAllText(path, root.ToJsonString(new JsonSerializerOptions { WriteIndented = true }));
+            }
+            catch { }
         }
 
         protected virtual void OnPropertyChanged([CallerMemberName] string name = null)
