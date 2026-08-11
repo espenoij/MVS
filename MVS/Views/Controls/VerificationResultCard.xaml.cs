@@ -99,11 +99,11 @@ namespace MVS.Views.Controls
                 return;
             }
 
-            mean.Text = string.Format(CultureInfo.CurrentCulture, "{0:F4}", s.Mean);
+            mean.Text = string.Format(CultureInfo.CurrentCulture, "{0:F3}", s.Mean);
             min.Text = string.Format(CultureInfo.CurrentCulture, "{0:F3}", s.Min);
             max.Text = string.Format(CultureInfo.CurrentCulture, "{0:F3}", s.Max);
-            std.Text = string.Format(CultureInfo.CurrentCulture, "{0:F4}", s.StdDev);
-            rms.Text = string.Format(CultureInfo.CurrentCulture, "{0:F4}", s.Rms);
+            std.Text = string.Format(CultureInfo.CurrentCulture, "{0:F3}", s.StdDev);
+            rms.Text = string.Format(CultureInfo.CurrentCulture, "{0:F3}", s.Rms);
         }
 
         private void FillDeviation(AxisStatistics s)
@@ -119,8 +119,8 @@ namespace MVS.Views.Controls
                 return;
             }
 
-            tbDevMean.Text = string.Format(CultureInfo.CurrentCulture, "{0:F4}", s.Mean);
-            tbDevStdDev.Text = string.Format(CultureInfo.CurrentCulture, "{0:F4}", s.StdDev);
+            tbDevMean.Text = string.Format(CultureInfo.CurrentCulture, "{0:F3}", s.Mean);
+            tbDevStdDev.Text = string.Format(CultureInfo.CurrentCulture, "{0:F3}", s.StdDev);
             tbDevOutliers.Text = string.Format(CultureInfo.CurrentCulture, "{0:F1} %", s.OutlierPercent);
             tbDevSamples.Text = string.Format(CultureInfo.CurrentCulture, "{0}", s.SampleCount);
 

@@ -425,7 +425,7 @@
                                        TextWrapping="Wrap"
                                        Foreground="{StaticResource SesTextSecondaryBrush}"
                                        Margin="0,0,0,12"
-                                       Text="Inspect reference, test and deviation statistics for each axis alongside the captured data charts. The deviation is the value this tool calculates; each card instead grades the quality of the captured input data &#8212; samples, vessel motion and noise &#8212; to tell you whether that calculated deviation can be trusted. Press the ? button on a card for a full explanation. This page is for review only; use Apply to save the recommended correction for this project."/>
+                                       Text="Inspect reference, test and deviation statistics for each axis alongside the captured data charts. The deviation is the value this tool calculates; each card grades the quality of the captured input data &#8212; samples, vessel motion and noise &#8212; to tell you whether that calculated deviation can be trusted. Press the ? button on a card for a full explanation."/>
 
                             <!-- Per-axis result cards combined with their detailed charts -->
                             <local:DataAnalysis Grid.Row="2"
