@@ -1058,11 +1058,33 @@ namespace MVS
 
         // ── Subsystem event handlers ──────────────────────────────────────────
 
+        private static string StatusLabel(LivoxLidarSubsystem.Status status) => status switch
+        {
+            LivoxLidarSubsystem.Status.Disconnected     => "Disconnected",
+            LivoxLidarSubsystem.Status.Connecting       => "Connecting...",
+            LivoxLidarSubsystem.Status.WaitingForDevice => "Waiting for device...",
+            LivoxLidarSubsystem.Status.Connected        => "Device ready",
+            LivoxLidarSubsystem.Status.Scanning         => "Scanning",
+            LivoxLidarSubsystem.Status.Error            => "Error",
+            _                                           => status.ToString()
+        };
+
         private void OnStatusChanged(LivoxLidarSubsystem.Status status)
         {
             Application.Current?.Dispatcher.BeginInvoke(DispatcherPriority.Normal, new Action(() =>
             {
-                SdkStatus = status.ToString();
+                SdkStatus = StatusLabel(status);
+
+                switch (status)
+                {
+                    case LivoxLidarSubsystem.Status.WaitingForDevice:
+                        AppendStatus("SDK initialised. Waiting for LiDAR device on the network...");
+                        break;
+                    case LivoxLidarSubsystem.Status.Connected:
+                        AppendStatus("LiDAR device found. Ready to scan.");
+                        break;
+                }
+
                     if (_simulationInProgress && status == LivoxLidarSubsystem.Status.Disconnected)
                     {
                         _simulationInProgress = false;

@@ -19,7 +19,7 @@ namespace MVS
     {
         // ── State ────────────────────────────────────────────────────────────
 
-        public enum Status { Disconnected, Connecting, Connected, Scanning, Error }
+        public enum Status { Disconnected, Connecting, WaitingForDevice, Connected, Scanning, Error }
 
         private Status _status = Status.Disconnected;
         public Status CurrentStatus
@@ -142,7 +142,10 @@ namespace MVS
                 LivoxLidarApi.SetLivoxLidarInfoChangeCallback(_infoChangeDelegate, IntPtr.Zero);
                 LivoxLidarApi.SetLivoxLidarPointCloudCallBack(_pointCloudDelegate, IntPtr.Zero);
 
-                CurrentStatus = Status.Connected;
+                // SDK is initialised and listening; the physical device is discovered
+                // asynchronously. OnInfoChange() will promote to Connected once the
+                // first device handle arrives.
+                CurrentStatus = Status.WaitingForDevice;
                 return true;
             }
             catch (DllNotFoundException ex)
@@ -830,8 +833,17 @@ namespace MVS
             try
             {
                 string ip = LivoxLidarApi.ReadAsciiString(info, LivoxLidarApi.StateInfoOffsetIp, 16);
+
+                bool isFirstDevice;
                 lock (_handleLock)
+                {
+                    isFirstDevice = !_handleToIp.ContainsKey(handle);
                     _handleToIp[handle] = ip;
+                }
+
+                // First time we see this device: promote from WaitingForDevice → Connected.
+                if (isFirstDevice && CurrentStatus == Status.WaitingForDevice)
+                    CurrentStatus = Status.Connected;
             }
             catch { }
         }
