@@ -1,5 +1,6 @@
 ﻿using System;
 using System.Collections.Generic;
+using System.Collections.ObjectModel;
 using System.IO;
 using System.Linq;
 using System.Net;
@@ -37,6 +38,16 @@ namespace MVS
 
         private bool _simulationInProgress;
 
+        private readonly ObservableCollection<ErrorMessage> _lidarMessages = new ObservableCollection<ErrorMessage>();
+        public ObservableCollection<ErrorMessage> LidarMessages => _lidarMessages;
+
+        private bool _hasNewLidarMessages;
+        public bool HasNewLidarMessages
+        {
+            get => _hasNewLidarMessages;
+            set { if (_hasNewLidarMessages != value) { _hasNewLidarMessages = value; OnPropertyChanged(); } }
+        }
+
         public LivoxLidarVM(LivoxLidarSubsystem subsystem, LivoxLidarCorrection correction,
                             ErrorHandler errorHandler, Config config)
         {
@@ -57,16 +68,17 @@ namespace MVS
             Correction = correction;
 
             // Commands
-            ConnectCommand          = new RelayCommand(_ => Connect(),        _ => CanConnect);
-            DisconnectCommand       = new RelayCommand(_ => Disconnect(),      _ => CanDisconnect);
-            StartScanCommand        = new RelayCommand(_ => StartScan(),       _ => CanScan);
-            StopScanCommand         = new RelayCommand(_ => StopScan(),        _ => IsScanning);
-            FitPlaneCommand         = new RelayCommand(_ => FitPlane(),        _ => CanFit);
-            ApplyCorrectionCommand  = new RelayCommand(_ => ApplyCorrection(), _ => HasFitResult);
-            ClearCorrectionCommand  = new RelayCommand(_ => ClearCorrection());
-            SimulateScanCommand     = new RelayCommand(_ => SimulateScan(),    _ => CanSimulate);
-            AnalyseCommand          = new RelayCommand(_ => Analyse(),         _ => CanFit);
-            DetectHostIpCommand     = new RelayCommand(_ => DetectHostIp());
+            ConnectCommand              = new RelayCommand(_ => Connect(),              _ => CanConnect);
+            DisconnectCommand           = new RelayCommand(_ => Disconnect(),           _ => CanDisconnect);
+            StartScanCommand            = new RelayCommand(_ => StartScan(),            _ => CanScan);
+            StopScanCommand             = new RelayCommand(_ => StopScan(),             _ => IsScanning);
+            FitPlaneCommand             = new RelayCommand(_ => FitPlane(),             _ => CanFit);
+            ApplyCorrectionCommand      = new RelayCommand(_ => ApplyCorrection(),      _ => HasFitResult);
+            ClearCorrectionCommand      = new RelayCommand(_ => ClearCorrection());
+            SimulateScanCommand         = new RelayCommand(_ => SimulateScan(),         _ => CanSimulate);
+            AnalyseCommand              = new RelayCommand(_ => Analyse(),              _ => CanFit);
+            DetectHostIpCommand         = new RelayCommand(_ => DetectHostIp());
+            ClearLidarMessagesCommand   = new RelayCommand(_ => { _lidarMessages.Clear(); HasNewLidarMessages = false; });
         }
 
         // ── Bound properties ─────────────────────────────────────────────────
@@ -483,11 +495,21 @@ namespace MVS
 
         public void AppendStatus(string msg)
         {
-            _errorHandler.Insert(new ErrorMessage(
+            var entry = new ErrorMessage(
                 DateTime.Now,
                 ErrorMessageType.LivoxLidar,
                 ErrorMessageCategory.None,
-                msg));
+                msg);
+
+            _errorHandler.Insert(entry);
+
+            Application.Current?.Dispatcher.BeginInvoke(DispatcherPriority.Normal, new Action(() =>
+            {
+                _lidarMessages.Add(new ErrorMessage(entry));
+                while (_lidarMessages.Count > Constants.MaxErrorMessages)
+                    _lidarMessages.RemoveAt(0);
+                HasNewLidarMessages = true;
+            }));
         }
 
         private string _sdkStatus = "Disconnected";
@@ -563,16 +585,17 @@ namespace MVS
 
         // ── Commands ─────────────────────────────────────────────────────────
 
-        public ICommand ConnectCommand         { get; }
-        public ICommand DisconnectCommand      { get; }
-        public ICommand StartScanCommand       { get; }
-        public ICommand StopScanCommand        { get; }
-        public ICommand FitPlaneCommand        { get; }
-        public ICommand ApplyCorrectionCommand { get; }
-        public ICommand ClearCorrectionCommand { get; }
-        public ICommand SimulateScanCommand    { get; }
-        public ICommand AnalyseCommand         { get; }
-        public ICommand DetectHostIpCommand    { get; }
+        public ICommand ConnectCommand             { get; }
+        public ICommand DisconnectCommand          { get; }
+        public ICommand StartScanCommand           { get; }
+        public ICommand StopScanCommand            { get; }
+        public ICommand FitPlaneCommand            { get; }
+        public ICommand ApplyCorrectionCommand     { get; }
+        public ICommand ClearCorrectionCommand     { get; }
+        public ICommand SimulateScanCommand        { get; }
+        public ICommand AnalyseCommand             { get; }
+        public ICommand DetectHostIpCommand        { get; }
+        public ICommand ClearLidarMessagesCommand  { get; }
 
         // ── Command implementations ───────────────────────────────────────────
 

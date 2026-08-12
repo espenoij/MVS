@@ -34,6 +34,30 @@ namespace MVS
             }
         }
 
+        private bool _hasNewMessages = false;
+        public bool hasNewMessages
+        {
+            get
+            {
+                return _hasNewMessages;
+            }
+            set
+            {
+                if (_hasNewMessages != value)
+                {
+                    _hasNewMessages = value;
+                    OnPropertyChanged();
+                }
+            }
+        }
+
+        public bool messagesPageActive { get; set; } = false;
+
+        // True when the user is on wizard Step 2 (LiDAR page) inside the Projects tab.
+        // LivoxLidar messages are shown inline on that page, so the main-menu badge
+        // should not fire for them while the page is active.
+        public bool lidarPageActive { get; set; } = false;
+
         protected void OnPropertyChanged([CallerMemberName] string propertyName = null)
         {
             PropertyChanged?.Invoke(this, new PropertyChangedEventArgs(propertyName));

@@ -805,6 +805,8 @@ namespace MVS
             panelStep4.Visibility = step == 4 ? Visibility.Visible : Visibility.Collapsed;
             panelStep5.Visibility = step == 5 ? Visibility.Visible : Visibility.Collapsed;
 
+            MenuStateVM.Instance.lidarPageActive = (step == 2);
+
             tbStep1.Foreground = step == 1 ? WizardActiveStepBrush : WizardInactiveStepBrush;
             tbStep2.Foreground = step == 2 ? WizardActiveStepBrush : WizardInactiveStepBrush;
             tbStep3.Foreground = step == 3 ? WizardActiveStepBrush : WizardInactiveStepBrush;

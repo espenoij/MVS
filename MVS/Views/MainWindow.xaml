@@ -122,6 +122,7 @@
                 <!--Side Menu: Projects-->
                 <!--==============================================================-->
                 <telerik:RadTabItem
+                    Name="tabProjects"
                     Header="Projects">
 
                     <telerik:RadTabItem.HeaderTemplate>
@@ -668,11 +669,20 @@
                                     <ColumnDefinition Width="36" />
                                     <ColumnDefinition Width="*" />
                                 </Grid.ColumnDefinitions>
-                                <Image
-                                    Grid.Column="0"
-                                    Width="36"
-                                    HorizontalAlignment="Right"
-                                    Source="../Icons/outline_announcement_white_36dp.png" />
+                                <Grid Grid.Column="0">
+                                    <Image
+                                        Width="36"
+                                        HorizontalAlignment="Right"
+                                        Source="../Icons/outline_announcement_white_36dp.png" />
+                                    <Ellipse
+                                        Width="14"
+                                        Height="14"
+                                        Fill="Red"
+                                        HorizontalAlignment="Right"
+                                        VerticalAlignment="Top"
+                                        Margin="0,-2,-2,0"
+                                        Visibility="{Binding Source={x:Static uc:MenuStateVM.Instance}, Path=hasNewMessages, Converter={StaticResource BoolToVis}}" />
+                                </Grid>
                                 <TextBlock
                                     Grid.Column="1"
                                     Text="{Binding}"

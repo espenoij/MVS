@@ -95,6 +95,14 @@ namespace MVS
                         while (errorMessageList.Count > Constants.MaxErrorMessages)
                             errorMessageList.RemoveAt(0);
                     }
+
+                    // Signal new message indicator in the main menu (only when not already on the Messages page,
+                    // and not when it is a LivoxLidar message and the user is on the LiDAR wizard step)
+                    bool suppressIndicator = MenuStateVM.Instance.messagesPageActive ||
+                        (errorMessage.type == ErrorMessageType.LivoxLidar && MenuStateVM.Instance.lidarPageActive);
+
+                    if (!suppressIndicator)
+                        MenuStateVM.Instance.hasNewMessages = true;
                 }
                 catch (Exception ex)
                 {

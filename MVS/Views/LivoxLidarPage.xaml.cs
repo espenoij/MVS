@@ -1,6 +1,7 @@
 using System;
 using System.Collections.Generic;
 using System.Windows;
+using System.Windows.Controls.Primitives;
 using System.Windows.Input;
 
 namespace MVS
@@ -102,6 +103,18 @@ namespace MVS
         private void Viewport_MouseWheel(object sender, MouseWheelEventArgs e)
         {
             _trackball.OnMouseWheel(e);
+        }
+
+        private void MessagesPanelThumb_DragDelta(object sender, DragDeltaEventArgs e)
+        {
+            double newWidth = messagesPanelGrid.Width - e.HorizontalChange;
+            messagesPanelGrid.Width = Math.Max(messagesPanelGrid.MinWidth, newWidth);
+        }
+
+        private void LidarMessagesExpander_Expanded(object sender, RoutedEventArgs e)
+        {
+            if (_vm != null)
+                _vm.HasNewLidarMessages = false;
         }
     }
 }

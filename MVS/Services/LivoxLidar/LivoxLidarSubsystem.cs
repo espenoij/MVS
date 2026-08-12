@@ -229,9 +229,8 @@ namespace MVS
             if (!hostIpFound)
             {
                 errorMessage =
-                    $"No network adapter on this machine has IP {hostIp} (configured in {configFilePath}). " +
-                    "Connect a Livox lidar and set the NIC's IPv4 address to match the config, " +
-                    "or edit the config file to match a NIC on this machine.";
+                    $"No network adapter on this machine has IP address '{hostIp}'. " +
+                    "Please set the correct host IP address in the Livox settings.";
                 return false;
             }
 

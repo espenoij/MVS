@@ -676,6 +676,20 @@ namespace MVS
             {
                 ucMVSInputSetup.UpdateSensorDataList();
             }
+
+            // Messages Tab - track active state and clear new message indicator
+            MenuStateVM.Instance.messagesPageActive = tabErrorMessages.IsSelected;
+            if (tabErrorMessages.IsSelected)
+            {
+                MenuStateVM.Instance.hasNewMessages = false;
+            }
+
+            // When leaving the Projects tab entirely, ensure the LiDAR page active flag
+            // is cleared so messages are no longer suppressed from the main menu indicator
+            if (!tabProjects.IsSelected)
+            {
+                MenuStateVM.Instance.lidarPageActive = false;
+            }
         }
 
         private void btnAbout_Click(object sender, RoutedEventArgs e)
