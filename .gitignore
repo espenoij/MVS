@@ -350,5 +350,3 @@ MigrationBackup/
 # Ionide (cross platform F# VS Code tools) working folder
 .ionide/
 
-# Native SDK binaries — place manually, see MVS/native/x64/README.md
-MVS/native/x64/*.dll
