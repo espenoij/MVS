@@ -30,11 +30,15 @@ namespace MVSTests.Helpers
         }
 
         [TestMethod]
-        [ExpectedException(typeof(NotImplementedException))]
         public void ConvertBack_Throws()
         {
             var c = new LabelAbsConverter();
-            c.ConvertBack("any", typeof(string), null, CultureInfo.InvariantCulture);
+            try
+            {
+                c.ConvertBack("any", typeof(string), null, CultureInfo.InvariantCulture);
+                Assert.Fail("Expected NotImplementedException.");
+            }
+            catch (NotImplementedException) { }
         }
     }
 }

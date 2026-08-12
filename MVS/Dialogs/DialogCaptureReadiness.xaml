@@ -1,0 +1,128 @@
+<telerik:RadWindow
+    x:Class="MVS.DialogCaptureReadiness"
+    xmlns="http://schemas.microsoft.com/winfx/2006/xaml/presentation"
+    xmlns:x="http://schemas.microsoft.com/winfx/2006/xaml"
+    xmlns:d="http://schemas.microsoft.com/expression/blend/2008"
+    xmlns:telerik="http://schemas.telerik.com/2008/xaml/presentation"
+    xmlns:mc="http://schemas.openxmlformats.org/markup-compatibility/2006"
+    mc:Ignorable="d"
+    xmlns:local="clr-namespace:MVS"
+    telerik:Header="Pre-Recording Readiness Check"
+    WindowStartupLocation="CenterScreen"
+    Width="480"
+    Height="Auto"
+    telerik:SizeToContent="True"
+    telerik:StyleManager.Theme="Material">
+
+    <telerik:RadWindow.Icon>
+        <Image
+            Height="32"
+            Source="../Icons/mvs_windows_icon.ico" />
+    </telerik:RadWindow.Icon>
+
+    <telerik:RadWindow.Resources>
+        <ResourceDictionary>
+            <Style
+                TargetType="local:DialogCaptureReadiness"
+                BasedOn="{StaticResource RadWindowStyle}" />
+            <BooleanToVisibilityConverter x:Key="BoolToVis" />
+        </ResourceDictionary>
+    </telerik:RadWindow.Resources>
+
+    <DockPanel Margin="16,12,16,0">
+
+        <!-- Footer buttons -->
+        <StackPanel
+            DockPanel.Dock="Bottom"
+            Orientation="Horizontal"
+            HorizontalAlignment="Center"
+            Margin="0,12,0,12">
+
+            <telerik:RadButton
+                x:Name="btnStart"
+                Width="130"
+                Margin="4,0"
+                Content="Start Recording"
+                Click="btnStart_Click" />
+
+            <telerik:RadButton
+                x:Name="btnCancel"
+                Width="100"
+                Margin="4,0"
+                Content="Cancel"
+                Click="btnCancel_Click" />
+
+        </StackPanel>
+
+        <!-- Heading -->
+        <TextBlock
+            DockPanel.Dock="Top"
+            Margin="0,0,0,12"
+            TextWrapping="Wrap"
+            FontSize="13"
+            Text="The following checks were performed before starting the recording session. Blocking issues must be resolved before you can continue." />
+
+        <!-- Checklist -->
+        <ItemsControl
+            DockPanel.Dock="Top"
+            x:Name="icItems">
+            <ItemsControl.ItemTemplate>
+                <DataTemplate DataType="{x:Type local:ReadinessItem}">
+                    <Grid Margin="0,4">
+                        <Grid.ColumnDefinitions>
+                            <ColumnDefinition Width="28" />
+                            <ColumnDefinition Width="*" />
+                            <ColumnDefinition Width="Auto" />
+                        </Grid.ColumnDefinitions>
+
+                        <!-- Pass / fail icon -->
+                        <Image
+                            Grid.Column="0"
+                            Width="18"
+                            Height="18"
+                            VerticalAlignment="Center">
+                            <Image.Style>
+                                    <Style TargetType="Image">
+                                        <Setter Property="Source" Value="../Icons/outline_verified_white_36dp.png" />
+                                        <Style.Triggers>
+                                            <DataTrigger Binding="{Binding Pass}" Value="False">
+                                                <Setter Property="Source" Value="../Icons/outline_error_outline_black_48dp.png" />
+                                            </DataTrigger>
+                                        </Style.Triggers>
+                                    </Style>
+                                </Image.Style>
+                        </Image>
+
+                        <!-- Label -->
+                        <TextBlock
+                            Grid.Column="1"
+                            VerticalAlignment="Center"
+                            Margin="6,0,0,0"
+                            Text="{Binding Label}"
+                            TextWrapping="Wrap" />
+
+                        <!-- Advisory badge -->
+                        <Border
+                            Grid.Column="2"
+                            Visibility="{Binding IsAdvisoryFailure, Converter={StaticResource BoolToVis}}"
+                            Background="#FFFDE7"
+                            BorderBrush="#FFC107"
+                            BorderThickness="1"
+                            CornerRadius="3"
+                            Padding="5,1"
+                            Margin="8,0,0,0"
+                            VerticalAlignment="Center">
+                            <TextBlock
+                                FontSize="10"
+                                Foreground="#F57F17"
+                                Text="Advisory" />
+                        </Border>
+
+                    </Grid>
+                </DataTemplate>
+            </ItemsControl.ItemTemplate>
+        </ItemsControl>
+
+    </DockPanel>
+
+</telerik:RadWindow>

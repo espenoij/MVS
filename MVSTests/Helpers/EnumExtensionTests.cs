@@ -63,8 +63,12 @@ namespace MVSTests.Helpers
         [TestMethod]
         public void GetEnumValueFromDescription_NonEnumType_ThrowsArgumentException()
         {
-            Assert.ThrowsException<ArgumentException>(() =>
-                EnumExtension.GetEnumValueFromDescription<int>("anything"));
+            try
+            {
+                EnumExtension.GetEnumValueFromDescription<int>("anything");
+                Assert.Fail("Expected ArgumentException.");
+            }
+            catch (ArgumentException) { }
         }
     }
 }

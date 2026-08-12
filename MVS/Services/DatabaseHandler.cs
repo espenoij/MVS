@@ -46,6 +46,7 @@ namespace MVS
 
         // Får vi opprettet OK forbindelse?
         private bool isDatabaseConnectionOK;
+        public bool IsDatabaseConnectionOK => isDatabaseConnectionOK;
 
         // Configuration
         private Config config;

@@ -512,6 +512,22 @@ namespace MVS
                     return;
                 }
 
+                // Pre-recording readiness check
+                var report = CaptureReadinessChecker.Evaluate(
+                    sensorDataRetrieval.GetSensorDataList(),
+                    database,
+                    livoxCorrection);
+
+                if (!report.AllGood)
+                {
+                    var dlg = new DialogCaptureReadiness();
+                    dlg.Init(report);
+                    dlg.ShowDialog();
+
+                    if (!dlg.UserConfirmed)
+                        return;
+                }
+
                 // Alt klart for å starte!
                 Start();
             }
