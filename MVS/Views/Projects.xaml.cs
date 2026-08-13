@@ -783,16 +783,6 @@ namespace MVS
 
         private int currentStep = 1;
 
-        // SES brand colours for the wizard step indicator: active = Energy Green,
-        // inactive = Dark Blue Grey. Resolved from application resources with a safe fallback.
-        private System.Windows.Media.Brush WizardActiveStepBrush =>
-            (TryFindResource("SesEnergyGreenTextBrush") as System.Windows.Media.Brush)
-            ?? new System.Windows.Media.SolidColorBrush(System.Windows.Media.Color.FromRgb(0x17, 0xA3, 0x77));
-
-        private System.Windows.Media.Brush WizardInactiveStepBrush =>
-            (TryFindResource("SesTextSecondaryBrush") as System.Windows.Media.Brush)
-            ?? new System.Windows.Media.SolidColorBrush(System.Windows.Media.Color.FromRgb(0x33, 0x4A, 0x5C));
-
         private void SetWizardStep(int step)
         {
             if (step < 1) step = 1;
@@ -807,17 +797,7 @@ namespace MVS
 
             MenuStateVM.Instance.lidarPageActive = (step == 2);
 
-            tbStep1.Foreground = step == 1 ? WizardActiveStepBrush : WizardInactiveStepBrush;
-            tbStep2.Foreground = step == 2 ? WizardActiveStepBrush : WizardInactiveStepBrush;
-            tbStep3.Foreground = step == 3 ? WizardActiveStepBrush : WizardInactiveStepBrush;
-            tbStep4.Foreground = step == 4 ? WizardActiveStepBrush : WizardInactiveStepBrush;
-            tbStep5.Foreground = step == 5 ? WizardActiveStepBrush : WizardInactiveStepBrush;
-
-            tbStep1.FontWeight = step == 1 ? FontWeights.Bold : FontWeights.Normal;
-            tbStep2.FontWeight = step == 2 ? FontWeights.Bold : FontWeights.Normal;
-            tbStep3.FontWeight = step == 3 ? FontWeights.Bold : FontWeights.Normal;
-            tbStep4.FontWeight = step == 4 ? FontWeights.Bold : FontWeights.Normal;
-            tbStep5.FontWeight = step == 5 ? FontWeights.Bold : FontWeights.Normal;
+            UpdateStepProgressBar(step);
 
             if (projectVM != null)
                 projectVM.CurrentWizardStep = step;
@@ -844,8 +824,6 @@ namespace MVS
 
         private void UpdateWizardNavigation()
         {
-            btnPrev.IsEnabled = currentStep > 1;
-
             var project = mainWindowVM?.SelectedProject;
             bool hasData = project != null && project.DataSetHasData();
             bool lidarApplied = _livoxVM?.Correction != null && _livoxVM.Correction.IsActive;
@@ -869,7 +847,7 @@ namespace MVS
                     canProceed = hasProject && hasName && hasInputMRUs && hasOperator && hasVesselName && hasLocation;
                     requirementsMet = canProceed;
                     requirementsText = canProceed
-                        ? "Step 1 complete — project setup is ready. Click Next to continue to LiDAR correction."
+                        ? "Step 1 complete — project setup is ready. Select LiDAR in the step bar to continue."
                         : "To continue you must:  " +
                           (hasProject ? "\u2713 Select a project" : "\u2717 Select a project") + "    " +
                           (hasName ? "\u2713 Enter a project name" : "\u2717 Enter a project name") + "    " +
@@ -888,9 +866,9 @@ namespace MVS
                     canProceed = lidarApplied || hasData;
                     requirementsMet = canProceed;
                     requirementsText = lidarApplied
-                        ? "Step 2 complete — the LiDAR correction is applied to the Reference MRU. Click Next to continue to capture."
+                        ? "Step 2 complete — the LiDAR correction is applied to the Reference MRU. Select Capture in the step bar to continue."
                         : hasData
-                            ? "Step 2 — project already has captured data. Click Next to continue."
+                            ? "Step 2 — project already has captured data. Select Capture in the step bar to continue."
                             : "To continue you must:  " +
                               (lidarSetup    ? "\u2713 1: Set up the LiDAR"    : "\u2717 1: Set up the LiDAR")    + "    " +
                               (lidarScanned  ? "\u2713 2: Perform a scan"       : "\u2717 2: Perform a scan")       + "    " +
@@ -903,7 +881,7 @@ namespace MVS
                     canProceed = hasData;
                     requirementsMet = canProceed;
                     requirementsText = canProceed
-                        ? "Step 3 complete — motion data captured. Click Next to review the results."
+                        ? "Step 3 complete — motion data captured. Select Review in the step bar to see the results."
                         : "To continue you must:  \u2717 Record live motion data for this project.";
                     break;
 
@@ -911,7 +889,7 @@ namespace MVS
                     // Step 4 — Review: informational only; the user may always continue to reporting.
                     canProceed = true;
                     requirementsMet = true;
-                    requirementsText = "Step 4 — review the results if needed, then click Next to continue to reporting.";
+                    requirementsText = "Step 4 — review the results if needed, then select Report in the step bar to continue.";
                     break;
 
                 default:
@@ -922,9 +900,7 @@ namespace MVS
                     break;
             }
 
-            btnNext.IsEnabled = canProceed;
-
-            // Update the requirements banner with success / outstanding-requirement feedback.
+            // Update the requirements banner
             if (currentStep >= 5 || string.IsNullOrEmpty(requirementsText))
             {
                 requirementsBanner.Visibility = Visibility.Collapsed;
@@ -1001,20 +977,10 @@ namespace MVS
             UpdateWizardStepHeaders();
         }
 
-        private void btnPrev_Click(object sender, RoutedEventArgs e)
-        {
-            SetWizardStep(currentStep - 1);
-        }
-
-        private void btnNext_Click(object sender, RoutedEventArgs e)
-        {
-            SetWizardStep(currentStep + 1);
-        }
-
         /// <summary>
-        /// Evaluates whether the wizard may advance from the given step to the next one,
-        /// mirroring the gating used by the Next button. Used to determine which step
-        /// headers the user is allowed to jump to directly.
+        /// Evaluates whether the wizard may advance from the given step to the next one.
+        /// Used to determine which step items in the RadStepProgressBar the user is
+        /// allowed to jump to directly.
         /// </summary>
         private bool CanProceedFromStep(int step)
         {
@@ -1058,30 +1024,42 @@ namespace MVS
         }
 
         /// <summary>
-        /// Updates the wizard step headers so that reachable steps appear clickable
-        /// (hand cursor) while unreachable steps do not.
+        /// Updates the RadStepProgressBar so that reachable step items are enabled
+        /// and unreachable ones are disabled.
         /// </summary>
         private void UpdateWizardStepHeaders()
         {
+            UpdateStepProgressBar(currentStep);
+        }
+
+        /// <summary>
+        /// Updates the RadStepProgressBar so item statuses reflect the current step
+        /// (Completed / Active / Upcoming) and only reachable steps are clickable.
+        /// </summary>
+        private void UpdateStepProgressBar(int step)
+        {
+            // SelectedIndex drives Completed / Indeterminate / NotStarted visuals automatically.
+            wizardStepBar.SelectedIndex = step - 1;
+
             int maxReachable = MaxReachableStep();
-            var headers = new[] { tbStep1, tbStep2, tbStep3, tbStep4, tbStep5 };
-            for (int i = 0; i < headers.Length; i++)
+            for (int i = 0; i < wizardStepBar.Items.Count; i++)
             {
-                headers[i].Cursor = (i + 1) <= maxReachable ? Cursors.Hand : Cursors.Arrow;
+                if (wizardStepBar.Items[i] is Telerik.Windows.Controls.RadStepProgressBarItem item)
+                    item.IsEnabled = (i + 1) <= maxReachable;
             }
         }
 
         /// <summary>
-        /// Handles a click on a wizard step header, jumping directly to that step
+        /// Handles a click on a RadStepProgressBar item, jumping directly to that step
         /// when it is currently reachable.
         /// </summary>
-        private void WizardStep_Click(object sender, MouseButtonEventArgs e)
+        private void WizardStepBar_StepClicked(object sender, Telerik.Windows.Controls.StepProgressBar.StepClickedEventArgs e)
         {
-            if (sender is FrameworkElement fe && fe.Tag is string tag && int.TryParse(tag, out int step))
-            {
-                if (step <= MaxReachableStep())
-                    SetWizardStep(step);
-            }
+            int step = wizardStepBar.Items.IndexOf(e.ClickedItem) + 1;
+            if (step >= 1 && step <= MaxReachableStep())
+                SetWizardStep(step);
+            else
+                e.CancelSelection = true;
         }
 
         // ============================================================

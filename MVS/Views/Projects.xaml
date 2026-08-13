@@ -69,43 +69,16 @@
                 </Grid>
 
                 <!-- Step indicator -->
-                <Border Grid.Row="1"
-                        Background="{StaticResource SesSurfaceBrush}"
-                        BorderBrush="{StaticResource SesBorderBrush}" BorderThickness="1"
-                        CornerRadius="{StaticResource SesCornerRadius}"
-                        Padding="10,6"
-                        Margin="0,0,0,8">
-                    <Grid>
-                        <Grid.ColumnDefinitions>
-                            <ColumnDefinition Width="*"/>
-                            <ColumnDefinition Width="Auto"/>
-                        </Grid.ColumnDefinitions>
-
-                        <StackPanel Grid.Column="0" Orientation="Horizontal" VerticalAlignment="Center">
-                            <TextBlock x:Name="tbStep1" Text="1. Setup" FontWeight="Bold" Foreground="{StaticResource SesEnergyGreenTextBrush}" Tag="1" MouseLeftButtonUp="WizardStep_Click"/>
-                            <TextBlock Text="  ›  " Foreground="{StaticResource SesTextSecondaryBrush}"/>
-                            <TextBlock x:Name="tbStep2" Text="2. LiDAR" Foreground="{StaticResource SesTextSecondaryBrush}" Tag="2" MouseLeftButtonUp="WizardStep_Click"/>
-                            <TextBlock Text="  ›  " Foreground="{StaticResource SesTextSecondaryBrush}"/>
-                            <TextBlock x:Name="tbStep3" Text="3. Capture" Foreground="{StaticResource SesTextSecondaryBrush}" Tag="3" MouseLeftButtonUp="WizardStep_Click"/>
-                            <TextBlock Text="  ›  " Foreground="{StaticResource SesTextSecondaryBrush}"/>
-                            <TextBlock x:Name="tbStep4" Text="4. Review" Foreground="{StaticResource SesTextSecondaryBrush}" Tag="4" MouseLeftButtonUp="WizardStep_Click"/>
-                            <TextBlock Text="  ›  " Foreground="{StaticResource SesTextSecondaryBrush}"/>
-                            <TextBlock x:Name="tbStep5" Text="5. Report" Foreground="{StaticResource SesTextSecondaryBrush}" Tag="5" MouseLeftButtonUp="WizardStep_Click"/>
-                        </StackPanel>
-
-                        <StackPanel Grid.Column="1" Orientation="Horizontal" VerticalAlignment="Center">
-                            <telerik:RadButton x:Name="btnPrev"
-                                             Click="btnPrev_Click"
-                                             Content="Back"
-                                             MinWidth="90"/>
-                            <telerik:RadButton x:Name="btnNext"
-                                             Click="btnNext_Click"
-                                             Content="Next"
-                                             MinWidth="90"
-                                             Margin="8,0,0,0"/>
-                        </StackPanel>
-                    </Grid>
-                </Border>
+                <telerik:RadStepProgressBar x:Name="wizardStepBar"
+                                            Grid.Row="1"
+                                            Margin="0,0,0,8"
+                                            StepClicked="WizardStepBar_StepClicked">
+                    <telerik:RadStepProgressBarItem Content="Setup"/>
+                    <telerik:RadStepProgressBarItem Content="LiDAR"/>
+                    <telerik:RadStepProgressBarItem Content="Capture"/>
+                    <telerik:RadStepProgressBarItem Content="Review"/>
+                    <telerik:RadStepProgressBarItem Content="Report"/>
+                </telerik:RadStepProgressBar>
 
                 <!-- Body: requirements banner + the four step panels stacked, only one visible at a time -->
                 <Grid Grid.Row="2">
