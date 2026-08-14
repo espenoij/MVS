@@ -9,7 +9,7 @@
     xmlns:local="clr-namespace:MVS"
     telerik:Header="About"
     WindowStartupLocation="CenterScreen"
-    Height="620"
+    Height="870"
     Width="700"
     telerik:StyleManager.Theme="Material">
 
@@ -29,46 +29,25 @@
 
     <DockPanel>
 
-        <Grid
-            DockPanel.Dock="Bottom">
-            <Grid.ColumnDefinitions>
-                <ColumnDefinition Width="*" />
-                <ColumnDefinition Width="Auto" />
-            </Grid.ColumnDefinitions>
+        <StackPanel
+            DockPanel.Dock="Bottom"
+            HorizontalAlignment="Center">
 
-            <StackPanel
-                Grid.Column="0"
-                Grid.ColumnSpan="2"
-                HorizontalAlignment="Center">
+            <telerik:Label
+                HorizontalAlignment="Center"
+                FontFamily="{StaticResource SesFontFamily}"
+                Foreground="{StaticResource SesTextSecondaryBrush}"
+                Content="{Binding Path=aboutCopyright}" />
 
-                <telerik:Label
-                    HorizontalAlignment="Center"
-                    FontFamily="{StaticResource SesFontFamily}"
-                    Foreground="{StaticResource SesTextSecondaryBrush}"
-                    Content="{Binding Path=aboutCopyright}" />
+            <telerik:RadButton
+                Margin="8"
+                Width="150"
+                HorizontalAlignment="Center"
+                Style="{StaticResource SesSecondaryButtonStyle}"
+                Content="Close"
+                Click="btnActivate_Click" />
 
-                <telerik:RadButton
-                    Margin="8"
-                    Width="150"
-                    HorizontalAlignment="Center"
-                    Style="{StaticResource SesSecondaryButtonStyle}"
-                    Content="Close"
-                    Click="btnActivate_Click" />
-
-            </StackPanel>
-
-            <!--About/version screen: logo bottom-right-->
-            <Image
-                Grid.Column="1"
-                Source="../Icons/ses_logo.png"
-                Height="28"
-                MinWidth="72"
-                HorizontalAlignment="Right"
-                VerticalAlignment="Bottom"
-                Margin="16,0,16,12"
-                RenderOptions.BitmapScalingMode="HighQuality" />
-
-        </Grid>
+        </StackPanel>
 
         <StackPanel>
 
@@ -106,6 +85,12 @@
                     Content="Motion Verification System" />
 
             </StackPanel>
+
+            <Image
+                HorizontalAlignment="Center"
+                Margin="0,20,0,20"
+                Width="350"
+                Source="../Icons/helifuel_logo.png" />
 
             <!--SOFTWARE-->
             <telerik:GroupBox
@@ -151,12 +136,97 @@
                 <StackPanel>
 
                     <!--Info-->
-                    <DockPanel>
+                    <telerik:Label
+                        Content="{Binding Path=aboutSupport}"
+                        Margin="8" />
 
-                        <telerik:Label
-                            Content="{Binding Path=aboutSupport}" />
+                    <!--QR Codes-->
+                    <Grid>
 
-                    </DockPanel>
+                        <Grid.ColumnDefinitions>
+                            <ColumnDefinition Width="*" />
+                            <ColumnDefinition Width="*" />
+                        </Grid.ColumnDefinitions>
+
+                        <!--Website QR Code-->
+                        <StackPanel
+                            Grid.Column="0"
+                            HorizontalAlignment="Center"
+                            Margin="8">
+
+                            <ContentControl
+                                x:Name="websiteBarcodeHost"
+                                Width="120"
+                                Height="120" />
+
+                            <StackPanel
+                                Orientation="Horizontal"
+                                HorizontalAlignment="Center"
+                                Margin="4">
+
+                                <!--Website Icon-->
+                                <TextBlock
+                                    Text="&#xE774;"
+                                    FontFamily="Segoe MDL2 Assets"
+                                    FontSize="16"
+                                    VerticalAlignment="Center"
+                                    Margin="0,0,4,0"
+                                    Foreground="{StaticResource SesEnergyGreenBrush}" />
+
+                                <TextBlock
+                                    VerticalAlignment="Center"
+                                    FontSize="11">
+                                    <Hyperlink
+                                        NavigateUri="https://sesenergy.com/aviation"
+                                        RequestNavigate="Hyperlink_RequestNavigate">
+                                        <Run Text="sesenergy.com/aviation" />
+                                    </Hyperlink>
+                                </TextBlock>
+
+                            </StackPanel>
+
+                        </StackPanel>
+
+                        <!--Email QR Code-->
+                        <StackPanel
+                            Grid.Column="1"
+                            HorizontalAlignment="Center"
+                            Margin="8">
+
+                            <ContentControl
+                                x:Name="emailBarcodeHost"
+                                Width="120"
+                                Height="120" />
+
+                            <StackPanel
+                                Orientation="Horizontal"
+                                HorizontalAlignment="Center"
+                                Margin="4">
+
+                                <!--Email Icon-->
+                                <TextBlock
+                                    Text="&#xE715;"
+                                    FontFamily="Segoe MDL2 Assets"
+                                    FontSize="16"
+                                    VerticalAlignment="Center"
+                                    Margin="0,0,4,0"
+                                    Foreground="{StaticResource SesEnergyGreenBrush}" />
+
+                                <TextBlock
+                                    VerticalAlignment="Center"
+                                    FontSize="11">
+                                    <Hyperlink
+                                        NavigateUri="mailto:aviation.services@sesenergy.com"
+                                        RequestNavigate="Hyperlink_RequestNavigate">
+                                        <Run Text="aviation.services@sesenergy.com" />
+                                    </Hyperlink>
+                                </TextBlock>
+
+                            </StackPanel>
+
+                        </StackPanel>
+
+                    </Grid>
 
                 </StackPanel>
 
