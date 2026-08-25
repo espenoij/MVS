@@ -13,6 +13,7 @@ using MVS.Models;
 using MVS.Views.Controls;
 using Telerik.Windows.Controls;
 using Telerik.Windows.Data;
+using Telerik.Windows.Documents.Fixed;
 using static MVS.MainWindow;
 
 namespace MVS
@@ -67,6 +68,9 @@ namespace MVS
         // the review charts are (re)built from the database only when the user enters
         // Step 4, so review graphs update only after capture is complete.
         private bool _reviewDataLoaded;
+
+        // Backing stream for the inline PDF viewer; kept alive while the viewer is showing.
+        private MemoryStream _inlineViewerStream;
 
         // Live-update timer for the duration banner while recording is active.
         private readonly DispatcherTimer _recordingBannerTimer;
@@ -452,6 +456,11 @@ namespace MVS
 
                 tbDurationWarning.Visibility = mainWindowVM.SelectedProject.DurationWarning();
 
+                // Scrub stale auto-generated no-data placeholder text so the
+                // assessment field appears empty and gets regenerated with real
+                // numbers the first time the user clicks Generate Report.
+                ScrubStaleAssessmentText(mainWindowVM.SelectedProject.ReportMetadata);
+
                 ucReportMetadata.Metadata = mainWindowVM.SelectedProject.ReportMetadata;
             }
             else
@@ -638,18 +647,32 @@ namespace MVS
             if (project == null)
                 return;
 
-            // Only populates blank fields, so existing operator input is preserved.
-            if (!project.ReportMetadata.ApplyDefaultsToEmptyFields())
-                return;
+            RadWindow.Confirm(
+                new DialogParameters
+                {
+                    Content = "This will overwrite any fields that are still empty with standard boilerplate text.\n\nFields you have already filled in will not be changed.\n\nProceed?",
+                    Header = "Insert Default Text",
+                    OkButtonContent = "Insert",
+                    CancelButtonContent = "Cancel",
+                    Closed = (_, args) =>
+                    {
+                        if (args.DialogResult != true)
+                            return;
 
-            // MruReportMetadata does not raise change notifications, so re-bind the
-            // editor to refresh the fields with the newly inserted default text.
-            ucReportMetadata.Metadata = null;
-            ucReportMetadata.Metadata = project.ReportMetadata;
+                        // Only populates blank fields, so existing operator input is preserved.
+                        if (!project.ReportMetadata.ApplyDefaultsToEmptyFields())
+                            return;
 
-            // Persist and invalidate the cached report (mirrors a manual edit).
-            mvsDatabase.Update(project);
-            InvalidateReportCache();
+                        // MruReportMetadata does not raise change notifications, so re-bind the
+                        // editor to refresh the fields with the newly inserted default text.
+                        ucReportMetadata.Metadata = null;
+                        ucReportMetadata.Metadata = project.ReportMetadata;
+
+                        // Persist and invalidate the cached report (mirrors a manual edit).
+                        mvsDatabase.Update(project);
+                        InvalidateReportCache();
+                    }
+                });
         }
 
         private void tbLocation_LostFocus(object sender, RoutedEventArgs e)
@@ -1038,8 +1061,12 @@ namespace MVS
         /// </summary>
         private void UpdateStepProgressBar(int step)
         {
-            // SelectedIndex drives Completed / Indeterminate / NotStarted visuals automatically.
-            wizardStepBar.SelectedIndex = step - 1;
+            // Walk forward through each step index so that the RadStepProgressBar
+            // marks every intermediate step as Completed rather than skipping them.
+            // This fixes the visual when jumping directly to a later step (e.g. from
+            // Setup straight to Report on an existing project).
+            for (int i = 0; i < step; i++)
+                wizardStepBar.SelectedIndex = i;
 
             int maxReachable = MaxReachableStep();
             for (int i = 0; i < wizardStepBar.Items.Count; i++)
@@ -1166,7 +1193,6 @@ namespace MVS
 
             _reportGenerating = true;
             btnGenerateReport.IsEnabled = false;
-            btnPreviewReport.IsEnabled = false;
             btnSaveReportToDisc.IsEnabled = false;
             btnOpenPdfReport.IsEnabled = false;
 
@@ -1179,8 +1205,18 @@ namespace MVS
                 var model = Services.Reporting.VerificationReportModel.FromProject(project, projectVM);
 
                 // Auto-fill the discussion field when the operator has not written one yet,
-                // and persist it back so the editor shows the generated text.
-                if (string.IsNullOrWhiteSpace(model.Metadata?.AcceptanceCriteriaDiscussion))
+                // or when it still holds the stale no-data placeholder from a previous run
+                // (persisted before data was available). Regenerate whenever we now have data
+                // and the field is blank or contains only the old sentinel text.
+                string existingDiscussion = model.Metadata?.AcceptanceCriteriaDiscussion ?? string.Empty;
+                bool isStaleNoDataText = existingDiscussion.StartsWith(
+                    "No verification data was captured", StringComparison.Ordinal) ||
+                    existingDiscussion.StartsWith(
+                    "Verification data has not yet been captured", StringComparison.Ordinal);
+                bool shouldGenerate = string.IsNullOrWhiteSpace(existingDiscussion) ||
+                                      (model.HasData && isStaleNoDataText);
+
+                if (shouldGenerate)
                 {
                     string generated = model.GenerateDefaultDiscussion();
                     if (model.Metadata != null)
@@ -1223,21 +1259,7 @@ namespace MVS
             await EnsureReportAsync();
         }
 
-        /// <summary>
-        /// Generates the report if needed and opens it in a popup preview window.
-        /// </summary>
-        private async void btnPreviewReport_Click(object sender, RoutedEventArgs e)
-        {
-            if (!await EnsureReportAsync())
-                return;
 
-            if (_reportPdfBytes == null)
-                return;
-
-            var preview = new DialogReportPreview();
-            preview.LoadReport(_reportPdfBytes);
-            preview.ShowDialog();
-        }
 
         /// <summary>
         /// Renders the result charts and exports the report to PDF bytes.
@@ -1263,9 +1285,10 @@ namespace MVS
         /// </summary>
         private void MarkReportAvailable()
         {
-            btnPreviewReport.IsEnabled = true;
             btnSaveReportToDisc.IsEnabled = true;
             btnOpenPdfReport.IsEnabled = true;
+            if (_reportPdfBytes != null)
+                LoadInlineReport(_reportPdfBytes);
         }
 
         /// <summary>
@@ -1273,9 +1296,48 @@ namespace MVS
         /// </summary>
         private void MarkReportUnavailable()
         {
-            btnPreviewReport.IsEnabled = false;
             btnSaveReportToDisc.IsEnabled = false;
             btnOpenPdfReport.IsEnabled = false;
+            ClearInlineReport();
+        }
+
+        /// <summary>
+        /// Loads the given PDF bytes into the inline viewer and hides the placeholder.
+        /// </summary>
+        private void LoadInlineReport(byte[] pdfBytes)
+        {
+            _inlineViewerStream?.Dispose();
+            _inlineViewerStream = new MemoryStream(pdfBytes, writable: false);
+            inlinePdfViewer.DocumentSource = new PdfDocumentSource(_inlineViewerStream);
+            reportViewerPlaceholder.Visibility = Visibility.Collapsed;
+        }
+
+        /// <summary>
+        /// Clears the inline viewer and shows the placeholder.
+        /// </summary>
+        private void ClearInlineReport()
+        {
+            inlinePdfViewer.DocumentSource = null;
+            _inlineViewerStream?.Dispose();
+            _inlineViewerStream = null;
+            reportViewerPlaceholder.Visibility = Visibility.Visible;
+        }
+
+        /// <summary>
+        /// Clears the AcceptanceCriteriaDiscussion field when it still holds a
+        /// previously persisted no-data placeholder so that EnsureReportAsync
+        /// regenerates a correct assessment from the actual captured numbers.
+        /// </summary>
+        private static void ScrubStaleAssessmentText(MruReportMetadata metadata)
+        {
+            if (metadata == null) return;
+            string text = metadata.AcceptanceCriteriaDiscussion;
+            if (string.IsNullOrWhiteSpace(text)) return;
+            if (text.StartsWith("No verification data was captured", StringComparison.Ordinal) ||
+                text.StartsWith("Verification data has not yet been captured", StringComparison.Ordinal))
+            {
+                metadata.AcceptanceCriteriaDiscussion = string.Empty;
+            }
         }
 
         /// <summary>

@@ -190,7 +190,7 @@
                                 <TextBlock TextWrapping="Wrap"
                                            Foreground="{StaticResource SesTextSecondaryBrush}"
                                            Margin="0,0,0,12"
-                                           Text="Create or select a project, then describe the verification. The Vessel MRU is verified against the Reference MRU."/>
+                                           Text="Create or select a project. The Vessel MRU is verified against the Reference MRU."/>
 
                                 <telerik:GroupBox Header="Project Details" Margin="0,0,0,8">
                                     <Grid Margin="8">
@@ -410,85 +410,117 @@
 
                     <!-- ===== STEP 5: APPLY & REPORT ===== -->
                     <Grid x:Name="panelStep5" Visibility="Collapsed">
-
-                       <!-- Report inputs + action buttons (full page width) -->
-                       <Grid>
-                           <Grid.RowDefinitions>
+                        <Grid>
+                            <Grid.RowDefinitions>
                                 <RowDefinition Height="Auto"/>
                                 <RowDefinition Height="Auto"/>
                                 <RowDefinition Height="*"/>
-                                <RowDefinition Height="Auto"/>
                             </Grid.RowDefinitions>
 
-                            <TextBlock Grid.Row="0"
-                                       Text="Step 5 &#x2014; Apply and report"
-                                       FontSize="14" FontWeight="SemiBold"
-                                       Margin="0,0,0,6"/>
-                            <TextBlock Grid.Row="1"
-                                       TextWrapping="Wrap"
-                                       Foreground="{StaticResource SesTextSecondaryBrush}"
-                                       Margin="0,0,0,12"
-                                       Text="Fill in all required fields (*), then click Generate Report. Use Preview Report to view it in a popup window, save it as PDF, or open it directly."/>
+                            <!-- Header -->
+                            <StackPanel Grid.Row="0" Margin="0,0,0,10">
+                                <TextBlock Text="Step 5 &#x2014; Apply and report"
+                                           FontSize="14" FontWeight="SemiBold"
+                                           Margin="0,0,0,4"/>
+                                <TextBlock TextWrapping="Wrap"
+                                           Foreground="{StaticResource SesTextSecondaryBrush}"
+                                           Text="Fill in the report details on the left. The report preview updates on the right after clicking Generate Report."/>
+                            </StackPanel>
 
-                            <!-- Project details + report metadata for the report -->
-                            <ScrollViewer Grid.Row="2" VerticalScrollBarVisibility="Auto" HorizontalScrollBarVisibility="Disabled" Padding="0,0,8,0">
-                              <StackPanel>
-                            <telerik:GroupBox Header="Project Details" Margin="0,0,0,10">
-                                <Grid Margin="8">
-                                    <Grid.ColumnDefinitions>
-                                        <ColumnDefinition Width="Auto" MinWidth="100"/>
-                                        <ColumnDefinition Width="*"/>
-                                    </Grid.ColumnDefinitions>
-                                    <Grid.RowDefinitions>
-                                        <RowDefinition Height="Auto"/>
-                                        <RowDefinition Height="32"/>
-                                    </Grid.RowDefinitions>
+                            <!-- Two-panel content: left = form, right = inline PDF viewer -->
+                            <Grid Grid.Row="2">
+                                <Grid.ColumnDefinitions>
+                                    <ColumnDefinition Width="3*" MinWidth="300"/>
+                                    <ColumnDefinition Width="Auto"/>
+                                    <ColumnDefinition Width="2*" MinWidth="200"/>
+                                </Grid.ColumnDefinitions>
 
-                                    <TextBlock Grid.Row="0" Grid.Column="0" Text="Comments" Margin="0,4,8,0" VerticalAlignment="Top" Foreground="{StaticResource SesTextSecondaryBrush}"/>
-                                    <telerik:RadWatermarkTextBox Grid.Row="0" Grid.Column="1"
-                                             Name="tbDataSetComments"
-                                             AcceptsReturn="True"
-                                             TextWrapping="Wrap"
-                                             VerticalScrollBarVisibility="Auto"
-                                             VerticalContentAlignment="Top"
-                                             Height="60"
-                                             MinHeight="60"
-                                             MaxHeight="120"
-                                             Margin="0,0,0,6"
-                                             WatermarkContent="Optional"
-                                             LostFocus="tbDataSetDescription_LostFocus"
-                                             KeyDown="tbDataSetDescription_KeyDown"/>
+                                <!-- Left: scrollable metadata form -->
+                                <ScrollViewer Grid.Column="0"
+                                              VerticalScrollBarVisibility="Auto"
+                                              HorizontalScrollBarVisibility="Disabled"
+                                              Padding="0,0,8,0">
+                                    <StackPanel>
+                                        <!-- Project details + extended report metadata -->
+                                        <telerik:GroupBox Header="Report Details" Margin="0,0,0,10">
+                                            <StackPanel Margin="8">
+                                                <Grid>
+                                                    <Grid.ColumnDefinitions>
+                                                        <ColumnDefinition Width="Auto" MinWidth="100"/>
+                                                        <ColumnDefinition Width="*"/>
+                                                    </Grid.ColumnDefinitions>
+                                                    <Grid.RowDefinitions>
+                                                        <RowDefinition Height="Auto"/>
+                                                        <RowDefinition Height="32"/>
+                                                    </Grid.RowDefinitions>
 
-                                    <TextBlock Grid.Row="1" Grid.Column="0" Text="Correction Applied" VerticalAlignment="Center" Margin="0,4,8,0" Foreground="{StaticResource SesTextSecondaryBrush}"/>
-                                    <CheckBox Grid.Row="1" Grid.Column="1"
-                                              x:Name="chkCorrectionApplied"
-                                              HorizontalAlignment="Left"
-                                              VerticalAlignment="Center"
-                                              Margin="0,4,0,0"
-                                              Checked="chkCorrectionApplied_Changed"
-                                              Unchecked="chkCorrectionApplied_Changed"/>
+                                                    <TextBlock Grid.Row="0" Grid.Column="0" Text="Comments" Margin="0,4,8,0" VerticalAlignment="Top" Foreground="{StaticResource SesTextSecondaryBrush}"/>
+                                                    <telerik:RadWatermarkTextBox Grid.Row="0" Grid.Column="1"
+                                                             Name="tbDataSetComments"
+                                                             AcceptsReturn="True"
+                                                             TextWrapping="Wrap"
+                                                             VerticalScrollBarVisibility="Auto"
+                                                             VerticalContentAlignment="Top"
+                                                             Height="60"
+                                                             MinHeight="60"
+                                                             MaxHeight="120"
+                                                             Margin="0,0,0,6"
+                                                             WatermarkContent="Optional"
+                                                             LostFocus="tbDataSetDescription_LostFocus"
+                                                             KeyDown="tbDataSetDescription_KeyDown"/>
+
+                                                    <TextBlock Grid.Row="1" Grid.Column="0" Text="Correction Applied" VerticalAlignment="Center" Margin="0,4,8,0" Foreground="{StaticResource SesTextSecondaryBrush}"/>
+                                                    <CheckBox Grid.Row="1" Grid.Column="1"
+                                                              x:Name="chkCorrectionApplied"
+                                                              HorizontalAlignment="Left"
+                                                              VerticalAlignment="Center"
+                                                              Margin="0,4,0,0"
+                                                              Checked="chkCorrectionApplied_Changed"
+                                                              Unchecked="chkCorrectionApplied_Changed"/>
+                                                </Grid>
+
+                                                <controls:ReportMetadataEditor x:Name="ucReportMetadata"
+                                                                               MetadataChanged="ucReportMetadata_MetadataChanged"/>
+                                            </StackPanel>
+                                        </telerik:GroupBox>
+                                    </StackPanel>
+                                </ScrollViewer>
+
+                                <!-- Splitter -->
+                                <GridSplitter Grid.Column="1"
+                                              Width="5"
+                                              HorizontalAlignment="Center"
+                                              VerticalAlignment="Stretch"
+                                              Background="{StaticResource SesBorderBrush}"
+                                              Margin="4,0"/>
+
+                                <!-- Right: inline PDF viewer -->
+                                <Grid Grid.Column="2">
+                                    <telerik:RadPdfViewer x:Name="inlinePdfViewer"
+                                                          Background="{StaticResource SesSurfaceBrush}"/>
+                                    <Border x:Name="reportViewerPlaceholder"
+                                            Background="{StaticResource SesSurfaceBrush}"
+                                            IsHitTestVisible="False">
+                                        <StackPanel HorizontalAlignment="Center" VerticalAlignment="Center" Margin="32">
+                                            <TextBlock Text="No report generated yet"
+                                                       FontSize="15" FontWeight="SemiBold"
+                                                       HorizontalAlignment="Center"
+                                                       Foreground="{StaticResource SesTextSecondaryBrush}"
+                                                       Margin="0,0,0,8"/>
+                                            <TextBlock Text="Fill in the report details and click 'Generate Report' to preview here."
+                                                       TextWrapping="Wrap"
+                                                       TextAlignment="Center"
+                                                       Foreground="{StaticResource SesTextSecondaryBrush}"/>
+                                        </StackPanel>
+                                    </Border>
                                 </Grid>
-                            </telerik:GroupBox>
+                            </Grid>
 
-                            <!-- Extended report metadata (equipment, setup, conditions, criteria, notes) -->
-                            <telerik:GroupBox Header="Report Details" Margin="0,0,0,10">
-                                <StackPanel Margin="8">
-                                    <telerik:RadButton x:Name="btnInsertDefaultText"
-                                                       Click="btnInsertDefaultText_Click"
-                                                       Content="Insert Default Text"
-                                                       HorizontalAlignment="Left"
-                                                       Margin="0,0,0,8"
-                                                       IsEnabled="{Binding IsEnabled, ElementName=ucReportMetadata}"/>
-                                    <controls:ReportMetadataEditor x:Name="ucReportMetadata"
-                                                                   MetadataChanged="ucReportMetadata_MetadataChanged"/>
-                                </StackPanel>
-                            </telerik:GroupBox>
-                              </StackPanel>
-                            </ScrollViewer>
-
-                            <!-- Action buttons -->
-                            <StackPanel Grid.Row="3" Margin="0,10,0,0">
-                                <StackPanel Orientation="Horizontal" Margin="0,0,0,6">
+                            <!-- Toolbar -->
+                            <Border Grid.Row="1"
+                                    BorderBrush="{StaticResource SesBorderBrush}" BorderThickness="0,0,0,1"
+                                    Padding="0,0,0,8" Margin="0,0,0,8">
+                                <StackPanel Orientation="Horizontal">
                                     <telerik:RadButton x:Name="btnGenerateReport"
                                                        Click="btnGenerateReport_Click"
                                                        Content="Generate Report"
@@ -499,27 +531,27 @@
                                                        Visibility="Collapsed"
                                                        MinWidth="150"
                                                        Margin="8,0,0,0"/>
-                                </StackPanel>
-                                <StackPanel Orientation="Horizontal">
-                                    <telerik:RadButton x:Name="btnPreviewReport"
-                                                       Click="btnPreviewReport_Click"
-                                                       Content="Preview Report"
-                                                       IsEnabled="False"
+                                    <Separator Width="1" Margin="12,2" Background="{StaticResource SesBorderBrush}" VerticalAlignment="Stretch"/>
+                                    <telerik:RadButton x:Name="btnInsertDefaultText"
+                                                       Click="btnInsertDefaultText_Click"
+                                                       Content="Insert Default Text"
                                                        MinWidth="140"
-                                                       Margin="0,0,8,0"/>
+                                                       Margin="0,0,8,0"
+                                                       IsEnabled="{Binding IsEnabled, ElementName=ucReportMetadata}"/>
+                                    <Separator Width="1" Margin="0,2,12,2" Background="{StaticResource SesBorderBrush}" VerticalAlignment="Stretch"/>
                                     <telerik:RadButton x:Name="btnSaveReportToDisc"
                                                        Click="btnSaveReportToDisc_Click"
-                                                       Content="Save Report"
+                                                       Content="Save as PDF"
                                                        IsEnabled="False"
-                                                       MinWidth="120"/>
+                                                       MinWidth="120"
+                                                       Margin="0,0,8,0"/>
                                     <telerik:RadButton x:Name="btnOpenPdfReport"
                                                        Click="btnOpenPdfReport_Click"
-                                                       Content="Open PDF Report"
+                                                       Content="Open PDF"
                                                        IsEnabled="False"
-                                                       MinWidth="140"
-                                                       Margin="8,0,0,0"/>
+                                                       MinWidth="120"/>
                                 </StackPanel>
-                            </StackPanel>
+                            </Border>
                         </Grid>
                     </Grid>
                     </Grid>

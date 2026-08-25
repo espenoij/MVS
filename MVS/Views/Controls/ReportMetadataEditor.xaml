@@ -27,11 +27,9 @@
         </Style>
     </UserControl.Resources>
 
-    <UniformGrid Columns="3">
-        <!-- Column 1: Equipment & Scope -->
-
+    <StackPanel>
         <!-- Section 2: Scope and objective -->
-        <telerik:GroupBox Header="Scope &amp; Objective" Margin="0,0,10,10">
+        <telerik:GroupBox Header="Scope &amp; Objective" Margin="0,0,0,10">
             <StackPanel Margin="8">
                 <TextBlock Text="Test objective" Style="{StaticResource FieldLabel}"/>
                 <telerik:RadWatermarkTextBox Text="{Binding TestObjective, UpdateSourceTrigger=LostFocus}"
@@ -45,7 +43,7 @@
         </telerik:GroupBox>
 
         <!-- Section 3: Equipment - MRU under test -->
-        <telerik:GroupBox Header="Equipment &#x2014; MRU Under Test (Vessel)" Margin="0,0,10,10">
+        <telerik:GroupBox Header="Equipment &#x2014; MRU Under Test (Vessel)" Margin="0,0,0,10">
             <StackPanel Margin="8">
                 <TextBlock Text="Manufacturer" Style="{StaticResource FieldLabel}"/>
                 <telerik:RadWatermarkTextBox Text="{Binding DutManufacturer, UpdateSourceTrigger=LostFocus}"
@@ -67,7 +65,7 @@
         </telerik:GroupBox>
 
         <!-- Section 3: Equipment - Reference MRU -->
-        <telerik:GroupBox Header="Equipment &#x2014; Reference MRU" Margin="0,0,10,10">
+        <telerik:GroupBox Header="Equipment &#x2014; Reference MRU" Margin="0,0,0,10">
             <StackPanel Margin="8">
                 <TextBlock Text="Manufacturer" Style="{StaticResource FieldLabel}"/>
                 <telerik:RadWatermarkTextBox Text="{Binding ReferenceManufacturer, UpdateSourceTrigger=LostFocus}"
@@ -99,10 +97,8 @@
             </StackPanel>
         </telerik:GroupBox>
 
-        <!-- Column 2: Test Setup & Conditions -->
-
         <!-- Section 4: Test setup -->
-        <telerik:GroupBox Header="Test Setup" Margin="0,0,10,10">
+        <telerik:GroupBox Header="Test Setup" Margin="0,0,0,10">
             <StackPanel Margin="8">
                 <TextBlock Text="DUT installation location" Style="{StaticResource FieldLabel}"/>
                 <telerik:RadWatermarkTextBox Text="{Binding DutInstallationLocation, UpdateSourceTrigger=LostFocus}"
@@ -144,7 +140,7 @@
         </telerik:GroupBox>
 
         <!-- Section 5: Test conditions -->
-        <telerik:GroupBox Header="Test Conditions" Margin="0,0,10,10">
+        <telerik:GroupBox Header="Test Conditions" Margin="0,0,0,10">
             <StackPanel Margin="8">
                 <TextBlock Text="Loading condition" Style="{StaticResource FieldLabel}"/>
                 <telerik:RadWatermarkTextBox Text="{Binding LoadingCondition, UpdateSourceTrigger=LostFocus}"
@@ -309,5 +305,5 @@
                                              Style="{StaticResource MultiLineFieldBox}" LostFocus="Field_LostFocus"/>
             </StackPanel>
         </telerik:GroupBox>
-    </UniformGrid>
+    </StackPanel>
 </UserControl>
