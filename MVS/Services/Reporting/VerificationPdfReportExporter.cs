@@ -3,6 +3,7 @@ using System.Collections.Generic;
 using System.Globalization;
 using System.IO;
 using System.Windows;
+using System.Windows.Media;
 using MVS.Models;
 using Telerik.Windows.Documents.Fixed.FormatProviders.Pdf;
 using Telerik.Windows.Documents.Fixed.Model;
@@ -12,6 +13,7 @@ using Telerik.Windows.Documents.Fixed.Model.Editing.Flow;
 using Telerik.Windows.Documents.Fixed.Model.Editing.Tables;
 using Telerik.Windows.Documents.Fixed.Model.Fonts;
 using Telerik.Windows.Documents.Fixed.Model.Resources;
+using TelerikImageSource = Telerik.Windows.Documents.Fixed.Model.Resources.ImageSource;
 using TelerikPadding = Telerik.Windows.Documents.Primitives.Padding;
 
 namespace MVS.Services.Reporting
@@ -28,6 +30,58 @@ namespace MVS.Services.Reporting
     public static class VerificationPdfReportExporter
     {
         private static readonly CultureInfo Ci = CultureInfo.CurrentCulture;
+
+        private static readonly FontBase _robotoRegular;
+        private static readonly FontBase _robotoBold;
+
+        static VerificationPdfReportExporter()
+        {
+            // Use a plain family name so that FontProperties keys match between
+            // RegisterFont and TryCreateFont. The TTF bytes are loaded directly
+            // from the embedded WPF resources rather than relying on WPF's
+            // GlyphTypeface resolver, which does not follow pack URIs.
+            var family = new FontFamily("Roboto Condensed");
+
+            RegisterRobotoFont(family, FontStyles.Normal, FontWeights.Normal,
+                "pack://application:,,,/MVS;component/Fonts/RobotoCondensed-Regular.ttf");
+
+            RegisterRobotoFont(family, FontStyles.Normal, FontWeights.Bold,
+                "pack://application:,,,/MVS;component/Fonts/RobotoCondensed-Bold.ttf");
+
+            _robotoRegular = FontsRepository.TryCreateFont(
+                family, FontStyles.Normal, FontWeights.Normal, out FontBase regular)
+                ? regular : FontsRepository.Helvetica;
+
+            _robotoBold = FontsRepository.TryCreateFont(
+                family, FontStyles.Normal, FontWeights.Bold, out FontBase bold)
+                ? bold : FontsRepository.HelveticaBold;
+        }
+
+        /// <summary>
+        /// Reads the TTF at <paramref name="packUri"/> from the application's
+        /// embedded resources and pre-registers it with RadPdfProcessing so that
+        /// <see cref="FontsRepository.TryCreateFont"/> can retrieve it by name
+        /// without needing WPF's GlyphTypeface resolver.
+        /// </summary>
+        private static void RegisterRobotoFont(
+            FontFamily family, FontStyle style, FontWeight weight, string packUri)
+        {
+            try
+            {
+                var uri = new Uri(packUri);
+                System.Windows.Resources.StreamResourceInfo info =
+                    Application.GetResourceStream(uri);
+                if (info == null) return;
+
+                using var ms = new MemoryStream();
+                info.Stream.CopyTo(ms);
+                FontsRepository.RegisterFont(family, style, weight, ms.ToArray());
+            }
+            catch
+            {
+                // Fall back to Helvetica if resources are unavailable (e.g. test host).
+            }
+        }
 
         // ── Palette (matches the on-screen review styling) ──
         // NOTE: RadPdfProcessing only lets us set the *font* (bold/regular) on
@@ -128,12 +182,12 @@ namespace MVS.Services.Reporting
 
         private static void WriteTitle(RadFixedDocumentEditor editor, VerificationReportModel model)
         {
-            SetText(editor, FontsRepository.HelveticaBold, 22, ColorHeading);
+            SetText(editor, _robotoBold, 22, ColorHeading);
             editor.ParagraphProperties.SpacingAfter = 2;
             editor.InsertParagraph();
             editor.InsertRun("Motion Reference Unit Verification Report");
 
-            SetText(editor, FontsRepository.Helvetica, 12, ColorMuted);
+            SetText(editor, _robotoRegular, 12, ColorMuted);
             editor.ParagraphProperties.SpacingAfter = 12;
             editor.InsertParagraph();
             editor.InsertRun(model.ProjectName);
@@ -661,7 +715,7 @@ namespace MVS.Services.Reporting
 
         private static void Heading(RadFixedDocumentEditor editor, string text)
         {
-            SetText(editor, FontsRepository.HelveticaBold, 15, ColorHeading);
+            SetText(editor, _robotoBold, 15, ColorHeading);
             editor.ParagraphProperties.SpacingBefore = 12;
             editor.ParagraphProperties.SpacingAfter = 4;
             editor.InsertParagraph();
@@ -671,7 +725,7 @@ namespace MVS.Services.Reporting
         private static void Paragraph(RadFixedDocumentEditor editor, string text, double size, RgbColor color,
                                       double spacingBefore = 0, double spacingAfter = 6, bool bold = false)
         {
-            SetText(editor, bold ? FontsRepository.HelveticaBold : FontsRepository.Helvetica, size, color);
+            SetText(editor, bold ? _robotoBold : _robotoRegular, size, color);
             editor.ParagraphProperties.SpacingBefore = spacingBefore;
             editor.ParagraphProperties.SpacingAfter = spacingAfter;
             editor.InsertParagraph();
@@ -702,7 +756,7 @@ namespace MVS.Services.Reporting
         {
             using (var ms = new MemoryStream(png))
             {
-                var image = new ImageSource(ms);
+                var image = new TelerikImageSource(ms);
                 editor.ParagraphProperties.SpacingAfter = 8;
                 editor.InsertParagraph();
                 editor.InsertImageInline(image, new Size(width, height));
@@ -730,7 +784,7 @@ namespace MVS.Services.Reporting
                 TableCell cell = row.Cells.AddTableCell();
                 cell.Background = ColorTableHeader;
                 Block block = cell.Blocks.AddBlock();
-                ApplyCellText(block, FontsRepository.HelveticaBold);
+                ApplyCellText(block, _robotoBold);
                 block.InsertText(text);
             }
         }
@@ -744,7 +798,7 @@ namespace MVS.Services.Reporting
                 TableCell cell = row.Cells.AddTableCell();
                 if (alt) cell.Background = ColorRowAlt;
                 Block block = cell.Blocks.AddBlock();
-                FontBase font = i == 0 ? FontsRepository.HelveticaBold : FontsRepository.Helvetica;
+                FontBase font = i == 0 ? _robotoBold : _robotoRegular;
                 ApplyCellText(block, font);
                 block.InsertText(cells[i] ?? string.Empty);
             }
@@ -763,14 +817,14 @@ namespace MVS.Services.Reporting
                 key.PreferredWidth = 170;
                 if (alt) key.Background = ColorRowAlt;
                 Block keyBlock = key.Blocks.AddBlock();
-                ApplyCellText(keyBlock, FontsRepository.HelveticaBold);
+                ApplyCellText(keyBlock, _robotoBold);
                 keyBlock.InsertText(kv.Key);
 
                 TableCell val = row.Cells.AddTableCell();
                 val.PreferredWidth = 510;
                 if (alt) val.Background = ColorRowAlt;
                 Block valBlock = val.Blocks.AddBlock();
-                ApplyCellText(valBlock, FontsRepository.Helvetica);
+                ApplyCellText(valBlock, _robotoRegular);
                 valBlock.InsertText(kv.Value ?? string.Empty);
             }
             editor.InsertTable(table);
