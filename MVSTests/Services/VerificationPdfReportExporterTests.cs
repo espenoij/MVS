@@ -158,10 +158,76 @@ namespace MVSTests.Services
             {
                 var model = SampleModel();
                 byte[] deviation = ReportChartRenderer.RenderDeviationChart(model);
-                byte[] means = ReportChartRenderer.RenderMeansChart(model);
+                byte[] means     = ReportChartRenderer.RenderMeansChart(model);
 
                 AssertIsPng(deviation);
                 AssertIsPng(means);
+            });
+        }
+
+        [TestMethod]
+        public void ChartRenderer_CoverBanner_ProducesValidPng()
+        {
+            StaTestHelper.Run(() =>
+            {
+                var model = SampleModel();
+                byte[] png = ReportChartRenderer.RenderCoverBanner(model);
+                AssertIsPng(png);
+            });
+        }
+
+        [TestMethod]
+        public void ChartRenderer_CoverBanner_WithoutData_ProducesValidPng()
+        {
+            StaTestHelper.Run(() =>
+            {
+                var model = SampleModel(withData: false);
+                byte[] png = ReportChartRenderer.RenderCoverBanner(model);
+                AssertIsPng(png);
+            });
+        }
+
+        [TestMethod]
+        public void ChartRenderer_ExecutiveDashboard_ProducesValidPng()
+        {
+            StaTestHelper.Run(() =>
+            {
+                var model = SampleModel();
+                byte[] png = ReportChartRenderer.RenderExecutiveDashboard(model);
+                AssertIsPng(png);
+            });
+        }
+
+        [TestMethod]
+        public void ChartRenderer_ExecutiveDashboard_WithoutData_ProducesValidPng()
+        {
+            StaTestHelper.Run(() =>
+            {
+                var model = SampleModel(withData: false);
+                byte[] png = ReportChartRenderer.RenderExecutiveDashboard(model);
+                AssertIsPng(png);
+            });
+        }
+
+        [TestMethod]
+        public void ChartRenderer_BulletChartsPanel_ProducesValidPng()
+        {
+            StaTestHelper.Run(() =>
+            {
+                var model = SampleModel();
+                byte[] png = ReportChartRenderer.RenderBulletChartsPanel(model);
+                AssertIsPng(png);
+            });
+        }
+
+        [TestMethod]
+        public void ChartRenderer_BulletChartsPanel_WithoutData_ProducesValidPng()
+        {
+            StaTestHelper.Run(() =>
+            {
+                var model = SampleModel(withData: false);
+                byte[] png = ReportChartRenderer.RenderBulletChartsPanel(model);
+                AssertIsPng(png);
             });
         }
 
@@ -173,14 +239,22 @@ namespace MVSTests.Services
             StaTestHelper.Run(() =>
             {
                 var model = SampleModel();
-                model.DeviationChartPng = ReportChartRenderer.RenderDeviationChart(model);
-                model.MeansChartPng = ReportChartRenderer.RenderMeansChart(model);
+                model.CoverBannerPng          = ReportChartRenderer.RenderCoverBanner(model);
+                model.ExecutiveDashboardPng   = ReportChartRenderer.RenderExecutiveDashboard(model);
+                model.SessionOverviewPng      = ReportChartRenderer.RenderSessionOverviewPanel(model);
+                model.BulletChartsPng         = ReportChartRenderer.RenderBulletChartsPanel(model);
+                model.CorrectionCardsPng      = ReportChartRenderer.RenderCorrectionCards(model);
+                model.CorrelationBarsPng      = ReportChartRenderer.RenderCorrelationBars(model);
+                model.ConfidencePanelPng      = ReportChartRenderer.RenderConfidencePanel(model);
+                model.ComplianceScorecardsPng = ReportChartRenderer.RenderComplianceScorecards(model);
+                model.DeviationChartPng       = ReportChartRenderer.RenderDeviationChart(model);
+                model.MeansChartPng           = ReportChartRenderer.RenderMeansChart(model);
 
                 var document = VerificationPdfReportExporter.Build(model);
 
                 Assert.IsNotNull(document);
-                Assert.IsTrue(document.Pages.Count >= 1,
-                    "Expected the report to contain at least one page.");
+                Assert.IsTrue(document.Pages.Count >= 2,
+                    "Expected the report to contain at least two pages (cover + dashboard).");
             });
         }
 

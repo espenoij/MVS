@@ -64,6 +64,42 @@ namespace MVS.Services.Reporting
         public byte[] MeansChartPng { get; set; }
         public byte[] LogoPng { get; set; }
 
+        // ----- Modern report design graphics (GDI+ rendered, embedded as full-width panels) -----
+        /// <summary>Cover page: premium SES-branded full-page panel (900x760 GDI).</summary>
+        public byte[] CoverBannerPng { get; set; }
+        /// <summary>Executive dashboard panel: KPI cards, per-axis status cards, data-quality metrics.</summary>
+        public byte[] ExecutiveDashboardPng { get; set; }
+        /// <summary>Bullet chart panel: three-row horizontal deviation vs. scale chart.</summary>
+        public byte[] BulletChartsPng { get; set; }
+        /// <summary>Correction cards panel: three large Pitch/Roll/Heave correction summary cards.</summary>
+        public byte[] CorrectionCardsPng { get; set; }
+        /// <summary>Correlation bars panel: color-coded horizontal bars for each axis correlation and latency.</summary>
+        public byte[] CorrelationBarsPng { get; set; }
+        /// <summary>Data quality confidence panel: overall verification confidence score with progress bars.</summary>
+        public byte[] ConfidencePanelPng { get; set; }
+        /// <summary>Session overview panel: four info cards (Project, Vessel, Session, Operator).</summary>
+        public byte[] SessionOverviewPng { get; set; }
+        /// <summary>Compliance scorecards panel: one card per criterion plus overall verdict.</summary>
+        public byte[] ComplianceScorecardsPng { get; set; }
+
+        /// <summary>Pitch axis summary banner (full-width, 900×96 GDI). Shows key metrics above the detail table.</summary>
+        public byte[] PitchAxisSummaryPng  { get; set; }
+        /// <summary>Roll axis summary banner (full-width, 900×96 GDI). Shows key metrics above the detail table.</summary>
+        public byte[] RollAxisSummaryPng   { get; set; }
+        /// <summary>Heave axis summary banner (full-width, 900×96 GDI). Shows key metrics above the detail table.</summary>
+        public byte[] HeaveAxisSummaryPng  { get; set; }
+
+        /// <summary>Returns the pre-rendered axis summary PNG for the given axis, or null.</summary>
+        public byte[] AxisSummaryPng(VerificationAxisKind axis)
+        {
+            switch (axis)
+            {
+                case VerificationAxisKind.Pitch: return PitchAxisSummaryPng;
+                case VerificationAxisKind.Roll:  return RollAxisSummaryPng;
+                default:                         return HeaveAxisSummaryPng;
+            }
+        }
+
         /// <summary>Number of averaged samples backing the deviation result.</summary>
         public int SampleCount
         {

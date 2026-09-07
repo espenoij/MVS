@@ -1224,6 +1224,11 @@ namespace MVS
                     ucReportMetadata.Metadata = model.Metadata;
                 }
 
+                // Load the company logo from the embedded WPF resource on the UI thread
+                // before handing off to the background worker.
+                model.LogoPng = LoadEmbeddedResourceBytes(
+                    "pack://application:,,,/MVS;component/Icons/helifuel_logo.png");
+
                 progress.Show();
 
                 // The heavy work (chart rendering + PDF build) only touches the model
@@ -1265,12 +1270,44 @@ namespace MVS
         /// Renders the result charts and exports the report to PDF bytes.
         /// Runs on a background thread; must not touch WPF UI objects.
         /// </summary>
+        /// <summary>
+        /// Reads an embedded WPF pack-URI resource into a byte array.
+        /// Returns null if the resource is unavailable (e.g. in unit-test hosts).
+        /// Must be called on the UI thread.
+        /// </summary>
+        private static byte[] LoadEmbeddedResourceBytes(string packUri)
+        {
+            try
+            {
+                var info = System.Windows.Application.GetResourceStream(new Uri(packUri));
+                if (info == null) return null;
+                using var ms = new MemoryStream();
+                info.Stream.CopyTo(ms);
+                return ms.ToArray();
+            }
+            catch
+            {
+                return null;
+            }
+        }
+
         private static byte[] GenerateReportBytes(Services.Reporting.VerificationReportModel model)
         {
             if (model.HasData)
             {
-                model.DeviationChartPng = Services.Reporting.ReportChartRenderer.RenderDeviationChart(model);
-                model.MeansChartPng = Services.Reporting.ReportChartRenderer.RenderMeansChart(model);
+                model.CoverBannerPng        = Services.Reporting.ReportChartRenderer.RenderCoverBanner(model);
+                model.ExecutiveDashboardPng = Services.Reporting.ReportChartRenderer.RenderExecutiveDashboard(model);
+                model.SessionOverviewPng    = Services.Reporting.ReportChartRenderer.RenderSessionOverviewPanel(model);
+                model.BulletChartsPng       = Services.Reporting.ReportChartRenderer.RenderBulletChartsPanel(model);
+                model.CorrectionCardsPng    = Services.Reporting.ReportChartRenderer.RenderCorrectionCards(model);
+                model.CorrelationBarsPng    = Services.Reporting.ReportChartRenderer.RenderCorrelationBars(model);
+                model.ConfidencePanelPng    = Services.Reporting.ReportChartRenderer.RenderConfidencePanel(model);
+                model.ComplianceScorecardsPng = Services.Reporting.ReportChartRenderer.RenderComplianceScorecards(model);
+                model.PitchAxisSummaryPng   = Services.Reporting.ReportChartRenderer.RenderAxisSummaryCard(model, Services.VerificationAxisKind.Pitch);
+                model.RollAxisSummaryPng    = Services.Reporting.ReportChartRenderer.RenderAxisSummaryCard(model, Services.VerificationAxisKind.Roll);
+                model.HeaveAxisSummaryPng   = Services.Reporting.ReportChartRenderer.RenderAxisSummaryCard(model, Services.VerificationAxisKind.Heave);
+                model.DeviationChartPng     = Services.Reporting.ReportChartRenderer.RenderDeviationChart(model);
+                model.MeansChartPng         = Services.Reporting.ReportChartRenderer.RenderMeansChart(model);
             }
 
             using (var ms = new MemoryStream())

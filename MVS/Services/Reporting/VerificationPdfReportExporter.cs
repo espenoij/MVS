@@ -1,4 +1,4 @@
-using System;
+﻿using System;
 using System.Collections.Generic;
 using System.Globalization;
 using System.IO;
@@ -83,17 +83,20 @@ namespace MVS.Services.Reporting
             }
         }
 
-        // ── Palette (matches the on-screen review styling) ──
-        // NOTE: RadPdfProcessing only lets us set the *font* (bold/regular) on
-        // table-cell text, not its size or colour; those are controllable only for
-        // text written through the editor's CharacterProperties. Table structure is
-        // therefore conveyed with cell background shading and bold header text.
-        private static readonly RgbColor ColorHeading = new RgbColor(0, 51, 102);
-        private static readonly RgbColor ColorText = new RgbColor(40, 40, 40);
-        private static readonly RgbColor ColorMuted = new RgbColor(110, 110, 110);
-        private static readonly RgbColor ColorTableHeader = new RgbColor(215, 226, 238);
-        private static readonly RgbColor ColorRowAlt = new RgbColor(242, 246, 250);
-        private static readonly RgbColor ColorBorder = new RgbColor(210, 210, 210);
+        // ── Palette (design-spec: deep navy / teal / seafoam / amber / red) ──
+        // Table cells: background is controllable; text color/size is not via the
+        // RadPdfProcessing flow API. Headers therefore use a medium-blue tint that
+        // remains readable with the dark default text color.
+        // SES Energy Brand Toolkit palette (PDF / RgbColor version)
+        private static readonly RgbColor ColorHeading     = new RgbColor(0x33, 0x4A, 0x5C); // SES Dark Blue Grey
+        private static readonly RgbColor ColorSubHeading  = new RgbColor(0x26, 0x37, 0x46); // SES Dark Blue Grey deep
+        private static readonly RgbColor ColorAccent      = new RgbColor(0x3D, 0xE6, 0xA9); // SES Energy Green
+        private static readonly RgbColor ColorText        = new RgbColor(0x1A, 0x27, 0x32); // Near-black text
+        private static readonly RgbColor ColorMuted       = new RgbColor(0x7F, 0x94, 0xA5); // Mid-tone grey
+        private static readonly RgbColor ColorTableHeader = new RgbColor(0x33, 0x4A, 0x5C); // SES Dark Blue Grey (table headers)
+        private static readonly RgbColor ColorTableHeaderText = new RgbColor(0xFF, 0xFF, 0xFF); // White text on dark header
+        private static readonly RgbColor ColorRowAlt      = new RgbColor(0xF2, 0xF5, 0xF7); // Light surface alt row
+        private static readonly RgbColor ColorBorder      = new RgbColor(0xD6, 0xDF, 0xE6); // Subtle divider
 
         // Capture-duration quality thresholds (minutes) — matches DurationStatusBanner.
         private const double MinDurationAcceptableMinutes  = 20.0;
@@ -131,43 +134,48 @@ namespace MVS.Services.Reporting
             if (model == null) throw new ArgumentNullException(nameof(model));
 
             var document = new RadFixedDocument();
-            var editor = new RadFixedDocumentEditor(document);
+            var editor   = new RadFixedDocumentEditor(document);
 
             // A4 portrait with comfortable margins.
-            editor.SectionProperties.PageSize = new Size(793, 1122);
+            editor.SectionProperties.PageSize    = new Size(793, 1122);
             editor.SectionProperties.PageMargins = new TelerikPadding(56);
 
-            // 1. Title / identification
+            // ── Page 1: Cover / identification ──────────────────────────────
             WriteTitle(editor, model);
-            // 2. Scope and objective
+
+            // ── Page 2: Executive dashboard ──────────────────────────────────
+            WriteExecutiveDashboard(editor, model);
+
+            // ── Body sections ─────────────────────────────────────────────────
+            // 1. Scope and objective
             WriteScope(editor, model);
-            // 3. Equipment
+            // 2. Equipment
             WriteEquipment(editor, model);
-            // 4. Test setup
+            // 3. Test setup
             WriteTestSetup(editor, model);
-            // 5. Test conditions
+            // 4. Test conditions
             WriteTestConditions(editor, model);
-            // 6. Data processing methodology
+            // 5. Data processing methodology
             WriteMethodology(editor, model);
-            // 7. Executive summary + capture overview
+            // 6. Overview / session summary
             WriteOverview(editor, model);
-            // 8. Results - recommended/applied corrections
+            // 7. Results — recommended/applied corrections
             WriteFinalResults(editor, model);
-            // 8b. Correlation and latency
+            // 7b. Correlation and latency
             WriteCorrelationAndLatency(editor, model);
-            // 8c. Result graphics
+            // 7c. Result graphics (deviation + means bar charts)
             WriteCharts(editor, model);
-            // 9. Supporting per-axis statistics
+            // 8. Supporting per-axis statistics
             WriteAxisDetails(editor, model);
-            // 10. Observations
+            // 9. Observations
             WriteObservations(editor, model);
-            // 11. Compliance assessment
+            // 10. Compliance assessment
             WriteCompliance(editor, model);
-            // 12. Conclusion
+            // 11. Conclusion
             WriteConclusion(editor, model);
-            // 13. Recommendations
+            // 12. Recommendations
             WriteRecommendations(editor, model);
-            // 14. Appendices / glossary
+            // 13. Appendices / glossary
             WriteAppendices(editor, model);
             WriteGlossary(editor, model);
 
@@ -180,29 +188,82 @@ namespace MVS.Services.Reporting
         // Sections
         // ============================================================
 
-        private static void WriteTitle(RadFixedDocumentEditor editor, VerificationReportModel model)
+		private static void WriteTitle(RadFixedDocumentEditor editor, VerificationReportModel model)
+		{
+			// Logo: left-aligned, compact, above the full-page cover panel
+			if (model.LogoPng != null)
+			{
+				const int logoW = 220;
+				const int logoH = 59; // 220 / 3.717 aspect
+				using (var ms = new MemoryStream(model.LogoPng))
+				{
+					var logoImage = new TelerikImageSource(ms);
+					editor.ParagraphProperties.SpacingBefore    = 0;
+					editor.ParagraphProperties.SpacingAfter     = 12;
+					editor.ParagraphProperties.HorizontalAlignment = Telerik.Windows.Documents.Fixed.Model.Editing.Flow.HorizontalAlignment.Left;
+					editor.InsertParagraph();
+					editor.InsertImageInline(logoImage, new Size(logoW, logoH));
+				}
+				editor.ParagraphProperties.HorizontalAlignment = Telerik.Windows.Documents.Fixed.Model.Editing.Flow.HorizontalAlignment.Left;
+			}
+
+			// Premium full-page SES cover panel (900x760 GDI -> 681x575 in PDF)
+			if (model.CoverBannerPng != null)
+			{
+				editor.ParagraphProperties.SpacingBefore = 0;
+				editor.ParagraphProperties.SpacingAfter  = 0;
+				InsertImage(editor, model.CoverBannerPng, 681, 575);
+			}
+			else
+			{
+				SetText(editor, _robotoBold, 22, ColorHeading);
+				editor.ParagraphProperties.SpacingAfter = 2;
+				editor.InsertParagraph();
+				editor.InsertRun("MOTION REFERENCE UNIT VERIFICATION REPORT");
+
+				SetText(editor, _robotoRegular, 12, ColorMuted);
+				editor.ParagraphProperties.SpacingAfter = 12;
+				editor.InsertParagraph();
+				editor.InsertRun(model.ProjectName);
+				TealRule(editor);
+
+				var rows = new List<KeyValuePair<string, string>>
+				{
+					new KeyValuePair<string, string>("Project / reference",    Dash(model.ProjectName)),
+					new KeyValuePair<string, string>("Vessel",                 Dash(model.VesselName)),
+					new KeyValuePair<string, string>("Operator / surveyor",    Dash(model.Operator)),
+					new KeyValuePair<string, string>("Location",               Dash(model.Location)),
+					new KeyValuePair<string, string>("Capture start",          Dash(model.StartTime)),
+					new KeyValuePair<string, string>("Capture end",            Dash(model.EndTime)),
+					new KeyValuePair<string, string>("Duration",               Dash(model.Duration)),
+					new KeyValuePair<string, string>("Report generated (UTC)", model.GeneratedUtc.ToString("yyyy-MM-dd HH:mm", Ci)),
+				};
+				InsertKeyValueTable(editor, rows);
+			}
+		}
+
+
+        /// <summary>
+        /// Page 2: 2×3 KPI dashboard panel — six large-number cards for instant status read.
+        /// </summary>
+        private static void WriteExecutiveDashboard(RadFixedDocumentEditor editor, VerificationReportModel model)
         {
-            SetText(editor, _robotoBold, 22, ColorHeading);
-            editor.ParagraphProperties.SpacingAfter = 2;
-            editor.InsertParagraph();
-            editor.InsertRun("Motion Reference Unit Verification Report");
+            editor.InsertPageBreak();
+            Heading(editor, "Executive Dashboard");
 
-            SetText(editor, _robotoRegular, 12, ColorMuted);
-            editor.ParagraphProperties.SpacingAfter = 12;
-            editor.InsertParagraph();
-            editor.InsertRun(model.ProjectName);
-
-            HorizontalRule(editor);
-
-            var rows = new List<KeyValuePair<string, string>>
+            if (model.ExecutiveDashboardPng != null)
             {
-                new KeyValuePair<string, string>("Project / reference", Dash(model.ProjectName)),
-                new KeyValuePair<string, string>("Vessel", Dash(model.VesselName)),
-                new KeyValuePair<string, string>("Operator / surveyor", Dash(model.Operator)),
-                new KeyValuePair<string, string>("Location", Dash(model.Location)),
-                new KeyValuePair<string, string>("Report generated", model.GeneratedUtc.ToLocalTime().ToString("yyyy-MM-dd HH:mm", Ci)),
-            };
-            InsertKeyValueTable(editor, rows);
+                editor.ParagraphProperties.SpacingAfter = 8;
+                // Dashboard image: 900×220 GDI → 681×166 PDF
+                InsertImage(editor, model.ExecutiveDashboardPng, 681, 166);
+            }
+
+            if (!model.HasData)
+            {
+                Paragraph(editor,
+                    "No measurement data was captured. Acquire reference and vessel motion data, then re-generate.",
+                    10.5, ColorMuted, spacingAfter: 6);
+            }
         }
 
         private static void WriteScope(RadFixedDocumentEditor editor, VerificationReportModel model)
@@ -212,10 +273,8 @@ namespace MVS.Services.Reporting
             MruReportMetadata m = model.Metadata;
             Paragraph(editor,
                 string.IsNullOrWhiteSpace(m?.TestObjective)
-                    ? "This report documents the verification of a vessel-installed Motion Reference Unit (MRU) " +
-                      "against a calibrated reference MRU. The objective is to quantify the agreement between the " +
-                      "two units in pitch, roll and heave, and to determine any orientation corrections required " +
-                      "for the vessel unit."
+                    ? "Verification of the vessel-installed MRU against a calibrated reference unit. " +
+                      "Corrections for pitch, roll, and heave are determined and applied."
                     : m.TestObjective,
                 11, ColorText, spacingAfter: 8);
 
@@ -308,12 +367,10 @@ namespace MVS.Services.Reporting
             Heading(editor, "5. Data Processing Methodology");
 
             Paragraph(editor,
-                "Reference and vessel motion channels are logged simultaneously and time-aligned sample-by-sample. " +
-                "For each axis the deviation (vessel minus reference) is computed per sample, and descriptive " +
-                "statistics (mean, standard deviation, minimum, maximum and RMS) are calculated over the capture. " +
-                "The mean deviation on each axis is taken as the recommended orientation correction for the vessel unit. " +
-                "Agreement between the two units is additionally quantified by the Pearson correlation coefficient, and " +
-                "the relative timing is estimated by cross-correlation (see Correlation and Latency).",
+                "Reference and vessel channels are time-aligned sample-by-sample. " +
+                "Per-sample deviation (vessel minus reference) is computed on each axis; " +
+                "the mean deviation is the recommended correction. " +
+                "Agreement is quantified by Pearson correlation; timing offset by cross-correlation.",
                 10.5, ColorText, spacingAfter: 6);
 
             MruReportMetadata m = model.Metadata;
@@ -337,26 +394,25 @@ namespace MVS.Services.Reporting
         private static void WriteOverview(RadFixedDocumentEditor editor, VerificationReportModel model)
         {
             editor.InsertPageBreak();
-            Heading(editor, "6. Executive Summary");
+            Heading(editor, "6. Session Overview");
 
-            Paragraph(editor, OverviewSentence(model), 11, ColorText, spacingAfter: 10);
+            // Visual session info cards (900x180 GDI -> 681x136 PDF)
+			if (model.SessionOverviewPng != null)
+			{
+				editor.ParagraphProperties.SpacingAfter = 10;
+				InsertImage(editor, model.SessionOverviewPng, 681, 136);
+			}
 
             var rows = new List<KeyValuePair<string, string>>
             {
-                new KeyValuePair<string, string>("Project", model.ProjectName),
-                new KeyValuePair<string, string>("Operator", Dash(model.Operator)),
-                new KeyValuePair<string, string>("Vessel", Dash(model.VesselName)),
-                new KeyValuePair<string, string>("Location", Dash(model.Location)),
-                new KeyValuePair<string, string>("Sensor setup", string.IsNullOrWhiteSpace(model.InputSetup) ? "-" : model.InputSetup),
-                new KeyValuePair<string, string>("Capture start", Dash(model.StartTime)),
-                new KeyValuePair<string, string>("Capture end", Dash(model.EndTime)),
-                new KeyValuePair<string, string>("Duration", Dash(model.Duration)),
-                new KeyValuePair<string, string>("Samples averaged", model.SampleCount.ToString("N0", Ci)),
-                new KeyValuePair<string, string>("Correction applied", model.HasCorrectionApplied
-                    ? "Yes" + (string.IsNullOrWhiteSpace(model.CorrectionAppliedAt) ? string.Empty : " (" + model.CorrectionAppliedAt + ")")
-                    : "Not yet applied"),
+                new KeyValuePair<string, string>("Location",         Dash(model.Location)),
+				new KeyValuePair<string, string>("Sensor setup",     string.IsNullOrWhiteSpace(model.InputSetup) ? "\u2014" : model.InputSetup),
+				new KeyValuePair<string, string>("Duration",         Dash(model.Duration)),
+				new KeyValuePair<string, string>("Samples averaged", model.SampleCount.ToString("N0", Ci)),
+				new KeyValuePair<string, string>("Correction",       model.HasCorrectionApplied
+					? "Applied" + (string.IsNullOrWhiteSpace(model.CorrectionAppliedAt) ? string.Empty : " (" + model.CorrectionAppliedAt + ")")
+					: "Not yet applied"),
             };
-
             InsertKeyValueTable(editor, rows);
 
             if (!string.IsNullOrWhiteSpace(model.Comments))
@@ -366,37 +422,47 @@ namespace MVS.Services.Reporting
             }
         }
 
-        private static void WriteFinalResults(RadFixedDocumentEditor editor, VerificationReportModel model)
-        {
-            Heading(editor, "7. Results - Recommended Corrections");
+		private static void WriteFinalResults(RadFixedDocumentEditor editor, VerificationReportModel model)
+		{
+			Heading(editor, "7. Results — Applied Corrections");
 
-            Paragraph(editor,
-                "These are the orientation corrections the verification calculated for the vessel unit. " +
-                "A correction is the offset that must be applied so the vessel unit matches the trusted reference.",
-                10.5, ColorText, spacingAfter: 10);
+			// Hero correction cards (900×280 GDI → 681×212 PDF)
+			if (model.CorrectionCardsPng != null)
+			{
+				editor.ParagraphProperties.SpacingAfter = 12;
+				InsertImage(editor, model.CorrectionCardsPng, 681, 212);
+			}
 
-            var table = NewTable();
-            AddHeaderRow(table, "Axis", "Recommended", "Applied", "Status");
+			// Bullet charts panel (deviation vs. reference scale) (900×210 GDI → 681×158 PDF)
+			if (model.BulletChartsPng != null)
+			{
+				editor.ParagraphProperties.SpacingAfter = 10;
+				InsertImage(editor, model.BulletChartsPng, 681, 158);
+			}
 
-            int index = 0;
-            foreach (VerificationAxisKind axis in AllAxes())
-            {
-                string unit = model.Unit(axis);
-                double recommended = model.RecommendedCorrection(axis);
-                double applied = model.AppliedCorrection(axis);
-                string status = model.HasCorrectionApplied
-                    ? (Math.Abs(applied - recommended) < 1e-6 ? "Applied as recommended" : "Applied (adjusted)")
-                    : "Pending";
+			// Supporting corrections table
+			var table = NewTable();
+			AddHeaderRow(table, "Axis", "Recommended", "Applied", "Status");
 
-                AddBodyRow(table, index++,
-                    model.AxisTitle(axis),
-                    Format(recommended, unit),
-                    model.HasCorrectionApplied ? Format(applied, unit) : "-",
-                    status);
-            }
+			int index = 0;
+			foreach (VerificationAxisKind axis in AllAxes())
+			{
+				string unit        = model.Unit(axis);
+				double recommended = model.RecommendedCorrection(axis);
+				double applied     = model.AppliedCorrection(axis);
+				string status      = model.HasCorrectionApplied
+					? (Math.Abs(applied - recommended) < 1e-6 ? "Applied as recommended" : "Applied (adjusted)")
+					: "Pending";
 
-            editor.InsertTable(table);
-        }
+				AddBodyRow(table, index++,
+					model.AxisTitle(axis),
+					Format(recommended, unit),
+					model.HasCorrectionApplied ? Format(applied, unit) : "—",
+					status);
+			}
+
+			editor.InsertTable(table);
+		}
 
         private static void WriteCharts(RadFixedDocumentEditor editor, VerificationReportModel model)
         {
@@ -407,18 +473,16 @@ namespace MVS.Services.Reporting
 
             if (model.DeviationChartPng != null)
             {
-                Paragraph(editor,
-                    "Calculated deviation per axis (how far the vessel unit differs from the reference):",
-                    10.5, ColorText, spacingAfter: 4);
-                InsertImage(editor, model.DeviationChartPng, 680, 240);
+                Paragraph(editor, "Calculated deviation per axis (vessel unit vs. reference):",
+                    10, ColorMuted, spacingAfter: 4);
+                InsertImage(editor, model.DeviationChartPng, 681, 270);
             }
 
             if (model.MeansChartPng != null)
             {
-                Paragraph(editor,
-                    "Reference versus vessel mean per axis:",
-                    10.5, ColorText, spacingBefore: 8, spacingAfter: 4);
-                InsertImage(editor, model.MeansChartPng, 680, 285);
+                Paragraph(editor, "Reference vs. vessel mean per axis:",
+                    10, ColorMuted, spacingBefore: 10, spacingAfter: 4);
+                InsertImage(editor, model.MeansChartPng, 681, 315);
             }
         }
 
@@ -430,17 +494,25 @@ namespace MVS.Services.Reporting
             foreach (VerificationAxisKind axis in AllAxes())
             {
                 AxisStatistics reference = model.RefStats(axis);
-                AxisStatistics test = model.TestStats(axis);
-                AxisStatistics dev = model.DevStats(axis);
-                string unit = model.Unit(axis);
+                AxisStatistics test      = model.TestStats(axis);
+                AxisStatistics dev       = model.DevStats(axis);
+                string         unit      = model.Unit(axis);
 
-                Paragraph(editor, model.AxisTitle(axis), 13, ColorHeading, spacingBefore: 8, spacingAfter: 2, bold: true);
-
-                string summary = VerificationAssessment.Summary(axis, reference, test, dev);
-                VerificationStatus status = VerificationAssessment.Classify(axis, reference, test, dev);
-                Paragraph(editor,
-                    VerificationAssessment.StatusLabel(status) + " - " + summary,
-                    10.5, ColorText, spacingAfter: 6);
+                // ── Per-axis summary banner (900×96 GDI → 681×72 PDF) ─────────────
+                byte[] summaryPng = model.AxisSummaryPng(axis);
+                if (summaryPng != null)
+                {
+                    editor.ParagraphProperties.SpacingBefore = 8;
+                    editor.ParagraphProperties.SpacingAfter  = 6;
+                    InsertImage(editor, summaryPng, 681, 72);
+                }
+                else
+                {
+                    VerificationStatus fallbackStatus = VerificationAssessment.Classify(axis, reference, test, dev);
+                    Paragraph(editor,
+                        model.AxisTitle(axis) + "  \u2014  " + VerificationAssessment.StatusLabel(fallbackStatus),
+                        12, ColorHeading, spacingBefore: 8, spacingAfter: 2, bold: true);
+                }
 
                 var table = NewTable();
                 AddHeaderRow(table, "Metric", "Reference", "Vessel", "Deviation");
@@ -466,10 +538,15 @@ namespace MVS.Services.Reporting
 
             Heading(editor, "Correlation and Latency");
             Paragraph(editor,
-                "Correlation measures how closely the vessel unit tracks the reference over time (1.00 = perfect " +
-                "agreement). Estimated latency is the time shift that best aligns the two signals; a positive value " +
-                "means the vessel unit lags the reference.",
+                "Correlation: 1.00 = perfect agreement. Latency: positive = vessel lags reference.",
                 10.5, ColorText, spacingAfter: 8);
+
+            // ── Correlation bars panel ─────────────────────────────────────────
+            if (model.CorrelationBarsPng != null)
+            {
+                editor.ParagraphProperties.SpacingAfter = 10;
+                InsertImage(editor, model.CorrelationBarsPng, 681, 196);
+            }
 
             var table = NewTable();
             AddHeaderRow(table, "Axis", "Correlation", "Estimated latency");
@@ -500,15 +577,23 @@ namespace MVS.Services.Reporting
                 10.5, ColorText, spacingAfter: 6);
         }
 
-        private static void WriteCompliance(RadFixedDocumentEditor editor, VerificationReportModel model)
-        {
-            Heading(editor, "10. Compliance Assessment");
+		private static void WriteCompliance(RadFixedDocumentEditor editor, VerificationReportModel model)
+		{
+			Heading(editor, "10. Compliance Assessment");
 
-            Paragraph(editor,
-                "The table below compares the quality of the captured verification data against the " +
-                "built-in thresholds. \u2018Acceptable\u2019 is the minimum required for reliable analysis; " +
-                "\u2018Good\u2019 indicates the recommended level for high-confidence results.",
-                10.5, ColorText, spacingAfter: 8);
+			// Compliance scorecards (900×200 GDI → 681×151 PDF)
+			if (model.ComplianceScorecardsPng != null)
+			{
+				editor.ParagraphProperties.SpacingAfter = 10;
+				InsertImage(editor, model.ComplianceScorecardsPng, 681, 151);
+			}
+
+			// Data quality confidence panel (900×260 GDI → 681×197 PDF)
+			if (model.ConfidencePanelPng != null)
+			{
+				editor.ParagraphProperties.SpacingAfter = 10;
+				InsertImage(editor, model.ConfidencePanelPng, 681, 197);
+			}
 
             var table = NewTable();
             AddHeaderRow(table, "Criterion", "Acceptable (min)", "Good (target)", "Measured", "Status");
@@ -624,10 +709,10 @@ namespace MVS.Services.Reporting
 
         private static void WriteFooter(RadFixedDocumentEditor editor, VerificationReportModel model)
         {
-            HorizontalRule(editor);
+            TealRule(editor);
             Paragraph(editor,
-                "Generated " + model.GeneratedUtc.ToLocalTime().ToString("yyyy-MM-dd HH:mm", Ci) +
-                " - Motion Verification System.",
+                "Generated " + model.GeneratedUtc.ToString("yyyy-MM-dd HH:mm", Ci) +
+                " UTC \u2014 Motion Verification System  |  MRU Verification Report",
                 8.5, ColorMuted, spacingBefore: 4);
         }
 
@@ -713,13 +798,53 @@ namespace MVS.Services.Reporting
             return verdict + correction;
         }
 
+        /// <summary>
+        /// Full-width SES-branded section heading: Dark Blue Grey band with
+        /// Energy Green left accent and bold white (via block ForegroundColor) text.
+        /// </summary>
         private static void Heading(RadFixedDocumentEditor editor, string text)
         {
-            SetText(editor, _robotoBold, 15, ColorHeading);
-            editor.ParagraphProperties.SpacingBefore = 12;
-            editor.ParagraphProperties.SpacingAfter = 4;
+            // Spacer before the heading band
+            SetText(editor, _robotoRegular, 4, ColorBorder);
+            editor.ParagraphProperties.SpacingBefore = 8;
+            editor.ParagraphProperties.SpacingAfter  = 0;
             editor.InsertParagraph();
-            editor.InsertRun(text);
+            editor.InsertRun(" ");
+
+            // Full-width Dark Blue Grey heading bar with Energy Green left border
+            var headTable = new Table { Borders = new TableBorders(new Border(0, ColorBorder)) };
+            headTable.DefaultCellProperties.Padding = new Thickness(10, 6, 10, 6);
+            TableRow  headRow  = headTable.Rows.AddTableRow();
+            TableCell headCell = headRow.Cells.AddTableCell();
+            headCell.PreferredWidth = 681;
+            headCell.Background     = ColorHeading;
+            headCell.Borders        = new TableCellBorders(new Border(5, ColorAccent), null, null, null);
+            Block headBlock = headCell.Blocks.AddBlock();
+            headBlock.SpacingBefore = 0;
+            headBlock.SpacingAfter  = 0;
+            headBlock.TextProperties.Font     = _robotoBold;
+            headBlock.TextProperties.FontSize = 12;
+            headBlock.GraphicProperties.FillColor = ColorTableHeaderText; // white text on Dark Blue Grey
+            headBlock.InsertText(text.ToUpperInvariant());
+            editor.InsertTable(headTable);
+
+            SetText(editor, _robotoRegular, 10, ColorText);
+            editor.ParagraphProperties.SpacingBefore = 0;
+            editor.ParagraphProperties.SpacingAfter  = 4;
+        }
+
+        /// <summary>Thin Energy Green horizontal rule — used as a visual section divider.</summary>
+        private static void TealRule(RadFixedDocumentEditor editor)
+        {
+            var table = new Table { Borders = new TableBorders(new Border(0, ColorBorder)) };
+            table.DefaultCellProperties.Padding = new Thickness(0);
+            TableRow  row  = table.Rows.AddTableRow();
+            TableCell cell = row.Cells.AddTableCell();
+            cell.PreferredWidth = 681;
+            cell.Background     = ColorAccent;
+            cell.Borders        = new TableCellBorders(null, new Border(2, ColorAccent), null, null);
+            cell.Blocks.AddBlock().InsertText(" ");
+            editor.InsertTable(table);
         }
 
         private static void Paragraph(RadFixedDocumentEditor editor, string text, double size, RgbColor color,
@@ -734,13 +859,12 @@ namespace MVS.Services.Reporting
 
         private static void HorizontalRule(RadFixedDocumentEditor editor)
         {
-            var table = new Table { Borders = new TableBorders(new Border(0.5, ColorBorder)) };
+            var table = new Table { Borders = new TableBorders(new Border(0, ColorBorder)) };
             table.DefaultCellProperties.Padding = new Thickness(0);
-            TableRow row = table.Rows.AddTableRow();
+            TableRow row  = table.Rows.AddTableRow();
             TableCell cell = row.Cells.AddTableCell();
-            cell.PreferredWidth = 680;
-            cell.Borders = new TableCellBorders(
-                null, new Border(0.5, ColorBorder), null, null);
+            cell.PreferredWidth = 681;
+            cell.Borders = new TableCellBorders(null, new Border(0.5, ColorBorder), null, null);
             cell.Blocks.AddBlock().InsertText(" ");
             editor.InsertTable(table);
         }
@@ -769,10 +893,10 @@ namespace MVS.Services.Reporting
         {
             var table = new Table
             {
-                Borders = new TableBorders(new Border(0.5, ColorBorder)),
+                Borders    = new TableBorders(new Border(0.5, ColorBorder)),
                 LayoutType = TableLayoutType.FixedWidth,
             };
-            table.DefaultCellProperties.Padding = new Thickness(5, 3, 5, 3);
+            table.DefaultCellProperties.Padding = new Thickness(6, 4, 6, 4);
             return table;
         }
 
@@ -783,9 +907,14 @@ namespace MVS.Services.Reporting
             {
                 TableCell cell = row.Cells.AddTableCell();
                 cell.Background = ColorTableHeader;
+                cell.Borders    = new TableCellBorders(
+                    new Border(0, ColorTableHeader),
+                    new Border(0, ColorTableHeader),
+                    new Border(0, ColorTableHeader),
+                    new Border(1, ColorBorder));
                 Block block = cell.Blocks.AddBlock();
-                ApplyCellText(block, _robotoBold);
-                block.InsertText(text);
+                ApplyCellTextHeader(block);
+                InsertHeaderText(block, text);
             }
         }
 
@@ -835,9 +964,22 @@ namespace MVS.Services.Reporting
         // defaults (dark text on light/shaded cells).
         private static void ApplyCellText(Block block, FontBase font)
         {
-            block.SpacingAfter = 0;
+            block.SpacingAfter  = 0;
             block.SpacingBefore = 0;
             block.TextProperties.Font = font;
+        }
+
+        private static void ApplyCellTextHeader(Block block)
+        {
+            block.SpacingAfter  = 0;
+            block.SpacingBefore = 0;
+            block.TextProperties.Font         = _robotoBold;
+            block.GraphicProperties.FillColor = ColorTableHeaderText; // white text on Dark Blue Grey header
+        }
+
+        private static void InsertHeaderText(Block block, string text)
+        {
+            block.InsertText(text);
         }
 
         // ── Formatting helpers ──
