@@ -34,6 +34,11 @@ namespace MVS.Services.Reporting
         private static readonly FontBase _robotoRegular;
         private static readonly FontBase _robotoBold;
 
+        // SES Energy doc-template strips (extracted from Doc-template - SES Energy.docx).
+        // Drawn on every page by AddPageFooters: header at y=0, footer at y=page-bottom.
+        private static readonly byte[]? _sesHeaderPng;
+        private static readonly byte[]? _sesFooterPng;
+
         static VerificationPdfReportExporter()
         {
             // Use a plain family name so that FontProperties keys match between
@@ -55,6 +60,31 @@ namespace MVS.Services.Reporting
             _robotoBold = FontsRepository.TryCreateFont(
                 family, FontStyles.Normal, FontWeights.Bold, out FontBase bold)
                 ? bold : FontsRepository.HelveticaBold;
+
+            _sesHeaderPng = LoadResourceBytes(
+                "pack://application:,,,/MVS;component/Resources/DocTemplate/ses-header.png");
+            _sesFooterPng = LoadResourceBytes(
+                "pack://application:,,,/MVS;component/Resources/DocTemplate/ses-footer.png");
+        }
+
+        /// <summary>
+        /// Loads a WPF pack-URI resource as raw bytes.
+        /// Returns <c>null</c> when the resource is unavailable (e.g. test host).
+        /// </summary>
+        private static byte[]? LoadResourceBytes(string packUri)
+        {
+            try
+            {
+                var info = Application.GetResourceStream(new Uri(packUri));
+                if (info == null) return null;
+                using var ms = new MemoryStream();
+                info.Stream.CopyTo(ms);
+                return ms.ToArray();
+            }
+            catch
+            {
+                return null;
+            }
         }
 
         /// <summary>
@@ -200,8 +230,10 @@ namespace MVS.Services.Reporting
 
 		private static void ConfigureEditor(RadFixedDocumentEditor editor)
 		{
-			editor.SectionProperties.PageSize    = new Size(793, 1122);
-			editor.SectionProperties.PageMargins = new TelerikPadding(56);
+			editor.SectionProperties.PageSize = new Size(793, 1122);
+			// Top margin cleared for the 93-DIP SES header strip; bottom margin cleared
+			// for the 70-DIP SES footer strip. Left/right margins unchanged at 56.
+			editor.SectionProperties.PageMargins = new TelerikPadding(56, 100, 56, 78);
 		}
 
 		// ============================================================
@@ -397,29 +429,67 @@ namespace MVS.Services.Reporting
 		}
 
 		/// <summary>
-		/// Post-processes every page of the built document to stamp a centred,
-		/// muted page number ("— N —") in the bottom margin using FixedContentEditor.
+		/// Post-processes every page of the built document to:
+		/// <list type="bullet">
+		///   <item>Stamp the SES Energy header strip (teal band, from Doc-template) at the top.</item>
+		///   <item>Stamp the SES Energy footer strip (teal band) at the bottom.</item>
+		///   <item>Draw a centred page number ("— N —") over the footer strip.</item>
+		/// </list>
 		/// Called after the flow editor has been disposed so all pages are committed.
 		/// </summary>
 		private static void AddPageFooters(RadFixedDocument document)
 		{
+			// Pre-create Telerik image sources once; null-safe when resources are absent (test host).
+			TelerikImageSource? headerImage = null;
+			TelerikImageSource? footerImage = null;
+
+			if (_sesHeaderPng != null)
+				using (var ms = new MemoryStream(_sesHeaderPng))
+					headerImage = new TelerikImageSource(ms);
+
+			if (_sesFooterPng != null)
+				using (var ms = new MemoryStream(_sesFooterPng))
+					footerImage = new TelerikImageSource(ms);
+
+			// Header strip pixel size: 1240 × 145 px (A4 @ 150 DPI). Displayed at full page
+			// width; height is proportional: 145 / 1754 × 1122 ≈ 93 DIP.
+			const double HeaderH = 93.0;
+			// Footer strip pixel size: 1240 × 110 px. Height: 110 / 1754 × 1122 ≈ 70 DIP.
+			const double FooterH = 70.0;
+
 			int total = document.Pages.Count;
 			for (int i = 0; i < total; i++)
 			{
 				var page = document.Pages[i];
-				var fce  = new FixedContentEditor(page);
+				double pageW = page.Size.Width;
+				double pageH = page.Size.Height;
+				var fce = new FixedContentEditor(page);
 
-				// Place the number in the bottom margin (below the 56-pt content margin).
-				double cx = page.Size.Width / 2.0;
-				double py = page.Size.Height - 28;
+				// --- Header strip (behind content, drawn at y=0) ---
+				if (headerImage != null)
+				{
+					fce.Position.Translate(0, 0);
+					fce.DrawImage(headerImage, new Size(pageW, HeaderH));
+				}
+
+				// --- Footer strip (drawn at the very bottom of the page) ---
+				if (footerImage != null)
+				{
+					fce.Position.Translate(0, pageH - FooterH);
+					fce.DrawImage(footerImage, new Size(pageW, FooterH));
+				}
+
+				// --- Page number centred over the footer strip ---
+				double cx = pageW / 2.0;
+				double py = pageH - FooterH + (FooterH - 12) / 2.0;  // vertically centred in strip
 
 				fce.Position.Translate(cx - 24, py);
 
 				var block = new Block();
-				block.HorizontalAlignment          = Telerik.Windows.Documents.Fixed.Model.Editing.Flow.HorizontalAlignment.Center;
-				block.TextProperties.Font          = _robotoRegular;
-				block.TextProperties.FontSize      = 8;
-				block.GraphicProperties.FillColor  = ColorMuted;
+				block.HorizontalAlignment         = Telerik.Windows.Documents.Fixed.Model.Editing.Flow.HorizontalAlignment.Center;
+				block.TextProperties.Font         = _robotoRegular;
+				block.TextProperties.FontSize     = 8;
+				block.GraphicProperties.FillColor = new RgbColor(0x1A, 0x27, 0x32); // dark on teal
 				block.InsertText($"\u2014 {i + 1} \u2014");
 				fce.DrawBlock(block, new Size(48, 12));
 			}

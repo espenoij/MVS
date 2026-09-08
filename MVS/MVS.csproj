@@ -62,6 +62,11 @@
     <Resource Include="Icons\detector_white_36dp.png" />
     <Resource Include="mvs_windows_icon.ico" />
     <Resource Include="swire_flag.ico" />
+    <!-- SES Energy doc-template strips — header/footer bands extracted from the
+         official Doc-template - SES Energy.docx and stamped on every report page. -->
+    <Resource Include="Resources\DocTemplate\ses-header.png" />
+    <Resource Include="Resources\DocTemplate\ses-footer.png" />
+    <Resource Include="Resources\DocTemplate\ses-logo.png" />
     <!-- SES brand fonts — embedded as application resources so Roboto Condensed
          is available on every machine without requiring system installation. -->
     <Resource Include="Fonts\RobotoCondensed-Light.ttf" />
