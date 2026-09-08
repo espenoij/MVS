@@ -43,10 +43,10 @@ namespace MVS.Services.Reporting
         private static readonly Color ColorWhite        = Color.White;
         private static readonly Color ColorBlack        = Color.FromArgb(0x0A, 0x0A, 0x0A); // Near-black
 
-        // Functional chart signal tokens updated to SES palette
-        private static readonly Color ColorReference = Color.FromArgb(0x33, 0x4A, 0x5C); // SES Dark Blue Grey
-        private static readonly Color ColorVessel    = Color.FromArgb(0x3D, 0xE6, 0xA9); // SES Energy Green
-        private static readonly Color ColorDeviation = Color.FromArgb(0x26, 0x37, 0x46); // Dark Blue Grey deep
+        // Signal colors — exact match to SesColors.xaml graph line palette
+        private static readonly Color ColorReference = Color.FromArgb(0x1A, 0x6E, 0xBF); // Steel blue   (#1A6EBF)
+        private static readonly Color ColorVessel    = Color.FromArgb(0xE0, 0x7B, 0x10); // Burnt orange (#E07B10)
+        private static readonly Color ColorDeviation = Color.FromArgb(0x80, 0x40, 0xB0); // Violet       (#8040B0)
         // â”€â”€ Chart background / grid â”€â”€â”€â”€â”€â”€â”€â”€â”€â”€â”€â”€â”€â”€â”€â”€â”€â”€â”€â”€â”€â”€â”€â”€â”€â”€â”€â”€â”€â”€â”€â”€â”€â”€â”€â”€â”€â”€â”€â”€â”€â”€â”€
         private static readonly Color ColorBackground = ColorWhite;
         private static readonly Color ColorAxis       = Color.FromArgb(100, 120, 135);
@@ -236,105 +236,138 @@ namespace MVS.Services.Reporting
 		/// an instant status read: Verification Status | Samples Averaged | Capture Duration |
 		/// Corrections Applied. Data quality detail lives in the dedicated Data Quality section.
 		/// </summary>
-		public static byte[] RenderExecutiveDashboard(VerificationReportModel model, int width = 900, int height = 220)
-		{
-			if (model == null) throw new ArgumentNullException(nameof(model));
+        /// <summary>
+        /// Renders the Executive Dashboard: 6 KPI cards in a 2x3 grid.
+        /// Row 1: Verification Status | Samples | Capture Duration
+        /// Row 2: Max Outlier Rate | Corrections | Confidence Score
+        /// Width=900; Height=300 for A4 content area.
+        /// </summary>
+        public static byte[] RenderExecutiveDashboard(VerificationReportModel model, int width = 900, int height = 420)
+        {
+            if (model == null) throw new ArgumentNullException(nameof(model));
 
-			using (var bmp = new Bitmap(width, height, PixelFormat.Format32bppArgb))
-			using (var g   = Graphics.FromImage(bmp))
-			{
-				g.SmoothingMode     = SmoothingMode.AntiAlias;
-				g.TextRenderingHint = TextRenderingHint.ClearTypeGridFit;
-				g.Clear(ColorNeutralLight);
+            using (var bmp = new Bitmap(width, height, PixelFormat.Format32bppArgb))
+            using (var g   = Graphics.FromImage(bmp))
+            {
+                g.SmoothingMode     = SmoothingMode.AntiAlias;
+                g.TextRenderingHint = TextRenderingHint.ClearTypeGridFit;
+                g.Clear(ColorNeutralLight);
 
-				DrawSectionHeader(g, "EXECUTIVE DASHBOARD", 0, 0, width, 38);
+                DrawSectionHeader(g, "EXECUTIVE DASHBOARD", 0, 0, width, 38);
 
-				int gap   = 10;
-				int cardW = (width - gap * 5) / 4;
-				int cardH = height - 46 - 6;
-				int cardY = 46;
+                const int cols  = 3;
+                const int rows  = 3;
+                int gap         = 10;
+                int headerH     = 46;
+                int rowH        = (height - headerH - gap * (rows + 1)) / rows;
+                int cardW       = (width  - gap * (cols + 1)) / cols;
 
-				// ── Card 1: Verification Status ───────────────────────────────────────
-				VerificationStatus vstatus = OverallStatus(model);
-				Color  statusColor = StatusBadgeColor(vstatus);
-				string statusValue = !model.HasData ? "NO DATA" :
-					vstatus == VerificationStatus.Good       ? "VERIFIED" :
-					vstatus == VerificationStatus.Acceptable ? "ACCEPTABLE" : "ATTENTION";
-				string statusIcon  = !model.HasData ? "\u2014" :
-					vstatus == VerificationStatus.Good || vstatus == VerificationStatus.Acceptable
-						? "\u2713" : "\u26A0";
+                // ── Derive card data (calculations unchanged) ────────────────────────────
+                VerificationStatus vstatus = OverallStatus(model);
+                Color  statusColor = StatusBadgeColor(vstatus);
+                string statusValue = !model.HasData ? "NO DATA" :
+                    vstatus == VerificationStatus.Good       ? "\u2713 VERIFIED" :
+                    vstatus == VerificationStatus.Acceptable ? "ACCEPTABLE" : "\u26A0 ATTENTION";
 
-				// ── Card 2: Samples Averaged ──────────────────────────────────────────
-				string samplesValue = model.HasData ? model.SampleCount.ToString("N0") : "\u2014";
-				Color  samplesColor = model.HasData ? SamplesColor(model.SampleCount) : ColorNeutralMid;
+                string samplesValue = model.HasData ? model.SampleCount.ToString("N0") : "\u2014";
+                Color  samplesColor = model.HasData ? SamplesColor(model.SampleCount) : ColorNeutralMid;
 
-				// ── Card 3: Capture Duration ──────────────────────────────────────────
-				double durationMin = 0;
-				if (!string.IsNullOrWhiteSpace(model.Duration) &&
-					TimeSpan.TryParse(model.Duration, out TimeSpan ts))
-					durationMin = ts.TotalMinutes;
-				string durValue = durationMin > 0
-					? string.Format(Ci, "{0:F1} MIN", durationMin) : "\u2014";
-				Color durColor = durationMin >= VerificationAssessment.MinDurationRecommendedMinutes ? ColorSuccess
-							  : durationMin >= VerificationAssessment.MinDurationAcceptableMinutes  ? ColorWarning
-							  : durationMin > 0 ? ColorFailure : ColorNeutralMid;
+                double durationMin = 0;
+                if (!string.IsNullOrWhiteSpace(model.Duration) &&
+                    TimeSpan.TryParse(model.Duration, out TimeSpan ts))
+                    durationMin = ts.TotalMinutes;
+                string durValue = durationMin > 0
+                    ? string.Format(Ci, "{0:F1} MIN", durationMin) : "\u2014";
+                Color durColor = durationMin >= VerificationAssessment.MinDurationRecommendedMinutes ? ColorSuccess
+                              : durationMin >= VerificationAssessment.MinDurationAcceptableMinutes  ? ColorWarning
+                              : durationMin > 0 ? ColorFailure : ColorNeutralMid;
 
-				// ── Card 4: Corrections Applied ───────────────────────────────────────
-				string corrValue = model.HasCorrectionApplied ? "\u2713  APPLIED"
-								 : model.HasData ? "PENDING" : "\u2014";
-				Color corrColor  = model.HasCorrectionApplied ? ColorSuccess
-								 : model.HasData ? ColorWarning : ColorNeutralMid;
+                double worst        = model.WorstOutlierPercent;
+                string outlierValue = (double.IsNaN(worst) || !model.HasData)
+                    ? "\u2014" : string.Format(Ci, "{0:F1} %", worst);
+                Color outlierColor  = (double.IsNaN(worst) || !model.HasData) ? ColorNeutralMid
+                    : worst <= VerificationAssessment.OutlierAcceptablePercent ? ColorSuccess
+                    : worst <= VerificationAssessment.OutlierAttentionPercent  ? ColorWarning : ColorFailure;
 
-				var cards = new[]
-				{
-					("VERIFICATION STATUS",    statusValue,  statusColor,  true),
-					("SAMPLES AVERAGED",        samplesValue, samplesColor, false),
-					("CAPTURE DURATION",        durValue,     durColor,     false),
-					("CORRECTIONS APPLIED",     corrValue,    corrColor,    true),
-				};
+                string corrValue = model.HasCorrectionApplied ? "\u2713 APPLIED"
+                                 : model.HasData ? "PENDING" : "\u2014";
+                Color corrColor  = model.HasCorrectionApplied ? ColorSuccess
+                                 : model.HasData ? ColorWarning : ColorNeutralMid;
 
-				for (int i = 0; i < cards.Length; i++)
-				{
-					var (label, value, color, useAccentText) = cards[i];
-					int cx = gap + i * (cardW + gap);
+                // Confidence score (algorithm unchanged)
+                double sampleScore  = model.HasData ? Math.Min(1.0, (double)model.SampleCount / VerificationAssessment.MinSamplesGood) : 0;
+                double outlierScore = (double.IsNaN(worst) || worst <= 0) ? 1.0 : Math.Max(0, 1.0 - worst / 10.0);
+                double durScore     = Math.Min(1.0, durationMin / Math.Max(1, VerificationAssessment.MinDurationRecommendedMinutes));
+                int    confScore    = model.HasData ? (int)Math.Round((sampleScore * 0.4 + durScore * 0.35 + outlierScore * 0.25) * 100) : 0;
+                string confValue    = model.HasData ? confScore + " / 100" : "\u2014";
+                Color  confColor    = confScore >= 80 ? ColorSuccess : confScore >= 60 ? ColorWarning : ColorFailure;
 
-					// Card background, colored border, thick top accent bar
-					using (var bg = new SolidBrush(ColorWhite))
-						g.FillRectangle(bg, cx, cardY, cardW, cardH);
-					using (var borderPen = new Pen(ColorDivider, 1f))
-						g.DrawRectangle(borderPen, cx, cardY, cardW - 1, cardH - 1);
-					using (var accentBr = new SolidBrush(color))
-						g.FillRectangle(accentBr, cx, cardY, cardW, 7);
+                // Correction values per axis
+                double pitchCorr = model.RecommendedCorrection(VerificationAxisKind.Pitch);
+                double rollCorr  = model.RecommendedCorrection(VerificationAxisKind.Roll);
+                double heaveCorr = model.RecommendedCorrection(VerificationAxisKind.Heave);
+                string pitchUnit = model.Unit(VerificationAxisKind.Pitch);
+                string rollUnit  = model.Unit(VerificationAxisKind.Roll);
+                string heaveUnit = model.Unit(VerificationAxisKind.Heave);
 
-					// Icon for status/correction cards (small dot indicator)
-					if (useAccentText && model.HasData)
-					{
-						using (var dotBr = new SolidBrush(color))
-							g.FillEllipse(dotBr, cx + 14, cardY + 18, 10, 10);
-					}
+                string FmtCorr(double v, string unit) =>
+                    (model.HasData && !double.IsNaN(v))
+                        ? string.Format(Ci, "{0:+0.000;-0.000;0.000} {1}", v, unit)
+                        : "\u2014";
 
-					// Primary large value — always dark on white card; accent bar conveys status color
-					float fs = value.Length <= 5  ? 38f
-							 : value.Length <= 9  ? 30f
-							 : value.Length <= 13 ? 22f : 17f;
-					Color valColor = ColorNeutralDark;
-					using (var valFont  = new Font("Segoe UI", fs, FontStyle.Bold))
-					using (var valBrush = new SolidBrush(valColor))
-					using (var sf       = new StringFormat { Alignment = StringAlignment.Center, LineAlignment = StringAlignment.Center })
-						g.DrawString(value, valFont, valBrush,
-							new RectangleF(cx, cardY + 10, cardW, cardH - 34), sf);
+                // Row 0: Status | Samples | Duration
+                // Row 1: Outliers | Corrections | Confidence
+                // Row 2: Pitch Correction | Roll Correction | Heave Correction
+                var cards = new[]
+                {
+                    (row: 0, col: 0, label: "VERIFICATION STATUS", value: statusValue,          color: statusColor),
+                    (row: 0, col: 1, label: "SAMPLES",             value: samplesValue,          color: samplesColor),
+                    (row: 0, col: 2, label: "CAPTURE DURATION",    value: durValue,              color: durColor),
+                    (row: 1, col: 0, label: "MAX OUTLIER RATE",    value: outlierValue,          color: outlierColor),
+                    (row: 1, col: 1, label: "CORRECTIONS",         value: corrValue,             color: corrColor),
+                    (row: 1, col: 2, label: "CONFIDENCE",          value: confValue,             color: confColor),
+                    (row: 2, col: 0, label: "PITCH CORRECTION",    value: FmtCorr(pitchCorr, pitchUnit),  color: ColorAccent),
+                    (row: 2, col: 1, label: "ROLL CORRECTION",     value: FmtCorr(rollCorr,  rollUnit),   color: ColorAccent),
+                    (row: 2, col: 2, label: "HEAVE CORRECTION",    value: FmtCorr(heaveCorr, heaveUnit),  color: ColorAccent),
+                };
 
-					// Category label pinned to bottom
-					using (var lFont  = new Font("Segoe UI", 8.5f, FontStyle.Bold))
-					using (var lBrush = new SolidBrush(ColorNeutralMid))
-					using (var sf     = new StringFormat { Alignment = StringAlignment.Center, LineAlignment = StringAlignment.Center })
-						g.DrawString(label, lFont, lBrush,
-							new RectangleF(cx, cardY + cardH - 26, cardW, 22), sf);
-				}
+                foreach (var card in cards)
+                {
+                    int cx = gap + card.col * (cardW + gap);
+                    int cy = headerH + gap + card.row * (rowH + gap);
 
-				return ToPng(bmp);
-			}
-		}
+                    // Card body + border
+                    using (var bg = new SolidBrush(ColorWhite))
+                        g.FillRectangle(bg, cx, cy, cardW, rowH);
+                    using (var borderPen = new Pen(ColorDivider, 1f))
+                        g.DrawRectangle(borderPen, cx, cy, cardW - 1, rowH - 1);
+
+                    // Thick colored top accent bar
+                    using (var accentBr = new SolidBrush(card.color))
+                        g.FillRectangle(accentBr, cx, cy, cardW, 8);
+
+                    // Primary value — scaled font, slightly tighter than before
+                    float fs = card.value.Length <= 5  ? 26f
+                             : card.value.Length <= 9  ? 21f
+                             : card.value.Length <= 13 ? 17f : 13f;
+                    using (var valFont  = new Font("Segoe UI", fs, FontStyle.Bold))
+                    using (var valBrush = new SolidBrush(ColorNeutralDark))
+                    using (var sf       = new StringFormat { Alignment = StringAlignment.Center, LineAlignment = StringAlignment.Center })
+                        g.DrawString(card.value, valFont, valBrush,
+                            new RectangleF(cx + 4, cy + 10, cardW - 8, rowH - 30), sf);
+
+                    // Label pinned to bottom — ALL CAPS, muted
+                    using (var lFont  = new Font("Segoe UI", 7.5f, FontStyle.Bold))
+                    using (var lBrush = new SolidBrush(ColorNeutralMid))
+                    using (var sf     = new StringFormat { Alignment = StringAlignment.Center, LineAlignment = StringAlignment.Center })
+                        g.DrawString(card.label, lFont, lBrush,
+                            new RectangleF(cx, cy + rowH - 20, cardW, 17), sf);
+                }
+
+                return ToPng(bmp);
+            }
+        }
+
 
 		/// <summary>
 		/// Renders a three-row horizontal bullet chart panel (Pitch, Roll, Heave)
@@ -414,19 +447,14 @@ namespace MVS.Services.Reporting
                 new BarRow("Heave \u2014 Vessel",    model.TestHeave?.Mean ?? 0, "m",      ColorVessel),
             };
 
-            return RenderHorizontalBars("Reference vs. Vessel mean", rows, width, height, signed: true);
-        }
+			return RenderHorizontalBars("Reference vs. Vessel mean", rows, width, height, signed: true);
+		}
 
 		/// <summary>
-		/// Renders three large correction summary cards (Pitch, Roll, Heave) with
-		/// the recommended correction value prominently displayed and an
-		/// Applied/Pending status badge. Energy Green accents on Dark Blue Grey cards.
+		/// Three premium hero cards showing the recommended correction value for each axis.
+		/// Corrections are the dominant visual element (large type, dark card, accent bar).
 		/// </summary>
-		/// <summary>
-		/// Renders large hero correction cards: one card per axis (Pitch, Roll, Heave)
-		/// with the correction value as the dominant typographic element.
-		/// </summary>
-		public static byte[] RenderCorrectionCards(VerificationReportModel model, int width = 900, int height = 280)
+		public static byte[] RenderCorrectionCards(VerificationReportModel model, int width = 900, int height = 340)
 		{
 			if (model == null) throw new ArgumentNullException(nameof(model));
 
@@ -437,21 +465,27 @@ namespace MVS.Services.Reporting
 				g.TextRenderingHint = TextRenderingHint.ClearTypeGridFit;
 				g.Clear(ColorNeutralLight);
 
-				DrawSectionHeader(g, "RECOMMENDED CORRECTIONS", 0, 0, width, 36);
+				DrawSectionHeader(g, "RECOMMENDED CORRECTIONS", 0, 0, width, 38);
 
-				int cardY = 44;
-				int gap   = 8;
+				int gap   = 12;
 				int cardW = (width - gap * 4) / 3;
+				int cardY = 46;
 				int cardH = height - cardY - 8;
 
 				var axes = new[]
 				{
-					("PITCH", model.RecommendedCorrectionPitch, model.AppliedCorrectionPitch,
-					 VerificationAssessment.Unit(VerificationAxisKind.Pitch)),
-					("ROLL",  model.RecommendedCorrectionRoll,  model.AppliedCorrectionRoll,
-					 VerificationAssessment.Unit(VerificationAxisKind.Roll)),
-					("HEAVE", model.RecommendedCorrectionHeave, model.AppliedCorrectionHeave,
-					 VerificationAssessment.Unit(VerificationAxisKind.Heave)),
+					("PITCH",
+					 model.RecommendedCorrection(VerificationAxisKind.Pitch),
+					 model.AppliedCorrection(VerificationAxisKind.Pitch),
+					 model.Unit(VerificationAxisKind.Pitch)),
+					("ROLL",
+					 model.RecommendedCorrection(VerificationAxisKind.Roll),
+					 model.AppliedCorrection(VerificationAxisKind.Roll),
+					 model.Unit(VerificationAxisKind.Roll)),
+					("HEAVE",
+					 model.RecommendedCorrection(VerificationAxisKind.Heave),
+					 model.AppliedCorrection(VerificationAxisKind.Heave),
+					 model.Unit(VerificationAxisKind.Heave)),
 				};
 
 				for (int i = 0; i < axes.Length; i++)
@@ -459,7 +493,7 @@ namespace MVS.Services.Reporting
 					var (label, recommended, applied, unit) = axes[i];
 					int cx = gap + i * (cardW + gap);
 
-					// Card body
+					// Dark card body
 					using (var cardBg = new SolidBrush(ColorPrimary))
 						g.FillRectangle(cardBg, cx, cardY, cardW, cardH);
 
@@ -467,57 +501,102 @@ namespace MVS.Services.Reporting
 					using (var accentBrush = new SolidBrush(ColorAccent))
 						g.FillRectangle(accentBrush, cx, cardY, cardW, 5);
 
-					// Card border
-					using (var borderPen = new Pen(ColorAccent, 1f))
-						g.DrawRectangle(borderPen, cx, cardY, cardW - 1, cardH - 1);
-
-					// "AXIS CORRECTION" label (top)
+					// Axis label
 					using (var labelFont = new Font("Segoe UI", 10f, FontStyle.Bold))
 					using (var greenBr   = new SolidBrush(ColorAccent))
 					using (var sf        = new StringFormat { Alignment = StringAlignment.Center })
 						g.DrawString(label + " CORRECTION", labelFont, greenBr,
-							new RectangleF(cx, cardY + 12, cardW, 20), sf);
+							new RectangleF(cx, cardY + 12, cardW, 22), sf);
 
-					// Large correction value (hero element)
+					// Hero value
 					bool   hasData = model.HasData && !double.IsNaN(recommended);
 					string valStr  = hasData
-						? string.Format("{0:+0.000;-0.000;0.000} {1}", recommended, unit)
+						? string.Format(Ci, "{0:+0.000;-0.000;0.000} {1}", recommended, unit)
 						: "\u2014";
 
-					using (var valFont  = new Font("Segoe UI", 36f, FontStyle.Bold))
-					using (var whiteBr  = new SolidBrush(ColorWhite))
-					using (var sf       = new StringFormat { Alignment = StringAlignment.Center, LineAlignment = StringAlignment.Center })
+					using (var valFont = new Font("Segoe UI", 22f, FontStyle.Bold))
+					using (var whiteBr = new SolidBrush(ColorWhite))
+					using (var sf      = new StringFormat { Alignment = StringAlignment.Center, LineAlignment = StringAlignment.Center })
 						g.DrawString(valStr, valFont, whiteBr,
-							new RectangleF(cx + 4, cardY + 38, cardW - 8, cardH - 90), sf);
+							new RectangleF(cx + 4, cardY + 38, cardW - 8, cardH - 92), sf);
 
-					// Divider line
-					using (var divPen = new Pen(Color.FromArgb(60, 255, 255, 255), 1f))
-						g.DrawLine(divPen, cx + 16, cardY + cardH - 48, cx + cardW - 16, cardY + cardH - 48);
+					// Divider
+					using (var divPen = new Pen(Color.FromArgb(50, 255, 255, 255), 1f))
+						g.DrawLine(divPen, cx + 16, cardY + cardH - 52, cx + cardW - 16, cardY + cardH - 52);
 
-					// Status (applied / pending)
+					// Status badge (tinted)
 					string statusStr = model.HasCorrectionApplied ? "\u2713  APPLIED" : "PENDING";
 					Color  statusCol = model.HasCorrectionApplied ? ColorAccent : ColorWarning;
-					using (var sFont = new Font("Segoe UI", 10f, FontStyle.Bold))
-					using (var sBr   = new SolidBrush(statusCol))
-					using (var sf    = new StringFormat { Alignment = StringAlignment.Center })
-						g.DrawString(statusStr, sFont, sBr,
-							new RectangleF(cx, cardY + cardH - 42, cardW, 24), sf);
+					DrawTintedBadge(g, cx + 16, cardY + cardH - 46, cardW - 32, 26, statusCol, statusStr);
 
-					// Applied value footnote (if adjusted)
+					// Applied-vs-recommended footnote
 					if (model.HasCorrectionApplied && hasData && Math.Abs(applied - recommended) > 1e-6)
 					{
-						string appliedStr = string.Format("Applied: {0:+0.000;-0.000;0.000} {1}", applied, unit);
-						using (var aFont   = new Font("Segoe UI", 7.5f, FontStyle.Regular))
+						string appliedStr = string.Format(Ci, "Applied: {0:+0.000;-0.000;0.000} {1}", applied, unit);
+						using (var aFont   = new Font("Segoe UI", 7.5f))
 						using (var mutedBr = new SolidBrush(ColorNeutralMid))
 						using (var sf      = new StringFormat { Alignment = StringAlignment.Center })
 							g.DrawString(appliedStr, aFont, mutedBr,
-								new RectangleF(cx, cardY + cardH - 20, cardW, 16), sf);
+								new RectangleF(cx, cardY + cardH - 18, cardW, 16), sf);
 					}
 				}
 
 				return ToPng(bmp);
 			}
 		}
+
+		private static void DrawPillBadge(Graphics g, int x, int y, int w, int h, string text, Color bg)
+        {
+            using (var brush = new SolidBrush(bg))
+                g.FillRectangle(brush, x, y, w, h);
+            using (var font      = new Font("Segoe UI", 7f, FontStyle.Bold))
+            using (var textBrush = new SolidBrush(ContrastText(bg)))
+            using (var sf        = new StringFormat { Alignment = StringAlignment.Center, LineAlignment = StringAlignment.Center })
+                g.DrawString(text, font, textBrush, new RectangleF(x, y, w, h), sf);
+        }
+
+        /// <summary>
+        /// Draws a tinted status badge with spec-compliant SES brand background/text colors.
+        /// SUCCESS: #DFF8EE bg / #1E7A54 text  WARNING: #FFF3D6 bg / #B87C00 text
+        /// FAIL: #FDE0E0 bg / #B42318 text
+        /// </summary>
+        private static void DrawTintedBadge(Graphics g, int x, int y, int w, int h, Color accentColor, string text)
+        {
+            double luma = (accentColor.R * 0.299 + accentColor.G * 0.587 + accentColor.B * 0.114) / 255.0;
+            bool isGreen  = accentColor.G > 180 && accentColor.R < 100;
+            bool isAmber  = accentColor.R > 200 && accentColor.G > 100 && accentColor.B < 80;
+            bool isRed    = accentColor.R > 180 && accentColor.G < 80;
+
+            Color bgColor, fgColor;
+            if (isGreen)
+            {
+                bgColor = Color.FromArgb(0xDF, 0xF8, 0xEE);
+                fgColor = Color.FromArgb(0x1E, 0x7A, 0x54);
+            }
+            else if (isAmber)
+            {
+                bgColor = Color.FromArgb(0xFF, 0xF3, 0xD6);
+                fgColor = Color.FromArgb(0xB8, 0x7C, 0x00);
+            }
+            else if (isRed)
+            {
+                bgColor = Color.FromArgb(0xFD, 0xE0, 0xE0);
+                fgColor = Color.FromArgb(0xB4, 0x23, 0x18);
+            }
+            else
+            {
+                bgColor = Color.FromArgb(0xF2, 0xF5, 0xF7);
+                fgColor = ColorNeutralDark;
+            }
+
+            using (var bgBrush = new SolidBrush(bgColor))
+                g.FillRectangle(bgBrush, x, y, w, h);
+            using (var font    = new Font("Segoe UI", 7.5f, FontStyle.Bold))
+            using (var fgBrush = new SolidBrush(fgColor))
+            using (var sf     = new StringFormat { Alignment = StringAlignment.Center, LineAlignment = StringAlignment.Center })
+                g.DrawString(text, font, fgBrush, new RectangleF(x, y, w, h), sf);
+        }
+
 		/// <summary>
 		/// Renders a session overview panel: four info cards showing Project, Vessel,
 		/// Session timing, and Operator in a single row.
@@ -812,7 +891,8 @@ namespace MVS.Services.Reporting
 							g.DrawString(corrStr, valueFont, vBrush,
 								new RectangleF(trackX + trackW + 6, cy, 52, rowH), sf);
 
-						// "CORRELATION" caption
+						// "CORRELATION" caption + quality interpretation
+						string corrQuality = !hasCorr ? "" : corr >= 0.95 ? "EXCELLENT" : corr >= 0.80 ? "GOOD" : corr >= 0.60 ? "ACCEPTABLE" : "POOR";
 						using (var capBr = new SolidBrush(ColorNeutralMid))
 						using (var sf = new StringFormat { Alignment = StringAlignment.Near, LineAlignment = StringAlignment.Far })
 							g.DrawString("CORRELATION", captionFont, capBr,
@@ -879,8 +959,7 @@ double latMs = pair != null ? pair.EstimatedLatencySeconds * 1000.0 : double.NaN
 				/// data quality status, applied correction, sample count, outlier rate, and
 				/// confidence for instant at-a-glance assessment per axis.
 				/// </summary>
-				public static byte[] RenderAxisSummaryCard(VerificationReportModel model, VerificationAxisKind axis,
-					int width = 900, int height = 96)
+				public static byte[] RenderAxisSummaryCard(VerificationReportModel model, VerificationAxisKind axis, int width = 900, int height = 130)
 				{
 					if (model == null) throw new ArgumentNullException(nameof(model));
 
@@ -1089,15 +1168,9 @@ double latMs = pair != null ? pair.EstimatedLatencySeconds * 1000.0 : double.NaN
 				using (var capBr   = new SolidBrush(ColorNeutralMid))
 					g.DrawString("CONFIDENCE SCORE", capFont, capBr, 24, scoreCardY + 96);
 
-				// Quality verdict badge
+				// Quality verdict badge â€” tinted per SES brand spec
 				int badgeY = scoreCardY + scoreCardH - 42;
-				using (var badgeBr = new SolidBrush(scoreColor))
-					g.FillRectangle(badgeBr, 18, badgeY, scoreCardW - 20, 32);
-				using (var vFont    = new Font("Segoe UI", 11f, FontStyle.Bold))
-				using (var badgeTxt = new SolidBrush(ContrastText(scoreColor)))
-				using (var sf       = new StringFormat { Alignment = StringAlignment.Center, LineAlignment = StringAlignment.Center })
-					g.DrawString("DATA QUALITY:  " + qualityVerdict, vFont, badgeTxt,
-						new RectangleF(18, badgeY, scoreCardW - 20, 32), sf);
+				DrawTintedBadge(g, 18, badgeY, scoreCardW - 20, 32, scoreColor, "DATA QUALITY:  " + qualityVerdict);
 
 				// ── Right column: three progress bars ─────────────────────────────────
 				int barsX  = scoreCardW + 20;
@@ -1476,18 +1549,7 @@ double latMs = pair != null ? pair.EstimatedLatencySeconds * 1000.0 : double.NaN
             }
         }
 
-        /// <summary>Draws a filled rounded pill badge.</summary>
-        private static void DrawPillBadge(Graphics g, int x, int y, int w, int h, string text, Color bg)
-        {
-            using (var brush = new SolidBrush(bg))
-                g.FillRectangle(brush, x, y, w, h);
-            using (var font      = new Font("Segoe UI", 7f, FontStyle.Bold))
-            using (var textBrush = new SolidBrush(ContrastText(bg)))
-            using (var sf        = new StringFormat { Alignment = StringAlignment.Center, LineAlignment = StringAlignment.Center })
-                g.DrawString(text, font, textBrush, new RectangleF(x, y, w, h), sf);
-        }
-
-        // â•â•â•â•â•â•â•â•â•â•â•â•â•â•â•â•â•â•â•â•â•â•â•â•â•â•â•â•â•â•â•â•â•â•â•â•â•â•â•â•â•â•â•â•â•â•â•â•â•â•â•â•â•â•â•â•â•â•â•â•â•â•â•â•â•â•â•â•â•
+        // 
         // ORIGINAL BAR CHART RENDERER (retained + updated palette)
         // â•â•â•â•â•â•â•â•â•â•â•â•â•â•â•â•â•â•â•â•â•â•â•â•â•â•â•â•â•â•â•â•â•â•â•â•â•â•â•â•â•â•â•â•â•â•â•â•â•â•â•â•â•â•â•â•â•â•â•â•â•â•â•â•â•â•â•â•â•
 

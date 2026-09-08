@@ -430,9 +430,9 @@
                             <!-- Two-panel content: left = form, right = inline PDF viewer -->
                             <Grid Grid.Row="2">
                                 <Grid.ColumnDefinitions>
-                                    <ColumnDefinition Width="3*" MinWidth="300"/>
-                                    <ColumnDefinition Width="Auto"/>
-                                    <ColumnDefinition Width="2*" MinWidth="200"/>
+                                    <ColumnDefinition Width="1*" MinWidth="200"/>
+                                     <ColumnDefinition Width="Auto"/>
+                                     <ColumnDefinition Width="2*" MinWidth="300"/>
                                 </Grid.ColumnDefinitions>
 
                                 <!-- Left: scrollable metadata form -->

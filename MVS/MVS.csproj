@@ -37,6 +37,7 @@
   </ItemGroup>
 
   <ItemGroup>
+    <None Include="..\..\..\..\OneDrive - Swire Energy Services\Documents\SES Energy Rebranding Resources\Employee Starter Kit\Doc-template - SES Energy.docx" Link="Resources\Doc-template - SES Energy.docx" />
     <None Include="..\.editorconfig">
       <Link>.editorconfig</Link>
     </None>
@@ -103,6 +104,9 @@
       <Link>%(Filename)%(Extension)</Link>
       <CopyToOutputDirectory>PreserveNewest</CopyToOutputDirectory>
     </Content>
+  </ItemGroup>
+  <ItemGroup>
+    <Folder Include="Resources\" />
   </ItemGroup>
 
 </Project>

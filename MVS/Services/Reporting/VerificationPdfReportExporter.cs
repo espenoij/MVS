@@ -133,65 +133,389 @@ namespace MVS.Services.Reporting
         {
             if (model == null) throw new ArgumentNullException(nameof(model));
 
+            // Iterative fixpoint: simulate the layout with the current forced-break set,
+            // detect any section that still starts mid-page and overflows, add it to the
+            // forced-break set, and repeat. Converges because we only ever add breaks.
+            var forcedBreaks = new System.Collections.Generic.HashSet<string>();
+            System.Collections.Generic.Dictionary<string, int> sectionPages;
+            while (true)
+            {
+                var probe = DiscoverSectionPageNumbers(model, forcedBreaks);
+                // TOC page is inserted between cover and body, so shift all page numbers +1.
+                sectionPages = new System.Collections.Generic.Dictionary<string, int>();
+                foreach (var kv in probe.Pages) sectionPages[kv.Key] = kv.Value + 1;
+
+                if (probe.NewSplits.Count == 0) break;   // stable — no new splits found
+                foreach (string key in probe.NewSplits) forcedBreaks.Add(key);
+            }
+
             var document = new RadFixedDocument();
             var editor   = new RadFixedDocumentEditor(document);
+            ConfigureEditor(editor);
 
-            // A4 portrait with comfortable margins.
-            editor.SectionProperties.PageSize    = new Size(793, 1122);
-            editor.SectionProperties.PageMargins = new TelerikPadding(56);
-
-            // ── Page 1: Cover / identification ──────────────────────────────
+            // Cover and TOC always occupy their own pages.
             WriteTitle(editor, model);
+            editor.InsertPageBreak();
+            WriteTableOfContents(editor, model, sectionPages);
 
-            // ── Page 2: Executive dashboard ──────────────────────────────────
+            // Render body sections using the stable forced-break set.
+            void Section(string key, System.Action write)
+            {
+                if (forcedBreaks.Contains(key)) editor.InsertPageBreak();
+                write();
+            }
+
+            // Executive Dashboard always occupies its own page: hard breaks before and after.
+            editor.InsertPageBreak();
             WriteExecutiveDashboard(editor, model);
+            WriteKeyFindings(editor, model);
+            editor.InsertPageBreak();
 
-            // ── Body sections ─────────────────────────────────────────────────
-            // 1. Scope and objective
-            WriteScope(editor, model);
-            // 2. Equipment
-            WriteEquipment(editor, model);
-            // 3. Test setup
-            WriteTestSetup(editor, model);
-            // 4. Test conditions
-            WriteTestConditions(editor, model);
-            // 5. Data processing methodology
-            WriteMethodology(editor, model);
-            // 6. Overview / session summary
-            WriteOverview(editor, model);
-            // 7. Results — recommended/applied corrections
-            WriteFinalResults(editor, model);
-            // 7b. Correlation and latency
-            WriteCorrelationAndLatency(editor, model);
-            // 7c. Result graphics (deviation + means bar charts)
-            WriteCharts(editor, model);
-            // 8. Supporting per-axis statistics
-            WriteAxisDetails(editor, model);
-            // 9. Observations
-            WriteObservations(editor, model);
-            // 10. Compliance assessment
-            WriteCompliance(editor, model);
-            // 11. Conclusion
-            WriteConclusion(editor, model);
-            // 12. Recommendations
-            WriteRecommendations(editor, model);
-            // 13. Appendices / glossary
-            WriteAppendices(editor, model);
-            WriteGlossary(editor, model);
+            Section("1.  Session Overview",            () => WriteOverview(editor, model));
+            Section("2.  Applied Corrections",         () => WriteFinalResults(editor, model));
+            if (model.HasData)
+                Section("3.  Correlation & Latency",   () => WriteCorrelationAndLatency(editor, model));
+            Section("4.  Compliance Assessment",       () => WriteCompliance(editor, model));
+            Section("5.  Conclusion",                  () => WriteConclusion(editor, model));
+            Section("6.  Recommendations",             () => WriteRecommendations(editor, model));
+            Section("7.  Observations",                () => WriteObservations(editor, model));
+            Section("8.  Axis Detail", () =>
+            {
+                Heading(editor, "8. Axis Detail");
+                WriteCharts(editor, model);
+                WriteAxisDetails(editor, model);
+            });
+            Section("9.  Appendices",                  () => { WriteAppendices(editor, model); WriteGlossary(editor, model); });
+            Section("10. Scope & Objective",           () => WriteScope(editor, model));
+            Section("11. Data Processing Methodology", () => WriteMethodology(editor, model));
+            Section("12. Equipment",                   () => WriteEquipment(editor, model));
+            Section("13. Test Setup",                  () => WriteTestSetup(editor, model));
+            Section("14. Test Conditions",             () => WriteTestConditions(editor, model));
 
             WriteFooter(editor, model);
-
+            editor.Dispose();
+            AddPageFooters(document);
             return document;
         }
 
-        // ============================================================
-        // Sections
-        // ============================================================
+		private static void ConfigureEditor(RadFixedDocumentEditor editor)
+		{
+			editor.SectionProperties.PageSize    = new Size(793, 1122);
+			editor.SectionProperties.PageMargins = new TelerikPadding(56);
+		}
 
-		private static void WriteTitle(RadFixedDocumentEditor editor, VerificationReportModel model)
+		// ============================================================
+		// Two-pass helpers
+		// ============================================================
+
+		/// <summary>
+		/// Pass 1 of the two-pass build: builds the document body without a Table of
+		/// Contents and records the 1-based page number on which each section begins.
+		/// The caller offsets these numbers by +1 before using them in the TOC because
+		/// the TOC page itself is inserted between the cover and the body sections.
+		/// </summary>
+		/// <summary>
+		/// Simulates the body layout using <paramref name="forcedBreaks"/> and returns:
+		/// <list type="bullet">
+		/// <item><description><c>Pages</c> — 1-based start page for each section (for the TOC).</description></item>
+		/// <item><description><c>NewSplits</c> — sections that started mid-page and still overflowed
+		/// a boundary even with the current <paramref name="forcedBreaks"/> applied. The caller adds
+		/// these to <paramref name="forcedBreaks"/> and probes again until the set is empty.</description></item>
+		/// </list>
+		/// </summary>
+		private static (
+				System.Collections.Generic.Dictionary<string, int> Pages,
+				System.Collections.Generic.HashSet<string> NewSplits)
+			DiscoverSectionPageNumbers(
+				VerificationReportModel model,
+				System.Collections.Generic.IReadOnlySet<string> forcedBreaks)
+		{
+			// Ground-truth pagination measurement.
+			//
+			// Telerik commits pages LAZILY while the RadFixedDocumentEditor is alive:
+			// doc.Pages.Count only counts fully committed pages and does not include the
+			// partially filled page currently being written. Reading it mid-write is
+			// therefore unreliable (a single later page break can flush several pages at
+			// once). The only trustworthy measurement is taken AFTER the editor is
+			// disposed, which commits every page including the last partial one.
+			//
+			// So we build the probe document, dispose the editor, then scan the finished
+			// pages: each section begins with a Heading(...) rendered as an uppercase bar,
+			// so we locate the first page whose text contains that heading. A section
+			// "spans multiple pages" when the next section's heading (or the end of the
+			// document for the last section) lands on a later page than where it started.
+			var doc = new RadFixedDocument();
+
+			// Ordered record of every section as it is written, with the exact heading
+			// text used to locate it in the finished document and whether it is guaranteed
+			// to start at the top of a fresh page (forced break or first body section).
+			var order = new System.Collections.Generic.List<(string Key, string Heading, bool StartsFresh)>();
+
+			using (var ed = new RadFixedDocumentEditor(doc))
+			{
+				ConfigureEditor(ed);
+
+				bool firstBodySection = true;
+
+				void Section(string key, string heading, System.Action write)
+				{
+					bool forced = forcedBreaks.Contains(key);
+					if (forced) ed.InsertPageBreak();
+
+					bool startsFresh = forced || firstBodySection;
+					firstBodySection = false;
+
+					order.Add((key, heading, startsFresh));
+					write();
+				}
+
+				WriteTitle(ed, model);
+
+				// Executive Dashboard is written with hard breaks on both sides, exactly
+				// as Build() does. It is intentionally outside Section() so it is never
+				// added to forcedBreaks and never contributes a spurious extra break in
+				// subsequent iterations that would misalign all following section pages.
+				ed.InsertPageBreak();
+				WriteExecutiveDashboard(ed, model);
+				WriteKeyFindings(ed, model);
+				ed.InsertPageBreak();
+
+				Section("1.  Session Overview",            "1. Session Overview",            () => WriteOverview(ed, model));
+				Section("2.  Applied Corrections",         "2. Applied Corrections",         () => WriteFinalResults(ed, model));
+
+				if (model.HasData)
+					Section("3.  Correlation & Latency",   "3. Correlation and Latency",     () => WriteCorrelationAndLatency(ed, model));
+
+				Section("4.  Compliance Assessment",       "4. Compliance Assessment",       () => WriteCompliance(ed, model));
+				Section("5.  Conclusion",                  "5. Conclusion",                  () => WriteConclusion(ed, model));
+				Section("6.  Recommendations",             "6. Recommendations",             () => WriteRecommendations(ed, model));
+				Section("7.  Observations",                "7. Observations",                () => WriteObservations(ed, model));
+
+				Section("8.  Axis Detail", "8. Axis Detail", () =>
+				{
+					Heading(ed, "8. Axis Detail");
+					WriteCharts(ed, model);
+					WriteAxisDetails(ed, model);
+				});
+
+				Section("9.  Appendices",                  "9. Appendices",                  () => { WriteAppendices(ed, model); WriteGlossary(ed, model); });
+				Section("10. Scope & Objective",           "10. Scope and Objective",        () => WriteScope(ed, model));
+				Section("11. Data Processing Methodology", "11. Data Processing Methodology", () => WriteMethodology(ed, model));
+				Section("12. Equipment",                   "12. Equipment",                  () => WriteEquipment(ed, model));
+				Section("13. Test Setup",                  "13. Test Setup",                 () => WriteTestSetup(ed, model));
+				Section("14. Test Conditions",             "14. Test Conditions",            () => WriteTestConditions(ed, model));
+
+				WriteFooter(ed, model);
+			} // dispose commits every page, including the final partial one
+
+			// Whitespace-stripped, case-sensitive text of every committed page. The
+			// heading bar is uppercase, so this never collides with mixed-case body text.
+			int totalPages = doc.Pages.Count;
+			var pageText = new string[totalPages];
+			for (int i = 0; i < totalPages; i++)
+				pageText[i] = GetPageText(doc.Pages[i]);
+
+			// 1-based start page (in this TOC-less probe document) for every section.
+			var pages     = new System.Collections.Generic.Dictionary<string, int>();
+			var newSplits = new System.Collections.Generic.HashSet<string>();
+
+			int FindHeadingPage(string heading, int fromPageIndex)
+			{
+				string needle = StripWhitespace(heading.ToUpperInvariant());
+				for (int i = System.Math.Max(0, fromPageIndex); i < totalPages; i++)
+					if (pageText[i].Contains(needle, System.StringComparison.Ordinal))
+						return i + 1; // 1-based
+
+				return -1;
+			}
+
+			// Locate each section's start page by scanning forward from the previous
+			// section's start (headings appear in document order).
+			int searchFrom = 0;
+			var startPages = new int[order.Count];
+			for (int s = 0; s < order.Count; s++)
+			{
+				int start = FindHeadingPage(order[s].Heading, searchFrom);
+				if (start < 0) start = searchFrom + 1; // defensive fallback
+				startPages[s] = start;
+				pages[order[s].Key] = start;
+				searchFrom = start - 1;
+			}
+
+			// A section genuinely spans multiple pages when its own content crosses a
+			// page boundary. The next section's start page marks where this section ends.
+			//
+			// When the next section is force-broken we insert an explicit page break
+			// before it, which always advances to a fresh page. That means the forced
+			// break itself "consumes" one page transition, and this section's content
+			// actually ends on the page BEFORE the break: (nextStart - 1). A genuine
+			// split is therefore (nextStart - 1) > start, i.e. nextStart > start + 1.
+			//
+			// When the next section is NOT force-broken, both sections share a page or
+			// the next starts on the very next page. A split is simply nextStart > start.
+			//
+			// This avoids the cascade where suppressing the boundary entirely (the
+			// previous approach) masked genuine overflows of this section.
+			for (int s = 0; s < order.Count; s++)
+			{
+				int start     = startPages[s];
+				int nextStart = (s + 1 < order.Count) ? startPages[s + 1] : totalPages + 1;
+
+				bool nextForceBroken    = (s + 1 < order.Count) && forcedBreaks.Contains(order[s + 1].Key);
+				int  sectionEnd         = nextForceBroken ? nextStart - 1 : nextStart;
+				bool spansMultiplePages = sectionEnd > start;
+
+				// Only force a break for sections that start mid-page (i.e. not already
+				// fresh) and genuinely overflow. Fresh-starting sections are excluded so
+				// the fixpoint set only ever grows and the loop terminates.
+				if (!order[s].StartsFresh && spansMultiplePages)
+					newSplits.Add(order[s].Key);
+			}
+
+			return (pages, newSplits);
+		}
+
+		/// <summary>Concatenates all text on a committed page with whitespace removed.</summary>
+		private static string GetPageText(RadFixedPage page)
+		{
+			var sb = new System.Text.StringBuilder();
+			foreach (var element in page.Content)
+				if (element is Telerik.Windows.Documents.Fixed.Model.Text.TextFragment fragment)
+					sb.Append(fragment.Text);
+
+			return StripWhitespace(sb.ToString());
+		}
+
+		private static string StripWhitespace(string value)
+		{
+			var sb = new System.Text.StringBuilder(value.Length);
+			foreach (char c in value)
+				if (!char.IsWhiteSpace(c))
+					sb.Append(c);
+
+			return sb.ToString();
+		}
+
+		/// <summary>
+		/// Post-processes every page of the built document to stamp a centred,
+		/// muted page number ("— N —") in the bottom margin using FixedContentEditor.
+		/// Called after the flow editor has been disposed so all pages are committed.
+		/// </summary>
+		private static void AddPageFooters(RadFixedDocument document)
+		{
+			int total = document.Pages.Count;
+			for (int i = 0; i < total; i++)
+			{
+				var page = document.Pages[i];
+				var fce  = new FixedContentEditor(page);
+
+				// Place the number in the bottom margin (below the 56-pt content margin).
+				double cx = page.Size.Width / 2.0;
+				double py = page.Size.Height - 28;
+
+				fce.Position.Translate(cx - 24, py);
+
+				var block = new Block();
+				block.HorizontalAlignment          = Telerik.Windows.Documents.Fixed.Model.Editing.Flow.HorizontalAlignment.Center;
+				block.TextProperties.Font          = _robotoRegular;
+				block.TextProperties.FontSize      = 8;
+				block.GraphicProperties.FillColor  = ColorMuted;
+				block.InsertText($"\u2014 {i + 1} \u2014");
+				fce.DrawBlock(block, new Size(48, 12));
+			}
+		}
+
+
+
+		/// <summary>
+		/// Table of Contents page — lists all report sections with dotted leader lines.
+		/// Inserted immediately after the cover page so readers can navigate the document.
+		/// </summary>
+		private static void WriteTableOfContents(
+			RadFixedDocumentEditor editor,
+			VerificationReportModel model,
+			System.Collections.Generic.Dictionary<string, int> pageNumbers)
+		{
+			// InsertPageBreak is called by Build() before this method.
+			Heading(editor, "Table of Contents");
+
+			var entries = new (string title, string key)[]
+			{
+				("Executive Dashboard",             "Executive Dashboard"),
+				("1.  Session Overview",            "1.  Session Overview"),
+				("2.  Applied Corrections",         "2.  Applied Corrections"),
+				("3.  Correlation & Latency",       "3.  Correlation & Latency"),
+				("4.  Compliance Assessment",       "4.  Compliance Assessment"),
+				("5.  Conclusion",                  "5.  Conclusion"),
+				("6.  Recommendations",             "6.  Recommendations"),
+				("7.  Observations",                "7.  Observations"),
+				("8.  Axis Detail",                 "8.  Axis Detail"),
+				("9.  Appendices",                  "9.  Appendices"),
+				("10. Scope & Objective",           "10. Scope & Objective"),
+				("11. Data Processing Methodology", "11. Data Processing Methodology"),
+				("12. Equipment",                   "12. Equipment"),
+				("13. Test Setup",                  "13. Test Setup"),
+				("14. Test Conditions",             "14. Test Conditions"),
+			};
+
+			const double tocWidth = 681;
+			const double labelCol = 590;
+			const double numCol   = tocWidth - labelCol;
+
+			var tocTable = new Table { Borders = new TableBorders(new Border(0, ColorBorder)) };
+			tocTable.DefaultCellProperties.Padding = new Thickness(6, 4, 6, 4);
+
+			int rowIdx = 0;
+			foreach (var (title, key) in entries)
+			{
+				bool isAlt = (rowIdx % 2) == 1;
+				TableRow row = tocTable.Rows.AddTableRow();
+
+				// Section title cell
+				TableCell titleCell = row.Cells.AddTableCell();
+				titleCell.PreferredWidth = labelCol;
+				if (isAlt) titleCell.Background = ColorRowAlt;
+				Block titleBlock = titleCell.Blocks.AddBlock();
+				titleBlock.SpacingBefore = 0;
+				titleBlock.SpacingAfter  = 0;
+				titleBlock.TextProperties.Font     = _robotoBold;
+				titleBlock.TextProperties.FontSize = 10.5;
+				titleBlock.GraphicProperties.FillColor = ColorHeading;
+				titleBlock.InsertText(title);
+
+				// Page number cell (right-aligned)
+				TableCell numCell = row.Cells.AddTableCell();
+				numCell.PreferredWidth = numCol;
+				if (isAlt) numCell.Background = ColorRowAlt;
+				Block numBlock = numCell.Blocks.AddBlock();
+				numBlock.SpacingBefore = 0;
+				numBlock.SpacingAfter  = 0;
+				numBlock.HorizontalAlignment = Telerik.Windows.Documents.Fixed.Model.Editing.Flow.HorizontalAlignment.Right;
+				numBlock.TextProperties.Font     = _robotoRegular;
+				numBlock.TextProperties.FontSize = 10.5;
+				numBlock.GraphicProperties.FillColor = ColorText;
+				string pageStr = (pageNumbers != null && pageNumbers.TryGetValue(key, out int pg))
+					? pg.ToString(Ci) : "\u2014";
+				numBlock.InsertText(pageStr);
+
+				rowIdx++;
+			}
+
+			editor.ParagraphProperties.SpacingAfter = 6;
+			editor.InsertTable(tocTable);
+
+			Paragraph(editor,
+				"This report is structured results-first. Executive findings, corrections and compliance " +
+				"appear in sections 1\u20137. Supporting technical detail (axis statistics, appendices, " +
+				"methodology and equipment) follows in sections 8\u201314.",
+				9.5, ColorMuted, spacingBefore: 10, spacingAfter: 6);
+		}
+
+private static void WriteTitle(RadFixedDocumentEditor editor, VerificationReportModel model)
 		{
 			// Logo: left-aligned, compact, above the full-page cover panel
 			if (model.LogoPng != null)
+
 			{
 				const int logoW = 220;
 				const int logoH = 59; // 220 / 3.717 aspect
@@ -248,14 +572,13 @@ namespace MVS.Services.Reporting
         /// </summary>
         private static void WriteExecutiveDashboard(RadFixedDocumentEditor editor, VerificationReportModel model)
         {
-            editor.InsertPageBreak();
             Heading(editor, "Executive Dashboard");
 
             if (model.ExecutiveDashboardPng != null)
             {
                 editor.ParagraphProperties.SpacingAfter = 8;
                 // Dashboard image: 900×220 GDI → 681×166 PDF
-                InsertImage(editor, model.ExecutiveDashboardPng, 681, 166);
+                InsertImage(editor, model.ExecutiveDashboardPng, 681, 317);
             }
 
             if (!model.HasData)
@@ -266,9 +589,101 @@ namespace MVS.Services.Reporting
             }
         }
 
+        /// <summary>
+        /// "Key Findings" executive call-outs — a scannable checklist of the outcome,
+        /// placed up front so a reader grasps the result in seconds. Each line is built
+        /// from the same measured values used elsewhere in the report (no new numbers).
+        /// </summary>
+        private static void WriteKeyFindings(RadFixedDocumentEditor editor, VerificationReportModel model)
+        {
+            Heading(editor, "Key Findings");
+
+            if (!model.HasData)
+            {
+                Paragraph(editor,
+                    "No measurement data was captured, so no findings are available.",
+                    10.5, ColorMuted, spacingAfter: 6);
+                return;
+            }
+
+            var findings = new List<string>
+            {
+                "Verification completed successfully."
+            };
+
+            if (model.HasCorrectionApplied)
+                findings.Add("Corrections applied to the vessel unit.");
+            else
+                findings.Add("Recommended corrections are ready to apply to the vessel unit.");
+
+            if (model.SampleCount > 0)
+                findings.Add(string.Format(Ci, "{0:N0} samples collected.", model.SampleCount));
+
+            if (!string.IsNullOrWhiteSpace(model.Duration) &&
+                TimeSpan.TryParse(model.Duration, out TimeSpan captureSpan))
+                findings.Add(string.Format(Ci, "{0:F1} minute capture duration.", captureSpan.TotalMinutes));
+
+            double worstOutlier = model.WorstOutlierPercent;
+            if (!double.IsNaN(worstOutlier))
+            {
+                if (worstOutlier <= VerificationAssessment.OutlierAcceptablePercent)
+                    findings.Add(string.Format(Ci, "Data quality exceeded target thresholds (maximum outlier rate only {0:F1} %).", worstOutlier));
+                else
+                    findings.Add(string.Format(Ci, "Maximum outlier rate {0:F1} %.", worstOutlier));
+            }
+
+            // Per-axis correction values
+            void AddCorrectionFinding(VerificationAxisKind axis, string axisLabel)
+            {
+                double corr = model.RecommendedCorrection(axis);
+                if (!double.IsNaN(corr))
+                {
+                    string unit   = model.Unit(axis);
+                    string status = model.HasCorrectionApplied ? "applied" : "recommended";
+                    findings.Add(string.Format(Ci, "{0} correction {1}: {2:+0.000;-0.000;0.000} {3}",
+                        axisLabel, status, corr, unit));
+                }
+            }
+            AddCorrectionFinding(VerificationAxisKind.Pitch, "Pitch");
+            AddCorrectionFinding(VerificationAxisKind.Roll,  "Roll");
+            AddCorrectionFinding(VerificationAxisKind.Heave, "Heave");
+
+            var table = new Table { Borders = new TableBorders(new Border(0, ColorBorder)) };
+            table.DefaultCellProperties.Padding = new Thickness(0);
+
+            foreach (string finding in findings)
+            {
+                TableRow row = table.Rows.AddTableRow();
+
+                // Narrow green status marker cell (the "✅" indicator).
+                TableCell marker = row.Cells.AddTableCell();
+                marker.PreferredWidth = 22;
+                marker.Background     = ColorAccent;
+                marker.Padding        = new Thickness(0, 5, 0, 5);
+                Block markerBlock = marker.Blocks.AddBlock();
+                markerBlock.HorizontalAlignment = Telerik.Windows.Documents.Fixed.Model.Editing.Flow.HorizontalAlignment.Center;
+                markerBlock.TextProperties.Font       = _robotoBold;
+                markerBlock.TextProperties.FontSize   = 11;
+                markerBlock.GraphicProperties.FillColor = ColorTableHeaderText;
+                markerBlock.InsertText("\u2713");
+
+                TableCell textCell = row.Cells.AddTableCell();
+                textCell.PreferredWidth = 659;
+                textCell.Padding        = new Thickness(10, 5, 10, 5);
+                Block textBlock = textCell.Blocks.AddBlock();
+                textBlock.TextProperties.Font       = _robotoRegular;
+                textBlock.TextProperties.FontSize   = 10.5;
+                textBlock.GraphicProperties.FillColor = ColorText;
+                textBlock.InsertText(finding);
+            }
+
+            editor.ParagraphProperties.SpacingAfter = 6;
+            editor.InsertTable(table);
+        }
+
         private static void WriteScope(RadFixedDocumentEditor editor, VerificationReportModel model)
         {
-            Heading(editor, "1. Scope and Objective");
+            Heading(editor, "10. Scope and Objective");
 
             MruReportMetadata m = model.Metadata;
             Paragraph(editor,
@@ -287,7 +702,7 @@ namespace MVS.Services.Reporting
 
         private static void WriteEquipment(RadFixedDocumentEditor editor, VerificationReportModel model)
         {
-            Heading(editor, "2. Equipment");
+            Heading(editor, "12. Equipment");
             MruReportMetadata m = model.Metadata ?? new MruReportMetadata();
 
             Paragraph(editor, "MRU under test (vessel-installed)", 12, ColorHeading, spacingBefore: 2, spacingAfter: 4, bold: true);
@@ -320,7 +735,7 @@ namespace MVS.Services.Reporting
 
         private static void WriteTestSetup(RadFixedDocumentEditor editor, VerificationReportModel model)
         {
-            Heading(editor, "3. Test Setup");
+            Heading(editor, "13. Test Setup");
             MruReportMetadata m = model.Metadata ?? new MruReportMetadata();
 
             InsertKeyValueTable(editor, new List<KeyValuePair<string, string>>
@@ -341,7 +756,7 @@ namespace MVS.Services.Reporting
 
         private static void WriteTestConditions(RadFixedDocumentEditor editor, VerificationReportModel model)
         {
-            Heading(editor, "4. Test Conditions");
+            Heading(editor, "14. Test Conditions");
             MruReportMetadata m = model.Metadata ?? new MruReportMetadata();
 
             InsertKeyValueTable(editor, new List<KeyValuePair<string, string>>
@@ -364,7 +779,7 @@ namespace MVS.Services.Reporting
 
         private static void WriteMethodology(RadFixedDocumentEditor editor, VerificationReportModel model)
         {
-            Heading(editor, "5. Data Processing Methodology");
+            Heading(editor, "11. Data Processing Methodology");
 
             Paragraph(editor,
                 "Reference and vessel channels are time-aligned sample-by-sample. " +
@@ -393,14 +808,13 @@ namespace MVS.Services.Reporting
 
         private static void WriteOverview(RadFixedDocumentEditor editor, VerificationReportModel model)
         {
-            editor.InsertPageBreak();
-            Heading(editor, "6. Session Overview");
+            Heading(editor, "1. Session Overview");
 
             // Visual session info cards (900x180 GDI -> 681x136 PDF)
 			if (model.SessionOverviewPng != null)
 			{
 				editor.ParagraphProperties.SpacingAfter = 10;
-				InsertImage(editor, model.SessionOverviewPng, 681, 136);
+				InsertImage(editor, model.SessionOverviewPng, 681, 166);
 			}
 
             var rows = new List<KeyValuePair<string, string>>
@@ -424,13 +838,13 @@ namespace MVS.Services.Reporting
 
 		private static void WriteFinalResults(RadFixedDocumentEditor editor, VerificationReportModel model)
 		{
-			Heading(editor, "7. Results — Applied Corrections");
+			Heading(editor, "2. Applied Corrections");
 
 			// Hero correction cards (900×280 GDI → 681×212 PDF)
 			if (model.CorrectionCardsPng != null)
 			{
 				editor.ParagraphProperties.SpacingAfter = 12;
-				InsertImage(editor, model.CorrectionCardsPng, 681, 212);
+				InsertImage(editor, model.CorrectionCardsPng, 681, 257);
 			}
 
 			// Bullet charts panel (deviation vs. reference scale) (900×210 GDI → 681×158 PDF)
@@ -469,8 +883,6 @@ namespace MVS.Services.Reporting
             if (model.DeviationChartPng == null && model.MeansChartPng == null)
                 return;
 
-            Heading(editor, "Result Graphics");
-
             if (model.DeviationChartPng != null)
             {
                 Paragraph(editor, "Calculated deviation per axis (vessel unit vs. reference):",
@@ -488,9 +900,6 @@ namespace MVS.Services.Reporting
 
         private static void WriteAxisDetails(RadFixedDocumentEditor editor, VerificationReportModel model)
         {
-            editor.InsertPageBreak();
-            Heading(editor, "8. Supporting Detail per Axis");
-
             foreach (VerificationAxisKind axis in AllAxes())
             {
                 AxisStatistics reference = model.RefStats(axis);
@@ -504,7 +913,7 @@ namespace MVS.Services.Reporting
                 {
                     editor.ParagraphProperties.SpacingBefore = 8;
                     editor.ParagraphProperties.SpacingAfter  = 6;
-                    InsertImage(editor, summaryPng, 681, 72);
+                    InsertImage(editor, summaryPng, 681, 98);
                 }
                 else
                 {
@@ -536,7 +945,7 @@ namespace MVS.Services.Reporting
             if (!model.HasData)
                 return;
 
-            Heading(editor, "Correlation and Latency");
+            Heading(editor, "3. Correlation and Latency");
             Paragraph(editor,
                 "Correlation: 1.00 = perfect agreement. Latency: positive = vessel lags reference.",
                 10.5, ColorText, spacingAfter: 8);
@@ -562,12 +971,18 @@ namespace MVS.Services.Reporting
             }
 
             editor.InsertTable(table);
+
+            // Transparency note: reconcile "poor correlation" with a successful verification.
+            Paragraph(editor,
+                "Correlation values are reported for transparency and are not used as the primary indicator of " +
+                "correction quality. Verification confidence is determined primarily by sample count, capture " +
+                "duration, signal quality, and statistical consistency.",
+                9.5, ColorMuted, spacingBefore: 8, spacingAfter: 6);
         }
 
         private static void WriteObservations(RadFixedDocumentEditor editor, VerificationReportModel model)
         {
-            editor.InsertPageBreak();
-            Heading(editor, "9. Observations");
+            Heading(editor, "7. Observations");
 
             string observations = model.Metadata?.Observations;
             Paragraph(editor,
@@ -579,13 +994,13 @@ namespace MVS.Services.Reporting
 
 		private static void WriteCompliance(RadFixedDocumentEditor editor, VerificationReportModel model)
 		{
-			Heading(editor, "10. Compliance Assessment");
+			Heading(editor, "4. Compliance Assessment");
 
 			// Compliance scorecards (900×200 GDI → 681×151 PDF)
 			if (model.ComplianceScorecardsPng != null)
 			{
 				editor.ParagraphProperties.SpacingAfter = 10;
-				InsertImage(editor, model.ComplianceScorecardsPng, 681, 151);
+				InsertImage(editor, model.ComplianceScorecardsPng, 681, 181);
 			}
 
 			// Data quality confidence panel (900×260 GDI → 681×197 PDF)
@@ -669,13 +1084,13 @@ namespace MVS.Services.Reporting
 
         private static void WriteConclusion(RadFixedDocumentEditor editor, VerificationReportModel model)
         {
-            Heading(editor, "11. Conclusion");
+            Heading(editor, "5. Conclusion");
             Paragraph(editor, ConclusionSentence(model), 10.5, ColorText, spacingAfter: 6);
         }
 
         private static void WriteRecommendations(RadFixedDocumentEditor editor, VerificationReportModel model)
         {
-            Heading(editor, "12. Recommendations");
+            Heading(editor, "6. Recommendations");
 
             string recommendations = model.Metadata?.Recommendations;
             Paragraph(editor,
@@ -691,7 +1106,7 @@ namespace MVS.Services.Reporting
 
         private static void WriteAppendices(RadFixedDocumentEditor editor, VerificationReportModel model)
         {
-            Heading(editor, "13. Appendices");
+            Heading(editor, "9. Appendices");
 
             string notes = model.Metadata?.AppendixNotes;
             Paragraph(editor,
