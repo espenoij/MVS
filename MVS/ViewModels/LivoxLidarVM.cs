@@ -603,6 +603,7 @@ namespace MVS
         {
             ApplyFiltersToSubsystem();
             AppendStatus("Connecting...");
+            EnsureConfigFileExists();
             _subsystem.Connect(LivoxConfigFilePath(), _errorHandler);
         }
 
@@ -1320,6 +1321,47 @@ namespace MVS
             _config.Write(ConfigKey.LivoxCorrectionRoll,      _correction.RollOffset.ToString());
             _config.Write(ConfigKey.LivoxCorrectionHeading,   _correction.HeadingOffset.ToString());
             _config.Write(ConfigKey.LivoxCorrectionTimestamp, _correction.IsActive ? _correction.Timestamp.ToString("O") : "");
+        }
+
+        private void EnsureConfigFileExists()
+        {
+            var path = LivoxConfigFilePath();
+            if (File.Exists(path))
+                return;
+
+            var dir = Path.GetDirectoryName(path);
+            if (!string.IsNullOrEmpty(dir))
+                Directory.CreateDirectory(dir);
+
+            var defaultJson = new JsonObject
+            {
+                ["MID360"] = new JsonObject
+                {
+                    ["lidar_net_info"] = new JsonObject
+                    {
+                        ["cmd_data_port"]   = _lidarCmdDataPort,
+                        ["push_msg_port"]   = _lidarPushMsgPort,
+                        ["point_data_port"] = _lidarPointDataPort,
+                        ["imu_data_port"]   = _lidarImuDataPort,
+                        ["log_data_port"]   = _lidarLogDataPort
+                    },
+                    ["host_net_info"] = new JsonArray
+                    {
+                        new JsonObject
+                        {
+                            ["host_ip"]         = _hostIp ?? "192.168.1.5",
+                            ["cmd_data_port"]   = _hostCmdDataPort,
+                            ["push_msg_port"]   = _hostPushMsgPort,
+                            ["point_data_port"] = _hostPointDataPort,
+                            ["imu_data_port"]   = _hostImuDataPort,
+                            ["log_data_port"]   = _hostLogDataPort
+                        }
+                    }
+                }
+            };
+
+            File.WriteAllText(path, defaultJson.ToJsonString(new JsonSerializerOptions { WriteIndented = true }));
+            AppendStatus($"Config file not found — created default at: {path}");
         }
 
         private static string LivoxConfigFilePath()
