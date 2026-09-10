@@ -67,6 +67,8 @@
     <Resource Include="Resources\DocTemplate\ses-header.png" />
     <Resource Include="Resources\DocTemplate\ses-footer.png" />
     <Resource Include="Resources\DocTemplate\ses-logo.png" />
+    <!-- Full-page semi-transparent SES background watermark (from DOCX image2). -->
+    <Resource Include="Resources\DocTemplate\ses-background.png" />
     <!-- SES brand fonts — embedded as application resources so Roboto Condensed
          is available on every machine without requiring system installation. -->
     <Resource Include="Fonts\RobotoCondensed-Light.ttf" />
@@ -112,6 +114,7 @@
   </ItemGroup>
   <ItemGroup>
     <Folder Include="Resources\" />
+    <Folder Include="_build\" />
   </ItemGroup>
 
 </Project>

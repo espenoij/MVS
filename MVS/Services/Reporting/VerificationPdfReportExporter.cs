@@ -1,4 +1,4 @@
-﻿using System;
+using System;
 using System.Collections.Generic;
 using System.Globalization;
 using System.IO;
@@ -34,8 +34,12 @@ namespace MVS.Services.Reporting
         private static readonly FontBase _robotoRegular;
         private static readonly FontBase _robotoBold;
 
-        // SES Energy doc-template strips (extracted from Doc-template - SES Energy.docx).
-        // Drawn on every page by AddPageFooters: header at y=0, footer at y=page-bottom.
+        // SES Energy doc-template images (extracted from Doc-template - SES Energy.docx).
+        // All three are drawn on every page by AddPageFooters in back-to-front order:
+        //   1. ses-background.png — full-page semi-transparent watermark (behind content)
+        //   2. ses-header.png     — teal band at the top of every page
+        //   3. ses-footer.png     — teal band at the bottom + page number
+        private static readonly byte[]? _sesBackgroundPng;
         private static readonly byte[]? _sesHeaderPng;
         private static readonly byte[]? _sesFooterPng;
 
@@ -61,6 +65,8 @@ namespace MVS.Services.Reporting
                 family, FontStyles.Normal, FontWeights.Bold, out FontBase bold)
                 ? bold : FontsRepository.HelveticaBold;
 
+            _sesBackgroundPng = LoadResourceBytes(
+                "pack://application:,,,/MVS;component/Resources/DocTemplate/ses-background.png");
             _sesHeaderPng = LoadResourceBytes(
                 "pack://application:,,,/MVS;component/Resources/DocTemplate/ses-header.png");
             _sesFooterPng = LoadResourceBytes(
@@ -440,8 +446,13 @@ namespace MVS.Services.Reporting
 		private static void AddPageFooters(RadFixedDocument document)
 		{
 			// Pre-create Telerik image sources once; null-safe when resources are absent (test host).
-			TelerikImageSource? headerImage = null;
-			TelerikImageSource? footerImage = null;
+			TelerikImageSource? backgroundImage = null;
+			TelerikImageSource? headerImage     = null;
+			TelerikImageSource? footerImage     = null;
+
+			if (_sesBackgroundPng != null)
+				using (var ms = new MemoryStream(_sesBackgroundPng))
+					backgroundImage = new TelerikImageSource(ms);
 
 			if (_sesHeaderPng != null)
 				using (var ms = new MemoryStream(_sesHeaderPng))
@@ -463,37 +474,54 @@ namespace MVS.Services.Reporting
 				var page = document.Pages[i];
 				double pageW = page.Size.Width;
 				double pageH = page.Size.Height;
-				var fce = new FixedContentEditor(page);
 
-				// --- Header strip (behind content, drawn at y=0) ---
-				if (headerImage != null)
-				{
-					fce.Position.Translate(0, 0);
-					fce.DrawImage(headerImage, new Size(pageW, HeaderH));
+				// FixedContentEditor uses the same top-left, Y-downward coordinate system as the
+				// flow editor (confirmed by the original page-number placement at y = pageH - 28).
+				// Each draw operation gets its own fresh editor so Position.Translate always
+					// starts from (0, 0) and is not compounded by previous draws.
+
+					// --- Full-page background watermark (drawn first, behind everything) ---
+					if (backgroundImage != null)
+					{
+						var fceB = new FixedContentEditor(page);
+						fceB.Position.Translate(0, 0);
+						fceB.DrawImage(backgroundImage, new Size(pageW, pageH));
+					}
+
+					// --- Header strip: top of page → y = 0 ---
+					if (headerImage != null)
+					{
+						var fceH = new FixedContentEditor(page);
+						fceH.Position.Translate(0, 0);
+						fceH.DrawImage(headerImage, new Size(pageW, HeaderH));
+					}
+
+					// --- Footer strip: bottom of page → y = pageH - FooterH ---
+					if (footerImage != null)
+					{
+						var fceF = new FixedContentEditor(page);
+						fceF.Position.Translate(0, pageH - FooterH);
+						fceF.DrawImage(footerImage, new Size(pageW, FooterH));
+					}
+
+					// --- Page number centred vertically inside the footer strip ---
+					{
+						double cx = pageW / 2.0;
+						double py = pageH - FooterH + (FooterH - 12) / 2.0; // mid of footer strip
+
+						var fceP = new FixedContentEditor(page);
+						fceP.Position.Translate(cx - 24, py);
+
+						var block = new Block();
+						block.HorizontalAlignment         = Telerik.Windows.Documents.Fixed.Model.Editing.Flow.HorizontalAlignment.Center;
+						block.TextProperties.Font         = _robotoRegular;
+						block.TextProperties.FontSize     = 8;
+						block.GraphicProperties.FillColor = new RgbColor(0x1A, 0x27, 0x32); // dark on teal
+						block.InsertText($"\u2014 {i + 1} \u2014");
+						fceP.DrawBlock(block, new Size(48, 12));
+					}
+					}
 				}
-
-				// --- Footer strip (drawn at the very bottom of the page) ---
-				if (footerImage != null)
-				{
-					fce.Position.Translate(0, pageH - FooterH);
-					fce.DrawImage(footerImage, new Size(pageW, FooterH));
-				}
-
-				// --- Page number centred over the footer strip ---
-				double cx = pageW / 2.0;
-				double py = pageH - FooterH + (FooterH - 12) / 2.0;  // vertically centred in strip
-
-				fce.Position.Translate(cx - 24, py);
-
-				var block = new Block();
-				block.HorizontalAlignment         = Telerik.Windows.Documents.Fixed.Model.Editing.Flow.HorizontalAlignment.Center;
-				block.TextProperties.Font         = _robotoRegular;
-				block.TextProperties.FontSize     = 8;
-				block.GraphicProperties.FillColor = new RgbColor(0x1A, 0x27, 0x32); // dark on teal
-				block.InsertText($"\u2014 {i + 1} \u2014");
-				fce.DrawBlock(block, new Size(48, 12));
-			}
-		}
 
 
 
@@ -914,10 +942,15 @@ private static void WriteTitle(RadFixedDocumentEditor editor, VerificationReport
 			if (model.CorrectionCardsPng != null)
 			{
 				editor.ParagraphProperties.SpacingAfter = 12;
-				InsertImage(editor, model.CorrectionCardsPng, 681, 257);
+				InsertImage(editor, model.CorrectionCardsPng, 681, 317);
+			}
+			else
+			{
+				// PDF-native correction cards when pre-rendered image is unavailable
+				InsertCorrectionCardsNative(editor, model);
 			}
 
-			// Bullet charts panel (deviation vs. reference scale) (900×210 GDI → 681×158 PDF)
+			// Bullet charts panel
 			if (model.BulletChartsPng != null)
 			{
 				editor.ParagraphProperties.SpacingAfter = 10;
@@ -970,28 +1003,39 @@ private static void WriteTitle(RadFixedDocumentEditor editor, VerificationReport
 
         private static void WriteAxisDetails(RadFixedDocumentEditor editor, VerificationReportModel model)
         {
+            bool firstAxis = true;
             foreach (VerificationAxisKind axis in AllAxes())
             {
+                // Generous whitespace + teal rule clearly separates each axis section
+                if (!firstAxis)
+                {
+                    SetText(editor, _robotoRegular, 4, ColorBorder);
+                    editor.ParagraphProperties.SpacingBefore = 24;
+                    editor.ParagraphProperties.SpacingAfter  = 0;
+                    editor.InsertParagraph();
+                    editor.InsertRun(" ");
+                    TealRule(editor);
+                    SetText(editor, _robotoRegular, 4, ColorBorder);
+                    editor.ParagraphProperties.SpacingBefore = 10;
+                    editor.ParagraphProperties.SpacingAfter  = 0;
+                    editor.InsertParagraph();
+                    editor.InsertRun(" ");
+                }
+                firstAxis = false;
+
                 AxisStatistics reference = model.RefStats(axis);
                 AxisStatistics test      = model.TestStats(axis);
                 AxisStatistics dev       = model.DevStats(axis);
                 string         unit      = model.Unit(axis);
 
-                // ── Per-axis summary banner (900×96 GDI → 681×72 PDF) ─────────────
-                byte[] summaryPng = model.AxisSummaryPng(axis);
-                if (summaryPng != null)
-                {
-                    editor.ParagraphProperties.SpacingBefore = 8;
-                    editor.ParagraphProperties.SpacingAfter  = 6;
-                    InsertImage(editor, summaryPng, 681, 98);
-                }
-                else
-                {
-                    VerificationStatus fallbackStatus = VerificationAssessment.Classify(axis, reference, test, dev);
-                    Paragraph(editor,
-                        model.AxisTitle(axis) + "  \u2014  " + VerificationAssessment.StatusLabel(fallbackStatus),
-                        12, ColorHeading, spacingBefore: 8, spacingAfter: 2, bold: true);
-                }
+                // ── Axis Summary Panel — answer-first card before the detailed table ──
+                VerificationStatus axisStatus = VerificationAssessment.Classify(axis, reference, test, dev);
+                InsertAxisSummaryCard(editor, model.AxisTitle(axis), axisStatus,
+                    model.RecommendedCorrection(axis), model.AppliedCorrection(axis), model.HasCorrectionApplied, unit, dev);
+
+                // Detail table sits directly below its card; SpacingBefore overrides any inherited value.
+                editor.ParagraphProperties.SpacingBefore = 6;
+                editor.ParagraphProperties.SpacingAfter  = 8;
 
                 var table = NewTable();
                 AddHeaderRow(table, "Metric", "Reference", "Vessel", "Deviation");
@@ -1009,6 +1053,7 @@ private static void WriteTitle(RadFixedDocumentEditor editor, VerificationReport
                 editor.InsertTable(table);
             }
         }
+
 
         private static void WriteCorrelationAndLatency(RadFixedDocumentEditor editor, VerificationReportModel model)
         {
@@ -1189,7 +1234,43 @@ private static void WriteTitle(RadFixedDocumentEditor editor, VerificationReport
         private static void WriteGlossary(RadFixedDocumentEditor editor, VerificationReportModel model)
         {
             Heading(editor, "What the Numbers Mean");
-            Paragraph(editor, VerificationAssessment.Glossary(VerificationAxisKind.Pitch), 9.5, ColorText, spacingAfter: 6);
+
+            Paragraph(editor,
+                "A quick reference guide for interpreting the metrics in this report.",
+                9.5, ColorMuted, spacingBefore: 0, spacingAfter: 10);
+
+            var terms = new (string Term, string Definition)[]
+            {
+                ("Reference MRU",  "The trusted baseline motion sensor. Its mean reading over the capture period is used as the reference value for all comparisons."),
+                ("Vessel MRU",     "The unit being verified. Its mean reading is compared against the Reference MRU to calculate the deviation on each axis."),
+                ("Deviation",      "Vessel minus Reference on each axis. This is the key output of the verification \u2014 the value used to derive the recommended correction."),
+                ("\u03C3 (Sigma)", "Standard deviation: how much the signal varies around its mean. Lower values indicate a stable, consistent signal."),
+                ("Min / Max",      "The most extreme values observed during the capture period. Large spreads may indicate transient disturbances or vessel manoeuvres."),
+                ("RMS",            "Root-Mean-Square magnitude of the signal. Useful for assessing average energy in the motion signal across the capture."),
+                ("Outliers",       "Percentage of samples flagged as anomalous by Tukey\u2019s 1.5\u00D7IQR rule. High rates reduce confidence in the deviation estimate."),
+                ("Samples",        "Number of data points included in the statistical calculations. More samples produce a more reliable correction estimate."),
+            };
+
+            for (int i = 0; i < terms.Length; i += 2)
+            {
+                string t2 = i + 1 < terms.Length ? terms[i + 1].Term       : string.Empty;
+                string d2 = i + 1 < terms.Length ? terms[i + 1].Definition : string.Empty;
+                InsertGlossaryRow(editor, terms[i].Term, terms[i].Definition, t2, d2);
+            }
+
+            TealRule(editor);
+            Paragraph(editor, "Can the Deviation Be Trusted?", 11, ColorHeading,
+                spacingBefore: 10, spacingAfter: 4, bold: true);
+            Paragraph(editor,
+                string.Format(Ci,
+                    "Trustworthiness depends on input data quality, not the deviation value. " +
+                    "Samples: \u2265 {0:N0} \u2192 usable, \u2265 {1:N0} \u2192 good. " +
+                    "Outliers: \u2264 {2:F0}% \u2192 good, \u2264 {3:F0}% \u2192 usable, > {3:F0}% \u2192 too noisy.",
+                    VerificationAssessment.MinSamplesAcceptable,
+                    VerificationAssessment.MinSamplesGood,
+                    VerificationAssessment.OutlierAcceptablePercent,
+                    VerificationAssessment.OutlierAttentionPercent),
+                9.5, ColorText, spacingAfter: 6);
         }
 
         private static void WriteFooter(RadFixedDocumentEditor editor, VerificationReportModel model)
@@ -1199,6 +1280,342 @@ private static void WriteTitle(RadFixedDocumentEditor editor, VerificationReport
                 "Generated " + model.GeneratedUtc.ToString("yyyy-MM-dd HH:mm", Ci) +
                 " UTC \u2014 Motion Verification System  |  MRU Verification Report",
                 8.5, ColorMuted, spacingBefore: 4);
+        }
+
+        // ============================================================
+        // Presentation helpers — card layouts and section dividers
+        // ============================================================
+
+        /// <summary>
+        /// Lightweight axis sub-heading: light blue-grey band with Energy Green left accent.
+        /// Used inside the Axis Detail section to clearly separate Pitch / Roll / Heave.
+        /// </summary>
+        private static void AxisSubheading(RadFixedDocumentEditor editor, string axisTitle)
+        {
+            var headTable = new Table { Borders = new TableBorders(new Border(0, ColorBorder)) };
+            headTable.DefaultCellProperties.Padding = new Thickness(10, 7, 10, 7);
+            TableRow  headRow  = headTable.Rows.AddTableRow();
+            TableCell headCell = headRow.Cells.AddTableCell();
+            headCell.PreferredWidth = 681;
+            headCell.Background     = new RgbColor(0xE4, 0xEC, 0xF2);
+            headCell.Borders        = new TableCellBorders(new Border(5, ColorAccent), null, null, null);
+            Block headBlock = headCell.Blocks.AddBlock();
+            headBlock.SpacingBefore = 0;
+            headBlock.SpacingAfter  = 0;
+            headBlock.TextProperties.Font     = _robotoBold;
+            headBlock.TextProperties.FontSize = 12;
+            headBlock.GraphicProperties.FillColor = ColorHeading;
+            headBlock.InsertText(axisTitle.ToUpperInvariant());
+            editor.ParagraphProperties.SpacingBefore = 0;
+            editor.ParagraphProperties.SpacingAfter  = 4;
+            editor.InsertTable(headTable);
+        }
+
+        /// <summary>
+        /// PDF-native axis summary card shown before each detailed statistics table.
+        /// Vertical layout: dark header (axis title) → hero correction value → stacked KPI metrics.
+        /// Structure: 5 pt teal left accent stripe | 676 pt content = 681 pt total.
+        /// Visual hierarchy: correction value (largest) → status → samples → outliers → reliability.
+        /// </summary>
+        private static void InsertAxisSummaryCard(
+            RadFixedDocumentEditor editor,
+            string axisTitle,
+            VerificationStatus status,
+            double recommended,
+            double applied,
+            bool hasApplied,
+            string unit,
+            AxisStatistics dev)
+        {
+            double heroVal  = (hasApplied && !double.IsNaN(applied)) ? applied : recommended;
+            string corrStr  = double.IsNaN(heroVal) ? "—"
+                : string.Format(Ci, "{0:+0.000;-0.000;0.000} {1}", heroVal, unit);
+            string corrLabel = hasApplied ? "APPLIED CORRECTION" : "RECOMMENDED CORRECTION";
+			string samplesStr = (dev?.SampleCount ?? 0) > 0
+				? dev.SampleCount.ToString("N0", Ci) : "\u2014";
+			string outlierStr = dev != null && !double.IsNaN(dev.OutlierPercent)
+				? string.Format(Ci, "{0:0.0} %", dev.OutlierPercent) : "\u2014";
+			string reliability = status == VerificationStatus.Good       ? "HIGH"
+							   : status == VerificationStatus.Acceptable ? "MEDIUM" : "REVIEW";
+			string statusLabel = VerificationAssessment.StatusLabel(status);
+			string statusLine  = status == VerificationStatus.Good       ? "\u2713  " + statusLabel.ToUpper()
+							   : status == VerificationStatus.Acceptable ? "\u25cf  " + statusLabel.ToUpper()
+							   : "\u26a0  " + statusLabel.ToUpper();
+
+			// Bright colours that remain legible on the dark card background.
+			RgbColor statusColor = status == VerificationStatus.Good       ? new RgbColor(0x34, 0xD3, 0x89)  // bright green
+								 : status == VerificationStatus.Acceptable ? new RgbColor(0xFF, 0xB8, 0x4D)  // bright amber
+								 : new RgbColor(0xFF, 0x6B, 0x6B);                                           // bright red
+
+			var labelColor = new RgbColor(0xA0, 0xB4, 0xC4);   // light-muted for dark bg
+
+			RgbColor outlierColor = dev == null || double.IsNaN(dev.OutlierPercent) ? labelColor
+				: dev.OutlierPercent <= VerificationAssessment.OutlierAcceptablePercent ? new RgbColor(0x34, 0xD3, 0x89)
+				: dev.OutlierPercent <= VerificationAssessment.OutlierAttentionPercent  ? new RgbColor(0xFF, 0xB8, 0x4D)
+				: new RgbColor(0xFF, 0x6B, 0x6B);
+
+			var cardBg  = ColorHeading;                              // dark blue-grey
+			var corrBg  = new RgbColor(0x1A, 0x35, 0x2B);           // dark teal, hero column
+			var divider = new Border(0.5, new RgbColor(0x4A, 0x60, 0x72));  // subtle on dark bg
+
+			// Card: 2 rows, consistent column count across both rows.
+			// Row 0: single full-width header cell (681 pt).
+			// Row 1: five horizontal KPI columns (220+116+115+115+115 = 681 pt).
+			var card = new Table
+			{
+				Borders    = new TableBorders(new Border(1, ColorBorder)),
+				LayoutType = TableLayoutType.FixedWidth,
+			};
+			card.DefaultCellProperties.Padding = new Thickness(0);
+
+			// Row 0: dark header
+			{
+				TableRow hr = card.Rows.AddTableRow();
+
+				// Five header cells that together equal 681 pt (mirrors the KPI row below).
+				// Widths: 220 + 116 + 115 + 115 + 115 = 681
+				int[] headerWidths = { 220, 116, 115, 115, 115 };
+				for (int i = 0; i < headerWidths.Length; i++)
+				{
+					TableCell hc = hr.Cells.AddTableCell();
+					hc.PreferredWidth = headerWidths[i];
+					hc.Background     = ColorHeading;
+					hc.Padding        = new Thickness(0);
+					hc.Borders        = i == 0
+						? new TableCellBorders(null, null, new Border(1, ColorBorder), null)
+						: new TableCellBorders(null, null, new Border(1, ColorBorder), new Border(0, ColorBorder));
+
+					if (i == 0)
+					{
+						// Only the first cell carries the axis title; rest are spacers.
+						hc.Padding = new Thickness(14, 0, 10, 0);
+						Block hb = hc.Blocks.AddBlock();
+						hb.SpacingBefore = 10;
+						hb.SpacingAfter  = 10;
+						hb.TextProperties.Font     = _robotoBold;
+						hb.TextProperties.FontSize = 13;
+						hb.GraphicProperties.FillColor = new RgbColor(0xFF, 0xFF, 0xFF);
+						hb.InsertText(axisTitle.ToUpperInvariant());
+					}
+					else
+					{
+						Block sb = hc.Blocks.AddBlock();
+						sb.SpacingBefore = 10;
+						sb.SpacingAfter  = 10;
+						sb.InsertText(" ");
+					}
+				}
+			}
+
+			// Row 1: horizontal KPI columns
+			{
+				TableRow dr = card.Rows.AddTableRow();
+
+				void AddKpi(int width, RgbColor bg, Border topAccent,
+							string label, string value, double valueSize, RgbColor valueColor,
+							bool addLeftDivider = false)
+				{
+					TableCell c = dr.Cells.AddTableCell();
+					c.PreferredWidth = width;
+					c.Background     = bg;
+					c.Padding        = new Thickness(14, 0, 10, 0);
+					c.Borders = new TableCellBorders(
+						topAccent,
+						addLeftDivider ? divider : null,
+						null,
+						null);
+
+					Block lb = c.Blocks.AddBlock();
+					lb.SpacingBefore = 10;
+					lb.SpacingAfter  = 3;
+					lb.TextProperties.Font     = _robotoRegular;
+					lb.TextProperties.FontSize = 7;
+					lb.GraphicProperties.FillColor = labelColor;
+					lb.InsertText(label);
+
+					Block vb = c.Blocks.AddBlock();
+					vb.SpacingBefore = 0;
+					vb.SpacingAfter  = 12;
+					vb.TextProperties.Font     = _robotoBold;
+					vb.TextProperties.FontSize = valueSize;
+					vb.GraphicProperties.FillColor = valueColor;
+					vb.InsertText(value ?? "\u2014");
+				}
+
+				// Hero: Correction (wider, tinted bg, 4 pt teal top accent, largest font)
+				AddKpi(220, corrBg, new Border(4, ColorAccent),
+					   corrLabel, corrStr, 20, ColorAccent);
+
+				// Supporting KPIs (3 pt colored top accents, separated by thin dividers)
+				AddKpi(116, cardBg, new Border(3, statusColor),
+					   "STATUS", statusLine, 11, statusColor, addLeftDivider: true);
+
+				AddKpi(115, cardBg, new Border(3, labelColor),
+					   "SAMPLES", samplesStr, 14, new RgbColor(0xFF, 0xFF, 0xFF), addLeftDivider: true);
+
+				AddKpi(115, cardBg, new Border(3, outlierColor),
+					   "OUTLIERS", outlierStr, 14, outlierColor, addLeftDivider: true);
+
+				AddKpi(115, cardBg, new Border(3, statusColor),
+					   "RELIABILITY", reliability, 14, statusColor, addLeftDivider: true);
+			}
+
+			editor.ParagraphProperties.SpacingBefore = 24;
+			editor.ParagraphProperties.SpacingAfter  = 28;
+			editor.InsertTable(card);
+		}
+
+        /// <summary>
+        /// PDF-native three-card correction panel (Pitch / Roll / Heave).
+        /// Rendered when the pre-built <c>CorrectionCardsPng</c> image is not available.
+        /// </summary>
+        private static void InsertCorrectionCardsNative(RadFixedDocumentEditor editor, VerificationReportModel model)
+        {
+            var table = new Table
+            {
+                Borders    = new TableBorders(new Border(0, ColorBorder)),
+                LayoutType = TableLayoutType.FixedWidth,
+            };
+            table.DefaultCellProperties.Padding = new Thickness(0);
+
+            TableRow row = table.Rows.AddTableRow();
+            bool firstCard = true;
+
+            foreach (VerificationAxisKind axis in AllAxes())
+            {
+                if (!firstCard)
+                {
+                    // Gap column between cards
+                    TableCell gap = row.Cells.AddTableCell();
+                    gap.PreferredWidth = 10;
+                    gap.Background     = new RgbColor(0xFF, 0xFF, 0xFF);
+                    gap.Borders        = new TableCellBorders(new Border(0, ColorBorder));
+                    gap.Blocks.AddBlock().InsertText(" ");
+                }
+                firstCard = false;
+
+                double recommended = model.RecommendedCorrection(axis);
+                double applied     = model.AppliedCorrection(axis);
+                string unit        = model.Unit(axis);
+                // Applied value is the focal point; fall back to recommended when not yet applied
+                double heroVal  = (model.HasCorrectionApplied && !double.IsNaN(applied)) ? applied : recommended;
+                string corrStr  = double.IsNaN(heroVal) ? "\u2014"
+                    : string.Format(Ci, "{0:+0.000;-0.000;0.000} {1}", heroVal, unit);
+                string badge    = model.HasCorrectionApplied ? "\u2713  APPLIED" : "\u2713  RECOMMENDED";
+
+                // 3 cards × 220 pt + 2 gaps × 10 pt = 680 pt (≈681)
+                TableCell card = row.Cells.AddTableCell();
+                card.PreferredWidth = 220;
+                card.Background     = new RgbColor(0x1A, 0x2A, 0x3A); // dark card body matching GDI render
+                card.Borders        = new TableCellBorders(new Border(5, ColorAccent), null, null, null);
+
+                var ha = Telerik.Windows.Documents.Fixed.Model.Editing.Flow.HorizontalAlignment.Center;
+
+                // Axis label — e.g. "PITCH CORRECTION"
+                Block axisLabel = card.Blocks.AddBlock();
+                axisLabel.SpacingBefore           = 18;
+                axisLabel.SpacingAfter            = 6;
+                axisLabel.HorizontalAlignment     = ha;
+                axisLabel.TextProperties.Font     = _robotoBold;
+                axisLabel.TextProperties.FontSize = 11;
+                axisLabel.GraphicProperties.FillColor = ColorAccent;
+                axisLabel.InsertText(model.AxisTitle(axis).ToUpperInvariant() + " CORRECTION");
+
+                // Hero correction value — large and white
+                Block valueBlock = card.Blocks.AddBlock();
+                valueBlock.SpacingBefore           = 10;
+                valueBlock.SpacingAfter            = 14;
+                valueBlock.HorizontalAlignment     = ha;
+                valueBlock.TextProperties.Font     = _robotoBold;
+                valueBlock.TextProperties.FontSize = 28;
+                valueBlock.GraphicProperties.FillColor = new RgbColor(0xFF, 0xFF, 0xFF);
+                valueBlock.InsertText(corrStr);
+
+                // Green "✓ APPLIED" badge
+                Block badgeBlock = card.Blocks.AddBlock();
+                badgeBlock.SpacingBefore           = 0;
+                badgeBlock.SpacingAfter            = 18;
+                badgeBlock.HorizontalAlignment     = ha;
+                badgeBlock.TextProperties.Font     = _robotoBold;
+                badgeBlock.TextProperties.FontSize = 10;
+                badgeBlock.GraphicProperties.FillColor = new RgbColor(0x18, 0x7C, 0x4E); // dark green
+                badgeBlock.InsertText(badge);
+            }
+
+            editor.ParagraphProperties.SpacingBefore = 8;
+            editor.ParagraphProperties.SpacingAfter  = 14;
+            editor.InsertTable(table);
+        }
+
+        /// <summary>
+        /// Inserts one row of two side-by-side glossary definition cards.
+        /// Pass empty strings for <paramref name="term2"/> / <paramref name="def2"/> to leave
+        /// the right cell blank (used when the term count is odd).
+        /// </summary>
+        private static void InsertGlossaryRow(
+            RadFixedDocumentEditor editor,
+            string term1, string def1,
+            string term2, string def2)
+        {
+            var table = new Table
+            {
+                Borders    = new TableBorders(new Border(0, ColorBorder)),
+                LayoutType = TableLayoutType.FixedWidth,
+            };
+            table.DefaultCellProperties.Padding = new Thickness(0);
+
+            TableRow row = table.Rows.AddTableRow();
+
+            // Two cards of 335 pt each with a 10 pt gap: 335 + 10 + 336 = 681
+            for (int col = 0; col < 2; col++)
+            {
+                if (col == 1)
+                {
+                    TableCell gap = row.Cells.AddTableCell();
+                    gap.PreferredWidth = 10;
+                    gap.Background     = new RgbColor(0xFF, 0xFF, 0xFF);
+                    gap.Borders        = new TableCellBorders(new Border(0, ColorBorder));
+                    gap.Blocks.AddBlock().InsertText(" ");
+                }
+
+                string term = col == 0 ? term1 : term2;
+                string def  = col == 0 ? def1  : def2;
+                int    cardW = col == 0 ? 335 : 336;
+
+                TableCell card = row.Cells.AddTableCell();
+                card.PreferredWidth = cardW;
+
+                if (string.IsNullOrEmpty(term))
+                {
+                    card.Background = new RgbColor(0xFF, 0xFF, 0xFF);
+                    card.Borders    = new TableCellBorders(new Border(0, ColorBorder));
+                    card.Blocks.AddBlock().InsertText(" ");
+                    continue;
+                }
+
+                card.Background = new RgbColor(0xF2, 0xF5, 0xF7);
+                card.Borders    = new TableCellBorders(new Border(3, ColorAccent), null, null, null);
+
+                Block tb = card.Blocks.AddBlock();
+                tb.SpacingBefore = 9;
+                tb.SpacingAfter  = 3;
+                tb.TextProperties.Font     = _robotoBold;
+                tb.TextProperties.FontSize = 10;
+                tb.GraphicProperties.FillColor = ColorHeading;
+                tb.InsertText(term);
+
+                Block db = card.Blocks.AddBlock();
+                db.SpacingBefore = 0;
+                db.SpacingAfter  = 9;
+                db.TextProperties.Font     = _robotoRegular;
+                db.TextProperties.FontSize = 9;
+                db.GraphicProperties.FillColor = ColorText;
+                db.InsertText(def ?? string.Empty);
+            }
+
+            editor.ParagraphProperties.SpacingBefore = 0;
+            editor.ParagraphProperties.SpacingAfter  = 6;
+            editor.InsertTable(table);
         }
 
         // ============================================================

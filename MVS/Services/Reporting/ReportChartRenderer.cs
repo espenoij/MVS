@@ -454,7 +454,7 @@ namespace MVS.Services.Reporting
 		/// Three premium hero cards showing the recommended correction value for each axis.
 		/// Corrections are the dominant visual element (large type, dark card, accent bar).
 		/// </summary>
-		public static byte[] RenderCorrectionCards(VerificationReportModel model, int width = 900, int height = 340)
+		public static byte[] RenderCorrectionCards(VerificationReportModel model, int width = 900, int height = 420)
 		{
 			if (model == null) throw new ArgumentNullException(nameof(model));
 
@@ -465,7 +465,8 @@ namespace MVS.Services.Reporting
 				g.TextRenderingHint = TextRenderingHint.ClearTypeGridFit;
 				g.Clear(ColorNeutralLight);
 
-				DrawSectionHeader(g, "RECOMMENDED CORRECTIONS", 0, 0, width, 38);
+				string sectionTitle = model.HasCorrectionApplied ? "APPLIED CORRECTIONS" : "RECOMMENDED CORRECTIONS";
+				DrawSectionHeader(g, sectionTitle, 0, 0, width, 38);
 
 				int gap   = 12;
 				int cardW = (width - gap * 4) / 3;
@@ -497,46 +498,47 @@ namespace MVS.Services.Reporting
 					using (var cardBg = new SolidBrush(ColorPrimary))
 						g.FillRectangle(cardBg, cx, cardY, cardW, cardH);
 
-					// Energy Green top accent bar
+					// Energy Green top accent bar (6 px — slightly heavier for prominence)
 					using (var accentBrush = new SolidBrush(ColorAccent))
-						g.FillRectangle(accentBrush, cx, cardY, cardW, 5);
+						g.FillRectangle(accentBrush, cx, cardY, cardW, 6);
 
-					// Axis label
-					using (var labelFont = new Font("Segoe UI", 10f, FontStyle.Bold))
+					// Axis label — "PITCH CORRECTION", "ROLL CORRECTION", "HEAVE CORRECTION"
+					using (var labelFont = new Font("Segoe UI", 11f, FontStyle.Bold))
 					using (var greenBr   = new SolidBrush(ColorAccent))
 					using (var sf        = new StringFormat { Alignment = StringAlignment.Center })
 						g.DrawString(label + " CORRECTION", labelFont, greenBr,
-							new RectangleF(cx, cardY + 12, cardW, 22), sf);
+							new RectangleF(cx, cardY + 14, cardW, 26), sf);
 
-					// Hero value
-					bool   hasData = model.HasData && !double.IsNaN(recommended);
-					string valStr  = hasData
-						? string.Format(Ci, "{0:+0.000;-0.000;0.000} {1}", recommended, unit)
+					// Hero value — applied correction is the focal point when available
+					bool   hasData  = model.HasData && !double.IsNaN(recommended);
+					double heroVal  = (model.HasCorrectionApplied && hasData) ? applied : recommended;
+					string valStr   = hasData
+						? string.Format(Ci, "{0:+0.000;-0.000;0.000} {1}", heroVal, unit)
 						: "\u2014";
 
-					using (var valFont = new Font("Segoe UI", 22f, FontStyle.Bold))
+					using (var valFont = new Font("Segoe UI", 30f, FontStyle.Bold))
 					using (var whiteBr = new SolidBrush(ColorWhite))
 					using (var sf      = new StringFormat { Alignment = StringAlignment.Center, LineAlignment = StringAlignment.Center })
 						g.DrawString(valStr, valFont, whiteBr,
-							new RectangleF(cx + 4, cardY + 38, cardW - 8, cardH - 92), sf);
+							new RectangleF(cx + 4, cardY + 46, cardW - 8, cardH - 108), sf);
 
 					// Divider
 					using (var divPen = new Pen(Color.FromArgb(50, 255, 255, 255), 1f))
-						g.DrawLine(divPen, cx + 16, cardY + cardH - 52, cx + cardW - 16, cardY + cardH - 52);
+						g.DrawLine(divPen, cx + 20, cardY + cardH - 58, cx + cardW - 20, cardY + cardH - 58);
 
-					// Status badge (tinted)
+					// Status badge — "✓ APPLIED" in green, "PENDING" in amber
 					string statusStr = model.HasCorrectionApplied ? "\u2713  APPLIED" : "PENDING";
 					Color  statusCol = model.HasCorrectionApplied ? ColorAccent : ColorWarning;
-					DrawTintedBadge(g, cx + 16, cardY + cardH - 46, cardW - 32, 26, statusCol, statusStr);
+					DrawTintedBadge(g, cx + 20, cardY + cardH - 50, cardW - 40, 30, statusCol, statusStr);
 
-					// Applied-vs-recommended footnote
+					// Recommended footnote when applied value differs
 					if (model.HasCorrectionApplied && hasData && Math.Abs(applied - recommended) > 1e-6)
 					{
-						string appliedStr = string.Format(Ci, "Applied: {0:+0.000;-0.000;0.000} {1}", applied, unit);
+						string recStr = string.Format(Ci, "Recommended: {0:+0.000;-0.000;0.000} {1}", recommended, unit);
 						using (var aFont   = new Font("Segoe UI", 7.5f))
 						using (var mutedBr = new SolidBrush(ColorNeutralMid))
 						using (var sf      = new StringFormat { Alignment = StringAlignment.Center })
-							g.DrawString(appliedStr, aFont, mutedBr,
+							g.DrawString(recStr, aFont, mutedBr,
 								new RectangleF(cx, cardY + cardH - 18, cardW, 16), sf);
 					}
 				}
@@ -959,7 +961,7 @@ double latMs = pair != null ? pair.EstimatedLatencySeconds * 1000.0 : double.NaN
 				/// data quality status, applied correction, sample count, outlier rate, and
 				/// confidence for instant at-a-glance assessment per axis.
 				/// </summary>
-				public static byte[] RenderAxisSummaryCard(VerificationReportModel model, VerificationAxisKind axis, int width = 900, int height = 130)
+				public static byte[] RenderAxisSummaryCard(VerificationReportModel model, VerificationAxisKind axis, int width = 900, int height = 280)
 				{
 					if (model == null) throw new ArgumentNullException(nameof(model));
 
@@ -975,123 +977,113 @@ double latMs = pair != null ? pair.EstimatedLatencySeconds * 1000.0 : double.NaN
 							ColorPrimary, ColorSecondary, LinearGradientMode.Horizontal))
 							g.FillRectangle(bgBr, 0, 0, width, height);
 
-						// Energy Green left accent
+						// Energy Green left accent bar
 						using (var accentBr = new SolidBrush(ColorAccent))
-							g.FillRectangle(accentBr, 0, 0, 6, height);
+							g.FillRectangle(accentBr, 0, 0, 8, height);
 
 						// Derive axis statistics
 						AxisStatistics     refStat  = model.RefStats(axis);
 						AxisStatistics     testStat = model.TestStats(axis);
 						AxisStatistics     devStat  = model.DevStats(axis);
-						PairedSeriesStatistics pair = model.PairStats(axis);
 						string unit                 = model.Unit(axis);
 						VerificationStatus vstatus  = VerificationAssessment.Classify(axis, refStat, testStat, devStat);
 
-						// Confidence score for this axis
-						double sampleScore = model.HasData && devStat?.SampleCount > 0
-							? Math.Min(1.0, (double)devStat.SampleCount / VerificationAssessment.MinSamplesGood) : 0;
-						double outlierPct  = devStat?.OutlierPercent ?? double.NaN;
-						double outlierScore = double.IsNaN(outlierPct) || outlierPct <= 0
-							? 1.0 : Math.Max(0, 1.0 - outlierPct / 10.0);
-						int    axisConf    = model.HasData ? (int)Math.Round((sampleScore * 0.6 + outlierScore * 0.4) * 100) : 0;
-						Color  confColor   = axisConf >= 80 ? ColorSuccess : axisConf >= 60 ? ColorWarning : ColorFailure;
-
-						// Applied correction
+						// Correction
 						double correction = model.RecommendedCorrection(axis);
 						string corrStr    = (model.HasData && !double.IsNaN(correction))
 							? string.Format(Ci, "{0:+0.000;-0.000;0.000} {1}", correction, unit)
 							: "\u2014";
 
-						// Status color
-						Color statusColor = vstatus == VerificationStatus.Good       ? ColorSuccess
-										  : vstatus == VerificationStatus.Acceptable  ? ColorWarning
+						// Status
+						Color statusColor = vstatus == VerificationStatus.Good           ? ColorSuccess
+										  : vstatus == VerificationStatus.Acceptable     ? ColorWarning
 										  : vstatus == VerificationStatus.NeedsAttention ? ColorFailure
 										  : ColorNeutralMid;
 						string statusLabel = VerificationAssessment.StatusLabel(vstatus);
+						string statusLine  = vstatus == VerificationStatus.Good       ? "\u2713 " + statusLabel.ToUpper()
+										   : vstatus == VerificationStatus.Acceptable ? "\u25CF " + statusLabel.ToUpper()
+										   : "\u26A0 " + statusLabel.ToUpper();
 
-						// ── Layout: axis name | correction | samples | outliers | confidence ──
-						int lp    = 18;
-						int col1X = lp;          // Axis label
-						int col2X = 200;         // Correction value
-						int col3X = 400;         // Samples
-						int col4X = 560;         // Outlier rate
-						int col5X = 730;         // Confidence
+						// Supporting metrics
+						double outlierPct   = devStat?.OutlierPercent ?? double.NaN;
+						string outlierStr   = !double.IsNaN(outlierPct) && model.HasData
+							? string.Format(Ci, "{0:0.0} %", outlierPct) : "\u2014";
+						Color outlierColor  = double.IsNaN(outlierPct) ? ColorNeutralMid
+							: outlierPct <= VerificationAssessment.OutlierAcceptablePercent ? ColorSuccess
+							: outlierPct <= VerificationAssessment.OutlierAttentionPercent  ? ColorWarning
+							: ColorFailure;
+						string samplesStr   = (devStat?.SampleCount ?? 0) > 0
+							? devStat.SampleCount.ToString("N0", Ci) : "\u2014";
+						string reliability  = vstatus == VerificationStatus.Good       ? "HIGH"
+										   : vstatus == VerificationStatus.Acceptable  ? "MEDIUM" : "REVIEW";
+						Color reliabilityColor = vstatus == VerificationStatus.Good       ? ColorSuccess
+											   : vstatus == VerificationStatus.Acceptable ? ColorWarning : ColorFailure;
 
-						using (var whiteBr  = new SolidBrush(ColorWhite))
-						using (var greenBr  = new SolidBrush(ColorAccent))
-						using (var mutedBr  = new SolidBrush(Color.FromArgb(180, 255, 255, 255)))
-						using (var statusBr = new SolidBrush(statusColor))
-						{
-							// Large axis name
-							using (var axisFont = new Font("Segoe UI", 24f, FontStyle.Bold))
-								g.DrawString(model.AxisTitle(axis).ToUpper(), axisFont, whiteBr, col1X, 10);
+						// ── Layout constants ───────────────────────────────────────────────
+						const int lx    = 22;   // left content margin (after accent bar)
+						const int sepY  = 190;  // y of horizontal separator
+						const int metY  = 200;  // y where supporting-metric rows start
 
-							// Status label below axis name
-							using (var statFont = new Font("Segoe UI", 8.5f, FontStyle.Bold))
-								g.DrawString(statusLabel, statFont, statusBr, col1X, 64);
+						// Three metric columns (roughly equal thirds of usable width 892)
+						const int col1X = 22;
+						const int col2X = 320;
+						const int col3X = 620;
 
-							// Divider
-							using (var divPen = new Pen(Color.FromArgb(40, 255, 255, 255), 1f))
-								g.DrawLine(divPen, col2X - 12, 12, col2X - 12, height - 12);
-
-							// Correction
-							using (var capFont = new Font("Segoe UI", 7.5f, FontStyle.Bold))
-							using (var valFont = new Font("Consolas", 20f, FontStyle.Bold))
+						using (var whiteBr   = new SolidBrush(ColorWhite))
+							using (var mutedBr   = new SolidBrush(Color.FromArgb(155, 255, 255, 255)))
+							using (var accentClr = new SolidBrush(ColorAccent))
+							using (var statusBr  = new SolidBrush(statusColor))
 							{
-								g.DrawString("CORRECTION", capFont, mutedBr, col2X, 10);
-								g.DrawString(corrStr, valFont, greenBr, col2X, 26);
-								if (model.HasCorrectionApplied && model.HasData)
+								// ── Axis title ─────────────────────────────────────────────────
+								using (var titleFont = new Font("Segoe UI", 17f, FontStyle.Bold))
+									g.DrawString(model.AxisTitle(axis).ToUpper(), titleFont, whiteBr, lx, 12);
+
+								// ── "CORRECTION" label ──────────────────────────────────────────
+								using (var capFont = new Font("Segoe UI", 8f, FontStyle.Bold))
+									g.DrawString("CORRECTION", capFont, mutedBr, lx, 52);
+
+								// ── Correction HERO value (largest element) ──────────────────────
+								using (var heroFont = new Font("Segoe UI", 38f, FontStyle.Bold))
+									g.DrawString(corrStr, heroFont, accentClr, lx, 64);
+
+								// ── DATA QUALITY label then status ──────────────────────────────
+								using (var dqCapFont  = new Font("Segoe UI", 8f,  FontStyle.Bold))
+								using (var statusFont = new Font("Segoe UI", 10f, FontStyle.Bold))
 								{
-									using (var appliedFont = new Font("Segoe UI", 7.5f, FontStyle.Bold))
-										g.DrawString("\u2713 APPLIED", appliedFont, new SolidBrush(ColorSuccess), col2X, 68);
+									g.DrawString("DATA QUALITY", dqCapFont,  mutedBr,  lx, 122);
+									g.DrawString(statusLine,     statusFont, statusBr, lx, 136);
+								}
+
+								// ── Horizontal separator ────────────────────────────────────────
+								using (var sepPen = new Pen(Color.FromArgb(40, 255, 255, 255), 1f))
+									g.DrawLine(sepPen, lx, sepY, width - 16, sepY);
+
+								// ── Supporting metrics (3 columns) ─────────────────────────────
+								using (var labelFont     = new Font("Segoe UI", 7.5f, FontStyle.Bold))
+								using (var valFont       = new Font("Segoe UI", 15f,  FontStyle.Bold))
+								using (var outlierBr     = new SolidBrush(outlierColor))
+								using (var reliabilityBr = new SolidBrush(reliabilityColor))
+								{
+									// Vertical sub-dividers between metric columns
+									using (var vDiv = new Pen(Color.FromArgb(30, 255, 255, 255), 1f))
+									{
+										g.DrawLine(vDiv, col2X - 10, metY, col2X - 10, height - 12);
+										g.DrawLine(vDiv, col3X - 10, metY, col3X - 10, height - 12);
+									}
+
+									// SAMPLES
+									g.DrawString("SAMPLES",  labelFont, mutedBr, col1X, metY);
+									g.DrawString(samplesStr, valFont,   whiteBr, col1X, metY + 13);
+
+									// OUTLIERS
+									g.DrawString("OUTLIERS", labelFont, mutedBr,   col2X, metY);
+									g.DrawString(outlierStr, valFont,   outlierBr, col2X, metY + 13);
+
+									// RELIABILITY
+									g.DrawString("RELIABILITY", labelFont, mutedBr,      col3X, metY);
+									g.DrawString(reliability,   valFont,   reliabilityBr, col3X, metY + 13);
 								}
 							}
-
-							// Divider
-							using (var divPen = new Pen(Color.FromArgb(40, 255, 255, 255), 1f))
-								g.DrawLine(divPen, col3X - 12, 12, col3X - 12, height - 12);
-
-							// Samples
-							using (var capFont = new Font("Segoe UI", 7.5f, FontStyle.Bold))
-							using (var valFont = new Font("Segoe UI", 20f, FontStyle.Bold))
-							{
-								string sampleStr = (devStat?.SampleCount ?? 0) > 0
-									? (devStat.SampleCount).ToString("N0", Ci) : "\u2014";
-								g.DrawString("SAMPLES", capFont, mutedBr, col3X, 10);
-								g.DrawString(sampleStr, valFont, whiteBr, col3X, 26);
-							}
-
-							// Divider
-							using (var divPen = new Pen(Color.FromArgb(40, 255, 255, 255), 1f))
-								g.DrawLine(divPen, col4X - 12, 12, col4X - 12, height - 12);
-
-							// Outlier rate
-							using (var capFont = new Font("Segoe UI", 7.5f, FontStyle.Bold))
-							using (var valFont = new Font("Segoe UI", 20f, FontStyle.Bold))
-							{
-								string outlierStr = !double.IsNaN(outlierPct) && model.HasData
-									? string.Format(Ci, "{0:0.0}%", outlierPct) : "\u2014";
-								Color outlierCol = double.IsNaN(outlierPct) ? ColorNeutralMid
-									: outlierPct <= VerificationAssessment.OutlierAcceptablePercent ? ColorSuccess
-									: outlierPct <= VerificationAssessment.OutlierAttentionPercent  ? ColorWarning
-									: ColorFailure;
-								g.DrawString("OUTLIERS", capFont, mutedBr, col4X, 10);
-								g.DrawString(outlierStr, valFont, new SolidBrush(outlierCol), col4X, 26);
-							}
-
-							// Divider
-							using (var divPen = new Pen(Color.FromArgb(40, 255, 255, 255), 1f))
-								g.DrawLine(divPen, col5X - 12, 12, col5X - 12, height - 12);
-
-							// Confidence score
-							using (var capFont = new Font("Segoe UI", 7.5f, FontStyle.Bold))
-							using (var valFont = new Font("Segoe UI", 20f, FontStyle.Bold))
-							{
-								string confStr = model.HasData ? axisConf.ToString() + " / 100" : "\u2014";
-								g.DrawString("CONFIDENCE", capFont, mutedBr, col5X, 10);
-								g.DrawString(confStr, valFont, new SolidBrush(confColor), col5X, 26);
-							}
-						}
 
 						return ToPng(bmp);
 					}
