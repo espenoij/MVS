@@ -81,6 +81,8 @@ namespace MVS.Services.Reporting
         public byte[] SessionOverviewPng { get; set; }
         /// <summary>Compliance scorecards panel: one card per criterion plus overall verdict.</summary>
         public byte[] ComplianceScorecardsPng { get; set; }
+        /// <summary>Compliance summary banner: large full-width "VERIFICATION QUALITY / EXCELLENT" verdict panel shown at the top of Section 4.</summary>
+        public byte[] ComplianceSummaryBannerPng { get; set; }
 
         /// <summary>Pitch axis summary banner (full-width, 900×96 GDI). Shows key metrics above the detail table.</summary>
         public byte[] PitchAxisSummaryPng  { get; set; }

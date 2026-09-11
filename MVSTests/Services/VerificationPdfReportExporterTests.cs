@@ -246,7 +246,8 @@ namespace MVSTests.Services
                 model.CorrectionCardsPng      = ReportChartRenderer.RenderCorrectionCards(model);
                 model.CorrelationBarsPng      = ReportChartRenderer.RenderCorrelationBars(model);
                 model.ConfidencePanelPng      = ReportChartRenderer.RenderConfidencePanel(model);
-                model.ComplianceScorecardsPng = ReportChartRenderer.RenderComplianceScorecards(model);
+                model.ComplianceScorecardsPng    = ReportChartRenderer.RenderComplianceScorecards(model);
+                model.ComplianceSummaryBannerPng = ReportChartRenderer.RenderComplianceSummaryBanner(model);
                 model.DeviationChartPng       = ReportChartRenderer.RenderDeviationChart(model);
                 model.MeansChartPng           = ReportChartRenderer.RenderMeansChart(model);
 

@@ -1301,8 +1301,9 @@ namespace MVS
                 model.BulletChartsPng       = Services.Reporting.ReportChartRenderer.RenderBulletChartsPanel(model);
                 model.CorrectionCardsPng    = Services.Reporting.ReportChartRenderer.RenderCorrectionCards(model);
                 model.CorrelationBarsPng    = Services.Reporting.ReportChartRenderer.RenderCorrelationBars(model);
-                model.ConfidencePanelPng    = Services.Reporting.ReportChartRenderer.RenderConfidencePanel(model);
-                model.ComplianceScorecardsPng = Services.Reporting.ReportChartRenderer.RenderComplianceScorecards(model);
+                model.ConfidencePanelPng          = Services.Reporting.ReportChartRenderer.RenderConfidencePanel(model);
+                model.ComplianceScorecardsPng      = Services.Reporting.ReportChartRenderer.RenderComplianceScorecards(model);
+                model.ComplianceSummaryBannerPng   = Services.Reporting.ReportChartRenderer.RenderComplianceSummaryBanner(model);
                 model.PitchAxisSummaryPng   = Services.Reporting.ReportChartRenderer.RenderAxisSummaryCard(model, Services.VerificationAxisKind.Pitch);
                 model.RollAxisSummaryPng    = Services.Reporting.ReportChartRenderer.RenderAxisSummaryCard(model, Services.VerificationAxisKind.Roll);
                 model.HeaveAxisSummaryPng   = Services.Reporting.ReportChartRenderer.RenderAxisSummaryCard(model, Services.VerificationAxisKind.Heave);

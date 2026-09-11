@@ -1111,19 +1111,19 @@ private static void WriteTitle(RadFixedDocumentEditor editor, VerificationReport
 		{
 			Heading(editor, "4. Compliance Assessment");
 
-			// Compliance scorecards (900×200 GDI → 681×151 PDF)
-			if (model.ComplianceScorecardsPng != null)
-			{
-				editor.ParagraphProperties.SpacingAfter = 10;
-				InsertImage(editor, model.ComplianceScorecardsPng, 681, 181);
-			}
+			// VERIFICATION QUALITY summary banner (900×160 GDI → 681×121 PDF)
+				if (model.ComplianceSummaryBannerPng != null)
+				{
+					editor.ParagraphProperties.SpacingAfter = 8;
+					InsertImage(editor, model.ComplianceSummaryBannerPng, 681, 121);
+				}
 
-			// Data quality confidence panel (900×260 GDI → 681×197 PDF)
-			if (model.ConfidencePanelPng != null)
-			{
-				editor.ParagraphProperties.SpacingAfter = 10;
-				InsertImage(editor, model.ConfidencePanelPng, 681, 197);
-			}
+				// KPI row: Confidence | Samples | Duration | Outliers (900×100 GDI → 681×75 PDF)
+				if (model.ComplianceScorecardsPng != null)
+				{
+					editor.ParagraphProperties.SpacingAfter = 10;
+					InsertImage(editor, model.ComplianceScorecardsPng, 681, 75);
+				}
 
             var table = NewTable();
             AddHeaderRow(table, "Criterion", "Acceptable (min)", "Good (target)", "Measured", "Status");
@@ -1312,29 +1312,30 @@ private static void WriteTitle(RadFixedDocumentEditor editor, VerificationReport
         }
 
         /// <summary>
-        /// PDF-native axis summary card shown before each detailed statistics table.
-        /// Vertical layout: dark header (axis title) → hero correction value → stacked KPI metrics.
-        /// Structure: 5 pt teal left accent stripe | 676 pt content = 681 pt total.
-        /// Visual hierarchy: correction value (largest) → status → samples → outliers → reliability.
+        /// Compact horizontal banner rendered immediately above each axis statistics table.
+        /// Row 0 (header): axis title left + status verdict right, dark background, teal 4 pt left accent.
+        /// Row 1 (body):   left column — correction hero value (18 pt teal) and outlier summary;
+        ///                 right column — sample count and reliability rating.
+        /// Total width 681 pt; SpacingAfter reduced to 6 pt so the banner sits close to its table.
         /// </summary>
-        private static void InsertAxisSummaryCard(
-            RadFixedDocumentEditor editor,
-            string axisTitle,
-            VerificationStatus status,
-            double recommended,
-            double applied,
-            bool hasApplied,
-            string unit,
-            AxisStatistics dev)
-        {
-            double heroVal  = (hasApplied && !double.IsNaN(applied)) ? applied : recommended;
-            string corrStr  = double.IsNaN(heroVal) ? "—"
-                : string.Format(Ci, "{0:+0.000;-0.000;0.000} {1}", heroVal, unit);
-            string corrLabel = hasApplied ? "APPLIED CORRECTION" : "RECOMMENDED CORRECTION";
+		private static void InsertAxisSummaryCard(
+			RadFixedDocumentEditor editor,
+			string axisTitle,
+			VerificationStatus status,
+			double recommended,
+			double applied,
+			bool hasApplied,
+			string unit,
+			AxisStatistics dev)
+		{
+			double heroVal   = (hasApplied && !double.IsNaN(applied)) ? applied : recommended;
+			string corrStr   = double.IsNaN(heroVal) ? "\u2014"
+				: string.Format(Ci, "{0:+0.000;-0.000;0.000} {1}", heroVal, unit);
+			string corrLabel = hasApplied ? "APPLIED CORRECTION" : "RECOMMENDED CORRECTION";
 			string samplesStr = (dev?.SampleCount ?? 0) > 0
 				? dev.SampleCount.ToString("N0", Ci) : "\u2014";
 			string outlierStr = dev != null && !double.IsNaN(dev.OutlierPercent)
-				? string.Format(Ci, "{0:0.0} %", dev.OutlierPercent) : "\u2014";
+				? string.Format(Ci, "{0:0.0}%", dev.OutlierPercent) : "\u2014";
 			string reliability = status == VerificationStatus.Good       ? "HIGH"
 							   : status == VerificationStatus.Acceptable ? "MEDIUM" : "REVIEW";
 			string statusLabel = VerificationAssessment.StatusLabel(status);
@@ -1342,127 +1343,136 @@ private static void WriteTitle(RadFixedDocumentEditor editor, VerificationReport
 							   : status == VerificationStatus.Acceptable ? "\u25cf  " + statusLabel.ToUpper()
 							   : "\u26a0  " + statusLabel.ToUpper();
 
-			// Bright colours that remain legible on the dark card background.
-			RgbColor statusColor = status == VerificationStatus.Good       ? new RgbColor(0x34, 0xD3, 0x89)  // bright green
-								 : status == VerificationStatus.Acceptable ? new RgbColor(0xFF, 0xB8, 0x4D)  // bright amber
-								 : new RgbColor(0xFF, 0x6B, 0x6B);                                           // bright red
+			RgbColor statusColor = status == VerificationStatus.Good       ? new RgbColor(0x34, 0xD3, 0x89)
+								 : status == VerificationStatus.Acceptable ? new RgbColor(0xFF, 0xB8, 0x4D)
+								 : new RgbColor(0xFF, 0x6B, 0x6B);
 
-			var labelColor = new RgbColor(0xA0, 0xB4, 0xC4);   // light-muted for dark bg
+			var labelColor = new RgbColor(0xA0, 0xB4, 0xC4);
 
 			RgbColor outlierColor = dev == null || double.IsNaN(dev.OutlierPercent) ? labelColor
 				: dev.OutlierPercent <= VerificationAssessment.OutlierAcceptablePercent ? new RgbColor(0x34, 0xD3, 0x89)
 				: dev.OutlierPercent <= VerificationAssessment.OutlierAttentionPercent  ? new RgbColor(0xFF, 0xB8, 0x4D)
 				: new RgbColor(0xFF, 0x6B, 0x6B);
 
-			var cardBg  = ColorHeading;                              // dark blue-grey
-			var corrBg  = new RgbColor(0x1A, 0x35, 0x2B);           // dark teal, hero column
-			var divider = new Border(0.5, new RgbColor(0x4A, 0x60, 0x72));  // subtle on dark bg
+			var subtleDivider = new Border(0.5, new RgbColor(0x4A, 0x60, 0x72));
 
-			// Card: 2 rows, consistent column count across both rows.
-			// Row 0: single full-width header cell (681 pt).
-			// Row 1: five horizontal KPI columns (220+116+115+115+115 = 681 pt).
-			var card = new Table
+			// ── Compact horizontal banner: 2 rows, 681 pt total ──────────────────────
+			// Row 0: header bar  — axis name (left) + status verdict (right)
+			// Row 1: body strip  — Correction hero (left col) | Samples + Reliability (right col)
+			var banner = new Table
 			{
 				Borders    = new TableBorders(new Border(1, ColorBorder)),
 				LayoutType = TableLayoutType.FixedWidth,
 			};
-			card.DefaultCellProperties.Padding = new Thickness(0);
+			banner.DefaultCellProperties.Padding = new Thickness(0);
 
-			// Row 0: dark header
+			// ── Row 0: axis title + status (same dark background, no inner divider) ──
 			{
-				TableRow hr = card.Rows.AddTableRow();
+				TableRow hr = banner.Rows.AddTableRow();
 
-				// Five header cells that together equal 681 pt (mirrors the KPI row below).
-				// Widths: 220 + 116 + 115 + 115 + 115 = 681
-				int[] headerWidths = { 220, 116, 115, 115, 115 };
-				for (int i = 0; i < headerWidths.Length; i++)
-				{
-					TableCell hc = hr.Cells.AddTableCell();
-					hc.PreferredWidth = headerWidths[i];
-					hc.Background     = ColorHeading;
-					hc.Padding        = new Thickness(0);
-					hc.Borders        = i == 0
-						? new TableCellBorders(null, null, new Border(1, ColorBorder), null)
-						: new TableCellBorders(null, null, new Border(1, ColorBorder), new Border(0, ColorBorder));
+				// Left: axis name — 440 pt, teal 4 pt left accent
+				TableCell titleCell = hr.Cells.AddTableCell();
+				titleCell.PreferredWidth = 440;
+				titleCell.Background     = ColorHeading;
+				titleCell.Padding        = new Thickness(14, 0, 10, 0);
+				titleCell.Borders        = new TableCellBorders(new Border(4, ColorAccent), null, null, null);
 
-					if (i == 0)
-					{
-						// Only the first cell carries the axis title; rest are spacers.
-						hc.Padding = new Thickness(14, 0, 10, 0);
-						Block hb = hc.Blocks.AddBlock();
-						hb.SpacingBefore = 10;
-						hb.SpacingAfter  = 10;
-						hb.TextProperties.Font     = _robotoBold;
-						hb.TextProperties.FontSize = 13;
-						hb.GraphicProperties.FillColor = new RgbColor(0xFF, 0xFF, 0xFF);
-						hb.InsertText(axisTitle.ToUpperInvariant());
-					}
-					else
-					{
-						Block sb = hc.Blocks.AddBlock();
-						sb.SpacingBefore = 10;
-						sb.SpacingAfter  = 10;
-						sb.InsertText(" ");
-					}
-				}
+				Block titleBlock = titleCell.Blocks.AddBlock();
+				titleBlock.SpacingBefore = 11;
+				titleBlock.SpacingAfter  = 11;
+				titleBlock.TextProperties.Font     = _robotoBold;
+				titleBlock.TextProperties.FontSize = 16;
+				titleBlock.GraphicProperties.FillColor = new RgbColor(0xFF, 0xFF, 0xFF);
+				titleBlock.InsertText(axisTitle.ToUpperInvariant());
+
+				// Right: status verdict — 241 pt, no extra accent
+				TableCell statusCell = hr.Cells.AddTableCell();
+				statusCell.PreferredWidth = 241;
+				statusCell.Background     = ColorHeading;
+				statusCell.Padding        = new Thickness(14, 0, 14, 0);
+				statusCell.Borders        = new TableCellBorders(null, null, null, null);
+
+				Block statusBlock = statusCell.Blocks.AddBlock();
+				statusBlock.SpacingBefore = 11;
+				statusBlock.SpacingAfter  = 11;
+				statusBlock.TextProperties.Font     = _robotoBold;
+				statusBlock.TextProperties.FontSize = 13;
+				statusBlock.GraphicProperties.FillColor = statusColor;
+				statusBlock.InsertText(statusLine);
 			}
 
-			// Row 1: horizontal KPI columns
+			// ── Row 1: two-column body ────────────────────────────────────────────────
+			// Left  (390 pt): correction hero value + outlier summary
+			// Right (291 pt): sample count + reliability rating
 			{
-				TableRow dr = card.Rows.AddTableRow();
+				TableRow dr = banner.Rows.AddTableRow();
 
-				void AddKpi(int width, RgbColor bg, Border topAccent,
-							string label, string value, double valueSize, RgbColor valueColor,
-							bool addLeftDivider = false)
-				{
-					TableCell c = dr.Cells.AddTableCell();
-					c.PreferredWidth = width;
-					c.Background     = bg;
-					c.Padding        = new Thickness(14, 0, 10, 0);
-					c.Borders = new TableCellBorders(
-						topAccent,
-						addLeftDivider ? divider : null,
-						null,
-						null);
+				// Left column — correction (hero) and outliers
+				TableCell leftCell = dr.Cells.AddTableCell();
+				leftCell.PreferredWidth = 390;
+				leftCell.Background     = ColorHeading;
+				leftCell.Padding        = new Thickness(14, 0, 16, 0);
+				leftCell.Borders        = new TableCellBorders(null, null, null, null);
 
-					Block lb = c.Blocks.AddBlock();
-					lb.SpacingBefore = 10;
-					lb.SpacingAfter  = 3;
-					lb.TextProperties.Font     = _robotoRegular;
-					lb.TextProperties.FontSize = 7;
-					lb.GraphicProperties.FillColor = labelColor;
-					lb.InsertText(label);
+				Block corrLabelBlock = leftCell.Blocks.AddBlock();
+				corrLabelBlock.SpacingBefore = 11;
+				corrLabelBlock.SpacingAfter  = 3;
+				corrLabelBlock.TextProperties.Font     = _robotoRegular;
+				corrLabelBlock.TextProperties.FontSize = 8.5;
+				corrLabelBlock.GraphicProperties.FillColor = labelColor;
+				corrLabelBlock.InsertText(corrLabel);
 
-					Block vb = c.Blocks.AddBlock();
-					vb.SpacingBefore = 0;
-					vb.SpacingAfter  = 12;
-					vb.TextProperties.Font     = _robotoBold;
-					vb.TextProperties.FontSize = valueSize;
-					vb.GraphicProperties.FillColor = valueColor;
-					vb.InsertText(value ?? "\u2014");
-				}
+				Block corrValueBlock = leftCell.Blocks.AddBlock();
+				corrValueBlock.SpacingBefore = 0;
+				corrValueBlock.SpacingAfter  = 6;
+				corrValueBlock.TextProperties.Font     = _robotoBold;
+				corrValueBlock.TextProperties.FontSize = 24;
+				corrValueBlock.GraphicProperties.FillColor = ColorAccent;
+				corrValueBlock.InsertText(corrStr);
 
-				// Hero: Correction (wider, tinted bg, 4 pt teal top accent, largest font)
-				AddKpi(220, corrBg, new Border(4, ColorAccent),
-					   corrLabel, corrStr, 20, ColorAccent);
+				Block outlierBlock = leftCell.Blocks.AddBlock();
+				outlierBlock.SpacingBefore = 0;
+				outlierBlock.SpacingAfter  = 11;
+				outlierBlock.TextProperties.Font     = _robotoRegular;
+				outlierBlock.TextProperties.FontSize = 11;
+				outlierBlock.GraphicProperties.FillColor = outlierColor;
+				outlierBlock.InsertText("Outliers  \u00b7  " + outlierStr);
 
-				// Supporting KPIs (3 pt colored top accents, separated by thin dividers)
-				AddKpi(116, cardBg, new Border(3, statusColor),
-					   "STATUS", statusLine, 11, statusColor, addLeftDivider: true);
+				// Right column — samples and reliability
+				TableCell rightCell = dr.Cells.AddTableCell();
+				rightCell.PreferredWidth = 291;
+				rightCell.Background     = ColorHeading;
+				rightCell.Padding        = new Thickness(14, 0, 14, 0);
+				rightCell.Borders        = new TableCellBorders(null, subtleDivider, null, null);
 
-				AddKpi(115, cardBg, new Border(3, labelColor),
-					   "SAMPLES", samplesStr, 14, new RgbColor(0xFF, 0xFF, 0xFF), addLeftDivider: true);
+				Block samplesLabelBlock = rightCell.Blocks.AddBlock();
+				samplesLabelBlock.SpacingBefore = 11;
+				samplesLabelBlock.SpacingAfter  = 3;
+				samplesLabelBlock.TextProperties.Font     = _robotoRegular;
+				samplesLabelBlock.TextProperties.FontSize = 8.5;
+				samplesLabelBlock.GraphicProperties.FillColor = labelColor;
+				samplesLabelBlock.InsertText("SAMPLES");
 
-				AddKpi(115, cardBg, new Border(3, outlierColor),
-					   "OUTLIERS", outlierStr, 14, outlierColor, addLeftDivider: true);
+				Block samplesValueBlock = rightCell.Blocks.AddBlock();
+				samplesValueBlock.SpacingBefore = 0;
+				samplesValueBlock.SpacingAfter  = 6;
+				samplesValueBlock.TextProperties.Font     = _robotoBold;
+				samplesValueBlock.TextProperties.FontSize = 18;
+				samplesValueBlock.GraphicProperties.FillColor = new RgbColor(0xFF, 0xFF, 0xFF);
+				samplesValueBlock.InsertText(samplesStr);
 
-				AddKpi(115, cardBg, new Border(3, statusColor),
-					   "RELIABILITY", reliability, 14, statusColor, addLeftDivider: true);
+				Block reliabilityBlock = rightCell.Blocks.AddBlock();
+				reliabilityBlock.SpacingBefore = 0;
+				reliabilityBlock.SpacingAfter  = 11;
+				reliabilityBlock.TextProperties.Font     = _robotoRegular;
+				reliabilityBlock.TextProperties.FontSize = 11;
+				reliabilityBlock.GraphicProperties.FillColor = statusColor;
+				reliabilityBlock.InsertText("Reliability  \u00b7  " + reliability);
 			}
 
-			editor.ParagraphProperties.SpacingBefore = 24;
-			editor.ParagraphProperties.SpacingAfter  = 28;
-			editor.InsertTable(card);
+			editor.ParagraphProperties.SpacingBefore = 16;
+			editor.ParagraphProperties.SpacingAfter  = 6;
+			editor.InsertTable(banner);
 		}
 
         /// <summary>

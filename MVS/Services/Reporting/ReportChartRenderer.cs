@@ -368,7 +368,6 @@ namespace MVS.Services.Reporting
             }
         }
 
-
 		/// <summary>
 		/// Renders a three-row horizontal bullet chart panel (Pitch, Roll, Heave)
 		/// showing the deviation magnitude relative to the reference scale, with
@@ -661,11 +660,160 @@ namespace MVS.Services.Reporting
 		}
 
 		/// <summary>
-		/// Renders compliance assessment scorecards: three criterion cards (Samples,
-		/// Duration, Outliers) with visible pass/fail icons and target values, plus a
-		/// prominent overall VERIFICATION QUALITY verdict card.
+		/// Renders a full-width executive summary banner for Section 4.
+		/// Dark SES-branded background, large verdict word, eyebrow label, two-line
+		/// subtitle and a large watermark icon.  The reader understands the quality
+		/// verdict at a glance before reading the KPI cards or detail table below.
+		/// Width=900; Height=160 GDI -> 681x121 pt in the PDF.
 		/// </summary>
-		public static byte[] RenderComplianceScorecards(VerificationReportModel model, int width = 900, int height = 200)
+		public static byte[] RenderComplianceSummaryBanner(VerificationReportModel model, int width = 900, int height = 160)
+		{
+
+			if (model == null) throw new ArgumentNullException(nameof(model));
+
+
+
+			// â”€â”€ Derive overall quality â”€â”€â”€â”€â”€â”€â”€â”€â”€â”€â”€â”€â”€â”€â”€â”€â”€â”€â”€â”€â”€â”€â”€â”€â”€â”€â”€â”€â”€â”€â”€â”€â”€â”€â”€â”€â”€â”€â”€â”€â”€â”€â”€â”€â”€â”€
+
+			int samples = model.SampleCount;
+			double durationMin = 0;
+			if (!string.IsNullOrWhiteSpace(model.Duration) &&
+				TimeSpan.TryParse(model.Duration, out TimeSpan ts))
+				durationMin = ts.TotalMinutes;
+			double worst = model.WorstOutlierPercent;
+
+
+
+			bool samplesGood  = samples    >= VerificationAssessment.MinSamplesGood;
+			bool durationGood = durationMin >= VerificationAssessment.MinDurationRecommendedMinutes;
+			bool outliersGood = double.IsNaN(worst) || worst <= VerificationAssessment.OutlierAcceptablePercent;
+			bool samplesOk    = samples    >= VerificationAssessment.MinSamplesAcceptable;
+			bool durationOk   = durationMin >= VerificationAssessment.MinDurationAcceptableMinutes;
+			bool outliersOk   = double.IsNaN(worst) || worst <= VerificationAssessment.OutlierAttentionPercent;
+
+
+
+			bool allGood = samplesGood && durationGood && outliersGood;
+			bool anyFail = !samplesOk  || !durationOk  || !outliersOk;
+
+
+
+			string verdict = !model.HasData ? "NO DATA"
+				: allGood   ? "EXCELLENT"
+				: anyFail   ? "ATTENTION REQUIRED"
+				:               "ACCEPTABLE";
+			string line1 = !model.HasData
+				? "No verification data available."
+				: allGood
+				? "All data-quality criteria satisfied."
+				: anyFail
+				? "One or more criteria did not meet the minimum threshold."
+				: "All minimum criteria met.  One or more criteria below preferred target.";
+			string line2 = !model.HasData ? string.Empty
+				: allGood   ? "Results are suitable for correction calculation."
+				: anyFail   ? "Review the detail table below before using these results."
+				:               "Review the detail table below.";
+
+
+
+			// Verdict uses accent color â€” vivid on the dark background.
+
+			Color accentColor = !model.HasData ? ColorNeutralMid
+				: allGood   ? ColorSuccess
+				: anyFail   ? ColorFailure
+				:               ColorWarning;
+			Color verdictColor = accentColor;
+
+
+
+			using (var bmp = new Bitmap(width, height, PixelFormat.Format32bppArgb))
+
+			using (var g   = Graphics.FromImage(bmp))
+
+			{
+
+				g.SmoothingMode     = SmoothingMode.AntiAlias;
+				g.TextRenderingHint = TextRenderingHint.ClearTypeGridFit;
+
+
+
+				// â”€â”€ Background â”€â”€â”€â”€â”€â”€â”€â”€â”€â”€â”€â”€â”€â”€â”€â”€â”€â”€â”€â”€â”€â”€â”€â”€â”€â”€â”€â”€â”€â”€â”€â”€â”€â”€â”€â”€â”€â”€â”€â”€â”€â”€â”€â”€â”€â”€â”€â”€â”€â”€â”€â”€â”€
+
+				using (var bg = new SolidBrush(ColorSecondary))
+					g.FillRectangle(bg, 0, 0, width, height);
+
+
+
+				// Left accent strip (6 px)
+
+				using (var strip = new SolidBrush(accentColor))
+					g.FillRectangle(strip, 0, 0, 6, height);
+
+
+
+				// â”€â”€ Watermark icon (behind text) â”€â”€â”€â”€â”€â”€â”€â”€â”€â”€â”€â”€â”€â”€â”€â”€â”€â”€â”€â”€â”€â”€â”€â”€â”€â”€â”€â”€â”€â”€â”€â”€â”€â”€â”€â”€
+
+				string wmIcon = !model.HasData ? "\u2014" : allGood ? "\u2713" : anyFail ? "\u26A0" : "\u2713";
+
+				using (var iconFont  = new Font("Segoe UI Symbol", 96f, FontStyle.Bold))
+				using (var iconBrush = new SolidBrush(Color.FromArgb(20, verdictColor)))
+					g.DrawString(wmIcon, iconFont, iconBrush,
+						new RectangleF(width - 180, -20, 180, height + 20),
+						new StringFormat { Alignment = StringAlignment.Center, LineAlignment = StringAlignment.Center });
+
+
+
+				int tx = 22;
+
+
+
+				// â”€â”€ Eyebrow label â”€â”€â”€â”€â”€â”€â”€â”€â”€â”€â”€â”€â”€â”€â”€â”€â”€â”€â”€â”€â”€â”€â”€â”€â”€â”€â”€â”€â”€â”€â”€â”€â”€â”€â”€â”€â”€â”€â”€â”€â”€â”€â”€â”€â”€â”€â”€â”€â”€â”€â”€
+
+				using (var eyeFont  = new Font("Segoe UI", 8f, FontStyle.Bold))
+				using (var eyeBrush = new SolidBrush(Color.FromArgb(140, 255, 255, 255)))
+					g.DrawString("VERIFICATION QUALITY", eyeFont, eyeBrush, tx, 16);
+
+
+
+				// â”€â”€ Thin rule below eyebrow â”€â”€â”€â”€â”€â”€â”€â”€â”€â”€â”€â”€â”€â”€â”€â”€â”€â”€â”€â”€â”€â”€â”€â”€â”€â”€â”€â”€â”€â”€â”€â”€â”€â”€â”€â”€â”€â”€â”€â”€â”€
+
+				using (var rulePen = new Pen(Color.FromArgb(55, accentColor), 1f))
+					g.DrawLine(rulePen, tx, 34, tx + 240, 34);
+
+
+
+				// â”€â”€ Large verdict word â”€â”€â”€â”€â”€â”€â”€â”€â”€â”€â”€â”€â”€â”€â”€â”€â”€â”€â”€â”€â”€â”€â”€â”€â”€â”€â”€â”€â”€â”€â”€â”€â”€â”€â”€â”€â”€â”€â”€â”€â”€â”€â”€â”€â”€â”€
+
+				using (var vFont  = new Font("Segoe UI", 34f, FontStyle.Bold))
+				using (var vBrush = new SolidBrush(verdictColor))
+					g.DrawString(verdict, vFont, vBrush, tx, 40);
+
+
+
+				// â”€â”€ Two-line subtitle â”€â”€â”€â”€â”€â”€â”€â”€â”€â”€â”€â”€â”€â”€â”€â”€â”€â”€â”€â”€â”€â”€â”€â”€â”€â”€â”€â”€â”€â”€â”€â”€â”€â”€â”€â”€â”€â”€â”€â”€â”€â”€â”€â”€â”€â”€â”€
+
+				using (var subFont  = new Font("Segoe UI", 8.5f, FontStyle.Regular))
+				using (var subBrush = new SolidBrush(Color.FromArgb(180, 255, 255, 255)))
+				{
+
+					g.DrawString(line1, subFont, subBrush, tx, 104);
+					if (!string.IsNullOrEmpty(line2))
+						g.DrawString(line2, subFont, subBrush, tx, 120);
+				}
+
+
+
+				return ToPng(bmp);
+			}
+		}
+
+				/// <summary>
+		/// Renders a compact single-row KPI strip for Section 4.
+		/// Four KPIs (Confidence | Samples | Duration | Outliers) are laid out
+		/// horizontally in one light panel with thin vertical dividers.
+		/// Width=900; Height=100 GDI -> 681x75 pt in the PDF.
+		/// </summary>
+		public static byte[] RenderComplianceScorecards(VerificationReportModel model, int width = 900, int height = 100)
 		{
 			if (model == null) throw new ArgumentNullException(nameof(model));
 
@@ -674,137 +822,110 @@ namespace MVS.Services.Reporting
 			{
 				g.SmoothingMode     = SmoothingMode.AntiAlias;
 				g.TextRenderingHint = TextRenderingHint.ClearTypeGridFit;
-				g.Clear(ColorNeutralLight);
 
-				DrawSectionHeader(g, "COMPLIANCE ASSESSMENT", 0, 0, width, 34);
+				// Single white container with outer border
+				using (var bg = new SolidBrush(ColorWhite))
+					g.FillRectangle(bg, 0, 0, width, height);
+				using (var borderPen = new Pen(ColorDivider, 1f))
+					g.DrawRectangle(borderPen, 0, 0, width - 1, height - 1);
 
-				int gap   = 8;
-				int cardW = (width - gap * 5) / 4;
-				int cardY = 42;
-				int cardH = height - cardY - 6;
-
-				// ── Samples ───────────────────────────────────────────────────────────
+				// Samples
 				int    samples       = model.SampleCount;
 				string samplesVal    = samples > 0 ? samples.ToString("N0") : "\u2014";
-				string samplesTarget = string.Format("\u2265 {0:N0}", VerificationAssessment.MinSamplesGood);
 				string samplesStatus = samples >= VerificationAssessment.MinSamplesGood       ? "GOOD" :
 									   samples >= VerificationAssessment.MinSamplesAcceptable ? "ACCEPTABLE" :
-									   samples > 0 ? "INSUFFICIENT" : "NO DATA";
-				Color samplesColor   = samples >= VerificationAssessment.MinSamplesGood       ? ColorSuccess :
+									   samples >  0                                           ? "INSUFFICIENT" : "NO DATA";
+				Color  samplesColor  = samples >= VerificationAssessment.MinSamplesGood       ? ColorSuccess :
 									   samples >= VerificationAssessment.MinSamplesAcceptable ? ColorWarning : ColorFailure;
 
-				// ── Duration ──────────────────────────────────────────────────────────
+				// Duration
 				double actualMin = 0;
 				if (!string.IsNullOrWhiteSpace(model.Duration) &&
-					TimeSpan.TryParse(model.Duration, out TimeSpan ts))
-					actualMin = ts.TotalMinutes;
+					TimeSpan.TryParse(model.Duration, out TimeSpan durTs))
+					actualMin = durTs.TotalMinutes;
 				string durVal    = actualMin > 0 ? string.Format(Ci, "{0:F1} min", actualMin) : "\u2014";
-				string durTarget = string.Format("\u2265 {0:F0} min", VerificationAssessment.MinDurationRecommendedMinutes);
 				string durStatus = actualMin >= VerificationAssessment.MinDurationRecommendedMinutes ? "GOOD" :
 								   actualMin >= VerificationAssessment.MinDurationAcceptableMinutes  ? "ACCEPTABLE" :
-								   actualMin > 0 ? "INSUFFICIENT" : "NO DATA";
-				Color durColor   = actualMin >= VerificationAssessment.MinDurationRecommendedMinutes ? ColorSuccess :
+								   actualMin >  0                                                    ? "INSUFFICIENT" : "NO DATA";
+				Color  durColor  = actualMin >= VerificationAssessment.MinDurationRecommendedMinutes ? ColorSuccess :
 								   actualMin >= VerificationAssessment.MinDurationAcceptableMinutes  ? ColorWarning : ColorFailure;
 
-				// ── Outliers ──────────────────────────────────────────────────────────
-				double worst        = model.WorstOutlierPercent;
-				string outlierVal   = double.IsNaN(worst) || !model.HasData ? "\u2014"
-									: string.Format(Ci, "{0:F1} %", worst);
-				string outlierTarget = string.Format("\u2264 {0:F0} %", VerificationAssessment.OutlierAcceptablePercent);
+				// Outliers
+				double worst         = model.WorstOutlierPercent;
+				string outlierVal    = double.IsNaN(worst) || !model.HasData ? "\u2014"
+									   : string.Format(Ci, "{0:F1} %", worst);
 				string outlierStatus = double.IsNaN(worst) || !model.HasData ? "NO DATA" :
 									   worst <= VerificationAssessment.OutlierAcceptablePercent ? "GOOD" :
 									   worst <= VerificationAssessment.OutlierAttentionPercent  ? "ACCEPTABLE" : "TOO NOISY";
-				Color outlierColor   = double.IsNaN(worst) || !model.HasData ? ColorNeutralMid :
+				Color  outlierColor  = double.IsNaN(worst) || !model.HasData ? ColorNeutralMid :
 									   worst <= VerificationAssessment.OutlierAcceptablePercent ? ColorSuccess :
 									   worst <= VerificationAssessment.OutlierAttentionPercent  ? ColorWarning : ColorFailure;
 
-				// ── Overall ───────────────────────────────────────────────────────────
-				bool allGood      = samplesStatus == "GOOD" && durStatus == "GOOD" && outlierStatus == "GOOD";
-				bool anyFail      = samplesStatus == "INSUFFICIENT" || durStatus == "INSUFFICIENT" || outlierStatus == "TOO NOISY";
-				string overallVal = !model.HasData ? "NO DATA" : allGood ? "EXCELLENT" : anyFail ? "ATTENTION" : "ACCEPTABLE";
-				Color overallColor = !model.HasData ? ColorNeutralMid : allGood ? ColorSuccess : anyFail ? ColorFailure : ColorWarning;
+				// Confidence composite score
+				double sampleScore   = model.HasData ? Math.Min(1.0, (double)samples / VerificationAssessment.MinSamplesGood) : 0;
+				double durationScore = Math.Min(1.0, actualMin / VerificationAssessment.MinDurationRecommendedMinutes);
+				double outlierScore  = double.IsNaN(worst) || worst <= 0 ? 1.0 : Math.Max(0, 1.0 - worst / 10.0);
+				int    scoreInt      = model.HasData ? (int)Math.Round((sampleScore * 0.4 + durationScore * 0.35 + outlierScore * 0.25) * 100.0) : 0;
+				Color  scoreColor    = model.HasData ? (scoreInt >= 80 ? ColorSuccess : scoreInt >= 60 ? ColorWarning : ColorFailure) : ColorNeutralMid;
+				string confVal       = model.HasData ? scoreInt.ToString() + " / 100" : "\u2014";
+				string confStatus    = !model.HasData ? "NO DATA" : scoreInt >= 80 ? "HIGH" : scoreInt >= 60 ? "ACCEPTABLE" : "LOW";
 
-				var cards = new[]
+				// KPI order: Confidence (priority 1), Samples, Duration, Outliers
+				var kpis = new[]
 				{
-					("SAMPLES",   samplesVal,   samplesTarget,  samplesStatus,  samplesColor,  true),
-					("DURATION",  durVal,       durTarget,      durStatus,      durColor,      true),
-					("OUTLIERS",  outlierVal,   outlierTarget,  outlierStatus,  outlierColor,  true),
-					("OVERALL",   overallVal,   string.Empty,   string.Empty,   overallColor,  false),
+					("Confidence", confVal,    confStatus,    scoreColor),
+					("Samples",    samplesVal, samplesStatus, samplesColor),
+					("Duration",   durVal,     durStatus,     durColor),
+					("Outliers",   outlierVal, outlierStatus, outlierColor),
 				};
 
-				for (int i = 0; i < cards.Length; i++)
+				int cellW = width / kpis.Length;
+				int padX  = 20;
+				int midY  = height / 2;
+
+				using (var labelFont  = new Font("Segoe UI", 7.5f, FontStyle.Regular))
+				using (var valueFont  = new Font("Segoe UI", 13f,  FontStyle.Bold))
+				using (var statusFont = new Font("Segoe UI", 7f,   FontStyle.Bold))
+				using (var divPen     = new Pen(ColorDivider, 1f))
 				{
-					var (title, value, target, status, accentCol, showIcon) = cards[i];
-					int cx = gap + i * (cardW + gap);
-					bool isOverall = i == cards.Length - 1;
+					var nearSf = new StringFormat { Alignment = StringAlignment.Near, LineAlignment = StringAlignment.Center };
 
-					// Card: Overall card gets solid accent background; criteria cards white
-					if (isOverall)
+					for (int i = 0; i < kpis.Length; i++)
 					{
-						using (var bg = new SolidBrush(accentCol))
-							g.FillRectangle(bg, cx, cardY, cardW, cardH);
-						using (var borderPen = new Pen(accentCol, 1f))
-							g.DrawRectangle(borderPen, cx, cardY, cardW - 1, cardH - 1);
-					}
-					else
-					{
-						using (var bg = new SolidBrush(ColorWhite))
-							g.FillRectangle(bg, cx, cardY, cardW, cardH);
-						using (var borderPen = new Pen(ColorDivider, 1f))
-							g.DrawRectangle(borderPen, cx, cardY, cardW - 1, cardH - 1);
-						using (var accentBr = new SolidBrush(accentCol))
-							g.FillRectangle(accentBr, cx, cardY, cardW, 6);
-					}
+						var (label, value, kpiStatus, accentCol) = kpis[i];
+						int cx = i * cellW;
 
-					Color contrastOnCard = ContrastText(accentCol);
-					Color textColor  = isOverall ? contrastOnCard : ColorNeutralDark;
-					Color labelColor = isOverall ? Color.FromArgb(180, contrastOnCard) : ColorNeutralMid;
+						// 3px top accent bar per KPI cell
+						using (var accentBar = new SolidBrush(accentCol))
+							g.FillRectangle(accentBar, cx, 0, cellW, 3);
 
-					// Pass/fail icon (top-right corner for criteria cards)
-					if (showIcon && model.HasData)
-					{
-						string icon = (status == "GOOD" || status == "ACCEPTABLE") ? "\u2713" : "\u2717";
-						using (var iconFont  = new Font("Segoe UI Symbol", 18f, FontStyle.Bold))
-						using (var iconBrush = new SolidBrush(StatusTextOnWhite(accentCol)))
-							g.DrawString(icon, iconFont, iconBrush,
-								new RectangleF(cx + cardW - 36, cardY + 8, 30, 26),
-								new StringFormat { Alignment = StringAlignment.Far });
+						// Label (muted, small)
+						using (var lb = new SolidBrush(ColorNeutralMid))
+							g.DrawString(label, labelFont, lb,
+								new RectangleF(cx + padX, midY - 34, cellW - padX * 2, 18), nearSf);
+
+						// Value (large, bold)
+						using (var vb = new SolidBrush(ColorNeutralDark))
+							g.DrawString(value, valueFont, vb,
+								new RectangleF(cx + padX, midY - 16, cellW - padX * 2, 28), nearSf);
+
+						// Status (accent color, small bold)
+						using (var sb2 = new SolidBrush(accentCol))
+							g.DrawString(kpiStatus, statusFont, sb2,
+								new RectangleF(cx + padX, midY + 14, cellW - padX * 2, 16), nearSf);
+
+						// Vertical divider between cells
+						if (i > 0)
+							g.DrawLine(divPen, cx, 10, cx, height - 10);
 					}
 
-					// Title
-					using (var tFont  = new Font("Segoe UI", 8f, FontStyle.Bold))
-					using (var tBrush = new SolidBrush(labelColor))
-					using (var sf     = new StringFormat { Alignment = StringAlignment.Center })
-						g.DrawString(title, tFont, tBrush,
-							new RectangleF(cx, cardY + 10, cardW, 16), sf);
-
-					// Large value
-					float fs = value.Length <= 8 ? 24f : value.Length <= 12 ? 18f : 14f;
-					using (var vFont  = new Font("Segoe UI", fs, FontStyle.Bold))
-					using (var vBrush = new SolidBrush(textColor))
-					using (var sf     = new StringFormat { Alignment = StringAlignment.Center, LineAlignment = StringAlignment.Center })
-						g.DrawString(value, vFont, vBrush,
-							new RectangleF(cx, cardY + 28, cardW, cardH - 72), sf);
-
-					// Target label
-					if (!string.IsNullOrEmpty(target))
-					{
-						using (var trFont  = new Font("Segoe UI", 7.5f, FontStyle.Regular))
-						using (var trBrush = new SolidBrush(ColorNeutralMid))
-						using (var sf      = new StringFormat { Alignment = StringAlignment.Center })
-							g.DrawString("Target: " + target, trFont, trBrush,
-								new RectangleF(cx, cardY + cardH - 44, cardW, 16), sf);
-					}
-
-					// Status badge
-					if (!string.IsNullOrEmpty(status))
-						DrawPillBadge(g, cx + cardW / 2 - 44, cardY + cardH - 26, 88, 20, status, accentCol);
+					nearSf.Dispose();
 				}
 
 				return ToPng(bmp);
 			}
 		}
-		/// <summary>
+/// <summary>
 		/// Renders color-coded horizontal indicator bars for correlation and latency
 		/// per axis. High correlation (>=0.95) = Energy Green; Moderate (>=0.80) = Amber;
 		/// Low = Red. Latency shown on a centered timeline bar.
@@ -903,7 +1024,6 @@ namespace MVS.Services.Reporting
 						// ── Latency timeline bar ─────────────────────────────
 						int lx2 = lx + halfW;
 double latMs = pair != null ? pair.EstimatedLatencySeconds * 1000.0 : double.NaN;
-
 
 						bool hasLat = !double.IsNaN(latMs);
 
@@ -1240,7 +1360,6 @@ double latMs = pair != null ? pair.EstimatedLatencySeconds * 1000.0 : double.NaN
 				return ToPng(bmp);
 			}
 		}
-
 
         // â•â•â•â•â•â•â•â•â•â•â•â•â•â•â•â•â•â•â•â•â•â•â•â•â•â•â•â•â•â•â•â•â•â•â•â•â•â•â•â•â•â•â•â•â•â•â•â•â•â•â•â•â•â•â•â•â•â•â•â•â•â•â•â•â•â•â•â•â•
         // DRAWING HELPERS â€” design elements
