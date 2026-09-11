@@ -1458,13 +1458,99 @@ namespace MVS
                 try
                 {
                     File.WriteAllBytes(dlg.FileName, _reportPdfBytes);
-                    RadWindow.Alert("PDF report saved successfully.");
+                    ShowPdfSavedDialog();
                 }
                 catch (Exception ex)
                 {
                     RadWindow.Alert("Failed to save PDF report:\n" + ex.Message);
                 }
             }
+        }
+
+        private void ShowPdfSavedDialog()
+        {
+            var dialog = new RadWindow
+            {
+                Width = 400,
+                Height = 180,
+                CanClose = false,
+                ResizeMode = ResizeMode.NoResize,
+                WindowStartupLocation = WindowStartupLocation.CenterOwner,
+                Owner = Window.GetWindow(this),
+                Header = "PDF Saved"
+            };
+
+            var layout = new Grid
+            {
+                Margin = new Thickness(16)
+            };
+            layout.ColumnDefinitions.Add(new ColumnDefinition { Width = GridLength.Auto });
+            layout.ColumnDefinitions.Add(new ColumnDefinition { Width = new GridLength(1, GridUnitType.Star) });
+            layout.RowDefinitions.Add(new RowDefinition { Height = new GridLength(1, GridUnitType.Star) });
+            layout.RowDefinitions.Add(new RowDefinition { Height = GridLength.Auto });
+
+            var icon = new Grid
+            {
+                Width = 36,
+                Height = 36,
+                Margin = new Thickness(0, 0, 12, 0),
+                VerticalAlignment = VerticalAlignment.Center
+            };
+
+            var iconBackground = new System.Windows.Shapes.Ellipse();
+            iconBackground.SetResourceReference(System.Windows.Shapes.Shape.FillProperty, "SesEnergyGreenBrush");
+
+            var iconText = new TextBlock
+            {
+                Text = "i",
+                FontSize = 22,
+                FontWeight = FontWeights.Bold,
+                HorizontalAlignment = HorizontalAlignment.Center,
+                VerticalAlignment = VerticalAlignment.Center
+            };
+            iconText.SetResourceReference(Control.ForegroundProperty, "SesWhiteBrush");
+
+            icon.Children.Add(iconBackground);
+            icon.Children.Add(iconText);
+            Grid.SetRow(icon, 0);
+            Grid.SetColumn(icon, 0);
+
+            var message = new TextBlock
+            {
+                Text = "PDF report saved successfully.",
+                TextWrapping = TextWrapping.Wrap,
+                VerticalAlignment = VerticalAlignment.Center
+            };
+            Grid.SetRow(message, 0);
+            Grid.SetColumn(message, 1);
+
+            var buttonPanel = new StackPanel
+            {
+                Orientation = Orientation.Horizontal,
+                HorizontalAlignment = HorizontalAlignment.Center,
+                Margin = new Thickness(0, 12, 0, 0)
+            };
+            Grid.SetRow(buttonPanel, 1);
+            Grid.SetColumnSpan(buttonPanel, 2);
+
+            var okButton = new RadButton
+            {
+                Content = "OK",
+                MinWidth = 100,
+                IsDefault = true
+            };
+            okButton.SetResourceReference(Control.BackgroundProperty, "SesWhiteBrush");
+            okButton.SetResourceReference(Control.ForegroundProperty, "SesDarkBlueGreyBrush");
+            okButton.SetResourceReference(Control.BorderBrushProperty, "SesBorderBrush");
+            okButton.Click += (_, _) => dialog.Close();
+
+            buttonPanel.Children.Add(okButton);
+            layout.Children.Add(icon);
+            layout.Children.Add(message);
+            layout.Children.Add(buttonPanel);
+
+            dialog.Content = layout;
+            dialog.ShowDialog();
         }
 
         private void btnOpenPdfReport_Click(object sender, RoutedEventArgs e)
