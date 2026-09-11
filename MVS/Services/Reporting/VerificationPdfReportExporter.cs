@@ -445,6 +445,7 @@ namespace MVS.Services.Reporting
 		/// </summary>
 		private static void AddPageFooters(RadFixedDocument document)
 		{
+            const string HeaderTitleText = "MRU Verification Report";
 			// Pre-create Telerik image sources once; null-safe when resources are absent (test host).
 			TelerikImageSource? backgroundImage = null;
 			TelerikImageSource? headerImage     = null;
@@ -495,6 +496,25 @@ namespace MVS.Services.Reporting
 						fceH.Position.Translate(0, 0);
 						fceH.DrawImage(headerImage, new Size(pageW, HeaderH));
 					}
+
+                    // --- Report title inside the repeated page header area ---
+                    {
+                        const double headerTitleWidth = 260;
+                        const double headerTitleHeight = 20;
+                        const double headerTitleLeftMargin = 56;
+                        double headerTitleTop = (HeaderH - headerTitleHeight) / 2.0;
+
+                        var fceT = new FixedContentEditor(page);
+                        fceT.Position.Translate(headerTitleLeftMargin, headerTitleTop);
+
+                        var headerBlock = new Block();
+                        headerBlock.HorizontalAlignment = Telerik.Windows.Documents.Fixed.Model.Editing.Flow.HorizontalAlignment.Left;
+                        headerBlock.TextProperties.Font = _robotoBold;
+                        headerBlock.TextProperties.FontSize = 15;
+                        headerBlock.GraphicProperties.FillColor = ColorHeading;
+                        headerBlock.InsertText(HeaderTitleText);
+                        fceT.DrawBlock(headerBlock, new Size(headerTitleWidth, headerTitleHeight));
+                    }
 
 					// --- Footer strip: bottom of page → y = pageH - FooterH ---
 					if (footerImage != null)
@@ -616,7 +636,7 @@ private static void WriteTitle(RadFixedDocumentEditor editor, VerificationReport
 
 			{
 				const int logoW = 220;
-				const int logoH = 59; // 220 / 3.717 aspect
+				const int logoH = 51; // 220 / 4.284 aspect (SES Energy logo 497x116)
 				using (var ms = new MemoryStream(model.LogoPng))
 				{
 					var logoImage = new TelerikImageSource(ms);

@@ -210,7 +210,7 @@ namespace MVS
                 if (_startTime == System.Data.SqlTypes.SqlDateTime.MinValue.Value)
                     return Constants.NotAvailable;
                 else
-                    return string.Format("{0} (UTC)", _startTime.ToString("HH:mm:ss"));
+                    return string.Format("{0} (UTC)", _startTime.ToString("yyyy-MM-dd"));
             }
         }
 

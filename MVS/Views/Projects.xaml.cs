@@ -1227,7 +1227,7 @@ namespace MVS
                 // Load the company logo from the embedded WPF resource on the UI thread
                 // before handing off to the background worker.
                 model.LogoPng = LoadEmbeddedResourceBytes(
-                    "pack://application:,,,/MVS;component/Icons/helifuel_logo.png");
+                    "pack://application:,,,/MVS;component/Resources/DocTemplate/ses-logo.png");
 
                 progress.Show();
 

@@ -73,7 +73,7 @@ namespace MVS.Services.Reporting
 				g.SmoothingMode     = SmoothingMode.AntiAlias;
 				g.TextRenderingHint = TextRenderingHint.ClearTypeGridFit;
 
-				// Dark Blue Grey gradient background
+				// ── Background ───────────────────────────────────────────────────
 				using (var bgBrush = new LinearGradientBrush(
 					new Rectangle(0, 0, width, height),
 					ColorPrimary, ColorSecondary,
@@ -82,7 +82,7 @@ namespace MVS.Services.Reporting
 					g.FillRectangle(bgBrush, 0, 0, width, height);
 				}
 
-				// Geometric offshore motif: concentric circles
+				// Geometric offshore motif: concentric circles (bottom-right corner)
 				using (var motifPen = new Pen(Color.FromArgb(18, 255, 255, 255), 1.5f))
 				{
 					g.DrawEllipse(motifPen, width - 380, height - 280, 520, 520);
@@ -97,130 +97,245 @@ namespace MVS.Services.Reporting
 						g.DrawLine(gridPen, x, 0, x + height, height);
 				}
 
-				// SES Energy Green accent bars
+				// SES Energy Green accent bars (top edge + left edge)
 				using (var ab = new SolidBrush(ColorAccent))
 				{
 					g.FillRectangle(ab, 0, 0, width, 5);
 					g.FillRectangle(ab, 0, 0, 5, height);
 				}
 
-				int lp = 32;
+				int lp = 32; // left padding
 
-				// Brand label strip
+				// ── Brand strip ──────────────────────────────────────────────────
 				using (var tagFont = new Font("Segoe UI", 9f, FontStyle.Bold))
 				using (var greenBr = new SolidBrush(ColorAccent))
-				using (var sf      = new StringFormat())
-				{
-					sf.Alignment     = StringAlignment.Near;
-					sf.LineAlignment = StringAlignment.Center;
-					g.DrawString("SES ENERGY  |  MOTION VERIFICATION", tagFont, greenBr,
+				using (var sf      = new StringFormat { Alignment = StringAlignment.Near, LineAlignment = StringAlignment.Center })
+					g.DrawString("SES ENERGY  |  MOTION VERIFICATION SYSTEM", tagFont, greenBr,
 						new RectangleF(lp, 14, width - lp * 2, 22), sf);
-				}
 
-				// Large title typography
+				// ── Title block ──────────────────────────────────────────────────
 				using (var t1Font  = new Font("Segoe UI", 36f, FontStyle.Bold))
 				using (var t2Font  = new Font("Segoe UI", 28f, FontStyle.Regular))
 				using (var whiteBr = new SolidBrush(ColorWhite))
 				{
-					g.DrawString("MOTION REFERENCE UNIT", t1Font, whiteBr, lp, 66);
-					g.DrawString("VERIFICATION REPORT",   t2Font, whiteBr, lp, 116);
+					g.DrawString("MOTION REFERENCE UNIT", t1Font, whiteBr, lp, 50);
+					g.DrawString("VERIFICATION REPORT",   t2Font, whiteBr, lp, 100);
 				}
 
-				// Thick Energy Green rule under title
+				// Energy Green rule under title
 				using (var rulePen = new Pen(ColorAccent, 3f))
-					g.DrawLine(rulePen, lp, 166, lp + 480, 166);
+					g.DrawLine(rulePen, lp, 148, lp + 480, 148);
 
-				// Vessel / project hero line
-				string heroLine = !string.IsNullOrWhiteSpace(model.VesselName)
-					? model.VesselName.ToUpper()
-					: (!string.IsNullOrWhiteSpace(model.ProjectName) ? model.ProjectName.ToUpper() : "\u2014");
+				// ── Status banner ────────────────────────────────────────────────
+				const int statusBannerY = 165;
+				const int statusBannerH = 68;
 
-				using (var heroFont = new Font("Segoe UI", 20f, FontStyle.Bold))
-				using (var greenBr  = new SolidBrush(ColorAccent))
-					g.DrawString(TruncateStr(heroLine, 50), heroFont, greenBr, lp, 184);
+				VerificationStatus vstatus = OverallStatus(model);
+				Color statusColor = vstatus == VerificationStatus.Good           ? ColorSuccess
+								  : vstatus == VerificationStatus.Acceptable     ? ColorWarning
+								  : vstatus == VerificationStatus.NeedsAttention ? ColorFailure
+								  : ColorNeutralMid;
 
-				// Metadata grid — 2 columns x 2 rows
-				int metaY    = 252;
+				using (var statusBg = new SolidBrush(Color.FromArgb(210, statusColor.R, statusColor.G, statusColor.B)))
+					g.FillRectangle(statusBg, lp, statusBannerY, width - lp * 2, statusBannerH);
+
+				string statusHeadline = !model.HasData
+					? "NO DATA CAPTURED"
+					: vstatus == VerificationStatus.Good           ? "\u2713  VERIFICATION COMPLETED"
+					: vstatus == VerificationStatus.Acceptable     ? "\u2713  VERIFICATION COMPLETED \u2014 REVIEW RECOMMENDED"
+					: vstatus == VerificationStatus.NeedsAttention ? "\u26A0  VERIFICATION REQUIRES ATTENTION"
+					: "PENDING \u2014 NO DATA CAPTURED";
+
+				string statusSub = !model.HasData ? string.Empty
+					: model.HasCorrectionApplied
+						? "Corrections applied to vessel unit"
+						: "Corrections ready \u2014 pending application to vessel unit";
+
+				Color statusTextColor = ContrastText(statusColor);
+				using (var headFont = new Font("Segoe UI", 17f, FontStyle.Bold))
+				using (var subFont  = new Font("Segoe UI", 9f, FontStyle.Bold))
+				using (var textBr   = new SolidBrush(statusTextColor))
+				using (var sf       = new StringFormat { LineAlignment = StringAlignment.Near })
+				{
+					g.DrawString(statusHeadline, headFont, textBr,
+						new RectangleF(lp + 14, statusBannerY + 7, width - lp * 2 - 28, 36), sf);
+					if (!string.IsNullOrEmpty(statusSub))
+						g.DrawString(statusSub, subFont, textBr,
+							new RectangleF(lp + 14, statusBannerY + 44, width - lp * 2 - 28, 20), sf);
+				}
+
+				// ── Applied / Recommended Corrections ───────────────────────────
+				int y = statusBannerY + statusBannerH + 18;
+
+				string corrSectionLabel = model.HasData && model.HasCorrectionApplied
+					? "APPLIED CORRECTIONS"
+					: "RECOMMENDED CORRECTIONS";
+
+				using (var secLblFont = new Font("Segoe UI", 8.5f, FontStyle.Bold))
+				using (var greenBr    = new SolidBrush(ColorAccent))
+					g.DrawString(corrSectionLabel, secLblFont, greenBr, lp, y);
+
+				y += 20;
+
+				// Three correction value cards: PITCH | ROLL | HEAVE
+				int cardGap = 8;
+				int cardW   = (width - lp * 2 - cardGap * 2) / 3;
+				const int cardH = 90;
+
+				void DrawCorrCard(int cx, int cy, string axisLabel, double corrValue, string unit)
+				{
+					// Frosted card background
+					using (var cardBg = new SolidBrush(Color.FromArgb(38, 255, 255, 255)))
+						g.FillRectangle(cardBg, cx, cy, cardW, cardH);
+
+					// Left accent bar
+					using (var accentBr = new SolidBrush(ColorAccent))
+						g.FillRectangle(accentBr, cx, cy, 4, cardH);
+
+					// Axis label
+					using (var axFont  = new Font("Segoe UI", 8f, FontStyle.Bold))
+					using (var greenBr2 = new SolidBrush(ColorAccent))
+						g.DrawString(axisLabel, axFont, greenBr2, cx + 12, cy + 8);
+
+					// Large correction value
+					string valText = !model.HasData || double.IsNaN(corrValue)
+						? "\u2014"
+						: string.Format(Ci, "{0:+0.000;-0.000;0.000}", corrValue);
+
+					using (var valFont  = new Font("Segoe UI", 26f, FontStyle.Bold))
+					using (var whiteBr2 = new SolidBrush(ColorWhite))
+						g.DrawString(valText, valFont, whiteBr2, cx + 12, cy + 24);
+
+					// Unit
+					using (var unitFont = new Font("Segoe UI", 9f, FontStyle.Regular))
+					using (var mutedBr  = new SolidBrush(Color.FromArgb(170, 255, 255, 255)))
+						g.DrawString(unit, unitFont, mutedBr, cx + 12, cy + 68);
+				}
+
+				double pitchCorr = model.HasCorrectionApplied
+					? model.AppliedCorrectionPitch : model.RecommendedCorrectionPitch;
+				double rollCorr  = model.HasCorrectionApplied
+					? model.AppliedCorrectionRoll  : model.RecommendedCorrectionRoll;
+				double heaveCorr = model.HasCorrectionApplied
+					? model.AppliedCorrectionHeave : model.RecommendedCorrectionHeave;
+
+				DrawCorrCard(lp,                            y, "PITCH", pitchCorr, "degrees");
+				DrawCorrCard(lp + cardW + cardGap,          y, "ROLL",  rollCorr,  "degrees");
+				DrawCorrCard(lp + (cardW + cardGap) * 2,   y, "HEAVE", heaveCorr, "metres");
+
+				y += cardH + 18;
+
+				// ── Quality Indicators ───────────────────────────────────────────
+				using (var secLblFont = new Font("Segoe UI", 8.5f, FontStyle.Bold))
+				using (var greenBr    = new SolidBrush(ColorAccent))
+					g.DrawString("DATA QUALITY", secLblFont, greenBr, lp, y);
+
+				y += 20;
+
+				int qualW   = (width - lp * 2 - cardGap * 2) / 3;
+				const int qualH = 54;
+
+				void DrawQualCard(int cx, int cy, string value, string label)
+				{
+					using (var cardBg = new SolidBrush(Color.FromArgb(22, 255, 255, 255)))
+						g.FillRectangle(cardBg, cx, cy, qualW, qualH);
+
+					using (var valFont  = new Font("Segoe UI", 16f, FontStyle.Bold))
+					using (var whiteBr2 = new SolidBrush(ColorWhite))
+						g.DrawString(value, valFont, whiteBr2, cx + 10, cy + 6);
+
+					using (var lblFont2 = new Font("Segoe UI", 8f, FontStyle.Regular))
+					using (var mutedBr  = new SolidBrush(Color.FromArgb(150, 255, 255, 255)))
+						g.DrawString(label, lblFont2, mutedBr, cx + 10, cy + 32);
+				}
+
+				string sampleVal = model.HasData
+					? string.Format(Ci, "{0:N0}", model.SampleCount)
+					: "\u2014";
+
+				string durationVal = "\u2014";
+				if (!string.IsNullOrWhiteSpace(model.Duration) &&
+					TimeSpan.TryParse(model.Duration, out TimeSpan durSpan))
+					durationVal = string.Format(Ci, "{0:F1} min", durSpan.TotalMinutes);
+
+				string outlierVal = "\u2014";
+				double worstOutlier = model.WorstOutlierPercent;
+				if (!double.IsNaN(worstOutlier))
+					outlierVal = string.Format(Ci, "{0:F1}%", worstOutlier);
+
+				DrawQualCard(lp,                          y, sampleVal,   "SAMPLES AVERAGED");
+				DrawQualCard(lp + qualW + cardGap,        y, durationVal, "CAPTURE DURATION");
+				DrawQualCard(lp + (qualW + cardGap) * 2,  y, outlierVal,  "MAXIMUM OUTLIERS");
+
+				y += qualH + 18;
+
+				// ── Thin divider ─────────────────────────────────────────────────
+				using (var divPen = new Pen(Color.FromArgb(55, 255, 255, 255), 0.8f))
+					g.DrawLine(divPen, lp, y, width - lp, y);
+
+				y += 14;
+
+				// ── Project metadata ─────────────────────────────────────────────
+				using (var secLblFont = new Font("Segoe UI", 8.5f, FontStyle.Bold))
+				using (var greenBr    = new SolidBrush(ColorAccent))
+					g.DrawString("PROJECT INFORMATION", secLblFont, greenBr, lp, y);
+
+				y += 18;
+
 				int metaColW = (width - lp * 2) / 2;
-				string[] mLabels = { "PROJECT", "VESSEL", "OPERATOR", "LOCATION" };
+
+				// Parse test date (date only — no time)
+				string testDateVal = "\u2014";
+				if (!string.IsNullOrWhiteSpace(model.StartTime))
+				{
+					testDateVal = DateTime.TryParse(model.StartTime, out DateTime testDt)
+						? testDt.ToString("yyyy-MM-dd")
+						: (model.StartTime.Length >= 10 ? model.StartTime[..10] : model.StartTime);
+				}
+
+				string[] mLabels = { "PROJECT", "VESSEL", "OPERATOR", "LOCATION", "TEST DATE", "REPORT DATE" };
 				string[] mValues =
 				{
 					string.IsNullOrWhiteSpace(model.ProjectName) ? "\u2014" : model.ProjectName,
 					string.IsNullOrWhiteSpace(model.VesselName)  ? "\u2014" : model.VesselName,
 					string.IsNullOrWhiteSpace(model.Operator)    ? "\u2014" : model.Operator,
 					string.IsNullOrWhiteSpace(model.Location)    ? "\u2014" : model.Location,
+					testDateVal,
+					model.GeneratedUtc.ToString("yyyy-MM-dd"),
 				};
 
-				using (var labelFont = new Font("Segoe UI", 8f, FontStyle.Bold))
-				using (var valueFont = new Font("Segoe UI", 10.5f, FontStyle.Regular))
-				using (var greenBr   = new SolidBrush(ColorAccent))
+				using (var labelFont = new Font("Segoe UI", 7.5f, FontStyle.Bold))
+				using (var valueFont = new Font("Segoe UI", 9.5f, FontStyle.Regular))
+				using (var greenBr2  = new SolidBrush(ColorAccent))
 				using (var whiteBr   = new SolidBrush(ColorWhite))
-				using (var divPen    = new Pen(Color.FromArgb(50, 255, 255, 255), 0.8f))
+				using (var divPen    = new Pen(Color.FromArgb(40, 255, 255, 255), 0.8f))
 				{
 					for (int i = 0; i < mLabels.Length; i++)
 					{
 						int col = i % 2;
 						int row = i / 2;
 						int cx  = lp + col * metaColW;
-						int cy  = metaY + row * 64;
+						int cy  = y + row * 50;
 						g.DrawLine(divPen, cx, cy, cx + metaColW - 12, cy);
-						g.DrawString(mLabels[i], labelFont, greenBr, cx, cy + 4);
-						g.DrawString(TruncateStr(mValues[i], 40), valueFont, whiteBr, cx, cy + 20);
+						g.DrawString(mLabels[i], labelFont, greenBr2, cx, cy + 4);
+						g.DrawString(TruncateStr(mValues[i], 42), valueFont, whiteBr, cx, cy + 18);
 					}
 				}
 
-				// Timing row — 4 columns
-				int row2Y = metaY + 2 * 64 + 16;
-				string[] tLabels = { "CAPTURE START", "CAPTURE END", "DURATION", "GENERATED" };
-				string[] tValues =
-				{
-					string.IsNullOrWhiteSpace(model.StartTime) ? "\u2014" : model.StartTime,
-					string.IsNullOrWhiteSpace(model.EndTime)   ? "\u2014" : model.EndTime,
-					string.IsNullOrWhiteSpace(model.Duration)  ? "\u2014" : model.Duration,
-					model.GeneratedUtc.ToLocalTime().ToString("yyyy-MM-dd  HH:mm") + " UTC",
-				};
+				y += 3 * 50;
 
-				using (var labelFont = new Font("Segoe UI", 8f, FontStyle.Bold))
-				using (var valueFont = new Font("Segoe UI", 10.5f, FontStyle.Regular))
-				using (var greenBr   = new SolidBrush(ColorAccent))
-				using (var whiteBr   = new SolidBrush(ColorWhite))
-				using (var divPen    = new Pen(Color.FromArgb(50, 255, 255, 255), 0.8f))
-				{
-					int tw = (width - lp * 2) / 4;
-					for (int i = 0; i < tLabels.Length; i++)
-					{
-						int cx = lp + i * tw;
-						g.DrawLine(divPen, cx, row2Y, cx + tw - 8, row2Y);
-						g.DrawString(tLabels[i], labelFont, greenBr, cx, row2Y + 4);
-						g.DrawString(TruncateStr(tValues[i], 25), valueFont, whiteBr, cx, row2Y + 20);
-					}
-				}
-
-				// Bottom classification band in Energy Green
-				int bandH = 48;
+				// ── Bottom classification band ───────────────────────────────────
+				const int bandH = 48;
 				using (var bandBrush = new SolidBrush(ColorAccent))
 					g.FillRectangle(bandBrush, 0, height - bandH, width, bandH);
 
-				VerificationStatus vstatus   = OverallStatus(model);
-				string             vstatusLbl = StatusBadgeLabel(vstatus);
-				string statusDesc = model.HasData
-					? string.Format("{0:N0} SAMPLES  \u00B7  CORRECTIONS {1}  \u00B7  {2}",
-						model.SampleCount,
-						model.HasCorrectionApplied ? "APPLIED" : "PENDING",
-						vstatusLbl)
-					: "NO DATA CAPTURED";
-
-				using (var docFont = new Font("Segoe UI", 9.5f, FontStyle.Bold))
+				using (var docFont = new Font("Segoe UI", 8.5f, FontStyle.Bold))
 				using (var darkBr  = new SolidBrush(ColorSecondary))
-				using (var sf      = new StringFormat())
-				{
-					sf.Alignment     = StringAlignment.Near;
-					sf.LineAlignment = StringAlignment.Center;
-					g.DrawString(statusDesc, docFont, darkBr,
-						new RectangleF(lp, height - bandH, width - 190, bandH), sf);
-				}
-
-				DrawStatusBadge(g, model, width - 172, height - bandH - 10, 156, 58);
+				using (var sf      = new StringFormat { Alignment = StringAlignment.Near, LineAlignment = StringAlignment.Center })
+					g.DrawString(
+						"MOTION VERIFICATION SYSTEM  \u00B7  MRU VERIFICATION REPORT  \u00B7  CONFIDENTIAL",
+						docFont, darkBr,
+						new RectangleF(lp, height - bandH, width - lp * 2, bandH), sf);
 
 				return ToPng(bmp);
 			}

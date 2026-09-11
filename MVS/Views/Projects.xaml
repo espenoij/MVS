@@ -58,6 +58,11 @@
                                    Foreground="{StaticResource SesTextSecondaryBrush}"
                                    VerticalAlignment="Center"
                                    Margin="6,2,0,0"/>
+                        <TextBlock Text="MRU Verification Report"
+                                   FontSize="14"
+                                   Foreground="{StaticResource SesDarkBlueGreyLightBrush}"
+                                   VerticalAlignment="Center"
+                                   Margin="16,2,0,0"/>
                     </StackPanel>
                     <TextBlock x:Name="tbWizardProjectName"
                                FontSize="14"
@@ -186,6 +191,7 @@
 
                                 <TextBlock Text="Step 1 — Project setup"
                                            FontSize="14" FontWeight="SemiBold"
+                                           Foreground="{StaticResource SesTextPrimaryBrush}"
                                            Margin="0,0,0,6"/>
                                 <TextBlock TextWrapping="Wrap"
                                            Foreground="{StaticResource SesTextSecondaryBrush}"
@@ -268,6 +274,7 @@
                         <StackPanel Grid.Row="0" Margin="0,0,0,6">
                             <TextBlock Text="Step 2 — LiDAR correction for Reference MRU"
                                        FontSize="14" FontWeight="SemiBold"
+                                       Foreground="{StaticResource SesTextPrimaryBrush}"
                                        Margin="0,0,0,6"/>
                             <TextBlock TextWrapping="Wrap"
                                        Foreground="{StaticResource SesTextSecondaryBrush}"
@@ -293,6 +300,7 @@
 
                             <TextBlock Text="Step 3 — Capture motion data"
                                        FontSize="14" FontWeight="SemiBold"
+                                       Foreground="{StaticResource SesTextPrimaryBrush}"
                                        Margin="0,0,0,6"/>
                             <TextBlock TextWrapping="Wrap"
                                        Foreground="{StaticResource SesTextSecondaryBrush}"
@@ -393,6 +401,7 @@
                             <TextBlock Grid.Row="0"
                                        Text="Step 4 — Review per-axis results"
                                        FontSize="14" FontWeight="SemiBold"
+                                       Foreground="{StaticResource SesTextPrimaryBrush}"
                                        Margin="0,0,0,6"/>
                             <TextBlock Grid.Row="1"
                                        TextWrapping="Wrap"
@@ -421,6 +430,7 @@
                             <StackPanel Grid.Row="0" Margin="0,0,0,10">
                                 <TextBlock Text="Step 5 &#x2014; Apply and report"
                                            FontSize="14" FontWeight="SemiBold"
+                                           Foreground="{StaticResource SesTextPrimaryBrush}"
                                            Margin="0,0,0,4"/>
                                 <TextBlock TextWrapping="Wrap"
                                            Foreground="{StaticResource SesTextSecondaryBrush}"

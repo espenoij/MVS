@@ -23,7 +23,7 @@
         all Resource-marked files in that folder and resolve by the internal
         family name.  The trailing Arial ensures a safe fallback.
     -->
-    <FontFamily x:Key="SesFontFamily">/MVS;component/Fonts/#Roboto Condensed</FontFamily>
+    <FontFamily x:Key="SesFontFamily">pack://application:,,,/MVS;component/Fonts/#Roboto Condensed, Arial</FontFamily>
     <FontFamily x:Key="SesFontFamilyFallback">Arial</FontFamily>
     <!--#endregion-->
 
@@ -53,6 +53,7 @@
     -->
     <Style TargetType="TextBlock">
         <Setter Property="FontFamily" Value="{StaticResource SesFontFamily}" />
+        <Setter Property="Foreground" Value="{DynamicResource SesTextPrimaryBrush}" />
     </Style>
 
     <Style TargetType="Label">
@@ -105,3 +106,4 @@
     <!--#endregion-->
 
 </ResourceDictionary>
+
