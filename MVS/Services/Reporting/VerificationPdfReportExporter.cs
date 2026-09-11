@@ -1053,8 +1053,8 @@ private static void WriteTitle(RadFixedDocumentEditor editor, VerificationReport
                 InsertAxisSummaryCard(editor, model.AxisTitle(axis), axisStatus,
                     model.RecommendedCorrection(axis), model.AppliedCorrection(axis), model.HasCorrectionApplied, unit, dev);
 
-                // Detail table sits directly below its card; SpacingBefore overrides any inherited value.
-                editor.ParagraphProperties.SpacingBefore = 6;
+                // Increase the gap so the detail table reads as a separate block under the summary card.
+                editor.ParagraphProperties.SpacingBefore = 16;
                 editor.ParagraphProperties.SpacingAfter  = 8;
 
                 var table = NewTable();
