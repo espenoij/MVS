@@ -368,12 +368,10 @@ namespace MVS.Services.Reporting
                 g.TextRenderingHint = TextRenderingHint.ClearTypeGridFit;
                 g.Clear(ColorNeutralLight);
 
-                DrawSectionHeader(g, "EXECUTIVE DASHBOARD", 0, 0, width, 38);
-
                 const int cols  = 3;
                 const int rows  = 3;
                 int gap         = 10;
-                int headerH     = 46;
+				int headerH     = 8;
                 int rowH        = (height - headerH - gap * (rows + 1)) / rows;
                 int cardW       = (width  - gap * (cols + 1)) / cols;
 
@@ -579,12 +577,9 @@ namespace MVS.Services.Reporting
 				g.TextRenderingHint = TextRenderingHint.ClearTypeGridFit;
 				g.Clear(ColorNeutralLight);
 
-				string sectionTitle = model.HasCorrectionApplied ? "APPLIED CORRECTIONS" : "RECOMMENDED CORRECTIONS";
-				DrawSectionHeader(g, sectionTitle, 0, 0, width, 38);
-
 				int gap   = 12;
 				int cardW = (width - gap * 4) / 3;
-				int cardY = 46;
+				int cardY = 8;
 				int cardH = height - cardY - 8;
 
 				var axes = new[]
@@ -728,11 +723,9 @@ namespace MVS.Services.Reporting
 				g.TextRenderingHint = TextRenderingHint.ClearTypeGridFit;
 				g.Clear(ColorNeutralLight);
 
-				DrawSectionHeader(g, "SESSION OVERVIEW", 0, 0, width, 34);
-
 				int gap   = 8;
 				int cardW = (width - gap * 5) / 4;
-				int cardY = 42;
+				int cardY = 8;
 				int cardH = height - cardY - 6;
 
 				string startEnd = (string.IsNullOrWhiteSpace(model.StartTime) ? "\u2014" : model.StartTime)
@@ -1056,9 +1049,7 @@ namespace MVS.Services.Reporting
 				g.TextRenderingHint = TextRenderingHint.ClearTypeGridFit;
 				g.Clear(ColorNeutralLight);
 
-				DrawSectionHeader(g, "SIGNAL CORRELATION & LATENCY", 0, 0, width, 34);
-
-				int y0    = 40;
+				int y0    = 6;
 				int rowH  = (height - y0 - 4) / 3;
 				int labelW = 80;
 				int halfW  = (width - labelW * 2 - 32) / 2;

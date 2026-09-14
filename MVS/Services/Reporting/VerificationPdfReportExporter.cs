@@ -215,12 +215,7 @@ namespace MVS.Services.Reporting
             Section("5.  Conclusion",                  () => WriteConclusion(editor, model));
             Section("6.  Recommendations",             () => WriteRecommendations(editor, model));
             Section("7.  Observations",                () => WriteObservations(editor, model));
-            Section("8.  Axis Detail", () =>
-            {
-                Heading(editor, "8. Axis Detail");
-                WriteCharts(editor, model);
-                WriteAxisDetails(editor, model);
-            });
+            Section("8.  Axis Detail", () => WriteAxisSection(editor, model));
             Section("9.  Appendices",                  () => { WriteAppendices(editor, model); WriteGlossary(editor, model); });
             Section("10. Scope & Objective",           () => WriteScope(editor, model));
             Section("11. Data Processing Methodology", () => WriteMethodology(editor, model));
@@ -329,12 +324,7 @@ namespace MVS.Services.Reporting
 				Section("6.  Recommendations",             "6. Recommendations",             () => WriteRecommendations(ed, model));
 				Section("7.  Observations",                "7. Observations",                () => WriteObservations(ed, model));
 
-				Section("8.  Axis Detail", "8. Axis Detail", () =>
-				{
-					Heading(ed, "8. Axis Detail");
-					WriteCharts(ed, model);
-					WriteAxisDetails(ed, model);
-				});
+                Section("8.  Axis Detail", "8. Axis Detail", () => WriteAxisSection(ed, model));
 
 				Section("9.  Appendices",                  "9. Appendices",                  () => { WriteAppendices(ed, model); WriteGlossary(ed, model); });
 				Section("10. Scope & Objective",           "10. Scope and Objective",        () => WriteScope(ed, model));
@@ -691,6 +681,8 @@ private static void WriteTitle(RadFixedDocumentEditor editor, VerificationReport
         private static void WriteExecutiveDashboard(RadFixedDocumentEditor editor, VerificationReportModel model)
         {
             Heading(editor, "Executive Dashboard");
+            Introduction(editor,
+                "Summary of verification outcome, correction status and key data-quality indicators for a rapid executive review.");
 
             if (model.ExecutiveDashboardPng != null)
             {
@@ -800,6 +792,8 @@ private static void WriteTitle(RadFixedDocumentEditor editor, VerificationReport
         private static void WriteScope(RadFixedDocumentEditor editor, VerificationReportModel model)
         {
             Heading(editor, "10. Scope and Objective");
+            Introduction(editor,
+                "Verification scope, intended outcome and applicable references defining the purpose and boundaries of this report.");
 
             MruReportMetadata m = model.Metadata;
             Paragraph(editor,
@@ -819,6 +813,9 @@ private static void WriteTitle(RadFixedDocumentEditor editor, VerificationReport
         private static void WriteEquipment(RadFixedDocumentEditor editor, VerificationReportModel model)
         {
             Heading(editor, "12. Equipment");
+            Introduction(editor,
+                "Equipment used for the verification, including the vessel-installed MRU, the reference unit and any supporting hardware.");
+
             MruReportMetadata m = model.Metadata ?? new MruReportMetadata();
 
             Paragraph(editor, "MRU under test (vessel-installed)", 12, ColorHeading, spacingBefore: 2, spacingAfter: 4, bold: true);
@@ -852,6 +849,9 @@ private static void WriteTitle(RadFixedDocumentEditor editor, VerificationReport
         private static void WriteTestSetup(RadFixedDocumentEditor editor, VerificationReportModel model)
         {
             Heading(editor, "13. Test Setup");
+            Introduction(editor,
+                "Installation arrangement, sensor geometry, synchronization approach and data acquisition settings used during the verification capture.");
+
             MruReportMetadata m = model.Metadata ?? new MruReportMetadata();
 
             InsertKeyValueTable(editor, new List<KeyValuePair<string, string>>
@@ -873,6 +873,9 @@ private static void WriteTitle(RadFixedDocumentEditor editor, VerificationReport
         private static void WriteTestConditions(RadFixedDocumentEditor editor, VerificationReportModel model)
         {
             Heading(editor, "14. Test Conditions");
+            Introduction(editor,
+                "Environmental and operational conditions recorded during the verification to provide context for the measured vessel and reference responses.");
+
             MruReportMetadata m = model.Metadata ?? new MruReportMetadata();
 
             InsertKeyValueTable(editor, new List<KeyValuePair<string, string>>
@@ -896,6 +899,8 @@ private static void WriteTitle(RadFixedDocumentEditor editor, VerificationReport
         private static void WriteMethodology(RadFixedDocumentEditor editor, VerificationReportModel model)
         {
             Heading(editor, "11. Data Processing Methodology");
+            Introduction(editor,
+                "Summary of synchronization, filtering, statistical treatment and comparison methods used to derive the reported verification metrics.");
 
             Paragraph(editor,
                 "Reference and vessel channels are time-aligned sample-by-sample. " +
@@ -925,6 +930,8 @@ private static void WriteTitle(RadFixedDocumentEditor editor, VerificationReport
         private static void WriteOverview(RadFixedDocumentEditor editor, VerificationReportModel model)
         {
             Heading(editor, "1. Session Overview");
+            Introduction(editor,
+                "Overview of the verification session, capture timing, operator details, data volume and current correction status.");
 
             // Visual session info cards (900x180 GDI -> 681x136 PDF)
 			if (model.SessionOverviewPng != null)
@@ -955,6 +962,8 @@ private static void WriteTitle(RadFixedDocumentEditor editor, VerificationReport
 		private static void WriteFinalResults(RadFixedDocumentEditor editor, VerificationReportModel model)
 		{
 			Heading(editor, "2. Applied Corrections");
+            Introduction(editor,
+                "Recommended and applied corrections for pitch, roll and heave, together with their implementation status across the vessel unit.");
 
 			// Hero correction cards (900×280 GDI → 681×212 PDF)
 			if (model.CorrectionCardsPng != null)
@@ -1073,12 +1082,24 @@ private static void WriteTitle(RadFixedDocumentEditor editor, VerificationReport
         }
 
 
+        private static void WriteAxisSection(RadFixedDocumentEditor editor, VerificationReportModel model)
+        {
+            Heading(editor, "8. Axis Detail");
+            Introduction(editor,
+                "Detailed per-axis statistics, comparison charts and correction values for pitch, roll and heave across the verification dataset.");
+
+            WriteCharts(editor, model);
+            WriteAxisDetails(editor, model);
+        }
+
         private static void WriteCorrelationAndLatency(RadFixedDocumentEditor editor, VerificationReportModel model)
         {
             if (!model.HasData)
                 return;
 
             Heading(editor, "3. Correlation and Latency");
+            Introduction(editor,
+                "Correlation strength and timing-offset metrics comparing reference and vessel motion signals across the measured axes.");
             Paragraph(editor,
                 "Correlation: 1.00 = perfect agreement. Latency: positive = vessel lags reference.",
                 10.5, ColorText, spacingAfter: 8);
@@ -1116,6 +1137,8 @@ private static void WriteTitle(RadFixedDocumentEditor editor, VerificationReport
         private static void WriteObservations(RadFixedDocumentEditor editor, VerificationReportModel model)
         {
             Heading(editor, "7. Observations");
+            Introduction(editor,
+                "Additional notes recorded during the verification that may help explain conditions, limitations or noteworthy aspects of the capture.");
 
             string observations = model.Metadata?.Observations;
             Paragraph(editor,
@@ -1128,6 +1151,8 @@ private static void WriteTitle(RadFixedDocumentEditor editor, VerificationReport
 		private static void WriteCompliance(RadFixedDocumentEditor editor, VerificationReportModel model)
 		{
 			Heading(editor, "4. Compliance Assessment");
+            Introduction(editor,
+                "Assessment of sample count, capture duration and signal quality against the recommended criteria for reliable verification results.");
 
 			// VERIFICATION QUALITY summary banner (900×160 GDI → 681×121 PDF)
 				if (model.ComplianceSummaryBannerPng != null)
@@ -1218,12 +1243,16 @@ private static void WriteTitle(RadFixedDocumentEditor editor, VerificationReport
         private static void WriteConclusion(RadFixedDocumentEditor editor, VerificationReportModel model)
         {
             Heading(editor, "5. Conclusion");
+            Introduction(editor,
+                "Overall verification outcome and interpretation of the calculated corrections based on the measured agreement between vessel and reference data.");
             Paragraph(editor, ConclusionSentence(model), 10.5, ColorText, spacingAfter: 6);
         }
 
         private static void WriteRecommendations(RadFixedDocumentEditor editor, VerificationReportModel model)
         {
             Heading(editor, "6. Recommendations");
+            Introduction(editor,
+                "Recommended follow-up actions based on the verification outcome, correction status and any identified data-quality limitations.");
 
             string recommendations = model.Metadata?.Recommendations;
             Paragraph(editor,
@@ -1240,6 +1269,8 @@ private static void WriteTitle(RadFixedDocumentEditor editor, VerificationReport
         private static void WriteAppendices(RadFixedDocumentEditor editor, VerificationReportModel model)
         {
             Heading(editor, "9. Appendices");
+            Introduction(editor,
+                "Supporting reference material and explanatory notes that complement the verification results without affecting the reported calculations or conclusions.");
 
             string notes = model.Metadata?.AppendixNotes;
             Paragraph(editor,
@@ -1761,6 +1792,11 @@ private static void WriteTitle(RadFixedDocumentEditor editor, VerificationReport
             SetText(editor, _robotoRegular, 10, ColorText);
             editor.ParagraphProperties.SpacingBefore = 0;
             editor.ParagraphProperties.SpacingAfter  = 4;
+        }
+
+        private static void Introduction(RadFixedDocumentEditor editor, string text)
+        {
+            Paragraph(editor, text, 9.5, ColorMuted, spacingAfter: 8);
         }
 
         /// <summary>Thin Energy Green horizontal rule — used as a visual section divider.</summary>
