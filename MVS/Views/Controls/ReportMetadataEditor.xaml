@@ -100,11 +100,11 @@
         <!-- Section 4: Test setup -->
         <telerik:GroupBox Header="Test Setup" Margin="0,0,0,10">
             <StackPanel Margin="8">
-                <TextBlock Text="DUT installation location" Style="{StaticResource FieldLabel}"/>
+                <TextBlock Text="Vessel MRU installation location" Style="{StaticResource FieldLabel}"/>
                 <telerik:RadWatermarkTextBox Text="{Binding DutInstallationLocation, UpdateSourceTrigger=LostFocus}"
                                              MinHeight="32"
                                              Style="{StaticResource MultiLineFieldBox}" LostFocus="Field_LostFocus"/>
-                <TextBlock Text="Reference installation location" Style="{StaticResource FieldLabel}"/>
+                <TextBlock Text="Reference MRU installation location" Style="{StaticResource FieldLabel}"/>
                 <telerik:RadWatermarkTextBox Text="{Binding ReferenceInstallationLocation, UpdateSourceTrigger=LostFocus}"
                                              MinHeight="32"
                                              Style="{StaticResource MultiLineFieldBox}" LostFocus="Field_LostFocus"/>

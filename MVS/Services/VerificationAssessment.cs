@@ -100,8 +100,8 @@ namespace MVS.Services
             if (samplesGood)
             {
                 sampleDetail = $"The verification session yielded {sampleCount:N0} averaged samples, " +
-                               $"exceeding the recommended minimum of {MinSamplesGood:N0}. " +
-                               "The statistical basis for the calculated deviations is considered robust.";
+                               $"substantially exceeding the recommended minimum of {MinSamplesGood:N0}. " +
+                               "The resulting statistical confidence is considered high.";
             }
             else if (samplesAcceptable)
             {
@@ -125,9 +125,9 @@ namespace MVS.Services
 
             if (durationGood)
             {
-                durationDetail = $"The capture ran for {durationMinutes:F1} minutes, " +
-                                 $"satisfying the recommended minimum of {MinDurationRecommendedMinutes:F0} minutes " +
-                                 "and providing representative temporal coverage of the vessel's motion.";
+                durationDetail = $"The capture duration of {durationMinutes:F1} minutes exceeded the " +
+                                 "recommended minimum and is considered sufficient to represent vessel motion " +
+                                 "during the verification period.";
             }
             else if (durationAcceptable)
             {
@@ -159,9 +159,9 @@ namespace MVS.Services
             }
             else if (outlierGood)
             {
-                outlierDetail = $"Signal quality was assessed as good. The worst-case outlier share across all axes was " +
-                                $"{worstOutlierPercent:F1}%, within the {OutlierAcceptablePercent:F0}% target. " +
-                                "The input data is considered clean and free from significant noise contamination.";
+                outlierDetail = $"Signal quality was assessed as good. The maximum outlier rate was " +
+                                $"{worstOutlierPercent:F1}%, remaining within the recommended limit. " +
+                                "Data quality is considered suitable for correction determination.";
             }
             else if (outlierAttention)
             {
@@ -186,8 +186,8 @@ namespace MVS.Services
                                (!double.IsNaN(worstOutlierPercent) && worstOutlierPercent > OutlierAttentionPercent);
 
             string overall = allGood
-                ? "The verification has been completed successfully. All data-quality criteria were met " +
-                  "and the calculated deviations are considered reliable for use in corrections and reporting."
+                ? "Verification was completed successfully. All quality criteria were satisfied and the " +
+                  "calculated corrections are considered reliable for operational use."
                 : anyCritical
                     ? "The verification has been completed, however one or more data-quality criteria were not fully met. " +
                       "Review the findings below before applying the calculated corrections."

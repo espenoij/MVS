@@ -714,8 +714,6 @@ private static void WriteTitle(RadFixedDocumentEditor editor, VerificationReport
         /// </summary>
         private static void WriteKeyFindings(RadFixedDocumentEditor editor, VerificationReportModel model)
         {
-            Heading(editor, "Key Findings");
-
             if (!model.HasData)
             {
                 Paragraph(editor,
@@ -730,7 +728,7 @@ private static void WriteTitle(RadFixedDocumentEditor editor, VerificationReport
             };
 
             if (model.HasCorrectionApplied)
-                findings.Add("Corrections applied to the vessel unit.");
+                findings.Add("Recommended corrections applied.");
             else
                 findings.Add("Recommended corrections are ready to apply to the vessel unit.");
 
@@ -745,7 +743,7 @@ private static void WriteTitle(RadFixedDocumentEditor editor, VerificationReport
             if (!double.IsNaN(worstOutlier))
             {
                 if (worstOutlier <= VerificationAssessment.OutlierAcceptablePercent)
-                    findings.Add(string.Format(Ci, "Data quality exceeded target thresholds (maximum outlier rate only {0:F1} %).", worstOutlier));
+                    findings.Add("Data quality exceeded target thresholds.");
                 else
                     findings.Add(string.Format(Ci, "Maximum outlier rate {0:F1} %.", worstOutlier));
             }
@@ -858,8 +856,8 @@ private static void WriteTitle(RadFixedDocumentEditor editor, VerificationReport
 
             InsertKeyValueTable(editor, new List<KeyValuePair<string, string>>
             {
-                new KeyValuePair<string, string>("DUT installation location", Dash(m.DutInstallationLocation)),
-                new KeyValuePair<string, string>("Reference installation location", Dash(m.ReferenceInstallationLocation)),
+                new KeyValuePair<string, string>("Vessel MRU installation location", Dash(m.DutInstallationLocation)),
+                new KeyValuePair<string, string>("Reference MRU installation location", Dash(m.ReferenceInstallationLocation)),
                 new KeyValuePair<string, string>("Mounting arrangement", Dash(m.MountingArrangement)),
                 new KeyValuePair<string, string>("Coordinate system", Dash(m.CoordinateSystem)),
                 new KeyValuePair<string, string>("Sensor separation", Dash(m.SensorSeparation)),
@@ -1122,7 +1120,7 @@ private static void WriteTitle(RadFixedDocumentEditor editor, VerificationReport
             string observations = model.Metadata?.Observations;
             Paragraph(editor,
                 string.IsNullOrWhiteSpace(observations)
-                    ? "No specific observations were recorded during the verification."
+                    ? "No additional observations were recorded."
                     : observations,
                 10.5, ColorText, spacingAfter: 6);
         }
@@ -1231,8 +1229,8 @@ private static void WriteTitle(RadFixedDocumentEditor editor, VerificationReport
             Paragraph(editor,
                 string.IsNullOrWhiteSpace(recommendations)
                     ? (model.HasCorrectionApplied
-                        ? "Apply and retain the corrections listed in this report. Re-verify periodically and after any " +
-                          "change to the installation or firmware."
+                        ? "Maintain the applied corrections and repeat verification following installation changes, " +
+                          "firmware updates or periodic maintenance activities."
                         : "Apply the recommended corrections listed in this report to the vessel unit, then re-verify to " +
                           "confirm agreement with the reference.")
                     : recommendations,
@@ -1253,7 +1251,7 @@ private static void WriteTitle(RadFixedDocumentEditor editor, VerificationReport
 
         private static void WriteGlossary(RadFixedDocumentEditor editor, VerificationReportModel model)
         {
-            Heading(editor, "What the Numbers Mean");
+            Heading(editor, "Metric Definitions");
 
             Paragraph(editor,
                 "A quick reference guide for interpreting the metrics in this report.",
@@ -1298,7 +1296,7 @@ private static void WriteTitle(RadFixedDocumentEditor editor, VerificationReport
             TealRule(editor);
             Paragraph(editor,
                 "Generated " + model.GeneratedUtc.ToString("yyyy-MM-dd HH:mm", Ci) +
-                " UTC \u2014 Motion Verification System  |  MRU Verification Report",
+                " UTC | Motion Verification System",
                 8.5, ColorMuted, spacingBefore: 4);
         }
 
@@ -1701,8 +1699,8 @@ private static void WriteTitle(RadFixedDocumentEditor editor, VerificationReport
             string verdict;
             if (assessed == 0)
             {
-                verdict = "No acceptance criteria were entered, so a formal pass/fail verdict is not stated; the " +
-                          "measured deviations and recommended corrections are reported for engineering review.";
+                verdict = "No formal acceptance criteria were defined. Measured deviations and recommended " +
+                          "corrections are therefore presented for engineering review.";
             }
             else if (failed > 0)
             {

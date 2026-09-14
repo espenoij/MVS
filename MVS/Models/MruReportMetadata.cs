@@ -21,7 +21,7 @@ namespace MVS
         public string TestObjective { get; set; } = string.Empty;
         public string ApplicableStandards { get; set; } = string.Empty;
 
-        // ---- Section 3: Equipment - MRU under test (DUT, vessel-installed) ----
+        // ---- Section 3: Equipment - MRU under test (vessel-installed) ----
         public string DutManufacturer { get; set; } = string.Empty;
         public string DutModel { get; set; } = string.Empty;
         public string DutSerialNumber { get; set; } = string.Empty;
@@ -94,13 +94,12 @@ namespace MVS
             {
                 // ---- Section 2: Scope and objective ----
                 TestObjective =
-                    "Verify that the vessel-installed Motion Reference Unit (MRU) under test meets the " +
-                    "required measurement accuracy for pitch, roll and heave by comparison against a " +
-                    "calibrated reference MRU under representative operating conditions, and determine any " +
-                    "orientation corrections required for the vessel unit.",
+                    "Verify agreement between the vessel-installed Motion Reference Unit (MRU) and a " +
+                    "calibrated reference MRU during representative operating conditions, and determine any " +
+                    "required pitch, roll and heave corrections.",
                 ApplicableStandards =
-                    "Verification performed in accordance with the equipment manufacturer's specifications " +
-                    "and the applicable vessel/class requirements.",
+                    "Verification performed in accordance with manufacturer specifications and applicable " +
+                    "vessel, client and class requirements.",
 
                 // ---- Section 3: Equipment ----
                 AdditionalEquipment = "None.",
@@ -113,23 +112,23 @@ namespace MVS
                     "Vessel-fixed right-handed coordinate system: X positive forward, Y positive to " +
                     "starboard, Z positive downward. Rotations follow the right-hand rule.",
                 DataAcquisitionMethod =
-                    "Outputs from the unit under test and the reference MRU logged simultaneously to a " +
-                    "common time base for the full duration of the capture.",
+                    "Reference and vessel MRU outputs were recorded simultaneously using a common time " +
+                    "base throughout the verification period.",
                 SynchronizationMethod =
-                    "Both units synchronised to a common time reference prior to logging.",
+                    "Both units were synchronised to a common time reference prior to data acquisition.",
                 LoggingConfiguration =
                     "Continuous logging of all motion channels at the configured sample rate (2Hz).",
 
                 // ---- Section 6: Data processing methodology ----
                 TimeSynchronizationNotes =
-                    "Reference and vessel channels time-aligned sample-by-sample to a common reference clock " +
-                    "prior to statistical analysis.",
+                    "Reference and vessel data streams were time-aligned prior to statistical analysis to " +
+                    "ensure sample-to-sample comparability.",
                 FilteringNotes =
                     "No additional filtering applied beyond the sensors' native output; raw logged samples " +
                     "used for the comparison.",
                 DataProcessingNotes =
-                    "Per-sample deviations (vessel minus reference) computed for each axis; descriptive " +
-                    "statistics and correlation calculated over the full capture.",
+                    "Deviations were calculated for each sample and axis using vessel minus reference " +
+                    "measurements. Statistical metrics were then computed over the full capture period.",
             };
         }
 
