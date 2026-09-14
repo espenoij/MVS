@@ -1126,12 +1126,24 @@ private static void WriteTitle(RadFixedDocumentEditor editor, VerificationReport
 
             editor.InsertTable(table);
 
-            // Transparency note: reconcile "poor correlation" with a successful verification.
             Paragraph(editor,
-                "Correlation values are reported for transparency and are not used as the primary indicator of " +
-                "correction quality. Verification confidence is determined primarily by sample count, capture " +
-                "duration, signal quality, and statistical consistency.",
-                9.5, ColorMuted, spacingBefore: 8, spacingAfter: 6);
+                "Description of Correlation and Latency",
+                10.5, ColorSubHeading, spacingBefore: 12, spacingAfter: 4, bold: true);
+
+            Paragraph(editor,
+                "Correlation describes how similarly the vessel and reference MRU signals vary over time. A value close to +1.0 indicates strong agreement in signal behaviour, while values closer to 0 indicate weaker similarity. Latency represents the estimated timing offset between the two signals; positive values indicate that the vessel signal lags the reference signal, while negative values indicate that it leads. Correlation and latency are reported for diagnostic purposes only. Verification confidence is based primarily on sample count, capture duration, signal quality and the stability of the calculated corrections. Low correlation does not necessarily indicate poor correction quality when a consistent offset is present.",
+                9.5, ColorMuted, spacingAfter: 12);
+
+            Paragraph(editor,
+                "Interpretation of Correlation and Latency",
+                10.5, ColorSubHeading, spacingAfter: 4, bold: true);
+            Paragraph(editor,
+                "Correlation and latency values are provided for diagnostic transparency and should not be considered " +
+                "primary indicators of verification quality. Verification confidence is determined primarily from " +
+                "sample count, capture duration, signal quality and the consistency of the measured deviations. Low " +
+                "correlation does not necessarily indicate poor correction quality when a stable and repeatable offset " +
+                "can be identified between the vessel and reference units.",
+                9.5, ColorMuted, spacingAfter: 6);
         }
 
         private static void WriteObservations(RadFixedDocumentEditor editor, VerificationReportModel model)
