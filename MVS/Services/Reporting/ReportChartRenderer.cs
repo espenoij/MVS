@@ -1795,12 +1795,13 @@ double latMs = pair != null ? pair.EstimatedLatencySeconds * 1000.0 : double.NaN
                 g.TextRenderingHint = TextRenderingHint.ClearTypeGridFit;
                 g.Clear(ColorBackground);
 
-                using (var titleFont = new Font("Segoe UI", 13f, FontStyle.Bold))
-                using (var labelFont = new Font("Segoe UI",  9.5f))
-                using (var valueFont = new Font("Segoe UI",  9.5f, FontStyle.Bold))
-                using (var textBrush = new SolidBrush(ColorText))
-                using (var axisPen   = new Pen(ColorAxis, 1.2f))
-                using (var gridPen   = new Pen(ColorGrid, 1f))
+				using (var titleFont = new Font("Segoe UI", 13f, FontStyle.Bold))
+				using (var labelFont = new Font("Segoe UI",  9.5f))
+				using (var valueFont = new Font("Segoe UI",  9.5f, FontStyle.Bold))
+				using (var textBrush = new SolidBrush(ColorText))
+				using (var valueBrush = new SolidBrush(ColorBlack))
+				using (var axisPen   = new Pen(ColorAxis, 1.2f))
+				using (var gridPen   = new Pen(ColorGrid, 1f))
                 {
                     // Title strip
                     using (var stripBrush = new SolidBrush(ColorNeutralLight))
@@ -1864,17 +1865,27 @@ double latMs = pair != null ? pair.EstimatedLatencySeconds * 1000.0 : double.NaN
                         using (var barBrush = new SolidBrush(r.Color))
                             g.FillRectangle(barBrush, barX, barTop, Math.Max(1f, barLen), barHeight);
 
-                        // Value label at bar end
+						// Value label outside the bar with a consistent gap.
                         string valueText = $"{r.Value:+0.000;-0.000;0.000} {r.Unit}";
-                        float  valueX    = r.Value >= 0 ? barX + barLen + 6 : barX - 6;
-                        using (var sf = new StringFormat
+						var valueRect = GetHorizontalBarValueLabelBounds(
+							g,
+							valueFont,
+							plot,
+							zeroX,
+							width,
+							centerY,
+							barX,
+							barLen,
+							r.Value,
+							valueText);
+
+						using (var sf = new StringFormat
                         {
-                            Alignment     = r.Value >= 0 ? StringAlignment.Near : StringAlignment.Far,
-                            LineAlignment = StringAlignment.Center
-                        })
-                        {
-                            var valueRect = new RectangleF(valueX - 80, centerY - rowHeight / 2f, 160, rowHeight);
-                            g.DrawString(valueText, valueFont, textBrush, valueRect, sf);
+							Alignment = StringAlignment.Near,
+							LineAlignment = StringAlignment.Center
+						})
+						{
+							g.DrawString(valueText, valueFont, valueBrush, valueRect, sf);
                         }
                     }
                 }
@@ -1882,6 +1893,47 @@ double latMs = pair != null ? pair.EstimatedLatencySeconds * 1000.0 : double.NaN
                 return ToPng(bmp);
             }
         }
+
+		private static RectangleF GetHorizontalBarValueLabelBounds(
+			Graphics g,
+			Font valueFont,
+			RectangleF plot,
+			float zeroX,
+			int chartWidth,
+			float centerY,
+			float barX,
+			float barLen,
+			double value,
+			string valueText)
+		{
+			const float gap = 8f;
+			const float outerPadding = 4f;
+
+			SizeF valueSize = g.MeasureString(valueText, valueFont, int.MaxValue, StringFormat.GenericTypographic);
+			float labelWidth = Math.Max(1f, valueSize.Width + 2f);
+			float labelHeight = Math.Max(valueSize.Height + 2f, 16f);
+			float labelX;
+
+			if (value >= 0)
+			{
+				float barRight = barX + barLen;
+				labelX = Math.Max(barRight + gap, zeroX + gap);
+				labelX = Math.Min(labelX, chartWidth - labelWidth - outerPadding);
+			}
+			else
+			{
+				float barLeft = barX;
+				float desiredRight = Math.Min(barLeft - gap, zeroX - gap);
+				labelX = Math.Max(outerPadding, desiredRight - labelWidth);
+			}
+
+			float labelTop = centerY - labelHeight / 2f;
+
+			if (labelX + labelWidth > plot.Right)
+				labelX = Math.Min(labelX, chartWidth - labelWidth - outerPadding);
+
+			return new RectangleF(labelX, labelTop, labelWidth, labelHeight);
+		}
 
         private static void DrawGridlines(Graphics g, Pen gridPen, Pen axisPen, Brush textBrush, Font font,
                                           RectangleF plot, float zeroX, float fullWidth, double niceMax, bool signed)
