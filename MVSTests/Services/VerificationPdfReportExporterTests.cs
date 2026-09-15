@@ -1,5 +1,6 @@
 using System;
 using System.IO;
+using System.Reflection;
 using Microsoft.VisualStudio.TestTools.UnitTesting;
 using MVS;
 using MVS.Models;
@@ -47,7 +48,6 @@ namespace MVSTests.Services
                     SampleRateHz = 10.0,
                     AcceptanceCriteriaDiscussion = "Data quality was good throughout the capture window.",
                     Observations = "Calm conditions throughout.",
-                    Recommendations = "Apply corrections and re-verify.",
                 },
                 PitchPair = new PairedSeriesStatistics { SampleCount = 400, Correlation = 0.98, EstimatedLatencySeconds = 0.10 },
                 RollPair = new PairedSeriesStatistics { SampleCount = 400, Correlation = 0.95, EstimatedLatencySeconds = 0.0 },
@@ -293,6 +293,28 @@ namespace MVSTests.Services
                     VerificationPdfReportExporter.Export(ms, model);
                     Assert.IsTrue(ms.Length > 0, "Empty-data report should still export a PDF.");
                 }
+            });
+        }
+
+        [TestMethod]
+        public void DiscoverSectionPageNumbers_DoesNotForceBreak_FinalAppendicesSection()
+        {
+            StaTestHelper.Run(() =>
+            {
+                var model = SampleModel(withData: false);
+                var method = typeof(VerificationPdfReportExporter).GetMethod(
+                    "DiscoverSectionPageNumbers",
+                    BindingFlags.NonPublic | BindingFlags.Static);
+
+                Assert.IsNotNull(method);
+
+                object result = method.Invoke(null, new object[] { model, new System.Collections.Generic.HashSet<string>() });
+                FieldInfo newSplitsField = result.GetType().GetField("Item2");
+
+                Assert.IsNotNull(newSplitsField);
+
+                var newSplits = (System.Collections.Generic.HashSet<string>)newSplitsField.GetValue(result);
+                Assert.IsFalse(newSplits.Contains("13. Appendices"));
             });
         }
 

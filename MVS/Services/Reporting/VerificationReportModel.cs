@@ -51,7 +51,7 @@ namespace MVS.Services.Reporting
         public double AppliedCorrectionHeave { get; set; }
 
         // ----- Operator-supplied report metadata (equipment, setup, conditions,
-        //       acceptance criteria, observations, recommendations) -----
+        //       acceptance criteria, observations, appendix notes) -----
         public MruReportMetadata Metadata { get; set; } = new MruReportMetadata();
 
         // ----- Pairwise correlation and estimated latency per axis -----

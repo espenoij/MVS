@@ -212,18 +212,16 @@ namespace MVS.Services.Reporting
             if (model.HasData)
                 Section("3.  Correlation & Latency",   () => WriteCorrelationAndLatency(editor, model));
             Section("4.  Compliance Assessment",       () => WriteCompliance(editor, model));
-            Section("5.  Conclusion",                  () => WriteConclusion(editor, model));
-            Section("6.  Recommendations",             () => WriteRecommendations(editor, model));
-            Section("7.  Observations",                () => WriteObservations(editor, model));
-            Section("8.  Axis Detail", () => WriteAxisSection(editor, model));
-            Section("9.  Appendices",                  () => { WriteAppendices(editor, model); WriteGlossary(editor, model); });
-            Section("10. Scope & Objective",           () => WriteScope(editor, model));
-            Section("11. Data Processing Methodology", () => WriteMethodology(editor, model));
-            Section("12. Equipment",                   () => WriteEquipment(editor, model));
-            Section("13. Test Setup",                  () => WriteTestSetup(editor, model));
-            Section("14. Test Conditions",             () => WriteTestConditions(editor, model));
+            Section("5.  Scope & Objective",           () => WriteScope(editor, model));
+            Section("6.  Data Processing Methodology", () => WriteMethodology(editor, model));
+            Section("7.  Equipment",                   () => WriteEquipment(editor, model));
+            Section("8.  Test Setup",                  () => WriteTestSetup(editor, model));
+            Section("9.  Test Conditions",             () => WriteTestConditions(editor, model));
+            Section("10. Axis Detail",                 () => WriteAxisSection(editor, model));
+            Section("11. Metric Definitions",          () => WriteGlossary(editor, model));
+            Section("12. Observations",                () => WriteObservations(editor, model));
+            Section("13. Appendices",                  () => WriteAppendices(editor, model));
 
-            WriteFooter(editor, model);
             editor.Dispose();
             AddPageFooters(document);
             return document;
@@ -319,21 +317,17 @@ namespace MVS.Services.Reporting
 				if (model.HasData)
 					Section("3.  Correlation & Latency",   "3. Correlation and Latency",     () => WriteCorrelationAndLatency(ed, model));
 
-				Section("4.  Compliance Assessment",       "4. Compliance Assessment",       () => WriteCompliance(ed, model));
-				Section("5.  Conclusion",                  "5. Conclusion",                  () => WriteConclusion(ed, model));
-				Section("6.  Recommendations",             "6. Recommendations",             () => WriteRecommendations(ed, model));
-				Section("7.  Observations",                "7. Observations",                () => WriteObservations(ed, model));
+                Section("4.  Compliance Assessment",       "4. Compliance Assessment",       () => WriteCompliance(ed, model));
+                Section("5.  Scope & Objective",           "5. Scope and Objective",         () => WriteScope(ed, model));
+                Section("6.  Data Processing Methodology", "6. Data Processing Methodology", () => WriteMethodology(ed, model));
+                Section("7.  Equipment",                   "7. Equipment",                   () => WriteEquipment(ed, model));
+                Section("8.  Test Setup",                  "8. Test Setup",                  () => WriteTestSetup(ed, model));
+                Section("9.  Test Conditions",             "9. Test Conditions",             () => WriteTestConditions(ed, model));
+                Section("10. Axis Detail",                 "10. Axis Detail",                () => WriteAxisSection(ed, model));
+                Section("11. Metric Definitions",          "11. Metric Definitions",         () => WriteGlossary(ed, model));
+                Section("12. Observations",                "12. Observations",               () => WriteObservations(ed, model));
+                Section("13. Appendices",                  "13. Appendices",                 () => WriteAppendices(ed, model));
 
-                Section("8.  Axis Detail", "8. Axis Detail", () => WriteAxisSection(ed, model));
-
-				Section("9.  Appendices",                  "9. Appendices",                  () => { WriteAppendices(ed, model); WriteGlossary(ed, model); });
-				Section("10. Scope & Objective",           "10. Scope and Objective",        () => WriteScope(ed, model));
-				Section("11. Data Processing Methodology", "11. Data Processing Methodology", () => WriteMethodology(ed, model));
-				Section("12. Equipment",                   "12. Equipment",                  () => WriteEquipment(ed, model));
-				Section("13. Test Setup",                  "13. Test Setup",                 () => WriteTestSetup(ed, model));
-				Section("14. Test Conditions",             "14. Test Conditions",            () => WriteTestConditions(ed, model));
-
-				WriteFooter(ed, model);
 			} // dispose commits every page, including the final partial one
 
 			// Whitespace-stripped, case-sensitive text of every committed page. The
@@ -370,8 +364,10 @@ namespace MVS.Services.Reporting
 				searchFrom = start - 1;
 			}
 
-			// A section genuinely spans multiple pages when its own content crosses a
-			// page boundary. The next section's start page marks where this section ends.
+            // A section genuinely spans multiple pages when its own content crosses a
+            // page boundary. For non-final sections, the next section's start page marks
+            // where this section ends. The final section instead ends on the document's
+            // actual last page.
 			//
 			// When the next section is force-broken we insert an explicit page break
 			// before it, which always advances to a fresh page. That means the forced
@@ -387,10 +383,13 @@ namespace MVS.Services.Reporting
 			for (int s = 0; s < order.Count; s++)
 			{
 				int start     = startPages[s];
-				int nextStart = (s + 1 < order.Count) ? startPages[s + 1] : totalPages + 1;
+                int nextStart = (s + 1 < order.Count) ? startPages[s + 1] : totalPages;
 
-				bool nextForceBroken    = (s + 1 < order.Count) && forcedBreaks.Contains(order[s + 1].Key);
-				int  sectionEnd         = nextForceBroken ? nextStart - 1 : nextStart;
+                bool hasNextSection     = s + 1 < order.Count;
+                bool nextForceBroken    = hasNextSection && forcedBreaks.Contains(order[s + 1].Key);
+                int  sectionEnd         = hasNextSection
+                    ? (nextForceBroken ? nextStart - 1 : nextStart)
+                    : totalPages;
 				bool spansMultiplePages = sectionEnd > start;
 
 				// Only force a break for sections that start mid-page (i.e. not already
@@ -553,17 +552,16 @@ namespace MVS.Services.Reporting
 				("1.  Session Overview",            "1.  Session Overview"),
 				("2.  Applied Corrections",         "2.  Applied Corrections"),
 				("3.  Correlation & Latency",       "3.  Correlation & Latency"),
-				("4.  Compliance Assessment",       "4.  Compliance Assessment"),
-				("5.  Conclusion",                  "5.  Conclusion"),
-				("6.  Recommendations",             "6.  Recommendations"),
-				("7.  Observations",                "7.  Observations"),
-				("8.  Axis Detail",                 "8.  Axis Detail"),
-				("9.  Appendices",                  "9.  Appendices"),
-				("10. Scope & Objective",           "10. Scope & Objective"),
-				("11. Data Processing Methodology", "11. Data Processing Methodology"),
-				("12. Equipment",                   "12. Equipment"),
-				("13. Test Setup",                  "13. Test Setup"),
-				("14. Test Conditions",             "14. Test Conditions"),
+                ("4.  Compliance Assessment",       "4.  Compliance Assessment"),
+                ("5.  Scope & Objective",           "5.  Scope & Objective"),
+                ("6.  Data Processing Methodology", "6.  Data Processing Methodology"),
+                ("7.  Equipment",                   "7.  Equipment"),
+                ("8.  Test Setup",                  "8.  Test Setup"),
+                ("9.  Test Conditions",             "9.  Test Conditions"),
+                ("10. Axis Detail",                 "10. Axis Detail"),
+                ("11. Metric Definitions",          "11. Metric Definitions"),
+                ("12. Observations",                "12. Observations"),
+                ("13. Appendices",                  "13. Appendices"),
 			};
 
 			const double tocWidth = 681;
@@ -791,7 +789,7 @@ private static void WriteTitle(RadFixedDocumentEditor editor, VerificationReport
 
         private static void WriteScope(RadFixedDocumentEditor editor, VerificationReportModel model)
         {
-            Heading(editor, "10. Scope and Objective");
+            Heading(editor, "5. Scope and Objective");
             Introduction(editor,
                 "Verification scope, intended outcome and applicable references defining the purpose and boundaries of this report.");
 
@@ -812,7 +810,7 @@ private static void WriteTitle(RadFixedDocumentEditor editor, VerificationReport
 
         private static void WriteEquipment(RadFixedDocumentEditor editor, VerificationReportModel model)
         {
-            Heading(editor, "12. Equipment");
+            Heading(editor, "7. Equipment");
             Introduction(editor,
                 "Equipment used for the verification, including the vessel-installed MRU, the reference unit and any supporting hardware.");
 
@@ -848,7 +846,7 @@ private static void WriteTitle(RadFixedDocumentEditor editor, VerificationReport
 
         private static void WriteTestSetup(RadFixedDocumentEditor editor, VerificationReportModel model)
         {
-            Heading(editor, "13. Test Setup");
+            Heading(editor, "8. Test Setup");
             Introduction(editor,
                 "Installation arrangement, sensor geometry, synchronization approach and data acquisition settings used during the verification capture.");
 
@@ -872,7 +870,7 @@ private static void WriteTitle(RadFixedDocumentEditor editor, VerificationReport
 
         private static void WriteTestConditions(RadFixedDocumentEditor editor, VerificationReportModel model)
         {
-            Heading(editor, "14. Test Conditions");
+            Heading(editor, "9. Test Conditions");
             Introduction(editor,
                 "Environmental and operational conditions recorded during the verification to provide context for the measured vessel and reference responses.");
 
@@ -898,7 +896,7 @@ private static void WriteTitle(RadFixedDocumentEditor editor, VerificationReport
 
         private static void WriteMethodology(RadFixedDocumentEditor editor, VerificationReportModel model)
         {
-            Heading(editor, "11. Data Processing Methodology");
+            Heading(editor, "6. Data Processing Methodology");
             Introduction(editor,
                 "Summary of synchronization, filtering, statistical treatment and comparison methods used to derive the reported verification metrics.");
 
@@ -1084,7 +1082,7 @@ private static void WriteTitle(RadFixedDocumentEditor editor, VerificationReport
 
         private static void WriteAxisSection(RadFixedDocumentEditor editor, VerificationReportModel model)
         {
-            Heading(editor, "8. Axis Detail");
+            Heading(editor, "10. Axis Detail");
             Introduction(editor,
                 "Detailed per-axis statistics, comparison charts and correction values for pitch, roll and heave across the verification dataset.");
 
@@ -1148,7 +1146,7 @@ private static void WriteTitle(RadFixedDocumentEditor editor, VerificationReport
 
         private static void WriteObservations(RadFixedDocumentEditor editor, VerificationReportModel model)
         {
-            Heading(editor, "7. Observations");
+            Heading(editor, "12. Observations");
             Introduction(editor,
                 "Additional notes recorded during the verification that may help explain conditions, limitations or noteworthy aspects of the capture.");
 
@@ -1252,35 +1250,9 @@ private static void WriteTitle(RadFixedDocumentEditor editor, VerificationReport
             }
         }
 
-        private static void WriteConclusion(RadFixedDocumentEditor editor, VerificationReportModel model)
-        {
-            Heading(editor, "5. Conclusion");
-            Introduction(editor,
-                "Overall verification outcome and interpretation of the calculated corrections based on the measured agreement between vessel and reference data.");
-            Paragraph(editor, ConclusionSentence(model), 10.5, ColorText, spacingAfter: 6);
-        }
-
-        private static void WriteRecommendations(RadFixedDocumentEditor editor, VerificationReportModel model)
-        {
-            Heading(editor, "6. Recommendations");
-            Introduction(editor,
-                "Recommended follow-up actions based on the verification outcome, correction status and any identified data-quality limitations.");
-
-            string recommendations = model.Metadata?.Recommendations;
-            Paragraph(editor,
-                string.IsNullOrWhiteSpace(recommendations)
-                    ? (model.HasCorrectionApplied
-                        ? "Maintain the applied corrections and repeat verification following installation changes, " +
-                          "firmware updates or periodic maintenance activities."
-                        : "Apply the recommended corrections listed in this report to the vessel unit, then re-verify to " +
-                          "confirm agreement with the reference.")
-                    : recommendations,
-                10.5, ColorText, spacingAfter: 6);
-        }
-
         private static void WriteAppendices(RadFixedDocumentEditor editor, VerificationReportModel model)
         {
-            Heading(editor, "9. Appendices");
+            Heading(editor, "13. Appendices");
             Introduction(editor,
                 "Supporting reference material and explanatory notes that complement the verification results without affecting the reported calculations or conclusions.");
 
@@ -1294,7 +1266,7 @@ private static void WriteTitle(RadFixedDocumentEditor editor, VerificationReport
 
         private static void WriteGlossary(RadFixedDocumentEditor editor, VerificationReportModel model)
         {
-            Heading(editor, "Metric Definitions");
+            Heading(editor, "11. Metric Definitions");
 
             Paragraph(editor,
                 "A quick reference guide for interpreting the metrics in this report.",
@@ -1332,15 +1304,6 @@ private static void WriteTitle(RadFixedDocumentEditor editor, VerificationReport
                     VerificationAssessment.OutlierAcceptablePercent,
                     VerificationAssessment.OutlierAttentionPercent),
                 9.5, ColorText, spacingAfter: 6);
-        }
-
-        private static void WriteFooter(RadFixedDocumentEditor editor, VerificationReportModel model)
-        {
-            TealRule(editor);
-            Paragraph(editor,
-                "Generated " + model.GeneratedUtc.ToString("yyyy-MM-dd HH:mm", Ci) +
-                " UTC | Motion Verification System",
-                8.5, ColorMuted, spacingBefore: 4);
         }
 
         // ============================================================
@@ -1718,57 +1681,6 @@ private static void WriteTitle(RadFixedDocumentEditor editor, VerificationReport
                 model.SampleCount,
                 string.IsNullOrWhiteSpace(model.Duration) ? "completed" : model.Duration,
                 applied);
-        }
-
-        private static string ConclusionSentence(VerificationReportModel model)
-        {
-            if (!model.HasData)
-            {
-                return "No measurement data was available, so no verification conclusion can be drawn. " +
-                       "Capture reference and vessel motion data and regenerate the report.";
-            }
-
-            int assessed = 0, passed = 0, conditional = 0, failed = 0;
-            foreach (VerificationAxisKind axis in AllAxes())
-            {
-                switch (model.Compliance(axis))
-                {
-                    case ComplianceResult.Pass: assessed++; passed++; break;
-                    case ComplianceResult.Conditional: assessed++; conditional++; break;
-                    case ComplianceResult.Fail: assessed++; failed++; break;
-                }
-            }
-
-            string verdict;
-            if (assessed == 0)
-            {
-                verdict = "No formal acceptance criteria were defined. Measured deviations and recommended " +
-                          "corrections are therefore presented for engineering review.";
-            }
-            else if (failed > 0)
-            {
-                verdict = string.Format(Ci,
-                    "{0} of {1} assessed axes did not meet the acceptance criteria. Apply the recommended corrections " +
-                    "and re-verify before relying on the vessel unit.", failed, assessed);
-            }
-            else if (conditional > 0)
-            {
-                verdict = string.Format(Ci,
-                    "All {0} assessed axes met the acceptance criteria, with {1} within the conditional margin. " +
-                    "Applying the recommended corrections is advised.", assessed, conditional);
-            }
-            else
-            {
-                verdict = string.Format(Ci,
-                    "All {0} assessed axes met the acceptance criteria. The vessel unit agrees with the reference " +
-                    "within the stated limits.", assessed);
-            }
-
-            string correction = model.HasCorrectionApplied
-                ? " The recommended corrections have been applied to the vessel unit."
-                : " The recommended corrections have not yet been applied.";
-
-            return verdict + correction;
         }
 
         /// <summary>

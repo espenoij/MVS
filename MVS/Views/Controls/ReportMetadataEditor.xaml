@@ -282,21 +282,17 @@
             </StackPanel>
         </telerik:GroupBox>
 
-        <!-- Sections 9 & 13: Observations and recommendations -->
-        <telerik:GroupBox Header="Observations &amp; Recommendations" Margin="0,0,0,10">
+        <!-- Section 11: Observations -->
+        <telerik:GroupBox Header="Observations" Margin="0,0,0,10">
             <StackPanel Margin="8">
                 <TextBlock Text="Observations" Style="{StaticResource FieldLabel}"/>
                 <telerik:RadWatermarkTextBox Text="{Binding Observations, UpdateSourceTrigger=LostFocus}"
                                              MinHeight="60"
                                              Style="{StaticResource MultiLineFieldBox}" LostFocus="Field_LostFocus"/>
-                <TextBlock Text="Recommendations" Style="{StaticResource FieldLabel}"/>
-                <telerik:RadWatermarkTextBox Text="{Binding Recommendations, UpdateSourceTrigger=LostFocus}"
-                                             MinHeight="60"
-                                             Style="{StaticResource MultiLineFieldBox}" LostFocus="Field_LostFocus"/>
             </StackPanel>
         </telerik:GroupBox>
 
-        <!-- Section 14: Appendices -->
+        <!-- Section 12: Appendices -->
         <telerik:GroupBox Header="Appendices" Margin="0,0,0,10">
             <StackPanel Margin="8">
                 <TextBlock Text="Appendix notes" Style="{StaticResource FieldLabel}"/>

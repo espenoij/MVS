@@ -8,7 +8,7 @@ namespace MVS
     /// application; they are captured on the Projects page and persisted with
     /// the project so the generated report can present a complete, professional
     /// engineering document (equipment identification, test setup, environmental
-    /// conditions, acceptance criteria, observations and recommendations).
+    /// conditions, acceptance criteria, observations and appendix notes).
     ///
     /// The whole object is serialised to a single JSON column on the project
     /// table, so adding a new field here requires no database migration.
@@ -71,11 +71,10 @@ namespace MVS
 
         public string ManufacturerSpecifications { get; set; } = string.Empty;
 
-        // ---- Sections 9 & 13: Observations and recommendations ----
+        // ---- Section 5: Observations ----
         public string Observations { get; set; } = string.Empty;
-        public string Recommendations { get; set; } = string.Empty;
 
-        // ---- Section 14: Appendices ----
+        // ---- Section 7: Appendices ----
         public string AppendixNotes { get; set; } = string.Empty;
 
         /// <summary>
@@ -210,7 +209,6 @@ namespace MVS
                 ManufacturerSpecifications = ManufacturerSpecifications,
 
                 Observations = Observations,
-                Recommendations = Recommendations,
 
                 AppendixNotes = AppendixNotes,
             };
