@@ -822,7 +822,6 @@ private static void WriteTitle(RadFixedDocumentEditor editor, VerificationReport
                 new KeyValuePair<string, string>("Manufacturer", Dash(m.DutManufacturer)),
                 new KeyValuePair<string, string>("Model", Dash(m.DutModel)),
                 new KeyValuePair<string, string>("Serial number", Dash(m.DutSerialNumber)),
-                new KeyValuePair<string, string>("Firmware version", Dash(m.DutFirmwareVersion)),
             });
 
             Paragraph(editor, "Reference MRU", 12, ColorHeading, spacingBefore: 10, spacingAfter: 4, bold: true);
@@ -830,11 +829,13 @@ private static void WriteTitle(RadFixedDocumentEditor editor, VerificationReport
             {
                 new KeyValuePair<string, string>("Manufacturer", Dash(m.ReferenceManufacturer)),
                 new KeyValuePair<string, string>("Model", Dash(m.ReferenceModel)),
-                new KeyValuePair<string, string>("Serial number", Dash(m.ReferenceSerialNumber)),
-                new KeyValuePair<string, string>("Firmware version", Dash(m.ReferenceFirmwareVersion)),
-                new KeyValuePair<string, string>("Calibration date", m.ReferenceCalibrationDate.HasValue
-                    ? m.ReferenceCalibrationDate.Value.ToString("yyyy-MM-dd", Ci) : "-"),
-                new KeyValuePair<string, string>("Calibration certificate", Dash(m.ReferenceCalibrationCertificateNumber)),
+            });
+
+            Paragraph(editor, "LiDAR", 12, ColorHeading, spacingBefore: 10, spacingAfter: 4, bold: true);
+            InsertKeyValueTable(editor, new List<KeyValuePair<string, string>>
+            {
+                new KeyValuePair<string, string>("Manufacturer", Dash(m.LidarManufacturer)),
+                new KeyValuePair<string, string>("Model", Dash(m.LidarModel)),
             });
 
             if (!string.IsNullOrWhiteSpace(m.AdditionalEquipment))

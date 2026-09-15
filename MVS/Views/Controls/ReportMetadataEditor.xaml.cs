@@ -3,6 +3,7 @@ using System.Globalization;
 using System.Windows;
 using System.Windows.Controls;
 using MVS.Services;
+using Telerik.Windows.Controls;
 
 namespace MVS.Views.Controls
 {
@@ -31,6 +32,12 @@ namespace MVS.Views.Controls
         public event EventHandler MetadataChanged;
 
         /// <summary>
+        /// Raised when a required field changes so the host page can refresh
+        /// report-step validation without persisting on every keystroke.
+        /// </summary>
+        public event EventHandler ValidationStateChanged;
+
+        /// <summary>
         /// The metadata object being edited. Setting it (re)binds every field.
         /// Passing null clears the editor.
         /// </summary>
@@ -44,6 +51,18 @@ namespace MVS.Views.Controls
         {
             if (Metadata != null)
                 MetadataChanged?.Invoke(this, EventArgs.Empty);
+        }
+
+        private void RequiredField_TextChanged(object sender, TextChangedEventArgs e)
+        {
+            if (Metadata != null)
+                ValidationStateChanged?.Invoke(this, EventArgs.Empty);
+        }
+
+        private void RequiredField_ValueChanged(object sender, RadRangeBaseValueChangedEventArgs e)
+        {
+            if (Metadata != null)
+                ValidationStateChanged?.Invoke(this, EventArgs.Empty);
         }
 
         // ── Formatted read-only strings for the Acceptance Criteria display ──────

@@ -150,6 +150,30 @@ namespace MVS
             UpdateWizardNavigation();
         }
 
+        private IReadOnlyList<string> GetMissingRequiredReportFields()
+        {
+            var metadata = mainWindowVM?.SelectedProject?.ReportMetadata;
+            return metadata?.GetMissingRequiredFields() ?? Array.Empty<string>();
+        }
+
+        private bool CanGenerateReport()
+        {
+            return mainWindowVM?.SelectedProject != null &&
+                   projectVM != null &&
+                   mainWindowVM.SelectedProject.ReportMetadata != null &&
+                   mainWindowVM.SelectedProject.ReportMetadata.HasAllRequiredFields();
+        }
+
+        private string GetReportRequirementsText()
+        {
+            var missing = GetMissingRequiredReportFields();
+            if (missing.Count == 0)
+                return "Step 5 complete — all required Report Details fields are filled. You can generate the report.";
+
+            return "To generate a report you must fill these required Report Details fields: " +
+                   string.Join("; ", missing) + ".";
+        }
+
         /// <summary>
         /// Wires the embedded Livox LiDAR wizard page (wizard step 2) to its view model.
         /// Called from MainWindow after the LivoxLidarVM has been constructed.
@@ -490,6 +514,7 @@ namespace MVS
             // Name / Input MRU changes.
             SubscribeToProject(mainWindowVM.SelectedProject);
 
+            UpdateReportButtonState();
             UpdateWizardNavigation();
             _loadingDetails = false;
         }
@@ -638,6 +663,18 @@ namespace MVS
                 mvsDatabase.Update(mainWindowVM.SelectedProject);
                 InvalidateReportCache();
             }
+
+            UpdateReportButtonState();
+            UpdateWizardNavigation();
+        }
+
+        private void ucReportMetadata_ValidationStateChanged(object sender, EventArgs e)
+        {
+            if (_loadingDetails)
+                return;
+
+            InvalidateReportCache();
+            UpdateWizardNavigation();
         }
 
         // Fill any empty Report Details fields with the standard default text.
@@ -647,32 +684,121 @@ namespace MVS
             if (project == null)
                 return;
 
-            RadWindow.Confirm(
-                new DialogParameters
-                {
-                    Content = "This will overwrite any fields that are still empty with standard boilerplate text.\n\nFields you have already filled in will not be changed.\n\nProceed?",
-                    Header = "Insert Default Text",
-                    OkButtonContent = "Insert",
-                    CancelButtonContent = "Cancel",
-                    Closed = (_, args) =>
-                    {
-                        if (args.DialogResult != true)
-                            return;
+            ShowInsertDefaultTextDialog(project);
+        }
 
-                        // Only populates blank fields, so existing operator input is preserved.
-                        if (!project.ReportMetadata.ApplyDefaultsToEmptyFields())
-                            return;
+        private void ShowInsertDefaultTextDialog(Project project)
+        {
+            ArgumentNullException.ThrowIfNull(project);
 
-                        // MruReportMetadata does not raise change notifications, so re-bind the
-                        // editor to refresh the fields with the newly inserted default text.
-                        ucReportMetadata.Metadata = null;
-                        ucReportMetadata.Metadata = project.ReportMetadata;
+            var owner = Window.GetWindow(this);
+            var dialog = new RadWindow
+            {
+                Header = "Insert Default Text",
+                Width = 520,
+                ResizeMode = ResizeMode.NoResize,
+                CanClose = true,
+                WindowStartupLocation = WindowStartupLocation.CenterOwner,
+                Owner = owner,
+            };
 
-                        // Persist and invalidate the cached report (mirrors a manual edit).
-                        mvsDatabase.Update(project);
-                        InvalidateReportCache();
-                    }
-                });
+            var layout = new Grid
+            {
+                Margin = new Thickness(24),
+            };
+            layout.RowDefinitions.Add(new RowDefinition { Height = GridLength.Auto });
+            layout.RowDefinitions.Add(new RowDefinition { Height = GridLength.Auto });
+            layout.ColumnDefinitions.Add(new ColumnDefinition { Width = GridLength.Auto });
+            layout.ColumnDefinitions.Add(new ColumnDefinition { Width = new GridLength(1, GridUnitType.Star) });
+
+            var iconBorder = new Border
+            {
+                Width = 56,
+                Height = 56,
+                CornerRadius = new CornerRadius(28),
+                BorderThickness = new Thickness(2),
+                BorderBrush = TryFindResource("SesEnergyGreenBrush") as System.Windows.Media.Brush,
+                Margin = new Thickness(0, 0, 16, 0),
+                VerticalAlignment = VerticalAlignment.Top,
+            };
+
+            var iconText = new TextBlock
+            {
+                Text = "?",
+                FontSize = 34,
+                FontWeight = FontWeights.SemiBold,
+                Foreground = TryFindResource("SesEnergyGreenBrush") as System.Windows.Media.Brush,
+                HorizontalAlignment = HorizontalAlignment.Center,
+                VerticalAlignment = VerticalAlignment.Center,
+                TextAlignment = TextAlignment.Center,
+            };
+            iconBorder.Child = iconText;
+            Grid.SetColumn(iconBorder, 0);
+            layout.Children.Add(iconBorder);
+
+            var messageText = new TextBlock
+            {
+                Text = "This will overwrite any fields that are still empty with standard boilerplate text.\n\nFields you have already filled in will not be changed.\n\nProceed?",
+                TextWrapping = TextWrapping.Wrap,
+                LineHeight = 24,
+                VerticalAlignment = VerticalAlignment.Center,
+            };
+            Grid.SetColumn(messageText, 1);
+            layout.Children.Add(messageText);
+
+            var buttonPanel = new StackPanel
+            {
+                Orientation = Orientation.Horizontal,
+                HorizontalAlignment = HorizontalAlignment.Right,
+                Margin = new Thickness(0, 24, 0, 0),
+            };
+            Grid.SetRow(buttonPanel, 1);
+            Grid.SetColumnSpan(buttonPanel, 2);
+
+            var insertButton = new RadButton
+            {
+                Content = "Insert",
+                MinWidth = 120,
+                Margin = new Thickness(0, 0, 8, 0),
+            };
+            insertButton.Click += (_, _) =>
+            {
+                dialog.DialogResult = true;
+                dialog.Close();
+            };
+
+            var cancelButton = new RadButton
+            {
+                Content = "Cancel",
+                MinWidth = 120,
+            };
+            cancelButton.Click += (_, _) =>
+            {
+                dialog.DialogResult = false;
+                dialog.Close();
+            };
+
+            buttonPanel.Children.Add(insertButton);
+            buttonPanel.Children.Add(cancelButton);
+            layout.Children.Add(buttonPanel);
+
+            dialog.Content = layout;
+            dialog.Closed += (_, args) =>
+            {
+                if (args.DialogResult != true)
+                    return;
+
+                if (!project.ReportMetadata.ApplyDefaultsToEmptyFields())
+                    return;
+
+                ucReportMetadata.Metadata = null;
+                ucReportMetadata.Metadata = project.ReportMetadata;
+
+                mvsDatabase.Update(project);
+                InvalidateReportCache();
+            };
+
+            dialog.ShowDialog();
         }
 
         private void tbLocation_LostFocus(object sender, RoutedEventArgs e)
@@ -918,13 +1044,13 @@ namespace MVS
                 default:
                     // Step 5 — Apply & Report: final step, no further navigation.
                     canProceed = false;
-                    requirementsMet = true;
-                    requirementsText = string.Empty;
+                    requirementsMet = CanGenerateReport();
+                    requirementsText = GetReportRequirementsText();
                     break;
             }
 
             // Update the requirements banner
-            if (currentStep >= 5 || string.IsNullOrEmpty(requirementsText))
+            if (string.IsNullOrEmpty(requirementsText))
             {
                 requirementsBanner.Visibility = Visibility.Collapsed;
             }
@@ -1180,6 +1306,14 @@ namespace MVS
                 return false;
             }
 
+            if (!CanGenerateReport())
+            {
+                UpdateReportButtonState();
+                UpdateWizardNavigation();
+                RadWindow.Alert(GetReportRequirementsText());
+                return false;
+            }
+
             // Reuse a valid cached report for this project.
             if (_reportPdfBytes != null && _reportProjectId == project.Id)
             {
@@ -1393,18 +1527,9 @@ namespace MVS
             UpdateReportButtonState();
         }
 
-        private bool IsInputValid()
-        {
-            var project = mainWindowVM?.SelectedProject;
-            return project != null && projectVM != null &&
-                   !string.IsNullOrWhiteSpace(tbOperator.Text) &&
-                   !string.IsNullOrWhiteSpace(tbVesselName.Text) &&
-                   !string.IsNullOrWhiteSpace(tbLocation.Text);
-        }
-
         private void UpdateReportButtonState()
         {
-            bool valid = IsInputValid();
+            bool valid = CanGenerateReport();
             btnGenerateReport.IsEnabled = valid;
             btnUpdateReport.IsEnabled = valid;
             btnUpdateReport.Visibility = (_reportGenerated && _reportNeedsUpdate)

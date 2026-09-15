@@ -1,4 +1,5 @@
 using System;
+using System.Collections.Generic;
 
 namespace MVS
 {
@@ -34,6 +35,13 @@ namespace MVS
         public string ReferenceFirmwareVersion { get; set; } = string.Empty;
         public DateTime? ReferenceCalibrationDate { get; set; }
         public string ReferenceCalibrationCertificateNumber { get; set; } = string.Empty;
+
+        // ---- Section 3: Equipment - LiDAR ----
+        public string LidarUser { get; set; } = string.Empty;
+        public string LidarManufacturer { get; set; } = string.Empty;
+        public string LidarModel { get; set; } = string.Empty;
+        public string LidarSerialNumber { get; set; } = string.Empty;
+        public string LidarFirmwareVersion { get; set; } = string.Empty;
 
         public string AdditionalEquipment { get; set; } = string.Empty;
 
@@ -78,6 +86,59 @@ namespace MVS
         public string AppendixNotes { get; set; } = string.Empty;
 
         /// <summary>
+        /// Returns the user-visible names of required Report Details fields that are
+        /// still blank and therefore block report generation.
+        /// </summary>
+        public IReadOnlyList<string> GetMissingRequiredFields()
+        {
+            List<string> missing = new();
+
+            AddIfMissing(missing, TestObjective, "Test objective");
+            AddIfMissing(missing, ApplicableStandards, "Applicable standards");
+            AddIfMissing(missing, DutManufacturer, "Vessel MRU manufacturer");
+            AddIfMissing(missing, DutModel, "Vessel MRU model");
+            AddIfMissing(missing, DutSerialNumber, "Vessel MRU serial number");
+            AddIfMissing(missing, ReferenceManufacturer, "Reference MRU manufacturer");
+            AddIfMissing(missing, ReferenceModel, "Reference MRU model");
+            AddIfMissing(missing, LidarManufacturer, "LiDAR manufacturer");
+            AddIfMissing(missing, LidarModel, "LiDAR model");
+            AddIfMissing(missing, DutInstallationLocation, "Vessel MRU installation location");
+            AddIfMissing(missing, ReferenceInstallationLocation, "Reference MRU installation location");
+            AddIfMissing(missing, MountingArrangement, "Mounting arrangement");
+            AddIfMissing(missing, CoordinateSystem, "Coordinate system");
+            AddIfMissing(missing, SensorSeparation, "Sensor separation");
+            AddIfMissing(missing, DataAcquisitionMethod, "Data acquisition method");
+            AddIfMissing(missing, SynchronizationMethod, "Synchronization method");
+
+            if (!SampleRateHz.HasValue)
+                missing.Add("Sample rate (Hz)");
+
+            AddIfMissing(missing, LoggingConfiguration, "Logging configuration");
+            AddIfMissing(missing, TimeSynchronizationNotes, "Time synchronization notes");
+            AddIfMissing(missing, FilteringNotes, "Filtering notes");
+            AddIfMissing(missing, DataProcessingNotes, "Data processing notes");
+            AddIfMissing(missing, AcceptanceCriteriaDiscussion, "Assessment");
+
+            return missing;
+        }
+
+        /// <summary>
+        /// Returns true when all required Report Details fields are populated.
+        /// </summary>
+        public bool HasAllRequiredFields()
+        {
+            return GetMissingRequiredFields().Count == 0;
+        }
+
+        private static void AddIfMissing(ICollection<string> missing, string value, string fieldName)
+        {
+            ArgumentNullException.ThrowIfNull(missing);
+
+            if (string.IsNullOrWhiteSpace(value))
+                missing.Add(fieldName);
+        }
+
+        /// <summary>
         /// Creates a metadata instance pre-filled with editable default
         /// boilerplate for the descriptive and methodology fields of the report.
         /// Only fields that carry safe, reusable standard text are populated;
@@ -101,9 +162,17 @@ namespace MVS
                     "vessel, client and class requirements.",
 
                 // ---- Section 3: Equipment ----
+                ReferenceManufacturer = "NORSUB",
+                ReferenceModel = "MRU Marine 9000 H",
+                LidarUser = "Enter the name or role of the LiDAR user.",
+                LidarManufacturer = "Livox Tech",
+                LidarModel = "Livox Mid-360 S",
+                LidarSerialNumber = "Enter the installed LiDAR serial number.",
+                LidarFirmwareVersion = "Enter the LiDAR firmware version used during the scan.",
                 AdditionalEquipment = "None.",
 
                 // ---- Section 4: Test setup ----
+                ReferenceInstallationLocation = "The reference MRU is located on the helideck deck, center.",
                 MountingArrangement =
                     "Both units rigidly mounted to the vessel structure with their measurement axes aligned " +
                     "to the vessel reference frame.",
@@ -145,7 +214,15 @@ namespace MVS
 
             if (string.IsNullOrWhiteSpace(TestObjective)) { TestObjective = defaults.TestObjective; changed = true; }
             if (string.IsNullOrWhiteSpace(ApplicableStandards)) { ApplicableStandards = defaults.ApplicableStandards; changed = true; }
+            if (string.IsNullOrWhiteSpace(ReferenceManufacturer)) { ReferenceManufacturer = defaults.ReferenceManufacturer; changed = true; }
+            if (string.IsNullOrWhiteSpace(ReferenceModel)) { ReferenceModel = defaults.ReferenceModel; changed = true; }
+            if (string.IsNullOrWhiteSpace(LidarUser)) { LidarUser = defaults.LidarUser; changed = true; }
+            if (string.IsNullOrWhiteSpace(LidarManufacturer)) { LidarManufacturer = defaults.LidarManufacturer; changed = true; }
+            if (string.IsNullOrWhiteSpace(LidarModel)) { LidarModel = defaults.LidarModel; changed = true; }
+            if (string.IsNullOrWhiteSpace(LidarSerialNumber)) { LidarSerialNumber = defaults.LidarSerialNumber; changed = true; }
+            if (string.IsNullOrWhiteSpace(LidarFirmwareVersion)) { LidarFirmwareVersion = defaults.LidarFirmwareVersion; changed = true; }
             if (string.IsNullOrWhiteSpace(AdditionalEquipment)) { AdditionalEquipment = defaults.AdditionalEquipment; changed = true; }
+            if (string.IsNullOrWhiteSpace(ReferenceInstallationLocation)) { ReferenceInstallationLocation = defaults.ReferenceInstallationLocation; changed = true; }
             if (string.IsNullOrWhiteSpace(MountingArrangement)) { MountingArrangement = defaults.MountingArrangement; changed = true; }
             if (string.IsNullOrWhiteSpace(CoordinateSystem)) { CoordinateSystem = defaults.CoordinateSystem; changed = true; }
             if (string.IsNullOrWhiteSpace(DataAcquisitionMethod)) { DataAcquisitionMethod = defaults.DataAcquisitionMethod; changed = true; }
@@ -181,6 +258,12 @@ namespace MVS
                 ReferenceFirmwareVersion = ReferenceFirmwareVersion,
                 ReferenceCalibrationDate = ReferenceCalibrationDate,
                 ReferenceCalibrationCertificateNumber = ReferenceCalibrationCertificateNumber,
+
+                LidarUser = LidarUser,
+                LidarManufacturer = LidarManufacturer,
+                LidarModel = LidarModel,
+                LidarSerialNumber = LidarSerialNumber,
+                LidarFirmwareVersion = LidarFirmwareVersion,
 
                 AdditionalEquipment = AdditionalEquipment,
 

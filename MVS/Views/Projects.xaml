@@ -464,7 +464,7 @@
                                                         <RowDefinition Height="32"/>
                                                     </Grid.RowDefinitions>
 
-                                                    <TextBlock Grid.Row="0" Grid.Column="0" Text="Comments" Margin="0,4,8,0" VerticalAlignment="Top" Foreground="{StaticResource SesTextSecondaryBrush}"/>
+                                                    <TextBlock Grid.Row="0" Grid.Column="0" Text="Project Comments" Margin="0,4,8,0" VerticalAlignment="Top" Foreground="{StaticResource SesTextSecondaryBrush}"/>
                                                     <telerik:RadWatermarkTextBox Grid.Row="0" Grid.Column="1"
                                                              Name="tbDataSetComments"
                                                              AcceptsReturn="True"
@@ -490,7 +490,8 @@
                                                 </Grid>
 
                                                 <controls:ReportMetadataEditor x:Name="ucReportMetadata"
-                                                                               MetadataChanged="ucReportMetadata_MetadataChanged"/>
+                                                                               MetadataChanged="ucReportMetadata_MetadataChanged"
+                                                                               ValidationStateChanged="ucReportMetadata_ValidationStateChanged"/>
                                             </StackPanel>
                                         </telerik:GroupBox>
                                     </StackPanel>
