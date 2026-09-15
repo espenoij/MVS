@@ -1,4 +1,5 @@
 ﻿using System;
+using System.Collections.Generic;
 using System.Drawing;
 using System.Drawing.Drawing2D;
 using System.Drawing.Imaging;
@@ -534,9 +535,9 @@ namespace MVS.Services.Reporting
 
             var rows = new[]
             {
-                new BarRow("Pitch deviation",  model.DevPitch?.Mean  ?? 0, "\u00B0", ColorDeviation),
-                new BarRow("Roll deviation",   model.DevRoll?.Mean   ?? 0, "\u00B0", ColorDeviation),
-                new BarRow("Heave deviation",  model.DevHeave?.Mean  ?? 0, "m",      ColorDeviation),
+				new BarRow("Pitch deviation",  model.DevPitch?.Mean  ?? 0, "\u00B0", ColorDeviation, "Deviation"),
+				new BarRow("Roll deviation",   model.DevRoll?.Mean   ?? 0, "\u00B0", ColorDeviation, "Deviation"),
+				new BarRow("Heave deviation",  model.DevHeave?.Mean  ?? 0, "m",      ColorDeviation, "Deviation"),
             };
 
             return RenderHorizontalBars("Calculated deviation  (Vessel \u2212 Reference)", rows, width, height, signed: true);
@@ -551,12 +552,12 @@ namespace MVS.Services.Reporting
 
             var rows = new[]
             {
-                new BarRow("Pitch \u2014 Reference", model.RefPitch?.Mean  ?? 0, "\u00B0", ColorReference),
-                new BarRow("Pitch \u2014 Vessel",    model.TestPitch?.Mean ?? 0, "\u00B0", ColorVessel),
-                new BarRow("Roll \u2014 Reference",  model.RefRoll?.Mean   ?? 0, "\u00B0", ColorReference),
-                new BarRow("Roll \u2014 Vessel",     model.TestRoll?.Mean  ?? 0, "\u00B0", ColorVessel),
-                new BarRow("Heave \u2014 Reference", model.RefHeave?.Mean  ?? 0, "m",      ColorReference),
-                new BarRow("Heave \u2014 Vessel",    model.TestHeave?.Mean ?? 0, "m",      ColorVessel),
+				new BarRow("Pitch \u2014 Reference", model.RefPitch?.Mean  ?? 0, "\u00B0", ColorReference, "Reference"),
+				new BarRow("Pitch \u2014 Vessel",    model.TestPitch?.Mean ?? 0, "\u00B0", ColorVessel, "Vessel"),
+				new BarRow("Roll \u2014 Reference",  model.RefRoll?.Mean   ?? 0, "\u00B0", ColorReference, "Reference"),
+				new BarRow("Roll \u2014 Vessel",     model.TestRoll?.Mean  ?? 0, "\u00B0", ColorVessel, "Vessel"),
+				new BarRow("Heave \u2014 Reference", model.RefHeave?.Mean  ?? 0, "m",      ColorReference, "Reference"),
+				new BarRow("Heave \u2014 Vessel",    model.TestHeave?.Mean ?? 0, "m",      ColorVessel, "Vessel"),
             };
 
 			return RenderHorizontalBars("Reference vs. Vessel mean", rows, width, height, signed: true);
@@ -1772,18 +1773,20 @@ double latMs = pair != null ? pair.EstimatedLatencySeconds * 1000.0 : double.NaN
 
         private sealed class BarRow
         {
-            public BarRow(string label, double value, string unit, Color color)
+			public BarRow(string label, double value, string unit, Color color, string? legendLabel = null)
             {
                 Label = label;
                 Value = double.IsNaN(value) ? 0 : value;
                 Unit  = unit;
                 Color = color;
+				LegendLabel = legendLabel;
             }
 
             public string Label { get; }
             public double Value { get; }
             public string Unit  { get; }
             public Color  Color { get; }
+			public string? LegendLabel { get; }
         }
 
         private static byte[] RenderHorizontalBars(string title, BarRow[] rows, int width, int height, bool signed)
@@ -1797,22 +1800,26 @@ double latMs = pair != null ? pair.EstimatedLatencySeconds * 1000.0 : double.NaN
 
 				using (var titleFont = new Font("Segoe UI", 13f, FontStyle.Bold))
 				using (var labelFont = new Font("Segoe UI",  9.5f))
+				using (var legendFont = new Font("Segoe UI", 8.5f, FontStyle.Bold))
 				using (var valueFont = new Font("Segoe UI",  9.5f, FontStyle.Bold))
 				using (var textBrush = new SolidBrush(ColorText))
 				using (var valueBrush = new SolidBrush(ColorBlack))
 				using (var axisPen   = new Pen(ColorAxis, 1.2f))
 				using (var gridPen   = new Pen(ColorGrid, 1f))
                 {
+					const int titleStripHeight = 56;
+
                     // Title strip
                     using (var stripBrush = new SolidBrush(ColorNeutralLight))
-                        g.FillRectangle(stripBrush, 0, 0, width, 38);
+						g.FillRectangle(stripBrush, 0, 0, width, titleStripHeight);
                     using (var accentBrush = new SolidBrush(ColorAccent))
-                        g.FillRectangle(accentBrush, 0, 0, 4, 38);
+						g.FillRectangle(accentBrush, 0, 0, 4, titleStripHeight);
                     g.DrawString(title, titleFont, textBrush, 12, 10);
+					DrawHorizontalBarLegend(g, rows, legendFont, textBrush, width - 12, 36f);
 
                     const int marginLeft   = 160;
                     const int marginRight  = 100;
-                    const int marginTop    = 52;
+					const int marginTop    = 68;
                     const int marginBottom = 22;
 
                     var plot = new RectangleF(
@@ -1872,7 +1879,6 @@ double latMs = pair != null ? pair.EstimatedLatencySeconds * 1000.0 : double.NaN
 							valueFont,
 							plot,
 							zeroX,
-							width,
 							centerY,
 							barX,
 							barLen,
@@ -1899,7 +1905,6 @@ double latMs = pair != null ? pair.EstimatedLatencySeconds * 1000.0 : double.NaN
 			Font valueFont,
 			RectangleF plot,
 			float zeroX,
-			int chartWidth,
 			float centerY,
 			float barX,
 			float barLen,
@@ -1916,23 +1921,79 @@ double latMs = pair != null ? pair.EstimatedLatencySeconds * 1000.0 : double.NaN
 
 			if (value >= 0)
 			{
-				float barRight = barX + barLen;
-				labelX = Math.Max(barRight + gap, zeroX + gap);
-				labelX = Math.Min(labelX, chartWidth - labelWidth - outerPadding);
+				float desiredRight = zeroX - gap;
+				labelX = Math.Max(plot.Left + outerPadding, desiredRight - labelWidth);
 			}
 			else
 			{
-				float barLeft = barX;
-				float desiredRight = Math.Min(barLeft - gap, zeroX - gap);
-				labelX = Math.Max(outerPadding, desiredRight - labelWidth);
+				float desiredLeft = zeroX + gap;
+				labelX = Math.Min(desiredLeft, plot.Right - labelWidth - outerPadding);
 			}
 
 			float labelTop = centerY - labelHeight / 2f;
 
-			if (labelX + labelWidth > plot.Right)
-				labelX = Math.Min(labelX, chartWidth - labelWidth - outerPadding);
-
 			return new RectangleF(labelX, labelTop, labelWidth, labelHeight);
+		}
+
+		private static void DrawHorizontalBarLegend(Graphics g, BarRow[] rows, Font font, Brush textBrush, float rightX, float centerY)
+		{
+			var legendRows = new List<BarRow>();
+
+			foreach (BarRow row in rows)
+			{
+				if (string.IsNullOrWhiteSpace(row.LegendLabel))
+					continue;
+
+				bool exists = false;
+
+				foreach (BarRow legendRow in legendRows)
+				{
+					if (string.Equals(legendRow.LegendLabel, row.LegendLabel, StringComparison.Ordinal))
+					{
+						exists = true;
+						break;
+					}
+				}
+
+				if (!exists)
+					legendRows.Add(row);
+			}
+
+			if (legendRows.Count == 0)
+				return;
+
+			const float swatchSize = 10f;
+			const float textGap = 5f;
+			const float itemGap = 16f;
+			float totalWidth = 0f;
+
+			foreach (BarRow legendRow in legendRows)
+			{
+				string label = legendRow.LegendLabel!;
+				SizeF labelSize = g.MeasureString(label, font, int.MaxValue, StringFormat.GenericTypographic);
+				totalWidth += swatchSize + textGap + labelSize.Width + itemGap;
+			}
+
+			totalWidth -= itemGap;
+			float x = Math.Max(12f, rightX - totalWidth);
+			float swatchTop = centerY - swatchSize / 2f;
+
+			foreach (BarRow legendRow in legendRows)
+			{
+				string label = legendRow.LegendLabel!;
+				SizeF labelSize = g.MeasureString(label, font, int.MaxValue, StringFormat.GenericTypographic);
+
+				using (var swatchBrush = new SolidBrush(legendRow.Color))
+				using (var swatchPen = new Pen(Color.FromArgb(110, ColorBlack), 1f))
+				{
+					g.FillRectangle(swatchBrush, x, swatchTop, swatchSize, swatchSize);
+					g.DrawRectangle(swatchPen, x, swatchTop, swatchSize, swatchSize);
+				}
+
+				x += swatchSize + textGap;
+				g.DrawString(label, font, textBrush, x, centerY - labelSize.Height / 2f);
+				x += labelSize.Width + itemGap;
+			}
 		}
 
         private static void DrawGridlines(Graphics g, Pen gridPen, Pen axisPen, Brush textBrush, Font font,
