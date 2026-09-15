@@ -1278,19 +1278,29 @@ private static void WriteTitle(RadFixedDocumentEditor editor, VerificationReport
                 ("Reference MRU",  "The trusted baseline motion sensor. Its mean reading over the capture period is used as the reference value for all comparisons."),
                 ("Vessel MRU",     "The unit being verified. Its mean reading is compared against the Reference MRU to calculate the deviation on each axis."),
                 ("Deviation",      "Vessel minus Reference on each axis. This is the key output of the verification \u2014 the value used to derive the recommended correction."),
-                ("\u03C3 (Sigma)", "Standard deviation: how much the signal varies around its mean. Lower values indicate a stable, consistent signal."),
+                ("Std. dev. (sigma)", "Standard deviation: how much the signal varies around its mean. Lower values indicate a stable, consistent signal."),
                 ("Min / Max",      "The most extreme values observed during the capture period. Large spreads may indicate transient disturbances or vessel manoeuvres."),
                 ("RMS",            "Root-Mean-Square magnitude of the signal. Useful for assessing average energy in the motion signal across the capture."),
                 ("Outliers",       "Percentage of samples flagged as anomalous by Tukey\u2019s 1.5\u00D7IQR rule. High rates reduce confidence in the deviation estimate."),
                 ("Samples",        "Number of data points included in the statistical calculations. More samples produce a more reliable correction estimate."),
             };
 
+            var glossaryTable = new Table
+            {
+                LayoutType = TableLayoutType.FixedWidth,
+            };
+            glossaryTable.DefaultCellProperties.Padding = new Thickness(0);
+
             for (int i = 0; i < terms.Length; i += 2)
             {
                 string t2 = i + 1 < terms.Length ? terms[i + 1].Term       : string.Empty;
                 string d2 = i + 1 < terms.Length ? terms[i + 1].Definition : string.Empty;
-                InsertGlossaryRow(editor, terms[i].Term, terms[i].Definition, t2, d2);
+                AddGlossaryRow(glossaryTable, terms[i].Term, terms[i].Definition, t2, d2);
             }
+
+            editor.ParagraphProperties.SpacingBefore = 0;
+            editor.ParagraphProperties.SpacingAfter  = 6;
+            editor.InsertTable(glossaryTable);
 
             TealRule(editor);
             Paragraph(editor, "Can the Deviation Be Trusted?", 11, ColorHeading,
@@ -1587,35 +1597,21 @@ private static void WriteTitle(RadFixedDocumentEditor editor, VerificationReport
         /// Pass empty strings for <paramref name="term2"/> / <paramref name="def2"/> to leave
         /// the right cell blank (used when the term count is odd).
         /// </summary>
-        private static void InsertGlossaryRow(
-            RadFixedDocumentEditor editor,
+        private static void AddGlossaryRow(
+            Table table,
             string term1, string def1,
             string term2, string def2)
         {
-            var table = new Table
-            {
-                Borders    = new TableBorders(new Border(0, ColorBorder)),
-                LayoutType = TableLayoutType.FixedWidth,
-            };
-            table.DefaultCellProperties.Padding = new Thickness(0);
-
             TableRow row = table.Rows.AddTableRow();
 
-            // Two cards of 335 pt each with a 10 pt gap: 335 + 10 + 336 = 681
+            // Two cards spanning the full 681 pt width. The right card's green left
+            // accent doubles as the column separator, avoiding a dedicated gap cell
+            // that can rasterize as a white strip/artifact in PDF viewers.
             for (int col = 0; col < 2; col++)
             {
-                if (col == 1)
-                {
-                    TableCell gap = row.Cells.AddTableCell();
-                    gap.PreferredWidth = 10;
-                    gap.Background     = new RgbColor(0xFF, 0xFF, 0xFF);
-                    gap.Borders        = new TableCellBorders(new Border(0, ColorBorder));
-                    gap.Blocks.AddBlock().InsertText(" ");
-                }
-
                 string term = col == 0 ? term1 : term2;
                 string def  = col == 0 ? def1  : def2;
-                int    cardW = col == 0 ? 335 : 336;
+                int    cardW = col == 0 ? 340 : 341;
 
                 TableCell card = row.Cells.AddTableCell();
                 card.PreferredWidth = cardW;
@@ -1623,7 +1619,6 @@ private static void WriteTitle(RadFixedDocumentEditor editor, VerificationReport
                 if (string.IsNullOrEmpty(term))
                 {
                     card.Background = new RgbColor(0xFF, 0xFF, 0xFF);
-                    card.Borders    = new TableCellBorders(new Border(0, ColorBorder));
                     card.Blocks.AddBlock().InsertText(" ");
                     continue;
                 }
@@ -1647,10 +1642,6 @@ private static void WriteTitle(RadFixedDocumentEditor editor, VerificationReport
                 db.GraphicProperties.FillColor = ColorText;
                 db.InsertText(def ?? string.Empty);
             }
-
-            editor.ParagraphProperties.SpacingBefore = 0;
-            editor.ParagraphProperties.SpacingAfter  = 6;
-            editor.InsertTable(table);
         }
 
         // ============================================================

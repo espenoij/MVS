@@ -1295,9 +1295,10 @@ namespace MVS
         /// Ensures a report exists for the current project. Generation runs on a
         /// background thread behind a modal progress dialog. A cached report for the
         /// same project is reused so the (potentially slow) generation only happens
-        /// once per project/data change. Returns true when a report is available.
+        /// once per project/data change unless explicit regeneration is requested.
+        /// Returns true when a report is available.
         /// </summary>
-        private async Task<bool> EnsureReportAsync()
+        private async Task<bool> EnsureReportAsync(bool forceRegenerate = false)
         {
             var project = mainWindowVM?.SelectedProject;
             if (project == null || projectVM == null)
@@ -1314,8 +1315,9 @@ namespace MVS
                 return false;
             }
 
-            // Reuse a valid cached report for this project.
-            if (_reportPdfBytes != null && _reportProjectId == project.Id)
+            // Reuse a valid cached report for this project unless the user explicitly
+            // asked to rebuild it via Generate/Update Report.
+            if (!forceRegenerate && _reportPdfBytes != null && _reportProjectId == project.Id)
             {
                 MarkReportAvailable();
                 return true;
@@ -1395,7 +1397,7 @@ namespace MVS
 
         private async void btnGenerateReport_Click(object sender, RoutedEventArgs e)
         {
-            await EnsureReportAsync();
+            await EnsureReportAsync(forceRegenerate: true);
         }
 
 
@@ -1540,7 +1542,7 @@ namespace MVS
         private void tbReportField_TextChanged(object sender, TextChangedEventArgs e)
         {
             if (_loadingDetails) return;
-            UpdateReportButtonState();
+            InvalidateReportCache();
         }
 
         // ============================================================

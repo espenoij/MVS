@@ -19,7 +19,7 @@ using System.Runtime.Versioning;
 [assembly: Guid("e6f00179-535b-4d38-b9ad-0bdbd2c00867")]
 
 // [assembly: AssemblyVersion("1.0.*")]
-[assembly: AssemblyVersion("1.0.0.501")]
-[assembly: AssemblyFileVersion("1.0.0.464")]
+[assembly: AssemblyVersion("1.0.0.508")]
+[assembly: AssemblyFileVersion("1.0.0.471")]
 
 [assembly: AssemblyInformationalVersion("0.0.0.216")]
