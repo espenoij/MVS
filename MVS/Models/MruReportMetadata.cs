@@ -115,6 +115,7 @@ namespace MVS
                     "base throughout the verification period.",
                 SynchronizationMethod =
                     "Both units were synchronised to a common time reference prior to data acquisition.",
+                SampleRateHz = 2,
                 LoggingConfiguration =
                     "Continuous logging of all motion channels at the configured sample rate (2Hz).",
 
@@ -149,6 +150,7 @@ namespace MVS
             if (string.IsNullOrWhiteSpace(CoordinateSystem)) { CoordinateSystem = defaults.CoordinateSystem; changed = true; }
             if (string.IsNullOrWhiteSpace(DataAcquisitionMethod)) { DataAcquisitionMethod = defaults.DataAcquisitionMethod; changed = true; }
             if (string.IsNullOrWhiteSpace(SynchronizationMethod)) { SynchronizationMethod = defaults.SynchronizationMethod; changed = true; }
+            if (!SampleRateHz.HasValue) { SampleRateHz = defaults.SampleRateHz; changed = true; }
             if (string.IsNullOrWhiteSpace(LoggingConfiguration)) { LoggingConfiguration = defaults.LoggingConfiguration; changed = true; }
             if (string.IsNullOrWhiteSpace(TimeSynchronizationNotes)) { TimeSynchronizationNotes = defaults.TimeSynchronizationNotes; changed = true; }
             if (string.IsNullOrWhiteSpace(FilteringNotes)) { FilteringNotes = defaults.FilteringNotes; changed = true; }

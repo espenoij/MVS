@@ -209,15 +209,15 @@ namespace MVS.Services.Reporting
 
             Section("1.  Session Overview",            () => WriteOverview(editor, model));
             Section("2.  Applied Corrections",         () => WriteFinalResults(editor, model));
+            Section("3.  Axis Detail",                 () => WriteAxisSection(editor, model));
             if (model.HasData)
-                Section("3.  Correlation & Latency",   () => WriteCorrelationAndLatency(editor, model));
-            Section("4.  Compliance Assessment",       () => WriteCompliance(editor, model));
-            Section("5.  Scope & Objective",           () => WriteScope(editor, model));
-            Section("6.  Data Processing Methodology", () => WriteMethodology(editor, model));
-            Section("7.  Equipment",                   () => WriteEquipment(editor, model));
-            Section("8.  Test Setup",                  () => WriteTestSetup(editor, model));
-            Section("9.  Test Conditions",             () => WriteTestConditions(editor, model));
-            Section("10. Axis Detail",                 () => WriteAxisSection(editor, model));
+                Section("4.  Correlation & Latency",   () => WriteCorrelationAndLatency(editor, model));
+            Section("5.  Compliance Assessment",       () => WriteCompliance(editor, model));
+            Section("6.  Scope & Objective",           () => WriteScope(editor, model));
+            Section("7.  Data Processing Methodology", () => WriteMethodology(editor, model));
+            Section("8.  Equipment",                   () => WriteEquipment(editor, model));
+            Section("9.  Test Setup",                  () => WriteTestSetup(editor, model));
+            Section("10. Test Conditions",             () => WriteTestConditions(editor, model));
             Section("11. Metric Definitions",          () => WriteGlossary(editor, model));
             Section("12. Observations",                () => WriteObservations(editor, model));
             Section("13. Appendices",                  () => WriteAppendices(editor, model));
@@ -311,19 +311,19 @@ namespace MVS.Services.Reporting
 				WriteKeyFindings(ed, model);
 				ed.InsertPageBreak();
 
-				Section("1.  Session Overview",            "1. Session Overview",            () => WriteOverview(ed, model));
-				Section("2.  Applied Corrections",         "2. Applied Corrections",         () => WriteFinalResults(ed, model));
+                Section("1.  Session Overview",            "1. Session Overview",            () => WriteOverview(ed, model));
+                Section("2.  Applied Corrections",         "2. Applied Corrections",         () => WriteFinalResults(ed, model));
+                Section("3.  Axis Detail",                 "3. Axis Detail",                 () => WriteAxisSection(ed, model));
 
-				if (model.HasData)
-					Section("3.  Correlation & Latency",   "3. Correlation and Latency",     () => WriteCorrelationAndLatency(ed, model));
+                if (model.HasData)
+                    Section("4.  Correlation & Latency",   "4. Correlation and Latency",     () => WriteCorrelationAndLatency(ed, model));
 
-                Section("4.  Compliance Assessment",       "4. Compliance Assessment",       () => WriteCompliance(ed, model));
-                Section("5.  Scope & Objective",           "5. Scope and Objective",         () => WriteScope(ed, model));
-                Section("6.  Data Processing Methodology", "6. Data Processing Methodology", () => WriteMethodology(ed, model));
-                Section("7.  Equipment",                   "7. Equipment",                   () => WriteEquipment(ed, model));
-                Section("8.  Test Setup",                  "8. Test Setup",                  () => WriteTestSetup(ed, model));
-                Section("9.  Test Conditions",             "9. Test Conditions",             () => WriteTestConditions(ed, model));
-                Section("10. Axis Detail",                 "10. Axis Detail",                () => WriteAxisSection(ed, model));
+                Section("5.  Compliance Assessment",       "5. Compliance Assessment",       () => WriteCompliance(ed, model));
+                Section("6.  Scope & Objective",           "6. Scope and Objective",         () => WriteScope(ed, model));
+                Section("7.  Data Processing Methodology", "7. Data Processing Methodology", () => WriteMethodology(ed, model));
+                Section("8.  Equipment",                   "8. Equipment",                   () => WriteEquipment(ed, model));
+                Section("9.  Test Setup",                  "9. Test Setup",                  () => WriteTestSetup(ed, model));
+                Section("10. Test Conditions",             "10. Test Conditions",            () => WriteTestConditions(ed, model));
                 Section("11. Metric Definitions",          "11. Metric Definitions",         () => WriteGlossary(ed, model));
                 Section("12. Observations",                "12. Observations",               () => WriteObservations(ed, model));
                 Section("13. Appendices",                  "13. Appendices",                 () => WriteAppendices(ed, model));
@@ -551,14 +551,14 @@ namespace MVS.Services.Reporting
 				("Executive Dashboard",             "Executive Dashboard"),
 				("1.  Session Overview",            "1.  Session Overview"),
 				("2.  Applied Corrections",         "2.  Applied Corrections"),
-				("3.  Correlation & Latency",       "3.  Correlation & Latency"),
-                ("4.  Compliance Assessment",       "4.  Compliance Assessment"),
-                ("5.  Scope & Objective",           "5.  Scope & Objective"),
-                ("6.  Data Processing Methodology", "6.  Data Processing Methodology"),
-                ("7.  Equipment",                   "7.  Equipment"),
-                ("8.  Test Setup",                  "8.  Test Setup"),
-                ("9.  Test Conditions",             "9.  Test Conditions"),
-                ("10. Axis Detail",                 "10. Axis Detail"),
+                ("3.  Axis Detail",                 "3.  Axis Detail"),
+                ("4.  Correlation & Latency",       "4.  Correlation & Latency"),
+                ("5.  Compliance Assessment",       "5.  Compliance Assessment"),
+                ("6.  Scope & Objective",           "6.  Scope & Objective"),
+                ("7.  Data Processing Methodology", "7.  Data Processing Methodology"),
+                ("8.  Equipment",                   "8.  Equipment"),
+                ("9.  Test Setup",                  "9.  Test Setup"),
+                ("10. Test Conditions",             "10. Test Conditions"),
                 ("11. Metric Definitions",          "11. Metric Definitions"),
                 ("12. Observations",                "12. Observations"),
                 ("13. Appendices",                  "13. Appendices"),
@@ -611,9 +611,9 @@ namespace MVS.Services.Reporting
 			editor.InsertTable(tocTable);
 
 			Paragraph(editor,
-				"This report is structured results-first. Executive findings, corrections and compliance " +
-				"appear in sections 1\u20137. Supporting technical detail (axis statistics, appendices, " +
-				"methodology and equipment) follows in sections 8\u201314.",
+                "This report is structured results-first. Executive findings, corrections, axis-level detail, " +
+                "correlation and compliance appear before the descriptive setup sections. Scope, methodology, " +
+                "equipment, test setup, test conditions and appendices follow in sections 6\u201313.",
 				9.5, ColorMuted, spacingBefore: 10, spacingAfter: 6);
 		}
 
@@ -789,7 +789,7 @@ private static void WriteTitle(RadFixedDocumentEditor editor, VerificationReport
 
         private static void WriteScope(RadFixedDocumentEditor editor, VerificationReportModel model)
         {
-            Heading(editor, "5. Scope and Objective");
+            Heading(editor, "6. Scope and Objective");
             Introduction(editor,
                 "Verification scope, intended outcome and applicable references defining the purpose and boundaries of this report.");
 
@@ -810,7 +810,7 @@ private static void WriteTitle(RadFixedDocumentEditor editor, VerificationReport
 
         private static void WriteEquipment(RadFixedDocumentEditor editor, VerificationReportModel model)
         {
-            Heading(editor, "7. Equipment");
+            Heading(editor, "8. Equipment");
             Introduction(editor,
                 "Equipment used for the verification, including the vessel-installed MRU, the reference unit and any supporting hardware.");
 
@@ -846,7 +846,7 @@ private static void WriteTitle(RadFixedDocumentEditor editor, VerificationReport
 
         private static void WriteTestSetup(RadFixedDocumentEditor editor, VerificationReportModel model)
         {
-            Heading(editor, "8. Test Setup");
+            Heading(editor, "9. Test Setup");
             Introduction(editor,
                 "Installation arrangement, sensor geometry, synchronization approach and data acquisition settings used during the verification capture.");
 
@@ -870,7 +870,7 @@ private static void WriteTitle(RadFixedDocumentEditor editor, VerificationReport
 
         private static void WriteTestConditions(RadFixedDocumentEditor editor, VerificationReportModel model)
         {
-            Heading(editor, "9. Test Conditions");
+            Heading(editor, "10. Test Conditions");
             Introduction(editor,
                 "Environmental and operational conditions recorded during the verification to provide context for the measured vessel and reference responses.");
 
@@ -896,7 +896,7 @@ private static void WriteTitle(RadFixedDocumentEditor editor, VerificationReport
 
         private static void WriteMethodology(RadFixedDocumentEditor editor, VerificationReportModel model)
         {
-            Heading(editor, "6. Data Processing Methodology");
+            Heading(editor, "7. Data Processing Methodology");
             Introduction(editor,
                 "Summary of synchronization, filtering, statistical treatment and comparison methods used to derive the reported verification metrics.");
 
@@ -1082,7 +1082,7 @@ private static void WriteTitle(RadFixedDocumentEditor editor, VerificationReport
 
         private static void WriteAxisSection(RadFixedDocumentEditor editor, VerificationReportModel model)
         {
-            Heading(editor, "10. Axis Detail");
+            Heading(editor, "3. Axis Detail");
             Introduction(editor,
                 "Detailed per-axis statistics, comparison charts and correction values for pitch, roll and heave across the verification dataset.");
 
@@ -1095,7 +1095,7 @@ private static void WriteTitle(RadFixedDocumentEditor editor, VerificationReport
             if (!model.HasData)
                 return;
 
-            Heading(editor, "3. Correlation and Latency");
+            Heading(editor, "4. Correlation and Latency");
             Introduction(editor,
                 "Correlation strength and timing-offset metrics comparing reference and vessel motion signals across the measured axes.");
             Paragraph(editor,
@@ -1160,7 +1160,7 @@ private static void WriteTitle(RadFixedDocumentEditor editor, VerificationReport
 
 		private static void WriteCompliance(RadFixedDocumentEditor editor, VerificationReportModel model)
 		{
-			Heading(editor, "4. Compliance Assessment");
+            Heading(editor, "5. Compliance Assessment");
             Introduction(editor,
                 "Assessment of sample count, capture duration and signal quality against the recommended criteria for reliable verification results.");
 

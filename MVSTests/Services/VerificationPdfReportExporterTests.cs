@@ -318,6 +318,31 @@ namespace MVSTests.Services
             });
         }
 
+        [TestMethod]
+        public void DiscoverSectionPageNumbers_PlacesAxisDetailImmediatelyAfterAppliedCorrections()
+        {
+            StaTestHelper.Run(() =>
+            {
+                var model = SampleModel();
+                var method = typeof(VerificationPdfReportExporter).GetMethod(
+                    "DiscoverSectionPageNumbers",
+                    BindingFlags.NonPublic | BindingFlags.Static);
+
+                Assert.IsNotNull(method);
+
+                object result = method.Invoke(null, new object[] { model, new System.Collections.Generic.HashSet<string>() });
+                FieldInfo pagesField = result.GetType().GetField("Item1");
+
+                Assert.IsNotNull(pagesField);
+
+                var pages = (System.Collections.Generic.Dictionary<string, int>)pagesField.GetValue(result);
+                Assert.IsTrue(pages.ContainsKey("3.  Axis Detail"));
+                Assert.IsFalse(pages.ContainsKey("10. Axis Detail"));
+                Assert.IsTrue(pages["3.  Axis Detail"] >= pages["2.  Applied Corrections"]);
+                Assert.IsTrue(pages["4.  Correlation & Latency"] >= pages["3.  Axis Detail"]);
+            });
+        }
+
         private static void AssertIsPng(byte[] bytes)
         {
             Assert.IsNotNull(bytes);
