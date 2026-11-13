@@ -76,10 +76,10 @@ namespace MVSTests.Services
     {
         // ── helpers ──────────────────────────────────────────────────────────────
 
-        private static RadObservableCollection<SensorData> MakeSensorList(
+        private static List<SensorData> MakeSensorList(
             bool hasRef, bool hasTest)
         {
-            var list = new RadObservableCollection<SensorData>();
+            var list = new List<SensorData>();
 
             if (hasRef)
             {
@@ -136,6 +136,31 @@ namespace MVSTests.Services
                 ActiveCorrection());
 
             Assert.IsTrue(report.AllGood);
+        }
+
+        [TestMethod]
+        public void Evaluate_VendorAndDotNetCollections_ReturnSameReadiness()
+        {
+            var sensors = MakeSensorList(hasRef: false, hasTest: true);
+            var vendorSensors = new RadObservableCollection<SensorData>();
+            foreach (var sensor in sensors)
+                vendorSensors.Add(sensor);
+
+            var database = DisconnectedDb();
+            var correction = ActiveCorrection();
+            var expected = CaptureReadinessChecker.Evaluate(sensors, database, correction);
+            var actual = CaptureReadinessChecker.Evaluate(vendorSensors, database, correction);
+
+            Assert.AreEqual(expected.Items.Count, actual.Items.Count);
+            for (int i = 0; i < expected.Items.Count; i++)
+            {
+                Assert.AreEqual(expected.Items[i].Label, actual.Items[i].Label);
+                Assert.AreEqual(expected.Items[i].Pass, actual.Items[i].Pass);
+                Assert.AreEqual(expected.Items[i].Severity, actual.Items[i].Severity);
+            }
+            Assert.AreEqual(expected.AllGood, actual.AllGood);
+            Assert.AreEqual(expected.HasAnyFailure, actual.HasAnyFailure);
+            Assert.AreEqual(expected.HasBlockingFailure, actual.HasBlockingFailure);
         }
 
         // ── Blocking failures ────────────────────────────────────────────────────
@@ -286,7 +311,7 @@ namespace MVSTests.Services
         public void Evaluate_SensorTypeNone_IsNotCountedAsConfigured()
         {
             // Add a ReferenceMRU entry whose type is SensorType.None — should fail
-            var list = new RadObservableCollection<SensorData>();
+            var list = new List<SensorData>();
             var s = new SensorData();
             // leave s.type as default SensorType.None
             s.mruType = MRUType.ReferenceMRU;
