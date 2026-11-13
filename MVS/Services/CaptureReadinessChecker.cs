@@ -64,7 +64,7 @@ namespace MVS
         ///   helideck correction has been applied.
         /// </param>
         public static ReadinessReport Evaluate(
-            IEnumerable<SensorData>             sensorDataList,
+            ICollection<SensorData>                 sensorDataList,
             DatabaseHandler                     database,
             LivoxLidarCorrection                livoxCorrection)
         {

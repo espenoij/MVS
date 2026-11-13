@@ -25,8 +25,8 @@ requires resolving the applicable instruction conflict before UI migration.
 
 Validate the focused tests on Windows with .NET 10 and the configured Telerik feed:
 
-```shell
-dotnet test MVSTests/MVSTests.csproj --filter "FullyQualifiedName~DisplayListTests|FullyQualifiedName~CaptureReadinessCheckerTests|FullyQualifiedName~ReadinessReportTests"
+```powershell
+dotnet test MVSTests\MVSTests.csproj --filter "FullyQualifiedName~DisplayListTests|FullyQualifiedName~CaptureReadinessCheckerTests|FullyQualifiedName~ReadinessReportTests"
 ```
 
 The display tests exercise both Telerik and .NET collection destinations against
