@@ -1,6 +1,5 @@
 using System.Collections.Generic;
 using System.Linq;
-using Telerik.Windows.Data;
 
 namespace MVS
 {
@@ -65,7 +64,7 @@ namespace MVS
         ///   helideck correction has been applied.
         /// </param>
         public static ReadinessReport Evaluate(
-            RadObservableCollection<SensorData> sensorDataList,
+            ICollection<SensorData>                 sensorDataList,
             DatabaseHandler                     database,
             LivoxLidarCorrection                livoxCorrection)
         {

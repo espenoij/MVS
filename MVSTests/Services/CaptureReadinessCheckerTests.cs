@@ -138,6 +138,33 @@ namespace MVSTests.Services
             Assert.IsTrue(report.AllGood);
         }
 
+        [TestMethod]
+        public void Evaluate_StandardCollection_MatchesTelerikCollection()
+        {
+            var standardList = new List<SensorData>
+            {
+                new SensorData { type = SensorType.SerialPort, mruType = MRUType.ReferenceMRU },
+                new SensorData { type = SensorType.SerialPort, mruType = MRUType.TestMRU },
+            };
+
+            var standardReport = CaptureReadinessChecker.Evaluate(
+                standardList,
+                ConnectedDb(),
+                ActiveCorrection());
+            var telerikReport = CaptureReadinessChecker.Evaluate(
+                MakeSensorList(true, true),
+                ConnectedDb(),
+                ActiveCorrection());
+
+            Assert.AreEqual(telerikReport.Items.Count, standardReport.Items.Count);
+            for (int i = 0; i < standardReport.Items.Count; i++)
+            {
+                Assert.AreEqual(telerikReport.Items[i].Label, standardReport.Items[i].Label);
+                Assert.AreEqual(telerikReport.Items[i].Pass, standardReport.Items[i].Pass);
+                Assert.AreEqual(telerikReport.Items[i].Severity, standardReport.Items[i].Severity);
+            }
+        }
+
         // ── Blocking failures ────────────────────────────────────────────────────
 
         [TestMethod]

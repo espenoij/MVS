@@ -1,12 +1,11 @@
 ﻿using System.Collections.Generic;
 using System.Linq;
-using Telerik.Windows.Data;
 
 namespace MVS
 {
     static class DisplayList
     {
-        public static void TransferDirect(RadObservableCollection<HMSData> dataList, RadObservableCollection<HMSData> displayList)
+        public static void TransferDirect(IEnumerable<HMSData> dataList, ICollection<HMSData> displayList)
         {
             displayList.Clear();
 
@@ -16,7 +15,7 @@ namespace MVS
                 displayList.Add(new HMSData(item));
         }
 
-        public static void Transfer(RadObservableCollection<HMSData> dataList, RadObservableCollection<HMSData> displayList)
+        public static void Transfer(IEnumerable<HMSData> dataList, ICollection<HMSData> displayList)
         {
             // Løpe gjennom listen med data som skal overføres til skjerm
             foreach (var item in dataList.ToList())
@@ -39,7 +38,7 @@ namespace MVS
             }
         }
 
-        public static void Transfer(RadObservableCollection<SensorData> dataList, RadObservableCollection<SensorData> displayList)
+        public static void Transfer(IEnumerable<SensorData> dataList, ICollection<SensorData> displayList)
         {
             // Løpe gjennom listen med data som skal overføres til skjerm
             foreach (var item in dataList.ToList())
@@ -62,7 +61,7 @@ namespace MVS
             }
         }
 
-        public static void Transfer(List<SerialPortData> dataList, RadObservableCollection<SerialPortData> displayList)
+        public static void Transfer(IEnumerable<SerialPortData> dataList, ICollection<SerialPortData> displayList)
         {
             // Løpe gjennom listen med data som skal overføres til skjerm
             foreach (var item in dataList.ToList())
@@ -85,7 +84,7 @@ namespace MVS
             }
         }
 
-        public static void Transfer(List<FileReaderSetup> dataList, RadObservableCollection<FileReaderSetup> displayList)
+        public static void Transfer(IEnumerable<FileReaderSetup> dataList, ICollection<FileReaderSetup> displayList)
         {
             // Løpe gjennom listen med data som skal overføres til skjerm
             foreach (var item in dataList.ToList())
@@ -112,7 +111,7 @@ namespace MVS
             }
         }
 
-        public static void Transfer(List<FixedValueSetup> dataList, RadObservableCollection<FixedValueSetup> displayList)
+        public static void Transfer(IEnumerable<FixedValueSetup> dataList, ICollection<FixedValueSetup> displayList)
         {
             foreach (var item in dataList.ToList())
             {
