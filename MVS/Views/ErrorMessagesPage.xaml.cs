@@ -1,11 +1,11 @@
 ﻿using System;
 using System.Collections.Generic;
+using System.Collections.ObjectModel;
 using System.Linq;
 using System.Windows;
 using System.Windows.Controls;
 using System.Windows.Threading;
 using Telerik.Windows.Controls;
-using Telerik.Windows.Data;
 
 namespace MVS
 {
@@ -21,7 +21,7 @@ namespace MVS
         private ErrorHandler errorHandler;
 
         // Error Message List
-        private RadObservableCollection<ErrorMessage> errorMessageDisplayList = new RadObservableCollection<ErrorMessage>();
+        private ObservableCollection<ErrorMessage> errorMessageDisplayList = new ObservableCollection<ErrorMessage>();
         private DispatcherTimer errorMessageDisplayListUpdater;
 
         public ErrorMessagesPage()
@@ -76,7 +76,7 @@ namespace MVS
                 errorMessageDisplayListUpdater.Start();
         }
 
-        private void TransferNewMessages(RadObservableCollection<ErrorMessage> displayList, ErrorHandler errorHandler)
+        private void TransferNewMessages(ObservableCollection<ErrorMessage> displayList, ErrorHandler errorHandler)
         {
             lock (errorHandler.GetErrorMessageListLock())
             {
@@ -106,9 +106,9 @@ namespace MVS
 
         private void cboErrorMessageView_SelectionChanged(object sender, SelectionChangedEventArgs e)
         {
-            if (sender as RadComboBox != null)
+            if (sender is ComboBox comboBox)
             {
-                switch ((sender as RadComboBox).SelectedIndex)
+                switch (comboBox.SelectedIndex)
                 {
                     // Live View
                     case 0:
@@ -126,27 +126,27 @@ namespace MVS
                 }
 
                 // Lagre ny setting til config fil
-                config.Write(ConfigKey.ErrorMessagesView, (sender as RadComboBox).SelectedIndex.ToString(), ConfigSection.ErrorMessages);
+                config.Write(ConfigKey.ErrorMessagesView, comboBox.SelectedIndex.ToString(), ConfigSection.ErrorMessages);
             }
         }
 
         private void cboErrorMessageType_SelectionChanged(object sender, SelectionChangedEventArgs e)
         {
-            if (sender as RadComboBox != null)
+            if (sender is ComboBox comboBox)
             {
-                errorHandler.SetSelectedType((ErrorMessageType)Enum.Parse(typeof(ErrorMessageType), (sender as RadComboBox).SelectedIndex.ToString()));
+                errorHandler.SetSelectedType((ErrorMessageType)Enum.Parse(typeof(ErrorMessageType), comboBox.SelectedIndex.ToString()));
 
                 // Lagre ny setting til config fil
-                config.Write(ConfigKey.ErrorMessagesType, (sender as RadComboBox).SelectedIndex.ToString(), ConfigSection.ErrorMessages);
+                config.Write(ConfigKey.ErrorMessagesType, comboBox.SelectedIndex.ToString(), ConfigSection.ErrorMessages);
             }
         }
 
         private void cboErrorMessageSelection_SelectionChanged(object sender, SelectionChangedEventArgs e)
         {
-            if (sender as RadComboBox != null)
+            if (sender is ComboBox comboBox)
             {
                 // Lagre ny setting til config fil
-                config.Write(ConfigKey.ErrorMessagesSelection, (sender as RadComboBox).SelectedIndex.ToString(), ConfigSection.ErrorMessages);
+                config.Write(ConfigKey.ErrorMessagesSelection, comboBox.SelectedIndex.ToString(), ConfigSection.ErrorMessages);
             }
         }
 

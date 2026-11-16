@@ -1,6 +1,5 @@
 ﻿using System;
 using System.Collections.Generic;
-using Telerik.Windows.Data;
 
 namespace MVS
 {
@@ -8,7 +7,7 @@ namespace MVS
     // Ellers identisk.
     static class GraphBuffer
     {
-        public static void Update(HMSData data, RadObservableCollection<HMSData> buffer)
+        public static void Update(HMSData data, ObservableCollectionEx<HMSData> buffer)
         {
             // NB! Når vi har data tilgjengelig fores dette inn i grafene.
             // Når vi ikke har data tilgjengelig legges 0 data inn i grafene for å holde de gående.
@@ -37,7 +36,7 @@ namespace MVS
             }
         }
 
-        public static void Transfer(RadObservableCollection<HMSData> buffer, RadObservableCollection<HMSData> dataList)
+        public static void Transfer(ObservableCollectionEx<HMSData> buffer, ObservableCollectionEx<HMSData> dataList)
         {
             // Overfører alle data fra buffer til dataList
             if (buffer != null &&
@@ -56,7 +55,7 @@ namespace MVS
             }
         }
 
-        public static void RemoveOldData(RadObservableCollection<HMSData> dataList, double timeInterval)
+        public static void RemoveOldData(ObservableCollectionEx<HMSData> dataList, double timeInterval)
         {
             if (dataList == null || dataList.Count == 0)
                 return;

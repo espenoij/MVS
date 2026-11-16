@@ -31,11 +31,11 @@
     <StackPanel
         Margin="8">
 
-        <telerik:Label
+        <TextBlock
             x:Name="lblStatus"
-            Content="Generating the verification report..." />
+            Text="Generating the verification report..." />
 
-        <telerik:RadProgressBar
+        <ProgressBar
             Name="reportProgressBar"
             IsIndeterminate="True"
             Orientation="Horizontal"
@@ -44,8 +44,8 @@
             Background="{StaticResource ColorBackgroundSeparatorDark}"
             Foreground="{StaticResource ColorGreen}" />
 
-        <telerik:Label
-            Content="This can take a moment for larger data sets."
+        <TextBlock
+            Text="This can take a moment for larger data sets."
             Foreground="{StaticResource SesTextSecondaryBrush}"
             Margin="0,8,0,0" />
 

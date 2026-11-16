@@ -1,7 +1,6 @@
 ﻿using System;
 using System.Windows.Controls;
 using System.Windows.Threading;
-using Telerik.Windows.Data;
 
 namespace MVS
 {
@@ -13,7 +12,7 @@ namespace MVS
         // Configuration settings
         private Config config;
 
-        private RadObservableCollection<HMSData> hmsOutputDisplayList = new RadObservableCollection<HMSData>();
+        private ObservableCollectionEx<HMSData> hmsOutputDisplayList = new ObservableCollectionEx<HMSData>();
 
         DispatcherTimer uiTimer = new DispatcherTimer();
 

@@ -53,7 +53,8 @@
                 Grid.Column="0">
 
                 <!--Basic Information-->
-                <telerik:GroupBox
+                <GroupBox
+                    Style="{StaticResource SesNativeGroupBoxStyle}"
                     Header="Basic Information"
                     Margin="8">
 
@@ -88,10 +89,11 @@
 
                     </StackPanel>
 
-                </telerik:GroupBox>
+                </GroupBox>
 
                 <!--Settings-->
-                <telerik:GroupBox
+                <GroupBox
+                    Style="{StaticResource SesNativeGroupBoxStyle}"
                     Header="Settings"
                     Margin="8">
 
@@ -99,10 +101,11 @@
 
                     </StackPanel>
 
-                </telerik:GroupBox>
+                </GroupBox>
 
                 <!--Read Controls-->
-                <telerik:GroupBox
+                <GroupBox
+                    Style="{StaticResource SesNativeGroupBoxStyle}"
                     Header="Read Controls"
                     Margin="8">
 
@@ -151,10 +154,11 @@
 
                     </StackPanel>
 
-                </telerik:GroupBox>
+                </GroupBox>
 
                 <!--Data Display-->
-                <telerik:GroupBox
+                <GroupBox
+                    Style="{StaticResource SesNativeGroupBoxStyle}"
                     Header="Data Display"
                     Margin="8">
 
@@ -183,7 +187,7 @@
 
                     </StackPanel>
 
-                </telerik:GroupBox>
+                </GroupBox>
 
             </StackPanel>
 
@@ -210,7 +214,8 @@
                         </Grid.ColumnDefinitions>
 
                         <!--Fixed Data Output-->
-                        <telerik:GroupBox
+                        <GroupBox
+                            Style="{StaticResource SesNativeGroupBoxStyle}"
                             Header="Fixed Data Output"
                             Grid.Column="0"
                             Grid.Row="0"
@@ -219,33 +224,36 @@
 
                             <DockPanel>
 
-                                <telerik:RadGridView
+                                <DataGrid
                                     Name="lvFixedDataOutput"
                                     IsReadOnly="True"
                                     IsManipulationEnabled="False"
                                     CanUserSortColumns="False"
-                                    ShowGroupPanel="False"
-                                    ShowColumnHeaders="False"
+                                    HeadersVisibility="None"
                                     RowHeight="25"
                                     Margin="8"
                                     CanUserReorderColumns="False"
                                     CanUserDeleteRows="False"
-                                    RowIndicatorVisibility="Collapsed"
+                                    Background="{StaticResource SesSurfaceBrush}"
+                                    Foreground="{StaticResource SesTextPrimaryBrush}"
+                                    BorderBrush="{StaticResource SesBorderBrush}"
+                                    HorizontalGridLinesBrush="{StaticResource SesBorderBrush}"
+                                    GridLinesVisibility="Horizontal"
                                     AutoGenerateColumns="False">
 
-                                    <telerik:RadGridView.Columns>
-                                        <telerik:GridViewDataColumn
-                                            DataMemberBinding="{Binding data}" />
-                                    </telerik:RadGridView.Columns>
+                                    <DataGrid.Columns>
+                                        <DataGridTextColumn Binding="{Binding data}" />
+                                    </DataGrid.Columns>
 
-                                </telerik:RadGridView>
+                                </DataGrid>
 
                             </DockPanel>
 
-                        </telerik:GroupBox>
+                        </GroupBox>
 
                         <!--Fixed Data-->
-                        <telerik:GroupBox
+                        <GroupBox
+                            Style="{StaticResource SesNativeGroupBoxStyle}"
                             Grid.Column="2"
                             Grid.Row="0"
                             Header="Fixed Data"
@@ -284,7 +292,7 @@
 
                             </StackPanel>
 
-                        </telerik:GroupBox>
+                        </GroupBox>
                     </Grid>
 
                 </telerik:RadTabItem>

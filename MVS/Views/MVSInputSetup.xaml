@@ -61,7 +61,8 @@
                 Width="1*" />
         </Grid.ColumnDefinitions>
 
-        <telerik:GroupBox
+        <GroupBox
+            Style="{StaticResource SesNativeGroupBoxStyle}"
             Header="SENSOR DATA"
             Grid.Column="0"
             Margin="8">
@@ -101,9 +102,10 @@
 
             </telerik:RadGridView>
 
-        </telerik:GroupBox>
+        </GroupBox>
 
-        <telerik:GroupBox
+        <GroupBox
+            Style="{StaticResource SesNativeGroupBoxStyle}"
             Header="MVS INPUT"
             Grid.Column="1"
             Margin="8">
@@ -146,7 +148,7 @@
 
             </telerik:RadGridView>
 
-        </telerik:GroupBox>
+        </GroupBox>
 
     </Grid>
 

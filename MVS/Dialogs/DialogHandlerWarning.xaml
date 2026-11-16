@@ -39,7 +39,8 @@
             Margin="8"
             Width="110"
             Content="Close"
-            Click="btnClose_Click"/>
+            Click="btnClose_Click"
+            Style="{StaticResource SesNativeSecondaryButtonStyle}" />
 
         <Image
             Width="48"

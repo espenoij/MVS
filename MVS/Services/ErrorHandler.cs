@@ -1,11 +1,11 @@
 ﻿using System;
 using System.Collections.Generic;
+using System.Collections.ObjectModel;
 using System.Linq;
 using System.Windows;
 using System.Windows.Data;
 using System.Windows.Threading;
 using Telerik.Windows.Controls;
-using Telerik.Windows.Data;
 
 namespace MVS
 {
@@ -15,7 +15,7 @@ namespace MVS
         private DatabaseHandler database;
 
         // Latest Error Messages
-        private RadObservableCollection<ErrorMessage> errorMessageList;
+        private ObservableCollection<ErrorMessage> errorMessageList;
         private object errorMessageListLock = new object();
 
         // Selected type
@@ -67,7 +67,7 @@ namespace MVS
         {
             this.database = database;
 
-            errorMessageList = new RadObservableCollection<ErrorMessage>();
+            errorMessageList = new ObservableCollection<ErrorMessage>();
             BindingOperations.EnableCollectionSynchronization(errorMessageList, errorMessageListLock);
 
             // Database Errors
@@ -142,7 +142,7 @@ namespace MVS
                 return errorMessageList?.ToList().Where(x => x?.id == id)?.DefaultIfEmpty(null).First();
         }
 
-        public RadObservableCollection<ErrorMessage> GetErrorMessageList()
+        public ObservableCollection<ErrorMessage> GetErrorMessageList()
         {
             return errorMessageList;
         }

@@ -39,7 +39,7 @@
 
     <StackPanel>
         <!-- Section 2: Scope and objective -->
-        <telerik:GroupBox Header="Scope &amp; Objective" Margin="0,0,0,10">
+        <GroupBox Style="{StaticResource SesNativeGroupBoxStyle}" Header="Scope &amp; Objective" Margin="0,0,0,10">
             <StackPanel Margin="8">
                 <TextBlock Text="Test objective" Style="{StaticResource FieldLabel}"/>
                 <telerik:RadWatermarkTextBox Text="{Binding TestObjective, UpdateSourceTrigger=PropertyChanged}"
@@ -52,10 +52,10 @@
                                              Style="{StaticResource RequiredMultiLineFieldBox}" LostFocus="Field_LostFocus"
                                              TextChanged="RequiredField_TextChanged"/>
             </StackPanel>
-        </telerik:GroupBox>
+        </GroupBox>
 
         <!-- Section 3: Equipment - MRU under test -->
-        <telerik:GroupBox Header="Equipment &#x2014; MRU Under Test (Vessel)" Margin="0,0,0,10">
+        <GroupBox Style="{StaticResource SesNativeGroupBoxStyle}" Header="Equipment &#x2014; MRU Under Test (Vessel)" Margin="0,0,0,10">
             <StackPanel Margin="8">
                 <TextBlock Text="Manufacturer" Style="{StaticResource FieldLabel}"/>
                 <telerik:RadWatermarkTextBox Text="{Binding DutManufacturer, UpdateSourceTrigger=PropertyChanged}"
@@ -73,10 +73,10 @@
                                              Style="{StaticResource RequiredMultiLineFieldBox}" LostFocus="Field_LostFocus"
                                              TextChanged="RequiredField_TextChanged"/>
             </StackPanel>
-        </telerik:GroupBox>
+        </GroupBox>
 
         <!-- Section 3: Equipment - Reference MRU -->
-        <telerik:GroupBox Header="Equipment &#x2014; Reference MRU" Margin="0,0,0,10">
+        <GroupBox Style="{StaticResource SesNativeGroupBoxStyle}" Header="Equipment &#x2014; Reference MRU" Margin="0,0,0,10">
             <StackPanel Margin="8">
                 <TextBlock Text="Manufacturer" Style="{StaticResource FieldLabel}"/>
                 <telerik:RadWatermarkTextBox Text="{Binding ReferenceManufacturer, UpdateSourceTrigger=PropertyChanged}"
@@ -89,9 +89,9 @@
                                              Style="{StaticResource RequiredMultiLineFieldBox}" LostFocus="Field_LostFocus"
                                              TextChanged="RequiredField_TextChanged"/>
             </StackPanel>
-        </telerik:GroupBox>
+        </GroupBox>
 
-        <telerik:GroupBox Header="Equipment &#x2014; LiDAR" Margin="0,0,0,10">
+        <GroupBox Style="{StaticResource SesNativeGroupBoxStyle}" Header="Equipment &#x2014; LiDAR" Margin="0,0,0,10">
             <StackPanel Margin="8">
                 <TextBlock Text="Manufacturer" Style="{StaticResource FieldLabel}"/>
                 <telerik:RadWatermarkTextBox Text="{Binding LidarManufacturer, UpdateSourceTrigger=PropertyChanged}"
@@ -104,19 +104,19 @@
                                              Style="{StaticResource RequiredMultiLineFieldBox}" LostFocus="Field_LostFocus"
                                              TextChanged="RequiredField_TextChanged"/>
             </StackPanel>
-        </telerik:GroupBox>
+        </GroupBox>
 
-        <telerik:GroupBox Header="Additional Equipment" Margin="0,0,0,10">
+        <GroupBox Style="{StaticResource SesNativeGroupBoxStyle}" Header="Additional Equipment" Margin="0,0,0,10">
             <StackPanel Margin="8">
                 <TextBlock Text="Additional equipment" Style="{StaticResource FieldLabel}"/>
                 <telerik:RadWatermarkTextBox Text="{Binding AdditionalEquipment, UpdateSourceTrigger=LostFocus}"
                                              MinHeight="40"
                                              Style="{StaticResource MultiLineFieldBox}" LostFocus="Field_LostFocus"/>
             </StackPanel>
-        </telerik:GroupBox>
+        </GroupBox>
 
         <!-- Section 4: Test setup -->
-        <telerik:GroupBox Header="Test Setup" Margin="0,0,0,10">
+        <GroupBox Style="{StaticResource SesNativeGroupBoxStyle}" Header="Test Setup" Margin="0,0,0,10">
             <StackPanel Margin="8">
                 <TextBlock Text="Vessel MRU installation location" Style="{StaticResource FieldLabel}"/>
                 <telerik:RadWatermarkTextBox Text="{Binding DutInstallationLocation, UpdateSourceTrigger=PropertyChanged}"
@@ -164,10 +164,10 @@
                                              Style="{StaticResource RequiredMultiLineFieldBox}" LostFocus="Field_LostFocus"
                                              TextChanged="RequiredField_TextChanged"/>
             </StackPanel>
-        </telerik:GroupBox>
+        </GroupBox>
 
         <!-- Section 5: Test conditions -->
-        <telerik:GroupBox Header="Test Conditions" Margin="0,0,0,10">
+        <GroupBox Style="{StaticResource SesNativeGroupBoxStyle}" Header="Test Conditions" Margin="0,0,0,10">
             <StackPanel Margin="8">
                 <TextBlock Text="Loading condition" Style="{StaticResource FieldLabel}"/>
                 <telerik:RadWatermarkTextBox Text="{Binding LoadingCondition, UpdateSourceTrigger=LostFocus}"
@@ -202,10 +202,10 @@
                                              MinHeight="40"
                                              Style="{StaticResource MultiLineFieldBox}" LostFocus="Field_LostFocus"/>
             </StackPanel>
-        </telerik:GroupBox>
+        </GroupBox>
 
         <!-- Section 6: Data processing methodology -->
-        <telerik:GroupBox Header="Data Processing Notes" Margin="0,0,10,10">
+        <GroupBox Style="{StaticResource SesNativeGroupBoxStyle}" Header="Data Processing Notes" Margin="0,0,10,10">
             <StackPanel Margin="8">
                 <TextBlock Text="Time synchronization notes" Style="{StaticResource FieldLabel}"/>
                 <telerik:RadWatermarkTextBox Text="{Binding TimeSynchronizationNotes, UpdateSourceTrigger=PropertyChanged}"
@@ -223,12 +223,12 @@
                                              Style="{StaticResource RequiredMultiLineFieldBox}" LostFocus="Field_LostFocus"
                                              TextChanged="RequiredField_TextChanged"/>
             </StackPanel>
-        </telerik:GroupBox>
+        </GroupBox>
 
         <!-- Column 3: Criteria, Observations & Appendices -->
 
         <!-- Section 11: Acceptance criteria -->
-        <telerik:GroupBox Header="Acceptance Criteria" Margin="0,0,0,10">
+        <GroupBox Style="{StaticResource SesNativeGroupBoxStyle}" Header="Acceptance Criteria" Margin="0,0,0,10">
             <StackPanel Margin="8">
 
                 <!-- Read-only compliance table: thresholds vs measured value and status -->
@@ -311,26 +311,26 @@
                                              Style="{StaticResource RequiredMultiLineFieldBox}" LostFocus="Field_LostFocus"
                                              TextChanged="RequiredField_TextChanged"/>
             </StackPanel>
-        </telerik:GroupBox>
+        </GroupBox>
 
         <!-- Section 11: Observations -->
-        <telerik:GroupBox Header="Observations" Margin="0,0,0,10">
+        <GroupBox Style="{StaticResource SesNativeGroupBoxStyle}" Header="Observations" Margin="0,0,0,10">
             <StackPanel Margin="8">
                 <TextBlock Text="Observations" Style="{StaticResource FieldLabel}"/>
                 <telerik:RadWatermarkTextBox Text="{Binding Observations, UpdateSourceTrigger=LostFocus}"
                                              MinHeight="60"
                                              Style="{StaticResource MultiLineFieldBox}" LostFocus="Field_LostFocus"/>
             </StackPanel>
-        </telerik:GroupBox>
+        </GroupBox>
 
         <!-- Section 12: Appendices -->
-        <telerik:GroupBox Header="Appendices" Margin="0,0,0,10">
+        <GroupBox Style="{StaticResource SesNativeGroupBoxStyle}" Header="Appendices" Margin="0,0,0,10">
             <StackPanel Margin="8">
                 <TextBlock Text="Appendix notes" Style="{StaticResource FieldLabel}"/>
                 <telerik:RadWatermarkTextBox Text="{Binding AppendixNotes, UpdateSourceTrigger=LostFocus}"
                                              MinHeight="60"
                                              Style="{StaticResource MultiLineFieldBox}" LostFocus="Field_LostFocus"/>
             </StackPanel>
-        </telerik:GroupBox>
+        </GroupBox>
     </StackPanel>
 </UserControl>

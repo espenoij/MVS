@@ -33,17 +33,17 @@
             DockPanel.Dock="Bottom"
             HorizontalAlignment="Center">
 
-            <telerik:Label
+            <TextBlock
                 HorizontalAlignment="Center"
                 FontFamily="{StaticResource SesFontFamily}"
                 Foreground="{StaticResource SesTextSecondaryBrush}"
-                Content="{Binding Path=aboutCopyright}" />
+                Text="{Binding Path=aboutCopyright}" />
 
-            <telerik:RadButton
+            <Button
                 Margin="8"
                 Width="150"
                 HorizontalAlignment="Center"
-                Style="{StaticResource SesSecondaryButtonStyle}"
+                Style="{StaticResource SesNativeSecondaryButtonStyle}"
                 Content="Close"
                 Click="btnActivate_Click" />
 
@@ -61,28 +61,28 @@
                     Width="50"
                     Source="../Icons/mvs_windows_icon.ico" />
 
-                <telerik:Label
+                <TextBlock
                     DockPanel.Dock="Top"
                     HorizontalAlignment="Center"
                     FontSize="{StaticResource SesFontSizePageTitle}"
                     FontFamily="{StaticResource SesFontFamily}"
                     FontWeight="Bold"
                     Foreground="{StaticResource SesWhiteBrush}"
-                    Content="MVS" />
+                    Text="MVS" />
 
                 <Separator
                     VerticalAlignment="Bottom"
                     Background="{StaticResource SesEnergyGreenBrush}"
                     Width="400" />
 
-                <telerik:Label
+                <TextBlock
                     HorizontalAlignment="Center"
                     FontSize="{StaticResource SesFontSizeSubHeader}"
                     FontFamily="{StaticResource SesFontFamily}"
                     Foreground="{StaticResource SesWhiteBrush}"
                     DockPanel.Dock="Top"
                     Margin="0,0,0,24"
-                    Content="Motion Verification System" />
+                    Text="Motion Verification System" />
 
             </StackPanel>
 
@@ -93,51 +93,53 @@
                 Source="../Icons/helifuel_logo.png" />
 
             <!--SOFTWARE-->
-            <telerik:GroupBox
+            <GroupBox
                 Header="Software"
                 DockPanel.Dock="Top"
-                Margin="8">
+                Margin="8"
+                Style="{StaticResource SesNativeGroupBoxStyle}">
 
                 <StackPanel>
 
                     <!--Software Name-->
                     <DockPanel>
 
-                        <telerik:Label
+                        <TextBlock
                             Width="200"
-                            Content="Name" />
+                            Text="Name" />
 
-                        <telerik:Label
-                            Content="{Binding Path=softwareName}" />
+                        <TextBlock
+                            Text="{Binding Path=softwareName}" />
 
                     </DockPanel>
 
                     <!--Software Version-->
                     <DockPanel>
 
-                        <telerik:Label
+                        <TextBlock
                             Width="200"
-                            Content="Version" />
+                            Text="Version" />
 
-                        <telerik:Label
-                            Content="{Binding Path=softwareVersion}" />
+                        <TextBlock
+                            Text="{Binding Path=softwareVersion}" />
 
                     </DockPanel>
 
                 </StackPanel>
 
-            </telerik:GroupBox>
+            </GroupBox>
 
             <!--Support-->
-            <telerik:GroupBox
+            <GroupBox
                 Header="Support"
-                Margin="8">
+                Margin="8"
+                Style="{StaticResource SesNativeGroupBoxStyle}">
 
                 <StackPanel>
 
                     <!--Info-->
-                    <telerik:Label
-                        Content="{Binding Path=aboutSupport}"
+                    <TextBlock
+                        Text="{Binding Path=aboutSupport}"
                         Margin="8" />
 
                     <!--QR Codes-->
@@ -230,7 +232,7 @@
 
                 </StackPanel>
 
-            </telerik:GroupBox>
+            </GroupBox>
 
         </StackPanel>
 

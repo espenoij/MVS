@@ -51,7 +51,7 @@
                 Grid.Row="0"
                 Grid.Column="0">
 
-                <telerik:GroupBox
+                <GroupBox Style="{StaticResource SesNativeGroupBoxStyle}"
                     Header="Basic Information"
                     Margin="8">
 
@@ -86,9 +86,9 @@
 
                     </StackPanel>
 
-                </telerik:GroupBox>
+                </GroupBox>
                 
-                <telerik:GroupBox
+                <GroupBox Style="{StaticResource SesNativeGroupBoxStyle}"
                     Header="Connection"
                     Margin="8">
                     
@@ -201,10 +201,10 @@
 
                     </StackPanel>
                     
-                </telerik:GroupBox>
+                </GroupBox>
 
                 <!--Data Range-->
-                <telerik:GroupBox
+                <GroupBox Style="{StaticResource SesNativeGroupBoxStyle}"
                     Header="Data Range"
                     Margin="8">
 
@@ -236,10 +236,10 @@
 
                     </StackPanel>
 
-                </telerik:GroupBox>
+                </GroupBox>
 
                 <!--Serial Port Controls-->
-                <telerik:GroupBox
+                <GroupBox Style="{StaticResource SesNativeGroupBoxStyle}"
                     Header="Connection Controls"
                     Margin="8">
 
@@ -288,11 +288,11 @@
 
                     </StackPanel>
 
-                </telerik:GroupBox>
+                </GroupBox>
 
 
                 <!--Serial Port Controls-->
-                <telerik:GroupBox
+                <GroupBox Style="{StaticResource SesNativeGroupBoxStyle}"
                     Header="Data Display"
                     Margin="8">
 
@@ -322,7 +322,7 @@
 
                     </StackPanel>
 
-                </telerik:GroupBox>
+                </GroupBox>
                 
             </StackPanel>
 
@@ -354,7 +354,7 @@
                         </Grid.RowDefinitions>
 
                         <!--Sample Data-->
-                        <telerik:GroupBox
+                        <GroupBox Style="{StaticResource SesNativeGroupBoxStyle}"
                             Grid.Row="0"
                             Grid.Column="0"
                             Header="Raw Data"
@@ -389,14 +389,14 @@
 
                             </telerik:RadGridView>
 
-                        </telerik:GroupBox>
+                        </GroupBox>
 
                         <DockPanel
                             Grid.Column="1"
                             Grid.Row="0">
                             
                             <!--Data Selection-->
-                            <telerik:GroupBox
+                            <GroupBox Style="{StaticResource SesNativeGroupBoxStyle}"
                                 Header="Data Selection"
                                 Margin="8">
 
@@ -416,12 +416,12 @@
 
                                 </StackPanel>
 
-                            </telerik:GroupBox>
+                            </GroupBox>
 
                         </DockPanel>
 
                         <!--Selected Data-->
-                        <telerik:GroupBox
+                        <GroupBox Style="{StaticResource SesNativeGroupBoxStyle}"
                             Grid.Row="1"
                             Grid.Column="0"
                             Header="Selected Data"
@@ -453,7 +453,7 @@
 
                             </DockPanel>
 
-                        </telerik:GroupBox>
+                        </GroupBox>
 
                     </Grid>
 
@@ -481,7 +481,7 @@
                         </Grid.RowDefinitions>
 
                         <!--Selected Data-->
-                        <telerik:GroupBox
+                        <GroupBox Style="{StaticResource SesNativeGroupBoxStyle}"
                             Grid.Row="0"
                             Grid.Column="0"
                             Header="Selected Data"
@@ -513,7 +513,7 @@
 
                             </DockPanel>
 
-                        </telerik:GroupBox>
+                        </GroupBox>
 
                         <StackPanel
                             Grid.Column="1"
@@ -521,7 +521,7 @@
                             Grid.RowSpan="2">
 
                             <!--Data Calculation 1-->
-                            <telerik:GroupBox
+                            <GroupBox Style="{StaticResource SesNativeGroupBoxStyle}"
                                 Header="Data Calculation 1"
                                 Margin="8">
 
@@ -554,11 +554,11 @@
 
                                 </StackPanel>
 
-                            </telerik:GroupBox>
+                            </GroupBox>
 
 
                             <!--Data Calculation 2-->
-                            <telerik:GroupBox
+                            <GroupBox Style="{StaticResource SesNativeGroupBoxStyle}"
                                 Header="Data Calculation 2"
                                 Margin="8">
 
@@ -591,11 +591,11 @@
 
                                 </StackPanel>
 
-                            </telerik:GroupBox>
+                            </GroupBox>
 
 
                             <!--Data Calculation 3-->
-                            <telerik:GroupBox
+                            <GroupBox Style="{StaticResource SesNativeGroupBoxStyle}"
                                 Header="Data Calculation 3"
                                 Margin="8">
 
@@ -628,10 +628,10 @@
 
                                 </StackPanel>
 
-                            </telerik:GroupBox>
+                            </GroupBox>
 
                             <!--Data Calculation 3-->
-                            <telerik:GroupBox
+                            <GroupBox Style="{StaticResource SesNativeGroupBoxStyle}"
                                 Header="Data Calculation 4"
                                 Margin="8">
 
@@ -664,12 +664,12 @@
 
                                 </StackPanel>
 
-                            </telerik:GroupBox>
+                            </GroupBox>
 
                         </StackPanel>
 
                         <!--Processed Data-->
-                        <telerik:GroupBox
+                        <GroupBox Style="{StaticResource SesNativeGroupBoxStyle}"
                             Grid.Column="0"
                             Grid.Row="1"
                             Header="Calculated Data"
@@ -701,7 +701,7 @@
 
                             </DockPanel>
 
-                        </telerik:GroupBox>
+                        </GroupBox>
 
                     </Grid>
 
