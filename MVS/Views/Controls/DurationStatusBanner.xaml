@@ -34,7 +34,7 @@
                        Margin="8,0,0,0"/>
 
             <!-- Progress bar -->
-            <telerik:RadProgressBar Grid.Row="1" Grid.ColumnSpan="2"
+            <ProgressBar Grid.Row="1" Grid.ColumnSpan="2"
                                     x:Name="pbDuration"
                                     Height="10"
                                     Minimum="0"

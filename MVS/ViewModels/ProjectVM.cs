@@ -25,47 +25,47 @@ namespace MVS
         private DispatcherTimer chartUpdateTimer = new DispatcherTimer();
 
         // Input
-        private RadObservableCollection<HMSData> refPitchBuffer = new RadObservableCollection<HMSData>();
-        private RadObservableCollection<HMSData> refRollBuffer = new RadObservableCollection<HMSData>();
-        private RadObservableCollection<HMSData> refHeaveBuffer = new RadObservableCollection<HMSData>();
+        private ObservableCollectionEx<HMSData> refPitchBuffer = new ObservableCollectionEx<HMSData>();
+        private ObservableCollectionEx<HMSData> refRollBuffer = new ObservableCollectionEx<HMSData>();
+        private ObservableCollectionEx<HMSData> refHeaveBuffer = new ObservableCollectionEx<HMSData>();
 
-        public RadObservableCollection<HMSData> refPitchList = new RadObservableCollection<HMSData>();
-        public RadObservableCollection<HMSData> refRollList = new RadObservableCollection<HMSData>();
-        public RadObservableCollection<HMSData> refHeaveList = new RadObservableCollection<HMSData>();
+        public ObservableCollectionEx<HMSData> refPitchList = new ObservableCollectionEx<HMSData>();
+        public ObservableCollectionEx<HMSData> refRollList = new ObservableCollectionEx<HMSData>();
+        public ObservableCollectionEx<HMSData> refHeaveList = new ObservableCollectionEx<HMSData>();
 
-        private RadObservableCollection<HMSData> testPitchBuffer = new RadObservableCollection<HMSData>();
-        private RadObservableCollection<HMSData> testRollBuffer = new RadObservableCollection<HMSData>();
-        private RadObservableCollection<HMSData> testHeaveBuffer = new RadObservableCollection<HMSData>();
+        private ObservableCollectionEx<HMSData> testPitchBuffer = new ObservableCollectionEx<HMSData>();
+        private ObservableCollectionEx<HMSData> testRollBuffer = new ObservableCollectionEx<HMSData>();
+        private ObservableCollectionEx<HMSData> testHeaveBuffer = new ObservableCollectionEx<HMSData>();
 
-        public RadObservableCollection<HMSData> testPitchList = new RadObservableCollection<HMSData>();
-            public RadObservableCollection<HMSData> testRollList = new RadObservableCollection<HMSData>();
-            public RadObservableCollection<HMSData> testHeaveList = new RadObservableCollection<HMSData>();
+        public ObservableCollectionEx<HMSData> testPitchList = new ObservableCollectionEx<HMSData>();
+            public ObservableCollectionEx<HMSData> testRollList = new ObservableCollectionEx<HMSData>();
+            public ObservableCollectionEx<HMSData> testHeaveList = new ObservableCollectionEx<HMSData>();
 
         // Mean
-        private RadObservableCollection<HMSData> refPitchMeanBuffer = new RadObservableCollection<HMSData>();
-        private RadObservableCollection<HMSData> refRollMeanBuffer = new RadObservableCollection<HMSData>();
-        private RadObservableCollection<HMSData> refHeaveMeanBuffer = new RadObservableCollection<HMSData>();
+        private ObservableCollectionEx<HMSData> refPitchMeanBuffer = new ObservableCollectionEx<HMSData>();
+        private ObservableCollectionEx<HMSData> refRollMeanBuffer = new ObservableCollectionEx<HMSData>();
+        private ObservableCollectionEx<HMSData> refHeaveMeanBuffer = new ObservableCollectionEx<HMSData>();
 
-        public RadObservableCollection<HMSData> refPitchMeanList = new RadObservableCollection<HMSData>();
-        public RadObservableCollection<HMSData> refRollMeanList = new RadObservableCollection<HMSData>();
-        public RadObservableCollection<HMSData> refHeaveMeanList = new RadObservableCollection<HMSData>();
+        public ObservableCollectionEx<HMSData> refPitchMeanList = new ObservableCollectionEx<HMSData>();
+        public ObservableCollectionEx<HMSData> refRollMeanList = new ObservableCollectionEx<HMSData>();
+        public ObservableCollectionEx<HMSData> refHeaveMeanList = new ObservableCollectionEx<HMSData>();
 
-        private RadObservableCollection<HMSData> testPitchMeanBuffer = new RadObservableCollection<HMSData>();
-        private RadObservableCollection<HMSData> testRollMeanBuffer = new RadObservableCollection<HMSData>();
-        private RadObservableCollection<HMSData> testHeaveMeanBuffer = new RadObservableCollection<HMSData>();
+        private ObservableCollectionEx<HMSData> testPitchMeanBuffer = new ObservableCollectionEx<HMSData>();
+        private ObservableCollectionEx<HMSData> testRollMeanBuffer = new ObservableCollectionEx<HMSData>();
+        private ObservableCollectionEx<HMSData> testHeaveMeanBuffer = new ObservableCollectionEx<HMSData>();
 
-        public RadObservableCollection<HMSData> testPitchMeanList = new RadObservableCollection<HMSData>();
-        public RadObservableCollection<HMSData> testRollMeanList = new RadObservableCollection<HMSData>();
-        public RadObservableCollection<HMSData> testHeaveMeanList = new RadObservableCollection<HMSData>();
+        public ObservableCollectionEx<HMSData> testPitchMeanList = new ObservableCollectionEx<HMSData>();
+        public ObservableCollectionEx<HMSData> testRollMeanList = new ObservableCollectionEx<HMSData>();
+        public ObservableCollectionEx<HMSData> testHeaveMeanList = new ObservableCollectionEx<HMSData>();
 
         // Deviation
-        public RadObservableCollection<HMSData> devPitchMeanBuffer = new RadObservableCollection<HMSData>();
-        public RadObservableCollection<HMSData> devRollMeanBuffer = new RadObservableCollection<HMSData>();
-        public RadObservableCollection<HMSData> devHeaveMeanBuffer = new RadObservableCollection<HMSData>();
+        public ObservableCollectionEx<HMSData> devPitchMeanBuffer = new ObservableCollectionEx<HMSData>();
+        public ObservableCollectionEx<HMSData> devRollMeanBuffer = new ObservableCollectionEx<HMSData>();
+        public ObservableCollectionEx<HMSData> devHeaveMeanBuffer = new ObservableCollectionEx<HMSData>();
 
-        public RadObservableCollection<HMSData> devPitchMeanList = new RadObservableCollection<HMSData>();
-        public RadObservableCollection<HMSData> devRollMeanList = new RadObservableCollection<HMSData>();
-        public RadObservableCollection<HMSData> devHeaveMeanList = new RadObservableCollection<HMSData>();
+        public ObservableCollectionEx<HMSData> devPitchMeanList = new ObservableCollectionEx<HMSData>();
+        public ObservableCollectionEx<HMSData> devRollMeanList = new ObservableCollectionEx<HMSData>();
+        public ObservableCollectionEx<HMSData> devHeaveMeanList = new ObservableCollectionEx<HMSData>();
 
         // Alle prosjekt data
         public RadObservableCollection<ProjectData> projectsDataList = new RadObservableCollection<ProjectData>();
@@ -748,24 +748,24 @@ namespace MVS
             devHeaveMeanData = noData;
 
             // Slette gamle data i buffer lister
-            refPitchBuffer.Clear();
-            refPitchMeanBuffer.Clear();
-            testPitchBuffer.Clear();
-            testPitchMeanBuffer.Clear();
+            ClearGraphBuffer(refPitchBuffer);
+            ClearGraphBuffer(refPitchMeanBuffer);
+            ClearGraphBuffer(testPitchBuffer);
+            ClearGraphBuffer(testPitchMeanBuffer);
 
-            refRollBuffer.Clear();
-            refRollMeanBuffer.Clear();
-            testRollBuffer.Clear();
-            testRollMeanBuffer.Clear();
+            ClearGraphBuffer(refRollBuffer);
+            ClearGraphBuffer(refRollMeanBuffer);
+            ClearGraphBuffer(testRollBuffer);
+            ClearGraphBuffer(testRollMeanBuffer);
 
-            refHeaveBuffer.Clear();
-            refHeaveMeanBuffer.Clear();
-            testHeaveBuffer.Clear();
-            testHeaveMeanBuffer.Clear();
+            ClearGraphBuffer(refHeaveBuffer);
+            ClearGraphBuffer(refHeaveMeanBuffer);
+            ClearGraphBuffer(testHeaveBuffer);
+            ClearGraphBuffer(testHeaveMeanBuffer);
 
-            devPitchMeanBuffer.Clear();
-            devRollMeanBuffer.Clear();
-            devHeaveMeanBuffer.Clear();
+            ClearGraphBuffer(devPitchMeanBuffer);
+            ClearGraphBuffer(devRollMeanBuffer);
+            ClearGraphBuffer(devHeaveMeanBuffer);
 
             // Slette gamle data i graf lister
             refPitchList.Clear();
@@ -818,33 +818,33 @@ namespace MVS
         /// Tømmer alle graf-buffere. Bufferne er ikke bundet direkte til UI, så dette
         /// er trygt å kalle fra bakgrunnstråden (i motsetning til graf-listene).
         /// </summary>
+        private static void ClearGraphBuffer(ObservableCollectionEx<HMSData> buffer)
+        {
+            lock (buffer)
+            {
+                buffer.Clear();
+            }
+        }
+
         private void ClearGraphBuffers()
         {
-            void ClearBuffer(RadObservableCollection<HMSData> buffer)
-            {
-                lock (buffer)
-                {
-                    buffer.Clear();
-                }
-            }
+            ClearGraphBuffer(refPitchBuffer);
+            ClearGraphBuffer(refPitchMeanBuffer);
+            ClearGraphBuffer(testPitchBuffer);
+            ClearGraphBuffer(testPitchMeanBuffer);
+            ClearGraphBuffer(devPitchMeanBuffer);
 
-            ClearBuffer(refPitchBuffer);
-            ClearBuffer(refPitchMeanBuffer);
-            ClearBuffer(testPitchBuffer);
-            ClearBuffer(testPitchMeanBuffer);
-            ClearBuffer(devPitchMeanBuffer);
+            ClearGraphBuffer(refRollBuffer);
+            ClearGraphBuffer(refRollMeanBuffer);
+            ClearGraphBuffer(testRollBuffer);
+            ClearGraphBuffer(testRollMeanBuffer);
+            ClearGraphBuffer(devRollMeanBuffer);
 
-            ClearBuffer(refRollBuffer);
-            ClearBuffer(refRollMeanBuffer);
-            ClearBuffer(testRollBuffer);
-            ClearBuffer(testRollMeanBuffer);
-            ClearBuffer(devRollMeanBuffer);
-
-            ClearBuffer(refHeaveBuffer);
-            ClearBuffer(refHeaveMeanBuffer);
-            ClearBuffer(testHeaveBuffer);
-            ClearBuffer(testHeaveMeanBuffer);
-            ClearBuffer(devHeaveMeanBuffer);
+            ClearGraphBuffer(refHeaveBuffer);
+            ClearGraphBuffer(refHeaveMeanBuffer);
+            ClearGraphBuffer(testHeaveBuffer);
+            ClearGraphBuffer(testHeaveMeanBuffer);
+            ClearGraphBuffer(devHeaveMeanBuffer);
         }
 
         public void TransferToDisplay()
@@ -917,17 +917,17 @@ namespace MVS
             devPitchMaxData = noData;
             devPitchMeanMaxData = noData;
 
-            refPitchBuffer.Clear();
-            refPitchMeanBuffer.Clear();
+            ClearGraphBuffer(refPitchBuffer);
+            ClearGraphBuffer(refPitchMeanBuffer);
             refPitchList.Clear();
             refPitchMeanList.Clear();
 
-            testPitchBuffer.Clear();
-            testPitchMeanBuffer.Clear();
+            ClearGraphBuffer(testPitchBuffer);
+            ClearGraphBuffer(testPitchMeanBuffer);
             testPitchList.Clear();
             testPitchMeanList.Clear();
 
-            devPitchMeanBuffer.Clear();
+            ClearGraphBuffer(devPitchMeanBuffer);
             devPitchMeanList.Clear();
         }
 
@@ -1432,17 +1432,17 @@ namespace MVS
             devRollMaxData = noData;
             devRollMeanMaxData = noData;
 
-            refRollBuffer.Clear();
-            refRollMeanBuffer.Clear();
+            ClearGraphBuffer(refRollBuffer);
+            ClearGraphBuffer(refRollMeanBuffer);
             refRollList.Clear();
             refRollMeanList.Clear();
 
-            testRollBuffer.Clear();
-            testRollMeanBuffer.Clear();
+            ClearGraphBuffer(testRollBuffer);
+            ClearGraphBuffer(testRollMeanBuffer);
             testRollList.Clear();
             testRollMeanList.Clear();
 
-            devRollMeanBuffer.Clear();
+            ClearGraphBuffer(devRollMeanBuffer);
             devRollMeanList.Clear();
         }
 
@@ -1947,17 +1947,17 @@ namespace MVS
             devHeaveMaxData = noData;
             devHeaveMeanMaxData = noData;
 
-            refHeaveBuffer.Clear();
-            refHeaveMeanBuffer.Clear();
+            ClearGraphBuffer(refHeaveBuffer);
+            ClearGraphBuffer(refHeaveMeanBuffer);
             refHeaveList.Clear();
             refHeaveMeanList.Clear();
 
-            testHeaveBuffer.Clear();
-            testHeaveMeanBuffer.Clear();
+            ClearGraphBuffer(testHeaveBuffer);
+            ClearGraphBuffer(testHeaveMeanBuffer);
             testHeaveList.Clear();
             testHeaveMeanList.Clear();
 
-            devHeaveMeanBuffer.Clear();
+            ClearGraphBuffer(devHeaveMeanBuffer);
             devHeaveMeanList.Clear();
         }
 

@@ -131,15 +131,17 @@
                             <StackPanel Grid.Row="1"
                                         Orientation="Horizontal"
                                         Margin="0,0,0,8">
-                                <telerik:RadButton Name="btnNew"
-                                                   Click="btnNew_Click"
-                                                   Content="New"
-                                                   MinWidth="100"/>
-                                <telerik:RadButton Name="btnDelete"
-                                                   Click="btnDelete_Click"
-                                                   Content="Delete"
-                                                   MinWidth="100"
-                                                   Margin="8,0,0,0"/>
+                                <Button Name="btnNew"
+                                        Click="btnNew_Click"
+                                        Content="New"
+                                        MinWidth="100"
+                                        Style="{StaticResource SesNativeSecondaryButtonStyle}"/>
+                                <Button Name="btnDelete"
+                                        Click="btnDelete_Click"
+                                        Content="Delete"
+                                        MinWidth="100"
+                                        Margin="8,0,0,0"
+                                        Style="{StaticResource SesNativeSecondaryButtonStyle}"/>
                             </StackPanel>
 
                             <telerik:RadGridView Grid.Row="2"
@@ -198,7 +200,7 @@
                                            Margin="0,0,0,12"
                                            Text="Create or select a project. The Vessel MRU is verified against the Reference MRU."/>
 
-                                <telerik:GroupBox Header="Project Details" Margin="0,0,0,8">
+                                <GroupBox Style="{StaticResource SesNativeGroupBoxStyle}" Header="Project Details" Margin="0,0,0,8">
                                     <Grid Margin="8">
                                         <Grid.ColumnDefinitions>
                                             <ColumnDefinition Width="Auto" MinWidth="120" MaxWidth="180"/>
@@ -258,7 +260,7 @@
                                                  KeyDown="tbLocation_KeyDown"
                                                  TextChanged="tbReportField_TextChanged"/>
                                                  </Grid>
-                                </telerik:GroupBox>
+                                </GroupBox>
 
                             </StackPanel>
                         </ScrollViewer>
@@ -309,7 +311,7 @@
 
                             <controls:DurationStatusBanner x:Name="durationBanner" Margin="0,0,0,12"/>
 
-                            <telerik:GroupBox Header="Date / Duration" Margin="0,0,0,8">
+                            <GroupBox Style="{StaticResource SesNativeGroupBoxStyle}" Header="Date / Duration" Margin="0,0,0,8">
                                 <Grid Margin="8">
                                     <Grid.ColumnDefinitions>
                                         <ColumnDefinition Width="Auto" MinWidth="120" MaxWidth="180"/>
@@ -340,43 +342,46 @@
                                                Margin="0,6,0,0"
                                                Visibility="Collapsed"/>
                                 </Grid>
-                            </telerik:GroupBox>
+                            </GroupBox>
 
                             <!-- Recording controls, bound to MainWindowVM via bridge element -->
-                            <telerik:GroupBox Header="Recording" Margin="0,0,0,8">
+                            <GroupBox Style="{StaticResource SesNativeGroupBoxStyle}" Header="Recording" Margin="0,0,0,8">
                                 <StackPanel Margin="8" Orientation="Vertical">
 
                                     <StackPanel Orientation="Horizontal">
-                                        <telerik:RadButton x:Name="btnStartRecording"
-                                                           Click="btnStartRecording_Click"
-                                                           IsEnabled="{Binding DataContext.StartButtonEnabled, ElementName=mainWindowVMBridge}"
-                                                           Content="Start Recording"
-                                                           MinWidth="140"
-                                                           Margin="0,0,10,0"/>
-                                        <telerik:RadButton x:Name="btnStopRecording"
-                                                           Click="btnStopRecording_Click"
-                                                           IsEnabled="{Binding DataContext.StopButtonEnabled, ElementName=mainWindowVMBridge}"
-                                                           Content="Stop"
-                                                           MinWidth="100"
-                                                           Margin="0,0,10,0"/>
-                                        <telerik:RadButton x:Name="btnClearRecording"
-                                                           Click="btnClearRecording_Click"
-                                                           Content="Clear Recording"
-                                                           MinWidth="140"
-                                                           IsEnabled="False"/>
+                                        <Button x:Name="btnStartRecording"
+                                                Click="btnStartRecording_Click"
+                                                IsEnabled="{Binding DataContext.StartButtonEnabled, ElementName=mainWindowVMBridge}"
+                                                Content="Start Recording"
+                                                MinWidth="140"
+                                                Margin="0,0,10,0"
+                                                Style="{StaticResource SesNativePrimaryButtonStyle}"/>
+                                        <Button x:Name="btnStopRecording"
+                                                Click="btnStopRecording_Click"
+                                                IsEnabled="{Binding DataContext.StopButtonEnabled, ElementName=mainWindowVMBridge}"
+                                                Content="Stop"
+                                                MinWidth="100"
+                                                Margin="0,0,10,0"
+                                                Style="{StaticResource SesNativeSecondaryButtonStyle}"/>
+                                        <Button x:Name="btnClearRecording"
+                                                Click="btnClearRecording_Click"
+                                                Content="Clear Recording"
+                                                MinWidth="140"
+                                                IsEnabled="False"
+                                                Style="{StaticResource SesNativeSecondaryButtonStyle}"/>
                                     </StackPanel>
 
                                 </StackPanel>
-                            </telerik:GroupBox>
+                            </GroupBox>
 
                             </StackPanel>
 
                         <!-- ===== RIGHT: live input charts (Pitch / Roll / Heave) ===== -->
-                        <telerik:GroupBox Grid.Column="1" Header="Live Input">
+                        <GroupBox Style="{StaticResource SesNativeGroupBoxStyle}" Grid.Column="1" Header="Live Input">
                             <local:CaptureCharts x:Name="ucCaptureCharts"
                                                  MinHeight="600"
                                                  Margin="8"/>
-                        </telerik:GroupBox>
+                        </GroupBox>
                     </Grid>
                     </ScrollViewer>
 
@@ -452,7 +457,7 @@
                                               Padding="0,0,8,0">
                                     <StackPanel>
                                         <!-- Project details + extended report metadata -->
-                                        <telerik:GroupBox Header="Report Details" Margin="0,0,0,10">
+                                        <GroupBox Style="{StaticResource SesNativeGroupBoxStyle}" Header="Report Details" Margin="0,0,0,10">
                                             <StackPanel Margin="8">
                                                 <Grid>
                                                     <Grid.ColumnDefinitions>
@@ -493,7 +498,7 @@
                                                                                MetadataChanged="ucReportMetadata_MetadataChanged"
                                                                                ValidationStateChanged="ucReportMetadata_ValidationStateChanged"/>
                                             </StackPanel>
-                                        </telerik:GroupBox>
+                                        </GroupBox>
                                     </StackPanel>
                                 </ScrollViewer>
 
@@ -532,35 +537,40 @@
                                     BorderBrush="{StaticResource SesBorderBrush}" BorderThickness="0,0,0,1"
                                     Padding="0,0,0,8" Margin="0,0,0,8">
                                 <StackPanel Orientation="Horizontal">
-                                    <telerik:RadButton x:Name="btnGenerateReport"
-                                                       Click="btnGenerateReport_Click"
-                                                       Content="Generate Report"
-                                                       MinWidth="150"/>
-                                    <telerik:RadButton x:Name="btnUpdateReport"
-                                                       Click="btnGenerateReport_Click"
-                                                       Content="Update Report"
-                                                       Visibility="Collapsed"
-                                                       MinWidth="150"
-                                                       Margin="8,0,0,0"/>
+                                    <Button x:Name="btnGenerateReport"
+                                            Click="btnGenerateReport_Click"
+                                            Content="Generate Report"
+                                            MinWidth="150"
+                                            Style="{StaticResource SesNativePrimaryButtonStyle}"/>
+                                    <Button x:Name="btnUpdateReport"
+                                            Click="btnGenerateReport_Click"
+                                            Content="Update Report"
+                                            Visibility="Collapsed"
+                                            MinWidth="150"
+                                            Margin="8,0,0,0"
+                                            Style="{StaticResource SesNativePrimaryButtonStyle}"/>
                                     <Separator Width="1" Margin="12,2" Background="{StaticResource SesBorderBrush}" VerticalAlignment="Stretch"/>
-                                    <telerik:RadButton x:Name="btnInsertDefaultText"
-                                                       Click="btnInsertDefaultText_Click"
-                                                       Content="Insert Default Text"
-                                                       MinWidth="140"
-                                                       Margin="0,0,8,0"
-                                                       IsEnabled="{Binding IsEnabled, ElementName=ucReportMetadata}"/>
+                                    <Button x:Name="btnInsertDefaultText"
+                                            Click="btnInsertDefaultText_Click"
+                                            Content="Insert Default Text"
+                                            MinWidth="140"
+                                            Margin="0,0,8,0"
+                                            IsEnabled="{Binding IsEnabled, ElementName=ucReportMetadata}"
+                                            Style="{StaticResource SesNativeSecondaryButtonStyle}"/>
                                     <Separator Width="1" Margin="0,2,12,2" Background="{StaticResource SesBorderBrush}" VerticalAlignment="Stretch"/>
-                                    <telerik:RadButton x:Name="btnSaveReportToDisc"
-                                                       Click="btnSaveReportToDisc_Click"
-                                                       Content="Save as PDF"
-                                                       IsEnabled="False"
-                                                       MinWidth="120"
-                                                       Margin="0,0,8,0"/>
-                                    <telerik:RadButton x:Name="btnOpenPdfReport"
-                                                       Click="btnOpenPdfReport_Click"
-                                                       Content="Open PDF"
-                                                       IsEnabled="False"
-                                                       MinWidth="120"/>
+                                    <Button x:Name="btnSaveReportToDisc"
+                                            Click="btnSaveReportToDisc_Click"
+                                            Content="Save as PDF"
+                                            IsEnabled="False"
+                                            MinWidth="120"
+                                            Margin="0,0,8,0"
+                                            Style="{StaticResource SesNativeSecondaryButtonStyle}"/>
+                                    <Button x:Name="btnOpenPdfReport"
+                                            Click="btnOpenPdfReport_Click"
+                                            Content="Open PDF"
+                                            IsEnabled="False"
+                                            MinWidth="120"
+                                            Style="{StaticResource SesNativeSecondaryButtonStyle}"/>
                                 </StackPanel>
                             </Border>
                         </Grid>

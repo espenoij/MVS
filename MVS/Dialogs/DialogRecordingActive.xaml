@@ -66,11 +66,12 @@
 
             <controls:DurationStatusBanner x:Name="banner" Margin="0,0,0,16" />
 
-            <telerik:RadButton x:Name="btnStop"
-                               Click="btnStop_Click"
-                               Content="Stop Recording"
-                               HorizontalAlignment="Right"
-                               MinWidth="140" />
+            <Button x:Name="btnStop"
+                    Click="btnStop_Click"
+                    Content="Stop Recording"
+                    HorizontalAlignment="Right"
+                    MinWidth="140"
+                    Style="{StaticResource SesNativePrimaryButtonStyle}" />
 
         </StackPanel>
     </Grid>

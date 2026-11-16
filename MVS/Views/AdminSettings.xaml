@@ -9,19 +9,16 @@
     d:DesignHeight="1000"
     d:DesignWidth="1500">
 
-    <telerik:RadTabControl
+    <TabControl
         DockPanel.Dock="Top"
         Name="tcMainMenu"
         Margin="8"
-        TabStripPlacement="Top"
-        TabOrientation="Horizontal"
-        HeaderBackground="{StaticResource ColorHorizontalBarBackground}">
+        TabStripPlacement="Top">
 
         <!--==============================================================-->
         <!--Side Menu: Input-->
         <!--==============================================================-->
-        <telerik:RadTabItem
-            Header="General">
+        <TabItem Header="General" Style="{StaticResource SesNativeTabItemStyle}">
 
             <Grid>
 
@@ -45,11 +42,12 @@
 
 
                 <!--DATABASE-->
-                <telerik:GroupBox
+                <GroupBox
                     Grid.Row="0"
                     Grid.Column="0"
                     Header="DATABASE"
-                    Margin="8">
+                    Margin="8"
+                    Style="{StaticResource SesNativeGroupBoxStyle}">
 
                     <Grid
                         Margin="8">
@@ -82,7 +80,7 @@
                                     Width="*" />
                             </Grid.ColumnDefinitions>
 
-                            <telerik:Label
+                            <Label Style="{StaticResource SesNativeFormLabelStyle}"
                                 Grid.Column="0"
                                 Content="Address"
                                 VerticalAlignment="Center"
@@ -111,7 +109,7 @@
                                     Width="*" />
                             </Grid.ColumnDefinitions>
 
-                            <telerik:Label
+                            <Label Style="{StaticResource SesNativeFormLabelStyle}"
                                 Grid.Column="0"
                                 Content="Port"
                                 VerticalAlignment="Center"
@@ -140,7 +138,7 @@
                                     Width="*" />
                             </Grid.ColumnDefinitions>
 
-                            <telerik:Label
+                            <Label Style="{StaticResource SesNativeFormLabelStyle}"
                                 Grid.Column="0"
                                 Content="Name"
                                 VerticalAlignment="Center"
@@ -168,7 +166,7 @@
                                     Width="*" />
                             </Grid.ColumnDefinitions>
 
-                            <telerik:Label
+                            <Label Style="{StaticResource SesNativeFormLabelStyle}"
                                 Grid.Column="0"
                                 Content="User ID"
                                 VerticalAlignment="Center"
@@ -195,7 +193,7 @@
                                     Width="*" />
                             </Grid.ColumnDefinitions>
 
-                            <telerik:Label
+                            <Label Style="{StaticResource SesNativeFormLabelStyle}"
                                 Grid.Column="0"
                                 Content="Password"
                                 VerticalAlignment="Center"
@@ -222,7 +220,7 @@
                                     Width="*" />
                             </Grid.ColumnDefinitions>
 
-                            <telerik:Label
+                            <Label Style="{StaticResource SesNativeFormLabelStyle}"
                                 Grid.Column="0"
                                 Content="Messages Storage Time"
                                 VerticalAlignment="Center"
@@ -256,7 +254,7 @@
                                 Stretch="Uniform"
                                 HorizontalAlignment="Left">
 
-                                <telerik:Label
+                                <Label Style="{StaticResource SesNativeFormLabelStyle}"
                                     Width="240"
                                     Content="Empty All Database Tables"
                                     VerticalAlignment="Center" />
@@ -279,14 +277,15 @@
 
                     </Grid>
 
-                </telerik:GroupBox>
+                </GroupBox>
 
                 <!--TIMING-->
-                <telerik:GroupBox
+                <GroupBox
                     Grid.Row="0"
                     Grid.Column="1"
                     Margin="8"
-                    Header="TIMING">
+                    Header="TIMING"
+                    Style="{StaticResource SesNativeGroupBoxStyle}">
 
                     <Grid
                         Margin="8">
@@ -319,7 +318,7 @@
                                     Width="*" />
                             </Grid.ColumnDefinitions>
 
-                            <telerik:Label
+                            <Label Style="{StaticResource SesNativeFormLabelStyle}"
                                 Grid.Column="0"
                                 Content="Setup UI Data Limit (ms)"
                                 VerticalAlignment="Center"
@@ -347,7 +346,7 @@
                                     Width="*" />
                             </Grid.ColumnDefinitions>
 
-                            <telerik:Label
+                            <Label Style="{StaticResource SesNativeFormLabelStyle}"
                                 Grid.Column="0"
                                 Content="Server UI Update Frequency"
                                 VerticalAlignment="Center"
@@ -375,7 +374,7 @@
                                     Width="*" />
                             </Grid.ColumnDefinitions>
 
-                            <telerik:Label
+                            <Label Style="{StaticResource SesNativeFormLabelStyle}"
                                 Grid.Column="0"
                                 Content="Database Save Frequency"
                                 VerticalAlignment="Center"
@@ -403,7 +402,7 @@
                                     Width="*" />
                             </Grid.ColumnDefinitions>
 
-                            <telerik:Label
+                            <Label Style="{StaticResource SesNativeFormLabelStyle}"
                                 Grid.Column="0"
                                 Content="Sensor Data Timeout"
                                 VerticalAlignment="Center"
@@ -431,7 +430,7 @@
                                     Width="*" />
                             </Grid.ColumnDefinitions>
 
-                            <telerik:Label
+                            <Label Style="{StaticResource SesNativeFormLabelStyle}"
                                 Grid.Column="0"
                                 Content="HMS Processing Frequency"
                                 VerticalAlignment="Center"
@@ -451,14 +450,15 @@
 
                     </Grid>
 
-                </telerik:GroupBox>
+                </GroupBox>
 
                 <!--SENSORS-->
-                <telerik:GroupBox
+                <GroupBox
                     Grid.Row="0"
                     Grid.Column="2"
                     Margin="8"
-                    Header="SENSOR">
+                    Header="SENSOR"
+                    Style="{StaticResource SesNativeGroupBoxStyle}">
 
                     <Grid
                         Margin="8">
@@ -491,7 +491,7 @@
                                     Width="2*" />
                             </Grid.ColumnDefinitions>
 
-                            <telerik:Label
+                            <Label Style="{StaticResource SesNativeFormLabelStyle}"
                                 Grid.Column="0"
                                 Content="Wave Height Cut-Off"
                                 VerticalAlignment="Center"
@@ -510,12 +510,12 @@
 
                     </Grid>
 
-                </telerik:GroupBox>
+                </GroupBox>
 
             </Grid>
 
-        </telerik:RadTabItem>
+        </TabItem>
 
-    </telerik:RadTabControl>
+    </TabControl>
     
 </UserControl>

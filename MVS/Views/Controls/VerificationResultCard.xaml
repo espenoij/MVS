@@ -116,7 +116,7 @@
 		</Grid>
 
 		<!-- Magnitude bar for deviation -->
-		<telerik:RadProgressBar Grid.Row="3"
+		<ProgressBar Grid.Row="3"
 								x:Name="pbDeviationMagnitude"
 								Height="4"
 								Minimum="0" Maximum="100"
@@ -143,21 +143,18 @@
 						   FontSize="11"
 						   Foreground="{StaticResource SesTextSecondaryBrush}"
 						   VerticalAlignment="Center"/>
-				<telerik:RadButton x:Name="btnInfo"
-								   Grid.Column="1"
-								   Content="?"
-								   Width="24"
-								   Height="24"
-								   Margin="8,0,0,0"
-								   VerticalAlignment="Top"
-								   FontWeight="Bold"
-								   FontSize="14"
-								   Foreground="{StaticResource SesTextSecondaryBrush}"
-								   Background="{StaticResource SesSurfaceAltBrush}"
-								   BorderBrush="{StaticResource SesBorderBrush}"
-								   BorderThickness="1"
-								   Padding="0"
-								   ToolTip="What do these numbers mean?"/>
+				<Button x:Name="btnInfo"
+						Grid.Column="1"
+						Content="?"
+						Width="24"
+						Height="24"
+						Margin="8,0,0,0"
+						VerticalAlignment="Top"
+						FontWeight="Bold"
+						FontSize="14"
+						Style="{StaticResource SesNativeIconButtonStyle}"
+						AutomationProperties.Name="Show information about the verification metrics"
+						ToolTip="What do these numbers mean?"/>
 			</Grid>
 		</Border>
 

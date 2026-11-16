@@ -38,17 +38,19 @@
             HorizontalAlignment="Center"
             Margin="0,12,0,12">
 
-            <telerik:RadButton
+            <Button
                 x:Name="btnStart"
                 Width="130"
                 Margin="4,0"
+                Style="{StaticResource SesNativePrimaryButtonStyle}"
                 Content="Start Recording"
                 Click="btnStart_Click" />
 
-            <telerik:RadButton
+            <Button
                 x:Name="btnCancel"
                 Width="100"
                 Margin="4,0"
+                Style="{StaticResource SesNativeSecondaryButtonStyle}"
                 Content="Cancel"
                 Click="btnCancel_Click" />
 

@@ -53,7 +53,7 @@
                 Grid.Column="0">
 
                 <!--Basic Information-->
-                <telerik:GroupBox
+                <GroupBox Style="{StaticResource SesNativeGroupBoxStyle}"
                     Header="Basic Information"
                     Margin="8">
 
@@ -88,10 +88,10 @@
 
                     </StackPanel>
 
-                </telerik:GroupBox>
+                </GroupBox>
 
                 <!--Settings-->
-                <telerik:GroupBox
+                <GroupBox Style="{StaticResource SesNativeGroupBoxStyle}"
                     Header="Settings"
                     Margin="8">
 
@@ -147,10 +147,10 @@
 
                     </StackPanel>
 
-                </telerik:GroupBox>
+                </GroupBox>
 
                 <!--Read Controls-->
-                <telerik:GroupBox
+                <GroupBox Style="{StaticResource SesNativeGroupBoxStyle}"
                     Header="Read Controls"
                     Margin="8">
 
@@ -199,10 +199,10 @@
 
                     </StackPanel>
 
-                </telerik:GroupBox>
+                </GroupBox>
 
                 <!--Data Display-->
-                <telerik:GroupBox
+                <GroupBox Style="{StaticResource SesNativeGroupBoxStyle}"
                     Header="Data Display"
                     Margin="8">
 
@@ -231,7 +231,7 @@
 
                     </StackPanel>
 
-                </telerik:GroupBox>
+                </GroupBox>
 
             </StackPanel>
 
@@ -267,7 +267,7 @@
                         </Grid.RowDefinitions>
 
                         <!--Data Line-->
-                        <telerik:GroupBox
+                        <GroupBox Style="{StaticResource SesNativeGroupBoxStyle}"
                             Header="Data Line"
                             Grid.Column="0"
                             Grid.Row="0"
@@ -276,33 +276,35 @@
 
                             <DockPanel>
 
-                                <telerik:RadGridView
+                                <DataGrid
                                     Name="lvDataLine"
                                     IsReadOnly="True"
                                     IsManipulationEnabled="False"
                                     CanUserSortColumns="False"
-                                    ShowGroupPanel="False"
-                                    ShowColumnHeaders="False"
+                                    HeadersVisibility="None"
                                     RowHeight="25"
                                     Margin="8"
                                     CanUserReorderColumns="False"
                                     CanUserDeleteRows="False"
-                                    RowIndicatorVisibility="Collapsed"
+                                    Background="{StaticResource SesSurfaceBrush}"
+                                    Foreground="{StaticResource SesTextPrimaryBrush}"
+                                    BorderBrush="{StaticResource SesBorderBrush}"
+                                    HorizontalGridLinesBrush="{StaticResource SesBorderBrush}"
+                                    GridLinesVisibility="Horizontal"
                                     AutoGenerateColumns="False">
 
-                                    <telerik:RadGridView.Columns>
-                                        <telerik:GridViewDataColumn
-                                            DataMemberBinding="{Binding data}" />
-                                    </telerik:RadGridView.Columns>
+                                    <DataGrid.Columns>
+                                        <DataGridTextColumn Binding="{Binding data}" />
+                                    </DataGrid.Columns>
 
-                                </telerik:RadGridView>
+                                </DataGrid>
 
                             </DockPanel>
 
-                        </telerik:GroupBox>
+                        </GroupBox>
 
                         <!--Data Fields-->
-                        <telerik:GroupBox
+                        <GroupBox Style="{StaticResource SesNativeGroupBoxStyle}"
                             Header="Data Fields"
                             Grid.Column="0"
                             Grid.Row="1"
@@ -574,10 +576,10 @@
 
                             </DockPanel>
 
-                        </telerik:GroupBox>
+                        </GroupBox>
 
                         <!--Selected Data-->
-                        <telerik:GroupBox
+                        <GroupBox Style="{StaticResource SesNativeGroupBoxStyle}"
                             Grid.Column="0"
                             Grid.Row="2"
                             Header="Selected Data"
@@ -609,9 +611,9 @@
 
                             </DockPanel>
 
-                        </telerik:GroupBox>
+                        </GroupBox>
 
-                        <telerik:GroupBox
+                        <GroupBox Style="{StaticResource SesNativeGroupBoxStyle}"
                             Grid.Column="2"
                             Grid.Row="0"
                             Header="Data Field Split"
@@ -664,10 +666,10 @@
 
                             </StackPanel>
 
-                        </telerik:GroupBox>
+                        </GroupBox>
 
                         <!--Data Selection-->
-                        <telerik:GroupBox
+                        <GroupBox Style="{StaticResource SesNativeGroupBoxStyle}"
                             Header="Data Selection"
                             Grid.Column="2"
                             Grid.Row="1"
@@ -708,7 +710,7 @@
 
                             </StackPanel>
 
-                        </telerik:GroupBox>
+                        </GroupBox>
 
                     </Grid>
 
@@ -737,7 +739,7 @@
                         </Grid.RowDefinitions>
 
                         <!--Selected Data-->
-                        <telerik:GroupBox
+                        <GroupBox Style="{StaticResource SesNativeGroupBoxStyle}"
                             Grid.Column="0"
                             Grid.Row="0"
                             Header="Selected Data"
@@ -764,10 +766,10 @@
 
                             </telerik:RadGridView>
 
-                        </telerik:GroupBox>
+                        </GroupBox>
 
                         <!--Calculated Data-->
-                        <telerik:GroupBox
+                        <GroupBox Style="{StaticResource SesNativeGroupBoxStyle}"
                             Grid.Column="0"
                             Grid.Row="1"
                             Header="Calculated Data"
@@ -794,7 +796,7 @@
 
                             </telerik:RadGridView>
 
-                        </telerik:GroupBox>
+                        </GroupBox>
 
                         <StackPanel
                             Grid.Column="1"
@@ -802,7 +804,7 @@
                             Grid.RowSpan="2">
 
                             <!--Data Calculations 1-->
-                            <telerik:GroupBox
+                            <GroupBox Style="{StaticResource SesNativeGroupBoxStyle}"
                                 Header="Data Calculations 1"
                                 Margin="8">
 
@@ -834,10 +836,10 @@
 
                                 </StackPanel>
 
-                            </telerik:GroupBox>
+                            </GroupBox>
 
                             <!--Data Calculations 2-->
-                            <telerik:GroupBox
+                            <GroupBox Style="{StaticResource SesNativeGroupBoxStyle}"
                                 Header="Data Calculations 2"
                                 Margin="8">
 
@@ -869,10 +871,10 @@
 
                                 </StackPanel>
 
-                            </telerik:GroupBox>
+                            </GroupBox>
 
                             <!--Data Calculations 3-->
-                            <telerik:GroupBox
+                            <GroupBox Style="{StaticResource SesNativeGroupBoxStyle}"
                                 Header="Data Calculations 3"
                                 Margin="8">
 
@@ -904,10 +906,10 @@
 
                                 </StackPanel>
 
-                            </telerik:GroupBox>
+                            </GroupBox>
 
                             <!--Data Calculations 4-->
-                            <telerik:GroupBox
+                            <GroupBox Style="{StaticResource SesNativeGroupBoxStyle}"
                                 Header="Data Calculations 4"
                                 Margin="8">
 
@@ -939,7 +941,7 @@
 
                                 </StackPanel>
 
-                            </telerik:GroupBox>
+                            </GroupBox>
 
                         </StackPanel>
 

@@ -33,7 +33,7 @@ namespace MVS
         private List<DataCalculations> dataCalculations = new List<DataCalculations>();
 
         // Lister for visning
-        private RadObservableCollection<FileDataLine> fileDataLines = new RadObservableCollection<FileDataLine>();
+        private ObservableCollectionEx<FileDataLine> fileDataLines = new ObservableCollectionEx<FileDataLine>();
         private RadObservableCollection<FileDataFields> fileDataFields = new RadObservableCollection<FileDataFields>();
         private RadObservableCollection<SelectedDataField> selectedDataList = new RadObservableCollection<SelectedDataField>();
         private RadObservableCollection<CalculatedData> calculatedDataList = new RadObservableCollection<CalculatedData>();

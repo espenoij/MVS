@@ -111,7 +111,8 @@
             <StackPanel
                 Grid.Column="1">
 
-                <telerik:GroupBox
+                <GroupBox
+                    Style="{StaticResource SesNativeGroupBoxStyle}"
                     Header="Basic Information"
                     Margin="8">
 
@@ -174,11 +175,12 @@
 
                     </StackPanel>
 
-                </telerik:GroupBox>
+                </GroupBox>
 
             </StackPanel>
 
-            <telerik:GroupBox
+            <GroupBox
+                Style="{StaticResource SesNativeGroupBoxStyle}"
                 Grid.Column="2"
                 Name="gbSetupSummaryNone"
                 Header="Setup Summery"
@@ -194,12 +196,13 @@
                     </DockPanel>
                 </StackPanel>
 
-            </telerik:GroupBox>
+            </GroupBox>
 
             <StackPanel
                 Grid.Column="2">
 
-                <telerik:GroupBox
+                <GroupBox
+                    Style="{StaticResource SesNativeGroupBoxStyle}"
                     Name="gbSetupSummarySerialPort"
                     Header="Setup Summery - Serial Port"
                     Visibility="Visible"
@@ -481,9 +484,10 @@
 
                     </StackPanel>
 
-                </telerik:GroupBox>
+                </GroupBox>
 
-                <telerik:GroupBox
+                <GroupBox
+                    Style="{StaticResource SesNativeGroupBoxStyle}"
                     Name="gbSetupSummaryModbus"
                     Header="Setup Summery - MODBUS"
                     Visibility="Collapsed"
@@ -688,9 +692,10 @@
 
                     </StackPanel>
 
-                </telerik:GroupBox>
+                </GroupBox>
 
-                <telerik:GroupBox
+                <GroupBox
+                    Style="{StaticResource SesNativeGroupBoxStyle}"
                     Name="gbSetupSummaryFileReader"
                     Header="Setup Summery - File Reader"
                     Visibility="Collapsed"
@@ -888,9 +893,10 @@
                         </DockPanel>
                     </StackPanel>
 
-                </telerik:GroupBox>
+                </GroupBox>
 
-                <telerik:GroupBox
+                <GroupBox
+                    Style="{StaticResource SesNativeGroupBoxStyle}"
                     Name="gbSetupSummaryFixedValue"
                     Header="Setup Summery - Fixed Value"
                     Visibility="Collapsed"
@@ -923,7 +929,7 @@
 
                     </StackPanel>
 
-                </telerik:GroupBox>
+                </GroupBox>
 
             </StackPanel>
 

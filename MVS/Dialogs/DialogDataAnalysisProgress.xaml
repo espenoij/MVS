@@ -30,10 +30,10 @@
     <StackPanel
         Margin="8">
 
-        <telerik:Label
-            Content="Loading Data and Analyzing..." />
+        <TextBlock
+            Text="Loading Data and Analyzing..." />
 
-        <telerik:RadProgressBar
+        <ProgressBar
             Name="dataAnalysisProgressBar"
             Minimum="0"
             Maximum="100"

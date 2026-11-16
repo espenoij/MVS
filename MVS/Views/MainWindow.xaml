@@ -214,11 +214,12 @@
                                 HorizontalAlignment="Left"
                                 Margin="8">
 
-                                <telerik:RadButton
+                                <Button
                                     Click="btnStart_Click"
                                     IsEnabled="{Binding StartButtonEnabled}"
                                     Width="140"
-                                    VerticalAlignment="Top">Start Recording</telerik:RadButton>
+                                    VerticalAlignment="Top"
+                                    Style="{StaticResource SesNativePrimaryButtonStyle}">Start Recording</Button>
 
                             </StackPanel>
 
@@ -559,11 +560,12 @@
                                 HorizontalAlignment="Left"
                                 Margin="8">
 
-                                <telerik:RadButton
+                                <Button
                                     Click="btnStart_Click"
                                     IsEnabled="{Binding StartButtonEnabled}"
                                     Width="140"
-                                    VerticalAlignment="Top">Start Recording</telerik:RadButton>
+                                    VerticalAlignment="Top"
+                                    Style="{StaticResource SesNativePrimaryButtonStyle}">Start Recording</Button>
 
                             </StackPanel>
 

@@ -15,8 +15,8 @@ namespace MVS
         // Configuration settings
         private Config config;
 
-        private RadObservableCollection<SensorData> sensorDisplayList = new RadObservableCollection<SensorData>();
-        private RadObservableCollection<HMSData> hmsInputDisplayList = new RadObservableCollection<HMSData>();
+        private ObservableCollectionEx<SensorData> sensorDisplayList = new ObservableCollectionEx<SensorData>();
+        private ObservableCollectionEx<HMSData> hmsInputDisplayList = new ObservableCollectionEx<HMSData>();
 
         private DispatcherTimer uiTimer = new DispatcherTimer();
 
@@ -86,13 +86,13 @@ namespace MVS
             ClearSensorStatus(hmsInputDisplayList);
         }
 
-        private void ClearSensorStatus(RadObservableCollection<SensorData> sensorDisplayList)
+        private void ClearSensorStatus(ObservableCollectionEx<SensorData> sensorDisplayList)
         {
             foreach (var item in sensorDisplayList)
                 item.portStatus = PortStatus.Closed;
         }
 
-        private void ClearSensorStatus(RadObservableCollection<HMSData> hmsInputDisplayList)
+        private void ClearSensorStatus(ObservableCollectionEx<HMSData> hmsInputDisplayList)
         {
             foreach (var item in hmsInputDisplayList)
                 item.status = DataStatus.NONE;

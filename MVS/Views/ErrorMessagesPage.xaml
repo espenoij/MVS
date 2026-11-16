@@ -29,9 +29,10 @@
             Grid.Row="0"
             Grid.Column="0">
 
-            <telerik:GroupBox
+            <GroupBox
                 Header="Filter"
-                Margin="10,0,0,0">
+                Margin="10,0,0,0"
+                Style="{StaticResource SesNativeGroupBoxStyle}">
                 <StackPanel>
 
                     <DockPanel>
@@ -39,9 +40,10 @@
                             Width="100"
                             Content="View"
                             VerticalAlignment="Center" />
-                        <telerik:RadComboBox
+                        <ComboBox
                             Width="auto"
                             Name="cboErrorMessageView"
+                            Style="{StaticResource SesNativeComboBoxStyle}"
                             SelectionChanged="cboErrorMessageView_SelectionChanged" />
                     </DockPanel>
 
@@ -50,9 +52,10 @@
                             Width="100"
                             Content="Type"
                             VerticalAlignment="Center" />
-                        <telerik:RadComboBox
+                        <ComboBox
                             Width="auto"
                             Name="cboErrorMessageType"
+                            Style="{StaticResource SesNativeComboBoxStyle}"
                             SelectionChanged="cboErrorMessageType_SelectionChanged" />
                     </DockPanel>
 
@@ -61,9 +64,10 @@
                             Width="100"
                             Content="Selection"
                             VerticalAlignment="Center" />
-                        <telerik:RadComboBox
+                        <ComboBox
                             Width="auto"
                             Name="cboErrorMessageSelection"
+                            Style="{StaticResource SesNativeComboBoxStyle}"
                             SelectionChanged="cboErrorMessageSelection_SelectionChanged" />
                     </DockPanel>
 
@@ -72,12 +76,13 @@
                             Width="210"
                             Content="Read Messages From Database"
                             VerticalAlignment="Center" />
-                        <telerik:RadButton
+                        <Button
                             Name="btnReadDB"
                             Click="btnReadDB_Click"
                             Width="100"
                             HorizontalAlignment="Right"
-                            Margin="5">Read</telerik:RadButton>
+                            Margin="5"
+                            Style="{StaticResource SesNativeSecondaryButtonStyle}">Read</Button>
                     </DockPanel>
 
                     <DockPanel>
@@ -85,12 +90,13 @@
                             Width="210"
                             Content="Clear All Messages"
                             VerticalAlignment="Center" />
-                        <telerik:RadButton
+                        <Button
                             Name="btnClearDisplay"
                             Click="btnClearDisplay_Click"
                             Width="100"
                             HorizontalAlignment="Right"
-                            Margin="5">Clear</telerik:RadButton>
+                            Margin="5"
+                            Style="{StaticResource SesNativeSecondaryButtonStyle}">Clear</Button>
                     </DockPanel>
 
                     <DockPanel>
@@ -98,21 +104,23 @@
                             Width="210"
                             Content="Copy to Clipboard"
                             VerticalAlignment="Center" />
-                        <telerik:RadButton
+                        <Button
                             Name="btnCopyToClipboard"
                             Click="btnCopyToClipboard_Click"
                             Width="100"
                             HorizontalAlignment="Right"
-                            Margin="5">Copy</telerik:RadButton>
+                            Margin="5"
+                            Style="{StaticResource SesNativeSecondaryButtonStyle}">Copy</Button>
                     </DockPanel>
 
                 </StackPanel>
 
-            </telerik:GroupBox>
+            </GroupBox>
 
-            <telerik:GroupBox
+            <GroupBox
                 Header="Database"
-                Margin="10,0,0,0">
+                Margin="10,0,0,0"
+                Style="{StaticResource SesNativeGroupBoxStyle}">
                 <StackPanel>
 
                     <DockPanel>
@@ -120,25 +128,28 @@
                             Width="180"
                             Content="Delete All Error Messages"
                             VerticalAlignment="Center" />
-                        <telerik:RadButton
+                        <Button
+                            Name="btnDeleteAllErrorMessages"
                             Click="btnDeleteAllErrorMessages_Click"
                             Width="80"
                             HorizontalAlignment="Right"
-                            Margin="5,10,5,5">Delete</telerik:RadButton>
+                            Margin="5,10,5,5"
+                            Style="{StaticResource SesNativeSecondaryButtonStyle}">Delete</Button>
                     </DockPanel>
 
                 </StackPanel>
 
-            </telerik:GroupBox>
+            </GroupBox>
 
         </StackPanel>
 
         <!--Error Message Data-->
-        <telerik:GroupBox
+        <GroupBox
             Grid.Row="0"
             Grid.Column="1"
             Header="Error Messages"
-            Margin="10,0,10,10">
+            Margin="10,0,10,10"
+            Style="{StaticResource SesNativeGroupBoxStyle}">
 
             <DockPanel>
 
@@ -179,7 +190,7 @@
 
             </DockPanel>
 
-        </telerik:GroupBox>
+        </GroupBox>
 
     </Grid>
 

@@ -62,8 +62,8 @@ namespace MVS
         private bool showControlChars;
 
         // Lister for visning
-        private RadObservableCollection<Packet> rawDataItems = new RadObservableCollection<Packet>();
-        private RadObservableCollection<Packet> selectedPacketsItems = new RadObservableCollection<Packet>();
+        private ObservableCollectionEx<Packet> rawDataItems = new ObservableCollectionEx<Packet>();
+        private ObservableCollectionEx<Packet> selectedPacketsItems = new ObservableCollectionEx<Packet>();
         private RadObservableCollection<PacketDataFields> packetDataFieldsItems = new RadObservableCollection<PacketDataFields>();
         private RadObservableCollection<SelectedDataField> selectedDataFieldItems = new RadObservableCollection<SelectedDataField>();
         private RadObservableCollection<CalculatedData> calculatedDataItems = new RadObservableCollection<CalculatedData>();
