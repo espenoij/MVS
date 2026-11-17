@@ -1,13 +1,12 @@
 using System.Linq;
 using System.Windows;
-using Telerik.Windows.Controls;
 
 namespace MVS
 {
     /// <summary>
     /// Pre-recording readiness check dialog.
     /// </summary>
-    public partial class DialogCaptureReadiness : RadWindow
+    public partial class DialogCaptureReadiness : Window
     {
         public bool UserConfirmed { get; private set; }
 
