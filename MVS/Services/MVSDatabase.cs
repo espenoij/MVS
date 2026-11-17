@@ -3,7 +3,6 @@ using System;
 using System.Collections.Generic;
 using System.Data;
 using Telerik.Charting;
-using Telerik.Windows.Data;
 
 namespace MVS
 {
@@ -251,7 +250,7 @@ namespace MVS
             }
         }
 
-        public void LoadSessionData(Project dataSet, RadObservableCollection<ProjectData> dataList)
+        public void LoadSessionData(Project dataSet, ICollection<ProjectData> dataList)
         {
             try
             {

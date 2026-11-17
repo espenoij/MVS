@@ -3,13 +3,13 @@ Helideck Monitoring System
 
 ## Telerik migration status
 
-The first collection-decoupling increment uses .NET collection interfaces in
-`DisplayList` and `CaptureReadinessChecker`, with their algorithms unchanged.
-All runtime collection instances, including display lists, retain their original
-Telerik types until Windows binding and live-update parity can be demonstrated.
-Display transfers still update the first matching item in place, append copies
-of new items, and retain items absent from the source. Direct transfers still
-clear and repopulate the display.
+The collection-decoupling work uses .NET collection interfaces in `DisplayList`
+and `CaptureReadinessChecker`. Some display, error-message, chart and loaded
+project-sample collections now use native collections; Telerik collections
+remain in acquisition, project-list, setup and other display paths. Display
+transfers still update the first matching item in place, append copies of new
+items, and retain items absent from the source. Direct transfers still clear
+and repopulate the display.
 
 The migration must not change any app functionality or observable behavior.
 Keep existing workflows, validation, device/data behavior, dialogs, grid
@@ -17,11 +17,34 @@ interactions, report content/output, charts and error paths unchanged. Do not
 replace a Telerik-dependent area if its parity cannot be demonstrated; record
 the evidence and blocker and leave that area unchanged.
 
-Controls, acquisition collections, chart buffers, PDF generation/preview, packages,
-licensing and installer dependencies remain unchanged. Chart notification batching
-and document/viewer replacements require separate parity and deployment validation.
-The existing Telerik-control guidance still applies to controls; replacing it
-requires resolving the applicable instruction conflict before UI migration.
+Remaining dependencies on the current main branch include:
+
+- **Controls and themes:** `App.xaml` loads Telerik Material dictionaries.
+  Windows, grids, tabs, step progress, numeric inputs, watermark inputs,
+  dropdowns and expanders remain in views and dialogs. SES styles also target
+  Telerik controls. The About dialog dynamically creates a Telerik QR barcode.
+- **Collections and charts:** `RadObservableCollection` remains in acquisition,
+  database, project, setup and display paths. `CaptureCharts.xaml` and
+  `DataAnalysis.xaml` still use Telerik charts, axes and series. Native chart
+  collection tests do not establish parity for replacing the chart controls.
+- **Documents:** `VerificationPdfReportExporter` uses Telerik document
+  processing, and `DialogReportPreview` uses `RadPdfViewer`. Export, rendering,
+  preview and report content must all be compared before replacing them.
+- **Packages and licensing:** `MVS.csproj` references Telerik UI for WPF and
+  Telerik licensing, includes a license file in output, and references
+  `System.IO.Hashing` for the Telerik PDF exporter. `App.xaml.cs` registers
+  Telerik licensing. `NuGet.config` maps the UI package to the local Telerik
+  installer feed and licensing to nuget.org.
+- **Assets and deployment:** tracked Telerik design-time assemblies remain
+  under `lib/RCWPF`; license files exist at the repository root and under
+  `MVS`. `MVS_Setup/HMSServerSetup.vdproj` lists Telerik assemblies with
+  older version metadata. The actual installer output and deployment must be
+  verified before removing those entries or assets.
+
+Do not remove the remaining packages, licenses, themes, assets or installer
+references until their consumers are replaced and build and deployment parity
+are verified. Any chart or document replacement also needs feature, licensing
+and redistribution checks.
 
 Validate the focused tests on Windows with .NET 10 and the configured Telerik feed:
 
@@ -36,3 +59,11 @@ runtime collections, compare status, sensor, serial, file, fixed-value and outpu
 grids with the original app during start/stop and live updates, including
 selection, sorting, scrolling, updates, notifications and errors. Linux cannot
 run the WPF application or its WindowsDesktop-dependent test assembly.
+
+`ProjectDataCollectionTests` compares loaded-sample notifications with Telerik
+and exercises analysis, chart data and progress. The optional
+`ProjectDataDatabaseIntegrationTests` additionally compares successful and
+failed database loads. Set `MVS_TEST_LOCAL_MARIADB=1` only when a disposable,
+isolated MariaDB instance is listening on loopback port 45173 with passwordless
+root access. The test creates and removes a uniquely named synthetic database;
+never point this fixture at a production instance.

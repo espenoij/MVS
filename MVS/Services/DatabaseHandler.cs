@@ -2,7 +2,6 @@ using System;
 using System.Collections.Generic;
 using System.Linq;
 using System.Security;
-using Telerik.Windows.Data;
 using MySqlConnector;
 using System.Windows.Markup;
 using MVS.Models;
@@ -672,7 +671,7 @@ namespace MVS
             }
         }
 
-        public void LoadSessionData(Project dataSet, RadObservableCollection<ProjectData> dataList)
+        public void LoadSessionData(Project dataSet, ICollection<ProjectData> dataList)
         {
             try
             {
