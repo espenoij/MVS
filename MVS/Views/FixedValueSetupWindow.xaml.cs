@@ -1,11 +1,11 @@
 ﻿using System;
+using System.Collections.ObjectModel;
 using System.Windows;
 using System.Windows.Controls;
 using System.Windows.Input;
 using System.Windows.Media;
 using System.Windows.Threading;
 using Telerik.Windows.Controls;
-using Telerik.Windows.Data;
 
 namespace MVS
 {
@@ -20,7 +20,7 @@ namespace MVS
         private DispatcherTimer fixedValueTimer = new DispatcherTimer();
 
         // Lister for visning
-        private RadObservableCollection<FileDataLine> fixedValueDataOutput = new RadObservableCollection<FileDataLine>();
+        private ObservableCollection<FileDataLine> fixedValueDataOutput = new ObservableCollection<FileDataLine>();
 
         // View Model
         private FixedValueWindowVM fixedValueWindowVM;

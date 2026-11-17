@@ -5,11 +5,11 @@ Helideck Monitoring System
 
 The collection-decoupling work uses .NET collection interfaces in `DisplayList`
 and `CaptureReadinessChecker`. Some display, error-message, chart and loaded
-project-sample collections now use native collections; Telerik collections
-remain in acquisition, project-list, setup and other display paths. Display
-transfers still update the first matching item in place, append copies of new
-items, and retain items absent from the source. Direct transfers still clear
-and repopulate the display.
+project-sample and fixed-value output collections now use native collections;
+Telerik collections remain in acquisition, project-list, setup and other display
+paths. Display transfers still update the first matching item in place, append
+copies of new items, and retain items absent from the source. Direct transfers
+still clear and repopulate the display.
 
 The migration must not change any app functionality or observable behavior.
 Keep existing workflows, validation, device/data behavior, dialogs, grid
@@ -60,6 +60,8 @@ grids with the original app during start/stop and live updates, including
 selection, sorting, scrolling, updates, notifications and errors. Linux cannot
 run the WPF application or its WindowsDesktop-dependent test assembly.
 
+`FixedValueDisplayTests` compares the fixed-value display notifications with
+Telerik and exercises its timer, selection, start, stop and clear behavior.
 `ProjectDataCollectionTests` compares loaded-sample notifications with Telerik
 and exercises analysis, chart data and progress. The optional
 `ProjectDataDatabaseIntegrationTests` additionally compares successful and
