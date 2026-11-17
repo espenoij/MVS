@@ -1,12 +1,12 @@
 ﻿using Org.BouncyCastle.Ocsp;
 using System;
 using System.Collections.Generic;
+using System.Collections.ObjectModel;
 using System.ComponentModel;
 using System.Linq;
 using System.Runtime.CompilerServices;
 using System.Windows.Threading;
 using MVS.Models;
-using Telerik.Windows.Data;
 
 namespace MVS
 {
@@ -68,7 +68,7 @@ namespace MVS
         public ObservableCollectionEx<HMSData> devHeaveMeanList = new ObservableCollectionEx<HMSData>();
 
         // Alle prosjekt data
-        public RadObservableCollection<ProjectData> projectsDataList = new RadObservableCollection<ProjectData>();
+        public ObservableCollection<ProjectData> projectsDataList = new ObservableCollection<ProjectData>();
 
         public void Init(MainWindowVM mainWindowVM, MVSProcessing mvsProcessing, MVSDataCollection mvsInputData, MVSDataCollection mvsOutputData)
         {
