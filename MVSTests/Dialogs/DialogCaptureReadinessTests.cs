@@ -20,6 +20,11 @@ namespace MVSTests.Dialogs
                 EnsureApplication();
 
                 var dialog = new DialogCaptureReadiness();
+                Assert.AreEqual("Pre-Recording Readiness Check", dialog.Title);
+                Assert.AreEqual(WindowStartupLocation.CenterScreen, dialog.WindowStartupLocation);
+                Assert.AreEqual(SizeToContent.Height, dialog.SizeToContent);
+                Assert.AreEqual(480d, dialog.Width);
+                Assert.IsNotNull(dialog.Icon);
                 dialog.Init(new ReadinessReport(new List<ReadinessItem>
                 {
                     new ReadinessItem("Blocking failure", false, ReadinessSeverity.Blocking),
