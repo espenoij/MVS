@@ -1,4 +1,4 @@
-﻿using Telerik.Windows.Controls;
+﻿using System.Windows;
 using System.Windows.Threading;
 using System;
 using System.ComponentModel;
@@ -9,13 +9,14 @@ namespace MVS
     /// Interaction logic for DialogDataAnalysisProgress
     /// .xaml
     /// </summary>
-    public partial class DialogDataAnalysisProgress : RadWindow
+    public partial class DialogDataAnalysisProgress : Window
     {
         private DispatcherTimer timer;
 
         public DialogDataAnalysisProgress()
         {
             InitializeComponent();
+            Closed += OnClosed;
         }
 
         public void Start(MainWindowVM mainWindowVM)
@@ -38,6 +39,12 @@ namespace MVS
                 //    Close();
                 //}
             }
+        }
+
+        private void OnClosed(object sender, EventArgs e)
+        {
+            timer?.Stop();
+            timer = null;
         }
     }
 }

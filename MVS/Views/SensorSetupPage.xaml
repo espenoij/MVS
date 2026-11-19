@@ -4,7 +4,6 @@
     xmlns:x="http://schemas.microsoft.com/winfx/2006/xaml"
     xmlns:mc="http://schemas.openxmlformats.org/markup-compatibility/2006"
     xmlns:d="http://schemas.microsoft.com/expression/blend/2008"
-    xmlns:telerik="http://schemas.telerik.com/2008/xaml/presentation"
     mc:Ignorable="d"
     d:DesignHeight="1100"
     d:DesignWidth="1400">
@@ -143,7 +142,7 @@
                                 Width="120"
                                 Content="Input Type"
                                 VerticalAlignment="Center" />
-                            <telerik:RadComboBox
+                            <ComboBox
                                 Width="auto"
                                 Name="cboSensorType"
                                 DropDownClosed="cboSensorType_DropDownClosed" />
@@ -167,7 +166,7 @@
                                 Width="120"
                                 Content="MRU Type"
                                 VerticalAlignment="Center" />
-                            <telerik:RadComboBox
+                            <ComboBox
                                 Width="auto"
                                 Name="cboMRUType"
                                 DropDownClosed="cboMRUType_DropDownClosed" />
@@ -933,46 +932,46 @@
 
             </StackPanel>
 
-            <telerik:RadGridView
+            <DataGrid
                 DockPanel.Dock="Left"
                 Name="gvProjects"
+                Style="{StaticResource SesNativeDataGridStyle}"
                 Margin="8,0,0,8"
                 ItemsSource="{Binding SensorData}"
                 IsReadOnly="True"
                 IsManipulationEnabled="True"
                 CanUserSortColumns="True"
-                ShowGroupPanel="False"
                 CanUserReorderColumns="False"
                 CanUserDeleteRows="True"
-                RowIndicatorVisibility="Collapsed"
                 SelectionMode="Single"
+                SelectionUnit="FullRow"
                 AutoGenerateColumns="False"
                 SelectionChanged="gvProjects_SelectionChanged">
 
-                <telerik:RadGridView.Columns>
-                    <telerik:GridViewDataColumn
+                <DataGrid.Columns>
+                    <DataGridTextColumn
                         Width="80"
                         Header="ID"
-                        DataMemberBinding="{Binding id}" />
-                    <telerik:GridViewDataColumn
+                        Binding="{Binding id}" />
+                    <DataGridTextColumn
                         Width="120"
                         Header="Type"
-                        DataMemberBinding="{Binding type}" />
-                    <telerik:GridViewDataColumn
+                        Binding="{Binding type}" />
+                    <DataGridTextColumn
                         Width="200"
                         Header="Source"
-                        DataMemberBinding="{Binding source}" />
-                    <telerik:GridViewDataColumn
+                        Binding="{Binding source}" />
+                    <DataGridTextColumn
                         Width="160"
                         Header="MRU Type"
-                        DataMemberBinding="{Binding mruTypeString}" />
-                    <telerik:GridViewDataColumn
+                        Binding="{Binding mruTypeString}" />
+                    <DataGridTextColumn
                         Width="400"
                         Header="Name"
-                        DataMemberBinding="{Binding name}" />
-                </telerik:RadGridView.Columns>
+                        Binding="{Binding name}" />
+                </DataGrid.Columns>
 
-            </telerik:RadGridView>
+            </DataGrid>
 
         </Grid>
 

@@ -9,15 +9,13 @@ using System.Windows.Controls;
 using System.Windows.Input;
 using System.Windows.Media;
 using System.Windows.Threading;
-using Telerik.Windows.Controls;
-using Telerik.Windows.Data;
 
 namespace MVS
 {
     /// <summary>
     /// Interaction logic for ModbusSetupWindow.xaml
     /// </summary>
-    public partial class ModbusSetupWindow : RadWindow
+    public partial class ModbusSetupWindow : Window
     {
         // Configuration settings
         private Config config;
@@ -29,7 +27,7 @@ namespace MVS
         private AdminSettingsVM adminSettingsVM;
 
         // Sensor Data List
-        private RadObservableCollection<SensorData> sensorDataList = new RadObservableCollection<SensorData>();
+        private ObservableCollectionEx<SensorData> sensorDataList = new ObservableCollectionEx<SensorData>();
 
         // Valgt sensor data
         private SensorData sensorData;
@@ -50,14 +48,14 @@ namespace MVS
         private ModbusCalculations process = new ModbusCalculations();
 
         // Lister for visning
-        private RadObservableCollection<ModbusData> rawDataItems = new RadObservableCollection<ModbusData>();
-        private RadObservableCollection<ModbusData> selectedDataItems = new RadObservableCollection<ModbusData>();
-        private RadObservableCollection<ModbusData> calculatedDataItems = new RadObservableCollection<ModbusData>();
+        private ObservableCollectionEx<ModbusData> rawDataItems = new ObservableCollectionEx<ModbusData>();
+        private ObservableCollectionEx<ModbusData> selectedDataItems = new ObservableCollectionEx<ModbusData>();
+        private ObservableCollectionEx<ModbusData> calculatedDataItems = new ObservableCollectionEx<ModbusData>();
 
         // View Model
         private ModbusSetupWindowVM modbusSetupWindowVM;
 
-        public ModbusSetupWindow(SensorData sensorData, RadObservableCollection<SensorData> sensorDataList, Config config, ErrorHandler errorHandler, AdminSettingsVM adminSettingsVM)
+        public ModbusSetupWindow(SensorData sensorData, ObservableCollectionEx<SensorData> sensorDataList, Config config, ErrorHandler errorHandler, AdminSettingsVM adminSettingsVM)
         {
             InitializeComponent();
 
@@ -330,7 +328,7 @@ namespace MVS
             }
             catch (Exception ex)
             {
-                RadWindow.Alert(string.Format("InitializeDataProcessing\n\n{0}", TextHelper.Wrap(ex.Message)));
+                DialogHandler.Alert(string.Format("InitializeDataProcessing\n\n{0}", TextHelper.Wrap(ex.Message)));
             }
         }
 
@@ -407,7 +405,7 @@ namespace MVS
             }
             catch (Exception ex)
             {
-                RadWindow.Alert(string.Format("Error opening MODBUS connection\n\n{0}", TextHelper.Wrap(ex.Message)));
+                DialogHandler.Alert(string.Format("Error opening MODBUS connection\n\n{0}", TextHelper.Wrap(ex.Message)));
 
                 // Stoppe lesing av data dersom vi ikke får åpnet serie port
                 Modbus_Stop();
@@ -510,7 +508,7 @@ namespace MVS
                 }
                 catch (Exception ex)
                 {
-                    RadWindow.Alert(string.Format("Modbus_Read\n\n{0}", TextHelper.Wrap(ex.Message)));
+                    DialogHandler.Alert(string.Format("Modbus_Read\n\n{0}", TextHelper.Wrap(ex.Message)));
 
                     Modbus_Stop();
                 }
@@ -646,7 +644,7 @@ namespace MVS
                 }
                 catch (Exception ex)
                 {
-                    RadWindow.Alert(string.Format("Register Data Error (1)\n\n{0}", TextHelper.Wrap(ex.Message)));
+                    DialogHandler.Alert(string.Format("Register Data Error (1)\n\n{0}", TextHelper.Wrap(ex.Message)));
                 }
             }));
         }
@@ -678,7 +676,7 @@ namespace MVS
                 }
                 catch (Exception ex)
                 {
-                    RadWindow.Alert(string.Format("Register Data Error (2)\n\n{0}", TextHelper.Wrap(ex.Message)));
+                    DialogHandler.Alert(string.Format("Register Data Error (2)\n\n{0}", TextHelper.Wrap(ex.Message)));
                 }
             }));
         }
@@ -729,7 +727,7 @@ namespace MVS
             }
             catch (Exception ex)
             {
-                RadWindow.Alert(string.Format("cboBaudRate_SelectionChanged\n\n{0}", TextHelper.Wrap(ex.Message)));
+                DialogHandler.Alert(string.Format("cboBaudRate_SelectionChanged\n\n{0}", TextHelper.Wrap(ex.Message)));
             }
         }
 
@@ -742,7 +740,7 @@ namespace MVS
             }
             catch (Exception ex)
             {
-                RadWindow.Alert(string.Format("cboDataBits_SelectionChanged\n\n{0}", TextHelper.Wrap(ex.Message)));
+                DialogHandler.Alert(string.Format("cboDataBits_SelectionChanged\n\n{0}", TextHelper.Wrap(ex.Message)));
             }
         }
 
@@ -755,7 +753,7 @@ namespace MVS
             }
             catch (Exception ex)
             {
-                RadWindow.Alert(string.Format("cboStopBits_SelectionChanged\n\n{0}", TextHelper.Wrap(ex.Message)));
+                DialogHandler.Alert(string.Format("cboStopBits_SelectionChanged\n\n{0}", TextHelper.Wrap(ex.Message)));
             }
         }
 
@@ -768,7 +766,7 @@ namespace MVS
             }
             catch (Exception ex)
             {
-                RadWindow.Alert(string.Format("cboDataParity_SelectionChanged\n\n{0}", TextHelper.Wrap(ex.Message)));
+                DialogHandler.Alert(string.Format("cboDataParity_SelectionChanged\n\n{0}", TextHelper.Wrap(ex.Message)));
             }
         }
 
@@ -781,7 +779,7 @@ namespace MVS
             }
             catch (Exception ex)
             {
-                RadWindow.Alert(string.Format("cboHandShake_SelectionChanged\n\n{0}", TextHelper.Wrap(ex.Message)));
+                DialogHandler.Alert(string.Format("cboHandShake_SelectionChanged\n\n{0}", TextHelper.Wrap(ex.Message)));
             }
         }
 
@@ -1003,7 +1001,7 @@ namespace MVS
                         }
                         else
                         {
-                            RadWindow.Alert(
+                            DialogHandler.Alert(
                                 string.Format("Input Error\n\nValid address space:\n{0} - {1}\n{2} - {3}\n{4} - {5}\n{6} - {7} (a)",
                                     Constants.ModbusCoilMin,
                                     Constants.ModbusCoilMax,
@@ -1027,7 +1025,7 @@ namespace MVS
             }
             catch (Exception ex)
             {
-                RadWindow.Alert(string.Format("Input Error\n\n{0}", TextHelper.Wrap(ex.Message)));
+                DialogHandler.Alert(string.Format("Input Error\n\n{0}", TextHelper.Wrap(ex.Message)));
             }
         }
 
@@ -1064,7 +1062,7 @@ namespace MVS
                             }
                             else
                             {
-                                RadWindow.Alert(
+                                DialogHandler.Alert(
                                     string.Format("Input Error\n\nValid address space (Start + Total):\n{0} - {1}\n{2} - {3}\n{4} - {5}\n{6} - {7} (b)",
                                         Constants.ModbusCoilMin,
                                         Constants.ModbusCoilMax,
@@ -1080,7 +1078,7 @@ namespace MVS
                         }
                         else
                         {
-                            RadWindow.Alert(string.Format("Valid address range: 0 - {0} (b)", Constants.ModbusRegistersMax));
+                            DialogHandler.Alert(string.Format("Valid address range: 0 - {0} (b)", Constants.ModbusRegistersMax));
                             sensorData.modbus.totalAddresses = 0;
                         }
                     }
@@ -1094,7 +1092,7 @@ namespace MVS
             }
             catch (Exception ex)
             {
-                RadWindow.Alert(string.Format("Input Error\n\n{0}", TextHelper.Wrap(ex.Message)));
+                DialogHandler.Alert(string.Format("Input Error\n\n{0}", TextHelper.Wrap(ex.Message)));
             }
         }
 
@@ -1128,7 +1126,7 @@ namespace MVS
                         }
                         else
                         {
-                            RadWindow.Alert(
+                            DialogHandler.Alert(
                                 string.Format("Input Error\n\nData Address must be within the\nsample data address space:\n\n{0} - {1}",
                                     sensorData.modbus.startAddress,
                                     sensorData.modbus.startAddress + sensorData.modbus.totalAddresses - 1));
@@ -1146,7 +1144,7 @@ namespace MVS
             }
             catch (Exception ex)
             {
-                RadWindow.Alert(string.Format("Input Error\n\n{0}", TextHelper.Wrap(ex.Message)));
+                DialogHandler.Alert(string.Format("Input Error\n\n{0}", TextHelper.Wrap(ex.Message)));
             }
         }
 

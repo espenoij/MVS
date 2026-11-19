@@ -5,14 +5,13 @@ using System.Drawing.Imaging;
 using System.IO;
 using System.Windows;
 using System.Windows.Media.Imaging;
-using Telerik.Windows.Controls;
 
 namespace MVS.Dialogs
 {
     /// <summary>
     /// Interaction logic for DialogScreenCapture.xaml
     /// </summary>
-    public partial class DialogScreenCapture : RadWindow
+    public partial class DialogScreenCapture : Window
     {
         private Bitmap bitmap;
 

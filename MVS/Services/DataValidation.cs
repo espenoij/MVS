@@ -1,6 +1,6 @@
 ﻿using System.Linq;
 using System.Text.RegularExpressions;
-using Telerik.Windows.Controls;
+using MVS;
 
 // Flere av disse valideringsmetodene er litt spesiell på den måten at
 // de ikke bare leverer true/false om valideringen er ok, men også en ferdig string.
@@ -32,13 +32,13 @@ public static class DataValidation
                 // Ikke gyldig
                 else
                 {
-                    RadWindow.Alert(string.Format("Input Error\n\nValid input range: {0} - {1}", min, max));
+                    DialogHandler.Alert(string.Format("Input Error\n\nValid input range: {0} - {1}", min, max));
                 }
             }
             // Numerisk input
             else
             {
-                RadWindow.Alert("Input Error\n\nA numeric input value is required.");
+                DialogHandler.Alert("Input Error\n\nA numeric input value is required.");
             }
         }
 
@@ -73,13 +73,13 @@ public static class DataValidation
                 // Ikke gyldig
                 else
                 {
-                    RadWindow.Alert(string.Format("Input Error\n\nValid input range: {0} - {1}", min, max));
+                    DialogHandler.Alert(string.Format("Input Error\n\nValid input range: {0} - {1}", min, max));
                 }
             }
             // Numerisk input
             else
             {
-                RadWindow.Alert("Input Error\n\nA numeric input value is required.");
+                DialogHandler.Alert("Input Error\n\nA numeric input value is required.");
             }
         }
 
@@ -140,7 +140,7 @@ public static class DataValidation
         // Ikke gyldig output -> Sett default verdi
         else
         {
-            RadWindow.Alert("Input Error\n\nInvalid IP address.");
+            DialogHandler.Alert("Input Error\n\nInvalid IP address.");
             validatedInput = defaultValue;
         }
 

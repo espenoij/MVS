@@ -3,7 +3,6 @@ using System.Windows.Controls;
 using System.Windows.Threading;
 using Telerik.Windows.Controls;
 using Telerik.Windows.Controls.GridView;
-using Telerik.Windows.Data;
 
 namespace MVS
 {
@@ -22,7 +21,7 @@ namespace MVS
 
         private MVSDataCollection hmsInputDataList;
 
-        private RadObservableCollection<SensorData> serverSensorDataList;
+        private ObservableCollectionEx<SensorData> serverSensorDataList;
 
         public MVSInputSetup()
         {
@@ -30,7 +29,7 @@ namespace MVS
         }
 
         public void Init(
-            RadObservableCollection<SensorData> serverSensorDataList,
+            ObservableCollectionEx<SensorData> serverSensorDataList,
             MVSDataCollection hmsInputDataList,
             Config config)
         {

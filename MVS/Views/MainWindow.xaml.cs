@@ -6,8 +6,6 @@ using System.Threading;
 using System.Windows;
 using System.Windows.Controls;
 using System.Windows.Threading;
-using Telerik.Windows.Controls;
-using Telerik.Windows.Data;
 using Forms = System.Windows.Forms;
 
 namespace MVS
@@ -15,13 +13,13 @@ namespace MVS
     /// <summary>
     /// Interaction logic for MainWindow.xaml
     /// </summary>
-    public partial class MainWindow : RadWindow
+    public partial class MainWindow : Window
     {
-        private RadObservableCollection<SensorData> statusDisplayList = new RadObservableCollection<SensorData>();
-        private RadObservableCollection<SensorData> sensorDataDisplayList = new RadObservableCollection<SensorData>();
-        private RadObservableCollection<SerialPortData> serialPortDataDisplayList = new RadObservableCollection<SerialPortData>();
-        private RadObservableCollection<FileReaderSetup> fileReaderDataDisplayList = new RadObservableCollection<FileReaderSetup>();
-        private RadObservableCollection<FixedValueSetup> fixedValueDataDisplayList = new RadObservableCollection<FixedValueSetup>();
+        private ObservableCollectionEx<SensorData> statusDisplayList = new ObservableCollectionEx<SensorData>();
+        private ObservableCollectionEx<SensorData> sensorDataDisplayList = new ObservableCollectionEx<SensorData>();
+        private ObservableCollectionEx<SerialPortData> serialPortDataDisplayList = new ObservableCollectionEx<SerialPortData>();
+        private ObservableCollectionEx<FileReaderSetup> fileReaderDataDisplayList = new ObservableCollectionEx<FileReaderSetup>();
+        private ObservableCollectionEx<FixedValueSetup> fixedValueDataDisplayList = new ObservableCollectionEx<FixedValueSetup>();
 
         // Database
         private DatabaseHandler database;
@@ -349,7 +347,7 @@ namespace MVS
                 dpApplicationRestartRequired.Visibility = Visibility.Collapsed;
         }
 
-        private void Window_Closing(object sender, WindowClosedEventArgs e)
+        private void Window_Closing(object sender, EventArgs e)
         {
             Stop();
 
@@ -478,37 +476,28 @@ namespace MVS
                 // Sjekker om valgt data set allerede har data
                 if (mainWindowVM.SelectedProject.DataSetHasData())
                 {
-                    RadWindow.Confirm("The selected data set already contains data.\n\nStarting a new recording session with this data set\nwill delete all the current data within it.", OnClosed);
-
-                    void OnClosed(object sendero, WindowClosedEventArgs ea)
+                    if (DialogHandler.Confirm("The selected data set already contains data.\n\nStarting a new recording session with this data set\nwill delete all the current data within it."))
                     {
                         // Starter selv om data set har data
-                        if ((bool)ea.DialogResult == true)
-                        {
-                            // Må først slette eksisterende data i databasen
-                            mvsDatabase.DeleteData(mainWindowVM.SelectedProject);
+                        // Må først slette eksisterende data i databasen
+                        mvsDatabase.DeleteData(mainWindowVM.SelectedProject);
 
-                            // Fjerne timestamps
-                            mainWindowVM.SelectedProject.ClearTimestamps();
-                        }
-                        else
-                        {
-                            return;
-                        }
+                        // Fjerne timestamps
+                        mainWindowVM.SelectedProject.ClearTimestamps();
                     }
                 }
 
                 // Sjekke om recording session har navn
                 if (string.IsNullOrEmpty(mainWindowVM.SelectedProject.Name))
                 {
-                    RadWindow.Alert(TextHelper.Wrap("The selected data recording session does not have a name.\n\nPlease set a name before starting the data recording session."));
+                    DialogHandler.Alert(TextHelper.Wrap("The selected data recording session does not have a name.\n\nPlease set a name before starting the data recording session."));
                     return;
                 }
 
                 // Check if input setup is set
                 if (mainWindowVM.SelectedProject.InputMRUs == InputMRUType.None)
                 {
-                    RadWindow.Alert(TextHelper.Wrap("The input MRUs have not been set.\n\nPlease set the input MRUs before starting the data recording session."));
+                    DialogHandler.Alert(TextHelper.Wrap("The input MRUs have not been set.\n\nPlease set the input MRUs before starting the data recording session."));
                     return;
                 }
 
@@ -627,22 +616,27 @@ namespace MVS
             }
         }
 
-        private void gvStatusDisplay_SelectionChanged(object sender, SelectionChangeEventArgs e)
+        private void gvStatusDisplay_SelectionChanged(object sender, SelectionChangedEventArgs e)
         {
             // Tillater ikke valg av linjer på status tab (kundens område)
-            (sender as RadGridView).UnselectAll();
+            (sender as DataGrid).UnselectAll();
         }
 
-        private void gvSensorDataDisplay_SelectionChanged(object sender, SelectionChangeEventArgs e)
+        private void gvSensorDataDisplay_SelectionChanged(object sender, SelectionChangedEventArgs e)
         {
         }
 
-        private void tcMainMenu_SelectionChanged(object sender, RadSelectionChangedEventArgs e)
+        private void gvNonSelectableDataGrid_SelectionChanged(object sender, SelectionChangedEventArgs e)
+        {
+            (sender as DataGrid).UnselectAll();
+        }
+
+        private void tcMainMenu_SelectionChanged(object sender, SelectionChangedEventArgs e)
         {
             // Fjerne fokus fra alle elementer slik at ikke knapper og felt lyser opp i rødt når vi bytter tab
             Dispatcher.BeginInvoke((Action)(() =>
             {
-                (sender as RadTabControl).Focus();
+                (sender as TabControl).Focus();
             }), DispatcherPriority.ApplicationIdle);
 
             // Dersom vi har vært innom input edit, og forlatt siden igjen, og server ikke kjører, må vi anta at sensor input er endret

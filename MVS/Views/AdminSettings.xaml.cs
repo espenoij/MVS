@@ -3,7 +3,6 @@ using System.Net.Sockets;
 using System.Windows;
 using System.Windows.Controls;
 using System.Windows.Input;
-using Telerik.Windows.Data;
 
 namespace MVS
 {
@@ -25,14 +24,14 @@ namespace MVS
         private ErrorHandler errorHandler;
 
         // Sensor Data List
-        private RadObservableCollection<SensorData> sensorDataList = new RadObservableCollection<SensorData>();
+        private ObservableCollectionEx<SensorData> sensorDataList = new ObservableCollectionEx<SensorData>();
 
         public AdminSettings()
         {
             InitializeComponent();
         }
 
-        public void Init(AdminSettingsVM adminSettingsVM, Config config, DatabaseHandler database, ErrorHandler errorHandler, RadObservableCollection<SensorData> sensorDataList)
+        public void Init(AdminSettingsVM adminSettingsVM, Config config, DatabaseHandler database, ErrorHandler errorHandler, ObservableCollectionEx<SensorData> sensorDataList)
         {
             DataContext = adminSettingsVM;
             this.adminSettingsVM = adminSettingsVM;

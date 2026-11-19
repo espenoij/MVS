@@ -1,31 +1,16 @@
-﻿<telerik:RadWindow
+﻿<Window
     x:Class="MVS.ModbusSetupWindow"
     xmlns="http://schemas.microsoft.com/winfx/2006/xaml/presentation"
     xmlns:d="http://schemas.microsoft.com/expression/blend/2008"
     xmlns:x="http://schemas.microsoft.com/winfx/2006/xaml"
     xmlns:mc="http://schemas.openxmlformats.org/markup-compatibility/2006"
     xmlns:local="clr-namespace:MVS"
-    xmlns:telerik="http://schemas.telerik.com/2008/xaml/presentation"
     mc:Ignorable="d"
-    telerik:Header="MODBUS Data Setup"
+    Title="MODBUS Data Setup"
     WindowState="Maximized"
     Height="1010"
-    Width="1300">
-
-    <telerik:RadWindow.Resources>
-        <ResourceDictionary>
-            <Style
-                TargetType="local:ModbusSetupWindow"
-                BasedOn="{StaticResource RadWindowStyle}" />
-        </ResourceDictionary>
-
-    </telerik:RadWindow.Resources>
-
-    <telerik:RadWindow.Icon>
-        <Image
-            Height="32"
-            Source="../Icons/mvs_windows_icon.ico" />
-    </telerik:RadWindow.Icon>
+    Width="1300"
+    Icon="pack://application:,,,/MVS;component/Icons/mvs_windows_icon.ico">
 
     <DockPanel>
 
@@ -99,7 +84,7 @@
                                 Width="110"
                                 Content="COM Port"
                                 VerticalAlignment="Center" />
-                            <telerik:RadComboBox
+                            <ComboBox
                                 Width="auto"
                                 Name="cboPortName"
                                 SelectionChanged="cboCOMPort_SelectionChanged" />
@@ -110,11 +95,11 @@
                                 Width="110"
                                 Content="Baud Rate"
                                 VerticalAlignment="Center" />
-                            <telerik:RadComboBox
+                            <ComboBox
                                 Width="auto"
                                 Name="cboBaudRate"
                                 SelectionChanged="cboBaudRate_SelectionChanged">
-                            </telerik:RadComboBox>
+                            </ComboBox>
                         </DockPanel>
 
                         <DockPanel>
@@ -122,11 +107,11 @@
                                 Width="110"
                                 Content="Data Bits"
                                 VerticalAlignment="Center" />
-                            <telerik:RadComboBox
+                            <ComboBox
                                 Width="auto"
                                 Name="cboDataBits"
                                 SelectionChanged="cboDataBits_SelectionChanged">
-                            </telerik:RadComboBox>
+                            </ComboBox>
                         </DockPanel>
 
                         <DockPanel>
@@ -134,11 +119,11 @@
                                 Width="110"
                                 Content="Stop Bits"
                                 VerticalAlignment="Center" />
-                            <telerik:RadComboBox
+                            <ComboBox
                                 Width="auto"
                                 Name="cboStopBits"
                                 SelectionChanged="cboStopBits_SelectionChanged">
-                            </telerik:RadComboBox>
+                            </ComboBox>
                         </DockPanel>
 
                         <DockPanel>
@@ -146,11 +131,11 @@
                                 Width="110"
                                 Content="Data Parity"
                                 VerticalAlignment="Center" />
-                            <telerik:RadComboBox
+                            <ComboBox
                                 Width="auto"
                                 Name="cboParity"
                                 SelectionChanged="cboDataParity_SelectionChanged">
-                            </telerik:RadComboBox>
+                            </ComboBox>
                         </DockPanel>
 
                         <DockPanel>
@@ -158,11 +143,11 @@
                                 Width="110"
                                 Content="Hand Shake"
                                 VerticalAlignment="Center" />
-                            <telerik:RadComboBox
+                            <ComboBox
                                 Width="auto"
                                 Name="cboHandShake"
                                 SelectionChanged="cboHandShake_SelectionChanged">
-                            </telerik:RadComboBox>
+                            </ComboBox>
                         </DockPanel>
 
                         <DockPanel>
@@ -326,14 +311,13 @@
                 
             </StackPanel>
 
-            <telerik:RadTabControl
+            <TabControl
                 Grid.Row="0"
                 Grid.Column="1"
-                Margin="8"
-                HeaderBackground="{StaticResource ColorHorizontalBarBackground}">
+                Margin="8">
 
                 <!--1. Packet Selection-->
-                <telerik:RadTabItem
+                <TabItem
                     Name="tabPacketSelection"
                     Header="1: Data Selection">
 
@@ -360,34 +344,33 @@
                             Header="Raw Data"
                             Margin="8">
 
-                            <telerik:RadGridView
+                            <DataGrid
                                 Name="lvModbusRawData"
+                                Style="{StaticResource SesNativeDataGridStyle}"
                                 IsReadOnly="True"
                                 IsManipulationEnabled="False"
                                 CanUserSortColumns="False"
-                                ShowGroupPanel="False"
-                                ShowColumnHeaders="True"
-                                IsFilteringAllowed="False"
+                                HeadersVisibility="Column"
                                 RowHeight="25"
                                 ColumnWidth="200"
                                 Margin="8"
                                 CanUserReorderColumns="False"
                                 CanUserDeleteRows="False"
-                                RowIndicatorVisibility="Collapsed"
+                                SelectionUnit="FullRow"
                                 AutoGenerateColumns="False">
 
-                                <telerik:RadGridView.Columns>
-                                    <telerik:GridViewDataColumn
+                                <DataGrid.Columns>
+                                    <DataGridTextColumn
                                         Header="Address"
                                         Width="120"
-                                        DataMemberBinding="{Binding addressString}" />
-                                    <telerik:GridViewDataColumn
+                                        Binding="{Binding addressString}" />
+                                    <DataGridTextColumn
                                         Header="Data"
                                         Width="*"
-                                        DataMemberBinding="{Binding dataString}" />
-                                </telerik:RadGridView.Columns>
+                                        Binding="{Binding dataString}" />
+                                </DataGrid.Columns>
 
-                            </telerik:RadGridView>
+                            </DataGrid>
 
                         </GroupBox>
 
@@ -429,27 +412,27 @@
 
                             <DockPanel>
 
-                                <telerik:RadGridView
+                                <DataGrid
                                     DockPanel.Dock="Left"
                                     Name="lvSelectedData"
+                                    Style="{StaticResource SesNativeDataGridStyle}"
                                     IsReadOnly="True"
                                     IsManipulationEnabled="False"
                                     CanUserSortColumns="False"
-                                    ShowGroupPanel="False"
-                                    ShowColumnHeaders="False"
+                                    HeadersVisibility="None"
                                     RowHeight="25"
                                     Margin="8"
                                     CanUserReorderColumns="False"
                                     CanUserDeleteRows="False"
-                                    RowIndicatorVisibility="Collapsed"
+                                    SelectionUnit="FullRow"
                                     AutoGenerateColumns="False">
 
-                                    <telerik:RadGridView.Columns>
-                                        <telerik:GridViewDataColumn
-                                            DataMemberBinding="{Binding dataString}" />
-                                    </telerik:RadGridView.Columns>
+                                    <DataGrid.Columns>
+                                        <DataGridTextColumn
+                                            Binding="{Binding dataString}" />
+                                    </DataGrid.Columns>
 
-                                </telerik:RadGridView>
+                                </DataGrid>
 
                             </DockPanel>
 
@@ -457,10 +440,10 @@
 
                     </Grid>
 
-                </telerik:RadTabItem>
+                </TabItem>
 
                 <!--1. Packet Selection-->
-                <telerik:RadTabItem
+                <TabItem
                     Name="tabDataCalculations"
                     Header="2: Data Calculations">
 
@@ -489,27 +472,27 @@
 
                             <DockPanel>
 
-                                <telerik:RadGridView
+                                <DataGrid
                                     DockPanel.Dock="Left"
                                     Name="lvSelectedData2"
+                                    Style="{StaticResource SesNativeDataGridStyle}"
                                     IsReadOnly="True"
                                     IsManipulationEnabled="False"
                                     CanUserSortColumns="False"
-                                    ShowGroupPanel="False"
-                                    ShowColumnHeaders="False"
+                                    HeadersVisibility="None"
                                     RowHeight="25"
                                     Margin="8"
                                     CanUserReorderColumns="False"
                                     CanUserDeleteRows="False"
-                                    RowIndicatorVisibility="Collapsed"
+                                    SelectionUnit="FullRow"
                                     AutoGenerateColumns="False">
 
-                                    <telerik:RadGridView.Columns>
-                                        <telerik:GridViewDataColumn
-                                            DataMemberBinding="{Binding dataString}" />
-                                    </telerik:RadGridView.Columns>
+                                    <DataGrid.Columns>
+                                        <DataGridTextColumn
+                                            Binding="{Binding dataString}" />
+                                    </DataGrid.Columns>
 
-                                </telerik:RadGridView>
+                                </DataGrid>
 
                             </DockPanel>
 
@@ -533,12 +516,12 @@
                                             Width="80"
                                             Content="Type"
                                             VerticalAlignment="Center" />
-                                        <telerik:RadComboBox
+                                        <ComboBox
                                             Width="auto"
                                             Name="cboCalculationType1"
                                             MaxDropDownHeight="400"
                                             SelectionChanged="cboCalculationType1_SelectionChanged">
-                                        </telerik:RadComboBox>
+                                        </ComboBox>
                                     </DockPanel>
 
                                     <DockPanel>
@@ -570,12 +553,12 @@
                                             Width="80"
                                             Content="Type"
                                             VerticalAlignment="Center" />
-                                        <telerik:RadComboBox
+                                        <ComboBox
                                             Width="auto"
                                             Name="cboCalculationType2"
                                             MaxDropDownHeight="400"
                                             SelectionChanged="cboCalculationType2_SelectionChanged">
-                                        </telerik:RadComboBox>
+                                        </ComboBox>
                                     </DockPanel>
 
                                     <DockPanel>
@@ -607,12 +590,12 @@
                                             Width="80"
                                             Content="Type"
                                             VerticalAlignment="Center" />
-                                        <telerik:RadComboBox
+                                        <ComboBox
                                             Width="auto"
                                             Name="cboCalculationType3"
                                             MaxDropDownHeight="400"
                                             SelectionChanged="cboCalculationType3_SelectionChanged">
-                                        </telerik:RadComboBox>
+                                        </ComboBox>
                                     </DockPanel>
 
                                     <DockPanel>
@@ -643,12 +626,12 @@
                                             Width="80"
                                             Content="Type"
                                             VerticalAlignment="Center" />
-                                        <telerik:RadComboBox
+                                        <ComboBox
                                             Width="auto"
                                             Name="cboCalculationType4"
                                             MaxDropDownHeight="400"
                                             SelectionChanged="cboCalculationType4_SelectionChanged">
-                                        </telerik:RadComboBox>
+                                        </ComboBox>
                                     </DockPanel>
 
                                     <DockPanel>
@@ -677,27 +660,27 @@
 
                             <DockPanel>
 
-                                <telerik:RadGridView
+                                <DataGrid
                                     DockPanel.Dock="Left"
                                     Name="lvCalculatedData"
+                                    Style="{StaticResource SesNativeDataGridStyle}"
                                     IsReadOnly="True"
                                     IsManipulationEnabled="False"
                                     CanUserSortColumns="False"
-                                    ShowGroupPanel="False"
-                                    ShowColumnHeaders="False"
+                                    HeadersVisibility="None"
                                     RowHeight="25"
                                     Margin="8"
                                     CanUserReorderColumns="False"
                                     CanUserDeleteRows="False"
-                                    RowIndicatorVisibility="Collapsed"
+                                    SelectionUnit="FullRow"
                                     AutoGenerateColumns="False">
 
-                                    <telerik:RadGridView.Columns>
-                                        <telerik:GridViewDataColumn
-                                            DataMemberBinding="{Binding calculatedDataString}" />
-                                    </telerik:RadGridView.Columns>
+                                    <DataGrid.Columns>
+                                        <DataGridTextColumn
+                                            Binding="{Binding calculatedDataString}" />
+                                    </DataGrid.Columns>
 
-                                </telerik:RadGridView>
+                                </DataGrid>
 
                             </DockPanel>
 
@@ -705,12 +688,12 @@
 
                     </Grid>
 
-                </telerik:RadTabItem>
+                </TabItem>
                 
-            </telerik:RadTabControl>
+            </TabControl>
 
         </Grid>
 
     </DockPanel>
 
-</telerik:RadWindow>
+</Window>

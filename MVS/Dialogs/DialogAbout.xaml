@@ -1,4 +1,4 @@
-﻿<telerik:RadWindow
+﻿<Window
     x:Class="MVS.DialogAbout"
     xmlns="http://schemas.microsoft.com/winfx/2006/xaml/presentation"
     xmlns:x="http://schemas.microsoft.com/winfx/2006/xaml"
@@ -7,25 +7,11 @@
     xmlns:mc="http://schemas.openxmlformats.org/markup-compatibility/2006"
     mc:Ignorable="d"
     xmlns:local="clr-namespace:MVS"
-    telerik:Header="About"
+    Title="About"
     WindowStartupLocation="CenterScreen"
     Height="870"
     Width="700"
-    telerik:StyleManager.Theme="Material">
-
-    <telerik:RadWindow.Icon>
-        <Image
-            Height="32"
-            Source="../Icons/mvs_windows_icon.ico" />
-    </telerik:RadWindow.Icon>
-
-    <telerik:RadWindow.Resources>
-        <ResourceDictionary>
-            <Style
-                TargetType="local:DialogAbout"
-                BasedOn="{StaticResource RadWindowStyle}" />
-        </ResourceDictionary>
-    </telerik:RadWindow.Resources>
+    Icon="pack://application:,,,/MVS;component/Icons/mvs_windows_icon.ico">
 
     <DockPanel>
 
@@ -238,4 +224,4 @@
 
     </DockPanel>
 
-</telerik:RadWindow>
+</Window>

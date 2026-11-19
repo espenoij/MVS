@@ -57,6 +57,7 @@ namespace MVSTests.Helpers
                     try
                     {
                         var grid = (DataGrid)dialog.FindName("lvFixedDataOutput");
+                        var tab = (TabItem)dialog.FindName("tabDataSelection");
                         var start = (Button)dialog.FindName("btnFixedValueOutputStart");
                         var stop = (Button)dialog.FindName("btnFixedValueOutputStop");
                         var clear = (Button)dialog.FindName("chkClearAllData");
@@ -68,6 +69,7 @@ namespace MVSTests.Helpers
                             "DisplayDataLines", BindingFlags.Instance | BindingFlags.NonPublic);
 
                         limit.Text = "2";
+                        Assert.AreEqual(dialog.FindResource("ColorHorizontalBarBackground"), tab.Background);
                         limit.RaiseEvent(new RoutedEventArgs(UIElement.LostFocusEvent));
                         start.RaiseEvent(new RoutedEventArgs(ButtonBase.ClickEvent));
                         Assert.IsFalse(start.IsEnabled);

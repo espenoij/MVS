@@ -2,7 +2,6 @@
 using System.ComponentModel.DataAnnotations;
 using System.Linq;
 using System.Windows.Data;
-using Telerik.Windows.Data;
 
 namespace MVS
 {
@@ -16,12 +15,12 @@ namespace MVS
         private Config config;
 
         // Liste med data
-        private RadObservableCollection<HMSData> dataList;
+        private ObservableCollectionEx<HMSData> dataList;
         private object dataListLock = new object();
 
         public MVSDataCollection()
         {
-            dataList = new RadObservableCollection<HMSData>();
+            dataList = new ObservableCollectionEx<HMSData>();
             BindingOperations.EnableCollectionSynchronization(dataList, dataListLock);
         }
 
@@ -121,7 +120,7 @@ namespace MVS
 
         // Overføre data fra liste i input to denne data samlingen
         // MVS: Overføre fra sensor data liste til MVS data liste
-        public void TransferData(RadObservableCollection<SensorData> sensorDataList, MainWindowVM mainWindowVM)
+        public void TransferData(ObservableCollectionEx<SensorData> sensorDataList, MainWindowVM mainWindowVM)
         {
             // Lese timeout fra config
             double dataTimeout = config.ReadWithDefault(ConfigKey.DataTimeout, Constants.DataTimeoutDefault);
@@ -171,7 +170,7 @@ namespace MVS
         }
 
         // Overføre data fra liste i input to denne data samlingen
-        public void TransferData(RadObservableCollection<HMSData> hmsDataList)
+        public void TransferData(ObservableCollectionEx<HMSData> hmsDataList)
         {
             // Lese timeout fra config
             double dataTimeout = config.ReadWithDefault(ConfigKey.DataTimeout, Constants.DataTimeoutDefault);
@@ -253,7 +252,7 @@ namespace MVS
         }
 
         // Hente datalisten
-        public RadObservableCollection<HMSData> GetDataList()
+        public ObservableCollectionEx<HMSData> GetDataList()
         {
             return dataList;
         }

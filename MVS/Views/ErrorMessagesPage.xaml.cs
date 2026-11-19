@@ -5,7 +5,6 @@ using System.Linq;
 using System.Windows;
 using System.Windows.Controls;
 using System.Windows.Threading;
-using Telerik.Windows.Controls;
 
 namespace MVS
 {
@@ -188,18 +187,13 @@ namespace MVS
 
         private void btnDeleteAllErrorMessages_Click(object sender, RoutedEventArgs e)
         {
-            RadWindow.Confirm("Delete all error messages data from database?", OnClosed);
-
-            void OnClosed(object sendero, WindowClosedEventArgs ea)
+            if (DialogHandler.Confirm("Delete all error messages data from database?"))
             {
-                if ((bool)ea.DialogResult == true)
-                {
-                    // Slette data
-                    errorHandler.DeleteErrorMessageData();
+                // Slette data
+                errorHandler.DeleteErrorMessageData();
 
-                    // Slette display feil listen
-                    errorMessageDisplayList.Clear();
-                }
+                // Slette display feil listen
+                errorMessageDisplayList.Clear();
             }
         }
 

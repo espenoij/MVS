@@ -1,32 +1,17 @@
-﻿<telerik:RadWindow
+﻿<Window
     x:Class="MVS.FixedValueSetupWindow"
     xmlns="http://schemas.microsoft.com/winfx/2006/xaml/presentation"
     xmlns:d="http://schemas.microsoft.com/expression/blend/2008"
     xmlns:x="http://schemas.microsoft.com/winfx/2006/xaml"
     xmlns:mc="http://schemas.openxmlformats.org/markup-compatibility/2006"
     xmlns:local="clr-namespace:MVS"
-    xmlns:telerik="http://schemas.telerik.com/2008/xaml/presentation"
     mc:Ignorable="d"
-    telerik:Header="Filxed Value Data Setup"
+    Title="Filxed Value Data Setup"
     WindowState="Maximized"
-    Closed="RadWindow_Closed"
+    Closed="Window_Closed"
     Height="1010"
-    Width="1300">
-
-    <telerik:RadWindow.Resources>
-        <ResourceDictionary>
-            <Style
-                TargetType="local:FixedValueSetupWindow"
-                BasedOn="{StaticResource RadWindowStyle}" />
-        </ResourceDictionary>
-
-    </telerik:RadWindow.Resources>
-
-    <telerik:RadWindow.Icon>
-        <Image
-            Height="32"
-            Source="../Icons/mvs_windows_icon.ico" />
-    </telerik:RadWindow.Icon>
+    Width="1300"
+    Icon="pack://application:,,,/MVS;component/Icons/mvs_windows_icon.ico">
 
     <DockPanel>
 
@@ -191,14 +176,20 @@
 
             </StackPanel>
 
-            <telerik:RadTabControl
+            <TabControl
                 Grid.Row="0"
                 Grid.Column="1"
-                Margin="8"
-                HeaderBackground="{StaticResource ColorHorizontalBarBackground}">
+                Margin="8">
+                <TabControl.Resources>
+                    <Style TargetType="{x:Type TabItem}">
+                        <Setter
+                            Property="Background"
+                            Value="{StaticResource ColorHorizontalBarBackground}" />
+                    </Style>
+                </TabControl.Resources>
 
                 <!--Data Ouput Setup-->
-                <telerik:RadTabItem
+                <TabItem
                     Name="tabDataSelection"
                     Header="Data Output Setup">
 
@@ -295,12 +286,12 @@
                         </GroupBox>
                     </Grid>
 
-                </telerik:RadTabItem>
+                </TabItem>
 
-            </telerik:RadTabControl>
+            </TabControl>
 
         </Grid>
 
     </DockPanel>
 
-</telerik:RadWindow>
+</Window>
