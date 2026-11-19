@@ -12,7 +12,6 @@ using Microsoft.Win32;
 using MVS.Models;
 using MVS.Views.Controls;
 using Telerik.Windows.Controls;
-using Telerik.Windows.Data;
 using Telerik.Windows.Documents.Fixed;
 using static MVS.MainWindow;
 
@@ -27,7 +26,7 @@ namespace MVS
         private MVSDatabase mvsDatabase;
 
         // Motion Data Set List
-        private RadObservableCollection<Project> mvsProjectList = new RadObservableCollection<Project>();
+        private ObservableCollectionEx<Project> mvsProjectList = new ObservableCollectionEx<Project>();
 
         private MainWindowVM mainWindowVM;
         private Config config;
@@ -46,7 +45,7 @@ namespace MVS
         private Action startRecordingCallback;
         private Action stopRecordingCallback;
         // Progress dialog
-        DialogDataAnalysisProgress progressDlg = new DialogDataAnalysisProgress();
+        private DialogDataAnalysisProgress progressDlg;
 
         // ---- Step 5 report generation / preview state ----
         // The generated PDF is cached in-memory so navigating back to Step 5 and
@@ -126,9 +125,6 @@ namespace MVS
 
             // Laste sensor data
             LoadProjects();
-
-            // Progress dialog
-            progressDlg.Owner = App.Current.MainWindow;
 
             //// Sette første set som selected
             //if (gvProjects.Items.Count > 0)
@@ -340,24 +336,19 @@ namespace MVS
         {
             if (mainWindowVM.SelectedProject != null)
             {
-                RadWindow.Confirm("Delete the selected motion data set and all associated data?", OnClosed);
-
-                void OnClosed(object sendero, WindowClosedEventArgs ea)
+                if (DialogHandler.Confirm("Delete the selected motion data set and all associated data?"))
                 {
-                    if ((bool)ea.DialogResult == true)
-                    {
-                        // Slette lagret LiDAR scan for prosjektet
-                        _livoxVM?.DeleteScanForProject(mainWindowVM.SelectedProject.Id);
+                    // Slette lagret LiDAR scan for prosjektet
+                    _livoxVM?.DeleteScanForProject(mainWindowVM.SelectedProject.Id);
 
-                        // Slette fra database
-                        mvsDatabase.Remove(mainWindowVM.SelectedProject);
+                    // Slette fra database
+                    mvsDatabase.Remove(mainWindowVM.SelectedProject);
 
-                        // Slette fra listen
-                        mvsProjectList.Remove(mainWindowVM.SelectedProject);
+                    // Slette fra listen
+                    mvsProjectList.Remove(mainWindowVM.SelectedProject);
 
-                        // Sette item 0 som selected (vil også laste data ettersom SelectionChange under kalles automatisk når vi gjør dette)
-                        gvProjects.SelectedItem = gvProjects.Items[0];
-                    }
+                    // Sette item 0 som selected (vil også laste data ettersom SelectionChange under kalles automatisk når vi gjør dette)
+                    gvProjects.SelectedItem = gvProjects.Items[0];
                 }
             }
 
@@ -380,24 +371,19 @@ namespace MVS
             if (project == null || !project.DataSetHasData())
                 return;
 
-            RadWindow.Confirm("This will permanently delete all recorded motion data for this project.\n\nThis action cannot be undone.", OnClosed);
-
-            void OnClosed(object sendero, WindowClosedEventArgs ea)
+            if (DialogHandler.Confirm("This will permanently delete all recorded motion data for this project.\n\nThis action cannot be undone."))
             {
-                if ((bool)ea.DialogResult == true)
-                {
-                    mvsDatabase.DeleteData(project);
-                    project.ClearTimestamps();
-                    projectVM?.ResetAnalysisResults();
-                    _reviewDataLoaded = false;
-                    LoadSelectedItemsDetails();
-                }
+                mvsDatabase.DeleteData(project);
+                project.ClearTimestamps();
+                projectVM?.ResetAnalysisResults();
+                _reviewDataLoaded = false;
+                LoadSelectedItemsDetails();
             }
         }
 
-        private void gvProjects_SelectionChanged(object sender, SelectionChangeEventArgs e)
+        private void gvProjects_SelectionChanged(object sender, SelectionChangedEventArgs e)
         {
-            mainWindowVM.SelectedProject = (sender as RadGridView).SelectedItem as Project;
+            mainWindowVM.SelectedProject = (sender as DataGrid).SelectedItem as Project;
 
             // Reset all downstream wizard data (LiDAR correction, analysis results and
             // the wizard step) so nothing from the previously selected project carries
@@ -421,8 +407,7 @@ namespace MVS
                 dataViewWorker.RunWorkerAsync();
 
                 // Åpne progress dialog
-                progressDlg.Start(mainWindowVM);
-                progressDlg.ShowDialog();
+                ShowAnalysisProgressDialog();
             }
 
             updateUIButtonsCallback();
@@ -692,12 +677,11 @@ namespace MVS
             ArgumentNullException.ThrowIfNull(project);
 
             var owner = Window.GetWindow(this);
-            var dialog = new RadWindow
+            var dialog = new Window
             {
-                Header = "Insert Default Text",
+                Title = "Insert Default Text",
                 Width = 520,
                 ResizeMode = ResizeMode.NoResize,
-                CanClose = true,
                 WindowStartupLocation = WindowStartupLocation.CenterOwner,
                 Owner = owner,
             };
@@ -755,39 +739,30 @@ namespace MVS
             Grid.SetRow(buttonPanel, 1);
             Grid.SetColumnSpan(buttonPanel, 2);
 
-            var insertButton = new RadButton
+            var insertButton = new Button
             {
                 Content = "Insert",
                 MinWidth = 120,
                 Margin = new Thickness(0, 0, 8, 0),
+                Style = (Style)FindResource("SesNativePrimaryButtonStyle"),
             };
-            insertButton.Click += (_, _) =>
-            {
-                dialog.DialogResult = true;
-                dialog.Close();
-            };
+            insertButton.Click += (_, _) => dialog.DialogResult = true;
 
-            var cancelButton = new RadButton
+            var cancelButton = new Button
             {
                 Content = "Cancel",
                 MinWidth = 120,
+                Style = (Style)FindResource("SesNativeSecondaryButtonStyle"),
             };
-            cancelButton.Click += (_, _) =>
-            {
-                dialog.DialogResult = false;
-                dialog.Close();
-            };
+            cancelButton.Click += (_, _) => dialog.DialogResult = false;
 
             buttonPanel.Children.Add(insertButton);
             buttonPanel.Children.Add(cancelButton);
             layout.Children.Add(buttonPanel);
 
             dialog.Content = layout;
-            dialog.Closed += (_, args) =>
+            if (dialog.ShowDialog() == true)
             {
-                if (args.DialogResult != true)
-                    return;
-
                 if (!project.ReportMetadata.ApplyDefaultsToEmptyFields())
                     return;
 
@@ -796,9 +771,7 @@ namespace MVS
 
                 mvsDatabase.Update(project);
                 InvalidateReportCache();
-            };
-
-            dialog.ShowDialog();
+            }
         }
 
         private void tbLocation_LostFocus(object sender, RoutedEventArgs e)
@@ -883,6 +856,12 @@ namespace MVS
 
             dataViewWorker.RunWorkerAsync();
 
+            ShowAnalysisProgressDialog();
+        }
+
+        private void ShowAnalysisProgressDialog()
+        {
+            progressDlg = new DialogDataAnalysisProgress { Owner = App.Current.MainWindow };
             progressDlg.Start(mainWindowVM);
             progressDlg.ShowDialog();
         }
@@ -1128,7 +1107,7 @@ namespace MVS
 
         /// <summary>
         /// Evaluates whether the wizard may advance from the given step to the next one.
-        /// Used to determine which step items in the RadStepProgressBar the user is
+        /// Used to determine which step items in the native indicator the user is
         /// allowed to jump to directly.
         /// </summary>
         private bool CanProceedFromStep(int step)
@@ -1173,7 +1152,7 @@ namespace MVS
         }
 
         /// <summary>
-        /// Updates the RadStepProgressBar so that reachable step items are enabled
+        /// Updates the native step indicator so reachable step items are enabled
         /// and unreachable ones are disabled.
         /// </summary>
         private void UpdateWizardStepHeaders()
@@ -1182,37 +1161,41 @@ namespace MVS
         }
 
         /// <summary>
-        /// Updates the RadStepProgressBar so item statuses reflect the current step
+        /// Updates the native step indicator so item statuses reflect the current step
         /// (Completed / Active / Upcoming) and only reachable steps are clickable.
         /// </summary>
         private void UpdateStepProgressBar(int step)
         {
-            // Walk forward through each step index so that the RadStepProgressBar
-            // marks every intermediate step as Completed rather than skipping them.
-            // This fixes the visual when jumping directly to a later step (e.g. from
-            // Setup straight to Report on an existing project).
-            for (int i = 0; i < step; i++)
-                wizardStepBar.SelectedIndex = i;
-
             int maxReachable = MaxReachableStep();
-            for (int i = 0; i < wizardStepBar.Items.Count; i++)
+            for (int i = 0; i < wizardStepBar.Children.Count; i++)
             {
-                if (wizardStepBar.Items[i] is Telerik.Windows.Controls.RadStepProgressBarItem item)
-                    item.IsEnabled = (i + 1) <= maxReachable;
+                var item = wizardStepBar.Children[i] as Button;
+                if (item == null)
+                    continue;
+
+                item.Tag = i + 1 < step
+                    ? "Completed"
+                    : i + 1 == step
+                        ? "Current"
+                        : "Upcoming";
+                item.IsEnabled = (i + 1) <= maxReachable;
             }
         }
 
         /// <summary>
-        /// Handles a click on a RadStepProgressBar item, jumping directly to that step
+        /// Handles a click on a step item, jumping directly to that step
         /// when it is currently reachable.
         /// </summary>
-        private void WizardStepBar_StepClicked(object sender, Telerik.Windows.Controls.StepProgressBar.StepClickedEventArgs e)
+        private void WizardStepButton_Click(object sender, RoutedEventArgs e)
         {
-            int step = wizardStepBar.Items.IndexOf(e.ClickedItem) + 1;
-            if (step >= 1 && step <= MaxReachableStep())
+            var item = sender as Button;
+            if (item != null &&
+                int.TryParse(item.CommandParameter as string, out int step) &&
+                step >= 1 &&
+                step <= MaxReachableStep())
+            {
                 SetWizardStep(step);
-            else
-                e.CancelSelection = true;
+            }
         }
 
         // ============================================================
@@ -1311,7 +1294,7 @@ namespace MVS
             {
                 UpdateReportButtonState();
                 UpdateWizardNavigation();
-                RadWindow.Alert(GetReportRequirementsText());
+                DialogHandler.Alert(GetReportRequirementsText());
                 return false;
             }
 
@@ -1384,12 +1367,12 @@ namespace MVS
                 _reportPdfBytes = null;
                 _reportProjectId = null;
                 MarkReportUnavailable();
-                RadWindow.Alert("Failed to generate the report:\n" + ex.Message);
+                DialogHandler.Alert("Failed to generate the report:\n" + ex.Message);
                 return false;
             }
             finally
             {
-                progress.Close();
+                progress.CloseProgress();
                 _reportGenerating = false;
                 UpdateReportButtonState();
             }
@@ -1567,7 +1550,7 @@ namespace MVS
                 }
                 catch (Exception ex)
                 {
-                    RadWindow.Alert("Failed to generate the report:\n" + ex.Message);
+                    DialogHandler.Alert("Failed to generate the report:\n" + ex.Message);
                     return;
                 }
             }
@@ -1589,23 +1572,24 @@ namespace MVS
                 }
                 catch (Exception ex)
                 {
-                    RadWindow.Alert("Failed to save PDF report:\n" + ex.Message);
+                    DialogHandler.Alert("Failed to save PDF report:\n" + ex.Message);
                 }
             }
         }
 
         private void ShowPdfSavedDialog()
         {
-            var dialog = new RadWindow
+            bool allowClose = false;
+            var dialog = new Window
             {
                 Width = 400,
                 Height = 180,
-                CanClose = false,
                 ResizeMode = ResizeMode.NoResize,
                 WindowStartupLocation = WindowStartupLocation.CenterOwner,
                 Owner = Window.GetWindow(this),
-                Header = "PDF Saved"
+                Title = "PDF Saved"
             };
+            dialog.Closing += (_, e) => e.Cancel = !allowClose;
 
             var layout = new Grid
             {
@@ -1660,16 +1644,18 @@ namespace MVS
             Grid.SetRow(buttonPanel, 1);
             Grid.SetColumnSpan(buttonPanel, 2);
 
-            var okButton = new RadButton
+            var okButton = new Button
             {
                 Content = "OK",
                 MinWidth = 100,
-                IsDefault = true
+                IsDefault = true,
+                Style = (Style)FindResource("SesNativePrimaryButtonStyle")
             };
-            okButton.SetResourceReference(Control.BackgroundProperty, "SesWhiteBrush");
-            okButton.SetResourceReference(Control.ForegroundProperty, "SesDarkBlueGreyBrush");
-            okButton.SetResourceReference(Control.BorderBrushProperty, "SesBorderBrush");
-            okButton.Click += (_, _) => dialog.Close();
+            okButton.Click += (_, _) =>
+            {
+                allowClose = true;
+                dialog.Close();
+            };
 
             buttonPanel.Children.Add(okButton);
             layout.Children.Add(icon);
@@ -1698,7 +1684,7 @@ namespace MVS
                 }
                 catch (Exception ex)
                 {
-                    RadWindow.Alert("Failed to generate the report:\n" + ex.Message);
+                    DialogHandler.Alert("Failed to generate the report:\n" + ex.Message);
                     return;
                 }
             }
@@ -1721,7 +1707,7 @@ namespace MVS
             }
             catch (Exception ex)
             {
-                RadWindow.Alert("Failed to open PDF report:\n" + ex.Message);
+                DialogHandler.Alert("Failed to open PDF report:\n" + ex.Message);
             }
         }
     }

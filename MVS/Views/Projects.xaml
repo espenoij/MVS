@@ -74,16 +74,36 @@
                 </Grid>
 
                 <!-- Step indicator -->
-                <telerik:RadStepProgressBar x:Name="wizardStepBar"
-                                            Grid.Row="1"
-                                            Margin="0,0,0,8"
-                                            StepClicked="WizardStepBar_StepClicked">
-                    <telerik:RadStepProgressBarItem Content="Setup"/>
-                    <telerik:RadStepProgressBarItem Content="LiDAR"/>
-                    <telerik:RadStepProgressBarItem Content="Capture"/>
-                    <telerik:RadStepProgressBarItem Content="Review"/>
-                    <telerik:RadStepProgressBarItem Content="Report"/>
-                </telerik:RadStepProgressBar>
+                <UniformGrid x:Name="wizardStepBar"
+                             Grid.Row="1"
+                             Columns="5"
+                             Margin="0,0,0,8">
+                    <Button Content="Setup"
+                            CommandParameter="1"
+                            Tag="Current"
+                            Style="{StaticResource SesNativeWizardStepButtonStyle}"
+                            Click="WizardStepButton_Click" />
+                    <Button Content="LiDAR"
+                            CommandParameter="2"
+                            Tag="Upcoming"
+                            Style="{StaticResource SesNativeWizardStepButtonStyle}"
+                            Click="WizardStepButton_Click" />
+                    <Button Content="Capture"
+                            CommandParameter="3"
+                            Tag="Upcoming"
+                            Style="{StaticResource SesNativeWizardStepButtonStyle}"
+                            Click="WizardStepButton_Click" />
+                    <Button Content="Review"
+                            CommandParameter="4"
+                            Tag="Upcoming"
+                            Style="{StaticResource SesNativeWizardStepButtonStyle}"
+                            Click="WizardStepButton_Click" />
+                    <Button Content="Report"
+                            CommandParameter="5"
+                            Tag="Upcoming"
+                            Style="{StaticResource SesNativeWizardStepButtonStyle}"
+                            Click="WizardStepButton_Click" />
+                </UniformGrid>
 
                 <!-- Body: requirements banner + the four step panels stacked, only one visible at a time -->
                 <Grid Grid.Row="2">

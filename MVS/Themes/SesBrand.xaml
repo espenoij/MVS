@@ -51,6 +51,25 @@
         </Style.Triggers>
     </Style>
 
+    <Style x:Key="SesNativeNavigationTabItemStyle" TargetType="{x:Type TabItem}">
+        <Setter Property="Background" Value="{DynamicResource SesDarkBlueGreyBrush}" />
+        <Setter Property="Foreground" Value="{DynamicResource SesWhiteBrush}" />
+        <Setter Property="FontFamily" Value="{DynamicResource SesFontFamily}" />
+        <Setter Property="FontSize" Value="{DynamicResource SesFontSizeSubHeader}" />
+        <Setter Property="HorizontalContentAlignment" Value="Stretch" />
+        <Setter Property="Padding" Value="12,10" />
+        <Style.Triggers>
+            <Trigger Property="IsSelected" Value="True">
+                <Setter Property="Background" Value="{DynamicResource SesDarkBlueGreyPressedBrush}" />
+                <Setter Property="Foreground" Value="{DynamicResource SesEnergyGreenBrush}" />
+                <Setter Property="FontWeight" Value="SemiBold" />
+            </Trigger>
+            <Trigger Property="IsMouseOver" Value="True">
+                <Setter Property="Background" Value="{DynamicResource SesDarkBlueGreyHoverBrush}" />
+            </Trigger>
+        </Style.Triggers>
+    </Style>
+
     <!-- Content-area horizontal tab item (sub-navigation) -->
     <Style x:Key="SesSubTabItemStyle" TargetType="telerik:RadTabItem" BasedOn="{StaticResource RadTabItemStyle}">
         <Setter Property="Background" Value="{DynamicResource SesDarkBlueGreyLightBrush}" />
@@ -62,6 +81,80 @@
             <Trigger Property="IsSelected" Value="True">
                 <Setter Property="Foreground" Value="{DynamicResource SesEnergyGreenBrush}" />
                 <Setter Property="FontWeight" Value="SemiBold" />
+            </Trigger>
+        </Style.Triggers>
+    </Style>
+
+    <Style x:Key="SesNativeSubTabItemStyle" TargetType="{x:Type TabItem}">
+        <Setter Property="Background" Value="{DynamicResource SesDarkBlueGreyLightBrush}" />
+        <Setter Property="Foreground" Value="{DynamicResource SesWhiteBrush}" />
+        <Setter Property="FontFamily" Value="{DynamicResource SesFontFamily}" />
+        <Setter Property="FontSize" Value="{DynamicResource SesFontSizeBody}" />
+        <Setter Property="Padding" Value="12,8" />
+        <Style.Triggers>
+            <Trigger Property="IsSelected" Value="True">
+                <Setter Property="Foreground" Value="{DynamicResource SesEnergyGreenBrush}" />
+                <Setter Property="FontWeight" Value="SemiBold" />
+            </Trigger>
+            <Trigger Property="IsMouseOver" Value="True">
+                <Setter Property="Background" Value="{DynamicResource SesDarkBlueGreyHoverBrush}" />
+            </Trigger>
+        </Style.Triggers>
+    </Style>
+
+    <Style x:Key="SesNativeWizardStepButtonStyle" TargetType="{x:Type Button}">
+        <Setter Property="Background" Value="{DynamicResource SesSurfaceAltBrush}" />
+        <Setter Property="Foreground" Value="{DynamicResource SesTextSecondaryBrush}" />
+        <Setter Property="BorderBrush" Value="{DynamicResource SesBorderBrush}" />
+        <Setter Property="BorderThickness" Value="1" />
+        <Setter Property="FontFamily" Value="{DynamicResource SesFontFamily}" />
+        <Setter Property="FontSize" Value="{DynamicResource SesFontSizeBody}" />
+        <Setter Property="Padding" Value="10,8" />
+        <Setter Property="Margin" Value="3,0" />
+        <Setter Property="HorizontalContentAlignment" Value="Center" />
+        <Setter Property="VerticalContentAlignment" Value="Center" />
+        <Setter Property="Template">
+            <Setter.Value>
+                <ControlTemplate TargetType="{x:Type Button}">
+                    <Border
+                        x:Name="StepButtonBorder"
+                        Background="{TemplateBinding Background}"
+                        BorderBrush="{TemplateBinding BorderBrush}"
+                        BorderThickness="{TemplateBinding BorderThickness}"
+                        CornerRadius="4"
+                        SnapsToDevicePixels="True">
+                        <ContentPresenter
+                            HorizontalAlignment="{TemplateBinding HorizontalContentAlignment}"
+                            VerticalAlignment="{TemplateBinding VerticalContentAlignment}"
+                            Margin="{TemplateBinding Padding}"
+                            RecognizesAccessKey="True" />
+                    </Border>
+                    <ControlTemplate.Triggers>
+                        <Trigger Property="IsKeyboardFocused" Value="True">
+                            <Setter TargetName="StepButtonBorder" Property="BorderThickness" Value="2" />
+                        </Trigger>
+                    </ControlTemplate.Triggers>
+                </ControlTemplate>
+            </Setter.Value>
+        </Setter>
+        <Style.Triggers>
+            <Trigger Property="Tag" Value="Completed">
+                <Setter Property="Background" Value="{DynamicResource SesEnergyGreenTintBrush}" />
+                <Setter Property="Foreground" Value="{DynamicResource SesEnergyGreenTextBrush}" />
+                <Setter Property="BorderBrush" Value="{DynamicResource SesEnergyGreenBrush}" />
+                <Setter Property="FontWeight" Value="SemiBold" />
+            </Trigger>
+            <Trigger Property="Tag" Value="Current">
+                <Setter Property="Background" Value="{DynamicResource SesDarkBlueGreyBrush}" />
+                <Setter Property="Foreground" Value="{DynamicResource SesWhiteBrush}" />
+                <Setter Property="BorderBrush" Value="{DynamicResource SesDarkBlueGreyBrush}" />
+                <Setter Property="FontWeight" Value="Bold" />
+            </Trigger>
+            <Trigger Property="IsMouseOver" Value="True">
+                <Setter Property="BorderBrush" Value="{DynamicResource SesEnergyGreenBrush}" />
+            </Trigger>
+            <Trigger Property="IsEnabled" Value="False">
+                <Setter Property="Opacity" Value="0.5" />
             </Trigger>
         </Style.Triggers>
     </Style>
