@@ -27,8 +27,8 @@ the evidence and blocker and leave that area unchanged.
 Remaining runtime dependencies include:
 
 - **Controls and themes:** `App.xaml` loads Telerik Material dictionaries.
-  Telerik grids, tabs, step progress,
-  numeric inputs, watermark inputs and dropdowns remain in views, and SES
+  Telerik grids, tabs, numeric inputs, watermark inputs and dropdowns remain
+  in views, and SES
   styles still target Telerik controls. The native About window dynamically
   creates a Telerik QR barcode; the native PDF-preview window still hosts
   `RadPdfViewer`.
