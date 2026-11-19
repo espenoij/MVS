@@ -1,7 +1,6 @@
 using System;
 using System.Windows;
 using System.Windows.Threading;
-using Telerik.Windows.Controls;
 
 namespace MVS
 {
@@ -10,7 +9,7 @@ namespace MVS
     /// capture-duration status banner and a Stop button so the operator always has
     /// a prominent recording indicator and can stop the session from the popup.
     /// </summary>
-    public partial class DialogRecordingActive : RadWindow
+    public partial class DialogRecordingActive : Window
     {
         private readonly DispatcherTimer timer;
         private DateTime recordingStartUtc;
@@ -62,7 +61,7 @@ namespace MVS
             RequestStop();
         }
 
-        private void OnClosed(object sender, WindowClosedEventArgs e)
+        private void OnClosed(object sender, EventArgs e)
         {
             closed = true;
             timer.Stop();

@@ -2,8 +2,6 @@
 using System.Windows;
 using System.Windows.Controls;
 using System.Windows.Input;
-using Telerik.Windows.Controls;
-using Telerik.Windows.Data;
 
 namespace MVS
 {
@@ -22,7 +20,7 @@ namespace MVS
         private AdminSettingsVM adminSettingsVM;
 
         // Sensor Data List
-        private RadObservableCollection<SensorData> sensorDataList = new RadObservableCollection<SensorData>();
+        private ObservableCollectionEx<SensorData> sensorDataList = new ObservableCollectionEx<SensorData>();
         private SensorData sensorDataSelected = new SensorData();
 
         private bool serverStarted = false;
@@ -181,28 +179,23 @@ namespace MVS
 
         private void btnDelete_Click(object sender, RoutedEventArgs e)
         {
-            RadWindow.Confirm("Delete the selected item?", OnClosed);
-
-            void OnClosed(object sendero, WindowClosedEventArgs ea)
+            if (DialogHandler.Confirm("Delete the selected item?"))
             {
-                if ((bool)ea.DialogResult == true)
-                {
-                    // Slette fra fil
-                    config.DeleteData(sensorDataSelected);
+                // Slette fra fil
+                config.DeleteData(sensorDataSelected);
 
-                    // Slette fra listen
-                    sensorDataList.Remove(sensorDataSelected);
-                    //((List<SensorData>)gvSensorSetupsItems.ItemsSource).Remove(sensorDataSelected);
+                // Slette fra listen
+                sensorDataList.Remove(sensorDataSelected);
+                //((List<SensorData>)gvSensorSetupsItems.ItemsSource).Remove(sensorDataSelected);
 
-                    // Sette item 0 som selected (vil også laste data ettersom SelectionChange under kalles automatisk når vi gjør dette)
-                    gvProjects.SelectedItem = gvProjects.Items[0];
-                }
+                // Sette item 0 som selected (vil også laste data ettersom SelectionChange under kalles automatisk når vi gjør dette)
+                gvProjects.SelectedItem = gvProjects.Items[0];
             }
         }
 
-        private void gvProjects_SelectionChanged(object sender, SelectionChangeEventArgs e)
+        private void gvProjects_SelectionChanged(object sender, SelectionChangedEventArgs e)
         {
-            sensorDataSelected = (sender as RadGridView).SelectedItem as SensorData; // <------------- Elegant kode
+            sensorDataSelected = (sender as DataGrid).SelectedItem as SensorData; // <------------- Elegant kode
 
             if (sensorDataSelected != null)
             {
@@ -256,7 +249,7 @@ namespace MVS
         private void cboSensorType_DropDownClosed(object sender, EventArgs e)
         {
             // Ny valgt sensor type
-            SensorType newSensorType = (SensorType)(sender as RadComboBox).SelectedIndex;
+            SensorType newSensorType = (SensorType)(sender as ComboBox).SelectedIndex;
 
             // Er sensor data satt fra listen?
             if (sensorDataSelected != null)
@@ -300,15 +293,9 @@ namespace MVS
             // Varsel - men ikke dersom None var satt og vi velger noe annet
             if (sensorDataSelected.type != SensorType.None)
             {
-                RadWindow.Confirm("Changing the sensor type will remove all\nsettings for the currently selected sensor.", OnClosed);
-
-                void OnClosed(object sender, WindowClosedEventArgs e)
-                {
-                    if ((bool)e.DialogResult == true)
-                        result = MessageBoxResult.OK;
-                    else
-                        result = MessageBoxResult.Cancel;
-                }
+                result = DialogHandler.Confirm("Changing the sensor type will remove all\nsettings for the currently selected sensor.")
+                    ? MessageBoxResult.OK
+                    : MessageBoxResult.Cancel;
             }
 
             switch (result)
@@ -372,10 +359,10 @@ namespace MVS
         private void cboMRUType_DropDownClosed(object sender, EventArgs e)
         {
             if (sensorDataSelected != null &&
-                (sender as RadComboBox).SelectedItem != null)
+                (sender as ComboBox).SelectedItem != null)
             {
                 // Ny valgt MRU type
-                sensorDataSelected.mruType = (MRUType)(sender as RadComboBox).SelectedIndex;
+                sensorDataSelected.mruType = (MRUType)(sender as ComboBox).SelectedIndex;
 
                 // Lagre til fil
                 config.SetData(sensorDataSelected);
@@ -439,7 +426,7 @@ namespace MVS
             }
             catch (Exception ex)
             {
-                RadWindow.Alert(string.Format("Open File Reader Setup (btnFileReaderSetup_Click):\n\nCheck file name and path.\n\n{0}", TextHelper.Wrap(ex.Message)));
+                DialogHandler.Alert(string.Format("Open File Reader Setup (btnFileReaderSetup_Click):\n\nCheck file name and path.\n\n{0}", TextHelper.Wrap(ex.Message)));
             }
         }
 
@@ -464,7 +451,7 @@ namespace MVS
             }
             catch (Exception ex)
             {
-                RadWindow.Alert(string.Format("Open Fixed Value Setup (btnFixedValueSetup_Click):\n\n{0}", TextHelper.Wrap(ex.Message)));
+                DialogHandler.Alert(string.Format("Open Fixed Value Setup (btnFixedValueSetup_Click):\n\n{0}", TextHelper.Wrap(ex.Message)));
             }
         }
 

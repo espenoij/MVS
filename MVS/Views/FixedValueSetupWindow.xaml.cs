@@ -5,14 +5,13 @@ using System.Windows.Controls;
 using System.Windows.Input;
 using System.Windows.Media;
 using System.Windows.Threading;
-using Telerik.Windows.Controls;
 
 namespace MVS
 {
     /// <summary>
     /// Interaction logic for FixedValueSetupWindow.xaml
     /// </summary>
-    public partial class FixedValueSetupWindow : RadWindow
+    public partial class FixedValueSetupWindow : Window
     {
         // Valgt sensor data
         private SensorData sensorData;
@@ -255,11 +254,11 @@ namespace MVS
             }
             catch (Exception ex)
             {
-                RadWindow.Alert(string.Format("Input must be numeric.\n\n{0}", TextHelper.Wrap(ex.Message)));
+                DialogHandler.Alert(string.Format("Input must be numeric.\n\n{0}", TextHelper.Wrap(ex.Message)));
             }
         }
 
-        private void RadWindow_Closed(object sender, WindowClosedEventArgs e)
+        private void Window_Closed(object sender, EventArgs e)
         {
             FixedValueSender_Stop();
         }

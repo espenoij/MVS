@@ -18,7 +18,7 @@
             </ResourceDictionary.MergedDictionaries>
 
             <!-- Apply the SES brand font (Roboto Condensed, Arial fallback) to the main application window. -->
-            <Style TargetType="local:MainWindow" BasedOn="{StaticResource RadWindowStyle}">
+            <Style TargetType="local:MainWindow">
                 <Setter Property="FontFamily" Value="{StaticResource SesFontFamily}" />
             </Style>
 

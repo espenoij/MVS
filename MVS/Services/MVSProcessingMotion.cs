@@ -1,5 +1,4 @@
 ﻿using System;
-using Telerik.Windows.Data;
 
 namespace MVS
 {
@@ -90,7 +89,7 @@ namespace MVS
             // NB! Variablene som legges inn i listen her fungerer som pekere: Oppdateres variabelen -> oppdateres listen
             // NB! Dersom nye variabler legges til i hmsOutputDataList må databasen opprettes på nytt
 
-            RadObservableCollection<HMSData> hmsOutputDataList = hmsOutputData.GetDataList();
+            ObservableCollectionEx<HMSData> hmsOutputDataList = hmsOutputData.GetDataList();
 
             // Reference MRU
             hmsOutputDataList.Add(refPitchData);

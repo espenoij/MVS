@@ -4,7 +4,6 @@ using System.Windows;
 using System.Windows.Controls;
 using System.Windows.Documents;
 using System.Windows.Media;
-using Telerik.Windows.Controls;
 using MVS.Models;
 using MVS.Services;
 
@@ -189,14 +188,14 @@ namespace MVS.Views.Controls
         {
             string glossaryText = VerificationAssessment.Glossary(AxisKind);
 
-            var window = new RadWindow
+            var window = new Window
             {
                 Width = 600,
                 Height = 500,
                 ResizeMode = ResizeMode.NoResize,
                 WindowStartupLocation = WindowStartupLocation.CenterOwner,
                 Owner = Window.GetWindow(this),
-                Header = string.Format(CultureInfo.CurrentCulture, "{0} — what the numbers mean", AxisTitle)
+                Title = string.Format(CultureInfo.CurrentCulture, "{0} — what the numbers mean", AxisTitle)
             };
 
             var scrollViewer = new ScrollViewer

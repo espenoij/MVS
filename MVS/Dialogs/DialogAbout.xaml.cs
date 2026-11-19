@@ -13,7 +13,7 @@ namespace MVS
     /// Interaction logic for DialogAbout
     /// .xaml
     /// </summary>
-    public partial class DialogAbout : RadWindow
+    public partial class DialogAbout : Window
     {
         private const string TelerikXmlns = "xmlns:telerik=\"http://schemas.telerik.com/2008/xaml/presentation\"";
 

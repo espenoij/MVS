@@ -723,7 +723,7 @@ namespace MVS
                 RefreshFitDisplay();
                 RefreshEdgeDisplay();
                 Application.Current.Dispatcher.BeginInvoke(System.Windows.Threading.DispatcherPriority.Normal, new Action(() =>
-                    Telerik.Windows.Controls.RadWindow.Alert(TextHelper.Wrap(msg))));
+                    DialogHandler.Alert(TextHelper.Wrap(msg))));
                 return;
             }
 
@@ -739,7 +739,7 @@ namespace MVS
                 RefreshEdgeDisplay();
                 string msg = "Plane fit failed — not enough points or degenerate surface.\n\nTry scanning longer or adjusting filters.";
                 Application.Current.Dispatcher.BeginInvoke(System.Windows.Threading.DispatcherPriority.Normal, new Action(() =>
-                    Telerik.Windows.Controls.RadWindow.Alert(TextHelper.Wrap(msg))));
+                    DialogHandler.Alert(TextHelper.Wrap(msg))));
                 return;
             }
 
@@ -755,7 +755,7 @@ namespace MVS
                 RefreshFitDisplay();
                 RefreshEdgeDisplay();
                 Application.Current.Dispatcher.BeginInvoke(System.Windows.Threading.DispatcherPriority.Normal, new Action(() =>
-                    Telerik.Windows.Controls.RadWindow.Alert(TextHelper.Wrap(msg))));
+                    DialogHandler.Alert(TextHelper.Wrap(msg))));
                 return;
             }
 
@@ -1005,7 +1005,7 @@ namespace MVS
                 _lastEdge = null;
                 RefreshEdgeDisplay();
                 Application.Current.Dispatcher.BeginInvoke(System.Windows.Threading.DispatcherPriority.Normal, new Action(() =>
-                    Telerik.Windows.Controls.RadWindow.Alert(TextHelper.Wrap(msg))));
+                    DialogHandler.Alert(TextHelper.Wrap(msg))));
                 return;
             }
 
@@ -1020,7 +1020,7 @@ namespace MVS
                 _lastEdge = null;
                 RefreshEdgeDisplay();
                 Application.Current.Dispatcher.BeginInvoke(System.Windows.Threading.DispatcherPriority.Normal, new Action(() =>
-                    Telerik.Windows.Controls.RadWindow.Alert(TextHelper.Wrap(msg))));
+                    DialogHandler.Alert(TextHelper.Wrap(msg))));
                 return;
             }
 
@@ -1029,7 +1029,7 @@ namespace MVS
                 string msg = $"Edge detection rejected: only {_lastEdge.EdgePointCount:N0} edge pts found, minimum required is {_minEdgePoints:N0}.\n\nTry scanning closer to the deck edge or increasing scan duration.";
                 AppendStatus($"Edge rejected — {_lastEdge.EdgePointCount:N0} edge pts, need ≥ {_minEdgePoints:N0}.");
                 Application.Current.Dispatcher.BeginInvoke(System.Windows.Threading.DispatcherPriority.Normal, new Action(() =>
-                    Telerik.Windows.Controls.RadWindow.Alert(TextHelper.Wrap(msg))));
+                    DialogHandler.Alert(TextHelper.Wrap(msg))));
                 _lastEdge = null;
                 RefreshEdgeDisplay();
                 return;

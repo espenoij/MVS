@@ -4,7 +4,6 @@ using System.IO.Ports;
 using System.Linq;
 using System.Windows.Data;
 using System.Windows.Threading;
-using Telerik.Windows.Data;
 
 namespace MVS
 {
@@ -17,7 +16,7 @@ namespace MVS
         private ErrorHandler errorHandler;
 
         // Sensor Data List
-        private RadObservableCollection<SensorData> sensorDataList;
+        private ObservableCollectionEx<SensorData> sensorDataList;
         private object sensorDataListLock = new object();
 
         // Serie port: Data innhenting
@@ -40,7 +39,7 @@ namespace MVS
             this.config = config;
             this.errorHandler = errorHandler;
 
-            sensorDataList = new RadObservableCollection<SensorData>();
+            sensorDataList = new ObservableCollectionEx<SensorData>();
             BindingOperations.EnableCollectionSynchronization(sensorDataList, sensorDataListLock);
 
             // Serial Port data innhenting
@@ -112,7 +111,7 @@ namespace MVS
             return serialPortDataRetrieval.GetSerialPortDataReceivedList();
         }
 
-        public RadObservableCollection<SensorData> GetSensorDataList()
+        public ObservableCollectionEx<SensorData> GetSensorDataList()
         {
             return sensorDataList;
         }

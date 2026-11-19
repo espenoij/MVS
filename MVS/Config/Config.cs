@@ -184,7 +184,7 @@ namespace MVS
         //    }
         //    catch (Exception ex)
         //    {
-        //        RadWindow.Alert(string.Format("Config (Read 5)\n\nError reading from config file\n\n{0}", TextHelper.Wrap(ex.Message)));
+        //        DialogHandler.Alert(string.Format("Config (Read 5)\n\nError reading from config file\n\n{0}", TextHelper.Wrap(ex.Message)));
         //    }
 
         //    // Konvertere fra string til double
@@ -212,7 +212,7 @@ namespace MVS
         //    }
         //    catch (Exception ex)
         //    {
-        //        RadWindow.Alert(string.Format("Config (Read 6)\n\nError reading from config file\n\n{0}", TextHelper.Wrap(ex.Message)));
+        //        DialogHandler.Alert(string.Format("Config (Read 6)\n\nError reading from config file\n\n{0}", TextHelper.Wrap(ex.Message)));
         //    }
 
         //    // Konvertere fra string til double

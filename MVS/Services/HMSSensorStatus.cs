@@ -4,12 +4,13 @@ using System.Linq;
 using System.Text;
 using System.Threading.Tasks;
 using System.Windows.Threading;
+using MVS;
 
 namespace SensorMonitor
 {
     public class HMSSensorStatus
     {
-        private RadObservableCollectionEx<SensorGroup> hmsSensorList = new RadObservableCollectionEx<SensorGroup>();
+        private ObservableCollectionEx<SensorGroup> hmsSensorList = new ObservableCollectionEx<SensorGroup>();
         private HMSDataCollection hmsOutputDataList;
 
         // Config
@@ -49,7 +50,7 @@ namespace SensorMonitor
             }
         }
 
-        public RadObservableCollectionEx<SensorGroup> GetSensorList()
+        public ObservableCollectionEx<SensorGroup> GetSensorList()
         {
             return hmsSensorList;
         }

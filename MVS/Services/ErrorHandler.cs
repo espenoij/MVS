@@ -5,7 +5,6 @@ using System.Linq;
 using System.Windows;
 using System.Windows.Data;
 using System.Windows.Threading;
-using Telerik.Windows.Controls;
 
 namespace MVS
 {
@@ -124,7 +123,7 @@ namespace MVS
                     new Action(() =>
                     {
                         {
-                            RadWindow.Alert(TextHelper.Wrap(errorMessage.message));
+                            DialogHandler.Alert(TextHelper.Wrap(errorMessage.message));
                         }
                     }));
 

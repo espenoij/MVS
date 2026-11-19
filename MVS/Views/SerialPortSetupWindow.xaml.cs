@@ -12,15 +12,13 @@ using System.Windows.Controls;
 using System.Windows.Input;
 using System.Windows.Media;
 using System.Windows.Threading;
-using Telerik.Windows.Controls;
-using Telerik.Windows.Data;
 
 namespace MVS
 {
     /// <summary>
     /// Interaction logic for SerialPortSetupWindow.xaml
     /// </summary>
-    public partial class SerialPortSetupWindow : RadWindow
+    public partial class SerialPortSetupWindow : Window
     {
         //// TEST
         //int totalPacketsRead;
@@ -35,7 +33,7 @@ namespace MVS
         private AdminSettingsVM adminSettingsVM;
 
         // Sensor Data List
-        private RadObservableCollection<SensorData> sensorDataList = new RadObservableCollection<SensorData>();
+        private ObservableCollectionEx<SensorData> sensorDataList = new ObservableCollectionEx<SensorData>();
 
         // Valgt sensor data
         private SensorData sensorData;
@@ -64,9 +62,9 @@ namespace MVS
         // Lister for visning
         private ObservableCollectionEx<Packet> rawDataItems = new ObservableCollectionEx<Packet>();
         private ObservableCollectionEx<Packet> selectedPacketsItems = new ObservableCollectionEx<Packet>();
-        private RadObservableCollection<PacketDataFields> packetDataFieldsItems = new RadObservableCollection<PacketDataFields>();
-        private RadObservableCollection<SelectedDataField> selectedDataFieldItems = new RadObservableCollection<SelectedDataField>();
-        private RadObservableCollection<CalculatedData> calculatedDataItems = new RadObservableCollection<CalculatedData>();
+        private ObservableCollectionEx<PacketDataFields> packetDataFieldsItems = new ObservableCollectionEx<PacketDataFields>();
+        private ObservableCollectionEx<SelectedDataField> selectedDataFieldItems = new ObservableCollectionEx<SelectedDataField>();
+        private ObservableCollectionEx<CalculatedData> calculatedDataItems = new ObservableCollectionEx<CalculatedData>();
 
         // View Model
         private SerialPortSetupWindowVM serialPortSetupWindowVM;
@@ -74,7 +72,7 @@ namespace MVS
         // Input data
         private string inputDataBuffer = string.Empty;
 
-        public SerialPortSetupWindow(SensorData sensorDataItem, RadObservableCollection<SensorData> sensorDataList, Config config, ErrorHandler errorHandler, AdminSettingsVM adminSettingsVM)
+        public SerialPortSetupWindow(SensorData sensorDataItem, ObservableCollectionEx<SensorData> sensorDataList, Config config, ErrorHandler errorHandler, AdminSettingsVM adminSettingsVM)
         {
             InitializeComponent();
 
@@ -474,7 +472,7 @@ namespace MVS
             }
             catch (Exception ex)
             {
-                RadWindow.Alert(string.Format("InitializeDataProcessing\n\n{0}", TextHelper.Wrap(TextHelper.Wrap(ex.Message))));
+                DialogHandler.Alert(string.Format("InitializeDataProcessing\n\n{0}", TextHelper.Wrap(TextHelper.Wrap(ex.Message))));
             }
         }
 
@@ -546,7 +544,7 @@ namespace MVS
             }
             catch (Exception ex)
             {
-                RadWindow.Alert(string.Format("Error opening serial port\n\n{0}", TextHelper.Wrap(ex.Message)));
+                DialogHandler.Alert(string.Format("Error opening serial port\n\n{0}", TextHelper.Wrap(ex.Message)));
             }
         }
 
@@ -583,7 +581,7 @@ namespace MVS
             }
             catch (Exception ex)
             {
-                RadWindow.Alert(string.Format("Error reading serial port\n\n{0}", TextHelper.Wrap(ex.Message)));
+                DialogHandler.Alert(string.Format("Error reading serial port\n\n{0}", TextHelper.Wrap(ex.Message)));
             }
 
             //switch (sensorData.serialPort.inputType)
@@ -922,7 +920,7 @@ namespace MVS
             }
             catch (Exception ex)
             {
-                RadWindow.Alert(string.Format("cboBaudRate_SelectionChanged\n\n{0}", TextHelper.Wrap(ex.Message)));
+                DialogHandler.Alert(string.Format("cboBaudRate_SelectionChanged\n\n{0}", TextHelper.Wrap(ex.Message)));
             }
         }
 
@@ -935,7 +933,7 @@ namespace MVS
             }
             catch (Exception ex)
             {
-                RadWindow.Alert(string.Format("cboDataBits_SelectionChanged\n\n{0}", TextHelper.Wrap(ex.Message)));
+                DialogHandler.Alert(string.Format("cboDataBits_SelectionChanged\n\n{0}", TextHelper.Wrap(ex.Message)));
             }
         }
 
@@ -948,7 +946,7 @@ namespace MVS
             }
             catch (Exception ex)
             {
-                RadWindow.Alert(string.Format("cboStopBits_SelectionChanged\n\n{0}", TextHelper.Wrap(ex.Message)));
+                DialogHandler.Alert(string.Format("cboStopBits_SelectionChanged\n\n{0}", TextHelper.Wrap(ex.Message)));
             }
         }
 
@@ -961,7 +959,7 @@ namespace MVS
             }
             catch (Exception ex)
             {
-                RadWindow.Alert(string.Format("cboDataParity_SelectionChanged\n\n{0}", TextHelper.Wrap(ex.Message)));
+                DialogHandler.Alert(string.Format("cboDataParity_SelectionChanged\n\n{0}", TextHelper.Wrap(ex.Message)));
             }
         }
 
@@ -974,7 +972,7 @@ namespace MVS
             }
             catch (Exception ex)
             {
-                RadWindow.Alert(string.Format("cboHandShake_SelectionChanged\n\n{0}", TextHelper.Wrap(ex.Message)));
+                DialogHandler.Alert(string.Format("cboHandShake_SelectionChanged\n\n{0}", TextHelper.Wrap(ex.Message)));
             }
         }
 
@@ -1383,7 +1381,7 @@ namespace MVS
             }
             catch (Exception ex)
             {
-                RadWindow.Alert(string.Format("Input must be numeric.\n\n{0}", TextHelper.Wrap(ex.Message)));
+                DialogHandler.Alert(string.Format("Input must be numeric.\n\n{0}", TextHelper.Wrap(ex.Message)));
             }
         }
 
@@ -1415,11 +1413,11 @@ namespace MVS
             }
             catch (Exception ex)
             {
-                RadWindow.Alert(string.Format("Input must be numeric.\n\n{0}", TextHelper.Wrap(ex.Message)));
+                DialogHandler.Alert(string.Format("Input must be numeric.\n\n{0}", TextHelper.Wrap(ex.Message)));
             }
         }
 
-        private void RadWindow_Closed(object sender, WindowClosedEventArgs e)
+        private void Window_Closed(object sender, EventArgs e)
         {
             // Når vinduet lukkes sjekker vi om port fortsatt er åpen
             if (serialPort != null)
@@ -1468,7 +1466,7 @@ namespace MVS
             }
             catch (Exception ex)
             {
-                RadWindow.Alert(string.Format("cboSensorDataType_SelectionChanged\n\n{0}", TextHelper.Wrap(ex.Message)));
+                DialogHandler.Alert(string.Format("cboSensorDataType_SelectionChanged\n\n{0}", TextHelper.Wrap(ex.Message)));
             }
         }
 

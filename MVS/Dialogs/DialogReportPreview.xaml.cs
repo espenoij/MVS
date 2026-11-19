@@ -11,7 +11,7 @@ namespace MVS
     /// <see cref="RadPdfViewer"/>. The report bytes are loaded via
     /// <see cref="LoadReport"/>; the backing stream is disposed when the window closes.
     /// </summary>
-    public partial class DialogReportPreview : RadWindow
+    public partial class DialogReportPreview : Window
     {
         // Backing stream for the viewer; kept alive for the window's lifetime.
         private MemoryStream _previewStream;
@@ -37,7 +37,7 @@ namespace MVS
             Close();
         }
 
-        private void DialogReportPreview_Closed(object sender, WindowClosedEventArgs e)
+        private void DialogReportPreview_Closed(object sender, System.EventArgs e)
         {
             pdfReportPreview.DocumentSource = null;
             _previewStream?.Dispose();

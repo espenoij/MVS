@@ -4,7 +4,6 @@
     xmlns:x="http://schemas.microsoft.com/winfx/2006/xaml"
     xmlns:d="http://schemas.microsoft.com/expression/blend/2008"
     xmlns:mc="http://schemas.openxmlformats.org/markup-compatibility/2006"
-    xmlns:telerik="http://schemas.telerik.com/2008/xaml/presentation"
     mc:Ignorable="d"
     d:DesignHeight="1100"
     d:DesignWidth="1900">
@@ -153,40 +152,47 @@
 
             <DockPanel>
 
-                <telerik:RadGridView
+                <DataGrid
                     Name="lvErrorMessagesData"
                     IsReadOnly="True"
                     IsManipulationEnabled="False"
                     CanUserSortColumns="False"
-                    ShowGroupPanel="False"
-                    ShowColumnHeaders="False"
+                    CanUserAddRows="False"
+                    HeadersVisibility="None"
                     RowHeight="25"
                     Margin="0,5,0,0"
+                    Background="{StaticResource SesSurfaceBrush}"
+                    Foreground="{StaticResource SesTextPrimaryBrush}"
+                    BorderBrush="{StaticResource SesBorderBrush}"
+                    HorizontalGridLinesBrush="{StaticResource SesBorderBrush}"
+                    GridLinesVisibility="Horizontal"
                     CanUserReorderColumns="False"
                     CanUserDeleteRows="False"
-                    RowIndicatorVisibility="Collapsed"
+                    RowHeaderWidth="0"
+                    SelectionMode="Extended"
+                    SelectionUnit="FullRow"
                     AutoGenerateColumns="False">
 
-                    <telerik:RadGridView.Columns>
-                        <telerik:GridViewDataColumn
+                    <DataGrid.Columns>
+                        <DataGridTextColumn
                             Header="Timestamp"
                             Width="180"
-                            DataMemberBinding="{Binding timestampString}" />
-                        <telerik:GridViewDataColumn
+                            Binding="{Binding timestampString}" />
+                        <DataGridTextColumn
                             Header="ID"
                             Width="40"
-                            DataMemberBinding="{Binding idString}" />
-                        <telerik:GridViewDataColumn
+                            Binding="{Binding idString}" />
+                        <DataGridTextColumn
                             Header="Type"
                             Width="80"
-                            DataMemberBinding="{Binding typeString}" />
-                        <telerik:GridViewDataColumn
+                            Binding="{Binding typeString}" />
+                        <DataGridTextColumn
                             Header="Message"
                             Width="auto"
-                            DataMemberBinding="{Binding message}" />
-                    </telerik:RadGridView.Columns>
+                            Binding="{Binding message}" />
+                    </DataGrid.Columns>
 
-                </telerik:RadGridView>
+                </DataGrid>
 
             </DockPanel>
 

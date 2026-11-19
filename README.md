@@ -11,18 +11,27 @@ paths. Display transfers still update the first matching item in place, append
 copies of new items, and retain items absent from the source. Direct transfers
 still clear and repopulate the display.
 
+The main, setup, About, and PDF-preview window shells, data-analysis and report
+progress windows, handler warning, recording readiness/status, screen-capture
+confirmation, and small contextual popups now use native WPF windows. The
+LiDAR messages expander also uses the native WPF control. Telerik alert and
+confirmation call sites now use native WPF dialogs. Modal/modeless use, close
+behavior, existing event flows, and progress updates are retained.
+
 The migration must not change any app functionality or observable behavior.
 Keep existing workflows, validation, device/data behavior, dialogs, grid
 interactions, report content/output, charts and error paths unchanged. Do not
 replace a Telerik-dependent area if its parity cannot be demonstrated; record
 the evidence and blocker and leave that area unchanged.
 
-Remaining dependencies on the current main branch include:
+Remaining runtime dependencies include:
 
 - **Controls and themes:** `App.xaml` loads Telerik Material dictionaries.
-  Windows, grids, tabs, step progress, numeric inputs, watermark inputs,
-  dropdowns and expanders remain in views and dialogs. SES styles also target
-  Telerik controls. The About dialog dynamically creates a Telerik QR barcode.
+  Telerik grids, tabs, step progress,
+  numeric inputs, watermark inputs and dropdowns remain in views, and SES
+  styles still target Telerik controls. The native About window dynamically
+  creates a Telerik QR barcode; the native PDF-preview window still hosts
+  `RadPdfViewer`.
 - **Collections and charts:** `RadObservableCollection` remains in acquisition,
   database, project, setup and display paths. `CaptureCharts.xaml` and
   `DataAnalysis.xaml` still use Telerik charts, axes and series. Native chart

@@ -7,15 +7,13 @@ using System.Windows.Controls;
 using System.Windows.Input;
 using System.Windows.Media;
 using System.Windows.Threading;
-using Telerik.Windows.Controls;
-using Telerik.Windows.Data;
 
 namespace MVS
 {
     /// <summary>
     /// Interaction logic for FileReaderSetupWindow.xaml
     /// </summary>
-    public partial class FileReaderSetupWindow : RadWindow
+    public partial class FileReaderSetupWindow : Window
     {
         // Error Handler
         private ErrorHandler errorHandler;
@@ -34,9 +32,9 @@ namespace MVS
 
         // Lister for visning
         private ObservableCollectionEx<FileDataLine> fileDataLines = new ObservableCollectionEx<FileDataLine>();
-        private RadObservableCollection<FileDataFields> fileDataFields = new RadObservableCollection<FileDataFields>();
-        private RadObservableCollection<SelectedDataField> selectedDataList = new RadObservableCollection<SelectedDataField>();
-        private RadObservableCollection<CalculatedData> calculatedDataList = new RadObservableCollection<CalculatedData>();
+        private ObservableCollectionEx<FileDataFields> fileDataFields = new ObservableCollectionEx<FileDataFields>();
+        private ObservableCollectionEx<SelectedDataField> selectedDataList = new ObservableCollectionEx<SelectedDataField>();
+        private ObservableCollectionEx<CalculatedData> calculatedDataList = new ObservableCollectionEx<CalculatedData>();
 
         // File stream reader
         private StreamReader fsReader;
@@ -278,7 +276,7 @@ namespace MVS
             }
             catch (Exception ex)
             {
-                RadWindow.Alert(string.Format("InitializeDataProcessing\n\n{0}", TextHelper.Wrap(ex.Message)));
+                DialogHandler.Alert(string.Format("InitializeDataProcessing\n\n{0}", TextHelper.Wrap(ex.Message)));
             }
         }
 
@@ -512,7 +510,7 @@ namespace MVS
             }
             catch (Exception ex)
             {
-                RadWindow.Alert(string.Format("Input must be numeric.\n\n{0}", TextHelper.Wrap(ex.Message)));
+                DialogHandler.Alert(string.Format("Input must be numeric.\n\n{0}", TextHelper.Wrap(ex.Message)));
             }
         }
 
@@ -544,7 +542,7 @@ namespace MVS
             }
             catch (Exception ex)
             {
-                RadWindow.Alert(string.Format("Input must be numeric.\n\n{0}", TextHelper.Wrap(ex.Message)));
+                DialogHandler.Alert(string.Format("Input must be numeric.\n\n{0}", TextHelper.Wrap(ex.Message)));
             }
         }
 
@@ -578,7 +576,7 @@ namespace MVS
             process.delimiter = validatedInput;
         }
 
-        private void RadWindow_Closed(object sender, WindowClosedEventArgs e)
+        private void Window_Closed(object sender, EventArgs e)
         {
             FileReader_Stop();
         }

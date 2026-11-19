@@ -50,6 +50,25 @@
 
             </Style.Triggers>
         </Style>
+        <Style
+            x:Key="SensorDataGridStatusColorCode"
+            TargetType="{x:Type DataGridRow}"
+            BasedOn="{StaticResource SesNativeDataGridRowStyle}">
+            <Style.Triggers>
+                <DataTrigger Binding="{Binding Path=statusString}" Value="TIMEOUT_ERROR">
+                    <Setter Property="Background" Value="{StaticResource ColorAmber}" />
+                </DataTrigger>
+                <DataTrigger Binding="{Binding Path=statusString}" Value="OK">
+                    <Setter Property="Background" Value="{StaticResource ColorGreen}" />
+                </DataTrigger>
+                <DataTrigger Binding="{Binding Path=statusString}" Value="OK_NA">
+                    <Setter Property="Background" Value="{StaticResource ColorGreen}" />
+                </DataTrigger>
+                <DataTrigger Binding="{Binding Path=statusString}" Value="NONE">
+                    <Setter Property="Background" Value="Transparent" />
+                </DataTrigger>
+            </Style.Triggers>
+        </Style>
     </UserControl.Resources>
 
     <Grid>
@@ -67,40 +86,40 @@
             Grid.Column="0"
             Margin="8">
 
-            <telerik:RadGridView
+            <DataGrid
                 DockPanel.Dock="Left"
                 Name="gvSensorInputData"
+                Style="{StaticResource SesNativeDataGridStyle}"
+                RowStyle="{StaticResource SensorDataGridStatusColorCode}"
                 Margin="0,8,0,0"
                 ItemsSource="{Binding SensorData}"
-                RowStyle="{StaticResource DataStatusColorCode}"
                 IsReadOnly="True"
                 IsManipulationEnabled="True"
                 CanUserSortColumns="True"
-                ShowGroupPanel="False"
                 CanUserReorderColumns="False"
                 CanUserDeleteRows="True"
-                RowIndicatorVisibility="Collapsed"
                 SelectionMode="Single"
+                SelectionUnit="FullRow"
                 AutoGenerateColumns="False">
 
-                <telerik:RadGridView.Columns>
+                <DataGrid.Columns>
 
-                    <telerik:GridViewDataColumn
+                    <DataGridTextColumn
                         Width="110"
                         Header="Data ID"
-                        DataMemberBinding="{Binding id}" />
-                    <telerik:GridViewDataColumn
+                        Binding="{Binding id}" />
+                    <DataGridTextColumn
                         Width="300"
                         Header="Name"
-                        DataMemberBinding="{Binding name}" />
-                    <telerik:GridViewDataColumn
+                        Binding="{Binding name}" />
+                    <DataGridTextColumn
                         Width="160"
                         Header="Data"
-                        DataMemberBinding="{Binding data}" />
+                        Binding="{Binding data}" />
 
-                </telerik:RadGridView.Columns>
+                </DataGrid.Columns>
 
-            </telerik:RadGridView>
+            </DataGrid>
 
         </GroupBox>
 

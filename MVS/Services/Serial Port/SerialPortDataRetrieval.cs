@@ -5,7 +5,6 @@ using System.Text;
 using System.Text.RegularExpressions;
 using System.Threading;
 using System.Windows.Threading;
-using Telerik.Windows.Data;
 
 namespace MVS
 {
@@ -17,7 +16,7 @@ namespace MVS
         // Database
         DatabaseHandler database;
 
-        RadObservableCollection<SensorData> sensorDataList;
+        ObservableCollectionEx<SensorData> sensorDataList;
 
         // Serial Port: List
         private List<SerialPort> serialPortList = new List<SerialPort>();
@@ -36,7 +35,7 @@ namespace MVS
 
         private DispatcherTimer sensorProcessingTimer = new DispatcherTimer();
 
-        public SerialPortDataRetrieval(Config config, RadObservableCollection<SensorData> sensorDataList, DatabaseHandler database, ErrorHandler errorHandler, AdminSettingsVM adminSettingsVM)
+        public SerialPortDataRetrieval(Config config, ObservableCollectionEx<SensorData> sensorDataList, DatabaseHandler database, ErrorHandler errorHandler, AdminSettingsVM adminSettingsVM)
         {
             this.config = config;
             this.database = database;

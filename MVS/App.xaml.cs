@@ -50,7 +50,7 @@ namespace MVS
             sensorMonitorServer.Show();
 
             // Egen kode for å få et icon på taskbar
-            var window = sensorMonitorServer.ParentOfType<Window>();
+            var window = sensorMonitorServer;
             window.ShowInTaskbar = true;
 
             // Tittel i taskbar
