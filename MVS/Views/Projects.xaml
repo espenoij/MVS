@@ -144,31 +144,33 @@
                                         Style="{StaticResource SesNativeSecondaryButtonStyle}"/>
                             </StackPanel>
 
-                            <telerik:RadGridView Grid.Row="2"
-                                                 Name="gvProjects"
-                                                 ItemsSource="{Binding Project}"
-                                                 IsReadOnly="True"
-                                                 IsManipulationEnabled="True"
-                                                 CanUserSortColumns="True"
-                                                 ShowGroupPanel="False"
-                                                 CanUserReorderColumns="False"
-                                                 CanUserDeleteRows="True"
-                                                 RowIndicatorVisibility="Collapsed"
-                                                 SelectionMode="Single"
-                                                 AutoGenerateColumns="False"
-                                                 SelectionChanged="gvProjects_SelectionChanged">
-                                <telerik:RadGridView.Columns>
-                                    <telerik:GridViewDataColumn Width="40"
-                                                                Header="ID"
-                                                                DataMemberBinding="{Binding Id}" />
-                                    <telerik:GridViewDataColumn Width="2*"
-                                                                Header="Name"
-                                                                DataMemberBinding="{Binding Name}" />
-                                    <telerik:GridViewDataColumn Width="*"
-                                                                Header="Date"
-                                                                DataMemberBinding="{Binding DateString}" />
-                                    <telerik:GridViewDataColumn Width="80" Header="Status">
-                                        <telerik:GridViewDataColumn.CellTemplate>
+                            <DataGrid Grid.Row="2"
+                                      Name="gvProjects"
+                                      Style="{StaticResource SesNativeDataGridStyle}"
+                                      ItemsSource="{Binding Project}"
+                                      IsReadOnly="True"
+                                      IsManipulationEnabled="True"
+                                      CanUserSortColumns="True"
+                                      CanUserReorderColumns="False"
+                                      CanUserDeleteRows="True"
+                                      SelectionMode="Single"
+                                      SelectionUnit="FullRow"
+                                      AutoGenerateColumns="False"
+                                      SelectionChanged="gvProjects_SelectionChanged">
+                                <DataGrid.Columns>
+                                    <DataGridTextColumn Width="40"
+                                                        Header="ID"
+                                                        Binding="{Binding Id}" />
+                                    <DataGridTextColumn Width="2*"
+                                                        Header="Name"
+                                                        Binding="{Binding Name}" />
+                                    <DataGridTextColumn Width="*"
+                                                        Header="Date"
+                                                        Binding="{Binding DateString}" />
+                                    <DataGridTemplateColumn Width="80"
+                                                            Header="Status"
+                                                            IsReadOnly="True">
+                                        <DataGridTemplateColumn.CellTemplate>
                                             <DataTemplate>
                                                 <StackPanel Orientation="Horizontal"
                                                             HorizontalAlignment="Center">
@@ -181,10 +183,10 @@
                                                                Margin="6,0,0,0"/>
                                                 </StackPanel>
                                             </DataTemplate>
-                                        </telerik:GridViewDataColumn.CellTemplate>
-                                    </telerik:GridViewDataColumn>
-                                </telerik:RadGridView.Columns>
-                            </telerik:RadGridView>
+                                        </DataGridTemplateColumn.CellTemplate>
+                                    </DataGridTemplateColumn>
+                                </DataGrid.Columns>
+                            </DataGrid>
                         </Grid>
 
                         <!-- Project details (right half of Step 1) -->
@@ -228,8 +230,9 @@
                                                               KeyDown="tbDataSetName_KeyDown"/>
 
                                         <TextBlock Grid.Row="2" Grid.Column="0" Text="Operator" VerticalAlignment="Center" Margin="0,4,0,0" Foreground="{StaticResource SesTextSecondaryBrush}"/>
-                                        <telerik:RadWatermarkTextBox Grid.Row="2" Grid.Column="1"
-                                                 Name="tbOperator"
+                                        <controls:WatermarkTextBox Grid.Row="2" Grid.Column="1"
+                                                 x:Name="tbOperator"
+                                                 Style="{StaticResource SesNativeWatermarkTextBoxStyle}"
                                                  MinHeight="32"
                                                  VerticalContentAlignment="Center"
                                                  Margin="0,4,0,0"
@@ -239,8 +242,9 @@
                                                  TextChanged="tbReportField_TextChanged"/>
 
                                         <TextBlock Grid.Row="3" Grid.Column="0" Text="Vessel" VerticalAlignment="Center" Margin="0,4,0,0" Foreground="{StaticResource SesTextSecondaryBrush}"/>
-                                        <telerik:RadWatermarkTextBox Grid.Row="3" Grid.Column="1"
-                                                 Name="tbVesselName"
+                                        <controls:WatermarkTextBox Grid.Row="3" Grid.Column="1"
+                                                 x:Name="tbVesselName"
+                                                 Style="{StaticResource SesNativeWatermarkTextBoxStyle}"
                                                  MinHeight="32"
                                                  VerticalContentAlignment="Center"
                                                  Margin="0,4,0,0"
@@ -250,8 +254,9 @@
                                                  TextChanged="tbReportField_TextChanged"/>
 
                                         <TextBlock Grid.Row="4" Grid.Column="0" Text="Location" VerticalAlignment="Center" Margin="0,4,0,0" Foreground="{StaticResource SesTextSecondaryBrush}"/>
-                                        <telerik:RadWatermarkTextBox Grid.Row="4" Grid.Column="1"
-                                                 Name="tbLocation"
+                                        <controls:WatermarkTextBox Grid.Row="4" Grid.Column="1"
+                                                 x:Name="tbLocation"
+                                                 Style="{StaticResource SesNativeWatermarkTextBoxStyle}"
                                                  MinHeight="32"
                                                  VerticalContentAlignment="Center"
                                                  Margin="0,4,0,0"
@@ -470,8 +475,9 @@
                                                     </Grid.RowDefinitions>
 
                                                     <TextBlock Grid.Row="0" Grid.Column="0" Text="Project Comments" Margin="0,4,8,0" VerticalAlignment="Top" Foreground="{StaticResource SesTextSecondaryBrush}"/>
-                                                    <telerik:RadWatermarkTextBox Grid.Row="0" Grid.Column="1"
-                                                             Name="tbDataSetComments"
+                                                    <controls:WatermarkTextBox Grid.Row="0" Grid.Column="1"
+                                                             x:Name="tbDataSetComments"
+                                                             Style="{StaticResource SesNativeWatermarkTextBoxStyle}"
                                                              AcceptsReturn="True"
                                                              TextWrapping="Wrap"
                                                              VerticalScrollBarVisibility="Auto"
