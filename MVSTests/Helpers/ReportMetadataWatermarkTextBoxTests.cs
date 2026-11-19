@@ -4,6 +4,7 @@ using System.Windows.Controls;
 using System.Windows.Data;
 using System.Windows.Media;
 using Microsoft.VisualStudio.TestTools.UnitTesting;
+using MVS;
 using MVS.Views.Controls;
 using MVSTests.TestInfrastructure;
 
