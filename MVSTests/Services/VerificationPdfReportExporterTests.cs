@@ -342,6 +342,33 @@ namespace MVSTests.Services
         }
 
         [TestMethod]
+        public void DrawSubheadingAndImage_NearPageBottom_KeepsHeadingWithImage()
+        {
+            StaTestHelper.Run(() =>
+            {
+                var model = SampleModel();
+                byte[] summary = ReportChartRenderer.RenderAxisSummaryCard(
+                    model, VerificationAxisKind.Pitch);
+
+                using var document = new PdfDocument();
+                using var canvas = new VerificationPdfReportExporter.ReportCanvas(document);
+                canvas.StartPage();
+                canvas.DrawParagraph(string.Join("\n", Enumerable.Repeat("Filler", 32)), 10.5);
+
+                canvas.DrawSubheadingAndImage(
+                    "PITCH", summary, VerificationPdfReportExporter.ReportCanvas.ContentWidth, 170);
+
+                canvas.Complete();
+                Assert.AreEqual(2, document.Pages.Count);
+                Assert.IsFalse(PageContent(document, 0).Contains("(PITCH) Tj"),
+                    "The heading should move with its summary image to the next page.");
+                StringAssert.Contains(PageContent(document, 1), "(PITCH) Tj");
+                Assert.IsTrue(canvas.Y > 250,
+                    "The summary image should be drawn beneath the heading on the new page.");
+            });
+        }
+
+        [TestMethod]
         public void DrawKeyValues_LongMetadata_PreservesAllLinesAcrossPages()
         {
             StaTestHelper.Run(() =>

@@ -269,9 +269,11 @@ namespace MVS.Services.Reporting
 
             foreach (VerificationAxisKind axis in AllAxes())
             {
-                canvas.EnsureSpace(90);
-                canvas.DrawSubheading(model.AxisTitle(axis).ToUpperInvariant());
-                canvas.DrawImage(model.AxisSummaryPng(axis), ReportCanvas.ContentWidth, 170);
+                canvas.DrawSubheadingAndImage(
+                    model.AxisTitle(axis).ToUpperInvariant(),
+                    model.AxisSummaryPng(axis),
+                    ReportCanvas.ContentWidth,
+                    170);
 
                 AxisStatistics reference = model.RefStats(axis);
                 AxisStatistics test = model.TestStats(axis);
@@ -769,6 +771,13 @@ namespace MVS.Services.Reporting
                     _graphics.DrawImage(image, LeftMargin + (ContentWidth - width) / 2, Y, width, height);
                     Y += height + 12;
                 }
+            }
+
+            internal void DrawSubheadingAndImage(string text, byte[] bytes, double maxWidth, double maxHeight)
+            {
+                EnsureSpace(28 + (bytes != null && bytes.Length > 0 ? maxHeight + 12 : 0));
+                DrawSubheading(text);
+                DrawImage(bytes, maxWidth, maxHeight);
             }
 
             internal void EnsureSpace(double height)

@@ -31,7 +31,7 @@ namespace MVS
 
         private void DialogReportPreview_Closed(object sender, System.EventArgs e)
         {
-            pdfReportPreview.Clear();
+            pdfReportPreview.Dispose();
         }
     }
 }

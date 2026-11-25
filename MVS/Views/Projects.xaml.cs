@@ -2,6 +2,7 @@
 using System.Collections.Generic;
 using System.ComponentModel;
 using System.IO;
+using System.Security;
 using System.Text;
 using System.Threading.Tasks;
 using System.Windows;
@@ -1458,8 +1459,17 @@ namespace MVS
         /// </summary>
         private void LoadInlineReport(byte[] pdfBytes)
         {
-            inlinePdfViewer.LoadPdf(pdfBytes);
-            reportViewerPlaceholder.Visibility = Visibility.Collapsed;
+            try
+            {
+                inlinePdfViewer.LoadPdf(pdfBytes);
+                reportViewerPlaceholder.Visibility = Visibility.Collapsed;
+            }
+            catch (Exception ex) when (ex is IOException || ex is UnauthorizedAccessException || ex is SecurityException)
+            {
+                ClearInlineReport();
+                reportViewerPlaceholderTitle.Text = "PDF preview unavailable";
+                reportViewerPlaceholderDetail.Text = "The report was generated, but its preview could not be created: " + ex.Message;
+            }
         }
 
         /// <summary>
@@ -1468,7 +1478,14 @@ namespace MVS
         private void ClearInlineReport()
         {
             inlinePdfViewer.Clear();
+            reportViewerPlaceholderTitle.Text = "No report generated yet";
+            reportViewerPlaceholderDetail.Text = "Fill in the report details and click 'Generate Report' to preview here.";
             reportViewerPlaceholder.Visibility = Visibility.Visible;
+        }
+
+        public void DisposeReportPreview()
+        {
+            inlinePdfViewer.Dispose();
         }
 
         /// <summary>
