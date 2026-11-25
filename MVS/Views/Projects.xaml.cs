@@ -11,7 +11,6 @@ using System.Windows.Threading;
 using Microsoft.Win32;
 using MVS.Models;
 using MVS.Views.Controls;
-using Telerik.Windows.Controls;
 using static MVS.MainWindow;
 
 namespace MVS
@@ -1347,7 +1346,7 @@ namespace MVS
                 progress.Show();
 
                 // The heavy work (chart rendering + PDF build) only touches the model
-                // POCO and Telerik document objects, so it is safe off the UI thread.
+                // POCO and document objects, so it is safe off the UI thread.
                 byte[] bytes = await Task.Run(() => GenerateReportBytes(model));
 
                 _reportPdfBytes = bytes;
