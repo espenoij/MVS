@@ -11,8 +11,6 @@ using System.Windows.Threading;
 using Microsoft.Win32;
 using MVS.Models;
 using MVS.Views.Controls;
-using Telerik.Windows.Controls;
-using Telerik.Windows.Documents.Fixed;
 using static MVS.MainWindow;
 
 namespace MVS
@@ -67,9 +65,6 @@ namespace MVS
         // the review charts are (re)built from the database only when the user enters
         // Step 4, so review graphs update only after capture is complete.
         private bool _reviewDataLoaded;
-
-        // Backing stream for the inline PDF viewer; kept alive while the viewer is showing.
-        private MemoryStream _inlineViewerStream;
 
         // Live-update timer for the duration banner while recording is active.
         private readonly DispatcherTimer _recordingBannerTimer;
@@ -1351,7 +1346,7 @@ namespace MVS
                 progress.Show();
 
                 // The heavy work (chart rendering + PDF build) only touches the model
-                // POCO and Telerik document objects, so it is safe off the UI thread.
+                // POCO and document objects, so it is safe off the UI thread.
                 byte[] bytes = await Task.Run(() => GenerateReportBytes(model));
 
                 _reportPdfBytes = bytes;
@@ -1463,9 +1458,7 @@ namespace MVS
         /// </summary>
         private void LoadInlineReport(byte[] pdfBytes)
         {
-            _inlineViewerStream?.Dispose();
-            _inlineViewerStream = new MemoryStream(pdfBytes, writable: false);
-            inlinePdfViewer.DocumentSource = new PdfDocumentSource(_inlineViewerStream);
+            inlinePdfViewer.LoadPdf(pdfBytes);
             reportViewerPlaceholder.Visibility = Visibility.Collapsed;
         }
 
@@ -1474,9 +1467,7 @@ namespace MVS
         /// </summary>
         private void ClearInlineReport()
         {
-            inlinePdfViewer.DocumentSource = null;
-            _inlineViewerStream?.Dispose();
-            _inlineViewerStream = null;
+            inlinePdfViewer.Clear();
             reportViewerPlaceholder.Visibility = Visibility.Visible;
         }
 

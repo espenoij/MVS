@@ -2,1651 +2,599 @@ using System;
 using System.Collections.Generic;
 using System.Globalization;
 using System.IO;
+using System.Linq;
+using System.Text;
 using System.Windows;
-using System.Windows.Media;
 using MVS.Models;
-using Telerik.Windows.Documents.Fixed.FormatProviders.Pdf;
-using Telerik.Windows.Documents.Fixed.Model;
-using Telerik.Windows.Documents.Fixed.Model.ColorSpaces;
-using Telerik.Windows.Documents.Fixed.Model.Editing;
-using Telerik.Windows.Documents.Fixed.Model.Editing.Flow;
-using Telerik.Windows.Documents.Fixed.Model.Editing.Tables;
-using Telerik.Windows.Documents.Fixed.Model.Fonts;
-using Telerik.Windows.Documents.Fixed.Model.Resources;
-using TelerikImageSource = Telerik.Windows.Documents.Fixed.Model.Resources.ImageSource;
-using TelerikPadding = Telerik.Windows.Documents.Primitives.Padding;
+using PdfSharp;
+using PdfSharp.Drawing;
+using PdfSharp.Pdf;
 
 namespace MVS.Services.Reporting
 {
     /// <summary>
-    /// Builds a comprehensive, business-language verification report and exports
-    /// it as a PDF using Telerik RadPdfProcessing (the document-processing
-    /// assemblies that ship with the referenced Telerik.UI.for.Wpf.80 package).
-    ///
-    /// The report deliberately avoids engineering jargon: it leads with a plain
-    /// summary and the final corrections, then shows charts, then the supporting
-    /// per-axis tables and a glossary for anyone who wants the detail.
+    /// Builds and exports the verification report as a PDF using PDFsharp.
+    /// The report includes the SES cover and page branding, measurement
+    /// summaries, charts, equipment and test metadata, and supporting definitions.
     /// </summary>
     public static class VerificationPdfReportExporter
     {
         private static readonly CultureInfo Ci = CultureInfo.CurrentCulture;
 
-        private static readonly FontBase _robotoRegular;
-        private static readonly FontBase _robotoBold;
+        private static readonly XColor ColorHeading = XColor.FromArgb(255, 0x33, 0x4A, 0x5C);
+        private static readonly XColor ColorAccent = XColor.FromArgb(255, 0x3D, 0xE6, 0xA9);
+        private static readonly XColor ColorText = XColor.FromArgb(255, 0x1A, 0x27, 0x32);
+        private static readonly XColor ColorMuted = XColor.FromArgb(255, 0x7F, 0x94, 0xA5);
+        private static readonly XColor ColorRowAlt = XColor.FromArgb(255, 0xF2, 0xF5, 0xF7);
+        private static readonly XColor ColorBorder = XColor.FromArgb(255, 0xD6, 0xDF, 0xE6);
 
-        // SES Energy doc-template images (extracted from Doc-template - SES Energy.docx).
-        // All three are drawn on every page by AddPageFooters in back-to-front order:
-        //   1. ses-background.png — full-page semi-transparent watermark (behind content)
-        //   2. ses-header.png     — teal band at the top of every page
-        //   3. ses-footer.png     — teal band at the bottom + page number
-        private static readonly byte[]? _sesBackgroundPng;
-        private static readonly byte[]? _sesHeaderPng;
-        private static readonly byte[]? _sesFooterPng;
+        private static readonly byte[] SesBackgroundPng = LoadResourceBytes(
+            "pack://application:,,,/MVS;component/Resources/DocTemplate/ses-background.png");
+        private static readonly byte[] SesHeaderPng = LoadResourceBytes(
+            "pack://application:,,,/MVS;component/Resources/DocTemplate/ses-header.png");
+        private static readonly byte[] SesFooterPng = LoadResourceBytes(
+            "pack://application:,,,/MVS;component/Resources/DocTemplate/ses-footer.png");
 
-        static VerificationPdfReportExporter()
-        {
-            // Use a plain family name so that FontProperties keys match between
-            // RegisterFont and TryCreateFont. The TTF bytes are loaded directly
-            // from the embedded WPF resources rather than relying on WPF's
-            // GlyphTypeface resolver, which does not follow pack URIs.
-            var family = new FontFamily("Roboto Condensed");
-
-            RegisterRobotoFont(family, FontStyles.Normal, FontWeights.Normal,
-                "pack://application:,,,/MVS;component/Fonts/RobotoCondensed-Regular.ttf");
-
-            RegisterRobotoFont(family, FontStyles.Normal, FontWeights.Bold,
-                "pack://application:,,,/MVS;component/Fonts/RobotoCondensed-Bold.ttf");
-
-            _robotoRegular = FontsRepository.TryCreateFont(
-                family, FontStyles.Normal, FontWeights.Normal, out FontBase regular)
-                ? regular : FontsRepository.Helvetica;
-
-            _robotoBold = FontsRepository.TryCreateFont(
-                family, FontStyles.Normal, FontWeights.Bold, out FontBase bold)
-                ? bold : FontsRepository.HelveticaBold;
-
-            _sesBackgroundPng = LoadResourceBytes(
-                "pack://application:,,,/MVS;component/Resources/DocTemplate/ses-background.png");
-            _sesHeaderPng = LoadResourceBytes(
-                "pack://application:,,,/MVS;component/Resources/DocTemplate/ses-header.png");
-            _sesFooterPng = LoadResourceBytes(
-                "pack://application:,,,/MVS;component/Resources/DocTemplate/ses-footer.png");
-        }
-
-        /// <summary>
-        /// Loads a WPF pack-URI resource as raw bytes.
-        /// Returns <c>null</c> when the resource is unavailable (e.g. test host).
-        /// </summary>
-        private static byte[]? LoadResourceBytes(string packUri)
-        {
-            try
-            {
-                var info = Application.GetResourceStream(new Uri(packUri));
-                if (info == null) return null;
-                using var ms = new MemoryStream();
-                info.Stream.CopyTo(ms);
-                return ms.ToArray();
-            }
-            catch
-            {
-                return null;
-            }
-        }
-
-        /// <summary>
-        /// Reads the TTF at <paramref name="packUri"/> from the application's
-        /// embedded resources and pre-registers it with RadPdfProcessing so that
-        /// <see cref="FontsRepository.TryCreateFont"/> can retrieve it by name
-        /// without needing WPF's GlyphTypeface resolver.
-        /// </summary>
-        private static void RegisterRobotoFont(
-            FontFamily family, FontStyle style, FontWeight weight, string packUri)
-        {
-            try
-            {
-                var uri = new Uri(packUri);
-                System.Windows.Resources.StreamResourceInfo info =
-                    Application.GetResourceStream(uri);
-                if (info == null) return;
-
-                using var ms = new MemoryStream();
-                info.Stream.CopyTo(ms);
-                FontsRepository.RegisterFont(family, style, weight, ms.ToArray());
-            }
-            catch
-            {
-                // Fall back to Helvetica if resources are unavailable (e.g. test host).
-            }
-        }
-
-        // ── Palette (design-spec: deep navy / teal / seafoam / amber / red) ──
-        // Table cells: background is controllable; text color/size is not via the
-        // RadPdfProcessing flow API. Headers therefore use a medium-blue tint that
-        // remains readable with the dark default text color.
-        // SES Energy Brand Toolkit palette (PDF / RgbColor version)
-        private static readonly RgbColor ColorHeading     = new RgbColor(0x33, 0x4A, 0x5C); // SES Dark Blue Grey
-        private static readonly RgbColor ColorSubHeading  = new RgbColor(0x26, 0x37, 0x46); // SES Dark Blue Grey deep
-        private static readonly RgbColor ColorAccent      = new RgbColor(0x3D, 0xE6, 0xA9); // SES Energy Green
-        private static readonly RgbColor ColorText        = new RgbColor(0x1A, 0x27, 0x32); // Near-black text
-        private static readonly RgbColor ColorMuted       = new RgbColor(0x7F, 0x94, 0xA5); // Mid-tone grey
-        private static readonly RgbColor ColorTableHeader = new RgbColor(0x33, 0x4A, 0x5C); // SES Dark Blue Grey (table headers)
-        private static readonly RgbColor ColorTableHeaderText = new RgbColor(0xFF, 0xFF, 0xFF); // White text on dark header
-        private static readonly RgbColor ColorRowAlt      = new RgbColor(0xF2, 0xF5, 0xF7); // Light surface alt row
-        private static readonly RgbColor ColorBorder      = new RgbColor(0xD6, 0xDF, 0xE6); // Subtle divider
-
-        // Capture-duration quality thresholds (minutes) — matches DurationStatusBanner.
-        private const double MinDurationAcceptableMinutes  = 20.0;
+        private const double MinDurationAcceptableMinutes = 20.0;
         private const double MinDurationRecommendedMinutes = 40.0;
 
         /// <summary>Exports the report to a file on disk.</summary>
         public static void Export(string path, VerificationReportModel model)
         {
-            if (string.IsNullOrWhiteSpace(path)) throw new ArgumentException("Path is required.", nameof(path));
-            if (model == null) throw new ArgumentNullException(nameof(model));
+            if (string.IsNullOrWhiteSpace(path))
+                throw new ArgumentException("Path is required.", nameof(path));
+            if (model == null)
+                throw new ArgumentNullException(nameof(model));
 
-            using (FileStream fs = File.Create(path))
-            {
-                Export(fs, model);
-            }
+            using (FileStream stream = File.Create(path))
+                Export(stream, model);
         }
 
         /// <summary>Exports the report to a stream (used by tests and the file overload).</summary>
         public static void Export(Stream stream, VerificationReportModel model)
         {
-            if (stream == null) throw new ArgumentNullException(nameof(stream));
-            if (model == null) throw new ArgumentNullException(nameof(model));
+            if (stream == null)
+                throw new ArgumentNullException(nameof(stream));
+            if (model == null)
+                throw new ArgumentNullException(nameof(model));
 
-            RadFixedDocument document = Build(model);
-            var provider = new PdfFormatProvider();
-            provider.Export(document, stream);
+            using (PdfDocument document = Build(model))
+                document.Save(stream);
         }
 
         /// <summary>
-        /// Builds the in-memory fixed document. Exposed internally so tests can
-        /// assert structure (page count, etc.) without writing to disk.
+        /// Builds the in-memory PDF document so tests can inspect its page count
+        /// without writing a file.
         /// </summary>
-        internal static RadFixedDocument Build(VerificationReportModel model)
+        internal static PdfDocument Build(VerificationReportModel model)
         {
-            if (model == null) throw new ArgumentNullException(nameof(model));
+            if (model == null)
+                throw new ArgumentNullException(nameof(model));
 
-            // Iterative fixpoint: simulate the layout with the current forced-break set,
-            // detect any section that still starts mid-page and overflows, add it to the
-            // forced-break set, and repeat. Converges because we only ever add breaks.
-            var forcedBreaks = new System.Collections.Generic.HashSet<string>();
-            System.Collections.Generic.Dictionary<string, int> sectionPages;
-            while (true)
+            var document = new PdfDocument();
+            document.Info.Title = "MRU Verification Report - " + Dash(model.ProjectName);
+            document.Info.Author = Dash(model.Operator);
+
+            using (var canvas = new ReportCanvas(document))
             {
-                var probe = DiscoverSectionPageNumbers(model, forcedBreaks);
-                // TOC page is inserted between cover and body, so shift all page numbers +1.
-                sectionPages = new System.Collections.Generic.Dictionary<string, int>();
-                foreach (var kv in probe.Pages) sectionPages[kv.Key] = kv.Value + 1;
+                WriteCover(canvas, model);
+                PdfPage contentsPage = canvas.StartPageWithResult();
+                WriteExecutiveDashboard(canvas, model);
 
-                if (probe.NewSplits.Count == 0) break;   // stable — no new splits found
-                foreach (string key in probe.NewSplits) forcedBreaks.Add(key);
+                canvas.StartSection("1. Session Overview",
+                    "Overview of the verification session, capture timing, operator details, data volume and correction status.");
+                WriteOverview(canvas, model);
+
+                canvas.StartSection("2. Applied Corrections",
+                    "Recommended and applied corrections for pitch, roll and heave, together with their implementation status.");
+                WriteCorrections(canvas, model);
+
+                canvas.StartSection("3. Axis Detail",
+                    "Detailed per-axis statistics, comparison charts and correction values for the verification dataset.");
+                WriteAxisDetails(canvas, model);
+
+                if (model.HasData)
+                {
+                    canvas.StartSection("4. Correlation and Latency",
+                        "Correlation strength and timing-offset metrics comparing reference and vessel motion signals.");
+                    WriteCorrelationAndLatency(canvas, model);
+                }
+
+                canvas.StartSection("5. Compliance Assessment",
+                    "Assessment of sample count, capture duration and signal quality against recommended criteria.");
+                WriteCompliance(canvas, model);
+
+                canvas.StartSection("6. Scope and Objective",
+                    "Verification scope, intended outcome and applicable references defining this report's purpose.");
+                WriteScope(canvas, model);
+
+                canvas.StartSection("7. Data Processing Methodology",
+                    "Summary of synchronization, filtering, statistical treatment and comparison methods.");
+                WriteMethodology(canvas, model);
+
+                canvas.StartSection("8. Equipment",
+                    "Equipment used for the verification, including the vessel-installed MRU, reference unit and supporting hardware.");
+                WriteEquipment(canvas, model);
+
+                canvas.StartSection("9. Test Setup",
+                    "Installation arrangement, sensor geometry, synchronization and data acquisition settings.");
+                WriteTestSetup(canvas, model);
+
+                canvas.StartSection("10. Test Conditions",
+                    "Environmental and operational conditions recorded during the verification.");
+                WriteTestConditions(canvas, model);
+
+                canvas.StartSection("11. Metric Definitions",
+                    "A quick reference guide for interpreting the metrics in this report.");
+                WriteGlossary(canvas, model);
+
+                canvas.StartSection("12. Observations",
+                    "Additional notes that may help explain conditions, limitations or noteworthy aspects of the capture.");
+                canvas.DrawParagraph(string.IsNullOrWhiteSpace(model.Metadata?.Observations)
+                    ? "No additional observations were recorded."
+                    : model.Metadata.Observations);
+
+                canvas.StartSection("13. Appendices",
+                    "Supporting reference material and explanatory notes that complement the verification results.");
+                canvas.DrawParagraph(string.IsNullOrWhiteSpace(model.Metadata?.AppendixNotes)
+                    ? "No additional appendix material was provided."
+                    : model.Metadata.AppendixNotes);
+
+                canvas.Complete();
+                WriteTableOfContents(contentsPage, canvas.SectionPages);
+                AddPageNumbers(document);
             }
 
-            var document = new RadFixedDocument();
-            var editor   = new RadFixedDocumentEditor(document);
-            ConfigureEditor(editor);
-
-            // Cover and TOC always occupy their own pages.
-            WriteTitle(editor, model);
-            editor.InsertPageBreak();
-            WriteTableOfContents(editor, model, sectionPages);
-
-            // Render body sections using the stable forced-break set.
-            void Section(string key, System.Action write)
-            {
-                if (forcedBreaks.Contains(key)) editor.InsertPageBreak();
-                write();
-            }
-
-            // Executive Dashboard always occupies its own page: hard breaks before and after.
-            editor.InsertPageBreak();
-            WriteExecutiveDashboard(editor, model);
-            WriteKeyFindings(editor, model);
-            editor.InsertPageBreak();
-
-            Section("1.  Session Overview",            () => WriteOverview(editor, model));
-            Section("2.  Applied Corrections",         () => WriteFinalResults(editor, model));
-            Section("3.  Axis Detail",                 () => WriteAxisSection(editor, model));
-            if (model.HasData)
-                Section("4.  Correlation & Latency",   () => WriteCorrelationAndLatency(editor, model));
-            Section("5.  Compliance Assessment",       () => WriteCompliance(editor, model));
-            Section("6.  Scope & Objective",           () => WriteScope(editor, model));
-            Section("7.  Data Processing Methodology", () => WriteMethodology(editor, model));
-            Section("8.  Equipment",                   () => WriteEquipment(editor, model));
-            Section("9.  Test Setup",                  () => WriteTestSetup(editor, model));
-            Section("10. Test Conditions",             () => WriteTestConditions(editor, model));
-            Section("11. Metric Definitions",          () => WriteGlossary(editor, model));
-            Section("12. Observations",                () => WriteObservations(editor, model));
-            Section("13. Appendices",                  () => WriteAppendices(editor, model));
-
-            editor.Dispose();
-            AddPageFooters(document);
             return document;
         }
 
-		private static void ConfigureEditor(RadFixedDocumentEditor editor)
-		{
-			editor.SectionProperties.PageSize = new Size(793, 1122);
-			// Top margin cleared for the 93-DIP SES header strip; bottom margin cleared
-			// for the 70-DIP SES footer strip. Left/right margins unchanged at 56.
-			editor.SectionProperties.PageMargins = new TelerikPadding(56, 100, 56, 78);
-		}
-
-		// ============================================================
-		// Two-pass helpers
-		// ============================================================
-
-		/// <summary>
-		/// Pass 1 of the two-pass build: builds the document body without a Table of
-		/// Contents and records the 1-based page number on which each section begins.
-		/// The caller offsets these numbers by +1 before using them in the TOC because
-		/// the TOC page itself is inserted between the cover and the body sections.
-		/// </summary>
-		/// <summary>
-		/// Simulates the body layout using <paramref name="forcedBreaks"/> and returns:
-		/// <list type="bullet">
-		/// <item><description><c>Pages</c> — 1-based start page for each section (for the TOC).</description></item>
-		/// <item><description><c>NewSplits</c> — sections that started mid-page and still overflowed
-		/// a boundary even with the current <paramref name="forcedBreaks"/> applied. The caller adds
-		/// these to <paramref name="forcedBreaks"/> and probes again until the set is empty.</description></item>
-		/// </list>
-		/// </summary>
-		private static (
-				System.Collections.Generic.Dictionary<string, int> Pages,
-				System.Collections.Generic.HashSet<string> NewSplits)
-			DiscoverSectionPageNumbers(
-				VerificationReportModel model,
-				System.Collections.Generic.IReadOnlySet<string> forcedBreaks)
-		{
-			// Ground-truth pagination measurement.
-			//
-			// Telerik commits pages LAZILY while the RadFixedDocumentEditor is alive:
-			// doc.Pages.Count only counts fully committed pages and does not include the
-			// partially filled page currently being written. Reading it mid-write is
-			// therefore unreliable (a single later page break can flush several pages at
-			// once). The only trustworthy measurement is taken AFTER the editor is
-			// disposed, which commits every page including the last partial one.
-			//
-			// So we build the probe document, dispose the editor, then scan the finished
-			// pages: each section begins with a Heading(...) rendered as an uppercase bar,
-			// so we locate the first page whose text contains that heading. A section
-			// "spans multiple pages" when the next section's heading (or the end of the
-			// document for the last section) lands on a later page than where it started.
-			var doc = new RadFixedDocument();
-
-			// Ordered record of every section as it is written, with the exact heading
-			// text used to locate it in the finished document and whether it is guaranteed
-			// to start at the top of a fresh page (forced break or first body section).
-			var order = new System.Collections.Generic.List<(string Key, string Heading, bool StartsFresh)>();
-
-			using (var ed = new RadFixedDocumentEditor(doc))
-			{
-				ConfigureEditor(ed);
-
-				bool firstBodySection = true;
-
-				void Section(string key, string heading, System.Action write)
-				{
-					bool forced = forcedBreaks.Contains(key);
-					if (forced) ed.InsertPageBreak();
-
-					bool startsFresh = forced || firstBodySection;
-					firstBodySection = false;
-
-					order.Add((key, heading, startsFresh));
-					write();
-				}
-
-				WriteTitle(ed, model);
-
-				// Executive Dashboard is written with hard breaks on both sides, exactly
-				// as Build() does. It is intentionally outside Section() so it is never
-				// added to forcedBreaks and never contributes a spurious extra break in
-				// subsequent iterations that would misalign all following section pages.
-				ed.InsertPageBreak();
-				WriteExecutiveDashboard(ed, model);
-				WriteKeyFindings(ed, model);
-				ed.InsertPageBreak();
-
-                Section("1.  Session Overview",            "1. Session Overview",            () => WriteOverview(ed, model));
-                Section("2.  Applied Corrections",         "2. Applied Corrections",         () => WriteFinalResults(ed, model));
-                Section("3.  Axis Detail",                 "3. Axis Detail",                 () => WriteAxisSection(ed, model));
-
-                if (model.HasData)
-                    Section("4.  Correlation & Latency",   "4. Correlation and Latency",     () => WriteCorrelationAndLatency(ed, model));
-
-                Section("5.  Compliance Assessment",       "5. Compliance Assessment",       () => WriteCompliance(ed, model));
-                Section("6.  Scope & Objective",           "6. Scope and Objective",         () => WriteScope(ed, model));
-                Section("7.  Data Processing Methodology", "7. Data Processing Methodology", () => WriteMethodology(ed, model));
-                Section("8.  Equipment",                   "8. Equipment",                   () => WriteEquipment(ed, model));
-                Section("9.  Test Setup",                  "9. Test Setup",                  () => WriteTestSetup(ed, model));
-                Section("10. Test Conditions",             "10. Test Conditions",            () => WriteTestConditions(ed, model));
-                Section("11. Metric Definitions",          "11. Metric Definitions",         () => WriteGlossary(ed, model));
-                Section("12. Observations",                "12. Observations",               () => WriteObservations(ed, model));
-                Section("13. Appendices",                  "13. Appendices",                 () => WriteAppendices(ed, model));
-
-			} // dispose commits every page, including the final partial one
-
-			// Whitespace-stripped, case-sensitive text of every committed page. The
-			// heading bar is uppercase, so this never collides with mixed-case body text.
-			int totalPages = doc.Pages.Count;
-			var pageText = new string[totalPages];
-			for (int i = 0; i < totalPages; i++)
-				pageText[i] = GetPageText(doc.Pages[i]);
-
-			// 1-based start page (in this TOC-less probe document) for every section.
-			var pages     = new System.Collections.Generic.Dictionary<string, int>();
-			var newSplits = new System.Collections.Generic.HashSet<string>();
-
-			int FindHeadingPage(string heading, int fromPageIndex)
-			{
-				string needle = StripWhitespace(heading.ToUpperInvariant());
-				for (int i = System.Math.Max(0, fromPageIndex); i < totalPages; i++)
-					if (pageText[i].Contains(needle, System.StringComparison.Ordinal))
-						return i + 1; // 1-based
-
-				return -1;
-			}
-
-			// Locate each section's start page by scanning forward from the previous
-			// section's start (headings appear in document order).
-			int searchFrom = 0;
-			var startPages = new int[order.Count];
-			for (int s = 0; s < order.Count; s++)
-			{
-				int start = FindHeadingPage(order[s].Heading, searchFrom);
-				if (start < 0) start = searchFrom + 1; // defensive fallback
-				startPages[s] = start;
-				pages[order[s].Key] = start;
-				searchFrom = start - 1;
-			}
-
-            // A section genuinely spans multiple pages when its own content crosses a
-            // page boundary. For non-final sections, the next section's start page marks
-            // where this section ends. The final section instead ends on the document's
-            // actual last page.
-			//
-			// When the next section is force-broken we insert an explicit page break
-			// before it, which always advances to a fresh page. That means the forced
-			// break itself "consumes" one page transition, and this section's content
-			// actually ends on the page BEFORE the break: (nextStart - 1). A genuine
-			// split is therefore (nextStart - 1) > start, i.e. nextStart > start + 1.
-			//
-			// When the next section is NOT force-broken, both sections share a page or
-			// the next starts on the very next page. A split is simply nextStart > start.
-			//
-			// This avoids the cascade where suppressing the boundary entirely (the
-			// previous approach) masked genuine overflows of this section.
-			for (int s = 0; s < order.Count; s++)
-			{
-				int start     = startPages[s];
-                int nextStart = (s + 1 < order.Count) ? startPages[s + 1] : totalPages;
-
-                bool hasNextSection     = s + 1 < order.Count;
-                bool nextForceBroken    = hasNextSection && forcedBreaks.Contains(order[s + 1].Key);
-                int  sectionEnd         = hasNextSection
-                    ? (nextForceBroken ? nextStart - 1 : nextStart)
-                    : totalPages;
-				bool spansMultiplePages = sectionEnd > start;
-
-				// Only force a break for sections that start mid-page (i.e. not already
-				// fresh) and genuinely overflow. Fresh-starting sections are excluded so
-				// the fixpoint set only ever grows and the loop terminates.
-				if (!order[s].StartsFresh && spansMultiplePages)
-					newSplits.Add(order[s].Key);
-			}
-
-			return (pages, newSplits);
-		}
-
-		/// <summary>Concatenates all text on a committed page with whitespace removed.</summary>
-		private static string GetPageText(RadFixedPage page)
-		{
-			var sb = new System.Text.StringBuilder();
-			foreach (var element in page.Content)
-				if (element is Telerik.Windows.Documents.Fixed.Model.Text.TextFragment fragment)
-					sb.Append(fragment.Text);
-
-			return StripWhitespace(sb.ToString());
-		}
-
-		private static string StripWhitespace(string value)
-		{
-			var sb = new System.Text.StringBuilder(value.Length);
-			foreach (char c in value)
-				if (!char.IsWhiteSpace(c))
-					sb.Append(c);
-
-			return sb.ToString();
-		}
-
-		/// <summary>
-		/// Post-processes every page of the built document to:
-		/// <list type="bullet">
-		///   <item>Stamp the SES Energy header strip (teal band, from Doc-template) at the top.</item>
-		///   <item>Stamp the SES Energy footer strip (teal band) at the bottom.</item>
-		///   <item>Draw a centred page number ("— N —") over the footer strip.</item>
-		/// </list>
-		/// Called after the flow editor has been disposed so all pages are committed.
-		/// </summary>
-		private static void AddPageFooters(RadFixedDocument document)
-		{
-            const string HeaderTitleText = "MRU Verification Report";
-			// Pre-create Telerik image sources once; null-safe when resources are absent (test host).
-			TelerikImageSource? backgroundImage = null;
-			TelerikImageSource? headerImage     = null;
-			TelerikImageSource? footerImage     = null;
-
-			if (_sesBackgroundPng != null)
-				using (var ms = new MemoryStream(_sesBackgroundPng))
-					backgroundImage = new TelerikImageSource(ms);
-
-			if (_sesHeaderPng != null)
-				using (var ms = new MemoryStream(_sesHeaderPng))
-					headerImage = new TelerikImageSource(ms);
-
-			if (_sesFooterPng != null)
-				using (var ms = new MemoryStream(_sesFooterPng))
-					footerImage = new TelerikImageSource(ms);
-
-			// Header strip pixel size: 1240 × 145 px (A4 @ 150 DPI). Displayed at full page
-			// width; height is proportional: 145 / 1754 × 1122 ≈ 93 DIP.
-			const double HeaderH = 93.0;
-			// Footer strip pixel size: 1240 × 110 px. Height: 110 / 1754 × 1122 ≈ 70 DIP.
-			const double FooterH = 70.0;
-
-			int total = document.Pages.Count;
-			for (int i = 0; i < total; i++)
-			{
-				var page = document.Pages[i];
-				double pageW = page.Size.Width;
-				double pageH = page.Size.Height;
-
-				// FixedContentEditor uses the same top-left, Y-downward coordinate system as the
-				// flow editor (confirmed by the original page-number placement at y = pageH - 28).
-				// Each draw operation gets its own fresh editor so Position.Translate always
-					// starts from (0, 0) and is not compounded by previous draws.
-
-					// --- Full-page background watermark (drawn first, behind everything) ---
-					if (backgroundImage != null)
-					{
-						var fceB = new FixedContentEditor(page);
-						fceB.Position.Translate(0, 0);
-						fceB.DrawImage(backgroundImage, new Size(pageW, pageH));
-					}
-
-					// --- Header strip: top of page → y = 0 ---
-					if (headerImage != null)
-					{
-						var fceH = new FixedContentEditor(page);
-						fceH.Position.Translate(0, 0);
-						fceH.DrawImage(headerImage, new Size(pageW, HeaderH));
-					}
-
-                    // --- Report title inside the repeated page header area ---
-                    {
-                        const double headerTitleWidth = 260;
-                        const double headerTitleHeight = 20;
-                        const double headerTitleLeftMargin = 56;
-                        double headerTitleTop = (HeaderH - headerTitleHeight) / 2.0;
-
-                        var fceT = new FixedContentEditor(page);
-                        fceT.Position.Translate(headerTitleLeftMargin, headerTitleTop);
-
-                        var headerBlock = new Block();
-                        headerBlock.HorizontalAlignment = Telerik.Windows.Documents.Fixed.Model.Editing.Flow.HorizontalAlignment.Left;
-                        headerBlock.TextProperties.Font = _robotoBold;
-                        headerBlock.TextProperties.FontSize = 15;
-                        headerBlock.GraphicProperties.FillColor = ColorHeading;
-                        headerBlock.InsertText(HeaderTitleText);
-                        fceT.DrawBlock(headerBlock, new Size(headerTitleWidth, headerTitleHeight));
-                    }
-
-					// --- Footer strip: bottom of page → y = pageH - FooterH ---
-					if (footerImage != null)
-					{
-						var fceF = new FixedContentEditor(page);
-						fceF.Position.Translate(0, pageH - FooterH);
-						fceF.DrawImage(footerImage, new Size(pageW, FooterH));
-					}
-
-					// --- Page number centred vertically inside the footer strip ---
-					{
-						double cx = pageW / 2.0;
-						double py = pageH - FooterH + (FooterH - 12) / 2.0; // mid of footer strip
-
-						var fceP = new FixedContentEditor(page);
-						fceP.Position.Translate(cx - 24, py);
-
-						var block = new Block();
-						block.HorizontalAlignment         = Telerik.Windows.Documents.Fixed.Model.Editing.Flow.HorizontalAlignment.Center;
-						block.TextProperties.Font         = _robotoRegular;
-						block.TextProperties.FontSize     = 8;
-						block.GraphicProperties.FillColor = new RgbColor(0x1A, 0x27, 0x32); // dark on teal
-						block.InsertText($"\u2014 {i + 1} \u2014");
-						fceP.DrawBlock(block, new Size(48, 12));
-					}
-					}
-				}
-
-
-
-		/// <summary>
-		/// Table of Contents page — lists all report sections with dotted leader lines.
-		/// Inserted immediately after the cover page so readers can navigate the document.
-		/// </summary>
-		private static void WriteTableOfContents(
-			RadFixedDocumentEditor editor,
-			VerificationReportModel model,
-			System.Collections.Generic.Dictionary<string, int> pageNumbers)
-		{
-			// InsertPageBreak is called by Build() before this method.
-			Heading(editor, "Table of Contents");
-
-			var entries = new (string title, string key)[]
-			{
-				("Executive Dashboard",             "Executive Dashboard"),
-				("1.  Session Overview",            "1.  Session Overview"),
-				("2.  Applied Corrections",         "2.  Applied Corrections"),
-                ("3.  Axis Detail",                 "3.  Axis Detail"),
-                ("4.  Correlation & Latency",       "4.  Correlation & Latency"),
-                ("5.  Compliance Assessment",       "5.  Compliance Assessment"),
-                ("6.  Scope & Objective",           "6.  Scope & Objective"),
-                ("7.  Data Processing Methodology", "7.  Data Processing Methodology"),
-                ("8.  Equipment",                   "8.  Equipment"),
-                ("9.  Test Setup",                  "9.  Test Setup"),
-                ("10. Test Conditions",             "10. Test Conditions"),
-                ("11. Metric Definitions",          "11. Metric Definitions"),
-                ("12. Observations",                "12. Observations"),
-                ("13. Appendices",                  "13. Appendices"),
-			};
-
-			const double tocWidth = 681;
-			const double labelCol = 590;
-			const double numCol   = tocWidth - labelCol;
-
-			var tocTable = new Table { Borders = new TableBorders(new Border(0, ColorBorder)) };
-			tocTable.DefaultCellProperties.Padding = new Thickness(6, 4, 6, 4);
-
-			int rowIdx = 0;
-			foreach (var (title, key) in entries)
-			{
-				bool isAlt = (rowIdx % 2) == 1;
-				TableRow row = tocTable.Rows.AddTableRow();
-
-				// Section title cell
-				TableCell titleCell = row.Cells.AddTableCell();
-				titleCell.PreferredWidth = labelCol;
-				if (isAlt) titleCell.Background = ColorRowAlt;
-				Block titleBlock = titleCell.Blocks.AddBlock();
-				titleBlock.SpacingBefore = 0;
-				titleBlock.SpacingAfter  = 0;
-				titleBlock.TextProperties.Font     = _robotoBold;
-				titleBlock.TextProperties.FontSize = 10.5;
-				titleBlock.GraphicProperties.FillColor = ColorHeading;
-				titleBlock.InsertText(title);
-
-				// Page number cell (right-aligned)
-				TableCell numCell = row.Cells.AddTableCell();
-				numCell.PreferredWidth = numCol;
-				if (isAlt) numCell.Background = ColorRowAlt;
-				Block numBlock = numCell.Blocks.AddBlock();
-				numBlock.SpacingBefore = 0;
-				numBlock.SpacingAfter  = 0;
-				numBlock.HorizontalAlignment = Telerik.Windows.Documents.Fixed.Model.Editing.Flow.HorizontalAlignment.Right;
-				numBlock.TextProperties.Font     = _robotoRegular;
-				numBlock.TextProperties.FontSize = 10.5;
-				numBlock.GraphicProperties.FillColor = ColorText;
-				string pageStr = (pageNumbers != null && pageNumbers.TryGetValue(key, out int pg))
-					? pg.ToString(Ci) : "\u2014";
-				numBlock.InsertText(pageStr);
-
-				rowIdx++;
-			}
-
-			editor.ParagraphProperties.SpacingAfter = 6;
-			editor.InsertTable(tocTable);
-
-			Paragraph(editor,
-                "This report is structured results-first. Executive findings, corrections, axis-level detail, " +
-                "correlation and compliance appear before the descriptive setup sections. Scope, methodology, " +
-                "equipment, test setup, test conditions and appendices follow in sections 6\u201313.",
-				9.5, ColorMuted, spacingBefore: 10, spacingAfter: 6);
-		}
-
-private static void WriteTitle(RadFixedDocumentEditor editor, VerificationReportModel model)
-		{
-			// Logo: left-aligned, compact, above the full-page cover panel
-			if (model.LogoPng != null)
-
-			{
-				const int logoW = 220;
-				const int logoH = 51; // 220 / 4.284 aspect (SES Energy logo 497x116)
-				using (var ms = new MemoryStream(model.LogoPng))
-				{
-					var logoImage = new TelerikImageSource(ms);
-					editor.ParagraphProperties.SpacingBefore    = 0;
-					editor.ParagraphProperties.SpacingAfter     = 12;
-					editor.ParagraphProperties.HorizontalAlignment = Telerik.Windows.Documents.Fixed.Model.Editing.Flow.HorizontalAlignment.Left;
-					editor.InsertParagraph();
-					editor.InsertImageInline(logoImage, new Size(logoW, logoH));
-				}
-				editor.ParagraphProperties.HorizontalAlignment = Telerik.Windows.Documents.Fixed.Model.Editing.Flow.HorizontalAlignment.Left;
-			}
-
-			// Premium full-page SES cover panel (900x760 GDI -> 681x575 in PDF)
-			if (model.CoverBannerPng != null)
-			{
-				editor.ParagraphProperties.SpacingBefore = 0;
-				editor.ParagraphProperties.SpacingAfter  = 0;
-				InsertImage(editor, model.CoverBannerPng, 681, 575);
-			}
-			else
-			{
-				SetText(editor, _robotoBold, 22, ColorHeading);
-				editor.ParagraphProperties.SpacingAfter = 2;
-				editor.InsertParagraph();
-				editor.InsertRun("MOTION REFERENCE UNIT VERIFICATION REPORT");
-
-				SetText(editor, _robotoRegular, 12, ColorMuted);
-				editor.ParagraphProperties.SpacingAfter = 12;
-				editor.InsertParagraph();
-				editor.InsertRun(model.ProjectName);
-				TealRule(editor);
-
-				var rows = new List<KeyValuePair<string, string>>
-				{
-					new KeyValuePair<string, string>("Project / reference",    Dash(model.ProjectName)),
-					new KeyValuePair<string, string>("Vessel",                 Dash(model.VesselName)),
-					new KeyValuePair<string, string>("Operator / surveyor",    Dash(model.Operator)),
-					new KeyValuePair<string, string>("Location",               Dash(model.Location)),
-					new KeyValuePair<string, string>("Capture start",          Dash(model.StartTime)),
-					new KeyValuePair<string, string>("Capture end",            Dash(model.EndTime)),
-					new KeyValuePair<string, string>("Duration",               Dash(model.Duration)),
-					new KeyValuePair<string, string>("Report generated (UTC)", model.GeneratedUtc.ToString("yyyy-MM-dd HH:mm", Ci)),
-				};
-				InsertKeyValueTable(editor, rows);
-			}
-		}
-
-
-        /// <summary>
-        /// Page 2: 2×3 KPI dashboard panel — six large-number cards for instant status read.
-        /// </summary>
-        private static void WriteExecutiveDashboard(RadFixedDocumentEditor editor, VerificationReportModel model)
+        private static void WriteCover(ReportCanvas canvas, VerificationReportModel model)
         {
-            Heading(editor, "Executive Dashboard");
-            Introduction(editor,
-                "Summary of verification outcome, correction status and key data-quality indicators for a rapid executive review.");
+            canvas.StartPage();
 
-            if (model.ExecutiveDashboardPng != null)
-            {
-                editor.ParagraphProperties.SpacingAfter = 8;
-                // Dashboard image: 900×220 GDI → 681×166 PDF
-                InsertImage(editor, model.ExecutiveDashboardPng, 681, 317);
-            }
+            if (model.LogoPng != null)
+                canvas.DrawImage(model.LogoPng, 180, 42);
 
-            if (!model.HasData)
+            if (model.CoverBannerPng != null)
             {
-                Paragraph(editor,
-                    "No measurement data was captured. Acquire reference and vessel motion data, then re-generate.",
-                    10.5, ColorMuted, spacingAfter: 6);
-            }
-        }
-
-        /// <summary>
-        /// "Key Findings" executive call-outs — a scannable checklist of the outcome,
-        /// placed up front so a reader grasps the result in seconds. Each line is built
-        /// from the same measured values used elsewhere in the report (no new numbers).
-        /// </summary>
-        private static void WriteKeyFindings(RadFixedDocumentEditor editor, VerificationReportModel model)
-        {
-            if (!model.HasData)
-            {
-                Paragraph(editor,
-                    "No measurement data was captured, so no findings are available.",
-                    10.5, ColorMuted, spacingAfter: 6);
+                canvas.DrawImage(model.CoverBannerPng, ReportCanvas.ContentWidth, 490);
                 return;
             }
 
-            var findings = new List<string>
+            canvas.DrawHeading("MOTION REFERENCE UNIT", 22);
+            canvas.DrawHeading("VERIFICATION REPORT", 22);
+            canvas.DrawParagraph(Dash(model.ProjectName), 13, bold: true, color: ColorMuted);
+            canvas.DrawKeyValues(new[]
             {
-                "Verification completed successfully."
-            };
+                Pair("Vessel", model.VesselName),
+                Pair("Operator / surveyor", model.Operator),
+                Pair("Location", model.Location),
+                Pair("Capture start", model.StartTime),
+                Pair("Capture end", model.EndTime),
+                Pair("Duration", model.Duration),
+                Pair("Report generated (UTC)", model.GeneratedUtc.ToString("yyyy-MM-dd HH:mm", Ci)),
+            });
+        }
 
-            if (model.HasCorrectionApplied)
-                findings.Add("Recommended corrections applied.");
-            else
-                findings.Add("Recommended corrections are ready to apply to the vessel unit.");
+        private static void WriteExecutiveDashboard(ReportCanvas canvas, VerificationReportModel model)
+        {
+            canvas.StartPage();
+            canvas.DrawHeading("Executive Dashboard");
+            canvas.DrawParagraph(
+                "Summary of verification outcome, correction status and key data-quality indicators for a rapid executive review.",
+                10, color: ColorMuted);
 
-            if (model.SampleCount > 0)
-                findings.Add(string.Format(Ci, "{0:N0} samples collected.", model.SampleCount));
+            canvas.DrawImage(model.ExecutiveDashboardPng, ReportCanvas.ContentWidth, 270);
+            if (!model.HasData)
+            {
+                canvas.DrawParagraph(
+                    "No measurement data was captured. Acquire reference and vessel motion data, then regenerate this report.");
+                return;
+            }
 
-            if (!string.IsNullOrWhiteSpace(model.Duration) &&
-                TimeSpan.TryParse(model.Duration, out TimeSpan captureSpan))
-                findings.Add(string.Format(Ci, "{0:F1} minute capture duration.", captureSpan.TotalMinutes));
+            canvas.DrawSubheading("Key findings");
+            canvas.DrawBullet("Verification completed successfully.");
+            canvas.DrawBullet(model.HasCorrectionApplied
+                ? "Recommended corrections have been applied."
+                : "Recommended corrections are ready to apply to the vessel unit.");
+            canvas.DrawBullet(string.Format(Ci, "{0:N0} samples collected.", model.SampleCount));
+            if (TimeSpan.TryParse(model.Duration, out TimeSpan duration))
+                canvas.DrawBullet(string.Format(Ci, "{0:F1} minute capture duration.", duration.TotalMinutes));
 
             double worstOutlier = model.WorstOutlierPercent;
             if (!double.IsNaN(worstOutlier))
-            {
-                if (worstOutlier <= VerificationAssessment.OutlierAcceptablePercent)
-                    findings.Add("Data quality exceeded target thresholds.");
-                else
-                    findings.Add(string.Format(Ci, "Maximum outlier rate {0:F1} %.", worstOutlier));
-            }
-
-            // Per-axis correction values
-            void AddCorrectionFinding(VerificationAxisKind axis, string axisLabel)
-            {
-                double corr = model.RecommendedCorrection(axis);
-                if (!double.IsNaN(corr))
-                {
-                    string unit   = model.Unit(axis);
-                    string status = model.HasCorrectionApplied ? "applied" : "recommended";
-                    findings.Add(string.Format(Ci, "{0} correction {1}: {2:+0.000;-0.000;0.000} {3}",
-                        axisLabel, status, corr, unit));
-                }
-            }
-            AddCorrectionFinding(VerificationAxisKind.Pitch, "Pitch");
-            AddCorrectionFinding(VerificationAxisKind.Roll,  "Roll");
-            AddCorrectionFinding(VerificationAxisKind.Heave, "Heave");
-
-            var table = new Table { Borders = new TableBorders(new Border(0, ColorBorder)) };
-            table.DefaultCellProperties.Padding = new Thickness(0);
-
-            foreach (string finding in findings)
-            {
-                TableRow row = table.Rows.AddTableRow();
-
-                // Narrow green status marker cell (the "✅" indicator).
-                TableCell marker = row.Cells.AddTableCell();
-                marker.PreferredWidth = 22;
-                marker.Background     = ColorAccent;
-                marker.Padding        = new Thickness(0, 5, 0, 5);
-                Block markerBlock = marker.Blocks.AddBlock();
-                markerBlock.HorizontalAlignment = Telerik.Windows.Documents.Fixed.Model.Editing.Flow.HorizontalAlignment.Center;
-                markerBlock.TextProperties.Font       = _robotoBold;
-                markerBlock.TextProperties.FontSize   = 11;
-                markerBlock.GraphicProperties.FillColor = ColorTableHeaderText;
-                markerBlock.InsertText("\u2713");
-
-                TableCell textCell = row.Cells.AddTableCell();
-                textCell.PreferredWidth = 659;
-                textCell.Padding        = new Thickness(10, 5, 10, 5);
-                Block textBlock = textCell.Blocks.AddBlock();
-                textBlock.TextProperties.Font       = _robotoRegular;
-                textBlock.TextProperties.FontSize   = 10.5;
-                textBlock.GraphicProperties.FillColor = ColorText;
-                textBlock.InsertText(finding);
-            }
-
-            editor.ParagraphProperties.SpacingAfter = 6;
-            editor.InsertTable(table);
+                canvas.DrawBullet(worstOutlier <= VerificationAssessment.OutlierAcceptablePercent
+                    ? "Data quality met the recommended outlier target."
+                    : string.Format(Ci, "Maximum outlier rate: {0:F1}%.", worstOutlier));
         }
 
-        private static void WriteScope(RadFixedDocumentEditor editor, VerificationReportModel model)
+        private static void WriteOverview(ReportCanvas canvas, VerificationReportModel model)
         {
-            Heading(editor, "6. Scope and Objective");
-            Introduction(editor,
-                "Verification scope, intended outcome and applicable references defining the purpose and boundaries of this report.");
-
-            MruReportMetadata m = model.Metadata;
-            Paragraph(editor,
-                string.IsNullOrWhiteSpace(m?.TestObjective)
-                    ? "Verification of the vessel-installed MRU against a calibrated reference unit. " +
-                      "Corrections for pitch, roll, and heave are determined and applied."
-                    : m.TestObjective,
-                11, ColorText, spacingAfter: 8);
-
-            if (!string.IsNullOrWhiteSpace(m?.ApplicableStandards))
+            canvas.DrawImage(model.SessionOverviewPng, ReportCanvas.ContentWidth, 175);
+            canvas.DrawKeyValues(new[]
             {
-                Paragraph(editor, "Applicable standards and references", 11, ColorHeading, spacingBefore: 4, spacingAfter: 2, bold: true);
-                Paragraph(editor, m.ApplicableStandards, 10.5, ColorText, spacingAfter: 6);
-            }
-        }
-
-        private static void WriteEquipment(RadFixedDocumentEditor editor, VerificationReportModel model)
-        {
-            Heading(editor, "8. Equipment");
-            Introduction(editor,
-                "Equipment used for the verification, including the vessel-installed MRU, the reference unit and any supporting hardware.");
-
-            MruReportMetadata m = model.Metadata ?? new MruReportMetadata();
-
-            Paragraph(editor, "MRU under test (vessel-installed)", 12, ColorHeading, spacingBefore: 2, spacingAfter: 4, bold: true);
-            InsertKeyValueTable(editor, new List<KeyValuePair<string, string>>
-            {
-                new KeyValuePair<string, string>("Manufacturer", Dash(m.DutManufacturer)),
-                new KeyValuePair<string, string>("Model", Dash(m.DutModel)),
-                new KeyValuePair<string, string>("Serial number", Dash(m.DutSerialNumber)),
+                Pair("Project / reference", model.ProjectName),
+                Pair("Vessel", model.VesselName),
+                Pair("Operator", model.Operator),
+                Pair("Location", model.Location),
+                Pair("Sensor setup", model.InputSetup),
+                Pair("Capture start", model.StartTime),
+                Pair("Capture end", model.EndTime),
+                Pair("Duration", model.Duration),
+                Pair("Samples averaged", model.SampleCount.ToString("N0", Ci)),
+                Pair("Correction", model.HasCorrectionApplied
+                    ? "Applied" + (string.IsNullOrWhiteSpace(model.CorrectionAppliedAt) ? "" : " (" + model.CorrectionAppliedAt + ")")
+                    : "Not yet applied"),
             });
-
-            Paragraph(editor, "Reference MRU", 12, ColorHeading, spacingBefore: 10, spacingAfter: 4, bold: true);
-            InsertKeyValueTable(editor, new List<KeyValuePair<string, string>>
-            {
-                new KeyValuePair<string, string>("Manufacturer", Dash(m.ReferenceManufacturer)),
-                new KeyValuePair<string, string>("Model", Dash(m.ReferenceModel)),
-            });
-
-            Paragraph(editor, "LiDAR", 12, ColorHeading, spacingBefore: 10, spacingAfter: 4, bold: true);
-            InsertKeyValueTable(editor, new List<KeyValuePair<string, string>>
-            {
-                new KeyValuePair<string, string>("Manufacturer", Dash(m.LidarManufacturer)),
-                new KeyValuePair<string, string>("Model", Dash(m.LidarModel)),
-            });
-
-            if (!string.IsNullOrWhiteSpace(m.AdditionalEquipment))
-            {
-                Paragraph(editor, "Additional equipment", 11, ColorHeading, spacingBefore: 10, spacingAfter: 2, bold: true);
-                Paragraph(editor, m.AdditionalEquipment, 10.5, ColorText, spacingAfter: 6);
-            }
-        }
-
-        private static void WriteTestSetup(RadFixedDocumentEditor editor, VerificationReportModel model)
-        {
-            Heading(editor, "9. Test Setup");
-            Introduction(editor,
-                "Installation arrangement, sensor geometry, synchronization approach and data acquisition settings used during the verification capture.");
-
-            MruReportMetadata m = model.Metadata ?? new MruReportMetadata();
-
-            InsertKeyValueTable(editor, new List<KeyValuePair<string, string>>
-            {
-                new KeyValuePair<string, string>("Vessel MRU installation location", Dash(m.DutInstallationLocation)),
-                new KeyValuePair<string, string>("Reference MRU installation location", Dash(m.ReferenceInstallationLocation)),
-                new KeyValuePair<string, string>("Mounting arrangement", Dash(m.MountingArrangement)),
-                new KeyValuePair<string, string>("Coordinate system", Dash(m.CoordinateSystem)),
-                new KeyValuePair<string, string>("Sensor separation", Dash(m.SensorSeparation)),
-                new KeyValuePair<string, string>("Data acquisition method", Dash(m.DataAcquisitionMethod)),
-                new KeyValuePair<string, string>("Synchronization method", Dash(m.SynchronizationMethod)),
-                new KeyValuePair<string, string>("Sample rate", m.SampleRateHz.HasValue
-                    ? string.Format(Ci, "{0:0.###} Hz", m.SampleRateHz.Value) : "-"),
-                new KeyValuePair<string, string>("Logging configuration", Dash(m.LoggingConfiguration)),
-                new KeyValuePair<string, string>("Sensor setup (logged)", string.IsNullOrWhiteSpace(model.InputSetup) ? "-" : model.InputSetup),
-            });
-        }
-
-        private static void WriteTestConditions(RadFixedDocumentEditor editor, VerificationReportModel model)
-        {
-            Heading(editor, "10. Test Conditions");
-            Introduction(editor,
-                "Environmental and operational conditions recorded during the verification to provide context for the measured vessel and reference responses.");
-
-            MruReportMetadata m = model.Metadata ?? new MruReportMetadata();
-
-            InsertKeyValueTable(editor, new List<KeyValuePair<string, string>>
-            {
-                new KeyValuePair<string, string>("Loading condition", Dash(m.LoadingCondition)),
-                new KeyValuePair<string, string>("Vessel speed", Dash(m.VesselSpeed)),
-                new KeyValuePair<string, string>("Operational mode", Dash(m.OperationalMode)),
-                new KeyValuePair<string, string>("Sea state", Dash(m.SeaState)),
-                new KeyValuePair<string, string>("Wind conditions", Dash(m.WindConditions)),
-                new KeyValuePair<string, string>("Wave conditions", Dash(m.WaveConditions)),
-                new KeyValuePair<string, string>("Current conditions", Dash(m.CurrentConditions)),
-            });
-
-            if (!string.IsNullOrWhiteSpace(m.EnvironmentalNotes))
-            {
-                Paragraph(editor, "Environmental notes", 11, ColorHeading, spacingBefore: 10, spacingAfter: 2, bold: true);
-                Paragraph(editor, m.EnvironmentalNotes, 10.5, ColorText, spacingAfter: 6);
-            }
-        }
-
-        private static void WriteMethodology(RadFixedDocumentEditor editor, VerificationReportModel model)
-        {
-            Heading(editor, "7. Data Processing Methodology");
-            Introduction(editor,
-                "Summary of synchronization, filtering, statistical treatment and comparison methods used to derive the reported verification metrics.");
-
-            Paragraph(editor,
-                "Reference and vessel channels are time-aligned sample-by-sample. " +
-                "Per-sample deviation (vessel minus reference) is computed on each axis; " +
-                "the mean deviation is the recommended correction. " +
-                "Agreement is quantified by Pearson correlation; timing offset by cross-correlation.",
-                10.5, ColorText, spacingAfter: 6);
-
-            MruReportMetadata m = model.Metadata;
-            if (!string.IsNullOrWhiteSpace(m?.TimeSynchronizationNotes))
-            {
-                Paragraph(editor, "Time synchronization", 11, ColorHeading, spacingBefore: 4, spacingAfter: 2, bold: true);
-                Paragraph(editor, m.TimeSynchronizationNotes, 10.5, ColorText, spacingAfter: 6);
-            }
-            if (!string.IsNullOrWhiteSpace(m?.FilteringNotes))
-            {
-                Paragraph(editor, "Filtering", 11, ColorHeading, spacingBefore: 4, spacingAfter: 2, bold: true);
-                Paragraph(editor, m.FilteringNotes, 10.5, ColorText, spacingAfter: 6);
-            }
-            if (!string.IsNullOrWhiteSpace(m?.DataProcessingNotes))
-            {
-                Paragraph(editor, "Additional processing notes", 11, ColorHeading, spacingBefore: 4, spacingAfter: 2, bold: true);
-                Paragraph(editor, m.DataProcessingNotes, 10.5, ColorText, spacingAfter: 6);
-            }
-        }
-
-        private static void WriteOverview(RadFixedDocumentEditor editor, VerificationReportModel model)
-        {
-            Heading(editor, "1. Session Overview");
-            Introduction(editor,
-                "Overview of the verification session, capture timing, operator details, data volume and current correction status.");
-
-            // Visual session info cards (900x180 GDI -> 681x136 PDF)
-			if (model.SessionOverviewPng != null)
-			{
-				editor.ParagraphProperties.SpacingAfter = 10;
-				InsertImage(editor, model.SessionOverviewPng, 681, 166);
-			}
-
-            var rows = new List<KeyValuePair<string, string>>
-            {
-                new KeyValuePair<string, string>("Location",         Dash(model.Location)),
-				new KeyValuePair<string, string>("Sensor setup",     string.IsNullOrWhiteSpace(model.InputSetup) ? "\u2014" : model.InputSetup),
-				new KeyValuePair<string, string>("Duration",         Dash(model.Duration)),
-				new KeyValuePair<string, string>("Samples averaged", model.SampleCount.ToString("N0", Ci)),
-				new KeyValuePair<string, string>("Correction",       model.HasCorrectionApplied
-					? "Applied" + (string.IsNullOrWhiteSpace(model.CorrectionAppliedAt) ? string.Empty : " (" + model.CorrectionAppliedAt + ")")
-					: "Not yet applied"),
-            };
-            InsertKeyValueTable(editor, rows);
 
             if (!string.IsNullOrWhiteSpace(model.Comments))
             {
-                Paragraph(editor, "Notes", 11, ColorHeading, spacingBefore: 10, spacingAfter: 2, bold: true);
-                Paragraph(editor, model.Comments, 10.5, ColorText, spacingAfter: 8);
+                canvas.DrawSubheading("Notes");
+                canvas.DrawParagraph(model.Comments);
             }
         }
 
-		private static void WriteFinalResults(RadFixedDocumentEditor editor, VerificationReportModel model)
-		{
-			Heading(editor, "2. Applied Corrections");
-            Introduction(editor,
-                "Recommended and applied corrections for pitch, roll and heave, together with their implementation status across the vessel unit.");
-
-			// Hero correction cards (900×280 GDI → 681×212 PDF)
-			if (model.CorrectionCardsPng != null)
-			{
-				editor.ParagraphProperties.SpacingAfter = 12;
-				InsertImage(editor, model.CorrectionCardsPng, 681, 317);
-			}
-			else
-			{
-				// PDF-native correction cards when pre-rendered image is unavailable
-				InsertCorrectionCardsNative(editor, model);
-			}
-
-			// Bullet charts panel
-			if (model.BulletChartsPng != null)
-			{
-				editor.ParagraphProperties.SpacingAfter = 10;
-				InsertImage(editor, model.BulletChartsPng, 681, 158);
-			}
-
-			// Supporting corrections table
-			var table = NewTable();
-			AddHeaderRow(table, "Axis", "Recommended", "Applied", "Status");
-
-			int index = 0;
-			foreach (VerificationAxisKind axis in AllAxes())
-			{
-				string unit        = model.Unit(axis);
-				double recommended = model.RecommendedCorrection(axis);
-				double applied     = model.AppliedCorrection(axis);
-				string status      = model.HasCorrectionApplied
-					? (Math.Abs(applied - recommended) < 1e-6 ? "Applied as recommended" : "Applied (adjusted)")
-					: "Pending";
-
-				AddBodyRow(table, index++,
-					model.AxisTitle(axis),
-					Format(recommended, unit),
-					model.HasCorrectionApplied ? Format(applied, unit) : "—",
-					status);
-			}
-
-			editor.InsertTable(table);
-		}
-
-        private static void WriteCharts(RadFixedDocumentEditor editor, VerificationReportModel model)
+        private static void WriteCorrections(ReportCanvas canvas, VerificationReportModel model)
         {
-            if (model.DeviationChartPng == null && model.MeansChartPng == null)
-                return;
+            canvas.DrawImage(model.CorrectionCardsPng, ReportCanvas.ContentWidth, 260);
+            canvas.DrawImage(model.BulletChartsPng, ReportCanvas.ContentWidth, 155);
 
-            if (model.DeviationChartPng != null)
-            {
-                Paragraph(editor, "Calculated deviation per axis (vessel unit vs. reference):",
-                    10, ColorMuted, spacingAfter: 4);
-                InsertImage(editor, model.DeviationChartPng, 681, 270);
-            }
-
-            if (model.MeansChartPng != null)
-            {
-                Paragraph(editor, "Reference vs. vessel mean per axis:",
-                    10, ColorMuted, spacingBefore: 10, spacingAfter: 4);
-                InsertImage(editor, model.MeansChartPng, 681, 315);
-            }
-        }
-
-        private static void WriteAxisDetails(RadFixedDocumentEditor editor, VerificationReportModel model)
-        {
-            bool firstAxis = true;
+            var rows = new List<string[]>();
             foreach (VerificationAxisKind axis in AllAxes())
             {
-                // Generous whitespace + teal rule clearly separates each axis section
-                if (!firstAxis)
+                double recommended = model.RecommendedCorrection(axis);
+                double applied = model.AppliedCorrection(axis);
+                string status = model.HasCorrectionApplied
+                    ? (Math.Abs(applied - recommended) < 1e-6 ? "Applied as recommended" : "Applied (adjusted)")
+                    : "Pending";
+                rows.Add(new[]
                 {
-                    SetText(editor, _robotoRegular, 4, ColorBorder);
-                    editor.ParagraphProperties.SpacingBefore = 24;
-                    editor.ParagraphProperties.SpacingAfter  = 0;
-                    editor.InsertParagraph();
-                    editor.InsertRun(" ");
-                    TealRule(editor);
-                    SetText(editor, _robotoRegular, 4, ColorBorder);
-                    editor.ParagraphProperties.SpacingBefore = 10;
-                    editor.ParagraphProperties.SpacingAfter  = 0;
-                    editor.InsertParagraph();
-                    editor.InsertRun(" ");
-                }
-                firstAxis = false;
+                    model.AxisTitle(axis),
+                    Format(recommended, model.Unit(axis)),
+                    model.HasCorrectionApplied ? Format(applied, model.Unit(axis)) : "-",
+                    status,
+                });
+            }
+
+            canvas.DrawTable(
+                new[] { "Axis", "Recommended", "Applied", "Status" },
+                rows,
+                new[] { 1.0, 1.2, 1.0, 1.6 });
+        }
+
+        private static void WriteAxisDetails(ReportCanvas canvas, VerificationReportModel model)
+        {
+            canvas.DrawImage(model.DeviationChartPng, ReportCanvas.ContentWidth, 245);
+            canvas.DrawImage(model.MeansChartPng, ReportCanvas.ContentWidth, 245);
+
+            foreach (VerificationAxisKind axis in AllAxes())
+            {
+                canvas.EnsureSpace(90);
+                canvas.DrawSubheading(model.AxisTitle(axis).ToUpperInvariant());
+                canvas.DrawImage(model.AxisSummaryPng(axis), ReportCanvas.ContentWidth, 170);
 
                 AxisStatistics reference = model.RefStats(axis);
-                AxisStatistics test      = model.TestStats(axis);
-                AxisStatistics dev       = model.DevStats(axis);
-                string         unit      = model.Unit(axis);
-
-                // ── Axis Summary Panel — answer-first card before the detailed table ──
-                VerificationStatus axisStatus = VerificationAssessment.Classify(axis, reference, test, dev);
-                InsertAxisSummaryCard(editor, model.AxisTitle(axis), axisStatus,
-                    model.RecommendedCorrection(axis), model.AppliedCorrection(axis), model.HasCorrectionApplied, unit, dev);
-
-                // Increase the gap so the detail table reads as a separate block under the summary card.
-                editor.ParagraphProperties.SpacingBefore = 16;
-                editor.ParagraphProperties.SpacingAfter  = 8;
-
-                var table = NewTable();
-                AddHeaderRow(table, "Metric", "Reference", "Vessel", "Deviation");
-                AddBodyRow(table, 0, "Mean", Stat(reference?.Mean, unit), Stat(test?.Mean, unit), Stat(dev?.Mean, unit));
-                AddBodyRow(table, 1, "Std. dev (sigma)", Stat(reference?.StdDev, unit), Stat(test?.StdDev, unit), Stat(dev?.StdDev, unit));
-                AddBodyRow(table, 2, "Minimum", Stat(reference?.Min, unit), Stat(test?.Min, unit), Stat(dev?.Min, unit));
-                AddBodyRow(table, 3, "Maximum", Stat(reference?.Max, unit), Stat(test?.Max, unit), Stat(dev?.Max, unit));
-                AddBodyRow(table, 4, "RMS", Stat(reference?.Rms, unit), Stat(test?.Rms, unit), Stat(dev?.Rms, unit));
-                AddBodyRow(table, 5, "Outliers", Percent(reference?.OutlierPercent), Percent(test?.OutlierPercent), Percent(dev?.OutlierPercent));
-                AddBodyRow(table, 6, "Samples",
-                    (reference?.SampleCount ?? 0).ToString("N0", Ci),
-                    (test?.SampleCount ?? 0).ToString("N0", Ci),
-                    (dev?.SampleCount ?? 0).ToString("N0", Ci));
-
-                editor.InsertTable(table);
+                AxisStatistics test = model.TestStats(axis);
+                AxisStatistics deviation = model.DevStats(axis);
+                string unit = model.Unit(axis);
+                canvas.DrawTable(
+                    new[] { "Metric", "Reference", "Vessel", "Deviation" },
+                    new[]
+                    {
+                        new[] { "Mean", Stat(reference?.Mean, unit), Stat(test?.Mean, unit), Stat(deviation?.Mean, unit) },
+                        new[] { "Std. dev (sigma)", Stat(reference?.StdDev, unit), Stat(test?.StdDev, unit), Stat(deviation?.StdDev, unit) },
+                        new[] { "Minimum", Stat(reference?.Min, unit), Stat(test?.Min, unit), Stat(deviation?.Min, unit) },
+                        new[] { "Maximum", Stat(reference?.Max, unit), Stat(test?.Max, unit), Stat(deviation?.Max, unit) },
+                        new[] { "RMS", Stat(reference?.Rms, unit), Stat(test?.Rms, unit), Stat(deviation?.Rms, unit) },
+                        new[] { "Outliers", Percent(reference?.OutlierPercent), Percent(test?.OutlierPercent), Percent(deviation?.OutlierPercent) },
+                        new[]
+                        {
+                            "Samples",
+                            (reference?.SampleCount ?? 0).ToString("N0", Ci),
+                            (test?.SampleCount ?? 0).ToString("N0", Ci),
+                            (deviation?.SampleCount ?? 0).ToString("N0", Ci),
+                        },
+                    },
+                    new[] { 1.3, 1.0, 1.0, 1.0 });
             }
         }
 
-
-        private static void WriteAxisSection(RadFixedDocumentEditor editor, VerificationReportModel model)
+        private static void WriteCorrelationAndLatency(ReportCanvas canvas, VerificationReportModel model)
         {
-            Heading(editor, "3. Axis Detail");
-            Introduction(editor,
-                "Detailed per-axis statistics, comparison charts and correction values for pitch, roll and heave across the verification dataset.");
+            canvas.DrawParagraph("Correlation: 1.00 indicates perfect agreement. Positive latency means the vessel signal lags the reference.");
+            canvas.DrawImage(model.CorrelationBarsPng, ReportCanvas.ContentWidth, 210);
 
-            WriteCharts(editor, model);
-            WriteAxisDetails(editor, model);
-        }
-
-        private static void WriteCorrelationAndLatency(RadFixedDocumentEditor editor, VerificationReportModel model)
-        {
-            if (!model.HasData)
-                return;
-
-            Heading(editor, "4. Correlation and Latency");
-            Introduction(editor,
-                "Correlation strength and timing-offset metrics comparing reference and vessel motion signals across the measured axes.");
-            Paragraph(editor,
-                "Correlation: 1.00 = perfect agreement. Latency: positive = vessel lags reference.",
-                10.5, ColorText, spacingAfter: 8);
-
-            // ── Correlation bars panel ─────────────────────────────────────────
-            if (model.CorrelationBarsPng != null)
-            {
-                editor.ParagraphProperties.SpacingAfter = 10;
-                InsertImage(editor, model.CorrelationBarsPng, 681, 196);
-            }
-
-            var table = NewTable();
-            AddHeaderRow(table, "Axis", "Correlation", "Estimated latency");
-
-            int index = 0;
+            var rows = new List<string[]>();
             foreach (VerificationAxisKind axis in AllAxes())
             {
                 PairedSeriesStatistics pair = model.PairStats(axis);
-                AddBodyRow(table, index++,
+                rows.Add(new[]
+                {
                     model.AxisTitle(axis),
                     Correlation(pair?.Correlation),
-                    Latency(pair?.EstimatedLatencySeconds));
+                    Latency(pair?.EstimatedLatencySeconds),
+                });
             }
+            canvas.DrawTable(new[] { "Axis", "Correlation", "Estimated latency" }, rows, new[] { 1.0, 1.0, 1.5 });
 
-            editor.InsertTable(table);
-
-            Paragraph(editor,
-                "Description of Correlation and Latency",
-                10.5, ColorSubHeading, spacingBefore: 12, spacingAfter: 4, bold: true);
-
-            Paragraph(editor,
-                "Correlation describes how similarly the vessel and reference MRU signals vary over time. A value close to +1.0 indicates strong agreement in signal behaviour, while values closer to 0 indicate weaker similarity. Latency represents the estimated timing offset between the two signals; positive values indicate that the vessel signal lags the reference signal, while negative values indicate that it leads. Correlation and latency are reported for diagnostic purposes only. Verification confidence is based primarily on sample count, capture duration, signal quality and the stability of the calculated corrections. Low correlation does not necessarily indicate poor correction quality when a consistent offset is present.",
-                9.5, ColorMuted, spacingAfter: 12);
-
-            Paragraph(editor,
-                "Interpretation of Correlation and Latency",
-                10.5, ColorSubHeading, spacingAfter: 4, bold: true);
-            Paragraph(editor,
-                "Correlation and latency values are provided for diagnostic transparency and should not be considered " +
-                "primary indicators of verification quality. Verification confidence is determined primarily from " +
-                "sample count, capture duration, signal quality and the consistency of the measured deviations. Low " +
-                "correlation does not necessarily indicate poor correction quality when a stable and repeatable offset " +
-                "can be identified between the vessel and reference units.",
-                9.5, ColorMuted, spacingAfter: 6);
+            canvas.DrawSubheading("Interpretation");
+            canvas.DrawParagraph(
+                "Correlation describes how similarly the vessel and reference MRU signals vary over time. Values close to +1.0 indicate strong agreement in signal behaviour; values closer to 0 indicate weaker similarity. Latency represents the estimated timing offset between the two signals. These metrics are diagnostic and are not, on their own, indicators of verification quality.");
         }
 
-        private static void WriteObservations(RadFixedDocumentEditor editor, VerificationReportModel model)
+        private static void WriteCompliance(ReportCanvas canvas, VerificationReportModel model)
         {
-            Heading(editor, "12. Observations");
-            Introduction(editor,
-                "Additional notes recorded during the verification that may help explain conditions, limitations or noteworthy aspects of the capture.");
+            canvas.DrawImage(model.ComplianceSummaryBannerPng, ReportCanvas.ContentWidth, 125);
+            canvas.DrawImage(model.ComplianceScorecardsPng, ReportCanvas.ContentWidth, 130);
+            canvas.DrawImage(model.ConfidencePanelPng, ReportCanvas.ContentWidth, 170);
 
-            string observations = model.Metadata?.Observations;
-            Paragraph(editor,
-                string.IsNullOrWhiteSpace(observations)
-                    ? "No additional observations were recorded."
-                    : observations,
-                10.5, ColorText, spacingAfter: 6);
-        }
-
-		private static void WriteCompliance(RadFixedDocumentEditor editor, VerificationReportModel model)
-		{
-            Heading(editor, "5. Compliance Assessment");
-            Introduction(editor,
-                "Assessment of sample count, capture duration and signal quality against the recommended criteria for reliable verification results.");
-
-			// VERIFICATION QUALITY summary banner (900×160 GDI → 681×121 PDF)
-				if (model.ComplianceSummaryBannerPng != null)
-				{
-					editor.ParagraphProperties.SpacingAfter = 8;
-					InsertImage(editor, model.ComplianceSummaryBannerPng, 681, 121);
-				}
-
-				// KPI row: Confidence | Samples | Duration | Outliers (900×100 GDI → 681×75 PDF)
-				if (model.ComplianceScorecardsPng != null)
-				{
-					editor.ParagraphProperties.SpacingAfter = 10;
-					InsertImage(editor, model.ComplianceScorecardsPng, 681, 75);
-				}
-
-            var table = NewTable();
-            AddHeaderRow(table, "Criterion", "Acceptable (min)", "Good (target)", "Measured", "Status");
-
-            int index = 0;
-
-            // Samples
+            double minutes = TimeSpan.TryParse(model.Duration, out TimeSpan duration)
+                ? duration.TotalMinutes
+                : 0;
+            double worstOutlier = model.WorstOutlierPercent;
+            var rows = new[]
             {
-                int samples = model.SampleCount;
-                string status =
-                    samples >= VerificationAssessment.MinSamplesGood       ? "Good" :
-                    samples >= VerificationAssessment.MinSamplesAcceptable ? "Acceptable" :
-                    samples > 0                                            ? "Insufficient" : "No data";
-                AddBodyRow(table, index++,
+                new[]
+                {
                     "Samples",
-                    string.Format(Ci, "\u2265\u00A0{0:N0}", VerificationAssessment.MinSamplesAcceptable),
-                    string.Format(Ci, "\u2265\u00A0{0:N0}", VerificationAssessment.MinSamplesGood),
-                    samples > 0 ? samples.ToString("N0", Ci) : "-",
-                    status);
-            }
-
-            // Capture duration
-            {
-                double actualMin = 0;
-                if (!string.IsNullOrWhiteSpace(model.Duration) &&
-                    TimeSpan.TryParse(model.Duration, out TimeSpan ts))
-                    actualMin = ts.TotalMinutes;
-                string status =
-                    actualMin >= MinDurationRecommendedMinutes ? "Good" :
-                    actualMin >= MinDurationAcceptableMinutes  ? "Acceptable" :
-                    actualMin > 0                             ? "Insufficient" : "No data";
-                AddBodyRow(table, index++,
+                    string.Format(Ci, ">= {0:N0}", VerificationAssessment.MinSamplesAcceptable),
+                    string.Format(Ci, ">= {0:N0}", VerificationAssessment.MinSamplesGood),
+                    model.SampleCount > 0 ? model.SampleCount.ToString("N0", Ci) : "-",
+                    model.SampleCount >= VerificationAssessment.MinSamplesGood ? "Good" :
+                        model.SampleCount >= VerificationAssessment.MinSamplesAcceptable ? "Acceptable" :
+                        model.SampleCount > 0 ? "Insufficient" : "No data",
+                },
+                new[]
+                {
                     "Capture duration",
-                    string.Format(Ci, "\u2265\u00A0{0:F0} min", MinDurationAcceptableMinutes),
-                    string.Format(Ci, "\u2265\u00A0{0:F0} min", MinDurationRecommendedMinutes),
-                    actualMin > 0 ? string.Format(Ci, "{0:F1} min", actualMin) : "-",
-                    status);
-            }
-
-            // Max outlier
-            {
-                double worst = model.WorstOutlierPercent;
-                string status =
-                    double.IsNaN(worst)                                         ? "No data" :
-                    worst <= VerificationAssessment.OutlierAcceptablePercent    ? "Good" :
-                    worst <= VerificationAssessment.OutlierAttentionPercent     ? "Acceptable" :
-                                                                                  "Too noisy";
-                AddBodyRow(table, index++,
+                    string.Format(Ci, ">= {0:F0} min", MinDurationAcceptableMinutes),
+                    string.Format(Ci, ">= {0:F0} min", MinDurationRecommendedMinutes),
+                    minutes > 0 ? string.Format(Ci, "{0:F1} min", minutes) : "-",
+                    minutes >= MinDurationRecommendedMinutes ? "Good" :
+                        minutes >= MinDurationAcceptableMinutes ? "Acceptable" :
+                        minutes > 0 ? "Insufficient" : "No data",
+                },
+                new[]
+                {
                     "Max outlier",
-                    string.Format(Ci, "\u2264\u00A0{0:F0}\u00A0%", VerificationAssessment.OutlierAttentionPercent),
-                    string.Format(Ci, "\u2264\u00A0{0:F0}\u00A0%", VerificationAssessment.OutlierAcceptablePercent),
-                    !double.IsNaN(worst) ? string.Format(Ci, "{0:F1}\u00A0%", worst) : "-",
-                    status);
-            }
-
-            editor.InsertTable(table);
-
-            // Operator discussion / assessment narrative.
-            string discussion = model.Metadata?.AcceptanceCriteriaDiscussion;
-            if (!string.IsNullOrWhiteSpace(discussion))
-            {
-                Paragraph(editor, "Assessment", 11, ColorHeading, spacingBefore: 10, spacingAfter: 2, bold: true);
-                Paragraph(editor, discussion, 10.5, ColorText, spacingAfter: 6);
-            }
-
-            string specs = model.Metadata?.ManufacturerSpecifications;
-            if (!string.IsNullOrWhiteSpace(specs))
-            {
-                Paragraph(editor, "Manufacturer specifications", 11, ColorHeading, spacingBefore: 10, spacingAfter: 2, bold: true);
-                Paragraph(editor, specs, 10.5, ColorText, spacingAfter: 6);
-            }
-        }
-
-        private static void WriteAppendices(RadFixedDocumentEditor editor, VerificationReportModel model)
-        {
-            Heading(editor, "13. Appendices");
-            Introduction(editor,
-                "Supporting reference material and explanatory notes that complement the verification results without affecting the reported calculations or conclusions.");
-
-            string notes = model.Metadata?.AppendixNotes;
-            Paragraph(editor,
-                string.IsNullOrWhiteSpace(notes)
-                    ? "No additional appendix material was provided."
-                    : notes,
-                10.5, ColorText, spacingAfter: 6);
-        }
-
-        private static void WriteGlossary(RadFixedDocumentEditor editor, VerificationReportModel model)
-        {
-            Heading(editor, "11. Metric Definitions");
-
-            Paragraph(editor,
-                "A quick reference guide for interpreting the metrics in this report.",
-                9.5, ColorMuted, spacingBefore: 0, spacingAfter: 10);
-
-            var terms = new (string Term, string Definition)[]
-            {
-                ("Reference MRU",  "The trusted baseline motion sensor. Its mean reading over the capture period is used as the reference value for all comparisons."),
-                ("Vessel MRU",     "The unit being verified. Its mean reading is compared against the Reference MRU to calculate the deviation on each axis."),
-                ("Deviation",      "Vessel minus Reference on each axis. This is the key output of the verification \u2014 the value used to derive the recommended correction."),
-                ("Std. dev. (sigma)", "Standard deviation: how much the signal varies around its mean. Lower values indicate a stable, consistent signal."),
-                ("Min / Max",      "The most extreme values observed during the capture period. Large spreads may indicate transient disturbances or vessel manoeuvres."),
-                ("RMS",            "Root-Mean-Square magnitude of the signal. Useful for assessing average energy in the motion signal across the capture."),
-                ("Outliers",       "Percentage of samples flagged as anomalous by Tukey\u2019s 1.5\u00D7IQR rule. High rates reduce confidence in the deviation estimate."),
-                ("Samples",        "Number of data points included in the statistical calculations. More samples produce a more reliable correction estimate."),
+                    string.Format(Ci, "<= {0:F0}%", VerificationAssessment.OutlierAttentionPercent),
+                    string.Format(Ci, "<= {0:F0}%", VerificationAssessment.OutlierAcceptablePercent),
+                    double.IsNaN(worstOutlier) ? "-" : string.Format(Ci, "{0:F1}%", worstOutlier),
+                    double.IsNaN(worstOutlier) ? "No data" :
+                        worstOutlier <= VerificationAssessment.OutlierAcceptablePercent ? "Good" :
+                        worstOutlier <= VerificationAssessment.OutlierAttentionPercent ? "Acceptable" : "Too noisy",
+                },
             };
+            canvas.DrawTable(
+                new[] { "Criterion", "Acceptable (min)", "Good (target)", "Measured", "Status" },
+                rows,
+                new[] { 1.15, 1.0, 1.0, 0.9, 0.85 });
 
-            var glossaryTable = new Table
-            {
-                LayoutType = TableLayoutType.FixedWidth,
-            };
-            glossaryTable.DefaultCellProperties.Padding = new Thickness(0);
-
-            for (int i = 0; i < terms.Length; i += 2)
-            {
-                string t2 = i + 1 < terms.Length ? terms[i + 1].Term       : string.Empty;
-                string d2 = i + 1 < terms.Length ? terms[i + 1].Definition : string.Empty;
-                AddGlossaryRow(glossaryTable, terms[i].Term, terms[i].Definition, t2, d2);
-            }
-
-            editor.ParagraphProperties.SpacingBefore = 0;
-            editor.ParagraphProperties.SpacingAfter  = 6;
-            editor.InsertTable(glossaryTable);
-
-            TealRule(editor);
-            Paragraph(editor, "Can the Deviation Be Trusted?", 11, ColorHeading,
-                spacingBefore: 10, spacingAfter: 4, bold: true);
-            Paragraph(editor,
-                string.Format(Ci,
-                    "Trustworthiness depends on input data quality, not the deviation value. " +
-                    "Samples: \u2265 {0:N0} \u2192 usable, \u2265 {1:N0} \u2192 good. " +
-                    "Outliers: \u2264 {2:F0}% \u2192 good, \u2264 {3:F0}% \u2192 usable, > {3:F0}% \u2192 too noisy.",
-                    VerificationAssessment.MinSamplesAcceptable,
-                    VerificationAssessment.MinSamplesGood,
-                    VerificationAssessment.OutlierAcceptablePercent,
-                    VerificationAssessment.OutlierAttentionPercent),
-                9.5, ColorText, spacingAfter: 6);
+            DrawOptionalNarrative(canvas, "Assessment", model.Metadata?.AcceptanceCriteriaDiscussion);
+            DrawOptionalNarrative(canvas, "Manufacturer specifications", model.Metadata?.ManufacturerSpecifications);
         }
 
-        // ============================================================
-        // Presentation helpers — card layouts and section dividers
-        // ============================================================
-
-        /// <summary>
-        /// Lightweight axis sub-heading: light blue-grey band with Energy Green left accent.
-        /// Used inside the Axis Detail section to clearly separate Pitch / Roll / Heave.
-        /// </summary>
-        private static void AxisSubheading(RadFixedDocumentEditor editor, string axisTitle)
+        private static void WriteScope(ReportCanvas canvas, VerificationReportModel model)
         {
-            var headTable = new Table { Borders = new TableBorders(new Border(0, ColorBorder)) };
-            headTable.DefaultCellProperties.Padding = new Thickness(10, 7, 10, 7);
-            TableRow  headRow  = headTable.Rows.AddTableRow();
-            TableCell headCell = headRow.Cells.AddTableCell();
-            headCell.PreferredWidth = 681;
-            headCell.Background     = new RgbColor(0xE4, 0xEC, 0xF2);
-            headCell.Borders        = new TableCellBorders(new Border(5, ColorAccent), null, null, null);
-            Block headBlock = headCell.Blocks.AddBlock();
-            headBlock.SpacingBefore = 0;
-            headBlock.SpacingAfter  = 0;
-            headBlock.TextProperties.Font     = _robotoBold;
-            headBlock.TextProperties.FontSize = 12;
-            headBlock.GraphicProperties.FillColor = ColorHeading;
-            headBlock.InsertText(axisTitle.ToUpperInvariant());
-            editor.ParagraphProperties.SpacingBefore = 0;
-            editor.ParagraphProperties.SpacingAfter  = 4;
-            editor.InsertTable(headTable);
+            MruReportMetadata metadata = model.Metadata ?? new MruReportMetadata();
+            canvas.DrawParagraph(string.IsNullOrWhiteSpace(metadata.TestObjective)
+                ? "Verification of the vessel-installed MRU against a calibrated reference unit. Corrections for pitch, roll and heave are determined and applied."
+                : metadata.TestObjective);
+            DrawOptionalNarrative(canvas, "Applicable standards and references", metadata.ApplicableStandards);
         }
 
-        /// <summary>
-        /// Compact horizontal banner rendered immediately above each axis statistics table.
-        /// Row 0 (header): axis title left + status verdict right, dark background, teal 4 pt left accent.
-        /// Row 1 (body):   left column — correction hero value (18 pt teal) and outlier summary;
-        ///                 right column — sample count and reliability rating.
-        /// Total width 681 pt; SpacingAfter reduced to 6 pt so the banner sits close to its table.
-        /// </summary>
-		private static void InsertAxisSummaryCard(
-			RadFixedDocumentEditor editor,
-			string axisTitle,
-			VerificationStatus status,
-			double recommended,
-			double applied,
-			bool hasApplied,
-			string unit,
-			AxisStatistics dev)
-		{
-			double heroVal   = (hasApplied && !double.IsNaN(applied)) ? applied : recommended;
-			string corrStr   = double.IsNaN(heroVal) ? "\u2014"
-				: string.Format(Ci, "{0:+0.000;-0.000;0.000} {1}", heroVal, unit);
-			string corrLabel = hasApplied ? "APPLIED CORRECTION" : "RECOMMENDED CORRECTION";
-			string samplesStr = (dev?.SampleCount ?? 0) > 0
-				? dev.SampleCount.ToString("N0", Ci) : "\u2014";
-			string outlierStr = dev != null && !double.IsNaN(dev.OutlierPercent)
-				? string.Format(Ci, "{0:0.0}%", dev.OutlierPercent) : "\u2014";
-			string reliability = status == VerificationStatus.Good       ? "HIGH"
-							   : status == VerificationStatus.Acceptable ? "MEDIUM" : "REVIEW";
-			string statusLabel = VerificationAssessment.StatusLabel(status);
-			string statusLine  = status == VerificationStatus.Good       ? "\u2713  " + statusLabel.ToUpper()
-							   : status == VerificationStatus.Acceptable ? "\u25cf  " + statusLabel.ToUpper()
-							   : "\u26a0  " + statusLabel.ToUpper();
-
-			RgbColor statusColor = status == VerificationStatus.Good       ? new RgbColor(0x34, 0xD3, 0x89)
-								 : status == VerificationStatus.Acceptable ? new RgbColor(0xFF, 0xB8, 0x4D)
-								 : new RgbColor(0xFF, 0x6B, 0x6B);
-
-			var labelColor = new RgbColor(0xA0, 0xB4, 0xC4);
-
-			RgbColor outlierColor = dev == null || double.IsNaN(dev.OutlierPercent) ? labelColor
-				: dev.OutlierPercent <= VerificationAssessment.OutlierAcceptablePercent ? new RgbColor(0x34, 0xD3, 0x89)
-				: dev.OutlierPercent <= VerificationAssessment.OutlierAttentionPercent  ? new RgbColor(0xFF, 0xB8, 0x4D)
-				: new RgbColor(0xFF, 0x6B, 0x6B);
-
-			var subtleDivider = new Border(0.5, new RgbColor(0x4A, 0x60, 0x72));
-
-			// ── Compact horizontal banner: 2 rows, 681 pt total ──────────────────────
-			// Row 0: header bar  — axis name (left) + status verdict (right)
-			// Row 1: body strip  — Correction hero (left col) | Samples + Reliability (right col)
-			var banner = new Table
-			{
-				Borders    = new TableBorders(new Border(1, ColorBorder)),
-				LayoutType = TableLayoutType.FixedWidth,
-			};
-			banner.DefaultCellProperties.Padding = new Thickness(0);
-
-			// ── Row 0: axis title + status (same dark background, no inner divider) ──
-			{
-				TableRow hr = banner.Rows.AddTableRow();
-
-				// Left: axis name — 440 pt, teal 4 pt left accent
-				TableCell titleCell = hr.Cells.AddTableCell();
-				titleCell.PreferredWidth = 440;
-				titleCell.Background     = ColorHeading;
-				titleCell.Padding        = new Thickness(14, 0, 10, 0);
-				titleCell.Borders        = new TableCellBorders(new Border(4, ColorAccent), null, null, null);
-
-				Block titleBlock = titleCell.Blocks.AddBlock();
-				titleBlock.SpacingBefore = 11;
-				titleBlock.SpacingAfter  = 11;
-				titleBlock.TextProperties.Font     = _robotoBold;
-				titleBlock.TextProperties.FontSize = 16;
-				titleBlock.GraphicProperties.FillColor = new RgbColor(0xFF, 0xFF, 0xFF);
-				titleBlock.InsertText(axisTitle.ToUpperInvariant());
-
-				// Right: status verdict — 241 pt, no extra accent
-				TableCell statusCell = hr.Cells.AddTableCell();
-				statusCell.PreferredWidth = 241;
-				statusCell.Background     = ColorHeading;
-				statusCell.Padding        = new Thickness(14, 0, 14, 0);
-				statusCell.Borders        = new TableCellBorders(null, null, null, null);
-
-				Block statusBlock = statusCell.Blocks.AddBlock();
-				statusBlock.SpacingBefore = 11;
-				statusBlock.SpacingAfter  = 11;
-				statusBlock.TextProperties.Font     = _robotoBold;
-				statusBlock.TextProperties.FontSize = 13;
-				statusBlock.GraphicProperties.FillColor = statusColor;
-				statusBlock.InsertText(statusLine);
-			}
-
-			// ── Row 1: two-column body ────────────────────────────────────────────────
-			// Left  (390 pt): correction hero value + outlier summary
-			// Right (291 pt): sample count + reliability rating
-			{
-				TableRow dr = banner.Rows.AddTableRow();
-
-				// Left column — correction (hero) and outliers
-				TableCell leftCell = dr.Cells.AddTableCell();
-				leftCell.PreferredWidth = 390;
-				leftCell.Background     = ColorHeading;
-				leftCell.Padding        = new Thickness(14, 0, 16, 0);
-				leftCell.Borders        = new TableCellBorders(null, null, null, null);
-
-				Block corrLabelBlock = leftCell.Blocks.AddBlock();
-				corrLabelBlock.SpacingBefore = 11;
-				corrLabelBlock.SpacingAfter  = 3;
-				corrLabelBlock.TextProperties.Font     = _robotoRegular;
-				corrLabelBlock.TextProperties.FontSize = 8.5;
-				corrLabelBlock.GraphicProperties.FillColor = labelColor;
-				corrLabelBlock.InsertText(corrLabel);
-
-				Block corrValueBlock = leftCell.Blocks.AddBlock();
-				corrValueBlock.SpacingBefore = 0;
-				corrValueBlock.SpacingAfter  = 6;
-				corrValueBlock.TextProperties.Font     = _robotoBold;
-				corrValueBlock.TextProperties.FontSize = 24;
-				corrValueBlock.GraphicProperties.FillColor = ColorAccent;
-				corrValueBlock.InsertText(corrStr);
-
-				Block outlierBlock = leftCell.Blocks.AddBlock();
-				outlierBlock.SpacingBefore = 0;
-				outlierBlock.SpacingAfter  = 11;
-				outlierBlock.TextProperties.Font     = _robotoRegular;
-				outlierBlock.TextProperties.FontSize = 11;
-				outlierBlock.GraphicProperties.FillColor = outlierColor;
-				outlierBlock.InsertText("Outliers  \u00b7  " + outlierStr);
-
-				// Right column — samples and reliability
-				TableCell rightCell = dr.Cells.AddTableCell();
-				rightCell.PreferredWidth = 291;
-				rightCell.Background     = ColorHeading;
-				rightCell.Padding        = new Thickness(14, 0, 14, 0);
-				rightCell.Borders        = new TableCellBorders(null, subtleDivider, null, null);
-
-				Block samplesLabelBlock = rightCell.Blocks.AddBlock();
-				samplesLabelBlock.SpacingBefore = 11;
-				samplesLabelBlock.SpacingAfter  = 3;
-				samplesLabelBlock.TextProperties.Font     = _robotoRegular;
-				samplesLabelBlock.TextProperties.FontSize = 8.5;
-				samplesLabelBlock.GraphicProperties.FillColor = labelColor;
-				samplesLabelBlock.InsertText("SAMPLES");
-
-				Block samplesValueBlock = rightCell.Blocks.AddBlock();
-				samplesValueBlock.SpacingBefore = 0;
-				samplesValueBlock.SpacingAfter  = 6;
-				samplesValueBlock.TextProperties.Font     = _robotoBold;
-				samplesValueBlock.TextProperties.FontSize = 18;
-				samplesValueBlock.GraphicProperties.FillColor = new RgbColor(0xFF, 0xFF, 0xFF);
-				samplesValueBlock.InsertText(samplesStr);
-
-				Block reliabilityBlock = rightCell.Blocks.AddBlock();
-				reliabilityBlock.SpacingBefore = 0;
-				reliabilityBlock.SpacingAfter  = 11;
-				reliabilityBlock.TextProperties.Font     = _robotoRegular;
-				reliabilityBlock.TextProperties.FontSize = 11;
-				reliabilityBlock.GraphicProperties.FillColor = statusColor;
-				reliabilityBlock.InsertText("Reliability  \u00b7  " + reliability);
-			}
-
-			editor.ParagraphProperties.SpacingBefore = 16;
-			editor.ParagraphProperties.SpacingAfter  = 6;
-			editor.InsertTable(banner);
-		}
-
-        /// <summary>
-        /// PDF-native three-card correction panel (Pitch / Roll / Heave).
-        /// Rendered when the pre-built <c>CorrectionCardsPng</c> image is not available.
-        /// </summary>
-        private static void InsertCorrectionCardsNative(RadFixedDocumentEditor editor, VerificationReportModel model)
+        private static void WriteMethodology(ReportCanvas canvas, VerificationReportModel model)
         {
-            var table = new Table
+            canvas.DrawParagraph(
+                "Reference and vessel channels are time-aligned sample-by-sample. Per-sample deviation (vessel minus reference) is computed on each axis; the mean deviation is the recommended correction. Agreement is quantified by Pearson correlation and timing offset by cross-correlation.");
+
+            MruReportMetadata metadata = model.Metadata ?? new MruReportMetadata();
+            DrawOptionalNarrative(canvas, "Time synchronization", metadata.TimeSynchronizationNotes);
+            DrawOptionalNarrative(canvas, "Filtering", metadata.FilteringNotes);
+            DrawOptionalNarrative(canvas, "Additional processing notes", metadata.DataProcessingNotes);
+        }
+
+        private static void WriteEquipment(ReportCanvas canvas, VerificationReportModel model)
+        {
+            MruReportMetadata metadata = model.Metadata ?? new MruReportMetadata();
+            canvas.DrawSubheading("MRU under test (vessel-installed)");
+            canvas.DrawKeyValues(new[]
             {
-                Borders    = new TableBorders(new Border(0, ColorBorder)),
-                LayoutType = TableLayoutType.FixedWidth,
+                Pair("Manufacturer", metadata.DutManufacturer),
+                Pair("Model", metadata.DutModel),
+                Pair("Serial number", metadata.DutSerialNumber),
+                Pair("Firmware version", metadata.DutFirmwareVersion),
+            });
+            canvas.DrawSubheading("Reference MRU");
+            canvas.DrawKeyValues(new[]
+            {
+                Pair("Manufacturer", metadata.ReferenceManufacturer),
+                Pair("Model", metadata.ReferenceModel),
+                Pair("Serial number", metadata.ReferenceSerialNumber),
+                Pair("Firmware version", metadata.ReferenceFirmwareVersion),
+                Pair("Calibration date", metadata.ReferenceCalibrationDate?.ToString("yyyy-MM-dd", Ci)),
+                Pair("Calibration certificate", metadata.ReferenceCalibrationCertificateNumber),
+            });
+            canvas.DrawSubheading("LiDAR");
+            canvas.DrawKeyValues(new[]
+            {
+                Pair("User", metadata.LidarUser),
+                Pair("Manufacturer", metadata.LidarManufacturer),
+                Pair("Model", metadata.LidarModel),
+                Pair("Serial number", metadata.LidarSerialNumber),
+                Pair("Firmware version", metadata.LidarFirmwareVersion),
+            });
+            DrawOptionalNarrative(canvas, "Additional equipment", metadata.AdditionalEquipment);
+        }
+
+        private static void WriteTestSetup(ReportCanvas canvas, VerificationReportModel model)
+        {
+            MruReportMetadata metadata = model.Metadata ?? new MruReportMetadata();
+            canvas.DrawKeyValues(new[]
+            {
+                Pair("Vessel MRU installation location", metadata.DutInstallationLocation),
+                Pair("Reference MRU installation location", metadata.ReferenceInstallationLocation),
+                Pair("Mounting arrangement", metadata.MountingArrangement),
+                Pair("Coordinate system", metadata.CoordinateSystem),
+                Pair("Sensor separation", metadata.SensorSeparation),
+                Pair("Data acquisition method", metadata.DataAcquisitionMethod),
+                Pair("Synchronization method", metadata.SynchronizationMethod),
+                Pair("Sample rate", metadata.SampleRateHz.HasValue ? string.Format(Ci, "{0:0.###} Hz", metadata.SampleRateHz.Value) : null),
+                Pair("Logging configuration", metadata.LoggingConfiguration),
+                Pair("Sensor setup (logged)", model.InputSetup),
+            });
+        }
+
+        private static void WriteTestConditions(ReportCanvas canvas, VerificationReportModel model)
+        {
+            MruReportMetadata metadata = model.Metadata ?? new MruReportMetadata();
+            canvas.DrawKeyValues(new[]
+            {
+                Pair("Loading condition", metadata.LoadingCondition),
+                Pair("Vessel speed", metadata.VesselSpeed),
+                Pair("Operational mode", metadata.OperationalMode),
+                Pair("Sea state", metadata.SeaState),
+                Pair("Wind conditions", metadata.WindConditions),
+                Pair("Wave conditions", metadata.WaveConditions),
+                Pair("Current conditions", metadata.CurrentConditions),
+            });
+            DrawOptionalNarrative(canvas, "Environmental notes", metadata.EnvironmentalNotes);
+        }
+
+        private static void WriteGlossary(ReportCanvas canvas, VerificationReportModel model)
+        {
+            var terms = new[]
+            {
+                Pair("Reference MRU", "The trusted baseline motion sensor. Its mean reading is used as the reference value for comparisons."),
+                Pair("Vessel MRU", "The unit being verified. Its mean reading is compared against the reference MRU."),
+                Pair("Deviation", "Vessel minus reference on each axis. This value is used to derive the recommended correction."),
+                Pair("Std. dev. (sigma)", "How much the signal varies around its mean. Lower values indicate a more stable signal."),
+                Pair("Min / Max", "The most extreme values observed during capture. Large spreads may indicate disturbances."),
+                Pair("RMS", "Root-mean-square magnitude of the signal, useful for assessing average motion energy."),
+                Pair("Outliers", "Percentage of samples flagged as anomalous by Tukey's 1.5 x IQR rule."),
+                Pair("Samples", "Number of data points included in the statistical calculations."),
             };
-            table.DefaultCellProperties.Padding = new Thickness(0);
+            canvas.DrawKeyValues(terms);
+            canvas.DrawSubheading("Can the deviation be trusted?");
+            canvas.DrawParagraph(string.Format(Ci,
+                "Trustworthiness depends on input data quality, not the deviation value. Samples: >= {0:N0} usable, >= {1:N0} good. Outliers: <= {2:F0}% good, <= {3:F0}% usable, above {3:F0}% too noisy.",
+                VerificationAssessment.MinSamplesAcceptable,
+                VerificationAssessment.MinSamplesGood,
+                VerificationAssessment.OutlierAcceptablePercent,
+                VerificationAssessment.OutlierAttentionPercent));
+        }
 
-            TableRow row = table.Rows.AddTableRow();
-            bool firstCard = true;
+        private static void DrawOptionalNarrative(ReportCanvas canvas, string title, string value)
+        {
+            if (string.IsNullOrWhiteSpace(value))
+                return;
+            canvas.DrawSubheading(title);
+            canvas.DrawParagraph(value);
+        }
 
-            foreach (VerificationAxisKind axis in AllAxes())
+        private static void WriteTableOfContents(PdfPage page, IDictionary<string, int> sectionPages)
+        {
+            using (XGraphics graphics = XGraphics.FromPdfPage(page))
             {
-                if (!firstCard)
+                double y = ReportCanvas.TopMargin;
+                DrawText(graphics, "Contents", 22, bold: true, ColorHeading,
+                    ReportCanvas.LeftMargin, y, ReportCanvas.ContentWidth);
+                y += 42;
+
+                foreach (KeyValuePair<string, int> section in sectionPages)
                 {
-                    // Gap column between cards
-                    TableCell gap = row.Cells.AddTableCell();
-                    gap.PreferredWidth = 10;
-                    gap.Background     = new RgbColor(0xFF, 0xFF, 0xFF);
-                    gap.Borders        = new TableCellBorders(new Border(0, ColorBorder));
-                    gap.Blocks.AddBlock().InsertText(" ");
+                    DrawText(graphics, section.Key, 11, bold: false, ColorText,
+                        ReportCanvas.LeftMargin, y, ReportCanvas.ContentWidth - 40);
+                    DrawText(graphics, section.Value.ToString(Ci), 11, bold: true, ColorHeading,
+                        page.Width.Point - ReportCanvas.RightMargin - 30, y, 30,
+                        XStringFormats.TopRight);
+                    y += 25;
                 }
-                firstCard = false;
-
-                double recommended = model.RecommendedCorrection(axis);
-                double applied     = model.AppliedCorrection(axis);
-                string unit        = model.Unit(axis);
-                // Applied value is the focal point; fall back to recommended when not yet applied
-                double heroVal  = (model.HasCorrectionApplied && !double.IsNaN(applied)) ? applied : recommended;
-                string corrStr  = double.IsNaN(heroVal) ? "\u2014"
-                    : string.Format(Ci, "{0:+0.000;-0.000;0.000} {1}", heroVal, unit);
-                string badge    = model.HasCorrectionApplied ? "\u2713  APPLIED" : "\u2713  RECOMMENDED";
-
-                // 3 cards × 220 pt + 2 gaps × 10 pt = 680 pt (≈681)
-                TableCell card = row.Cells.AddTableCell();
-                card.PreferredWidth = 220;
-                card.Background     = new RgbColor(0x1A, 0x2A, 0x3A); // dark card body matching GDI render
-                card.Borders        = new TableCellBorders(new Border(5, ColorAccent), null, null, null);
-
-                var ha = Telerik.Windows.Documents.Fixed.Model.Editing.Flow.HorizontalAlignment.Center;
-
-                // Axis label — e.g. "PITCH CORRECTION"
-                Block axisLabel = card.Blocks.AddBlock();
-                axisLabel.SpacingBefore           = 18;
-                axisLabel.SpacingAfter            = 6;
-                axisLabel.HorizontalAlignment     = ha;
-                axisLabel.TextProperties.Font     = _robotoBold;
-                axisLabel.TextProperties.FontSize = 11;
-                axisLabel.GraphicProperties.FillColor = ColorAccent;
-                axisLabel.InsertText(model.AxisTitle(axis).ToUpperInvariant() + " CORRECTION");
-
-                // Hero correction value — large and white
-                Block valueBlock = card.Blocks.AddBlock();
-                valueBlock.SpacingBefore           = 10;
-                valueBlock.SpacingAfter            = 14;
-                valueBlock.HorizontalAlignment     = ha;
-                valueBlock.TextProperties.Font     = _robotoBold;
-                valueBlock.TextProperties.FontSize = 28;
-                valueBlock.GraphicProperties.FillColor = new RgbColor(0xFF, 0xFF, 0xFF);
-                valueBlock.InsertText(corrStr);
-
-                // Green "✓ APPLIED" badge
-                Block badgeBlock = card.Blocks.AddBlock();
-                badgeBlock.SpacingBefore           = 0;
-                badgeBlock.SpacingAfter            = 18;
-                badgeBlock.HorizontalAlignment     = ha;
-                badgeBlock.TextProperties.Font     = _robotoBold;
-                badgeBlock.TextProperties.FontSize = 10;
-                badgeBlock.GraphicProperties.FillColor = new RgbColor(0x18, 0x7C, 0x4E); // dark green
-                badgeBlock.InsertText(badge);
             }
-
-            editor.ParagraphProperties.SpacingBefore = 8;
-            editor.ParagraphProperties.SpacingAfter  = 14;
-            editor.InsertTable(table);
         }
 
-        /// <summary>
-        /// Inserts one row of two side-by-side glossary definition cards.
-        /// Pass empty strings for <paramref name="term2"/> / <paramref name="def2"/> to leave
-        /// the right cell blank (used when the term count is odd).
-        /// </summary>
-        private static void AddGlossaryRow(
-            Table table,
-            string term1, string def1,
-            string term2, string def2)
+        private static void AddPageNumbers(PdfDocument document)
         {
-            TableRow row = table.Rows.AddTableRow();
-
-            // Two cards spanning the full 681 pt width. The right card's green left
-            // accent doubles as the column separator, avoiding a dedicated gap cell
-            // that can rasterize as a white strip/artifact in PDF viewers.
-            for (int col = 0; col < 2; col++)
+            for (int i = 0; i < document.Pages.Count; i++)
             {
-                string term = col == 0 ? term1 : term2;
-                string def  = col == 0 ? def1  : def2;
-                int    cardW = col == 0 ? 340 : 341;
-
-                TableCell card = row.Cells.AddTableCell();
-                card.PreferredWidth = cardW;
-
-                if (string.IsNullOrEmpty(term))
+                PdfPage page = document.Pages[i];
+                using (XGraphics graphics = XGraphics.FromPdfPage(page))
                 {
-                    card.Background = new RgbColor(0xFF, 0xFF, 0xFF);
-                    card.Blocks.AddBlock().InsertText(" ");
-                    continue;
+                    DrawText(graphics, "- " + (i + 1).ToString(Ci) + " -", 8, false, ColorText,
+                        0, page.Height.Point - 42, page.Width.Point, XStringFormats.BottomCenter);
                 }
-
-                card.Background = new RgbColor(0xF2, 0xF5, 0xF7);
-                card.Borders    = new TableCellBorders(new Border(3, ColorAccent), null, null, null);
-
-                Block tb = card.Blocks.AddBlock();
-                tb.SpacingBefore = 9;
-                tb.SpacingAfter  = 3;
-                tb.TextProperties.Font     = _robotoBold;
-                tb.TextProperties.FontSize = 10;
-                tb.GraphicProperties.FillColor = ColorHeading;
-                tb.InsertText(term);
-
-                Block db = card.Blocks.AddBlock();
-                db.SpacingBefore = 0;
-                db.SpacingAfter  = 9;
-                db.TextProperties.Font     = _robotoRegular;
-                db.TextProperties.FontSize = 9;
-                db.GraphicProperties.FillColor = ColorText;
-                db.InsertText(def ?? string.Empty);
             }
         }
 
-        // ============================================================
-        // Building blocks
-        // ============================================================
+        private static void DrawPageChrome(XGraphics graphics, PdfPage page)
+        {
+            if (SesBackgroundPng != null)
+                DrawImageBytes(graphics, SesBackgroundPng, 0, 0, page.Width.Point, page.Height.Point);
+
+            const double headerHeight = 62;
+            const double footerHeight = 48;
+            if (SesHeaderPng != null)
+                DrawImageBytes(graphics, SesHeaderPng, 0, 0, page.Width.Point, headerHeight);
+            if (SesFooterPng != null)
+                DrawImageBytes(graphics, SesFooterPng, 0, page.Height.Point - footerHeight, page.Width.Point, footerHeight);
+
+            DrawText(graphics, "MRU Verification Report", 14, true, ColorHeading,
+                ReportCanvas.LeftMargin, 22, 300);
+        }
+
+        private static void DrawImageBytes(XGraphics graphics, byte[] bytes, double x, double y, double width, double height)
+        {
+            using (var stream = new MemoryStream(bytes, writable: false))
+            using (XImage image = XImage.FromStream(stream))
+                graphics.DrawImage(image, x, y, width, height);
+        }
+
+        private static void DrawText(
+            XGraphics graphics,
+            string text,
+            double size,
+            bool bold,
+            XColor color,
+            double x,
+            double y,
+            double width,
+            XStringFormat format = null)
+        {
+            var font = new XFont("Arial", size, bold ? XFontStyleEx.Bold : XFontStyleEx.Regular);
+            graphics.DrawString(text ?? string.Empty, font, new XSolidBrush(color),
+                new XRect(x, y, width, size * 1.6), format ?? XStringFormats.TopLeft);
+        }
+
+        private static byte[] LoadResourceBytes(string packUri)
+        {
+            try
+            {
+                var info = Application.GetResourceStream(new Uri(packUri));
+                if (info == null)
+                    return null;
+                using (info.Stream)
+                using (var memory = new MemoryStream())
+                {
+                    info.Stream.CopyTo(memory);
+                    return memory.ToArray();
+                }
+            }
+            catch (IOException)
+            {
+                return null;
+            }
+            catch (InvalidOperationException)
+            {
+                return null;
+            }
+            catch (UriFormatException)
+            {
+                return null;
+            }
+        }
+
+        private static KeyValuePair<string, string> Pair(string key, string value) =>
+            new KeyValuePair<string, string>(key, value);
 
         private static IEnumerable<VerificationAxisKind> AllAxes()
         {
@@ -1655,248 +603,276 @@ private static void WriteTitle(RadFixedDocumentEditor editor, VerificationReport
             yield return VerificationAxisKind.Heave;
         }
 
-        private static string OverviewSentence(VerificationReportModel model)
+        private static string Dash(string value) =>
+            string.IsNullOrWhiteSpace(value) ? "-" : value;
+
+        private static string Format(double value, string unit) =>
+            double.IsNaN(value) ? "-" : string.Format(Ci, "{0:+0.000;-0.000;0.000} {1}", value, unit);
+
+        private static string Stat(double? value, string unit) =>
+            !value.HasValue || double.IsNaN(value.Value)
+                ? "-"
+                : string.Format(Ci, "{0:F3} {1}", value.Value, unit);
+
+        private static string Percent(double? value) =>
+            !value.HasValue || double.IsNaN(value.Value)
+                ? "-"
+                : string.Format(Ci, "{0:F1}%", value.Value);
+
+        private static string Correlation(double? value) =>
+            !value.HasValue || double.IsNaN(value.Value)
+                ? "-"
+                : string.Format(Ci, "{0:F3}", value.Value);
+
+        private static string Latency(double? seconds) =>
+            !seconds.HasValue || double.IsNaN(seconds.Value)
+                ? "-"
+                : string.Format(Ci, "{0:+0.000;-0.000;0.000} s", seconds.Value);
+
+        internal sealed class ReportCanvas : IDisposable
         {
-            if (!model.HasData)
+            internal const double LeftMargin = 48;
+            internal const double RightMargin = 48;
+            internal const double TopMargin = 91;
+            private const double BottomMargin = 76;
+            internal const double ContentWidth = 595.28 - LeftMargin - RightMargin;
+
+            private readonly PdfDocument _document;
+            private XGraphics _graphics;
+
+            internal double Y { get; private set; }
+            internal IDictionary<string, int> SectionPages { get; } =
+                new Dictionary<string, int>(StringComparer.Ordinal);
+
+            internal ReportCanvas(PdfDocument document)
             {
-                return "No measurement data was captured for this project, so a verification result is not available. " +
-                       "Capture reference and vessel motion data, then generate the report again.";
+                _document = document;
             }
 
-            string applied = model.HasCorrectionApplied
-                ? "The recommended corrections have been applied to the vessel unit."
-                : "The recommended corrections have not yet been applied.";
-
-            return string.Format(Ci,
-                "This report verifies the vessel motion unit against a trusted reference using {0:N0} averaged samples " +
-                "over a {1} capture. The calculated orientation corrections are listed below. {2}",
-                model.SampleCount,
-                string.IsNullOrWhiteSpace(model.Duration) ? "completed" : model.Duration,
-                applied);
-        }
-
-        /// <summary>
-        /// Full-width SES-branded section heading: Dark Blue Grey band with
-        /// Energy Green left accent and bold white (via block ForegroundColor) text.
-        /// </summary>
-        private static void Heading(RadFixedDocumentEditor editor, string text)
-        {
-            // Spacer before the heading band
-            SetText(editor, _robotoRegular, 4, ColorBorder);
-            editor.ParagraphProperties.SpacingBefore = 8;
-            editor.ParagraphProperties.SpacingAfter  = 0;
-            editor.InsertParagraph();
-            editor.InsertRun(" ");
-
-            // Full-width Dark Blue Grey heading bar with Energy Green left border
-            var headTable = new Table { Borders = new TableBorders(new Border(0, ColorBorder)) };
-            headTable.DefaultCellProperties.Padding = new Thickness(10, 6, 10, 6);
-            TableRow  headRow  = headTable.Rows.AddTableRow();
-            TableCell headCell = headRow.Cells.AddTableCell();
-            headCell.PreferredWidth = 681;
-            headCell.Background     = ColorHeading;
-            headCell.Borders        = new TableCellBorders(new Border(5, ColorAccent), null, null, null);
-            Block headBlock = headCell.Blocks.AddBlock();
-            headBlock.SpacingBefore = 0;
-            headBlock.SpacingAfter  = 0;
-            headBlock.TextProperties.Font     = _robotoBold;
-            headBlock.TextProperties.FontSize = 12;
-            headBlock.GraphicProperties.FillColor = ColorTableHeaderText; // white text on Dark Blue Grey
-            headBlock.InsertText(text.ToUpperInvariant());
-            editor.InsertTable(headTable);
-
-            SetText(editor, _robotoRegular, 10, ColorText);
-            editor.ParagraphProperties.SpacingBefore = 0;
-            editor.ParagraphProperties.SpacingAfter  = 4;
-        }
-
-        private static void Introduction(RadFixedDocumentEditor editor, string text)
-        {
-            Paragraph(editor, text, 9.5, ColorMuted, spacingAfter: 8);
-        }
-
-        /// <summary>Thin Energy Green horizontal rule — used as a visual section divider.</summary>
-        private static void TealRule(RadFixedDocumentEditor editor)
-        {
-            var table = new Table { Borders = new TableBorders(new Border(0, ColorBorder)) };
-            table.DefaultCellProperties.Padding = new Thickness(0);
-            TableRow  row  = table.Rows.AddTableRow();
-            TableCell cell = row.Cells.AddTableCell();
-            cell.PreferredWidth = 681;
-            cell.Background     = ColorAccent;
-            cell.Borders        = new TableCellBorders(null, new Border(2, ColorAccent), null, null);
-            cell.Blocks.AddBlock().InsertText(" ");
-            editor.InsertTable(table);
-        }
-
-        private static void Paragraph(RadFixedDocumentEditor editor, string text, double size, RgbColor color,
-                                      double spacingBefore = 0, double spacingAfter = 6, bool bold = false)
-        {
-            SetText(editor, bold ? _robotoBold : _robotoRegular, size, color);
-            editor.ParagraphProperties.SpacingBefore = spacingBefore;
-            editor.ParagraphProperties.SpacingAfter = spacingAfter;
-            editor.InsertParagraph();
-            editor.InsertRun(text ?? string.Empty);
-        }
-
-        private static void HorizontalRule(RadFixedDocumentEditor editor)
-        {
-            var table = new Table { Borders = new TableBorders(new Border(0, ColorBorder)) };
-            table.DefaultCellProperties.Padding = new Thickness(0);
-            TableRow row  = table.Rows.AddTableRow();
-            TableCell cell = row.Cells.AddTableCell();
-            cell.PreferredWidth = 681;
-            cell.Borders = new TableCellBorders(null, new Border(0.5, ColorBorder), null, null);
-            cell.Blocks.AddBlock().InsertText(" ");
-            editor.InsertTable(table);
-        }
-
-        private static void SetText(RadFixedDocumentEditor editor, FontBase font, double size, RgbColor color)
-        {
-            editor.CharacterProperties.Font = font;
-            editor.CharacterProperties.FontSize = size;
-            editor.CharacterProperties.ForegroundColor = color;
-        }
-
-        private static void InsertImage(RadFixedDocumentEditor editor, byte[] png, double width, double height)
-        {
-            using (var ms = new MemoryStream(png))
+            internal void StartPage()
             {
-                var image = new TelerikImageSource(ms);
-                editor.ParagraphProperties.SpacingAfter = 8;
-                editor.InsertParagraph();
-                editor.InsertImageInline(image, new Size(width, height));
+                _graphics?.Dispose();
+                PdfPage page = _document.AddPage();
+                page.Size = PageSize.A4;
+                _graphics = XGraphics.FromPdfPage(page);
+                DrawPageChrome(_graphics, page);
+                Y = TopMargin;
             }
-        }
 
-        // ── Tables ──
-
-        private static Table NewTable()
-        {
-            var table = new Table
+            internal PdfPage StartPageWithResult()
             {
-                Borders    = new TableBorders(new Border(0.5, ColorBorder)),
-                LayoutType = TableLayoutType.FixedWidth,
-            };
-            table.DefaultCellProperties.Padding = new Thickness(6, 4, 6, 4);
-            return table;
-        }
-
-        private static void AddHeaderRow(Table table, params string[] cells)
-        {
-            TableRow row = table.Rows.AddTableRow();
-            foreach (string text in cells)
-            {
-                TableCell cell = row.Cells.AddTableCell();
-                cell.Background = ColorTableHeader;
-                cell.Borders    = new TableCellBorders(
-                    new Border(0, ColorTableHeader),
-                    new Border(0, ColorTableHeader),
-                    new Border(0, ColorTableHeader),
-                    new Border(1, ColorBorder));
-                Block block = cell.Blocks.AddBlock();
-                ApplyCellTextHeader(block);
-                InsertHeaderText(block, text);
+                StartPage();
+                return _document.Pages[_document.Pages.Count - 1];
             }
-        }
 
-        private static void AddBodyRow(Table table, int index, params string[] cells)
-        {
-            TableRow row = table.Rows.AddTableRow();
-            bool alt = (index % 2) == 1;
-            for (int i = 0; i < cells.Length; i++)
+            internal void StartSection(string title, string description)
             {
-                TableCell cell = row.Cells.AddTableCell();
-                if (alt) cell.Background = ColorRowAlt;
-                Block block = cell.Blocks.AddBlock();
-                FontBase font = i == 0 ? _robotoBold : _robotoRegular;
-                ApplyCellText(block, font);
-                block.InsertText(cells[i] ?? string.Empty);
+                StartPage();
+                SectionPages[title] = _document.Pages.Count;
+                DrawHeading(title);
+                DrawParagraph(description, 10, color: ColorMuted);
             }
-        }
 
-        private static void InsertKeyValueTable(RadFixedDocumentEditor editor, List<KeyValuePair<string, string>> rows)
-        {
-            var table = NewTable();
-            int index = 0;
-            foreach (KeyValuePair<string, string> kv in rows)
+            internal void Complete()
             {
-                TableRow row = table.Rows.AddTableRow();
-                bool alt = (index++ % 2) == 1;
-
-                TableCell key = row.Cells.AddTableCell();
-                key.PreferredWidth = 170;
-                if (alt) key.Background = ColorRowAlt;
-                Block keyBlock = key.Blocks.AddBlock();
-                ApplyCellText(keyBlock, _robotoBold);
-                keyBlock.InsertText(kv.Key);
-
-                TableCell val = row.Cells.AddTableCell();
-                val.PreferredWidth = 510;
-                if (alt) val.Background = ColorRowAlt;
-                Block valBlock = val.Blocks.AddBlock();
-                ApplyCellText(valBlock, _robotoRegular);
-                valBlock.InsertText(kv.Value ?? string.Empty);
+                _graphics?.Dispose();
+                _graphics = null;
             }
-            editor.InsertTable(table);
-        }
 
-        // Only the font (bold vs regular) can be set on table-cell text via the
-        // public RadPdfProcessing API; size and colour fall back to the document
-        // defaults (dark text on light/shaded cells).
-        private static void ApplyCellText(Block block, FontBase font)
-        {
-            block.SpacingAfter  = 0;
-            block.SpacingBefore = 0;
-            block.TextProperties.Font = font;
-        }
+            internal void DrawHeading(string text, double size = 20)
+            {
+                EnsureSpace(size * 2.4);
+                DrawText(_graphics, text, size, true, ColorHeading, LeftMargin, Y, ContentWidth);
+                Y += size * 1.8;
+                DrawLine(ColorAccent, 3);
+                Y += 10;
+            }
 
-        private static void ApplyCellTextHeader(Block block)
-        {
-            block.SpacingAfter  = 0;
-            block.SpacingBefore = 0;
-            block.TextProperties.Font         = _robotoBold;
-            block.GraphicProperties.FillColor = ColorTableHeaderText; // white text on Dark Blue Grey header
-        }
+            internal void DrawSubheading(string text)
+            {
+                EnsureSpace(28);
+                DrawText(_graphics, text, 12, true, ColorHeading, LeftMargin, Y, ContentWidth);
+                Y += 21;
+            }
 
-        private static void InsertHeaderText(Block block, string text)
-        {
-            block.InsertText(text);
-        }
+            internal void DrawParagraph(string text, double size = 10.5, bool bold = false, XColor? color = null)
+            {
+                if (string.IsNullOrWhiteSpace(text))
+                {
+                    Y += 5;
+                    return;
+                }
 
-        // ── Formatting helpers ──
+                var font = new XFont("Arial", size, bold ? XFontStyleEx.Bold : XFontStyleEx.Regular);
+                foreach (string line in WrapText(text, font, ContentWidth))
+                {
+                    double lineHeight = size * 1.45;
+                    EnsureSpace(lineHeight);
+                    _graphics.DrawString(line, font, new XSolidBrush(color ?? ColorText),
+                        new XRect(LeftMargin, Y, ContentWidth, lineHeight), XStringFormats.TopLeft);
+                    Y += lineHeight;
+                }
+                Y += 7;
+            }
 
-        private static string Dash(string s) => string.IsNullOrWhiteSpace(s) ? "-" : s;
+            internal void DrawBullet(string text)
+            {
+                DrawParagraph("- " + text, 10.5);
+            }
 
-        private static string Format(double value, string unit)
-        {
-            if (double.IsNaN(value)) return "-";
-            return string.Format(Ci, "{0:+0.000;-0.000;0.000} {1}", value, unit);
-        }
+            internal void DrawKeyValues(IEnumerable<KeyValuePair<string, string>> rows)
+            {
+                foreach (KeyValuePair<string, string> row in rows)
+                {
+                    // Keep the label and the first line of its value together.
+                    EnsureSpace(14 + 10 * 1.45);
+                    DrawText(_graphics, row.Key, 9.5, true, ColorHeading, LeftMargin, Y, ContentWidth);
+                    Y += 14;
+                    DrawParagraph(Dash(row.Value), 10);
+                }
+            }
 
-        private static string Stat(double? value, string unit)
-        {
-            if (value == null || double.IsNaN(value.Value)) return "-";
-            return string.Format(Ci, "{0:0.000} {1}", value.Value, unit);
-        }
+            internal void DrawTable(string[] headers, IEnumerable<string[]> rows, double[] weights)
+            {
+                double totalWeight = 0;
+                foreach (double weight in weights)
+                    totalWeight += weight;
+                double[] widths = new double[weights.Length];
+                for (int i = 0; i < weights.Length; i++)
+                    widths[i] = ContentWidth * weights[i] / totalWeight;
 
-        private static string Percent(double? value)
-        {
-            if (value == null || double.IsNaN(value.Value)) return "-";
-            return string.Format(Ci, "{0:0.0} %", value.Value);
-        }
+                DrawTableRow(headers, widths, header: true, rowIndex: 0);
+                int rowIndex = 0;
+                foreach (string[] row in rows)
+                    DrawTableRow(row, widths, header: false, rowIndex: rowIndex++);
+                Y += 9;
+            }
 
-        private static string Correlation(double? value)
-        {
-            if (value == null || double.IsNaN(value.Value)) return "-";
-            return string.Format(Ci, "{0:0.000}", value.Value);
-        }
+            internal void DrawImage(byte[] bytes, double maxWidth, double maxHeight)
+            {
+                if (bytes == null || bytes.Length == 0)
+                    return;
 
-        private static string Latency(double? seconds)
-        {
-            if (seconds == null || double.IsNaN(seconds.Value)) return "-";
-            double ms = seconds.Value * 1000.0;
-            return string.Format(Ci, "{0:+0;-0;0} ms", ms);
+                using (var stream = new MemoryStream(bytes, writable: false))
+                using (XImage image = XImage.FromStream(stream))
+                {
+                    double ratio = (double)image.PixelHeight / image.PixelWidth;
+                    double width = Math.Min(maxWidth, ContentWidth);
+                    double height = width * ratio;
+                    if (height > maxHeight)
+                    {
+                        height = maxHeight;
+                        width = height / ratio;
+                    }
+
+                    EnsureSpace(height + 12);
+                    _graphics.DrawImage(image, LeftMargin + (ContentWidth - width) / 2, Y, width, height);
+                    Y += height + 12;
+                }
+            }
+
+            internal void EnsureSpace(double height)
+            {
+                if (Y + height <= PageHeight - BottomMargin)
+                    return;
+                StartPage();
+            }
+
+            private void DrawTableRow(string[] cells, double[] widths, bool header, int rowIndex)
+            {
+                var font = new XFont("Arial", header ? 8.5 : 8.5,
+                    header ? XFontStyleEx.Bold : XFontStyleEx.Regular);
+                var cellLines = new List<string[]>();
+                double rowHeight = header ? 25 : 22;
+                for (int i = 0; i < widths.Length; i++)
+                {
+                    string[] lines = WrapText(i < cells.Length ? cells[i] : string.Empty, font, widths[i] - 12).ToArray();
+                    cellLines.Add(lines);
+                    rowHeight = Math.Max(rowHeight, lines.Length * 12 + 10);
+                }
+
+                EnsureSpace(rowHeight);
+                double x = LeftMargin;
+                for (int i = 0; i < widths.Length; i++)
+                {
+                    XRect rect = new XRect(x, Y, widths[i], rowHeight);
+                    XColor fill = header ? ColorHeading : (rowIndex % 2 == 0 ? ColorRowAlt : XColors.White);
+                    _graphics.DrawRectangle(new XSolidBrush(fill), rect);
+                    _graphics.DrawRectangle(new XPen(ColorBorder, 0.5), rect);
+                    double textY = Y + 5;
+                    XColor textColor = header ? XColors.White : ColorText;
+                    foreach (string line in cellLines[i])
+                    {
+                        _graphics.DrawString(line, font, new XSolidBrush(textColor),
+                            new XRect(x + 6, textY, widths[i] - 12, 12), XStringFormats.TopLeft);
+                        textY += 12;
+                    }
+                    x += widths[i];
+                }
+                Y += rowHeight;
+            }
+
+            private void DrawLine(XColor color, double thickness)
+            {
+                _graphics.DrawLine(new XPen(color, thickness),
+                    LeftMargin, Y, LeftMargin + ContentWidth, Y);
+            }
+
+            private IEnumerable<string> WrapText(string text, XFont font, double width)
+            {
+                foreach (string paragraph in (text ?? string.Empty).Replace("\r", string.Empty).Split('\n'))
+                {
+                    string line = string.Empty;
+                    foreach (string word in paragraph.Split(new[] { ' ' }, StringSplitOptions.RemoveEmptyEntries))
+                    {
+                        if (_graphics.MeasureString(word, font).Width > width)
+                        {
+                            if (line.Length > 0)
+                            {
+                                yield return line;
+                                line = string.Empty;
+                            }
+
+                            var segment = new StringBuilder();
+                            TextElementEnumerator elements = StringInfo.GetTextElementEnumerator(word);
+                            while (elements.MoveNext())
+                            {
+                                string element = elements.GetTextElement();
+                                string segmentCandidate = segment.ToString() + element;
+                                if (segment.Length > 0 && _graphics.MeasureString(segmentCandidate, font).Width > width)
+                                {
+                                    yield return segment.ToString();
+                                    segment.Clear();
+                                }
+                                segment.Append(element);
+                            }
+
+                            line = segment.ToString();
+                            continue;
+                        }
+
+                        string candidate = line.Length == 0 ? word : line + " " + word;
+                        if (line.Length > 0 && _graphics.MeasureString(candidate, font).Width > width)
+                        {
+                            yield return line;
+                            line = word;
+                        }
+                        else
+                        {
+                            line = candidate;
+                        }
+                    }
+                    yield return line;
+                }
+            }
+
+            private double PageHeight => _graphics.PageSize.Height;
+
+            public void Dispose()
+            {
+                _graphics?.Dispose();
+                _graphics = null;
+            }
         }
     }
 }

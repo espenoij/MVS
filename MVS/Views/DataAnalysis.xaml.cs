@@ -1,4 +1,5 @@
 ﻿using System.Windows.Controls;
+using MVS.Views.Controls;
 
 namespace MVS
 {
@@ -17,29 +18,31 @@ namespace MVS
             // Context
             DataContext = projectVM;
 
-            // Koble chart til data
-            // Input
-            chartPitch1.Series[0].ItemsSource = projectVM.testPitchList;
-            chartRoll1.Series[0].ItemsSource = projectVM.testRollList;
-            chartHeave1.Series[0].ItemsSource = projectVM.testHeaveList;
+            BindComparisonChart(chartPitch1, projectVM.refPitchList, projectVM.testPitchList);
+            BindComparisonChart(chartRoll1, projectVM.refRollList, projectVM.testRollList);
+            BindComparisonChart(chartHeave1, projectVM.refHeaveList, projectVM.testHeaveList);
 
-            chartPitch1.Series[1].ItemsSource = projectVM.refPitchList;
-            chartRoll1.Series[1].ItemsSource = projectVM.refRollList;
-            chartHeave1.Series[1].ItemsSource = projectVM.refHeaveList;
+            BindComparisonChart(chartPitch2, projectVM.refPitchMeanList, projectVM.testPitchMeanList);
+            BindComparisonChart(chartRoll2, projectVM.refRollMeanList, projectVM.testRollMeanList);
+            BindComparisonChart(chartHeave2, projectVM.refHeaveMeanList, projectVM.testHeaveMeanList);
 
-            // Mean
-            chartPitch2.Series[0].ItemsSource = projectVM.testPitchMeanList;
-            chartRoll2.Series[0].ItemsSource = projectVM.testRollMeanList;
-            chartHeave2.Series[0].ItemsSource = projectVM.testHeaveMeanList;
+            BindDeviationChart(chartPitch3, projectVM.devPitchMeanList);
+            BindDeviationChart(chartRoll3, projectVM.devRollMeanList);
+            BindDeviationChart(chartHeave3, projectVM.devHeaveMeanList);
+        }
 
-            chartPitch2.Series[1].ItemsSource = projectVM.refPitchMeanList;
-            chartRoll2.Series[1].ItemsSource = projectVM.refRollMeanList;
-            chartHeave2.Series[1].ItemsSource = projectVM.refHeaveMeanList;
+        private static void BindComparisonChart(
+            LiveLineChart chart,
+            ObservableCollectionEx<HMSData> reference,
+            ObservableCollectionEx<HMSData> test)
+        {
+            chart.ReferenceItemsSource = reference;
+            chart.TestItemsSource = test;
+        }
 
-            // Deviation
-            chartPitch3.Series[0].ItemsSource = projectVM.devPitchMeanList;
-            chartRoll3.Series[0].ItemsSource = projectVM.devRollMeanList;
-            chartHeave3.Series[0].ItemsSource = projectVM.devHeaveMeanList;
+        private static void BindDeviationChart(LiveLineChart chart, ObservableCollectionEx<HMSData> deviation)
+        {
+            chart.TestItemsSource = deviation;
         }
 
         /// <summary>

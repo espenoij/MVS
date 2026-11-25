@@ -13,7 +13,7 @@ namespace MVS
             // Når vi ikke har data tilgjengelig legges 0 data inn i grafene for å holde de gående.
 
             // Grunnen til at vi buffrer data først er pga ytelsesproblemer dersom vi kjører data rett ut i grafene på skjerm.
-            // Det takler ikke grafene fra Telerik. Buffrer data først og så oppdaterer vi grafene med jevne passende mellomrom.
+            // Buffrer data først og så oppdaterer vi grafene med jevne passende mellomrom.
 
             // Lock ensures Add is mutually exclusive with Transfer's snapshot+clear.
             lock (buffer)
@@ -21,7 +21,7 @@ namespace MVS
                 // NB! Alle grafpunkt tidsstemples med samme klokke (UtcNow) som x-aksen
                 // (alignmentTime) bruker. Kildens timestamp kan stå stille mellom
                 // bufferoppdateringer eller ligge bak veggklokka, noe som gir like eller
-                // ikke-monotone x-verdier. Da tegner Telerik-grafen en linje fra siste
+                // ikke-monotone x-verdier. Da kan grafen tegne en linje fra siste
                 // til første datapunkt. Konsekvent UtcNow gir strengt økende x-verdier.
                 if (data?.status == DataStatus.OK)
                 {
@@ -76,7 +76,7 @@ namespace MVS
             // Fjerne alle gamle datapunkter i én batch-operasjon.
             // Ved å bruke Suspend/ResumeNotifications sendes kun én collection-changed
             // hendelse til grafen. Dersom vi i stedet fjerner ett og ett punkt vil
-            // Telerik-grafen midlertidig tegne en linje fra siste til første datapunkt.
+            // grafen midlertidig tegne en linje fra siste til første datapunkt.
             dataList.SuspendNotifications();
             try
             {

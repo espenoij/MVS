@@ -1,8 +1,7 @@
 <ResourceDictionary
     xmlns="http://schemas.microsoft.com/winfx/2006/xaml/presentation"
     xmlns:x="http://schemas.microsoft.com/winfx/2006/xaml"
-    xmlns:controls="clr-namespace:MVS.Views.Controls"
-    xmlns:telerik="http://schemas.telerik.com/2008/xaml/presentation">
+    xmlns:controls="clr-namespace:MVS.Views.Controls">
 
     <!--
         SES Energy Brand Toolkit — Forms
@@ -11,24 +10,6 @@
         Positive states use Energy Green; error states stay accessible and
         professional. Brand tokens are resolved with DynamicResource.
     -->
-
-    <!-- Form field label -->
-    <Style x:Key="SesFormLabelStyle" TargetType="telerik:Label">
-        <Setter Property="FontFamily" Value="{DynamicResource SesFontFamily}" />
-        <Setter Property="FontSize" Value="{DynamicResource SesFontSizeBody}" />
-        <Setter Property="FontWeight" Value="SemiBold" />
-        <Setter Property="Foreground" Value="{DynamicResource SesTextPrimaryBrush}" />
-        <Setter Property="VerticalAlignment" Value="Center" />
-        <Setter Property="Padding" Value="0,0,0,2" />
-    </Style>
-
-    <!-- Secondary / helper label -->
-    <Style x:Key="SesFormHelperLabelStyle" TargetType="telerik:Label">
-        <Setter Property="FontFamily" Value="{DynamicResource SesFontFamily}" />
-        <Setter Property="FontSize" Value="{DynamicResource SesFontSizeCaption}" />
-        <Setter Property="FontWeight" Value="Normal" />
-        <Setter Property="Foreground" Value="{DynamicResource SesTextSecondaryBrush}" />
-    </Style>
 
     <!-- Native form field label -->
     <Style x:Key="SesNativeFormLabelStyle" TargetType="{x:Type Label}">
@@ -176,24 +157,6 @@
         <Setter Property="BorderThickness" Value="1" />
         <Setter Property="FontFamily" Value="{DynamicResource SesFontFamily}" />
         <Setter Property="FontSize" Value="{DynamicResource SesFontSizeBody}" />
-    </Style>
-
-    <!-- Single-line input field -->
-    <Style x:Key="SesFieldTextBoxStyle" TargetType="telerik:RadWatermarkTextBox" BasedOn="{StaticResource RadWatermarkTextBoxStyle}">
-        <Setter Property="FontFamily" Value="{DynamicResource SesFontFamily}" />
-        <Setter Property="FontSize" Value="{DynamicResource SesFontSizeBody}" />
-        <Setter Property="Foreground" Value="{DynamicResource SesTextPrimaryBrush}" />
-        <Setter Property="MinHeight" Value="{DynamicResource SesControlMinHeight}" />
-        <Setter Property="Padding" Value="4,2" />
-        <Setter Property="Margin" Value="{DynamicResource SesFieldMargin}" />
-    </Style>
-
-    <!-- Multi-line input field -->
-    <Style x:Key="SesMultiLineFieldTextBoxStyle" TargetType="telerik:RadWatermarkTextBox" BasedOn="{StaticResource SesFieldTextBoxStyle}">
-        <Setter Property="TextWrapping" Value="Wrap" />
-        <Setter Property="AcceptsReturn" Value="True" />
-        <Setter Property="VerticalContentAlignment" Value="Top" />
-        <Setter Property="MinHeight" Value="72" />
     </Style>
 
     <!-- Validation / error message text -->

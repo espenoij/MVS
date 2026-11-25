@@ -1,11 +1,11 @@
 ﻿using System;
 using System.Diagnostics;
 using System.IO;
-using System.Reflection;
 using System.Windows;
-using System.Windows.Markup;
+using System.Windows.Controls;
+using System.Windows.Media;
+using System.Windows.Media.Imaging;
 using System.Windows.Navigation;
-using Telerik.Windows.Controls;
 
 namespace MVS
 {
@@ -15,58 +15,37 @@ namespace MVS
     /// </summary>
     public partial class DialogAbout : Window
     {
-        private const string TelerikXmlns = "xmlns:telerik=\"http://schemas.telerik.com/2008/xaml/presentation\"";
-
-        // Load DataVisualization assembly before any XAML parsing so that
-        // XamlReader can resolve RadBarcode / QRCode via XmlnsDefinitionAttribute.
-        private static readonly Assembly? _dataVisAsm = LoadDataVisualizationAssembly();
-
         public DialogAbout()
         {
             InitializeComponent();
             Loaded += (s, e) =>
             {
-                websiteBarcodeHost.Content = CreateQrBarcode("https://sesenergy.com/aviation");
-                emailBarcodeHost.Content = CreateQrBarcode("mailto:aviation.services@sesenergy.com");
+                websiteBarcodeHost.Content = CreateQrCode("https://sesenergy.com/aviation");
+                emailBarcodeHost.Content = CreateQrCode("mailto:aviation.services@sesenergy.com");
             };
         }
 
-        private static Assembly? LoadDataVisualizationAssembly()
+        private static Image CreateQrCode(string value)
         {
-            try
+            var bitmap = new BitmapImage();
+            using (var stream = new MemoryStream(QrCodeRenderer.CreatePng(value)))
             {
-                string path = Path.Combine(
-                    AppContext.BaseDirectory,
-                    "Telerik.Windows.Controls.DataVisualization.dll");
-                return File.Exists(path)
-                    ? Assembly.LoadFrom(path)
-                    : Assembly.Load("Telerik.Windows.Controls.DataVisualization");
+                bitmap.BeginInit();
+                bitmap.CacheOption = BitmapCacheOption.OnLoad;
+                bitmap.StreamSource = stream;
+                bitmap.EndInit();
             }
-            catch (Exception ex)
-            {
-                Debug.WriteLine($"Failed to load Telerik DataVisualization assembly: {ex.Message}");
-                return null;
-            }
-        }
 
-        private static UIElement? CreateQrBarcode(string value)
-        {
-            if (_dataVisAsm == null)
-                return null;
-
-            try
+            bitmap.Freeze();
+            var image = new Image
             {
-                string xaml =
-                    $"<telerik:RadBarcode {TelerikXmlns} Width=\"120\" Height=\"120\" Value=\"{value}\">" +
-                    "<telerik:RadBarcode.Symbology><telerik:QRCode /></telerik:RadBarcode.Symbology>" +
-                    "</telerik:RadBarcode>";
-                return (UIElement)XamlReader.Parse(xaml);
-            }
-            catch (Exception ex)
-            {
-                Debug.WriteLine($"Failed to create QR barcode: {ex.Message}");
-                return null;
-            }
+                Width = 120,
+                Height = 120,
+                Source = bitmap,
+                Stretch = Stretch.Uniform
+            };
+            RenderOptions.SetBitmapScalingMode(image, BitmapScalingMode.NearestNeighbor);
+            return image;
         }
 
         public void Init(AboutVM aboutVM)

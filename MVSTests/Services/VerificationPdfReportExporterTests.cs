@@ -1,19 +1,22 @@
 using System;
+using System.Collections.Generic;
 using System.IO;
-using System.Reflection;
+using System.Linq;
+using System.Text;
 using Microsoft.VisualStudio.TestTools.UnitTesting;
 using MVS;
 using MVS.Models;
 using MVS.Services;
 using MVS.Services.Reporting;
 using MVSTests.TestInfrastructure;
+using PdfSharp.Pdf;
 
 namespace MVSTests.Services
 {
     /// <summary>
     /// Tests for the verification reporting layer: the report model accessors,
-    /// the deterministic chart bitmaps, and the RadPdfProcessing PDF export.
-    /// PDF/chart building touches Telerik/GDI+ objects, so those tests run on an
+    /// the deterministic chart bitmaps, and the PDFsharp PDF export.
+    /// PDF/chart building touches WPF/GDI+ objects, so those tests run on an
     /// STA thread via <see cref="StaTestHelper"/>.
     /// </summary>
     [TestClass]
@@ -254,8 +257,8 @@ namespace MVSTests.Services
                 var document = VerificationPdfReportExporter.Build(model);
 
                 Assert.IsNotNull(document);
-                Assert.IsTrue(document.Pages.Count >= 2,
-                    "Expected the report to contain at least two pages (cover + dashboard).");
+                Assert.IsTrue(document.Pages.Count >= 12,
+                    "Expected the report to include its cover, contents and verification sections.");
             });
         }
 
@@ -297,51 +300,82 @@ namespace MVSTests.Services
         }
 
         [TestMethod]
-        public void DiscoverSectionPageNumbers_DoesNotForceBreak_FinalAppendicesSection()
+        public void Build_WithLongAppendixNotes_PaginatesTheReport()
         {
             StaTestHelper.Run(() =>
             {
                 var model = SampleModel(withData: false);
-                var method = typeof(VerificationPdfReportExporter).GetMethod(
-                    "DiscoverSectionPageNumbers",
-                    BindingFlags.NonPublic | BindingFlags.Static);
-
-                Assert.IsNotNull(method);
-
-                object result = method.Invoke(null, new object[] { model, new System.Collections.Generic.HashSet<string>() });
-                FieldInfo newSplitsField = result.GetType().GetField("Item2");
-
-                Assert.IsNotNull(newSplitsField);
-
-                var newSplits = (System.Collections.Generic.HashSet<string>)newSplitsField.GetValue(result);
-                Assert.IsFalse(newSplits.Contains("13. Appendices"));
+                model.Metadata.AppendixNotes = new string('A', 5000);
+                using (var document = VerificationPdfReportExporter.Build(model))
+                {
+                    Assert.IsTrue(document.Pages.Count > 15,
+                        "A long appendix should flow onto additional pages without truncating the report.");
+                }
             });
         }
 
         [TestMethod]
-        public void DiscoverSectionPageNumbers_PlacesAxisDetailImmediatelyAfterAppliedCorrections()
+        [DataRow(45)]
+        [DataRow(46)]
+        public void DrawKeyValues_NearPageBottom_KeepsLabelWithFirstValueLine(int precedingLines)
         {
             StaTestHelper.Run(() =>
             {
-                var model = SampleModel();
-                var method = typeof(VerificationPdfReportExporter).GetMethod(
-                    "DiscoverSectionPageNumbers",
-                    BindingFlags.NonPublic | BindingFlags.Static);
+                using var document = new PdfDocument();
+                using var canvas = new VerificationPdfReportExporter.ReportCanvas(document);
+                canvas.StartPage();
+                canvas.DrawParagraph(string.Join("\n", Enumerable.Repeat("Filler", precedingLines)), 10);
 
-                Assert.IsNotNull(method);
+                canvas.DrawKeyValues(new[]
+                {
+                    new KeyValuePair<string, string>("Equipment", "Reference MRU")
+                });
 
-                object result = method.Invoke(null, new object[] { model, new System.Collections.Generic.HashSet<string>() });
-                FieldInfo pagesField = result.GetType().GetField("Item1");
-
-                Assert.IsNotNull(pagesField);
-
-                var pages = (System.Collections.Generic.Dictionary<string, int>)pagesField.GetValue(result);
-                Assert.IsTrue(pages.ContainsKey("3.  Axis Detail"));
-                Assert.IsFalse(pages.ContainsKey("10. Axis Detail"));
-                Assert.IsTrue(pages["3.  Axis Detail"] >= pages["2.  Applied Corrections"]);
-                Assert.IsTrue(pages["4.  Correlation & Latency"] >= pages["3.  Axis Detail"]);
+                canvas.Complete();
+                Assert.AreEqual(2, document.Pages.Count);
+                Assert.AreEqual(126.5, canvas.Y, 0.01,
+                    "The label and first value line must both be drawn on the new page.");
+                Assert.IsFalse(PageContent(document, 0).Contains("(Equipment) Tj"));
+                StringAssert.Contains(PageContent(document, 1), "(Equipment) Tj");
+                StringAssert.Contains(PageContent(document, 1), "(Reference MRU) Tj");
             });
         }
+
+        [TestMethod]
+        public void DrawKeyValues_LongMetadata_PreservesAllLinesAcrossPages()
+        {
+            StaTestHelper.Run(() =>
+            {
+                using var document = new PdfDocument();
+                using var canvas = new VerificationPdfReportExporter.ReportCanvas(document);
+                canvas.StartPage();
+                canvas.DrawParagraph(string.Join("\n", Enumerable.Repeat("Filler", 45)), 10);
+
+                canvas.DrawKeyValues(new[]
+                {
+                    new KeyValuePair<string, string>("Installation",
+                        string.Join("\n", Enumerable.Range(0, 100).Select(i => $"Metadata {i:D3}"))),
+                    new KeyValuePair<string, string>("Next field", "Next value")
+                });
+
+                canvas.Complete();
+                Assert.AreEqual(4, document.Pages.Count);
+                Assert.AreEqual(264.0, canvas.Y, 0.01,
+                    "All 100 metadata lines and the following label/value must be laid out.");
+                string firstValuePage = PageContent(document, 1);
+                StringAssert.Contains(firstValuePage, "(Installation) Tj");
+                StringAssert.Contains(firstValuePage, "(Metadata 000) Tj");
+                string allPages = string.Concat(Enumerable.Range(0, document.Pages.Count)
+                    .Select(i => PageContent(document, i)));
+                for (int i = 0; i < 100; i++)
+                    StringAssert.Contains(allPages, $"(Metadata {i:D3}) Tj");
+                StringAssert.Contains(PageContent(document, 3), "(Next field) Tj");
+                StringAssert.Contains(PageContent(document, 3), "(Next value) Tj");
+            });
+        }
+
+        private static string PageContent(PdfDocument document, int pageIndex) =>
+            Encoding.Latin1.GetString(document.Pages[pageIndex].Contents.CreateSingleContent().Stream.UnfilteredValue);
 
         private static void AssertIsPng(byte[] bytes)
         {
