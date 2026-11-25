@@ -37,13 +37,15 @@ namespace MVS
             }
 
             bitmap.Freeze();
-            return new Image
+            var image = new Image
             {
                 Width = 120,
                 Height = 120,
                 Source = bitmap,
                 Stretch = Stretch.Uniform
             };
+            RenderOptions.SetBitmapScalingMode(image, BitmapScalingMode.NearestNeighbor);
+            return image;
         }
 
         public void Init(AboutVM aboutVM)
