@@ -7,8 +7,6 @@ using System.Windows.Threading;
 using Microsoft.VisualStudio.TestTools.UnitTesting;
 using MVS;
 using MVSTests.TestInfrastructure;
-using Telerik.Windows.Controls;
-using Telerik.Windows.Controls.GridView;
 
 namespace MVSTests.Helpers
 {
@@ -37,18 +35,10 @@ namespace MVSTests.Helpers
                     CreateRecord(3, "Not available", DataStatus.OK_NA)
                 };
                 grid.ItemsSource = records;
-                var legacyGrid = CreateLegacyGrid(records);
-                var sideBySide = new Grid();
-                sideBySide.ColumnDefinitions.Add(new ColumnDefinition());
-                sideBySide.ColumnDefinitions.Add(new ColumnDefinition());
-                sideBySide.Children.Add(control);
-                Grid.SetColumn(legacyGrid, 1);
-                sideBySide.Children.Add(legacyGrid);
-
                 var window = new Window
                 {
-                    Content = sideBySide,
-                    Width = 900,
+                    Content = control,
+                    Width = 600,
                     Height = 500,
                     ShowInTaskbar = false,
                     WindowStyle = WindowStyle.None
@@ -81,32 +71,12 @@ namespace MVSTests.Helpers
                     Assert.AreEqual(DataGridSelectionUnit.FullRow, grid.SelectionUnit);
                     Assert.AreEqual(DataGridHeadersVisibility.Column, grid.HeadersVisibility);
 
-                    Assert.AreEqual(grid.Items.Count, legacyGrid.Items.Count);
-                    Assert.AreEqual(grid.Columns.Count, legacyGrid.Columns.Count);
-                    for (var index = 0; index < grid.Items.Count; index++)
-                        Assert.AreSame(grid.Items[index], legacyGrid.Items[index]);
-
                     grid.SelectedItem = records[1];
-                    legacyGrid.SelectedItem = records[1];
                     Assert.AreSame(records[1], grid.SelectedItem);
-                    Assert.AreSame(records[1], legacyGrid.SelectedItem);
-                    Assert.AreEqual(System.Windows.Controls.SelectionMode.Single, legacyGrid.SelectionMode);
 
                     AssertRowColor(grid, records[0], "ColorAmber");
                     AssertRowColor(grid, records[1], "ColorGreen");
                     AssertRowColor(grid, records[2], "ColorGreen");
-                    Assert.AreEqual(
-                        GetRowColor(legacyGrid, records[0]),
-                        GetRowColor(grid, records[0]),
-                        "Timeout row status color should match the Telerik grid.");
-                    Assert.AreEqual(
-                        GetRowColor(legacyGrid, records[1]),
-                        GetRowColor(grid, records[1]),
-                        "Valid row status color should match the Telerik grid.");
-                    Assert.AreEqual(
-                        GetRowColor(legacyGrid, records[2]),
-                        GetRowColor(grid, records[2]),
-                        "Not-available row status color should match the Telerik grid.");
                 }
                 finally
                 {
@@ -137,67 +107,5 @@ namespace MVSTests.Helpers
             Assert.AreEqual(expected, actual, "Unexpected row status color for " + record.statusString + ".");
         }
 
-        private static Color? GetRowColor(RadGridView grid, HMSData record)
-        {
-            grid.UpdateLayout();
-            var row = grid.ItemContainerGenerator.ContainerFromItem(record) as GridViewRow;
-            Assert.IsNotNull(row, "Expected a Telerik grid row for " + record.name + ".");
-            return (row.Background as SolidColorBrush)?.Color;
-        }
-
-        private static Color? GetRowColor(DataGrid grid, HMSData record)
-        {
-            grid.UpdateLayout();
-            var row = grid.ItemContainerGenerator.ContainerFromItem(record) as DataGridRow;
-            Assert.IsNotNull(row, "Expected a DataGrid row for " + record.name + ".");
-            return (row.Background as SolidColorBrush)?.Color;
-        }
-
-        private static RadGridView CreateLegacyGrid(ObservableCollection<HMSData> records)
-        {
-            var grid = new RadGridView
-            {
-                ItemsSource = records,
-                IsReadOnly = true,
-                IsManipulationEnabled = false,
-                CanUserSortColumns = true,
-                CanUserReorderColumns = false,
-                CanUserDeleteRows = false,
-                SelectionMode = System.Windows.Controls.SelectionMode.Single,
-                AutoGenerateColumns = false,
-                ShowGroupPanel = false,
-                RowStyle = CreateLegacyRowStyle()
-            };
-            grid.Columns.Add(new GridViewDataColumn { Header = "Name", DataMemberBinding = new System.Windows.Data.Binding("name"), IsReadOnly = true });
-            grid.Columns.Add(new GridViewDataColumn { Header = "Data", DataMemberBinding = new System.Windows.Data.Binding("dataString"), IsReadOnly = true });
-            grid.Columns.Add(new GridViewDataColumn { Header = "ID", DataMemberBinding = new System.Windows.Data.Binding("id"), IsReadOnly = true });
-            grid.Columns.Add(new GridViewDataColumn { Header = "Status", DataMemberBinding = new System.Windows.Data.Binding("statusString"), IsReadOnly = true });
-            return grid;
-        }
-
-        private static Style CreateLegacyRowStyle()
-        {
-            var style = new Style(typeof(GridViewRow))
-            {
-                BasedOn = (Style)Application.Current.FindResource("GridViewRowStyle")
-            };
-            AddStatusTrigger(style, "TIMEOUT_ERROR", "ColorAmber");
-            AddStatusTrigger(style, "OK", "ColorGreen");
-            AddStatusTrigger(style, "OK_NA", "ColorGreen");
-            return style;
-        }
-
-        private static void AddStatusTrigger(Style style, string status, string resourceKey)
-        {
-            var trigger = new DataTrigger
-            {
-                Binding = new System.Windows.Data.Binding("statusString"),
-                Value = status
-            };
-            trigger.Setters.Add(new Setter(
-                Control.BackgroundProperty,
-                Application.Current.FindResource(resourceKey)));
-            style.Triggers.Add(trigger);
-        }
     }
 }

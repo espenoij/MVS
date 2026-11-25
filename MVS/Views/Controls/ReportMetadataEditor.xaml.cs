@@ -3,12 +3,11 @@ using System.Globalization;
 using System.Windows;
 using System.Windows.Controls;
 using MVS.Services;
-using Telerik.Windows.Controls;
 
 namespace MVS.Views.Controls
 {
     /// <summary>
-    /// Telerik-based editor for the operator-supplied <see cref="MruReportMetadata"/>
+    /// Editor for the operator-supplied <see cref="MruReportMetadata"/>
     /// that backs the detailed MRU verification report. The control binds directly
     /// to a metadata instance (set through <see cref="Metadata"/>) and raises
     /// <see cref="MetadataChanged"/> whenever a field loses focus so the host page
@@ -59,10 +58,16 @@ namespace MVS.Views.Controls
                 ValidationStateChanged?.Invoke(this, EventArgs.Empty);
         }
 
-        private void RequiredField_ValueChanged(object sender, RadRangeBaseValueChangedEventArgs e)
+        private void RequiredField_ValueChanged(object sender, EventArgs e)
         {
             if (Metadata != null)
                 ValidationStateChanged?.Invoke(this, EventArgs.Empty);
+        }
+
+        private void SampleRate_Spun(object sender, EventArgs e)
+        {
+            if (Metadata != null)
+                MetadataChanged?.Invoke(this, EventArgs.Empty);
         }
 
         // ── Formatted read-only strings for the Acceptance Criteria display ──────

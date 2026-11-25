@@ -6,9 +6,8 @@ using System.Windows.Media.Imaging;
 using System.Windows.Threading;
 using Microsoft.VisualStudio.TestTools.UnitTesting;
 using MVS;
+using MVS.Views.Controls;
 using MVSTests.TestInfrastructure;
-using Telerik.Windows.Controls;
-using Telerik.Windows.Data;
 
 namespace MVSTests.Helpers
 {
@@ -16,7 +15,7 @@ namespace MVSTests.Helpers
     public class CaptureChartsCollectionBindingTests
     {
         [TestMethod]
-        public void CaptureCharts_RenderIdenticallyWithTelerikAndNativeCollections()
+        public void CaptureCharts_RenderLiveCollectionsAndRefreshAfterBatchChanges()
         {
             StaTestHelper.Run(() =>
             {
@@ -27,94 +26,189 @@ namespace MVSTests.Helpers
                 }
 
                 var projectVM = new ProjectVM();
-                var nativeView = new CaptureCharts();
-                var telerikView = new CaptureCharts();
-                nativeView.Init(projectVM);
-                telerikView.Init(projectVM);
+                projectVM.alignmentTime = new DateTime(2025, 1, 1, 12, 0, 0, DateTimeKind.Utc);
+                var view = new CaptureCharts();
+                view.Init(projectVM);
+                view.DataContext = new ChartDataContext(projectVM.alignmentTime);
 
-                var alignmentTime = new DateTime(2025, 1, 1, 12, 0, 0, DateTimeKind.Utc);
-                nativeView.DataContext = new ChartDataContext(alignmentTime);
-                telerikView.DataContext = new ChartDataContext(alignmentTime);
-
-                var chartNames = new[] { "chartPitch", "chartRoll", "chartHeave" };
-                var nativeCollections = new List<ObservableCollectionEx<HMSData>>();
-                var telerikCollections = new List<RadObservableCollection<HMSData>>();
-                foreach (var chartName in chartNames)
+                var charts = new[]
                 {
-                    var nativeChart = (RadCartesianChart)nativeView.FindName(chartName);
-                    var telerikChart = (RadCartesianChart)telerikView.FindName(chartName);
-                    Assert.AreEqual(2, nativeChart.Series.Count, chartName + " should have two series.");
-                    Assert.AreEqual(2, telerikChart.Series.Count, chartName + " should have two series.");
-                    for (var seriesIndex = 0; seriesIndex < nativeChart.Series.Count; seriesIndex++)
-                    {
-                        var nativeCollection = new ObservableCollectionEx<HMSData>();
-                        var telerikCollection = new RadObservableCollection<HMSData>();
-                        nativeChart.Series[seriesIndex].ItemsSource = nativeCollection;
-                        telerikChart.Series[seriesIndex].ItemsSource = telerikCollection;
-                        nativeCollections.Add(nativeCollection);
-                        telerikCollections.Add(telerikCollection);
-                    }
-                }
-                Assert.AreEqual(6, nativeCollections.Count);
-                Assert.AreEqual(6, telerikCollections.Count);
+                    (LiveLineChart)view.FindName("chartPitch"),
+                    (LiveLineChart)view.FindName("chartRoll"),
+                    (LiveLineChart)view.FindName("chartHeave")
+                };
+                Assert.AreSame(projectVM.refPitchList, charts[0].ReferenceItemsSource);
+                Assert.AreSame(projectVM.testPitchList, charts[0].TestItemsSource);
+                Assert.AreSame(projectVM.refRollList, charts[1].ReferenceItemsSource);
+                Assert.AreSame(projectVM.testRollList, charts[1].TestItemsSource);
+                Assert.AreSame(projectVM.refHeaveList, charts[2].ReferenceItemsSource);
+                Assert.AreSame(projectVM.testHeaveList, charts[2].TestItemsSource);
 
-                var nativeWindow = ShowOffscreen(nativeView);
-                var telerikWindow = ShowOffscreen(telerikView);
+                var window = ShowOffscreen(view);
                 try
                 {
-                    var emptyNativePixels = Render(nativeView);
-                    var emptyTelerikPixels = Render(telerikView);
-                    AssertPixelsEqual(emptyTelerikPixels, emptyNativePixels, "Empty chart rendering");
-
-                    var previousNativePixels = emptyNativePixels;
-                    for (var index = 0; index < nativeCollections.Count; index++)
+                    var emptyPixels = Render(view);
+                    var sampleTime = projectVM.alignmentTime.AddMinutes(-20);
+                    var collections = new[]
                     {
-                        var valueOffset = (index - (nativeCollections.Count - 1) / 2d) * 0.1;
-                        nativeCollections[index].AddRange(CreateSamples(alignmentTime, valueOffset));
-                        telerikCollections[index].AddRange(CreateSamples(alignmentTime, valueOffset));
-
-                        var telerikPixels = Render(telerikView);
-                        var nativePixels = Render(nativeView);
-                        var seriesName = chartNames[index / 2] + " series " + (index % 2);
-                        AssertPixelsEqual(telerikPixels, nativePixels, "AddRange " + seriesName + " rendering");
-                        Assert.IsTrue(
-                            CountDifferentPixels(previousNativePixels, nativePixels) > 0,
-                            "AddRange should render data from " + seriesName + ".");
-                        previousNativePixels = nativePixels;
+                        projectVM.refPitchList, projectVM.testPitchList,
+                        projectVM.refRollList, projectVM.testRollList,
+                        projectVM.refHeaveList, projectVM.testHeaveList
+                    };
+                    for (var index = 0; index < collections.Length; index++)
+                    {
+                        collections[index].AddRange(CreateSamples(sampleTime, index % 2 == 0 ? -0.5 : 0.5));
                     }
 
-                    for (var index = 0; index < nativeCollections.Count; index++)
-                    {
-                        var valueOffset = (index - (nativeCollections.Count - 1) / 2d) * 0.1;
-                        nativeCollections[index].Add(CreateSample(alignmentTime.AddMinutes(-1), -0.5 + valueOffset));
-                        telerikCollections[index].Add(CreateSample(alignmentTime.AddMinutes(-1), -0.5 + valueOffset));
-                    }
-                    AssertRenderedCollectionsEqual(telerikView, nativeView, "Single-item update");
+                    var populatedPixels = Render(view);
+                    Assert.IsTrue(
+                        CountDifferentPixels(emptyPixels, populatedPixels) > 0,
+                        "Adding live chart samples should render the chart.");
+                    AssertTraceAtVisibleBoundaries(
+                        view,
+                        charts[0],
+                        populatedPixels,
+                        ((SolidColorBrush)Application.Current.FindResource("ColorGraphLineRef")).Color,
+                        "Reference");
+                    AssertTraceAtVisibleBoundaries(
+                        view,
+                        charts[0],
+                        populatedPixels,
+                        ((SolidColorBrush)Application.Current.FindResource("ColorGraphLineTest")).Color,
+                        "Vessel");
 
-                    for (var index = 0; index < nativeCollections.Count; index++)
+                    foreach (var collection in new[]
                     {
-                        RemoveFirstTwoWithSuspendedNotifications(nativeCollections[index]);
-                        RemoveFirstTwoWithSuspendedNotifications(telerikCollections[index]);
+                        projectVM.refPitchList, projectVM.testPitchList,
+                        projectVM.refRollList, projectVM.testRollList,
+                        projectVM.refHeaveList, projectVM.testHeaveList
+                    })
+                    {
+                        collection.SuspendNotifications();
+                        try
+                        {
+                            collection.RemoveAt(0);
+                            collection.RemoveAt(0);
+                        }
+                        finally
+                        {
+                            collection.ResumeNotifications();
+                        }
                     }
-                    AssertRenderedCollectionsEqual(telerikView, nativeView, "Suspended removals");
+
+                    var trimmedPixels = Render(view);
+                    Assert.IsTrue(
+                        CountDifferentPixels(populatedPixels, trimmedPixels) > 0,
+                        "Removing buffered samples should refresh the live charts.");
+                    Assert.IsTrue(
+                        CountPixelsNearColor(trimmedPixels, ((SolidColorBrush)Application.Current.FindResource("ColorGraphLineRef")).Color) > 0,
+                        "The reference trace should remain visible after batched removals.");
+                    Assert.IsTrue(
+                        CountPixelsNearColor(trimmedPixels, ((SolidColorBrush)Application.Current.FindResource("ColorGraphLineTest")).Color) > 0,
+                        "The vessel trace should remain visible after batched removals.");
                 }
                 finally
                 {
-                    nativeWindow.Close();
-                    telerikWindow.Close();
+                    window.Close();
                 }
             });
         }
 
-        private static List<HMSData> CreateSamples(DateTime alignmentTime, double valueOffset)
+        [TestMethod]
+        public void DataAnalysis_UsesNativeChartsForAllSeriesAndRendersSamples()
+        {
+            StaTestHelper.Run(() =>
+            {
+                if (Application.Current == null)
+                {
+                    var app = new App();
+                    app.InitializeComponent();
+                }
+
+                var projectVM = new ProjectVM();
+                projectVM.alignmentTime = new DateTime(2025, 1, 1, 12, 0, 0, DateTimeKind.Utc);
+                var view = new DataAnalysis();
+                view.Init(projectVM);
+                view.DataContext = new ChartDataContext(projectVM.alignmentTime);
+
+                var charts = new[]
+                {
+                    (LiveLineChart)view.FindName("chartPitch1"),
+                    (LiveLineChart)view.FindName("chartPitch2"),
+                    (LiveLineChart)view.FindName("chartPitch3"),
+                    (LiveLineChart)view.FindName("chartRoll1"),
+                    (LiveLineChart)view.FindName("chartRoll2"),
+                    (LiveLineChart)view.FindName("chartRoll3"),
+                    (LiveLineChart)view.FindName("chartHeave1"),
+                    (LiveLineChart)view.FindName("chartHeave2"),
+                    (LiveLineChart)view.FindName("chartHeave3")
+                };
+                Assert.AreEqual(9, charts.Length);
+
+                Assert.AreSame(projectVM.refPitchList, charts[0].ReferenceItemsSource);
+                Assert.AreSame(projectVM.testPitchList, charts[0].TestItemsSource);
+                Assert.AreSame(projectVM.refPitchMeanList, charts[1].ReferenceItemsSource);
+                Assert.AreSame(projectVM.testPitchMeanList, charts[1].TestItemsSource);
+                Assert.AreSame(projectVM.devPitchMeanList, charts[2].TestItemsSource);
+                Assert.AreSame(projectVM.refRollList, charts[3].ReferenceItemsSource);
+                Assert.AreSame(projectVM.testRollList, charts[3].TestItemsSource);
+                Assert.AreSame(projectVM.refRollMeanList, charts[4].ReferenceItemsSource);
+                Assert.AreSame(projectVM.testRollMeanList, charts[4].TestItemsSource);
+                Assert.AreSame(projectVM.devRollMeanList, charts[5].TestItemsSource);
+                Assert.AreSame(projectVM.refHeaveList, charts[6].ReferenceItemsSource);
+                Assert.AreSame(projectVM.testHeaveList, charts[6].TestItemsSource);
+                Assert.AreSame(projectVM.refHeaveMeanList, charts[7].ReferenceItemsSource);
+                Assert.AreSame(projectVM.testHeaveMeanList, charts[7].TestItemsSource);
+                Assert.AreSame(projectVM.devHeaveMeanList, charts[8].TestItemsSource);
+                Assert.AreSame(Application.Current.FindResource("ColorGraphLineDev"), charts[2].TestStroke);
+                Assert.AreSame(Application.Current.FindResource("ColorGraphLineDev"), charts[5].TestStroke);
+                Assert.AreSame(Application.Current.FindResource("ColorGraphLineDev"), charts[8].TestStroke);
+                Assert.IsTrue(charts[0].ShowAbsoluteAxisLabels);
+                Assert.IsTrue(charts[1].ShowAbsoluteAxisLabels);
+                Assert.IsFalse(charts[6].ShowAbsoluteAxisLabels);
+                Assert.IsFalse(charts[7].ShowAbsoluteAxisLabels);
+                Assert.IsFalse(charts[8].ShowAbsoluteAxisLabels);
+
+                var window = ShowOffscreen(view);
+                try
+                {
+                    var emptyPixels = Render(view);
+                    var sampleTime = projectVM.alignmentTime.AddMinutes(-20);
+                    projectVM.refPitchList.AddRange(CreateSamples(sampleTime, -0.5));
+                    projectVM.testPitchList.AddRange(CreateSamples(sampleTime, 0.5));
+                    var populatedPixels = Render(view);
+                    Assert.IsTrue(
+                        CountDifferentPixels(emptyPixels, populatedPixels) > 0,
+                        "Adding analysis samples should render the native chart traces.");
+                    AssertTraceAtVisibleBoundaries(
+                        view,
+                        charts[0],
+                        populatedPixels,
+                        ((SolidColorBrush)Application.Current.FindResource("ColorGraphLineRef")).Color,
+                        "Analysis reference");
+                    AssertTraceAtVisibleBoundaries(
+                        view,
+                        charts[0],
+                        populatedPixels,
+                        ((SolidColorBrush)Application.Current.FindResource("ColorGraphLineTest")).Color,
+                        "Analysis vessel");
+                }
+                finally
+                {
+                    window.Close();
+                }
+            });
+        }
+
+        private static List<HMSData> CreateSamples(DateTime timestamp, double valueOffset)
         {
             return new List<HMSData>
             {
-                CreateSample(alignmentTime.AddMinutes(-10), -1.5 + valueOffset),
-                CreateSample(alignmentTime.AddMinutes(-8), 0.5 + valueOffset),
-                CreateSample(alignmentTime.AddMinutes(-6), 1.5 + valueOffset),
-                CreateSample(alignmentTime.AddMinutes(-4), -0.5 + valueOffset),
-                CreateSample(alignmentTime.AddMinutes(-2), 1 + valueOffset)
+                CreateSample(timestamp, -1.5 + valueOffset),
+                CreateSample(timestamp.AddMinutes(5), 0.5 + valueOffset),
+                CreateSample(timestamp.AddMinutes(10), 1.5 + valueOffset),
+                CreateSample(timestamp.AddMinutes(15), -0.5 + valueOffset),
+                CreateSample(timestamp.AddMinutes(20), 1 + valueOffset)
             };
         }
 
@@ -126,47 +220,6 @@ namespace MVSTests.Helpers
                 data = value,
                 status = DataStatus.OK
             };
-        }
-
-        private static void RemoveFirstTwoWithSuspendedNotifications<T>(ObservableCollectionEx<T> collection)
-        {
-            collection.SuspendNotifications();
-            try
-            {
-                collection.RemoveAt(0);
-                collection.RemoveAt(0);
-            }
-            finally
-            {
-                collection.ResumeNotifications();
-            }
-        }
-
-        private static void RemoveFirstTwoWithSuspendedNotifications<T>(RadObservableCollection<T> collection)
-        {
-            collection.SuspendNotifications();
-            try
-            {
-                collection.RemoveAt(0);
-                collection.RemoveAt(0);
-            }
-            finally
-            {
-                collection.ResumeNotifications();
-            }
-        }
-
-        private static void AssertRenderedCollectionsEqual(CaptureCharts telerikView, CaptureCharts nativeView, string operation)
-        {
-            AssertPixelsEqual(Render(telerikView), Render(nativeView), operation + " chart rendering");
-        }
-
-        private static void AssertPixelsEqual(byte[] expected, byte[] actual, string operation)
-        {
-            Assert.AreEqual(
-                0,
-                CountDifferentPixels(expected, actual),
-                operation + " should match pixel-for-pixel.");
         }
 
         private static int CountDifferentPixels(byte[] first, byte[] second)
@@ -186,6 +239,68 @@ namespace MVSTests.Helpers
             }
 
             return differentPixels;
+        }
+
+        private static int CountPixelsNearColor(byte[] pixels, Color target)
+        {
+            var matches = 0;
+            for (var index = 0; index < pixels.Length; index += 4)
+            {
+                if (pixels[index + 3] < 220)
+                    continue;
+
+                if (Math.Abs(pixels[index + 2] - target.R) <= 35 &&
+                    Math.Abs(pixels[index + 1] - target.G) <= 35 &&
+                    Math.Abs(pixels[index] - target.B) <= 35)
+                {
+                    matches++;
+                }
+            }
+
+            return matches;
+        }
+
+        private static void AssertTraceAtVisibleBoundaries(
+            FrameworkElement root,
+            LiveLineChart chart,
+            byte[] pixels,
+            Color target,
+            string seriesName)
+        {
+            const int plotLeft = 42;
+            var transform = chart.TransformToAncestor(root);
+            var screenPlotLeft = (int)Math.Round(transform.Transform(new Point(plotLeft, 0)).X);
+            var screenPlotRight = (int)Math.Round(transform.Transform(new Point(chart.ActualWidth - 10, 0)).X);
+            Assert.IsTrue(
+                CountPixelsNearColorInColumns(pixels, target, screenPlotLeft - 3, screenPlotLeft + 3) > 0,
+                seriesName + " trace should render at the visible time-window start. Plot column: " + screenPlotLeft);
+            Assert.IsTrue(
+                CountPixelsNearColorInColumns(pixels, target, screenPlotRight - 3, screenPlotRight + 3) > 0,
+                seriesName + " trace should render at the visible time-window end. Plot column: " + screenPlotRight);
+        }
+
+        private static int CountPixelsNearColorInColumns(byte[] pixels, Color target, int minimumX, int maximumX)
+        {
+            const int stride = 900;
+            var matches = 0;
+            for (var y = 0; y < 700; y++)
+            {
+                for (var x = Math.Max(0, minimumX); x <= Math.Min(stride - 1, maximumX); x++)
+                {
+                    var index = (y * stride + x) * 4;
+                    if (pixels[index + 3] < 220)
+                        continue;
+
+                    if (Math.Abs(pixels[index + 2] - target.R) <= 35 &&
+                        Math.Abs(pixels[index + 1] - target.G) <= 35 &&
+                        Math.Abs(pixels[index] - target.B) <= 35)
+                    {
+                        matches++;
+                    }
+                }
+            }
+
+            return matches;
         }
 
         private static byte[] Render(FrameworkElement element)
@@ -234,10 +349,22 @@ namespace MVSTests.Helpers
             public DateTime alignmentTimeMax => alignmentTime;
             public double pitchChartAxisMax => 3;
             public double pitchChartAxisMin => -3;
+            public double meanPitchChartAxisMax => 3;
+            public double meanPitchChartAxisMin => -3;
+            public double devPitchChartAxisMax => 3;
+            public double devPitchChartAxisMin => -3;
             public double rollChartAxisMax => 3;
             public double rollChartAxisMin => -3;
+            public double meanRollChartAxisMax => 3;
+            public double meanRollChartAxisMin => -3;
+            public double devRollChartAxisMax => 3;
+            public double devRollChartAxisMin => -3;
             public double heaveChartAxisMax => 3;
             public double heaveChartAxisMin => -3;
+            public double meanHeaveChartAxisMax => 3;
+            public double meanHeaveChartAxisMin => -3;
+            public double devHeaveChartAxisMax => 3;
+            public double devHeaveChartAxisMin => -3;
             public RecordingContext MainWindowVM { get; } = new RecordingContext();
         }
 
