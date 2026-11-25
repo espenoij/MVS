@@ -12,7 +12,6 @@
         Brand tokens are resolved with DynamicResource.
     -->
 
-    <!-- Native WPF counterpart for controls migrated away from Telerik. -->
     <Style x:Key="SesNativeSecondaryButtonStyle" TargetType="{x:Type Button}">
         <Setter Property="Background" Value="{DynamicResource SesDarkBlueGreyBrush}" />
         <Setter Property="Foreground" Value="{DynamicResource SesWhiteBrush}" />
