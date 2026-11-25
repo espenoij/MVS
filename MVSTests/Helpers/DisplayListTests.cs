@@ -4,31 +4,28 @@ using System;
 using System.Collections.Generic;
 using System.Collections.ObjectModel;
 using System.Collections.Specialized;
-using Telerik.Windows.Data;
 
 namespace MVSTests.Helpers
 {
     [TestClass]
     public class DisplayListTests
     {
-        private static IList<T> CreateDisplay<T>(bool useTelerik, params T[] items)
+        private static IList<T> CreateDisplay<T>(params T[] items)
         {
-            IList<T> display = useTelerik ? new RadObservableCollection<T>() : new ObservableCollection<T>();
+            IList<T> display = new ObservableCollection<T>();
             foreach (var item in items)
                 display.Add(item);
             return display;
         }
 
         [TestMethod]
-        [DataRow(false)]
-        [DataRow(true)]
-        public void Transfer_HmsData_UpdatesFirstMatchAndAppendsCopiesWithoutRemovingStaleItems(bool useTelerik)
+        public void Transfer_HmsData_UpdatesFirstMatchAndAppendsCopiesWithoutRemovingStaleItems()
         {
             var existing = new HMSData { id = 1, data = 1 };
             var duplicate = new HMSData { id = 1, data = 2 };
             var stale = new HMSData { id = 9, data = 9 };
             var added = new HMSData { id = 2, data = 20 };
-            var display = CreateDisplay(useTelerik, existing, duplicate, stale);
+            var display = CreateDisplay(existing, duplicate, stale);
             int additions = 0;
             bool dataChanged = false;
             ((INotifyCollectionChanged)display).CollectionChanged += (_, e) =>
@@ -52,13 +49,11 @@ namespace MVSTests.Helpers
         }
 
         [TestMethod]
-        [DataRow(false)]
-        [DataRow(true)]
-        public void TransferDirect_ReplacesDisplayWithIndependentCopiesInSourceOrder(bool useTelerik)
+        public void TransferDirect_ReplacesDisplayWithIndependentCopiesInSourceOrder()
         {
             var first = new HMSData { id = 2, data = 20 };
             var second = new HMSData { id = 1, data = 10 };
-            var display = CreateDisplay(useTelerik, new HMSData { id = 9 });
+            var display = CreateDisplay(new HMSData { id = 9 });
 
             DisplayList.TransferDirect(new[] { first, second }, display);
 
@@ -75,13 +70,11 @@ namespace MVSTests.Helpers
         }
 
         [TestMethod]
-        [DataRow(false)]
-        [DataRow(true)]
-        public void Transfer_SensorData_UpdatesByIdAndAppendsCopies(bool useTelerik)
+        public void Transfer_SensorData_UpdatesByIdAndAppendsCopies()
         {
             var existing = new SensorData { id = 1, data = 1 };
             var added = new SensorData { id = 2, data = 20 };
-            var display = CreateDisplay(useTelerik, existing);
+            var display = CreateDisplay(existing);
 
             DisplayList.Transfer(new[] { new SensorData { id = 1, data = 10 }, added }, display);
 
@@ -93,13 +86,11 @@ namespace MVSTests.Helpers
         }
 
         [TestMethod]
-        [DataRow(false)]
-        [DataRow(true)]
-        public void Transfer_SerialPortData_UpdatesByPortNameAndAppendsCopies(bool useTelerik)
+        public void Transfer_SerialPortData_UpdatesByPortNameAndAppendsCopies()
         {
             var existing = new SerialPortData { portName = "COM1", buffer_text = "old" };
             var added = new SerialPortData { portName = "COM2", buffer_text = "second" };
-            var display = CreateDisplay(useTelerik, existing);
+            var display = CreateDisplay(existing);
 
             DisplayList.Transfer(new[]
             {
@@ -116,9 +107,7 @@ namespace MVSTests.Helpers
         }
 
         [TestMethod]
-        [DataRow(false)]
-        [DataRow(true)]
-        public void Transfer_FileReaderData_MatchesFolderAndNameAndPreservesExistingSetup(bool useTelerik)
+        public void Transfer_FileReaderData_MatchesFolderAndNameAndPreservesExistingSetup()
         {
             var existing = new FileReaderSetup
             {
@@ -126,7 +115,7 @@ namespace MVSTests.Helpers
             };
             var added = new FileReaderSetup { fileFolder = "second", fileName = "data.csv", dataLine = "second" };
             var timestamp = new DateTime(2026, 1, 1, 0, 0, 0, DateTimeKind.Utc);
-            var display = CreateDisplay(useTelerik, existing);
+            var display = CreateDisplay(existing);
 
             DisplayList.Transfer(new[]
             {
@@ -149,13 +138,11 @@ namespace MVSTests.Helpers
         }
 
         [TestMethod]
-        [DataRow(false)]
-        [DataRow(true)]
-        public void Transfer_FixedValueData_UpdatesByIdAndAppendsCopies(bool useTelerik)
+        public void Transfer_FixedValueData_UpdatesByIdAndAppendsCopies()
         {
             var existing = new FixedValueSetup { id = 1, value = "old" };
             var added = new FixedValueSetup { id = 2, value = "second" };
-            var display = CreateDisplay(useTelerik, existing);
+            var display = CreateDisplay(existing);
 
             DisplayList.Transfer(new[]
             {
