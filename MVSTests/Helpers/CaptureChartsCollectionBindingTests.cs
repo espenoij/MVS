@@ -29,6 +29,7 @@ namespace MVSTests.Helpers
                 projectVM.alignmentTime = new DateTime(2025, 1, 1, 12, 0, 0, DateTimeKind.Utc);
                 var view = new CaptureCharts();
                 view.Init(projectVM);
+                view.DataContext = new ChartDataContext(projectVM.alignmentTime);
 
                 var charts = new[]
                 {
@@ -47,21 +48,34 @@ namespace MVSTests.Helpers
                 try
                 {
                     var emptyPixels = Render(view);
-                    var sampleTime = projectVM.alignmentTime.AddMinutes(-10);
-                    foreach (var collection in new[]
+                    var sampleTime = projectVM.alignmentTime.AddMinutes(-20);
+                    var collections = new[]
                     {
                         projectVM.refPitchList, projectVM.testPitchList,
                         projectVM.refRollList, projectVM.testRollList,
                         projectVM.refHeaveList, projectVM.testHeaveList
-                    })
+                    };
+                    for (var index = 0; index < collections.Length; index++)
                     {
-                        collection.AddRange(CreateSamples(sampleTime));
+                        collections[index].AddRange(CreateSamples(sampleTime, index % 2 == 0 ? -0.5 : 0.5));
                     }
 
                     var populatedPixels = Render(view);
                     Assert.IsTrue(
                         CountDifferentPixels(emptyPixels, populatedPixels) > 0,
-                        "Adding live chart samples should render both traces.");
+                        "Adding live chart samples should render the chart.");
+                    AssertTraceAtVisibleBoundaries(
+                        view,
+                        charts[0],
+                        populatedPixels,
+                        ((SolidColorBrush)Application.Current.FindResource("ColorGraphLineRef")).Color,
+                        "Reference");
+                    AssertTraceAtVisibleBoundaries(
+                        view,
+                        charts[0],
+                        populatedPixels,
+                        ((SolidColorBrush)Application.Current.FindResource("ColorGraphLineTest")).Color,
+                        "Vessel");
 
                     foreach (var collection in new[]
                     {
@@ -86,6 +100,12 @@ namespace MVSTests.Helpers
                     Assert.IsTrue(
                         CountDifferentPixels(populatedPixels, trimmedPixels) > 0,
                         "Removing buffered samples should refresh the live charts.");
+                    Assert.IsTrue(
+                        CountPixelsNearColor(trimmedPixels, ((SolidColorBrush)Application.Current.FindResource("ColorGraphLineRef")).Color) > 0,
+                        "The reference trace should remain visible after batched removals.");
+                    Assert.IsTrue(
+                        CountPixelsNearColor(trimmedPixels, ((SolidColorBrush)Application.Current.FindResource("ColorGraphLineTest")).Color) > 0,
+                        "The vessel trace should remain visible after batched removals.");
                 }
                 finally
                 {
@@ -94,15 +114,101 @@ namespace MVSTests.Helpers
             });
         }
 
-        private static List<HMSData> CreateSamples(DateTime timestamp)
+        [TestMethod]
+        public void DataAnalysis_UsesNativeChartsForAllSeriesAndRendersSamples()
+        {
+            StaTestHelper.Run(() =>
+            {
+                if (Application.Current == null)
+                {
+                    var app = new App();
+                    app.InitializeComponent();
+                }
+
+                var projectVM = new ProjectVM();
+                projectVM.alignmentTime = new DateTime(2025, 1, 1, 12, 0, 0, DateTimeKind.Utc);
+                var view = new DataAnalysis();
+                view.Init(projectVM);
+                view.DataContext = new ChartDataContext(projectVM.alignmentTime);
+
+                var charts = new[]
+                {
+                    (LiveLineChart)view.FindName("chartPitch1"),
+                    (LiveLineChart)view.FindName("chartPitch2"),
+                    (LiveLineChart)view.FindName("chartPitch3"),
+                    (LiveLineChart)view.FindName("chartRoll1"),
+                    (LiveLineChart)view.FindName("chartRoll2"),
+                    (LiveLineChart)view.FindName("chartRoll3"),
+                    (LiveLineChart)view.FindName("chartHeave1"),
+                    (LiveLineChart)view.FindName("chartHeave2"),
+                    (LiveLineChart)view.FindName("chartHeave3")
+                };
+                Assert.AreEqual(9, charts.Length);
+
+                Assert.AreSame(projectVM.refPitchList, charts[0].ReferenceItemsSource);
+                Assert.AreSame(projectVM.testPitchList, charts[0].TestItemsSource);
+                Assert.AreSame(projectVM.refPitchMeanList, charts[1].ReferenceItemsSource);
+                Assert.AreSame(projectVM.testPitchMeanList, charts[1].TestItemsSource);
+                Assert.AreSame(projectVM.devPitchMeanList, charts[2].TestItemsSource);
+                Assert.AreSame(projectVM.refRollList, charts[3].ReferenceItemsSource);
+                Assert.AreSame(projectVM.testRollList, charts[3].TestItemsSource);
+                Assert.AreSame(projectVM.refRollMeanList, charts[4].ReferenceItemsSource);
+                Assert.AreSame(projectVM.testRollMeanList, charts[4].TestItemsSource);
+                Assert.AreSame(projectVM.devRollMeanList, charts[5].TestItemsSource);
+                Assert.AreSame(projectVM.refHeaveList, charts[6].ReferenceItemsSource);
+                Assert.AreSame(projectVM.testHeaveList, charts[6].TestItemsSource);
+                Assert.AreSame(projectVM.refHeaveMeanList, charts[7].ReferenceItemsSource);
+                Assert.AreSame(projectVM.testHeaveMeanList, charts[7].TestItemsSource);
+                Assert.AreSame(projectVM.devHeaveMeanList, charts[8].TestItemsSource);
+                Assert.AreSame(Application.Current.FindResource("ColorGraphLineDev"), charts[2].TestStroke);
+                Assert.AreSame(Application.Current.FindResource("ColorGraphLineDev"), charts[5].TestStroke);
+                Assert.AreSame(Application.Current.FindResource("ColorGraphLineDev"), charts[8].TestStroke);
+                Assert.IsTrue(charts[0].ShowAbsoluteAxisLabels);
+                Assert.IsTrue(charts[1].ShowAbsoluteAxisLabels);
+                Assert.IsFalse(charts[6].ShowAbsoluteAxisLabels);
+                Assert.IsFalse(charts[7].ShowAbsoluteAxisLabels);
+                Assert.IsFalse(charts[8].ShowAbsoluteAxisLabels);
+
+                var window = ShowOffscreen(view);
+                try
+                {
+                    var emptyPixels = Render(view);
+                    var sampleTime = projectVM.alignmentTime.AddMinutes(-20);
+                    projectVM.refPitchList.AddRange(CreateSamples(sampleTime, -0.5));
+                    projectVM.testPitchList.AddRange(CreateSamples(sampleTime, 0.5));
+                    var populatedPixels = Render(view);
+                    Assert.IsTrue(
+                        CountDifferentPixels(emptyPixels, populatedPixels) > 0,
+                        "Adding analysis samples should render the native chart traces.");
+                    AssertTraceAtVisibleBoundaries(
+                        view,
+                        charts[0],
+                        populatedPixels,
+                        ((SolidColorBrush)Application.Current.FindResource("ColorGraphLineRef")).Color,
+                        "Analysis reference");
+                    AssertTraceAtVisibleBoundaries(
+                        view,
+                        charts[0],
+                        populatedPixels,
+                        ((SolidColorBrush)Application.Current.FindResource("ColorGraphLineTest")).Color,
+                        "Analysis vessel");
+                }
+                finally
+                {
+                    window.Close();
+                }
+            });
+        }
+
+        private static List<HMSData> CreateSamples(DateTime timestamp, double valueOffset)
         {
             return new List<HMSData>
             {
-                CreateSample(timestamp, -1.5),
-                CreateSample(timestamp.AddMinutes(2), 0.5),
-                CreateSample(timestamp.AddMinutes(4), 1.5),
-                CreateSample(timestamp.AddMinutes(6), -0.5),
-                CreateSample(timestamp.AddMinutes(8), 1)
+                CreateSample(timestamp, -1.5 + valueOffset),
+                CreateSample(timestamp.AddMinutes(5), 0.5 + valueOffset),
+                CreateSample(timestamp.AddMinutes(10), 1.5 + valueOffset),
+                CreateSample(timestamp.AddMinutes(15), -0.5 + valueOffset),
+                CreateSample(timestamp.AddMinutes(20), 1 + valueOffset)
             };
         }
 
@@ -133,6 +239,68 @@ namespace MVSTests.Helpers
             }
 
             return differentPixels;
+        }
+
+        private static int CountPixelsNearColor(byte[] pixels, Color target)
+        {
+            var matches = 0;
+            for (var index = 0; index < pixels.Length; index += 4)
+            {
+                if (pixels[index + 3] < 220)
+                    continue;
+
+                if (Math.Abs(pixels[index + 2] - target.R) <= 35 &&
+                    Math.Abs(pixels[index + 1] - target.G) <= 35 &&
+                    Math.Abs(pixels[index] - target.B) <= 35)
+                {
+                    matches++;
+                }
+            }
+
+            return matches;
+        }
+
+        private static void AssertTraceAtVisibleBoundaries(
+            FrameworkElement root,
+            LiveLineChart chart,
+            byte[] pixels,
+            Color target,
+            string seriesName)
+        {
+            const int plotLeft = 42;
+            var transform = chart.TransformToAncestor(root);
+            var screenPlotLeft = (int)Math.Round(transform.Transform(new Point(plotLeft, 0)).X);
+            var screenPlotRight = (int)Math.Round(transform.Transform(new Point(chart.ActualWidth - 10, 0)).X);
+            Assert.IsTrue(
+                CountPixelsNearColorInColumns(pixels, target, screenPlotLeft - 3, screenPlotLeft + 3) > 0,
+                seriesName + " trace should render at the visible time-window start. Plot column: " + screenPlotLeft);
+            Assert.IsTrue(
+                CountPixelsNearColorInColumns(pixels, target, screenPlotRight - 3, screenPlotRight + 3) > 0,
+                seriesName + " trace should render at the visible time-window end. Plot column: " + screenPlotRight);
+        }
+
+        private static int CountPixelsNearColorInColumns(byte[] pixels, Color target, int minimumX, int maximumX)
+        {
+            const int stride = 900;
+            var matches = 0;
+            for (var y = 0; y < 700; y++)
+            {
+                for (var x = Math.Max(0, minimumX); x <= Math.Min(stride - 1, maximumX); x++)
+                {
+                    var index = (y * stride + x) * 4;
+                    if (pixels[index + 3] < 220)
+                        continue;
+
+                    if (Math.Abs(pixels[index + 2] - target.R) <= 35 &&
+                        Math.Abs(pixels[index + 1] - target.G) <= 35 &&
+                        Math.Abs(pixels[index] - target.B) <= 35)
+                    {
+                        matches++;
+                    }
+                }
+            }
+
+            return matches;
         }
 
         private static byte[] Render(FrameworkElement element)
@@ -167,6 +335,42 @@ namespace MVSTests.Helpers
             window.UpdateLayout();
             Dispatcher.CurrentDispatcher.Invoke(() => { }, DispatcherPriority.ApplicationIdle);
             return window;
+        }
+
+        private sealed class ChartDataContext
+        {
+            public ChartDataContext(DateTime alignmentTime)
+            {
+                this.alignmentTime = alignmentTime;
+            }
+
+            public DateTime alignmentTime { get; }
+            public DateTime alignmentTimeMin => alignmentTime.AddMinutes(-20);
+            public DateTime alignmentTimeMax => alignmentTime;
+            public double pitchChartAxisMax => 3;
+            public double pitchChartAxisMin => -3;
+            public double meanPitchChartAxisMax => 3;
+            public double meanPitchChartAxisMin => -3;
+            public double devPitchChartAxisMax => 3;
+            public double devPitchChartAxisMin => -3;
+            public double rollChartAxisMax => 3;
+            public double rollChartAxisMin => -3;
+            public double meanRollChartAxisMax => 3;
+            public double meanRollChartAxisMin => -3;
+            public double devRollChartAxisMax => 3;
+            public double devRollChartAxisMin => -3;
+            public double heaveChartAxisMax => 3;
+            public double heaveChartAxisMin => -3;
+            public double meanHeaveChartAxisMax => 3;
+            public double meanHeaveChartAxisMin => -3;
+            public double devHeaveChartAxisMax => 3;
+            public double devHeaveChartAxisMin => -3;
+            public RecordingContext MainWindowVM { get; } = new RecordingContext();
+        }
+
+        private sealed class RecordingContext
+        {
+            public bool IsRecording => false;
         }
     }
 }

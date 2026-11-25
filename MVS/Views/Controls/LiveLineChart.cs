@@ -39,6 +39,18 @@ namespace MVS.Views.Controls
             DependencyProperty.Register(nameof(Maximum), typeof(double), typeof(LiveLineChart),
                 new FrameworkPropertyMetadata(1d, OnChartPropertyChanged));
 
+        public static readonly DependencyProperty ReferenceStrokeProperty =
+            DependencyProperty.Register(nameof(ReferenceStroke), typeof(Brush), typeof(LiveLineChart),
+                new FrameworkPropertyMetadata(null, OnChartPropertyChanged));
+
+        public static readonly DependencyProperty TestStrokeProperty =
+            DependencyProperty.Register(nameof(TestStroke), typeof(Brush), typeof(LiveLineChart),
+                new FrameworkPropertyMetadata(null, OnChartPropertyChanged));
+
+        public static readonly DependencyProperty ShowAbsoluteAxisLabelsProperty =
+            DependencyProperty.Register(nameof(ShowAbsoluteAxisLabels), typeof(bool), typeof(LiveLineChart),
+                new FrameworkPropertyMetadata(true, OnChartPropertyChanged));
+
         public ObservableCollectionEx<HMSData> ReferenceItemsSource
         {
             get { return (ObservableCollectionEx<HMSData>)GetValue(ReferenceItemsSourceProperty); }
@@ -73,6 +85,24 @@ namespace MVS.Views.Controls
         {
             get { return (double)GetValue(MaximumProperty); }
             set { SetValue(MaximumProperty, value); }
+        }
+
+        public Brush ReferenceStroke
+        {
+            get { return (Brush)GetValue(ReferenceStrokeProperty); }
+            set { SetValue(ReferenceStrokeProperty, value); }
+        }
+
+        public Brush TestStroke
+        {
+            get { return (Brush)GetValue(TestStrokeProperty); }
+            set { SetValue(TestStrokeProperty, value); }
+        }
+
+        public bool ShowAbsoluteAxisLabels
+        {
+            get { return (bool)GetValue(ShowAbsoluteAxisLabelsProperty); }
+            set { SetValue(ShowAbsoluteAxisLabelsProperty, value); }
         }
 
         private static void OnItemsSourceChanged(DependencyObject dependencyObject, DependencyPropertyChangedEventArgs e)
@@ -139,7 +169,8 @@ namespace MVS.Views.Controls
                 else
                     drawingContext.DrawLine(gridPen, new Point(plot.Left, y), new Point(plot.Right, y));
 
-                var label = Math.Abs(value).ToString("0.##", CultureInfo.CurrentCulture);
+                var labelValue = ShowAbsoluteAxisLabels ? Math.Abs(value) : value;
+                var label = labelValue.ToString("0.##", CultureInfo.CurrentCulture);
                 var formattedText = CreateText(label, textBrush);
                 drawingContext.DrawText(formattedText, new Point(36 - formattedText.Width, y - formattedText.Height / 2));
             }
@@ -152,8 +183,8 @@ namespace MVS.Views.Controls
             }
 
             drawingContext.PushClip(new RectangleGeometry(plot));
-            DrawSeries(drawingContext, ReferenceItemsSource, timeMinimum, timeSpan, minimum, maximum, plot, GetSeriesBrush("ColorGraphLineRef", Color.FromRgb(26, 110, 191)));
-            DrawSeries(drawingContext, TestItemsSource, timeMinimum, timeSpan, minimum, maximum, plot, GetSeriesBrush("ColorGraphLineTest", Color.FromRgb(224, 123, 16)));
+            DrawSeries(drawingContext, ReferenceItemsSource, timeMinimum, timeSpan, minimum, maximum, plot, ReferenceStroke ?? GetSeriesBrush("ColorGraphLineRef", Color.FromRgb(26, 110, 191)));
+            DrawSeries(drawingContext, TestItemsSource, timeMinimum, timeSpan, minimum, maximum, plot, TestStroke ?? GetSeriesBrush("ColorGraphLineTest", Color.FromRgb(224, 123, 16)));
             drawingContext.Pop();
         }
 
