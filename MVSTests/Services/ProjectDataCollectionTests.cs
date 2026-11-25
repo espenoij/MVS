@@ -7,7 +7,6 @@ using Microsoft.VisualStudio.TestTools.UnitTesting;
 using MVS;
 using MVS.Models;
 using MVSTests.TestInfrastructure;
-using Telerik.Windows.Data;
 
 namespace MVSTests.Services
 {
@@ -15,31 +14,31 @@ namespace MVSTests.Services
     public class ProjectDataCollectionTests
     {
         [TestMethod]
-        public void ProjectSamples_MatchTelerikLoadAndClearNotifications()
+        public void ProjectSamples_LoadAndClearEmitExpectedNotifications()
         {
             StaTestHelper.Run(() =>
             {
-                var legacy = new RadObservableCollection<ProjectData>();
                 var current = new ProjectVM().projectsDataList;
-                var legacyEvents = CaptureEvents(legacy);
                 var currentEvents = CaptureEvents(current);
                 var first = new ProjectData { id = 1 };
                 var second = new ProjectData { id = 2 };
 
-                legacy.Clear();
-                current.Clear();
-                legacy.Add(first);
                 current.Add(first);
-                legacy.Add(second);
                 current.Add(second);
-                CollectionAssert.AreEqual(legacy.ToArray(), current.ToArray());
-                legacy.Clear();
+                CollectionAssert.AreEqual(new[] { 1, 2 }, current.Select(sample => sample.id).ToArray());
                 current.Clear();
-                legacy.Add(second);
                 current.Add(second);
 
-                CollectionAssert.AreEqual(legacy.ToArray(), current.ToArray());
-                CollectionAssert.AreEqual(legacyEvents, currentEvents);
+                CollectionAssert.AreEqual(new[] { 2 }, current.Select(sample => sample.id).ToArray());
+                CollectionAssert.AreEqual(
+                    new[]
+                    {
+                        "P:Count", "P:Item[]", "C:Add:0:-1",
+                        "P:Count", "P:Item[]", "C:Add:1:-1",
+                        "P:Count", "P:Item[]", "C:Reset:-1:-1",
+                        "P:Count", "P:Item[]", "C:Add:0:-1"
+                    },
+                    currentEvents);
             });
         }
 

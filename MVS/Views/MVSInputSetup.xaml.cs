@@ -1,8 +1,7 @@
 ﻿using System;
+using System.Linq;
 using System.Windows.Controls;
 using System.Windows.Threading;
-using Telerik.Windows.Controls;
-using Telerik.Windows.Controls.GridView;
 
 namespace MVS
 {
@@ -22,6 +21,10 @@ namespace MVS
         private MVSDataCollection hmsInputDataList;
 
         private ObservableCollectionEx<SensorData> serverSensorDataList;
+
+        private HMSData editingInput;
+        private int originalDataId;
+        private int cellDataId;
 
         public MVSInputSetup()
         {
@@ -53,12 +56,12 @@ namespace MVS
                 if (serverSensorDataList.Count != sensorDisplayList.Count)
                     sensorDisplayList.Clear();
 
-                if (hmsInputDataList.GetDataList().Count != hmsInputDisplayList.Count)
+                if (editingInput == null && hmsInputDataList.GetDataList().Count != hmsInputDisplayList.Count)
                     hmsInputDisplayList.Clear();
 
                 // Overføre fra data lister til display lister
                 DisplayList.Transfer(serverSensorDataList, sensorDisplayList);
-                DisplayList.Transfer(hmsInputDataList.GetDataList(), hmsInputDisplayList);
+                TransferInputData();
             }
         }
 
@@ -79,10 +82,31 @@ namespace MVS
         {
             // Overføre fra data lister til display lister
             DisplayList.Transfer(serverSensorDataList, sensorDisplayList);
-            DisplayList.Transfer(hmsInputDataList.GetDataList(), hmsInputDisplayList);
+            TransferInputData();
 
             ClearSensorStatus(sensorDisplayList);
             ClearSensorStatus(hmsInputDisplayList);
+        }
+
+        private void TransferInputData()
+        {
+            var items = hmsInputDataList.GetDataList().ToList();
+            if (editingInput != null)
+            {
+                var current = items.FirstOrDefault(item => item.id == editingInput.id);
+                if (current != null)
+                {
+                    editingInput.name = current.name;
+                    editingInput.data = current.data;
+                    editingInput.data2 = current.data2;
+                    editingInput.data3 = current.data3;
+                    editingInput.timestamp = current.timestamp;
+                    editingInput.status = current.status;
+                    editingInput.dbColumn = current.dbColumn;
+                }
+                items.RemoveAll(item => item.id == editingInput.id);
+            }
+            DisplayList.Transfer(items, hmsInputDisplayList);
         }
 
         private void ClearSensorStatus(ObservableCollectionEx<SensorData> sensorDisplayList)
@@ -97,28 +121,39 @@ namespace MVS
                 item.status = DataStatus.NONE;
         }
 
-        private void gvClientData_BeginningEdit(object sender, GridViewBeginningEditRoutedEventArgs e)
+        private void gvClientData_BeginningEdit(object sender, DataGridBeginningEditEventArgs e)
         {
-            gvHMSInputData.BeginEdit();
+            if (e.Row.Item is HMSData input)
+            {
+                if (!ReferenceEquals(editingInput, input))
+                {
+                    editingInput = input;
+                    originalDataId = input.dataId;
+                }
+                cellDataId = input.dataId;
+            }
         }
 
-        private void gvClientData_RowEditEnded(object sender, GridViewRowEditEndedEventArgs e)
+        private void gvClientData_CellEditEnding(object sender, DataGridCellEditEndingEventArgs e)
         {
-            if (e.EditAction == GridViewEditAction.Cancel)
+            if (e.EditAction == DataGridEditAction.Cancel && e.Row.Item is HMSData input)
+                input.dataId = cellDataId;
+        }
+
+        private void gvClientData_RowEditEnding(object sender, DataGridRowEditEndingEventArgs e)
+        {
+            HMSData hmsData = (HMSData)e.Row.Item;
+            if (e.EditAction == DataGridEditAction.Cancel)
             {
-                return;
+                if (ReferenceEquals(editingInput, hmsData))
+                    hmsData.dataId = originalDataId;
             }
-            if (e.EditOperationType == GridViewEditOperationType.Edit)
+            else
             {
-                // Hente oppdaterte data
-                HMSData hmsData = (sender as RadGridView).SelectedItem as HMSData;
-
-                // Lagre til data samling
                 hmsInputDataList.SetData(hmsData);
-
-                // Lagre til fil
                 config.SetClientData(hmsData);
             }
+            editingInput = null;
         }
     }
 }

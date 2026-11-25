@@ -1,4 +1,5 @@
 using System.Windows.Controls;
+using MVS.Views.Controls;
 
 namespace MVS
 {
@@ -6,7 +7,7 @@ namespace MVS
     /// Interaction logic for CaptureCharts.xaml
     ///
     /// Live Pitch/Roll/Heave input charts shown on the Capture wizard step.
-    /// The series are bound to the same live lists that the ProjectVM chart-update
+    /// The charts observe the same live lists that the ProjectVM chart-update
     /// timer maintains while a recording session is active.
     /// </summary>
     public partial class CaptureCharts : UserControl
@@ -18,19 +19,14 @@ namespace MVS
 
         public void Init(ProjectVM projectVM)
         {
-            // Context
             DataContext = projectVM;
 
-            // Bind to the same live lists that the ProjectVM chart-update timer maintains.
-            // Series[0] = Ref, Series[1] = Test (swapped from DataAnalysis to show vessel on top).
-            chartPitch.Series[0].ItemsSource = projectVM.refPitchList;
-            chartPitch.Series[1].ItemsSource = projectVM.testPitchList;
-
-            chartRoll.Series[0].ItemsSource = projectVM.refRollList;
-            chartRoll.Series[1].ItemsSource = projectVM.testRollList;
-
-            chartHeave.Series[0].ItemsSource = projectVM.refHeaveList;
-            chartHeave.Series[1].ItemsSource = projectVM.testHeaveList;
+            chartPitch.ReferenceItemsSource = projectVM.refPitchList;
+            chartPitch.TestItemsSource = projectVM.testPitchList;
+            chartRoll.ReferenceItemsSource = projectVM.refRollList;
+            chartRoll.TestItemsSource = projectVM.testRollList;
+            chartHeave.ReferenceItemsSource = projectVM.refHeaveList;
+            chartHeave.TestItemsSource = projectVM.testHeaveList;
         }
     }
 }

@@ -10,19 +10,11 @@
     <ApplicationIcon>mvs_windows_icon.ico</ApplicationIcon>
     <RollForward>LatestMajor</RollForward>
     <!-- Declare this app as Windows-only so the platform-compat analyzer
-         (CA1416) stops warning about every WPF / Telerik call site. -->
+         (CA1416) stops warning about every WPF call site. -->
     <SupportedOSPlatformVersion>7.0</SupportedOSPlatformVersion>
   </PropertyGroup>
 
-  <!--
-    Telerik UI for WPF (NoXaml) – consumed via the official Telerik NuGet
-    meta-package which delivers the net8.0-windows assemblies that are
-    binary-compatible with .NET 10. The package is resolved from the local
-    Telerik installer feed configured in NuGet.config.
-  -->
   <ItemGroup>
-    <PackageReference Include="Telerik.UI.for.Wpf.80" Version="2026.1.415" />
-    <PackageReference Include="System.IO.Hashing" Version="10.0.10" />
     <PackageReference Include="PDFsharp-WPF" Version="6.2.2" />
     <PackageReference Include="Microsoft.Web.WebView2" Version="1.0.2903.40" />
   </ItemGroup>
@@ -76,12 +68,6 @@
   </ItemGroup>
 
   <ItemGroup>
-    <Content Include="telerik-license.txt">
-      <CopyToOutputDirectory>PreserveNewest</CopyToOutputDirectory>
-    </Content>
-  </ItemGroup>
-
-  <ItemGroup>
     <PackageReference Include="CrcDotNET" Version="1.0.3" />
     <PackageReference Include="DeviceId.Windows.Wmi" Version="6.11.0" />
     <PackageReference Include="Google.Protobuf" Version="3.35.1" />
@@ -93,7 +79,7 @@
     <PackageReference Include="MySqlConnector" Version="2.6.1" />
     <PackageReference Include="NModbus.Serial" Version="3.0.83" />
     <PackageReference Include="Portable.BouncyCastle" Version="1.9.0" />
-    <PackageReference Include="Telerik.Licensing" Version="1.9.1" />
+    <PackageReference Include="QRCoder" Version="1.6.0" />
     <PackageReference Include="ZstdSharp.Port" Version="0.8.8" />
   </ItemGroup>
 

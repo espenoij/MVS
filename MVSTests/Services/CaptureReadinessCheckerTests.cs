@@ -1,7 +1,6 @@
 using Microsoft.VisualStudio.TestTools.UnitTesting;
 using MVS;
 using System.Collections.Generic;
-using Telerik.Windows.Data;
 
 namespace MVSTests.Services
 {
@@ -139,20 +138,10 @@ namespace MVSTests.Services
         }
 
         [TestMethod]
-        public void Evaluate_StandardCollection_MatchesTelerikCollection()
+        public void Evaluate_StandardCollection_ReturnsExpectedChecksAndFlags()
         {
-            var standardList = new List<SensorData>
-            {
-                new SensorData { type = SensorType.SerialPort, mruType = MRUType.ReferenceMRU },
-                new SensorData { type = SensorType.SerialPort, mruType = MRUType.TestMRU },
-            };
-
-            var standardReport = CaptureReadinessChecker.Evaluate(
-                standardList,
-                ConnectedDb(),
-                ActiveCorrection());
-            var telerikReport = CaptureReadinessChecker.Evaluate(
-                new RadObservableCollection<SensorData>
+            var report = CaptureReadinessChecker.Evaluate(
+                new List<SensorData>
                 {
                     new SensorData { type = SensorType.SerialPort, mruType = MRUType.ReferenceMRU },
                     new SensorData { type = SensorType.SerialPort, mruType = MRUType.TestMRU },
@@ -160,38 +149,32 @@ namespace MVSTests.Services
                 ConnectedDb(),
                 ActiveCorrection());
 
-            Assert.AreEqual(telerikReport.Items.Count, standardReport.Items.Count);
-            for (int i = 0; i < standardReport.Items.Count; i++)
+            Assert.AreEqual(4, report.Items.Count);
+            CollectionAssert.AreEqual(
+                new[]
+                {
+                    "Reference MRU sensor configured",
+                    "Vessel MRU sensor configured",
+                    "Database connection reachable",
+                    "LiDAR helideck correction applied"
+                },
+                new[]
+                {
+                    report.Items[0].Label,
+                    report.Items[1].Label,
+                    report.Items[2].Label,
+                    report.Items[3].Label
+                });
+            for (int i = 0; i < report.Items.Count; i++)
             {
-                Assert.AreEqual(telerikReport.Items[i].Label, standardReport.Items[i].Label);
-                Assert.AreEqual(telerikReport.Items[i].Pass, standardReport.Items[i].Pass);
-                Assert.AreEqual(telerikReport.Items[i].Severity, standardReport.Items[i].Severity);
+                Assert.IsTrue(report.Items[i].Pass);
+                Assert.AreEqual(
+                    i < 2 ? ReadinessSeverity.Blocking : ReadinessSeverity.Advisory,
+                    report.Items[i].Severity);
             }
-        }
-
-        [TestMethod]
-        public void Evaluate_VendorAndDotNetCollections_ReturnSameReadiness()
-        {
-            var sensors = MakeSensorList(hasRef: false, hasTest: true);
-            var vendorSensors = new RadObservableCollection<SensorData>();
-            foreach (var sensor in sensors)
-                vendorSensors.Add(sensor);
-
-            var database = DisconnectedDb();
-            var correction = ActiveCorrection();
-            var expected = CaptureReadinessChecker.Evaluate(sensors, database, correction);
-            var actual = CaptureReadinessChecker.Evaluate(vendorSensors, database, correction);
-
-            Assert.AreEqual(expected.Items.Count, actual.Items.Count);
-            for (int i = 0; i < expected.Items.Count; i++)
-            {
-                Assert.AreEqual(expected.Items[i].Label, actual.Items[i].Label);
-                Assert.AreEqual(expected.Items[i].Pass, actual.Items[i].Pass);
-                Assert.AreEqual(expected.Items[i].Severity, actual.Items[i].Severity);
-            }
-            Assert.AreEqual(expected.AllGood, actual.AllGood);
-            Assert.AreEqual(expected.HasAnyFailure, actual.HasAnyFailure);
-            Assert.AreEqual(expected.HasBlockingFailure, actual.HasBlockingFailure);
+            Assert.IsTrue(report.AllGood);
+            Assert.IsFalse(report.HasAnyFailure);
+            Assert.IsFalse(report.HasBlockingFailure);
         }
 
         // ── Blocking failures ────────────────────────────────────────────────────

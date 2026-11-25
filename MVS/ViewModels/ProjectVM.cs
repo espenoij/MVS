@@ -288,7 +288,7 @@ namespace MVS
             // Uten denne tømmingen legges hele sesjonen (tidsstemplet fra opptakets
             // start) BAK disse restpunktene, slik at det første punktet ligger helt
             // til høyre og det neste hopper tilbake til venstre. Da tegner
-            // Telerik-grafen en ekstra linje tvers over grafen (fra slutt til start).
+            // grafen en ekstra linje tvers over grafen (fra slutt til start).
             ClearGraphBuffers();
 
             // Timestamp of the first record, used to suppress the rolling-mean
