@@ -629,7 +629,7 @@ namespace MVS.Services.Reporting
                 ? "-"
                 : string.Format(Ci, "{0:+0.000;-0.000;0.000} s", seconds.Value);
 
-        private sealed class ReportCanvas : IDisposable
+        internal sealed class ReportCanvas : IDisposable
         {
             internal const double LeftMargin = 48;
             internal const double RightMargin = 48;
@@ -724,6 +724,8 @@ namespace MVS.Services.Reporting
             {
                 foreach (KeyValuePair<string, string> row in rows)
                 {
+                    // Keep the label and the first line of its value together.
+                    EnsureSpace(14 + 10 * 1.45);
                     DrawText(_graphics, row.Key, 9.5, true, ColorHeading, LeftMargin, Y, ContentWidth);
                     Y += 14;
                     DrawParagraph(Dash(row.Value), 10);

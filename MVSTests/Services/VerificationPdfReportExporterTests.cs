@@ -1,11 +1,15 @@
 using System;
+using System.Collections.Generic;
 using System.IO;
+using System.Linq;
+using System.Text;
 using Microsoft.VisualStudio.TestTools.UnitTesting;
 using MVS;
 using MVS.Models;
 using MVS.Services;
 using MVS.Services.Reporting;
 using MVSTests.TestInfrastructure;
+using PdfSharp.Pdf;
 
 namespace MVSTests.Services
 {
@@ -309,6 +313,69 @@ namespace MVSTests.Services
                 }
             });
         }
+
+        [TestMethod]
+        [DataRow(45)]
+        [DataRow(46)]
+        public void DrawKeyValues_NearPageBottom_KeepsLabelWithFirstValueLine(int precedingLines)
+        {
+            StaTestHelper.Run(() =>
+            {
+                using var document = new PdfDocument();
+                using var canvas = new VerificationPdfReportExporter.ReportCanvas(document);
+                canvas.StartPage();
+                canvas.DrawParagraph(string.Join("\n", Enumerable.Repeat("Filler", precedingLines)), 10);
+
+                canvas.DrawKeyValues(new[]
+                {
+                    new KeyValuePair<string, string>("Equipment", "Reference MRU")
+                });
+
+                canvas.Complete();
+                Assert.AreEqual(2, document.Pages.Count);
+                Assert.AreEqual(126.5, canvas.Y, 0.01,
+                    "The label and first value line must both be drawn on the new page.");
+                Assert.IsFalse(PageContent(document, 0).Contains("(Equipment) Tj"));
+                StringAssert.Contains(PageContent(document, 1), "(Equipment) Tj");
+                StringAssert.Contains(PageContent(document, 1), "(Reference MRU) Tj");
+            });
+        }
+
+        [TestMethod]
+        public void DrawKeyValues_LongMetadata_PreservesAllLinesAcrossPages()
+        {
+            StaTestHelper.Run(() =>
+            {
+                using var document = new PdfDocument();
+                using var canvas = new VerificationPdfReportExporter.ReportCanvas(document);
+                canvas.StartPage();
+                canvas.DrawParagraph(string.Join("\n", Enumerable.Repeat("Filler", 45)), 10);
+
+                canvas.DrawKeyValues(new[]
+                {
+                    new KeyValuePair<string, string>("Installation",
+                        string.Join("\n", Enumerable.Range(0, 100).Select(i => $"Metadata {i:D3}"))),
+                    new KeyValuePair<string, string>("Next field", "Next value")
+                });
+
+                canvas.Complete();
+                Assert.AreEqual(4, document.Pages.Count);
+                Assert.AreEqual(264.0, canvas.Y, 0.01,
+                    "All 100 metadata lines and the following label/value must be laid out.");
+                string firstValuePage = PageContent(document, 1);
+                StringAssert.Contains(firstValuePage, "(Installation) Tj");
+                StringAssert.Contains(firstValuePage, "(Metadata 000) Tj");
+                string allPages = string.Concat(Enumerable.Range(0, document.Pages.Count)
+                    .Select(i => PageContent(document, i)));
+                for (int i = 0; i < 100; i++)
+                    StringAssert.Contains(allPages, $"(Metadata {i:D3}) Tj");
+                StringAssert.Contains(PageContent(document, 3), "(Next field) Tj");
+                StringAssert.Contains(PageContent(document, 3), "(Next value) Tj");
+            });
+        }
+
+        private static string PageContent(PdfDocument document, int pageIndex) =>
+            Encoding.Latin1.GetString(document.Pages[pageIndex].Contents.CreateSingleContent().Stream.UnfilteredValue);
 
         private static void AssertIsPng(byte[] bytes)
         {
