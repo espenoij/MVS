@@ -349,6 +349,7 @@ namespace MVS
 
         private void Window_Closing(object sender, EventArgs e)
         {
+            ucProjects.DisposeReportPreview();
             Stop();
 
             Application.Current.Shutdown();

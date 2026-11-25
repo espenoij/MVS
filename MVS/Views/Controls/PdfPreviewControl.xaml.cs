@@ -2,6 +2,7 @@ using System;
 using System.Collections.Generic;
 using System.Diagnostics;
 using System.IO;
+using System.Security;
 using System.Windows.Controls;
 using Microsoft.Web.WebView2.Core;
 
@@ -15,6 +16,9 @@ namespace MVS.Views.Controls
     {
         private readonly HashSet<string> _retiredFiles = new HashSet<string>(StringComparer.OrdinalIgnoreCase);
         private string _activeFile;
+        private bool _disposed;
+
+        internal Action<string, byte[]> WritePdfBytes { get; set; } = File.WriteAllBytes;
 
         public PdfPreviewControl()
         {
@@ -24,6 +28,8 @@ namespace MVS.Views.Controls
 
         public void LoadPdf(byte[] pdfBytes)
         {
+            if (_disposed)
+                throw new ObjectDisposedException(nameof(PdfPreviewControl));
             if (pdfBytes == null)
                 throw new ArgumentNullException(nameof(pdfBytes));
             if (pdfBytes.Length == 0)
@@ -35,20 +41,55 @@ namespace MVS.Views.Controls
             Directory.CreateDirectory(directory);
 
             string path = Path.Combine(directory, Guid.NewGuid().ToString("N") + ".pdf");
-            File.WriteAllBytes(path, pdfBytes);
+            try
+            {
+                WritePdfBytes(path, pdfBytes);
+            }
+            catch
+            {
+                _retiredFiles.Add(path);
+                if (TryDeleteFile(path))
+                    _retiredFiles.Remove(path);
+                throw;
+            }
             _activeFile = path;
             pdfViewer.Source = new Uri(path);
         }
 
         public void Clear()
         {
+            if (_disposed)
+                return;
             RetireActiveFile();
 
             if (pdfViewer.CoreWebView2 != null)
                 pdfViewer.CoreWebView2.Navigate("about:blank");
+            else if (pdfViewer.Source != null)
+                pdfViewer.Source = new Uri("about:blank");
             else
+                DeleteRetiredFiles();
+        }
+
+        /// <summary>
+        /// Releases the browser and deletes files owned by this preview when its owner closes.
+        /// Unlike Clear, this control cannot be reused afterward.
+        /// </summary>
+        public void Dispose()
+        {
+            if (_disposed)
+                return;
+
+            _disposed = true;
+            pdfViewer.CoreWebView2InitializationCompleted -= PdfViewer_CoreWebView2InitializationCompleted;
+            if (pdfViewer.CoreWebView2 != null)
+                pdfViewer.CoreWebView2.NavigationCompleted -= PdfViewer_NavigationCompleted;
+            RetireActiveFile();
+            try
             {
-                pdfViewer.Source = null;
+                pdfViewer.Dispose();
+            }
+            finally
+            {
                 DeleteRetiredFiles();
             }
         }
@@ -94,23 +135,26 @@ namespace MVS.Views.Controls
             var deletedFiles = new List<string>();
             foreach (string path in _retiredFiles)
             {
-                try
-                {
-                    File.Delete(path);
+                if (TryDeleteFile(path))
                     deletedFiles.Add(path);
-                }
-                catch (IOException ex)
-                {
-                    Debug.WriteLine("Could not remove temporary PDF preview file: " + ex.Message);
-                }
-                catch (UnauthorizedAccessException ex)
-                {
-                    Debug.WriteLine("Could not remove temporary PDF preview file: " + ex.Message);
-                }
             }
 
             foreach (string path in deletedFiles)
                 _retiredFiles.Remove(path);
+        }
+
+        private static bool TryDeleteFile(string path)
+        {
+            try
+            {
+                File.Delete(path);
+                return true;
+            }
+            catch (Exception ex) when (ex is IOException || ex is UnauthorizedAccessException || ex is SecurityException)
+            {
+                Debug.WriteLine("Could not remove temporary PDF preview file: " + ex.Message);
+                return false;
+            }
         }
     }
 }

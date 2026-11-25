@@ -543,12 +543,12 @@
                                             Background="{StaticResource SesSurfaceBrush}"
                                             IsHitTestVisible="False">
                                         <StackPanel HorizontalAlignment="Center" VerticalAlignment="Center" Margin="32">
-                                            <TextBlock Text="No report generated yet"
+                                            <TextBlock x:Name="reportViewerPlaceholderTitle" Text="No report generated yet"
                                                        FontSize="15" FontWeight="SemiBold"
                                                        HorizontalAlignment="Center"
                                                        Foreground="{StaticResource SesTextSecondaryBrush}"
                                                        Margin="0,0,0,8"/>
-                                            <TextBlock Text="Fill in the report details and click 'Generate Report' to preview here."
+                                            <TextBlock x:Name="reportViewerPlaceholderDetail" Text="Fill in the report details and click 'Generate Report' to preview here."
                                                        TextWrapping="Wrap"
                                                        TextAlignment="Center"
                                                        Foreground="{StaticResource SesTextSecondaryBrush}"/>
