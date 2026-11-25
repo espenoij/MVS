@@ -1,21 +1,15 @@
-using System.IO;
 using System.Windows;
-using Telerik.Windows.Controls;
-using Telerik.Windows.Documents.Fixed;
 
 namespace MVS
 {
     /// <summary>
     /// Interaction logic for DialogReportPreview.xaml.
     /// A popup window that displays the generated verification report PDF in a
-    /// <see cref="RadPdfViewer"/>. The report bytes are loaded via
-    /// <see cref="LoadReport"/>; the backing stream is disposed when the window closes.
+    /// WebView2's built-in PDF viewer. The report bytes are loaded via
+    /// <see cref="LoadReport"/> and the temporary preview file is removed on close.
     /// </summary>
     public partial class DialogReportPreview : Window
     {
-        // Backing stream for the viewer; kept alive for the window's lifetime.
-        private MemoryStream _previewStream;
-
         public DialogReportPreview()
         {
             InitializeComponent();
@@ -27,9 +21,7 @@ namespace MVS
         /// </summary>
         public void LoadReport(byte[] pdfBytes)
         {
-            _previewStream?.Dispose();
-            _previewStream = new MemoryStream(pdfBytes, writable: false);
-            pdfReportPreview.DocumentSource = new PdfDocumentSource(_previewStream);
+            pdfReportPreview.LoadPdf(pdfBytes);
         }
 
         private void btnClose_Click(object sender, RoutedEventArgs e)
@@ -39,9 +31,7 @@ namespace MVS
 
         private void DialogReportPreview_Closed(object sender, System.EventArgs e)
         {
-            pdfReportPreview.DocumentSource = null;
-            _previewStream?.Dispose();
-            _previewStream = null;
+            pdfReportPreview.Clear();
         }
     }
 }

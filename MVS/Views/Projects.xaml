@@ -538,8 +538,8 @@
 
                                 <!-- Right: inline PDF viewer -->
                                 <Grid Grid.Column="2">
-                                    <telerik:RadPdfViewer x:Name="inlinePdfViewer"
-                                                          Background="{StaticResource SesSurfaceBrush}"/>
+                                    <controls:PdfPreviewControl x:Name="inlinePdfViewer"
+                                                                Background="{StaticResource SesSurfaceBrush}"/>
                                     <Border x:Name="reportViewerPlaceholder"
                                             Background="{StaticResource SesSurfaceBrush}"
                                             IsHitTestVisible="False">
