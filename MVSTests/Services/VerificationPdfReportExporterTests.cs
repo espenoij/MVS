@@ -1,6 +1,5 @@
 using System;
 using System.IO;
-using System.Reflection;
 using Microsoft.VisualStudio.TestTools.UnitTesting;
 using MVS;
 using MVS.Models;
@@ -12,8 +11,8 @@ namespace MVSTests.Services
 {
     /// <summary>
     /// Tests for the verification reporting layer: the report model accessors,
-    /// the deterministic chart bitmaps, and the RadPdfProcessing PDF export.
-    /// PDF/chart building touches Telerik/GDI+ objects, so those tests run on an
+    /// the deterministic chart bitmaps, and the PDFsharp PDF export.
+    /// PDF/chart building touches WPF/GDI+ objects, so those tests run on an
     /// STA thread via <see cref="StaTestHelper"/>.
     /// </summary>
     [TestClass]
@@ -254,8 +253,8 @@ namespace MVSTests.Services
                 var document = VerificationPdfReportExporter.Build(model);
 
                 Assert.IsNotNull(document);
-                Assert.IsTrue(document.Pages.Count >= 2,
-                    "Expected the report to contain at least two pages (cover + dashboard).");
+                Assert.IsTrue(document.Pages.Count >= 12,
+                    "Expected the report to include its cover, contents and verification sections.");
             });
         }
 
@@ -297,49 +296,17 @@ namespace MVSTests.Services
         }
 
         [TestMethod]
-        public void DiscoverSectionPageNumbers_DoesNotForceBreak_FinalAppendicesSection()
+        public void Build_WithLongAppendixNotes_PaginatesTheReport()
         {
             StaTestHelper.Run(() =>
             {
                 var model = SampleModel(withData: false);
-                var method = typeof(VerificationPdfReportExporter).GetMethod(
-                    "DiscoverSectionPageNumbers",
-                    BindingFlags.NonPublic | BindingFlags.Static);
-
-                Assert.IsNotNull(method);
-
-                object result = method.Invoke(null, new object[] { model, new System.Collections.Generic.HashSet<string>() });
-                FieldInfo newSplitsField = result.GetType().GetField("Item2");
-
-                Assert.IsNotNull(newSplitsField);
-
-                var newSplits = (System.Collections.Generic.HashSet<string>)newSplitsField.GetValue(result);
-                Assert.IsFalse(newSplits.Contains("13. Appendices"));
-            });
-        }
-
-        [TestMethod]
-        public void DiscoverSectionPageNumbers_PlacesAxisDetailImmediatelyAfterAppliedCorrections()
-        {
-            StaTestHelper.Run(() =>
-            {
-                var model = SampleModel();
-                var method = typeof(VerificationPdfReportExporter).GetMethod(
-                    "DiscoverSectionPageNumbers",
-                    BindingFlags.NonPublic | BindingFlags.Static);
-
-                Assert.IsNotNull(method);
-
-                object result = method.Invoke(null, new object[] { model, new System.Collections.Generic.HashSet<string>() });
-                FieldInfo pagesField = result.GetType().GetField("Item1");
-
-                Assert.IsNotNull(pagesField);
-
-                var pages = (System.Collections.Generic.Dictionary<string, int>)pagesField.GetValue(result);
-                Assert.IsTrue(pages.ContainsKey("3.  Axis Detail"));
-                Assert.IsFalse(pages.ContainsKey("10. Axis Detail"));
-                Assert.IsTrue(pages["3.  Axis Detail"] >= pages["2.  Applied Corrections"]);
-                Assert.IsTrue(pages["4.  Correlation & Latency"] >= pages["3.  Axis Detail"]);
+                model.Metadata.AppendixNotes = new string('A', 5000);
+                using (var document = VerificationPdfReportExporter.Build(model))
+                {
+                    Assert.IsTrue(document.Pages.Count > 15,
+                        "A long appendix should flow onto additional pages without truncating the report.");
+                }
             });
         }
 
