@@ -4,7 +4,6 @@
              xmlns:mc="http://schemas.openxmlformats.org/markup-compatibility/2006"
              xmlns:d="http://schemas.microsoft.com/expression/blend/2008"
              xmlns:controls="clr-namespace:MVS.Views.Controls"
-             xmlns:telerik="http://schemas.telerik.com/2008/xaml/presentation"
              mc:Ignorable="d"
              d:DesignWidth="360">
     <UserControl.Resources>
@@ -155,9 +154,9 @@
                                              Style="{StaticResource RequiredMultiLineFieldBox}" LostFocus="Field_LostFocus"
                                              TextChanged="RequiredField_TextChanged"/>
                 <TextBlock Text="Sample rate (Hz)" Style="{StaticResource FieldLabel}"/>
-                <telerik:RadNumericUpDown Value="{Binding SampleRateHz, UpdateSourceTrigger=PropertyChanged}"
-                                          Minimum="0" Maximum="10000" IsInteger="False"
+                <controls:SampleRateInput x:Name="SampleRate" Value="{Binding SampleRateHz, UpdateSourceTrigger=PropertyChanged}"
                                           Margin="0,4,0,0" LostFocus="Field_LostFocus"
+                                          Spun="SampleRate_Spun"
                                           ValueChanged="RequiredField_ValueChanged"/>
                 <TextBlock Text="Logging configuration" Style="{StaticResource FieldLabel}"/>
                 <controls:WatermarkTextBox Text="{Binding LoggingConfiguration, UpdateSourceTrigger=PropertyChanged}"
