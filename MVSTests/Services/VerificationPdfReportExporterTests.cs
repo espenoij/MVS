@@ -15,7 +15,7 @@ namespace MVSTests.Services
 {
     /// <summary>
     /// Tests for the verification reporting layer: the report model accessors,
-    /// the deterministic chart bitmaps, and the PDFsharp PDF export.
+    /// deterministic chart bitmaps, and the PDFsharp PDF export.
     /// PDF/chart building touches WPF/GDI+ objects, so those tests run on an
     /// STA thread via <see cref="StaTestHelper"/>.
     /// </summary>
