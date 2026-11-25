@@ -754,10 +754,6 @@ namespace MVS
                 while (rawDataItems.Count() > serialPortSetupWindowVM.totalDataLines)
                     rawDataItems.RemoveAt(0);
 
-                // Hvorfor ikke bare automatisk scrolle data til siste i listen?
-                // Fordi scroll funksjonen til telerik (under) er så inn i helsike treig. UI blir ikke-responsiv.
-                //lvRawData.ScrollIntoViewAsync(lvRawData.Items[lvRawData.Items.Count - 1], lvRawData.Columns[0], null);
-
                 // Status
                 sensorMonitorStatus.Text = "Receiving data from serial port...";
             }));
