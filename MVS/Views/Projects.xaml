@@ -14,6 +14,11 @@
 
         <BooleanToVisibilityConverter x:Key="BoolToVis" />
 
+        <Style x:Key="ProjectListTextStyle" TargetType="TextBlock" BasedOn="{StaticResource {x:Type TextBlock}}">
+            <Setter Property="Margin" Value="2,0,2,0" />
+            <Setter Property="VerticalAlignment" Value="Center" />
+        </Style>
+
         <!-- Status indicator color for the project list "Status" column. -->
         <Style x:Key="ProjectStatusColor" TargetType="Ellipse">
             <Style.Triggers>
@@ -34,7 +39,7 @@
 
     </UserControl.Resources>
 
-    <Grid Margin="12">
+    <Grid Margin="24" Background="{StaticResource SesSurfaceBrush}">
                 <Grid.RowDefinitions>
                     <RowDefinition Height="Auto"/>
                     <RowDefinition Height="Auto"/>
@@ -46,22 +51,21 @@
         <FrameworkElement x:Name="mainWindowVMBridge" Visibility="Collapsed"/>
 
                 <!-- Header -->
-                <Grid Grid.Row="0" Margin="0,0,0,8">
-                    <StackPanel Orientation="Horizontal">
+                <Grid Grid.Row="0" Margin="0,0,0,16">
+                    <StackPanel>
                         <TextBlock Text="Motion Unit Verification"
                                    FontFamily="{StaticResource SesFontFamily}"
-                                   FontSize="18" FontWeight="Bold"
+                                   FontSize="28" FontWeight="Bold"
                                    Foreground="{StaticResource SesTextPrimaryBrush}"/>
-                        <TextBlock Text=" — Guided workflow"
-                                   FontSize="14"
-                                   Foreground="{StaticResource SesTextSecondaryBrush}"
-                                   VerticalAlignment="Center"
-                                   Margin="6,2,0,0"/>
-                        <TextBlock Text="MRU Verification Report"
-                                   FontSize="14"
-                                   Foreground="{StaticResource SesDarkBlueGreyLightBrush}"
-                                   VerticalAlignment="Center"
-                                   Margin="16,2,0,0"/>
+                        <StackPanel Orientation="Horizontal" Margin="0,4,0,0">
+                            <TextBlock Text="Guided workflow"
+                                       FontSize="14"
+                                       Foreground="{StaticResource SesTextSecondaryBrush}"/>
+                            <TextBlock Text="MRU Verification Report"
+                                       FontSize="14"
+                                       Foreground="{StaticResource SesDarkBlueGreyLightBrush}"
+                                       Margin="16,0,0,0"/>
+                        </StackPanel>
                     </StackPanel>
                     <TextBlock x:Name="tbWizardProjectName"
                                FontSize="14"
@@ -76,7 +80,7 @@
                 <UniformGrid x:Name="wizardStepBar"
                              Grid.Row="1"
                              Columns="5"
-                             Margin="0,0,0,8">
+                             Margin="0,0,0,16">
                     <Button Content="Setup"
                             CommandParameter="1"
                             Tag="Current"
@@ -128,14 +132,21 @@
                     <Grid Grid.Row="1">
 
                     <!-- ===== STEP 1: SETUP ===== -->
-                    <Grid x:Name="panelStep1">
+                    <ScrollViewer x:Name="setupHorizontalScroll"
+                                  HorizontalScrollBarVisibility="Auto"
+                                  VerticalScrollBarVisibility="Disabled"
+                                  Visibility="{Binding Visibility, ElementName=panelStep1}">
+                    <Grid x:Name="panelStep1" MinWidth="860"
+                          Width="{Binding ActualWidth, ElementName=setupHorizontalScroll}">
                         <Grid.ColumnDefinitions>
                             <ColumnDefinition Width="2*" MinWidth="350"/>
                             <ColumnDefinition Width="3*"/>
                         </Grid.ColumnDefinitions>
 
                         <!-- Projects list (left half of Step 1) -->
-                        <Grid Grid.Column="0" Margin="0,0,8,0">
+                        <Border Grid.Column="0" Margin="0,0,16,0"
+                                Style="{StaticResource SesCardBorderStyle}" Padding="12">
+                        <Grid>
                             <Grid.RowDefinitions>
                                 <RowDefinition Height="Auto"/>
                                 <RowDefinition Height="Auto"/>
@@ -144,7 +155,7 @@
 
                             <TextBlock Grid.Row="0"
                                        Text="Projects"
-                                       FontSize="14" FontWeight="SemiBold"
+                                       FontSize="16" FontWeight="Bold"
                                        Margin="0,0,0,8"/>
 
                             <StackPanel Grid.Row="1"
@@ -154,7 +165,7 @@
                                         Click="btnNew_Click"
                                         Content="New"
                                         MinWidth="100"
-                                        Style="{StaticResource SesNativeSecondaryButtonStyle}"/>
+                                        Style="{StaticResource SesNativePrimaryButtonStyle}"/>
                                 <Button Name="btnDelete"
                                         Click="btnDelete_Click"
                                         Content="Delete"
@@ -166,6 +177,7 @@
                             <DataGrid Grid.Row="2"
                                       Name="gvProjects"
                                       Style="{StaticResource SesNativeDataGridStyle}"
+                                      RowHeight="36"
                                       ItemsSource="{Binding Project}"
                                       IsReadOnly="True"
                                       IsManipulationEnabled="True"
@@ -176,15 +188,25 @@
                                       SelectionUnit="FullRow"
                                       AutoGenerateColumns="False"
                                       SelectionChanged="gvProjects_SelectionChanged">
+                                <DataGrid.CellStyle>
+                                    <Style TargetType="DataGridCell">
+                                        <Setter Property="VerticalContentAlignment" Value="Center" />
+                                    </Style>
+                                </DataGrid.CellStyle>
                                 <DataGrid.Columns>
                                     <DataGridTextColumn Width="40"
                                                         Header="ID"
+                                                        ElementStyle="{StaticResource ProjectListTextStyle}"
                                                         Binding="{Binding Id}" />
                                     <DataGridTextColumn Width="2*"
+                                                        MinWidth="90"
                                                         Header="Name"
+                                                        ElementStyle="{StaticResource ProjectListTextStyle}"
                                                         Binding="{Binding Name}" />
                                     <DataGridTextColumn Width="*"
+                                                        MinWidth="75"
                                                         Header="Date"
+                                                        ElementStyle="{StaticResource ProjectListTextStyle}"
                                                         Binding="{Binding DateString}" />
                                     <DataGridTemplateColumn Width="80"
                                                             Header="Status"
@@ -207,13 +229,14 @@
                                 </DataGrid.Columns>
                             </DataGrid>
                         </Grid>
+                        </Border>
 
                         <!-- Project details (right half of Step 1) -->
                         <ScrollViewer Grid.Column="1" VerticalScrollBarVisibility="Auto" HorizontalScrollBarVisibility="Disabled">
                             <StackPanel>
 
                                 <TextBlock Text="Step 1 — Project setup"
-                                           FontSize="14" FontWeight="SemiBold"
+                                           FontSize="20" FontWeight="Bold"
                                            Foreground="{StaticResource SesTextPrimaryBrush}"
                                            Margin="0,0,0,6"/>
                                 <TextBlock TextWrapping="Wrap"
@@ -221,7 +244,7 @@
                                            Margin="0,0,0,12"
                                            Text="Create or select a project. The Vessel MRU is verified against the Reference MRU."/>
 
-                                <GroupBox Style="{StaticResource SesNativeGroupBoxStyle}" Header="Project Details" Margin="0,0,0,8">
+                                <GroupBox Style="{StaticResource SesSectionGroupBoxStyle}" Header="Project Details" Margin="0,0,0,8">
                                     <Grid Margin="8">
                                         <Grid.ColumnDefinitions>
                                             <ColumnDefinition Width="Auto" MinWidth="120" MaxWidth="180"/>
@@ -289,6 +312,7 @@
                             </StackPanel>
                         </ScrollViewer>
                     </Grid>
+                    </ScrollViewer>
 
                     <!-- ===== STEP 2: LIDAR CORRECTION ===== -->
                     <Grid x:Name="panelStep2" Visibility="Collapsed">

@@ -69,6 +69,8 @@
     <SolidColorBrush x:Key="SesDarkBlueGreyPressedBrush" Color="{StaticResource SesDarkBlueGreyPressedColor}" />
     <SolidColorBrush x:Key="SesDarkBlueGreyLightBrush" Color="{StaticResource SesDarkBlueGreyLightColor}" />
     <SolidColorBrush x:Key="SesDarkBlueGreyTintBrush" Color="{StaticResource SesDarkBlueGreyTintColor}" />
+    <SolidColorBrush x:Key="SesNavigationSelectedBrush" Color="#FF356359" />
+    <SolidColorBrush x:Key="SesNavigationMutedBrush" Color="#FFC4D0D7" />
 
     <SolidColorBrush x:Key="SesBlackBrush" Color="{StaticResource SesBlackColor}" />
     <SolidColorBrush x:Key="SesWhiteBrush" Color="{StaticResource SesWhiteColor}" />

@@ -1,0 +1,98 @@
+{
+  "schemaVersion": 2,
+  "generatedAt": "2026-11-27T13:22:52+01:00",
+  "title": "Design System: MVS",
+  "extensions": {
+    "colorMeta": {
+      "energy-green": { "role": "primary", "displayName": "Energy green" },
+      "blue-grey": { "role": "primary", "displayName": "Blue-grey" },
+      "surface": { "role": "neutral", "displayName": "Cool surface" },
+      "warning": { "role": "secondary", "displayName": "Status amber" },
+      "error": { "role": "secondary", "displayName": "Status red" }
+    },
+    "typographyMeta": {
+      "title": { "displayName": "Title", "purpose": "Project heading." },
+      "subheading": { "displayName": "Subheading", "purpose": "Axis headings." },
+      "body": { "displayName": "Body", "purpose": "Shared controls and data." },
+      "label": { "displayName": "Label", "purpose": "Buttons and form labels." }
+    }
+  },
+  "components": [
+    {
+      "name": "Primary Button",
+      "kind": "button",
+      "refersTo": "button-primary",
+      "description": "WPF-inspired preview of the primary action; dimensions represent DIPs.",
+      "html": "<button class=\"ds-primary\">Start Recording</button>",
+      "css": ".ds-primary{background:#3DE6A9;color:#334A5C;border:1px solid #3DE6A9;border-radius:3px;padding:6px 16px;min-height:34px;min-width:120px;font:600 14px 'Roboto Condensed',Arial,sans-serif;cursor:pointer}.ds-primary:hover{background:#2FCF97;border-color:#2FCF97}.ds-primary:active{background:#17A377;border-color:#17A377}.ds-primary:focus-visible{outline:none;border:2px solid #263A48}.ds-primary:disabled{background:#EAEFF2;border-color:#D5DDE2;color:#6B7A85}"
+    },
+    {
+      "name": "Secondary Button",
+      "kind": "button",
+      "refersTo": "button-secondary",
+      "description": "Blue-grey secondary action.",
+      "html": "<button class=\"ds-secondary\">New</button>",
+      "css": ".ds-secondary{background:#334A5C;color:#fff;border:1px solid #334A5C;border-radius:3px;padding:6px 16px;min-height:34px;min-width:120px;font:600 14px 'Roboto Condensed',Arial,sans-serif;cursor:pointer}.ds-secondary:hover{background:#3F5A6C;border-color:#3F5A6C}.ds-secondary:active{background:#263A48;border-color:#263A48}.ds-secondary:focus-visible{outline:none;border:2px solid #3DE6A9}.ds-secondary:disabled{background:#EAEFF2;border-color:#D5DDE2;color:#6B7A85}"
+    },
+    {
+      "name": "Watermark Field",
+      "kind": "input",
+      "refersTo": "watermark-field",
+      "description": "Rectangular native watermark field with a mint focus border.",
+      "html": "<input class=\"ds-field\" placeholder=\"Project name\" aria-label=\"Project name\">",
+      "css": ".ds-field{background:#fff;color:#334A5C;border:1px solid #D5DDE2;padding:4px 6px;font:14px 'Roboto Condensed',Arial,sans-serif}.ds-field::placeholder{color:#566672}.ds-field:focus-visible{outline:none;border-color:#3DE6A9}.ds-field:disabled{opacity:.5}"
+    },
+    {
+      "name": "Navigation",
+      "kind": "nav",
+      "refersTo": "navigation-item",
+      "description": "Text-only approximation of the left rail; items have at least 42-DIP surfaces and 6-DIP gaps. Selected text is white and its muted green background persists on hover. The actual shell also uses white image icons.",
+      "html": "<nav class=\"ds-nav\"><button class=\"ds-nav-item\" aria-current=\"page\">Projects</button><button class=\"ds-nav-item\">Input</button></nav>",
+      "css": ".ds-nav{background:#334A5C;display:flex;flex-direction:column;align-items:stretch;gap:6px}.ds-nav-item{box-sizing:border-box;min-height:42px;background:transparent;color:#fff;border:1px solid transparent;border-radius:3px;padding:8px 12px;text-align:left;font:14px 'Roboto Condensed',Arial,sans-serif}.ds-nav-item[aria-current=page]{background:#356359;color:#fff;font-weight:600}.ds-nav-item:hover:not([aria-current=page]){background:#3F5A6C}.ds-nav-item:focus-visible{outline:none;border-color:#3DE6A9}.ds-nav-item:disabled{opacity:.5}"
+    },
+    {
+      "name": "Subtabs",
+      "kind": "nav",
+      "refersTo": "subtab-selected",
+      "description": "Selected subtab uses a green underline.",
+      "html": "<nav class=\"ds-tabs\"><button class=\"ds-tab\" aria-current=\"page\">Status</button><button class=\"ds-tab\">Data</button></nav>",
+      "css": ".ds-tabs{display:flex}.ds-tab{background:#EAEFF2;color:#566672;border:0;border-bottom:1px solid #D5DDE2;padding:8px 12px;font:14px 'Roboto Condensed',Arial,sans-serif}.ds-tab[aria-current=page]{background:#fff;color:#12805B;border-bottom:2px solid #12805B;font-weight:600}.ds-tab:hover{background:#EBEFF2}.ds-tab:focus-visible{outline:1px solid #12805B}.ds-tab:disabled{opacity:.5}"
+    },
+    {
+      "name": "Wizard Steps",
+      "kind": "nav",
+      "refersTo": "wizard-current",
+      "description": "Current, completed and upcoming project steps.",
+      "html": "<nav class=\"ds-steps\"><button class=\"ds-step ds-done\">Setup</button><button class=\"ds-step ds-current\" aria-current=\"step\">LiDAR</button><button class=\"ds-step\">Capture</button></nav>",
+      "css": ".ds-steps{display:flex}.ds-step{background:#EAEFF2;color:#566672;border:1px solid #D5DDE2;border-radius:4px;padding:8px 10px;margin:0 3px;font:14px 'Roboto Condensed',Arial,sans-serif}.ds-done{background:#E4FBF3;color:#12805B;border-color:#3DE6A9;font-weight:600}.ds-current{background:#334A5C;color:#fff;border-color:#334A5C;font-weight:700}.ds-step:hover{border-color:#3DE6A9}.ds-step:focus-visible{outline:none;border-width:2px}.ds-step:disabled{opacity:.5}"
+    },
+    {
+      "name": "Data Grid",
+      "kind": "custom",
+      "description": "Simplified preview of the shared grid header, alternating rows and selection; project list rows are 36 DIP high with centered content.",
+      "html": "<table class=\"ds-grid\"><thead><tr><th>Name</th><th>Status</th></tr></thead><tbody><tr><td>Project</td><td>Ready</td></tr><tr class=\"ds-selected\"><td>Project</td><td>Selected</td></tr></tbody></table>",
+      "css": ".ds-grid{background:#fff;border:1px solid #D5DDE2;border-collapse:collapse;color:#334A5C;font:14px 'Roboto Condensed',Arial,sans-serif}.ds-grid th{background:#334A5C;color:#fff;padding:6px 8px;text-align:left;font-weight:700}.ds-grid td{height:36px;box-sizing:border-box;vertical-align:middle;border-bottom:1px solid #D5DDE2;padding:6px 8px}.ds-grid tbody tr:nth-child(even){background:#F5F8FA}.ds-grid tbody tr.ds-selected{background:#E4FBF3}.ds-grid tbody tr:hover{background:#EAEFF2}"
+    }
+  ],
+  "narrative": {
+    "northStar": "The Verification Workspace",
+    "overview": "The implemented shell combines dark blue-grey navigation with a cool, light workspace and compact controls for the existing verification workflow. The Helideck platform's transfer document, current source, and an older synthetic-data browser-test capture informed this revision; this record is not independent visual approval.",
+    "keyCharacteristics": [
+      "Native WPF controls and data-dense grids.",
+      "Blue-grey structure, mint interaction accents, and explicit status colors.",
+      "Bundled condensed type and small, bordered surfaces."
+    ],
+    "rules": [
+      { "name": "The Status Is Named Rule", "body": "Where status is shown in a project list or chart legend, pair color with the existing text label rather than relying on color alone.", "section": "colors" }
+    ],
+    "dos": [
+      "Do use the shared SES resources for established control colors and states.",
+      "Do retain text labels alongside the existing status and chart color cues.",
+      "Do keep data-oriented layouts compact and preserve existing actions and content."
+    ],
+    "donts": [
+      "Don't treat a chart series color as an error or success status.",
+      "Don't assume every screen uses the shared named text styles or a custom control template."
+    ]
+  }
+}

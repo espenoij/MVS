@@ -22,7 +22,7 @@
     </Style>
 
     <Style x:Key="SesNativeWatermarkTextBoxStyle" TargetType="{x:Type controls:WatermarkTextBox}">
-        <Setter Property="Background" Value="{DynamicResource SesSurfaceBrush}" />
+        <Setter Property="Background" Value="{DynamicResource SesWhiteBrush}" />
         <Setter Property="Foreground" Value="{DynamicResource SesTextPrimaryBrush}" />
         <Setter Property="BorderBrush" Value="{DynamicResource SesBorderBrush}" />
         <Setter Property="BorderThickness" Value="1" />
@@ -74,7 +74,7 @@
 
     <!-- Native single-select field -->
     <Style x:Key="SesNativeComboBoxStyle" TargetType="{x:Type ComboBox}">
-        <Setter Property="Background" Value="{DynamicResource SesSurfaceBrush}" />
+        <Setter Property="Background" Value="{DynamicResource SesWhiteBrush}" />
         <Setter Property="Foreground" Value="{DynamicResource SesTextPrimaryBrush}" />
         <Setter Property="BorderBrush" Value="{DynamicResource SesBorderBrush}" />
         <Setter Property="BorderThickness" Value="1" />
@@ -136,14 +136,13 @@
     <!-- Native top-tab navigation -->
     <Style x:Key="SesNativeTabItemStyle" TargetType="{x:Type TabItem}">
         <Setter Property="Background" Value="{DynamicResource SesSurfaceAltBrush}" />
-        <Setter Property="Foreground" Value="{DynamicResource SesTextSecondaryBrush}" />
+        <Setter Property="Foreground" Value="{DynamicResource SesTextPrimaryBrush}" />
         <Setter Property="FontFamily" Value="{DynamicResource SesFontFamily}" />
         <Setter Property="FontSize" Value="{DynamicResource SesFontSizeBody}" />
         <Setter Property="Padding" Value="12,8" />
         <Style.Triggers>
             <Trigger Property="IsSelected" Value="True">
                 <Setter Property="Background" Value="{DynamicResource SesSurfaceBrush}" />
-                <Setter Property="Foreground" Value="{DynamicResource SesEnergyGreenTextBrush}" />
                 <Setter Property="FontWeight" Value="SemiBold" />
             </Trigger>
         </Style.Triggers>
@@ -157,6 +156,36 @@
         <Setter Property="BorderThickness" Value="1" />
         <Setter Property="FontFamily" Value="{DynamicResource SesFontFamily}" />
         <Setter Property="FontSize" Value="{DynamicResource SesFontSizeBody}" />
+    </Style>
+
+    <Style x:Key="SesSectionGroupBoxStyle" TargetType="{x:Type GroupBox}"
+           BasedOn="{StaticResource SesNativeGroupBoxStyle}">
+        <Setter Property="Background" Value="{DynamicResource SesWhiteBrush}" />
+        <Setter Property="HorizontalContentAlignment" Value="Stretch" />
+        <Setter Property="VerticalContentAlignment" Value="Stretch" />
+        <Setter Property="Template">
+            <Setter.Value>
+                <ControlTemplate TargetType="{x:Type GroupBox}">
+                    <Border Background="{TemplateBinding Background}"
+                            BorderBrush="{TemplateBinding BorderBrush}"
+                            BorderThickness="{TemplateBinding BorderThickness}"
+                            CornerRadius="6">
+                        <DockPanel>
+                            <Border DockPanel.Dock="Top" Background="{DynamicResource SesSurfaceAltBrush}"
+                                    BorderBrush="{DynamicResource SesBorderBrush}" BorderThickness="0,0,0,1"
+                                    CornerRadius="5,5,0,0" Padding="12,10">
+                                <ContentPresenter ContentSource="Header" RecognizesAccessKey="True"
+                                                  TextElement.FontWeight="SemiBold" />
+                            </Border>
+                            <ContentPresenter ContentSource="Content"
+                                              Margin="{TemplateBinding Padding}"
+                                              HorizontalAlignment="{TemplateBinding HorizontalContentAlignment}"
+                                              VerticalAlignment="{TemplateBinding VerticalContentAlignment}" />
+                        </DockPanel>
+                    </Border>
+                </ControlTemplate>
+            </Setter.Value>
+        </Setter>
     </Style>
 
     <!-- Validation / error message text -->
