@@ -52,6 +52,10 @@
                             <Setter TargetName="ButtonBorder" Property="Background" Value="{DynamicResource SesDarkBlueGreyPressedBrush}" />
                             <Setter TargetName="ButtonBorder" Property="BorderBrush" Value="{DynamicResource SesDarkBlueGreyPressedBrush}" />
                         </Trigger>
+                        <Trigger Property="IsKeyboardFocused" Value="True">
+                            <Setter TargetName="ButtonBorder" Property="BorderBrush" Value="{DynamicResource SesEnergyGreenBrush}" />
+                            <Setter TargetName="ButtonBorder" Property="BorderThickness" Value="2" />
+                        </Trigger>
                         <Trigger Property="IsEnabled" Value="False">
                             <Setter TargetName="ButtonBorder" Property="Background" Value="{DynamicResource SesSurfaceAltBrush}" />
                             <Setter TargetName="ButtonBorder" Property="BorderBrush" Value="{DynamicResource SesBorderBrush}" />
@@ -103,6 +107,10 @@
                             <Setter TargetName="ButtonBorder" Property="Background" Value="{DynamicResource SesEnergyGreenPressedBrush}" />
                             <Setter TargetName="ButtonBorder" Property="BorderBrush" Value="{DynamicResource SesEnergyGreenPressedBrush}" />
                         </Trigger>
+                        <Trigger Property="IsKeyboardFocused" Value="True">
+                            <Setter TargetName="ButtonBorder" Property="BorderBrush" Value="{DynamicResource SesDarkBlueGreyPressedBrush}" />
+                            <Setter TargetName="ButtonBorder" Property="BorderThickness" Value="2" />
+                        </Trigger>
                         <Trigger Property="IsEnabled" Value="False">
                             <Setter TargetName="ButtonBorder" Property="Background" Value="{DynamicResource SesSurfaceAltBrush}" />
                             <Setter TargetName="ButtonBorder" Property="BorderBrush" Value="{DynamicResource SesBorderBrush}" />
@@ -151,6 +159,10 @@
                             <Setter TargetName="ButtonBorder" Property="Background" Value="{DynamicResource SesDarkBlueGreyTintBrush}" />
                             <Setter TargetName="ButtonBorder" Property="BorderBrush" Value="{DynamicResource SesDarkBlueGreyBrush}" />
                             <Setter Property="Foreground" Value="{DynamicResource SesDarkBlueGreyBrush}" />
+                        </Trigger>
+                        <Trigger Property="IsKeyboardFocused" Value="True">
+                            <Setter TargetName="ButtonBorder" Property="BorderBrush" Value="{DynamicResource SesEnergyGreenTextBrush}" />
+                            <Setter TargetName="ButtonBorder" Property="BorderThickness" Value="2" />
                         </Trigger>
                         <Trigger Property="IsEnabled" Value="False">
                             <Setter TargetName="ButtonBorder" Property="Background" Value="{DynamicResource SesSurfaceBrush}" />

@@ -44,6 +44,7 @@
         <Setter Property="ColumnHeaderStyle" Value="{StaticResource SesNativeDataGridHeaderStyle}" />
         <Setter Property="RowHeaderWidth" Value="0" />
         <Setter Property="GridLinesVisibility" Value="Horizontal" />
+        <Setter Property="HorizontalGridLinesBrush" Value="{DynamicResource SesBorderBrush}" />
         <Setter Property="AlternationCount" Value="2" />
         <Setter Property="AlternatingRowBackground" Value="{DynamicResource SesSurfaceBrush}" />
         <Setter Property="RowStyle" Value="{StaticResource SesNativeDataGridRowStyle}" />

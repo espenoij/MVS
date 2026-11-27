@@ -64,7 +64,7 @@
 
     </Window.Resources>
 
-    <Grid>
+    <Grid Background="{StaticResource SesSurfaceBrush}">
 
         <DockPanel>
 
@@ -100,6 +100,7 @@
                 DockPanel.Dock="Top"
                 Name="tcMainMenu"
                 TabStripPlacement="Left"
+                Style="{StaticResource SesNativeNavigationTabControlStyle}"
                 Background="{StaticResource ColorVerticalBarBackground}"
                 SelectionChanged="tcMainMenu_SelectionChanged">
 
@@ -120,13 +121,13 @@
                                 </Grid.ColumnDefinitions>
                                 <Image
                                     Grid.Column="0"
-                                    Width="36"
-                                    HorizontalAlignment="Right"
+                                    Width="18"
+                                    HorizontalAlignment="Center"
                                     Source="../Icons/outline_addchart_white_48dp.png" />
                                 <TextBlock
                                     Grid.Column="1"
                                     Text="{Binding}"
-                                    Foreground="White"
+                                    Foreground="{StaticResource SesWhiteBrush}"
                                     HorizontalAlignment="Left"
                                     VerticalAlignment="Center"
                                     Margin="8,0,0,0"
@@ -156,13 +157,13 @@
                                 </Grid.ColumnDefinitions>
                                 <Image
                                     Grid.Column="0"
-                                    Width="36"
-                                    HorizontalAlignment="Right"
+                                    Width="18"
+                                    HorizontalAlignment="Center"
                                     Source="../Icons/input_white_36dp.png" />
                                 <TextBlock
                                     Grid.Column="1"
                                     Text="{Binding}"
-                                    Foreground="White"
+                                    Foreground="{StaticResource SesWhiteBrush}"
                                     HorizontalAlignment="Left"
                                     VerticalAlignment="Center"
                                     Margin="8,0,0,0"
@@ -213,7 +214,7 @@
 
                         <TabControl
                             DockPanel.Dock="Top"
-                            Background="{StaticResource ColorHorizontalBarBackground}"
+                            Background="{StaticResource SesSurfaceBrush}"
                             Margin="8,0,8,8">
 
                             <TabItem Style="{StaticResource SesNativeSubTabItemStyle}"
@@ -460,13 +461,13 @@
                                 </Grid.ColumnDefinitions>
                                 <Image
                                     Grid.Column="0"
-                                    Width="36"
-                                    HorizontalAlignment="Right"
+                                    Width="18"
+                                    HorizontalAlignment="Center"
                                     Source="../Icons/detector_white_36dp.png" />
                                 <TextBlock
                                     Grid.Column="1"
                                     Text="{Binding}"
-                                    Foreground="White"
+                                    Foreground="{StaticResource SesWhiteBrush}"
                                     HorizontalAlignment="Left"
                                     VerticalAlignment="Center"
                                     Margin="8,0,0,0"
@@ -498,13 +499,13 @@
                                 </Grid.ColumnDefinitions>
                                 <Image
                                     Grid.Column="0"
-                                    Width="36"
-                                    HorizontalAlignment="Right"
+                                    Width="18"
+                                    HorizontalAlignment="Center"
                                     Source="../Icons/input_edit_white_36dp.png" />
                                 <TextBlock
                                     Grid.Column="1"
                                     Text="{Binding}"
-                                    Foreground="White"
+                                    Foreground="{StaticResource SesWhiteBrush}"
                                     HorizontalAlignment="Left"
                                     VerticalAlignment="Center"
                                     Margin="8,0,0,0"
@@ -554,7 +555,7 @@
 
                         <TabControl
                             DockPanel.Dock="Top"
-                            Background="{StaticResource ColorHorizontalBarBackground}"
+                            Background="{StaticResource SesSurfaceBrush}"
                             Margin="8,0,8,8">
 
                             <TabItem Style="{StaticResource SesNativeSubTabItemStyle}"
@@ -617,13 +618,13 @@
                                 </Grid.ColumnDefinitions>
                                 <Image
                                     Grid.Column="0"
-                                    Width="36"
-                                    HorizontalAlignment="Right"
+                                    Width="18"
+                                    HorizontalAlignment="Center"
                                     Source="../Icons/outline_admin_panel_settings_white_36dp.png" />
                                 <TextBlock
                                     Grid.Column="1"
                                     Text="{Binding}"
-                                    Foreground="White"
+                                    Foreground="{StaticResource SesWhiteBrush}"
                                     HorizontalAlignment="Left"
                                     VerticalAlignment="Center"
                                     Margin="8,0,0,0"
@@ -654,8 +655,8 @@
                                 </Grid.ColumnDefinitions>
                                 <Grid Grid.Column="0">
                                     <Image
-                                        Width="36"
-                                        HorizontalAlignment="Right"
+                                        Width="18"
+                                        HorizontalAlignment="Center"
                                         Source="../Icons/outline_announcement_white_36dp.png" />
                                     <Ellipse
                                         Width="14"
@@ -669,7 +670,7 @@
                                 <TextBlock
                                     Grid.Column="1"
                                     Text="{Binding}"
-                                    Foreground="White"
+                                    Foreground="{StaticResource SesWhiteBrush}"
                                     HorizontalAlignment="Left"
                                     VerticalAlignment="Center"
                                     Margin="8,0,0,0"
